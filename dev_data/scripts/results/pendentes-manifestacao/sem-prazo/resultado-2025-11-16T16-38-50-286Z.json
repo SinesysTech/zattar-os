@@ -1,0 +1,16 @@
+{
+  "timestamp": "2025-11-16T16-38-50-286Z",
+  "config": {
+    "trtCodigo": "TRT1",
+    "grau": "primeiro_grau",
+    "filtroPrazo": "sem_prazo"
+  },
+  "duracaoSegundos": 32.23,
+  "totalProcessos": 0,
+  "filtroPrazo": "sem_prazo",
+  "dados": {
+    "processos": [],
+    "total": 0,
+    "filtroPrazo": "sem_prazo"
+  }
+}

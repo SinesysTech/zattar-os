@@ -1,0 +1,123 @@
+// Serviço específico para captura de acervo geral do TRT
+// Usa API REST do PJE (não faz scraping HTML)
+
+import { autenticarPJE, type AuthResult } from './trt-auth.service';
+import type { CapturaTRTParams } from './trt-capture.service';
+import {
+  obterTodosProcessos,
+  obterTotalizadores,
+  AgrupamentoProcessoTarefa,
+  type Processo,
+} from './pje-api.service';
+import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
+import { buscarOuCriarAdvogadoPorCpf } from '../persistence/advogado-helper.service';
+
+/**
+ * Resultado da captura de acervo geral
+ */
+export interface AcervoGeralResult {
+  processos: Processo[];
+  total: number;
+  persistencia?: SalvarAcervoResult;
+}
+
+/**
+ * Serviço de captura de acervo geral
+ * 
+ * Fluxo:
+ * 1. Recebe parâmetros (TRT, grau, credenciais)
+ * 2. Chama autenticação (autenticarPJE)
+ * 3. Obtém idAdvogado do JWT (já extraído durante autenticação)
+ * 4. Obtém totalizadores para validação
+ * 5. Chama API REST para obter processos do Acervo Geral
+ * 6. Valida se quantidade obtida condiz com totalizador
+ * 7. Retorna todos os processos (com paginação automática)
+ * 8. Limpa recursos
+ */
+export async function acervoGeralCapture(
+  params: CapturaTRTParams
+): Promise<AcervoGeralResult> {
+  let authResult: AuthResult | null = null;
+
+  try {
+    // 1. Autenticar no PJE
+    authResult = await autenticarPJE({
+      credential: params.credential,
+      config: params.config,
+      twofauthConfig: params.twofauthConfig,
+      headless: true,
+    });
+
+    const { page, advogadoInfo } = authResult;
+
+    // 2. Obter ID do advogado (já extraído do JWT durante autenticação)
+    const idAdvogado = parseInt(advogadoInfo.idAdvogado, 10);
+    
+    if (isNaN(idAdvogado)) {
+      throw new Error(`ID do advogado inválido: ${advogadoInfo.idAdvogado}`);
+    }
+
+    // 3. Obter totalizadores para validação
+    const totalizadores = await obterTotalizadores(page, idAdvogado);
+    const totalizadorAcervoGeral = totalizadores.find(
+      (t) => t.idAgrupamentoProcessoTarefa === AgrupamentoProcessoTarefa.ACERVO_GERAL
+    );
+
+    // 4. Chamar API REST para obter processos do Acervo Geral
+    // Agrupamento 1 = Acervo Geral
+    const processos = await obterTodosProcessos(
+      page,
+      idAdvogado,
+      AgrupamentoProcessoTarefa.ACERVO_GERAL
+    );
+
+    // 5. Validar se a quantidade raspada condiz com o totalizador
+    if (totalizadorAcervoGeral) {
+      const quantidadeEsperada = totalizadorAcervoGeral.quantidadeProcessos;
+      const quantidadeObtida = processos.length;
+
+      if (quantidadeObtida !== quantidadeEsperada) {
+        throw new Error(
+          `Quantidade de processos obtida (${quantidadeObtida}) não condiz com o totalizador (${quantidadeEsperada}). A raspagem pode estar incompleta.`
+        );
+      }
+    }
+
+    // 6. Salvar processos no banco de dados
+    let persistencia: SalvarAcervoResult | undefined;
+    try {
+      const advogadoDb = await buscarOuCriarAdvogadoPorCpf(
+        advogadoInfo.cpf,
+        advogadoInfo.nome
+      );
+
+      persistencia = await salvarAcervo({
+        processos,
+        advogadoId: advogadoDb.id,
+        origem: 'acervo_geral',
+        trt: params.config.codigo,
+        grau: params.config.grau,
+      });
+
+      console.log('✅ Processos salvos no banco:', {
+        total: persistencia.total,
+        atualizados: persistencia.atualizados,
+        erros: persistencia.erros,
+      });
+    } catch (error) {
+      console.error('❌ Erro ao salvar processos no banco:', error);
+      // Não falha a captura se a persistência falhar - apenas loga o erro
+    }
+
+    return {
+      processos,
+      total: processos.length,
+      persistencia,
+    };
+  } finally {
+    // 4. Limpar recursos (fechar navegador)
+    if (authResult?.browser) {
+      await authResult.browser.close();
+    }
+  }
+}
