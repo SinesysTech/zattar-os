@@ -36,6 +36,12 @@ const options: Options = {
           name: 'sb-access-token',
           description: 'Autenticação via sessão do Supabase',
         },
+        serviceApiKey: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'x-service-api-key',
+          description: 'API Key para autenticação de jobs do sistema. Usado por scripts automatizados e processos agendados.',
+        },
       },
       schemas: {
         Error: {
@@ -64,23 +70,88 @@ const options: Options = {
         },
         BaseCapturaTRTParams: {
           type: 'object',
-          required: ['credential_id', 'trt_codigo', 'grau'],
+          required: ['advogado_id', 'trt_codigo', 'grau'],
           properties: {
-            credential_id: {
+            advogado_id: {
               type: 'integer',
-              description: 'ID da credencial no banco de dados',
+              description: 'ID do advogado na tabela advogados. O backend buscará automaticamente a credencial correspondente para este advogado, TRT e grau.',
               example: 1,
             },
             trt_codigo: {
               type: 'string',
               description: 'Código do TRT (ex: TRT1, TRT2, TRT3)',
+              enum: ['TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24'],
               example: 'TRT3',
             },
             grau: {
               type: 'string',
-              enum: ['1g', '2g'],
-              description: 'Grau do processo',
-              example: '1g',
+              enum: ['primeiro_grau', 'segundo_grau'],
+              description: 'Grau do processo (primeiro_grau ou segundo_grau)',
+              example: 'primeiro_grau',
+            },
+          },
+        },
+        AudienciasParams: {
+          type: 'object',
+          required: ['advogado_id', 'trt_codigo', 'grau'],
+          properties: {
+            advogado_id: {
+              type: 'integer',
+              description: 'ID do advogado na tabela advogados. O backend buscará automaticamente a credencial correspondente para este advogado, TRT e grau.',
+              example: 1,
+            },
+            trt_codigo: {
+              type: 'string',
+              description: 'Código do TRT (ex: TRT1, TRT2, TRT3)',
+              enum: ['TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24'],
+              example: 'TRT3',
+            },
+            grau: {
+              type: 'string',
+              enum: ['primeiro_grau', 'segundo_grau'],
+              description: 'Grau do processo (primeiro_grau ou segundo_grau)',
+              example: 'primeiro_grau',
+            },
+            dataInicio: {
+              type: 'string',
+              format: 'date',
+              description: 'Data inicial do período de busca (formato: YYYY-MM-DD). Se não fornecido, usa hoje',
+              example: '2024-01-01',
+            },
+            dataFim: {
+              type: 'string',
+              format: 'date',
+              description: 'Data final do período de busca (formato: YYYY-MM-DD). Se não fornecido, usa hoje + 365 dias',
+              example: '2024-12-31',
+            },
+          },
+        },
+        PendentesManifestacaoParams: {
+          type: 'object',
+          required: ['advogado_id', 'trt_codigo', 'grau'],
+          properties: {
+            advogado_id: {
+              type: 'integer',
+              description: 'ID do advogado na tabela advogados. O backend buscará automaticamente a credencial correspondente para este advogado, TRT e grau.',
+              example: 1,
+            },
+            trt_codigo: {
+              type: 'string',
+              description: 'Código do TRT (ex: TRT1, TRT2, TRT3)',
+              enum: ['TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24'],
+              example: 'TRT3',
+            },
+            grau: {
+              type: 'string',
+              enum: ['primeiro_grau', 'segundo_grau'],
+              description: 'Grau do processo (primeiro_grau ou segundo_grau)',
+              example: 'primeiro_grau',
+            },
+            filtroPrazo: {
+              type: 'string',
+              enum: ['no_prazo', 'sem_prazo'],
+              description: 'Filtro de prazo para processos pendentes. Padrão: sem_prazo',
+              example: 'sem_prazo',
             },
           },
         },
@@ -92,6 +163,9 @@ const options: Options = {
       },
       {
         sessionAuth: [],
+      },
+      {
+        serviceApiKey: [],
       },
     ],
   },

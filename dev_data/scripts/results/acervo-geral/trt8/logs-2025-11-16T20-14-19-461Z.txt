@@ -1,0 +1,31 @@
+=== LOGS DE EXECUÇÃO (ERRO) ===
+Timestamp: 2025-11-16T20-14-19-461Z
+TRT: TRT8
+Grau: primeiro_grau
+
+=== ERRO ===
+page.waitForURL: NS_ERROR_NET_EMPTY_RESPONSE
+=========================== logs ===========================
+waiting for navigation until "load"
+============================================================
+
+=== LOGS DO CONSOLE ===
+[LOG] 
+🚀 Iniciando teste de captura - Acervo Geral
+
+[LOG] Configuração:
+[LOG]   - TRT: TRT8
+[LOG]   - Grau: primeiro_grau
+[LOG]   - Timestamp: 2025-11-16T20-14-19-461Z
+
+[LOG] ✅ Credencial encontrada: {"advogado":"Pedro Zattar Eugenio","cpf":"07529294610","oab":"128404/MG"}
+[LOG] ✅ Configuração do tribunal encontrada: {"nome":"TRT da 8ª Região","loginUrl":"https://pje.trt8.jus.br/primeirograu/login.seam","baseUrl":"https://pje.trt8.jus.br"}
+[LOG] 
+⏳ Iniciando autenticação e captura de Acervo Geral...
+
+[LOG] ℹ️ [INFO] 🚀 Iniciando autenticação PJE com Firefox... {"loginUrl":"https://pje.trt8.jus.br/primeirograu/login.seam","headless":true}
+[LOG] ✅ [SUCCESS] ✅ Browser Firefox lançado
+[LOG] ℹ️ [INFO] 🌐 Navegando para página de login... {"url":"https://pje.trt8.jus.br/primeirograu/login.seam"}
+[LOG] ℹ️ [INFO] 🔑 Buscando botão SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Botão SSO encontrado
+[LOG] ℹ️ [INFO] 🖱️ Clicando em SSO PDPJ...

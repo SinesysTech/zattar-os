@@ -1,0 +1,44 @@
+=== LOGS DE EXECUÇÃO (ERRO) ===
+Timestamp: 2025-11-16T20-12-50-275Z
+TRT: TRT6
+Grau: primeiro_grau
+
+=== ERRO ===
+Campo OTP não apareceu após aguardar. Verifique se o login foi concluído corretamente.
+
+=== LOGS DO CONSOLE ===
+[LOG] 
+🚀 Iniciando teste de captura - Acervo Geral
+
+[LOG] Configuração:
+[LOG]   - TRT: TRT6
+[LOG]   - Grau: primeiro_grau
+[LOG]   - Timestamp: 2025-11-16T20-12-50-275Z
+
+[LOG] ✅ Credencial encontrada: {"advogado":"Pedro Zattar Eugenio","cpf":"07529294610","oab":"128404/MG"}
+[LOG] ✅ Configuração do tribunal encontrada: {"nome":"TRT da 6ª Região","loginUrl":"https://pje.trt6.jus.br/primeirograu/login.seam","baseUrl":"https://pje.trt6.jus.br"}
+[LOG] 
+⏳ Iniciando autenticação e captura de Acervo Geral...
+
+[LOG] ℹ️ [INFO] 🚀 Iniciando autenticação PJE com Firefox... {"loginUrl":"https://pje.trt6.jus.br/primeirograu/login.seam","headless":true}
+[LOG] ✅ [SUCCESS] ✅ Browser Firefox lançado
+[LOG] ℹ️ [INFO] 🌐 Navegando para página de login... {"url":"https://pje.trt6.jus.br/primeirograu/login.seam"}
+[LOG] ℹ️ [INFO] 🔑 Buscando botão SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Botão SSO encontrado
+[LOG] ℹ️ [INFO] 🖱️ Clicando em SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Redirecionado para página de login PDPJ
+[LOG] ℹ️ [INFO] 📝 Preenchendo credenciais...
+[LOG] ✅ [SUCCESS] ✅ CPF preenchido
+[LOG] ✅ [SUCCESS] ✅ Senha preenchida
+[LOG] ℹ️ [INFO] 🚀 Submetendo login...
+[LOG] ✅ [SUCCESS] ✅ Login submetido
+[LOG] ℹ️ [INFO] 🔍 Aguardando campo OTP aparecer... {"url":"https://sso.cloud.pje.jus.br/auth/realms/pje/login-actions/authenticate?execution=a859731d-33b4-4090-8b71-c6187fbbf04c&client_id=pje-trt6-1g&tab_id=ECRtwEePxec"}
+[LOG] ℹ️ [INFO] ⏳ Campo OTP ainda não visível, aguardando... (1/10)
+[LOG] ℹ️ [INFO] ⏳ Campo OTP ainda não visível, aguardando... (2/10)
+[LOG] ℹ️ [INFO] ⏳ Campo OTP ainda não visível, aguardando... (3/10)
+[LOG] ℹ️ [INFO] ⏳ Campo OTP ainda não visível, aguardando... (4/10)
+[LOG] ℹ️ [INFO] ⏳ Campo OTP ainda não visível, aguardando... (5/10)
+[LOG] ℹ️ [INFO] ⏳ Campo OTP ainda não visível, aguardando... (6/10)
+[LOG] ℹ️ [INFO] ⏳ Campo OTP ainda não visível, aguardando... (7/10)
+[LOG] ℹ️ [INFO] ⏳ Campo OTP ainda não visível, aguardando... (8/10)
+[LOG] ℹ️ [INFO] ⏳ Campo OTP ainda não visível, aguardando... (9/10)

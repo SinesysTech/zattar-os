@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { getCredential } from '@/backend/captura/credentials/credential.service';
+import { getCredentialByTribunalAndGrau } from '@/backend/captura/credentials/credential.service';
 import { acervoGeralCapture } from '@/backend/captura/services/trt/acervo-geral.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
 import type { BaseCapturaTRTParams } from '@/backend/captura/services/trt/types';
@@ -19,6 +19,7 @@ import type { BaseCapturaTRTParams } from '@/backend/captura/services/trt/types'
  *     security:
  *       - bearerAuth: []
  *       - sessionAuth: []
+ *       - serviceApiKey: []
  *     requestBody:
  *       required: true
  *       content:
@@ -26,9 +27,9 @@ import type { BaseCapturaTRTParams } from '@/backend/captura/services/trt/types'
  *           schema:
  *             $ref: '#/components/schemas/BaseCapturaTRTParams'
  *           example:
- *             credential_id: 1
+ *             advogado_id: 1
  *             trt_codigo: "TRT3"
- *             grau: "1g"
+ *             grau: "primeiro_grau"
  *     responses:
  *       200:
  *         description: Captura realizada com sucesso
@@ -50,7 +51,7 @@ import type { BaseCapturaTRTParams } from '@/backend/captura/services/trt/types'
  *             schema:
  *               $ref: '#/components/schemas/Error'
  *             example:
- *               error: "Missing required parameters: credential_id, trt_codigo, grau"
+ *               error: "Missing required parameters: advogado_id, trt_codigo, grau"
  *       401:
  *         description: Não autenticado
  *         content:
@@ -66,7 +67,7 @@ import type { BaseCapturaTRTParams } from '@/backend/captura/services/trt/types'
  *             schema:
  *               $ref: '#/components/schemas/Error'
  *             example:
- *               error: "Credential not found or access denied"
+ *               error: "Credential not found for this advogado_id, trt_codigo and grau combination"
  *       500:
  *         description: Erro interno do servidor
  *         content:
@@ -89,25 +90,42 @@ export async function POST(request: NextRequest) {
 
     // 2. Validar e parsear body da requisição
     const body = await request.json();
-    const { credential_id, trt_codigo, grau } = body as BaseCapturaTRTParams;
+    const { advogado_id, trt_codigo, grau } = body as BaseCapturaTRTParams;
 
     // Validações básicas
-    if (!credential_id || !trt_codigo || !grau) {
+    if (!advogado_id || !trt_codigo || !grau) {
       return NextResponse.json(
-        { error: 'Missing required parameters: credential_id, trt_codigo, grau' },
+        { error: 'Missing required parameters: advogado_id, trt_codigo, grau' },
         { status: 400 }
       );
     }
 
-    // 3. Buscar credencial do banco (com verificação de permissão)
-    const credential = await getCredential({
-      credentialId: credential_id,
-      userId: authResult.userId,
+    // Validar grau
+    if (grau !== 'primeiro_grau' && grau !== 'segundo_grau') {
+      return NextResponse.json(
+        { error: 'Invalid grau. Must be "primeiro_grau" or "segundo_grau"' },
+        { status: 400 }
+      );
+    }
+
+    // 3. Buscar credencial do banco usando advogado_id, TRT e grau
+    const credential = await getCredentialByTribunalAndGrau({
+      advogadoId: advogado_id,
+      tribunal: trt_codigo,
+      grau,
     });
 
     if (!credential) {
       return NextResponse.json(
-        { error: 'Credential not found or access denied' },
+        { 
+          error: 'Credential not found for this advogado_id, trt_codigo and grau combination',
+          details: {
+            advogado_id: advogado_id,
+            trt_codigo,
+            grau,
+            message: 'Verifique se existe uma credencial ativa para este advogado, TRT e grau no banco de dados'
+          }
+        },
         { status: 404 }
       );
     }

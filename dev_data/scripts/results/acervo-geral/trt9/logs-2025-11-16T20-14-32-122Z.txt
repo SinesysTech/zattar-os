@@ -1,0 +1,85 @@
+=== LOGS DE EXECUÇÃO ===
+Timestamp: 2025-11-16T20-14-32-122Z
+TRT: TRT9
+Grau: primeiro_grau
+Duração: 32.10 segundos
+Total de processos: 41
+Persistência: Não disponível
+
+=== LOGS DO CONSOLE ===
+[LOG] 
+🚀 Iniciando teste de captura - Acervo Geral
+
+[LOG] Configuração:
+[LOG]   - TRT: TRT9
+[LOG]   - Grau: primeiro_grau
+[LOG]   - Timestamp: 2025-11-16T20-14-32-122Z
+
+[LOG] ✅ Credencial encontrada: {"advogado":"Pedro Zattar Eugenio","cpf":"07529294610","oab":"128404/MG"}
+[LOG] ✅ Configuração do tribunal encontrada: {"nome":"TRT da 9ª Região","loginUrl":"https://pje.trt9.jus.br/primeirograu/login.seam","baseUrl":"https://pje.trt9.jus.br"}
+[LOG] 
+⏳ Iniciando autenticação e captura de Acervo Geral...
+
+[LOG] ℹ️ [INFO] 🚀 Iniciando autenticação PJE com Firefox... {"loginUrl":"https://pje.trt9.jus.br/primeirograu/login.seam","headless":true}
+[LOG] ✅ [SUCCESS] ✅ Browser Firefox lançado
+[LOG] ℹ️ [INFO] 🌐 Navegando para página de login... {"url":"https://pje.trt9.jus.br/primeirograu/login.seam"}
+[LOG] ℹ️ [INFO] 🔑 Buscando botão SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Botão SSO encontrado
+[LOG] ℹ️ [INFO] 🖱️ Clicando em SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Redirecionado para página de login PDPJ
+[LOG] ℹ️ [INFO] 📝 Preenchendo credenciais...
+[LOG] ✅ [SUCCESS] ✅ CPF preenchido
+[LOG] ✅ [SUCCESS] ✅ Senha preenchida
+[LOG] ℹ️ [INFO] 🚀 Submetendo login...
+[LOG] ✅ [SUCCESS] ✅ Login submetido
+[LOG] ℹ️ [INFO] 🔍 Aguardando campo OTP aparecer... {"url":"https://sso.cloud.pje.jus.br/auth/realms/pje/login-actions/authenticate?execution=379d879e-5e45-40b9-b272-464174820ed5&client_id=pje-trt9-1g&tab_id=bU867rFGyjU"}
+[LOG] ℹ️ [INFO] 📱 Campo OTP detectado, obtendo código...
+[LOG] ✅ [SUCCESS] ✅ OTP obtido: 600137
+[LOG] ℹ️ [INFO] 📱 Próximo OTP disponível: 355488 (será usado se o atual falhar)
+[LOG] ✅ [SUCCESS] ✅ OTP preenchido no campo
+[LOG] ℹ️ [INFO] 🖱️ Clicando em validar OTP...
+[LOG] ✅ [SUCCESS] ✅ OTP aceito! Redirecionando...
+[LOG] ℹ️ [INFO] ⏳ Aguardando redirects do SSO...
+[LOG] ✅ [SUCCESS] ✅ Redirecionado para domínio PJE {"url":"https://pje.trt9.jus.br/pjekz/quadro-avisos/visualizar"}
+[LOG] ℹ️ [INFO] 🔑 Extraindo JWT do cookie...
+[LOG] ℹ️ [INFO] 📍 URL atual: https://pje.trt9.jus.br/pjekz/quadro-avisos/visualizar {"hostname":"pje.trt9.jus.br"}
+[LOG] ℹ️ [INFO] ⏳ Aguardando cookie access_token...
+[LOG] ✅ [SUCCESS] ✅ Cookie access_token encontrado! {"domain":"pje.trt9.jus.br","path":"/"}
+[LOG] ✅ [SUCCESS] ✅ ID advogado do JWT: 626185
+[LOG] ℹ️ [INFO] 👤 ID Advogado: 626185
+[LOG] ✅ [SUCCESS] ✅ Tokens capturados {"accessToken":"eyJraWQiOiJicWlNdTVsMXdwYUhSUE...","xsrfToken":"presente"}
+[LOG] ✅ [SUCCESS] ✅ Autenticação concluída com sucesso! {"idAdvogado":"626185","cpf":"","nome":"PEDRO ZATTAR EUGENIO"}
+[ERROR] ❌ Erro ao salvar processos no banco: {}
+[LOG] 
+✅ Captura concluída com sucesso!
+
+[LOG] ⏱️  Duração: 32.10 segundos
+
+[LOG] 📊 Resultados:
+[LOG]   - Total de processos: 41
+[LOG]   - Primeiros 5 processos:
+[LOG]     1. 0000719-43.2024.5.09.0655 - ATSum
+[LOG]        Autora: KEYLA DE FARIA DOS SANTOS
+[LOG]        Ré: PONTUAL SERVICOS TERCEIRIZADOS LTDA
+[LOG]        Órgão: VARA DO TRABALHO DE ASSIS CHATEAUBRIAND
+[LOG] 
+[LOG]     2. 0000536-72.2024.5.09.0655 - ATSum
+[LOG]        Autora: KEYLA DE FARIA DOS SANTOS
+[LOG]        Ré: WMBA SERVICOS EIRELI
+[LOG]        Órgão: VARA DO TRABALHO DE ASSIS CHATEAUBRIAND
+[LOG] 
+[LOG]     3. 0001031-34.2024.5.09.0068 - ATSum
+[LOG]        Autora: LUCAS DA SILVA ARRUDA
+[LOG]        Ré: FRIGORIFICO LUNATO LTDA
+[LOG]        Órgão: 01ª VARA DO TRABALHO DE TOLEDO
+[LOG] 
+[LOG]     4. 0000015-10.2025.5.09.0133 - ATSum
+[LOG]        Autora: RAFAEL AUGUSTO FLAUSINO ALVES
+[LOG]        Ré: UBER DO BRASIL TECNOLOGIA LTDA.
+[LOG]        Órgão: 02ª VARA DO TRABALHO DE APUCARANA
+[LOG] 
+[LOG]     5. 0000071-35.2023.5.09.0029 - ATSum
+[LOG]        Autora: DIEGO SOUZA RIBEIRO
+[LOG]        Ré: RAPPI BRASIL INTERMEDIACAO DE NEGOCIOS LTDA
+[LOG]        Órgão: 20ª VARA DO TRABALHO DE CURITIBA
+[LOG] 

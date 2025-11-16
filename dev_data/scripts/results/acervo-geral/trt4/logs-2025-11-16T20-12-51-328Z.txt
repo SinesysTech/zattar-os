@@ -1,0 +1,24 @@
+=== LOGS DE EXECUÇÃO (ERRO) ===
+Timestamp: 2025-11-16T20-12-51-328Z
+TRT: TRT4
+Grau: primeiro_grau
+
+=== ERRO ===
+browserContext.newPage: Target page, context or browser has been closed
+
+=== LOGS DO CONSOLE ===
+[LOG] 
+🚀 Iniciando teste de captura - Acervo Geral
+
+[LOG] Configuração:
+[LOG]   - TRT: TRT4
+[LOG]   - Grau: primeiro_grau
+[LOG]   - Timestamp: 2025-11-16T20-12-51-328Z
+
+[LOG] ✅ Credencial encontrada: {"advogado":"Pedro Zattar Eugenio","cpf":"07529294610","oab":"128404/MG"}
+[LOG] ✅ Configuração do tribunal encontrada: {"nome":"TRT da 4ª Região","loginUrl":"https://pje.trt4.jus.br/primeirograu/login.seam","baseUrl":"https://pje.trt4.jus.br"}
+[LOG] 
+⏳ Iniciando autenticação e captura de Acervo Geral...
+
+[LOG] ℹ️ [INFO] 🚀 Iniciando autenticação PJE com Firefox... {"loginUrl":"https://pje.trt4.jus.br/primeirograu/login.seam","headless":true}
+[LOG] ✅ [SUCCESS] ✅ Browser Firefox lançado

@@ -135,7 +135,7 @@ async function processOTP(
 
   // Obter OTP atual e próximo (a API sempre retorna ambos quando disponível)
   const otpResult = await getOTP(twofauthConfig);
-  let currentOtp = otpResult.password;
+  const currentOtp = otpResult.password;
   const nextOtp = otpResult.nextPassword;
 
   log('success', `✅ OTP obtido: ${currentOtp}`);

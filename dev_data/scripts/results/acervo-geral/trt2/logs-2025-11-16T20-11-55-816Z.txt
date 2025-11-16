@@ -1,0 +1,85 @@
+=== LOGS DE EXECUÇÃO ===
+Timestamp: 2025-11-16T20-11-55-816Z
+TRT: TRT2
+Grau: primeiro_grau
+Duração: 37.02 segundos
+Total de processos: 188
+Persistência: Não disponível
+
+=== LOGS DO CONSOLE ===
+[LOG] 
+🚀 Iniciando teste de captura - Acervo Geral
+
+[LOG] Configuração:
+[LOG]   - TRT: TRT2
+[LOG]   - Grau: primeiro_grau
+[LOG]   - Timestamp: 2025-11-16T20-11-55-816Z
+
+[LOG] ✅ Credencial encontrada: {"advogado":"Pedro Zattar Eugenio","cpf":"07529294610","oab":"128404/MG"}
+[LOG] ✅ Configuração do tribunal encontrada: {"nome":"TRT da 2ª Região","loginUrl":"https://pje.trt2.jus.br/primeirograu/login.seam","baseUrl":"https://pje.trt2.jus.br"}
+[LOG] 
+⏳ Iniciando autenticação e captura de Acervo Geral...
+
+[LOG] ℹ️ [INFO] 🚀 Iniciando autenticação PJE com Firefox... {"loginUrl":"https://pje.trt2.jus.br/primeirograu/login.seam","headless":true}
+[LOG] ✅ [SUCCESS] ✅ Browser Firefox lançado
+[LOG] ℹ️ [INFO] 🌐 Navegando para página de login... {"url":"https://pje.trt2.jus.br/primeirograu/login.seam"}
+[LOG] ℹ️ [INFO] 🔑 Buscando botão SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Botão SSO encontrado
+[LOG] ℹ️ [INFO] 🖱️ Clicando em SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Redirecionado para página de login PDPJ
+[LOG] ℹ️ [INFO] 📝 Preenchendo credenciais...
+[LOG] ✅ [SUCCESS] ✅ CPF preenchido
+[LOG] ✅ [SUCCESS] ✅ Senha preenchida
+[LOG] ℹ️ [INFO] 🚀 Submetendo login...
+[LOG] ✅ [SUCCESS] ✅ Login submetido
+[LOG] ℹ️ [INFO] 🔍 Aguardando campo OTP aparecer... {"url":"https://sso.cloud.pje.jus.br/auth/realms/pje/login-actions/authenticate?execution=379d879e-5e45-40b9-b272-464174820ed5&client_id=pje-trt2-1g&tab_id=qtshSf_va14"}
+[LOG] ℹ️ [INFO] 📱 Campo OTP detectado, obtendo código...
+[LOG] ✅ [SUCCESS] ✅ OTP obtido: 365794
+[LOG] ℹ️ [INFO] 📱 Próximo OTP disponível: 194378 (será usado se o atual falhar)
+[LOG] ✅ [SUCCESS] ✅ OTP preenchido no campo
+[LOG] ℹ️ [INFO] 🖱️ Clicando em validar OTP...
+[LOG] ✅ [SUCCESS] ✅ OTP aceito! Redirecionando...
+[LOG] ℹ️ [INFO] ⏳ Aguardando redirects do SSO...
+[LOG] ✅ [SUCCESS] ✅ Redirecionado para domínio PJE {"url":"https://pje.trt2.jus.br/pjekz/painel/usuario-externo"}
+[LOG] ℹ️ [INFO] 🔑 Extraindo JWT do cookie...
+[LOG] ℹ️ [INFO] 📍 URL atual: https://pje.trt2.jus.br/pjekz/painel/usuario-externo {"hostname":"pje.trt2.jus.br"}
+[LOG] ℹ️ [INFO] ⏳ Aguardando cookie access_token...
+[LOG] ✅ [SUCCESS] ✅ Cookie access_token encontrado! {"domain":"pje.trt2.jus.br","path":"/"}
+[LOG] ✅ [SUCCESS] ✅ ID advogado do JWT: 1320867
+[LOG] ℹ️ [INFO] 👤 ID Advogado: 1320867
+[LOG] ✅ [SUCCESS] ✅ Tokens capturados {"accessToken":"eyJraWQiOiJJWDBETTdYYkN4ZGNIR0...","xsrfToken":"presente"}
+[LOG] ✅ [SUCCESS] ✅ Autenticação concluída com sucesso! {"idAdvogado":"1320867","cpf":"","nome":"PEDRO ZATTAR EUGENIO"}
+[ERROR] ❌ Erro ao salvar processos no banco: {}
+[LOG] 
+✅ Captura concluída com sucesso!
+
+[LOG] ⏱️  Duração: 37.02 segundos
+
+[LOG] 📊 Resultados:
+[LOG]   - Total de processos: 188
+[LOG]   - Primeiros 5 processos:
+[LOG]     1. 1001355-12.2025.5.02.0312 - ATSum
+[LOG]        Autora: THIAGO SANTOS DE SENA
+[LOG]        Ré: GPS AIR - SERVICOS AUXILIARES AO TRANSPORTE AEREO LTDA                                                                                                
+[LOG]        Órgão: 2ª Vara do Trabalho de Guarulhos
+[LOG] 
+[LOG]     2. 1000735-50.2025.5.02.0263 - ATOrd
+[LOG]        Autora: DAVID MARTTIN DA SILVA RODRIGUES
+[LOG]        Ré: IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.
+[LOG]        Órgão: 3ª Vara do Trabalho de Diadema
+[LOG] 
+[LOG]     3. 1001017-80.2025.5.02.0007 - ATSum
+[LOG]        Autora: DANIEL DAVID DE OLIVEIRA SOUZA
+[LOG]        Ré: CINEMARK BRASIL S.A.                                                                                                                                  
+[LOG]        Órgão: 7ª Vara do Trabalho de São Paulo
+[LOG] 
+[LOG]     4. 1003369-48.2025.5.02.0221 - ATSum
+[LOG]        Autora: CAMILA NUNES DE SOUZA
+[LOG]        Ré: EBAZAR.COM.BR. LTDA
+[LOG]        Órgão: Vara do Trabalho de Cajamar
+[LOG] 
+[LOG]     5. 1000010-41.2025.5.02.0011 - ATSum
+[LOG]        Autora: GABRIEL BIANKATO DA SILVA
+[LOG]        Ré: IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.
+[LOG]        Órgão: 11ª Vara do Trabalho de São Paulo
+[LOG] 

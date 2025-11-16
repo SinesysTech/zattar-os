@@ -1,0 +1,131 @@
+{
+  "timestamp": "2025-11-16T20:40:50.310Z",
+  "grau": "primeiro_grau",
+  "totalTRTs": 24,
+  "sucessos": 0,
+  "falhas": 24,
+  "totalProcessosCapturados": 0,
+  "duracaoTotalSegundos": 0,
+  "resultados": [
+    {
+      "trt": "TRT1",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT2",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT3",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT4",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT5",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT6",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT7",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT8",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT9",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT10",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT11",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT12",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT13",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT14",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT15",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT16",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT17",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT18",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT19",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT20",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT21",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT22",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT23",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    },
+    {
+      "trt": "TRT24",
+      "sucesso": false,
+      "erro": "Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts"
+    }
+  ]
+}

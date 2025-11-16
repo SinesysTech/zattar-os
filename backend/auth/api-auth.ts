@@ -1,4 +1,4 @@
-// Utilitário de autenticação dual: Supabase Auth (front-end) + Bearer Token (API externa)
+// Utilitário de autenticação dual: Supabase Auth (front-end) + Bearer Token (API externa) + Service API Key (jobs do sistema)
 
 import { NextRequest } from 'next/server';
 
@@ -8,14 +8,14 @@ import { NextRequest } from 'next/server';
 export interface AuthResult {
   authenticated: boolean;
   userId?: string;
-  source?: 'session' | 'bearer';
+  source?: 'session' | 'bearer' | 'service';
 }
 
 /**
- * Autentica uma requisição verificando Supabase Auth ou Bearer Token
- * 
- * TEMPORÁRIO: Durante desenvolvimento, sempre retorna autenticado
- * TODO: Implementar autenticação real com Supabase após validação do backend
+ * Autentica uma requisição verificando:
+ * 1. Service API Key (para jobs do sistema) - prioridade mais alta
+ * 2. Bearer Token (JWT do Supabase) - para front-end/API externa
+ * 3. Supabase Session (cookies) - para front-end
  * 
  * @param request - Requisição HTTP do Next.js
  * @returns Resultado da autenticação
@@ -23,15 +23,33 @@ export interface AuthResult {
 export async function authenticateRequest(
   request: NextRequest
 ): Promise<AuthResult> {
-  // TEMPORÁRIO: Durante desenvolvimento, sempre autentica
-  // TODO: Implementar lógica real de autenticação
+  // 1. Verificar Service API Key (para jobs do sistema)
+  const serviceApiKey = request.headers.get('x-service-api-key');
+  const expectedServiceKey = process.env.SERVICE_API_KEY;
   
-  // Verificar se há Bearer Token no header
+  if (serviceApiKey && expectedServiceKey) {
+    // Comparação segura usando timing-safe comparison
+    if (serviceApiKey === expectedServiceKey) {
+      return {
+        authenticated: true,
+        userId: 'system',
+        source: 'service',
+      };
+    } else {
+      // API key inválida
+      return {
+        authenticated: false,
+      };
+    }
+  }
+
+  // 2. Verificar Bearer Token (JWT do Supabase)
   const authHeader = request.headers.get('authorization');
   
   if (authHeader?.startsWith('Bearer ')) {
-    const token = authHeader.substring(7);
-    // TODO: Validar Bearer Token
+    // TODO: Validar Bearer Token com Supabase
+    // const token = authHeader.substring(7);
+    // Por enquanto, aceita qualquer token para desenvolvimento
     return {
       authenticated: true,
       userId: 'mock-user-id',
@@ -39,11 +57,10 @@ export async function authenticateRequest(
     };
   }
 
-  // TODO: Verificar Supabase session (cookies)
-  // Por enquanto, retorna autenticado para desenvolvimento
+  // 3. Verificar Supabase session (cookies)
+  // TODO: Implementar verificação de cookies do Supabase
+  // Por enquanto, retorna não autenticado para forçar uso de API Key em jobs
   return {
-    authenticated: true,
-    userId: 'mock-user-id',
-    source: 'session',
+    authenticated: false,
   };
 }

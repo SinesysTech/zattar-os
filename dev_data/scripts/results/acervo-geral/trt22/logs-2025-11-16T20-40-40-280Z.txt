@@ -1,0 +1,16 @@
+=== LOGS DE EXECUÇÃO (ERRO) ===
+Timestamp: 2025-11-16T20-40-40-280Z
+TRT: TRT22
+Grau: primeiro_grau
+
+=== ERRO ===
+Missing Supabase configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY environment variables, or configure MOCK_SUPABASE_CONFIG in dev_data/storage/mock-config.ts
+
+=== LOGS DO CONSOLE ===
+[LOG] 
+🚀 Iniciando captura de Acervo Geral (Job do Sistema)
+
+[LOG] Configuração:
+[LOG]   - TRT: TRT22
+[LOG]   - Grau: primeiro_grau
+[LOG]   - Timestamp: 2025-11-16T20-40-40-280Z
