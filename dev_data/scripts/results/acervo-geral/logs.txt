@@ -1,0 +1,83 @@
+=== LOGS DE EXECUÇÃO ===
+Timestamp: 2025-11-16T16-24-22-467Z
+TRT: TRT1
+Grau: primeiro_grau
+Duração: 33.19 segundos
+Total de processos: 215
+
+=== LOGS DO CONSOLE ===
+[LOG] 
+🚀 Iniciando teste de captura - Acervo Geral
+
+[LOG] Configuração:
+[LOG]   - TRT: TRT1
+[LOG]   - Grau: primeiro_grau
+[LOG]   - Timestamp: 2025-11-16T16-24-22-467Z
+
+[LOG] ✅ Credencial encontrada: {"advogado":"Pedro Zattar Eugenio","cpf":"07529294610","oab":"128404/MG"}
+[LOG] ✅ Configuração do tribunal encontrada: {"nome":"TRT da 1ª Região","loginUrl":"https://pje.trt1.jus.br/primeirograu/login.seam","baseUrl":"https://pje.trt1.jus.br"}
+[LOG] 
+⏳ Iniciando autenticação e captura de Acervo Geral...
+
+[LOG] ℹ️ [INFO] 🚀 Iniciando autenticação PJE com Firefox... {"loginUrl":"https://pje.trt1.jus.br/primeirograu/login.seam","headless":true}
+[LOG] ✅ [SUCCESS] ✅ Browser Firefox lançado
+[LOG] ℹ️ [INFO] 🌐 Navegando para página de login... {"url":"https://pje.trt1.jus.br/primeirograu/login.seam"}
+[LOG] ℹ️ [INFO] 🔑 Buscando botão SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Botão SSO encontrado
+[LOG] ℹ️ [INFO] 🖱️ Clicando em SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Redirecionado para página de login PDPJ
+[LOG] ℹ️ [INFO] 📝 Preenchendo credenciais...
+[LOG] ✅ [SUCCESS] ✅ CPF preenchido
+[LOG] ✅ [SUCCESS] ✅ Senha preenchida
+[LOG] ℹ️ [INFO] 🚀 Submetendo login...
+[LOG] ✅ [SUCCESS] ✅ Login submetido
+[LOG] ℹ️ [INFO] 🔍 Aguardando campo OTP aparecer... {"url":"https://sso.cloud.pje.jus.br/auth/realms/pje/login-actions/authenticate?execution=379d879e-5e45-40b9-b272-464174820ed5&client_id=pje-trt1-1g&tab_id=dBw8QKrOz7w"}
+[LOG] ℹ️ [INFO] 📱 Campo OTP detectado, obtendo código...
+[LOG] ✅ [SUCCESS] ✅ OTP obtido: 935135
+[LOG] ℹ️ [INFO] 📱 Próximo OTP disponível: 023769 (será usado se o atual falhar)
+[LOG] ✅ [SUCCESS] ✅ OTP preenchido no campo
+[LOG] ℹ️ [INFO] 🖱️ Clicando em validar OTP...
+[LOG] ✅ [SUCCESS] ✅ OTP aceito! Redirecionando...
+[LOG] ℹ️ [INFO] ⏳ Aguardando redirects do SSO...
+[LOG] ✅ [SUCCESS] ✅ Redirecionado para domínio PJE {"url":"https://pje.trt1.jus.br/pjekz/painel/usuario-externo"}
+[LOG] ℹ️ [INFO] 🔑 Extraindo JWT do cookie...
+[LOG] ℹ️ [INFO] 📍 URL atual: https://pje.trt1.jus.br/pjekz/painel/usuario-externo {"hostname":"pje.trt1.jus.br"}
+[LOG] ℹ️ [INFO] ⏳ Aguardando cookie access_token...
+[LOG] ✅ [SUCCESS] ✅ Cookie access_token encontrado! {"domain":"pje.trt1.jus.br","path":"/"}
+[LOG] ✅ [SUCCESS] ✅ ID advogado do JWT: 63042
+[LOG] ℹ️ [INFO] 👤 ID Advogado: 63042
+[LOG] ✅ [SUCCESS] ✅ Tokens capturados {"accessToken":"eyJraWQiOiJtemdVLUdlRVBhR3BQaH...","xsrfToken":"presente"}
+[LOG] ✅ [SUCCESS] ✅ Autenticação concluída com sucesso! {"idAdvogado":"63042","cpf":"","nome":"PEDRO ZATTAR EUGENIO"}
+[LOG] 
+✅ Captura concluída com sucesso!
+
+[LOG] ⏱️  Duração: 33.19 segundos
+
+[LOG] 📊 Resultados:
+[LOG]   - Total de processos: 215
+[LOG]   - Primeiros 5 processos:
+[LOG]     1. 0101450-28.2025.5.01.0431 - ATOrd
+[LOG]        Autora: LEONARDO XAVIER DE SOUZA
+[LOG]        Ré: HOTEL NACIONAL RIO DE JANEIRO ADMINISTRADORA LTDA
+[LOG]        Órgão: 1ª Vara do Trabalho de Cabo Frio
+[LOG] 
+[LOG]     2. 0100777-02.2024.5.01.0033 - ATSum
+[LOG]        Autora: RAUL DE ASSIS PACHECO
+[LOG]        Ré: IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.                                                                                                         
+[LOG]        Órgão: 33ª Vara do Trabalho do Rio de Janeiro
+[LOG] 
+[LOG]     3. 0100004-53.2023.5.01.0077 - ATSum
+[LOG]        Autora: JONATHAN MIRANDA ESTEVES
+[LOG]        Ré: RAPPI BRASIL INTERMEDIACAO DE NEGOCIOS LTDA
+[LOG]        Órgão: 77ª Vara do Trabalho do Rio de Janeiro
+[LOG] 
+[LOG]     4. 0100008-74.2024.5.01.0265 - ATSum
+[LOG]        Autora: DIOGO GARCIA REI
+[LOG]        Ré: IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.                                                                                                         
+[LOG]        Órgão: 5ª Vara do Trabalho de São Gonçalo
+[LOG] 
+[LOG]     5. 0100016-92.2025.5.01.0046 - ATSum
+[LOG]        Autora: WAGNER BARROS DE LIMA
+[LOG]        Ré: UBER DO BRASIL TECNOLOGIA LTDA.
+[LOG]        Órgão: 46ª Vara do Trabalho do Rio de Janeiro
+[LOG] 

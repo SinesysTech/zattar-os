@@ -1,0 +1,70 @@
+=== LOGS DE EXECUÇÃO ===
+Timestamp: 2025-11-16T16-38-05-725Z
+TRT: TRT1
+Grau: primeiro_grau
+Filtro: sem_prazo
+Duração: 0.00 segundos
+Total de processos: 0
+
+=== LOGS DO CONSOLE ===
+[LOG] 
+🚀 Iniciando teste de captura - Pendentes de Manifestação (SEM PRAZO)
+
+[LOG] Configuração:
+[LOG]   - TRT: TRT1
+[LOG]   - Grau: primeiro_grau
+[LOG]   - Filtro: sem_prazo
+[LOG]   - Timestamp: 2025-11-16T16-38-05-725Z
+
+[LOG] ✅ Credencial encontrada: {"advogado":"Pedro Zattar Eugenio","cpf":"07529294610","oab":"128404/MG"}
+[LOG] ✅ Configuração do tribunal encontrada: {"nome":"TRT da 1ª Região","loginUrl":"https://pje.trt1.jus.br/primeirograu/login.seam","baseUrl":"https://pje.trt1.jus.br"}
+[LOG] 
+⏳ Iniciando autenticação e captura de Pendentes de Manifestação (SEM PRAZO)...
+
+[LOG] ℹ️ [INFO] 🚀 Iniciando autenticação PJE com Firefox... {"loginUrl":"https://pje.trt1.jus.br/primeirograu/login.seam","headless":true}
+[LOG] ✅ [SUCCESS] ✅ Browser Firefox lançado
+[LOG] ℹ️ [INFO] 🌐 Navegando para página de login... {"url":"https://pje.trt1.jus.br/primeirograu/login.seam"}
+[LOG] ℹ️ [INFO] 🔑 Buscando botão SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Botão SSO encontrado
+[LOG] ℹ️ [INFO] 🖱️ Clicando em SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Redirecionado para página de login PDPJ
+[LOG] ℹ️ [INFO] 📝 Preenchendo credenciais...
+[LOG] ✅ [SUCCESS] ✅ CPF preenchido
+[LOG] ✅ [SUCCESS] ✅ Senha preenchida
+[LOG] ℹ️ [INFO] 🚀 Submetendo login...
+[LOG] ✅ [SUCCESS] ✅ Login submetido
+[LOG] ℹ️ [INFO] 🔍 Aguardando campo OTP aparecer... {"url":"https://sso.cloud.pje.jus.br/auth/realms/pje/login-actions/authenticate?execution=379d879e-5e45-40b9-b272-464174820ed5&client_id=pje-trt1-1g&tab_id=Dvp8BbSmcoM"}
+[LOG] ℹ️ [INFO] 📱 Campo OTP detectado, obtendo código...
+[LOG] ✅ [SUCCESS] ✅ OTP obtido: 963344
+[LOG] ℹ️ [INFO] 📱 Próximo OTP disponível: 560460 (será usado se o atual falhar)
+[LOG] ✅ [SUCCESS] ✅ OTP preenchido no campo
+[LOG] ℹ️ [INFO] 🖱️ Clicando em validar OTP...
+[LOG] ✅ [SUCCESS] ✅ OTP aceito! Redirecionando...
+[LOG] ℹ️ [INFO] ⏳ Aguardando redirects do SSO...
+[LOG] ✅ [SUCCESS] ✅ Redirecionado para domínio PJE {"url":"https://pje.trt1.jus.br/pjekz/painel/usuario-externo"}
+[LOG] ℹ️ [INFO] 🔑 Extraindo JWT do cookie...
+[LOG] ℹ️ [INFO] 📍 URL atual: https://pje.trt1.jus.br/pjekz/painel/usuario-externo {"hostname":"pje.trt1.jus.br"}
+[LOG] ℹ️ [INFO] ⏳ Aguardando cookie access_token...
+[LOG] ✅ [SUCCESS] ✅ Cookie access_token encontrado! {"domain":"pje.trt1.jus.br","path":"/"}
+[LOG] ✅ [SUCCESS] ✅ ID advogado do JWT: 63042
+[LOG] ℹ️ [INFO] 👤 ID Advogado: 63042
+[LOG] ✅ [SUCCESS] ✅ Tokens capturados {"accessToken":"eyJraWQiOiJtemdVLUdlRVBhR3BQaH...","xsrfToken":"presente"}
+[LOG] ✅ [SUCCESS] ✅ Autenticação concluída com sucesso! {"idAdvogado":"63042","cpf":"","nome":"PEDRO ZATTAR EUGENIO"}
+[ERROR] 
+❌ Erro durante captura:
+[ERROR]   Mensagem: Campo 'resultado' não é um array na resposta da API. Estrutura recebida: {
+  "pagina": 1,
+  "tamanhoPagina": 100,
+  "qtdPaginas": 0,
+  "totalRegistros": 0
+}
+[ERROR]   Stack: Error: Campo 'resultado' não é um array na resposta da API. Estrutura recebida: {
+  "pagina": 1,
+  "tamanhoPagina": 100,
+  "qtdPaginas": 0,
+  "totalRegistros": 0
+}
+    at obterTodosProcessos (E:\Zattar Advogados\sinesys\sinesys\backend\captura\services\trt\pje-api.service.ts:232:11)
+    at async pendentesManifestacaoCapture (E:\Zattar Advogados\sinesys\sinesys\backend\captura\services\trt\pendentes-manifestacao.service.ts:85:23)
+    at async testarPendentesManifestacaoSemPrazo (E:\Zattar Advogados\sinesys\sinesys\dev_data\scripts\test-capture-pendentes-manifestacao-sem-prazo.ts:141:17)
+    at async main (E:\Zattar Advogados\sinesys\sinesys\dev_data\scripts\test-capture-pendentes-manifestacao-sem-prazo.ts:222:3)

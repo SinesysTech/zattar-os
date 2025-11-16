@@ -1,0 +1,103 @@
+=== LOGS DE EXECUÇÃO ===
+Timestamp: 2025-11-16T17-29-51-311Z
+TRT: TRT1
+Grau: primeiro_grau
+Duração: 34.02 segundos
+Total de audiências: 19
+
+=== LOGS DO CONSOLE ===
+[LOG] 
+🚀 Iniciando teste de captura - Audiências
+
+[LOG] Configuração:
+[LOG]   - TRT: TRT1
+[LOG]   - Grau: primeiro_grau
+[LOG]   - Timestamp: 2025-11-16T17-29-51-311Z
+
+[LOG] ✅ Credencial encontrada: {"advogado":"Pedro Zattar Eugenio","cpf":"07529294610","oab":"128404/MG"}
+[LOG] ✅ Configuração do tribunal encontrada: {"nome":"TRT da 1ª Região","loginUrl":"https://pje.trt1.jus.br/primeirograu/login.seam","baseUrl":"https://pje.trt1.jus.br"}
+[LOG] 
+⏳ Iniciando autenticação e captura de Audiências...
+
+[LOG] 📅 Período de busca: Padrão (hoje até +365 dias)
+[LOG] 📋 Código de situação: M (Marcadas/Designadas)
+
+[LOG] ℹ️ [INFO] 🚀 Iniciando autenticação PJE com Firefox... {"loginUrl":"https://pje.trt1.jus.br/primeirograu/login.seam","headless":true}
+[LOG] ✅ [SUCCESS] ✅ Browser Firefox lançado
+[LOG] ℹ️ [INFO] 🌐 Navegando para página de login... {"url":"https://pje.trt1.jus.br/primeirograu/login.seam"}
+[LOG] ℹ️ [INFO] 🔑 Buscando botão SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Botão SSO encontrado
+[LOG] ℹ️ [INFO] 🖱️ Clicando em SSO PDPJ...
+[LOG] ✅ [SUCCESS] ✅ Redirecionado para página de login PDPJ
+[LOG] ℹ️ [INFO] 📝 Preenchendo credenciais...
+[LOG] ✅ [SUCCESS] ✅ CPF preenchido
+[LOG] ✅ [SUCCESS] ✅ Senha preenchida
+[LOG] ℹ️ [INFO] 🚀 Submetendo login...
+[LOG] ✅ [SUCCESS] ✅ Login submetido
+[LOG] ℹ️ [INFO] 🔍 Aguardando campo OTP aparecer... {"url":"https://sso.cloud.pje.jus.br/auth/realms/pje/login-actions/authenticate?execution=379d879e-5e45-40b9-b272-464174820ed5&client_id=pje-trt1-1g&tab_id=dJbAl0LyxCQ"}
+[LOG] ℹ️ [INFO] 📱 Campo OTP detectado, obtendo código...
+[LOG] ✅ [SUCCESS] ✅ OTP obtido: 860143
+[LOG] ℹ️ [INFO] 📱 Próximo OTP disponível: 005375 (será usado se o atual falhar)
+[LOG] ✅ [SUCCESS] ✅ OTP preenchido no campo
+[LOG] ℹ️ [INFO] 🖱️ Clicando em validar OTP...
+[LOG] ✅ [SUCCESS] ✅ OTP aceito! Redirecionando...
+[LOG] ℹ️ [INFO] ⏳ Aguardando redirects do SSO...
+[LOG] ✅ [SUCCESS] ✅ Redirecionado para domínio PJE {"url":"https://pje.trt1.jus.br/pjekz/painel/usuario-externo"}
+[LOG] ℹ️ [INFO] 🔑 Extraindo JWT do cookie...
+[LOG] ℹ️ [INFO] 📍 URL atual: https://pje.trt1.jus.br/pjekz/painel/usuario-externo {"hostname":"pje.trt1.jus.br"}
+[LOG] ℹ️ [INFO] ⏳ Aguardando cookie access_token...
+[LOG] ✅ [SUCCESS] ✅ Cookie access_token encontrado! {"domain":"pje.trt1.jus.br","path":"/"}
+[LOG] ✅ [SUCCESS] ✅ ID advogado do JWT: 63042
+[LOG] ℹ️ [INFO] 👤 ID Advogado: 63042
+[LOG] ✅ [SUCCESS] ✅ Tokens capturados {"accessToken":"eyJraWQiOiJtemdVLUdlRVBhR3BQaH...","xsrfToken":"presente"}
+[LOG] ✅ [SUCCESS] ✅ Autenticação concluída com sucesso! {"idAdvogado":"63042","cpf":"","nome":"PEDRO ZATTAR EUGENIO"}
+[LOG] 📡 Chamando API de audiências... {"dataInicio":"2025-11-16","dataFim":"2026-11-16","codigoSituacao":"M"}
+[LOG] 🔍 [obterTodasAudiencias] Iniciando busca de audiências... {"dataInicio":"2025-11-16","dataFim":"2026-11-16","codigoSituacao":"M"}
+[LOG] 📄 [obterTodasAudiencias] Buscando primeira página...
+[LOG] 🌐 [obterPautaAudiencias] Chamando API: {"endpoint":"/pje-comum-api/api/pauta-usuarios-externos","params":{"dataInicio":"2025-11-16","dataFim":"2026-11-16","numeroPagina":1,"tamanhoPagina":100,"codigoSituacao":"M","ordenacao":"asc"}}
+[LOG] ✅ [obterPautaAudiencias] Resposta recebida: {"pagina":1,"tamanhoPagina":19,"qtdPaginas":0,"totalRegistros":19,"resultadoLength":19}
+[LOG] 📊 [obterTodasAudiencias] Primeira página recebida: {"totalRegistros":19,"qtdPaginas":0,"resultadoLength":19}
+[LOG] ✅ [obterTodasAudiencias] Adicionando 19 audiências da primeira página
+[LOG] 📄 [obterTodasAudiencias] Total de páginas: 1
+[LOG] ✅ [obterTodasAudiencias] Total de audiências obtidas: 19
+[LOG] ✅ API de audiências retornou: {"total":19,"primeiras3":[{"processo":"0101182-81.2025.5.01.0072","dataInicio":"2025-11-19T09:00:00","status":"M"},{"processo":"0100434-38.2023.5.01.0066","dataInicio":"2025-11-19T12:30:00","status":"M"},{"processo":"0100018-72.2024.5.01.0248","dataInicio":"2025-11-24T11:00:00","status":"M"}]}
+[LOG] 
+✅ Captura concluída com sucesso!
+
+[LOG] ⏱️  Duração: 34.02 segundos
+
+[LOG] 📊 Resultados:
+[LOG]   - Período: 2025-11-16 até 2026-11-16
+[LOG]   - Total de audiências: 19
+[LOG]   - Primeiras 5 audiências:
+[LOG]     1. Processo: 0101182-81.2025.5.01.0072
+[LOG]        Data/Hora: 2025-11-19T09:00:00
+[LOG]        Tipo: Una
+[LOG]        Sala: 72ª Vara do Trabalho do Rio de Janeiro
+[LOG]        Status: M
+[LOG] 
+[LOG]     2. Processo: 0100434-38.2023.5.01.0066
+[LOG]        Data/Hora: 2025-11-19T12:30:00
+[LOG]        Tipo: Instrução por videoconferência
+[LOG]        Sala: VT66RJ
+[LOG]        Status: M
+[LOG]        Virtual: https://trt1-jus-br.zoom.us/j/85739445124
+[LOG] 
+[LOG]     3. Processo: 0100018-72.2024.5.01.0248
+[LOG]        Data/Hora: 2025-11-24T11:00:00
+[LOG]        Tipo: Instrução por videoconferência
+[LOG]        Sala: 08VTNT -- A
+[LOG]        Status: M
+[LOG] 
+[LOG]     4. Processo: 0101061-77.2023.5.01.0022
+[LOG]        Data/Hora: 2025-11-25T09:40:00
+[LOG]        Tipo: Instrução (rito sumaríssimo)
+[LOG]        Sala: VT22RJ - sala principal
+[LOG]        Status: M
+[LOG] 
+[LOG]     5. Processo: 0100915-84.2024.5.01.0221
+[LOG]        Data/Hora: 2025-11-27T11:00:00
+[LOG]        Tipo: Instrução por videoconferência
+[LOG]        Sala: 01VTNI
+[LOG]        Status: M
+[LOG] 
