@@ -7,12 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:acervo-geral": "tsx dev_data/scripts/test-capture-acervo-geral.ts",
-    "test:pendentes": "tsx dev_data/scripts/test-capture-pendentes-manifestacao.ts",
-    "test:pendentes-no-prazo": "tsx dev_data/scripts/test-capture-pendentes-manifestacao-no-prazo.ts",
-    "test:pendentes-sem-prazo": "tsx dev_data/scripts/test-capture-pendentes-manifestacao-sem-prazo.ts",
-    "test:arquivados": "tsx dev_data/scripts/test-capture-arquivados.ts",
-    "test:audiencias": "tsx dev_data/scripts/test-capture-audiencias.ts"
+        "test:api-acervo-geral": "tsx dev_data/scripts/test-api-acervo-geral.ts",
+        "test:api-arquivados": "tsx dev_data/scripts/test-api-arquivados.ts",
+        "test:api-audiencias": "tsx dev_data/scripts/test-api-audiencias.ts",
+        "test:api-pendentes-manifestacao": "tsx dev_data/scripts/test-api-pendentes-manifestacao.ts",
+        "debug:credentials": "tsx dev_data/scripts/debug-check-credentials.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
@@ -32,6 +31,7 @@
     "@types/react-dom": "^19",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-react": "^5.18.0",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
     "tailwindcss": "^4",

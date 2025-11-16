@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-11-16T22-43-51-161Z",
+  "grau": "primeiro_grau",
+  "totalTRTs": 1,
+  "sucessos": 1,
+  "falhas": 0,
+  "totalProcessosCapturados": 1,
+  "duracaoTotalSegundos": 32.32,
+  "resultados": [
+    {
+      "trt": "TRT14",
+      "sucesso": true,
+      "totalProcessos": 1,
+      "duracaoSegundos": 32.32
+    }
+  ]
+}

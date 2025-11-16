@@ -47,10 +47,8 @@ export type CodigoTRT =
  * Parâmetros base para todas as rotas de captura TRT
  */
 export interface BaseCapturaTRTParams {
-  /** ID da credencial armazenada no banco de dados */
-  credential_id: number;
-  /** Tipo de rota a ser capturada */
-  tipo: TipoRotaTRT;
+  /** ID do advogado na tabela advogados */
+  advogado_id: number;
   /** Código do TRT (ex: 'TRT1', 'TRT2', etc.) */
   trt_codigo: CodigoTRT;
   /** Grau do processo ('primeiro_grau' ou 'segundo_grau') */

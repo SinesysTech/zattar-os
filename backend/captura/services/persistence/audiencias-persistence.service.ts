@@ -168,7 +168,7 @@ export async function salvarAudiencias(
 
   // UPSERT em lotes para melhor performance
   const BATCH_SIZE = 100;
-  let inseridos = 0;
+  const inseridos = 0; // UPSERT não distingue inseridos de atualizados, sempre 0
   let atualizados = 0;
   let erros = 0;
 
