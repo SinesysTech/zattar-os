@@ -93,29 +93,29 @@ export function ProcessosFiltrosAvancados({
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
-        <SheetHeader>
+      <SheetContent className="flex flex-col w-full sm:max-w-lg p-0 gap-0">
+        <SheetHeader className="px-6 pt-6 pb-4 border-b flex-shrink-0 p-0">
           <SheetTitle>Filtros Avançados</SheetTitle>
           <SheetDescription>
             Filtre os processos por critérios específicos. Os filtros são aplicados em conjunto.
           </SheetDescription>
         </SheetHeader>
 
-        <div className="mt-6 space-y-6">
+        <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
           {/* Origem */}
           <div className="space-y-2">
             <Label htmlFor="origem">Origem</Label>
             <Select
-              value={localFilters.origem || ''}
+              value={localFilters.origem || 'all'}
               onValueChange={(value) =>
-                handleFilterChange('origem', value as 'acervo_geral' | 'arquivado' | undefined)
+                handleFilterChange('origem', value === 'all' ? undefined : value as 'acervo_geral' | 'arquivado' | undefined)
               }
             >
               <SelectTrigger id="origem">
                 <SelectValue placeholder="Todas as origens" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todas as origens</SelectItem>
+                <SelectItem value="all">Todas as origens</SelectItem>
                 <SelectItem value="acervo_geral">Acervo Geral</SelectItem>
                 <SelectItem value="arquivado">Arquivado</SelectItem>
               </SelectContent>
@@ -126,14 +126,14 @@ export function ProcessosFiltrosAvancados({
           <div className="space-y-2">
             <Label htmlFor="trt">TRT</Label>
             <Select
-              value={localFilters.trt || ''}
-              onValueChange={(value) => handleFilterChange('trt', value || undefined)}
+              value={localFilters.trt || 'all'}
+              onValueChange={(value) => handleFilterChange('trt', value === 'all' ? undefined : value)}
             >
               <SelectTrigger id="trt">
                 <SelectValue placeholder="Todos os TRTs" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os TRTs</SelectItem>
+                <SelectItem value="all">Todos os TRTs</SelectItem>
                 {TRTS.map((trt) => (
                   <SelectItem key={trt} value={trt}>
                     {trt}
@@ -147,16 +147,16 @@ export function ProcessosFiltrosAvancados({
           <div className="space-y-2">
             <Label htmlFor="grau">Grau</Label>
             <Select
-              value={localFilters.grau || ''}
+              value={localFilters.grau || 'all'}
               onValueChange={(value) =>
-                handleFilterChange('grau', value as 'primeiro_grau' | 'segundo_grau' | undefined)
+                handleFilterChange('grau', value === 'all' ? undefined : value as 'primeiro_grau' | 'segundo_grau' | undefined)
               }
             >
               <SelectTrigger id="grau">
                 <SelectValue placeholder="Todos os graus" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os graus</SelectItem>
+                <SelectItem value="all">Todos os graus</SelectItem>
                 <SelectItem value="primeiro_grau">Primeiro Grau</SelectItem>
                 <SelectItem value="segundo_grau">Segundo Grau</SelectItem>
               </SelectContent>
@@ -386,12 +386,12 @@ export function ProcessosFiltrosAvancados({
           </div>
         </div>
 
-        <SheetFooter className="mt-6">
-          <Button variant="outline" onClick={handleReset}>
+        <SheetFooter className="px-6 py-4 border-t bg-background gap-2 sm:flex-row flex-shrink-0 p-0">
+          <Button variant="outline" onClick={handleReset} className="w-full sm:w-auto">
             <X className="mr-2 h-4 w-4" />
             Limpar
           </Button>
-          <Button onClick={handleApply}>Aplicar Filtros</Button>
+          <Button onClick={handleApply} className="w-full sm:w-auto">Aplicar Filtros</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
