@@ -28,7 +28,7 @@ const teams = [
   {
     name: "Zattar Advogados",
     logo: Scale,
-    plan: "Enterprise",
+    plan: "by Sinesys",
   },
 ]
 

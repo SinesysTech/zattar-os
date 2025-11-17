@@ -107,6 +107,7 @@ export interface ListarContratosParams {
   busca?: string; // Busca em observacoes
   areaDireito?: AreaDireito;
   tipoContrato?: TipoContrato;
+  tipoCobranca?: TipoCobranca;
   status?: StatusContrato;
   clienteId?: number;
   parteContrariaId?: number;
@@ -482,6 +483,10 @@ export async function listarContratos(
 
   if (params.tipoContrato) {
     query = query.eq('tipo_contrato', params.tipoContrato);
+  }
+
+  if (params.tipoCobranca) {
+    query = query.eq('tipo_cobranca', params.tipoCobranca);
   }
 
   if (params.status) {
