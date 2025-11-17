@@ -2,7 +2,7 @@
 
 // Hook para buscar usuários do sistema
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { UsuariosParams } from '@/lib/types/usuarios';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
@@ -38,6 +38,29 @@ export const useUsuarios = (params: UsuariosParams = {}): UseUsuariosResult => {
   const [paginacao, setPaginacao] = useState<UseUsuariosResult['paginacao']>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Extrair valores primitivos para usar no callback
+  const pagina = params.pagina ?? 1;
+  const limite = params.limite ?? 50;
+  const busca = params.busca || '';
+  const ativo = params.ativo;
+  const oab = params.oab || '';
+  const ufOab = params.ufOab || '';
+  
+  // Normalizar parâmetros para comparação estável
+  const paramsKey = useMemo(() => {
+    return JSON.stringify({
+      pagina,
+      limite,
+      busca,
+      ativo,
+      oab,
+      ufOab,
+    });
+  }, [pagina, limite, busca, ativo, oab, ufOab]);
+  
+  // Usar ref para comparar valores anteriores e evitar loops
+  const paramsRef = useRef<string>('');
 
   const buscarUsuarios = useCallback(async () => {
     setIsLoading(true);
@@ -47,23 +70,20 @@ export const useUsuarios = (params: UsuariosParams = {}): UseUsuariosResult => {
       // Construir query string
       const searchParams = new URLSearchParams();
       
-      if (params.pagina !== undefined) {
-        searchParams.set('pagina', params.pagina.toString());
+      searchParams.set('pagina', pagina.toString());
+      searchParams.set('limite', limite.toString());
+      
+      if (busca) {
+        searchParams.set('busca', busca);
       }
-      if (params.limite !== undefined) {
-        searchParams.set('limite', params.limite.toString());
+      if (ativo !== undefined) {
+        searchParams.set('ativo', ativo.toString());
       }
-      if (params.busca) {
-        searchParams.set('busca', params.busca);
+      if (oab) {
+        searchParams.set('oab', oab);
       }
-      if (params.ativo !== undefined) {
-        searchParams.set('ativo', params.ativo.toString());
-      }
-      if (params.oab) {
-        searchParams.set('oab', params.oab);
-      }
-      if (params.ufOab) {
-        searchParams.set('ufOab', params.ufOab);
+      if (ufOab) {
+        searchParams.set('ufOab', ufOab);
       }
 
       const response = await fetch(`/api/usuarios?${searchParams.toString()}`);
@@ -105,11 +125,16 @@ export const useUsuarios = (params: UsuariosParams = {}): UseUsuariosResult => {
     } finally {
       setIsLoading(false);
     }
-  }, [params]);
+  }, [pagina, limite, busca, ativo, oab, ufOab]);
 
   useEffect(() => {
-    buscarUsuarios();
-  }, [buscarUsuarios]);
+    // Só executar se os parâmetros realmente mudaram
+    if (paramsRef.current !== paramsKey) {
+      paramsRef.current = paramsKey;
+      buscarUsuarios();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramsKey]);
 
   return {
     usuarios,
