@@ -4,8 +4,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { obterUsuarios } from '@/backend/usuarios/services/usuarios/listar-usuarios.service';
-import { cadastrarUsuario } from '@/backend/usuarios/services/usuarios/criar-usuario.service';
-import type { UsuarioDados, ListarUsuariosParams } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import { criarUsuarioCompleto, type CriarUsuarioCompletoParams } from '@/backend/usuarios/services/usuarios/criar-usuario-completo.service';
+import type { ListarUsuariosParams } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 /**
  * @swagger
@@ -192,7 +192,7 @@ export async function POST(request: NextRequest) {
 
     // 2. Validar e parsear body da requisição
     const body = await request.json();
-    const dadosUsuario = body as UsuarioDados;
+    const dadosUsuario = body as CriarUsuarioCompletoParams;
 
     // Validações básicas
     if (!dadosUsuario.nomeCompleto || !dadosUsuario.nomeExibicao || !dadosUsuario.cpf || !dadosUsuario.emailCorporativo) {
@@ -202,8 +202,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Criar usuário
-    const resultado = await cadastrarUsuario(dadosUsuario);
+    if (!dadosUsuario.senha || dadosUsuario.senha.length < 6) {
+      return NextResponse.json(
+        { error: 'Senha é obrigatória e deve ter no mínimo 6 caracteres' },
+        { status: 400 }
+      );
+    }
+
+    // 3. Criar usuário completo (auth.users + public.usuarios)
+    const resultado = await criarUsuarioCompleto(dadosUsuario);
 
     if (!resultado.sucesso) {
       return NextResponse.json(

@@ -9,13 +9,14 @@ import { DataTableColumnHeader } from '@/components/data-table-column-header';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, Pencil, Plus } from 'lucide-react';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { UsuariosGridView } from '@/components/usuarios/usuarios-grid-view';
 import { ViewToggle } from '@/components/usuarios/view-toggle';
 import { UsuariosFiltrosAvancados } from '@/components/usuarios/usuarios-filtros-avancados';
 import { UsuarioViewSheet } from '@/components/usuarios/usuario-view-sheet';
 import { UsuarioEditSheet } from '@/components/usuarios/usuario-edit-sheet';
+import { UsuarioCreateSheet } from '@/components/usuarios/usuario-create-sheet';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import type { UsuariosFilters, ViewMode } from '@/lib/types/usuarios';
@@ -216,6 +217,7 @@ export default function UsuariosPage() {
   );
   const [viewOpen, setViewOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
+  const [createOpen, setCreateOpen] = React.useState(false);
 
   // Carregar preferência de visualização do localStorage
   React.useEffect(() => {
@@ -237,21 +239,30 @@ export default function UsuariosPage() {
   const buscaDebounced = useDebounce(busca, 500);
 
   // Parâmetros para buscar usuários
+  // Usar valores primitivos do filtros para evitar recriação desnecessária
   const params = React.useMemo(() => {
     return {
       pagina: pagina + 1, // API usa 1-indexed
       limite,
       busca: buscaDebounced || undefined,
-      ...filtros,
+      ativo: filtros.ativo,
+      oab: filtros.oab,
+      ufOab: filtros.ufOab,
     };
-  }, [pagina, limite, buscaDebounced, filtros]);
+  }, [pagina, limite, buscaDebounced, filtros.ativo, filtros.oab, filtros.ufOab]);
 
   const { usuarios, paginacao, isLoading, error, refetch } = useUsuarios(params);
 
   // Função para atualizar após edição
-  const handleEditSuccess = React.useCallback(() => {
-    refetch();
+  // Usar ref para evitar dependência de refetch que pode mudar
+  const refetchRef = React.useRef(refetch);
+  React.useEffect(() => {
+    refetchRef.current = refetch;
   }, [refetch]);
+
+  const handleEditSuccess = React.useCallback(() => {
+    refetchRef.current();
+  }, []);
 
   const colunas = React.useMemo(
     () => criarColunas(handleEditSuccess),
@@ -284,22 +295,28 @@ export default function UsuariosPage() {
   return (
     <div className="space-y-4">
       {/* Barra de busca, filtros e alternância de visualização */}
-      <div className="flex items-center gap-4 flex-wrap">
-        <Input
-          placeholder="Buscar por nome, CPF ou e-mail..."
-          value={busca}
-          onChange={(e) => {
-            setBusca(e.target.value);
-            setPagina(0); // Resetar para primeira página ao buscar
-          }}
-          className="max-w-sm"
-        />
-        <UsuariosFiltrosAvancados
-          filters={filtros}
-          onFiltersChange={handleFiltersChange}
-          onReset={handleFiltersReset}
-        />
-        <ViewToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
+      <div className="flex items-center gap-4 flex-wrap justify-between">
+        <div className="flex items-center gap-4 flex-wrap">
+          <Input
+            placeholder="Buscar por nome, CPF ou e-mail..."
+            value={busca}
+            onChange={(e) => {
+              setBusca(e.target.value);
+              setPagina(0); // Resetar para primeira página ao buscar
+            }}
+            className="max-w-sm"
+          />
+          <UsuariosFiltrosAvancados
+            filters={filtros}
+            onFiltersChange={handleFiltersChange}
+            onReset={handleFiltersReset}
+          />
+          <ViewToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
+        </div>
+        <Button onClick={() => setCreateOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Novo Usuário
+        </Button>
       </div>
 
       {/* Mensagem de erro */}
@@ -343,7 +360,7 @@ export default function UsuariosPage() {
         />
       )}
 
-      {/* Sheets para visualização e edição */}
+      {/* Sheets para visualização, edição e criação */}
       <UsuarioViewSheet
         open={viewOpen}
         onOpenChange={setViewOpen}
@@ -353,6 +370,11 @@ export default function UsuariosPage() {
         open={editOpen}
         onOpenChange={setEditOpen}
         usuario={selectedUsuario}
+        onSuccess={handleEditSuccess}
+      />
+      <UsuarioCreateSheet
+        open={createOpen}
+        onOpenChange={setCreateOpen}
         onSuccess={handleEditSuccess}
       />
     </div>
