@@ -40,9 +40,11 @@ export interface Audiencia {
   advogado_id: number;
   processo_id: number;
   orgao_julgador_id: number | null;
+  orgao_julgador_descricao: string | null; // Descrição do órgão julgador via JOIN
   trt: string;
   grau: GrauAudiencia;
   numero_processo: string;
+  classe_judicial: string | null; // Classe judicial via JOIN com acervo
   data_inicio: string; // ISO timestamp
   data_fim: string; // ISO timestamp
   sala_audiencia_nome: string | null;

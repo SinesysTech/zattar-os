@@ -16,6 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AudienciasVisualizacaoSemana } from '@/components/audiencias-visualizacao-semana';
+import { AudienciasVisualizacaoMes } from '@/components/audiencias-visualizacao-mes';
+import { AudienciasVisualizacaoAno } from '@/components/audiencias-visualizacao-ano';
 import { useAudiencias } from '@/lib/hooks/use-audiencias';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -40,6 +44,75 @@ const formatarDataHora = (dataISO: string | null): string => {
   } catch {
     return '-';
   }
+};
+
+/**
+ * Formata apenas hora ISO para formato brasileiro (HH:mm)
+ */
+const formatarHora = (dataISO: string | null): string => {
+  if (!dataISO) return '-';
+  try {
+    const data = new Date(dataISO);
+    return data.toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return '-';
+  }
+};
+
+/**
+ * Formata o grau para exibição
+ */
+const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
+  return grau === 'primeiro_grau' ? '1º Grau' : '2º Grau';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge do TRT
+ */
+const getTRTColorClass = (trt: string): string => {
+  const trtColors: Record<string, string> = {
+    'TRT1': 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
+    'TRT2': 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
+    'TRT3': 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
+    'TRT4': 'bg-pink-100 text-pink-800 border-pink-200 dark:bg-pink-900 dark:text-pink-200 dark:border-pink-800',
+    'TRT5': 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-800',
+    'TRT6': 'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-200 dark:border-indigo-800',
+    'TRT7': 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800',
+    'TRT8': 'bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900 dark:text-teal-200 dark:border-teal-800',
+    'TRT9': 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-200 dark:border-orange-800',
+    'TRT10': 'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900 dark:text-cyan-200 dark:border-cyan-800',
+    'TRT11': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
+    'TRT12': 'bg-violet-100 text-violet-800 border-violet-200 dark:bg-violet-900 dark:text-violet-200 dark:border-violet-800',
+    'TRT13': 'bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900 dark:text-rose-200 dark:border-rose-800',
+    'TRT14': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+    'TRT15': 'bg-lime-100 text-lime-800 border-lime-200 dark:bg-lime-900 dark:text-lime-200 dark:border-lime-800',
+    'TRT16': 'bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-900 dark:text-sky-200 dark:border-sky-800',
+    'TRT17': 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200 dark:bg-fuchsia-900 dark:text-fuchsia-200 dark:border-fuchsia-800',
+    'TRT18': 'bg-stone-100 text-stone-800 border-stone-200 dark:bg-stone-900 dark:text-stone-200 dark:border-stone-800',
+    'TRT19': 'bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:border-slate-800',
+    'TRT20': 'bg-zinc-100 text-zinc-800 border-zinc-200 dark:bg-zinc-900 dark:text-zinc-200 dark:border-zinc-800',
+    'TRT21': 'bg-neutral-100 text-neutral-800 border-neutral-200 dark:bg-neutral-900 dark:text-neutral-200 dark:border-neutral-800',
+    'TRT22': 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800',
+    'TRT23': 'bg-blue-200 text-blue-900 border-blue-300 dark:bg-blue-800 dark:text-blue-100 dark:border-blue-700',
+    'TRT24': 'bg-green-200 text-green-900 border-green-300 dark:bg-green-800 dark:text-green-100 dark:border-green-700',
+  };
+
+  return trtColors[trt] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge do grau
+ */
+const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
+  const grauColors: Record<string, string> = {
+    'primeiro_grau': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
+    'segundo_grau': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+  };
+
+  return grauColors[grau] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
 };
 
 /**
@@ -121,99 +194,103 @@ function ResponsavelCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
  */
 function criarColunas(onSuccess: () => void): ColumnDef<Audiencia>[] {
   return [
-  {
-    accessorKey: 'data_inicio',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Data e Hora de Início" />
-    ),
-    enableSorting: true,
-    cell: ({ row }) => formatarDataHora(row.getValue('data_inicio')),
-  },
-  {
-    accessorKey: 'numero_processo',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Número do Processo" />
-    ),
-    enableSorting: true,
-    cell: ({ row }) => (
-      <div className="font-medium">{row.getValue('numero_processo')}</div>
-    ),
-  },
-  {
-    accessorKey: 'polo_ativo_nome',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Parte Autora" />
-    ),
-    enableSorting: true,
-    cell: ({ row }) => <div>{row.getValue('polo_ativo_nome') || '-'}</div>,
-  },
-  {
-    accessorKey: 'polo_passivo_nome',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Parte Ré" />
-    ),
-    enableSorting: true,
-    cell: ({ row }) => <div>{row.getValue('polo_passivo_nome') || '-'}</div>,
-  },
-  {
-    accessorKey: 'sala_audiencia_nome',
-    header: 'Sala de Audiência',
-    cell: ({ row }) => (
-      <div>{row.getValue('sala_audiencia_nome') || '-'}</div>
-    ),
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => {
-      const status = row.getValue('status') as string;
-      const statusValue = formatarStatus(status);
-      const variant =
-        status === 'M'
-          ? 'default'
-          : status === 'R'
-            ? 'secondary'
-            : status === 'C'
-              ? 'destructive'
-              : 'outline';
-      return (
-        <Badge variant={variant} className="capitalize">
-          {statusValue}
-        </Badge>
-      );
-    },
-  },
-  {
-    accessorKey: 'tipo_descricao',
-    header: 'Tipo',
-    cell: ({ row }) => {
-      const tipo = row.getValue('tipo_descricao') as string | null;
-      const isVirtual = row.original.tipo_is_virtual;
-      return (
-        <div className="flex items-center gap-2">
-          <span>{tipo || '-'}</span>
-          {isVirtual && (
-            <Badge variant="outline" className="text-xs">
-              Virtual
-            </Badge>
-          )}
+    {
+      accessorKey: 'data_inicio',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="Hora" />
         </div>
-      );
+      ),
+      enableSorting: true,
+      size: 100,
+      cell: ({ row }) => (
+        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
+          {formatarHora(row.getValue('data_inicio'))}
+        </div>
+      ),
     },
-  },
-  {
-    accessorKey: 'data_fim',
-    header: 'Data e Hora de Fim',
-    cell: ({ row }) => formatarDataHora(row.getValue('data_fim')),
-  },
-  {
-    accessorKey: 'responsavel_id',
-    header: 'Responsável',
-    cell: ({ row }) => (
-      <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} />
-    ),
-  },
-];
+    {
+      id: 'processo',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Processo</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 350,
+      cell: ({ row }) => {
+        const classeJudicial = row.original.classe_judicial || '';
+        const numeroProcesso = row.original.numero_processo;
+        const trt = row.original.trt;
+        const grau = row.original.grau;
+        const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
+
+        return (
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[350px]">
+            <div className="text-sm font-medium whitespace-nowrap">
+              {classeJudicial && `${classeJudicial} `}{numeroProcesso}
+            </div>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
+                {trt}
+              </Badge>
+              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>
+                {formatarGrau(grau)}
+              </Badge>
+            </div>
+            <div className="text-xs text-muted-foreground max-w-full truncate">
+              {orgaoJulgador}
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'tipo_local',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Tipo/Local</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 200,
+      cell: ({ row }) => {
+        const tipo = row.original.tipo_descricao || '-';
+        const isVirtual = row.original.tipo_is_virtual;
+        const sala = row.original.sala_audiencia_nome || '-';
+
+        return (
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1 max-w-[200px]">
+            <div className="flex items-center gap-2">
+              <span className="text-sm">{tipo}</span>
+              {isVirtual && (
+                <Badge variant="outline" className="text-xs">
+                  Virtual
+                </Badge>
+              )}
+            </div>
+            <div className="text-xs text-muted-foreground truncate max-w-full">
+              {sala}
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'responsavel_id',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Responsável</div>
+        </div>
+      ),
+      size: 220,
+      cell: ({ row }) => (
+        <div className="min-h-[2.5rem] flex items-center justify-center">
+          <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} />
+        </div>
+      ),
+    },
+  ];
 }
 
 export default function AudienciasPage() {
@@ -224,7 +301,9 @@ export default function AudienciasPage() {
     'data_inicio' | 'numero_processo' | 'polo_ativo_nome' | 'polo_passivo_nome' | null
   >('data_inicio');
   const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
+  const [status, setStatus] = React.useState<'M' | 'R' | 'C' | 'todos'>('M'); // Default: Marcada
   const [filtros, setFiltros] = React.useState<AudienciasFilters>({});
+  const [visualizacao, setVisualizacao] = React.useState<'tabela' | 'semana' | 'mes' | 'ano'>('tabela');
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -237,9 +316,10 @@ export default function AudienciasPage() {
       busca: buscaDebounced || undefined,
       ordenar_por: ordenarPor || undefined,
       ordem,
+      status: status !== 'todos' ? status : undefined, // Filtro de status
       ...filtros, // Spread dos filtros avançados
     }),
-    [pagina, limite, buscaDebounced, ordenarPor, ordem, filtros]
+    [pagina, limite, buscaDebounced, ordenarPor, ordem, status, filtros]
   );
 
   const { audiencias, paginacao, isLoading, error, refetch } = useAudiencias(params);
@@ -294,33 +374,74 @@ export default function AudienciasPage() {
           onFiltersChange={handleFiltersChange}
           onReset={handleFiltersReset}
         />
+        <Select
+          value={status}
+          onValueChange={(value) => {
+            setStatus(value as 'M' | 'R' | 'C' | 'todos');
+            setPagina(0); // Resetar para primeira página ao mudar status
+          }}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="M">Marcada</SelectItem>
+            <SelectItem value="R">Realizada</SelectItem>
+            <SelectItem value="C">Cancelada</SelectItem>
+            <SelectItem value="todos">Todos os Status</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Tabela */}
-      <DataTable
-        data={audiencias}
-        columns={colunas}
-        pagination={
-          paginacao
-            ? {
-                pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-                pageSize: paginacao.limite,
-                total: paginacao.total,
-                totalPages: paginacao.totalPaginas,
-                onPageChange: setPagina,
-                onPageSizeChange: setLimite,
-              }
-            : undefined
-        }
-        sorting={{
-          columnId: ordenarPor,
-          direction: ordem,
-          onSortingChange: handleSortingChange,
-        }}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhuma audiência encontrada."
-      />
+      {/* Seletor de visualização */}
+      <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
+        <TabsList>
+          <TabsTrigger value="tabela">Tabela</TabsTrigger>
+          <TabsTrigger value="semana">Semana</TabsTrigger>
+          <TabsTrigger value="mes">Mês</TabsTrigger>
+          <TabsTrigger value="ano">Ano</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="tabela" className="mt-4">
+          {/* Tabela */}
+          <DataTable
+            data={audiencias}
+            columns={colunas}
+            pagination={
+              paginacao
+                ? {
+                    pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                    pageSize: paginacao.limite,
+                    total: paginacao.total,
+                    totalPages: paginacao.totalPaginas,
+                    onPageChange: setPagina,
+                    onPageSizeChange: setLimite,
+                  }
+                : undefined
+            }
+            sorting={{
+              columnId: ordenarPor,
+              direction: ordem,
+              onSortingChange: handleSortingChange,
+            }}
+            isLoading={isLoading}
+            error={error}
+            emptyMessage="Nenhuma audiência encontrada."
+          />
+        </TabsContent>
+
+        <TabsContent value="semana" className="mt-4">
+          <AudienciasVisualizacaoSemana audiencias={audiencias} isLoading={isLoading} />
+        </TabsContent>
+
+        <TabsContent value="mes" className="mt-4">
+          <AudienciasVisualizacaoMes audiencias={audiencias} isLoading={isLoading} />
+        </TabsContent>
+
+        <TabsContent value="ano" className="mt-4">
+          <AudienciasVisualizacaoAno audiencias={audiencias} isLoading={isLoading} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
