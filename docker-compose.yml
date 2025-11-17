@@ -1,12 +1,17 @@
-version: '3.8'
+version: "3.7"
 
+# Definição dos Serviços
 services:
+  # Definição do Serviço do Sinesys
   zattar_advogados:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: zattar_advogados
-    restart: unless-stopped
+    # imagem do docker (deve ser buildada antes ou estar em um registry)
+    image: zattar_advogados:latest
+    # Define o hostname do container
+    hostname: "{{.Service.Name}}.{{.Task.Slot}}"
+    # configura a rede do serviço
+    networks:
+      - network_swarm_public
+    # configura as variáveis de ambiente
     environment:
       # Variáveis do Supabase (obrigatórias)
       - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
@@ -20,42 +25,91 @@ services:
       # Porta da aplicação
       - PORT=3000
       - HOSTNAME=0.0.0.0
-    ports:
-      - "3000:3000"
-    labels:
-      # Labels do Traefik
-      - "traefik.enable=true"
+
+    # Configura o Modo de Deploy da Aplicação
+    deploy:
+      # O serviço será executado no modo de replicação
+      mode: replicated
+      # Vamos ter apenas uma instância do serviço
+      replicas: 1
+      # Configura o local de execução
+      placement:
+        constraints:
+          # Você pode rodar no Manager mesmo ou especificar um worker
+          - node.role == manager
+          # - node.hostname == worker1
+          # - node.labels.app == http # nome do label: app, valor do label: http
       
-      # Router principal
-      - "traefik.http.routers.zattar_advogados.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.zattar_advogados.entrypoints=websecure"
-      - "traefik.http.routers.zattar_advogados.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.zattar_advogados.tls=true"
+      # Limitação de Recursos
+      resources:
+        # Definição dos Limites de Recursos deste Serviço
+        limits:
+          # Define a quantidade de CPU para evitar travamento do Host
+          cpus: "2"
+          # Define a quantidade de RAM para evitar travamento do Host
+          memory: 2048M
+        # Reserva mínima de recursos
+        reservations:
+          # Reserva mínima de CPU
+          cpus: "0.5"
+          # Reserva mínima de RAM
+          memory: 512M
       
-      # Redirecionamento HTTP para HTTPS
-      - "traefik.http.routers.zattar_advogados-http.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.zattar_advogados-http.entrypoints=web"
-      - "traefik.http.routers.zattar_advogados-http.middlewares=redirect-to-https"
+      # Define a política de reinício do serviço
+      restart_policy:
+        condition: on-failure
+        delay: 45s
+        max_attempts: 3
+        window: 120s
+
+      # Health check do serviço
+      healthcheck:
+        test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+        interval: 30s
+        timeout: 10s
+        retries: 3
+        start_period: 40s
+
+      # Define os Labels do Serviço
+      labels:
+        # Configura o Roteamento do Traefik
+        - traefik.enable=true
+        
+        # Router principal HTTPS
+        - traefik.http.routers.zattar_advogados.rule=Host(`${DOMAIN}`)
+        - traefik.http.routers.zattar_advogados.entrypoints=websecure
+        - traefik.http.routers.zattar_advogados.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.zattar_advogados.tls=true
+        - traefik.http.routers.zattar_advogados.service=zattar_advogados
+        
+        # Redirecionamento HTTP para HTTPS
+        - traefik.http.routers.zattar_advogados-http.rule=Host(`${DOMAIN}`)
+        - traefik.http.routers.zattar_advogados-http.entrypoints=web
+        - traefik.http.routers.zattar_advogados-http.middlewares=redirect-to-https
+        
+        # Middleware de redirecionamento
+        - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+        - traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true
+        
+        # Service
+        - traefik.http.services.zattar_advogados.loadbalancer.server.port=3000
+        - traefik.http.services.zattar_advogados.loadbalancer.passHostHeader=true
+        
+        # Configurações adicionais
+        - traefik.docker.network=network_swarm_public
       
-      # Middleware de redirecionamento
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
-      
-      # Service
-      - "traefik.http.services.zattar_advogados.loadbalancer.server.port=3000"
-      
-      # Configurações adicionais
-      - "traefik.docker.network=network_swarm_public"
-    networks:
-      - network_swarm_public
-    healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      # Configura o modo de atualização do serviço
+      update_config:
+        # Configura o paralelismo de atualização
+        parallelism: 1
+        # Configura o tempo de espera entre as atualizações
+        delay: 30s
+        # Configura a ação em caso de falha
+        order: start-first
+        # Configura a ação em caso de falha
+        failure_action: rollback
 
 networks:
   network_swarm_public:
+    name: network_swarm_public
     external: true
-
