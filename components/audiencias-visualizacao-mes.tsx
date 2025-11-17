@@ -6,6 +6,7 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { AudienciaDetalhesDialog } from '@/components/audiencia-detalhes-dialog';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 
 /**
@@ -26,6 +27,9 @@ interface AudienciasVisualizacaoMesProps {
 
 export function AudienciasVisualizacaoMes({ audiencias, isLoading }: AudienciasVisualizacaoMesProps) {
   const [mesAtual, setMesAtual] = React.useState(new Date());
+  const [audienciaSelecionada, setAudienciaSelecionada] = React.useState<Audiencia | null>(null);
+  const [audienciasDia, setAudienciasDia] = React.useState<Audiencia[]>([]);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   // Gerar dias do mês
   const diasMes = React.useMemo(() => {
@@ -88,6 +92,19 @@ export function AudienciasVisualizacaoMes({ audiencias, isLoading }: AudienciasV
     if (!dia) return [];
     const chave = `${dia.getFullYear()}-${dia.getMonth()}-${dia.getDate()}`;
     return audienciasPorDia.get(chave) || [];
+  };
+
+  const handleAudienciaClick = (audiencia: Audiencia) => {
+    setAudienciaSelecionada(audiencia);
+    setAudienciasDia([]);
+    setDialogOpen(true);
+  };
+
+  const handleMaisClick = (dia: Date) => {
+    const audiencias = getAudienciasDia(dia);
+    setAudienciasDia(audiencias);
+    setAudienciaSelecionada(null);
+    setDialogOpen(true);
   };
 
   const ehHoje = (dia: Date | null) => {
@@ -173,13 +190,24 @@ export function AudienciasVisualizacaoMes({ audiencias, isLoading }: AudienciasV
                         {audienciasDia.slice(0, 3).map((audiencia) => (
                           <div
                             key={audiencia.id}
-                            className="text-xs bg-primary/10 rounded px-1 py-0.5 truncate"
+                            className="text-xs bg-primary/10 hover:bg-primary/20 rounded px-1 py-0.5 truncate cursor-pointer transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAudienciaClick(audiencia);
+                            }}
                           >
                             {formatarHora(audiencia.data_inicio)} - {audiencia.numero_processo}
                           </div>
                         ))}
                         {audienciasDia.length > 3 && (
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge
+                            variant="secondary"
+                            className="text-xs cursor-pointer hover:bg-secondary/80 transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleMaisClick(dia);
+                            }}
+                          >
                             +{audienciasDia.length - 3} mais
                           </Badge>
                         )}
@@ -192,6 +220,14 @@ export function AudienciasVisualizacaoMes({ audiencias, isLoading }: AudienciasV
           })}
         </div>
       </div>
+
+      {/* Dialog de detalhes */}
+      <AudienciaDetalhesDialog
+        audiencia={audienciaSelecionada}
+        audiencias={audienciasDia.length > 0 ? audienciasDia : undefined}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </div>
   );
 }
