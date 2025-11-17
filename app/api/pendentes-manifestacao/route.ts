@@ -49,7 +49,7 @@ import type { ListarPendentesParams } from '@/backend/types/pendentes/types';
  *         name: trt
  *         schema:
  *           type: string
- *         description: Filtrar por código do TRT (ex: TRT3, TRT1)
+ *         description: "Filtrar por código do TRT (ex: TRT3, TRT1)"
  *       - in: query
  *         name: grau
  *         schema:
@@ -105,17 +105,17 @@ import type { ListarPendentesParams } from '@/backend/types/pendentes/types';
  *         name: sigla_orgao_julgador
  *         schema:
  *           type: string
- *         description: Filtrar por sigla do órgão julgador (busca parcial, ex: VT33RJ)
+ *         description: "Filtrar por sigla do órgão julgador (busca parcial, ex: VT33RJ)"
  *       - in: query
  *         name: classe_judicial
  *         schema:
  *           type: string
- *         description: Filtrar por classe judicial (exata, ex: ATOrd, ATSum)
+ *         description: "Filtrar por classe judicial (exata, ex: ATOrd, ATSum)"
  *       - in: query
  *         name: codigo_status_processo
  *         schema:
  *           type: string
- *         description: Filtrar por código do status (exata, ex: DISTRIBUIDO)
+ *         description: "Filtrar por código do status (exata, ex: DISTRIBUIDO)"
  *       - in: query
  *         name: segredo_justica
  *         schema:
@@ -141,68 +141,68 @@ import type { ListarPendentesParams } from '@/backend/types/pendentes/types';
  *         schema:
  *           type: string
  *           format: date
- *         description: Data inicial para filtrar por data do prazo legal (ISO date: YYYY-MM-DD)
+ *         description: "Data inicial para filtrar por data do prazo legal (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_prazo_legal_fim
  *         schema:
  *           type: string
  *           format: date
- *         description: Data final para filtrar por data do prazo legal (ISO date: YYYY-MM-DD)
+ *         description: "Data final para filtrar por data do prazo legal (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_ciencia_inicio
  *         schema:
  *           type: string
  *           format: date
- *         description: Data inicial para filtrar por data de ciência da parte (ISO date: YYYY-MM-DD)
+ *         description: "Data inicial para filtrar por data de ciência da parte (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_ciencia_fim
  *         schema:
  *           type: string
  *           format: date
- *         description: Data final para filtrar por data de ciência da parte (ISO date: YYYY-MM-DD)
+ *         description: "Data final para filtrar por data de ciência da parte (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_criacao_expediente_inicio
  *         schema:
  *           type: string
  *           format: date
- *         description: Data inicial para filtrar por data de criação do expediente (ISO date: YYYY-MM-DD)
+ *         description: "Data inicial para filtrar por data de criação do expediente (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_criacao_expediente_fim
  *         schema:
  *           type: string
  *           format: date
- *         description: Data final para filtrar por data de criação do expediente (ISO date: YYYY-MM-DD)
+ *         description: "Data final para filtrar por data de criação do expediente (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_autuacao_inicio
  *         schema:
  *           type: string
  *           format: date
- *         description: Data inicial para filtrar por data de autuação (ISO date: YYYY-MM-DD)
+ *         description: "Data inicial para filtrar por data de autuação (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_autuacao_fim
  *         schema:
  *           type: string
  *           format: date
- *         description: Data final para filtrar por data de autuação (ISO date: YYYY-MM-DD)
+ *         description: "Data final para filtrar por data de autuação (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_arquivamento_inicio
  *         schema:
  *           type: string
  *           format: date
- *         description: Data inicial para filtrar por data de arquivamento (ISO date: YYYY-MM-DD)
+ *         description: "Data inicial para filtrar por data de arquivamento (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_arquivamento_fim
  *         schema:
  *           type: string
  *           format: date
- *         description: Data final para filtrar por data de arquivamento (ISO date: YYYY-MM-DD)
+ *         description: "Data final para filtrar por data de arquivamento (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: ordenar_por
  *         schema:
  *           type: string
  *           enum: [data_prazo_legal_parte, data_autuacao, numero_processo, nome_parte_autora, nome_parte_re, data_arquivamento, data_ciencia_parte, data_criacao_expediente, prioridade_processual, created_at, updated_at]
  *           default: data_prazo_legal_parte
- *         description: Campo para ordenação (padrão: data_prazo_legal_parte)
+ *         description: "Campo para ordenação (padrão: data_prazo_legal_parte)"
  *       - in: query
  *         name: ordem
  *         schema:

@@ -62,7 +62,7 @@ function parseNumber(value: string | null): number | undefined {
  *         name: trt
  *         schema:
  *           type: string
- *         description: Filtrar por código do TRT (ex: TRT3, TRT1)
+ *         description: "Filtrar por código do TRT (ex: TRT3, TRT1)"
  *       - in: query
  *         name: grau
  *         schema:
@@ -132,25 +132,25 @@ function parseNumber(value: string | null): number | undefined {
  *         schema:
  *           type: string
  *           format: date
- *         description: Data inicial para filtrar por data de início (ISO date: YYYY-MM-DD)
+ *         description: "Data inicial para filtrar por data de início (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_inicio_fim
  *         schema:
  *           type: string
  *           format: date
- *         description: Data final para filtrar por data de início (ISO date: YYYY-MM-DD)
+ *         description: "Data final para filtrar por data de início (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_fim_inicio
  *         schema:
  *           type: string
  *           format: date
- *         description: Data inicial para filtrar por data de fim (ISO date: YYYY-MM-DD)
+ *         description: "Data inicial para filtrar por data de fim (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_fim_fim
  *         schema:
  *           type: string
  *           format: date
- *         description: Data final para filtrar por data de fim (ISO date: YYYY-MM-DD)
+ *         description: "Data final para filtrar por data de fim (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: ordenar_por
  *         schema:
