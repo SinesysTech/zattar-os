@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/data-table';
 import { DataTableColumnHeader } from '@/components/data-table-column-header';
+import { DataTableColumnHeaderWithFilter } from '@/components/data-table-column-header-with-filter';
 import { ExpedientesFiltrosAvancados } from '@/components/expedientes-filtros-avancados';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +18,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { ExpedientesVisualizacaoSemana } from '@/components/expedientes-visualizacao-semana';
 import { ExpedientesVisualizacaoMes } from '@/components/expedientes-visualizacao-mes';
 import { ExpedientesVisualizacaoAno } from '@/components/expedientes-visualizacao-ano';
@@ -24,14 +31,8 @@ import { usePendentes } from '@/lib/hooks/use-pendentes';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, Undo2 } from 'lucide-react';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 import type { ExpedientesFilters } from '@/lib/types/expedientes';
@@ -61,6 +62,39 @@ const getParteAutoraColorClass = (): string => {
  */
 const getParteReColorClass = (): string => {
   return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge do TRT
+ */
+const getTRTColorClass = (trt: string): string => {
+  const trtColors: Record<string, string> = {
+    'TRT1': 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
+    'TRT2': 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
+    'TRT3': 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
+    'TRT4': 'bg-pink-100 text-pink-800 border-pink-200 dark:bg-pink-900 dark:text-pink-200 dark:border-pink-800',
+    'TRT5': 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-800',
+    'TRT6': 'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-200 dark:border-indigo-800',
+  };
+  return trtColors[trt] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge do grau
+ */
+const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
+  const grauColors: Record<string, string> = {
+    'primeiro_grau': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
+    'segundo_grau': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+  };
+  return grauColors[grau] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
+};
+
+/**
+ * Formata o grau para exibição
+ */
+const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
+  return grau === 'primeiro_grau' ? '1º Grau' : '2º Grau';
 };
 
 /**
@@ -168,16 +202,26 @@ function criarColunas(onSuccess: () => void): ColumnDef<PendenteManifestacao>[] 
         </div>
       ),
       enableSorting: false,
-      size: 350,
+      size: 380,
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
         const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
+        const trt = row.original.trt;
+        const grau = row.original.grau;
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[350px]">
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
+            </div>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
+                {trt}
+              </Badge>
+              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>
+                {formatarGrau(grau)}
+              </Badge>
             </div>
             <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}
@@ -251,28 +295,42 @@ function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
   const estaBaixado = !!expediente.baixado_em;
 
   return (
-    <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Abrir menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {!estaBaixado ? (
-            <DropdownMenuItem onClick={() => setBaixarDialogOpen(true)}>
-              <CheckCircle2 className="mr-2 h-4 w-4" />
-              Baixar Expediente
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem onClick={() => setReverterDialogOpen(true)}>
-              <XCircle className="mr-2 h-4 w-4" />
-              Reverter Baixa
-            </DropdownMenuItem>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+    <TooltipProvider>
+      <div className="flex items-center gap-1">
+        {!estaBaixado ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => setBaixarDialogOpen(true)}
+              >
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Baixar Expediente</p>
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => setReverterDialogOpen(true)}
+              >
+                <Undo2 className="h-4 w-4 text-amber-600" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Reverter Baixa</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+      </div>
 
       <ExpedientesBaixarDialog
         open={baixarDialogOpen}
@@ -287,7 +345,7 @@ function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
         expediente={expediente}
         onSuccess={handleSuccess}
       />
-    </>
+    </TooltipProvider>
   );
 }
 
