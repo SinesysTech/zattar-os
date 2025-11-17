@@ -113,6 +113,7 @@ export async function GET(request: NextRequest) {
       busca: searchParams.get('busca') || undefined,
       areaDireito: (searchParams.get('areaDireito') as ListarContratosParams['areaDireito']) || undefined,
       tipoContrato: (searchParams.get('tipoContrato') as ListarContratosParams['tipoContrato']) || undefined,
+      tipoCobranca: (searchParams.get('tipoCobranca') as ListarContratosParams['tipoCobranca']) || undefined,
       status: (searchParams.get('status') as ListarContratosParams['status']) || undefined,
       clienteId: searchParams.get('clienteId') ? parseInt(searchParams.get('clienteId')!, 10) : undefined,
       parteContrariaId: searchParams.get('parteContrariaId') ? parseInt(searchParams.get('parteContrariaId')!, 10) : undefined,

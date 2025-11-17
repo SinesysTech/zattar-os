@@ -25,6 +25,7 @@ export interface BuscarContratosParams extends Partial<ListarContratosParams> {
   busca?: string;
   areaDireito?: 'trabalhista' | 'civil' | 'previdenciario' | 'criminal' | 'empresarial' | 'administrativo';
   tipoContrato?: 'ajuizamento' | 'defesa' | 'ato_processual' | 'assessoria' | 'consultoria' | 'extrajudicial' | 'parecer';
+  tipoCobranca?: 'pro_exito' | 'pro_labore';
   status?: 'em_contratacao' | 'contratado' | 'distribuido' | 'desistencia';
   clienteId?: number;
   parteContrariaId?: number;
