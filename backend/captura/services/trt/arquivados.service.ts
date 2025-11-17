@@ -4,10 +4,10 @@
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaTRTParams } from './trt-capture.service';
 import {
-  obterTodosProcessos,
+  obterTodosProcessosArquivados,
   AgrupamentoProcessoTarefa,
   type Processo,
-} from './pje-api.service';
+} from '@/backend/api/pje-trt/arquivados';
 import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../persistence/advogado-helper.service';
 
@@ -66,11 +66,9 @@ export async function arquivadosCapture(
     };
 
     // 4. Chamar API REST para obter processos Arquivados
-    // Agrupamento 5 = Arquivados
-    const processos = await obterTodosProcessos(
+    const processos = await obterTodosProcessosArquivados(
       page,
       idAdvogado,
-      AgrupamentoProcessoTarefa.ARQUIVADOS,
       500, // delayEntrePaginas
       paramsAdicionais
     );

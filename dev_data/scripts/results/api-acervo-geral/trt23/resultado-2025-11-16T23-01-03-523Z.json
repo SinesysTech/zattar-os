@@ -1,0 +1,59 @@
+{
+  "timestamp": "2025-11-16T23-01-03-523Z",
+  "trtCodigo": "TRT23",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "duracaoSegundos": 31.15,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 99953,
+          "descricaoOrgaoJulgadorColegiado": "OJC de Análise de Recurso",
+          "descricaoOrgaoJulgador": "OJ de Análise de Recurso",
+          "classeJudicial": "RORSum",
+          "numero": 149,
+          "numeroProcesso": "0000149-26.2023.5.23.0001",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "WILLIANS FONSECA VAZ MARCIANO DE OLIVEIRA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.                                                                                                         ",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2023-06-19T16:40:08.935",
+          "juizoDigital": false,
+          "nomeRelator": "MARIA BEATRIZ THEODORO GOMES",
+          "dataArquivamento": "2023-12-13T14:20:23.863"
+        },
+        {
+          "id": 87015,
+          "descricaoOrgaoJulgadorColegiado": "OJC de Análise de Recurso",
+          "descricaoOrgaoJulgador": "OJ de Análise de Recurso",
+          "classeJudicial": "RORSum",
+          "numero": 442,
+          "numeroProcesso": "0000442-43.2021.5.23.0008",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "JAIR JUNG",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.                                                                                                                       ",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2022-03-25T07:30:14.241",
+          "juizoDigital": false,
+          "nomeRelator": "PAULO ROBERTO RAMOS BARRIONUEVO",
+          "dataArquivamento": "2022-10-27T13:30:10.583"
+        }
+      ],
+      "total": 2,
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 2,
+        "erros": 0,
+        "total": 2
+      }
+    }
+  }
+}

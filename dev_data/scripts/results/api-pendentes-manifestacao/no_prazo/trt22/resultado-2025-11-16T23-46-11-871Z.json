@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-11-16T23-46-11-871Z",
+  "trtCodigo": "TRT22",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 32.81,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 339342,
+          "descricaoOrgaoJulgador": "6ª Vara do Trabalho de Teresina",
+          "classeJudicial": "CumPrSe",
+          "numero": 924,
+          "numeroProcesso": "0000924-82.2025.5.22.0006",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "SONY ANDERSON SANTOS TEIXEIRA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-13T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-24T23:59:59.999999",
+          "dataAutuacao": "2025-07-25T12:31:15.670563",
+          "juizoDigital": true,
+          "idDocumento": 16208105,
+          "dataArquivamento": "2025-11-11T12:47:57.719",
+          "temAssociacao": true,
+          "dataCriacaoExpediente": "2025-11-11T12:47:57.465079",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "VT 06"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "timestamp": "2025-11-16T23-44-26-713Z",
+  "trtCodigo": "TRT19",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 32.65,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 410509,
+          "descricaoOrgaoJulgador": "9ª Vara do Trabalho de Maceió",
+          "classeJudicial": "ATSum",
+          "numero": 449,
+          "numeroProcesso": "0000449-28.2025.5.19.0001",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "JONATAS LEITE DA SILVA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-14T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-28T23:59:59.999999",
+          "dataAutuacao": "2025-04-02T15:36:52.060812",
+          "juizoDigital": false,
+          "idDocumento": 21882108,
+          "dataArquivamento": "2025-11-12T21:33:59.31",
+          "temAssociacao": true,
+          "dataCriacaoExpediente": "2025-11-12T21:33:59.136818",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "9VT"
+        },
+        {
+          "id": 418894,
+          "descricaoOrgaoJulgador": "7ª Vara do Trabalho de Maceió",
+          "classeJudicial": "ATSum",
+          "numero": 954,
+          "numeroProcesso": "0000954-98.2025.5.19.0007",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "DAYANE DA SILVA SANTOS",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-06T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-18T23:59:59.999999",
+          "dataAutuacao": "2025-06-25T10:44:22.067357",
+          "juizoDigital": true,
+          "idDocumento": 21806685,
+          "dataArquivamento": "2025-11-04T08:18:28.327",
+          "dataCriacaoExpediente": "2025-11-04T08:18:28.158264",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "7VT"
+        }
+      ],
+      "total": 2,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 2,
+        "erros": 0,
+        "total": 2
+      }
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "timestamp": "2025-11-16T23-55-02-411Z",
+  "trtCodigo": "TRT2",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 31.26,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 1721568,
+          "descricaoOrgaoJulgadorColegiado": "16ª Turma",
+          "descricaoOrgaoJulgador": "16ª Turma - Cadeira 4",
+          "classeJudicial": "RORSum",
+          "numero": 1001346,
+          "numeroProcesso": "1001346-80.2025.5.02.0011",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "MARCIO ROBERTO DOS SANTOS LUSTOSA",
+          "qtdeParteAutora": 2,
+          "nomeParteRe": "99 TECNOLOGIA LTDA",
+          "qtdeParteRe": 2,
+          "dataAutuacao": "2025-11-14T10:22:04.173711",
+          "juizoDigital": false,
+          "nomeRelator": "NELSON BUENO DO PRADO",
+          "idDocumento": 219282351,
+          "dataArquivamento": "2025-11-14T19:21:04.608",
+          "dataCriacaoExpediente": "2025-11-14T19:21:04.404514",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "T16C4"
+        },
+        {
+          "id": 1721568,
+          "descricaoOrgaoJulgadorColegiado": "16ª Turma",
+          "descricaoOrgaoJulgador": "16ª Turma - Cadeira 4",
+          "classeJudicial": "RORSum",
+          "numero": 1001346,
+          "numeroProcesso": "1001346-80.2025.5.02.0011",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "MARCIO ROBERTO DOS SANTOS LUSTOSA",
+          "qtdeParteAutora": 2,
+          "nomeParteRe": "99 TECNOLOGIA LTDA",
+          "qtdeParteRe": 2,
+          "dataAutuacao": "2025-11-14T10:22:04.173711",
+          "juizoDigital": false,
+          "nomeRelator": "NELSON BUENO DO PRADO",
+          "idDocumento": 219282351,
+          "dataArquivamento": "2025-11-14T19:21:04.608",
+          "dataCriacaoExpediente": "2025-11-14T19:21:04.404514",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "T16C4"
+        },
+        {
+          "id": 1637849,
+          "descricaoOrgaoJulgadorColegiado": "3ª Turma",
+          "descricaoOrgaoJulgador": "3ª Turma - Cadeira 4",
+          "classeJudicial": "RORSum",
+          "numero": 1002643,
+          "numeroProcesso": "1002643-96.2024.5.02.0613",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "ALEXANDRE MARTINS PEREIRA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2025-06-29T16:00:04.847583",
+          "juizoDigital": true,
+          "nomeRelator": "LIANE MARTINS CASARIN",
+          "idDocumento": 219227118,
+          "dataArquivamento": "2025-11-14T14:05:27.818",
+          "dataCriacaoExpediente": "2025-11-14T14:05:25.802499",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "T3C4"
+        }
+      ],
+      "total": 3,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 0,
+        "erros": 3,
+        "total": 3
+      }
+    }
+  }
+}

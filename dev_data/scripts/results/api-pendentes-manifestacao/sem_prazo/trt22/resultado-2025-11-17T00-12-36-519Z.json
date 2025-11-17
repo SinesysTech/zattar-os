@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-11-17T00-12-36-519Z",
+  "trtCodigo": "TRT22",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 33.44,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [],
+      "total": 0,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 0,
+        "erros": 0,
+        "total": 0
+      }
+    }
+  }
+}

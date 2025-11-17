@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-11-16T23-21-10-537Z",
+  "trtCodigo": "TRT7",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 31.32,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 877357,
+          "descricaoOrgaoJulgador": "17ª Vara do Trabalho de Fortaleza",
+          "classeJudicial": "ATSum",
+          "numero": 1453,
+          "numeroProcesso": "0001453-22.2024.5.07.0017",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "FRANCISCO VALDENICIO MAGALHAES DE SOUSA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 1,
+          "dataProximaAudiencia": "2026-02-10T09:20:00",
+          "dataAutuacao": "2024-11-25T16:05:57.878",
+          "juizoDigital": false,
+          "idDocumento": 46617466,
+          "dataArquivamento": "2025-11-13T10:42:17.911",
+          "dataCriacaoExpediente": "2025-11-13T10:42:12.913143",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "017FOR"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

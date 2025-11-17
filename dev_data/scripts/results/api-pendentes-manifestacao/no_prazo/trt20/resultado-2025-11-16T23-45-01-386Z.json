@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-11-16T23-45-01-386Z",
+  "trtCodigo": "TRT20",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 31.99,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 324316,
+          "descricaoOrgaoJulgador": "2ª Vara do Trabalho de Aracaju",
+          "classeJudicial": "CumPrSe",
+          "numero": 570,
+          "numeroProcesso": "0000570-26.2025.5.20.0002",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "ALISSON ALMEIDA DA SILVA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-13T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-27T23:59:59.999999",
+          "dataAutuacao": "2025-05-09T10:30:22.605553",
+          "juizoDigital": true,
+          "idDocumento": 20730797,
+          "dataArquivamento": "2025-11-11T14:10:58.458",
+          "temAssociacao": true,
+          "dataCriacaoExpediente": "2025-11-11T14:10:58.33405",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "VT2"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

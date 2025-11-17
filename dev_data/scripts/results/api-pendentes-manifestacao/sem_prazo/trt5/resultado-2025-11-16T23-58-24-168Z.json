@@ -1,0 +1,73 @@
+{
+  "timestamp": "2025-11-16T23-58-24-168Z",
+  "trtCodigo": "TRT5",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 31.56,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 440535,
+          "descricaoOrgaoJulgadorColegiado": "Primeira Turma",
+          "descricaoOrgaoJulgador": "Gab. Des. Marcos Oliveira Gurgel",
+          "classeJudicial": "RORSum",
+          "numero": 841,
+          "numeroProcesso": "0000841-47.2024.5.05.0015",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "JOAO VICTOR SANTOS DE FREITAS",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2025-03-25T12:04:20.808",
+          "juizoDigital": false,
+          "nomeRelator": "MARCOS OLIVEIRA GURGEL",
+          "idDocumento": 60003719,
+          "idProcessoParteExpediente": 2814014,
+          "dataArquivamento": "2025-11-15T09:31:35.671",
+          "dataCriacaoExpediente": "2025-11-15T09:31:33.667793",
+          "prazoVencido": false,
+          "pendenteResposta": false,
+          "siglaOrgaoJulgador": "GMG"
+        },
+        {
+          "id": 353357,
+          "descricaoOrgaoJulgadorColegiado": "Análise de Recursos",
+          "descricaoOrgaoJulgador": "Gabinete Processante de Recursos",
+          "classeJudicial": "RORSum",
+          "numero": 337,
+          "numeroProcesso": "0000337-63.2023.5.05.0019",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "UANDERSON SANTOS DE JESUS",
+          "qtdeParteAutora": 2,
+          "nomeParteRe": "UANDERSON SANTOS DE JESUS",
+          "qtdeParteRe": 2,
+          "dataAutuacao": "2024-02-26T08:31:29.821",
+          "juizoDigital": false,
+          "nomeRelator": "ANA PAOLA SANTOS MACHADO DINIZ",
+          "idDocumento": 44253211,
+          "idProcessoParteExpediente": 2014462,
+          "dataArquivamento": "2024-08-29T10:31:26.137",
+          "dataCriacaoExpediente": "2024-03-14T13:56:42.099312",
+          "prazoVencido": false,
+          "pendenteResposta": false,
+          "siglaOrgaoJulgador": "GAR"
+        }
+      ],
+      "total": 2,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 2,
+        "erros": 0,
+        "total": 2
+      }
+    }
+  }
+}

@@ -69,8 +69,12 @@ export async function getCredential(
   // TODO: Quando userId fornecido e não for 'system', validar permissão
   // Por enquanto, permite acesso para qualquer userId (desenvolvimento)
 
-  // advogados é um objeto único quando usado com .single()
-  const advogado = credencial.advogados as { cpf: string; nome_completo: string } | null;
+  // advogados pode ser um objeto único ou array, mas com .single() deve ser objeto único
+  // Tratamos ambos os casos para evitar erros de tipo
+  const advogadoRaw = credencial.advogados;
+  const advogado = Array.isArray(advogadoRaw)
+    ? (advogadoRaw[0] as { cpf: string; nome_completo: string } | undefined)
+    : (advogadoRaw as { cpf: string; nome_completo: string } | null);
   
   if (!advogado || !advogado.cpf) {
     console.error('Advogado não encontrado ou sem CPF');
@@ -138,8 +142,12 @@ export async function getCredentialByTribunalAndGrau(
     return null;
   }
 
-  // advogados é um objeto único quando usado com .single()
-  const advogado = credencial.advogados as { cpf: string; nome_completo: string } | null;
+  // advogados pode ser um objeto único ou array, mas com .single() deve ser objeto único
+  // Tratamos ambos os casos para evitar erros de tipo
+  const advogadoRaw = credencial.advogados;
+  const advogado = Array.isArray(advogadoRaw)
+    ? (advogadoRaw[0] as { cpf: string; nome_completo: string } | undefined)
+    : (advogadoRaw as { cpf: string; nome_completo: string } | null);
   
   if (!advogado || !advogado.cpf) {
     console.error('Advogado não encontrado ou sem CPF');
@@ -200,8 +208,12 @@ export async function getActiveCredentialsByTribunalAndGrau(
   // Montar resultado
   const resultados = credenciais
     .map((credencial) => {
-      // advogados pode ser um objeto único ou array, mas com a query atual é objeto único
-      const advogado = credencial.advogados as { id: number; cpf: string; nome_completo: string } | null;
+      // advogados pode ser um objeto único ou array
+      // Tratamos ambos os casos para evitar erros de tipo
+      const advogadoRaw = credencial.advogados;
+      const advogado = Array.isArray(advogadoRaw)
+        ? (advogadoRaw[0] as { id: number; cpf: string; nome_completo: string } | undefined)
+        : (advogadoRaw as { id: number; cpf: string; nome_completo: string } | null);
 
       if (!advogado || !advogado.cpf) {
         return null;
@@ -269,14 +281,24 @@ export async function getAdvogadoByCredentialId(credentialId: number) {
     return null;
   }
 
-  // advogados é um objeto único quando usado com .single()
-  const advogado = credencial.advogados as {
-    id: number;
-    cpf: string;
-    nome_completo: string;
-    oab: string;
-    uf_oab: string;
-  } | null;
+  // advogados pode ser um objeto único ou array, mas com .single() deve ser objeto único
+  // Tratamos ambos os casos para evitar erros de tipo
+  const advogadoRaw = credencial.advogados;
+  const advogado = Array.isArray(advogadoRaw)
+    ? (advogadoRaw[0] as {
+        id: number;
+        cpf: string;
+        nome_completo: string;
+        oab: string;
+        uf_oab: string;
+      } | undefined)
+    : (advogadoRaw as {
+        id: number;
+        cpf: string;
+        nome_completo: string;
+        oab: string;
+        uf_oab: string;
+      } | null);
 
   if (!advogado) {
     return null;

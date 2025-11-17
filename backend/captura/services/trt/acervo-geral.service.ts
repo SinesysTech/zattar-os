@@ -4,11 +4,11 @@
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaTRTParams } from './trt-capture.service';
 import {
-  obterTodosProcessos,
-  obterTotalizadores,
+  obterTodosProcessosAcervoGeral,
+  obterTotalizadoresAcervoGeral,
   AgrupamentoProcessoTarefa,
   type Processo,
-} from './pje-api.service';
+} from '@/backend/api/pje-trt/acervo-geral';
 import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../persistence/advogado-helper.service';
 
@@ -57,19 +57,11 @@ export async function acervoGeralCapture(
       throw new Error(`ID do advogado inválido: ${advogadoInfo.idAdvogado}`);
     }
 
-    // 3. Obter totalizadores para validação
-    const totalizadores = await obterTotalizadores(page, idAdvogado);
-    const totalizadorAcervoGeral = totalizadores.find(
-      (t) => t.idAgrupamentoProcessoTarefa === AgrupamentoProcessoTarefa.ACERVO_GERAL
-    );
+    // 3. Obter totalizador de acervo geral para validação
+    const totalizadorAcervoGeral = await obterTotalizadoresAcervoGeral(page, idAdvogado);
 
     // 4. Chamar API REST para obter processos do Acervo Geral
-    // Agrupamento 1 = Acervo Geral
-    const processos = await obterTodosProcessos(
-      page,
-      idAdvogado,
-      AgrupamentoProcessoTarefa.ACERVO_GERAL
-    );
+    const processos = await obterTodosProcessosAcervoGeral(page, idAdvogado);
 
     // 5. Validar se a quantidade raspada condiz com o totalizador
     if (totalizadorAcervoGeral) {

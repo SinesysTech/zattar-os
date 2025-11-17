@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-11-16T23-46-38-606Z",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "trts": [
+    "TRT16",
+    "TRT17"
+  ],
+  "filtrosPrazo": [
+    "no_prazo",
+    "sem_prazo"
+  ],
+  "totalTestes": 4,
+  "sucessos": 4,
+  "falhas": 0,
+  "totalProcessosCapturados": 4,
+  "duracaoTotalSegundos": 156.52999999999997,
+  "resultados": [
+    {
+      "trt": "TRT16",
+      "filtroPrazo": "no_prazo",
+      "sucesso": true,
+      "totalProcessos": 4,
+      "duracaoSegundos": 39.16
+    },
+    {
+      "trt": "TRT16",
+      "filtroPrazo": "sem_prazo",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 54.94
+    },
+    {
+      "trt": "TRT17",
+      "filtroPrazo": "no_prazo",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 32.23
+    },
+    {
+      "trt": "TRT17",
+      "filtroPrazo": "sem_prazo",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 30.2
+    }
+  ]
+}

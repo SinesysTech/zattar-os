@@ -2,7 +2,7 @@
 // Salva audiências capturadas no banco de dados
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { Audiencia } from '../trt/pje-api.service';
+import type { Audiencia } from '@/backend/api/pje-trt/types';
 import type { CodigoTRT, GrauTRT } from '../trt/types';
 import { buscarOrgaoJulgador } from './orgao-julgador-persistence.service';
 import { buscarProcessoNoAcervo } from './acervo-persistence.service';

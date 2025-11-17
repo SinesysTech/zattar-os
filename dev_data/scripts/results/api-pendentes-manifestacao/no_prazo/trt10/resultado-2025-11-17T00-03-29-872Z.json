@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-11-17T00-03-29-872Z",
+  "trtCodigo": "TRT10",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 31.57,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 185566,
+          "descricaoOrgaoJulgadorColegiado": "1ª Turma",
+          "descricaoOrgaoJulgador": "Desembargador Dorival Borges de Souza Neto",
+          "classeJudicial": "RORSum",
+          "numero": 743,
+          "numeroProcesso": "0000743-29.2025.5.10.0002",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "JHONE DE LIMA SANTOS",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-13T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-26T23:59:59.999999",
+          "dataAutuacao": "2025-09-01T10:01:20.566562",
+          "juizoDigital": false,
+          "nomeRelator": "URGEL RIBEIRO PEREIRA LOPES",
+          "idDocumento": 24062258,
+          "dataArquivamento": "2025-11-11T09:23:59.37",
+          "dataCriacaoExpediente": "2025-11-11T09:23:55.179446",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "GDDBSN"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

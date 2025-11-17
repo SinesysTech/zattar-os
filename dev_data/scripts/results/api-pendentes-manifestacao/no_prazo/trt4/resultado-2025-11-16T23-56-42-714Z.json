@@ -1,0 +1,73 @@
+{
+  "timestamp": "2025-11-16T23-56-42-714Z",
+  "trtCodigo": "TRT4",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 32.84,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 741027,
+          "descricaoOrgaoJulgadorColegiado": "3ª Turma",
+          "descricaoOrgaoJulgador": "Gabinete Clóvis Fernando Schuch Santos",
+          "classeJudicial": "RORSum",
+          "numero": 20632,
+          "numeroProcesso": "0020632-97.2024.5.04.0251",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "EVERTON GOMES DA SILVEIRA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "EU ENTREGO SISTEMAS S/A",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-17T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-28T23:59:59.999999",
+          "dataAutuacao": "2025-10-20T08:50:23.101188",
+          "juizoDigital": true,
+          "nomeRelator": "CLOVIS FERNANDO SCHUCH SANTOS",
+          "idDocumento": 107350142,
+          "dataArquivamento": "2025-11-13T15:52:46.059",
+          "dataCriacaoExpediente": "2025-11-13T15:52:43.174639",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "GCFSS"
+        },
+        {
+          "id": 737445,
+          "descricaoOrgaoJulgadorColegiado": "11ª Turma",
+          "descricaoOrgaoJulgador": "Gabinete Manuel Cid Jardon",
+          "classeJudicial": "RORSum",
+          "numero": 20335,
+          "numeroProcesso": "0020335-03.2025.5.04.0010",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "JORGE ALEXANDRE OVIEDO DE OLIVEIRA JUNIOR",
+          "qtdeParteAutora": 2,
+          "nomeParteRe": "JORGE ALEXANDRE OVIEDO DE OLIVEIRA JUNIOR",
+          "qtdeParteRe": 2,
+          "dataCienciaParte": "2025-11-10T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-21T23:59:59.999999",
+          "dataAutuacao": "2025-10-06T11:10:43.88572",
+          "juizoDigital": false,
+          "nomeRelator": "MANUEL CID JARDON",
+          "idDocumento": 107047309,
+          "dataArquivamento": "2025-11-06T18:42:32.722",
+          "dataCriacaoExpediente": "2025-11-06T18:42:29.641453",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "GMCJ"
+        }
+      ],
+      "total": 2,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 2,
+        "erros": 0,
+        "total": 2
+      }
+    }
+  }
+}

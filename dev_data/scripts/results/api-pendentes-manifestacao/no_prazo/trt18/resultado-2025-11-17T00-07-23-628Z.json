@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-11-17T00-07-23-628Z",
+  "trtCodigo": "TRT18",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 31.82,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 231588,
+          "descricaoOrgaoJulgadorColegiado": "1ª TURMA",
+          "descricaoOrgaoJulgador": "Gabinete de Desembargador do Trabalho (Vaga n.º 2 da Magistratura)",
+          "classeJudicial": "RORSum",
+          "numero": 11581,
+          "numeroProcesso": "0011581-31.2024.5.18.0006",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "LUCAS NEPOMUCENO LIMA",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-11T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-25T23:59:59.999999",
+          "dataAutuacao": "2025-02-28T09:11:32.690597",
+          "juizoDigital": true,
+          "nomeRelator": "CELSO MOREDO GARCIA",
+          "idDocumento": 31846662,
+          "dataArquivamento": "2025-11-07T13:53:14.044",
+          "dataCriacaoExpediente": "2025-11-07T13:53:09.148673",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "GJ2MAG"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

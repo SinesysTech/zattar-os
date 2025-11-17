@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-11-17T00-12-01-128Z",
+  "trtCodigo": "TRT22",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 33.38,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 94800,
+          "descricaoOrgaoJulgadorColegiado": "OJC de Análise de Recurso",
+          "descricaoOrgaoJulgador": "OJ de Análise de Recurso",
+          "classeJudicial": "RORSum",
+          "numero": 1208,
+          "numeroProcesso": "0001208-27.2024.5.22.0006",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "RAIMUNDO ANDRADE FREITAS",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "99 TECNOLOGIA LTDA",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-17T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-12-01T23:59:59.999999",
+          "dataAutuacao": "2025-05-14T09:30:09.078007",
+          "juizoDigital": true,
+          "nomeRelator": "FRANCISCO METON MARQUES DE LIMA",
+          "idDocumento": 9878794,
+          "dataArquivamento": "2025-11-13T18:03:48.172",
+          "dataCriacaoExpediente": "2025-11-13T18:03:47.978036",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "OJAN"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

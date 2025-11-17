@@ -1,0 +1,75 @@
+{
+  "timestamp": "2025-11-16T23-58-57-737Z",
+  "trtCodigo": "TRT6",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 32.63,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 293767,
+          "descricaoOrgaoJulgadorColegiado": "Segunda Turma",
+          "descricaoOrgaoJulgador": "Desembargador Fernando Cabral de Andrade Filho",
+          "classeJudicial": "RORSum",
+          "numero": 42,
+          "numeroProcesso": "0000042-13.2025.5.06.0121",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "LUIZ HENRIQUE DO NASCIMENTO",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-14T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-27T23:59:59.999999",
+          "dataAutuacao": "2025-10-19T11:10:34.177824",
+          "juizoDigital": true,
+          "nomeRelator": "FERNANDO CABRAL DE ANDRADE FILHO",
+          "idDocumento": 48206465,
+          "idProcessoParteExpediente": 1987256,
+          "dataArquivamento": "2025-11-12T13:09:10.882",
+          "dataCriacaoExpediente": "2025-11-12T13:09:08.444588",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "GABFERNAND"
+        },
+        {
+          "id": 290177,
+          "descricaoOrgaoJulgadorColegiado": "Segunda Turma",
+          "descricaoOrgaoJulgador": "Desembargador Fernando Cabral de Andrade Filho",
+          "classeJudicial": "RORSum",
+          "numero": 480,
+          "numeroProcesso": "0000480-73.2025.5.06.0142",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "RENATO AQUILINO BATISTA DE FRANCA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-14T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-27T23:59:59.999999",
+          "dataAutuacao": "2025-09-19T14:10:37.162922",
+          "juizoDigital": true,
+          "nomeRelator": "FERNANDO CABRAL DE ANDRADE FILHO",
+          "idDocumento": 48206424,
+          "idProcessoParteExpediente": 1987217,
+          "dataArquivamento": "2025-11-12T13:06:48.868",
+          "dataCriacaoExpediente": "2025-11-12T13:06:45.407952",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "GABFERNAND"
+        }
+      ],
+      "total": 2,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 2,
+        "erros": 0,
+        "total": 2
+      }
+    }
+  }
+}

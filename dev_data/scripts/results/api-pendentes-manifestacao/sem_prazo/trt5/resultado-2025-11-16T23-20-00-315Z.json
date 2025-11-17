@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-11-16T23-20-00-315Z",
+  "trtCodigo": "TRT5",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 31.56,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 1505676,
+          "descricaoOrgaoJulgador": "4ª Vara do Trabalho de Feira de Santana",
+          "classeJudicial": "CumPrSe",
+          "numero": 391,
+          "numeroProcesso": "0000391-18.2025.5.05.0194",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "JORGE FERREIRA COSTA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.                                                                                                                       ",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2025-04-09T10:25:19.036289",
+          "juizoDigital": true,
+          "idDocumento": 113491319,
+          "idProcessoParteExpediente": 18341482,
+          "dataArquivamento": "2025-11-14T10:09:27.255",
+          "temAssociacao": true,
+          "dataCriacaoExpediente": "2025-11-14T10:09:26.813019",
+          "prazoVencido": false,
+          "pendenteResposta": false,
+          "siglaOrgaoJulgador": "FSAJ04"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

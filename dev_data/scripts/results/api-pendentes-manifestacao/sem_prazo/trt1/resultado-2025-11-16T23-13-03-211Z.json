@@ -1,0 +1,44 @@
+{
+  "timestamp": "2025-11-16T23-13-03-211Z",
+  "trtCodigo": "TRT1",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 31.6,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 3221777,
+          "descricaoOrgaoJulgador": "24ª Vara do Trabalho do Rio de Janeiro",
+          "classeJudicial": "ATSum",
+          "numero": 100725,
+          "numeroProcesso": "0100725-33.2024.5.01.0024",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "VIVIANE DA SILVA MOREIRA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "99 TECNOLOGIA LTDA                                                                                                                                    ",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2024-06-27T17:52:21.572",
+          "juizoDigital": true,
+          "idDocumento": 246786979,
+          "dataArquivamento": "2025-11-16T18:49:29.643",
+          "dataCriacaoExpediente": "2025-11-16T18:49:29.422717",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "VT24RJ"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

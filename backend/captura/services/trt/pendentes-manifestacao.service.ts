@@ -4,11 +4,11 @@
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaPendentesManifestacaoParams } from './trt-capture.service';
 import {
-  obterTodosProcessos,
-  obterTotalizadores,
+  obterTodosProcessosPendentesManifestacao,
+  obterTotalizadoresPendentesManifestacao,
   AgrupamentoProcessoTarefa,
   type Processo,
-} from './pje-api.service';
+} from '@/backend/api/pje-trt/pendentes-manifestacao';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../persistence/advogado-helper.service';
 
@@ -66,11 +66,8 @@ export async function pendentesManifestacaoCapture(
       throw new Error(`ID do advogado inválido: ${advogadoInfo.idAdvogado}`);
     }
 
-    // 3. Obter totalizadores para validação
-    const totalizadores = await obterTotalizadores(page, idAdvogado);
-    const totalizadorPendentes = totalizadores.find(
-      (t) => t.idAgrupamentoProcessoTarefa === AgrupamentoProcessoTarefa.PENDENTES_MANIFESTACAO
-    );
+    // 3. Obter totalizador de pendentes para validação
+    const totalizadorPendentes = await obterTotalizadoresPendentesManifestacao(page, idAdvogado);
 
     // 4. Preparar parâmetros adicionais para filtro de prazo
     const filtroPrazo = params.filtroPrazo || 'sem_prazo'; // Default: sem prazo
@@ -84,11 +81,9 @@ export async function pendentesManifestacaoCapture(
     };
 
     // 5. Chamar API REST para obter processos Pendentes de Manifestação com filtro
-    // Agrupamento 2 = Pendentes de Manifestação
-    const processos = await obterTodosProcessos(
+    const processos = await obterTodosProcessosPendentesManifestacao(
       page,
       idAdvogado,
-      AgrupamentoProcessoTarefa.PENDENTES_MANIFESTACAO,
       500, // delayEntrePaginas
       paramsAdicionais
     );

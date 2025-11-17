@@ -1,0 +1,155 @@
+{
+  "timestamp": "2025-11-16T23-17-36-970Z",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "totalTRTs": 24,
+  "sucessos": 22,
+  "falhas": 2,
+  "totalProcessosCapturados": 29,
+  "duracaoTotalSegundos": 732.27,
+  "resultados": [
+    {
+      "trt": "TRT1",
+      "sucesso": true,
+      "totalProcessos": 1,
+      "duracaoSegundos": 35.64
+    },
+    {
+      "trt": "TRT2",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 30.64
+    },
+    {
+      "trt": "TRT3",
+      "sucesso": true,
+      "totalProcessos": 12,
+      "duracaoSegundos": 37.01
+    },
+    {
+      "trt": "TRT4",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 31.96
+    },
+    {
+      "trt": "TRT5",
+      "sucesso": true,
+      "totalProcessos": 1,
+      "duracaoSegundos": 31.56
+    },
+    {
+      "trt": "TRT6",
+      "sucesso": true,
+      "totalProcessos": 2,
+      "duracaoSegundos": 34.62
+    },
+    {
+      "trt": "TRT7",
+      "sucesso": true,
+      "totalProcessos": 1,
+      "duracaoSegundos": 31.32
+    },
+    {
+      "trt": "TRT8",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 31.57
+    },
+    {
+      "trt": "TRT9",
+      "sucesso": true,
+      "totalProcessos": 1,
+      "duracaoSegundos": 31.38
+    },
+    {
+      "trt": "TRT10",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 31.25
+    },
+    {
+      "trt": "TRT11",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 37.14
+    },
+    {
+      "trt": "TRT12",
+      "sucesso": true,
+      "totalProcessos": 1,
+      "duracaoSegundos": 36.15
+    },
+    {
+      "trt": "TRT13",
+      "sucesso": true,
+      "totalProcessos": 9,
+      "duracaoSegundos": 45.74
+    },
+    {
+      "trt": "TRT14",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 32.53
+    },
+    {
+      "trt": "TRT15",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 31.9
+    },
+    {
+      "trt": "TRT16",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT17",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT18",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 30.78
+    },
+    {
+      "trt": "TRT19",
+      "sucesso": true,
+      "totalProcessos": 1,
+      "duracaoSegundos": 33.56
+    },
+    {
+      "trt": "TRT20",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 32.05
+    },
+    {
+      "trt": "TRT21",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 33.57
+    },
+    {
+      "trt": "TRT22",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 30.78
+    },
+    {
+      "trt": "TRT23",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 30.19
+    },
+    {
+      "trt": "TRT24",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 30.93
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "timestamp": "2025-11-16T23-24-03-305Z",
+  "trtCodigo": "TRT12",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 36.15,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 1170195,
+          "descricaoOrgaoJulgador": "3ª VARA DO TRABALHO DE FLORIANÓPOLIS",
+          "classeJudicial": "ATSum",
+          "numero": 461,
+          "numeroProcesso": "0000461-59.2025.5.12.0026",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "CLAUDIO FELIPE MUNIZ SOARES",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.                                                                                                                       ",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2025-05-05T11:20:23.131485",
+          "juizoDigital": true,
+          "idDocumento": 80505694,
+          "dataArquivamento": "2025-11-14T14:15:10.601",
+          "dataCriacaoExpediente": "2025-11-14T14:15:10.296445",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "3FNS"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

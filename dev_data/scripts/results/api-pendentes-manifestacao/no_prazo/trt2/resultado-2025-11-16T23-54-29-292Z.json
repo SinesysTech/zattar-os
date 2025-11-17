@@ -1,0 +1,73 @@
+{
+  "timestamp": "2025-11-16T23-54-29-292Z",
+  "trtCodigo": "TRT2",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 31.11,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 1625273,
+          "descricaoOrgaoJulgadorColegiado": "Seção Especializada em Dissídios Individuais - 4",
+          "descricaoOrgaoJulgador": "SDI-4 - Cadeira 2",
+          "classeJudicial": "MSCiv",
+          "numero": 1008588,
+          "numeroProcesso": "1008588-26.2025.5.02.0000",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "ROBSON TADEU DE JESUS RIBEIRO",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "Juízo da 1ª Vara do Trabalho de Itaquaquecetuba",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-07T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-19T23:59:59.999999",
+          "dataAutuacao": "2025-06-05T10:55:06.532803",
+          "juizoDigital": true,
+          "nomeRelator": "MARTA NATALINA FEDEL",
+          "idDocumento": 218220993,
+          "dataArquivamento": "2025-11-13T18:36:03.12",
+          "dataCriacaoExpediente": "2025-11-05T16:16:25.250685",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "I4C2"
+        },
+        {
+          "id": 1108466,
+          "descricaoOrgaoJulgadorColegiado": "Análise de Recursos",
+          "descricaoOrgaoJulgador": "Vice-Presidência Judicial",
+          "classeJudicial": "RORSum",
+          "numero": 1001411,
+          "numeroProcesso": "1001411-79.2022.5.02.0076",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "RAPPI BRASIL INTERMEDIACAO DE NEGOCIOS LTDA                                                                                                           ",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "DANILO BARBERINO DA SILVA                                   ",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-05T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-17T23:59:59.999999",
+          "dataAutuacao": "2025-05-14T08:54:34.971243",
+          "juizoDigital": true,
+          "nomeRelator": "VALERIA PEDROSO DE MORAES",
+          "idDocumento": 217905383,
+          "dataArquivamento": "2025-11-03T12:47:15.489",
+          "dataCriacaoExpediente": "2025-11-03T12:47:15.321218",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "VPJAR"
+        }
+      ],
+      "total": 2,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 2,
+        "erros": 0,
+        "total": 2
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-11-16T23-22-17-469Z",
+  "trtCodigo": "TRT9",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 31.38,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 1418501,
+          "descricaoOrgaoJulgador": "23ª VARA DO TRABALHO DE CURITIBA",
+          "classeJudicial": "ATSum",
+          "numero": 921,
+          "numeroProcesso": "0000921-43.2022.5.09.0088",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "JULIO CESAR KLEIN SANTOS",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "RAPPI BRASIL INTERMEDIACAO DE NEGOCIOS LTDA",
+          "qtdeParteRe": 1,
+          "dataProximaAudiencia": "2025-12-08T13:55:00",
+          "dataAutuacao": "2022-09-27T15:38:45.558",
+          "juizoDigital": true,
+          "idDocumento": 157259306,
+          "idProcessoParteExpediente": 25395063,
+          "dataArquivamento": "2025-11-16T20:08:54.615",
+          "dataCriacaoExpediente": "2025-11-16T20:08:54.229054",
+          "prazoVencido": false,
+          "pendenteResposta": false,
+          "siglaOrgaoJulgador": "23 VTCTB"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

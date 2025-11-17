@@ -2,7 +2,7 @@
 // Salva processos pendentes capturados no banco de dados
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { Processo } from '../trt/pje-api.service';
+import type { Processo } from '@/backend/api/pje-trt/types';
 import type { CodigoTRT, GrauTRT } from '../trt/types';
 
 /**

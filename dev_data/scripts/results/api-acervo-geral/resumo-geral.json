@@ -1,17 +1,23 @@
 {
-  "timestamp": "2025-11-16T22-43-51-161Z",
-  "grau": "primeiro_grau",
-  "totalTRTs": 1,
-  "sucessos": 1,
+  "timestamp": "2025-11-16T23-25-30-077Z",
+  "grau": "segundo_grau",
+  "totalTRTs": 2,
+  "sucessos": 2,
   "falhas": 0,
-  "totalProcessosCapturados": 1,
-  "duracaoTotalSegundos": 32.32,
+  "totalProcessosCapturados": 14,
+  "duracaoTotalSegundos": 66.31,
   "resultados": [
     {
       "trt": "TRT14",
       "sucesso": true,
       "totalProcessos": 1,
-      "duracaoSegundos": 32.32
+      "duracaoSegundos": 33.49
+    },
+    {
+      "trt": "TRT20",
+      "sucesso": true,
+      "totalProcessos": 13,
+      "duracaoSegundos": 32.82
     }
   ]
 }

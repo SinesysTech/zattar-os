@@ -1,0 +1,70 @@
+{
+  "timestamp": "2025-11-16T23-43-52-911Z",
+  "trtCodigo": "TRT18",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 31.73,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 1163056,
+          "descricaoOrgaoJulgador": "18ª VARA DO TRABALHO DE GOIÂNIA",
+          "classeJudicial": "ATSum",
+          "numero": 732,
+          "numeroProcesso": "0000732-27.2025.5.18.0018",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "HELBER SOUZA DO CARMO",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 1,
+          "dataProximaAudiencia": "2025-12-04T08:20:00",
+          "dataCienciaParte": "2025-11-14T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-25T23:59:59.999999",
+          "dataAutuacao": "2025-05-05T15:29:15.093392",
+          "juizoDigital": true,
+          "idDocumento": 77069411,
+          "dataArquivamento": "2025-11-12T11:45:34.415",
+          "dataCriacaoExpediente": "2025-11-12T11:45:33.992489",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "18VTGO"
+        },
+        {
+          "id": 1002194,
+          "descricaoOrgaoJulgador": "VARA DO TRABALHO DE GOIÁS",
+          "classeJudicial": "ATOrd",
+          "numero": 11996,
+          "numeroProcesso": "0011996-82.2023.5.18.0221",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 4,
+          "nomeParteAutora": "MATEUS DA SILVA AZEVEDO",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "ILEZIO INACIO FERREIRA",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-05T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-18T23:59:59.999999",
+          "dataAutuacao": "2023-11-07T09:41:31.764",
+          "juizoDigital": true,
+          "idDocumento": 76839192,
+          "dataArquivamento": "2025-11-03T20:57:16.251",
+          "dataCriacaoExpediente": "2025-11-03T20:57:15.852996",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "VTGOI"
+        }
+      ],
+      "total": 2,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 2,
+        "erros": 0,
+        "total": 2
+      }
+    }
+  }
+}

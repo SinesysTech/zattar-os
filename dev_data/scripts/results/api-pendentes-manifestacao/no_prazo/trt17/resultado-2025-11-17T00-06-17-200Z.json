@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-11-17T00-06-17-200Z",
+  "trtCodigo": "TRT17",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 30.81,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 154294,
+          "descricaoOrgaoJulgadorColegiado": "1ª Turma",
+          "descricaoOrgaoJulgador": "GAB. DES. VALDIR DONIZETTI CAIXETA",
+          "classeJudicial": "RORSum",
+          "numero": 1262,
+          "numeroProcesso": "0001262-28.2024.5.17.0007",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "ROBSON RIBEIRO DE SOUZA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "99 TAXIS DESENVOLVIMENTO DE SOFTWARES LTDA. - EPP",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-07T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-19T23:59:59.999999",
+          "dataAutuacao": "2025-09-24T18:40:51.161993",
+          "juizoDigital": true,
+          "nomeRelator": "VALDIR DONIZETTI CAIXETA",
+          "idDocumento": 25675963,
+          "idProcessoParteExpediente": 1163985,
+          "dataArquivamento": "2025-11-05T12:57:27.187",
+          "dataCriacaoExpediente": "2025-11-05T12:57:24.232659",
+          "prazoVencido": false,
+          "pendenteResposta": true,
+          "siglaOrgaoJulgador": "GDVDC"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

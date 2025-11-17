@@ -32,13 +32,14 @@ const SERVICE_API_KEY = process.env.SERVICE_API_KEY || '';
  * Valores fixos (simulam requisição externa/front-end)
  */
 const ADVOGADO_ID = 1; // ID do advogado na tabela advogados
-const GRAU = 'primeiro_grau'; // Primeiro grau
+const GRAU = 'segundo_grau'; // Segundo grau
 
 /**
- * Lista de TRTs para testar (apenas TRT14)
+ * Lista de TRTs para testar (apenas TRT14 e TRT20)
  */
 const TODOS_TRTS: CodigoTRT[] = [
   'TRT14',
+  'TRT20',
 ];
 
 /**
@@ -131,7 +132,7 @@ async function testarAcervoGeralTRT(trtCodigo: CodigoTRT) {
 async function main() {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   
-  console.log('\n🚀 Iniciando testes de API HTTP - Acervo Geral - TRT14\n');
+  console.log('\n🚀 Iniciando testes de API HTTP - Acervo Geral - TRT14 e TRT20 (2º Grau)\n');
   console.log(`Total de TRTs: ${TODOS_TRTS.length}`);
   console.log(`API URL: ${API_BASE_URL}\n`);
 
@@ -213,12 +214,17 @@ async function main() {
 // Executar se chamado diretamente
 if (require.main === module) {
   main()
-    .then(() => {
+    .then(async () => {
       console.log('\n✅ Teste concluído com sucesso!');
+      // Aguardar um pouco para garantir que todos os recursos assíncronos sejam limpos
+      // Isso previne o erro "Assertion failed: !(handle->flags & UV_HANDLE_CLOSING)"
+      await new Promise((resolve) => setTimeout(resolve, 500));
       process.exit(0);
     })
-    .catch((error) => {
+    .catch(async (error) => {
       console.error('\n❌ Teste falhou:', error);
+      // Aguardar antes de sair mesmo em caso de erro
+      await new Promise((resolve) => setTimeout(resolve, 500));
       process.exit(1);
     });
 }

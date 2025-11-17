@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-11-16T23-27-31-248Z",
+  "trtCodigo": "TRT19",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 33.56,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 410479,
+          "descricaoOrgaoJulgador": "10ª Vara do Trabalho de Maceió",
+          "classeJudicial": "ATSum",
+          "numero": 449,
+          "numeroProcesso": "0000449-22.2025.5.19.0003",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "WELLINGTON VIEIRA DA SILVA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2025-04-02T14:14:46.709575",
+          "juizoDigital": true,
+          "idDocumento": 21901692,
+          "dataArquivamento": "2025-11-14T21:34:26.353",
+          "temAssociacao": true,
+          "dataCriacaoExpediente": "2025-11-14T21:34:25.989888",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "10VT"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-11-17T00-09-39-191Z",
+  "trtCodigo": "TRT20",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 32.79,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 96453,
+          "descricaoOrgaoJulgadorColegiado": "Primeira Turma",
+          "descricaoOrgaoJulgador": "Gab. Des. Thenisson Dória",
+          "classeJudicial": "RORSum",
+          "numero": 1275,
+          "numeroProcesso": "0001275-52.2024.5.20.0004",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 8,
+          "nomeParteAutora": "99 TAXIS DESENVOLVIMENTO DE SOFTWARES LTDA.",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "THIAGO DE OLIVEIRA MELO",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-11T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-25T23:59:59.999999",
+          "dataAutuacao": "2025-08-14T19:30:03.29773",
+          "juizoDigital": true,
+          "nomeRelator": "THENISSON SANTANA DÓRIA",
+          "idDocumento": 11551677,
+          "dataArquivamento": "2025-11-07T11:33:01.404",
+          "dataCriacaoExpediente": "2025-11-07T11:32:59.776289",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "GDTD"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

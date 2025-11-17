@@ -1,0 +1,67 @@
+{
+  "timestamp": "2025-11-16T23-20-33-898Z",
+  "trtCodigo": "TRT6",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 34.62,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 1159250,
+          "descricaoOrgaoJulgador": "17ª Vara do Trabalho do Recife",
+          "classeJudicial": "ATSum",
+          "numero": 199,
+          "numeroProcesso": "0000199-41.2024.5.06.0017",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "ANGELO SANTOS CANDIDO DA SILVA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "RAPPI BRASIL INTERMEDIACAO DE NEGOCIOS LTDA",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2024-03-08T14:59:19.645",
+          "juizoDigital": true,
+          "idDocumento": 94326606,
+          "idProcessoParteExpediente": 16820534,
+          "dataArquivamento": "2025-11-16T08:58:39.426",
+          "dataCriacaoExpediente": "2025-11-16T08:58:39.132396",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "RE17"
+        },
+        {
+          "id": 1228502,
+          "descricaoOrgaoJulgador": "Vara Única do Trabalho de São Lourenço da Mata",
+          "classeJudicial": "ATSum",
+          "numero": 998,
+          "numeroProcesso": "0000998-40.2024.5.06.0161",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "RODRIGO MENDONCA DE JESUS",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "99 TECNOLOGIA LTDA",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2024-10-17T13:25:08.309",
+          "juizoDigital": true,
+          "idDocumento": 93192010,
+          "idProcessoParteExpediente": 16611633,
+          "dataArquivamento": "2025-10-15T14:45:26.732",
+          "dataCriacaoExpediente": "2025-10-15T14:44:24.565002",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "SM01"
+        }
+      ],
+      "total": 2,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 2,
+        "erros": 0,
+        "total": 2
+      }
+    }
+  }
+}

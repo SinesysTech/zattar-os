@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-11-16T23-40-24-707Z",
+  "trtCodigo": "TRT12",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 31.59,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 1057003,
+          "descricaoOrgaoJulgador": "2ª VARA DO TRABALHO DE BALNEÁRIO CAMBORIÚ",
+          "classeJudicial": "ATSum",
+          "numero": 800,
+          "numeroProcesso": "0000800-10.2024.5.12.0040",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "SERGIO AUGUSTO DE ARAUJO",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.                                                                                                                       ",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-12T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-19T23:59:59.999999",
+          "dataAutuacao": "2024-06-07T15:59:18.328",
+          "juizoDigital": true,
+          "idDocumento": 80323326,
+          "dataArquivamento": "2025-11-10T18:57:37.794",
+          "temAssociacao": true,
+          "dataCriacaoExpediente": "2025-11-10T18:57:37.551693",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "2BCU"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

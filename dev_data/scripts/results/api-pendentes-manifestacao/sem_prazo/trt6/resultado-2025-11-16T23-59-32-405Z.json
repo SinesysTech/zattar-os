@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-11-16T23-59-32-405Z",
+  "trtCodigo": "TRT6",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 32.15,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 224652,
+          "descricaoOrgaoJulgadorColegiado": "OJC de Análise de Recurso",
+          "descricaoOrgaoJulgador": "OJ de Análise de Recurso",
+          "classeJudicial": "RORSum",
+          "numero": 279,
+          "numeroProcesso": "0000279-24.2023.5.06.0022",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "WILMAR MANTA DOS SANTOS JUNIOR",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2023-11-12T11:40:21.432",
+          "juizoDigital": false,
+          "nomeRelator": "ANA CLAUDIA PETRUCCELLI DE LIMA",
+          "idDocumento": 34049106,
+          "idProcessoParteExpediente": 1342115,
+          "dataArquivamento": "2024-03-13T09:30:56.335",
+          "dataCriacaoExpediente": "2023-11-17T11:29:31.472872",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "OJAR"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}
