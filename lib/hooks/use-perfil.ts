@@ -2,8 +2,7 @@
 
 // Hook para buscar e gerenciar dados do perfil do usuário logado
 
-import { useState, useEffect, useCallback } from 'react';
-import { createClient } from '@/lib/client';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 interface UsePerfilResult {
@@ -25,34 +24,24 @@ export const usePerfil = (): UsePerfilResult => {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isMountedRef = useRef(true);
+  const isFetchingRef = useRef(false);
+  const hasFetchedRef = useRef(false);
 
   const buscarPerfil = useCallback(async () => {
+    // Evitar múltiplas requisições simultâneas ou repetidas
+    if (isFetchingRef.current || hasFetchedRef.current) {
+      return;
+    }
+
+    isFetchingRef.current = true;
+    hasFetchedRef.current = true;
     setIsLoading(true);
     setError(null);
 
     try {
-      const supabase = createClient();
-      
-      // Obter usuário autenticado do Supabase Auth
-      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !authUser) {
-        throw new Error('Usuário não autenticado');
-      }
-
-      // Buscar dados do usuário na tabela usuarios pelo auth_user_id
-      const { data: usuarioData, error: usuarioError } = await supabase
-        .from('usuarios')
-        .select('id')
-        .eq('auth_user_id', authUser.id)
-        .single();
-
-      if (usuarioError || !usuarioData) {
-        throw new Error('Usuário não encontrado');
-      }
-
-      // Buscar dados completos via API
-      const response = await fetch(`/api/usuarios/${usuarioData.id}`);
+      // Buscar perfil do usuário logado via API
+      const response = await fetch('/api/perfil');
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({
@@ -69,25 +58,43 @@ export const usePerfil = (): UsePerfilResult => {
         throw new Error('Resposta da API indicou falha');
       }
 
-      setUsuario(data.data);
+      if (isMountedRef.current) {
+        setUsuario(data.data);
+      }
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Erro ao buscar perfil';
-      setError(errorMessage);
-      setUsuario(null);
+      if (isMountedRef.current) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Erro ao buscar perfil';
+        setError(errorMessage);
+        setUsuario(null);
+      }
+      // Resetar flag em caso de erro para permitir retry
+      hasFetchedRef.current = false;
     } finally {
-      setIsLoading(false);
+      if (isMountedRef.current) {
+        setIsLoading(false);
+      }
+      isFetchingRef.current = false;
     }
   }, []);
 
   useEffect(() => {
+    // Executar apenas uma vez na montagem
     buscarPerfil();
-  }, [buscarPerfil]);
+
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     usuario,
     isLoading,
     error,
-    refetch: buscarPerfil,
+    refetch: useCallback(async () => {
+      hasFetchedRef.current = false;
+      isFetchingRef.current = false;
+      await buscarPerfil();
+    }, [buscarPerfil]),
   };
 };

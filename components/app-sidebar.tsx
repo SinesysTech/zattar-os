@@ -83,44 +83,53 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     avatar: string
   } | null>(null)
 
+  const hasLoadedRef = React.useRef(false)
+
   React.useEffect(() => {
+    // Evitar múltiplas chamadas
+    if (hasLoadedRef.current) {
+      return
+    }
+
     async function loadUser() {
       try {
-        const supabase = createClient()
+        hasLoadedRef.current = true
         
-        // Obter usuário autenticado do Supabase Auth
-        const { data: { user: authUser }, error: authError } = await supabase.auth.getUser()
-        
-        if (authError || !authUser) {
-          console.error("Erro ao obter usuário autenticado:", authError)
+        // Buscar perfil do usuário logado via API
+        const response = await fetch('/api/perfil')
+
+        if (!response.ok) {
+          // Se não conseguir buscar via API, tentar usar dados do auth como fallback
+          try {
+            const supabase = createClient()
+            const { data: { user: authUser } } = await supabase.auth.getUser()
+            
+            if (authUser) {
+              setUser({
+                name: authUser.user_metadata?.full_name || authUser.email?.split("@")[0] || "Usuário",
+                email: authUser.email || "",
+                avatar: authUser.user_metadata?.avatar_url || "",
+              })
+            }
+          } catch {
+            // Ignorar erro do fallback
+          }
           return
         }
 
-        // Buscar dados do usuário na tabela usuarios
-        const { data: usuario, error: usuarioError } = await supabase
-          .from("usuarios")
-          .select("nome_exibicao, email_corporativo")
-          .eq("auth_user_id", authUser.id)
-          .single()
+        const data = await response.json()
 
-        if (usuarioError || !usuario) {
-          // Se não encontrar na tabela usuarios, usar dados do auth
+        if (data.success && data.data) {
+          const usuario = data.data
           setUser({
-            name: authUser.user_metadata?.full_name || authUser.email?.split("@")[0] || "Usuário",
-            email: authUser.email || "",
-            avatar: authUser.user_metadata?.avatar_url || "",
+            name: usuario.nomeExibicao || usuario.nomeCompleto || "Usuário",
+            email: usuario.emailCorporativo || usuario.emailPessoal || "",
+            avatar: "",
           })
-          return
         }
-
-        // Usar dados da tabela usuarios
-        setUser({
-          name: usuario.nome_exibicao,
-          email: usuario.email_corporativo,
-          avatar: authUser.user_metadata?.avatar_url || "",
-        })
       } catch (error) {
         console.error("Erro ao carregar dados do usuário:", error)
+        hasLoadedRef.current = false // Permitir retry em caso de erro
       }
     }
 

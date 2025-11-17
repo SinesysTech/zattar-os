@@ -9,7 +9,19 @@ import { DataTableColumnHeader } from '@/components/data-table-column-header';
 import { ExpedientesFiltrosAvancados } from '@/components/expedientes-filtros-avancados';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ExpedientesVisualizacaoSemana } from '@/components/expedientes-visualizacao-semana';
+import { ExpedientesVisualizacaoMes } from '@/components/expedientes-visualizacao-mes';
+import { ExpedientesVisualizacaoAno } from '@/components/expedientes-visualizacao-ano';
 import { usePendentes } from '@/lib/hooks/use-pendentes';
+import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
 import {
@@ -37,109 +49,192 @@ const formatarData = (dataISO: string | null): string => {
   }
 };
 
+/**
+ * Retorna a classe CSS de cor para badge da Parte Autora
+ */
+const getParteAutoraColorClass = (): string => {
+  return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge da Parte Ré
+ */
+const getParteReColorClass = (): string => {
+  return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800';
+};
+
+/**
+ * Componente para atribuir responsável a um expediente
+ */
+function ResponsavelCell({ expediente, onSuccess }: { expediente: PendenteManifestacao; onSuccess: () => void }) {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { usuarios } = useUsuarios({ ativo: true, limite: 1000 });
+
+  const handleChange = async (value: string) => {
+    setIsLoading(true);
+    try {
+      const responsavelId = value === 'null' || value === '' ? null : parseInt(value, 10);
+
+      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/responsavel`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ responsavelId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao atribuir responsável');
+      }
+
+      // Atualizar a lista após sucesso
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao atribuir responsável:', error);
+      // Em caso de erro, ainda atualizamos para mostrar o estado atual
+      onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const responsavelAtual = usuarios.find(u => u.id === expediente.responsavel_id);
+
+  return (
+    <Select
+      value={expediente.responsavel_id?.toString() || 'null'}
+      onValueChange={handleChange}
+      disabled={isLoading}
+    >
+      <SelectTrigger className="w-[200px]">
+        <SelectValue placeholder="Sem responsável">
+          {responsavelAtual ? responsavelAtual.nomeExibicao : 'Sem responsável'}
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="null">Sem responsável</SelectItem>
+        {usuarios.map((usuario) => (
+          <SelectItem key={usuario.id} value={usuario.id.toString()}>
+            {usuario.nomeExibicao}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
 
 /**
  * Define as colunas da tabela de expedientes
  */
-const colunas: ColumnDef<PendenteManifestacao>[] = [
-  {
-    accessorKey: 'numero_processo',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Número do Processo" />
-    ),
-    enableSorting: true,
-    cell: ({ row }) => (
-      <div className="font-medium">{row.getValue('numero_processo')}</div>
-    ),
-  },
-  {
-    accessorKey: 'nome_parte_autora',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Parte Autora" />
-    ),
-    enableSorting: true,
-    cell: ({ row }) => <div>{row.getValue('nome_parte_autora')}</div>,
-  },
-  {
-    accessorKey: 'nome_parte_re',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Parte Ré" />
-    ),
-    enableSorting: true,
-    cell: ({ row }) => <div>{row.getValue('nome_parte_re')}</div>,
-  },
-  {
-    accessorKey: 'descricao_orgao_julgador',
-    header: 'Órgão Julgador',
-    cell: ({ row }) => (
-      <div className="max-w-[300px] truncate">{row.getValue('descricao_orgao_julgador')}</div>
-    ),
-  },
-  {
-    accessorKey: 'classe_judicial',
-    header: 'Classe Judicial',
-    cell: ({ row }) => (
-      <Badge variant="outline">{row.getValue('classe_judicial')}</Badge>
-    ),
-  },
-  {
-    accessorKey: 'data_ciencia_parte',
-    header: 'Data de Ciência',
-    cell: ({ row }) => formatarData(row.getValue('data_ciencia_parte')),
-  },
-  {
-    accessorKey: 'data_prazo_legal_parte',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Prazo Legal" />
-    ),
-    enableSorting: true,
-    cell: ({ row }) => formatarData(row.getValue('data_prazo_legal_parte')),
-  },
-  {
-    accessorKey: 'prazo_vencido',
-    header: 'Prazo',
-    cell: ({ row }) => {
-      const prazoVencido = row.getValue('prazo_vencido') as boolean;
-      return (
-        <Badge variant={prazoVencido ? 'destructive' : 'default'}>
-          {prazoVencido ? 'Vencido' : 'No Prazo'}
-        </Badge>
-      );
+function criarColunas(onSuccess: () => void): ColumnDef<PendenteManifestacao>[] {
+  return [
+    {
+      accessorKey: 'data_ciencia_parte',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="Data de Ciência" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 120,
+      cell: ({ row }) => (
+        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
+          {formatarData(row.getValue('data_ciencia_parte'))}
+        </div>
+      ),
     },
-  },
-  {
-    id: 'status_baixa',
-    header: 'Status',
-    cell: ({ row }) => {
-      const baixadoEm = row.original.baixado_em;
-      if (baixadoEm) {
+    {
+      accessorKey: 'data_prazo_legal_parte',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="Prazo Legal" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 120,
+      cell: ({ row }) => (
+        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
+          {formatarData(row.getValue('data_prazo_legal_parte'))}
+        </div>
+      ),
+    },
+    {
+      id: 'processo',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Processo</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 350,
+      cell: ({ row }) => {
+        const classeJudicial = row.original.classe_judicial || '';
+        const numeroProcesso = row.original.numero_processo;
+        const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
+
         return (
-          <Badge variant="secondary" className="capitalize">
-            Baixado
-          </Badge>
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[350px]">
+            <div className="text-sm font-medium whitespace-nowrap">
+              {classeJudicial && `${classeJudicial} `}{numeroProcesso}
+            </div>
+            <div className="text-xs text-muted-foreground max-w-full truncate">
+              {orgaoJulgador}
+            </div>
+          </div>
         );
-      }
-      return (
-        <Badge variant="outline" className="capitalize">
-          Pendente
-        </Badge>
-      );
+      },
     },
-  },
-  {
-    accessorKey: 'baixado_em',
-    header: 'Data de Baixa',
-    cell: ({ row }) => formatarData(row.getValue('baixado_em')),
-  },
-  {
-    id: 'acoes',
-    header: 'Ações',
-    cell: ({ row }) => {
-      const expediente = row.original;
-      return <AcoesExpediente expediente={expediente} />;
+    {
+      id: 'partes',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Partes</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 250,
+      cell: ({ row }) => {
+        const parteAutora = row.original.nome_parte_autora || '-';
+        const parteRe = row.original.nome_parte_re || '-';
+
+        return (
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+            <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit whitespace-nowrap max-w-full truncate`}>
+              {parteAutora}
+            </Badge>
+            <Badge variant="outline" className={`${getParteReColorClass()} w-fit whitespace-nowrap max-w-full truncate`}>
+              {parteRe}
+            </Badge>
+          </div>
+        );
+      },
     },
-  },
-];
+    {
+      accessorKey: 'responsavel_id',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Responsável</div>
+        </div>
+      ),
+      size: 220,
+      cell: ({ row }) => (
+        <div className="min-h-[2.5rem] flex items-center justify-center">
+          <ResponsavelCell expediente={row.original} onSuccess={onSuccess} />
+        </div>
+      ),
+    },
+    {
+      id: 'acoes',
+      header: 'Ações',
+      cell: ({ row }) => {
+        const expediente = row.original;
+        return <AcoesExpediente expediente={expediente} />;
+      },
+    },
+  ];
+}
 
 /**
  * Componente de ações para cada expediente
@@ -201,10 +296,13 @@ export default function ExpedientesPage() {
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
   const [ordenarPor, setOrdenarPor] = React.useState<
-    'data_prazo_legal_parte' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | null
+    'data_prazo_legal_parte' | 'data_ciencia_parte' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | null
   >('data_prazo_legal_parte');
   const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
+  const [statusBaixa, setStatusBaixa] = React.useState<'pendente' | 'baixado' | 'todos'>('pendente'); // Padrão: pendente
+  const [statusPrazo, setStatusPrazo] = React.useState<'no_prazo' | 'vencido' | 'todos'>('no_prazo'); // Padrão: no prazo
   const [filtros, setFiltros] = React.useState<ExpedientesFilters>({});
+  const [visualizacao, setVisualizacao] = React.useState<'tabela' | 'semana' | 'mes' | 'ano'>('tabela');
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -217,12 +315,23 @@ export default function ExpedientesPage() {
       busca: buscaDebounced || undefined,
       ordenar_por: ordenarPor || undefined,
       ordem,
+      baixado: statusBaixa === 'baixado' ? true : statusBaixa === 'pendente' ? false : undefined,
+      prazo_vencido: statusPrazo === 'vencido' ? true : statusPrazo === 'no_prazo' ? false : undefined,
       ...filtros, // Spread dos filtros avançados
     }),
-    [pagina, limite, buscaDebounced, ordenarPor, ordem, filtros]
+    [pagina, limite, buscaDebounced, ordenarPor, ordem, statusBaixa, statusPrazo, filtros]
   );
 
-  const { expedientes, paginacao, isLoading, error } = usePendentes(params);
+  const { expedientes, paginacao, isLoading, error, refetch } = usePendentes(params);
+
+  const handleSuccess = React.useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  const colunas = React.useMemo(
+    () => criarColunas(handleSuccess),
+    [handleSuccess]
+  );
 
   const handleSortingChange = React.useCallback(
     (columnId: string | null, direction: 'asc' | 'desc' | null) => {
@@ -248,51 +357,105 @@ export default function ExpedientesPage() {
   }, []);
 
   return (
-    <div className="space-y-4">
-      {/* Barra de busca e filtros */}
-      <div className="flex items-center gap-4">
-        <Input
-          placeholder="Buscar por número do processo, parte autora, parte ré, órgão julgador ou classe judicial..."
-          value={busca}
-          onChange={(e) => {
-            setBusca(e.target.value);
-            setPagina(0); // Resetar para primeira página ao buscar
-          }}
-          className="max-w-sm"
-        />
-        <ExpedientesFiltrosAvancados
-          filters={filtros}
-          onFiltersChange={handleFiltersChange}
-          onReset={handleFiltersReset}
-        />
-      </div>
+    <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
+      <div className="space-y-4">
+        {/* Barra de busca e filtros */}
+        <div className="flex items-center gap-4">
+          <Input
+            placeholder="Buscar por número do processo, parte autora, parte ré, órgão julgador ou classe judicial..."
+            value={busca}
+            onChange={(e) => {
+              setBusca(e.target.value);
+              setPagina(0); // Resetar para primeira página ao buscar
+            }}
+            className="max-w-sm"
+          />
+          <ExpedientesFiltrosAvancados
+            filters={filtros}
+            onFiltersChange={handleFiltersChange}
+            onReset={handleFiltersReset}
+          />
+          <Select
+            value={statusBaixa}
+            onValueChange={(value) => {
+              setStatusBaixa(value as 'pendente' | 'baixado' | 'todos');
+              setPagina(0); // Resetar para primeira página ao mudar status
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="pendente">Pendente</SelectItem>
+              <SelectItem value="baixado">Baixado</SelectItem>
+              <SelectItem value="todos">Todos os Status</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={statusPrazo}
+            onValueChange={(value) => {
+              setStatusPrazo(value as 'no_prazo' | 'vencido' | 'todos');
+              setPagina(0); // Resetar para primeira página ao mudar prazo
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Prazo" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="no_prazo">No Prazo</SelectItem>
+              <SelectItem value="vencido">Vencido</SelectItem>
+              <SelectItem value="todos">Todos os Prazos</SelectItem>
+            </SelectContent>
+          </Select>
+          <TabsList>
+            <TabsTrigger value="tabela">Tabela</TabsTrigger>
+            <TabsTrigger value="semana">Semana</TabsTrigger>
+            <TabsTrigger value="mes">Mês</TabsTrigger>
+            <TabsTrigger value="ano">Ano</TabsTrigger>
+          </TabsList>
+        </div>
 
-      {/* Tabela */}
-      <DataTable
-        data={expedientes}
-        columns={colunas}
-        pagination={
-          paginacao
-            ? {
-                pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-                pageSize: paginacao.limite,
-                total: paginacao.total,
-                totalPages: paginacao.totalPaginas,
-                onPageChange: setPagina,
-                onPageSizeChange: setLimite,
-              }
-            : undefined
-        }
-        sorting={{
-          columnId: ordenarPor,
-          direction: ordem,
-          onSortingChange: handleSortingChange,
-        }}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhum expediente encontrado."
-      />
-    </div>
+        <TabsContent value="tabela" className="mt-0">
+          {/* Tabela */}
+          <DataTable
+            data={expedientes}
+            columns={colunas}
+            pagination={
+              paginacao
+                ? {
+                    pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                    pageSize: paginacao.limite,
+                    total: paginacao.total,
+                    totalPages: paginacao.totalPaginas,
+                    onPageChange: setPagina,
+                    onPageSizeChange: setLimite,
+                  }
+                : undefined
+            }
+            sorting={{
+              columnId: ordenarPor,
+              direction: ordem,
+              onSortingChange: handleSortingChange,
+            }}
+            isLoading={isLoading}
+            error={error}
+            emptyMessage="Nenhum expediente encontrado."
+          />
+        </TabsContent>
+
+        <TabsContent value="semana" className="mt-0">
+          <ExpedientesVisualizacaoSemana expedientes={expedientes} isLoading={isLoading} />
+        </TabsContent>
+
+        <TabsContent value="mes" className="mt-0">
+          <ExpedientesVisualizacaoMes expedientes={expedientes} isLoading={isLoading} />
+        </TabsContent>
+
+        <TabsContent value="ano" className="mt-0">
+          <ExpedientesVisualizacaoAno expedientes={expedientes} isLoading={isLoading} />
+        </TabsContent>
+      </div>
+    </Tabs>
   );
 }
 
