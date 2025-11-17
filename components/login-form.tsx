@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import Image from 'next/image'
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
@@ -90,8 +91,16 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Entrar</CardTitle>
-          <CardDescription>Digite seu email abaixo para entrar na sua conta</CardDescription>
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/zattar.png"
+              alt="Zattar Advogados"
+              width={200}
+              height={80}
+              className="object-contain"
+              priority
+            />
+          </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin}>

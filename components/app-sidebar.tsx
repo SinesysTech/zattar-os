@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   Scale,
   Users,
+  UserCog,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -39,11 +40,6 @@ const navMain = [
     isActive: true,
   },
   {
-    title: "Processos",
-    url: "/processos",
-    icon: Scale,
-  },
-  {
     title: "Clientes",
     url: "/clientes",
     icon: Users,
@@ -54,6 +50,11 @@ const navMain = [
     icon: FileText,
   },
   {
+    title: "Processos",
+    url: "/processos",
+    icon: Scale,
+  },
+  {
     title: "Audiências",
     url: "/audiencias",
     icon: Calendar,
@@ -62,6 +63,14 @@ const navMain = [
     title: "Expedientes",
     url: "/expedientes",
     icon: FolderOpen,
+  },
+]
+
+const navAdmin = [
+  {
+    name: "Usuários",
+    url: "/usuarios",
+    icon: UserCog,
   },
 ]
 
@@ -123,6 +132,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
+        <NavProjects projects={navAdmin} label="Administração" showActions={false} />
       </SidebarContent>
       <SidebarFooter>
         {user ? (

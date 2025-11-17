@@ -9,7 +9,15 @@ import { DataTableColumnHeader } from '@/components/data-table-column-header';
 import { AudienciasFiltrosAvancados } from '@/components/audiencias-filtros-avancados';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useAudiencias } from '@/lib/hooks/use-audiencias';
+import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 import type { AudienciasFilters } from '@/lib/types/audiencias';
@@ -48,9 +56,71 @@ const formatarStatus = (status: string | null): string => {
 };
 
 /**
+ * Componente para atribuir responsável a uma audiência
+ */
+function ResponsavelCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { usuarios } = useUsuarios({ ativo: true, limite: 1000 });
+
+  const handleChange = async (value: string) => {
+    setIsLoading(true);
+    try {
+      const responsavelId = value === 'null' || value === '' ? null : parseInt(value, 10);
+      
+      const response = await fetch(`/api/audiencias/${audiencia.id}/responsavel`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ responsavelId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao atribuir responsável');
+      }
+
+      // Atualizar a lista após sucesso
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao atribuir responsável:', error);
+      // Em caso de erro, ainda atualizamos para mostrar o estado atual
+      onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const responsavelAtual = usuarios.find(u => u.id === audiencia.responsavel_id);
+
+  return (
+    <Select
+      value={audiencia.responsavel_id?.toString() || 'null'}
+      onValueChange={handleChange}
+      disabled={isLoading}
+    >
+      <SelectTrigger className="w-[200px]">
+        <SelectValue placeholder="Sem responsável">
+          {responsavelAtual ? responsavelAtual.nomeExibicao : 'Sem responsável'}
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="null">Sem responsável</SelectItem>
+        {usuarios.map((usuario) => (
+          <SelectItem key={usuario.id} value={usuario.id.toString()}>
+            {usuario.nomeExibicao}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+/**
  * Define as colunas da tabela de audiências
  */
-const colunas: ColumnDef<Audiencia>[] = [
+function criarColunas(onSuccess: () => void): ColumnDef<Audiencia>[] {
+  return [
   {
     accessorKey: 'data_inicio',
     header: ({ column }) => (
@@ -136,7 +206,15 @@ const colunas: ColumnDef<Audiencia>[] = [
     header: 'Data e Hora de Fim',
     cell: ({ row }) => formatarDataHora(row.getValue('data_fim')),
   },
+  {
+    accessorKey: 'responsavel_id',
+    header: 'Responsável',
+    cell: ({ row }) => (
+      <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} />
+    ),
+  },
 ];
+}
 
 export default function AudienciasPage() {
   const [busca, setBusca] = React.useState('');
@@ -164,7 +242,16 @@ export default function AudienciasPage() {
     [pagina, limite, buscaDebounced, ordenarPor, ordem, filtros]
   );
 
-  const { audiencias, paginacao, isLoading, error } = useAudiencias(params);
+  const { audiencias, paginacao, isLoading, error, refetch } = useAudiencias(params);
+
+  const handleSuccess = React.useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  const colunas = React.useMemo(
+    () => criarColunas(handleSuccess),
+    [handleSuccess]
+  );
 
   const handleSortingChange = React.useCallback(
     (columnId: string | null, direction: 'asc' | 'desc' | null) => {

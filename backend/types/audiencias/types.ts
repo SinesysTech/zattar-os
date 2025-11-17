@@ -63,7 +63,7 @@ export interface Audiencia {
   url_audiencia_virtual: string | null;
   hora_inicial: string | null; // Time format HH:mm:ss
   hora_final: string | null; // Time format HH:mm:ss
-  responsavel_id: number | null; // Adicionado via join com acervo
+  responsavel_id: number | null;
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }

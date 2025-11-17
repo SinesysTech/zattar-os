@@ -24,6 +24,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Filter, X } from 'lucide-react';
+import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import type { AudienciasFilters } from '@/lib/types/audiencias';
 
 // Lista de TRTs disponíveis
@@ -46,6 +47,7 @@ export function AudienciasFiltrosAvancados({
 }: AudienciasFiltrosAvancadosProps) {
   const [open, setOpen] = React.useState(false);
   const [localFilters, setLocalFilters] = React.useState<AudienciasFilters>(filters);
+  const { usuarios, isLoading: isLoadingUsuarios } = useUsuarios({ ativo: true, limite: 1000 });
 
   // Sincronizar filtros locais com props quando abrir o sheet
   React.useEffect(() => {
@@ -139,6 +141,44 @@ export function AudienciasFiltrosAvancados({
                 <SelectItem value="all">Todos os graus</SelectItem>
                 <SelectItem value="primeiro_grau">Primeiro Grau</SelectItem>
                 <SelectItem value="segundo_grau">Segundo Grau</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Responsável */}
+          <div className="space-y-2">
+            <Label htmlFor="responsavel_id">Responsável</Label>
+            <Select
+              value={
+                localFilters.responsavel_id === 'null'
+                  ? 'null'
+                  : localFilters.responsavel_id?.toString() || 'all'
+              }
+              onValueChange={(value) => {
+                if (value === 'null') {
+                  handleFilterChange('responsavel_id', 'null');
+                } else if (value === 'all') {
+                  handleFilterChange('responsavel_id', undefined);
+                } else {
+                  const num = parseInt(value, 10);
+                  if (!isNaN(num)) {
+                    handleFilterChange('responsavel_id', num);
+                  }
+                }
+              }}
+              disabled={isLoadingUsuarios}
+            >
+              <SelectTrigger id="responsavel_id">
+                <SelectValue placeholder={isLoadingUsuarios ? 'Carregando...' : 'Todos os responsáveis'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os responsáveis</SelectItem>
+                <SelectItem value="null">Sem responsável</SelectItem>
+                {usuarios.map((usuario) => (
+                  <SelectItem key={usuario.id} value={usuario.id.toString()}>
+                    {usuario.nomeExibicao}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

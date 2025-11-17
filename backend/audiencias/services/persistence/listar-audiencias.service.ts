@@ -41,7 +41,7 @@ function converterParaAudiencia(data: Record<string, unknown>): Audiencia {
     url_audiencia_virtual: (data.url_audiencia_virtual as string | null) ?? null,
     hora_inicial: (data.hora_inicial as string | null) ?? null,
     hora_final: (data.hora_final as string | null) ?? null,
-    responsavel_id: (data.responsavel_id as number | null) ?? null, // Vem do join com acervo
+    responsavel_id: (data.responsavel_id as number | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };
@@ -49,7 +49,7 @@ function converterParaAudiencia(data: Record<string, unknown>): Audiencia {
 
 /**
  * Lista audiências com filtros, paginação e ordenação
- * Faz join com acervo para obter responsavel_id
+ * Usa responsavel_id diretamente da tabela audiencias
  */
 export async function listarAudiencias(
   params: ListarAudienciasParams = {}
@@ -60,12 +60,10 @@ export async function listarAudiencias(
   const limite = Math.min(params.limite ?? 50, 100); // Máximo 100
   const offset = (pagina - 1) * limite;
 
-  // Fazer join com acervo para pegar responsavel_id
-  // Usar sintaxe do Supabase para relacionamentos via foreign key processo_id
-  // O Supabase detecta automaticamente o relacionamento pela foreign key
+  // Selecionar todos os campos da tabela audiencias (incluindo responsavel_id)
   let query = supabase
     .from('audiencias')
-    .select('*, acervo!inner(responsavel_id)', { count: 'exact' });
+    .select('*', { count: 'exact' });
 
   // Filtros básicos (campos da tabela audiencias não precisam de prefixo)
   if (params.trt) {
@@ -76,14 +74,14 @@ export async function listarAudiencias(
     query = query.eq('grau', params.grau);
   }
 
-  // Filtro de responsável (vem do join com acervo)
+  // Filtro de responsável (vem diretamente da tabela audiencias)
   if (params.sem_responsavel === true) {
-    query = query.is('acervo.responsavel_id', null);
+    query = query.is('responsavel_id', null);
   } else if (params.responsavel_id !== undefined) {
     if (params.responsavel_id === 'null') {
-      query = query.is('acervo.responsavel_id', null);
+      query = query.is('responsavel_id', null);
     } else if (typeof params.responsavel_id === 'number') {
-      query = query.eq('acervo.responsavel_id', params.responsavel_id);
+      query = query.eq('responsavel_id', params.responsavel_id);
     }
   }
 
@@ -155,29 +153,9 @@ export async function listarAudiencias(
     throw new Error(`Erro ao listar audiências: ${error.message}`);
   }
 
-  // Converter dados do formato do join para formato de retorno
+  // Converter dados para formato de retorno
   const audiencias = (data || []).map((row: Record<string, unknown>) => {
-    // O Supabase retorna os dados do join em formato aninhado
-    // Precisamos extrair responsavel_id do objeto acervo
-    let responsavelId: number | null = null;
-    
-    if (row.acervo) {
-      const acervoData = Array.isArray(row.acervo) ? row.acervo[0] : row.acervo;
-      if (acervoData && typeof acervoData === 'object' && 'responsavel_id' in acervoData) {
-        responsavelId = (acervoData as { responsavel_id: number | null }).responsavel_id;
-      }
-    }
-
-    // Criar objeto com todos os campos de audiencias + responsavel_id
-    const audienciaData: Record<string, unknown> = {
-      ...row,
-      responsavel_id: responsavelId,
-    };
-
-    // Remover o objeto acervo aninhado
-    delete audienciaData.acervo;
-
-    return converterParaAudiencia(audienciaData);
+    return converterParaAudiencia(row);
   });
 
   const total = count ?? 0;

@@ -30,6 +30,7 @@ create table public.audiencias (
   url_audiencia_virtual text,
   hora_inicial time,
   hora_final time,
+  responsavel_id bigint references public.usuarios(id) on delete set null,
   created_at timestamptz default now() not null,
   updated_at timestamptz default now() not null,
   -- Garantir unicidade da audiência: mesmo processo pode ter múltiplos advogados habilitados
@@ -64,6 +65,7 @@ comment on column public.audiencias.polo_passivo_cnpj is 'CNPJ da parte ré';
 comment on column public.audiencias.url_audiencia_virtual is 'URL para audiências virtuais (Zoom, Google Meet, etc)';
 comment on column public.audiencias.hora_inicial is 'Hora inicial da audiência';
 comment on column public.audiencias.hora_final is 'Hora final da audiência';
+comment on column public.audiencias.responsavel_id is 'Usuário responsável pela audiência. Pode ser atribuído, transferido ou desatribuído. Todas as alterações são registradas em logs_alteracao';
 
 -- Índices para melhor performance
 create index idx_audiencias_advogado_id on public.audiencias using btree (advogado_id);
@@ -76,6 +78,7 @@ create index idx_audiencias_numero_processo on public.audiencias using btree (nu
 create index idx_audiencias_status on public.audiencias using btree (status);
 create index idx_audiencias_data_inicio on public.audiencias using btree (data_inicio);
 create index idx_audiencias_data_fim on public.audiencias using btree (data_fim);
+create index idx_audiencias_responsavel_id on public.audiencias using btree (responsavel_id);
 create index idx_audiencias_advogado_trt_grau on public.audiencias using btree (advogado_id, trt, grau);
 create index idx_audiencias_processo_data on public.audiencias using btree (processo_id, data_inicio);
 

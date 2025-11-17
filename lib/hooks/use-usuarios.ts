@@ -3,17 +3,17 @@
 // Hook para buscar usuários do sistema
 
 import { useState, useEffect, useCallback } from 'react';
-
-export interface Usuario {
-  id: number;
-  nomeCompleto: string;
-  nomeExibicao: string;
-  emailCorporativo: string;
-  ativo: boolean;
-}
+import type { UsuariosParams } from '@/lib/types/usuarios';
+import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 interface UseUsuariosResult {
   usuarios: Usuario[];
+  paginacao: {
+    pagina: number;
+    limite: number;
+    total: number;
+    totalPaginas: number;
+  } | null;
   isLoading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
@@ -22,22 +22,20 @@ interface UseUsuariosResult {
 interface UsuariosApiResponse {
   success: boolean;
   data: {
-    usuarios: Array<{
-      id: number;
-      nomeCompleto: string;
-      nomeExibicao: string;
-      emailCorporativo: string;
-      ativo: boolean;
-    }>;
+    usuarios: Usuario[];
     total: number;
+    pagina: number;
+    limite: number;
+    totalPaginas: number;
   };
 }
 
 /**
- * Hook para buscar usuários do sistema
+ * Hook para buscar usuários do sistema com paginação e filtros
  */
-export const useUsuarios = (ativo?: boolean): UseUsuariosResult => {
+export const useUsuarios = (params: UsuariosParams = {}): UseUsuariosResult => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [paginacao, setPaginacao] = useState<UseUsuariosResult['paginacao']>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,10 +44,26 @@ export const useUsuarios = (ativo?: boolean): UseUsuariosResult => {
     setError(null);
 
     try {
+      // Construir query string
       const searchParams = new URLSearchParams();
-      searchParams.set('limite', '1000'); // Buscar muitos usuários
-      if (ativo !== undefined) {
-        searchParams.set('ativo', ativo.toString());
+      
+      if (params.pagina !== undefined) {
+        searchParams.set('pagina', params.pagina.toString());
+      }
+      if (params.limite !== undefined) {
+        searchParams.set('limite', params.limite.toString());
+      }
+      if (params.busca) {
+        searchParams.set('busca', params.busca);
+      }
+      if (params.ativo !== undefined) {
+        searchParams.set('ativo', params.ativo.toString());
+      }
+      if (params.oab) {
+        searchParams.set('oab', params.oab);
+      }
+      if (params.ufOab) {
+        searchParams.set('ufOab', params.ufOab);
       }
 
       const response = await fetch(`/api/usuarios?${searchParams.toString()}`);
@@ -69,25 +83,29 @@ export const useUsuarios = (ativo?: boolean): UseUsuariosResult => {
         throw new Error('Resposta da API indicou falha');
       }
 
-      // A API já retorna no formato correto (camelCase)
-      const usuariosFormatados: Usuario[] = data.data.usuarios.map((u) => ({
-        id: u.id,
-        nomeCompleto: u.nomeCompleto,
-        nomeExibicao: u.nomeExibicao,
-        emailCorporativo: u.emailCorporativo,
-        ativo: u.ativo,
-      }));
+      // Verificar se a estrutura de dados está correta
+      if (!data.data) {
+        console.error('Estrutura de dados inválida:', data);
+        throw new Error('Estrutura de dados inválida na resposta da API');
+      }
 
-      setUsuarios(usuariosFormatados);
+      setUsuarios(data.data.usuarios || []);
+      setPaginacao({
+        pagina: data.data.pagina,
+        limite: data.data.limite,
+        total: data.data.total,
+        totalPaginas: data.data.totalPaginas,
+      });
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Erro ao buscar usuários';
       setError(errorMessage);
       setUsuarios([]);
+      setPaginacao(null);
     } finally {
       setIsLoading(false);
     }
-  }, [ativo]);
+  }, [params]);
 
   useEffect(() => {
     buscarUsuarios();
@@ -95,6 +113,7 @@ export const useUsuarios = (ativo?: boolean): UseUsuariosResult => {
 
   return {
     usuarios,
+    paginacao,
     isLoading,
     error,
     refetch: buscarUsuarios,

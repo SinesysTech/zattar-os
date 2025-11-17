@@ -530,6 +530,14 @@ export async function listarUsuarios(
   const limite = params.limite ?? 50;
   const offset = (pagina - 1) * limite;
 
+  // Debug: verificar se a chave está configurada
+  const secretKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!secretKey) {
+    console.error('❌ Secret Key não configurada! Verifique SUPABASE_SECRET_KEY ou SUPABASE_SERVICE_ROLE_KEY');
+  } else {
+    console.log('✅ Secret Key configurada:', secretKey.substring(0, 20) + '...');
+  }
+
   let query = supabase.from('usuarios').select('*', { count: 'exact' });
 
   // Aplicar filtros
@@ -558,8 +566,16 @@ export async function listarUsuarios(
   const { data, error, count } = await query;
 
   if (error) {
+    console.error('❌ Erro ao listar usuários:', error);
+    console.error('❌ Código do erro:', error.code);
+    console.error('❌ Mensagem do erro:', error.message);
+    console.error('❌ Detalhes do erro:', error.details);
+    console.error('❌ Hint do erro:', error.hint);
     throw new Error(`Erro ao listar usuários: ${error.message}`);
   }
+
+  console.log('✅ Query executada com sucesso. Total encontrado:', count ?? 0);
+  console.log('✅ Dados retornados:', data?.length ?? 0, 'registros');
 
   const usuarios = (data || []).map(converterParaUsuario);
   const total = count ?? 0;
