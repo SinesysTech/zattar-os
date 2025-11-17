@@ -1,0 +1,155 @@
+{
+  "timestamp": "2025-11-17T01-04-26-173Z",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "codigoSituacao": "M",
+  "totalTRTs": 24,
+  "sucessos": 18,
+  "falhas": 6,
+  "totalAudienciasCapturadas": 124,
+  "duracaoTotalSegundos": 615.12,
+  "resultados": [
+    {
+      "trt": "TRT1",
+      "sucesso": true,
+      "totalAudiencias": 19,
+      "duracaoSegundos": 37.85
+    },
+    {
+      "trt": "TRT2",
+      "sucesso": true,
+      "totalAudiencias": 10,
+      "duracaoSegundos": 33.82
+    },
+    {
+      "trt": "TRT3",
+      "sucesso": true,
+      "totalAudiencias": 51,
+      "duracaoSegundos": 47.52
+    },
+    {
+      "trt": "TRT4",
+      "sucesso": true,
+      "totalAudiencias": 5,
+      "duracaoSegundos": 33.36
+    },
+    {
+      "trt": "TRT5",
+      "sucesso": true,
+      "totalAudiencias": 1,
+      "duracaoSegundos": 31.9
+    },
+    {
+      "trt": "TRT6",
+      "sucesso": true,
+      "totalAudiencias": 6,
+      "duracaoSegundos": 36.04
+    },
+    {
+      "trt": "TRT7",
+      "sucesso": true,
+      "totalAudiencias": 4,
+      "duracaoSegundos": 33.06
+    },
+    {
+      "trt": "TRT8",
+      "sucesso": true,
+      "totalAudiencias": 1,
+      "duracaoSegundos": 30.76
+    },
+    {
+      "trt": "TRT9",
+      "sucesso": true,
+      "totalAudiencias": 2,
+      "duracaoSegundos": 34.31
+    },
+    {
+      "trt": "TRT10",
+      "sucesso": true,
+      "totalAudiencias": 2,
+      "duracaoSegundos": 33.14
+    },
+    {
+      "trt": "TRT11",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT12",
+      "sucesso": true,
+      "totalAudiencias": 3,
+      "duracaoSegundos": 32.72
+    },
+    {
+      "trt": "TRT13",
+      "sucesso": true,
+      "totalAudiencias": 6,
+      "duracaoSegundos": 33.91
+    },
+    {
+      "trt": "TRT14",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT15",
+      "sucesso": true,
+      "totalAudiencias": 4,
+      "duracaoSegundos": 32.18
+    },
+    {
+      "trt": "TRT16",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT17",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT18",
+      "sucesso": true,
+      "totalAudiencias": 1,
+      "duracaoSegundos": 31.45
+    },
+    {
+      "trt": "TRT19",
+      "sucesso": true,
+      "totalAudiencias": 1,
+      "duracaoSegundos": 34.96
+    },
+    {
+      "trt": "TRT20",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT21",
+      "sucesso": true,
+      "totalAudiencias": 4,
+      "duracaoSegundos": 34.18
+    },
+    {
+      "trt": "TRT22",
+      "sucesso": true,
+      "totalAudiencias": 2,
+      "duracaoSegundos": 32.08
+    },
+    {
+      "trt": "TRT23",
+      "sucesso": true,
+      "totalAudiencias": 2,
+      "duracaoSegundos": 31.88
+    },
+    {
+      "trt": "TRT24",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    }
+  ]
+}

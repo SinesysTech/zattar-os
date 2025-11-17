@@ -1,0 +1,297 @@
+{
+  "timestamp": "2025-11-17T01-16-21-763Z",
+  "trtCodigo": "TRT21",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 34.18,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 650084,
+          "dataInicio": "2025-11-17T13:45:00",
+          "dataFim": "2025-11-17T13:46:00",
+          "salaAudiencia": {
+            "nome": "Sala de Audiência 1VT_Substitut"
+          },
+          "status": "M",
+          "processo": {
+            "id": 372090,
+            "numero": "0000957-17.2025.5.21.0001",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 41,
+              "descricao": "1ª Vara do Trabalho de Natal",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 6,
+            "descricao": "Instrução",
+            "codigo": "22",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "ED NEY DE MELO PENA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "99 TECNOLOGIA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 650084,
+            "horaInicial": "13:45:00",
+            "horaFinal": "13:46:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000957-17.2025.5.21.0001",
+          "idProcesso": 372090
+        },
+        {
+          "id": 642880,
+          "dataInicio": "2025-11-24T11:00:00",
+          "dataFim": "2025-11-24T11:20:00",
+          "salaAudiencia": {
+            "nome": "JUÍZA TITULAR"
+          },
+          "status": "M",
+          "processo": {
+            "id": 365857,
+            "numero": "0000731-12.2025.5.21.0001",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 52,
+              "descricao": "11ª Vara do Trabalho de Natal",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 6,
+            "descricao": "Instrução",
+            "codigo": "22",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "DJAIR DE OLIVEIRA ARAUJO JUNIOR",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 642880,
+            "horaInicial": "11:00:00",
+            "horaFinal": "11:20:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000731-12.2025.5.21.0001",
+          "idProcesso": 365857
+        },
+        {
+          "id": 649567,
+          "dataInicio": "2025-11-28T09:00:00",
+          "dataFim": "2025-11-28T09:30:00",
+          "salaAudiencia": {
+            "nome": "PAUTA EXTRA"
+          },
+          "status": "M",
+          "processo": {
+            "id": 341341,
+            "numero": "0001011-87.2024.5.21.0010",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 50,
+              "descricao": "10ª Vara do Trabalho de Natal",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 6,
+            "descricao": "Instrução",
+            "codigo": "22",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "CAIO MENEZES DO NASCIMENTO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 649567,
+            "horaInicial": "09:00:00",
+            "horaFinal": "09:30:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001011-87.2024.5.21.0010",
+          "idProcesso": 341341
+        },
+        {
+          "id": 653081,
+          "dataInicio": "2025-12-09T14:50:00",
+          "dataFim": "2025-12-09T14:55:00",
+          "salaAudiencia": {
+            "nome": "AUDIÊNCIA 4VT"
+          },
+          "status": "M",
+          "processo": {
+            "id": 355890,
+            "numero": "0000375-08.2025.5.21.0004",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 44,
+              "descricao": "4ª Vara do Trabalho de Natal",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 4,
+            "descricao": "Julgamento",
+            "codigo": "24",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "MATEUS WILDSON DOS SANTOS DANTAS",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 653081,
+            "horaInicial": "14:50:00",
+            "horaFinal": "14:55:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000375-08.2025.5.21.0004",
+          "idProcesso": 355890
+        }
+      ],
+      "total": 4,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 4,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 4,
+        "orgaosJulgadoresCriados": 4
+      }
+    }
+  }
+}

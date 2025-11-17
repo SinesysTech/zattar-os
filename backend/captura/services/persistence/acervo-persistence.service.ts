@@ -1,9 +1,17 @@
 // Serviço de persistência de acervo (acervo geral + arquivados)
-// Salva processos capturados no banco de dados
+// Salva processos capturados no banco de dados com comparação antes de atualizar
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type { Processo } from '@/backend/api/pje-trt/types';
 import type { CodigoTRT, GrauTRT } from '../trt/types';
+import {
+  compararObjetos,
+  removerCamposControle,
+} from './comparison.util';
+import {
+  captureLogService,
+  type TipoEntidade,
+} from './capture-log.service';
 
 /**
  * Parâmetros para salvar processos no acervo
@@ -22,6 +30,7 @@ export interface SalvarAcervoParams {
 export interface SalvarAcervoResult {
   inseridos: number;
   atualizados: number;
+  naoAtualizados: number;
   erros: number;
   total: number;
 }
@@ -39,8 +48,39 @@ function parseDate(dateString: string | null | undefined): string | null {
 }
 
 /**
+ * Busca um processo existente no acervo com todos os campos
+ */
+async function buscarProcessoExistente(
+  idPje: number,
+  trt: CodigoTRT,
+  grau: GrauTRT,
+  numeroProcesso: string
+): Promise<Record<string, unknown> | null> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('acervo')
+    .select('*')
+    .eq('id_pje', idPje)
+    .eq('trt', trt)
+    .eq('grau', grau)
+    .eq('numero_processo', numeroProcesso.trim())
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      // Nenhum registro encontrado
+      return null;
+    }
+    throw new Error(`Erro ao buscar processo no acervo: ${error.message}`);
+  }
+
+  return data as Record<string, unknown>;
+}
+
+/**
  * Salva múltiplos processos no acervo
- * Usa UPSERT baseado na constraint unique (id_pje, trt, grau, numero_processo)
+ * Compara cada registro antes de atualizar para evitar atualizações desnecessárias
  */
 export async function salvarAcervo(
   params: SalvarAcervoParams
@@ -52,67 +92,143 @@ export async function salvarAcervo(
     return {
       inseridos: 0,
       atualizados: 0,
+      naoAtualizados: 0,
       erros: 0,
       total: 0,
     };
   }
 
-  // Converter processos para formato do banco
-  const dados = processos.map((processo) => ({
-    id_pje: processo.id,
-    advogado_id: advogadoId,
-    origem,
-    trt,
-    grau,
-    numero_processo: processo.numeroProcesso.trim(),
-    numero: processo.numero,
-    descricao_orgao_julgador: processo.descricaoOrgaoJulgador.trim(),
-    classe_judicial: processo.classeJudicial.trim(),
-    segredo_justica: processo.segredoDeJustica,
-    codigo_status_processo: processo.codigoStatusProcesso.trim(),
-    prioridade_processual: processo.prioridadeProcessual,
-    nome_parte_autora: processo.nomeParteAutora.trim(),
-    qtde_parte_autora: processo.qtdeParteAutora,
-    nome_parte_re: processo.nomeParteRe.trim(),
-    qtde_parte_re: processo.qtdeParteRe,
-    data_autuacao: parseDate(processo.dataAutuacao),
-    juizo_digital: processo.juizoDigital,
-    data_arquivamento: parseDate(processo.dataArquivamento),
-    data_proxima_audiencia: parseDate(processo.dataProximaAudiencia),
-    tem_associacao: processo.temAssociacao ?? false,
-  }));
-
-  // UPSERT em lotes para melhor performance
-  const BATCH_SIZE = 100;
-  const inseridos = 0; // UPSERT não distingue inseridos de atualizados, sempre 0
+  let inseridos = 0;
   let atualizados = 0;
+  let naoAtualizados = 0;
   let erros = 0;
 
-  for (let i = 0; i < dados.length; i += BATCH_SIZE) {
-    const batch = dados.slice(i, i + BATCH_SIZE);
+  const entidade: TipoEntidade = 'acervo';
 
-    const { data, error } = await supabase
-      .from('acervo')
-      .upsert(batch, {
-        onConflict: 'id_pje,trt,grau,numero_processo',
-        ignoreDuplicates: false,
-      })
-      .select('id');
+  // Processar cada processo individualmente para comparar antes de persistir
+  for (const processo of processos) {
+    try {
+      const numeroProcesso = processo.numeroProcesso.trim();
 
-    if (error) {
-      console.error(`Erro ao salvar lote de processos (${i + 1}-${Math.min(i + BATCH_SIZE, dados.length)}):`, error);
-      erros += batch.length;
-    } else {
-      // Contar inseridos vs atualizados (aproximação: se retornou dados, foi upsert bem-sucedido)
-      const count = data?.length ?? 0;
-      // Não temos como distinguir inseridos de atualizados com upsert, então contamos como atualizados
-      atualizados += count;
+      // Converter processo para formato do banco
+      const dadosNovos = {
+        id_pje: processo.id,
+        advogado_id: advogadoId,
+        origem,
+        trt,
+        grau,
+        numero_processo: numeroProcesso,
+        numero: processo.numero,
+        descricao_orgao_julgador: processo.descricaoOrgaoJulgador.trim(),
+        classe_judicial: processo.classeJudicial.trim(),
+        segredo_justica: processo.segredoDeJustica,
+        codigo_status_processo: processo.codigoStatusProcesso.trim(),
+        prioridade_processual: processo.prioridadeProcessual,
+        nome_parte_autora: processo.nomeParteAutora.trim(),
+        qtde_parte_autora: processo.qtdeParteAutora,
+        nome_parte_re: processo.nomeParteRe.trim(),
+        qtde_parte_re: processo.qtdeParteRe,
+        data_autuacao: parseDate(processo.dataAutuacao),
+        juizo_digital: processo.juizoDigital,
+        data_arquivamento: parseDate(processo.dataArquivamento),
+        data_proxima_audiencia: parseDate(processo.dataProximaAudiencia),
+        tem_associacao: processo.temAssociacao ?? false,
+      };
+
+      // Buscar registro existente
+      const registroExistente = await buscarProcessoExistente(
+        processo.id,
+        trt,
+        grau,
+        numeroProcesso
+      );
+
+      if (!registroExistente) {
+        // Registro não existe - inserir
+        const { error } = await supabase.from('acervo').insert(dadosNovos);
+
+        if (error) {
+          throw error;
+        }
+
+        inseridos++;
+        captureLogService.logInserido(
+          entidade,
+          processo.id,
+          trt,
+          grau,
+          numeroProcesso
+        );
+      } else {
+        // Registro existe - comparar antes de atualizar
+        const comparacao = compararObjetos(
+          dadosNovos,
+          registroExistente as Record<string, unknown>
+        );
+
+        if (comparacao.saoIdenticos) {
+          // Registro idêntico - não atualizar
+          naoAtualizados++;
+          captureLogService.logNaoAtualizado(
+            entidade,
+            processo.id,
+            trt,
+            grau,
+            numeroProcesso
+          );
+        } else {
+          // Registro diferente - atualizar com dados anteriores
+          const dadosAnteriores = removerCamposControle(
+            registroExistente as Record<string, unknown>
+          );
+
+          const { error } = await supabase
+            .from('acervo')
+            .update({
+              ...dadosNovos,
+              dados_anteriores: dadosAnteriores,
+            })
+            .eq('id_pje', processo.id)
+            .eq('trt', trt)
+            .eq('grau', grau)
+            .eq('numero_processo', numeroProcesso);
+
+          if (error) {
+            throw error;
+          }
+
+          atualizados++;
+          captureLogService.logAtualizado(
+            entidade,
+            processo.id,
+            trt,
+            grau,
+            numeroProcesso,
+            comparacao.camposAlterados
+          );
+        }
+      }
+    } catch (error) {
+      erros++;
+      const erroMsg =
+        error instanceof Error ? error.message : String(error);
+      captureLogService.logErro(entidade, erroMsg, {
+        id_pje: processo.id,
+        numero_processo: processo.numeroProcesso,
+        trt,
+        grau,
+      });
+      console.error(
+        `Erro ao salvar processo ${processo.numeroProcesso}:`,
+        error
+      );
     }
   }
 
   return {
-    inseridos: 0, // UPSERT não distingue inseridos de atualizados
-    atualizados: inseridos + atualizados,
+    inseridos,
+    atualizados,
+    naoAtualizados,
     erros,
     total: processos.length,
   };

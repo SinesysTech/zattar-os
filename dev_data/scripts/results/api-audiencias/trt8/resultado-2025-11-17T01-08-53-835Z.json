@@ -1,0 +1,96 @@
+{
+  "timestamp": "2025-11-17T01-08-53-835Z",
+  "trtCodigo": "TRT8",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 30.76,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 1353332,
+          "dataInicio": "2026-02-05T09:30:00",
+          "dataFim": "2026-02-05T09:45:00",
+          "salaAudiencia": {
+            "nome": "AUDIÊNCIAS NA VARA"
+          },
+          "status": "M",
+          "processo": {
+            "id": 878284,
+            "numero": "0000672-39.2025.5.08.0016",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 46,
+              "descricao": "16ª VARA DO TRABALHO DE BELÉM",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 5,
+            "descricao": "Una",
+            "codigo": "7195",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "THIAGO DE SOUSA MARQUES",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": true
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 1353332,
+            "horaInicial": "09:30:00",
+            "horaFinal": "09:45:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 878284,
+          "nrProcesso": "0000672-39.2025.5.08.0016"
+        }
+      ],
+      "total": 1,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 1,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 1,
+        "orgaosJulgadoresCriados": 1
+      }
+    }
+  }
+}

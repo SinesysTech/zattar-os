@@ -32,21 +32,61 @@ const SERVICE_API_KEY = process.env.SERVICE_API_KEY || '';
  * Valores fixos (simulam requisição externa/front-end)
  */
 const ADVOGADO_ID = 1; // ID do advogado na tabela advogados
-const GRAU = 'primeiro_grau'; // Primeiro grau
 
 /**
- * Lista de todos os TRTs disponíveis
+ * Calcular datas: hoje até o mesmo dia do ano que vem
  */
-const TODOS_TRTS: CodigoTRT[] = [
-  'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8',
-  'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16',
-  'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24',
+function calcularDatas(): { dataInicio: string; dataFim: string } {
+  const hoje = new Date();
+  const anoQueVem = new Date(hoje);
+  anoQueVem.setFullYear(hoje.getFullYear() + 1);
+  
+  // Formatar como YYYY-MM-DD
+  const formatarData = (data: Date): string => {
+    const ano = data.getFullYear();
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const dia = String(data.getDate()).padStart(2, '0');
+    return `${ano}-${mes}-${dia}`;
+  };
+  
+  return {
+    dataInicio: formatarData(hoje),
+    dataFim: formatarData(anoQueVem),
+  };
+}
+
+const { dataInicio, dataFim } = calcularDatas();
+
+/**
+ * Lista de TRTs que apresentaram erro no teste anterior
+ * Testando apenas estes TRTs em ambos os graus para verificar se o erro persiste
+ */
+const TRTS_COM_ERRO: CodigoTRT[] = [
+  'TRT11',
+  'TRT14',
+  'TRT16',
+  'TRT17',
+  'TRT20',
+  'TRT24',
+];
+
+/**
+ * Graus para testar (primeiro grau primeiro, depois segundo grau)
+ */
+const GRAUS: Array<'primeiro_grau' | 'segundo_grau'> = [
+  'primeiro_grau',
+  'segundo_grau',
 ];
 
 /**
  * Função para fazer requisição HTTP para um TRT específico
  */
-async function testarAudienciasTRT(trtCodigo: CodigoTRT, dataInicio?: string, dataFim?: string) {
+async function testarAudienciasTRT(
+  trtCodigo: CodigoTRT,
+  grau: 'primeiro_grau' | 'segundo_grau',
+  dataInicio?: string,
+  dataFim?: string
+) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   
   try {
@@ -63,7 +103,7 @@ async function testarAudienciasTRT(trtCodigo: CodigoTRT, dataInicio?: string, da
     const body: Record<string, unknown> = {
       advogado_id: ADVOGADO_ID,
       trt_codigo: trtCodigo,
-      grau: GRAU,
+      grau,
     };
 
     // Adicionar datas se fornecidas
@@ -114,7 +154,7 @@ async function testarAudienciasTRT(trtCodigo: CodigoTRT, dataInicio?: string, da
     const resultadoCompleto = {
       timestamp,
       trtCodigo,
-      grau: GRAU,
+      grau,
       advogadoId: ADVOGADO_ID,
       periodo: dataInicio && dataFim ? { dataInicio, dataFim } : undefined,
       duracaoSegundos: parseFloat(duracao),
@@ -140,59 +180,85 @@ async function testarAudienciasTRT(trtCodigo: CodigoTRT, dataInicio?: string, da
 }
 
 /**
- * Função principal - testa todos os TRTs
+ * Função principal - testa apenas os TRTs que apresentaram erro, em ambos os graus
  */
 async function main() {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   
-  console.log('\n🚀 Iniciando testes de API HTTP - Audiências\n');
-  console.log(`Total de TRTs: ${TODOS_TRTS.length}`);
-  console.log(`API URL: ${API_BASE_URL}`);
-  console.log('📅 Período: Padrão (hoje até +365 dias)\n');
+  console.log('\n🚀 Iniciando testes de API HTTP - Audiências - TRTs com Erro (1º e 2º Grau)\n');
+  console.log(`Total de TRTs: ${TRTS_COM_ERRO.length}`);
+  console.log(`TRTs: ${TRTS_COM_ERRO.join(', ')}`);
+  console.log(`Graus: ${GRAUS.join(' → ')}`);
+  console.log(`Total de testes: ${TRTS_COM_ERRO.length * GRAUS.length} (${TRTS_COM_ERRO.length} TRTs × ${GRAUS.length} graus)`);
+  console.log(`📅 Período: ${dataInicio} até ${dataFim} (1 ano)`);
+  console.log(`🔍 Código Situação: M (Marcadas/Designadas)`);
+  console.log(`API URL: ${API_BASE_URL}\n`);
 
   const resultados: Array<{
     trt: CodigoTRT;
+    grau: 'primeiro_grau' | 'segundo_grau';
     sucesso: boolean;
     totalAudiencias?: number;
     duracaoSegundos?: number;
     erro?: string;
   }> = [];
 
-  // Iterar por todos os TRTs
-  for (let i = 0; i < TODOS_TRTS.length; i++) {
-    const trtCodigo = TODOS_TRTS[i];
-    const progresso = `[${i + 1}/${TODOS_TRTS.length}]`;
+  let contadorTotal = 0;
+  const totalTestes = TRTS_COM_ERRO.length * GRAUS.length;
 
-    console.log(`\n${'='.repeat(80)}`);
-    console.log(`${progresso} Processando ${trtCodigo}...`);
-    console.log(`${'='.repeat(80)}`);
-
-    // Não fornecer datas = API usa padrão (hoje até +365 dias)
-    const resultado = await testarAudienciasTRT(trtCodigo);
+  // Primeiro: todos os TRTs no primeiro grau
+  // Depois: todos os TRTs no segundo grau
+  for (let g = 0; g < GRAUS.length; g++) {
+    const grau = GRAUS[g];
     
-    resultados.push({
-      trt: trtCodigo,
-      sucesso: resultado.sucesso,
-      totalAudiencias: resultado.sucesso ? resultado.resultado?.data?.total : undefined,
-      duracaoSegundos: resultado.duracaoSegundos,
-      erro: resultado.erro,
-    });
+    console.log(`\n${'='.repeat(80)}`);
+    console.log(`📋 FASE ${g + 1}/${GRAUS.length}: ${grau === 'primeiro_grau' ? '1º GRAU' : '2º GRAU'}`);
+    console.log(`${'='.repeat(80)}\n`);
 
-    // Delay entre TRTs para evitar sobrecarga
-    if (i < TODOS_TRTS.length - 1) {
-      console.log('\n⏳ Aguardando 2 segundos antes do próximo TRT...\n');
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    for (let i = 0; i < TRTS_COM_ERRO.length; i++) {
+      const trtCodigo = TRTS_COM_ERRO[i];
+      contadorTotal++;
+      const progresso = `[${contadorTotal}/${totalTestes}]`;
+
+      console.log(`\n${'='.repeat(80)}`);
+      console.log(`${progresso} Processando ${trtCodigo} - ${grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}`);
+      console.log(`${'='.repeat(80)}`);
+
+      // Passar datas explícitas: hoje até o mesmo dia do ano que vem
+      const resultado = await testarAudienciasTRT(trtCodigo, grau, dataInicio, dataFim);
+      
+      resultados.push({
+        trt: trtCodigo,
+        grau,
+        sucesso: resultado.sucesso,
+        totalAudiencias: resultado.sucesso ? resultado.resultado?.data?.total : undefined,
+        duracaoSegundos: resultado.duracaoSegundos,
+        erro: resultado.erro,
+      });
+
+      // Delay entre testes para evitar sobrecarga
+      if (contadorTotal < totalTestes) {
+        console.log('\n⏳ Aguardando 2 segundos antes do próximo teste...\n');
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
     }
   }
 
   // Salvar resumo geral
   await mkdir(RESULTS_DIR, { recursive: true });
-  const resumoPath = join(RESULTS_DIR, 'resumo-geral.json');
+  const resumoPath = join(RESULTS_DIR, 'resumo-geral-trt-com-erro-ambos-graus.json');
   const resumo = {
     timestamp,
-    grau: GRAU,
+    trtsComErro: TRTS_COM_ERRO,
+    graus: GRAUS,
     advogadoId: ADVOGADO_ID,
-    totalTRTs: TODOS_TRTS.length,
+    periodo: {
+      dataInicio,
+      dataFim,
+    },
+    codigoSituacao: 'M', // Marcadas/Designadas
+    totalTRTs: TRTS_COM_ERRO.length,
+    totalTestes: totalTestes,
     sucessos: resultados.filter((r) => r.sucesso).length,
     falhas: resultados.filter((r) => !r.sucesso).length,
     totalAudienciasCapturadas: resultados
@@ -210,19 +276,28 @@ async function main() {
   console.log(`\n${'='.repeat(80)}`);
   console.log('📊 RESUMO FINAL');
   console.log(`${'='.repeat(80)}`);
-  console.log(`Total de TRTs processados: ${TODOS_TRTS.length}`);
+  console.log(`Total de testes realizados: ${totalTestes} (${TRTS_COM_ERRO.length} TRTs × ${GRAUS.length} graus)`);
   console.log(`✅ Sucessos: ${resumo.sucessos}`);
   console.log(`❌ Falhas: ${resumo.falhas}`);
   console.log(`📦 Total de audiências capturadas: ${resumo.totalAudienciasCapturadas}`);
   console.log(`⏱️  Duração total: ${(resumo.duracaoTotalSegundos / 60).toFixed(2)} minutos`);
   console.log(`\n💾 Resumo salvo em: ${resumoPath}`);
 
+  // Mostrar resumo por grau
+  console.log(`\n📊 Resumo por Grau:`);
+  for (const grau of GRAUS) {
+    const resultadosGrau = resultados.filter((r) => r.grau === grau);
+    const sucessosGrau = resultadosGrau.filter((r) => r.sucesso).length;
+    const falhasGrau = resultadosGrau.filter((r) => !r.sucesso).length;
+    console.log(`  ${grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}: ${sucessosGrau} sucessos, ${falhasGrau} falhas`);
+  }
+
   if (resumo.falhas > 0) {
-    console.log(`\n⚠️  TRTs com falha:`);
+    console.log(`\n⚠️  Testes com falha:`);
     resultados
       .filter((r) => !r.sucesso)
       .forEach((r) => {
-        console.log(`  - ${r.trt}: ${r.erro}`);
+        console.log(`  - ${r.trt} (${r.grau === 'primeiro_grau' ? '1º' : '2º'} grau): ${r.erro}`);
       });
   }
 }

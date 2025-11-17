@@ -6,11 +6,11 @@ import type { CapturaTRTParams } from './trt-capture.service';
 import {
   obterTodosProcessosAcervoGeral,
   obterTotalizadoresAcervoGeral,
-  AgrupamentoProcessoTarefa,
   type Processo,
 } from '@/backend/api/pje-trt/acervo-geral';
 import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../persistence/advogado-helper.service';
+import { captureLogService } from '../persistence/capture-log.service';
 
 /**
  * Resultado da captura de acervo geral
@@ -93,9 +93,14 @@ export async function acervoGeralCapture(
 
       console.log('✅ Processos salvos no banco:', {
         total: persistencia.total,
+        inseridos: persistencia.inseridos,
         atualizados: persistencia.atualizados,
+        naoAtualizados: persistencia.naoAtualizados,
         erros: persistencia.erros,
       });
+
+      // Imprimir resumo dos logs
+      captureLogService.imprimirResumo();
     } catch (error) {
       console.error('❌ Erro ao salvar processos no banco:', error);
       // Não falha a captura se a persistência falhar - apenas loga o erro

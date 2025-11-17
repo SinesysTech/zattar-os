@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-11-17T00-28-18-377Z",
+  "trtCodigo": "TRT12",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 30.32,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 261025,
+          "descricaoOrgaoJulgadorColegiado": "OJC de Análise de Recurso",
+          "descricaoOrgaoJulgador": "OJ de Análise de Recurso",
+          "classeJudicial": "RORSum",
+          "numero": 1242,
+          "numeroProcesso": "0001242-85.2024.5.12.0036",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteAutora": 2,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 2,
+          "dataCienciaParte": "2025-11-17T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-28T23:59:59.999999",
+          "dataAutuacao": "2025-05-30T17:01:00.984314",
+          "juizoDigital": true,
+          "nomeRelator": "NIVALDO STANKIEWICZ",
+          "idDocumento": 33591198,
+          "dataArquivamento": "2025-11-13T07:03:30.073",
+          "dataCriacaoExpediente": "2025-11-13T07:03:28.517918",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "GD-ANREC"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

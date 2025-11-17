@@ -155,6 +155,39 @@ const options: Options = {
             },
           },
         },
+        AtribuirResponsavelRequest: {
+          type: 'object',
+          properties: {
+            responsavelId: {
+              type: 'integer',
+              nullable: true,
+              description: 'ID do usuário responsável. Use null para desatribuir responsável. Se omitido, mantém o responsável atual.',
+              example: 15,
+            },
+          },
+        },
+        AtribuirResponsavelResponse: {
+          type: 'object',
+          properties: {
+            success: {
+              type: 'boolean',
+              example: true,
+            },
+            data: {
+              type: 'object',
+              description: 'Dados atualizados da entidade',
+              properties: {
+                id: {
+                  type: 'integer',
+                },
+                responsavel_id: {
+                  type: 'integer',
+                  nullable: true,
+                },
+              },
+            },
+          },
+        },
       },
     },
     security: [

@@ -1,0 +1,135 @@
+{
+  "timestamp": "2025-11-17T00-26-34-211Z",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "testesComErro": [
+    {
+      "trt": "TRT10",
+      "filtroPrazo": "sem_prazo"
+    },
+    {
+      "trt": "TRT11",
+      "filtroPrazo": "no_prazo"
+    },
+    {
+      "trt": "TRT11",
+      "filtroPrazo": "sem_prazo"
+    },
+    {
+      "trt": "TRT12",
+      "filtroPrazo": "no_prazo"
+    },
+    {
+      "trt": "TRT12",
+      "filtroPrazo": "sem_prazo"
+    },
+    {
+      "trt": "TRT13",
+      "filtroPrazo": "no_prazo"
+    },
+    {
+      "trt": "TRT13",
+      "filtroPrazo": "sem_prazo"
+    },
+    {
+      "trt": "TRT14",
+      "filtroPrazo": "no_prazo"
+    },
+    {
+      "trt": "TRT14",
+      "filtroPrazo": "sem_prazo"
+    },
+    {
+      "trt": "TRT15",
+      "filtroPrazo": "no_prazo"
+    },
+    {
+      "trt": "TRT21",
+      "filtroPrazo": "sem_prazo"
+    }
+  ],
+  "totalTestes": 11,
+  "sucessos": 11,
+  "falhas": 0,
+  "totalProcessosCapturados": 28,
+  "duracaoTotalSegundos": 345.82,
+  "resultados": [
+    {
+      "trt": "TRT10",
+      "filtroPrazo": "sem_prazo",
+      "sucesso": true,
+      "totalProcessos": 1,
+      "duracaoSegundos": 31.54
+    },
+    {
+      "trt": "TRT11",
+      "filtroPrazo": "no_prazo",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 32.96
+    },
+    {
+      "trt": "TRT11",
+      "filtroPrazo": "sem_prazo",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 33.63
+    },
+    {
+      "trt": "TRT12",
+      "filtroPrazo": "no_prazo",
+      "sucesso": true,
+      "totalProcessos": 1,
+      "duracaoSegundos": 30.32
+    },
+    {
+      "trt": "TRT12",
+      "filtroPrazo": "sem_prazo",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 30.5
+    },
+    {
+      "trt": "TRT13",
+      "filtroPrazo": "no_prazo",
+      "sucesso": true,
+      "totalProcessos": 24,
+      "duracaoSegundos": 31.23
+    },
+    {
+      "trt": "TRT13",
+      "filtroPrazo": "sem_prazo",
+      "sucesso": true,
+      "totalProcessos": 1,
+      "duracaoSegundos": 31.59
+    },
+    {
+      "trt": "TRT14",
+      "filtroPrazo": "no_prazo",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 30.96
+    },
+    {
+      "trt": "TRT14",
+      "filtroPrazo": "sem_prazo",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 31.06
+    },
+    {
+      "trt": "TRT15",
+      "filtroPrazo": "no_prazo",
+      "sucesso": true,
+      "totalProcessos": 1,
+      "duracaoSegundos": 30.16
+    },
+    {
+      "trt": "TRT21",
+      "filtroPrazo": "sem_prazo",
+      "sucesso": true,
+      "totalProcessos": 0,
+      "duracaoSegundos": 31.87
+    }
+  ]
+}

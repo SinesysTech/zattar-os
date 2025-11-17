@@ -1,0 +1,230 @@
+{
+  "timestamp": "2025-11-17T01-11-12-425Z",
+  "trtCodigo": "TRT12",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 32.72,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 1604588,
+          "dataInicio": "2025-12-10T14:30:00",
+          "dataFim": "2025-12-10T15:00:00",
+          "salaAudiencia": {
+            "nome": "Sala 2ª VT de Fpolis"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1210692,
+            "numero": "0000886-25.2025.5.12.0014",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 10,
+              "descricao": "2ª VARA DO TRABALHO DE FLORIANÓPOLIS",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 25,
+            "descricao": "Instrução por videoconferência (rito sumaríssimo)",
+            "codigo": "7697",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "ISABEL CRISTINA FONSECA DE SANTANA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "REDE TELEMED SERVICOS DE TELEATENDIMENTO LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 1604588,
+            "horaInicial": "14:30:00",
+            "horaFinal": "15:00:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000886-25.2025.5.12.0014",
+          "idProcesso": 1210692
+        },
+        {
+          "id": 1492833,
+          "dataInicio": "2025-12-11T14:45:00",
+          "dataFim": "2025-12-11T15:30:00",
+          "salaAudiencia": {
+            "nome": "VT de Itapema"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1095682,
+            "numero": "0001896-91.2024.5.12.0062",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 131,
+              "descricao": "VARA DO TRABALHO DE ITAPEMA",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 25,
+            "descricao": "Instrução por videoconferência (rito sumaríssimo)",
+            "codigo": "7697",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "ROBSON SILVA CAMPINAS",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 1492833,
+            "horaInicial": "14:45:00",
+            "horaFinal": "15:30:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001896-91.2024.5.12.0062",
+          "idProcesso": 1095682
+        },
+        {
+          "id": 1548030,
+          "dataInicio": "2025-12-12T13:30:00",
+          "dataFim": "2025-12-12T13:31:00",
+          "salaAudiencia": {
+            "nome": "Sala Principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1129199,
+            "numero": "0000066-80.2025.5.12.0054",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 26,
+              "descricao": "3ª VARA DO TRABALHO SÃO JOSÉ",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 25,
+            "descricao": "Instrução por videoconferência (rito sumaríssimo)",
+            "codigo": "7697",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "JAIR CUNHA DE OLIVEIRA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "99 TECNOLOGIA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 1548030,
+            "horaInicial": "13:30:00",
+            "horaFinal": "13:31:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000066-80.2025.5.12.0054",
+          "idProcesso": 1129199
+        }
+      ],
+      "total": 3,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 3,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 3,
+        "orgaosJulgadoresCriados": 3
+      }
+    }
+  }
+}

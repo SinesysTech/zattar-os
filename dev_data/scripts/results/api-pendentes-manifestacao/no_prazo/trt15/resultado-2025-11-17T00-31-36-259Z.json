@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-11-17T00-31-36-259Z",
+  "trtCodigo": "TRT15",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "no_prazo",
+  "duracaoSegundos": 30.16,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 1211116,
+          "descricaoOrgaoJulgadorColegiado": "Órgão Especial - Análise de Recurso",
+          "descricaoOrgaoJulgador": "Gabinete da Vice-Presidência Judicial - Análise de Recurso",
+          "classeJudicial": "RORSum",
+          "numero": 10147,
+          "numeroProcesso": "0010147-37.2024.5.15.0023",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "THALISON LUIZ DE SOUZA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.",
+          "qtdeParteRe": 1,
+          "dataCienciaParte": "2025-11-13T23:59:59.999999",
+          "dataPrazoLegalParte": "2025-11-28T23:59:59.999999",
+          "dataAutuacao": "2025-02-26T11:01:23.217029",
+          "juizoDigital": true,
+          "nomeRelator": "ANDREA GUELFI CUNHA",
+          "idDocumento": 142373260,
+          "idProcessoParteExpediente": 8933640,
+          "dataArquivamento": "2025-11-11T17:08:40.931",
+          "dataCriacaoExpediente": "2025-11-11T17:08:39.953876",
+          "prazoVencido": false,
+          "pendenteResposta": true,
+          "siglaOrgaoJulgador": "GVICEPRES"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "no_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

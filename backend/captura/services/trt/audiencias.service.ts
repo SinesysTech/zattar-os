@@ -7,6 +7,7 @@ import { obterTodasAudiencias } from '@/backend/api/pje-trt/audiencias';
 import type { Audiencia } from '@/backend/api/pje-trt/types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../persistence/advogado-helper.service';
+import { captureLogService } from '../persistence/capture-log.service';
 
 /**
  * Resultado da captura de audiências
@@ -150,10 +151,15 @@ export async function audienciasCapture(
 
       console.log('✅ Audiências salvas no banco:', {
         total: persistencia.total,
+        inseridos: persistencia.inseridos,
         atualizados: persistencia.atualizados,
+        naoAtualizados: persistencia.naoAtualizados,
         erros: persistencia.erros,
         orgaosJulgadoresCriados: persistencia.orgaosJulgadoresCriados,
       });
+
+      // Imprimir resumo dos logs
+      captureLogService.imprimirResumo();
     } catch (error) {
       console.error('❌ Erro ao salvar audiências no banco:', error);
       // Não falha a captura se a persistência falhar - apenas loga o erro

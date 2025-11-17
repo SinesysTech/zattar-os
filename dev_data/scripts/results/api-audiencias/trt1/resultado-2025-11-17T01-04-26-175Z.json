@@ -1,0 +1,1302 @@
+{
+  "timestamp": "2025-11-17T01-04-26-175Z",
+  "trtCodigo": "TRT1",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 37.85,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 5131427,
+          "dataInicio": "2025-11-19T09:00:00",
+          "dataFim": "2025-11-19T09:10:00",
+          "salaAudiencia": {
+            "nome": "72ª Vara do Trabalho do Rio de Janeiro"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3587833,
+            "numero": "0101182-81.2025.5.01.0072",
+            "classeJudicial": {
+              "id": 535,
+              "codigo": "985",
+              "descricao": "Ação Trabalhista - Rito Ordinário",
+              "sigla": "ATOrd",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 60720.01,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 63,
+              "descricao": "72ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 5,
+            "descricao": "Una",
+            "codigo": "7195",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "FRANCISCO ELMANO FRANCA PINTO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "INSTITUTO DE DESENVOLVIMENTO PARA EDUCACAO, SAUDE E INTEGRACAO SOCIAL - IDESI",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5131427,
+            "horaInicial": "09:00:00",
+            "horaFinal": "09:10:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3587833,
+          "nrProcesso": "0101182-81.2025.5.01.0072"
+        },
+        {
+          "id": 5012469,
+          "dataInicio": "2025-11-19T12:30:00",
+          "dataFim": "2025-11-19T13:00:00",
+          "salaAudiencia": {
+            "nome": "VT66RJ"
+          },
+          "status": "M",
+          "processo": {
+            "id": 2920376,
+            "numero": "0100434-38.2023.5.01.0066",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 82,
+              "descricao": "66ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 22,
+            "descricao": "Instrução por videoconferência",
+            "codigo": "7696",
+            "isVirtual": false
+          },
+          "designada": false,
+          "urlAudienciaVirtual": "https://trt1-jus-br.zoom.us/j/85739445124",
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "JOSE GENILDO PINHEIRO DE ANDRADE",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5012469,
+            "horaInicial": "12:30:00",
+            "horaFinal": "13:00:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 2920376,
+          "nrProcesso": "0100434-38.2023.5.01.0066"
+        },
+        {
+          "id": 5120178,
+          "dataInicio": "2025-11-24T11:00:00",
+          "dataFim": "2025-11-24T11:01:00",
+          "salaAudiencia": {
+            "nome": "08VTNT -- A"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3095287,
+            "numero": "0100018-72.2024.5.01.0248",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 152,
+              "descricao": "8ª Vara do Trabalho de Niterói",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 22,
+            "descricao": "Instrução por videoconferência",
+            "codigo": "7696",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "VITOR VILLACA MELLO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5120178,
+            "horaInicial": "11:00:00",
+            "horaFinal": "11:01:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3095287,
+          "nrProcesso": "0100018-72.2024.5.01.0248"
+        },
+        {
+          "id": 5166306,
+          "dataInicio": "2025-11-25T09:40:00",
+          "dataFim": "2025-11-25T10:10:00",
+          "salaAudiencia": {
+            "nome": "VT22RJ - sala principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3033430,
+            "numero": "0101061-77.2023.5.01.0022",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 136,
+              "descricao": "22ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 11,
+            "descricao": "Instrução (rito sumaríssimo)",
+            "codigo": "7578",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "PAULO CESAR SOUZA DE AZEVEDO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "LOCALIZA RENT A CAR SA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5166306,
+            "horaInicial": "09:40:00",
+            "horaFinal": "10:10:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3033430,
+          "nrProcesso": "0101061-77.2023.5.01.0022"
+        },
+        {
+          "id": 4939279,
+          "dataInicio": "2025-11-27T11:00:00",
+          "dataFim": "2025-11-27T11:01:00",
+          "salaAudiencia": {
+            "nome": "01VTNI"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3272948,
+            "numero": "0100915-84.2024.5.01.0221",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 46,
+              "descricao": "1ª Vara do Trabalho de Nova Iguaçu",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 22,
+            "descricao": "Instrução por videoconferência",
+            "codigo": "7696",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "YURI GAUDINO DE ALMEIDA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 4939279,
+            "horaInicial": "11:00:00",
+            "horaFinal": "11:01:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3272948,
+          "nrProcesso": "0100915-84.2024.5.01.0221"
+        },
+        {
+          "id": 5148301,
+          "dataInicio": "2025-11-27T11:10:00",
+          "dataFim": "2025-11-27T11:25:00",
+          "salaAudiencia": {
+            "nome": "27VTRJ"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3603810,
+            "numero": "0101292-21.2025.5.01.0027",
+            "classeJudicial": {
+              "id": 535,
+              "codigo": "985",
+              "descricao": "Ação Trabalhista - Rito Ordinário",
+              "sigla": "ATOrd",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 60720.01,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 103,
+              "descricao": "27ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 5,
+            "descricao": "Una",
+            "codigo": "7195",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "WESLEY LEITE DOS SANTOS",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "LOCALIZA RENT A CAR SA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5148301,
+            "horaInicial": "11:10:00",
+            "horaFinal": "11:25:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3603810,
+          "nrProcesso": "0101292-21.2025.5.01.0027"
+        },
+        {
+          "id": 5084492,
+          "dataInicio": "2025-12-03T08:10:00",
+          "dataFim": "2025-12-03T08:20:00",
+          "salaAudiencia": {
+            "nome": "Sala Principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3552970,
+            "numero": "0101116-84.2025.5.01.0207",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 48,
+              "descricao": "7ª Vara do Trabalho de Duque de Caxias",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 17,
+            "descricao": "Una (rito sumaríssimo)",
+            "codigo": "7450",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "JOAO VICTOR DA SILVA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "LOCALIZA RENT A CAR SA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5084492,
+            "horaInicial": "08:10:00",
+            "horaFinal": "08:20:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3552970,
+          "nrProcesso": "0101116-84.2025.5.01.0207"
+        },
+        {
+          "id": 5089500,
+          "dataInicio": "2025-12-03T14:20:00",
+          "dataFim": "2025-12-03T14:21:00",
+          "salaAudiencia": {
+            "nome": "VT22RJ - sala principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3565164,
+            "numero": "0101083-67.2025.5.01.0022",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 136,
+              "descricao": "22ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 29,
+            "descricao": "Una por videoconferência (rito sumaríssimo)",
+            "codigo": "7703",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "LUIZ FELIPE DA SILVA LIMA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": true
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 5089500,
+            "horaInicial": "14:20:00",
+            "horaFinal": "14:21:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3565164,
+          "nrProcesso": "0101083-67.2025.5.01.0022"
+        },
+        {
+          "id": 5105180,
+          "dataInicio": "2025-12-04T09:50:00",
+          "dataFim": "2025-12-04T10:00:00",
+          "salaAudiencia": {
+            "nome": "03 VTNI Sala Principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3573950,
+            "numero": "0101083-34.2025.5.01.0227",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 47,
+              "descricao": "3ª Vara do Trabalho de Nova Iguaçu",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 5,
+            "descricao": "Una",
+            "codigo": "7195",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "VITORIO SILVA CAMILO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "INSTITUTO DE DESENVOLVIMENTO PARA EDUCACAO, SAUDE E INTEGRACAO SOCIAL - IDESI",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5105180,
+            "horaInicial": "09:50:00",
+            "horaFinal": "10:00:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3573950,
+          "nrProcesso": "0101083-34.2025.5.01.0227"
+        },
+        {
+          "id": 5200187,
+          "dataInicio": "2025-12-11T09:15:00",
+          "dataFim": "2025-12-11T09:16:00",
+          "salaAudiencia": {
+            "nome": "Sala Principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3596547,
+            "numero": "0101213-15.2025.5.01.0036",
+            "classeJudicial": {
+              "id": 535,
+              "codigo": "985",
+              "descricao": "Ação Trabalhista - Rito Ordinário",
+              "sigla": "ATOrd",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 60720.01,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 119,
+              "descricao": "36ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 5,
+            "descricao": "Una",
+            "codigo": "7195",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "VERONICA CARLA DE CASTRO GONZO DE CARVALHO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "INSTITUTO DE DESENVOLVIMENTO PARA EDUCACAO, SAUDE E INTEGRACAO SOCIAL - IDESI",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 5200187,
+            "horaInicial": "09:15:00",
+            "horaFinal": "09:16:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3596547,
+          "nrProcesso": "0101213-15.2025.5.01.0036"
+        },
+        {
+          "id": 5194679,
+          "dataInicio": "2025-12-16T09:30:00",
+          "dataFim": "2025-12-16T09:35:00",
+          "salaAudiencia": {
+            "nome": "82VTRJ"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3596441,
+            "numero": "0101256-08.2025.5.01.0082",
+            "classeJudicial": {
+              "id": 535,
+              "codigo": "985",
+              "descricao": "Ação Trabalhista - Rito Ordinário",
+              "sigla": "ATOrd",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 60720.01,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 58,
+              "descricao": "82ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 20,
+            "descricao": "Inicial por videoconferência",
+            "codigo": "7699",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "JESSICA QUELLE BARROS DA SILVA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "INSTITUTO DE DESENVOLVIMENTO PARA EDUCACAO, SAUDE E INTEGRACAO SOCIAL - IDESI",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 5194679,
+            "horaInicial": "09:30:00",
+            "horaFinal": "09:35:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3596441,
+          "nrProcesso": "0101256-08.2025.5.01.0082"
+        },
+        {
+          "id": 5184129,
+          "dataInicio": "2026-01-21T08:35:00",
+          "dataFim": "2026-01-21T08:36:00",
+          "salaAudiencia": {
+            "nome": "44 VT RJ"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3511568,
+            "numero": "0100799-90.2025.5.01.0044",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 120,
+              "descricao": "44ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 21,
+            "descricao": "Una por videoconferência",
+            "codigo": "7702",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "WALLACE CORREIA DA SILVA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5184129,
+            "horaInicial": "08:35:00",
+            "horaFinal": "08:36:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3511568,
+          "nrProcesso": "0100799-90.2025.5.01.0044"
+        },
+        {
+          "id": 5017858,
+          "dataInicio": "2026-01-26T09:05:00",
+          "dataFim": "2026-01-26T09:10:00",
+          "salaAudiencia": {
+            "nome": "sala02VTCF"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3463947,
+            "numero": "0100727-06.2025.5.01.0432",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 162,
+              "descricao": "2ª Vara do Trabalho de Cabo Frio",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 27,
+            "descricao": "Inicial por videoconferência (rito sumaríssimo)",
+            "codigo": "7700",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "JEFERSON MENEGUSSI XAVIER",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5017858,
+            "horaInicial": "09:05:00",
+            "horaFinal": "09:10:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3463947,
+          "nrProcesso": "0100727-06.2025.5.01.0432"
+        },
+        {
+          "id": 5081998,
+          "dataInicio": "2026-01-27T09:10:00",
+          "dataFim": "2026-01-27T09:20:00",
+          "salaAudiencia": {
+            "nome": "16VTRJ"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3552663,
+            "numero": "0101008-46.2025.5.01.0016",
+            "classeJudicial": {
+              "id": 535,
+              "codigo": "985",
+              "descricao": "Ação Trabalhista - Rito Ordinário",
+              "sigla": "ATOrd",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 60720.01,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 130,
+              "descricao": "16ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 21,
+            "descricao": "Una por videoconferência",
+            "codigo": "7702",
+            "isVirtual": false
+          },
+          "designada": false,
+          "urlAudienciaVirtual": "https://trt1-jus-br.zoom.us/my/vt16.rj?pwd=MnBTYWJtRlpYa0pYU1dhcmN3aWNDQT09",
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "LUCELIA DINIZ FACCION",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "INSTITUTO DE DESENVOLVIMENTO PARA EDUCACAO, SAUDE E INTEGRACAO SOCIAL - IDESI",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5081998,
+            "horaInicial": "09:10:00",
+            "horaFinal": "09:20:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3552663,
+          "nrProcesso": "0101008-46.2025.5.01.0016"
+        },
+        {
+          "id": 4984046,
+          "dataInicio": "2026-02-02T09:20:00",
+          "dataFim": "2026-02-02T09:21:00",
+          "salaAudiencia": {
+            "nome": "25ª  Vara do Trabalho"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3435188,
+            "numero": "0100401-06.2025.5.01.0025",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 118,
+              "descricao": "25ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 17,
+            "descricao": "Una (rito sumaríssimo)",
+            "codigo": "7450",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "FABIANO MELO DA SILVA BARBOSA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 4984046,
+            "horaInicial": "09:20:00",
+            "horaFinal": "09:21:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3435188,
+          "nrProcesso": "0100401-06.2025.5.01.0025"
+        },
+        {
+          "id": 5028022,
+          "dataInicio": "2026-02-26T11:00:00",
+          "dataFim": "2026-02-26T11:01:00",
+          "salaAudiencia": {
+            "nome": "Sala Principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 2937711,
+            "numero": "0100500-04.2023.5.01.0006",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 124,
+              "descricao": "6ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 6,
+            "descricao": "Instrução",
+            "codigo": "22",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "JONATHAN AVELAR DA CUNHA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5028022,
+            "horaInicial": "11:00:00",
+            "horaFinal": "11:01:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 2937711,
+          "nrProcesso": "0100500-04.2023.5.01.0006"
+        },
+        {
+          "id": 5171459,
+          "dataInicio": "2026-03-03T09:55:00",
+          "dataFim": "2026-03-03T09:56:00",
+          "salaAudiencia": {
+            "nome": "01VTCF"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3573625,
+            "numero": "0101450-28.2025.5.01.0431",
+            "classeJudicial": {
+              "id": 535,
+              "codigo": "985",
+              "descricao": "Ação Trabalhista - Rito Ordinário",
+              "sigla": "ATOrd",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 60720.01,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 161,
+              "descricao": "1ª Vara do Trabalho de Cabo Frio",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 20,
+            "descricao": "Inicial por videoconferência",
+            "codigo": "7699",
+            "isVirtual": false
+          },
+          "designada": false,
+          "urlAudienciaVirtual": "https://trt1-jus-br.zoom.us/j/3846989217?pwd=L2UzWVU3TVA0NVNCNm53dDB4WUc3dz09",
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "LEONARDO XAVIER DE SOUZA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "HOTEL NACIONAL RIO DE JANEIRO ADMINISTRADORA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 5171459,
+            "horaInicial": "09:55:00",
+            "horaFinal": "09:56:00"
+          },
+          "prioridades": "Acidente de Trabalho; Assédio Moral ou Sexual; Discriminação",
+          "statusDescricao": "Designada",
+          "idProcesso": 3573625,
+          "nrProcesso": "0101450-28.2025.5.01.0431"
+        },
+        {
+          "id": 5187978,
+          "dataInicio": "2026-03-31T09:20:00",
+          "dataFim": "2026-03-31T09:40:00",
+          "salaAudiencia": {
+            "nome": "VT66RJ"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3103966,
+            "numero": "0100075-54.2024.5.01.0066",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 82,
+              "descricao": "66ª Vara do Trabalho do Rio de Janeiro",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 22,
+            "descricao": "Instrução por videoconferência",
+            "codigo": "7696",
+            "isVirtual": false
+          },
+          "designada": false,
+          "urlAudienciaVirtual": "https://trt1-jus-br.zoom.us/j/82690615751",
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "EDER JOSE SIQUEIRA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "FACULDADES CATOLICAS",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 5187978,
+            "horaInicial": "09:20:00",
+            "horaFinal": "09:40:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3103966,
+          "nrProcesso": "0100075-54.2024.5.01.0066"
+        },
+        {
+          "id": 4956657,
+          "dataInicio": "2026-08-31T10:20:00",
+          "dataFim": "2026-08-31T10:21:00",
+          "salaAudiencia": {
+            "nome": "01VTCF"
+          },
+          "status": "M",
+          "processo": {
+            "id": 3478215,
+            "numero": "0100786-94.2025.5.01.0431",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 161,
+              "descricao": "1ª Vara do Trabalho de Cabo Frio",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 29,
+            "descricao": "Una por videoconferência (rito sumaríssimo)",
+            "codigo": "7703",
+            "isVirtual": false
+          },
+          "designada": false,
+          "urlAudienciaVirtual": "https://trt1-jus-br.zoom.us/j/3846989217?pwd=L2UzWVU3TVA0NVNCNm53dDB4WUc3dz09",
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "NATALY DE ARAUJO CALIXTO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "DROGARIA CIPRIANO DE SANTA ROSA S.A.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 4956657,
+            "horaInicial": "10:20:00",
+            "horaFinal": "10:21:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 3478215,
+          "nrProcesso": "0100786-94.2025.5.01.0431"
+        }
+      ],
+      "total": 19,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 19,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 19,
+        "orgaosJulgadoresCriados": 16
+      }
+    }
+  }
+}

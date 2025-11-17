@@ -1,0 +1,96 @@
+{
+  "timestamp": "2025-11-17T01-07-06-805Z",
+  "trtCodigo": "TRT5",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 31.9,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 2112123,
+          "dataInicio": "2026-02-03T10:10:00",
+          "dataFim": "2026-02-03T10:30:00",
+          "salaAudiencia": {
+            "nome": "sala impar"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1563463,
+            "numero": "0000783-71.2025.5.05.0027",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 60,
+              "descricao": "27ª Vara do Trabalho de Salvador",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 17,
+            "descricao": "Una (rito sumaríssimo)",
+            "codigo": "7450",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "ALBERTINO DANIEL DE FREITAS NETO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": true
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 2112123,
+            "horaInicial": "10:10:00",
+            "horaFinal": "10:30:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000783-71.2025.5.05.0027",
+          "idProcesso": 1563463
+        }
+      ],
+      "total": 1,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 1,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 1,
+        "orgaosJulgadoresCriados": 1
+      }
+    }
+  }
+}

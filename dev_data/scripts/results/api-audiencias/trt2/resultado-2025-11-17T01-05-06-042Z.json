@@ -1,0 +1,699 @@
+{
+  "timestamp": "2025-11-17T01-05-06-042Z",
+  "trtCodigo": "TRT2",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 33.82,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 11568692,
+          "dataInicio": "2025-11-25T11:00:00",
+          "dataFim": "2025-11-25T11:10:00",
+          "salaAudiencia": {
+            "nome": "Sala Principal/Presencial"
+          },
+          "status": "M",
+          "processo": {
+            "id": 7679150,
+            "numero": "1003369-48.2025.5.02.0221",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 29,
+              "descricao": "Vara do Trabalho de Cajamar",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 19,
+            "descricao": "Una (rito sumaríssimo)",
+            "codigo": "7450",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "CAMILA NUNES DE SOUZA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "EBAZAR.COM.BR. LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 11568692,
+            "horaInicial": "11:00:00",
+            "horaFinal": "11:10:00"
+          },
+          "prioridades": "Pagamento de Salário",
+          "statusDescricao": "Designada",
+          "nrProcesso": "1003369-48.2025.5.02.0221",
+          "idProcesso": 7679150
+        },
+        {
+          "id": 11807364,
+          "dataInicio": "2025-11-25T16:00:00",
+          "dataFim": "2025-11-25T16:01:00",
+          "salaAudiencia": {
+            "nome": "Sala principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 7666973,
+            "numero": "1001480-14.2025.5.02.0042",
+            "classeJudicial": {
+              "id": 79,
+              "codigo": "65",
+              "descricao": "Ação Civil Pública Cível",
+              "sigla": "ACPCiv",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": false,
+              "podeIncluirAutoridade": false,
+              "ativo": true,
+              "idClasseJudicialPai": 76,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 111,
+              "descricao": "42ª Vara do Trabalho de São Paulo",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 4,
+            "descricao": "Julgamento",
+            "codigo": "24",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "SINDICATO DOS TRABALHADORES COM APLICATIVOS DE TRANSPORTE TERRESTRE INTERMUNICIPAL DO ESTADO DE SAO PAULO - STATTESP",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "99 TECNOLOGIA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 11807364,
+            "horaInicial": "16:00:00",
+            "horaFinal": "16:01:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "1001480-14.2025.5.02.0042",
+          "idProcesso": 7666973
+        },
+        {
+          "id": 11635465,
+          "dataInicio": "2025-11-26T10:15:00",
+          "dataFim": "2025-11-26T10:30:00",
+          "salaAudiencia": {
+            "nome": "Sala Auxiliar"
+          },
+          "status": "M",
+          "processo": {
+            "id": 6806518,
+            "numero": "1000010-41.2025.5.02.0011",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 78,
+              "descricao": "11ª Vara do Trabalho de São Paulo",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 19,
+            "descricao": "Una (rito sumaríssimo)",
+            "codigo": "7450",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "GABRIEL BIANKATO DA SILVA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 11635465,
+            "horaInicial": "10:15:00",
+            "horaFinal": "10:30:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "1000010-41.2025.5.02.0011",
+          "idProcesso": 6806518
+        },
+        {
+          "id": 11696436,
+          "dataInicio": "2025-11-27T11:15:00",
+          "dataFim": "2025-11-27T11:30:00",
+          "salaAudiencia": {
+            "nome": "Sala 1 - Principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 7810295,
+            "numero": "1002435-92.2025.5.02.0382",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 45,
+              "descricao": "2ª Vara do Trabalho de Osasco",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 31,
+            "descricao": "Una por videoconferência (rito sumaríssimo)",
+            "codigo": "7703",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "LIANDRA DA SILVA DE SOUZA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "EMPORIO CASA CAROLINA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 11696436,
+            "horaInicial": "11:15:00",
+            "horaFinal": "11:30:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "1002435-92.2025.5.02.0382",
+          "idProcesso": 7810295
+        },
+        {
+          "id": 11702452,
+          "dataInicio": "2025-12-03T08:40:00",
+          "dataFim": "2025-12-03T08:50:00",
+          "salaAudiencia": {
+            "nome": "SALA ÍMPAR"
+          },
+          "status": "M",
+          "processo": {
+            "id": 7082266,
+            "numero": "1000525-56.2025.5.02.0341",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 5,
+              "descricao": "1ª Vara do Trabalho de Itaquaquecetuba",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 19,
+            "descricao": "Una (rito sumaríssimo)",
+            "codigo": "7450",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "ROBSON TADEU DE JESUS RIBEIRO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 11702452,
+            "horaInicial": "08:40:00",
+            "horaFinal": "08:50:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "1000525-56.2025.5.02.0341",
+          "idProcesso": 7082266
+        },
+        {
+          "id": 11748957,
+          "dataInicio": "2025-12-03T13:00:00",
+          "dataFim": "2025-12-03T13:30:00",
+          "salaAudiencia": {
+            "nome": "18 VTSP/ZS - SALA PAR"
+          },
+          "status": "M",
+          "processo": {
+            "id": 5702363,
+            "numero": "1001612-51.2023.5.02.0718",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 202,
+              "descricao": "18ª Vara do Trabalho de São Paulo - Zona Sul",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 6,
+            "descricao": "Instrução",
+            "codigo": "22",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "GUILHERME ALVES FARIAS",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "LALAMOVE TECNOLOGIA (BRASIL) LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 11748957,
+            "horaInicial": "13:00:00",
+            "horaFinal": "13:30:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "1001612-51.2023.5.02.0718",
+          "idProcesso": 5702363
+        },
+        {
+          "id": 11637664,
+          "dataInicio": "2025-12-05T09:00:00",
+          "dataFim": "2025-12-05T09:10:00",
+          "salaAudiencia": {
+            "nome": "Principal (Sala ÍMPAR)"
+          },
+          "status": "M",
+          "processo": {
+            "id": 6048118,
+            "numero": "1000503-71.2024.5.02.0716",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 200,
+              "descricao": "16ª Vara do Trabalho de São Paulo - Zona Sul",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 19,
+            "descricao": "Una (rito sumaríssimo)",
+            "codigo": "7450",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "MARCOS NORBERTO DE SOUZA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "LOGGI TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 11637664,
+            "horaInicial": "09:00:00",
+            "horaFinal": "09:10:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "1000503-71.2024.5.02.0716",
+          "idProcesso": 6048118
+        },
+        {
+          "id": 11634700,
+          "dataInicio": "2025-12-15T13:10:00",
+          "dataFim": "2025-12-15T13:11:00",
+          "salaAudiencia": {
+            "nome": "Sala 1"
+          },
+          "status": "M",
+          "processo": {
+            "id": 7140785,
+            "numero": "1000614-10.2025.5.02.0461",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 19,
+              "descricao": "1ª Vara do Trabalho de São Bernardo do Campo",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 31,
+            "descricao": "Una por videoconferência (rito sumaríssimo)",
+            "codigo": "7703",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "SERGIO DOMICIANO ALVES",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 11634700,
+            "horaInicial": "13:10:00",
+            "horaFinal": "13:11:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "1000614-10.2025.5.02.0461",
+          "idProcesso": 7140785
+        },
+        {
+          "id": 11723724,
+          "dataInicio": "2025-12-16T11:20:00",
+          "dataFim": "2025-12-16T11:30:00",
+          "salaAudiencia": {
+            "nome": "Sala Substituto (Juízo 2)"
+          },
+          "status": "M",
+          "processo": {
+            "id": 7557416,
+            "numero": "1001355-12.2025.5.02.0312",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 32,
+              "descricao": "2ª Vara do Trabalho de Guarulhos",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 6,
+            "descricao": "Instrução",
+            "codigo": "22",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "THIAGO SANTOS DE SENA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "GPS AIR - SERVICOS AUXILIARES AO TRANSPORTE AEREO LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 11723724,
+            "horaInicial": "11:20:00",
+            "horaFinal": "11:30:00"
+          },
+          "prioridades": "Acidente de Trabalho; Pagamento de Salário",
+          "statusDescricao": "Designada",
+          "nrProcesso": "1001355-12.2025.5.02.0312",
+          "idProcesso": 7557416
+        },
+        {
+          "id": 11795917,
+          "dataInicio": "2025-12-18T18:00:00",
+          "dataFim": "2025-12-18T18:01:00",
+          "salaAudiencia": {
+            "nome": "2. SALA ÍMPAR - Dra Tamara"
+          },
+          "status": "M",
+          "processo": {
+            "id": 7722353,
+            "numero": "1001589-67.2025.5.02.0708",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 192,
+              "descricao": "8ª Vara do Trabalho de São Paulo - Zona Sul",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 4,
+            "descricao": "Julgamento",
+            "codigo": "24",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "LUCAS SILVA SANTOS DE CARVALHO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "ZUBALE BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 11795917,
+            "horaInicial": "18:00:00",
+            "horaFinal": "18:01:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "1001589-67.2025.5.02.0708",
+          "idProcesso": 7722353
+        }
+      ],
+      "total": 10,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 10,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 10,
+        "orgaosJulgadoresCriados": 10
+      }
+    }
+  }
+}

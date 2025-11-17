@@ -1,0 +1,163 @@
+{
+  "timestamp": "2025-11-17T01-17-32-043Z",
+  "trtCodigo": "TRT23",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 31.88,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 896964,
+          "dataInicio": "2025-11-21T08:00:00",
+          "dataFim": "2025-11-21T08:02:00",
+          "salaAudiencia": {
+            "nome": "Sala Principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 586566,
+            "numero": "0000598-12.2025.5.23.0066",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 26,
+              "descricao": "VARA DO TRABALHO DE SORRISO",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 26,
+            "descricao": "Instrução por videoconferência (rito sumaríssimo)",
+            "codigo": "7697",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "GECIANE DA SILVA SOUSA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "FRIGORIFICO NUTRIBRAS LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 896964,
+            "horaInicial": "08:00:00",
+            "horaFinal": "08:02:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000598-12.2025.5.23.0066",
+          "idProcesso": 586566
+        },
+        {
+          "id": 896245,
+          "dataInicio": "2025-11-28T08:02:00",
+          "dataFim": "2025-11-28T08:05:00",
+          "salaAudiencia": {
+            "nome": "Sala Principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 583608,
+            "numero": "0000504-64.2025.5.23.0066",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 26,
+              "descricao": "VARA DO TRABALHO DE SORRISO",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 24,
+            "descricao": "Encerramento de instrução por videoconferência",
+            "codigo": "7694",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "RICARDO ALVES DE SOUSA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "FRIGORIFICO NUTRIBRAS LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 896245,
+            "horaInicial": "08:02:00",
+            "horaFinal": "08:05:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000504-64.2025.5.23.0066",
+          "idProcesso": 583608
+        }
+      ],
+      "total": 2,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 2,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 2,
+        "orgaosJulgadoresCriados": 1
+      }
+    }
+  }
+}

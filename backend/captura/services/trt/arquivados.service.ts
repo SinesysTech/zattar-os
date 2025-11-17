@@ -5,11 +5,11 @@ import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaTRTParams } from './trt-capture.service';
 import {
   obterTodosProcessosArquivados,
-  AgrupamentoProcessoTarefa,
   type Processo,
 } from '@/backend/api/pje-trt/arquivados';
 import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../persistence/advogado-helper.service';
+import { captureLogService } from '../persistence/capture-log.service';
 
 /**
  * Resultado da captura de processos arquivados
@@ -91,9 +91,14 @@ export async function arquivadosCapture(
 
       console.log('✅ Processos arquivados salvos no banco:', {
         total: persistencia.total,
+        inseridos: persistencia.inseridos,
         atualizados: persistencia.atualizados,
+        naoAtualizados: persistencia.naoAtualizados,
         erros: persistencia.erros,
       });
+
+      // Imprimir resumo dos logs
+      captureLogService.imprimirResumo();
     } catch (error) {
       console.error('❌ Erro ao salvar processos arquivados no banco:', error);
       // Não falha a captura se a persistência falhar - apenas loga o erro

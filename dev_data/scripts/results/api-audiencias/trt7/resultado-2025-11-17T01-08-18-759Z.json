@@ -1,0 +1,297 @@
+{
+  "timestamp": "2025-11-17T01-08-18-759Z",
+  "trtCodigo": "TRT7",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 33.06,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 1126851,
+          "dataInicio": "2025-11-27T11:30:00",
+          "dataFim": "2025-11-27T11:31:00",
+          "salaAudiencia": {
+            "nome": "Sala 7VT Fortaleza"
+          },
+          "status": "M",
+          "processo": {
+            "id": 947078,
+            "numero": "0001184-76.2025.5.07.0007",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 12,
+              "descricao": "7ª Vara do Trabalho de Fortaleza",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 6,
+            "descricao": "Instrução",
+            "codigo": "22",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "ALAN HIGOR COSTA LIMA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 1126851,
+            "horaInicial": "11:30:00",
+            "horaFinal": "11:31:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001184-76.2025.5.07.0007",
+          "idProcesso": 947078
+        },
+        {
+          "id": 1135230,
+          "dataInicio": "2026-01-23T10:30:00",
+          "dataFim": "2026-01-23T11:00:00",
+          "salaAudiencia": {
+            "nome": "Sala de audiências 06ª Vara - Pares"
+          },
+          "status": "M",
+          "processo": {
+            "id": 813709,
+            "numero": "0000086-93.2024.5.07.0006",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 11,
+              "descricao": "6ª Vara do Trabalho de Fortaleza",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 6,
+            "descricao": "Instrução",
+            "codigo": "22",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "CLAUDEMIR DE SOUZA DA SILVA FILHO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "SABOR - INDUSTRIA E COMERCIO DE ALIMENTOS LTDA - ME",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 1135230,
+            "horaInicial": "10:30:00",
+            "horaFinal": "11:00:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000086-93.2024.5.07.0006",
+          "idProcesso": 813709
+        },
+        {
+          "id": 1133244,
+          "dataInicio": "2026-02-10T09:20:00",
+          "dataFim": "2026-02-10T09:40:00",
+          "salaAudiencia": {
+            "nome": "Sala Ímpar - Juiz(a) Substituto(a)"
+          },
+          "status": "M",
+          "processo": {
+            "id": 877357,
+            "numero": "0001453-22.2024.5.07.0017",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 22,
+              "descricao": "17ª Vara do Trabalho de Fortaleza",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 17,
+            "descricao": "Una (rito sumaríssimo)",
+            "codigo": "7450",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "FRANCISCO VALDENICIO MAGALHAES DE SOUSA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 1133244,
+            "horaInicial": "09:20:00",
+            "horaFinal": "09:40:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001453-22.2024.5.07.0017",
+          "idProcesso": 877357
+        },
+        {
+          "id": 1132988,
+          "dataInicio": "2026-03-16T10:40:00",
+          "dataFim": "2026-03-16T11:00:00",
+          "salaAudiencia": {
+            "nome": "Sala Ímpar"
+          },
+          "status": "M",
+          "processo": {
+            "id": 946225,
+            "numero": "0001253-84.2025.5.07.0015",
+            "classeJudicial": {
+              "id": 387,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 323,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 21,
+              "descricao": "16ª Vara do Trabalho de Fortaleza",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 6,
+            "descricao": "Instrução",
+            "codigo": "22",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "CICERO MARCOS",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": true
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 1132988,
+            "horaInicial": "10:40:00",
+            "horaFinal": "11:00:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001253-84.2025.5.07.0015",
+          "idProcesso": 946225
+        }
+      ],
+      "total": 4,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 4,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 4,
+        "orgaosJulgadoresCriados": 4
+      }
+    }
+  }
+}

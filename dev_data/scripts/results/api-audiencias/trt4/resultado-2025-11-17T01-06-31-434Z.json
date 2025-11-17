@@ -1,0 +1,365 @@
+{
+  "timestamp": "2025-11-17T01-06-31-434Z",
+  "trtCodigo": "TRT4",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 33.36,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 2920288,
+          "dataInicio": "2025-11-17T09:30:00",
+          "dataFim": "2025-11-17T09:31:00",
+          "salaAudiencia": {
+            "nome": "Sala de Audiências - Juiz(íza) Substituto(a)"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1858125,
+            "numero": "0020289-34.2023.5.04.0026",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 88,
+              "descricao": "26ª VARA DO TRABALHO DE PORTO ALEGRE",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 22,
+            "descricao": "Instrução por videoconferência",
+            "codigo": "7696",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "DEBORA ALVES DA SILVEIRA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "SUPERNOW PORTAL E SERVICOS DE INTERNET LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 2920288,
+            "horaInicial": "09:30:00",
+            "horaFinal": "09:31:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 1858125,
+          "nrProcesso": "0020289-34.2023.5.04.0026"
+        },
+        {
+          "id": 2930455,
+          "dataInicio": "2025-12-02T09:30:00",
+          "dataFim": "2025-12-02T09:31:00",
+          "salaAudiencia": {
+            "nome": "CEJUSC - SALA 5"
+          },
+          "status": "M",
+          "processo": {
+            "id": 2302236,
+            "numero": "0020790-62.2025.5.04.0011",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 213,
+              "descricao": "CEJUSC JT PORTO ALEGRE",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 18,
+            "descricao": "Conciliação em Conhecimento por videoconferência",
+            "codigo": "7692",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "GABRIEL DANTAS CAMARA DA SILVA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "MADERO INDUSTRIA E COMERCIO S.A.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 2930455,
+            "horaInicial": "09:30:00",
+            "horaFinal": "09:31:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 2302236,
+          "nrProcesso": "0020790-62.2025.5.04.0011"
+        },
+        {
+          "id": 2756644,
+          "dataInicio": "2026-03-26T14:15:00",
+          "dataFim": "2026-03-26T15:15:00",
+          "salaAudiencia": {
+            "nome": "Sala de Audiências - Juíza Substituta"
+          },
+          "status": "M",
+          "processo": {
+            "id": 2188183,
+            "numero": "0020043-76.2025.5.04.0023",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 82,
+              "descricao": "23ª VARA DO TRABALHO DE PORTO ALEGRE",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 29,
+            "descricao": "Una por videoconferência (rito sumaríssimo)",
+            "codigo": "7703",
+            "isVirtual": false
+          },
+          "designada": false,
+          "urlAudienciaVirtual": "https://trt4-jus-br.zoom.us/my/varapoa23js",
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "RODRIGO FURTADO DE MORAIS",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 2756644,
+            "horaInicial": "14:15:00",
+            "horaFinal": "15:15:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 2188183,
+          "nrProcesso": "0020043-76.2025.5.04.0023"
+        },
+        {
+          "id": 2950137,
+          "dataInicio": "2026-04-27T16:00:00",
+          "dataFim": "2026-04-27T16:01:00",
+          "salaAudiencia": {
+            "nome": "Sala de Audiências - Juiz(íza) Substituto(a)"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1852382,
+            "numero": "0020239-14.2023.5.04.0024",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 86,
+              "descricao": "24ª VARA DO TRABALHO DE PORTO ALEGRE",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 17,
+            "descricao": "Una (rito sumaríssimo)",
+            "codigo": "7450",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "CLEBER LUIS MOREIRA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 2950137,
+            "horaInicial": "16:00:00",
+            "horaFinal": "16:01:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 1852382,
+          "nrProcesso": "0020239-14.2023.5.04.0024"
+        },
+        {
+          "id": 2843241,
+          "dataInicio": "2026-07-01T09:00:00",
+          "dataFim": "2026-07-01T09:01:00",
+          "salaAudiencia": {
+            "nome": "Sala de Audiências - Juiz(íza) Titular"
+          },
+          "status": "M",
+          "processo": {
+            "id": 2085923,
+            "numero": "0020584-52.2024.5.04.0021",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 78,
+              "descricao": "21ª VARA DO TRABALHO DE PORTO ALEGRE",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 11,
+            "descricao": "Instrução (rito sumaríssimo)",
+            "codigo": "7578",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "ALEX DA SILVA LOPES",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 2843241,
+            "horaInicial": "09:00:00",
+            "horaFinal": "09:01:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 2085923,
+          "nrProcesso": "0020584-52.2024.5.04.0021"
+        }
+      ],
+      "total": 5,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 5,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 5,
+        "orgaosJulgadoresCriados": 5
+      }
+    }
+  }
+}

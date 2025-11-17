@@ -3,6 +3,10 @@
 
 import type { CodigoTRT, GrauTRT, CredenciaisTRT } from '@/backend/captura/services/trt/types';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { getFromCache, setCache } from './credential-cache.service';
+
+// Re-exportar getCredentialsBatch para facilitar imports
+export { getCredentialsBatch } from './credential-cache.service';
 
 /**
  * Parâmetros para buscar uma credencial
@@ -91,6 +95,11 @@ export async function getCredential(
  * Busca uma credencial por advogado, tribunal e grau
  * Útil para jobs do sistema que precisam buscar credenciais por TRT/grau
  * 
+ * Esta função usa cache automaticamente:
+ * 1. Primeiro verifica o cache
+ * 2. Se não estiver no cache, busca no banco
+ * 3. Salva no cache após buscar no banco
+ * 
  * @param params - Parâmetros de busca
  * @returns Credenciais ou null se não encontrado
  */
@@ -98,9 +107,16 @@ export async function getCredentialByTribunalAndGrau(
   params: GetCredentialByTribunalParams
 ): Promise<CredenciaisTRT | null> {
   const { advogadoId, tribunal, grau } = params;
+
+  // 1. Verificar cache primeiro
+  const cached = getFromCache(advogadoId, tribunal, grau);
+  if (cached) {
+    return cached;
+  }
+
+  // 2. Se não estiver no cache, buscar no banco
   const supabase = createServiceClient();
 
-  // Buscar credencial no banco
   const { data: credencial, error } = await supabase
     .from('credenciais')
     .select(`
@@ -148,21 +164,29 @@ export async function getCredentialByTribunalAndGrau(
   const advogado = Array.isArray(advogadoRaw)
     ? (advogadoRaw[0] as { cpf: string; nome_completo: string } | undefined)
     : (advogadoRaw as { cpf: string; nome_completo: string } | null);
-  
+
   if (!advogado || !advogado.cpf) {
     console.error('Advogado não encontrado ou sem CPF');
     return null;
   }
 
-  return {
+  // 3. Montar credencial e salvar no cache
+  const credential: CredenciaisTRT = {
     cpf: advogado.cpf,
     senha: credencial.senha,
   };
+
+  // Salvar no cache para próximas buscas
+  setCache(advogadoId, tribunal, grau, credential);
+
+  return credential;
 }
 
 /**
  * Busca todas as credenciais ativas para um TRT e grau específicos
  * Útil para jobs do sistema que processam capturas para múltiplos advogados
+ * 
+ * Esta função também popula o cache automaticamente para cada credencial encontrada.
  * 
  * @param tribunal - Código do tribunal
  * @param grau - Grau do processo
@@ -205,7 +229,7 @@ export async function getActiveCredentialsByTribunalAndGrau(
     return [];
   }
 
-  // Montar resultado
+  // Montar resultado e popular cache
   const resultados = credenciais
     .map((credencial) => {
       // advogados pode ser um objeto único ou array
@@ -219,15 +243,20 @@ export async function getActiveCredentialsByTribunalAndGrau(
         return null;
       }
 
+      const credential: CredenciaisTRT = {
+        cpf: advogado.cpf,
+        senha: credencial.senha,
+      };
+
+      // Popular cache para uso futuro
+      setCache(advogado.id, tribunal, grau, credential);
+
       return {
         credentialId: credencial.id,
         advogadoId: advogado.id,
         cpf: advogado.cpf,
         nomeCompleto: advogado.nome_completo,
-        credenciais: {
-          cpf: advogado.cpf,
-          senha: credencial.senha,
-        },
+        credenciais: credential,
       };
     })
     .filter((item): item is NonNullable<typeof item> => item !== null);

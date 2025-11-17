@@ -1,0 +1,46 @@
+{
+  "timestamp": "2025-11-17T00-29-56-469Z",
+  "trtCodigo": "TRT13",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 31.59,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 144531,
+          "descricaoOrgaoJulgadorColegiado": "1ª Turma",
+          "descricaoOrgaoJulgador": "Gabinete do Desembargador Eduardo Sérgio de Almeida",
+          "classeJudicial": "RORSum",
+          "numero": 682,
+          "numeroProcesso": "0000682-21.2025.5.13.0024",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "PABLO RODRIGUES SILVA BEZERRA",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2025-10-23T15:10:06.143584",
+          "juizoDigital": true,
+          "nomeRelator": "ARNALDO JOSE DUARTE DO AMARAL",
+          "idDocumento": 15738880,
+          "dataArquivamento": "2025-11-14T15:02:05.355",
+          "dataCriacaoExpediente": "2025-11-14T15:02:03.887912",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "GDES"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

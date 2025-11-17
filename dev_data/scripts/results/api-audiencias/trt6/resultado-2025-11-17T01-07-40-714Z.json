@@ -1,0 +1,432 @@
+{
+  "timestamp": "2025-11-17T01-07-40-714Z",
+  "trtCodigo": "TRT6",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 36.04,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 2305211,
+          "dataInicio": "2025-11-18T13:28:00",
+          "dataFim": "2025-11-18T13:29:00",
+          "salaAudiencia": {
+            "nome": "Sala_5_Titular"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1231555,
+            "numero": "0001109-04.2024.5.06.0006",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 74,
+              "descricao": "6ª Vara do Trabalho do Recife",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 24,
+            "descricao": "Encerramento de instrução por videoconferência",
+            "codigo": "7694",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "JHONNYS HYGGOR MIGUEL DE OLIVEIRA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "99 TECNOLOGIA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 2305211,
+            "horaInicial": "13:28:00",
+            "horaFinal": "13:29:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001109-04.2024.5.06.0006",
+          "idProcesso": 1231555
+        },
+        {
+          "id": 2299207,
+          "dataInicio": "2025-11-26T08:20:00",
+          "dataFim": "2025-11-26T08:21:00",
+          "salaAudiencia": {
+            "nome": "Sala_1_Substituto"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1285885,
+            "numero": "0000480-42.2025.5.06.0023",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 70,
+              "descricao": "2ª Vara do Trabalho do Recife",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 30,
+            "descricao": "Una por videoconferência (rito sumaríssimo)",
+            "codigo": "7703",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "PLINIO RYAN SANTANA SANTOS",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 2299207,
+            "horaInicial": "08:20:00",
+            "horaFinal": "08:21:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000480-42.2025.5.06.0023",
+          "idProcesso": 1285885
+        },
+        {
+          "id": 2294539,
+          "dataInicio": "2025-11-28T09:10:00",
+          "dataFim": "2025-11-28T09:20:00",
+          "salaAudiencia": {
+            "nome": "Sala_7_Titular"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1305714,
+            "numero": "0000707-59.2025.5.06.0014",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 82,
+              "descricao": "14ª Vara do Trabalho do Recife",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 22,
+            "descricao": "Una por videoconferência",
+            "codigo": "7702",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "MARCELO DE ALBUQUERQUE OLIVEIRA FILHO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 2294539,
+            "horaInicial": "09:10:00",
+            "horaFinal": "09:20:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000707-59.2025.5.06.0014",
+          "idProcesso": 1305714
+        },
+        {
+          "id": 2259920,
+          "dataInicio": "2025-12-15T10:00:00",
+          "dataFim": "2025-12-15T10:30:00",
+          "salaAudiencia": {
+            "nome": "Sala_9_Titular"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1194947,
+            "numero": "0000639-37.2024.5.06.0017",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 85,
+              "descricao": "17ª Vara do Trabalho do Recife",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 26,
+            "descricao": "Instrução por videoconferência (rito sumaríssimo)",
+            "codigo": "7697",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "LEONARDO FERREIRA GOMES",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "IFOOD.COM AGENCIA DE RESTAURANTES ONLINE S.A.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 2259920,
+            "horaInicial": "10:00:00",
+            "horaFinal": "10:30:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000639-37.2024.5.06.0017",
+          "idProcesso": 1194947
+        },
+        {
+          "id": 2291188,
+          "dataInicio": "2026-02-02T13:30:00",
+          "dataFim": "2026-02-02T13:50:00",
+          "salaAudiencia": {
+            "nome": "Sala_9_ Titular"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1331433,
+            "numero": "0001056-50.2025.5.06.0018",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 86,
+              "descricao": "18ª Vara do Trabalho do Recife",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 26,
+            "descricao": "Instrução por videoconferência (rito sumaríssimo)",
+            "codigo": "7697",
+            "isVirtual": false
+          },
+          "designada": false,
+          "urlAudienciaVirtual": "https://trt6-jus-br.zoom.us/j/89162020938",
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "LUCAS DANIEL LEANDRO DA SILVA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "99 TECNOLOGIA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 2291188,
+            "horaInicial": "13:30:00",
+            "horaFinal": "13:50:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001056-50.2025.5.06.0018",
+          "idProcesso": 1331433
+        },
+        {
+          "id": 2235362,
+          "dataInicio": "2026-02-10T09:25:00",
+          "dataFim": "2026-02-10T09:40:00",
+          "salaAudiencia": {
+            "nome": "SALA J TITULAR"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1281886,
+            "numero": "0000492-72.2025.5.06.0147",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 140,
+              "descricao": "7ª Vara do Trabalho de Jaboatão",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 5,
+            "descricao": "Una",
+            "codigo": "7195",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "RENATO AQUILINO BATISTA DE FRANCA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "99 TECNOLOGIA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 2235362,
+            "horaInicial": "09:25:00",
+            "horaFinal": "09:40:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0000492-72.2025.5.06.0147",
+          "idProcesso": 1281886
+        }
+      ],
+      "total": 6,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 6,
+        "total": 6,
+        "orgaosJulgadoresCriados": 6
+      }
+    }
+  }
+}

@@ -1,0 +1,433 @@
+{
+  "timestamp": "2025-11-17T01-11-47-169Z",
+  "trtCodigo": "TRT13",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 33.91,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 686457,
+          "dataInicio": "2025-11-18T14:10:00",
+          "dataFim": "2025-11-18T14:20:00",
+          "salaAudiencia": {
+            "nome": "JUIZ SUBSTITUTO FIXO (ACERVO ÍMPAR)"
+          },
+          "status": "M",
+          "processo": {
+            "id": 436278,
+            "numero": "0001527-38.2025.5.13.0029",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 69,
+              "descricao": "10ª Vara do Trabalho de João Pessoa",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 27,
+            "descricao": "Inicial por videoconferência (rito sumaríssimo)",
+            "codigo": "7700",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "TAMIRES CARDOSO DA SILVA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "MAX ROCHA EMPREENDIMENTOS LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 686457,
+            "horaInicial": "14:10:00",
+            "horaFinal": "14:20:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001527-38.2025.5.13.0029",
+          "idProcesso": 436278
+        },
+        {
+          "id": 685699,
+          "dataInicio": "2025-11-18T14:50:00",
+          "dataFim": "2025-11-18T15:00:00",
+          "salaAudiencia": {
+            "nome": "JUIZ SUBSTITUTO FIXO (ACERVO ÍMPAR)"
+          },
+          "status": "M",
+          "processo": {
+            "id": 426990,
+            "numero": "0001175-80.2025.5.13.0029",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 69,
+              "descricao": "10ª Vara do Trabalho de João Pessoa",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 27,
+            "descricao": "Inicial por videoconferência (rito sumaríssimo)",
+            "codigo": "7700",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "ADRIANO JOSE DA SILVA ARAUJO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": true
+          },
+          "poloPassivo": {
+            "nome": "99 TECNOLOGIA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 685699,
+            "horaInicial": "14:50:00",
+            "horaFinal": "15:00:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001175-80.2025.5.13.0029",
+          "idProcesso": 426990
+        },
+        {
+          "id": 682180,
+          "dataInicio": "2025-11-25T09:00:00",
+          "dataFim": "2025-11-25T09:01:00",
+          "salaAudiencia": {
+            "nome": "02"
+          },
+          "status": "M",
+          "processo": {
+            "id": 425983,
+            "numero": "0001126-33.2025.5.13.0031",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 73,
+              "descricao": "12ª Vara do Trabalho de João Pessoa",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 27,
+            "descricao": "Inicial por videoconferência (rito sumaríssimo)",
+            "codigo": "7700",
+            "isVirtual": false
+          },
+          "designada": false,
+          "urlAudienciaVirtual": "https://www.google.com/url?q=https://trt13-jus-br.zoom.us/j/83108195251&sa=D&source=calendar&ust=1674317396571204&usg=AOvVaw2IAbF9ecjVfAwhsR-JZaSL",
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "ADELINO DA SILVA INACIO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": true
+          },
+          "poloPassivo": {
+            "nome": "99 TECNOLOGIA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 682180,
+            "horaInicial": "09:00:00",
+            "horaFinal": "09:01:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001126-33.2025.5.13.0031",
+          "idProcesso": 425983
+        },
+        {
+          "id": 682285,
+          "dataInicio": "2025-11-28T10:30:00",
+          "dataFim": "2025-11-28T10:50:00",
+          "salaAudiencia": {
+            "nome": "VT05JPA-Acervo JUIZ SUBSTITUTO"
+          },
+          "status": "M",
+          "processo": {
+            "id": 434012,
+            "numero": "0001387-76.2025.5.13.0005",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 62,
+              "descricao": "5ª Vara do Trabalho de João Pessoa",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 21,
+            "descricao": "Una por videoconferência",
+            "codigo": "7702",
+            "isVirtual": false
+          },
+          "designada": false,
+          "urlAudienciaVirtual": "https://trt13-jus-br.zoom.us/j/88568895563",
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "ALISSON DA CRUZ SILVA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "RCM LOCACOES DE MAQUINAS E SERVICOS DE DEMOLICAO LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 682285,
+            "horaInicial": "10:30:00",
+            "horaFinal": "10:50:00"
+          },
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001387-76.2025.5.13.0005",
+          "idProcesso": 434012
+        },
+        {
+          "id": 684034,
+          "dataInicio": "2025-12-04T10:00:00",
+          "dataFim": "2025-12-04T10:10:00",
+          "salaAudiencia": {
+            "nome": "JUIZ  TITULAR (ACERVO PAR)"
+          },
+          "status": "M",
+          "processo": {
+            "id": 429078,
+            "numero": "0001254-59.2025.5.13.0029",
+            "classeJudicial": {
+              "id": 888,
+              "codigo": "12134",
+              "descricao": "Tutela Cautelar Antecedente",
+              "sigla": "TutCautAnt",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": false,
+              "podeIncluirAutoridade": false,
+              "ativo": true,
+              "idClasseJudicialPai": 891,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 69,
+              "descricao": "10ª Vara do Trabalho de João Pessoa",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 21,
+            "descricao": "Una por videoconferência",
+            "codigo": "7702",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "ADRIANO JOSE DA SILVA ARAUJO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": true
+          },
+          "poloPassivo": {
+            "nome": "99 TECNOLOGIA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 684034,
+            "horaInicial": "10:00:00",
+            "horaFinal": "10:10:00"
+          },
+          "prioridades": "Discriminação",
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001254-59.2025.5.13.0029",
+          "idProcesso": 429078
+        },
+        {
+          "id": 689559,
+          "dataInicio": "2025-12-09T08:50:00",
+          "dataFim": "2025-12-09T09:40:00",
+          "salaAudiencia": {
+            "nome": "VT05JPA-Acervo JUIZ TITULAR"
+          },
+          "status": "M",
+          "processo": {
+            "id": 434115,
+            "numero": "0001390-31.2025.5.13.0005",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 62,
+              "descricao": "5ª Vara do Trabalho de João Pessoa",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 17,
+            "descricao": "Una (rito sumaríssimo)",
+            "codigo": "7450",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "MICAEL HONORO PEREIRA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "HIDRAULICA MARTINS CORREIA LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": true
+          },
+          "pautaAudienciaHorario": {
+            "id": 689559,
+            "horaInicial": "08:50:00",
+            "horaFinal": "09:40:00"
+          },
+          "prioridades": "Pagamento de Salário",
+          "statusDescricao": "Designada",
+          "nrProcesso": "0001390-31.2025.5.13.0005",
+          "idProcesso": 434115
+        }
+      ],
+      "total": 6,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 6,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 6,
+        "orgaosJulgadoresCriados": 3
+      }
+    }
+  }
+}

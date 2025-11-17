@@ -1,0 +1,96 @@
+{
+  "timestamp": "2025-11-17T01-15-10-817Z",
+  "trtCodigo": "TRT19",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 34.96,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 693394,
+          "dataInicio": "2025-12-16T11:20:00",
+          "dataFim": "2025-12-16T11:21:00",
+          "salaAudiencia": {
+            "nome": "SALA JUIZ TITULAR"
+          },
+          "status": "M",
+          "processo": {
+            "id": 386490,
+            "numero": "0000618-25.2024.5.19.0009",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 53,
+              "descricao": "9ª Vara do Trabalho de Maceió",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 21,
+            "descricao": "Una por videoconferência",
+            "codigo": "7702",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "HELVYSSON MATHEUS DOS SANTOS BATISTA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 693394,
+            "horaInicial": "11:20:00",
+            "horaFinal": "11:21:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 386490,
+          "nrProcesso": "0000618-25.2024.5.19.0009"
+        }
+      ],
+      "total": 1,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 1,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 1,
+        "orgaosJulgadoresCriados": 1
+      }
+    }
+  }
+}

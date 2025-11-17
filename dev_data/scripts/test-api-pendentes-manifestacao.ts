@@ -35,20 +35,23 @@ const ADVOGADO_ID = 1; // ID do advogado na tabela advogados
 const GRAU = 'segundo_grau'; // Segundo grau
 
 /**
- * Lista de todos os TRTs disponíveis
+ * Lista de testes específicos que apresentaram erro (TRT + filtro)
  */
-const TODOS_TRTS: CodigoTRT[] = [
-  'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8',
-  'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16',
-  'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24',
-];
-
-/**
- * Filtros de prazo para testar (ambos)
- */
-const FILTROS_PRAZO: Array<'no_prazo' | 'sem_prazo'> = [
-  'no_prazo',
-  'sem_prazo',
+const TESTES_COM_ERRO: Array<{
+  trt: CodigoTRT;
+  filtroPrazo: 'no_prazo' | 'sem_prazo';
+}> = [
+  { trt: 'TRT10', filtroPrazo: 'sem_prazo' },
+  { trt: 'TRT11', filtroPrazo: 'no_prazo' },
+  { trt: 'TRT11', filtroPrazo: 'sem_prazo' },
+  { trt: 'TRT12', filtroPrazo: 'no_prazo' },
+  { trt: 'TRT12', filtroPrazo: 'sem_prazo' },
+  { trt: 'TRT13', filtroPrazo: 'no_prazo' },
+  { trt: 'TRT13', filtroPrazo: 'sem_prazo' },
+  { trt: 'TRT14', filtroPrazo: 'no_prazo' },
+  { trt: 'TRT14', filtroPrazo: 'sem_prazo' },
+  { trt: 'TRT15', filtroPrazo: 'no_prazo' },
+  { trt: 'TRT21', filtroPrazo: 'sem_prazo' },
 ];
 
 /**
@@ -150,14 +153,13 @@ async function testarPendentesManifestacaoTRT(trtCodigo: CodigoTRT, filtroPrazo?
 }
 
 /**
- * Função principal - testa todos os TRTs com ambos os filtros de prazo
+ * Função principal - testa apenas as combinações TRT + filtro que apresentaram erro
  */
 async function main() {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   
-  console.log('\n🚀 Iniciando testes de API HTTP - Pendentes de Manifestação - Todos os TRTs (2º Grau) - Ambos os Filtros\n');
-  console.log(`Total de TRTs: ${TODOS_TRTS.length}`);
-  console.log(`Filtros de prazo: ${FILTROS_PRAZO.join(', ')}`);
+  console.log('\n🚀 Iniciando testes de API HTTP - Pendentes de Manifestação - TRTs com Erro (2º Grau)\n');
+  console.log(`Total de testes: ${TESTES_COM_ERRO.length}`);
   console.log(`Grau: ${GRAU}`);
   console.log(`API URL: ${API_BASE_URL}\n`);
 
@@ -170,50 +172,43 @@ async function main() {
     erro?: string;
   }> = [];
 
-  let contadorTotal = 0;
-  const totalTestes = TODOS_TRTS.length * FILTROS_PRAZO.length;
+  const totalTestes = TESTES_COM_ERRO.length;
 
-  // Iterar por todos os TRTs e para cada TRT, testar ambos os filtros
-  for (let i = 0; i < TODOS_TRTS.length; i++) {
-    const trtCodigo = TODOS_TRTS[i];
+  // Iterar pelos testes específicos que apresentaram erro
+  for (let i = 0; i < TESTES_COM_ERRO.length; i++) {
+    const teste = TESTES_COM_ERRO[i];
+    const progresso = `[${i + 1}/${totalTestes}]`;
 
-    for (let j = 0; j < FILTROS_PRAZO.length; j++) {
-      const filtroPrazo = FILTROS_PRAZO[j];
-      contadorTotal++;
-      const progresso = `[${contadorTotal}/${totalTestes}]`;
+    console.log(`\n${'='.repeat(80)}`);
+    console.log(`${progresso} Processando ${teste.trt} - Filtro: ${teste.filtroPrazo}`);
+    console.log(`${'='.repeat(80)}`);
 
-      console.log(`\n${'='.repeat(80)}`);
-      console.log(`${progresso} Processando ${trtCodigo} - Filtro: ${filtroPrazo}`);
-      console.log(`${'='.repeat(80)}`);
+    const resultado = await testarPendentesManifestacaoTRT(teste.trt, teste.filtroPrazo);
+    
+    resultados.push({
+      trt: teste.trt,
+      filtroPrazo: teste.filtroPrazo,
+      sucesso: resultado.sucesso,
+      totalProcessos: resultado.sucesso ? resultado.resultado?.data?.total : undefined,
+      duracaoSegundos: resultado.duracaoSegundos,
+      erro: resultado.erro,
+    });
 
-      const resultado = await testarPendentesManifestacaoTRT(trtCodigo, filtroPrazo);
-      
-      resultados.push({
-        trt: trtCodigo,
-        filtroPrazo,
-        sucesso: resultado.sucesso,
-        totalProcessos: resultado.sucesso ? resultado.resultado?.data?.total : undefined,
-        duracaoSegundos: resultado.duracaoSegundos,
-        erro: resultado.erro,
-      });
-
-      // Delay entre testes para evitar sobrecarga
-      if (contadorTotal < totalTestes) {
-        console.log('\n⏳ Aguardando 2 segundos antes do próximo teste...\n');
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-      }
+    // Delay entre testes para evitar sobrecarga
+    if (i < totalTestes - 1) {
+      console.log('\n⏳ Aguardando 2 segundos antes do próximo teste...\n');
+      await new Promise((resolve) => setTimeout(resolve, 2000));
     }
   }
 
   // Salvar resumo geral
   await mkdir(RESULTS_DIR, { recursive: true });
-  const resumoPath = join(RESULTS_DIR, `resumo-geral-segundo-grau-ambos-filtros.json`);
+  const resumoPath = join(RESULTS_DIR, `resumo-geral-segundo-grau-tests-com-erro.json`);
   const resumo = {
     timestamp,
     grau: GRAU,
     advogadoId: ADVOGADO_ID,
-    trts: TODOS_TRTS,
-    filtrosPrazo: FILTROS_PRAZO,
+    testesComErro: TESTES_COM_ERRO,
     totalTestes: totalTestes,
     sucessos: resultados.filter((r) => r.sucesso).length,
     falhas: resultados.filter((r) => !r.sucesso).length,
@@ -232,7 +227,7 @@ async function main() {
   console.log(`\n${'='.repeat(80)}`);
   console.log('📊 RESUMO FINAL');
   console.log(`${'='.repeat(80)}`);
-  console.log(`Total de testes realizados: ${totalTestes} (${TODOS_TRTS.length} TRTs × ${FILTROS_PRAZO.length} filtros)`);
+  console.log(`Total de testes realizados: ${totalTestes}`);
   console.log(`✅ Sucessos: ${resumo.sucessos}`);
   console.log(`❌ Falhas: ${resumo.falhas}`);
   console.log(`📦 Total de processos capturados: ${resumo.totalProcessosCapturados}`);

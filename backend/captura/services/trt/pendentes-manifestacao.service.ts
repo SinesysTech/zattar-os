@@ -6,11 +6,11 @@ import type { CapturaPendentesManifestacaoParams } from './trt-capture.service';
 import {
   obterTodosProcessosPendentesManifestacao,
   obterTotalizadoresPendentesManifestacao,
-  AgrupamentoProcessoTarefa,
   type Processo,
 } from '@/backend/api/pje-trt/pendentes-manifestacao';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../persistence/advogado-helper.service';
+import { captureLogService } from '../persistence/capture-log.service';
 
 /**
  * Resultado da captura de processos pendentes de manifestação
@@ -120,9 +120,14 @@ export async function pendentesManifestacaoCapture(
 
       console.log('✅ Processos pendentes salvos no banco:', {
         total: persistencia.total,
+        inseridos: persistencia.inseridos,
         atualizados: persistencia.atualizados,
+        naoAtualizados: persistencia.naoAtualizados,
         erros: persistencia.erros,
       });
+
+      // Imprimir resumo dos logs
+      captureLogService.imprimirResumo();
     } catch (error) {
       console.error('❌ Erro ao salvar processos pendentes no banco:', error);
       // Não falha a captura se a persistência falhar - apenas loga o erro

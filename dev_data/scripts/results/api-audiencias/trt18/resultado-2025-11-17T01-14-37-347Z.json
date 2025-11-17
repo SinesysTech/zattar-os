@@ -1,0 +1,96 @@
+{
+  "timestamp": "2025-11-17T01-14-37-347Z",
+  "trtCodigo": "TRT18",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 31.45,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 2012520,
+          "dataInicio": "2025-12-04T08:20:00",
+          "dataFim": "2025-12-04T08:40:00",
+          "salaAudiencia": {
+            "nome": "C - CEJUSC - INICIAIS"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1163056,
+            "numero": "0000732-27.2025.5.18.0018",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 72,
+              "descricao": "18ª VARA DO TRABALHO DE GOIÂNIA",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 28,
+            "descricao": "Inicial por videoconferência (rito sumaríssimo)",
+            "codigo": "7700",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "HELBER SOUZA DO CARMO",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 2012520,
+            "horaInicial": "08:20:00",
+            "horaFinal": "08:40:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 1163056,
+          "nrProcesso": "0000732-27.2025.5.18.0018"
+        }
+      ],
+      "total": 1,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 1,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 1,
+        "orgaosJulgadoresCriados": 1
+      }
+    }
+  }
+}

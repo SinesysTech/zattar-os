@@ -1,0 +1,46 @@
+{
+  "timestamp": "2025-11-17T00-26-34-214Z",
+  "trtCodigo": "TRT10",
+  "grau": "segundo_grau",
+  "advogadoId": 1,
+  "filtroPrazo": "sem_prazo",
+  "duracaoSegundos": 31.54,
+  "resultado": {
+    "success": true,
+    "data": {
+      "processos": [
+        {
+          "id": 180297,
+          "descricaoOrgaoJulgadorColegiado": "3ª Turma",
+          "descricaoOrgaoJulgador": "Desembargador Pedro Luís Vicentin Foltran",
+          "classeJudicial": "RORSum",
+          "numero": 496,
+          "numeroProcesso": "0000496-24.2025.5.10.0010",
+          "segredoDeJustica": false,
+          "codigoStatusProcesso": "DISTRIBUIDO",
+          "prioridadeProcessual": 0,
+          "nomeParteAutora": "FRANCISCO MIKAEL COSTA RODRIGUES",
+          "qtdeParteAutora": 1,
+          "nomeParteRe": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "qtdeParteRe": 1,
+          "dataAutuacao": "2025-07-07T08:30:25.804489",
+          "juizoDigital": false,
+          "nomeRelator": "PEDRO LUÍS VICENTIN FOLTRAN",
+          "idDocumento": 24084409,
+          "dataArquivamento": "2025-11-14T14:34:44.659",
+          "dataCriacaoExpediente": "2025-11-14T14:34:40.364504",
+          "prazoVencido": false,
+          "siglaOrgaoJulgador": "GDPVF"
+        }
+      ],
+      "total": 1,
+      "filtroPrazo": "sem_prazo",
+      "persistencia": {
+        "inseridos": 0,
+        "atualizados": 1,
+        "erros": 0,
+        "total": 1
+      }
+    }
+  }
+}

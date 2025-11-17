@@ -1,0 +1,101 @@
+{
+  "timestamp": "2025-11-17T01-42-59-050Z",
+  "trtsComErro": [
+    "TRT11",
+    "TRT14",
+    "TRT16",
+    "TRT17",
+    "TRT20",
+    "TRT24"
+  ],
+  "graus": [
+    "primeiro_grau",
+    "segundo_grau"
+  ],
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "codigoSituacao": "M",
+  "totalTRTs": 6,
+  "totalTestes": 12,
+  "sucessos": 0,
+  "falhas": 12,
+  "totalAudienciasCapturadas": 0,
+  "duracaoTotalSegundos": 0,
+  "resultados": [
+    {
+      "trt": "TRT11",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT14",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT16",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT17",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT20",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT24",
+      "grau": "primeiro_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT11",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT14",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT16",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT17",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT20",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    },
+    {
+      "trt": "TRT24",
+      "grau": "segundo_grau",
+      "sucesso": false,
+      "erro": "API Error 500: Internal server error"
+    }
+  ]
+}

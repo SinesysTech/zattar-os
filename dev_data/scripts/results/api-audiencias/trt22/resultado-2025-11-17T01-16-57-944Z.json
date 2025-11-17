@@ -1,0 +1,163 @@
+{
+  "timestamp": "2025-11-17T01-16-57-944Z",
+  "trtCodigo": "TRT22",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 32.08,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 426228,
+          "dataInicio": "2025-11-17T09:20:00",
+          "dataFim": "2025-11-17T09:40:00",
+          "salaAudiencia": {
+            "nome": "Principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 342316,
+            "numero": "0001110-14.2025.5.22.0004",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "AÇÃO TRABALHISTA - RITO SUMARÍSSIMO",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 43,
+              "descricao": "4ª Vara do Trabalho de Teresina",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 31,
+            "descricao": "Una por videoconferência (rito sumaríssimo)",
+            "codigo": "7703",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "FRANCISCO DAS CHAGAS DA SILVA SOUSA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "99 TAXIS DESENVOLVIMENTO DE SOFTWARES LTDA.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 426228,
+            "horaInicial": "09:20:00",
+            "horaFinal": "09:40:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 342316,
+          "nrProcesso": "0001110-14.2025.5.22.0004"
+        },
+        {
+          "id": 431184,
+          "dataInicio": "2026-01-26T08:30:00",
+          "dataFim": "2026-01-26T08:48:00",
+          "salaAudiencia": {
+            "nome": "AA - Sala Principal"
+          },
+          "status": "M",
+          "processo": {
+            "id": 345573,
+            "numero": "0001335-43.2025.5.22.0001",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "AÇÃO TRABALHISTA - RITO SUMARÍSSIMO",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": false,
+            "orgaoJulgador": {
+              "id": 40,
+              "descricao": "1ª Vara do Trabalho de Teresina",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 19,
+            "descricao": "Una (rito sumaríssimo)",
+            "codigo": "7450",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "MATHEUS GONZAGA PIRES TEIXEIRA",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "CONTRACTA RECURSOS HUMANOS LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 431184,
+            "horaInicial": "08:30:00",
+            "horaFinal": "08:48:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 345573,
+          "nrProcesso": "0001335-43.2025.5.22.0001"
+        }
+      ],
+      "total": 2,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 2,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 2,
+        "orgaosJulgadoresCriados": 2
+      }
+    }
+  }
+}

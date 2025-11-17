@@ -1,0 +1,163 @@
+{
+  "timestamp": "2025-11-17T01-09-26-607Z",
+  "trtCodigo": "TRT9",
+  "grau": "primeiro_grau",
+  "advogadoId": 1,
+  "periodo": {
+    "dataInicio": "2025-11-16",
+    "dataFim": "2026-11-16"
+  },
+  "duracaoSegundos": 34.31,
+  "resultado": {
+    "success": true,
+    "data": {
+      "audiencias": [
+        {
+          "id": 3154234,
+          "dataInicio": "2025-12-08T13:55:00",
+          "dataFim": "2025-12-08T13:56:00",
+          "salaAudiencia": {
+            "nome": "SALA 01 - JUÍZA TITULAR"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1418501,
+            "numero": "0000921-43.2022.5.09.0088",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": false,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 146,
+              "descricao": "23ª VARA DO TRABALHO DE CURITIBA",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 23,
+            "descricao": "Encerramento de instrução por videoconferência",
+            "codigo": "7694",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "JULIO CESAR KLEIN SANTOS",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "RAPPI BRASIL INTERMEDIACAO DE NEGOCIOS LTDA",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 3154234,
+            "horaInicial": "13:55:00",
+            "horaFinal": "13:56:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 1418501,
+          "nrProcesso": "0000921-43.2022.5.09.0088"
+        },
+        {
+          "id": 3153291,
+          "dataInicio": "2026-01-21T11:40:00",
+          "dataFim": "2026-01-21T11:41:00",
+          "salaAudiencia": {
+            "nome": "Sala 01 - Juiz Titular"
+          },
+          "status": "M",
+          "processo": {
+            "id": 1682819,
+            "numero": "0000752-22.2024.5.09.0012",
+            "classeJudicial": {
+              "id": 608,
+              "codigo": "1125",
+              "descricao": "Ação Trabalhista - Rito Sumaríssimo",
+              "sigla": "ATSum",
+              "requerProcessoReferenciaCodigo": "NE",
+              "controlaValorCausa": true,
+              "podeIncluirAutoridade": false,
+              "pisoValorCausa": 3036.01,
+              "tetoValorCausa": 60720,
+              "ativo": true,
+              "idClasseJudicialPai": 593,
+              "possuiFilhos": false
+            },
+            "segredoDeJustica": true,
+            "juizoDigital": true,
+            "orgaoJulgador": {
+              "id": 113,
+              "descricao": "11ª VARA DO TRABALHO DE CURITIBA",
+              "cejusc": false,
+              "ativo": false,
+              "postoAvancado": false,
+              "novoOrgaoJulgador": false,
+              "codigoServentiaCnj": 0
+            }
+          },
+          "tipo": {
+            "id": 23,
+            "descricao": "Encerramento de instrução por videoconferência",
+            "codigo": "7694",
+            "isVirtual": false
+          },
+          "designada": false,
+          "emAndamento": false,
+          "documentoAtivo": false,
+          "poloAtivo": {
+            "nome": "E.D.S.",
+            "polo": "ativo",
+            "poloEnum": "ATIVO",
+            "representaVarios": false
+          },
+          "poloPassivo": {
+            "nome": "U.D.B.T.L.",
+            "polo": "passivo",
+            "poloEnum": "PASSIVO",
+            "representaVarios": false
+          },
+          "pautaAudienciaHorario": {
+            "id": 3153291,
+            "horaInicial": "11:40:00",
+            "horaFinal": "11:41:00"
+          },
+          "statusDescricao": "Designada",
+          "idProcesso": 1682819,
+          "nrProcesso": "0000752-22.2024.5.09.0012"
+        }
+      ],
+      "total": 2,
+      "dataInicio": "2025-11-16",
+      "dataFim": "2026-11-16",
+      "persistencia": {
+        "inseridos": 2,
+        "atualizados": 0,
+        "naoAtualizados": 0,
+        "erros": 0,
+        "total": 2,
+        "orgaosJulgadoresCriados": 2
+      }
+    }
+  }
+}

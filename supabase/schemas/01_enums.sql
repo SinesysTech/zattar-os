@@ -36,3 +36,12 @@ create type public.codigo_tribunal as enum (
 );
 comment on type public.codigo_tribunal is 'Código do Tribunal Regional do Trabalho (TRT1 a TRT24)';
 
+-- Enum para gênero do usuário
+create type public.genero_usuario as enum (
+  'masculino',
+  'feminino',
+  'outro',
+  'prefiro_nao_informar'
+);
+comment on type public.genero_usuario is 'Gênero do usuário do sistema';
+
