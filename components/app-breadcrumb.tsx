@@ -22,6 +22,7 @@ const routeLabels: Record<string, string> = {
   documentos: "Documentos",
   configuracoes: "Configurações",
   perfil: "Perfil",
+  usuarios: "Usuários",
 }
 
 // Função para formatar o segmento da rota em um label legível

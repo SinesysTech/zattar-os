@@ -12,7 +12,8 @@ import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ClienteViewSheet } from '@/components/clientes/cliente-view-sheet';
 import { ClienteEditSheet } from '@/components/clientes/cliente-edit-sheet';
-import { Eye, Pencil } from 'lucide-react';
+import { ClienteCreateSheet } from '@/components/clientes/cliente-create-sheet';
+import { Eye, Pencil, Plus } from 'lucide-react';
 import { useClientes } from '@/lib/hooks/use-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Cliente } from '@/backend/clientes/services/persistence/cliente-persistence.service';
@@ -341,6 +342,7 @@ export default function ClientesPage() {
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<ClientesFilters>({});
+  const [createOpen, setCreateOpen] = React.useState(false);
   
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -377,21 +379,27 @@ export default function ClientesPage() {
   return (
     <div className="space-y-4">
       {/* Barra de busca e filtros */}
-      <div className="flex items-center gap-4">
-        <Input
-          placeholder="Buscar por nome, CPF, CNPJ ou e-mail..."
-          value={busca}
-          onChange={(e) => {
-            setBusca(e.target.value);
-            setPagina(0); // Resetar para primeira página ao buscar
-          }}
-          className="max-w-sm"
-        />
-        <ClientesFiltrosAvancados
-          filters={filtros}
-          onFiltersChange={handleFiltersChange}
-          onReset={handleFiltersReset}
-        />
+      <div className="flex items-center gap-4 justify-between">
+        <div className="flex items-center gap-2">
+          <Input
+            placeholder="Buscar por nome, CPF, CNPJ ou e-mail..."
+            value={busca}
+            onChange={(e) => {
+              setBusca(e.target.value);
+              setPagina(0); // Resetar para primeira página ao buscar
+            }}
+            className="max-w-sm"
+          />
+          <ClientesFiltrosAvancados
+            filters={filtros}
+            onFiltersChange={handleFiltersChange}
+            onReset={handleFiltersReset}
+          />
+        </div>
+        <Button onClick={() => setCreateOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Novo Cliente
+        </Button>
       </div>
       
       {/* Tabela */}
@@ -414,6 +422,13 @@ export default function ClientesPage() {
         isLoading={isLoading}
         error={error}
         emptyMessage="Nenhum cliente encontrado."
+      />
+
+      {/* Sheet para criação */}
+      <ClienteCreateSheet
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onSuccess={handleEditSuccess}
       />
     </div>
   );

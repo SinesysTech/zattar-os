@@ -295,8 +295,8 @@ export default function UsuariosPage() {
   return (
     <div className="space-y-4">
       {/* Barra de busca, filtros e alternância de visualização */}
-      <div className="flex items-center gap-4 flex-wrap justify-between">
-        <div className="flex items-center gap-4 flex-wrap">
+      <div className="flex items-center gap-4 justify-between">
+        <div className="flex items-center gap-2">
           <Input
             placeholder="Buscar por nome, CPF ou e-mail..."
             value={busca}
