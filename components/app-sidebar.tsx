@@ -9,6 +9,7 @@ import {
   Scale,
   Users,
   UserCog,
+  Database,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -73,6 +74,11 @@ const navAdmin = [
     name: "Usuários",
     url: "/usuarios",
     icon: UserCog,
+  },
+  {
+    name: "Captura",
+    url: "/captura",
+    icon: Database,
   },
 ]
 
