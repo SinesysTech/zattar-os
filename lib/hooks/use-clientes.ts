@@ -2,7 +2,7 @@
 
 // Hook para buscar clientes
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { ClientesApiResponse, BuscarClientesParams } from '@/lib/types/clientes';
 import type { Cliente } from '@/backend/clientes/services/persistence/cliente-persistence.service';
 
@@ -27,6 +27,27 @@ export const useClientes = (params: BuscarClientesParams = {}): UseClientesResul
   const [paginacao, setPaginacao] = useState<UseClientesResult['paginacao']>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Extrair valores primitivos para usar no callback
+  const pagina = params.pagina ?? 1;
+  const limite = params.limite ?? 50;
+  const busca = params.busca || '';
+  const tipoPessoa = params.tipoPessoa || '';
+  const ativo = params.ativo;
+  
+  // Normalizar parâmetros para comparação estável
+  const paramsKey = useMemo(() => {
+    return JSON.stringify({
+      pagina,
+      limite,
+      busca,
+      tipoPessoa,
+      ativo,
+    });
+  }, [pagina, limite, busca, tipoPessoa, ativo]);
+  
+  // Usar ref para comparar valores anteriores e evitar loops
+  const paramsRef = useRef<string>('');
 
   const buscarClientes = useCallback(async () => {
     setIsLoading(true);
@@ -36,20 +57,17 @@ export const useClientes = (params: BuscarClientesParams = {}): UseClientesResul
       // Construir query string
       const searchParams = new URLSearchParams();
       
-      if (params.pagina !== undefined) {
-        searchParams.set('pagina', params.pagina.toString());
+      searchParams.set('pagina', pagina.toString());
+      searchParams.set('limite', limite.toString());
+      
+      if (busca) {
+        searchParams.set('busca', busca);
       }
-      if (params.limite !== undefined) {
-        searchParams.set('limite', params.limite.toString());
+      if (tipoPessoa) {
+        searchParams.set('tipoPessoa', tipoPessoa);
       }
-      if (params.busca) {
-        searchParams.set('busca', params.busca);
-      }
-      if (params.tipoPessoa) {
-        searchParams.set('tipoPessoa', params.tipoPessoa);
-      }
-      if (params.ativo !== undefined) {
-        searchParams.set('ativo', params.ativo.toString());
+      if (ativo !== undefined) {
+        searchParams.set('ativo', ativo.toString());
       }
 
       const response = await fetch(`/api/clientes?${searchParams.toString()}`);
@@ -80,11 +98,16 @@ export const useClientes = (params: BuscarClientesParams = {}): UseClientesResul
     } finally {
       setIsLoading(false);
     }
-  }, [params]);
+  }, [pagina, limite, busca, tipoPessoa, ativo]);
 
   useEffect(() => {
-    buscarClientes();
-  }, [buscarClientes]);
+    // Só executar se os parâmetros realmente mudaram
+    if (paramsRef.current !== paramsKey) {
+      paramsRef.current = paramsKey;
+      buscarClientes();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramsKey]);
 
   return {
     clientes,

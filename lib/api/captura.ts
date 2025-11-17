@@ -18,6 +18,33 @@ export interface CapturaApiResponse<T = unknown> {
 }
 
 /**
+ * Credencial disponível para captura
+ */
+export interface CredencialDisponivel {
+  id: number;
+  advogado_id: number;
+  advogado_nome: string;
+  advogado_cpf: string;
+  advogado_oab: string;
+  advogado_uf_oab: string;
+  tribunal: CodigoTRT;
+  grau: GrauTRT;
+}
+
+/**
+ * Resposta da API de credenciais
+ */
+export interface CredenciaisApiResponse {
+  success: boolean;
+  data?: {
+    credenciais: CredencialDisponivel[];
+    tribunais_disponiveis: CodigoTRT[];
+    graus_disponiveis: GrauTRT[];
+  };
+  error?: string;
+}
+
+/**
  * Resultado de captura de acervo geral
  */
 export interface AcervoGeralResult {
@@ -86,6 +113,36 @@ export interface AudienciasParams extends BaseCapturaTRTParams {
  */
 export interface PendentesParams extends BaseCapturaTRTParams {
   filtroPrazo?: FiltroPrazoPendentes;
+}
+
+/**
+ * Cliente API para buscar credenciais disponíveis
+ */
+export async function listarCredenciais(): Promise<CredenciaisApiResponse> {
+  try {
+    const response = await fetch('/api/captura/credenciais', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+      };
+    }
+
+    return data;
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro desconhecido ao listar credenciais',
+    };
+  }
 }
 
 /**
@@ -244,4 +301,3 @@ export const FILTROS_PRAZO: { value: FiltroPrazoPendentes; label: string }[] = [
   { value: 'sem_prazo', label: 'Sem Prazo' },
   { value: 'no_prazo', label: 'No Prazo' },
 ];
-
