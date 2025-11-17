@@ -45,3 +45,67 @@ create type public.genero_usuario as enum (
 );
 comment on type public.genero_usuario is 'Gênero do usuário do sistema';
 
+-- Enum para tipo de pessoa (física ou jurídica)
+create type public.tipo_pessoa as enum (
+  'pf',
+  'pj'
+);
+comment on type public.tipo_pessoa is 'Tipo de pessoa: física (pf) ou jurídica (pj)';
+
+-- Enum para estado civil
+create type public.estado_civil as enum (
+  'solteiro',
+  'casado',
+  'divorciado',
+  'viuvo',
+  'uniao_estavel',
+  'outro'
+);
+comment on type public.estado_civil is 'Estado civil da pessoa física';
+
+-- Enum para área de direito
+create type public.area_direito as enum (
+  'trabalhista',
+  'civil',
+  'previdenciario',
+  'criminal',
+  'empresarial',
+  'administrativo'
+);
+comment on type public.area_direito is 'Área de direito do contrato';
+
+-- Enum para tipo de contrato
+create type public.tipo_contrato as enum (
+  'ajuizamento',
+  'defesa',
+  'ato_processual',
+  'assessoria',
+  'consultoria',
+  'extrajudicial',
+  'parecer'
+);
+comment on type public.tipo_contrato is 'Tipo de contrato jurídico';
+
+-- Enum para tipo de cobrança
+create type public.tipo_cobranca as enum (
+  'pro_exito',
+  'pro_labore'
+);
+comment on type public.tipo_cobranca is 'Tipo de cobrança do contrato';
+
+-- Enum para status do contrato
+create type public.status_contrato as enum (
+  'em_contratacao',
+  'contratado',
+  'distribuido',
+  'desistencia'
+);
+comment on type public.status_contrato is 'Status do contrato no sistema';
+
+-- Enum para polo processual
+create type public.polo_processual as enum (
+  'autor',
+  're'
+);
+comment on type public.polo_processual is 'Polo processual (autor ou ré)';
+
