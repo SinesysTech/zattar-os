@@ -18,9 +18,11 @@ function converterParaAudiencia(data: Record<string, unknown>): Audiencia {
     advogado_id: data.advogado_id as number,
     processo_id: data.processo_id as number,
     orgao_julgador_id: (data.orgao_julgador_id as number | null) ?? null,
+    orgao_julgador_descricao: (data.orgao_julgador_descricao as string | null) ?? null,
     trt: data.trt as string,
     grau: data.grau as 'primeiro_grau' | 'segundo_grau',
     numero_processo: data.numero_processo as string,
+    classe_judicial: (data.classe_judicial as string | null) ?? null,
     data_inicio: data.data_inicio as string,
     data_fim: data.data_fim as string,
     sala_audiencia_nome: (data.sala_audiencia_nome as string | null) ?? null,
@@ -60,10 +62,14 @@ export async function listarAudiencias(
   const limite = Math.min(params.limite ?? 50, 100); // Máximo 100
   const offset = (pagina - 1) * limite;
 
-  // Selecionar todos os campos da tabela audiencias (incluindo responsavel_id)
+  // Selecionar todos os campos da tabela audiencias e fazer JOIN com orgao_julgador e acervo
   let query = supabase
     .from('audiencias')
-    .select('*', { count: 'exact' });
+    .select(`
+      *,
+      orgao_julgador:orgao_julgador_id(descricao),
+      acervo:processo_id(classe_judicial)
+    `, { count: 'exact' });
 
   // Filtros básicos (campos da tabela audiencias não precisam de prefixo)
   if (params.trt) {
@@ -155,7 +161,18 @@ export async function listarAudiencias(
 
   // Converter dados para formato de retorno
   const audiencias = (data || []).map((row: Record<string, unknown>) => {
-    return converterParaAudiencia(row);
+    // Extrair dados do JOIN
+    const orgaoJulgador = row.orgao_julgador as Record<string, unknown> | null;
+    const acervo = row.acervo as Record<string, unknown> | null;
+
+    // Adicionar campos do JOIN ao objeto
+    const rowWithJoins = {
+      ...row,
+      orgao_julgador_descricao: orgaoJulgador?.descricao ?? null,
+      classe_judicial: acervo?.classe_judicial ?? null,
+    };
+
+    return converterParaAudiencia(rowWithJoins);
   });
 
   const total = count ?? 0;
