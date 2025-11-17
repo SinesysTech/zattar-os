@@ -213,15 +213,15 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error in audiencias capture:', error);
-    
+
     // Retornar erro específico se for erro de validação
-    if (error instanceof Error && error.message.includes('Formato de data') || error.message.includes('não pode ser posterior')) {
+    if (error instanceof Error && (error.message.includes('Formato de data') || error.message.includes('não pode ser posterior'))) {
       return NextResponse.json(
         { error: error.message },
         { status: 400 }
       );
     }
-    
+
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

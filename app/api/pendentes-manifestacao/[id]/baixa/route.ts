@@ -117,6 +117,11 @@ export async function PATCH(
     let usuarioId: number;
     if (authResult.userId === 'system') {
       usuarioId = 10; // Sistema usa ID padrão do Super Administrador
+    } else if (!authResult.userId) {
+      return NextResponse.json(
+        { error: 'ID de usuário não fornecido' },
+        { status: 401 }
+      );
     } else {
       const userIdNum = parseInt(authResult.userId, 10);
       if (isNaN(userIdNum)) {

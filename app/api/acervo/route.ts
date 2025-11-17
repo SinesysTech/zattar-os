@@ -54,7 +54,7 @@ import type { ListarAcervoParams } from '@/backend/types/acervo/types';
  *         name: trt
  *         schema:
  *           type: string
- *         description: Filtrar por código do TRT (ex: TRT3, TRT1)
+ *         description: "Filtrar por código do TRT (ex: TRT3, TRT1)"
  *       - in: query
  *         name: grau
  *         schema:
@@ -109,12 +109,12 @@ import type { ListarAcervoParams } from '@/backend/types/acervo/types';
  *         name: classe_judicial
  *         schema:
  *           type: string
- *         description: Filtrar por classe judicial (exata, ex: ATOrd, ATSum)
+ *         description: "Filtrar por classe judicial (exata, ex: ATOrd, ATSum)"
  *       - in: query
  *         name: codigo_status_processo
  *         schema:
  *           type: string
- *         description: Filtrar por código do status (exata, ex: DISTRIBUIDO)
+ *         description: "Filtrar por código do status (exata, ex: DISTRIBUIDO)"
  *       - in: query
  *         name: segredo_justica
  *         schema:
@@ -135,37 +135,37 @@ import type { ListarAcervoParams } from '@/backend/types/acervo/types';
  *         schema:
  *           type: string
  *           format: date
- *         description: Data inicial para filtrar por data de autuação (ISO date: YYYY-MM-DD)
+ *         description: "Data inicial para filtrar por data de autuação (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_autuacao_fim
  *         schema:
  *           type: string
  *           format: date
- *         description: Data final para filtrar por data de autuação (ISO date: YYYY-MM-DD)
+ *         description: "Data final para filtrar por data de autuação (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_arquivamento_inicio
  *         schema:
  *           type: string
  *           format: date
- *         description: Data inicial para filtrar por data de arquivamento (ISO date: YYYY-MM-DD)
+ *         description: "Data inicial para filtrar por data de arquivamento (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_arquivamento_fim
  *         schema:
  *           type: string
  *           format: date
- *         description: Data final para filtrar por data de arquivamento (ISO date: YYYY-MM-DD)
+ *         description: "Data final para filtrar por data de arquivamento (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_proxima_audiencia_inicio
  *         schema:
  *           type: string
  *           format: date
- *         description: Data inicial para filtrar por data da próxima audiência (ISO date: YYYY-MM-DD)
+ *         description: "Data inicial para filtrar por data da próxima audiência (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: data_proxima_audiencia_fim
  *         schema:
  *           type: string
  *           format: date
- *         description: Data final para filtrar por data da próxima audiência (ISO date: YYYY-MM-DD)
+ *         description: "Data final para filtrar por data da próxima audiência (ISO date: YYYY-MM-DD)"
  *       - in: query
  *         name: tem_proxima_audiencia
  *         schema:
