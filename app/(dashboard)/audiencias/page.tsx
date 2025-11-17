@@ -116,6 +116,20 @@ const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
 };
 
 /**
+ * Retorna a classe CSS de cor para badge da Parte Autora
+ */
+const getParteAutoraColorClass = (): string => {
+  return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge da Parte Ré
+ */
+const getParteReColorClass = (): string => {
+  return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800';
+};
+
+/**
  * Formata status da audiência para exibição
  */
 const formatarStatus = (status: string | null): string => {
@@ -241,6 +255,31 @@ function criarColunas(onSuccess: () => void): ColumnDef<Audiencia>[] {
             <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}
             </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'partes',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Partes</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 250,
+      cell: ({ row }) => {
+        const parteAutora = row.original.polo_ativo_nome || '-';
+        const parteRe = row.original.polo_passivo_nome || '-';
+
+        return (
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+            <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit whitespace-nowrap max-w-full truncate`}>
+              {parteAutora}
+            </Badge>
+            <Badge variant="outline" className={`${getParteReColorClass()} w-fit whitespace-nowrap max-w-full truncate`}>
+              {parteRe}
+            </Badge>
           </div>
         );
       },

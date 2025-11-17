@@ -59,6 +59,20 @@ const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
 };
 
 /**
+ * Retorna a classe CSS de cor para badge da Parte Autora
+ */
+const getParteAutoraColorClass = (): string => {
+  return 'bg-blue-100 text-blue-800 border-blue-200';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge da Parte Ré
+ */
+const getParteReColorClass = (): string => {
+  return 'bg-red-100 text-red-800 border-red-200';
+};
+
+/**
  * Define as colunas da tabela de audiências para visualização semanal
  */
 function criarColunasSemanais(): ColumnDef<Audiencia>[] {
@@ -100,6 +114,26 @@ function criarColunasSemanais(): ColumnDef<Audiencia>[] {
             <div className="text-xs text-muted-foreground truncate">
               {orgaoJulgador}
             </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'partes',
+      header: () => <div className="text-sm font-medium">Partes</div>,
+      size: 220,
+      cell: ({ row }) => {
+        const parteAutora = row.original.polo_ativo_nome || '-';
+        const parteRe = row.original.polo_passivo_nome || '-';
+
+        return (
+          <div className="flex flex-col gap-1">
+            <Badge variant="outline" className={`${getParteAutoraColorClass()} text-xs whitespace-nowrap truncate max-w-full`}>
+              {parteAutora}
+            </Badge>
+            <Badge variant="outline" className={`${getParteReColorClass()} text-xs whitespace-nowrap truncate max-w-full`}>
+              {parteRe}
+            </Badge>
           </div>
         );
       },
