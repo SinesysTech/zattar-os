@@ -373,3 +373,25 @@ export async function listarAcervoAgrupado(
   };
 }
 
+/**
+ * Busca um processo do acervo por ID
+ */
+export async function buscarAcervoPorId(id: number): Promise<Acervo | null> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('acervo')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return null;
+    }
+    throw new Error(`Erro ao buscar acervo: ${error.message}`);
+  }
+
+  return data ? converterParaAcervo(data) : null;
+}
+
