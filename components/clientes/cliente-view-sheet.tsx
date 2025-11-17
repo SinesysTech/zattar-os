@@ -6,7 +6,6 @@ import * as React from 'react';
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
@@ -40,9 +39,9 @@ export function ClienteViewSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle className="flex items-center gap-2">
+      <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto p-6">
+        <SheetHeader className="pb-5">
+          <SheetTitle className="text-xl font-semibold flex items-center gap-2">
             {formatarNome(cliente.nome)}
             <Badge variant={cliente.ativo ? 'default' : 'secondary'}>
               {cliente.ativo ? 'Ativo' : 'Inativo'}
@@ -51,12 +50,9 @@ export function ClienteViewSheet({
               {formatarTipoPessoa(cliente.tipoPessoa)}
             </Badge>
           </SheetTitle>
-          <SheetDescription>
-            Visualização completa dos dados do cliente
-          </SheetDescription>
         </SheetHeader>
 
-        <div className="mt-6 space-y-6">
+        <div className="space-y-6">
           {/* Informações Básicas */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Informações Básicas</h3>

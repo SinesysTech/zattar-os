@@ -95,15 +95,12 @@ export function AudienciasFiltrosAvancados({
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle>Filtros Avançados</SheetTitle>
-          <SheetDescription>
-            Filtre as audiências por critérios específicos. Os filtros são aplicados em conjunto.
-          </SheetDescription>
+      <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto p-6">
+        <SheetHeader className="pb-5">
+          <SheetTitle className="text-xl font-semibold">Filtros Avançados</SheetTitle>
         </SheetHeader>
 
-        <div className="mt-6 space-y-6">
+        <div className="space-y-6">
           {/* TRT */}
           <div className="space-y-2">
             <Label htmlFor="trt">TRT</Label>
@@ -343,7 +340,7 @@ export function AudienciasFiltrosAvancados({
           </div>
         </div>
 
-        <SheetFooter className="mt-6">
+        <SheetFooter className="pt-6">
           <Button variant="outline" onClick={handleReset}>
             <X className="mr-2 h-4 w-4" />
             Limpar

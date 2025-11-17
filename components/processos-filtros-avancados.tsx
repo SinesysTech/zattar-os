@@ -17,7 +17,6 @@ import {
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -93,15 +92,12 @@ export function ProcessosFiltrosAvancados({
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex flex-col w-full sm:max-w-lg p-0 gap-0">
-        <SheetHeader className="px-6 pt-6 pb-4 border-b flex-shrink-0 p-0">
-          <SheetTitle>Filtros Avançados</SheetTitle>
-          <SheetDescription>
-            Filtre os processos por critérios específicos. Os filtros são aplicados em conjunto.
-          </SheetDescription>
+      <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto p-6">
+        <SheetHeader className="pb-5">
+          <SheetTitle className="text-xl font-semibold">Filtros Avançados</SheetTitle>
         </SheetHeader>
 
-        <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+        <div className="space-y-6">
           {/* Origem */}
           <div className="space-y-2">
             <Label htmlFor="origem">Origem</Label>
@@ -386,12 +382,12 @@ export function ProcessosFiltrosAvancados({
           </div>
         </div>
 
-        <SheetFooter className="px-6 py-4 border-t bg-background gap-2 sm:flex-row flex-shrink-0 p-0">
-          <Button variant="outline" onClick={handleReset} className="w-full sm:w-auto">
+        <SheetFooter className="pt-6">
+          <Button variant="outline" onClick={handleReset}>
             <X className="mr-2 h-4 w-4" />
             Limpar
           </Button>
-          <Button onClick={handleApply} className="w-full sm:w-auto">Aplicar Filtros</Button>
+          <Button onClick={handleApply}>Aplicar Filtros</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>

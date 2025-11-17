@@ -6,7 +6,6 @@ import * as React from 'react';
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -104,10 +103,10 @@ export function ClienteCreateSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">
+      <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto p-6">
         <form onSubmit={handleSubmit}>
-          <SheetHeader>
-            <SheetTitle className="flex items-center gap-2">
+          <SheetHeader className="pb-5">
+            <SheetTitle className="text-xl font-semibold flex items-center gap-2">
               Novo Cliente
               {formData.tipoPessoa && (
                 <Badge variant="outline">
@@ -115,12 +114,9 @@ export function ClienteCreateSheet({
                 </Badge>
               )}
             </SheetTitle>
-            <SheetDescription>
-              Preencha os dados para criar um novo cliente no sistema
-            </SheetDescription>
           </SheetHeader>
 
-          <div className="mt-6 space-y-6">
+          <div className="space-y-6">
             {error && (
               <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
                 {error}
@@ -478,7 +474,7 @@ export function ClienteCreateSheet({
             )}
           </div>
 
-          <SheetFooter className="mt-6">
+          <SheetFooter className="pt-6">
             <Button
               type="button"
               variant="outline"

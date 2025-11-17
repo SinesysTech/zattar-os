@@ -101,16 +101,13 @@ export function UsuarioCreateSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[600px] overflow-y-auto">
+      <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto p-6">
         <form onSubmit={handleSubmit}>
-          <SheetHeader>
-            <SheetTitle>Novo Usuário</SheetTitle>
-            <SheetDescription>
-              Preencha os dados para criar um novo usuário no sistema. O usuário será criado em auth.users e em public.usuarios.
-            </SheetDescription>
+          <SheetHeader className="pb-5">
+            <SheetTitle className="text-xl font-semibold">Novo Usuário</SheetTitle>
           </SheetHeader>
 
-          <div className="grid gap-4 py-4">
+          <div className="space-y-4">
             {/* Campos obrigatórios */}
             <div className="grid gap-2">
               <Label htmlFor="nomeCompleto">
@@ -296,7 +293,7 @@ export function UsuarioCreateSheet({
             )}
           </div>
 
-          <SheetFooter>
+          <SheetFooter className="pt-6">
             <Button
               type="button"
               variant="outline"
