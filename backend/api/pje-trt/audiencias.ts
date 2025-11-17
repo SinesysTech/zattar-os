@@ -21,7 +21,7 @@
 
 import type { Page } from 'playwright';
 import { fetchPJEAPI } from './fetch';
-import type { PagedResponse, Audiencia } from './types';
+import type { PagedResponse, Audiencia } from '@/backend/types/pje-trt/types';
 
 /**
  * Função: obterPautaAudiencias

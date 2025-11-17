@@ -3,8 +3,8 @@
 // Adaptado para integração com o serviço de captura TRT
 
 import { Browser, BrowserContext, Page, firefox } from 'playwright';
-import { getOTP, type TwoFAuthConfig } from '@/backend/api/twofauth.service';
-import type { CredenciaisTRT, ConfigTRT } from './types';
+import { getOTP, type TwoFAuthConfig } from '@/backend/utils/api/twofauth.service';
+import type { CredenciaisTRT, ConfigTRT } from '@/backend/types/captura/trt-types';
 
 // ============================================================================
 // TIPOS E INTERFACES

@@ -1,8 +1,8 @@
 // Tipos e interfaces comuns para captura TRT
 // (Não usa mais herança - cada serviço chama autenticação diretamente)
 
-import type { CredenciaisTRT, ConfigTRT, FiltroPrazoPendentes } from './types';
-import type { TwoFAuthConfig } from '@/backend/api/twofauth.service';
+import type { CredenciaisTRT, ConfigTRT, FiltroPrazoPendentes } from '@/backend/types/captura/trt-types';
+import type { TwoFAuthConfig } from '@/backend/utils/api/twofauth.service';
 
 /**
  * Parâmetros base para captura TRT

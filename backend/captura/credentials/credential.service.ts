@@ -1,7 +1,7 @@
 // Serviço para gerenciar credenciais de acesso aos tribunais
 // Responsável por buscar credenciais do banco de dados
 
-import type { CodigoTRT, GrauTRT, CredenciaisTRT } from '@/backend/captura/services/trt/types';
+import type { CodigoTRT, GrauTRT, CredenciaisTRT } from '@/backend/types/captura/trt-types';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { getFromCache, setCache } from './credential-cache.service';
 

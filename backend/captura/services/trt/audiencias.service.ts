@@ -4,9 +4,9 @@
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaAudienciasParams } from './trt-capture.service';
 import { obterTodasAudiencias } from '@/backend/api/pje-trt/audiencias';
-import type { Audiencia } from '@/backend/api/pje-trt/types';
+import type { Audiencia } from '@/backend/types/pje-trt/types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
-import { buscarOuCriarAdvogadoPorCpf } from '../persistence/advogado-helper.service';
+import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
 import { captureLogService } from '../persistence/capture-log.service';
 
 /**

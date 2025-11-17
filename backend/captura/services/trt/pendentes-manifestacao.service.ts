@@ -6,10 +6,10 @@ import type { CapturaPendentesManifestacaoParams } from './trt-capture.service';
 import {
   obterTodosProcessosPendentesManifestacao,
   obterTotalizadoresPendentesManifestacao,
-  type Processo,
 } from '@/backend/api/pje-trt/pendentes-manifestacao';
+import type { Processo } from '@/backend/types/pje-trt/types';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
-import { buscarOuCriarAdvogadoPorCpf } from '../persistence/advogado-helper.service';
+import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
 import { captureLogService } from '../persistence/capture-log.service';
 
 /**

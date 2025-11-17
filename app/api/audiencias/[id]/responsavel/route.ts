@@ -2,7 +2,7 @@
 // PATCH: Atribuir/transferir/desatribuir responsável
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { atribuirResponsavelAudiencia } from '@/backend/audiencias/services/atribuir-responsavel.service';
 
 /**

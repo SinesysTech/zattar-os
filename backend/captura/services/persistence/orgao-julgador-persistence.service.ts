@@ -2,7 +2,7 @@
 // Salva órgãos julgadores capturados das audiências no banco de dados
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { CodigoTRT, GrauTRT } from '../trt/types';
+import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 
 /**
  * Dados de um órgão julgador vindo da API do PJE

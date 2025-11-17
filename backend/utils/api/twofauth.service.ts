@@ -192,3 +192,4 @@ export async function getOTP(config?: TwoFAuthConfig): Promise<OTPResult> {
     );
   }
 }
+

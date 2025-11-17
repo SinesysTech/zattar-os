@@ -2,7 +2,7 @@
 // GET: Buscar usuário por ID | PATCH: Atualizar usuário
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { obterUsuarioPorId } from '@/backend/usuarios/services/usuarios/buscar-usuario.service';
 import { atualizarUsuario } from '@/backend/usuarios/services/usuarios/atualizar-usuario.service';
 import type { UsuarioDados } from '@/backend/usuarios/services/persistence/usuario-persistence.service';

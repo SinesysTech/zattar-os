@@ -9,7 +9,7 @@ import type {
   ListarAcervoParams,
   ListarAcervoResult,
   ListarAcervoAgrupadoResult,
-} from './types';
+} from '@/backend/types/acervo/types';
 
 /**
  * Lista acervo com filtros, paginação e ordenação

@@ -1,11 +1,11 @@
 // Rota de API para captura de processos pendentes de manifestação do TRT
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { getCredentialByTribunalAndGrau } from '@/backend/captura/credentials/credential.service';
 import { pendentesManifestacaoCapture } from '@/backend/captura/services/trt/pendentes-manifestacao.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import type { BaseCapturaTRTParams, FiltroPrazoPendentes } from '@/backend/captura/services/trt/types';
+import type { BaseCapturaTRTParams, FiltroPrazoPendentes } from '@/backend/types/captura/trt-types';
 
 interface PendentesManifestacaoParams extends BaseCapturaTRTParams {
   filtroPrazo?: FiltroPrazoPendentes;

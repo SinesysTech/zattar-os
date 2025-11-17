@@ -2,7 +2,7 @@
 // GET: Busca um usuário pelo e-mail corporativo
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { obterUsuarioPorEmail } from '@/backend/usuarios/services/usuarios/buscar-usuario.service';
 
 /**

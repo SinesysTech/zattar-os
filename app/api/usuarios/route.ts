@@ -2,7 +2,7 @@
 // GET: Listar usuários | POST: Criar usuário
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { obterUsuarios } from '@/backend/usuarios/services/usuarios/listar-usuarios.service';
 import { cadastrarUsuario } from '@/backend/usuarios/services/usuarios/criar-usuario.service';
 import type { UsuarioDados, ListarUsuariosParams } from '@/backend/usuarios/services/persistence/usuario-persistence.service';

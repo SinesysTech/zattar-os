@@ -5,10 +5,10 @@ import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaTRTParams } from './trt-capture.service';
 import {
   obterTodosProcessosArquivados,
-  type Processo,
 } from '@/backend/api/pje-trt/arquivados';
+import type { Processo } from '@/backend/types/pje-trt/types';
 import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
-import { buscarOuCriarAdvogadoPorCpf } from '../persistence/advogado-helper.service';
+import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
 import { captureLogService } from '../persistence/capture-log.service';
 
 /**

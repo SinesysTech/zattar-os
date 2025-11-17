@@ -22,8 +22,8 @@
 
 import type { Page } from 'playwright';
 import { fetchPJEAPI } from './fetch';
-import type { PagedResponse, Processo } from './types';
-import { AgrupamentoProcessoTarefa } from './types';
+import type { PagedResponse, Processo } from '@/backend/types/pje-trt/types';
+import { AgrupamentoProcessoTarefa } from '@/backend/types/pje-trt/types';
 
 // Re-exportar tipos para facilitar imports dos serviços
 export { AgrupamentoProcessoTarefa };

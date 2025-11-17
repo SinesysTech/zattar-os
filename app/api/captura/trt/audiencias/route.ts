@@ -1,11 +1,11 @@
 // Rota de API para captura de audiências do TRT
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { getCredentialByTribunalAndGrau } from '@/backend/captura/credentials/credential.service';
 import { audienciasCapture } from '@/backend/captura/services/trt/audiencias.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import type { BaseCapturaTRTParams } from '@/backend/captura/services/trt/types';
+import type { BaseCapturaTRTParams } from '@/backend/types/captura/trt-types';
 
 interface AudienciasParams extends BaseCapturaTRTParams {
   dataInicio?: string;
