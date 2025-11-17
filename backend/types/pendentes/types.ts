@@ -72,6 +72,9 @@ export interface PendenteManifestacao {
   data_criacao_expediente: string | null; // ISO timestamp
   prazo_vencido: boolean;
   sigla_orgao_julgador: string | null;
+  baixado_em: string | null; // ISO timestamp - data de baixa do expediente
+  protocolo_id: number | null; // ID do protocolo quando houve protocolo de peça
+  justificativa_baixa: string | null; // Justificativa quando não houve protocolo
   responsavel_id: number | null;
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
@@ -107,6 +110,7 @@ export interface ListarPendentesParams {
   processo_id?: number; // Filtrar por processo relacionado no acervo - apenas filtro, não agrupamento
 
   // Filtros específicos de pendentes
+  baixado?: boolean; // true = apenas baixados, false = apenas pendentes
   prazo_vencido?: boolean;
   data_prazo_legal_inicio?: string; // ISO date
   data_prazo_legal_fim?: string; // ISO date

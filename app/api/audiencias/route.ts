@@ -1,0 +1,306 @@
+// Rota de API para audiências
+// GET: Listar audiências com filtros, paginação e ordenação
+
+import { NextRequest, NextResponse } from 'next/server';
+import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { obterAudiencias } from '@/backend/audiencias/services/listar-audiencias.service';
+import type { ListarAudienciasParams } from '@/backend/types/audiencias/types';
+
+/**
+ * Helper para parsear booleanos de query params
+ */
+function parseBoolean(value: string | null): boolean | undefined {
+  if (value === null) return undefined;
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return undefined;
+}
+
+/**
+ * Helper para parsear números de query params
+ */
+function parseNumber(value: string | null): number | undefined {
+  if (value === null) return undefined;
+  const parsed = parseInt(value, 10);
+  return isNaN(parsed) ? undefined : parsed;
+}
+
+/**
+ * @swagger
+ * /api/audiencias:
+ *   get:
+ *     summary: Lista audiências
+ *     description: |
+ *       Retorna uma lista paginada de audiências com filtros avançados, ordenação e busca.
+ *       
+ *       **Filtros disponíveis:**
+ *       - Filtros básicos: TRT, grau, responsável
+ *       - Busca textual em múltiplos campos
+ *       - Filtros específicos por campo (status, tipo, etc.)
+ *       - Filtros de data (ranges)
+ *     tags:
+ *       - Audiências
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *       - serviceApiKey: []
+ *     parameters:
+ *       - in: query
+ *         name: pagina
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Número da página (começa em 1)
+ *       - in: query
+ *         name: limite
+ *         schema:
+ *           type: integer
+ *           default: 50
+ *           maximum: 100
+ *         description: Quantidade de itens por página (máximo 100)
+ *       - in: query
+ *         name: trt
+ *         schema:
+ *           type: string
+ *         description: Filtrar por código do TRT (ex: TRT3, TRT1)
+ *       - in: query
+ *         name: grau
+ *         schema:
+ *           type: string
+ *           enum: [primeiro_grau, segundo_grau]
+ *         description: Filtrar por grau do processo
+ *       - in: query
+ *         name: responsavel_id
+ *         schema:
+ *           type: string
+ *         description: |
+ *           Filtrar por ID do responsável.
+ *           Use número para audiências com responsável específico.
+ *           Use string 'null' para audiências sem responsável.
+ *       - in: query
+ *         name: sem_responsavel
+ *         schema:
+ *           type: boolean
+ *         description: Filtrar apenas audiências sem responsável (true)
+ *       - in: query
+ *         name: busca
+ *         schema:
+ *           type: string
+ *         description: |
+ *           Busca textual em múltiplos campos:
+ *           - numero_processo
+ *           - polo_ativo_nome
+ *           - polo_passivo_nome
+ *       - in: query
+ *         name: numero_processo
+ *         schema:
+ *           type: string
+ *         description: Filtrar por número do processo (busca parcial)
+ *       - in: query
+ *         name: polo_ativo_nome
+ *         schema:
+ *           type: string
+ *         description: Filtrar por nome da parte autora (busca parcial)
+ *       - in: query
+ *         name: polo_passivo_nome
+ *         schema:
+ *           type: string
+ *         description: Filtrar por nome da parte ré (busca parcial)
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [M, R, C]
+ *         description: Filtrar por status (M=Marcada, R=Realizada, C=Cancelada)
+ *       - in: query
+ *         name: tipo_descricao
+ *         schema:
+ *           type: string
+ *         description: Filtrar por descrição do tipo de audiência (busca parcial)
+ *       - in: query
+ *         name: tipo_codigo
+ *         schema:
+ *           type: string
+ *         description: Filtrar por código do tipo de audiência
+ *       - in: query
+ *         name: tipo_is_virtual
+ *         schema:
+ *           type: boolean
+ *         description: Filtrar por audiências virtuais (true) ou presenciais (false)
+ *       - in: query
+ *         name: data_inicio_inicio
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Data inicial para filtrar por data de início (ISO date: YYYY-MM-DD)
+ *       - in: query
+ *         name: data_inicio_fim
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Data final para filtrar por data de início (ISO date: YYYY-MM-DD)
+ *       - in: query
+ *         name: data_fim_inicio
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Data inicial para filtrar por data de fim (ISO date: YYYY-MM-DD)
+ *       - in: query
+ *         name: data_fim_fim
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Data final para filtrar por data de fim (ISO date: YYYY-MM-DD)
+ *       - in: query
+ *         name: ordenar_por
+ *         schema:
+ *           type: string
+ *           enum: [data_inicio, data_fim, numero_processo, polo_ativo_nome, polo_passivo_nome, status, tipo_descricao, created_at, updated_at]
+ *           default: data_inicio
+ *         description: Campo para ordenação
+ *       - in: query
+ *         name: ordem
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: asc
+ *         description: Direção da ordenação (asc = crescente, desc = decrescente)
+ *     responses:
+ *       200:
+ *         description: Lista de audiências retornada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     audiencias:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Audiencia'
+ *                     paginacao:
+ *                       type: object
+ *                       properties:
+ *                         pagina:
+ *                           type: integer
+ *                         limite:
+ *                           type: integer
+ *                         total:
+ *                           type: integer
+ *                         totalPaginas:
+ *                           type: integer
+ *       400:
+ *         description: Parâmetros inválidos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *             example:
+ *               error: "Parâmetro 'pagina' deve ser maior ou igual a 1"
+ *       401:
+ *         description: Não autenticado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+export async function GET(request: NextRequest) {
+  try {
+    // 1. Autenticação
+    const authResult = await authenticateRequest(request);
+    if (!authResult.authenticated) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // 2. Extrair e parsear parâmetros da query string
+    const searchParams = request.nextUrl.searchParams;
+
+    const pagina = parseNumber(searchParams.get('pagina')) ?? 1;
+    const limite = parseNumber(searchParams.get('limite')) ?? 50;
+
+    const params: ListarAudienciasParams = {
+      // Paginação
+      pagina,
+      limite,
+
+      // Filtros básicos
+      trt: searchParams.get('trt') || undefined,
+      grau: searchParams.get('grau') as ListarAudienciasParams['grau'] | undefined,
+      responsavel_id:
+        searchParams.get('responsavel_id') === 'null'
+          ? 'null'
+          : parseNumber(searchParams.get('responsavel_id')),
+      sem_responsavel: parseBoolean(searchParams.get('sem_responsavel')),
+
+      // Busca textual
+      busca: searchParams.get('busca') || undefined,
+
+      // Filtros específicos
+      numero_processo: searchParams.get('numero_processo') || undefined,
+      polo_ativo_nome: searchParams.get('polo_ativo_nome') || undefined,
+      polo_passivo_nome: searchParams.get('polo_passivo_nome') || undefined,
+      status: searchParams.get('status') || undefined,
+      tipo_descricao: searchParams.get('tipo_descricao') || undefined,
+      tipo_codigo: searchParams.get('tipo_codigo') || undefined,
+      tipo_is_virtual: parseBoolean(searchParams.get('tipo_is_virtual')),
+
+      // Filtros de data
+      data_inicio_inicio: searchParams.get('data_inicio_inicio') || undefined,
+      data_inicio_fim: searchParams.get('data_inicio_fim') || undefined,
+      data_fim_inicio: searchParams.get('data_fim_inicio') || undefined,
+      data_fim_fim: searchParams.get('data_fim_fim') || undefined,
+
+      // Ordenação
+      ordenar_por: searchParams.get('ordenar_por') as ListarAudienciasParams['ordenar_por'] | undefined,
+      ordem: searchParams.get('ordem') as 'asc' | 'desc' | undefined,
+    };
+
+    // 3. Validações básicas
+    if (params.pagina !== undefined && params.pagina < 1) {
+      return NextResponse.json(
+        { error: "Parâmetro 'pagina' deve ser maior ou igual a 1" },
+        { status: 400 }
+      );
+    }
+
+    if (params.limite !== undefined && (params.limite < 1 || params.limite > 100)) {
+      return NextResponse.json(
+        { error: "Parâmetro 'limite' deve estar entre 1 e 100" },
+        { status: 400 }
+      );
+    }
+
+    // 4. Listar audiências
+    const resultado = await obterAudiencias(params);
+
+    // 5. Formatar resposta
+    return NextResponse.json({
+      success: true,
+      data: {
+        audiencias: resultado.audiencias,
+        paginacao: {
+          pagina: resultado.pagina,
+          limite: resultado.limite,
+          total: resultado.total,
+          totalPaginas: resultado.totalPaginas,
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Erro ao listar audiências:', error);
+    const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
+    return NextResponse.json({ error: erroMsg }, { status: 500 });
+  }
+}
+

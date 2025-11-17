@@ -28,11 +28,24 @@ create table public.pendentes_manifestacao (
   data_criacao_expediente timestamptz,
   prazo_vencido boolean not null default false,
   sigla_orgao_julgador text,
+  baixado_em timestamptz,
+  protocolo_id bigint,
+  justificativa_baixa text,
+  dados_anteriores jsonb,
+  responsavel_id bigint references public.usuarios(id) on delete set null,
   created_at timestamptz default now() not null,
   updated_at timestamptz default now() not null,
   -- Garantir unicidade do expediente pendente: mesmo expediente pode aparecer para múltiplos advogados
   -- Não inclui advogado_id porque múltiplos advogados do mesmo escritório podem ver o mesmo expediente
-  unique (id_pje, trt, grau, numero_processo)
+  unique (id_pje, trt, grau, numero_processo),
+  -- Constraint: se baixado_em não é null, então protocolo_id OU justificativa_baixa deve estar preenchido
+  constraint check_baixa_valida check (
+    baixado_em is null 
+    or (
+      protocolo_id is not null 
+      or (justificativa_baixa is not null and trim(justificativa_baixa) != '')
+    )
+  )
 );
 comment on table public.pendentes_manifestacao is 'Processos pendentes de manifestação do advogado. A unicidade do expediente é garantida por (id_pje, trt, grau, numero_processo), permitindo que múltiplos advogados vejam o mesmo expediente sem duplicação';
 comment on column public.pendentes_manifestacao.id_pje is 'ID do expediente no sistema PJE (não é o ID do processo)';
@@ -60,6 +73,11 @@ comment on column public.pendentes_manifestacao.data_prazo_legal_parte is 'Data 
 comment on column public.pendentes_manifestacao.data_criacao_expediente is 'Data de criação do expediente';
 comment on column public.pendentes_manifestacao.prazo_vencido is 'Indica se o prazo para manifestação já venceu';
 comment on column public.pendentes_manifestacao.sigla_orgao_julgador is 'Sigla do órgão julgador (ex: VT33RJ)';
+comment on column public.pendentes_manifestacao.baixado_em is 'Data e hora em que o expediente foi baixado (marcado como respondido). Null indica que o expediente ainda está pendente';
+comment on column public.pendentes_manifestacao.protocolo_id is 'ID do protocolo da peça protocolada em resposta ao expediente. Deve estar preenchido quando houve protocolo de peça';
+comment on column public.pendentes_manifestacao.justificativa_baixa is 'Justificativa para baixa do expediente sem protocolo de peça. Deve estar preenchido quando não houve protocolo';
+comment on column public.pendentes_manifestacao.dados_anteriores is 'Armazena o estado anterior do registro antes da última atualização. Null quando o registro foi inserido ou quando não houve mudanças na última captura.';
+comment on column public.pendentes_manifestacao.responsavel_id is 'Usuário responsável pelo processo pendente de manifestação. Pode ser atribuído, transferido ou desatribuído. Todas as alterações são registradas em logs_alteracao';
 
 -- Índices para melhor performance
 create index idx_pendentes_advogado_id on public.pendentes_manifestacao using btree (advogado_id);
@@ -72,6 +90,9 @@ create index idx_pendentes_prazo_vencido on public.pendentes_manifestacao using 
 create index idx_pendentes_data_prazo_legal on public.pendentes_manifestacao using btree (data_prazo_legal_parte);
 create index idx_pendentes_advogado_trt_grau on public.pendentes_manifestacao using btree (advogado_id, trt, grau);
 create index idx_pendentes_numero_processo_advogado on public.pendentes_manifestacao using btree (numero_processo, advogado_id);
+create index idx_pendentes_baixado_em on public.pendentes_manifestacao using btree (baixado_em) where baixado_em is not null;
+create index idx_pendentes_advogado_baixado on public.pendentes_manifestacao using btree (advogado_id, baixado_em) where baixado_em is null;
+create index idx_pendentes_responsavel_id on public.pendentes_manifestacao using btree (responsavel_id);
 
 -- Trigger para atualizar updated_at automaticamente
 create trigger update_pendentes_manifestacao_updated_at
@@ -110,6 +131,76 @@ before insert or update on public.pendentes_manifestacao
 for each row
 when (new.processo_id is null)
 execute function public.sync_pendentes_processo_id();
+
+-- Função para registrar baixa nos logs
+create or replace function public.registrar_baixa_expediente(
+  p_expediente_id bigint,
+  p_usuario_id bigint,
+  p_protocolo_id bigint default null,
+  p_justificativa text default null
+)
+returns void
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  insert into public.logs_alteracao (
+    tipo_entidade,
+    entidade_id,
+    tipo_evento,
+    usuario_que_executou_id,
+    dados_evento
+  ) values (
+    'pendentes_manifestacao',
+    p_expediente_id,
+    'baixa_expediente',
+    p_usuario_id,
+    jsonb_build_object(
+      'protocolo_id', p_protocolo_id,
+      'justificativa_baixa', p_justificativa,
+      'baixado_em', now()
+    )
+  );
+end;
+$$;
+
+comment on function public.registrar_baixa_expediente is 'Registra a baixa de um expediente nos logs de alteração';
+
+-- Função para registrar reversão nos logs
+create or replace function public.registrar_reversao_baixa_expediente(
+  p_expediente_id bigint,
+  p_usuario_id bigint,
+  p_protocolo_id_anterior bigint default null,
+  p_justificativa_anterior text default null
+)
+returns void
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  insert into public.logs_alteracao (
+    tipo_entidade,
+    entidade_id,
+    tipo_evento,
+    usuario_que_executou_id,
+    dados_evento
+  ) values (
+    'pendentes_manifestacao',
+    p_expediente_id,
+    'reversao_baixa_expediente',
+    p_usuario_id,
+    jsonb_build_object(
+      'protocolo_id_anterior', p_protocolo_id_anterior,
+      'justificativa_anterior', p_justificativa_anterior,
+      'revertido_em', now()
+    )
+  );
+end;
+$$;
+
+comment on function public.registrar_reversao_baixa_expediente is 'Registra a reversão da baixa de um expediente nos logs de alteração';
 
 -- Habilitar RLS
 alter table public.pendentes_manifestacao enable row level security;

@@ -395,6 +395,7 @@ export async function GET(request: NextRequest) {
       processo_id: searchParams.get('processo_id') ? parseInt(searchParams.get('processo_id')!, 10) : undefined,
 
       // Filtros específicos de pendentes
+      baixado: parseBoolean(searchParams.get('baixado')),
       prazo_vencido: parseBoolean(searchParams.get('prazo_vencido')),
       data_prazo_legal_inicio: searchParams.get('data_prazo_legal_inicio') || undefined,
       data_prazo_legal_fim: searchParams.get('data_prazo_legal_fim') || undefined,

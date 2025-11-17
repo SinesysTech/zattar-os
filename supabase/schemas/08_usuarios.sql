@@ -71,3 +71,35 @@ execute function public.update_updated_at_column();
 -- Habilitar RLS
 alter table public.usuarios enable row level security;
 
+-- Políticas RLS para usuarios
+-- Permite que o service_role tenha acesso total (bypass RLS por padrão, mas explicitado aqui)
+create policy "Service role tem acesso total"
+  on public.usuarios
+  for all
+  to service_role
+  using (true)
+  with check (true);
+
+-- Permite que usuários autenticados leiam seus próprios dados
+create policy "Usuários podem ler seus próprios dados"
+  on public.usuarios
+  for select
+  to authenticated
+  using (auth.uid() = auth_user_id);
+
+-- Permite que usuários autenticados leiam dados de outros usuários
+-- (necessário para colaboração, atribuição de responsáveis, etc.)
+create policy "Usuários autenticados podem ler outros usuários"
+  on public.usuarios
+  for select
+  to authenticated
+  using (true);
+
+-- Permite que usuários atualizem apenas seus próprios dados
+create policy "Usuários podem atualizar seus próprios dados"
+  on public.usuarios
+  for update
+  to authenticated
+  using (auth.uid() = auth_user_id)
+  with check (auth.uid() = auth_user_id);
+

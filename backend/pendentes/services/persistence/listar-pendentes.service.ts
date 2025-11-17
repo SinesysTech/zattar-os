@@ -41,6 +41,9 @@ function converterParaPendente(data: Record<string, unknown>): PendenteManifesta
     data_criacao_expediente: (data.data_criacao_expediente as string | null) ?? null,
     prazo_vencido: data.prazo_vencido as boolean,
     sigla_orgao_julgador: (data.sigla_orgao_julgador as string | null) ?? null,
+    baixado_em: (data.baixado_em as string | null) ?? null,
+    protocolo_id: (data.protocolo_id as number | null) ?? null,
+    justificativa_baixa: (data.justificativa_baixa as string | null) ?? null,
     responsavel_id: (data.responsavel_id as number | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
@@ -128,6 +131,17 @@ export async function listarPendentes(
 
   if (params.processo_id !== undefined) {
     query = query.eq('processo_id', params.processo_id);
+  }
+
+  // Filtro de baixa (status de baixa)
+  if (params.baixado !== undefined) {
+    if (params.baixado === true) {
+      // Apenas baixados
+      query = query.not('baixado_em', 'is', null);
+    } else {
+      // Apenas pendentes (não baixados)
+      query = query.is('baixado_em', null);
+    }
   }
 
   // Filtros específicos de pendentes
@@ -268,6 +282,17 @@ export async function listarPendentesAgrupado(
 
   if (params.processo_id !== undefined) {
     query = query.eq('processo_id', params.processo_id);
+  }
+
+  // Filtro de baixa (status de baixa)
+  if (params.baixado !== undefined) {
+    if (params.baixado === true) {
+      // Apenas baixados
+      query = query.not('baixado_em', 'is', null);
+    } else {
+      // Apenas pendentes (não baixados)
+      query = query.is('baixado_em', null);
+    }
   }
 
   // Filtros específicos de pendentes
