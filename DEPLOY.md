@@ -16,10 +16,24 @@ Antes de fazer o deploy, você precisa configurar as seguintes variáveis de amb
 
 ### Obrigatórias
 
-- `NEXT_PUBLIC_SUPABASE_URL`: URL pública do projeto Supabase
+- `NEXT_PUBLIC_SUPABASE_URL`: URL pública do projeto Supabase (ex: `https://xxxxx.supabase.co`)
+  - ⚠️ **IMPORTANTE**: Esta é a URL do **Supabase** (serviço de backend), NÃO o domínio da sua aplicação!
+  - Você encontra essa URL no dashboard do Supabase em **Settings** > **API**
+  - Formato: `https://[seu-projeto-id].supabase.co`
+  
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`: Chave pública/anônima do Supabase
+  - Chave pública que pode ser exposta no frontend
+  - Encontrada no dashboard do Supabase em **Settings** > **API**
+  
 - `SUPABASE_SERVICE_ROLE_KEY`: Chave secreta do Supabase (service_role)
-- `DOMAIN`: Domínio onde a aplicação estará disponível (ex: `sinesys.exemplo.com.br`)
+  - Chave secreta para operações administrativas no backend
+  - ⚠️ **NUNCA** exponha esta chave no frontend!
+  - Encontrada no dashboard do Supabase em **Settings** > **API**
+  
+- `DOMAIN`: Domínio onde a aplicação Next.js estará disponível (ex: `zattaradvogados.sinesys.app`)
+  - ⚠️ **IMPORTANTE**: Este é o domínio da **sua aplicação** (onde os usuários acessarão)
+  - Usado pelo Traefik para roteamento e certificados SSL
+  - No seu caso: `zattaradvogados.sinesys.app` ou `sinesys.app` (depende da sua configuração)
 
 ### Opcionais
 
@@ -58,7 +72,24 @@ docker push seu-registry.com/sinesys:latest
 2. Vá em **Stacks** no menu lateral
 3. Clique em **Add stack**
 4. Dê um nome para a stack (ex: `sinesys`)
-5. Escolha **Web editor** ou **Upload** para o método de deploy
+5. Escolha o método de deploy:
+   - **Repository** (recomendado): Conecta diretamente ao GitHub/GitLab
+   - **Web editor**: Cole o conteúdo do docker-compose.yml manualmente
+   - **Upload**: Faça upload do arquivo docker-compose.yml
+
+#### Configuração via Repository (GitHub/GitLab)
+
+Se escolher **Repository**:
+
+1. **Build method**: Selecione `Repository`
+2. **Repository URL**: Cole a URL do seu repositório (ex: `https://github.com/usuario/sinesys`)
+3. **Credenciais**: Configure as credenciais do GitHub/GitLab
+4. **Skip TLS Verification**: Deixe **desmarcado** (não marque) - só marque se tiver problemas de certificado SSL
+5. **Repository reference**: 
+   - Se sua branch principal é `main`: `refs/heads/main`
+   - Se sua branch principal é `master`: `refs/heads/master`
+   - Para uma tag específica: `refs/tags/v1.0.0`
+6. **Compose path**: `docker-compose.yml` (deve estar na raiz do repositório)
 
 ### 3. Configurar docker-compose.yml
 
@@ -88,16 +119,20 @@ services:
 
 ### 4. Configurar Variáveis de Ambiente
 
+⚠️ **IMPORTANTE**: Após configurar o repositório, você **DEVE** configurar as variáveis de ambiente antes de fazer o deploy!
+
 No Portainer, você pode configurar as variáveis de ambiente de duas formas:
 
-#### Opção A: Via Interface do Portainer
+#### Opção A: Via Interface do Portainer (Recomendado)
 
-1. Na seção **Environment variables** da stack
-2. Adicione cada variável:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-   - `DOMAIN`
+1. Após configurar o repositório, role a página para baixo até a seção **Environment variables**
+2. Clique em **Add variable** para cada variável obrigatória:
+   - `NEXT_PUBLIC_SUPABASE_URL` = `https://xxxxx.supabase.co`
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` = `sb_publishable_xxxxx` ou `eyJxxxxx`
+   - `SUPABASE_SERVICE_ROLE_KEY` = `eyJxxxxx` (chave service_role)
+   - `DOMAIN` = `sinesys.exemplo.com.br` (seu domínio)
+
+3. **Não esqueça** de configurar todas as 4 variáveis obrigatórias antes de fazer o deploy!
 
 #### Opção B: Via Arquivo .env
 

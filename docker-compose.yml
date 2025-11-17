@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  sinesys:
+  zattar_advogados:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sinesys
+    container_name: zattar_advogados
     restart: unless-stopped
     environment:
       # Variáveis do Supabase (obrigatórias)
@@ -27,27 +27,27 @@ services:
       - "traefik.enable=true"
       
       # Router principal
-      - "traefik.http.routers.sinesys.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.sinesys.entrypoints=websecure"
-      - "traefik.http.routers.sinesys.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.sinesys.tls=true"
+      - "traefik.http.routers.zattar_advogados.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.zattar_advogados.entrypoints=websecure"
+      - "traefik.http.routers.zattar_advogados.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.zattar_advogados.tls=true"
       
       # Redirecionamento HTTP para HTTPS
-      - "traefik.http.routers.sinesys-http.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.sinesys-http.entrypoints=web"
-      - "traefik.http.routers.sinesys-http.middlewares=redirect-to-https"
+      - "traefik.http.routers.zattar_advogados-http.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.zattar_advogados-http.entrypoints=web"
+      - "traefik.http.routers.zattar_advogados-http.middlewares=redirect-to-https"
       
       # Middleware de redirecionamento
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
       
       # Service
-      - "traefik.http.services.sinesys.loadbalancer.server.port=3000"
+      - "traefik.http.services.zattar_advogados.loadbalancer.server.port=3000"
       
       # Configurações adicionais
-      - "traefik.docker.network=traefik"
+      - "traefik.docker.network=network_swarm_public"
     networks:
-      - traefik
+      - network_swarm_public
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
       interval: 30s
@@ -56,6 +56,6 @@ services:
       start_period: 40s
 
 networks:
-  traefik:
+  network_swarm_public:
     external: true
 
