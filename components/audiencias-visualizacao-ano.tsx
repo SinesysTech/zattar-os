@@ -5,6 +5,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { AudienciaDetalhesDialog } from '@/components/audiencia-detalhes-dialog';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 
 interface AudienciasVisualizacaoAnoProps {
@@ -14,6 +15,8 @@ interface AudienciasVisualizacaoAnoProps {
 
 export function AudienciasVisualizacaoAno({ audiencias, isLoading }: AudienciasVisualizacaoAnoProps) {
   const [anoAtual, setAnoAtual] = React.useState(new Date().getFullYear());
+  const [audienciasDia, setAudienciasDia] = React.useState<Audiencia[]>([]);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   // Agrupar audiências por dia
   const audienciasPorDia = React.useMemo(() => {
@@ -35,6 +38,25 @@ export function AudienciasVisualizacaoAno({ audiencias, isLoading }: AudienciasV
   const temAudiencia = (ano: number, mes: number, dia: number) => {
     const chave = `${ano}-${mes}-${dia}`;
     return audienciasPorDia.has(chave);
+  };
+
+  const getAudienciasDia = (ano: number, mes: number, dia: number): Audiencia[] => {
+    return audiencias.filter((aud) => {
+      const data = new Date(aud.data_inicio);
+      return (
+        data.getFullYear() === ano &&
+        data.getMonth() === mes &&
+        data.getDate() === dia
+      );
+    });
+  };
+
+  const handleDiaClick = (ano: number, mes: number, dia: number) => {
+    const audiencias = getAudienciasDia(ano, mes, dia);
+    if (audiencias.length > 0) {
+      setAudienciasDia(audiencias);
+      setDialogOpen(true);
+    }
   };
 
   // Gerar dias de um mês específico
@@ -143,9 +165,10 @@ export function AudienciasVisualizacaoAno({ audiencias, isLoading }: AudienciasV
                           aspect-square flex items-center justify-center text-xs rounded
                           ${!dia ? 'invisible' : ''}
                           ${hoje ? 'bg-blue-500 text-white font-semibold' : ''}
-                          ${temAud && !hoje ? 'bg-primary text-primary-foreground font-medium' : ''}
+                          ${temAud && !hoje ? 'bg-primary text-primary-foreground font-medium cursor-pointer hover:opacity-80 transition-opacity' : ''}
                           ${!temAud && !hoje ? 'text-muted-foreground' : ''}
                         `}
+                        onClick={() => dia && temAud && handleDiaClick(anoAtual, mes, dia)}
                       >
                         {dia}
                       </div>
@@ -166,13 +189,21 @@ export function AudienciasVisualizacaoAno({ audiencias, isLoading }: AudienciasV
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-primary rounded"></div>
-          <span>Com audiências</span>
+          <span>Com audiências (clique para ver)</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 border rounded"></div>
           <span>Sem audiências</span>
         </div>
       </div>
+
+      {/* Dialog de detalhes */}
+      <AudienciaDetalhesDialog
+        audiencia={null}
+        audiencias={audienciasDia.length > 0 ? audienciasDia : undefined}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </div>
   );
 }
