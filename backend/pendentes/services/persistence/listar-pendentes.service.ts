@@ -403,4 +403,3 @@ export async function listarPendentesAgrupado(
     total: pendentes.length,
   };
 }
-

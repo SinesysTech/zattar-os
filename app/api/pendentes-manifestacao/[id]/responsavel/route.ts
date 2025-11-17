@@ -122,9 +122,41 @@ export async function PATCH(
     // 4. Obter ID do usuário que está executando a ação
     // Se for sistema (service key), usar ID padrão 10 (Super Administrador)
     // Se for usuário autenticado, usar o usuarioId retornado pela autenticação
-    const usuarioExecutouId = authResult.userId === 'system' 
-      ? 10 // ID do Super Administrador para operações do sistema
-      : authResult.usuarioId!; // usuarioId sempre existe para usuários autenticados
+    if (authResult.userId === 'system') {
+      // Sistema usa ID padrão do Super Administrador
+      const usuarioExecutouId = 10;
+      
+      // 5. Executar atribuição
+      const resultado = await atribuirResponsavelPendente({
+        pendenteId,
+        responsavelId: responsavelId ?? null,
+        usuarioExecutouId,
+      });
+
+      if (!resultado.success) {
+        const statusCode = resultado.error?.includes('não encontrado') ? 404 : 400;
+        return NextResponse.json(
+          { error: resultado.error || 'Erro ao atribuir responsável' },
+          { status: statusCode }
+        );
+      }
+
+      // 6. Retornar resultado
+      return NextResponse.json({
+        success: true,
+        data: resultado.data,
+      });
+    }
+
+    // Verificar se usuarioId existe para usuários autenticados
+    if (!authResult.usuarioId) {
+      return NextResponse.json(
+        { error: 'Usuário não encontrado na base de dados' },
+        { status: 401 }
+      );
+    }
+
+    const usuarioExecutouId = authResult.usuarioId;
 
     // 5. Executar atribuição
     const resultado = await atribuirResponsavelPendente({
