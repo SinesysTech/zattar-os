@@ -444,7 +444,7 @@ export default function ExpedientesPage() {
         </TabsContent>
 
         <TabsContent value="semana" className="mt-0">
-          <ExpedientesVisualizacaoSemana expedientes={expedientes} isLoading={isLoading} />
+          <ExpedientesVisualizacaoSemana expedientes={expedientes} isLoading={isLoading} onRefresh={refetch} />
         </TabsContent>
 
         <TabsContent value="mes" className="mt-0">

@@ -7,7 +7,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ChevronLeft, ChevronRight, MoreHorizontal, CheckCircle2, XCircle } from 'lucide-react';
+import { useUsuarios } from '@/lib/hooks/use-usuarios';
+import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
+import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 
@@ -39,9 +55,122 @@ const getParteReColorClass = (): string => {
 };
 
 /**
+ * Componente para atribuir responsável a um expediente
+ */
+function ResponsavelCell({ expediente, onSuccess }: { expediente: PendenteManifestacao; onSuccess: () => void }) {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { usuarios } = useUsuarios({ ativo: true, limite: 1000 });
+
+  const handleChange = async (value: string) => {
+    setIsLoading(true);
+    try {
+      const responsavelId = value === 'null' || value === '' ? null : parseInt(value, 10);
+
+      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/responsavel`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ responsavelId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao atribuir responsável');
+      }
+
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao atribuir responsável:', error);
+      onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const responsavelAtual = usuarios.find(u => u.id === expediente.responsavel_id);
+
+  return (
+    <Select
+      value={expediente.responsavel_id?.toString() || 'null'}
+      onValueChange={handleChange}
+      disabled={isLoading}
+    >
+      <SelectTrigger className="w-[200px]">
+        <SelectValue placeholder="Sem responsável">
+          {responsavelAtual ? responsavelAtual.nomeExibicao : 'Sem responsável'}
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="null">Sem responsável</SelectItem>
+        {usuarios.map((usuario) => (
+          <SelectItem key={usuario.id} value={usuario.id.toString()}>
+            {usuario.nomeExibicao}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+/**
+ * Componente de ações para cada expediente
+ */
+function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
+  const [baixarDialogOpen, setBaixarDialogOpen] = React.useState(false);
+  const [reverterDialogOpen, setReverterDialogOpen] = React.useState(false);
+
+  const handleSuccess = () => {
+    window.location.reload();
+  };
+
+  const estaBaixado = !!expediente.baixado_em;
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Abrir menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {!estaBaixado ? (
+            <DropdownMenuItem onClick={() => setBaixarDialogOpen(true)}>
+              <CheckCircle2 className="mr-2 h-4 w-4" />
+              Baixar Expediente
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onClick={() => setReverterDialogOpen(true)}>
+              <XCircle className="mr-2 h-4 w-4" />
+              Reverter Baixa
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <ExpedientesBaixarDialog
+        open={baixarDialogOpen}
+        onOpenChange={setBaixarDialogOpen}
+        expediente={expediente}
+        onSuccess={handleSuccess}
+      />
+
+      <ExpedientesReverterBaixaDialog
+        open={reverterDialogOpen}
+        onOpenChange={setReverterDialogOpen}
+        expediente={expediente}
+        onSuccess={handleSuccess}
+      />
+    </>
+  );
+}
+
+/**
  * Define as colunas da tabela de expedientes para visualização semanal
  */
-function criarColunasSemanais(): ColumnDef<PendenteManifestacao>[] {
+function criarColunasSemanais(onSuccess: () => void): ColumnDef<PendenteManifestacao>[] {
   return [
     {
       accessorKey: 'data_ciencia_parte',
@@ -105,24 +234,16 @@ function criarColunasSemanais(): ColumnDef<PendenteManifestacao>[] {
       },
     },
     {
-      id: 'status',
-      header: () => <div className="text-sm font-medium">Status</div>,
-      size: 120,
-      cell: ({ row }) => {
-        const prazoVencido = row.original.prazo_vencido;
-        const baixadoEm = row.original.baixado_em;
-
-        return (
-          <div className="flex flex-col gap-1">
-            <Badge variant={baixadoEm ? 'secondary' : 'default'} className="text-xs">
-              {baixadoEm ? 'Baixado' : 'Pendente'}
-            </Badge>
-            <Badge variant={prazoVencido ? 'destructive' : 'default'} className="text-xs">
-              {prazoVencido ? 'Vencido' : 'No Prazo'}
-            </Badge>
-          </div>
-        );
-      },
+      accessorKey: 'responsavel_id',
+      header: () => <div className="text-sm font-medium">Responsável</div>,
+      size: 220,
+      cell: ({ row }) => <ResponsavelCell expediente={row.original} onSuccess={onSuccess} />,
+    },
+    {
+      id: 'acoes',
+      header: () => <div className="text-sm font-medium">Ações</div>,
+      size: 80,
+      cell: ({ row }) => <AcoesExpediente expediente={row.original} />,
     },
   ];
 }
@@ -130,11 +251,18 @@ function criarColunasSemanais(): ColumnDef<PendenteManifestacao>[] {
 interface ExpedientesVisualizacaoSemanaProps {
   expedientes: PendenteManifestacao[];
   isLoading: boolean;
+  onRefresh?: () => void;
 }
 
-export function ExpedientesVisualizacaoSemana({ expedientes, isLoading }: ExpedientesVisualizacaoSemanaProps) {
+export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefresh }: ExpedientesVisualizacaoSemanaProps) {
   const [semanaAtual, setSemanaAtual] = React.useState(new Date());
   const [diaAtivo, setDiaAtivo] = React.useState<string>('segunda');
+
+  const handleSuccess = React.useCallback(() => {
+    if (onRefresh) {
+      onRefresh();
+    }
+  }, [onRefresh]);
 
   // Calcular início e fim da semana
   const inicioSemana = React.useMemo(() => {
@@ -180,7 +308,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading }: Expedi
     return dias;
   }, [expedientes, inicioSemana, fimSemana]);
 
-  const colunas = React.useMemo(() => criarColunasSemanais(), []);
+  const colunas = React.useMemo(() => criarColunasSemanais(handleSuccess), [handleSuccess]);
 
   const formatarDataCabecalho = (data: Date) => {
     return data.toLocaleDateString('pt-BR', {
