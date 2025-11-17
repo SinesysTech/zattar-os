@@ -32,8 +32,8 @@ export default function CapturaPage() {
               </TabsTrigger>
               <TabsTrigger value="pendentes" className="flex items-center gap-2">
                 <AlertCircle className="h-4 w-4" />
-                <span className="hidden sm:inline">Pendências</span>
-                <span className="sm:hidden">Pend.</span>
+                <span className="hidden sm:inline">Expedientes</span>
+                <span className="sm:hidden">Exp.</span>
               </TabsTrigger>
             </TabsList>
 
