@@ -108,14 +108,14 @@ export function ExpedientesFiltrosAvancados({
           <div className="space-y-2">
             <Label htmlFor="trt">TRT</Label>
             <Select
-              value={localFilters.trt || ''}
-              onValueChange={(value) => handleFilterChange('trt', value || undefined)}
+              value={localFilters.trt || 'all'}
+              onValueChange={(value) => handleFilterChange('trt', value === 'all' ? undefined : value)}
             >
               <SelectTrigger id="trt">
                 <SelectValue placeholder="Todos os TRTs" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os TRTs</SelectItem>
+                <SelectItem value="all">Todos os TRTs</SelectItem>
                 {TRTS.map((trt) => (
                   <SelectItem key={trt} value={trt}>
                     {trt}
@@ -129,16 +129,16 @@ export function ExpedientesFiltrosAvancados({
           <div className="space-y-2">
             <Label htmlFor="grau">Grau</Label>
             <Select
-              value={localFilters.grau || ''}
+              value={localFilters.grau || 'all'}
               onValueChange={(value) =>
-                handleFilterChange('grau', value as 'primeiro_grau' | 'segundo_grau' | undefined)
+                handleFilterChange('grau', value === 'all' ? undefined : value as 'primeiro_grau' | 'segundo_grau' | undefined)
               }
             >
               <SelectTrigger id="grau">
                 <SelectValue placeholder="Todos os graus" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os graus</SelectItem>
+                <SelectItem value="all">Todos os graus</SelectItem>
                 <SelectItem value="primeiro_grau">Primeiro Grau</SelectItem>
                 <SelectItem value="segundo_grau">Segundo Grau</SelectItem>
               </SelectContent>
@@ -152,12 +152,12 @@ export function ExpedientesFiltrosAvancados({
               value={
                 localFilters.responsavel_id === 'null'
                   ? 'null'
-                  : localFilters.responsavel_id?.toString() || ''
+                  : localFilters.responsavel_id?.toString() || 'all'
               }
               onValueChange={(value) => {
                 if (value === 'null') {
                   handleFilterChange('responsavel_id', 'null');
-                } else if (value === '') {
+                } else if (value === 'all') {
                   handleFilterChange('responsavel_id', undefined);
                 } else {
                   const num = parseInt(value, 10);
@@ -172,7 +172,7 @@ export function ExpedientesFiltrosAvancados({
                 <SelectValue placeholder={isLoadingUsuarios ? 'Carregando...' : 'Todos os responsáveis'} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os responsáveis</SelectItem>
+                <SelectItem value="all">Todos os responsáveis</SelectItem>
                 <SelectItem value="null">Sem responsável</SelectItem>
                 {usuarios.map((usuario) => (
                   <SelectItem key={usuario.id} value={usuario.id.toString()}>
@@ -216,7 +216,7 @@ export function ExpedientesFiltrosAvancados({
                   ? 'baixado'
                   : localFilters.baixado === false
                     ? 'pendente'
-                    : ''
+                    : 'all'
               }
               onValueChange={(value) => {
                 if (value === 'baixado') {
@@ -232,7 +232,7 @@ export function ExpedientesFiltrosAvancados({
                 <SelectValue placeholder="Todos os status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os status</SelectItem>
+                <SelectItem value="all">Todos os status</SelectItem>
                 <SelectItem value="pendente">Apenas Pendentes</SelectItem>
                 <SelectItem value="baixado">Apenas Baixados</SelectItem>
               </SelectContent>

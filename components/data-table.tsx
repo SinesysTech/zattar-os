@@ -162,13 +162,23 @@ export function DataTable<TData>({
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
-                      </TableHead>
-                    ))}
+                    {headerGroup.headers.map((header, index) => {
+                      const columnSize = header.column.columnDef.size;
+                      const maxWidth = columnSize ? `${columnSize}px` : undefined;
+                      const align = (header.column.columnDef.meta as { align?: 'left' | 'center' | 'right' })?.align || 'center';
+                      const alignClass = align === 'left' ? 'text-left' : align === 'right' ? 'text-right' : 'text-center';
+                      return (
+                        <TableHead 
+                          key={header.id} 
+                          className={`${alignClass} ${index < headerGroup.headers.length - 1 ? 'border-r border-border' : ''}`}
+                          style={maxWidth ? { maxWidth, width: maxWidth } : undefined}
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(header.column.columnDef.header, header.getContext())}
+                        </TableHead>
+                      );
+                    })}
                   </TableRow>
                 ))}
               </TableHeader>
@@ -181,11 +191,21 @@ export function DataTable<TData>({
                       className={onRowClick ? 'cursor-pointer' : ''}
                       onClick={() => onRowClick?.(row.original)}
                     >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </TableCell>
-                      ))}
+                      {row.getVisibleCells().map((cell, index) => {
+                        const columnSize = cell.column.columnDef.size;
+                        const maxWidth = columnSize ? `${columnSize}px` : undefined;
+                        const align = (cell.column.columnDef.meta as { align?: 'left' | 'center' | 'right' })?.align || 'center';
+                        const alignClass = align === 'left' ? 'text-left' : align === 'right' ? 'text-right' : 'text-center';
+                        return (
+                          <TableCell 
+                            key={cell.id} 
+                            className={`${alignClass} ${index < row.getVisibleCells().length - 1 ? 'border-r border-border' : ''}`}
+                            style={maxWidth ? { maxWidth, width: maxWidth } : undefined}
+                          >
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </TableCell>
+                        );
+                      })}
                     </TableRow>
                   ))
                 ) : (

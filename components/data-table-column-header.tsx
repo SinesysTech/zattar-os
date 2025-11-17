@@ -15,7 +15,7 @@ export function DataTableColumnHeader<TData, TValue>({
   title,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return <div>{title}</div>;
+    return <div className="text-sm font-medium">{title}</div>;
   }
 
   return (
@@ -31,7 +31,7 @@ export function DataTableColumnHeader<TData, TValue>({
           column.clearSorting();
         }
       }}
-      className="h-8 p-0 hover:bg-transparent"
+      className="h-8 p-0 hover:bg-transparent text-sm font-medium"
     >
       <span>{title}</span>
       {column.getIsSorted() === 'asc' ? (

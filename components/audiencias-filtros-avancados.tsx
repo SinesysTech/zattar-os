@@ -106,14 +106,14 @@ export function AudienciasFiltrosAvancados({
           <div className="space-y-2">
             <Label htmlFor="trt">TRT</Label>
             <Select
-              value={localFilters.trt || ''}
-              onValueChange={(value) => handleFilterChange('trt', value || undefined)}
+              value={localFilters.trt || 'all'}
+              onValueChange={(value) => handleFilterChange('trt', value === 'all' ? undefined : value)}
             >
               <SelectTrigger id="trt">
                 <SelectValue placeholder="Todos os TRTs" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os TRTs</SelectItem>
+                <SelectItem value="all">Todos os TRTs</SelectItem>
                 {TRTS.map((trt) => (
                   <SelectItem key={trt} value={trt}>
                     {trt}
@@ -127,16 +127,16 @@ export function AudienciasFiltrosAvancados({
           <div className="space-y-2">
             <Label htmlFor="grau">Grau</Label>
             <Select
-              value={localFilters.grau || ''}
+              value={localFilters.grau || 'all'}
               onValueChange={(value) =>
-                handleFilterChange('grau', value as 'primeiro_grau' | 'segundo_grau' | undefined)
+                handleFilterChange('grau', value === 'all' ? undefined : value as 'primeiro_grau' | 'segundo_grau' | undefined)
               }
             >
               <SelectTrigger id="grau">
                 <SelectValue placeholder="Todos os graus" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os graus</SelectItem>
+                <SelectItem value="all">Todos os graus</SelectItem>
                 <SelectItem value="primeiro_grau">Primeiro Grau</SelectItem>
                 <SelectItem value="segundo_grau">Segundo Grau</SelectItem>
               </SelectContent>
@@ -147,14 +147,14 @@ export function AudienciasFiltrosAvancados({
           <div className="space-y-2">
             <Label htmlFor="status">Status</Label>
             <Select
-              value={localFilters.status || ''}
-              onValueChange={(value) => handleFilterChange('status', value || undefined)}
+              value={localFilters.status || 'all'}
+              onValueChange={(value) => handleFilterChange('status', value === 'all' ? undefined : value)}
             >
               <SelectTrigger id="status">
                 <SelectValue placeholder="Todos os status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos os status</SelectItem>
+                <SelectItem value="all">Todos os status</SelectItem>
                 <SelectItem value="M">Marcada</SelectItem>
                 <SelectItem value="R">Realizada</SelectItem>
                 <SelectItem value="C">Cancelada</SelectItem>
