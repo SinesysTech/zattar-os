@@ -21,69 +21,117 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { createClient } from "@/lib/client"
 
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+const teams = [
+  {
+    name: "Zattar Advogados",
+    logo: Scale,
+    plan: "Enterprise",
   },
-  teams: [
-    {
-      name: "Zattar Advogados",
-      logo: Scale,
-      plan: "Enterprise",
-    },
-  ],
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: LayoutDashboard,
-      isActive: true,
-    },
-    {
-      title: "Processos",
-      url: "/processos",
-      icon: Scale,
-    },
-    {
-      title: "Clientes",
-      url: "/clientes",
-      icon: Users,
-    },
-    {
-      title: "Contratos",
-      url: "/contratos",
-      icon: FileText,
-    },
-    {
-      title: "Audiências",
-      url: "/audiencias",
-      icon: Calendar,
-    },
-    {
-      title: "Expedientes",
-      url: "/expedientes",
-      icon: FolderOpen,
-    },
-  ],
-  projects: [],
-}
+]
+
+const navMain = [
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: LayoutDashboard,
+    isActive: true,
+  },
+  {
+    title: "Processos",
+    url: "/processos",
+    icon: Scale,
+  },
+  {
+    title: "Clientes",
+    url: "/clientes",
+    icon: Users,
+  },
+  {
+    title: "Contratos",
+    url: "/contratos",
+    icon: FileText,
+  },
+  {
+    title: "Audiências",
+    url: "/audiencias",
+    icon: Calendar,
+  },
+  {
+    title: "Expedientes",
+    url: "/expedientes",
+    icon: FolderOpen,
+  },
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [user, setUser] = React.useState<{
+    name: string
+    email: string
+    avatar: string
+  } | null>(null)
+
+  React.useEffect(() => {
+    async function loadUser() {
+      try {
+        const supabase = createClient()
+        
+        // Obter usuário autenticado do Supabase Auth
+        const { data: { user: authUser }, error: authError } = await supabase.auth.getUser()
+        
+        if (authError || !authUser) {
+          console.error("Erro ao obter usuário autenticado:", authError)
+          return
+        }
+
+        // Buscar dados do usuário na tabela usuarios
+        const { data: usuario, error: usuarioError } = await supabase
+          .from("usuarios")
+          .select("nome_exibicao, email_corporativo")
+          .eq("auth_user_id", authUser.id)
+          .single()
+
+        if (usuarioError || !usuario) {
+          // Se não encontrar na tabela usuarios, usar dados do auth
+          setUser({
+            name: authUser.user_metadata?.full_name || authUser.email?.split("@")[0] || "Usuário",
+            email: authUser.email || "",
+            avatar: authUser.user_metadata?.avatar_url || "",
+          })
+          return
+        }
+
+        // Usar dados da tabela usuarios
+        setUser({
+          name: usuario.nome_exibicao,
+          email: usuario.email_corporativo,
+          avatar: authUser.user_metadata?.avatar_url || "",
+        })
+      } catch (error) {
+        console.error("Erro ao carregar dados do usuário:", error)
+      }
+    }
+
+    loadUser()
+  }, [])
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher teams={teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        {data.projects.length > 0 && <NavProjects projects={data.projects} />}
+        <NavMain items={navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {user ? (
+          <NavUser user={user} />
+        ) : (
+          <div className="px-2 py-2">
+            <div className="h-10 w-full animate-pulse rounded-lg bg-sidebar-accent" />
+          </div>
+        )}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
