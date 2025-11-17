@@ -37,24 +37,6 @@ const formatarData = (dataISO: string | null): string => {
   }
 };
 
-/**
- * Formata data e hora ISO para formato brasileiro (DD/MM/YYYY HH:mm)
- */
-const formatarDataHora = (dataISO: string | null): string => {
-  if (!dataISO) return '-';
-  try {
-    const data = new Date(dataISO);
-    return data.toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return '-';
-  }
-};
 
 /**
  * Define as colunas da tabela de expedientes
@@ -165,10 +147,8 @@ const colunas: ColumnDef<PendenteManifestacao>[] = [
 function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
   const [baixarDialogOpen, setBaixarDialogOpen] = React.useState(false);
   const [reverterDialogOpen, setReverterDialogOpen] = React.useState(false);
-  const [refetchKey, setRefetchKey] = React.useState(0);
 
   const handleSuccess = () => {
-    setRefetchKey((prev) => prev + 1);
     // Forçar reload da página após sucesso
     window.location.reload();
   };

@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
-import type { Cliente, ClienteDados } from '@/backend/clientes/services/persistence/cliente-persistence.service';
+import type { Cliente, ClienteDados, GeneroCliente, EstadoCivil } from '@/backend/clientes/services/persistence/cliente-persistence.service';
 
 interface ClienteEditSheetProps {
   open: boolean;
@@ -191,7 +191,7 @@ export function ClienteEditSheet({
                         id="genero"
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         value={formData.genero || ''}
-                        onChange={(e) => setFormData({ ...formData, genero: e.target.value as any })}
+                        onChange={(e) => setFormData({ ...formData, genero: e.target.value as GeneroCliente | undefined })}
                       >
                         <option value="">Selecione...</option>
                         <option value="masculino">Masculino</option>
@@ -206,7 +206,7 @@ export function ClienteEditSheet({
                         id="estadoCivil"
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         value={formData.estadoCivil || ''}
-                        onChange={(e) => setFormData({ ...formData, estadoCivil: e.target.value as any })}
+                        onChange={(e) => setFormData({ ...formData, estadoCivil: e.target.value as EstadoCivil | undefined })}
                       >
                         <option value="">Selecione...</option>
                         <option value="solteiro">Solteiro</option>

@@ -14,18 +14,6 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 import type { AudienciasFilters } from '@/lib/types/audiencias';
 
-/**
- * Formata data ISO para formato brasileiro (DD/MM/YYYY)
- */
-const formatarData = (dataISO: string | null): string => {
-  if (!dataISO) return '-';
-  try {
-    const data = new Date(dataISO);
-    return data.toLocaleDateString('pt-BR');
-  } catch {
-    return '-';
-  }
-};
 
 /**
  * Formata data e hora ISO para formato brasileiro (DD/MM/YYYY HH:mm)

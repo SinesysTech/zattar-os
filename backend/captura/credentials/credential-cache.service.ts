@@ -398,7 +398,6 @@ export function clearCredentialCache(): void {
  * }, 60000); // A cada 1 minuto
  */
 export function cleanExpiredCache(): number {
-  const now = Date.now();
   let removed = 0;
 
   for (const [key, item] of credentialCache.entries()) {

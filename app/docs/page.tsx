@@ -22,7 +22,7 @@ const SwaggerUI = dynamic(() => import('swagger-ui-react'), {
  * Acesse em: http://localhost:3000/docs
  */
 export default function SwaggerDocsPage() {
-  const [spec, setSpec] = useState<any>(null);
+  const [spec, setSpec] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
