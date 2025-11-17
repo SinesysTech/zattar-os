@@ -266,7 +266,9 @@ export async function criarContrato(
       qtde_parte_autora: qtdeParteAutora,
       qtde_parte_re: qtdeParteRe,
       status: params.status || 'em_contratacao',
-      data_contratacao: params.dataContratacao ? new Date(params.dataContratacao).toISOString() : new Date().toISOString(),
+      data_contratacao: params.dataContratacao
+        ? parseDate(params.dataContratacao)
+        : new Date().toISOString().split('T')[0],
       data_assinatura: parseDate(params.dataAssinatura),
       data_distribuicao: parseDate(params.dataDistribuicao),
       data_desistencia: parseDate(params.dataDesistencia),
@@ -387,7 +389,9 @@ export async function atualizarContrato(
       dadosAtualizacao.status = params.status;
     }
     if (params.dataContratacao !== undefined) {
-      dadosAtualizacao.data_contratacao = params.dataContratacao ? new Date(params.dataContratacao).toISOString() : new Date().toISOString();
+      dadosAtualizacao.data_contratacao = params.dataContratacao
+        ? parseDate(params.dataContratacao)
+        : new Date().toISOString().split('T')[0];
     }
     if (params.dataAssinatura !== undefined) {
       dadosAtualizacao.data_assinatura = parseDate(params.dataAssinatura);
