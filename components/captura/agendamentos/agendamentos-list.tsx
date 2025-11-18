@@ -1,3 +1,4 @@
+import type { TipoCaptura } from '@/backend/types/captura/capturas-log-types';
 'use client';
 
 import * as React from 'react';
@@ -8,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useAgendamentos } from '@/lib/hooks/use-agendamentos';
 import { deletarAgendamento, executarAgendamento } from '@/lib/api/agendamentos';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Agendamento, TipoCaptura } from '@/backend/types/captura/agendamentos-types';
+import type { Agendamento } from '@/backend/types/captura/agendamentos-types';
 import { Play, Pause, Trash2, Edit } from 'lucide-react';
 import {
   AlertDialog,

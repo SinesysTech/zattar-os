@@ -76,7 +76,7 @@ export function AcervoGeralForm() {
       <CapturaResult
         success={result.success}
         error={result.error}
-        data={result.data}
+        data={result.data as any}
         captureId={result.capture_id}
       />
     </div>
