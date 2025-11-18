@@ -3,6 +3,7 @@
 // Página de audiências - Lista audiências agendadas
 
 import * as React from 'react';
+import Image from 'next/image';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/data-table';
 import { DataTableColumnHeader } from '@/components/data-table-column-header';
@@ -18,7 +19,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Copy, Pencil } from 'lucide-react';
 import { AudienciasVisualizacaoSemana } from '@/components/audiencias-visualizacao-semana';
 import { AudienciasVisualizacaoMes } from '@/components/audiencias-visualizacao-mes';
 import { AudienciasVisualizacaoAno } from '@/components/audiencias-visualizacao-ano';
@@ -175,6 +176,187 @@ const formatarStatus = (status: string | null): string => {
   };
   return statusMap[status] || status;
 };
+
+/**
+ * Detecta qual plataforma de videoconferência baseado na URL
+ */
+type PlataformaVideo = 'zoom' | 'meet' | 'webex' | null;
+
+const detectarPlataforma = (url: string | null): PlataformaVideo => {
+  if (!url) return null;
+  const urlLower = url.toLowerCase();
+  if (urlLower.includes('zoom')) return 'zoom';
+  if (urlLower.includes('meet')) return 'meet';
+  if (urlLower.includes('webex')) return 'webex';
+  return null;
+};
+
+/**
+ * Retorna o caminho da logo para a plataforma
+ */
+const getLogoPlataforma = (plataforma: PlataformaVideo): string | null => {
+  const logos: Record<string, string> = {
+    zoom: '/Zoom_Logo.png',
+    meet: '/meet_logo.png',
+    webex: '/webex_logo.png',
+  };
+  return plataforma ? logos[plataforma] : null;
+};
+
+/**
+ * Componente para editar URL da audiência virtual
+ */
+function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [url, setUrl] = React.useState(audiencia.url_audiencia_virtual || '');
+
+  React.useEffect(() => {
+    setUrl(audiencia.url_audiencia_virtual || '');
+  }, [audiencia.url_audiencia_virtual]);
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      const urlToSave = url.trim() || null;
+
+      const response = await fetch(`/api/audiencias/${audiencia.id}/url-virtual`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ urlAudienciaVirtual: urlToSave }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao atualizar URL');
+      }
+
+      setIsEditing(false);
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao atualizar URL:', error);
+      onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setUrl(audiencia.url_audiencia_virtual || '');
+    setIsEditing(false);
+  };
+
+  if (isEditing) {
+    return (
+      <div className="flex items-center gap-2 min-w-[250px]">
+        <Input
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://..."
+          disabled={isLoading}
+          className="h-8 text-sm"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSave();
+            if (e.key === 'Escape') handleCancel();
+          }}
+        />
+        <Button
+          size="sm"
+          onClick={handleSave}
+          disabled={isLoading}
+          className="h-8 px-2"
+        >
+          OK
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={handleCancel}
+          disabled={isLoading}
+          className="h-8 px-2"
+        >
+          ✕
+        </Button>
+      </div>
+    );
+  }
+
+  const handleCopyUrl = async () => {
+    if (!audiencia.url_audiencia_virtual) return;
+    try {
+      await navigator.clipboard.writeText(audiencia.url_audiencia_virtual);
+    } catch (error) {
+      console.error('Erro ao copiar URL:', error);
+    }
+  };
+
+  const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
+  const logoPath = getLogoPlataforma(plataforma);
+
+  if (!audiencia.url_audiencia_virtual) {
+    return (
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => setIsEditing(true)}
+        className="h-8 text-xs"
+      >
+        <Pencil className="h-3 w-3 mr-1" />
+        Adicionar URL
+      </Button>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      {logoPath ? (
+        <a
+          href={audiencia.url_audiencia_virtual}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:opacity-70 transition-opacity"
+        >
+          <Image
+            src={logoPath}
+            alt={plataforma || 'Plataforma de vídeo'}
+            width={80}
+            height={30}
+            className="object-contain"
+          />
+        </a>
+      ) : (
+        <a
+          href={audiencia.url_audiencia_virtual}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-blue-600 hover:underline truncate max-w-[150px]"
+        >
+          {audiencia.url_audiencia_virtual}
+        </a>
+      )}
+      <Button
+        size="sm"
+        variant="ghost"
+        onClick={handleCopyUrl}
+        className="h-7 w-7 p-0"
+        title="Copiar URL"
+      >
+        <Copy className="h-3.5 w-3.5" />
+      </Button>
+      <Button
+        size="sm"
+        variant="ghost"
+        onClick={() => setIsEditing(true)}
+        className="h-7 w-7 p-0"
+        title="Editar URL"
+      >
+        <Pencil className="h-3.5 w-3.5" />
+      </Button>
+    </div>
+  );
+}
 
 /**
  * Componente para atribuir responsável a uma audiência
@@ -368,6 +550,21 @@ function criarColunas(
           </div>
         );
       },
+    },
+    {
+      accessorKey: 'url_audiencia_virtual',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">URL Virtual</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 280,
+      cell: ({ row }) => (
+        <div className="min-h-[2.5rem] flex items-start justify-start px-2">
+          <UrlVirtualCell audiencia={row.original} onSuccess={onSuccess} />
+        </div>
+      ),
     },
     {
       accessorKey: 'responsavel_id',
