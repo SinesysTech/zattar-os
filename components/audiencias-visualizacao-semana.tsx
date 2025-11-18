@@ -177,18 +177,24 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading }: Audienci
   // Calcular início e fim da semana
   const inicioSemana = React.useMemo(() => {
     const date = new Date(semanaAtual);
+    // Normalizar para meia-noite para comparação correta
+    date.setHours(0, 0, 0, 0);
     const day = date.getDay();
-    const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Ajustar para segunda
-    return new Date(date.setDate(diff));
+    // Calcular diferença para segunda-feira (1 = segunda, 0 = domingo)
+    const diff = day === 0 ? -6 : 1 - day;
+    const inicio = new Date(date);
+    inicio.setDate(date.getDate() + diff);
+    return inicio;
   }, [semanaAtual]);
 
   const fimSemana = React.useMemo(() => {
     const date = new Date(inicioSemana);
-    date.setDate(date.getDate() + 4); // Até sexta
+    date.setDate(date.getDate() + 4); // Até sexta-feira
+    date.setHours(23, 59, 59, 999); // Fim do dia
     return date;
   }, [inicioSemana]);
 
-  // Filtrar audiências por dia da semana
+  // Filtrar audiências por dia da semana, verificando se pertencem à semana atual
   const audienciasPorDia = React.useMemo(() => {
     const dias = {
       segunda: [] as Audiencia[],
@@ -198,10 +204,28 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading }: Audienci
       sexta: [] as Audiencia[],
     };
 
-    audiencias.forEach((audiencia) => {
-      const data = new Date(audiencia.data_inicio);
-      const diaSemana = data.getDay();
+    // Normalizar início e fim da semana para comparação apenas por data
+    const inicioNormalizado = new Date(inicioSemana);
+    inicioNormalizado.setHours(0, 0, 0, 0);
+    
+    const fimNormalizado = new Date(fimSemana);
+    fimNormalizado.setHours(23, 59, 59, 999);
 
+    audiencias.forEach((audiencia) => {
+      const dataAudiencia = new Date(audiencia.data_inicio);
+      
+      // Normalizar data da audiência para comparação apenas por dia
+      const dataAudienciaNormalizada = new Date(dataAudiencia);
+      dataAudienciaNormalizada.setHours(0, 0, 0, 0);
+      
+      // Verificar se a audiência está dentro da semana atual (segunda a sexta)
+      if (dataAudienciaNormalizada < inicioNormalizado || dataAudienciaNormalizada > fimNormalizado) {
+        return; // Pular audiências fora da semana atual
+      }
+
+      const diaSemana = dataAudiencia.getDay();
+
+      // Agrupar por dia da semana (1 = segunda, 5 = sexta)
       if (diaSemana === 1) dias.segunda.push(audiencia);
       else if (diaSemana === 2) dias.terca.push(audiencia);
       else if (diaSemana === 3) dias.quarta.push(audiencia);
@@ -209,16 +233,44 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading }: Audienci
       else if (diaSemana === 5) dias.sexta.push(audiencia);
     });
 
+    // Ordenar audiências por horário em cada dia
+    Object.values(dias).forEach((audienciasDia) => {
+      audienciasDia.sort((a, b) => {
+        const dataA = new Date(a.data_inicio).getTime();
+        const dataB = new Date(b.data_inicio).getTime();
+        return dataA - dataB;
+      });
+    });
+
     return dias;
-  }, [audiencias]);
+  }, [audiencias, inicioSemana, fimSemana]);
 
   const colunas = React.useMemo(() => criarColunasSemanais(), []);
+
+  // Calcular datas de cada dia da semana
+  const datasDiasSemana = React.useMemo(() => {
+    const datas: Record<string, Date> = {};
+    for (let i = 0; i < 5; i++) {
+      const data = new Date(inicioSemana);
+      data.setDate(inicioSemana.getDate() + i);
+      const diaNome = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'][i];
+      datas[diaNome] = data;
+    }
+    return datas;
+  }, [inicioSemana]);
 
   const formatarDataCabecalho = (data: Date) => {
     return data.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
+    });
+  };
+
+  const formatarDataTab = (data: Date) => {
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
     });
   };
 
@@ -262,23 +314,59 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading }: Audienci
       {/* Tabs de dias */}
       <Tabs value={diaAtivo} onValueChange={setDiaAtivo}>
         <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="segunda">Segunda</TabsTrigger>
-          <TabsTrigger value="terca">Terça</TabsTrigger>
-          <TabsTrigger value="quarta">Quarta</TabsTrigger>
-          <TabsTrigger value="quinta">Quinta</TabsTrigger>
-          <TabsTrigger value="sexta">Sexta</TabsTrigger>
+          <TabsTrigger value="segunda">
+            <div className="flex flex-col items-center">
+              <span className="text-xs">Seg</span>
+              <span className="text-xs font-medium">{formatarDataTab(datasDiasSemana.segunda)}</span>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger value="terca">
+            <div className="flex flex-col items-center">
+              <span className="text-xs">Ter</span>
+              <span className="text-xs font-medium">{formatarDataTab(datasDiasSemana.terca)}</span>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger value="quarta">
+            <div className="flex flex-col items-center">
+              <span className="text-xs">Qua</span>
+              <span className="text-xs font-medium">{formatarDataTab(datasDiasSemana.quarta)}</span>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger value="quinta">
+            <div className="flex flex-col items-center">
+              <span className="text-xs">Qui</span>
+              <span className="text-xs font-medium">{formatarDataTab(datasDiasSemana.quinta)}</span>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger value="sexta">
+            <div className="flex flex-col items-center">
+              <span className="text-xs">Sex</span>
+              <span className="text-xs font-medium">{formatarDataTab(datasDiasSemana.sexta)}</span>
+            </div>
+          </TabsTrigger>
         </TabsList>
 
-        {Object.entries(audienciasPorDia).map(([dia, audienciasDia]) => (
-          <TabsContent key={dia} value={dia}>
-            <DataTable
-              data={audienciasDia}
-              columns={colunas}
-              isLoading={isLoading}
-              emptyMessage={`Nenhuma audiência agendada para ${dia}.`}
-            />
-          </TabsContent>
-        ))}
+        {Object.entries(audienciasPorDia).map(([dia, audienciasDia]) => {
+          const dataDia = datasDiasSemana[dia];
+          const nomeDiaCompleto = {
+            segunda: 'Segunda-feira',
+            terca: 'Terça-feira',
+            quarta: 'Quarta-feira',
+            quinta: 'Quinta-feira',
+            sexta: 'Sexta-feira',
+          }[dia];
+          
+          return (
+            <TabsContent key={dia} value={dia}>
+              <DataTable
+                data={audienciasDia}
+                columns={colunas}
+                isLoading={isLoading}
+                emptyMessage={`Nenhuma audiência agendada para ${nomeDiaCompleto}, ${formatarDataCabecalho(dataDia)}.`}
+              />
+            </TabsContent>
+          );
+        })}
       </Tabs>
     </div>
   );
