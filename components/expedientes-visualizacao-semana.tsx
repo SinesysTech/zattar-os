@@ -423,39 +423,57 @@ function criarColunasSemanais(
   return [
     {
       id: 'tipo_descricao',
-      header: () => <div className="text-sm font-medium">Tipo / Descrição</div>,
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Tipo / Descrição</div>
+        </div>
+      ),
       size: 250,
       cell: ({ row }) => (
-        <TipoDescricaoCell 
-          expediente={row.original} 
-          onSuccess={onSuccess} 
-          tiposExpedientes={tiposExpedientes} 
-        />
+        <div className="min-h-[2.5rem] flex items-start justify-center max-w-[250px]">
+          <TipoDescricaoCell
+            expediente={row.original}
+            onSuccess={onSuccess}
+            tiposExpedientes={tiposExpedientes}
+          />
+        </div>
       ),
     },
     {
       accessorKey: 'data_ciencia_parte',
-      header: () => <div className="text-sm font-medium">Ciência</div>,
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Ciência</div>
+        </div>
+      ),
       size: 100,
       cell: ({ row }) => (
-        <div className="text-sm font-medium">
+        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
           {formatarData(row.getValue('data_ciencia_parte'))}
         </div>
       ),
     },
     {
       accessorKey: 'data_prazo_legal_parte',
-      header: () => <div className="text-sm font-medium">Prazo</div>,
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Prazo</div>
+        </div>
+      ),
       size: 100,
       cell: ({ row }) => (
-        <div className="text-sm font-medium">
+        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
           {formatarData(row.getValue('data_prazo_legal_parte'))}
         </div>
       ),
     },
     {
       id: 'processo',
-      header: () => <div className="text-sm font-medium">Processo</div>,
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Processo</div>
+        </div>
+      ),
       size: 330,
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
@@ -465,19 +483,19 @@ function criarColunasSemanais(
         const grau = row.original.grau;
 
         return (
-          <div className="flex flex-col gap-1">
-            <div className="text-sm font-medium">
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[330px]">
+            <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
-            <div className="flex items-center gap-1 flex-wrap">
-              <Badge variant="outline" className={`${getTRTColorClass(trt)} text-xs`}>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
               </Badge>
-              <Badge variant="outline" className={`${getGrauColorClass(grau)} text-xs`}>
+              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>
                 {formatarGrau(grau)}
               </Badge>
             </div>
-            <div className="text-xs text-muted-foreground truncate">
+            <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}
             </div>
           </div>
@@ -486,18 +504,22 @@ function criarColunasSemanais(
     },
     {
       id: 'partes',
-      header: () => <div className="text-sm font-medium">Partes</div>,
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Partes</div>
+        </div>
+      ),
       size: 220,
       cell: ({ row }) => {
         const parteAutora = row.original.nome_parte_autora || '-';
         const parteRe = row.original.nome_parte_re || '-';
 
         return (
-          <div className="flex flex-col gap-1">
-            <Badge variant="outline" className={`${getParteAutoraColorClass()} text-xs whitespace-nowrap truncate max-w-full`}>
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[220px]">
+            <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit whitespace-nowrap max-w-full truncate text-xs`}>
               {parteAutora}
             </Badge>
-            <Badge variant="outline" className={`${getParteReColorClass()} text-xs whitespace-nowrap truncate max-w-full`}>
+            <Badge variant="outline" className={`${getParteReColorClass()} w-fit whitespace-nowrap max-w-full truncate text-xs`}>
               {parteRe}
             </Badge>
           </div>
@@ -506,15 +528,31 @@ function criarColunasSemanais(
     },
     {
       accessorKey: 'responsavel_id',
-      header: () => <div className="text-sm font-medium">Responsável</div>,
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Responsável</div>
+        </div>
+      ),
       size: 220,
-      cell: ({ row }) => <ResponsavelCell expediente={row.original} onSuccess={onSuccess} usuarios={usuarios} />,
+      cell: ({ row }) => (
+        <div className="min-h-[2.5rem] flex items-center justify-center">
+          <ResponsavelCell expediente={row.original} onSuccess={onSuccess} usuarios={usuarios} />
+        </div>
+      ),
     },
     {
       id: 'acoes',
-      header: () => <div className="text-sm font-medium">Ações</div>,
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Ações</div>
+        </div>
+      ),
       size: 80,
-      cell: ({ row }) => handleAcoes(row.original),
+      cell: ({ row }) => (
+        <div className="min-h-[2.5rem] flex items-center justify-center">
+          {handleAcoes(row.original)}
+        </div>
+      ),
     },
   ];
 }
