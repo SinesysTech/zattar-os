@@ -42,7 +42,7 @@ function converterParaPendente(data: Record<string, unknown>): PendenteManifesta
     prazo_vencido: data.prazo_vencido as boolean,
     sigla_orgao_julgador: (data.sigla_orgao_julgador as string | null) ?? null,
     baixado_em: (data.baixado_em as string | null) ?? null,
-    protocolo_id: (data.protocolo_id as number | null) ?? null,
+    protocolo_id: (data.protocolo_id as string | null) ?? null,
     justificativa_baixa: (data.justificativa_baixa as string | null) ?? null,
     responsavel_id: (data.responsavel_id as number | null) ?? null,
     tipo_expediente_id: (data.tipo_expediente_id as number | null) ?? null,

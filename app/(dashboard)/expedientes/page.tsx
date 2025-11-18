@@ -40,7 +40,8 @@ import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { useTiposExpedientes } from '@/lib/hooks/use-tipos-expedientes';
 import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
-import { CheckCircle2, XCircle, Undo2 } from 'lucide-react';
+import { ExpedienteVisualizarDialog } from '@/components/expediente-visualizar-dialog';
+import { CheckCircle2, XCircle, Undo2, Eye } from 'lucide-react';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 import type { ExpedientesFilters } from '@/lib/types/expedientes';
@@ -211,7 +212,9 @@ function TipoDescricaoCell({
                     </SelectItem>
                   ))
                 ) : (
-                  <SelectItem value="" disabled>Carregando tipos...</SelectItem>
+                  <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                    {isLoadingTipos ? 'Carregando tipos...' : 'Nenhum tipo disponível'}
+                  </div>
                 )}
               </SelectContent>
             </Select>
@@ -455,7 +458,7 @@ function criarColunas(
       header: 'Ações',
       cell: ({ row }) => {
         const expediente = row.original;
-        return <AcoesExpediente expediente={expediente} />;
+        return <AcoesExpediente expediente={expediente} usuarios={usuarios} tiposExpedientes={tiposExpedientes} />;
       },
     },
   ];
@@ -464,9 +467,18 @@ function criarColunas(
 /**
  * Componente de ações para cada expediente
  */
-function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
+function AcoesExpediente({ 
+  expediente, 
+  usuarios, 
+  tiposExpedientes 
+}: { 
+  expediente: PendenteManifestacao;
+  usuarios: Usuario[];
+  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+}) {
   const [baixarDialogOpen, setBaixarDialogOpen] = React.useState(false);
   const [reverterDialogOpen, setReverterDialogOpen] = React.useState(false);
+  const [visualizarDialogOpen, setVisualizarDialogOpen] = React.useState(false);
 
   const handleSuccess = () => {
     // Forçar reload da página após sucesso
@@ -478,6 +490,21 @@ function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
   return (
     <TooltipProvider>
       <div className="flex items-center gap-1">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setVisualizarDialogOpen(true)}
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Visualizar Expediente</p>
+          </TooltipContent>
+        </Tooltip>
         {!estaBaixado ? (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -512,6 +539,14 @@ function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
           </Tooltip>
         )}
       </div>
+
+      <ExpedienteVisualizarDialog
+        open={visualizarDialogOpen}
+        onOpenChange={setVisualizarDialogOpen}
+        expediente={expediente}
+        usuarios={usuarios}
+        tiposExpedientes={tiposExpedientes}
+      />
 
       <ExpedientesBaixarDialog
         open={baixarDialogOpen}
@@ -567,7 +602,7 @@ export default function ExpedientesPage() {
   const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 1000 });
   
   // Buscar tipos de expedientes uma única vez para compartilhar entre todas as células
-  const { tiposExpedientes, isLoading: isLoadingTipos, error: errorTipos } = useTiposExpedientes({ limite: 1000 });
+  const { tiposExpedientes, isLoading: isLoadingTipos, error: errorTipos } = useTiposExpedientes({ limite: 100 });
   
   // Debug: verificar se tipos estão sendo carregados
   React.useEffect(() => {

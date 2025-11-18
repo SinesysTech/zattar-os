@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ChevronLeft, ChevronRight, CheckCircle2, Undo2, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle2, Undo2, Loader2, Eye } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -29,6 +29,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
+import { ExpedienteVisualizarDialog } from '@/components/expediente-visualizar-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
@@ -197,7 +198,9 @@ function TipoDescricaoCell({
                     </SelectItem>
                   ))
                 ) : (
-                  <SelectItem value="" disabled>Carregando tipos...</SelectItem>
+                  <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                    Carregando tipos...
+                  </div>
                 )}
               </SelectContent>
             </Select>
@@ -305,9 +308,18 @@ function ResponsavelCell({
 /**
  * Componente de ações para cada expediente
  */
-function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
+function AcoesExpediente({ 
+  expediente, 
+  usuarios, 
+  tiposExpedientes 
+}: { 
+  expediente: PendenteManifestacao;
+  usuarios: Usuario[];
+  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+}) {
   const [baixarDialogOpen, setBaixarDialogOpen] = React.useState(false);
   const [reverterDialogOpen, setReverterDialogOpen] = React.useState(false);
+  const [visualizarDialogOpen, setVisualizarDialogOpen] = React.useState(false);
 
   const handleSuccess = () => {
     window.location.reload();
@@ -318,6 +330,21 @@ function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
   return (
     <TooltipProvider>
       <div className="flex items-center gap-1">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setVisualizarDialogOpen(true)}
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Visualizar Expediente</p>
+          </TooltipContent>
+        </Tooltip>
         {!estaBaixado ? (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -353,6 +380,14 @@ function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
         )}
       </div>
 
+      <ExpedienteVisualizarDialog
+        open={visualizarDialogOpen}
+        onOpenChange={setVisualizarDialogOpen}
+        expediente={expediente}
+        usuarios={usuarios}
+        tiposExpedientes={tiposExpedientes}
+      />
+
       <ExpedientesBaixarDialog
         open={baixarDialogOpen}
         onOpenChange={setBaixarDialogOpen}
@@ -378,6 +413,13 @@ function criarColunasSemanais(
   usuarios: Usuario[],
   tiposExpedientes: Array<{ id: number; tipo_expediente: string }>
 ): ColumnDef<PendenteManifestacao>[] {
+  const handleAcoes = (expediente: PendenteManifestacao) => (
+    <AcoesExpediente 
+      expediente={expediente} 
+      usuarios={usuarios} 
+      tiposExpedientes={tiposExpedientes} 
+    />
+  );
   return [
     {
       id: 'tipo_descricao',
@@ -472,7 +514,7 @@ function criarColunasSemanais(
       id: 'acoes',
       header: () => <div className="text-sm font-medium">Ações</div>,
       size: 80,
-      cell: ({ row }) => <AcoesExpediente expediente={row.original} />,
+      cell: ({ row }) => handleAcoes(row.original),
     },
   ];
 }

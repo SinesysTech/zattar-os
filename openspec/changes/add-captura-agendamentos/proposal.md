@@ -32,7 +32,8 @@ Atualmente, as capturas precisam ser iniciadas manualmente pelo usuário. Para a
 - `tipo_captura`: Tipo de captura (acervo_geral, arquivados, audiencias, pendentes)
 - `advogado_id`: ID do advogado
 - `credencial_ids`: Array de IDs das credenciais
-- `periodicidade`: Tipo de periodicidade (diario, a_cada_2_dias, a_cada_3_dias, semanal, mensal)
+- `periodicidade`: Tipo de periodicidade (diario, a_cada_N_dias onde N é configurável pelo usuário)
+- `dias_intervalo`: Número de dias entre execuções (usado quando periodicidade = a_cada_N_dias)
 - `horario`: Horário de execução (HH:mm)
 - `ativo`: Boolean indicando se o agendamento está ativo
 - `parametros_extras`: JSONB com parâmetros específicos (dataInicio, dataFim, filtroPrazo)

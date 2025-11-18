@@ -8,7 +8,7 @@
 - [ ] 2.1 Criar `backend/types/captura/agendamentos-types.ts`
 - [ ] 2.2 Definir interface `Agendamento`
 - [ ] 2.3 Definir interfaces para criar/atualizar/listar agendamentos
-- [ ] 2.4 Definir enum `Periodicidade` (diario, a_cada_2_dias, a_cada_3_dias, semanal, mensal)
+- [ ] 2.4 Definir tipo `Periodicidade` ('diario' | 'a_cada_N_dias') e campo `dias_intervalo` (number | null)
 
 ## 3. Backend - Serviços de Persistência
 - [ ] 3.1 Criar `backend/captura/services/persistence/agendamento-persistence.service.ts`

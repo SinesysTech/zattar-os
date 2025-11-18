@@ -76,7 +76,7 @@ export function ExpedientesBaixarDialog({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          protocolo_id: modo === 'protocolo' ? parseInt(protocoloId, 10) : null,
+          protocolo_id: modo === 'protocolo' ? protocoloId.trim() : null,
           justificativa: modo === 'justificativa' ? justificativa.trim() : null,
         }),
       });

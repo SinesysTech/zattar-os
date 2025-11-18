@@ -35,27 +35,20 @@ O sistema MUST fornecer operações completas de CRUD para agendamentos de captu
 - **AND** não executar mais capturas para este agendamento
 
 ### Requirement: Tipos de Periodicidade
-O sistema MUST suportar diferentes tipos de periodicidade para agendamentos.
+O sistema MUST suportar periodicidade flexível em dias para agendamentos.
 
 #### Scenario: Periodicidade diária
 - **WHEN** um agendamento é criado com periodicidade "diario"
 - **THEN** o sistema deve calcular próxima execução como próximo dia no horário especificado
-- **AND** após cada execução, recalcular para o próximo dia
+- **AND** após cada execução, recalcular para o próximo dia no mesmo horário
+- **AND** não requer campo `dias_intervalo`
 
-#### Scenario: Periodicidade a cada N dias
-- **WHEN** um agendamento é criado com periodicidade "a_cada_2_dias" ou "a_cada_3_dias"
-- **THEN** o sistema deve calcular próxima execução adicionando N dias ao horário atual
+#### Scenario: Periodicidade a cada N dias (customizável)
+- **WHEN** um agendamento é criado com periodicidade "a_cada_N_dias" e `dias_intervalo` = N (onde N é qualquer número inteiro positivo)
+- **THEN** o sistema deve validar que N > 0
+- **AND** calcular próxima execução adicionando N dias ao horário atual
 - **AND** após cada execução, recalcular adicionando N dias novamente
-
-#### Scenario: Periodicidade semanal
-- **WHEN** um agendamento é criado com periodicidade "semanal"
-- **THEN** o sistema deve calcular próxima execução adicionando 7 dias ao horário atual
-- **AND** após cada execução, recalcular adicionando 7 dias novamente
-
-#### Scenario: Periodicidade mensal
-- **WHEN** um agendamento é criado com periodicidade "mensal"
-- **THEN** o sistema deve calcular próxima execução adicionando 1 mês ao horário atual
-- **AND** após cada execução, recalcular adicionando 1 mês novamente
+- **AND** permitir qualquer valor de N (1, 2, 3, 4, 5, 10, 15, etc.) definido pelo usuário
 
 ### Requirement: Execução Automática de Agendamentos
 O sistema MUST executar agendamentos automaticamente quando a próxima execução chegar.

@@ -73,7 +73,7 @@ export interface PendenteManifestacao {
   prazo_vencido: boolean;
   sigla_orgao_julgador: string | null;
   baixado_em: string | null; // ISO timestamp - data de baixa do expediente
-  protocolo_id: number | null; // ID do protocolo quando houve protocolo de peça
+  protocolo_id: string | null; // ID do protocolo quando houve protocolo de peça (pode conter números e letras)
   justificativa_baixa: string | null; // Justificativa quando não houve protocolo
   responsavel_id: number | null;
   tipo_expediente_id: number | null; // Tipo de expediente associado

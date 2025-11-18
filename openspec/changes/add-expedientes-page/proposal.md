@@ -14,6 +14,9 @@ Precisamos implementar a página de expedientes que lista processos pendentes de
   - Suporta filtros específicos de expedientes (prazo vencido, datas de prazo legal, etc.)
   - Suporta busca textual em múltiplos campos
   - Suporta ordenação e paginação server-side
+- Criar componente `ExpedienteVisualizarDialog` para exibir detalhes completos do expediente em um diálogo organizado
+- Adicionar botão de visualizar (ícone Eye) na coluna de ações da tabela de expedientes
+- Adicionar botão "Abrir Expediente" no diálogo de visualização (preparado para navegação futura para página dedicada)
 - Atualizar tipos TypeScript para incluir campos de baixa (`baixado_em`, `protocolo_id`, `justificativa_baixa`)
 - Organizar código por módulo/domínio seguindo arquitetura desacoplada
 
@@ -23,7 +26,9 @@ Precisamos implementar a página de expedientes que lista processos pendentes de
   - `lib/hooks/use-pendentes.ts` - Novo hook para buscar expedientes
   - `lib/types/expedientes.ts` - Novos tipos para filtros e resposta da API
   - `components/expedientes-filtros-avancados.tsx` - Novo componente de filtros
+  - `components/expediente-visualizar-dialog.tsx` - Novo componente de diálogo de visualização
   - `app/(dashboard)/expedientes/page.tsx` - Nova página completa
+  - `components/expedientes-visualizacao-semana.tsx` - Atualizado para incluir botão de visualizar
   - `backend/types/pendentes/types.ts` - Atualizar interface para incluir campos de baixa
 
 

@@ -33,6 +33,7 @@
 ## 5. Página de Expedientes
 - [ ] 5.1 Criar diretório `app/(dashboard)/expedientes/`
 - [ ] 5.2 Definir colunas da tabela de expedientes:
+  - Tipo / Descrição (coluna composta)
   - Número do processo
   - Parte autora
   - Parte ré
@@ -44,12 +45,16 @@
   - Status de baixa (se baixado_em não é null)
   - Data de baixa (se aplicável)
   - Responsável
+  - Ações (com botão de visualizar)
 - [ ] 5.3 Implementar página de expedientes usando DataTable
 - [ ] 5.4 Adicionar busca textual (debounced)
 - [ ] 5.5 Implementar formatação de dados (datas, status, badges)
 - [ ] 5.6 Implementar ordenação padrão por `data_prazo_legal_parte` (asc - mais urgentes primeiro)
 - [ ] 5.7 Adicionar indicadores visuais para expedientes com prazo vencido
 - [ ] 5.8 Adicionar indicadores visuais para expedientes baixados
+- [ ] 5.9 Criar componente `ExpedienteVisualizarDialog` com todas as informações do expediente organizadas
+- [ ] 5.10 Adicionar botão de visualizar (ícone Eye) na coluna de ações
+- [ ] 5.11 Adicionar botão "Abrir Expediente" no diálogo (preparado para navegação futura)
 
 ## 6. Testes e Ajustes
 - [ ] 6.1 Testar paginação e ordenação

@@ -26,11 +26,10 @@ O sistema atual permite capturas manuais através da interface web. Para automat
 - Permite visualização clara no frontend
 
 **Algoritmo**:
-- `diario`: Adicionar 1 dia ao horário atual
-- `a_cada_2_dias`: Adicionar 2 dias
-- `a_cada_3_dias`: Adicionar 3 dias
-- `semanal`: Adicionar 7 dias
-- `mensal`: Adicionar 1 mês
+- `diario`: Adicionar 1 dia ao horário atual (sempre no horário especificado)
+- `a_cada_N_dias`: Adicionar N dias ao horário atual, onde N é definido pelo usuário (1, 2, 3, 4, 5, etc.)
+  - Campo `dias_intervalo` armazena o valor de N
+  - Permite flexibilidade total para o usuário definir intervalo customizado
 
 ### 3. Execução do Scheduler
 **Decisão**: Criar serviço Node.js que roda periodicamente (ex: a cada minuto)
@@ -85,14 +84,19 @@ CREATE TABLE agendamentos (
   tipo_captura TEXT NOT NULL,
   advogado_id BIGINT REFERENCES advogados(id),
   credencial_ids BIGINT[] NOT NULL,
-  periodicidade TEXT NOT NULL, -- 'diario', 'a_cada_2_dias', 'a_cada_3_dias', 'semanal', 'mensal'
+  periodicidade TEXT NOT NULL, -- 'diario' ou 'a_cada_N_dias'
+  dias_intervalo INTEGER, -- Número de dias (usado quando periodicidade = 'a_cada_N_dias', NULL quando 'diario')
   horario TIME NOT NULL, -- HH:mm
   ativo BOOLEAN DEFAULT true,
   parametros_extras JSONB,
   ultima_execucao TIMESTAMPTZ,
   proxima_execucao TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  CONSTRAINT check_dias_intervalo CHECK (
+    (periodicidade = 'diario' AND dias_intervalo IS NULL) OR
+    (periodicidade = 'a_cada_N_dias' AND dias_intervalo IS NOT NULL AND dias_intervalo > 0)
+  )
 );
 ```
 

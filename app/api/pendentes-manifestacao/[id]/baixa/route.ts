@@ -36,15 +36,15 @@ import { baixarExpediente } from '@/backend/pendentes/services/baixa-expediente.
  *             type: object
  *             properties:
  *               protocolo_id:
- *                 type: integer
+ *                 type: string
  *                 nullable: true
- *                 description: ID do protocolo da peça protocolada (obrigatório se justificativa não fornecida)
+ *                 description: ID do protocolo da peça protocolada (pode conter números e letras, obrigatório se justificativa não fornecida)
  *               justificativa:
  *                 type: string
  *                 nullable: true
  *                 description: Justificativa para baixa sem protocolo (obrigatório se protocolo_id não fornecido)
  *           example:
- *             protocolo_id: 12345
+ *             protocolo_id: "ABC12345"
  *             # OU
  *             justificativa: "Expediente resolvido extrajudicialmente"
  *     responses:
@@ -67,7 +67,7 @@ import { baixarExpediente } from '@/backend/pendentes/services/baixa-expediente.
  *                       type: string
  *                       format: date-time
  *                     protocolo_id:
- *                       type: integer
+ *                       type: string
  *                       nullable: true
  *                     justificativa_baixa:
  *                       type: string

@@ -6,7 +6,7 @@ import { registrar_baixa_expediente } from './persistence/registrar-baixa-log.se
 
 export interface BaixarExpedienteParams {
   expedienteId: number;
-  protocoloId?: number | null;
+  protocoloId?: string | null;
   justificativa?: string | null;
   usuarioId: number;
 }
@@ -16,7 +16,7 @@ export interface BaixarExpedienteResult {
   data?: {
     id: number;
     baixado_em: string;
-    protocolo_id: number | null;
+    protocolo_id: string | null;
     justificativa_baixa: string | null;
   };
   error?: string;

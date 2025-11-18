@@ -6,7 +6,7 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 export interface RegistrarBaixaLogParams {
   expedienteId: number;
   usuarioId: number;
-  protocoloId: number | null;
+  protocoloId: string | null;
   justificativa: string | null;
 }
 
@@ -34,7 +34,7 @@ export async function registrar_baixa_expediente(
 export interface RegistrarReversaoBaixaLogParams {
   expedienteId: number;
   usuarioId: number;
-  protocoloIdAnterior: number | null;
+  protocoloIdAnterior: string | null;
   justificativaAnterior: string | null;
 }
 

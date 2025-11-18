@@ -29,7 +29,7 @@ create table public.pendentes_manifestacao (
   prazo_vencido boolean not null default false,
   sigla_orgao_julgador text,
   baixado_em timestamptz,
-  protocolo_id bigint,
+  protocolo_id text,
   justificativa_baixa text,
   dados_anteriores jsonb,
   responsavel_id bigint references public.usuarios(id) on delete set null,
@@ -136,7 +136,7 @@ execute function public.sync_pendentes_processo_id();
 create or replace function public.registrar_baixa_expediente(
   p_expediente_id bigint,
   p_usuario_id bigint,
-  p_protocolo_id bigint default null,
+  p_protocolo_id text default null,
   p_justificativa text default null
 )
 returns void
@@ -171,7 +171,7 @@ comment on function public.registrar_baixa_expediente is 'Registra a baixa de um
 create or replace function public.registrar_reversao_baixa_expediente(
   p_expediente_id bigint,
   p_usuario_id bigint,
-  p_protocolo_id_anterior bigint default null,
+  p_protocolo_id_anterior text default null,
   p_justificativa_anterior text default null
 )
 returns void

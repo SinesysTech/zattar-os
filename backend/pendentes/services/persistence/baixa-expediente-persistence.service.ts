@@ -5,7 +5,7 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 
 export interface BaixarExpedienteParams {
   expedienteId: number;
-  protocoloId: number | null;
+  protocoloId: string | null;
   justificativa: string | null;
 }
 
@@ -14,7 +14,7 @@ export interface BaixarExpedienteResult {
   data?: {
     id: number;
     baixado_em: string;
-    protocolo_id: number | null;
+    protocolo_id: string | null;
     justificativa_baixa: string | null;
   };
   error?: string;
