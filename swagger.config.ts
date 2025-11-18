@@ -188,6 +188,60 @@ const options: Options = {
             },
           },
         },
+        TipoExpediente: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              description: 'ID único do tipo de expediente',
+              example: 1,
+            },
+            tipo_expediente: {
+              type: 'string',
+              description: 'Nome do tipo de expediente',
+              example: 'Audiência',
+            },
+            created_by: {
+              type: 'integer',
+              description: 'ID do usuário que criou o tipo',
+              example: 19,
+            },
+            created_at: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Data e hora de criação',
+              example: '2024-01-15T10:30:00Z',
+            },
+            updated_at: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Data e hora da última atualização',
+              example: '2024-01-15T10:30:00Z',
+            },
+          },
+          required: ['id', 'tipo_expediente', 'created_by', 'created_at', 'updated_at'],
+        },
+        CriarTipoExpedienteParams: {
+          type: 'object',
+          required: ['tipo_expediente'],
+          properties: {
+            tipo_expediente: {
+              type: 'string',
+              description: 'Nome do tipo de expediente (deve ser único)',
+              example: 'Audiência',
+            },
+          },
+        },
+        AtualizarTipoExpedienteParams: {
+          type: 'object',
+          properties: {
+            tipo_expediente: {
+              type: 'string',
+              description: 'Novo nome do tipo de expediente (deve ser único)',
+              example: 'Audiência Judicial',
+            },
+          },
+        },
       },
     },
     security: [

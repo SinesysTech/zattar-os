@@ -14,13 +14,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ChevronLeft, ChevronRight, CheckCircle2, XCircle, Undo2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle2, Undo2, Loader2 } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -226,9 +233,32 @@ function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
  */
 function criarColunasSemanais(
   onSuccess: () => void, 
-  usuarios: Usuario[]
+  usuarios: Usuario[],
+  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>
 ): ColumnDef<PendenteManifestacao>[] {
   return [
+    {
+      id: 'tipo_descricao',
+      header: () => <div className="text-sm font-medium">Tipo / Descrição</div>,
+      size: 250,
+      cell: ({ row }) => {
+        const expediente = row.original;
+        const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipo_expediente_id);
+        const tipoNome = tipoExpediente ? tipoExpediente.tipo_expediente : 'Sem tipo';
+        const descricao = expediente.descricao_arquivos || '-';
+
+        return (
+          <div className="flex flex-col gap-1">
+            <Badge variant="outline" className="text-xs w-fit">
+              {tipoNome}
+            </Badge>
+            <div className="text-xs text-muted-foreground truncate">
+              {descricao}
+            </div>
+          </div>
+        );
+      },
+    },
     {
       accessorKey: 'data_ciencia_parte',
       header: () => <div className="text-sm font-medium">Ciência</div>,
@@ -320,9 +350,10 @@ interface ExpedientesVisualizacaoSemanaProps {
   isLoading: boolean;
   onRefresh?: () => void;
   usuarios: Usuario[];
+  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
 }
 
-export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefresh, usuarios }: ExpedientesVisualizacaoSemanaProps) {
+export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefresh, usuarios, tiposExpedientes }: ExpedientesVisualizacaoSemanaProps) {
   const [semanaAtual, setSemanaAtual] = React.useState(new Date());
   const [diaAtivo, setDiaAtivo] = React.useState<string>('segunda');
 
@@ -376,7 +407,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     return dias;
   }, [expedientes, inicioSemana, fimSemana]);
 
-  const colunas = React.useMemo(() => criarColunasSemanais(handleSuccess, usuarios), [handleSuccess, usuarios]);
+  const colunas = React.useMemo(() => criarColunasSemanais(handleSuccess, usuarios, tiposExpedientes), [handleSuccess, usuarios, tiposExpedientes]);
 
   const formatarDataCabecalho = (data: Date) => {
     return data.toLocaleDateString('pt-BR', {
