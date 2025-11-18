@@ -604,7 +604,7 @@ export default function ExpedientesPage() {
   const { expedientes, paginacao, isLoading, error, refetch } = usePendentes(params);
 
   // Buscar usuários uma única vez para compartilhar entre todas as células
-  const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 1000 });
+  const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 100 });
   
   // Buscar tipos de expedientes uma única vez para compartilhar entre todas as células
   const { tiposExpedientes, isLoading: isLoadingTipos, error: errorTipos } = useTiposExpedientes({ limite: 100 });

@@ -214,7 +214,7 @@ export function HistoricoCapturas() {
   const [dataFim, setDataFim] = React.useState<Date | undefined>(undefined);
 
   // Buscar advogados para filtro
-  const { advogados } = useAdvogados({ limite: 1000 });
+  const { advogados } = useAdvogados({ limite: 100 });
 
   // Buscar histórico de capturas
   const { capturas, paginacao, isLoading, error, refetch } = useCapturasLog({

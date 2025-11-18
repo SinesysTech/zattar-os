@@ -47,7 +47,7 @@ export function AudienciasFiltrosAvancados({
 }: AudienciasFiltrosAvancadosProps) {
   const [open, setOpen] = React.useState(false);
   const [localFilters, setLocalFilters] = React.useState<AudienciasFilters>(filters);
-  const { usuarios, isLoading: isLoadingUsuarios } = useUsuarios({ ativo: true, limite: 1000 });
+  const { usuarios, isLoading: isLoadingUsuarios } = useUsuarios({ ativo: true, limite: 100 });
 
   // Sincronizar filtros locais com props quando abrir o sheet
   React.useEffect(() => {

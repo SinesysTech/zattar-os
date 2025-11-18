@@ -419,7 +419,7 @@ export default function AudienciasPage() {
   const { audiencias: audienciasRaw, paginacao, isLoading, error, refetch } = useAudiencias(params);
 
   // Buscar usuários uma única vez para compartilhar entre todas as células
-  const { usuarios } = useUsuarios({ ativo: true, limite: 1000 });
+  const { usuarios } = useUsuarios({ ativo: true, limite: 100 });
 
   // Ordenar por data normalizada quando ordenar por data_inicio
   const audiencias = React.useMemo(() => {

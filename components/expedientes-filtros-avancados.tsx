@@ -46,7 +46,7 @@ export function ExpedientesFiltrosAvancados({
 }: ExpedientesFiltrosAvancadosProps) {
   const [open, setOpen] = React.useState(false);
   const [localFilters, setLocalFilters] = React.useState<ExpedientesFilters>(filters);
-  const { usuarios, isLoading: isLoadingUsuarios } = useUsuarios({ ativo: true, limite: 1000 }); // Apenas usuários ativos
+  const { usuarios, isLoading: isLoadingUsuarios } = useUsuarios({ ativo: true, limite: 100 }); // Apenas usuários ativos
 
   // Sincronizar filtros locais com props quando abrir o sheet
   React.useEffect(() => {
