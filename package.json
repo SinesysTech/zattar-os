@@ -47,8 +47,10 @@
     "puppeteer": "^24.30.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "sonner": "^2.0.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-react": "^3.23.3",
+    "swr": "^2.3.6",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {

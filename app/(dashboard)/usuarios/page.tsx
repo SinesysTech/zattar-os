@@ -16,6 +16,8 @@ import { UsuariosGridView } from '@/components/usuarios/usuarios-grid-view';
 import { ViewToggle } from '@/components/usuarios/view-toggle';
 import { UsuariosFiltrosAvancados } from '@/components/usuarios/usuarios-filtros-avancados';
 import { UsuarioCreateSheet } from '@/components/usuarios/usuario-create-sheet';
+import { UsuarioViewSheet } from '@/components/usuarios/usuario-view-sheet';
+import { UsuarioEditSheet } from '@/components/usuarios/usuario-edit-sheet';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import type { UsuariosFilters, ViewMode } from '@/lib/types/usuarios';
