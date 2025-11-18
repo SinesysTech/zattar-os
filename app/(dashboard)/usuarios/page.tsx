@@ -3,6 +3,7 @@
 // Página de usuários - Lista usuários do sistema
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/data-table';
 import { DataTableColumnHeader } from '@/components/data-table-column-header';
@@ -14,8 +15,6 @@ import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { UsuariosGridView } from '@/components/usuarios/usuarios-grid-view';
 import { ViewToggle } from '@/components/usuarios/view-toggle';
 import { UsuariosFiltrosAvancados } from '@/components/usuarios/usuarios-filtros-avancados';
-import { UsuarioViewSheet } from '@/components/usuarios/usuario-view-sheet';
-import { UsuarioEditSheet } from '@/components/usuarios/usuario-edit-sheet';
 import { UsuarioCreateSheet } from '@/components/usuarios/usuario-create-sheet';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
