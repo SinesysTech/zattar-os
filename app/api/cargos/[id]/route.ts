@@ -18,7 +18,7 @@ import { validarAtualizarCargoDTO } from '@/backend/types/cargos/types';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verificar permissão: cargos.visualizar
@@ -27,7 +27,8 @@ export async function GET(
       return authOrError;
     }
 
-    const id = parseInt(params.id, 10);
+    const { id: idStr } = await params;
+    const id = parseInt(idStr, 10);
     const cargo = await buscarCargoPorId(id);
 
     if (!cargo) {
@@ -42,7 +43,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verificar permissão: cargos.editar
@@ -51,7 +52,8 @@ export async function PUT(
       return authOrError;
     }
 
-    const id = parseInt(params.id, 10);
+    const { id: idStr } = await params;
+    const id = parseInt(idStr, 10);
     const body = await request.json();
 
     if (!validarAtualizarCargoDTO(body)) {
@@ -67,7 +69,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verificar permissão: cargos.deletar
@@ -76,7 +78,8 @@ export async function DELETE(
       return authOrError;
     }
 
-    const id = parseInt(params.id, 10);
+    const { id: idStr } = await params;
+    const id = parseInt(idStr, 10);
 
     // Verificar se cargo existe
     const cargo = await buscarCargoPorId(id);

@@ -20,7 +20,7 @@ import {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verificar permissão: usuarios.visualizar
@@ -29,7 +29,8 @@ export async function GET(
       return authOrError;
     }
 
-    const usuarioId = parseInt(params.id, 10);
+    const { id } = await params;
+    const usuarioId = parseInt(id, 10);
 
     // Buscar usuário para verificar se é super admin
     const supabase = createServiceClient();
@@ -88,7 +89,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verificar permissão: usuarios.gerenciar_permissoes
@@ -98,7 +99,8 @@ export async function POST(
     }
     const { usuarioId: executadoPor } = authOrError;
 
-    const usuarioId = parseInt(params.id, 10);
+    const { id } = await params;
+    const usuarioId = parseInt(id, 10);
     const body = await request.json();
 
     if (!validarAtribuirPermissoesDTO({ permissoes: body })) {
@@ -115,7 +117,7 @@ export async function POST(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verificar permissão: usuarios.gerenciar_permissoes
@@ -125,7 +127,8 @@ export async function PUT(
     }
     const { usuarioId: executadoPor } = authOrError;
 
-    const usuarioId = parseInt(params.id, 10);
+    const { id } = await params;
+    const usuarioId = parseInt(id, 10);
     const body = await request.json();
 
     if (!validarAtribuirPermissoesDTO({ permissoes: body })) {
