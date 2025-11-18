@@ -5,6 +5,12 @@
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { invalidarCacheUsuario } from '@/backend/utils/auth/authorization';
+import {
+  registrarAtribuicaoPermissao,
+  registrarRevogacaoPermissao,
+  registrarAtribuicaoLote,
+  registrarSubstituicaoPermissoes,
+} from '@/backend/utils/logs/auditoria-permissoes';
 import type {
   Permissao,
   AtribuirPermissaoDTO,
@@ -69,7 +75,8 @@ export const atribuirPermissao = async (
   usuarioId: number,
   recurso: Recurso,
   operacao: Operacao,
-  permitido: boolean = true
+  permitido: boolean = true,
+  executadoPor?: number
 ): Promise<Permissao> => {
   const supabase = createServiceClient();
 
@@ -93,6 +100,11 @@ export const atribuirPermissao = async (
     throw new Error(`Erro ao atribuir permissão: ${error.message}`);
   }
 
+  // Registrar log de auditoria
+  if (executadoPor) {
+    await registrarAtribuicaoPermissao(usuarioId, recurso, operacao, executadoPor);
+  }
+
   // Invalidar cache do usuário
   invalidarCacheUsuario(usuarioId);
 
@@ -104,7 +116,8 @@ export const atribuirPermissao = async (
  */
 export const atribuirPermissoesBatch = async (
   usuarioId: number,
-  permissoes: AtribuirPermissaoDTO[]
+  permissoes: AtribuirPermissaoDTO[],
+  executadoPor?: number
 ): Promise<Permissao[]> => {
   const supabase = createServiceClient();
 
@@ -126,6 +139,15 @@ export const atribuirPermissoesBatch = async (
     throw new Error(`Erro ao atribuir permissões em lote: ${error.message}`);
   }
 
+  // Registrar log de auditoria
+  if (executadoPor) {
+    const permissoesLog = permissoes.map((p) => ({
+      recurso: p.recurso,
+      operacao: p.operacao,
+    }));
+    await registrarAtribuicaoLote(usuarioId, permissoesLog, executadoPor);
+  }
+
   // Invalidar cache do usuário
   invalidarCacheUsuario(usuarioId);
 
@@ -138,7 +160,8 @@ export const atribuirPermissoesBatch = async (
 export const revogarPermissao = async (
   usuarioId: number,
   recurso: Recurso,
-  operacao: Operacao
+  operacao: Operacao,
+  executadoPor?: number
 ): Promise<void> => {
   const supabase = createServiceClient();
 
@@ -151,6 +174,11 @@ export const revogarPermissao = async (
 
   if (error) {
     throw new Error(`Erro ao revogar permissão: ${error.message}`);
+  }
+
+  // Registrar log de auditoria
+  if (executadoPor) {
+    await registrarRevogacaoPermissao(usuarioId, recurso, operacao, executadoPor);
   }
 
   // Invalidar cache do usuário
@@ -181,19 +209,35 @@ export const revogarTodasPermissoes = async (usuarioId: number): Promise<void> =
  */
 export const substituirPermissoes = async (
   usuarioId: number,
-  permissoes: AtribuirPermissaoDTO[]
+  permissoes: AtribuirPermissaoDTO[],
+  executadoPor?: number
 ): Promise<Permissao[]> => {
   const supabase = createServiceClient();
 
-  // 1. Deletar todas as permissões existentes
+  // 1. Contar permissões antigas
+  const { count: permissoesAntigas } = await supabase
+    .from('permissoes')
+    .select('*', { count: 'exact', head: true })
+    .eq('usuario_id', usuarioId);
+
+  // 2. Deletar todas as permissões existentes
   await revogarTodasPermissoes(usuarioId);
 
-  // 2. Se não há permissões novas, retornar array vazio
+  // 3. Se não há permissões novas, retornar array vazio
   if (permissoes.length === 0) {
+    // Registrar log de auditoria
+    if (executadoPor) {
+      await registrarSubstituicaoPermissoes(
+        usuarioId,
+        permissoesAntigas || 0,
+        0,
+        executadoPor
+      );
+    }
     return [];
   }
 
-  // 3. Inserir novas permissões
+  // 4. Inserir novas permissões
   const inserts = permissoes.map((p) => ({
     usuario_id: usuarioId,
     recurso: p.recurso,
@@ -208,6 +252,16 @@ export const substituirPermissoes = async (
 
   if (error) {
     throw new Error(`Erro ao substituir permissões: ${error.message}`);
+  }
+
+  // Registrar log de auditoria
+  if (executadoPor) {
+    await registrarSubstituicaoPermissoes(
+      usuarioId,
+      permissoesAntigas || 0,
+      permissoes.length,
+      executadoPor
+    );
   }
 
   // Invalidar cache do usuário
