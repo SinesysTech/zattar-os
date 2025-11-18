@@ -168,8 +168,15 @@ function UsuarioActions({
   usuario: Usuario;
   onEditSuccess: () => void;
 }) {
-  const [viewOpen, setViewOpen] = React.useState(false);
-  const [editOpen, setEditOpen] = React.useState(false);
+  const router = useRouter();
+
+  const handleViewClick = () => {
+    router.push(`/usuarios/${usuario.id}`);
+  };
+
+  const handleEditClick = () => {
+    router.push(`/usuarios/${usuario.id}`);
+  };
 
   return (
     <>
@@ -177,7 +184,7 @@ function UsuarioActions({
         variant="ghost"
         size="icon"
         className="h-8 w-8"
-        onClick={() => setViewOpen(true)}
+        onClick={handleViewClick}
       >
         <Eye className="h-4 w-4" />
         <span className="sr-only">Visualizar usuário</span>
@@ -186,22 +193,11 @@ function UsuarioActions({
         variant="ghost"
         size="icon"
         className="h-8 w-8"
-        onClick={() => setEditOpen(true)}
+        onClick={handleEditClick}
       >
         <Pencil className="h-4 w-4" />
         <span className="sr-only">Editar usuário</span>
       </Button>
-      <UsuarioViewSheet
-        open={viewOpen}
-        onOpenChange={setViewOpen}
-        usuario={usuario}
-      />
-      <UsuarioEditSheet
-        open={editOpen}
-        onOpenChange={setEditOpen}
-        usuario={usuario}
-        onSuccess={onEditSuccess}
-      />
     </>
   );
 }
