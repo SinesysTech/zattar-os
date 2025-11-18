@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { requirePermission } from '@/backend/utils/auth/require-permission';
 import {
   buscarCargoPorId,
   atualizarCargo,
@@ -21,9 +21,10 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Verificar permissão: cargos.visualizar
+    const authOrError = await requirePermission(request, 'cargos', 'visualizar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
     const id = parseInt(params.id, 10);
@@ -44,9 +45,10 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Verificar permissão: cargos.editar
+    const authOrError = await requirePermission(request, 'cargos', 'editar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
     const id = parseInt(params.id, 10);
@@ -68,9 +70,10 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Verificar permissão: cargos.deletar
+    const authOrError = await requirePermission(request, 'cargos', 'deletar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
     const id = parseInt(params.id, 10);

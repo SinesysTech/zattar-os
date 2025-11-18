@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { requirePermission } from '@/backend/utils/auth/require-permission';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import {
   listarPermissoesUsuario,
@@ -23,9 +23,10 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Verificar permissão: usuarios.visualizar
+    const authOrError = await requirePermission(request, 'usuarios', 'visualizar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
     const usuarioId = parseInt(params.id, 10);
@@ -90,10 +91,12 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Verificar permissão: usuarios.gerenciar_permissoes
+    const authOrError = await requirePermission(request, 'usuarios', 'gerenciar_permissoes');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
+    const { usuarioId: executadoPor } = authOrError;
 
     const usuarioId = parseInt(params.id, 10);
     const body = await request.json();
@@ -102,7 +105,7 @@ export async function POST(
       return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 });
     }
 
-    const permissoes = await atribuirPermissoesBatch(usuarioId, body);
+    const permissoes = await atribuirPermissoesBatch(usuarioId, body, executadoPor);
 
     return NextResponse.json({ success: true, data: permissoes }, { status: 201 });
   } catch (error: any) {
@@ -115,10 +118,12 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Verificar permissão: usuarios.gerenciar_permissoes
+    const authOrError = await requirePermission(request, 'usuarios', 'gerenciar_permissoes');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
+    const { usuarioId: executadoPor } = authOrError;
 
     const usuarioId = parseInt(params.id, 10);
     const body = await request.json();
@@ -127,7 +132,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 });
     }
 
-    const permissoes = await substituirPermissoes(usuarioId, body);
+    const permissoes = await substituirPermissoes(usuarioId, body, executadoPor);
 
     return NextResponse.json({ success: true, data: permissoes }, { status: 200 });
   } catch (error: any) {

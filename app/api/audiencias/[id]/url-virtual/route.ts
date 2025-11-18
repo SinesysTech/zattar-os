@@ -1,7 +1,7 @@
 // Rota de API para atualizar URL de audiência virtual
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { requirePermission } from '@/backend/utils/auth/require-permission';
 import { atualizarUrlVirtualAudiencia } from '@/backend/audiencias/services/atualizar-url-virtual.service';
 
 /**
@@ -63,13 +63,10 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    // 1. Verificar permissão: audiencias.editar_url_virtual
+    const authOrError = await requirePermission(request, 'audiencias', 'editar_url_virtual');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
     // 2. Await params e validar ID

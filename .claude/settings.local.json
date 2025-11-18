@@ -4,7 +4,9 @@
       "Bash(test:*)",
       "Bash(cat:*)",
       "Bash(find:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "SlashCommand(/openspec:proposal acordos-condenacoes-pagamentos)",
+      "SlashCommand(/openspec:proposal:*)"
     ],
     "deny": [],
     "ask": []

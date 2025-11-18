@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { requirePermission } from '@/backend/utils/auth/require-permission';
 import {
   listarCargos,
   criarCargo,
@@ -19,10 +19,10 @@ import { validarCriarCargoDTO } from '@/backend/types/cargos/types';
  */
 export async function GET(request: NextRequest) {
   try {
-    // Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Verificar permissão: cargos.listar
+    const authOrError = await requirePermission(request, 'cargos', 'listar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
     // Extrair query params
@@ -68,11 +68,12 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    // Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated || !authResult.usuarioId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Verificar permissão: cargos.criar
+    const authOrError = await requirePermission(request, 'cargos', 'criar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
+    const { usuarioId } = authOrError;
 
     // Parse body
     const body = await request.json();
@@ -95,7 +96,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Criar cargo
-    const cargo = await criarCargo(body, authResult.usuarioId);
+    const cargo = await criarCargo(body, usuarioId);
 
     return NextResponse.json(
       {
