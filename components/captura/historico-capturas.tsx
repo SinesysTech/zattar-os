@@ -219,12 +219,16 @@ function criarColunas(
     },
     {
       id: 'acoes',
-      header: 'Ações',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="Ações" />
+        </div>
+      ),
       size: 120,
       cell: ({ row }) => {
         const captura = row.original;
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2">
             <Button
               variant="ghost"
               size="sm"

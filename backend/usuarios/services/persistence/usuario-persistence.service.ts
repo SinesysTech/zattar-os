@@ -40,6 +40,8 @@ export interface UsuarioDados {
   ramal?: string;
   endereco?: Endereco;
   authUserId?: string; // UUID do Supabase Auth
+  cargoId?: number | null;
+  isSuperAdmin?: boolean;
   ativo?: boolean;
 }
 
@@ -62,6 +64,13 @@ export interface Usuario {
   telefone: string | null;
   ramal: string | null;
   endereco: Endereco | null;
+  cargoId: number | null;
+  cargo?: {
+    id: number;
+    nome: string;
+    descricao: string | null;
+  } | null;
+  isSuperAdmin: boolean;
   ativo: boolean;
   createdAt: string;
   updatedAt: string;
@@ -86,6 +95,8 @@ export interface ListarUsuariosParams {
   ativo?: boolean;
   oab?: string;
   ufOab?: string;
+  cargoId?: number | null;
+  isSuperAdmin?: boolean;
 }
 
 /**
