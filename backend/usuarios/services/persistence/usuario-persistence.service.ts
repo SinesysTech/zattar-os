@@ -207,6 +207,13 @@ function converterParaUsuario(data: Record<string, unknown>): Usuario {
     telefone: (data.telefone as string | null) ?? null,
     ramal: (data.ramal as string | null) ?? null,
     endereco: (data.endereco as Endereco | null) ?? null,
+    cargoId: (data.cargo_id as number | null) ?? null,
+    cargo: data.cargos ? {
+      id: (data.cargos as any).id,
+      nome: (data.cargos as any).nome,
+      descricao: (data.cargos as any).descricao || null,
+    } : undefined,
+    isSuperAdmin: (data.is_super_admin as boolean) ?? false,
     ativo: data.ativo as boolean,
     createdAt: data.created_at as string,
     updatedAt: data.updated_at as string,
@@ -279,6 +286,19 @@ export async function criarUsuario(
     // Validar e normalizar endereço
     const enderecoNormalizado = validarEndereco(params.endereco);
 
+    // Validar cargo_id se fornecido
+    if (params.cargoId !== undefined && params.cargoId !== null) {
+      const { data: cargo } = await supabase
+        .from('cargos')
+        .select('id')
+        .eq('id', params.cargoId)
+        .single();
+
+      if (!cargo) {
+        return { sucesso: false, erro: 'Cargo não encontrado' };
+      }
+    }
+
     // Preparar dados para inserção
     const dadosNovos = {
       auth_user_id: params.authUserId || null,
@@ -295,6 +315,8 @@ export async function criarUsuario(
       telefone: params.telefone?.trim() || null,
       ramal: params.ramal?.trim() || null,
       endereco: enderecoNormalizado,
+      cargo_id: params.cargoId !== undefined ? params.cargoId : null,
+      is_super_admin: params.isSuperAdmin ?? false,
       ativo: params.ativo ?? true,
     };
 
