@@ -2,12 +2,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
-import { getCredentialByTribunalAndGrau } from '@/backend/captura/credentials/credential.service';
+import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
 import { pendentesManifestacaoCapture } from '@/backend/captura/services/trt/pendentes-manifestacao.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import type { BaseCapturaTRTParams, FiltroPrazoPendentes } from '@/backend/types/captura/trt-types';
+import type { FiltroPrazoPendentes } from '@/backend/types/captura/trt-types';
 
-interface PendentesManifestacaoParams extends BaseCapturaTRTParams {
+interface PendentesManifestacaoParams {
+  advogado_id: number;
+  credencial_ids: number[];
   filtroPrazo?: FiltroPrazoPendentes;
 }
 
@@ -41,15 +43,31 @@ interface PendentesManifestacaoParams extends BaseCapturaTRTParams {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/PendentesManifestacaoParams'
+ *             type: object
+ *             required:
+ *               - advogado_id
+ *               - credencial_ids
+ *             properties:
+ *               advogado_id:
+ *                 type: integer
+ *                 description: ID do advogado
+ *               credencial_ids:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 description: Array de IDs das credenciais a serem utilizadas na captura
+ *               filtroPrazo:
+ *                 type: string
+ *                 enum: [no_prazo, sem_prazo]
+ *                 default: sem_prazo
+ *                 description: Filtro de prazo para processos pendentes
  *           example:
  *             advogado_id: 1
- *             trt_codigo: "TRT3"
- *             grau: "primeiro_grau"
+ *             credencial_ids: [1, 2, 3]
  *             filtroPrazo: "sem_prazo"
  *     responses:
  *       200:
- *         description: Captura realizada com sucesso
+ *         description: Captura iniciada com sucesso (resposta assíncrona)
  *         content:
  *           application/json:
  *             schema:
@@ -58,33 +76,36 @@ interface PendentesManifestacaoParams extends BaseCapturaTRTParams {
  *                 success:
  *                   type: boolean
  *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Captura iniciada com sucesso"
+ *                 status:
+ *                   type: string
+ *                   enum: [in_progress]
+ *                   example: "in_progress"
  *                 data:
  *                   type: object
  *                   properties:
- *                     processos:
+ *                     credenciais_processadas:
+ *                       type: integer
+ *                       description: Número de credenciais processadas
+ *                     resultados:
  *                       type: array
- *                       description: Lista de processos pendentes de manifestação
  *                       items:
  *                         type: object
- *                     total:
- *                       type: integer
- *                       description: Total de processos capturados
- *                       example: 25
- *                     filtroPrazo:
- *                       type: string
- *                       enum: [no_prazo, sem_prazo]
- *                       description: Filtro de prazo utilizado na captura
- *                       example: "sem_prazo"
- *                     persistencia:
- *                       type: object
- *                       description: Informações sobre a persistência no banco de dados
- *                       properties:
- *                         total:
- *                           type: integer
- *                         atualizados:
- *                           type: integer
- *                         erros:
- *                           type: integer
+ *                         properties:
+ *                           credencial_id:
+ *                             type: integer
+ *                           tribunal:
+ *                             type: string
+ *                           grau:
+ *                             type: string
+ *                           resultado:
+ *                             type: object
+ *                             description: Resultado da captura para esta credencial (inclui processos, total, filtroPrazo, persistencia)
+ *                           erro:
+ *                             type: string
+ *                             description: Mensagem de erro se a captura falhou
  *       400:
  *         description: Parâmetros obrigatórios ausentes
  *         content:
@@ -92,7 +113,7 @@ interface PendentesManifestacaoParams extends BaseCapturaTRTParams {
  *             schema:
  *               $ref: '#/components/schemas/Error'
  *             example:
- *               error: "Missing required parameters: advogado_id, trt_codigo, grau"
+ *               error: "Missing required parameters: advogado_id, credencial_ids"
  *       401:
  *         description: Não autenticado
  *         content:
@@ -136,20 +157,12 @@ export async function POST(request: NextRequest) {
 
     // 2. Validar e parsear body da requisição
     const body = await request.json();
-    const { advogado_id, trt_codigo, grau, filtroPrazo } = body as PendentesManifestacaoParams;
+    const { advogado_id, credencial_ids, filtroPrazo } = body as PendentesManifestacaoParams;
 
     // Validações básicas
-    if (!advogado_id || !trt_codigo || !grau) {
+    if (!advogado_id || !credencial_ids || !Array.isArray(credencial_ids) || credencial_ids.length === 0) {
       return NextResponse.json(
-        { error: 'Missing required parameters: advogado_id, trt_codigo, grau' },
-        { status: 400 }
-      );
-    }
-
-    // Validar grau
-    if (grau !== 'primeiro_grau' && grau !== 'segundo_grau') {
-      return NextResponse.json(
-        { error: 'Invalid grau. Must be "primeiro_grau" or "segundo_grau"' },
+        { error: 'Missing required parameters: advogado_id, credencial_ids (array não vazio)' },
         { status: 400 }
       );
     }
@@ -162,48 +175,105 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Buscar credencial do banco usando advogado_id, TRT e grau
-    const credential = await getCredentialByTribunalAndGrau({
-      advogadoId: advogado_id,
-      tribunal: trt_codigo,
-      grau,
-    });
+    // 3. Buscar credenciais completas por IDs
+    const credenciaisCompletas = await Promise.all(
+      credencial_ids.map((id) => getCredentialComplete(id))
+    );
 
-    if (!credential) {
+    // Verificar se todas as credenciais foram encontradas
+    const credenciaisNaoEncontradas = credenciaisCompletas
+      .map((cred, index) => (!cred ? credencial_ids[index] : null))
+      .filter((id): id is number => id !== null);
+
+    if (credenciaisNaoEncontradas.length > 0) {
       return NextResponse.json(
-        { 
-          error: 'Credential not found for this advogado_id, trt_codigo and grau combination',
+        {
+          error: 'One or more credentials not found',
           details: {
-            advogado_id: advogado_id,
-            trt_codigo,
-            grau,
-            message: 'Verifique se existe uma credencial ativa para este advogado, TRT e grau no banco de dados'
-          }
+            credencial_ids_nao_encontradas: credenciaisNaoEncontradas,
+            message: 'Verifique se todas as credenciais existem e estão ativas',
+          },
         },
         { status: 404 }
       );
     }
 
-    // 4. Buscar configuração do tribunal
-    const tribunalConfig = getTribunalConfig(trt_codigo, grau);
-    if (!tribunalConfig) {
+    // Verificar se todas as credenciais pertencem ao advogado
+    const credenciaisInvalidas = credenciaisCompletas
+      .map((cred, index) => (cred && cred.advogadoId !== advogado_id ? credencial_ids[index] : null))
+      .filter((id): id is number => id !== null);
+
+    if (credenciaisInvalidas.length > 0) {
       return NextResponse.json(
-        { error: 'Tribunal configuration not found' },
-        { status: 404 }
+        {
+          error: 'One or more credentials do not belong to the specified advogado',
+          details: {
+            credencial_ids_invalidas: credenciaisInvalidas,
+            advogado_id,
+          },
+        },
+        { status: 400 }
       );
     }
 
-    // 5. Executar captura (credenciais descriptografadas em memória)
-    const resultado = await pendentesManifestacaoCapture({
-      credential,
-      config: tribunalConfig,
-      filtroPrazo: filtroPrazo || 'sem_prazo',
-    });
+    // 4. Processar cada credencial
+    const resultados = await Promise.all(
+      credenciaisCompletas.map(async (credCompleta) => {
+        if (!credCompleta) return null;
 
-    // 6. Retornar resultado (credenciais já foram limpas da memória)
+        // Buscar configuração do tribunal
+        const tribunalConfig = getTribunalConfig(credCompleta.tribunal, credCompleta.grau);
+        if (!tribunalConfig) {
+          console.error(`Tribunal configuration not found for ${credCompleta.tribunal} ${credCompleta.grau}`);
+          return null;
+        }
+
+        // Executar captura
+        try {
+          const resultado = await pendentesManifestacaoCapture({
+            credential: credCompleta.credenciais,
+            config: tribunalConfig,
+            filtroPrazo: filtroPrazo || 'sem_prazo',
+          });
+
+          return {
+            credencial_id: credCompleta.credentialId,
+            tribunal: credCompleta.tribunal,
+            grau: credCompleta.grau,
+            resultado,
+          };
+        } catch (error) {
+          console.error(`Erro ao capturar para credencial ${credCompleta.credentialId}:`, error);
+          
+          // Retornar erro específico se for erro de validação
+          if (error instanceof Error && error.message.includes('Quantidade de processos')) {
+            return {
+              credencial_id: credCompleta.credentialId,
+              tribunal: credCompleta.tribunal,
+              grau: credCompleta.grau,
+              erro: error.message,
+            };
+          }
+          
+          return {
+            credencial_id: credCompleta.credentialId,
+            tribunal: credCompleta.tribunal,
+            grau: credCompleta.grau,
+            erro: error instanceof Error ? error.message : 'Erro desconhecido',
+          };
+        }
+      })
+    );
+
+    // 5. Retornar resultado (resposta assíncrona)
     return NextResponse.json({
       success: true,
-      data: resultado,
+      message: 'Captura iniciada com sucesso',
+      status: 'in_progress',
+      data: {
+        credenciais_processadas: resultados.length,
+        resultados,
+      },
     });
 
   } catch (error) {

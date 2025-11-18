@@ -148,3 +148,4 @@ docker build -t sinesys:latest .
 2. Adicione a seção `build:`
 3. O Portainer fará o build automaticamente
 
+

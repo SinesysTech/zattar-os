@@ -265,6 +265,69 @@ export async function getActiveCredentialsByTribunalAndGrau(
 }
 
 /**
+ * Busca credencial completa por ID (incluindo tribunal e grau)
+ * Retorna credenciais + informações do tribunal e grau
+ */
+export interface CredencialCompleta {
+  credentialId: number;
+  advogadoId: number;
+  tribunal: CodigoTRT;
+  grau: GrauTRT;
+  credenciais: CredenciaisTRT;
+}
+
+export async function getCredentialComplete(
+  credentialId: number
+): Promise<CredencialCompleta | null> {
+  const supabase = createServiceClient();
+
+  const { data: credencial, error } = await supabase
+    .from('credenciais')
+    .select(`
+      id,
+      advogado_id,
+      senha,
+      tribunal,
+      grau,
+      active,
+      advogados (
+        id,
+        cpf,
+        nome_completo
+      )
+    `)
+    .eq('id', credentialId)
+    .eq('active', true)
+    .single();
+
+  if (error || !credencial) {
+    console.error('Erro ao buscar credencial completa:', error);
+    return null;
+  }
+
+  const advogadoRaw = credencial.advogados;
+  const advogado = Array.isArray(advogadoRaw)
+    ? (advogadoRaw[0] as { id: number; cpf: string; nome_completo: string } | undefined)
+    : (advogadoRaw as { id: number; cpf: string; nome_completo: string } | null);
+
+  if (!advogado || !advogado.cpf) {
+    console.error('Advogado não encontrado ou sem CPF');
+    return null;
+  }
+
+  return {
+    credentialId: credencial.id,
+    advogadoId: advogado.id,
+    tribunal: credencial.tribunal as CodigoTRT,
+    grau: credencial.grau as GrauTRT,
+    credenciais: {
+      cpf: advogado.cpf,
+      senha: credencial.senha,
+    },
+  };
+}
+
+/**
  * Valida se uma credencial existe e está ativa
  */
 export async function validateCredential(

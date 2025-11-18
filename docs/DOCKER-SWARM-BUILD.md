@@ -84,3 +84,4 @@ docker build -t zattar_advogados:latest .
    - Clique em **Update the stack**
    - O Swarm vai fazer rolling update automaticamente
 
+
