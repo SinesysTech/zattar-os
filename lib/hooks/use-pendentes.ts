@@ -35,6 +35,9 @@ export const usePendentes = (
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Serializar params para evitar loops infinitos por mudanças de referência
+  const paramsKey = JSON.stringify(params);
+
   const buscarExpedientes = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -115,7 +118,8 @@ export const usePendentes = (
     } finally {
       setIsLoading(false);
     }
-  }, [params]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramsKey]);
 
   useEffect(() => {
     buscarExpedientes();

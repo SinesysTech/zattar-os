@@ -2,7 +2,7 @@
 // GET: Buscar usuário por ID | PATCH: Atualizar usuário
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { requirePermission } from '@/backend/utils/auth/require-permission';
 import { obterUsuarioPorId } from '@/backend/usuarios/services/usuarios/buscar-usuario.service';
 import { atualizarUsuario } from '@/backend/usuarios/services/usuarios/atualizar-usuario.service';
 import type { UsuarioDados } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
@@ -105,13 +105,10 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    // 1. Verificar permissão: usuarios.visualizar
+    const authOrError = await requirePermission(request, 'usuarios', 'visualizar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
     // 2. Obter ID do parâmetro
@@ -154,13 +151,10 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    // 1. Verificar permissão: usuarios.editar
+    const authOrError = await requirePermission(request, 'usuarios', 'editar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
     // 2. Obter ID do parâmetro

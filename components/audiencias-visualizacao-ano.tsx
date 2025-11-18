@@ -3,18 +3,16 @@
 // Componente de visualização de audiências por ano com calendários mensais
 
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { AudienciaDetalhesDialog } from '@/components/audiencia-detalhes-dialog';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 
 interface AudienciasVisualizacaoAnoProps {
   audiencias: Audiencia[];
   isLoading: boolean;
+  anoAtual: number;
 }
 
-export function AudienciasVisualizacaoAno({ audiencias, isLoading }: AudienciasVisualizacaoAnoProps) {
-  const [anoAtual, setAnoAtual] = React.useState(new Date().getFullYear());
+export function AudienciasVisualizacaoAno({ audiencias, isLoading, anoAtual }: AudienciasVisualizacaoAnoProps) {
   const [audienciasDia, setAudienciasDia] = React.useState<Audiencia[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -30,10 +28,6 @@ export function AudienciasVisualizacaoAno({ audiencias, isLoading }: AudienciasV
 
     return mapa;
   }, [audiencias]);
-
-  const navegarAno = (direcao: 'anterior' | 'proximo') => {
-    setAnoAtual(direcao === 'proximo' ? anoAtual + 1 : anoAtual - 1);
-  };
 
   const temAudiencia = (ano: number, mes: number, dia: number) => {
     const chave = `${ano}-${mes}-${dia}`;
@@ -100,73 +94,53 @@ export function AudienciasVisualizacaoAno({ audiencias, isLoading }: AudienciasV
 
   return (
     <div className="space-y-4">
-      {/* Navegação de ano */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarAno('anterior')}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <div className="text-lg font-semibold min-w-[100px] text-center">
-            {anoAtual}
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarAno('proximo')}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-        <Button
-          variant="outline"
-          onClick={() => setAnoAtual(new Date().getFullYear())}
-        >
-          Ano Atual
-        </Button>
-      </div>
-
       {/* Grid de meses */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {meses.map((nomeMes, mes) => {
           const diasMes = getDiasMes(mes);
 
           return (
-            <div key={mes} className="border rounded-lg p-3">
+            <div key={mes} className="border rounded-lg p-2">
               {/* Nome do mês */}
-              <div className="text-sm font-semibold mb-2 text-center">
+              <div className="text-xs font-semibold mb-3 text-center">
                 {nomeMes}
               </div>
 
               {/* Mini calendário */}
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {/* Cabeçalho dos dias da semana */}
-                <div className="grid grid-cols-7 gap-1">
-                  {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((dia, i) => (
-                    <div key={i} className="text-center text-xs text-muted-foreground">
-                      {dia}
-                    </div>
-                  ))}
+                <div className="grid grid-cols-7 gap-0.5">
+                  {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((dia, i) => {
+                    const isSabadoDomingo = i >= 5;
+                    return (
+                      <div
+                        key={i}
+                        className={`text-center text-[10px] font-bold ${isSabadoDomingo ? 'text-muted-foreground/60' : 'text-muted-foreground'}`}
+                      >
+                        {dia}
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {/* Grade de dias */}
-                <div className="grid grid-cols-7 gap-1">
+                <div className="grid grid-cols-7 gap-0.5">
                   {diasMes.map((dia, index) => {
                     const temAud = dia ? temAudiencia(anoAtual, mes, dia) : false;
                     const hoje = dia ? ehHoje(mes, dia) : false;
+                    const diaSemana = dia ? new Date(anoAtual, mes, dia).getDay() : 0;
+                    const isSabadoDomingo = diaSemana === 0 || diaSemana === 6;
 
                     return (
                       <div
                         key={index}
                         className={`
-                          aspect-square flex items-center justify-center text-xs rounded
+                          aspect-square flex items-center justify-center text-[10px] rounded
                           ${!dia ? 'invisible' : ''}
                           ${hoje ? 'bg-blue-500 text-white font-semibold' : ''}
                           ${temAud && !hoje ? 'bg-primary text-primary-foreground font-medium cursor-pointer hover:opacity-80 transition-opacity' : ''}
-                          ${!temAud && !hoje ? 'text-muted-foreground' : ''}
+                          ${!temAud && !hoje && isSabadoDomingo ? 'text-muted-foreground/60' : ''}
+                          ${!temAud && !hoje && !isSabadoDomingo ? 'text-muted-foreground' : ''}
                         `}
                         onClick={() => dia && temAud && handleDiaClick(anoAtual, mes, dia)}
                       >

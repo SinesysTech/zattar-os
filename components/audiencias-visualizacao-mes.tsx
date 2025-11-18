@@ -3,9 +3,7 @@
 // Componente de visualização de audiências por mês em calendário
 
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { AudienciaDetalhesDialog } from '@/components/audiencia-detalhes-dialog';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 
@@ -23,10 +21,10 @@ const formatarHora = (dataISO: string): string => {
 interface AudienciasVisualizacaoMesProps {
   audiencias: Audiencia[];
   isLoading: boolean;
+  mesAtual: Date;
 }
 
-export function AudienciasVisualizacaoMes({ audiencias, isLoading }: AudienciasVisualizacaoMesProps) {
-  const [mesAtual, setMesAtual] = React.useState(new Date());
+export function AudienciasVisualizacaoMes({ audiencias, isLoading, mesAtual }: AudienciasVisualizacaoMesProps) {
   const [audienciaSelecionada, setAudienciaSelecionada] = React.useState<Audiencia | null>(null);
   const [audienciasDia, setAudienciasDia] = React.useState<Audiencia[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -71,23 +69,6 @@ export function AudienciasVisualizacaoMes({ audiencias, isLoading }: AudienciasV
     return mapa;
   }, [audiencias]);
 
-  const navegarMes = (direcao: 'anterior' | 'proximo') => {
-    const novoMes = new Date(mesAtual);
-    if (direcao === 'proximo') {
-      novoMes.setMonth(novoMes.getMonth() + 1);
-    } else {
-      novoMes.setMonth(novoMes.getMonth() - 1);
-    }
-    setMesAtual(novoMes);
-  };
-
-  const formatarMesAno = () => {
-    return mesAtual.toLocaleDateString('pt-BR', {
-      month: 'long',
-      year: 'numeric',
-    });
-  };
-
   const getAudienciasDia = (dia: Date | null) => {
     if (!dia) return [];
     const chave = `${dia.getFullYear()}-${dia.getMonth()}-${dia.getDate()}`;
@@ -123,44 +104,21 @@ export function AudienciasVisualizacaoMes({ audiencias, isLoading }: AudienciasV
 
   return (
     <div className="space-y-4">
-      {/* Navegação de mês */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarMes('anterior')}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <div className="text-lg font-semibold capitalize min-w-[200px] text-center">
-            {formatarMesAno()}
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarMes('proximo')}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-        <Button
-          variant="outline"
-          onClick={() => setMesAtual(new Date())}
-        >
-          Mês Atual
-        </Button>
-      </div>
-
       {/* Calendário */}
       <div className="border rounded-lg overflow-hidden">
         {/* Cabeçalho dos dias da semana */}
         <div className="grid grid-cols-7 bg-muted">
-          {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map((dia) => (
-            <div key={dia} className="p-2 text-center text-sm font-medium">
-              {dia}
-            </div>
-          ))}
+          {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map((dia, i) => {
+            const isSabadoDomingo = i >= 5;
+            return (
+              <div
+                key={dia}
+                className={`p-2 text-center text-sm font-bold ${isSabadoDomingo ? 'text-muted-foreground/70' : ''}`}
+              >
+                {dia}
+              </div>
+            );
+          })}
         </div>
 
         {/* Grade de dias */}
@@ -169,20 +127,23 @@ export function AudienciasVisualizacaoMes({ audiencias, isLoading }: AudienciasV
             const audienciasDia = getAudienciasDia(dia);
             const temAudiencias = audienciasDia.length > 0;
             const hoje = ehHoje(dia);
+            const diaSemana = dia ? dia.getDay() : 0;
+            const isSabadoDomingo = diaSemana === 0 || diaSemana === 6;
 
             return (
               <div
                 key={index}
                 className={`
-                  min-h-[120px] border-r border-b p-2
+                  min-h-[100px] border-r border-b p-1.5
                   ${!dia ? 'bg-muted/50' : ''}
                   ${hoje ? 'bg-blue-50 dark:bg-blue-950' : ''}
                   ${temAudiencias ? 'hover:bg-accent cursor-pointer' : ''}
+                  ${isSabadoDomingo && !hoje ? 'bg-muted/30' : ''}
                 `}
               >
                 {dia && (
                   <>
-                    <div className={`text-sm font-medium mb-1 ${hoje ? 'text-blue-600 dark:text-blue-400' : ''}`}>
+                    <div className={`text-sm font-medium mb-2 ${hoje ? 'text-blue-600 dark:text-blue-400' : ''} ${isSabadoDomingo && !hoje ? 'text-muted-foreground/70' : ''}`}>
                       {dia.getDate()}
                     </div>
                     {temAudiencias && (

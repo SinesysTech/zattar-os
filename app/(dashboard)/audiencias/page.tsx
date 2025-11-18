@@ -599,6 +599,8 @@ export default function AudienciasPage() {
   const [filtros, setFiltros] = React.useState<AudienciasFilters>({});
   const [visualizacao, setVisualizacao] = React.useState<'tabela' | 'semana' | 'mes' | 'ano'>('tabela');
   const [semanaAtual, setSemanaAtual] = React.useState(new Date());
+  const [mesAtual, setMesAtual] = React.useState(new Date());
+  const [anoAtual, setAnoAtual] = React.useState(new Date().getFullYear());
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -681,6 +683,26 @@ export default function AudienciasPage() {
     setSemanaAtual(new Date());
   }, []);
 
+  // Funções para navegação de mês
+  const navegarMes = React.useCallback((direcao: 'anterior' | 'proximo') => {
+    const novoMes = new Date(mesAtual);
+    novoMes.setMonth(novoMes.getMonth() + (direcao === 'proximo' ? 1 : -1));
+    setMesAtual(novoMes);
+  }, [mesAtual]);
+
+  const voltarMesAtual = React.useCallback(() => {
+    setMesAtual(new Date());
+  }, []);
+
+  // Funções para navegação de ano
+  const navegarAno = React.useCallback((direcao: 'anterior' | 'proximo') => {
+    setAnoAtual(direcao === 'proximo' ? anoAtual + 1 : anoAtual - 1);
+  }, [anoAtual]);
+
+  const voltarAnoAtual = React.useCallback(() => {
+    setAnoAtual(new Date().getFullYear());
+  }, []);
+
   // Calcular início e fim da semana para exibição
   const { inicioSemana, fimSemana } = React.useMemo(() => {
     const date = new Date(semanaAtual);
@@ -701,6 +723,13 @@ export default function AudienciasPage() {
     return data.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
+  const formatarMesAno = (data: Date) => {
+    return data.toLocaleDateString('pt-BR', {
+      month: 'long',
       year: 'numeric',
     });
   };
@@ -773,7 +802,53 @@ export default function AudienciasPage() {
             </div>
           )}
 
-          {/* Botão semana atual na extremidade direita */}
+          {/* Controles de navegação de mês (aparecem apenas na visualização de mês) */}
+          {visualizacao === 'mes' && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navegarMes('anterior')}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <div className="text-sm font-medium whitespace-nowrap capitalize min-w-[160px] text-center">
+                {formatarMesAno(mesAtual)}
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navegarMes('proximo')}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+
+          {/* Controles de navegação de ano (aparecem apenas na visualização de ano) */}
+          {visualizacao === 'ano' && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navegarAno('anterior')}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <div className="text-sm font-medium whitespace-nowrap min-w-[80px] text-center">
+                {anoAtual}
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navegarAno('proximo')}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+
+          {/* Botão atual na extremidade direita */}
           {visualizacao === 'semana' && (
             <Button
               variant="outline"
@@ -781,6 +856,24 @@ export default function AudienciasPage() {
               className="ml-auto"
             >
               Semana Atual
+            </Button>
+          )}
+          {visualizacao === 'mes' && (
+            <Button
+              variant="outline"
+              onClick={voltarMesAtual}
+              className="ml-auto"
+            >
+              Mês Atual
+            </Button>
+          )}
+          {visualizacao === 'ano' && (
+            <Button
+              variant="outline"
+              onClick={voltarAnoAtual}
+              className="ml-auto"
+            >
+              Ano Atual
             </Button>
           )}
         </div>
@@ -824,11 +917,19 @@ export default function AudienciasPage() {
         </TabsContent>
 
         <TabsContent value="mes" className="mt-0">
-          <AudienciasVisualizacaoMes audiencias={audiencias} isLoading={isLoading} />
+          <AudienciasVisualizacaoMes
+            audiencias={audiencias}
+            isLoading={isLoading}
+            mesAtual={mesAtual}
+          />
         </TabsContent>
 
         <TabsContent value="ano" className="mt-0">
-          <AudienciasVisualizacaoAno audiencias={audiencias} isLoading={isLoading} />
+          <AudienciasVisualizacaoAno
+            audiencias={audiencias}
+            isLoading={isLoading}
+            anoAtual={anoAtual}
+          />
         </TabsContent>
       </div>
     </Tabs>
