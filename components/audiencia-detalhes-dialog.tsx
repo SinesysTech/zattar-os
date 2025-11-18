@@ -3,6 +3,7 @@
 // Componente Dialog para exibir detalhes de audiência(s)
 
 import * as React from 'react';
+import Image from 'next/image';
 import {
   Dialog,
   DialogContent,
@@ -12,6 +13,9 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Copy, Pencil, Plus } from 'lucide-react';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 
 /**
@@ -68,12 +72,203 @@ const getStatusVariant = (status: string): 'default' | 'secondary' | 'destructiv
   return 'outline';
 };
 
+/**
+ * Detecta qual plataforma de videoconferência baseado na URL
+ */
+type PlataformaVideo = 'zoom' | 'meet' | 'webex' | null;
+
+const detectarPlataforma = (url: string | null): PlataformaVideo => {
+  if (!url) return null;
+  const urlLower = url.toLowerCase();
+  if (urlLower.includes('zoom')) return 'zoom';
+  if (urlLower.includes('meet')) return 'meet';
+  if (urlLower.includes('webex')) return 'webex';
+  return null;
+};
+
+/**
+ * Retorna o caminho da logo para a plataforma
+ */
+const getLogoPlataforma = (plataforma: PlataformaVideo): string | null => {
+  const logos: Record<string, string> = {
+    zoom: '/Zoom_Logo.png',
+    meet: '/meet_logo.png',
+    webex: '/webex_logo.png',
+  };
+  return plataforma ? logos[plataforma] : null;
+};
+
+/**
+ * Componente para exibir e editar URL da audiência virtual no dialog
+ */
+function UrlVirtualDialogSection({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess?: () => void }) {
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [url, setUrl] = React.useState(audiencia.url_audiencia_virtual || '');
+
+  React.useEffect(() => {
+    setUrl(audiencia.url_audiencia_virtual || '');
+  }, [audiencia.url_audiencia_virtual]);
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      const urlToSave = url.trim() || null;
+
+      const response = await fetch(`/api/audiencias/${audiencia.id}/url-virtual`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ urlAudienciaVirtual: urlToSave }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao atualizar URL');
+      }
+
+      setIsEditing(false);
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error('Erro ao atualizar URL:', error);
+      if (onSuccess) onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setUrl(audiencia.url_audiencia_virtual || '');
+    setIsEditing(false);
+  };
+
+  const handleCopyUrl = async () => {
+    if (!audiencia.url_audiencia_virtual) return;
+    try {
+      await navigator.clipboard.writeText(audiencia.url_audiencia_virtual);
+    } catch (error) {
+      console.error('Erro ao copiar URL:', error);
+    }
+  };
+
+  if (isEditing) {
+    return (
+      <div>
+        <div className="text-sm text-muted-foreground mb-2">URL da Audiência Virtual</div>
+        <div className="flex items-center gap-2">
+          <Input
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="https://..."
+            disabled={isLoading}
+            className="h-9"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSave();
+              if (e.key === 'Escape') handleCancel();
+            }}
+          />
+          <Button
+            size="sm"
+            onClick={handleSave}
+            disabled={isLoading}
+          >
+            Salvar
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleCancel}
+            disabled={isLoading}
+          >
+            Cancelar
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
+  const logoPath = getLogoPlataforma(plataforma);
+
+  if (!audiencia.url_audiencia_virtual) {
+    return (
+      <div>
+        <div className="text-sm text-muted-foreground mb-2">URL da Audiência Virtual</div>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => setIsEditing(true)}
+          className="gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Adicionar URL
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="text-sm text-muted-foreground mb-2">URL da Audiência Virtual</div>
+      <div className="flex items-center gap-2">
+        {logoPath ? (
+          <a
+            href={audiencia.url_audiencia_virtual}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:opacity-70 transition-opacity flex items-center"
+          >
+            <Image
+              src={logoPath}
+              alt={plataforma || 'Plataforma de vídeo'}
+              width={100}
+              height={40}
+              className="object-contain"
+            />
+          </a>
+        ) : (
+          <a
+            href={audiencia.url_audiencia_virtual}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-blue-600 hover:underline break-all"
+          >
+            {audiencia.url_audiencia_virtual}
+          </a>
+        )}
+        <div className="flex gap-1 ml-auto">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={handleCopyUrl}
+            className="h-8 w-8 p-0"
+            title="Copiar URL"
+          >
+            <Copy className="h-4 w-4" />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setIsEditing(true)}
+            className="h-8 w-8 p-0"
+            title="Editar URL"
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 interface AudienciaDetalhesDialogProps {
   audiencia: Audiencia | null;
   audiencias?: Audiencia[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
   titulo?: string;
+  onRefresh?: () => void;
 }
 
 export function AudienciaDetalhesDialog({
@@ -82,6 +277,7 @@ export function AudienciaDetalhesDialog({
   open,
   onOpenChange,
   titulo,
+  onRefresh,
 }: AudienciaDetalhesDialogProps) {
   // Se temos múltiplas audiências, mostra lista
   const exibirLista = audiencias && audiencias.length > 0;
@@ -161,6 +357,12 @@ export function AudienciaDetalhesDialog({
                       <div>{aud.sala_audiencia_nome || '-'}</div>
                     </div>
                   </div>
+
+                  {aud.tipo_is_virtual && (
+                    <div className="pt-3 border-t">
+                      <UrlVirtualDialogSection audiencia={aud} onSuccess={onRefresh} />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -237,18 +439,8 @@ export function AudienciaDetalhesDialog({
                   </div>
                 </div>
 
-                {audienciaUnica.url_audiencia_virtual && (
-                  <div>
-                    <div className="text-sm text-muted-foreground">Link da Audiência Virtual</div>
-                    <a
-                      href={audienciaUnica.url_audiencia_virtual}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline text-sm break-all"
-                    >
-                      {audienciaUnica.url_audiencia_virtual}
-                    </a>
-                  </div>
+                {audienciaUnica.tipo_is_virtual && (
+                  <UrlVirtualDialogSection audiencia={audienciaUnica} onSuccess={onRefresh} />
                 )}
 
                 <div className="grid grid-cols-2 gap-4">

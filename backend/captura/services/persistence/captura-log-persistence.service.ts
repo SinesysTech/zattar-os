@@ -177,3 +177,22 @@ export async function listarCapturasLog(
   };
 }
 
+/**
+ * Deletar registro de captura por ID
+ */
+export async function deletarCapturaLog(id: number): Promise<void> {
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from('capturas_log')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      throw new Error('Registro de captura não encontrado');
+    }
+    throw new Error(`Erro ao deletar registro de captura: ${error.message}`);
+  }
+}
+

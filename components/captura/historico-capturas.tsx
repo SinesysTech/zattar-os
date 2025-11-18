@@ -6,7 +6,6 @@ import * as React from 'react';
 import { DataTable } from '@/components/data-table';
 import { DataTableColumnHeader } from '@/components/data-table-column-header';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import {
   Select,
@@ -18,8 +17,22 @@ import {
 import { Button } from '@/components/ui/button';
 import { useCapturasLog } from '@/lib/hooks/use-capturas-log';
 import { useAdvogados } from '@/lib/hooks/use-advogados';
+import { deletarCapturaLog } from '@/lib/api/captura';
+import { CapturaDetailsDialog } from './captura-details-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/backend/types/captura/capturas-log-types';
+import { Eye, Trash2 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 /**
  * Formata data e hora ISO para formato brasileiro (DD/MM/YYYY HH:mm)
@@ -72,7 +85,10 @@ const StatusBadge = ({ status }: { status: StatusCaptura }) => {
 /**
  * Colunas da tabela de histórico
  */
-function criarColunas(): ColumnDef<CapturaLog>[] {
+function criarColunas(
+  onView: (captura: CapturaLog) => void,
+  onDelete: (captura: CapturaLog) => void
+): ColumnDef<CapturaLog>[] {
   return [
     {
       accessorKey: 'id',
@@ -201,10 +217,58 @@ function criarColunas(): ColumnDef<CapturaLog>[] {
         );
       },
     },
+    {
+      id: 'acoes',
+      header: 'Ações',
+      size: 120,
+      cell: ({ row }) => {
+        const captura = row.original;
+        return (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onView(captura)}
+              title="Visualizar detalhes"
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="sm" title="Deletar">
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Tem certeza que deseja deletar esta captura? Esta ação não pode ser desfeita.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => onDelete(captura)}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Deletar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        );
+      },
+    },
   ];
 }
 
-export function HistoricoCapturas() {
+interface HistoricoCapturaProps {
+  actionButton?: React.ReactNode;
+}
+
+export function HistoricoCapturas({ actionButton }: HistoricoCapturaProps = {}) {
   const [pagina, setPagina] = React.useState(1);
   const [limite, setLimite] = React.useState(50);
   const [tipoCaptura, setTipoCaptura] = React.useState<TipoCaptura | 'todos'>('todos');
@@ -212,6 +276,8 @@ export function HistoricoCapturas() {
   const [advogadoId, setAdvogadoId] = React.useState<number | undefined>(undefined);
   const [dataInicio, setDataInicio] = React.useState<Date | undefined>(undefined);
   const [dataFim, setDataFim] = React.useState<Date | undefined>(undefined);
+  const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
+  const [selectedCaptura, setSelectedCaptura] = React.useState<CapturaLog | null>(null);
 
   // Buscar advogados para filtro
   const { advogados } = useAdvogados({ limite: 100 });
@@ -227,7 +293,32 @@ export function HistoricoCapturas() {
     data_fim: dataFim ? dataFim.toISOString().split('T')[0] : undefined,
   });
 
-  const colunas = React.useMemo(() => criarColunas(), []);
+  const handleView = React.useCallback((captura: CapturaLog) => {
+    setSelectedCaptura(captura);
+    setDetailsDialogOpen(true);
+  }, []);
+
+  const handleDelete = React.useCallback(
+    async (captura: CapturaLog) => {
+      try {
+        await deletarCapturaLog(captura.id);
+        refetch();
+      } catch (error) {
+        console.error('Erro ao deletar captura:', error);
+      }
+    },
+    [refetch]
+  );
+
+  const handleDeleteFromDialog = React.useCallback(async () => {
+    if (selectedCaptura) {
+      await handleDelete(selectedCaptura);
+      setDetailsDialogOpen(false);
+      setSelectedCaptura(null);
+    }
+  }, [selectedCaptura, handleDelete]);
+
+  const colunas = React.useMemo(() => criarColunas(handleView, handleDelete), [handleView, handleDelete]);
 
   // Resetar página quando filtros mudarem
   React.useEffect(() => {
@@ -236,103 +327,100 @@ export function HistoricoCapturas() {
 
   return (
     <div className="space-y-4">
-      {/* Filtros */}
-      <div className="flex flex-wrap items-center gap-4">
-        {/* Tipo de Captura */}
-        <Select
-          value={tipoCaptura}
-          onValueChange={(value) => setTipoCaptura(value as TipoCaptura | 'todos')}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Tipo" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="todos">Todos os Tipos</SelectItem>
-            <SelectItem value="acervo_geral">Acervo Geral</SelectItem>
-            <SelectItem value="arquivados">Arquivados</SelectItem>
-            <SelectItem value="audiencias">Audiências</SelectItem>
-            <SelectItem value="pendentes">Pendentes</SelectItem>
-          </SelectContent>
-        </Select>
+      {/* Filtros e Ações */}
+      <div className="flex flex-wrap items-center gap-4 justify-between">
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Tipo de Captura */}
+          <Select
+            value={tipoCaptura}
+            onValueChange={(value) => setTipoCaptura(value as TipoCaptura | 'todos')}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Tipo" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="todos">Todos os Tipos</SelectItem>
+              <SelectItem value="acervo_geral">Acervo Geral</SelectItem>
+              <SelectItem value="arquivados">Arquivados</SelectItem>
+              <SelectItem value="audiencias">Audiências</SelectItem>
+              <SelectItem value="pendentes">Pendentes</SelectItem>
+            </SelectContent>
+          </Select>
 
-        {/* Status */}
-        <Select
-          value={status}
-          onValueChange={(value) => setStatus(value as StatusCaptura | 'todos')}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="todos">Todos os Status</SelectItem>
-            <SelectItem value="pending">Pendente</SelectItem>
-            <SelectItem value="in_progress">Em Progresso</SelectItem>
-            <SelectItem value="completed">Concluída</SelectItem>
-            <SelectItem value="failed">Falhou</SelectItem>
-          </SelectContent>
-        </Select>
+          {/* Status */}
+          <Select
+            value={status}
+            onValueChange={(value) => setStatus(value as StatusCaptura | 'todos')}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="todos">Todos os Status</SelectItem>
+              <SelectItem value="pending">Pendente</SelectItem>
+              <SelectItem value="in_progress">Em Progresso</SelectItem>
+              <SelectItem value="completed">Concluída</SelectItem>
+              <SelectItem value="failed">Falhou</SelectItem>
+            </SelectContent>
+          </Select>
 
-        {/* Advogado */}
-        <Select
-          value={advogadoId?.toString() || 'todos'}
-          onValueChange={(value) => setAdvogadoId(value === 'todos' ? undefined : parseInt(value, 10))}
-        >
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Advogado" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="todos">Todos os Advogados</SelectItem>
-            {advogados.map((advogado) => (
-              <SelectItem key={advogado.id} value={advogado.id.toString()}>
-                {advogado.nome_completo} - OAB {advogado.oab}/{advogado.uf_oab}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          {/* Advogado */}
+          <Select
+            value={advogadoId?.toString() || 'todos'}
+            onValueChange={(value) => setAdvogadoId(value === 'todos' ? undefined : parseInt(value, 10))}
+          >
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Advogado" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="todos">Todos os Advogados</SelectItem>
+              {advogados.map((advogado) => (
+                <SelectItem key={advogado.id} value={advogado.id.toString()}>
+                  {advogado.nome_completo} - OAB {advogado.oab}/{advogado.uf_oab}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-        {/* Data Início */}
-        <div className="flex flex-col gap-1">
-          <Label htmlFor="data-inicio" className="text-xs text-muted-foreground">
-            Data Início
-          </Label>
+          {/* Data Início */}
           <Input
             id="data-inicio"
             type="date"
+            placeholder="Data Início"
             value={dataInicio ? dataInicio.toISOString().split('T')[0] : ''}
             onChange={(e) => setDataInicio(e.target.value ? new Date(e.target.value) : undefined)}
             className="w-[180px]"
           />
-        </div>
 
-        {/* Data Fim */}
-        <div className="flex flex-col gap-1">
-          <Label htmlFor="data-fim" className="text-xs text-muted-foreground">
-            Data Fim
-          </Label>
+          {/* Data Fim */}
           <Input
             id="data-fim"
             type="date"
+            placeholder="Data Fim"
             value={dataFim ? dataFim.toISOString().split('T')[0] : ''}
             onChange={(e) => setDataFim(e.target.value ? new Date(e.target.value) : undefined)}
             className="w-[180px]"
           />
+
+          {/* Botão Limpar Filtros */}
+          {(tipoCaptura !== 'todos' || status !== 'todos' || advogadoId !== undefined || dataInicio || dataFim) && (
+            <Button
+              variant="outline"
+              onClick={() => {
+                setTipoCaptura('todos');
+                setStatus('todos');
+                setAdvogadoId(undefined);
+                setDataInicio(undefined);
+                setDataFim(undefined);
+              }}
+            >
+              Limpar Filtros
+            </Button>
+          )}
         </div>
 
-        {/* Botão Limpar Filtros */}
-        {(tipoCaptura !== 'todos' || status !== 'todos' || advogadoId !== undefined || dataInicio || dataFim) && (
-          <Button
-            variant="outline"
-            onClick={() => {
-              setTipoCaptura('todos');
-              setStatus('todos');
-              setAdvogadoId(undefined);
-              setDataInicio(undefined);
-              setDataFim(undefined);
-            }}
-          >
-            Limpar Filtros
-          </Button>
-        )}
+        {/* Botão de Ação (ex: Nova Captura) */}
+        {actionButton && <div>{actionButton}</div>}
       </div>
 
       {/* Tabela */}
@@ -355,6 +443,14 @@ export function HistoricoCapturas() {
         isLoading={isLoading}
         error={error}
         emptyMessage="Nenhuma captura encontrada no histórico."
+      />
+
+      {/* Dialog de Detalhes */}
+      <CapturaDetailsDialog
+        open={detailsDialogOpen}
+        onOpenChange={setDetailsDialogOpen}
+        captura={selectedCaptura}
+        onDelete={handleDeleteFromDialog}
       />
     </div>
   );

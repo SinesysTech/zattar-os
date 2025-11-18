@@ -3,9 +3,13 @@
 // Componente de visualização de audiências por semana com tabs de dias
 
 import * as React from 'react';
+import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Copy, Pencil, Plus } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -77,6 +81,191 @@ const getParteAutoraColorClass = (): string => {
 const getParteReColorClass = (): string => {
   return 'bg-red-100 text-red-800 border-red-200';
 };
+
+/**
+ * Detecta qual plataforma de videoconferência baseado na URL
+ */
+type PlataformaVideo = 'zoom' | 'meet' | 'webex' | null;
+
+const detectarPlataforma = (url: string | null): PlataformaVideo => {
+  if (!url) return null;
+  const urlLower = url.toLowerCase();
+  if (urlLower.includes('zoom')) return 'zoom';
+  if (urlLower.includes('meet')) return 'meet';
+  if (urlLower.includes('webex')) return 'webex';
+  return null;
+};
+
+/**
+ * Retorna o caminho da logo para a plataforma
+ */
+const getLogoPlataforma = (plataforma: PlataformaVideo): string | null => {
+  const logos: Record<string, string> = {
+    zoom: '/Zoom_Logo.png',
+    meet: '/meet_logo.png',
+    webex: '/webex_logo.png',
+  };
+  return plataforma ? logos[plataforma] : null;
+};
+
+/**
+ * Componente para editar URL da audiência virtual
+ */
+function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [url, setUrl] = React.useState(audiencia.url_audiencia_virtual || '');
+
+  React.useEffect(() => {
+    setUrl(audiencia.url_audiencia_virtual || '');
+  }, [audiencia.url_audiencia_virtual]);
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      const urlToSave = url.trim() || null;
+
+      const response = await fetch(`/api/audiencias/${audiencia.id}/url-virtual`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ urlAudienciaVirtual: urlToSave }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao atualizar URL');
+      }
+
+      setIsEditing(false);
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao atualizar URL:', error);
+      onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setUrl(audiencia.url_audiencia_virtual || '');
+    setIsEditing(false);
+  };
+
+  if (isEditing) {
+    return (
+      <div className="flex items-center gap-2 min-w-[250px]">
+        <Input
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://..."
+          disabled={isLoading}
+          className="h-8 text-sm"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSave();
+            if (e.key === 'Escape') handleCancel();
+          }}
+        />
+        <Button
+          size="sm"
+          onClick={handleSave}
+          disabled={isLoading}
+          className="h-8 px-2"
+        >
+          OK
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={handleCancel}
+          disabled={isLoading}
+          className="h-8 px-2"
+        >
+          ✕
+        </Button>
+      </div>
+    );
+  }
+
+  const handleCopyUrl = async () => {
+    if (!audiencia.url_audiencia_virtual) return;
+    try {
+      await navigator.clipboard.writeText(audiencia.url_audiencia_virtual);
+    } catch (error) {
+      console.error('Erro ao copiar URL:', error);
+    }
+  };
+
+  const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
+  const logoPath = getLogoPlataforma(plataforma);
+
+  if (!audiencia.url_audiencia_virtual) {
+    return (
+      <div className="relative group bg-white h-full w-full min-h-[60px] flex items-center justify-center p-2">
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setIsEditing(true)}
+          className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
+          title="Adicionar URL"
+        >
+          <Plus className="h-3.5 w-3.5" />
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative group bg-white h-full w-full min-h-[60px] flex items-center justify-center p-3">
+      {logoPath ? (
+        <a
+          href={audiencia.url_audiencia_virtual}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:opacity-70 transition-opacity flex items-center justify-center"
+        >
+          <Image
+            src={logoPath}
+            alt={plataforma || 'Plataforma de vídeo'}
+            width={80}
+            height={30}
+            className="object-contain"
+          />
+        </a>
+      ) : (
+        <a
+          href={audiencia.url_audiencia_virtual}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-blue-600 hover:underline truncate max-w-[100px]"
+        >
+          {audiencia.url_audiencia_virtual}
+        </a>
+      )}
+      <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={handleCopyUrl}
+          className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
+          title="Copiar URL"
+        >
+          <Copy className="h-3 w-3" />
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setIsEditing(true)}
+          className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
+          title="Editar URL"
+        >
+          <Pencil className="h-3 w-3" />
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 /**
  * Componente para atribuir responsável a uma audiência
@@ -170,7 +359,7 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
           <div className="text-sm font-medium">Processo</div>
         </div>
       ),
-      size: 350,
+      size: 250,
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
@@ -179,7 +368,7 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
         const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[350px]">
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
@@ -251,6 +440,21 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
           </div>
         );
       },
+    },
+    {
+      accessorKey: 'url_audiencia_virtual',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">URL Virtual</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 120,
+      cell: ({ row }) => (
+        <div className="h-full w-full">
+          <UrlVirtualCell audiencia={row.original} onSuccess={onSuccess} />
+        </div>
+      ),
     },
     {
       accessorKey: 'responsavel_id',

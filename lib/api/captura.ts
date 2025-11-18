@@ -309,3 +309,63 @@ export const FILTROS_PRAZO: { value: FiltroPrazoPendentes; label: string }[] = [
   { value: 'sem_prazo', label: 'Sem Prazo' },
   { value: 'no_prazo', label: 'No Prazo' },
 ];
+
+/**
+ * Buscar registro de captura por ID
+ */
+export async function buscarCapturaLog(id: number): Promise<CapturaApiResponse> {
+  try {
+    const response = await fetch(`/api/captura/historico/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+      };
+    }
+
+    return data;
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro desconhecido ao buscar captura',
+    };
+  }
+}
+
+/**
+ * Deletar registro de captura por ID
+ */
+export async function deletarCapturaLog(id: number): Promise<CapturaApiResponse> {
+  try {
+    const response = await fetch(`/api/captura/historico/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+      };
+    }
+
+    return data;
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro desconhecido ao deletar captura',
+    };
+  }
+}

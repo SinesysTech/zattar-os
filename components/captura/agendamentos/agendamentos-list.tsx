@@ -71,9 +71,10 @@ const formatarPeriodicidade = (periodicidade: string, diasIntervalo: number | nu
 interface AgendamentosListProps {
   onEdit?: (agendamento: Agendamento) => void;
   onRefresh?: () => void;
+  actionButton?: React.ReactNode;
 }
 
-export function AgendamentosList({ onEdit, onRefresh }: AgendamentosListProps) {
+export function AgendamentosList({ onEdit, onRefresh, actionButton }: AgendamentosListProps) {
   const [pagina, setPagina] = React.useState(1);
   const [limite, setLimite] = React.useState(50);
   const { agendamentos, paginacao, isLoading, error, refetch } = useAgendamentos({
@@ -282,26 +283,36 @@ export function AgendamentosList({ onEdit, onRefresh }: AgendamentosListProps) {
   );
 
   return (
-    <DataTable
-      data={agendamentos}
-      columns={colunas}
-      pagination={
-        paginacao
-          ? {
-              pageIndex: paginacao.pagina - 1,
-              pageSize: paginacao.limite,
-              total: paginacao.total,
-              totalPages: paginacao.totalPaginas,
-              onPageChange: setPagina,
-              onPageSizeChange: setLimite,
-            }
-          : undefined
-      }
-      sorting={undefined}
-      isLoading={isLoading}
-      error={error}
-      emptyMessage="Nenhum agendamento encontrado."
-    />
+    <div className="space-y-4">
+      {/* Ações */}
+      {actionButton && (
+        <div className="flex justify-end">
+          {actionButton}
+        </div>
+      )}
+
+      {/* Tabela */}
+      <DataTable
+        data={agendamentos}
+        columns={colunas}
+        pagination={
+          paginacao
+            ? {
+                pageIndex: paginacao.pagina - 1,
+                pageSize: paginacao.limite,
+                total: paginacao.total,
+                totalPages: paginacao.totalPaginas,
+                onPageChange: setPagina,
+                onPageSizeChange: setLimite,
+              }
+            : undefined
+        }
+        sorting={undefined}
+        isLoading={isLoading}
+        error={error}
+        emptyMessage="Nenhum agendamento encontrado."
+      />
+    </div>
   );
 }
 

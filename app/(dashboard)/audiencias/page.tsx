@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Copy, Pencil } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Copy, Pencil, Plus } from 'lucide-react';
 import { AudienciasVisualizacaoSemana } from '@/components/audiencias-visualizacao-semana';
 import { AudienciasVisualizacaoMes } from '@/components/audiencias-visualizacao-mes';
 import { AudienciasVisualizacaoAno } from '@/components/audiencias-visualizacao-ano';
@@ -297,26 +297,28 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
 
   if (!audiencia.url_audiencia_virtual) {
     return (
-      <Button
-        size="sm"
-        variant="outline"
-        onClick={() => setIsEditing(true)}
-        className="h-8 text-xs"
-      >
-        <Pencil className="h-3 w-3 mr-1" />
-        Adicionar URL
-      </Button>
+      <div className="relative group bg-white h-full w-full min-h-[60px] flex items-center justify-center p-2">
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setIsEditing(true)}
+          className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
+          title="Adicionar URL"
+        >
+          <Plus className="h-3.5 w-3.5" />
+        </Button>
+      </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="relative group bg-white h-full w-full min-h-[60px] flex items-center justify-center p-3">
       {logoPath ? (
         <a
           href={audiencia.url_audiencia_virtual}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:opacity-70 transition-opacity"
+          className="hover:opacity-70 transition-opacity flex items-center justify-center"
         >
           <Image
             src={logoPath}
@@ -331,29 +333,31 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
           href={audiencia.url_audiencia_virtual}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-blue-600 hover:underline truncate max-w-[150px]"
+          className="text-xs text-blue-600 hover:underline truncate max-w-[100px]"
         >
           {audiencia.url_audiencia_virtual}
         </a>
       )}
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={handleCopyUrl}
-        className="h-7 w-7 p-0"
-        title="Copiar URL"
-      >
-        <Copy className="h-3.5 w-3.5" />
-      </Button>
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={() => setIsEditing(true)}
-        className="h-7 w-7 p-0"
-        title="Editar URL"
-      >
-        <Pencil className="h-3.5 w-3.5" />
-      </Button>
+      <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={handleCopyUrl}
+          className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
+          title="Copiar URL"
+        >
+          <Copy className="h-3 w-3" />
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setIsEditing(true)}
+          className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
+          title="Editar URL"
+        >
+          <Pencil className="h-3 w-3" />
+        </Button>
+      </div>
     </div>
   );
 }
@@ -467,7 +471,7 @@ function criarColunas(
         </div>
       ),
       enableSorting: false,
-      size: 350,
+      size: 250,
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
@@ -476,7 +480,7 @@ function criarColunas(
         const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[350px]">
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
@@ -559,9 +563,9 @@ function criarColunas(
         </div>
       ),
       enableSorting: false,
-      size: 280,
+      size: 120,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-start justify-start px-2">
+        <div className="h-full w-full">
           <UrlVirtualCell audiencia={row.original} onSuccess={onSuccess} />
         </div>
       ),
