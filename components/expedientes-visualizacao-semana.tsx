@@ -516,10 +516,10 @@ function criarColunasSemanais(
 
         return (
           <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[220px]">
-            <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit whitespace-nowrap max-w-full truncate text-xs`}>
+            <Badge variant="outline" className={`${getParteAutoraColorClass()} whitespace-nowrap max-w-full truncate text-xs`}>
               {parteAutora}
             </Badge>
-            <Badge variant="outline" className={`${getParteReColorClass()} w-fit whitespace-nowrap max-w-full truncate text-xs`}>
+            <Badge variant="outline" className={`${getParteReColorClass()} whitespace-nowrap max-w-full truncate text-xs`}>
               {parteRe}
             </Badge>
           </div>

@@ -1,6 +1,6 @@
-import type { TipoCaptura } from '@/backend/types/captura/capturas-log-types';
 'use client';
 
+import type { TipoCaptura } from '@/backend/types/captura/capturas-log-types';
 import * as React from 'react';
 import { DataTable } from '@/components/data-table';
 import { DataTableColumnHeader } from '@/components/data-table-column-header';
