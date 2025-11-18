@@ -31,19 +31,7 @@ import { atualizarTipoDescricaoExpediente } from '@/backend/pendentes/services/a
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               tipoExpedienteId:
- *                 type: integer
- *                 nullable: true
- *                 description: ID do tipo de expediente (null para remover tipo)
- *               descricaoArquivos:
- *                 type: string
- *                 nullable: true
- *                 description: Descrição ou referência a arquivos relacionados
- *           example:
- *             tipoExpedienteId: 1
- *             descricaoArquivos: "Documentos anexados: petição inicial, documentos pessoais"
+ *             $ref: '#/components/schemas/AtualizarTipoDescricaoRequest'
  *     responses:
  *       200:
  *         description: Tipo e descrição atualizados com sucesso

@@ -40,7 +40,6 @@ import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { useTiposExpedientes } from '@/lib/hooks/use-tipos-expedientes';
 import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
-import { Button } from '@/components/ui/button';
 import { CheckCircle2, XCircle, Undo2 } from 'lucide-react';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
@@ -128,6 +127,12 @@ function TipoDescricaoCell({
     expediente.descricao_arquivos || ''
   );
 
+  // Sincronizar estado quando expediente mudar
+  React.useEffect(() => {
+    setTipoSelecionado(expediente.tipo_expediente_id?.toString() || 'null');
+    setDescricao(expediente.descricao_arquivos || '');
+  }, [expediente.tipo_expediente_id, expediente.descricao_arquivos]);
+
   const handleSave = async () => {
     setIsLoading(true);
     try {
@@ -181,29 +186,33 @@ function TipoDescricaoCell({
           </div>
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-80" align="start">
+      <PopoverContent className="w-80 z-[100]" align="start">
         <div className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium">Tipo de Expediente</label>
             <Select
               value={tipoSelecionado}
               onValueChange={setTipoSelecionado}
-              disabled={isLoading}
+              disabled={isLoading || tiposExpedientes.length === 0}
             >
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Selecione o tipo">
                   {tipoSelecionado === 'null' 
                     ? 'Sem tipo' 
-                    : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipo_expediente}
+                    : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipo_expediente || 'Selecione o tipo'}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-h-[300px] z-[200]">
                 <SelectItem value="null">Sem tipo</SelectItem>
-                {tiposExpedientes.map((tipo) => (
-                  <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                    {tipo.tipo_expediente}
-                  </SelectItem>
-                ))}
+                {tiposExpedientes.length > 0 ? (
+                  tiposExpedientes.map((tipo) => (
+                    <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                      {tipo.tipo_expediente}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="" disabled>Carregando tipos...</SelectItem>
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -558,7 +567,17 @@ export default function ExpedientesPage() {
   const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 1000 });
   
   // Buscar tipos de expedientes uma única vez para compartilhar entre todas as células
-  const { tiposExpedientes } = useTiposExpedientes({ limite: 1000 });
+  const { tiposExpedientes, isLoading: isLoadingTipos, error: errorTipos } = useTiposExpedientes({ limite: 1000 });
+  
+  // Debug: verificar se tipos estão sendo carregados
+  React.useEffect(() => {
+    if (errorTipos) {
+      console.error('Erro ao carregar tipos de expedientes:', errorTipos);
+    }
+    if (!isLoadingTipos && tiposExpedientes.length > 0) {
+      console.log('Tipos de expedientes carregados:', tiposExpedientes.length);
+    }
+  }, [tiposExpedientes, isLoadingTipos, errorTipos]);
 
   const handleSuccess = React.useCallback(() => {
     refetch();

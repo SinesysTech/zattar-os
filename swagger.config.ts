@@ -166,6 +166,23 @@ const options: Options = {
             },
           },
         },
+        AtualizarTipoDescricaoRequest: {
+          type: 'object',
+          properties: {
+            tipoExpedienteId: {
+              type: 'integer',
+              nullable: true,
+              description: 'ID do tipo de expediente. Use null para remover tipo.',
+              example: 1,
+            },
+            descricaoArquivos: {
+              type: 'string',
+              nullable: true,
+              description: 'Descrição ou referência a arquivos relacionados',
+              example: 'Documentos anexados: petição inicial, documentos pessoais',
+            },
+          },
+        },
         AtribuirResponsavelResponse: {
           type: 'object',
           properties: {

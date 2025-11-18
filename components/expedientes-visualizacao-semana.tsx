@@ -27,7 +27,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
 import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -93,6 +92,149 @@ const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
 const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
   return grau === 'primeiro_grau' ? '1º Grau' : '2º Grau';
 };
+
+/**
+ * Componente para editar tipo e descrição de um expediente
+ */
+function TipoDescricaoCell({ 
+  expediente, 
+  onSuccess, 
+  tiposExpedientes 
+}: { 
+  expediente: PendenteManifestacao; 
+  onSuccess: () => void;
+  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+}) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [tipoSelecionado, setTipoSelecionado] = React.useState<string>(
+    expediente.tipo_expediente_id?.toString() || 'null'
+  );
+  const [descricao, setDescricao] = React.useState<string>(
+    expediente.descricao_arquivos || ''
+  );
+
+  // Sincronizar estado quando expediente mudar
+  React.useEffect(() => {
+    setTipoSelecionado(expediente.tipo_expediente_id?.toString() || 'null');
+    setDescricao(expediente.descricao_arquivos || '');
+  }, [expediente.tipo_expediente_id, expediente.descricao_arquivos]);
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      const tipoExpedienteId = tipoSelecionado === 'null' ? null : parseInt(tipoSelecionado, 10);
+      const descricaoArquivos = descricao.trim() || null;
+
+      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/tipo-descricao`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tipoExpedienteId,
+          descricaoArquivos,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao atualizar tipo e descrição');
+      }
+
+      setIsOpen(false);
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao atualizar tipo e descrição:', error);
+      setIsOpen(false);
+      onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipo_expediente_id);
+  const tipoNome = tipoExpediente ? tipoExpediente.tipo_expediente : 'Sem tipo';
+  const descricaoExibicao = expediente.descricao_arquivos || '-';
+
+  return (
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer"
+        >
+          <Badge variant="outline" className="text-xs w-fit">
+            {tipoNome}
+          </Badge>
+          <div className="text-xs text-muted-foreground truncate">
+            {descricaoExibicao}
+          </div>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80 z-[100]" align="start">
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Tipo de Expediente</label>
+            <Select
+              value={tipoSelecionado}
+              onValueChange={setTipoSelecionado}
+              disabled={isLoading || tiposExpedientes.length === 0}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecione o tipo">
+                  {tipoSelecionado === 'null' 
+                    ? 'Sem tipo' 
+                    : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipo_expediente || 'Selecione o tipo'}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px] z-[200]">
+                <SelectItem value="null">Sem tipo</SelectItem>
+                {tiposExpedientes.length > 0 ? (
+                  tiposExpedientes.map((tipo) => (
+                    <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                      {tipo.tipo_expediente}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="" disabled>Carregando tipos...</SelectItem>
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Descrição / Arquivos</label>
+            <Textarea
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
+              placeholder="Digite a descrição ou referência aos arquivos..."
+              disabled={isLoading}
+              rows={3}
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsOpen(false)}
+              disabled={isLoading}
+            >
+              Cancelar
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleSave}
+              disabled={isLoading}
+            >
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Salvar
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 /**
  * Componente para atribuir responsável a um expediente
@@ -241,23 +383,13 @@ function criarColunasSemanais(
       id: 'tipo_descricao',
       header: () => <div className="text-sm font-medium">Tipo / Descrição</div>,
       size: 250,
-      cell: ({ row }) => {
-        const expediente = row.original;
-        const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipo_expediente_id);
-        const tipoNome = tipoExpediente ? tipoExpediente.tipo_expediente : 'Sem tipo';
-        const descricao = expediente.descricao_arquivos || '-';
-
-        return (
-          <div className="flex flex-col gap-1">
-            <Badge variant="outline" className="text-xs w-fit">
-              {tipoNome}
-            </Badge>
-            <div className="text-xs text-muted-foreground truncate">
-              {descricao}
-            </div>
-          </div>
-        );
-      },
+      cell: ({ row }) => (
+        <TipoDescricaoCell 
+          expediente={row.original} 
+          onSuccess={onSuccess} 
+          tiposExpedientes={tiposExpedientes} 
+        />
+      ),
     },
     {
       accessorKey: 'data_ciencia_parte',

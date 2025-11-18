@@ -7,6 +7,7 @@ import { getCredentialComplete } from '@/backend/captura/credentials/credential.
 import { acervoGeralCapture } from '@/backend/captura/services/trt/acervo-geral.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
+import { ordenarCredenciaisPorTRT } from '@/backend/captura/utils/ordenar-credenciais';
 
 /**
  * @swagger
@@ -187,7 +188,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 4. Criar registro de histórico de captura
+    // 4. Ordenar credenciais por número do TRT (TRT1, TRT2, ..., TRT10, ...)
+    const credenciaisOrdenadas = ordenarCredenciaisPorTRT(
+      credenciaisCompletas.filter((c): c is NonNullable<typeof c> => c !== null)
+    );
+
+    // 5. Criar registro de histórico de captura
     let logId: number | null = null;
     try {
       logId = await iniciarCapturaLog({
@@ -201,66 +207,82 @@ export async function POST(request: NextRequest) {
       // Continuar mesmo se falhar o registro de histórico
     }
 
-    // 5. Processar cada credencial (assíncrono, não bloqueia resposta)
-    Promise.all(
-      credenciaisCompletas.map(async (credCompleta) => {
-        if (!credCompleta) return null;
+    // 6. Processar cada credencial SEQUENCIALMENTE (não bloqueia resposta)
+    (async () => {
+      const resultados: Array<{
+        credencial_id: number;
+        tribunal: string;
+        grau: string;
+        resultado?: unknown;
+        erro?: string;
+      }> = [];
+
+      for (const credCompleta of credenciaisOrdenadas) {
+        console.log(`[Acervo Geral] Iniciando captura: ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);
 
         // Buscar configuração do tribunal
         const tribunalConfig = getTribunalConfig(credCompleta.tribunal, credCompleta.grau);
         if (!tribunalConfig) {
           console.error(`Tribunal configuration not found for ${credCompleta.tribunal} ${credCompleta.grau}`);
-          return null;
+          resultados.push({
+            credencial_id: credCompleta.credentialId,
+            tribunal: credCompleta.tribunal,
+            grau: credCompleta.grau,
+            erro: 'Configuração do tribunal não encontrada',
+          });
+          continue;
         }
 
-        // Executar captura
+        // Executar captura sequencialmente
         try {
           const resultado = await acervoGeralCapture({
             credential: credCompleta.credenciais,
             config: tribunalConfig,
           });
 
-          return {
+          console.log(`[Acervo Geral] Captura concluída: ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);
+
+          resultados.push({
             credencial_id: credCompleta.credentialId,
             tribunal: credCompleta.tribunal,
             grau: credCompleta.grau,
             resultado,
-          };
+          });
         } catch (error) {
-          console.error(`Erro ao capturar para credencial ${credCompleta.credentialId}:`, error);
-          return {
+          console.error(`[Acervo Geral] Erro ao capturar ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId}):`, error);
+          resultados.push({
             credencial_id: credCompleta.credentialId,
             tribunal: credCompleta.tribunal,
             grau: credCompleta.grau,
             erro: error instanceof Error ? error.message : 'Erro desconhecido',
-          };
+          });
         }
-      })
-    ).then(async (resultados) => {
-      // Atualizar histórico após conclusão
+      }
+
+      // Atualizar histórico após conclusão de todas as capturas
       if (logId) {
         try {
-          const resultadosFiltrados = resultados.filter((r): r is NonNullable<typeof r> => r !== null);
-          const temErros = resultadosFiltrados.some((r) => 'erro' in r);
+          const temErros = resultados.some((r) => 'erro' in r);
           
           if (temErros) {
-            const erros = resultadosFiltrados
+            const erros = resultados
               .filter((r) => 'erro' in r)
-              .map((r) => `Credencial ${r.credencial_id}: ${r.erro}`)
+              .map((r) => `${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${r.erro}`)
               .join('; ');
             await finalizarCapturaLogErro(logId, erros);
           } else {
             await finalizarCapturaLogSucesso(logId, {
-              credenciais_processadas: resultadosFiltrados.length,
-              resultados: resultadosFiltrados,
+              credenciais_processadas: resultados.length,
+              resultados,
             });
           }
+          console.log(`[Acervo Geral] Processamento concluído. Total: ${resultados.length} credenciais processadas.`);
         } catch (error) {
           console.error('Erro ao atualizar histórico de captura:', error);
         }
       }
-    }).catch((error) => {
-      console.error('Erro ao processar capturas:', error);
+    })().catch((error) => {
+      console.error('[Acervo Geral] Erro ao processar capturas:', error);
       if (logId) {
         finalizarCapturaLogErro(logId, error instanceof Error ? error.message : 'Erro desconhecido').catch(
           (err) => console.error('Erro ao registrar erro no histórico:', err)
@@ -268,7 +290,7 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // 6. Retornar resultado imediato (resposta assíncrona)
+    // 7. Retornar resultado imediato (resposta assíncrona)
     return NextResponse.json({
       success: true,
       message: 'Captura iniciada com sucesso',
