@@ -2,9 +2,7 @@
 
 ## Purpose
 Sistema de captura automatizada de dados do Processo Judicial Eletrônico dos Tribunais Regionais do Trabalho (PJE-TRT). Realiza autenticação via SSO com suporte a 2FA (OTP) e captura acervo geral, processos arquivados, audiências e pendências de manifestação através de web scraping automatizado.
-
 ## Requirements
-
 ### Requirement: Autenticação SSO com 2FA
 O sistema MUST autenticar usuários no sistema PJE-TRT através de Single Sign-On (SSO) com suporte a autenticação de dois fatores (2FA) via OTP.
 
@@ -126,28 +124,39 @@ O sistema MUST registrar logs detalhados de todas as operações de captura.
 - **AND** permitir diagnóstico e correção
 
 ### Requirement: API REST para Captura
-O sistema MUST fornecer endpoints REST para iniciar capturas de dados do PJE-TRT.
+O sistema MUST fornecer endpoints REST para iniciar capturas de dados do PJE-TRT usando credenciais identificadas por ID.
 
-#### Scenario: Endpoint POST /api/captura/trt/acervo-geral
-- **WHEN** uma requisição POST é enviada com credenciais válidas
-- **THEN** o sistema deve iniciar captura de acervo geral
-- **AND** retornar status da operação
-- **AND** incluir quantidade de processos capturados
+#### Scenario: Endpoint POST /api/captura/trt/acervo-geral com credencial_id
+- **WHEN** uma requisição POST é enviada com `advogado_id` e `credencial_ids[]`
+- **THEN** o sistema deve buscar credenciais pelos IDs fornecidos
+- **AND** extrair tribunal e grau de cada credencial
+- **AND** iniciar captura de acervo geral para cada credencial
+- **AND** retornar status da operação com identificador de captura
+- **AND** registrar captura no histórico com status "in_progress"
 
-#### Scenario: Endpoint POST /api/captura/trt/arquivados
-- **WHEN** uma requisição POST é enviada
-- **THEN** o sistema deve iniciar captura de processos arquivados
+#### Scenario: Endpoint POST /api/captura/trt/arquivados com credencial_id
+- **WHEN** uma requisição POST é enviada com `advogado_id` e `credencial_ids[]`
+- **THEN** o sistema deve buscar credenciais pelos IDs fornecidos
+- **AND** iniciar captura de processos arquivados para cada credencial
 - **AND** retornar resultado da operação
 
-#### Scenario: Endpoint POST /api/captura/trt/audiencias
-- **WHEN** uma requisição POST é enviada
-- **THEN** o sistema deve iniciar captura de audiências
+#### Scenario: Endpoint POST /api/captura/trt/audiencias com credencial_id
+- **WHEN** uma requisição POST é enviada com `advogado_id` e `credencial_ids[]`
+- **THEN** o sistema deve buscar credenciais pelos IDs fornecidos
+- **AND** iniciar captura de audiências para cada credencial
 - **AND** retornar lista de audiências capturadas
 
-#### Scenario: Endpoint POST /api/captura/trt/pendentes-manifestacao
-- **WHEN** uma requisição POST é enviada
-- **THEN** o sistema deve iniciar captura de pendências
+#### Scenario: Endpoint POST /api/captura/trt/pendentes-manifestacao com credencial_id
+- **WHEN** uma requisição POST é enviada com `advogado_id` e `credencial_ids[]`
+- **THEN** o sistema deve buscar credenciais pelos IDs fornecidos
+- **AND** iniciar captura de pendências para cada credencial
 - **AND** retornar lista de pendências capturadas
+
+#### Scenario: Resposta assíncrona para capturas longas
+- **WHEN** uma captura é iniciada e pode levar vários minutos
+- **THEN** o sistema deve retornar resposta imediata com status "in_progress"
+- **AND** incluir identificador de captura para consulta posterior
+- **AND** registrar captura no histórico para acompanhamento
 
 ### Requirement: Tratamento de Erros e Rate Limiting
 O sistema MUST tratar adequadamente erros de rede, timeouts e rate limiting do PJE.
@@ -166,3 +175,122 @@ O sistema MUST tratar adequadamente erros de rede, timeouts e rate limiting do P
 - **WHEN** ocorre erro de conexão de rede
 - **THEN** o sistema deve retornar erro apropriado
 - **AND** não corromper dados parcialmente capturados
+
+### Requirement: Interface de Usuário para Captura de Dados
+O sistema SHALL fornecer uma interface de usuário web que permita aos usuários iniciar e monitorar capturas de dados do PJE-TRT através dos endpoints REST disponíveis.
+
+#### Scenario: Acesso à página de captura
+- **WHEN** um usuário autenticado acessa a página de captura
+- **THEN** o sistema deve exibir formulários para cada tipo de captura disponível
+- **AND** deve permitir seleção de advogado, TRT e grau
+- **AND** deve exibir instruções claras sobre cada tipo de captura
+
+#### Scenario: Iniciar captura de acervo geral
+- **WHEN** um usuário preenche o formulário de acervo geral com advogado_id, trt_codigo e grau válidos
+- **AND** clica no botão de captura
+- **THEN** o sistema deve enviar requisição POST para `/api/captura/trt/acervo-geral`
+- **AND** deve exibir indicador de loading durante a requisição
+- **AND** deve exibir resultado da captura (sucesso ou erro) após conclusão
+- **AND** deve mostrar quantidade de processos capturados quando bem-sucedida
+
+#### Scenario: Iniciar captura de processos arquivados
+- **WHEN** um usuário preenche o formulário de arquivados com parâmetros válidos
+- **AND** clica no botão de captura
+- **THEN** o sistema deve enviar requisição POST para `/api/captura/trt/arquivados`
+- **AND** deve exibir feedback visual durante e após a operação
+- **AND** deve mostrar total de processos arquivados capturados
+
+#### Scenario: Iniciar captura de audiências com período
+- **WHEN** um usuário preenche o formulário de audiências com advogado_id, trt_codigo, grau
+- **AND** opcionalmente fornece dataInicio e dataFim
+- **AND** clica no botão de captura
+- **THEN** o sistema deve enviar requisição POST para `/api/captura/trt/audiencias`
+- **AND** deve incluir datas fornecidas no corpo da requisição
+- **AND** deve usar datas padrão (hoje até +365 dias) se não fornecidas
+- **AND** deve exibir total de audiências capturadas e período utilizado
+
+#### Scenario: Iniciar captura de pendências com filtro de prazo
+- **WHEN** um usuário preenche o formulário de pendências com parâmetros válidos
+- **AND** seleciona filtroPrazo (no_prazo ou sem_prazo)
+- **AND** clica no botão de captura
+- **THEN** o sistema deve enviar requisição POST para `/api/captura/trt/pendentes-manifestacao`
+- **AND** deve incluir filtroPrazo no corpo da requisição
+- **AND** deve usar "sem_prazo" como padrão se não fornecido
+- **AND** deve exibir total de pendências capturadas e filtro utilizado
+
+#### Scenario: Tratamento de erros de autenticação
+- **WHEN** uma requisição de captura retorna status 401 (Não autenticado)
+- **THEN** o sistema deve exibir mensagem de erro apropriada
+- **AND** deve redirecionar para página de login se necessário
+
+#### Scenario: Tratamento de credenciais não encontradas
+- **WHEN** uma requisição de captura retorna status 404 com mensagem de credencial não encontrada
+- **THEN** o sistema deve exibir mensagem de erro clara
+- **AND** deve indicar que é necessário cadastrar credenciais para o advogado/TRT/grau especificado
+
+#### Scenario: Tratamento de parâmetros inválidos
+- **WHEN** uma requisição de captura retorna status 400 (Parâmetros inválidos)
+- **THEN** o sistema deve exibir mensagem de erro específica
+- **AND** deve destacar quais campos estão incorretos
+- **AND** deve permitir correção e nova tentativa
+
+#### Scenario: Tratamento de erros de servidor
+- **WHEN** uma requisição de captura retorna status 500 (Erro interno)
+- **THEN** o sistema deve exibir mensagem de erro genérica
+- **AND** deve sugerir tentar novamente mais tarde
+- **AND** deve registrar o erro para diagnóstico
+
+#### Scenario: Validação de formulários no cliente
+- **WHEN** um usuário tenta submeter formulário sem campos obrigatórios preenchidos
+- **THEN** o sistema deve impedir o envio da requisição
+- **AND** deve destacar campos obrigatórios não preenchidos
+- **AND** deve exibir mensagens de validação apropriadas
+
+#### Scenario: Feedback visual durante captura
+- **WHEN** uma captura está em andamento
+- **THEN** o sistema deve exibir indicador de loading
+- **AND** deve desabilitar botão de captura para evitar requisições duplicadas
+- **AND** deve mostrar mensagem informando que a captura está em progresso
+
+#### Scenario: Exibição de resultados de captura
+- **WHEN** uma captura é concluída com sucesso
+- **THEN** o sistema deve exibir toast de sucesso
+- **AND** deve mostrar resumo dos dados capturados (total de processos/audiências/pendências)
+- **AND** deve exibir informações de persistência quando disponíveis (total, atualizados, erros)
+
+### Requirement: Desacoplamento Front-end e Back-end
+O front-end SHALL comunicar-se exclusivamente com o back-end através de chamadas HTTP REST para os endpoints de API, sem importações diretas de código do back-end.
+
+#### Scenario: Comunicação via API REST apenas
+- **WHEN** o front-end precisa executar uma captura
+- **THEN** o sistema deve fazer requisição HTTP POST para o endpoint apropriado
+- **AND** não deve importar serviços ou funções diretamente do diretório `backend/`
+- **AND** deve usar apenas tipos TypeScript compartilhados quando necessário
+
+#### Scenario: Cliente API isolado
+- **WHEN** o front-end precisa chamar endpoints de captura
+- **THEN** o sistema deve usar um cliente API centralizado em `lib/api/captura.ts`
+- **AND** este cliente deve encapsular todas as chamadas HTTP
+- **AND** deve tratar autenticação e formatação de requisições/respostas
+
+#### Scenario: Tipos compartilhados
+- **WHEN** o front-end precisa usar tipos de dados de captura
+- **THEN** o sistema deve importar tipos de `backend/types/captura/` apenas para definições TypeScript
+- **AND** não deve importar implementações ou lógica de negócio do back-end
+
+### Requirement: Histórico de Capturas
+O sistema MUST manter histórico de todas as capturas realizadas para consulta e auditoria.
+
+#### Scenario: Listar histórico de capturas
+- **WHEN** um usuário acessa o endpoint GET /api/captura/historico
+- **THEN** o sistema deve retornar lista de capturas realizadas
+- **AND** incluir status, tipo de captura, advogado, credenciais utilizadas
+- **AND** incluir resultado ou erro se disponível
+- **AND** ordenar por data de início (mais recentes primeiro)
+
+#### Scenario: Consultar status de captura específica
+- **WHEN** um usuário consulta uma captura pelo ID
+- **THEN** o sistema deve retornar status atual (pending, in_progress, completed, failed)
+- **AND** incluir resultado completo se concluída
+- **AND** incluir mensagem de erro se falhou
+

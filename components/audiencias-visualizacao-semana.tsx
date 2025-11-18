@@ -6,13 +6,19 @@ import * as React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Audiencia } from '@/backend/types/audiencias/types';
+import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 /**
- * Formata apenas hora ISO para formato brasileiro (HH:mm)
+ * Formata apenas hora ISO para formato brasileiro (HH:mmh)
  */
 const formatarHora = (dataISO: string | null): string => {
   if (!dataISO) return '-';
@@ -21,7 +27,7 @@ const formatarHora = (dataISO: string | null): string => {
     return data.toLocaleTimeString('pt-BR', {
       hour: '2-digit',
       minute: '2-digit',
-    });
+    }) + 'h';
   } catch {
     return '-';
   }
@@ -73,9 +79,75 @@ const getParteReColorClass = (): string => {
 };
 
 /**
+ * Componente para atribuir responsável a uma audiência
+ */
+function ResponsavelCell({
+  audiencia,
+  onSuccess,
+  usuarios
+}: {
+  audiencia: Audiencia;
+  onSuccess: () => void;
+  usuarios: Usuario[];
+}) {
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleChange = async (value: string) => {
+    setIsLoading(true);
+    try {
+      const responsavelId = value === 'null' || value === '' ? null : parseInt(value, 10);
+
+      const response = await fetch(`/api/audiencias/${audiencia.id}/responsavel`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ responsavelId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao atribuir responsável');
+      }
+
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao atribuir responsável:', error);
+      onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const responsavelAtual = usuarios.find(u => u.id === audiencia.responsavel_id);
+
+  return (
+    <Select
+      value={audiencia.responsavel_id?.toString() || 'null'}
+      onValueChange={handleChange}
+      disabled={isLoading}
+    >
+      <SelectTrigger className="w-[200px]">
+        <SelectValue placeholder="Sem responsável">
+          {responsavelAtual ? responsavelAtual.nomeExibicao : 'Sem responsável'}
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="null">Sem responsável</SelectItem>
+        {usuarios.map((usuario) => (
+          <SelectItem key={usuario.id} value={usuario.id.toString()}>
+            {usuario.nomeExibicao}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+/**
  * Define as colunas da tabela de audiências para visualização semanal
  */
-function criarColunasSemanais(): ColumnDef<Audiencia>[] {
+function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): ColumnDef<Audiencia>[] {
   return [
     {
       accessorKey: 'data_inicio',
@@ -162,16 +234,26 @@ function criarColunasSemanais(): ColumnDef<Audiencia>[] {
         );
       },
     },
+    {
+      accessorKey: 'responsavel_id',
+      header: () => <div className="text-sm font-medium">Responsável</div>,
+      size: 220,
+      cell: ({ row }) => (
+        <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} />
+      ),
+    },
   ];
 }
 
 interface AudienciasVisualizacaoSemanaProps {
   audiencias: Audiencia[];
   isLoading: boolean;
+  semanaAtual: Date;
+  usuarios: Usuario[];
+  onRefresh: () => void;
 }
 
-export function AudienciasVisualizacaoSemana({ audiencias, isLoading }: AudienciasVisualizacaoSemanaProps) {
-  const [semanaAtual, setSemanaAtual] = React.useState(new Date());
+export function AudienciasVisualizacaoSemana({ audiencias, isLoading, semanaAtual, usuarios, onRefresh }: AudienciasVisualizacaoSemanaProps) {
   const [diaAtivo, setDiaAtivo] = React.useState<string>('segunda');
 
   // Calcular início e fim da semana
@@ -259,14 +341,6 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading }: Audienci
     return datas;
   }, [inicioSemana]);
 
-  const formatarDataCabecalho = (data: Date) => {
-    return data.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  };
-
   const formatarDataTab = (data: Date) => {
     return data.toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -274,75 +348,33 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading }: Audienci
     });
   };
 
-  const navegarSemana = (direcao: 'anterior' | 'proxima') => {
-    const novaSemana = new Date(semanaAtual);
-    novaSemana.setDate(novaSemana.getDate() + (direcao === 'proxima' ? 7 : -7));
-    setSemanaAtual(novaSemana);
+  const formatarDataCompleta = (data: Date) => {
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
   };
 
   return (
     <div className="space-y-4">
-      {/* Navegação de semana */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarSemana('anterior')}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <div className="text-sm font-medium">
-            {formatarDataCabecalho(inicioSemana)} - {formatarDataCabecalho(fimSemana)}
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarSemana('proxima')}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-        <Button
-          variant="outline"
-          onClick={() => setSemanaAtual(new Date())}
-        >
-          Semana Atual
-        </Button>
-      </div>
-
       {/* Tabs de dias */}
       <Tabs value={diaAtivo} onValueChange={setDiaAtivo}>
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="segunda">
-            <div className="flex flex-col items-center">
-              <span className="text-xs">Seg</span>
-              <span className="text-xs font-medium">{formatarDataTab(datasDiasSemana.segunda)}</span>
-            </div>
+            <span className="text-xs">Segunda - {formatarDataTab(datasDiasSemana.segunda)}</span>
           </TabsTrigger>
           <TabsTrigger value="terca">
-            <div className="flex flex-col items-center">
-              <span className="text-xs">Ter</span>
-              <span className="text-xs font-medium">{formatarDataTab(datasDiasSemana.terca)}</span>
-            </div>
+            <span className="text-xs">Terça - {formatarDataTab(datasDiasSemana.terca)}</span>
           </TabsTrigger>
           <TabsTrigger value="quarta">
-            <div className="flex flex-col items-center">
-              <span className="text-xs">Qua</span>
-              <span className="text-xs font-medium">{formatarDataTab(datasDiasSemana.quarta)}</span>
-            </div>
+            <span className="text-xs">Quarta - {formatarDataTab(datasDiasSemana.quarta)}</span>
           </TabsTrigger>
           <TabsTrigger value="quinta">
-            <div className="flex flex-col items-center">
-              <span className="text-xs">Qui</span>
-              <span className="text-xs font-medium">{formatarDataTab(datasDiasSemana.quinta)}</span>
-            </div>
+            <span className="text-xs">Quinta - {formatarDataTab(datasDiasSemana.quinta)}</span>
           </TabsTrigger>
           <TabsTrigger value="sexta">
-            <div className="flex flex-col items-center">
-              <span className="text-xs">Sex</span>
-              <span className="text-xs font-medium">{formatarDataTab(datasDiasSemana.sexta)}</span>
-            </div>
+            <span className="text-xs">Sexta - {formatarDataTab(datasDiasSemana.sexta)}</span>
           </TabsTrigger>
         </TabsList>
 
@@ -362,7 +394,7 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading }: Audienci
                 data={audienciasDia}
                 columns={colunas}
                 isLoading={isLoading}
-                emptyMessage={`Nenhuma audiência agendada para ${nomeDiaCompleto}, ${formatarDataCabecalho(dataDia)}.`}
+                emptyMessage={`Nenhuma audiência agendada para ${nomeDiaCompleto}, ${formatarDataCompleta(dataDia)}.`}
               />
             </TabsContent>
           );

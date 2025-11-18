@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ChevronLeft, ChevronRight, CheckCircle2, Undo2, Loader2, Eye } from 'lucide-react';
+import { CheckCircle2, Undo2, Loader2, Eye } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -525,10 +525,10 @@ interface ExpedientesVisualizacaoSemanaProps {
   onRefresh?: () => void;
   usuarios: Usuario[];
   tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+  semanaAtual: Date;
 }
 
-export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefresh, usuarios, tiposExpedientes }: ExpedientesVisualizacaoSemanaProps) {
-  const [semanaAtual, setSemanaAtual] = React.useState(new Date());
+export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefresh, usuarios, tiposExpedientes, semanaAtual }: ExpedientesVisualizacaoSemanaProps) {
   const [diaAtivo, setDiaAtivo] = React.useState<string>('segunda');
 
   const handleSuccess = React.useCallback(() => {
@@ -583,59 +583,45 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
 
   const colunas = React.useMemo(() => criarColunasSemanais(handleSuccess, usuarios, tiposExpedientes), [handleSuccess, usuarios, tiposExpedientes]);
 
-  const formatarDataCabecalho = (data: Date) => {
+  // Calcular datas de cada dia da semana
+  const datasDiasSemana = React.useMemo(() => {
+    const datas: Record<string, Date> = {};
+    for (let i = 0; i < 5; i++) {
+      const data = new Date(inicioSemana);
+      data.setDate(inicioSemana.getDate() + i);
+      const diaNome = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'][i];
+      datas[diaNome] = data;
+    }
+    return datas;
+  }, [inicioSemana]);
+
+  const formatarDataTab = (data: Date) => {
     return data.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
     });
-  };
-
-  const navegarSemana = (direcao: 'anterior' | 'proxima') => {
-    const novaSemana = new Date(semanaAtual);
-    novaSemana.setDate(novaSemana.getDate() + (direcao === 'proxima' ? 7 : -7));
-    setSemanaAtual(novaSemana);
   };
 
   return (
     <div className="space-y-4">
-      {/* Navegação de semana */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarSemana('anterior')}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <div className="text-sm font-medium">
-            {formatarDataCabecalho(inicioSemana)} - {formatarDataCabecalho(fimSemana)}
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarSemana('proxima')}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-        <Button
-          variant="outline"
-          onClick={() => setSemanaAtual(new Date())}
-        >
-          Semana Atual
-        </Button>
-      </div>
-
       {/* Tabs de dias */}
       <Tabs value={diaAtivo} onValueChange={setDiaAtivo}>
         <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="segunda">Segunda</TabsTrigger>
-          <TabsTrigger value="terca">Terça</TabsTrigger>
-          <TabsTrigger value="quarta">Quarta</TabsTrigger>
-          <TabsTrigger value="quinta">Quinta</TabsTrigger>
-          <TabsTrigger value="sexta">Sexta</TabsTrigger>
+          <TabsTrigger value="segunda">
+            <span className="text-xs">Segunda - {formatarDataTab(datasDiasSemana.segunda)}</span>
+          </TabsTrigger>
+          <TabsTrigger value="terca">
+            <span className="text-xs">Terça - {formatarDataTab(datasDiasSemana.terca)}</span>
+          </TabsTrigger>
+          <TabsTrigger value="quarta">
+            <span className="text-xs">Quarta - {formatarDataTab(datasDiasSemana.quarta)}</span>
+          </TabsTrigger>
+          <TabsTrigger value="quinta">
+            <span className="text-xs">Quinta - {formatarDataTab(datasDiasSemana.quinta)}</span>
+          </TabsTrigger>
+          <TabsTrigger value="sexta">
+            <span className="text-xs">Sexta - {formatarDataTab(datasDiasSemana.sexta)}</span>
+          </TabsTrigger>
         </TabsList>
 
         {Object.entries(expedientesPorDia).map(([dia, expedientesDia]) => (
