@@ -19,13 +19,16 @@ interface CapturaResultProps {
     dataInicio?: string;
     dataFim?: string;
     filtroPrazo?: string;
+    credenciais_processadas?: number;
+    message?: string;
   };
+  captureId?: number | null;
 }
 
 /**
  * Componente para exibir resultados de captura
  */
-export function CapturaResult({ success, error, data }: CapturaResultProps) {
+export function CapturaResult({ success, error, data, captureId }: CapturaResultProps) {
   if (success === null) {
     return null;
   }
@@ -40,18 +43,39 @@ export function CapturaResult({ success, error, data }: CapturaResultProps) {
     );
   }
 
+  // Verificar se é resposta assíncrona (captura em progresso)
+  const isAsync = data?.message?.includes('background') || data?.credenciais_processadas !== undefined;
+
   return (
-    <Alert className="border-green-500 bg-green-50 dark:bg-green-950">
-      <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
-      <AlertTitle className="text-green-800 dark:text-green-200">
-        Captura Realizada com Sucesso
+    <Alert className={isAsync ? "border-blue-500 bg-blue-50 dark:bg-blue-950" : "border-green-500 bg-green-50 dark:bg-green-950"}>
+      <CheckCircle2 className={`h-4 w-4 ${isAsync ? "text-blue-600 dark:text-blue-400" : "text-green-600 dark:text-green-400"}`} />
+      <AlertTitle className={isAsync ? "text-blue-800 dark:text-blue-200" : "text-green-800 dark:text-green-200"}>
+        {isAsync ? 'Captura Iniciada com Sucesso' : 'Captura Realizada com Sucesso'}
       </AlertTitle>
-      <AlertDescription className="text-green-700 dark:text-green-300">
+      <AlertDescription className={isAsync ? "text-blue-700 dark:text-blue-300" : "text-green-700 dark:text-green-300"}>
         <div className="mt-2 space-y-2">
-          {data?.total !== undefined && (
-            <p>
-              <strong>Total capturado:</strong> {data.total}
-            </p>
+          {isAsync ? (
+            <>
+              <p>{data?.message || 'A captura está sendo processada em background.'}</p>
+              {data?.credenciais_processadas !== undefined && (
+                <p>
+                  <strong>Credenciais processadas:</strong> {data.credenciais_processadas}
+                </p>
+              )}
+              {captureId && (
+                <p className="text-sm mt-2">
+                  <strong>ID da captura:</strong> {captureId} (consulte o histórico para acompanhar o progresso)
+                </p>
+              )}
+            </>
+          ) : (
+            <>
+              {data?.total !== undefined && (
+                <p>
+                  <strong>Total capturado:</strong> {data.total}
+                </p>
+              )}
+            </>
           )}
           {data?.persistencia && (
             <div className="mt-3 space-y-1 text-sm">

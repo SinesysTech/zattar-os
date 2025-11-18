@@ -101,9 +101,17 @@ export interface PendentesResult {
 }
 
 /**
+ * Parâmetros base para captura (novo formato)
+ */
+export interface BaseCapturaParams {
+  advogado_id: number;
+  credencial_ids: number[];
+}
+
+/**
  * Parâmetros para captura de audiências
  */
-export interface AudienciasParams extends BaseCapturaTRTParams {
+export interface AudienciasParams extends BaseCapturaParams {
   dataInicio?: string;
   dataFim?: string;
 }
@@ -111,7 +119,7 @@ export interface AudienciasParams extends BaseCapturaTRTParams {
 /**
  * Parâmetros para captura de pendências
  */
-export interface PendentesParams extends BaseCapturaTRTParams {
+export interface PendentesParams extends BaseCapturaParams {
   filtroPrazo?: FiltroPrazoPendentes;
 }
 
@@ -149,7 +157,7 @@ export async function listarCredenciais(): Promise<CredenciaisApiResponse> {
  * Cliente API para captura de acervo geral
  */
 export async function capturarAcervoGeral(
-  params: BaseCapturaTRTParams
+  params: BaseCapturaParams
 ): Promise<CapturaApiResponse<AcervoGeralResult>> {
   try {
     const response = await fetch('/api/captura/trt/acervo-geral', {
@@ -182,7 +190,7 @@ export async function capturarAcervoGeral(
  * Cliente API para captura de processos arquivados
  */
 export async function capturarArquivados(
-  params: BaseCapturaTRTParams
+  params: BaseCapturaParams
 ): Promise<CapturaApiResponse<ArquivadosResult>> {
   try {
     const response = await fetch('/api/captura/trt/arquivados', {

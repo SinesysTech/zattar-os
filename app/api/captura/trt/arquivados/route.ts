@@ -5,6 +5,7 @@ import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
 import { arquivadosCapture } from '@/backend/captura/services/trt/arquivados.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
+import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
 
 /**
  * @swagger
@@ -64,6 +65,11 @@ import { getTribunalConfig } from '@/backend/captura/services/trt/config';
  *                   type: string
  *                   enum: [in_progress]
  *                   example: "in_progress"
+ *                 capture_id:
+ *                   type: integer
+ *                   nullable: true
+ *                   description: ID do registro de histórico da captura (para consulta posterior)
+ *                   example: 123
  *                 data:
  *                   type: object
  *                   properties:
@@ -187,25 +193,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 4. Processar cada credencial
-    const resultados = await Promise.all(
+    // 4. Criar registro de histórico de captura
+    let logId: number | null = null;
+    try {
+      logId = await iniciarCapturaLog({
+        tipo_captura: 'arquivados',
+        advogado_id: advogado_id,
+        credencial_ids: credencial_ids,
+        status: 'in_progress',
+      });
+    } catch (error) {
+      console.error('Erro ao criar registro de histórico:', error);
+    }
+
+    // 5. Processar cada credencial (assíncrono)
+    Promise.all(
       credenciaisCompletas.map(async (credCompleta) => {
         if (!credCompleta) return null;
-
-        // Buscar configuração do tribunal
         const tribunalConfig = getTribunalConfig(credCompleta.tribunal, credCompleta.grau);
         if (!tribunalConfig) {
           console.error(`Tribunal configuration not found for ${credCompleta.tribunal} ${credCompleta.grau}`);
           return null;
         }
-
-        // Executar captura
         try {
           const resultado = await arquivadosCapture({
             credential: credCompleta.credenciais,
             config: tribunalConfig,
           });
-
           return {
             credencial_id: credCompleta.credentialId,
             tribunal: credCompleta.tribunal,
@@ -222,16 +236,45 @@ export async function POST(request: NextRequest) {
           };
         }
       })
-    );
+    ).then(async (resultados) => {
+      if (logId) {
+        try {
+          const resultadosFiltrados = resultados.filter((r): r is NonNullable<typeof r> => r !== null);
+          const temErros = resultadosFiltrados.some((r) => 'erro' in r);
+          if (temErros) {
+            const erros = resultadosFiltrados
+              .filter((r) => 'erro' in r)
+              .map((r) => `Credencial ${r.credencial_id}: ${r.erro}`)
+              .join('; ');
+            await finalizarCapturaLogErro(logId, erros);
+          } else {
+            await finalizarCapturaLogSucesso(logId, {
+              credenciais_processadas: resultadosFiltrados.length,
+              resultados: resultadosFiltrados,
+            });
+          }
+        } catch (error) {
+          console.error('Erro ao atualizar histórico de captura:', error);
+        }
+      }
+    }).catch((error) => {
+      console.error('Erro ao processar capturas:', error);
+      if (logId) {
+        finalizarCapturaLogErro(logId, error instanceof Error ? error.message : 'Erro desconhecido').catch(
+          (err) => console.error('Erro ao registrar erro no histórico:', err)
+        );
+      }
+    });
 
-    // 5. Retornar resultado (resposta assíncrona)
+    // 6. Retornar resultado imediato
     return NextResponse.json({
       success: true,
       message: 'Captura iniciada com sucesso',
       status: 'in_progress',
+      capture_id: logId,
       data: {
-        credenciais_processadas: resultados.length,
-        resultados,
+        credenciais_processadas: credenciaisCompletas.length,
+        message: 'A captura está sendo processada em background. Consulte o histórico para acompanhar o progresso.',
       },
     });
 

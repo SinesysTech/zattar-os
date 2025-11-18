@@ -36,6 +36,7 @@ import { CheckCircle2, XCircle, Undo2 } from 'lucide-react';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 import type { ExpedientesFilters } from '@/lib/types/expedientes';
+import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 /**
  * Formata data ISO para formato brasileiro (DD/MM/YYYY)
@@ -100,9 +101,16 @@ const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
 /**
  * Componente para atribuir responsável a um expediente
  */
-function ResponsavelCell({ expediente, onSuccess }: { expediente: PendenteManifestacao; onSuccess: () => void }) {
+function ResponsavelCell({ 
+  expediente, 
+  onSuccess, 
+  usuarios 
+}: { 
+  expediente: PendenteManifestacao; 
+  onSuccess: () => void;
+  usuarios: Usuario[];
+}) {
   const [isLoading, setIsLoading] = React.useState(false);
-  const { usuarios } = useUsuarios({ ativo: true, limite: 1000 });
 
   const handleChange = async (value: string) => {
     setIsLoading(true);
@@ -162,7 +170,7 @@ function ResponsavelCell({ expediente, onSuccess }: { expediente: PendenteManife
 /**
  * Define as colunas da tabela de expedientes
  */
-function criarColunas(onSuccess: () => void): ColumnDef<PendenteManifestacao>[] {
+function criarColunas(onSuccess: () => void, usuarios: Usuario[]): ColumnDef<PendenteManifestacao>[] {
   return [
     {
       accessorKey: 'data_ciencia_parte',
@@ -265,7 +273,7 @@ function criarColunas(onSuccess: () => void): ColumnDef<PendenteManifestacao>[] 
       size: 220,
       cell: ({ row }) => (
         <div className="min-h-[2.5rem] flex items-center justify-center">
-          <ResponsavelCell expediente={row.original} onSuccess={onSuccess} />
+          <ResponsavelCell expediente={row.original} onSuccess={onSuccess} usuarios={usuarios} />
         </div>
       ),
     },
@@ -382,13 +390,16 @@ export default function ExpedientesPage() {
 
   const { expedientes, paginacao, isLoading, error, refetch } = usePendentes(params);
 
+  // Buscar usuários uma única vez para compartilhar entre todas as células
+  const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 1000 });
+
   const handleSuccess = React.useCallback(() => {
     refetch();
   }, [refetch]);
 
   const colunas = React.useMemo(
-    () => criarColunas(handleSuccess),
-    [handleSuccess]
+    () => criarColunas(handleSuccess, usuariosLista),
+    [handleSuccess, usuariosLista]
   );
 
   const handleSortingChange = React.useCallback(
@@ -502,7 +513,7 @@ export default function ExpedientesPage() {
         </TabsContent>
 
         <TabsContent value="semana" className="mt-0">
-          <ExpedientesVisualizacaoSemana expedientes={expedientes} isLoading={isLoading} onRefresh={refetch} />
+          <ExpedientesVisualizacaoSemana expedientes={expedientes} isLoading={isLoading} onRefresh={refetch} usuarios={usuariosLista} />
         </TabsContent>
 
         <TabsContent value="mes" className="mt-0">

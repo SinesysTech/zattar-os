@@ -1,52 +1,37 @@
 'use client';
 
-import { CapturaFormBase, validarCamposCaptura, gerarCombinacoesCaptura } from './captura-form-base';
+import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
-import { capturarAudiencias, listarCredenciais, type CredencialDisponivel } from '@/lib/api/captura';
-import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
-import { useState, useEffect } from 'react';
+import { capturarAudiencias } from '@/lib/api/captura';
+import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 
 export function AudienciasForm() {
-  const [credenciais, setCredenciais] = useState<CredencialDisponivel[]>([]);
+  const [advogadoId, setAdvogadoId] = useState<number | null>(null);
   const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
-  const [tribunaisDisponiveis, setTribunaisDisponiveis] = useState<CodigoTRT[]>([]);
-  const [grausDisponiveis, setGrausDisponiveis] = useState<GrauTRT[]>([]);
-  const [tribunaisSelecionados, setTribunaisSelecionados] = useState<CodigoTRT[]>([]);
-  const [grausSelecionados, setGrausSelecionados] = useState<GrauTRT[]>([]);
-  const [todosTribunais, setTodosTribunais] = useState(false);
-  const [todosGraus, setTodosGraus] = useState(false);
   const [dataInicio, setDataInicio] = useState('');
   const [dataFim, setDataFim] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingCredenciais, setIsLoadingCredenciais] = useState(true);
   const [result, setResult] = useState<{
     success: boolean | null;
     error?: string;
     data?: unknown;
+    capture_id?: number;
   }>({ success: null });
 
-  useEffect(() => {
-    const carregarCredenciais = async () => {
-      setIsLoadingCredenciais(true);
-      const response = await listarCredenciais();
-      if (response.success && response.data) {
-        setCredenciais(response.data.credenciais);
-        setTribunaisDisponiveis(response.data.tribunais_disponiveis);
-        setGrausDisponiveis(response.data.graus_disponiveis);
-      } else {
-        setResult({ success: false, error: response.error || 'Erro ao carregar credenciais' });
-      }
-      setIsLoadingCredenciais(false);
-    };
-    carregarCredenciais();
-  }, []);
-
   const handleCaptura = async () => {
-    if (!validarCamposCaptura(credenciaisSelecionadas, tribunaisSelecionados, grausSelecionados, todosTribunais, todosGraus)) {
-      setResult({ success: false, error: 'Selecione pelo menos uma credencial, tribunal e grau' });
+    if (!validarCamposCaptura(advogadoId, credenciaisSelecionadas)) {
+      setResult({
+        success: false,
+        error: 'Selecione um advogado e pelo menos uma credencial',
+      });
+      return;
+    }
+
+    if (!advogadoId) {
+      setResult({ success: false, error: 'Advogado não selecionado' });
       return;
     }
 
@@ -54,75 +39,31 @@ export function AudienciasForm() {
     setResult({ success: null });
 
     try {
-      const combinacoes = gerarCombinacoesCaptura(
-        credenciais,
-        credenciaisSelecionadas,
-        tribunaisSelecionados,
-        grausSelecionados,
-        todosTribunais,
-        todosGraus
-      );
+      const params: {
+        advogado_id: number;
+        credencial_ids: number[];
+        dataInicio?: string;
+        dataFim?: string;
+      } = {
+        advogado_id: advogadoId,
+        credencial_ids: credenciaisSelecionadas,
+      };
 
-      if (combinacoes.length === 0) {
-        setResult({ success: false, error: 'Nenhuma combinação válida encontrada' });
-        setIsLoading(false);
-        return;
-      }
+      if (dataInicio) params.dataInicio = dataInicio;
+      if (dataFim) params.dataFim = dataFim;
 
-      // Para audiências, executar uma por vez (não em paralelo)
-      const resultados = [];
-      for (const combo of combinacoes) {
-        const params: {
-          advogado_id: number;
-          trt_codigo: CodigoTRT;
-          grau: GrauTRT;
-          dataInicio?: string;
-          dataFim?: string;
-        } = { ...combo };
+      const response = await capturarAudiencias(params);
 
-        if (dataInicio) params.dataInicio = dataInicio;
-        if (dataFim) params.dataFim = dataFim;
-
-        const response = await capturarAudiencias(params);
-        resultados.push(response);
-      }
-
-      const sucessos = resultados.filter((r) => r.success);
-      const falhas = resultados.filter((r) => !r.success);
-
-      if (sucessos.length === 0) {
-        const primeiroErro = falhas[0];
-        setResult({ success: false, error: primeiroErro.error || 'Erro desconhecido' });
+      if (!response.success) {
+        setResult({
+          success: false,
+          error: response.error || 'Erro ao iniciar captura',
+        });
       } else {
-        const dadosAgregados = sucessos.reduce(
-          (acc, r) => {
-            if (r.data) {
-              const data = r.data;
-              acc.total = (acc.total || 0) + (data.total || 0);
-              acc.persistencia = {
-                total: (acc.persistencia?.total || 0) + (data.persistencia?.total || 0),
-                atualizados: (acc.persistencia?.atualizados || 0) + (data.persistencia?.atualizados || 0),
-                erros: (acc.persistencia?.erros || 0) + (data.persistencia?.erros || 0),
-                orgaosJulgadoresCriados: (acc.persistencia?.orgaosJulgadoresCriados || 0) + (data.persistencia?.orgaosJulgadoresCriados || 0),
-              };
-            }
-            return acc;
-          },
-          { total: 0, persistencia: { total: 0, atualizados: 0, erros: 0, orgaosJulgadoresCriados: 0 } } as {
-            total: number;
-            persistencia: { total: number; atualizados: number; erros: number; orgaosJulgadoresCriados: number };
-          }
-        );
-
         setResult({
           success: true,
-          data: {
-            ...dadosAgregados,
-            dataInicio: dataInicio || undefined,
-            dataFim: dataFim || undefined,
-            combinacoes_executadas: sucessos.length,
-            combinacoes_falhadas: falhas.length,
-          },
+          data: response.data,
+          capture_id: (response as any).capture_id,
         });
       }
     } catch (error) {
@@ -133,31 +74,13 @@ export function AudienciasForm() {
     }
   };
 
-  if (isLoadingCredenciais) {
-    return <div className="text-sm text-muted-foreground">Carregando credenciais...</div>;
-  }
-
   return (
     <div className="space-y-6">
       <CapturaFormBase
-        credenciais={credenciais}
+        advogadoId={advogadoId}
         credenciaisSelecionadas={credenciaisSelecionadas}
-        tribunaisDisponiveis={tribunaisDisponiveis}
-        grausDisponiveis={grausDisponiveis}
-        tribunaisSelecionados={tribunaisSelecionados}
-        grausSelecionados={grausSelecionados}
-        todosTribunais={todosTribunais}
-        todosGraus={todosGraus}
+        onAdvogadoChange={setAdvogadoId}
         onCredenciaisChange={setCredenciaisSelecionadas}
-        onTribunaisChange={(tribunais, todos) => {
-          setTribunaisSelecionados(tribunais);
-          setTodosTribunais(todos);
-        }}
-        onGrausChange={(graus, todos) => {
-          setGrausSelecionados(graus);
-          setTodosGraus(todos);
-        }}
-        permiteMultiplaSelecao={false}
       >
         {/* Data Início */}
         <div className="space-y-2">
@@ -192,7 +115,12 @@ export function AudienciasForm() {
         Iniciar Captura de Audiências
       </CapturaButton>
 
-      <CapturaResult success={result.success} error={result.error} data={result.data} />
+      <CapturaResult
+        success={result.success}
+        error={result.error}
+        data={result.data}
+        captureId={result.capture_id}
+      />
     </div>
   );
 }

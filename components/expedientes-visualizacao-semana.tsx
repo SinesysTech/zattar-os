@@ -21,11 +21,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
+import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 /**
  * Formata data ISO para formato brasileiro (DD/MM/YYYY)
@@ -90,9 +90,16 @@ const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
 /**
  * Componente para atribuir responsável a um expediente
  */
-function ResponsavelCell({ expediente, onSuccess }: { expediente: PendenteManifestacao; onSuccess: () => void }) {
+function ResponsavelCell({ 
+  expediente, 
+  onSuccess, 
+  usuarios 
+}: { 
+  expediente: PendenteManifestacao; 
+  onSuccess: () => void;
+  usuarios: Usuario[];
+}) {
   const [isLoading, setIsLoading] = React.useState(false);
-  const { usuarios } = useUsuarios({ ativo: true, limite: 1000 });
 
   const handleChange = async (value: string) => {
     setIsLoading(true);
@@ -217,7 +224,10 @@ function AcoesExpediente({ expediente }: { expediente: PendenteManifestacao }) {
 /**
  * Define as colunas da tabela de expedientes para visualização semanal
  */
-function criarColunasSemanais(onSuccess: () => void): ColumnDef<PendenteManifestacao>[] {
+function criarColunasSemanais(
+  onSuccess: () => void, 
+  usuarios: Usuario[]
+): ColumnDef<PendenteManifestacao>[] {
   return [
     {
       accessorKey: 'data_ciencia_parte',
@@ -294,7 +304,7 @@ function criarColunasSemanais(onSuccess: () => void): ColumnDef<PendenteManifest
       accessorKey: 'responsavel_id',
       header: () => <div className="text-sm font-medium">Responsável</div>,
       size: 220,
-      cell: ({ row }) => <ResponsavelCell expediente={row.original} onSuccess={onSuccess} />,
+      cell: ({ row }) => <ResponsavelCell expediente={row.original} onSuccess={onSuccess} usuarios={usuarios} />,
     },
     {
       id: 'acoes',
@@ -309,9 +319,10 @@ interface ExpedientesVisualizacaoSemanaProps {
   expedientes: PendenteManifestacao[];
   isLoading: boolean;
   onRefresh?: () => void;
+  usuarios: Usuario[];
 }
 
-export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefresh }: ExpedientesVisualizacaoSemanaProps) {
+export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefresh, usuarios }: ExpedientesVisualizacaoSemanaProps) {
   const [semanaAtual, setSemanaAtual] = React.useState(new Date());
   const [diaAtivo, setDiaAtivo] = React.useState<string>('segunda');
 
@@ -365,7 +376,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     return dias;
   }, [expedientes, inicioSemana, fimSemana]);
 
-  const colunas = React.useMemo(() => criarColunasSemanais(handleSuccess), [handleSuccess]);
+  const colunas = React.useMemo(() => criarColunasSemanais(handleSuccess, usuarios), [handleSuccess, usuarios]);
 
   const formatarDataCabecalho = (data: Date) => {
     return data.toLocaleDateString('pt-BR', {

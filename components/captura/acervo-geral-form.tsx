@@ -1,49 +1,33 @@
 'use client';
 
-import { CapturaFormBase, validarCamposCaptura, gerarCombinacoesCaptura } from './captura-form-base';
+import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
-import { capturarAcervoGeral, listarCredenciais, type CredencialDisponivel } from '@/lib/api/captura';
-import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
-import { useState, useEffect } from 'react';
+import { capturarAcervoGeral } from '@/lib/api/captura';
+import { useState } from 'react';
 
 export function AcervoGeralForm() {
-  const [credenciais, setCredenciais] = useState<CredencialDisponivel[]>([]);
+  const [advogadoId, setAdvogadoId] = useState<number | null>(null);
   const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
-  const [tribunaisDisponiveis, setTribunaisDisponiveis] = useState<CodigoTRT[]>([]);
-  const [grausDisponiveis, setGrausDisponiveis] = useState<GrauTRT[]>([]);
-  const [tribunaisSelecionados, setTribunaisSelecionados] = useState<CodigoTRT[]>([]);
-  const [grausSelecionados, setGrausSelecionados] = useState<GrauTRT[]>([]);
-  const [todosTribunais, setTodosTribunais] = useState(false);
-  const [todosGraus, setTodosGraus] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingCredenciais, setIsLoadingCredenciais] = useState(true);
   const [result, setResult] = useState<{
     success: boolean | null;
     error?: string;
     data?: unknown;
+    capture_id?: number;
   }>({ success: null });
 
-  // Carregar credenciais ao montar componente
-  useEffect(() => {
-    const carregarCredenciais = async () => {
-      setIsLoadingCredenciais(true);
-      const response = await listarCredenciais();
-      if (response.success && response.data) {
-        setCredenciais(response.data.credenciais);
-        setTribunaisDisponiveis(response.data.tribunais_disponiveis);
-        setGrausDisponiveis(response.data.graus_disponiveis);
-      } else {
-        setResult({ success: false, error: response.error || 'Erro ao carregar credenciais' });
-      }
-      setIsLoadingCredenciais(false);
-    };
-    carregarCredenciais();
-  }, []);
-
   const handleCaptura = async () => {
-    if (!validarCamposCaptura(credenciaisSelecionadas, tribunaisSelecionados, grausSelecionados, todosTribunais, todosGraus)) {
-      setResult({ success: false, error: 'Selecione pelo menos uma credencial, tribunal e grau' });
+    if (!validarCamposCaptura(advogadoId, credenciaisSelecionadas)) {
+      setResult({
+        success: false,
+        error: 'Selecione um advogado e pelo menos uma credencial',
+      });
+      return;
+    }
+
+    if (!advogadoId) {
+      setResult({ success: false, error: 'Advogado não selecionado' });
       return;
     }
 
@@ -51,66 +35,21 @@ export function AcervoGeralForm() {
     setResult({ success: null });
 
     try {
-      // Gerar todas as combinações de captura
-      const combinacoes = gerarCombinacoesCaptura(
-        credenciais,
-        credenciaisSelecionadas,
-        tribunaisSelecionados,
-        grausSelecionados,
-        todosTribunais,
-        todosGraus
-      );
+      const response = await capturarAcervoGeral({
+        advogado_id: advogadoId,
+        credencial_ids: credenciaisSelecionadas,
+      });
 
-      if (combinacoes.length === 0) {
-        setResult({ success: false, error: 'Nenhuma combinação válida encontrada' });
-        setIsLoading(false);
-        return;
-      }
-
-      // Executar capturas em paralelo
-      const resultados = await Promise.allSettled(
-        combinacoes.map((combo) => capturarAcervoGeral(combo))
-      );
-
-      // Agregar resultados
-      const sucessos = resultados.filter((r) => r.status === 'fulfilled' && r.value.success);
-      const falhas = resultados.filter((r) => r.status === 'rejected' || (r.status === 'fulfilled' && !r.value.success));
-
-      if (sucessos.length === 0) {
-        const primeiroErro = falhas[0];
-        const erroMsg =
-          primeiroErro.status === 'rejected'
-            ? primeiroErro.reason?.message || 'Erro desconhecido'
-            : primeiroErro.value.error || 'Erro desconhecido';
-        setResult({ success: false, error: `Todas as capturas falharam. Primeiro erro: ${erroMsg}` });
+      if (!response.success) {
+        setResult({
+          success: false,
+          error: response.error || 'Erro ao iniciar captura',
+        });
       } else {
-        // Agregar dados de sucesso
-        const dadosAgregados = sucessos.reduce(
-          (acc, r) => {
-            if (r.status === 'fulfilled' && r.value.data) {
-              const data = r.value.data;
-              acc.total = (acc.total || 0) + (data.total || 0);
-              acc.persistencia = {
-                total: (acc.persistencia?.total || 0) + (data.persistencia?.total || 0),
-                atualizados: (acc.persistencia?.atualizados || 0) + (data.persistencia?.atualizados || 0),
-                erros: (acc.persistencia?.erros || 0) + (data.persistencia?.erros || 0),
-              };
-            }
-            return acc;
-          },
-          { total: 0, persistencia: { total: 0, atualizados: 0, erros: 0 } } as {
-            total: number;
-            persistencia: { total: number; atualizados: number; erros: number };
-          }
-        );
-
         setResult({
           success: true,
-          data: {
-            ...dadosAgregados,
-            combinacoes_executadas: sucessos.length,
-            combinacoes_falhadas: falhas.length,
-          },
+          data: response.data,
+          capture_id: (response as any).capture_id,
         });
       }
     } catch (error) {
@@ -121,31 +60,13 @@ export function AcervoGeralForm() {
     }
   };
 
-  if (isLoadingCredenciais) {
-    return <div className="text-sm text-muted-foreground">Carregando credenciais...</div>;
-  }
-
   return (
     <div className="space-y-6">
       <CapturaFormBase
-        credenciais={credenciais}
+        advogadoId={advogadoId}
         credenciaisSelecionadas={credenciaisSelecionadas}
-        tribunaisDisponiveis={tribunaisDisponiveis}
-        grausDisponiveis={grausDisponiveis}
-        tribunaisSelecionados={tribunaisSelecionados}
-        grausSelecionados={grausSelecionados}
-        todosTribunais={todosTribunais}
-        todosGraus={todosGraus}
+        onAdvogadoChange={setAdvogadoId}
         onCredenciaisChange={setCredenciaisSelecionadas}
-        onTribunaisChange={(tribunais, todos) => {
-          setTribunaisSelecionados(tribunais);
-          setTodosTribunais(todos);
-        }}
-        onGrausChange={(graus, todos) => {
-          setGrausSelecionados(graus);
-          setTodosGraus(todos);
-        }}
-        permiteMultiplaSelecao={true}
       />
 
       <CapturaButton isLoading={isLoading} onClick={handleCaptura}>
@@ -156,6 +77,7 @@ export function AcervoGeralForm() {
         success={result.success}
         error={result.error}
         data={result.data}
+        captureId={result.capture_id}
       />
     </div>
   );
