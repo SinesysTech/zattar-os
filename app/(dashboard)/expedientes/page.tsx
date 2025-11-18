@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tooltip,
@@ -110,14 +110,16 @@ const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
 /**
  * Componente para editar tipo e descrição de um expediente
  */
-function TipoDescricaoCell({ 
-  expediente, 
-  onSuccess, 
-  tiposExpedientes 
-}: { 
-  expediente: PendenteManifestacao; 
+function TipoDescricaoCell({
+  expediente,
+  onSuccess,
+  tiposExpedientes,
+  isLoadingTipos
+}: {
+  expediente: PendenteManifestacao;
   onSuccess: () => void;
   tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+  isLoadingTipos?: boolean;
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -326,9 +328,10 @@ function ResponsavelCell({
  * Define as colunas da tabela de expedientes
  */
 function criarColunas(
-  onSuccess: () => void, 
-  usuarios: Usuario[], 
-  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>
+  onSuccess: () => void,
+  usuarios: Usuario[],
+  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>,
+  isLoadingTipos?: boolean
 ): ColumnDef<PendenteManifestacao>[] {
   return [
     {
@@ -341,10 +344,11 @@ function criarColunas(
       enableSorting: false,
       size: 300,
       cell: ({ row }) => (
-        <TipoDescricaoCell 
-          expediente={row.original} 
-          onSuccess={onSuccess} 
-          tiposExpedientes={tiposExpedientes} 
+        <TipoDescricaoCell
+          expediente={row.original}
+          onSuccess={onSuccess}
+          tiposExpedientes={tiposExpedientes}
+          isLoadingTipos={isLoadingTipos}
         />
       ),
     },
@@ -577,6 +581,7 @@ export default function ExpedientesPage() {
   const [statusPrazo, setStatusPrazo] = React.useState<'no_prazo' | 'vencido' | 'todos'>('no_prazo'); // Padrão: no prazo
   const [filtros, setFiltros] = React.useState<ExpedientesFilters>({});
   const [visualizacao, setVisualizacao] = React.useState<'tabela' | 'semana' | 'mes' | 'ano'>('tabela');
+  const [semanaAtual, setSemanaAtual] = React.useState(new Date());
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -619,8 +624,8 @@ export default function ExpedientesPage() {
   }, [refetch]);
 
   const colunas = React.useMemo(
-    () => criarColunas(handleSuccess, usuariosLista, tiposExpedientes),
-    [handleSuccess, usuariosLista, tiposExpedientes]
+    () => criarColunas(handleSuccess, usuariosLista, tiposExpedientes, isLoadingTipos),
+    [handleSuccess, usuariosLista, tiposExpedientes, isLoadingTipos]
   );
 
   const handleSortingChange = React.useCallback(
@@ -645,6 +650,41 @@ export default function ExpedientesPage() {
     setFiltros({});
     setPagina(0);
   }, []);
+
+  // Funções para navegação de semana
+  const navegarSemana = React.useCallback((direcao: 'anterior' | 'proxima') => {
+    const novaSemana = new Date(semanaAtual);
+    novaSemana.setDate(novaSemana.getDate() + (direcao === 'proxima' ? 7 : -7));
+    setSemanaAtual(novaSemana);
+  }, [semanaAtual]);
+
+  const voltarSemanaAtual = React.useCallback(() => {
+    setSemanaAtual(new Date());
+  }, []);
+
+  // Calcular início e fim da semana para exibição
+  const { inicioSemana, fimSemana } = React.useMemo(() => {
+    const date = new Date(semanaAtual);
+    date.setHours(0, 0, 0, 0);
+    const day = date.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    const inicio = new Date(date);
+    inicio.setDate(date.getDate() + diff);
+
+    const fim = new Date(inicio);
+    fim.setDate(fim.getDate() + 4);
+    fim.setHours(23, 59, 59, 999);
+
+    return { inicioSemana: inicio, fimSemana: fim };
+  }, [semanaAtual]);
+
+  const formatarDataCabecalho = (data: Date) => {
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
 
   return (
     <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
@@ -697,12 +737,48 @@ export default function ExpedientesPage() {
               <SelectItem value="todos">Todos os Prazos</SelectItem>
             </SelectContent>
           </Select>
+
+          {/* Tabs de visualização */}
           <TabsList>
             <TabsTrigger value="tabela">Tabela</TabsTrigger>
             <TabsTrigger value="semana">Semana</TabsTrigger>
             <TabsTrigger value="mes">Mês</TabsTrigger>
             <TabsTrigger value="ano">Ano</TabsTrigger>
           </TabsList>
+
+          {/* Controles de navegação de semana (aparecem apenas na visualização de semana) */}
+          {visualizacao === 'semana' && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navegarSemana('anterior')}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <div className="text-sm font-medium whitespace-nowrap">
+                {formatarDataCabecalho(inicioSemana)} - {formatarDataCabecalho(fimSemana)}
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navegarSemana('proxima')}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+
+          {/* Botão semana atual na extremidade direita */}
+          {visualizacao === 'semana' && (
+            <Button
+              variant="outline"
+              onClick={voltarSemanaAtual}
+              className="ml-auto"
+            >
+              Semana Atual
+            </Button>
+          )}
         </div>
 
         <TabsContent value="tabela" className="mt-0">
@@ -734,7 +810,14 @@ export default function ExpedientesPage() {
         </TabsContent>
 
         <TabsContent value="semana" className="mt-0">
-          <ExpedientesVisualizacaoSemana expedientes={expedientes} isLoading={isLoading} onRefresh={refetch} usuarios={usuariosLista} tiposExpedientes={tiposExpedientes} />
+          <ExpedientesVisualizacaoSemana
+            expedientes={expedientes}
+            isLoading={isLoading}
+            onRefresh={refetch}
+            usuarios={usuariosLista}
+            tiposExpedientes={tiposExpedientes}
+            semanaAtual={semanaAtual}
+          />
         </TabsContent>
 
         <TabsContent value="mes" className="mt-0">

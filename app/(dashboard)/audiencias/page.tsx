@@ -17,6 +17,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { AudienciasVisualizacaoSemana } from '@/components/audiencias-visualizacao-semana';
 import { AudienciasVisualizacaoMes } from '@/components/audiencias-visualizacao-mes';
 import { AudienciasVisualizacaoAno } from '@/components/audiencias-visualizacao-ano';
@@ -385,6 +387,7 @@ export default function AudienciasPage() {
   const [status, setStatus] = React.useState<'M' | 'R' | 'C' | 'todos'>('M'); // Default: Marcada
   const [filtros, setFiltros] = React.useState<AudienciasFilters>({});
   const [visualizacao, setVisualizacao] = React.useState<'tabela' | 'semana' | 'mes' | 'ano'>('tabela');
+  const [semanaAtual, setSemanaAtual] = React.useState(new Date());
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -453,53 +456,122 @@ export default function AudienciasPage() {
     setPagina(0);
   }, []);
 
+  // Funções para navegação de semana
+  const navegarSemana = React.useCallback((direcao: 'anterior' | 'proxima') => {
+    const novaSemana = new Date(semanaAtual);
+    novaSemana.setDate(novaSemana.getDate() + (direcao === 'proxima' ? 7 : -7));
+    setSemanaAtual(novaSemana);
+  }, [semanaAtual]);
+
+  const voltarSemanaAtual = React.useCallback(() => {
+    setSemanaAtual(new Date());
+  }, []);
+
+  // Calcular início e fim da semana para exibição
+  const { inicioSemana, fimSemana } = React.useMemo(() => {
+    const date = new Date(semanaAtual);
+    date.setHours(0, 0, 0, 0);
+    const day = date.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    const inicio = new Date(date);
+    inicio.setDate(date.getDate() + diff);
+
+    const fim = new Date(inicio);
+    fim.setDate(fim.getDate() + 4);
+    fim.setHours(23, 59, 59, 999);
+
+    return { inicioSemana: inicio, fimSemana: fim };
+  }, [semanaAtual]);
+
+  const formatarDataCabecalho = (data: Date) => {
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
   return (
-    <div className="space-y-4">
-      {/* Barra de busca e filtros */}
-      <div className="flex items-center gap-4">
-        <Input
-          placeholder="Buscar por número do processo, parte autora ou parte ré..."
-          value={busca}
-          onChange={(e) => {
-            setBusca(e.target.value);
-            setPagina(0); // Resetar para primeira página ao buscar
-          }}
-          className="max-w-sm"
-        />
-        <AudienciasFiltrosAvancados
-          filters={filtros}
-          onFiltersChange={handleFiltersChange}
-          onReset={handleFiltersReset}
-        />
-        <Select
-          value={status}
-          onValueChange={(value) => {
-            setStatus(value as 'M' | 'R' | 'C' | 'todos');
-            setPagina(0); // Resetar para primeira página ao mudar status
-          }}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="M">Marcada</SelectItem>
-            <SelectItem value="R">Realizada</SelectItem>
-            <SelectItem value="C">Cancelada</SelectItem>
-            <SelectItem value="todos">Todos os Status</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+    <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
+      <div className="space-y-4">
+        {/* Barra de busca, filtros e tabs de visualização */}
+        <div className="flex items-center gap-4">
+          <Input
+            placeholder="Buscar por número do processo, parte autora ou parte ré..."
+            value={busca}
+            onChange={(e) => {
+              setBusca(e.target.value);
+              setPagina(0); // Resetar para primeira página ao buscar
+            }}
+            className="max-w-sm"
+          />
+          <AudienciasFiltrosAvancados
+            filters={filtros}
+            onFiltersChange={handleFiltersChange}
+            onReset={handleFiltersReset}
+          />
+          <Select
+            value={status}
+            onValueChange={(value) => {
+              setStatus(value as 'M' | 'R' | 'C' | 'todos');
+              setPagina(0); // Resetar para primeira página ao mudar status
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="M">Marcada</SelectItem>
+              <SelectItem value="R">Realizada</SelectItem>
+              <SelectItem value="C">Cancelada</SelectItem>
+              <SelectItem value="todos">Todos os Status</SelectItem>
+            </SelectContent>
+          </Select>
 
-      {/* Seletor de visualização */}
-      <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
-        <TabsList>
-          <TabsTrigger value="tabela">Tabela</TabsTrigger>
-          <TabsTrigger value="semana">Semana</TabsTrigger>
-          <TabsTrigger value="mes">Mês</TabsTrigger>
-          <TabsTrigger value="ano">Ano</TabsTrigger>
-        </TabsList>
+          {/* Tabs de visualização */}
+          <TabsList>
+            <TabsTrigger value="tabela">Tabela</TabsTrigger>
+            <TabsTrigger value="semana">Semana</TabsTrigger>
+            <TabsTrigger value="mes">Mês</TabsTrigger>
+            <TabsTrigger value="ano">Ano</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="tabela" className="mt-4">
+          {/* Controles de navegação de semana (aparecem apenas na visualização de semana) */}
+          {visualizacao === 'semana' && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navegarSemana('anterior')}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <div className="text-sm font-medium whitespace-nowrap">
+                {formatarDataCabecalho(inicioSemana)} - {formatarDataCabecalho(fimSemana)}
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navegarSemana('proxima')}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+
+          {/* Botão semana atual na extremidade direita */}
+          {visualizacao === 'semana' && (
+            <Button
+              variant="outline"
+              onClick={voltarSemanaAtual}
+              className="ml-auto"
+            >
+              Semana Atual
+            </Button>
+          )}
+        </div>
+
+        <TabsContent value="tabela" className="mt-0">
           {/* Tabela */}
           <DataTable
             data={audiencias}
@@ -527,19 +599,23 @@ export default function AudienciasPage() {
           />
         </TabsContent>
 
-        <TabsContent value="semana" className="mt-4">
-          <AudienciasVisualizacaoSemana audiencias={audiencias} isLoading={isLoading} />
+        <TabsContent value="semana" className="mt-0">
+          <AudienciasVisualizacaoSemana
+            audiencias={audiencias}
+            isLoading={isLoading}
+            semanaAtual={semanaAtual}
+          />
         </TabsContent>
 
-        <TabsContent value="mes" className="mt-4">
+        <TabsContent value="mes" className="mt-0">
           <AudienciasVisualizacaoMes audiencias={audiencias} isLoading={isLoading} />
         </TabsContent>
 
-        <TabsContent value="ano" className="mt-4">
+        <TabsContent value="ano" className="mt-0">
           <AudienciasVisualizacaoAno audiencias={audiencias} isLoading={isLoading} />
         </TabsContent>
-      </Tabs>
-    </div>
+      </div>
+    </Tabs>
   );
 }
 
