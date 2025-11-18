@@ -131,7 +131,7 @@ import type { AtualizarTipoExpedienteParams } from '@/backend/types/tipos-expedi
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // 1. Autenticação
@@ -143,8 +143,9 @@ export async function GET(
       );
     }
 
-    // 2. Validar ID
-    const id = parseInt(params.id, 10);
+    // 2. Await params e validar ID
+    const { id: idParam } = await params;
+    const id = parseInt(idParam, 10);
     if (isNaN(id) || id <= 0) {
       return NextResponse.json(
         { error: 'ID inválido' },
@@ -178,7 +179,7 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // 1. Autenticação
@@ -190,8 +191,9 @@ export async function PATCH(
       );
     }
 
-    // 2. Validar ID
-    const id = parseInt(params.id, 10);
+    // 2. Await params e validar ID
+    const { id: idParam } = await params;
+    const id = parseInt(idParam, 10);
     if (isNaN(id) || id <= 0) {
       return NextResponse.json(
         { error: 'ID inválido' },
@@ -248,7 +250,7 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // 1. Autenticação
@@ -260,8 +262,9 @@ export async function DELETE(
       );
     }
 
-    // 2. Validar ID
-    const id = parseInt(params.id, 10);
+    // 2. Await params e validar ID
+    const { id: idParam } = await params;
+    const id = parseInt(idParam, 10);
     if (isNaN(id) || id <= 0) {
       return NextResponse.json(
         { error: 'ID inválido' },
