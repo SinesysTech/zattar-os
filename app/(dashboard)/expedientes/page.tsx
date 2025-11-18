@@ -356,7 +356,7 @@ function criarColunas(
       accessorKey: 'data_ciencia_parte',
       header: ({ column }) => (
         <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Data de Ciência" />
+          <DataTableColumnHeader column={column} title="Início" />
         </div>
       ),
       enableSorting: true,
@@ -371,7 +371,7 @@ function criarColunas(
       accessorKey: 'data_prazo_legal_parte',
       header: ({ column }) => (
         <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Prazo Legal" />
+          <DataTableColumnHeader column={column} title="Fim" />
         </div>
       ),
       enableSorting: true,
@@ -459,7 +459,11 @@ function criarColunas(
     },
     {
       id: 'acoes',
-      header: 'Ações',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="Ações" />
+        </div>
+      ),
       cell: ({ row }) => {
         const expediente = row.original;
         return <AcoesExpediente expediente={expediente} usuarios={usuarios} tiposExpedientes={tiposExpedientes} />;
@@ -493,7 +497,7 @@ function AcoesExpediente({
 
   return (
     <TooltipProvider>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center justify-center gap-1">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
