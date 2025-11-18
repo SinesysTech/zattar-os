@@ -258,9 +258,9 @@ function criarColunas(onSuccess: () => void): ColumnDef<Audiencia>[] {
       cell: ({ row }) => {
         const dataInicio = row.getValue('data_inicio') as string | null;
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-center justify-center text-sm">
+          <div className="min-h-[2.5rem] flex flex-col items-center justify-center text-sm gap-1">
             <div className="font-medium">{formatarData(dataInicio)}</div>
-            <div className="text-xs text-muted-foreground">{formatarHora(dataInicio)}</div>
+            <div className="text-sm font-medium">{formatarHora(dataInicio)}h</div>
           </div>
         );
       },
