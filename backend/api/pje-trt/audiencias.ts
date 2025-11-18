@@ -358,6 +358,7 @@ export async function obterTodasAudiencias(
     totalRegistros: primeiraPagina.totalRegistros,
     qtdPaginas: primeiraPagina.qtdPaginas,
     resultadoLength: primeiraPagina.resultado?.length || 0,
+    temResultado: 'resultado' in primeiraPagina,
   });
 
   // Validar estrutura da resposta
@@ -366,18 +367,25 @@ export async function obterTodasAudiencias(
     throw new Error(`Resposta inválida da API: ${JSON.stringify(primeiraPagina)}`);
   }
 
-  // Validar que resultado é um array
-  if (!Array.isArray(primeiraPagina.resultado)) {
-    console.error('❌ [obterTodasAudiencias] Campo resultado não é array:', primeiraPagina);
+  // Caso especial: quando não há resultados (totalRegistros=0), a API pode não retornar o campo 'resultado'
+  // Neste caso, retornar array vazio sem erro
+  if (primeiraPagina.totalRegistros === 0 || primeiraPagina.qtdPaginas === 0) {
+    console.log('ℹ️ [obterTodasAudiencias] Nenhum resultado encontrado (totalRegistros=0 ou qtdPaginas=0)');
+    return [];
+  }
+
+  // Validar que resultado existe e é um array (apenas se houver resultados esperados)
+  if (!('resultado' in primeiraPagina) || !Array.isArray(primeiraPagina.resultado)) {
+    console.error('❌ [obterTodasAudiencias] Campo resultado não existe ou não é array:', primeiraPagina);
     throw new Error(
-      `Campo 'resultado' não é um array na resposta da API. Estrutura recebida: ${JSON.stringify(primeiraPagina, null, 2)}`
+      `Campo 'resultado' não existe ou não é um array na resposta da API. Estrutura recebida: ${JSON.stringify(primeiraPagina, null, 2)}`
     );
   }
 
-  // Se não há resultados no array, retornar array vazio
-  // Nota: A API pode retornar qtdPaginas=0 mesmo com resultados quando tamanhoPagina >= totalRegistros
-  if (primeiraPagina.resultado.length === 0 || primeiraPagina.totalRegistros === 0) {
-    console.log('ℹ️ [obterTodasAudiencias] Nenhum resultado encontrado (array vazio ou totalRegistros=0)');
+  // Se o array está vazio mas totalRegistros > 0, pode ser um problema
+  // Mas ainda assim retornamos array vazio para não quebrar o fluxo
+  if (primeiraPagina.resultado.length === 0) {
+    console.log('ℹ️ [obterTodasAudiencias] Array resultado está vazio (mas totalRegistros > 0)');
     return [];
   }
 

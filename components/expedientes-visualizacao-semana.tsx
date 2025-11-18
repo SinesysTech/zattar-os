@@ -172,7 +172,7 @@ function TipoDescricaoCell({
           </div>
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 z-[100]" align="start">
+      <PopoverContent className="w-80" align="start">
         <div className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium">Tipo de Expediente</label>
@@ -188,7 +188,7 @@ function TipoDescricaoCell({
                     : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipo_expediente || 'Selecione o tipo'}
                 </SelectValue>
               </SelectTrigger>
-              <SelectContent className="max-h-[300px] z-[200]">
+              <SelectContent className="max-h-[300px]">
                 <SelectItem value="null">Sem tipo</SelectItem>
                 {tiposExpedientes.length > 0 ? (
                   tiposExpedientes.map((tipo) => (
