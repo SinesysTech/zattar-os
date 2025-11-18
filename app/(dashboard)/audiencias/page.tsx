@@ -179,9 +179,16 @@ const formatarStatus = (status: string | null): string => {
 /**
  * Componente para atribuir responsável a uma audiência
  */
-function ResponsavelCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
+function ResponsavelCell({
+  audiencia,
+  onSuccess,
+  usuarios
+}: {
+  audiencia: Audiencia;
+  onSuccess: () => void;
+  usuarios: Array<{ id: number; nomeExibicao: string }>;
+}) {
   const [isLoading, setIsLoading] = React.useState(false);
-  const { usuarios } = useUsuarios({ ativo: true, limite: 1000 });
 
   const handleChange = async (value: string) => {
     setIsLoading(true);
@@ -240,7 +247,10 @@ function ResponsavelCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
 /**
  * Define as colunas da tabela de audiências
  */
-function criarColunas(onSuccess: () => void): ColumnDef<Audiencia>[] {
+function criarColunas(
+  onSuccess: () => void,
+  usuarios: Array<{ id: number; nomeExibicao: string }>
+): ColumnDef<Audiencia>[] {
   return [
     {
       accessorKey: 'data_inicio',
@@ -369,7 +379,7 @@ function criarColunas(onSuccess: () => void): ColumnDef<Audiencia>[] {
       size: 220,
       cell: ({ row }) => (
         <div className="min-h-[2.5rem] flex items-center justify-center">
-          <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} />
+          <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} />
         </div>
       ),
     },
@@ -408,6 +418,9 @@ export default function AudienciasPage() {
 
   const { audiencias: audienciasRaw, paginacao, isLoading, error, refetch } = useAudiencias(params);
 
+  // Buscar usuários uma única vez para compartilhar entre todas as células
+  const { usuarios } = useUsuarios({ ativo: true, limite: 1000 });
+
   // Ordenar por data normalizada quando ordenar por data_inicio
   const audiencias = React.useMemo(() => {
     if (!audienciasRaw || ordenarPor !== 'data_inicio') {
@@ -429,8 +442,8 @@ export default function AudienciasPage() {
   }, [refetch]);
 
   const colunas = React.useMemo(
-    () => criarColunas(handleSuccess),
-    [handleSuccess]
+    () => criarColunas(handleSuccess, usuarios),
+    [handleSuccess, usuarios]
   );
 
   const handleSortingChange = React.useCallback(
@@ -604,6 +617,8 @@ export default function AudienciasPage() {
             audiencias={audiencias}
             isLoading={isLoading}
             semanaAtual={semanaAtual}
+            usuarios={usuarios}
+            onRefresh={refetch}
           />
         </TabsContent>
 

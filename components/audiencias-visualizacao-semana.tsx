@@ -151,18 +151,26 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
   return [
     {
       accessorKey: 'data_inicio',
-      header: () => <div className="text-sm font-medium">Hora</div>,
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Hora</div>
+        </div>
+      ),
       size: 80,
       cell: ({ row }) => (
-        <div className="text-sm font-medium">
+        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
           {formatarHora(row.getValue('data_inicio'))}
         </div>
       ),
     },
     {
       id: 'processo',
-      header: () => <div className="text-sm font-medium">Processo</div>,
-      size: 300,
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Processo</div>
+        </div>
+      ),
+      size: 350,
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
@@ -171,19 +179,19 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
         const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
 
         return (
-          <div className="flex flex-col gap-1">
-            <div className="text-sm font-medium">
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[350px]">
+            <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
-            <div className="flex items-center gap-1 flex-wrap">
-              <Badge variant="outline" className={`${getTRTColorClass(trt)} text-xs`}>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
               </Badge>
-              <Badge variant="outline" className={`${getGrauColorClass(grau)} text-xs`}>
+              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>
                 {formatarGrau(grau)}
               </Badge>
             </div>
-            <div className="text-xs text-muted-foreground truncate">
+            <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}
             </div>
           </div>
@@ -192,18 +200,22 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     },
     {
       id: 'partes',
-      header: () => <div className="text-sm font-medium">Partes</div>,
-      size: 220,
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Partes</div>
+        </div>
+      ),
+      size: 250,
       cell: ({ row }) => {
         const parteAutora = row.original.polo_ativo_nome || '-';
         const parteRe = row.original.polo_passivo_nome || '-';
 
         return (
-          <div className="flex flex-col gap-1">
-            <Badge variant="outline" className={`${getParteAutoraColorClass()} text-xs whitespace-nowrap truncate max-w-full`}>
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+            <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit whitespace-nowrap max-w-full truncate`}>
               {parteAutora}
             </Badge>
-            <Badge variant="outline" className={`${getParteReColorClass()} text-xs whitespace-nowrap truncate max-w-full`}>
+            <Badge variant="outline" className={`${getParteReColorClass()} w-fit whitespace-nowrap max-w-full truncate`}>
               {parteRe}
             </Badge>
           </div>
@@ -212,22 +224,28 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     },
     {
       id: 'tipo_local',
-      header: () => <div className="text-sm font-medium">Tipo/Local</div>,
-      size: 180,
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Tipo/Local</div>
+        </div>
+      ),
+      size: 200,
       cell: ({ row }) => {
         const tipo = row.original.tipo_descricao || '-';
         const isVirtual = row.original.tipo_is_virtual;
         const sala = row.original.sala_audiencia_nome || '-';
 
         return (
-          <div className="flex flex-col gap-1">
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1 max-w-[200px]">
             <div className="flex items-center gap-2">
               <span className="text-sm">{tipo}</span>
               {isVirtual && (
-                <Badge variant="outline" className="text-xs">Virtual</Badge>
+                <Badge variant="outline" className="text-xs">
+                  Virtual
+                </Badge>
               )}
             </div>
-            <div className="text-xs text-muted-foreground truncate">
+            <div className="text-xs text-muted-foreground truncate max-w-full">
               {sala}
             </div>
           </div>
@@ -236,10 +254,16 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     },
     {
       accessorKey: 'responsavel_id',
-      header: () => <div className="text-sm font-medium">Responsável</div>,
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Responsável</div>
+        </div>
+      ),
       size: 220,
       cell: ({ row }) => (
-        <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} />
+        <div className="min-h-[2.5rem] flex items-center justify-center">
+          <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} />
+        </div>
       ),
     },
   ];
@@ -327,7 +351,7 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading, semanaAtua
     return dias;
   }, [audiencias, inicioSemana, fimSemana]);
 
-  const colunas = React.useMemo(() => criarColunasSemanais(), []);
+  const colunas = React.useMemo(() => criarColunasSemanais(onRefresh, usuarios), [onRefresh, usuarios]);
 
   // Calcular datas de cada dia da semana
   const datasDiasSemana = React.useMemo(() => {
