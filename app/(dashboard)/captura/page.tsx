@@ -7,17 +7,23 @@ import { ArquivadosForm } from '@/components/captura/arquivados-form';
 import { AudienciasForm } from '@/components/captura/audiencias-form';
 import { PendentesForm } from '@/components/captura/pendentes-form';
 import { HistoricoCapturas } from '@/components/captura/historico-capturas';
-import { Database, Archive, Calendar, AlertCircle, History } from 'lucide-react';
+import { AgendamentoForm } from '@/components/captura/agendamentos/agendamento-form';
+import { AgendamentosList } from '@/components/captura/agendamentos/agendamentos-list';
+import { Database, Archive, Calendar, AlertCircle, History, Clock } from 'lucide-react';
 
 export default function CapturaPage() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="captura" className="w-full">
-        {/* Abas principais: Captura e Histórico */}
-        <TabsList className="grid w-full grid-cols-2 max-w-md">
+        {/* Abas principais: Captura, Agendamentos e Histórico */}
+        <TabsList className="grid w-full grid-cols-3 max-w-2xl">
           <TabsTrigger value="captura" className="flex items-center gap-2">
             <Database className="h-4 w-4" />
             <span>Captura</span>
+          </TabsTrigger>
+          <TabsTrigger value="agendamentos" className="flex items-center gap-2">
+            <Clock className="h-4 w-4" />
+            <span>Agendamentos</span>
           </TabsTrigger>
           <TabsTrigger value="historico" className="flex items-center gap-2">
             <History className="h-4 w-4" />
@@ -68,6 +74,26 @@ export default function CapturaPage() {
 
                 <TabsContent value="pendentes" className="mt-6">
                   <PendentesForm />
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Conteúdo da aba Agendamentos */}
+        <TabsContent value="agendamentos" className="mt-6">
+          <Card>
+            <CardContent className="pt-6">
+              <Tabs defaultValue="listar" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 max-w-md">
+                  <TabsTrigger value="listar">Listar Agendamentos</TabsTrigger>
+                  <TabsTrigger value="criar">Criar Agendamento</TabsTrigger>
+                </TabsList>
+                <TabsContent value="listar" className="mt-6">
+                  <AgendamentosList />
+                </TabsContent>
+                <TabsContent value="criar" className="mt-6">
+                  <AgendamentoForm />
                 </TabsContent>
               </Tabs>
             </CardContent>

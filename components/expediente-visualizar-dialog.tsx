@@ -314,7 +314,7 @@ export function ExpedienteVisualizarDialog({
                 </div>
                 <div className="pl-6">
                   <div className="text-xs text-muted-foreground mb-1">Usuário Responsável</div>
-                  <div className="font-medium">{responsavel.nome}</div>
+                  <div className="font-medium">{responsavel.nomeExibicao || responsavel.nomeCompleto}</div>
                 </div>
               </div>
             )}

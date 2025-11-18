@@ -99,7 +99,7 @@ export function AgendamentoForm({ onSuccess }: AgendamentoFormProps) {
       const response = await criarAgendamento({
         tipo_captura: tipoCaptura,
         advogado_id: advogadoId!,
-        credenciais_ids: credenciaisSelecionadas,
+        credencial_ids: credenciaisSelecionadas,
         periodicidade: periodicidade as 'diario' | 'a_cada_N_dias',
         dias_intervalo: periodicidade === 'a_cada_N_dias' ? diasIntervalo : undefined,
         horario,
