@@ -45,6 +45,8 @@ function converterParaPendente(data: Record<string, unknown>): PendenteManifesta
     protocolo_id: (data.protocolo_id as number | null) ?? null,
     justificativa_baixa: (data.justificativa_baixa as string | null) ?? null,
     responsavel_id: (data.responsavel_id as number | null) ?? null,
+    tipo_expediente_id: (data.tipo_expediente_id as number | null) ?? null,
+    descricao_arquivos: (data.descricao_arquivos as string | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };
@@ -147,6 +149,17 @@ export async function listarPendentes(
   // Filtros específicos de pendentes
   if (params.prazo_vencido !== undefined) {
     query = query.eq('prazo_vencido', params.prazo_vencido);
+  }
+
+  // Filtro por tipo de expediente
+  if (params.sem_tipo === true) {
+    query = query.is('tipo_expediente_id', null);
+  } else if (params.tipo_expediente_id !== undefined) {
+    if (params.tipo_expediente_id === 'null') {
+      query = query.is('tipo_expediente_id', null);
+    } else if (typeof params.tipo_expediente_id === 'number') {
+      query = query.eq('tipo_expediente_id', params.tipo_expediente_id);
+    }
   }
 
   if (params.data_prazo_legal_inicio) {

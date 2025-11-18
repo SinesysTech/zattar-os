@@ -17,6 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tooltip,
@@ -29,6 +37,7 @@ import { ExpedientesVisualizacaoMes } from '@/components/expedientes-visualizaca
 import { ExpedientesVisualizacaoAno } from '@/components/expedientes-visualizacao-ano';
 import { usePendentes } from '@/lib/hooks/use-pendentes';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
+import { useTiposExpedientes } from '@/lib/hooks/use-tipos-expedientes';
 import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
 import { Button } from '@/components/ui/button';
@@ -97,6 +106,140 @@ const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
 const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
   return grau === 'primeiro_grau' ? '1º Grau' : '2º Grau';
 };
+
+/**
+ * Componente para editar tipo e descrição de um expediente
+ */
+function TipoDescricaoCell({ 
+  expediente, 
+  onSuccess, 
+  tiposExpedientes 
+}: { 
+  expediente: PendenteManifestacao; 
+  onSuccess: () => void;
+  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+}) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [tipoSelecionado, setTipoSelecionado] = React.useState<string>(
+    expediente.tipo_expediente_id?.toString() || 'null'
+  );
+  const [descricao, setDescricao] = React.useState<string>(
+    expediente.descricao_arquivos || ''
+  );
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      const tipoExpedienteId = tipoSelecionado === 'null' ? null : parseInt(tipoSelecionado, 10);
+      const descricaoArquivos = descricao.trim() || null;
+
+      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/tipo-descricao`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tipoExpedienteId,
+          descricaoArquivos,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao atualizar tipo e descrição');
+      }
+
+      setIsOpen(false);
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao atualizar tipo e descrição:', error);
+      // Em caso de erro, ainda fechamos o popover e atualizamos para mostrar o estado atual
+      setIsOpen(false);
+      onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipo_expediente_id);
+  const tipoNome = tipoExpediente ? tipoExpediente.tipo_expediente : 'Sem tipo';
+  const descricaoExibicao = expediente.descricao_arquivos || '-';
+
+  return (
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[300px] text-left hover:opacity-80 transition-opacity cursor-pointer"
+        >
+          <Badge variant="outline" className="w-fit text-xs">
+            {tipoNome}
+          </Badge>
+          <div className="text-xs text-muted-foreground max-w-full truncate">
+            {descricaoExibicao}
+          </div>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80" align="start">
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Tipo de Expediente</label>
+            <Select
+              value={tipoSelecionado}
+              onValueChange={setTipoSelecionado}
+              disabled={isLoading}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o tipo">
+                  {tipoSelecionado === 'null' 
+                    ? 'Sem tipo' 
+                    : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipo_expediente}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="null">Sem tipo</SelectItem>
+                {tiposExpedientes.map((tipo) => (
+                  <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                    {tipo.tipo_expediente}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Descrição / Arquivos</label>
+            <Textarea
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
+              placeholder="Digite a descrição ou referência aos arquivos..."
+              disabled={isLoading}
+              rows={3}
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsOpen(false)}
+              disabled={isLoading}
+            >
+              Cancelar
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleSave}
+              disabled={isLoading}
+            >
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Salvar
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 /**
  * Componente para atribuir responsável a um expediente
@@ -170,8 +313,29 @@ function ResponsavelCell({
 /**
  * Define as colunas da tabela de expedientes
  */
-function criarColunas(onSuccess: () => void, usuarios: Usuario[]): ColumnDef<PendenteManifestacao>[] {
+function criarColunas(
+  onSuccess: () => void, 
+  usuarios: Usuario[], 
+  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>
+): ColumnDef<PendenteManifestacao>[] {
   return [
+    {
+      id: 'tipo_descricao',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Tipo / Descrição</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 300,
+      cell: ({ row }) => (
+        <TipoDescricaoCell 
+          expediente={row.original} 
+          onSuccess={onSuccess} 
+          tiposExpedientes={tiposExpedientes} 
+        />
+      ),
+    },
     {
       accessorKey: 'data_ciencia_parte',
       header: ({ column }) => (
@@ -392,14 +556,17 @@ export default function ExpedientesPage() {
 
   // Buscar usuários uma única vez para compartilhar entre todas as células
   const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 1000 });
+  
+  // Buscar tipos de expedientes uma única vez para compartilhar entre todas as células
+  const { tiposExpedientes } = useTiposExpedientes({ limite: 1000 });
 
   const handleSuccess = React.useCallback(() => {
     refetch();
   }, [refetch]);
 
   const colunas = React.useMemo(
-    () => criarColunas(handleSuccess, usuariosLista),
-    [handleSuccess, usuariosLista]
+    () => criarColunas(handleSuccess, usuariosLista, tiposExpedientes),
+    [handleSuccess, usuariosLista, tiposExpedientes]
   );
 
   const handleSortingChange = React.useCallback(
@@ -513,7 +680,7 @@ export default function ExpedientesPage() {
         </TabsContent>
 
         <TabsContent value="semana" className="mt-0">
-          <ExpedientesVisualizacaoSemana expedientes={expedientes} isLoading={isLoading} onRefresh={refetch} usuarios={usuariosLista} />
+          <ExpedientesVisualizacaoSemana expedientes={expedientes} isLoading={isLoading} onRefresh={refetch} usuarios={usuariosLista} tiposExpedientes={tiposExpedientes} />
         </TabsContent>
 
         <TabsContent value="mes" className="mt-0">

@@ -76,6 +76,8 @@ export interface PendenteManifestacao {
   protocolo_id: number | null; // ID do protocolo quando houve protocolo de peça
   justificativa_baixa: string | null; // Justificativa quando não houve protocolo
   responsavel_id: number | null;
+  tipo_expediente_id: number | null; // Tipo de expediente associado
+  descricao_arquivos: string | null; // Descrição ou referência a arquivos relacionados
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }
@@ -112,6 +114,8 @@ export interface ListarPendentesParams {
   // Filtros específicos de pendentes
   baixado?: boolean; // true = apenas baixados, false = apenas pendentes
   prazo_vencido?: boolean;
+  tipo_expediente_id?: number | 'null'; // Filtrar por tipo de expediente ('null' para sem tipo)
+  sem_tipo?: boolean; // true = apenas expedientes sem tipo atribuído
   data_prazo_legal_inicio?: string; // ISO date
   data_prazo_legal_fim?: string; // ISO date
   data_ciencia_inicio?: string; // ISO date
