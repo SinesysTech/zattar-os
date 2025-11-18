@@ -47,6 +47,23 @@ const formatarDataHora = (dataISO: string | null): string => {
 };
 
 /**
+ * Formata apenas data ISO para formato brasileiro (DD/MM/YYYY)
+ */
+const formatarData = (dataISO: string | null): string => {
+  if (!dataISO) return '-';
+  try {
+    const data = new Date(dataISO);
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  } catch {
+    return '-';
+  }
+};
+
+/**
  * Formata apenas hora ISO para formato brasileiro (HH:mm)
  */
 const formatarHora = (dataISO: string | null): string => {
@@ -59,6 +76,21 @@ const formatarHora = (dataISO: string | null): string => {
     });
   } catch {
     return '-';
+  }
+};
+
+/**
+ * Normaliza data para comparação apenas por dia (ignora hora)
+ */
+const normalizarDataParaComparacao = (dataISO: string | null): number => {
+  if (!dataISO) return 0;
+  try {
+    const data = new Date(dataISO);
+    // Criar nova data apenas com ano, mês e dia (zerar horas)
+    const dataNormalizada = new Date(data.getFullYear(), data.getMonth(), data.getDate());
+    return dataNormalizada.getTime();
+  } catch {
+    return 0;
   }
 };
 
@@ -212,16 +244,26 @@ function criarColunas(onSuccess: () => void): ColumnDef<Audiencia>[] {
       accessorKey: 'data_inicio',
       header: ({ column }) => (
         <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Hora" />
+          <DataTableColumnHeader column={column} title="Data/Hora" />
         </div>
       ),
       enableSorting: true,
-      size: 100,
-      cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
-          {formatarHora(row.getValue('data_inicio'))}
-        </div>
-      ),
+      size: 140,
+      // Sorting customizado que ordena apenas por data (ignora hora)
+      sortingFn: (rowA, rowB) => {
+        const dataA = normalizarDataParaComparacao(rowA.original.data_inicio);
+        const dataB = normalizarDataParaComparacao(rowB.original.data_inicio);
+        return dataA - dataB;
+      },
+      cell: ({ row }) => {
+        const dataInicio = row.getValue('data_inicio') as string | null;
+        return (
+          <div className="min-h-[2.5rem] flex flex-col items-center justify-center text-sm">
+            <div className="font-medium">{formatarData(dataInicio)}</div>
+            <div className="text-xs text-muted-foreground">{formatarHora(dataInicio)}</div>
+          </div>
+        );
+      },
     },
     {
       id: 'processo',
@@ -361,7 +403,23 @@ export default function AudienciasPage() {
     [pagina, limite, buscaDebounced, ordenarPor, ordem, status, filtros]
   );
 
-  const { audiencias, paginacao, isLoading, error, refetch } = useAudiencias(params);
+  const { audiencias: audienciasRaw, paginacao, isLoading, error, refetch } = useAudiencias(params);
+
+  // Ordenar por data normalizada quando ordenar por data_inicio
+  const audiencias = React.useMemo(() => {
+    if (!audienciasRaw || ordenarPor !== 'data_inicio') {
+      return audienciasRaw;
+    }
+
+    // Ordenar por data normalizada (ignorando hora)
+    const audienciasOrdenadas = [...audienciasRaw].sort((a, b) => {
+      const dataA = normalizarDataParaComparacao(a.data_inicio);
+      const dataB = normalizarDataParaComparacao(b.data_inicio);
+      return ordem === 'asc' ? dataA - dataB : dataB - dataA;
+    });
+
+    return audienciasOrdenadas;
+  }, [audienciasRaw, ordenarPor, ordem]);
 
   const handleSuccess = React.useCallback(() => {
     refetch();
