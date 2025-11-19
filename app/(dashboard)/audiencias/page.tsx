@@ -288,6 +288,7 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
           href={audiencia.url_audiencia_virtual}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`Acessar audiência virtual via ${plataforma}`}
           className="hover:opacity-70 transition-opacity flex items-center justify-center"
         >
           <Image
@@ -303,6 +304,7 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
           href={audiencia.url_audiencia_virtual}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Acessar audiência virtual"
           className="text-xs text-blue-600 hover:underline truncate max-w-[100px]"
         >
           {audiencia.url_audiencia_virtual}
@@ -426,7 +428,7 @@ function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
 
   return (
     <div className="relative group h-full w-full min-h-[60px] flex items-start justify-start p-2">
-      <span className="text-sm whitespace-pre-wrap break-words w-full">
+      <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
         {audiencia.observacoes || '-'}
       </span>
       <Button
@@ -558,7 +560,7 @@ function criarColunas(
       cell: ({ row }) => {
         const dataInicio = row.getValue('data_inicio') as string | null;
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-center justify-center text-sm gap-1">
+          <div className="min-h-10 flex flex-col items-center justify-center text-sm gap-1">
             <div className="font-medium">{formatarData(dataInicio)}</div>
             <div className="text-sm font-medium">{formatarHora(dataInicio)}h</div>
           </div>
@@ -582,7 +584,7 @@ function criarColunas(
         const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -615,7 +617,7 @@ function criarColunas(
         const parteRe = row.original.polo_passivo_nome || '-';
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
             <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
               {parteAutora}
             </Badge>
@@ -641,7 +643,7 @@ function criarColunas(
         const sala = row.original.sala_audiencia_nome || '-';
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1 max-w-[280px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1 max-w-[280px]">
             <div className="flex items-start gap-2">
               <span className="text-sm text-left">{tipo}</span>
               {isVirtual && (
@@ -696,7 +698,7 @@ function criarColunas(
       ),
       size: 160,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center">
+        <div className="min-h-10 flex items-center justify-center">
           <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} />
         </div>
       ),
@@ -931,7 +933,7 @@ export default function AudienciasPage() {
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <div className="text-sm font-medium whitespace-nowrap capitalize min-w-[160px] text-center">
+              <div className="text-sm font-medium whitespace-nowrap capitalize min-w-40 text-center">
                 {formatarMesAno(mesAtual)}
               </div>
               <Button
@@ -954,7 +956,7 @@ export default function AudienciasPage() {
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <div className="text-sm font-medium whitespace-nowrap min-w-[80px] text-center">
+              <div className="text-sm font-medium whitespace-nowrap min-w-20 text-center">
                 {anoAtual}
               </div>
               <Button

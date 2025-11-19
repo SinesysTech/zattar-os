@@ -217,6 +217,7 @@ function UrlVirtualDialogSection({ audiencia, onSuccess }: { audiencia: Audienci
             href={audiencia.url_audiencia_virtual}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`Acessar audiência virtual via ${plataforma}`}
             className="hover:opacity-70 transition-opacity flex items-center"
           >
             <Image
@@ -232,6 +233,7 @@ function UrlVirtualDialogSection({ audiencia, onSuccess }: { audiencia: Audienci
             href={audiencia.url_audiencia_virtual}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Acessar audiência virtual"
             className="text-sm text-blue-600 hover:underline break-all"
           >
             {audiencia.url_audiencia_virtual}
