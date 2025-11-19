@@ -1,0 +1,312 @@
+/**
+ * Arquivo: pje-expediente-documento.service.ts
+ *
+ * PROPÓSITO:
+ * Serviço especializado para buscar documentos PDF de expedientes pendentes do PJE-TRT.
+ * Orquestra o processo completo: fetch do PJE → upload Google Drive → persistência no banco.
+ *
+ * IMPORTANTE:
+ * Este serviço é específico para documentos de PENDENTES DE MANIFESTAÇÃO.
+ * Futuramente teremos serviços similares para outros domínios PJE (cartas de audiência, processos completos, etc.).
+ *
+ * DEPENDÊNCIAS:
+ * - playwright: Para executar fetch no contexto do navegador com cookies
+ * - documento-types.ts: Tipos TypeScript para documentos PJE
+ * - storage: GoogleDriveStorageService para upload de arquivos
+ * - pendentes-persistence: Para atualizar informações de arquivo no banco
+ *
+ * EXPORTAÇÕES:
+ * - fetchDocumentoMetadata(): Busca metadados do documento (nome, mimetype, tamanho)
+ * - fetchDocumentoConteudo(): Busca conteúdo do documento (PDF em base64)
+ * - downloadAndUploadDocumento(): Orquestração completa do processo
+ *
+ * QUEM USA ESTE ARQUIVO:
+ * - app/api/pje/pendente-manifestacao/documento/route.ts: Endpoint REST standalone
+ * - pendentes-manifestacao.service.ts: Integração com scraper automático
+ */
+
+import type { Page } from 'playwright';
+import type {
+  DocumentoMetadata,
+  DocumentoConteudo,
+  FetchDocumentoParams,
+  FetchDocumentoResult,
+  ArquivoInfo,
+} from '@/backend/types/pje-trt/documento-types';
+import { createStorageService } from '@/backend/acordos-condenacoes/services/storage/storage-factory';
+import { atualizarDocumentoPendente } from '@/backend/captura/services/persistence/pendentes-persistence.service';
+
+/**
+ * Função: fetchDocumentoMetadata
+ *
+ * PROPÓSITO:
+ * Busca metadados de um documento específico do PJE.
+ * Usado para validar tipo do documento antes de fazer download completo.
+ *
+ * ENDPOINT PJE:
+ * GET /pje-comum-api/api/processos/id/{processoId}/documentos/id/{documentoId}
+ *
+ * PARÂMETROS:
+ * - page: Instância do Playwright com cookies de autenticação
+ * - processoId: ID do processo no PJE
+ * - documentoId: ID do documento/expediente no PJE
+ *
+ * RETORNO:
+ * Promise<DocumentoMetadata> - Metadados do documento
+ *
+ * EXEMPLO DE RETORNO:
+ * {
+ *   id: 123456,
+ *   nome: "sentenca.pdf",
+ *   mimetype: "application/pdf",
+ *   tamanho: 1024000,
+ *   dataHora: "2025-01-19T12:00:00Z"
+ * }
+ */
+export async function fetchDocumentoMetadata(
+  page: Page,
+  processoId: string,
+  documentoId: string
+): Promise<DocumentoMetadata> {
+  const baseUrl = await page.evaluate(() => window.location.origin);
+  const url = `${baseUrl}/pje-comum-api/api/processos/id/${processoId}/documentos/id/${documentoId}`;
+
+  console.log(`📄 Buscando metadados do documento: ${documentoId} do processo: ${processoId}`);
+
+  const response = await page.evaluate(async ({ url }: { url: string }) => {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+
+    return response.json();
+  }, { url });
+
+  console.log(`✅ Metadados obtidos: ${response.nome} (${response.mimetype})`);
+  return response as DocumentoMetadata;
+}
+
+/**
+ * Função: fetchDocumentoConteudo
+ *
+ * PROPÓSITO:
+ * Busca o conteúdo completo de um documento (PDF em base64) do PJE.
+ *
+ * ENDPOINT PJE:
+ * GET /pje-comum-api/api/processos/id/{processoId}/documentos/id/{documentoId}/conteudo
+ *
+ * PARÂMETROS:
+ * - page: Instância do Playwright com cookies de autenticação
+ * - processoId: ID do processo no PJE
+ * - documentoId: ID do documento/expediente no PJE
+ *
+ * RETORNO:
+ * Promise<DocumentoConteudo> - Conteúdo do documento em base64
+ *
+ * EXEMPLO DE RETORNO:
+ * {
+ *   documento: "JVBERi0xLjQKJeLjz9MK...",
+ *   mimetype: "application/pdf"
+ * }
+ */
+export async function fetchDocumentoConteudo(
+  page: Page,
+  processoId: string,
+  documentoId: string
+): Promise<DocumentoConteudo> {
+  const baseUrl = await page.evaluate(() => window.location.origin);
+  const url = `${baseUrl}/pje-comum-api/api/processos/id/${processoId}/documentos/id/${documentoId}/conteudo`;
+
+  console.log(`📥 Baixando conteúdo do documento: ${documentoId}`);
+
+  const response = await page.evaluate(async ({ url }: { url: string }) => {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
+    }
+
+    return response.json();
+  }, { url });
+
+  console.log(`✅ Conteúdo obtido (${response.documento.length} caracteres base64)`);
+  return response as DocumentoConteudo;
+}
+
+/**
+ * Função: downloadAndUploadDocumento
+ *
+ * PROPÓSITO:
+ * Orquestra o processo completo de captura de documento:
+ * 1. Busca metadados do PJE
+ * 2. Valida que é PDF
+ * 3. Busca conteúdo (base64)
+ * 4. Converte para Buffer
+ * 5. Faz upload para Google Drive
+ * 6. Atualiza banco de dados
+ *
+ * PARÂMETROS:
+ * - page: Instância do Playwright com cookies de autenticação
+ * - params: FetchDocumentoParams contendo processoId, documentoId, pendenteId, numeroProcesso, trt, grau
+ *
+ * RETORNO:
+ * Promise<FetchDocumentoResult> - Resultado da operação com success e arquivoInfo ou error
+ *
+ * EXEMPLO DE USO:
+ * const result = await downloadAndUploadDocumento(page, {
+ *   processoId: "12345678",
+ *   documentoId: "87654321",
+ *   pendenteId: 999,
+ *   numeroProcesso: "0010702-80.2025.5.03.0111",
+ *   trt: "TRT3",
+ *   grau: "1"
+ * });
+ *
+ * EXEMPLO DE SUCESSO:
+ * {
+ *   success: true,
+ *   pendenteId: 999,
+ *   arquivoInfo: {
+ *     arquivo_nome: "pendentes/trt3g1/999_1705856400000.pdf",
+ *     arquivo_url_visualizacao: "https://drive.google.com/...",
+ *     arquivo_url_download: "https://drive.google.com/..."
+ *   }
+ * }
+ *
+ * EXEMPLO DE ERRO:
+ * {
+ *   success: false,
+ *   pendenteId: 999,
+ *   error: "Documento não é um PDF válido"
+ * }
+ */
+export async function downloadAndUploadDocumento(
+  page: Page,
+  params: FetchDocumentoParams
+): Promise<FetchDocumentoResult> {
+  const { processoId, documentoId, pendenteId, numeroProcesso, trt, grau } = params;
+
+  try {
+    console.log(`\n🚀 Iniciando captura de documento para pendente ${pendenteId}`);
+
+    // 1. Buscar metadados
+    const metadata = await fetchDocumentoMetadata(page, processoId, documentoId);
+
+    // 2. Validar que é PDF
+    if (metadata.mimetype !== 'application/pdf') {
+      throw new Error(
+        `Documento não é um PDF válido. Mimetype: ${metadata.mimetype}`
+      );
+    }
+
+    // 3. Buscar conteúdo (base64)
+    const conteudo = await fetchDocumentoConteudo(page, processoId, documentoId);
+
+    // 4. Converter base64 para Buffer
+    const buffer = Buffer.from(conteudo.documento, 'base64');
+    console.log(`📦 Buffer criado: ${buffer.length} bytes`);
+
+    // 5. Gerar timestamp formatado para nome do arquivo
+    const now = new Date();
+    const formattedDateTime = now
+      .toISOString()
+      .replace(/T/, '_')
+      .replace(/\..+/, '')
+      .replace(/:/g, '-')
+      .slice(0, 19); // "2025-11-08_15-28-35"
+
+    // 6. Preparar payload para webhook n8n
+    const webhookUrl = process.env.GOOGLE_DRIVE_WEBHOOK_URL;
+    if (!webhookUrl) {
+      throw new Error('GOOGLE_DRIVE_WEBHOOK_URL não configurada');
+    }
+
+    const payload = {
+      domain: 'pendente_manifestacao',
+      data: {
+        id: pendenteId,
+        numeroProcesso: numeroProcesso,
+        idDocumento: documentoId,
+        formattedDateTime,
+      },
+      file: {
+        content: conteudo.documento, // Já está em base64
+      },
+    };
+
+    console.log(`📤 Enviando para webhook n8n: ${webhookUrl}`);
+    console.log(`Processo: ${payload.data.numeroProcesso}`);
+
+    // 7. Fazer upload via webhook n8n
+    const webhookResponse = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!webhookResponse.ok) {
+      const errorText = await webhookResponse.text();
+      throw new Error(
+        `Erro no webhook n8n: ${webhookResponse.status} - ${errorText}`
+      );
+    }
+
+    const webhookResult = await webhookResponse.json();
+
+    console.log(`✅ Upload concluído no Google Drive`);
+    console.log(`File ID: ${webhookResult.file_id}`);
+    console.log(`File Name: ${webhookResult.file_name}`);
+
+    // 8. Preparar informações do arquivo
+    const arquivoInfo: ArquivoInfo = {
+      arquivo_nome: webhookResult.file_name || `${payload.domain}_${formattedDateTime}_${pendenteId}_${documentoId}`,
+      arquivo_url_visualizacao: webhookResult.web_view_link || '',
+      arquivo_url_download: webhookResult.web_content_link || '',
+    };
+
+    // 8. Atualizar banco de dados
+    console.log(`💾 Atualizando banco de dados: pendente ${pendenteId}`);
+    await atualizarDocumentoPendente(pendenteId, arquivoInfo);
+
+    console.log(`🎉 Documento capturado com sucesso para pendente ${pendenteId}\n`);
+
+    return {
+      success: true,
+      pendenteId,
+      arquivoInfo,
+    };
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Erro desconhecido';
+
+    console.error(
+      `❌ Erro ao capturar documento para pendente ${pendenteId}:`,
+      errorMessage
+    );
+
+    return {
+      success: false,
+      pendenteId,
+      error: errorMessage,
+    };
+  }
+}

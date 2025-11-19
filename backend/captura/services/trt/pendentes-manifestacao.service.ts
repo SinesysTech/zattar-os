@@ -11,6 +11,8 @@ import type { Processo } from '@/backend/types/pje-trt/types';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
 import { captureLogService } from '../persistence/capture-log.service';
+import { downloadAndUploadDocumento } from '../pje/pje-expediente-documento.service';
+import type { FetchDocumentoParams } from '@/backend/types/pje-trt/documento-types';
 
 /**
  * Resultado da captura de processos pendentes de manifestação
@@ -20,6 +22,9 @@ export interface PendentesManifestacaoResult {
   total: number;
   filtroPrazo?: 'no_prazo' | 'sem_prazo';
   persistencia?: SalvarPendentesResult;
+  documentosCapturados?: number;
+  documentosFalhados?: number;
+  errosDocumentos?: string[];
 }
 
 /**
@@ -133,11 +138,93 @@ export async function pendentesManifestacaoCapture(
       // Não falha a captura se a persistência falhar - apenas loga o erro
     }
 
+    // 8. Capturar documentos PDF se solicitado
+    let documentosCapturados = 0;
+    let documentosFalhados = 0;
+    const errosDocumentos: string[] = [];
+
+    if (params.capturarDocumentos && persistencia) {
+      console.log('\n📄 Iniciando captura de documentos...');
+      console.log(`Total de pendentes para capturar documentos: ${processos.length}`);
+
+      for (const processo of processos as ProcessoPendente[]) {
+        // Verificar se o processo tem ID de documento
+        if (!processo.idDocumento) {
+          console.log(`⚠️ Pendente ${processo.numeroProcesso} não possui idDocumento, pulando...`);
+          continue;
+        }
+
+        // Buscar ID do pendente no banco (necessário para atualização)
+        // Usamos o id_pje para encontrar o registro inserido/atualizado
+        try {
+          const { data: pendenteDb } = await require('@/backend/utils/supabase/service-client')
+            .createServiceClient()
+            .from('pendentes_manifestacao')
+            .select('id')
+            .eq('id_pje', processo.id)
+            .eq('trt', params.config.codigo)
+            .eq('grau', params.config.grau)
+            .eq('numero_processo', processo.numeroProcesso.trim())
+            .single();
+
+          if (!pendenteDb) {
+            console.log(`⚠️ Pendente ${processo.numeroProcesso} não encontrado no banco, pulando...`);
+            continue;
+          }
+
+          // Preparar parâmetros para captura de documento
+          const documentoParams: FetchDocumentoParams = {
+            processoId: String(processo.id),
+            documentoId: String(processo.idDocumento),
+            pendenteId: pendenteDb.id,
+            numeroProcesso: processo.numeroProcesso,
+            trt: params.config.codigo,
+            grau: params.config.grau,
+          };
+
+          // Tentar capturar documento
+          console.log(`\n📥 Capturando documento ${processo.idDocumento} do processo ${processo.numeroProcesso}...`);
+
+          const resultado = await downloadAndUploadDocumento(authResult.page, documentoParams);
+
+          if (resultado.success) {
+            documentosCapturados++;
+            console.log(`✅ Documento capturado: ${resultado.arquivoInfo?.arquivo_nome}`);
+          } else {
+            documentosFalhados++;
+            const erro = `Pendente ${processo.numeroProcesso}: ${resultado.error}`;
+            errosDocumentos.push(erro);
+            console.error(`❌ ${erro}`);
+          }
+
+          // Delay de 500ms entre documentos para evitar sobrecarga da API PJE
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        } catch (error) {
+          documentosFalhados++;
+          const erroMsg = error instanceof Error ? error.message : String(error);
+          const erro = `Pendente ${processo.numeroProcesso}: ${erroMsg}`;
+          errosDocumentos.push(erro);
+          console.error(`❌ Erro ao capturar documento:`, error);
+        }
+      }
+
+      console.log('\n📊 Resumo da captura de documentos:');
+      console.log(`  ✅ Capturados: ${documentosCapturados}`);
+      console.log(`  ❌ Falhados: ${documentosFalhados}`);
+      if (errosDocumentos.length > 0) {
+        console.log(`  📋 Erros:`);
+        errosDocumentos.forEach((erro) => console.log(`    - ${erro}`));
+      }
+    }
+
     return {
       processos,
       total: processos.length,
       filtroPrazo,
       persistencia,
+      documentosCapturados,
+      documentosFalhados,
+      errosDocumentos: errosDocumentos.length > 0 ? errosDocumentos : undefined,
     };
   } finally {
     // 7. Limpar recursos (fechar navegador)

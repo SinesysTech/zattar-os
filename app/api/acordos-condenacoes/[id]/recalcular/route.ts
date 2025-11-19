@@ -17,7 +17,18 @@ export async function POST(
     const { id: idStr } = await params;
     const acordoCondenacaoId = parseInt(idStr, 10);
 
-    const resultado = await recalcularDistribuicao(acordoCondenacaoId);
+    // Parse body to get tipoValor
+    const body = await request.json();
+    const tipoValor = body.tipoValor as 'credito_principal' | 'honorarios_sucumbenciais';
+
+    if (!tipoValor || (tipoValor !== 'credito_principal' && tipoValor !== 'honorarios_sucumbenciais')) {
+      return NextResponse.json(
+        { error: 'Campo tipoValor é obrigatório e deve ser "credito_principal" ou "honorarios_sucumbenciais"' },
+        { status: 400 }
+      );
+    }
+
+    const resultado = await recalcularDistribuicao(acordoCondenacaoId, tipoValor);
 
     if (!resultado.sucesso) {
       return NextResponse.json(

@@ -100,22 +100,22 @@ export function AudienciasVisualizacaoAno({ audiencias, isLoading, anoAtual }: A
           const diasMes = getDiasMes(mes);
 
           return (
-            <div key={mes} className="border rounded-lg p-1.5">
+            <div key={mes} className="border rounded-lg px-2 py-2">
               {/* Nome do mês */}
-              <div className="text-xs font-semibold mb-2 text-center">
+              <div className="text-xs font-semibold mb-3 text-center">
                 {nomeMes}
               </div>
 
               {/* Mini calendário */}
-              <div className="space-y-0.5">
+              <div className="space-y-1">
                 {/* Cabeçalho dos dias da semana */}
-                <div className="grid grid-cols-7 gap-px">
+                <div className="grid grid-cols-7 gap-px justify-items-center">
                   {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((dia, i) => {
                     const isSabadoDomingo = i >= 5;
                     return (
                       <div
                         key={i}
-                        className={`text-center text-[10px] font-bold h-3 flex items-center justify-center ${isSabadoDomingo ? 'text-muted-foreground/60' : 'text-muted-foreground'}`}
+                        className={`text-center text-[10px] font-bold w-5 h-5 flex items-center justify-center ${isSabadoDomingo ? 'text-muted-foreground/60' : 'text-muted-foreground'}`}
                       >
                         {dia}
                       </div>
@@ -124,7 +124,7 @@ export function AudienciasVisualizacaoAno({ audiencias, isLoading, anoAtual }: A
                 </div>
 
                 {/* Grade de dias */}
-                <div className="grid grid-cols-7 gap-px">
+                <div className="grid grid-cols-7 gap-px justify-items-center">
                   {diasMes.map((dia, index) => {
                     const temAud = dia ? temAudiencia(anoAtual, mes, dia) : false;
                     const hoje = dia ? ehHoje(mes, dia) : false;
@@ -135,7 +135,7 @@ export function AudienciasVisualizacaoAno({ audiencias, isLoading, anoAtual }: A
                       <div
                         key={index}
                         className={`
-                          h-5 w-5 flex items-center justify-center text-[10px] rounded-sm
+                          w-5 h-5 flex items-center justify-center text-xs rounded-sm
                           ${!dia ? 'invisible' : ''}
                           ${hoje ? 'bg-blue-500 text-white font-semibold' : ''}
                           ${temAud && !hoje ? 'bg-primary text-primary-foreground font-medium cursor-pointer hover:opacity-80 transition-opacity' : ''}

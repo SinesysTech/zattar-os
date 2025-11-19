@@ -20,9 +20,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, Save } from 'lucide-react';
+import { Loader2, Save, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Usuario, Endereco } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import { useCargosAtivos } from '@/lib/hooks/use-cargos';
+import { buscarEnderecoPorCep, limparCep, formatarCep } from '@/lib/utils/viacep';
 
 interface UsuarioEditDialogProps {
   open: boolean;
@@ -38,6 +40,7 @@ export function UsuarioEditDialog({
   onSuccess,
 }: UsuarioEditDialogProps) {
   const [isSaving, setIsSaving] = useState(false);
+  const [isBuscandoCep, setIsBuscandoCep] = useState(false);
   const [formData, setFormData] = useState({
     nomeCompleto: '',
     nomeExibicao: '',
@@ -47,6 +50,7 @@ export function UsuarioEditDialog({
     genero: '',
     oab: '',
     ufOab: '',
+    cargoId: null as number | null,
     emailPessoal: '',
     emailCorporativo: '',
     telefone: '',
@@ -63,6 +67,9 @@ export function UsuarioEditDialog({
     ativo: true,
   });
 
+  // Buscar lista de cargos
+  const { cargos, isLoading: isLoadingCargos } = useCargosAtivos();
+
   // Preencher formulário quando usuário mudar
   useEffect(() => {
     if (usuario) {
@@ -75,6 +82,7 @@ export function UsuarioEditDialog({
         genero: usuario.genero || '',
         oab: usuario.oab || '',
         ufOab: usuario.ufOab || '',
+        cargoId: usuario.cargo?.id || null,
         emailPessoal: usuario.emailPessoal || '',
         emailCorporativo: usuario.emailCorporativo || '',
         telefone: usuario.telefone || '',
@@ -93,6 +101,56 @@ export function UsuarioEditDialog({
     }
   }, [usuario]);
 
+  // Função para buscar endereço por CEP
+  const handleBuscarCep = async () => {
+    if (!formData.endereco.cep) {
+      toast.error('Digite um CEP primeiro');
+      return;
+    }
+
+    const cep = limparCep(formData.endereco.cep);
+
+    if (cep.length !== 8) {
+      toast.error('CEP deve conter 8 dígitos');
+      return;
+    }
+
+    setIsBuscandoCep(true);
+
+    try {
+      const endereco = await buscarEnderecoPorCep(cep);
+
+      if (!endereco) {
+        toast.error('CEP não encontrado');
+        return;
+      }
+
+      // Preencher campos do endereço
+      setFormData({
+        ...formData,
+        endereco: {
+          ...formData.endereco,
+          cep: endereco.cep,
+          logradouro: endereco.logradouro,
+          bairro: endereco.bairro,
+          cidade: endereco.cidade,
+          estado: endereco.estado,
+          complemento: endereco.complemento || formData.endereco.complemento,
+        },
+      });
+
+      toast.success('Endereço encontrado!');
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : 'Erro ao buscar CEP. Tente novamente.'
+      );
+    } finally {
+      setIsBuscandoCep(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
@@ -103,6 +161,7 @@ export function UsuarioEditDialog({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          cargoId: formData.cargoId || null,
           // Remover campos vazios do endereço
           endereco: Object.values(formData.endereco).some((v) => v)
             ? formData.endereco
@@ -319,6 +378,33 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
+            {/* Cargo */}
+            <div className="grid gap-2">
+              <Label htmlFor="cargo">Cargo</Label>
+              <Select
+                value={formData.cargoId?.toString() || 'none'}
+                onValueChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    cargoId: value === 'none' ? null : parseInt(value, 10),
+                  })
+                }
+                disabled={isLoadingCargos}
+              >
+                <SelectTrigger id="cargo">
+                  <SelectValue placeholder="Selecione um cargo..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Nenhum</SelectItem>
+                  {cargos.map((cargo) => (
+                    <SelectItem key={cargo.id} value={cargo.id.toString()}>
+                      {cargo.nome}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Endereço */}
             <div className="border-t pt-4 mt-2">
               <h3 className="font-medium mb-3">Endereço</h3>
@@ -328,16 +414,34 @@ export function UsuarioEditDialog({
                 <div className="grid grid-cols-3 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="cep">CEP</Label>
-                    <Input
-                      id="cep"
-                      value={formData.endereco.cep}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          endereco: { ...formData.endereco, cep: e.target.value },
-                        })
-                      }
-                    />
+                    <div className="flex gap-2">
+                      <Input
+                        id="cep"
+                        value={formData.endereco.cep}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            endereco: { ...formData.endereco, cep: e.target.value },
+                          })
+                        }
+                        placeholder="00000-000"
+                        maxLength={9}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={handleBuscarCep}
+                        disabled={isBuscandoCep}
+                        title="Buscar CEP"
+                      >
+                        {isBuscandoCep ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Search className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
 
                   <div className="grid gap-2 col-span-2">
