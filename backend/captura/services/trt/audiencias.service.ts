@@ -3,7 +3,7 @@
 
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaAudienciasParams } from './trt-capture.service';
-import { obterTodasAudiencias } from '@/backend/api/pje-trt/audiencias';
+import { obterTodasAudiencias } from '@/backend/api/pje-trt';
 import type { Audiencia } from '@/backend/types/pje-trt/types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';

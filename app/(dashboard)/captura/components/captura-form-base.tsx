@@ -34,7 +34,7 @@ export function CapturaFormBase({
   });
 
   // Buscar credenciais do advogado selecionado
-  const { credenciais, isLoading: isLoadingCredenciais } = useCredenciais(advogadoId, {
+  const { credenciais, isLoading: isLoadingCredenciais } = useCredenciais(advogadoId ?? undefined, {
     active: true,
   });
 

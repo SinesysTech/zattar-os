@@ -6,7 +6,7 @@ import type { CapturaTRTParams } from './trt-capture.service';
 import {
   obterTodosProcessosAcervoGeral,
   obterTotalizadoresAcervoGeral,
-} from '@/backend/api/pje-trt/acervo-geral';
+} from '@/backend/api/pje-trt';
 import type { Processo } from '@/backend/types/pje-trt/types';
 import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';

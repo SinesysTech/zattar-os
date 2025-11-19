@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { Badge } from '@/components/ui/badge';
 import {
   Select,
@@ -189,71 +190,67 @@ export function AcordosCondenacoesList() {
             </Button>
           )}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium mb-2 block">Tipo</label>
-            <Select
-              value={filtros.tipo || undefined}
-              onValueChange={(value) =>
-                setFiltros((prev) => ({ ...prev, tipo: value }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Todos" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="acordo">Acordo</SelectItem>
-                <SelectItem value="condenacao">Condenação</SelectItem>
-                <SelectItem value="custas_processuais">Custas</SelectItem>
-              </SelectContent>
-            </Select>
+            <label className="text-sm font-medium mb-2 block">Filtros</label>
+            <ButtonGroup>
+              <Select
+                value={filtros.tipo || undefined}
+                onValueChange={(value) =>
+                  setFiltros((prev) => ({ ...prev, tipo: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="acordo">Acordo</SelectItem>
+                  <SelectItem value="condenacao">Condenação</SelectItem>
+                  <SelectItem value="custas_processuais">Custas</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={filtros.direcao || undefined}
+                onValueChange={(value) =>
+                  setFiltros((prev) => ({ ...prev, direcao: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Direção" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recebimento">Recebimento</SelectItem>
+                  <SelectItem value="pagamento">Pagamento</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={filtros.status || undefined}
+                onValueChange={(value) =>
+                  setFiltros((prev) => ({ ...prev, status: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pendente">Pendente</SelectItem>
+                  <SelectItem value="pago_parcial">Pago Parcial</SelectItem>
+                  <SelectItem value="pago_total">Pago Total</SelectItem>
+                  <SelectItem value="atrasado">Atrasado</SelectItem>
+                </SelectContent>
+              </Select>
+            </ButtonGroup>
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">Direção</label>
-            <Select
-              value={filtros.direcao || undefined}
-              onValueChange={(value) =>
-                setFiltros((prev) => ({ ...prev, direcao: value }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Todas" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="recebimento">Recebimento</SelectItem>
-                <SelectItem value="pagamento">Pagamento</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <label className="text-sm font-medium mb-2 block">Status</label>
-            <Select
-              value={filtros.status || undefined}
-              onValueChange={(value) =>
-                setFiltros((prev) => ({ ...prev, status: value }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Todos" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pendente">Pendente</SelectItem>
-                <SelectItem value="pago_parcial">Pago Parcial</SelectItem>
-                <SelectItem value="pago_total">Pago Total</SelectItem>
-                <SelectItem value="atrasado">Atrasado</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <label className="text-sm font-medium mb-2 block">Processo ID</label>
+            <label className="text-sm font-medium mb-2 block">Busca</label>
             <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground z-10" />
               <Input
                 type="text"
-                placeholder="Buscar processo"
+                placeholder="Buscar por processo"
                 value={filtros.processoId}
                 onChange={(e) =>
                   setFiltros((prev) => ({ ...prev, processoId: e.target.value }))

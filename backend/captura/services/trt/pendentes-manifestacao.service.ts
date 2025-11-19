@@ -6,7 +6,7 @@ import type { CapturaPendentesManifestacaoParams } from './trt-capture.service';
 import {
   obterTodosProcessosPendentesManifestacao,
   obterTotalizadoresPendentesManifestacao,
-} from '@/backend/api/pje-trt/pendentes-manifestacao';
+} from '@/backend/api/pje-trt';
 import type { Processo } from '@/backend/types/pje-trt/types';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';

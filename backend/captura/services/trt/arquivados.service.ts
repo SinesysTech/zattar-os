@@ -5,7 +5,7 @@ import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaTRTParams } from './trt-capture.service';
 import {
   obterTodosProcessosArquivados,
-} from '@/backend/api/pje-trt/arquivados';
+} from '@/backend/api/pje-trt';
 import type { Processo } from '@/backend/types/pje-trt/types';
 import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';

@@ -3,10 +3,10 @@
 import { useMemo } from 'react';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { GRAUS } from '@/lib/api/captura';
-import type { CredencialComAdvogado } from '@/backend/types/credenciais/types';
+import type { Credencial } from '@/lib/types/credenciais';
 
 interface CredenciaisComboboxProps {
-  credenciais: CredencialComAdvogado[];
+  credenciais: Credencial[];
   selectedIds: number[];
   onSelectionChange: (ids: number[]) => void;
   disabled?: boolean;
@@ -24,7 +24,7 @@ function extrairNumeroTRT(tribunal: string): number {
 /**
  * Ordena credenciais por número do TRT (crescente) e depois por grau
  */
-function ordenarCredenciais(credenciais: CredencialComAdvogado[]): CredencialComAdvogado[] {
+function ordenarCredenciais(credenciais: Credencial[]): Credencial[] {
   return [...credenciais].sort((a, b) => {
     // Primeiro ordenar por número do TRT
     const numTRTA = extrairNumeroTRT(a.tribunal);

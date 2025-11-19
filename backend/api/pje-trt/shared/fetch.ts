@@ -1,5 +1,5 @@
 /**
- * Arquivo: fetch.ts
+ * Arquivo: shared/fetch.ts
  * 
  * PROPÓSITO:
  * Este arquivo contém a função auxiliar genérica fetchPJEAPI que realiza requisições HTTP GET
@@ -16,12 +16,7 @@
  * - fetchPJEAPI<T>(): Função genérica para fazer requisições GET à API do PJE
  * 
  * QUEM USA ESTE ARQUIVO:
- * - processos.ts: Importa fetchPJEAPI para chamar endpoints de processos
- * - audiencias.ts: Importa fetchPJEAPI para chamar endpoints de audiências
- * 
- * NÃO É USADO DIRETAMENTE:
- * Esta função não é chamada diretamente pelos serviços de captura.
- * Ela é uma função auxiliar interna usada apenas pelas funções de processos.ts e audiencias.ts.
+ * - Todas as APIs do PJE (acervo-geral, pendentes-manifestacao, audiencias, arquivados)
  */
 
 import type { Page } from 'playwright';
@@ -78,11 +73,6 @@ import type { Page } from 'playwright';
  * - window.location.origin: Obtém a origem da URL atual (ex: "https://pje.trt3.jus.br")
  * - URLSearchParams: Constrói a query string a partir dos parâmetros
  * - fetch(): Faz a requisição HTTP GET dentro do contexto do navegador
- * 
- * CHAMADAS EXTERNAS:
- * Esta função é chamada por:
- * - processos.ts: obterTotalizadores(), obterProcessos()
- * - audiencias.ts: obterPautaAudiencias()
  * 
  * ENDPOINT HTTP:
  * Não há um endpoint fixo. A URL completa é construída dinamicamente:
@@ -211,4 +201,3 @@ export async function fetchPJEAPI<T>(
   // Retorna a resposta tipada como T
   return response as T;
 }
-

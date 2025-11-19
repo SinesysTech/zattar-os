@@ -18,9 +18,13 @@ export function getRedisClient(): Redis | null {
       redisClient = new Redis(REDIS_URL!, {
         password: REDIS_PASSWORD,
         maxRetriesPerRequest: 3,
-        retryDelayOnFailover: 100,
         enableReadyCheck: false,
-        maxMemory: REDIS_CACHE_MAX_MEMORY,
+        retryStrategy: (times) => {
+          if (times > 3) {
+            return null; // Stop retrying after 3 attempts
+          }
+          return Math.min(times * 100, 2000); // Exponential backoff up to 2 seconds
+        },
       });
 
       redisClient.on('error', (err: Error) => {

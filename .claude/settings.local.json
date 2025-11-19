@@ -12,7 +12,8 @@
       "Bash(npx openspec list --specs)",
       "Bash(npx openspec:*)",
       "Bash(npx tsc:*)",
-      "Bash(psql \"postgresql://postgres.qggifqpqgjjgobcqbfgo:Zattar2024%40@aws-0-sa-east-1.pooler.supabase.com:6543/postgres\" -c \"\\d usuarios\")"
+      "Bash(psql \"postgresql://postgres.qggifqpqgjjgobcqbfgo:Zattar2024%40@aws-0-sa-east-1.pooler.supabase.com:6543/postgres\" -c \"\\d usuarios\")",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []

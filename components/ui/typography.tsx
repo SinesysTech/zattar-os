@@ -25,23 +25,24 @@ function createTypographyComponent<T extends React.ElementType>(
     { className?: string }
   >;
 
-  const Component = React.forwardRef(
-    <C extends React.ElementType = T>(
-      { as, className: userClassName, children, ...props }: TypographyProps<C>,
-      ref?: React.ComponentPropsWithRef<C>['ref']
-    ) => {
-      const Element = as || defaultElement;
-      return (
-        <Element
-          ref={ref}
-          className={cn(className, userClassName)}
-          {...props}
-        >
-          {children}
-        </Element>
-      );
-    }
-  );
+  function Component<C extends React.ElementType = T>({
+    as,
+    className: userClassName,
+    children,
+    ref,
+    ...props
+  }: TypographyProps<C> & { ref?: React.ComponentPropsWithRef<C>['ref'] }) {
+    const Element = (as || defaultElement) as React.ElementType;
+    return (
+      <Element
+        ref={ref}
+        className={cn(className, userClassName)}
+        {...(props as any)}
+      >
+        {children}
+      </Element>
+    );
+  }
 
   Component.displayName = displayName;
   return Component;
