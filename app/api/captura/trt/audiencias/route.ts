@@ -13,6 +13,7 @@ interface AudienciasParams {
   credencial_ids: number[];
   dataInicio?: string;
   dataFim?: string;
+  status?: 'M' | 'C' | 'F'; // M=Designada, C=Cancelada, F=Realizada
 }
 
 /**
@@ -66,11 +67,16 @@ interface AudienciasParams {
  *                 type: string
  *                 format: date
  *                 description: Data final do período de busca (YYYY-MM-DD). Se não fornecida, usa hoje + 365 dias.
+ *               status:
+ *                 type: string
+ *                 enum: [M, C, F]
+ *                 description: Status da audiência (M=Designada, C=Cancelada, F=Realizada). Padrão M.
  *           example:
  *             advogado_id: 1
  *             credencial_ids: [1, 2, 3]
  *             dataInicio: "2024-01-01"
  *             dataFim: "2024-12-31"
+ *             status: "M"
  *     responses:
  *       200:
  *         description: Captura iniciada com sucesso (resposta assíncrona)
@@ -171,7 +177,7 @@ export async function POST(request: NextRequest) {
 
     // 2. Validar e parsear body da requisição
     const body = await request.json();
-    const { advogado_id, credencial_ids, dataInicio, dataFim } = body as AudienciasParams;
+    const { advogado_id, credencial_ids, dataInicio, dataFim, status } = body as AudienciasParams;
 
     // Validações básicas
     if (!advogado_id || !credencial_ids || !Array.isArray(credencial_ids) || credencial_ids.length === 0) {
@@ -271,6 +277,7 @@ export async function POST(request: NextRequest) {
             config: tribunalConfig,
             dataInicio,
             dataFim,
+            codigoSituacao: status || 'M', // Padrão: Designada
           });
 
           console.log(`[Audiências] Captura concluída: ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);

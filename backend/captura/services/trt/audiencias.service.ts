@@ -111,18 +111,19 @@ export async function audienciasCapture(
     }
 
     // 3. Chamar API REST para obter pauta de audiências
-    // codigoSituacao='M' = Marcadas/Designadas (agendadas)
+    // codigoSituacao: 'M' = Designada, 'C' = Cancelada, 'F' = Realizada
+    const codigoSituacao = params.codigoSituacao || 'M';
     console.log('📡 Chamando API de audiências...', {
       dataInicio,
       dataFim,
-      codigoSituacao: 'M',
+      codigoSituacao,
     });
 
     const audiencias = await obterTodasAudiencias(
       page,
       dataInicio,
       dataFim,
-      'M' // Marcadas/Designadas
+      params.codigoSituacao || 'M' // Padrão: Marcadas/Designadas
     );
 
     console.log('✅ API de audiências retornou:', {
