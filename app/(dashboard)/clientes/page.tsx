@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { ClienteViewSheet } from './components/cliente-view-sheet';
 import { ClienteEditSheet } from './components/cliente-edit-sheet';
 import { ClienteCreateSheet } from './components/cliente-create-sheet';
@@ -151,7 +152,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       cell: ({ row }) => {
         const cliente = row.original;
         return (
-          <div className="min-h-[2.5rem] flex items-center justify-center gap-2">
+          <div className="min-h-[2.5rem] flex items-center justify-center">
             <ClienteActions cliente={cliente} onEditSuccess={onEditSuccess} />
           </div>
         );
@@ -175,24 +176,26 @@ function ClienteActions({
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8"
-        onClick={() => setViewOpen(true)}
-      >
-        <Eye className="h-4 w-4" />
-        <span className="sr-only">Visualizar cliente</span>
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8"
-        onClick={() => setEditOpen(true)}
-      >
-        <Pencil className="h-4 w-4" />
-        <span className="sr-only">Editar cliente</span>
-      </Button>
+      <ButtonGroup>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={() => setViewOpen(true)}
+        >
+          <Eye className="h-4 w-4" />
+          <span className="sr-only">Visualizar cliente</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={() => setEditOpen(true)}
+        >
+          <Pencil className="h-4 w-4" />
+          <span className="sr-only">Editar cliente</span>
+        </Button>
+      </ButtonGroup>
       <ClienteViewSheet
         open={viewOpen}
         onOpenChange={setViewOpen}
@@ -380,7 +383,7 @@ export default function ClientesPage() {
     <div className="space-y-4">
       {/* Barra de busca e filtros */}
       <div className="flex items-center gap-4 justify-between">
-        <div className="flex items-center gap-2">
+        <ButtonGroup>
           <Input
             placeholder="Buscar por nome, CPF, CNPJ ou e-mail..."
             value={busca}
@@ -395,7 +398,7 @@ export default function ClientesPage() {
             onFiltersChange={handleFiltersChange}
             onReset={handleFiltersReset}
           />
-        </div>
+        </ButtonGroup>
         <Button onClick={() => setCreateOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
           Novo Cliente

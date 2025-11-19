@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ChevronLeft, ChevronRight, Copy, Pencil, Plus } from 'lucide-react';
 import { AudienciasVisualizacaoSemana } from './components/audiencias-visualizacao-semana';
@@ -858,20 +859,22 @@ export default function AudienciasPage() {
       <div className="space-y-4">
         {/* Barra de busca, filtros e tabs de visualização */}
         <div className="flex items-center gap-4">
-          <Input
-            placeholder="Buscar por número do processo, parte autora ou parte ré..."
-            value={busca}
-            onChange={(e) => {
-              setBusca(e.target.value);
-              setPagina(0); // Resetar para primeira página ao buscar
-            }}
-            className="max-w-sm"
-          />
-          <AudienciasFiltrosAvancados
-            filters={filtros}
-            onFiltersChange={handleFiltersChange}
-            onReset={handleFiltersReset}
-          />
+          <ButtonGroup>
+            <Input
+              placeholder="Buscar por número do processo, parte autora ou parte ré..."
+              value={busca}
+              onChange={(e) => {
+                setBusca(e.target.value);
+                setPagina(0); // Resetar para primeira página ao buscar
+              }}
+              className="max-w-sm"
+            />
+            <AudienciasFiltrosAvancados
+              filters={filtros}
+              onFiltersChange={handleFiltersChange}
+              onReset={handleFiltersReset}
+            />
+          </ButtonGroup>
           <Select
             value={status}
             onValueChange={(value) => {
@@ -925,7 +928,7 @@ export default function AudienciasPage() {
 
           {/* Controles de navegação de mês (aparecem apenas na visualização de mês) */}
           {visualizacao === 'mes' && (
-            <div className="flex items-center gap-2">
+            <ButtonGroup>
               <Button
                 variant="outline"
                 size="icon"
@@ -933,9 +936,9 @@ export default function AudienciasPage() {
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <div className="text-sm font-medium whitespace-nowrap capitalize min-w-40 text-center">
+              <ButtonGroupText className="whitespace-nowrap capitalize min-w-40 text-center">
                 {formatarMesAno(mesAtual)}
-              </div>
+              </ButtonGroupText>
               <Button
                 variant="outline"
                 size="icon"
@@ -943,12 +946,12 @@ export default function AudienciasPage() {
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
-            </div>
+            </ButtonGroup>
           )}
 
           {/* Controles de navegação de ano (aparecem apenas na visualização de ano) */}
           {visualizacao === 'ano' && (
-            <div className="flex items-center gap-2">
+            <ButtonGroup>
               <Button
                 variant="outline"
                 size="icon"
@@ -956,9 +959,9 @@ export default function AudienciasPage() {
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <div className="text-sm font-medium whitespace-nowrap min-w-20 text-center">
+              <ButtonGroupText className="whitespace-nowrap min-w-20 text-center">
                 {anoAtual}
-              </div>
+              </ButtonGroupText>
               <Button
                 variant="outline"
                 size="icon"
@@ -966,7 +969,7 @@ export default function AudienciasPage() {
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
-            </div>
+            </ButtonGroup>
           )}
 
           {/* Botão atual na extremidade direita */}

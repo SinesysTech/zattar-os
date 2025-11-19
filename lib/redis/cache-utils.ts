@@ -2,6 +2,9 @@ import { getRedisClient, isRedisAvailable } from './client';
 
 const REDIS_CACHE_TTL = parseInt(process.env.REDIS_CACHE_TTL || '600', 10);
 
+// Re-export for convenience
+export { isRedisAvailable };
+
 export const CACHE_PREFIXES = {
   pendentes: 'pendentes',
   audiencias: 'audiencias',

@@ -15,15 +15,15 @@ interface UseCredenciaisResult {
   isLoading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
-  criarCredencial: (advogadoId: number, params: Omit<CriarCredencialParams, 'advogado_id'>) => Promise<void>;
-  atualizarCredencial: (advogadoId: number, credencialId: number, params: AtualizarCredencialParams) => Promise<void>;
+  criarCredencial: (advogadoId: number, credencialParams: Omit<CriarCredencialParams, 'advogado_id'>) => Promise<void>;
+  atualizarCredencial: (advogadoId: number, credencialId: number, credencialParams: AtualizarCredencialParams) => Promise<void>;
   toggleStatus: (advogadoId: number, credencialId: number, active: boolean) => Promise<void>;
 }
 
 /**
  * Hook para gerenciar credenciais de acesso aos tribunais
  */
-export const useCredenciais = (): UseCredenciaisResult => {
+export const useCredenciais = (advogadoId?: number, params?: { active?: boolean }): UseCredenciaisResult => {
   const [credenciais, setCredenciais] = useState<Credencial[]>([]);
   const [tribunais, setTribunais] = useState<string[]>([]);
   const [graus, setGraus] = useState<string[]>([]);
@@ -35,7 +35,17 @@ export const useCredenciais = (): UseCredenciaisResult => {
     setError(null);
 
     try {
-      const response = await fetch('/api/captura/credenciais');
+      // Construir query string com filtros
+      const queryParams = new URLSearchParams();
+      if (advogadoId !== undefined) {
+        queryParams.append('advogado_id', advogadoId.toString());
+      }
+      if (params?.active !== undefined) {
+        queryParams.append('active', params.active.toString());
+      }
+
+      const url = `/api/captura/credenciais${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      const response = await fetch(url);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
@@ -58,17 +68,17 @@ export const useCredenciais = (): UseCredenciaisResult => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [advogadoId, params?.active]);
 
   const criarCredencial = useCallback(
-    async (advogadoId: number, params: Omit<CriarCredencialParams, 'advogado_id'>) => {
+    async (advogadoId: number, credencialParams: Omit<CriarCredencialParams, 'advogado_id'>) => {
       try {
         const response = await fetch(`/api/advogados/${advogadoId}/credenciais`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(params),
+          body: JSON.stringify(credencialParams),
         });
 
         if (!response.ok) {
@@ -87,14 +97,14 @@ export const useCredenciais = (): UseCredenciaisResult => {
   );
 
   const atualizarCredencial = useCallback(
-    async (advogadoId: number, credencialId: number, params: AtualizarCredencialParams) => {
+    async (advogadoId: number, credencialId: number, credencialParams: AtualizarCredencialParams) => {
       try {
         const response = await fetch(`/api/advogados/${advogadoId}/credenciais/${credencialId}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(params),
+          body: JSON.stringify(credencialParams),
         });
 
         if (!response.ok) {
