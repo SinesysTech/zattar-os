@@ -156,28 +156,116 @@ export interface Processo {
 }
 
 /**
+ * Interface: ClasseJudicial
+ * 
+ * Representa a classe judicial retornada pela API do PJE.
+ */
+export interface ClasseJudicial {
+  id: number;
+  codigo: string;
+  descricao: string;
+  sigla: string;
+  requerProcessoReferenciaCodigo: string;
+  controlaValorCausa: boolean;
+  podeIncluirAutoridade: boolean;
+  pisoValorCausa: number;
+  tetoValorCausa: number;
+  ativo: boolean;
+  idClasseJudicialPai: number | null;
+  possuiFilhos: boolean;
+}
+
+/**
+ * Interface: OrgaoJulgador
+ * 
+ * Representa o órgão julgador retornado pela API do PJE.
+ */
+export interface OrgaoJulgador {
+  id: number;
+  descricao: string;
+  cejusc: boolean;
+  ativo: boolean;
+  postoAvancado: boolean;
+  novoOrgaoJulgador: boolean;
+  codigoServentiaCnj: number;
+}
+
+/**
+ * Interface: ProcessoAudiencia
+ * 
+ * Representa o processo dentro de uma audiência do PJE.
+ */
+export interface ProcessoAudiencia {
+  id: number;
+  numero: string;
+  classeJudicial: ClasseJudicial;
+  segredoDeJustica: boolean;
+  juizoDigital: boolean;
+  orgaoJulgador: OrgaoJulgador;
+}
+
+/**
+ * Interface: TipoAudiencia
+ * 
+ * Representa o tipo de audiência retornado pela API do PJE.
+ */
+export interface TipoAudiencia {
+  id: number;
+  descricao: string;
+  codigo: string;
+  isVirtual: boolean;
+}
+
+/**
+ * Interface: PoloAudiencia
+ * 
+ * Representa um polo (ativo ou passivo) em uma audiência.
+ */
+export interface PoloAudiencia {
+  nome: string;
+  polo: string;
+  poloEnum: 'ATIVO' | 'PASSIVO';
+  representaVarios: boolean;
+  cpf?: string;
+  cnpj?: string;
+}
+
+/**
+ * Interface: SalaAudiencia
+ * 
+ * Representa a sala de audiência retornada pela API do PJE.
+ */
+export interface SalaAudiencia {
+  nome: string;
+  id?: number;
+}
+
+/**
+ * Interface: PautaAudienciaHorario
+ * 
+ * Representa o horário da audiência na pauta.
+ */
+export interface PautaAudienciaHorario {
+  id: number;
+  horaInicial: string;
+  horaFinal: string;
+}
+
+/**
  * Interface: Audiencia
  * 
  * PROPÓSITO:
  * Representa uma audiência retornada pela API do PJE.
  * Contém todas as informações sobre uma audiência agendada, incluindo dados do processo relacionado.
  * 
- * CAMPOS:
- * - id: number - ID único da audiência no sistema PJE
- * - dataInicio: string - Data e hora de início da audiência no formato ISO
- * - dataFim: string - Data e hora de término da audiência no formato ISO
- * - salaAudiencia: { nome: string, id: number } - Informações da sala de audiência
- * - status: string - Status da audiência (ex: "Marcada", "Realizada", "Cancelada")
- * - processo: { ... } - Objeto com informações do processo relacionado:
- *   - id: number - ID do processo
- *   - numero: string - Número do processo
- *   - classeJudicial: { id: number, descricao: string } - Classe judicial
- *   - orgaoJulgador: { ... } - Informações do órgão julgador
- * - tipo: { id: number, descricao: string } - Tipo da audiência
- * - poloAtivo: { nome: string, cpf: string } - Informações do polo ativo
- * - poloPassivo: { nome: string, cnpj: string } - Informações do polo passivo
- * - urlAudienciaVirtual?: string - URL para audiência virtual (opcional, presente apenas em audiências virtuais)
- * - pautaAudienciaHorario: { horaInicial: string, horaFinal: string } - Horário da audiência
+ * ESTRUTURA COMPLETA DO OBJETO PJE:
+ * - Dados principais da audiência (id, datas, status)
+ * - Processo relacionado (com classe judicial, órgão julgador)
+ * - Tipo de audiência (com informações sobre virtualidade)
+ * - Polos (ativo e passivo com CPF/CNPJ)
+ * - Sala de audiência
+ * - Pauta e horários
+ * - Flags de estado (designada, em andamento, documento ativo)
  * 
  * USO:
  * Utilizada por todas as funções que retornam audiências:
@@ -190,46 +278,20 @@ export interface Audiencia {
   id: number;
   dataInicio: string;
   dataFim: string;
-  salaAudiencia: {
-    nome: string;
-    id: number;
-  };
+  salaAudiencia: SalaAudiencia;
   status: string;
-  processo: {
-    id: number;
-    numero: string;
-    classeJudicial: {
-      id: number;
-      descricao: string;
-    };
-    orgaoJulgador: {
-      id: number;
-      nome?: string;
-      descricao?: string;
-      cejusc?: boolean;
-      ativo?: boolean;
-      postoAvancado?: boolean;
-      novoOrgaoJulgador?: boolean;
-      codigoServentiaCnj?: number;
-    };
-  };
-  tipo: {
-    id: number;
-    descricao: string;
-  };
-  poloAtivo: {
-    nome: string;
-    cpf: string;
-  };
-  poloPassivo: {
-    nome: string;
-    cnpj: string;
-  };
+  processo: ProcessoAudiencia;
+  tipo: TipoAudiencia;
+  designada: boolean;
+  emAndamento: boolean;
+  documentoAtivo: boolean;
+  poloAtivo: PoloAudiencia;
+  poloPassivo: PoloAudiencia;
+  pautaAudienciaHorario: PautaAudienciaHorario;
+  statusDescricao: string;
+  idProcesso: number;
+  nrProcesso: string;
   urlAudienciaVirtual?: string;
-  pautaAudienciaHorario: {
-    horaInicial: string;
-    horaFinal: string;
-  };
 }
 
 /**

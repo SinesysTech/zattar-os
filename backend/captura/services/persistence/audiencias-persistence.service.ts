@@ -7,6 +7,9 @@ import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 import { buscarOrgaoJulgador } from './orgao-julgador-persistence.service';
 import { buscarProcessoNoAcervo } from './acervo-persistence.service';
 import { salvarOrgaoJulgador } from './orgao-julgador-persistence.service';
+import { salvarClasseJudicial, buscarClasseJudicial } from './classe-judicial-persistence.service';
+import { salvarTipoAudiencia, buscarTipoAudiencia } from './tipo-audiencia-persistence.service';
+import { salvarSalaAudiencia, buscarSalaAudiencia } from './sala-audiencia-persistence.service';
 import {
   compararObjetos,
   removerCamposControle,
@@ -36,6 +39,9 @@ export interface SalvarAudienciasResult {
   erros: number;
   total: number;
   orgaosJulgadoresCriados: number;
+  classesJudiciaisCriadas: number;
+  tiposAudienciaCriados: number;
+  salasAudienciaCriadas: number;
 }
 
 /**
@@ -43,16 +49,6 @@ export interface SalvarAudienciasResult {
  */
 function parseDate(dateString: string): string {
   return new Date(dateString).toISOString();
-}
-
-/**
- * Converte hora HH:mm:ss para time ou null
- */
-function parseTime(timeString: string | undefined): string | null {
-  if (!timeString) return null;
-  // Extrair apenas HH:mm:ss (remover timezone se presente)
-  const match = timeString.match(/(\d{2}:\d{2}:\d{2})/);
-  return match ? match[1] : null;
 }
 
 /**
@@ -103,10 +99,16 @@ export async function salvarAudiencias(
       erros: 0,
       total: 0,
       orgaosJulgadoresCriados: 0,
+      classesJudiciaisCriadas: 0,
+      tiposAudienciaCriados: 0,
+      salasAudienciaCriadas: 0,
     };
   }
 
   let orgaosJulgadoresCriados = 0;
+  let classesJudiciaisCriadas = 0;
+  let tiposAudienciaCriados = 0;
+  let salasAudienciaCriadas = 0;
 
   // Primeiro, garantir que todos os órgãos julgadores estão salvos
   for (const audiencia of audiencias) {
@@ -118,8 +120,7 @@ export async function salvarAudiencias(
       
       if (!existe) {
         // Salvar órgão julgador
-        // A API de audiências retorna orgaoJulgador com 'nome' ou 'descricao'
-        const descricao = orgaoJulgador.nome || orgaoJulgador.descricao || '';
+        const descricao = orgaoJulgador.descricao || '';
         
         await salvarOrgaoJulgador({
           orgaoJulgador: {
@@ -137,13 +138,41 @@ export async function salvarAudiencias(
         orgaosJulgadoresCriados++;
       }
     }
+
+    // Salvar classe judicial (se existir)
+    if (audiencia.processo?.classeJudicial) {
+      const classeJudicial = audiencia.processo.classeJudicial;
+      const resultado = await salvarClasseJudicial({
+        classeJudicial,
+        trt,
+        grau,
+      });
+      if (resultado.inserido) {
+        classesJudiciaisCriadas++;
+      }
+    }
+
+    // Salvar tipo de audiência (se existir)
+    if (audiencia.tipo) {
+      const resultado = await salvarTipoAudiencia({
+        tipoAudiencia: audiencia.tipo,
+        trt,
+        grau,
+      });
+      if (resultado.inserido) {
+        tiposAudienciaCriados++;
+      }
+    }
   }
 
-  // Buscar IDs dos órgãos julgadores e processos
+  // Buscar IDs dos órgãos julgadores, processos, classes judiciais, tipos e salas
   const dadosComRelacoes = await Promise.all(
     audiencias.map(async (audiencia) => {
       let orgaoJulgadorId: number | null = null;
       let processoId: number | null = null;
+      let classeJudicialId: number | null = null;
+      let tipoAudienciaId: number | null = null;
+      let salaAudienciaId: number | null = null;
 
       // Buscar ID do órgão julgador
       if (audiencia.processo?.orgaoJulgador) {
@@ -166,10 +195,47 @@ export async function salvarAudiencias(
         processoId = processo?.id ?? null;
       }
 
+      // Buscar ID da classe judicial
+      if (audiencia.processo?.classeJudicial) {
+        const classe = await buscarClasseJudicial(
+          audiencia.processo.classeJudicial.id,
+          trt,
+          grau
+        );
+        classeJudicialId = classe?.id ?? null;
+      }
+
+      // Buscar ID do tipo de audiência
+      if (audiencia.tipo) {
+        const tipo = await buscarTipoAudiencia(
+          audiencia.tipo.id,
+          trt,
+          grau
+        );
+        tipoAudienciaId = tipo?.id ?? null;
+      }
+
+      // Salvar e buscar ID da sala de audiência
+      if (audiencia.salaAudiencia?.nome && orgaoJulgadorId) {
+        const resultado = await salvarSalaAudiencia({
+          salaAudiencia: audiencia.salaAudiencia,
+          trt,
+          grau,
+          orgaoJulgadorId,
+        });
+        salaAudienciaId = resultado.id;
+        if (resultado.inserido) {
+          salasAudienciaCriadas++;
+        }
+      }
+
       return {
         audiencia,
         orgaoJulgadorId,
         processoId,
+        classeJudicialId,
+        tipoAudienciaId,
+        salaAudienciaId,
       };
     })
   );
@@ -182,7 +248,14 @@ export async function salvarAudiencias(
   const entidade: TipoEntidade = 'audiencias';
 
   // Processar cada audiência individualmente
-  for (const { audiencia, orgaoJulgadorId, processoId } of dadosComRelacoes) {
+  for (const { 
+    audiencia, 
+    orgaoJulgadorId, 
+    processoId, 
+    classeJudicialId, 
+    tipoAudienciaId, 
+    salaAudienciaId 
+  } of dadosComRelacoes) {
     try {
       const numeroProcesso = audiencia.processo?.numero?.trim() ?? '';
 
@@ -191,29 +264,30 @@ export async function salvarAudiencias(
         advogado_id: advogadoId,
         processo_id: processoId,
         orgao_julgador_id: orgaoJulgadorId,
+        classe_judicial_id: classeJudicialId,
+        tipo_audiencia_id: tipoAudienciaId,
+        sala_audiencia_id: salaAudienciaId,
         trt,
         grau,
         numero_processo: numeroProcesso,
         data_inicio: parseDate(audiencia.dataInicio),
         data_fim: parseDate(audiencia.dataFim),
         sala_audiencia_nome: audiencia.salaAudiencia?.nome?.trim() ?? null,
-        sala_audiencia_id: audiencia.salaAudiencia?.id ?? null,
         status: audiencia.status,
-        status_descricao: null,
-        tipo_id: audiencia.tipo?.id ?? null,
-        tipo_descricao: audiencia.tipo?.descricao?.trim() ?? null,
-        tipo_codigo: null,
-        tipo_is_virtual: false,
-        designada: false,
-        em_andamento: false,
-        documento_ativo: false,
+        status_descricao: audiencia.statusDescricao?.trim() ?? null,
+        designada: audiencia.designada ?? false,
+        em_andamento: audiencia.emAndamento ?? false,
+        documento_ativo: audiencia.documentoAtivo ?? false,
         polo_ativo_nome: audiencia.poloAtivo?.nome?.trim() ?? null,
         polo_ativo_cpf: audiencia.poloAtivo?.cpf?.trim() ?? null,
+        polo_ativo_representa_varios: audiencia.poloAtivo?.representaVarios ?? false,
         polo_passivo_nome: audiencia.poloPassivo?.nome?.trim() ?? null,
         polo_passivo_cnpj: audiencia.poloPassivo?.cnpj?.trim() ?? null,
+        polo_passivo_representa_varios: audiencia.poloPassivo?.representaVarios ?? false,
         url_audiencia_virtual: audiencia.urlAudienciaVirtual?.trim() ?? null,
-        hora_inicial: parseTime(audiencia.pautaAudienciaHorario?.horaInicial),
-        hora_final: parseTime(audiencia.pautaAudienciaHorario?.horaFinal),
+        segredo_justica: audiencia.processo?.segredoDeJustica ?? false,
+        juizo_digital: audiencia.processo?.juizoDigital ?? false,
+        pauta_audiencia_horario_id: audiencia.pautaAudienciaHorario?.id ?? null,
       };
 
       // Buscar registro existente
@@ -308,6 +382,9 @@ export async function salvarAudiencias(
     erros,
     total: audiencias.length,
     orgaosJulgadoresCriados,
+    classesJudiciaisCriadas,
+    tiposAudienciaCriados,
+    salasAudienciaCriadas,
   };
 }
 
