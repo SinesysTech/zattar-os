@@ -1,23 +1,39 @@
 'use client';
 
 import { RepassesPendentesList } from '@/components/acordos-condenacoes/repasses-pendentes-list';
+import { UploadDeclaracaoDialog } from '@/components/acordos-condenacoes/upload-declaracao-dialog';
+import { UploadComprovanteDialog } from '@/components/acordos-condenacoes/upload-comprovante-dialog';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+
+interface DialogState {
+  open: boolean;
+  parcelaId: number | null;
+  valorRepasse?: number;
+}
 
 export default function RepassesPage() {
-  const router = useRouter();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [declaracaoDialog, setDeclaracaoDialog] = useState<DialogState>({
+    open: false,
+    parcelaId: null,
+  });
+  const [comprovanteDialog, setComprovanteDialog] = useState<DialogState>({
+    open: false,
+    parcelaId: null,
+    valorRepasse: 0,
+  });
 
-  const handleAnexarDeclaracao = async (parcelaId: number) => {
-    // TODO: Implementar dialog para upload de declaração
-    console.log('Anexar declaração para parcela:', parcelaId);
-    alert('Funcionalidade de anexar declaração será implementada');
+  const handleAnexarDeclaracao = (parcelaId: number) => {
+    setDeclaracaoDialog({ open: true, parcelaId });
   };
 
-  const handleRealizarRepasse = async (parcelaId: number) => {
-    // TODO: Implementar dialog para upload de comprovante e confirmação
-    console.log('Realizar repasse para parcela:', parcelaId);
-    alert('Funcionalidade de realizar repasse será implementada');
+  const handleRealizarRepasse = (parcelaId: number, valorRepasse: number) => {
+    setComprovanteDialog({ open: true, parcelaId, valorRepasse });
+  };
+
+  const handleDialogSuccess = () => {
+    // Forçar reload da lista
+    setRefreshKey((prev) => prev + 1);
   };
 
   return (
@@ -36,6 +52,30 @@ export default function RepassesPage() {
         onAnexarDeclaracao={handleAnexarDeclaracao}
         onRealizarRepasse={handleRealizarRepasse}
       />
+
+      {/* Dialogs */}
+      {declaracaoDialog.parcelaId && (
+        <UploadDeclaracaoDialog
+          open={declaracaoDialog.open}
+          onOpenChange={(open) =>
+            setDeclaracaoDialog((prev) => ({ ...prev, open }))
+          }
+          parcelaId={declaracaoDialog.parcelaId}
+          onSuccess={handleDialogSuccess}
+        />
+      )}
+
+      {comprovanteDialog.parcelaId && (
+        <UploadComprovanteDialog
+          open={comprovanteDialog.open}
+          onOpenChange={(open) =>
+            setComprovanteDialog((prev) => ({ ...prev, open }))
+          }
+          parcelaId={comprovanteDialog.parcelaId}
+          valorRepasse={comprovanteDialog.valorRepasse || 0}
+          onSuccess={handleDialogSuccess}
+        />
+      )}
     </div>
   );
 }

@@ -143,54 +143,44 @@ export function PermissoesMatriz({
           )}
 
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-3 font-medium text-sm bg-muted/50 sticky left-0 z-10">
-                    Recurso
-                  </th>
-                  {/* Colunas dinâmicas baseadas nas operações */}
-                  {matriz.length > 0 &&
-                    Object.keys(matriz[0].operacoes).map((operacao) => (
-                      <th
-                        key={operacao}
-                        className="text-center p-3 font-medium text-sm bg-muted/50 min-w-[100px]"
-                      >
-                        {formatarNomeOperacao(operacao)}
-                      </th>
-                    ))}
-                </tr>
-              </thead>
-              <tbody>
-                {matriz.map((item, index) => (
-                  <tr
-                    key={item.recurso}
-                    className={`border-b ${index % 2 === 0 ? 'bg-background' : 'bg-muted/20'}`}
-                  >
-                    <td className="p-3 font-medium text-sm sticky left-0 bg-inherit">
-                      {formatarNomeRecurso(item.recurso)}
-                    </td>
+            <div className="space-y-4">
+              {matriz.map((item, index) => (
+                <div
+                  key={item.recurso}
+                  className="border rounded-lg p-4"
+                >
+                  <div className="font-medium text-base mb-3 flex items-center gap-2">
+                    {formatarNomeRecurso(item.recurso)}
+                    <span className="text-xs text-muted-foreground">
+                      ({Object.values(item.operacoes).filter(Boolean).length} de {Object.keys(item.operacoes).length})
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
                     {Object.entries(item.operacoes).map(([operacao, permitido]) => (
-                      <td key={`${item.recurso}-${operacao}`} className="text-center p-3">
-                        <div className="flex items-center justify-center">
-                          <Checkbox
-                            id={`perm-${item.recurso}-${operacao}`}
-                            checked={isSuperAdmin || permitido}
-                            onCheckedChange={() => {
-                              if (canEdit && !isSuperAdmin) {
-                                onTogglePermissao(item.recurso, operacao);
-                              }
-                            }}
-                            disabled={!canEdit || isSuperAdmin || isSaving}
-                            aria-label={`Permitir ${formatarNomeOperacao(operacao)} em ${formatarNomeRecurso(item.recurso)}`}
-                          />
-                        </div>
-                      </td>
+                      <label
+                        key={`${item.recurso}-${operacao}`}
+                        className="flex items-center gap-2 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors"
+                      >
+                        <Checkbox
+                          id={`perm-${item.recurso}-${operacao}`}
+                          checked={isSuperAdmin || permitido}
+                          onCheckedChange={() => {
+                            if (canEdit && !isSuperAdmin) {
+                              onTogglePermissao(item.recurso, operacao);
+                            }
+                          }}
+                          disabled={!canEdit || isSuperAdmin || isSaving}
+                          aria-label={`Permitir ${formatarNomeOperacao(operacao)} em ${formatarNomeRecurso(item.recurso)}`}
+                        />
+                        <span className="text-sm">
+                          {formatarNomeOperacao(operacao)}
+                        </span>
+                      </label>
                     ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {matriz.length === 0 && (

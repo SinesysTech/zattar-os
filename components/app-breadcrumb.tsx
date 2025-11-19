@@ -11,6 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { useBreadcrumb } from "@/components/breadcrumb-context"
 
 // Mapeamento de rotas para labels customizados
 const routeLabels: Record<string, string> = {
@@ -55,6 +56,7 @@ function formatRouteSegment(segment: string): string {
 
 export function AppBreadcrumb() {
   const pathname = usePathname()
+  const { overrides } = useBreadcrumb()
 
   // Divide o pathname em segmentos e remove strings vazias
   const segments = pathname.split("/").filter(Boolean)
@@ -75,7 +77,11 @@ export function AppBreadcrumb() {
   // Gera os breadcrumbs
   const breadcrumbs = segments.map((segment, index) => {
     const href = "/" + segments.slice(0, index + 1).join("/")
-    const label = formatRouteSegment(segment)
+
+    // Verifica se existe override para este caminho
+    const override = overrides.find((o) => o.path === href)
+    const label = override ? override.label : formatRouteSegment(segment)
+
     const isLast = index === segments.length - 1
 
     return {

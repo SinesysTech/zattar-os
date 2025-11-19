@@ -2,7 +2,7 @@
  * Hook para gerenciar estado da matriz de permissões
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import type { PermissaoMatriz, Permissao } from '@/lib/types/usuarios';
 import {
@@ -27,19 +27,29 @@ export function usePermissoesMatriz({
   isSuperAdmin,
   onMutate,
 }: UsePermissoesMatrizProps) {
+  // Serializar permissões para usar como chave de comparação
+  const permissoesKey = useMemo(() => JSON.stringify(permissoes), [permissoes]);
+
   const [matriz, setMatriz] = useState<PermissaoMatriz[]>([]);
   const [matrizOriginal, setMatrizOriginal] = useState<PermissaoMatriz[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [lastPermissoesKey, setLastPermissoesKey] = useState<string>('');
 
-  // Inicializar matriz quando permissões mudarem
+  // Atualizar matriz quando permissões mudarem (comparando por key)
   useEffect(() => {
-    const matrizInicial = formatarPermissoesParaMatriz(permissoes);
-    setMatriz(matrizInicial);
-    setMatrizOriginal(matrizInicial);
-  }, [permissoes]);
+    if (permissoesKey !== lastPermissoesKey) {
+      const novaMatriz = formatarPermissoesParaMatriz(permissoes);
+      setMatriz(novaMatriz);
+      setMatrizOriginal(novaMatriz);
+      setLastPermissoesKey(permissoesKey);
+    }
+  }, [permissoesKey, lastPermissoesKey, permissoes]);
 
   // Detectar mudanças
-  const hasChanges = detectarMudancas(matrizOriginal, matriz);
+  const hasChanges = useMemo(
+    () => detectarMudancas(matrizOriginal, matriz),
+    [matrizOriginal, matriz]
+  );
 
   /**
    * Toggle uma permissão específica

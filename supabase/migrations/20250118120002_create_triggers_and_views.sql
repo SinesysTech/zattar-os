@@ -2,23 +2,29 @@
 -- Triggers para cálculos automáticos e views para repasses pendentes
 
 -- ============================================================================
--- Função: Calcular valor de repasse ao cliente
+-- Função: Calcular valores automáticos da parcela
 -- ============================================================================
-create or replace function calcular_valor_repasse_cliente()
+create or replace function calcular_valores_parcela()
 returns trigger as $$
 declare
   v_forma_distribuicao text;
   v_percentual_cliente numeric;
+  v_percentual_escritorio numeric;
 begin
   -- Buscar configuração do acordo
   select
     forma_distribuicao,
-    percentual_cliente
+    percentual_cliente,
+    percentual_escritorio
   into
     v_forma_distribuicao,
-    v_percentual_cliente
+    v_percentual_cliente,
+    v_percentual_escritorio
   from public.acordos_condenacoes
   where id = new.acordo_condenacao_id;
+
+  -- Calcular honorários contratuais
+  new.honorarios_contratuais := new.valor_bruto_credito_principal * (v_percentual_escritorio / 100.0);
 
   -- Se for distribuição integral, calcular valor de repasse
   if v_forma_distribuicao = 'integral' then
@@ -37,13 +43,13 @@ begin
 end;
 $$ language plpgsql;
 
-comment on function calcular_valor_repasse_cliente() is 'Calcula automaticamente o valor de repasse ao cliente baseado no percentual do acordo';
+comment on function calcular_valores_parcela() is 'Calcula automaticamente honorários contratuais e valor de repasse ao cliente';
 
--- Trigger para calcular valor de repasse ao criar/atualizar parcela
-create trigger trigger_calcular_valor_repasse
+-- Trigger para calcular valores ao criar/atualizar parcela
+create trigger trigger_calcular_valores_parcela
   before insert or update of valor_bruto_credito_principal on public.parcelas
   for each row
-  execute function calcular_valor_repasse_cliente();
+  execute function calcular_valores_parcela();
 
 -- ============================================================================
 -- Função: Atualizar status de parcela atrasada

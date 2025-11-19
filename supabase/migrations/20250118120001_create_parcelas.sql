@@ -10,14 +10,8 @@ create table public.parcelas (
   valor_bruto_credito_principal numeric(15, 2) not null check (valor_bruto_credito_principal >= 0),
   honorarios_sucumbenciais numeric(15, 2) default 0 check (honorarios_sucumbenciais >= 0),
 
-  -- Valores calculados automaticamente
-  honorarios_contratuais numeric(15, 2) generated always as (
-    valor_bruto_credito_principal * (
-      select percentual_escritorio / 100.0
-      from public.acordos_condenacoes
-      where id = acordo_condenacao_id
-    )
-  ) stored,
+  -- Valores calculados automaticamente (via trigger)
+  honorarios_contratuais numeric(15, 2) default 0,
 
   -- Datas e status
   data_vencimento date not null,
@@ -65,7 +59,7 @@ comment on column public.parcelas.acordo_condenacao_id is 'ID do acordo/condena�
 comment on column public.parcelas.numero_parcela is 'Número sequencial da parcela (1, 2, 3...)';
 comment on column public.parcelas.valor_bruto_credito_principal is 'Valor bruto do crédito principal da parcela (editável pelo usuário)';
 comment on column public.parcelas.honorarios_sucumbenciais is 'Valor de honorários sucumbenciais nesta parcela (editável pelo usuário)';
-comment on column public.parcelas.honorarios_contratuais is 'Honorários contratuais calculados automaticamente (valor_bruto * percentual_escritorio)';
+comment on column public.parcelas.honorarios_contratuais is 'Honorários contratuais calculados automaticamente via trigger (valor_bruto * percentual_escritorio)';
 comment on column public.parcelas.data_vencimento is 'Data de vencimento da parcela';
 comment on column public.parcelas.status is 'Status da parcela: pendente, recebida, paga, atrasado';
 comment on column public.parcelas.data_efetivacao is 'Data em que a parcela foi marcada como recebida/paga';

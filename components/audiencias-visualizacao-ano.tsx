@@ -135,7 +135,7 @@ export function AudienciasVisualizacaoAno({ audiencias, isLoading, anoAtual }: A
                       <div
                         key={index}
                         className={`
-                          w-full aspect-square flex items-center justify-center text-xs rounded-sm
+                          h-5 w-5 flex items-center justify-center text-[10px] rounded-sm
                           ${!dia ? 'invisible' : ''}
                           ${hoje ? 'bg-blue-500 text-white font-semibold' : ''}
                           ${temAud && !hoje ? 'bg-primary text-primary-foreground font-medium cursor-pointer hover:opacity-80 transition-opacity' : ''}

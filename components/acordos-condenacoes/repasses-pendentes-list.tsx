@@ -26,7 +26,7 @@ interface RepassePendente {
 
 interface RepassesPendentesListProps {
   onAnexarDeclaracao?: (parcelaId: number) => void;
-  onRealizarRepasse?: (parcelaId: number) => void;
+  onRealizarRepasse?: (parcelaId: number, valorRepasse: number) => void;
 }
 
 export function RepassesPendentesList({
@@ -168,7 +168,7 @@ export function RepassesPendentesList({
                       {onRealizarRepasse && (
                         <Button
                           size="sm"
-                          onClick={() => onRealizarRepasse(repasse.parcelaId)}
+                          onClick={() => onRealizarRepasse(repasse.parcelaId, repasse.valorRepasseCliente)}
                         >
                           <FileCheck className="h-4 w-4 mr-1" />
                           Realizar Repasse

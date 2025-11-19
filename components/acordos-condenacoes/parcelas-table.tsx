@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Edit2, XCircle } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { toast } from 'sonner';
 
 interface Parcela {
   id: number;
@@ -34,6 +35,8 @@ interface ParcelasTableProps {
   onMarcarRecebida?: (parcelaId: number) => void;
   onMarcarPaga?: (parcelaId: number) => void;
   direcao: 'recebimento' | 'pagamento';
+  onParcelaUpdated?: () => void;
+  acordoCondenacaoId?: number;
 }
 
 export function ParcelasTable({
@@ -42,6 +45,8 @@ export function ParcelasTable({
   onMarcarRecebida,
   onMarcarPaga,
   direcao,
+  onParcelaUpdated,
+  acordoCondenacaoId,
 }: ParcelasTableProps) {
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
@@ -92,11 +97,44 @@ export function ParcelasTable({
   const handleMarcar = async (parcelaId: number, tipo: 'recebida' | 'paga') => {
     setLoadingId(parcelaId);
     try {
+      // Se callbacks customizados foram fornecidos, use-os
       if (tipo === 'recebida' && onMarcarRecebida) {
         await onMarcarRecebida(parcelaId);
       } else if (tipo === 'paga' && onMarcarPaga) {
         await onMarcarPaga(parcelaId);
+      } else if (acordoCondenacaoId) {
+        // Caso contrário, chame a API diretamente
+        const response = await fetch(
+          `/api/acordos-condenacoes/${acordoCondenacaoId}/parcelas/${parcelaId}/receber`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              dataEfetivacao: new Date().toISOString(),
+            }),
+          }
+        );
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          toast.success(
+            tipo === 'recebida'
+              ? 'Parcela marcada como recebida'
+              : 'Parcela marcada como paga'
+          );
+          if (onParcelaUpdated) {
+            onParcelaUpdated();
+          }
+        } else {
+          toast.error(result.error || 'Erro ao atualizar parcela');
+        }
       }
+    } catch (error) {
+      console.error('Erro ao marcar parcela:', error);
+      toast.error('Erro ao comunicar com o servidor');
     } finally {
       setLoadingId(null);
     }

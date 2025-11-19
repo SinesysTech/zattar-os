@@ -16,6 +16,7 @@ import { UsuarioDadosBasicos } from '@/components/usuarios/usuario-dados-basicos
 import { PermissoesMatriz } from '@/components/usuarios/permissoes-matriz';
 import { useUsuarioDetail, useUsuarioPermissoes } from '@/lib/hooks/use-usuario-detail';
 import { usePermissoesMatriz } from '@/lib/hooks/use-permissoes-matriz';
+import { useBreadcrumbOverride } from '@/components/breadcrumb-context';
 
 interface UsuarioDetailPageProps {
   params: Promise<{
@@ -28,12 +29,13 @@ export default function UsuarioDetailPage({ params }: UsuarioDetailPageProps) {
   const router = useRouter();
   const usuarioId = parseInt(resolvedParams.id, 10);
 
-  // Validar ID
+  // Validar ID (apenas uma vez)
   useEffect(() => {
     if (isNaN(usuarioId) || usuarioId <= 0) {
       router.push('/usuarios');
     }
-  }, [usuarioId, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Fetch dados do usuário
   const {
@@ -69,6 +71,10 @@ export default function UsuarioDetailPage({ params }: UsuarioDetailPageProps) {
       mutateUsuario();
     },
   });
+
+  // Atualizar breadcrumb com nome do usuário
+  const nomeUsuario = usuario?.nomeExibicao || usuario?.nomeCompleto || undefined;
+  useBreadcrumbOverride(`/usuarios/${usuarioId}`, nomeUsuario);
 
   // TODO: Verificar permissão do usuário logado (usuarios.visualizar e usuarios.gerenciar_permissoes)
   // Por enquanto, permitindo edição sempre
@@ -108,29 +114,16 @@ export default function UsuarioDetailPage({ params }: UsuarioDetailPageProps) {
     );
   }
 
+  // Atualizar título da página
+  useEffect(() => {
+    if (usuario) {
+      const nomeUsuario = usuario.nomeExibicao || usuario.nomeCompleto || `Usuário #${usuarioId}`;
+      document.title = `${nomeUsuario} - Usuários - Sinesys`;
+    }
+  }, [usuario, usuarioId]);
+
   return (
     <div className="container mx-auto py-6 space-y-6">
-      {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Link href="/usuarios" className="hover:text-foreground transition-colors">
-          Usuários
-        </Link>
-        <span>/</span>
-        <span className="text-foreground font-medium">{usuario.nomeExibicao}</span>
-      </div>
-
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">{usuario.nomeExibicao}</h1>
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/usuarios">
-            <ArrowLeft className="h-4 w-4 mr-1.5" />
-            Voltar
-          </Link>
-        </Button>
-      </div>
-
-      <Separator />
 
       {/* Dados básicos */}
       <UsuarioDadosBasicos usuario={usuario} />

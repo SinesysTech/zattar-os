@@ -10,14 +10,12 @@ import { DataTableColumnHeader } from '@/components/data-table-column-header';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Pencil, Plus } from 'lucide-react';
+import { Eye, Plus } from 'lucide-react';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { UsuariosGridView } from '@/components/usuarios/usuarios-grid-view';
 import { ViewToggle } from '@/components/usuarios/view-toggle';
 import { UsuariosFiltrosAvancados } from '@/components/usuarios/usuarios-filtros-avancados';
 import { UsuarioCreateSheet } from '@/components/usuarios/usuario-create-sheet';
-import { UsuarioViewSheet } from '@/components/usuarios/usuario-view-sheet';
-import { UsuarioEditSheet } from '@/components/usuarios/usuario-edit-sheet';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import type { UsuariosFilters, ViewMode } from '@/lib/types/usuarios';
@@ -33,7 +31,7 @@ const VIEW_MODE_STORAGE_KEY = 'usuarios-view-mode';
 /**
  * Define as colunas da tabela de usuários
  */
-function criarColunas(onEditSuccess: () => void): ColumnDef<Usuario>[] {
+function criarColunas(): ColumnDef<Usuario>[] {
   return [
     {
       accessorKey: 'nomeExibicao',
@@ -148,10 +146,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Usuario>[] {
         const usuario = row.original;
         return (
           <div className="min-h-10 flex items-center justify-center gap-2">
-            <UsuarioActions
-              usuario={usuario}
-              onEditSuccess={onEditSuccess}
-            />
+            <UsuarioActions usuario={usuario} />
           </div>
         );
       },
@@ -162,58 +157,33 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Usuario>[] {
 /**
  * Componente de ações para cada usuário
  */
-function UsuarioActions({
-  usuario,
-  onEditSuccess,
-}: {
-  usuario: Usuario;
-  onEditSuccess: () => void;
-}) {
+function UsuarioActions({ usuario }: { usuario: Usuario }) {
   const router = useRouter();
 
   const handleViewClick = () => {
     router.push(`/usuarios/${usuario.id}`);
   };
 
-  const handleEditClick = () => {
-    router.push(`/usuarios/${usuario.id}`);
-  };
-
   return (
-    <>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8"
-        onClick={handleViewClick}
-      >
-        <Eye className="h-4 w-4" />
-        <span className="sr-only">Visualizar usuário</span>
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8"
-        onClick={handleEditClick}
-      >
-        <Pencil className="h-4 w-4" />
-        <span className="sr-only">Editar usuário</span>
-      </Button>
-    </>
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-8 w-8"
+      onClick={handleViewClick}
+    >
+      <Eye className="h-4 w-4" />
+      <span className="sr-only">Visualizar usuário</span>
+    </Button>
   );
 }
 
 export default function UsuariosPage() {
+  const router = useRouter();
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<UsuariosFilters>({});
   const [viewMode, setViewMode] = React.useState<ViewMode>('table');
-  const [selectedUsuario, setSelectedUsuario] = React.useState<Usuario | null>(
-    null
-  );
-  const [viewOpen, setViewOpen] = React.useState(false);
-  const [editOpen, setEditOpen] = React.useState(false);
   const [createOpen, setCreateOpen] = React.useState(false);
 
   // Carregar preferência de visualização do localStorage
@@ -250,21 +220,17 @@ export default function UsuariosPage() {
 
   const { usuarios, paginacao, isLoading, error, refetch } = useUsuarios(params);
 
-  // Função para atualizar após edição
-  // Usar ref para evitar dependência de refetch que pode mudar
+  // Função para atualizar após criação de novo usuário
   const refetchRef = React.useRef(refetch);
   React.useEffect(() => {
     refetchRef.current = refetch;
   }, [refetch]);
 
-  const handleEditSuccess = React.useCallback(() => {
+  const handleCreateSuccess = React.useCallback(() => {
     refetchRef.current();
   }, []);
 
-  const colunas = React.useMemo(
-    () => criarColunas(handleEditSuccess),
-    [handleEditSuccess]
-  );
+  const colunas = React.useMemo(() => criarColunas(), []);
 
   const handleFiltersChange = React.useCallback(
     (newFilters: UsuariosFilters) => {
@@ -279,15 +245,12 @@ export default function UsuariosPage() {
     setPagina(0);
   }, []);
 
-  const handleView = React.useCallback((usuario: Usuario) => {
-    setSelectedUsuario(usuario);
-    setViewOpen(true);
-  }, []);
-
-  const handleEdit = React.useCallback((usuario: Usuario) => {
-    setSelectedUsuario(usuario);
-    setEditOpen(true);
-  }, []);
+  const handleView = React.useCallback(
+    (usuario: Usuario) => {
+      router.push(`/usuarios/${usuario.id}`);
+    },
+    [router]
+  );
 
   return (
     <div className="space-y-4">
@@ -330,7 +293,6 @@ export default function UsuariosPage() {
           usuarios={usuarios}
           paginacao={paginacao}
           onView={handleView}
-          onEdit={handleEdit}
           onPageChange={setPagina}
           onPageSizeChange={setLimite}
         />
@@ -357,22 +319,11 @@ export default function UsuariosPage() {
         />
       )}
 
-      {/* Sheets para visualização, edição e criação */}
-      <UsuarioViewSheet
-        open={viewOpen}
-        onOpenChange={setViewOpen}
-        usuario={selectedUsuario}
-      />
-      <UsuarioEditSheet
-        open={editOpen}
-        onOpenChange={setEditOpen}
-        usuario={selectedUsuario}
-        onSuccess={handleEditSuccess}
-      />
+      {/* Sheet para criação de novo usuário */}
       <UsuarioCreateSheet
         open={createOpen}
         onOpenChange={setCreateOpen}
-        onSuccess={handleEditSuccess}
+        onSuccess={handleCreateSuccess}
       />
     </div>
   );

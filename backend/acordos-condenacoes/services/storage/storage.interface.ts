@@ -8,6 +8,7 @@ export interface UploadResult {
   success: boolean;
   path?: string;
   url?: string;
+  fileId?: string;
   error?: string;
 }
 
@@ -25,6 +26,7 @@ export interface DeleteResult {
 export interface GetUrlResult {
   success: boolean;
   url?: string;
+  expiresAt?: string;
   error?: string;
 }
 
@@ -71,7 +73,7 @@ export interface IStorageService {
 /**
  * Provider de storage
  */
-export type StorageProvider = 'minio' | 's3' | 'aws' | 'local';
+export type StorageProvider = 'minio' | 's3' | 'aws' | 'local' | 'google-drive';
 
 /**
  * Configuração de storage

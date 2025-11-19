@@ -83,13 +83,22 @@ export const checkPermission = async (
     .eq('id', usuarioId)
     .single();
 
-  if (usuarioError || !usuario) {
-    console.error(`Erro ao buscar usuário ${usuarioId}:`, usuarioError);
-    return false;
+  // Se houver erro (ex: coluna não existe), assumir que não é super admin
+  // e prosseguir com verificação normal de permissões
+  if (usuarioError) {
+    if (usuarioError.code === 'PGRST204' || usuarioError.message?.includes('does not exist')) {
+      console.warn(
+        `Campo is_super_admin não encontrado. As migrations foram aplicadas? Prosseguindo sem bypass de super admin.`
+      );
+      // Prosseguir para verificação normal de permissões
+    } else {
+      console.error(`Erro ao buscar usuário ${usuarioId}:`, usuarioError);
+      return false;
+    }
   }
 
   // 4. Se super admin, conceder acesso total (bypass)
-  if (usuario.is_super_admin) {
+  if (usuario?.is_super_admin) {
     const result = true;
     permissionCache.set(cacheKey, {
       result,

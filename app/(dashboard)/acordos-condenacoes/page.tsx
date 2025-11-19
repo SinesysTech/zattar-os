@@ -1,7 +1,7 @@
-import { Suspense } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
+import { AcordosCondenacoesList } from '@/components/acordos-condenacoes/acordos-condenacoes-list';
 
 export default function AcordosCondecoesPage() {
   return (
@@ -23,19 +23,7 @@ export default function AcordosCondecoesPage() {
       </div>
 
       {/* Lista */}
-      <Suspense fallback={<div>Carregando...</div>}>
-        <AcordosCondenacoesList />
-      </Suspense>
-    </div>
-  );
-}
-
-async function AcordosCondenacoesList() {
-  // TODO: Fetch data from API
-  return (
-    <div className="rounded-md border p-8 text-center text-muted-foreground">
-      <p>Lista de acordos e condenações será exibida aqui</p>
-      <p className="text-sm mt-2">Integre com a API /api/acordos-condenacoes</p>
+      <AcordosCondenacoesList />
     </div>
   );
 }
