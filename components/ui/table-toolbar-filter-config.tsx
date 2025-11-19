@@ -27,14 +27,16 @@ export function buildFilterOptions(configs: FilterConfig[]): ComboboxOption[] {
           });
         }
       }
-    } else {
-      // for boolean, text, date
+    } else if (config.type === 'boolean') {
+      // Only include boolean filters in the combobox
+      // Text and date filters require input controls and should be handled separately
       options.push({
         value: config.id,
         label: config.label,
         searchText: config.searchText,
       });
     }
+    // Skip 'text' and 'date' types - they need dedicated input controls
   }
 
   return options;
@@ -58,16 +60,12 @@ export function parseFilterValues(selectedFilters: string[], configs: FilterConf
         }
       }
     } else {
-      // for boolean, text, date, value is id
+      // for boolean type only
       const config = configMap.get(selected);
-      if (config) {
-        if (config.type === 'boolean') {
-          filters[selected] = true;
-        } else if (config.type === 'text' || config.type === 'date') {
-          // Indicate enabled, but no value input in combobox
-          filters[selected] = true;
-        }
+      if (config && config.type === 'boolean') {
+        filters[selected] = true;
       }
+      // text and date types are not handled here since they require dedicated input controls
     }
   }
 
