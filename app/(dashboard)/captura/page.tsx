@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { TableToolbar } from '@/components/ui/table-toolbar';
 import { HistoricoCapturas } from './components/historico-capturas';
 import { AgendamentosList } from './components/agendamentos/agendamentos-list';
 import { CredencialsList } from './components/credenciais/credenciais-list';
@@ -17,6 +18,12 @@ export default function CapturaPage() {
   const [credencialDialogOpen, setCredencialDialogOpen] = useState(false);
   const [refreshAgendamentos, setRefreshAgendamentos] = useState(0);
   const [refreshCredenciais, setRefreshCredenciais] = useState(0);
+  const [buscaHistorico, setBuscaHistorico] = useState('');
+  const [buscaAgendamentos, setBuscaAgendamentos] = useState('');
+  const [buscaCredenciais, setBuscaCredenciais] = useState('');
+  const [selectedFilterIdsHistorico, setSelectedFilterIdsHistorico] = useState<string[]>([]);
+  const [selectedFilterIdsAgendamentos, setSelectedFilterIdsAgendamentos] = useState<string[]>([]);
+  const [selectedFilterIdsCredenciais, setSelectedFilterIdsCredenciais] = useState<string[]>([]);
 
   const handleAgendamentoSuccess = () => {
     // Forçar refresh da lista de agendamentos
@@ -49,39 +56,53 @@ export default function CapturaPage() {
 
         {/* Conteúdo da aba Histórico */}
         <TabsContent value="historico" className="mt-6">
-          <HistoricoCapturas
-            actionButton={
-              <Button onClick={() => setCapturaDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Nova Captura
-              </Button>
-            }
+          <TableToolbar
+            searchValue={buscaHistorico}
+            onSearchChange={setBuscaHistorico}
+            isSearching={false}
+            searchPlaceholder="Buscar capturas..."
+            filterOptions={[]}
+            selectedFilters={selectedFilterIdsHistorico}
+            onFiltersChange={setSelectedFilterIdsHistorico}
+            onNewClick={() => setCapturaDialogOpen(true)}
+            newButtonTooltip="Nova Captura"
           />
+          <HistoricoCapturas />
         </TabsContent>
 
         {/* Conteúdo da aba Agendamentos */}
         <TabsContent value="agendamentos" className="mt-6">
+          <TableToolbar
+            searchValue={buscaAgendamentos}
+            onSearchChange={setBuscaAgendamentos}
+            isSearching={false}
+            searchPlaceholder="Buscar agendamentos..."
+            filterOptions={[]}
+            selectedFilters={selectedFilterIdsAgendamentos}
+            onFiltersChange={setSelectedFilterIdsAgendamentos}
+            onNewClick={() => setAgendamentoDialogOpen(true)}
+            newButtonTooltip="Novo Agendamento"
+          />
           <AgendamentosList
             key={refreshAgendamentos}
-            actionButton={
-              <Button onClick={() => setAgendamentoDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Novo Agendamento
-              </Button>
-            }
           />
         </TabsContent>
 
         {/* Conteúdo da aba Credenciais */}
         <TabsContent value="credenciais" className="mt-6">
+          <TableToolbar
+            searchValue={buscaCredenciais}
+            onSearchChange={setBuscaCredenciais}
+            isSearching={false}
+            searchPlaceholder="Buscar credenciais..."
+            filterOptions={[]}
+            selectedFilters={selectedFilterIdsCredenciais}
+            onFiltersChange={setSelectedFilterIdsCredenciais}
+            onNewClick={() => setCredencialDialogOpen(true)}
+            newButtonTooltip="Nova Credencial"
+          />
           <CredencialsList
             key={refreshCredenciais}
-            actionButton={
-              <Button onClick={() => setCredencialDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Nova Credencial
-              </Button>
-            }
           />
         </TabsContent>
       </Tabs>

@@ -87,3 +87,40 @@ Para desabilitar o cache localmente durante desenvolvimento, defina `ENABLE_REDI
 - **Problema**: Memória do Redis esgotada. **Solução**: Ajuste `REDIS_CACHE_MAX_MEMORY` ou configure políticas de eviction no Redis.
 
 Para mais detalhes, consulte a [documentação do Redis](https://redis.io/documentation) e a [documentação do ioredis](https://github.com/redis/ioredis).
+
+## Componentes Reutilizáveis
+
+### TableToolbar
+
+Componente reutilizável para barras de ferramentas acima de tabelas, integrando busca, filtros e ações.
+
+**Localização:** `components/ui/table-toolbar.tsx`
+
+**Uso:**
+
+```tsx
+import { TableToolbar } from "@/components/ui/table-toolbar";
+
+<TableToolbar
+  searchValue={busca}
+  onSearchChange={setBusca}
+  isSearching={isSearching}
+  searchPlaceholder="Buscar..."
+  filterOptions={filterOptions}
+  selectedFilters={selectedFilterIds}
+  onFiltersChange={handleFilterIdsChange}
+  onNewClick={() => setCreateOpen(true)}
+  newButtonTooltip="Novo Registro"
+/>;
+```
+
+**Páginas que utilizam:**
+
+- Processos
+- Audiências
+- Contratos
+- Acordos e Condenações
+- Captura
+
+**Configuração de filtros:**
+Cada página define seus filtros específicos em arquivos `*-toolbar-filters.tsx` no diretório de componentes da página.

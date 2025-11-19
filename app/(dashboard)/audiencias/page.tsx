@@ -7,8 +7,6 @@ import Image from 'next/image';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
-import { AudienciasFiltrosAvancados } from './components/audiencias-filtros-avancados';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
   Select,
@@ -28,6 +26,8 @@ import { AudienciasVisualizacaoAno } from './components/audiencias-visualizacao-
 import { useAudiencias } from '@/lib/hooks/use-audiencias';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { STATUS_AUDIENCIA_OPTIONS } from '@/lib/constants/audiencias';
+import { TableToolbar } from '@/components/ui/table-toolbar';
+import { buildAudienciasFilterOptions, parseAudienciasFilters } from './components/audiencias-toolbar-filters';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 import type { AudienciasFilters } from '@/lib/types/audiencias';
@@ -721,6 +721,8 @@ export default function AudienciasPage() {
   const [semanaAtual, setSemanaAtual] = React.useState(new Date());
   const [mesAtual, setMesAtual] = React.useState(new Date());
   const [anoAtual, setAnoAtual] = React.useState(new Date().getFullYear());
+  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+  const [isSearching, setIsSearching] = React.useState(false);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -782,13 +784,19 @@ export default function AudienciasPage() {
     []
   );
 
-  const handleFiltersChange = React.useCallback((newFilters: AudienciasFilters) => {
-    setFiltros(newFilters);
-    setPagina(0); // Resetar para primeira página ao aplicar filtros
-  }, []);
+  // Detectar quando está buscando
+  React.useEffect(() => {
+    setIsSearching(busca !== buscaDebounced);
+  }, [busca, buscaDebounced]);
 
-  const handleFiltersReset = React.useCallback(() => {
-    setFiltros({});
+  // Gerar opções de filtro
+  const filterOptions = React.useMemo(() => buildAudienciasFilterOptions(usuarios), [usuarios]);
+
+  // Converter IDs selecionados para filtros
+  const handleFilterIdsChange = React.useCallback((newSelectedIds: string[]) => {
+    setSelectedFilterIds(newSelectedIds);
+    const newFilters = parseAudienciasFilters(newSelectedIds);
+    setFiltros(newFilters);
     setPagina(0);
   }, []);
 
@@ -859,22 +867,19 @@ export default function AudienciasPage() {
       <div className="space-y-4">
         {/* Barra de busca, filtros e tabs de visualização */}
         <div className="flex items-center gap-4">
-          <ButtonGroup>
-            <Input
-              placeholder="Buscar por número do processo, parte autora ou parte ré..."
-              value={busca}
-              onChange={(e) => {
-                setBusca(e.target.value);
-                setPagina(0); // Resetar para primeira página ao buscar
-              }}
-              className="max-w-sm"
-            />
-            <AudienciasFiltrosAvancados
-              filters={filtros}
-              onFiltersChange={handleFiltersChange}
-              onReset={handleFiltersReset}
-            />
-          </ButtonGroup>
+          <TableToolbar
+            searchValue={busca}
+            onSearchChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar por número do processo, partes ou tipo de audiência..."
+            filterOptions={filterOptions}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            // Audiências não tem botão de novo (usa tabs)
+          />
           <Select
             value={status}
             onValueChange={(value) => {
@@ -1059,4 +1064,3 @@ export default function AudienciasPage() {
     </Tabs>
   );
 }
-

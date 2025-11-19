@@ -32,6 +32,12 @@ export {
   obterTodosProcessosArquivados,
 } from './arquivados';
 
+// Timeline
+export {
+  obterTimeline,
+} from './timeline';
+export type { TimelineResponse, ObterTimelineOptions } from './timeline';
+
 // Shared
 export { fetchPJEAPI } from './shared/fetch';
 

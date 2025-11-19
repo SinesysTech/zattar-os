@@ -6,16 +6,15 @@ import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
-import { ContratosFiltrosAvancados } from './components/contratos-filtros-avancados';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Badge } from '@/components/ui/badge';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { ContratoViewSheet } from './components/contrato-view-sheet';
 import { ContratoEditSheet } from './components/contrato-edit-sheet';
 import { ContratoCreateSheet } from './components/contrato-create-sheet';
-import { Eye, Pencil, Plus } from 'lucide-react';
+import { Eye, Pencil } from 'lucide-react';
 import { useContratos } from '@/lib/hooks/use-contratos';
+import { buildContratosFilterOptions, parseContratosFilters } from './components/contratos-toolbar-filters';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Contrato } from '@/backend/contratos/services/persistence/contrato-persistence.service';
 import type { ContratosFilters } from '@/lib/types/contratos';
@@ -228,9 +227,19 @@ export default function ContratosPage() {
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<ContratosFilters>({});
   const [createOpen, setCreateOpen] = React.useState(false);
+  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+  const [isSearching, setIsSearching] = React.useState(false);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
+
+  // Detectar se está buscando
+  React.useEffect(() => {
+    setIsSearching(busca !== buscaDebounced);
+  }, [busca, buscaDebounced]);
+
+  // Gerar opções de filtro
+  const filterOptions = React.useMemo(() => buildContratosFilterOptions(), []);
 
   // Parâmetros para buscar contratos
   const params = React.useMemo(() => {
@@ -251,41 +260,30 @@ export default function ContratosPage() {
 
   const colunas = React.useMemo(() => criarColunas(handleEditSuccess), [handleEditSuccess]);
 
-  const handleFiltersChange = React.useCallback((newFilters: ContratosFilters) => {
+  const handleFilterIdsChange = React.useCallback((newSelectedFilterIds: string[]) => {
+    setSelectedFilterIds(newSelectedFilterIds);
+    const newFilters = parseContratosFilters(newSelectedFilterIds);
     setFiltros(newFilters);
     setPagina(0); // Resetar para primeira página ao aplicar filtros
-  }, []);
-
-  const handleFiltersReset = React.useCallback(() => {
-    setFiltros({});
-    setPagina(0);
   }, []);
 
   return (
     <div className="space-y-4">
       {/* Barra de busca e filtros */}
-      <div className="flex items-center gap-4 justify-between">
-        <div className="flex items-center gap-2">
-          <Input
-            placeholder="Buscar por observações..."
-            value={busca}
-            onChange={(e) => {
-              setBusca(e.target.value);
-              setPagina(0); // Resetar para primeira página ao buscar
-            }}
-            className="max-w-sm"
-          />
-          <ContratosFiltrosAvancados
-            filters={filtros}
-            onFiltersChange={handleFiltersChange}
-            onReset={handleFiltersReset}
-          />
-        </div>
-        <Button onClick={() => setCreateOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Novo Contrato
-        </Button>
-      </div>
+      <TableToolbar
+        searchValue={busca}
+        onSearchChange={(value) => {
+          setBusca(value);
+          setPagina(0);
+        }}
+        isSearching={isSearching}
+        searchPlaceholder="Buscar por observações..."
+        filterOptions={filterOptions}
+        selectedFilters={selectedFilterIds}
+        onFiltersChange={handleFilterIdsChange}
+        onNewClick={() => setCreateOpen(true)}
+        newButtonTooltip="Novo Contrato"
+      />
 
       {/* Tabela */}
       <DataTable
