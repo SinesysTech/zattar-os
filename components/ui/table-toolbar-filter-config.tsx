@@ -1,4 +1,8 @@
-import { ComboboxOption } from './combobox';
+export interface ComboboxOption {
+  value: string
+  label: string
+  searchText?: string
+}
 
 export interface FilterConfig {
   id: string;
