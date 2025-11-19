@@ -14,6 +14,7 @@
     "test:api-audiencias": "tsx dev_data/scripts/test-api-audiencias.ts",
     "test:api-pendentes-manifestacao": "tsx dev_data/scripts/test-api-pendentes-manifestacao.ts",
     "debug:credentials": "tsx dev_data/scripts/debug-check-credentials.ts",
+    "populate:tabelas-audiencias": "tsx dev_data/scripts/populate-tabelas-auxiliares-audiencias.ts",
     "sincronizar-usuarios": "tsx scripts/sincronizar-usuarios.ts"
   },
   "dependencies": {
