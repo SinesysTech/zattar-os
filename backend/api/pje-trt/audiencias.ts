@@ -68,11 +68,11 @@ import type { PagedResponse, Audiencia } from '@/backend/types/pje-trt/types';
  *   Tipo: string
  *   Significado: Código da situação das audiências a serem retornadas
  *   Valores possíveis:
- *   - 'M': Marcadas/Designadas (audiências agendadas, ainda não realizadas)
- *   - 'R': Realizadas (audiências que já foram realizadas)
  *   - 'C': Canceladas (audiências que foram canceladas)
- *   Padrão: 'M' (audiências marcadas/designadas)
- *   Exemplo: 'R' (apenas audiências realizadas)
+ *   - 'M': Designadas (audiências agendadas, ainda não realizadas)
+ *   - 'F': Realizadas (audiências que já foram realizadas)
+ *   Padrão: 'M' (audiências designadas)
+ *   Exemplo: 'F' (apenas audiências realizadas)
  * 
  * - ordenacao: 'asc' | 'desc' (opcional, padrão: 'asc')
  *   Tipo: Literal 'asc' ou 'desc'
@@ -147,7 +147,7 @@ import type { PagedResponse, Audiencia } from '@/backend/types/pje-trt/types';
  *   '2024-12-31',
  *   2,
  *   100,
- *   'R',
+ *   'F',
  *   'desc'
  * );
  */
@@ -157,7 +157,7 @@ export async function obterPautaAudiencias(
   dataFim: string, // YYYY-MM-DD
   numeroPagina: number = 1,
   tamanhoPagina: number = 100,
-  codigoSituacao: string = 'M', // M=Designada/Marcada, R=Realizada, C=Cancelada
+  codigoSituacao: string = 'M', // C=Cancelada, M=Designada, F=Realizada
   ordenacao: 'asc' | 'desc' = 'asc'
 ): Promise<PagedResponse<Audiencia>> {
   const params = {
@@ -232,11 +232,11 @@ export async function obterPautaAudiencias(
  *   Tipo: string
  *   Significado: Código da situação das audiências a serem retornadas
  *   Valores possíveis:
- *   - 'M': Marcadas/Designadas (audiências agendadas, ainda não realizadas)
- *   - 'R': Realizadas (audiências que já foram realizadas)
  *   - 'C': Canceladas (audiências que foram canceladas)
- *   Padrão: 'M' (audiências marcadas/designadas)
- *   Exemplo: 'R' (apenas audiências realizadas)
+ *   - 'M': Designadas (audiências agendadas, ainda não realizadas)
+ *   - 'F': Realizadas (audiências que já foram realizadas)
+ *   Padrão: 'M' (audiências designadas)
+ *   Exemplo: 'F' (apenas audiências realizadas)
  * 
  * - delayEntrePaginas: number (opcional, padrão: 500)
  *   Tipo: number
@@ -309,7 +309,7 @@ export async function obterPautaAudiencias(
  * 
  * EXEMPLO DE USO:
  * 
- * // Obter todas as audiências marcadas para 2024
+ * // Obter todas as audiências designadas para 2024
  * const todasAudiencias = await obterTodasAudiencias(
  *   page,
  *   '2024-01-01',
@@ -323,7 +323,7 @@ export async function obterPautaAudiencias(
  *   page,
  *   '2024-01-01',
  *   '2024-12-31',
- *   'R',
+ *   'F',
  *   1000 // 1 segundo entre páginas
  * );
  */

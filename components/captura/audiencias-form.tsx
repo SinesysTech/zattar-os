@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { STATUS_AUDIENCIA_OPTIONS } from '@/lib/constants/audiencias';
 
 export function AudienciasForm() {
   const [advogadoId, setAdvogadoId] = useState<number | null>(null);
@@ -100,9 +101,11 @@ export function AudienciasForm() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="M">Designada</SelectItem>
-              <SelectItem value="C">Cancelada</SelectItem>
-              <SelectItem value="F">Realizada</SelectItem>
+              {STATUS_AUDIENCIA_OPTIONS.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <p className="text-sm text-muted-foreground">

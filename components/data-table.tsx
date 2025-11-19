@@ -184,11 +184,14 @@ export function DataTable<TData>({
               </TableHeader>
               <TableBody>
                 {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
+                  table.getRowModel().rows.map((row, rowIndex) => (
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && 'selected'}
-                      className={onRowClick ? 'cursor-pointer' : ''}
+                      className={cn(
+                        onRowClick ? 'cursor-pointer' : '',
+                        rowIndex % 2 === 1 ? 'bg-muted/30' : ''
+                      )}
                       onClick={() => onRowClick?.(row.original)}
                     >
                       {row.getVisibleCells().map((cell, index) => {
