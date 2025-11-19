@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { AcordoCondenacaoForm } from '@/components/acordos-condenacoes/acordo-condenacao-form';
+import { AcordoCondenacaoForm } from '../components/acordo-condenacao-form';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';

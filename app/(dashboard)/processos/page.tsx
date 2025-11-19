@@ -4,9 +4,9 @@
 
 import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/data-table';
-import { DataTableColumnHeader } from '@/components/data-table-column-header';
-import { ProcessosFiltrosAvancados } from '@/components/processos-filtros-avancados';
+import { DataTable } from '@/components/ui/data-table';
+import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { ProcessosFiltrosAvancados } from './components/processos-filtros-avancados';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -416,52 +416,37 @@ function criarColunas(
       ),
     },
     {
-      id: 'tribunal',
+      id: 'processo',
       header: () => (
-        <div className="flex items-center justify-center">
-          <TribunalColumnHeader
-            ordenarPor={
-              ordenarPor === 'trt' || ordenarPor === 'grau' || ordenarPor === 'trt_primeiro_grau' || ordenarPor === 'trt_segundo_grau'
-                ? ordenarPor
-                : null
-            }
-            ordem={ordem}
-            onSortChange={onTribunalSortChange}
-          />
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Processo</div>
         </div>
       ),
       enableSorting: false,
-      size: 140,
-      cell: ({ row }) => {
-        const trt = row.original.trt;
-        const grau = row.original.grau;
-        return (
-          <div className="min-h-[2.5rem] flex flex-col items-center justify-center gap-1">
-            <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit`}>
-              {trt}
-            </Badge>
-            <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit`}>
-              {formatarGrau(grau)}
-            </Badge>
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: 'numero_processo',
-      header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Número do Processo" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 280,
+      size: 380,
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
-        const numeroProcesso = row.getValue('numero_processo') as string;
+        const numeroProcesso = row.original.numero_processo;
+        const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
+        const trt = row.original.trt;
+        const grau = row.original.grau;
+
         return (
-          <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium whitespace-nowrap">
-            {classeJudicial ? `${classeJudicial} ${numeroProcesso}` : numeroProcesso}
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
+                {trt}
+              </Badge>
+              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>
+                {formatarGrau(grau)}
+              </Badge>
+            </div>
+            <div className="text-sm font-medium whitespace-nowrap">
+              {classeJudicial && `${classeJudicial} `}{numeroProcesso}
+            </div>
+            <div className="text-xs text-muted-foreground max-w-full truncate">
+              {orgaoJulgador}
+            </div>
           </div>
         );
       },
@@ -494,20 +479,6 @@ function criarColunas(
           </div>
         );
       },
-    },
-    {
-      accessorKey: 'descricao_orgao_julgador',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Órgão Julgador</div>
-        </div>
-      ),
-      size: 300,
-      cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm break-words px-2 max-w-[300px]">
-          {row.getValue('descricao_orgao_julgador')}
-        </div>
-      ),
     },
     {
       id: 'acoes',

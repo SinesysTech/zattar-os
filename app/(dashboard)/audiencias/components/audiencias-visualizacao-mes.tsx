@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { AudienciaDetalhesDialog } from '@/components/audiencia-detalhes-dialog';
+import { AudienciaDetalhesDialog } from './audiencia-detalhes-dialog';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 
 /**

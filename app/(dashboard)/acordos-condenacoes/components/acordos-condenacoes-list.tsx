@@ -20,8 +20,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Eye, Search, X } from 'lucide-react';
+import { Eye, Search, X, Loader2, AlertCircle, FileX } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from '@/components/ui/empty';
 
 interface AcordoCondenacao {
   id: number;
@@ -139,24 +140,35 @@ export function AcordosCondenacoesList() {
 
   if (isLoading) {
     return (
-      <div className="text-center py-8 text-muted-foreground">
-        Carregando acordos e condenações...
-      </div>
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Loader2 className="h-6 w-6 animate-spin" />
+          </EmptyMedia>
+          <EmptyTitle>Carregando acordos e condenações...</EmptyTitle>
+        </EmptyHeader>
+      </Empty>
     );
   }
 
   if (error) {
     return (
-      <div className="rounded-md border border-destructive p-8 text-center">
-        <p className="text-destructive font-medium">{error}</p>
-        <Button
-          variant="outline"
-          onClick={loadData}
-          className="mt-4"
-        >
-          Tentar Novamente
-        </Button>
-      </div>
+      <Empty className="border-destructive">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <AlertCircle className="h-6 w-6 text-destructive" />
+          </EmptyMedia>
+          <EmptyTitle className="text-destructive">{error}</EmptyTitle>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button
+            variant="outline"
+            onClick={loadData}
+          >
+            Tentar Novamente
+          </Button>
+        </EmptyContent>
+      </Empty>
     );
   }
 
@@ -255,12 +267,17 @@ export function AcordosCondenacoesList() {
 
       {/* Tabela */}
       {dados.acordos.length === 0 ? (
-        <div className="rounded-md border p-8 text-center text-muted-foreground">
-          <p>Nenhum acordo ou condenação encontrado</p>
-          <p className="text-sm mt-2">
-            Use os filtros acima ou cadastre um novo registro
-          </p>
-        </div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FileX className="h-6 w-6" />
+            </EmptyMedia>
+            <EmptyTitle>Nenhum acordo ou condenação encontrado</EmptyTitle>
+            <EmptyDescription>
+              Use os filtros acima ou cadastre um novo registro
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       ) : (
         <>
           <div className="rounded-md border">

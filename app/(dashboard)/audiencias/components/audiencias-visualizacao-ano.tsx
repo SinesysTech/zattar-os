@@ -3,7 +3,7 @@
 // Componente de visualização de audiências por ano com calendários mensais
 
 import * as React from 'react';
-import { AudienciaDetalhesDialog } from '@/components/audiencia-detalhes-dialog';
+import { AudienciaDetalhesDialog } from './audiencia-detalhes-dialog';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 
 interface AudienciasVisualizacaoAnoProps {

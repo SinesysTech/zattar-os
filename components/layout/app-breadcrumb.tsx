@@ -11,7 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { useBreadcrumb } from "@/components/breadcrumb-context"
+import { useBreadcrumb } from "@/components/layout/breadcrumb-context"
 
 // Mapeamento de rotas para labels customizados
 const routeLabels: Record<string, string> = {

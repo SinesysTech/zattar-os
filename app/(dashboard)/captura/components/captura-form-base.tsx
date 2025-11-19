@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
+import { AlertCircle } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { useAdvogados } from '@/lib/hooks/use-advogados';
 import { useCredenciais } from '@/lib/hooks/use-credenciais';
 import { AdvogadoCombobox } from './advogado-combobox';
 import { CredenciaisCombobox } from './credenciais-combobox';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
 
 interface CapturaFormBaseProps {
   advogadoId: number | null;
@@ -66,9 +68,17 @@ export function CapturaFormBase({
           placeholder="Selecione um advogado"
         />
         {advogados.length === 0 && !isLoadingAdvogados && (
-          <p className="text-sm text-muted-foreground">
-            Nenhum advogado com credenciais cadastradas encontrado. Cadastre credenciais antes de iniciar capturas.
-          </p>
+          <Empty className="border-0 py-4">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <AlertCircle className="h-6 w-6" />
+              </EmptyMedia>
+              <EmptyTitle className="text-base">Nenhum advogado encontrado</EmptyTitle>
+              <EmptyDescription className="text-sm">
+                Nenhum advogado com credenciais cadastradas encontrado. Cadastre credenciais antes de iniciar capturas.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
         )}
       </div>
 
@@ -79,11 +89,17 @@ export function CapturaFormBase({
           {isLoadingCredenciais ? (
             <div className="text-sm text-muted-foreground">Carregando credenciais...</div>
           ) : credenciais.length === 0 ? (
-            <div className="rounded-lg border p-4">
-              <p className="text-sm text-muted-foreground">
-                Nenhuma credencial ativa encontrada para este advogado.
-              </p>
-            </div>
+            <Empty className="border-0 py-4">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <AlertCircle className="h-6 w-6" />
+                </EmptyMedia>
+                <EmptyTitle className="text-base">Nenhuma credencial ativa encontrada</EmptyTitle>
+                <EmptyDescription className="text-sm">
+                  Não há credenciais ativas para este advogado.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
           ) : (
             <CredenciaisCombobox
               credenciais={credenciais}

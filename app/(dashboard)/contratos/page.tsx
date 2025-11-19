@@ -4,15 +4,15 @@
 
 import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/data-table';
-import { DataTableColumnHeader } from '@/components/data-table-column-header';
-import { ContratosFiltrosAvancados } from '@/components/contratos-filtros-avancados';
+import { DataTable } from '@/components/ui/data-table';
+import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { ContratosFiltrosAvancados } from './components/contratos-filtros-avancados';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ContratoViewSheet } from '@/components/contratos/contrato-view-sheet';
-import { ContratoEditSheet } from '@/components/contratos/contrato-edit-sheet';
-import { ContratoCreateSheet } from '@/components/contratos/contrato-create-sheet';
+import { ContratoViewSheet } from './components/contrato-view-sheet';
+import { ContratoEditSheet } from './components/contrato-edit-sheet';
+import { ContratoCreateSheet } from './components/contrato-create-sheet';
 import { Eye, Pencil, Plus } from 'lucide-react';
 import { useContratos } from '@/lib/hooks/use-contratos';
 import type { ColumnDef } from '@tanstack/react-table';

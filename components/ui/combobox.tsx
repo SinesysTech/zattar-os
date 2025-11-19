@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown, X } from "lucide-react"
+import { Check, ChevronsUpDown, X, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/popover"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
 
 export interface ComboboxOption {
   value: string
@@ -227,9 +228,14 @@ export function Combobox({
           {/* Lista de opções */}
           <div className="max-h-[300px] overflow-auto p-1">
             {filteredOptions.length === 0 ? (
-              <div className="py-6 text-center text-sm text-muted-foreground">
-                {emptyText}
-              </div>
+              <Empty className="border-0 py-4">
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <Search className="h-6 w-6" />
+                  </EmptyMedia>
+                  <EmptyTitle className="text-base">{emptyText}</EmptyTitle>
+                </EmptyHeader>
+              </Empty>
             ) : (
               filteredOptions.map((option) => {
                 const isSelected = selectedValues.includes(option.value)

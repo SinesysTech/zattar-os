@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { HistoricoCapturas } from '@/components/captura/historico-capturas';
-import { AgendamentosList } from '@/components/captura/agendamentos/agendamentos-list';
-import { CapturaDialog } from '@/components/captura/captura-dialog';
-import { AgendamentoDialog } from '@/components/captura/agendamento-dialog';
+import { HistoricoCapturas } from './components/historico-capturas';
+import { AgendamentosList } from './components/agendamentos/agendamentos-list';
+import { CapturaDialog } from './components/captura-dialog';
+import { AgendamentoDialog } from './components/agendamento-dialog';
 import { History, Clock, Plus } from 'lucide-react';
 
 export default function CapturaPage() {

@@ -11,9 +11,10 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, Edit2, XCircle } from 'lucide-react';
+import { CheckCircle2, Edit2, XCircle, FileX } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { toast } from 'sonner';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 
 interface Parcela {
   id: number;
@@ -159,8 +160,15 @@ export function ParcelasTable({
         <TableBody>
           {parcelas.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={9} className="text-center text-muted-foreground">
-                Nenhuma parcela encontrada
+              <TableCell colSpan={9} className="p-0">
+                <Empty className="border-0 py-8">
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                      <FileX className="h-6 w-6" />
+                    </EmptyMedia>
+                    <EmptyTitle>Nenhuma parcela encontrada</EmptyTitle>
+                  </EmptyHeader>
+                </Empty>
               </TableCell>
             </TableRow>
           ) : (

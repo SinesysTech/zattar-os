@@ -1,8 +1,8 @@
 'use client';
 
-import { RepassesPendentesList } from '@/components/acordos-condenacoes/repasses-pendentes-list';
-import { UploadDeclaracaoDialog } from '@/components/acordos-condenacoes/upload-declaracao-dialog';
-import { UploadComprovanteDialog } from '@/components/acordos-condenacoes/upload-comprovante-dialog';
+import { RepassesPendentesList } from '../acordos-condenacoes/components/repasses-pendentes-list';
+import { UploadDeclaracaoDialog } from '../acordos-condenacoes/components/upload-declaracao-dialog';
+import { UploadComprovanteDialog } from '../acordos-condenacoes/components/upload-comprovante-dialog';
 import { useState } from 'react';
 
 interface DialogState {
