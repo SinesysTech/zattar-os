@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AcordoCondenacaoForm } from '../../components/acordo-condenacao-form';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
 
 interface AcordoCondenacao {
   id: number;
@@ -83,9 +84,14 @@ export default function EditarAcordoCondenacaoPage({
   if (isLoading) {
     return (
       <div className="container mx-auto py-8 max-w-4xl">
-        <div className="text-center py-12 text-muted-foreground">
-          Carregando dados...
-        </div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <Loader2 className="h-6 w-6 animate-spin" />
+            </EmptyMedia>
+            <EmptyTitle>Carregando dados...</EmptyTitle>
+          </EmptyHeader>
+        </Empty>
       </div>
     );
   }
@@ -93,18 +99,24 @@ export default function EditarAcordoCondenacaoPage({
   if (error || !acordo) {
     return (
       <div className="container mx-auto py-8 max-w-4xl">
-        <div className="rounded-md border border-destructive p-8 text-center">
-          <p className="text-destructive font-medium">
-            {error || 'Acordo não encontrado'}
-          </p>
-          <Button
-            variant="outline"
-            onClick={() => router.push('/acordos-condenacoes')}
-            className="mt-4"
-          >
-            Voltar para Lista
-          </Button>
-        </div>
+        <Empty className="border-destructive">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <AlertCircle className="h-6 w-6 text-destructive" />
+            </EmptyMedia>
+            <EmptyTitle className="text-destructive">
+              {error || 'Acordo não encontrado'}
+            </EmptyTitle>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button
+              variant="outline"
+              onClick={() => router.push('/acordos-condenacoes')}
+            >
+              Voltar para Lista
+            </Button>
+          </EmptyContent>
+        </Empty>
       </div>
     );
   }

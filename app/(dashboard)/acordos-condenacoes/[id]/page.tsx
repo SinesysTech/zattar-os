@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ParcelasTable } from '../components/parcelas-table';
 import { EditParcelaDialog } from '../components/edit-parcela-dialog';
 import Link from 'next/link';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -162,9 +163,14 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
   if (isLoading) {
     return (
       <div className="container mx-auto py-8">
-        <div className="text-center py-12 text-muted-foreground">
-          Carregando detalhes...
-        </div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <Loader2 className="h-6 w-6 animate-spin" />
+            </EmptyMedia>
+            <EmptyTitle>Carregando detalhes...</EmptyTitle>
+          </EmptyHeader>
+        </Empty>
       </div>
     );
   }
@@ -172,16 +178,22 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
   if (error || !acordo) {
     return (
       <div className="container mx-auto py-8">
-        <div className="rounded-md border border-destructive p-8 text-center">
-          <p className="text-destructive font-medium">{error || 'Acordo não encontrado'}</p>
-          <Button
-            variant="outline"
-            onClick={() => router.push('/acordos-condenacoes')}
-            className="mt-4"
-          >
-            Voltar para Lista
-          </Button>
-        </div>
+        <Empty className="border-destructive">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <AlertCircle className="h-6 w-6 text-destructive" />
+            </EmptyMedia>
+            <EmptyTitle className="text-destructive">{error || 'Acordo não encontrado'}</EmptyTitle>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button
+              variant="outline"
+              onClick={() => router.push('/acordos-condenacoes')}
+            >
+              Voltar para Lista
+            </Button>
+          </EmptyContent>
+        </Empty>
       </div>
     );
   }

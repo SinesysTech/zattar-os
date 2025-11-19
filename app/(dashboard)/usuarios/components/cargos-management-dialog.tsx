@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Loader2,
   Plus,
@@ -238,15 +239,13 @@ export function CargosManagementDialog({
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       id="ativo"
                       checked={formData.ativo}
-                      onChange={(e) =>
-                        setFormData({ ...formData, ativo: e.target.checked })
+                      onCheckedChange={(checked) =>
+                        setFormData({ ...formData, ativo: checked === true })
                       }
                       disabled={isSaving}
-                      className="h-4 w-4"
                     />
                     <Label htmlFor="ativo" className="cursor-pointer">
                       Cargo ativo
@@ -373,7 +372,7 @@ export function CargosManagementDialog({
           <AlertDialogHeader>
             <AlertDialogTitle>Deletar Cargo</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja deletar o cargo "{deletingCargo?.nome}"?
+              Tem certeza que deseja deletar o cargo &quot;{deletingCargo?.nome}&quot;?
               {'\n\n'}
               Esta ação não pode ser desfeita. Se houver usuários com este
               cargo, a operação falhará.

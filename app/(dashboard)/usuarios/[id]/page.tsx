@@ -115,14 +115,21 @@ export default function UsuarioDetailPage({ params }: UsuarioDetailPageProps) {
             </Link>
           </Button>
         </div>
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            {errorUsuario
-              ? 'Erro ao carregar dados do usuário. Tente novamente.'
-              : 'Usuário não encontrado.'}
-          </AlertDescription>
-        </Alert>
+        <Empty className="border-destructive">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <AlertCircle className="h-6 w-6 text-destructive" />
+            </EmptyMedia>
+            <EmptyTitle className="text-destructive">
+              {errorUsuario ? 'Erro ao carregar usuário' : 'Usuário não encontrado'}
+            </EmptyTitle>
+            <EmptyDescription>
+              {errorUsuario
+                ? 'Erro ao carregar dados do usuário. Tente novamente.'
+                : 'O usuário que você está procurando não existe.'}
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       </div>
     );
   }
