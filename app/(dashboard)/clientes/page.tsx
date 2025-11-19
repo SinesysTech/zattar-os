@@ -4,15 +4,15 @@
 
 import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/data-table';
-import { DataTableColumnHeader } from '@/components/data-table-column-header';
+import { DataTable } from '@/components/ui/data-table';
+import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ClienteViewSheet } from '@/components/clientes/cliente-view-sheet';
-import { ClienteEditSheet } from '@/components/clientes/cliente-edit-sheet';
-import { ClienteCreateSheet } from '@/components/clientes/cliente-create-sheet';
+import { ClienteViewSheet } from './components/cliente-view-sheet';
+import { ClienteEditSheet } from './components/cliente-edit-sheet';
+import { ClienteCreateSheet } from './components/cliente-create-sheet';
 import { Eye, Pencil, Plus } from 'lucide-react';
 import { useClientes } from '@/lib/hooks/use-clientes';
 import type { ColumnDef } from '@tanstack/react-table';

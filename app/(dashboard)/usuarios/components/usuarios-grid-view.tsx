@@ -3,8 +3,10 @@
 // Componente Grid para exibir usuários em cards
 
 import * as React from 'react';
+import { Users } from 'lucide-react';
 import { UsuarioCard } from './usuario-card';
 import { UsuariosPagination } from './usuarios-pagination';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 interface UsuariosGridViewProps {
@@ -31,9 +33,14 @@ export function UsuariosGridView({
 }: UsuariosGridViewProps) {
   if (usuarios.length === 0) {
     return (
-      <div className="flex items-center justify-center py-12 text-muted-foreground">
-        <p>Nenhum usuário encontrado.</p>
-      </div>
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Users className="h-6 w-6" />
+          </EmptyMedia>
+          <EmptyTitle>Nenhum usuário encontrado.</EmptyTitle>
+        </EmptyHeader>
+      </Empty>
     );
   }
 

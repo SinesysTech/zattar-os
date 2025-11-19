@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ParcelasTable } from '@/components/acordos-condenacoes/parcelas-table';
-import { EditParcelaDialog } from '@/components/acordos-condenacoes/edit-parcela-dialog';
+import { ParcelasTable } from '../components/parcelas-table';
+import { EditParcelaDialog } from '../components/edit-parcela-dialog';
 import Link from 'next/link';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import {

@@ -12,12 +12,13 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ArrowLeft, AlertCircle, Pencil } from 'lucide-react';
-import { UsuarioDadosBasicos } from '@/components/usuarios/usuario-dados-basicos';
-import { PermissoesMatriz } from '@/components/usuarios/permissoes-matriz';
-import { UsuarioEditDialog } from '@/components/usuarios/usuario-edit-dialog';
+import { UsuarioDadosBasicos } from '../components/usuario-dados-basicos';
+import { PermissoesMatriz } from '../components/permissoes-matriz';
+import { UsuarioEditDialog } from '../components/usuario-edit-dialog';
 import { useUsuarioDetail, useUsuarioPermissoes } from '@/lib/hooks/use-usuario-detail';
 import { usePermissoesMatriz } from '@/lib/hooks/use-permissoes-matriz';
-import { useBreadcrumbOverride } from '@/components/breadcrumb-context';
+import { useBreadcrumbOverride } from '@/components/layout/breadcrumb-context';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from '@/components/ui/empty';
 
 interface UsuarioDetailPageProps {
   params: Promise<{

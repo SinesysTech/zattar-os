@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DataTable } from '@/components/data-table';
+import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -27,9 +27,9 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
-import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
-import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
-import { ExpedienteVisualizarDialog } from '@/components/expediente-visualizar-dialog';
+import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
+import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dialog';
+import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';

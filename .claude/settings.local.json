@@ -10,7 +10,8 @@
       "Bash(npx shadcn@latest add:*)",
       "Bash(npm run build:*)",
       "Bash(npx openspec list --specs)",
-      "Bash(npx openspec:*)"
+      "Bash(npx openspec:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

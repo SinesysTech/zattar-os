@@ -22,10 +22,12 @@ import {
   Save,
   X,
   Briefcase,
+  FileX,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCargos } from '@/lib/hooks/use-cargos';
 import type { Cargo } from '@/backend/types/cargos/types';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -303,9 +305,14 @@ export function CargosManagementDialog({
                   <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                 </div>
               ) : cargos.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  Nenhum cargo cadastrado
-                </div>
+                <Empty>
+                  <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                      <FileX className="h-6 w-6" />
+                    </EmptyMedia>
+                    <EmptyTitle>Nenhum cargo cadastrado</EmptyTitle>
+                  </EmptyHeader>
+                </Empty>
               ) : (
                 <div className="space-y-1">
                   {cargos.map((cargo) => (

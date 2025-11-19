@@ -11,8 +11,9 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Upload, FileCheck } from 'lucide-react';
+import { Upload, FileCheck, Loader2, AlertCircle, FileX } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 
 interface RepassePendente {
   parcelaId: number;
@@ -83,14 +84,28 @@ export function RepassesPendentesList({
   };
 
   if (isLoading) {
-    return <div className="text-center py-8">Carregando repasses...</div>;
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Loader2 className="h-6 w-6 animate-spin" />
+          </EmptyMedia>
+          <EmptyTitle>Carregando repasses...</EmptyTitle>
+        </EmptyHeader>
+      </Empty>
+    );
   }
 
   if (error) {
     return (
-      <div className="text-center py-8 text-destructive">
-        {error}
-      </div>
+      <Empty className="border-destructive">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <AlertCircle className="h-6 w-6 text-destructive" />
+          </EmptyMedia>
+          <EmptyTitle className="text-destructive">{error}</EmptyTitle>
+        </EmptyHeader>
+      </Empty>
     );
   }
 
@@ -185,9 +200,14 @@ export function RepassesPendentesList({
 
       {/* Nenhum repasse pendente */}
       {repasses.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground">
-          Nenhum repasse pendente no momento
-        </div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FileX className="h-6 w-6" />
+            </EmptyMedia>
+            <EmptyTitle>Nenhum repasse pendente no momento</EmptyTitle>
+          </EmptyHeader>
+        </Empty>
       )}
     </div>
   );

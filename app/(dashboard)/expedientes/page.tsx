@@ -4,10 +4,10 @@
 
 import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/data-table';
-import { DataTableColumnHeader } from '@/components/data-table-column-header';
-import { DataTableColumnHeaderWithFilter } from '@/components/data-table-column-header-with-filter';
-import { ExpedientesFiltrosAvancados } from '@/components/expedientes-filtros-avancados';
+import { DataTable } from '@/components/ui/data-table';
+import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { DataTableColumnHeaderWithFilter } from '@/components/ui/data-table-column-header-with-filter';
+import { ExpedientesFiltrosAvancados } from './components/expedientes-filtros-avancados';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -32,15 +32,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { ExpedientesVisualizacaoSemana } from '@/components/expedientes-visualizacao-semana';
-import { ExpedientesVisualizacaoMes } from '@/components/expedientes-visualizacao-mes';
-import { ExpedientesVisualizacaoAno } from '@/components/expedientes-visualizacao-ano';
+import { ExpedientesVisualizacaoSemana } from './components/expedientes-visualizacao-semana';
+import { ExpedientesVisualizacaoMes } from './components/expedientes-visualizacao-mes';
+import { ExpedientesVisualizacaoAno } from './components/expedientes-visualizacao-ano';
 import { usePendentes } from '@/lib/hooks/use-pendentes';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { useTiposExpedientes } from '@/lib/hooks/use-tipos-expedientes';
-import { ExpedientesBaixarDialog } from '@/components/expedientes-baixar-dialog';
-import { ExpedientesReverterBaixaDialog } from '@/components/expedientes-reverter-baixa-dialog';
-import { ExpedienteVisualizarDialog } from '@/components/expediente-visualizar-dialog';
+import { ExpedientesBaixarDialog } from './components/expedientes-baixar-dialog';
+import { ExpedientesReverterBaixaDialog } from './components/expedientes-reverter-baixa-dialog';
+import { ExpedienteVisualizarDialog } from './components/expediente-visualizar-dialog';
 import { CheckCircle2, XCircle, Undo2, Eye } from 'lucide-react';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';

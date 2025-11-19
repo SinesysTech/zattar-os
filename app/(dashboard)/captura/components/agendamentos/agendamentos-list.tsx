@@ -2,8 +2,8 @@
 
 import type { TipoCaptura } from '@/backend/types/captura/capturas-log-types';
 import * as React from 'react';
-import { DataTable } from '@/components/data-table';
-import { DataTableColumnHeader } from '@/components/data-table-column-header';
+import { DataTable } from '@/components/ui/data-table';
+import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAgendamentos } from '@/lib/hooks/use-agendamentos';

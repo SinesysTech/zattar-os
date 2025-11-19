@@ -27,8 +27,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2, FileX } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 
 export interface DataTableProps<TData> {
   // Dados
@@ -213,8 +214,15 @@ export function DataTable<TData>({
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                      {emptyMessage}
+                    <TableCell colSpan={columns.length} className="p-0">
+                      <Empty>
+                        <EmptyHeader>
+                          <EmptyMedia variant="icon">
+                            <FileX className="h-6 w-6" />
+                          </EmptyMedia>
+                          <EmptyTitle>{emptyMessage}</EmptyTitle>
+                        </EmptyHeader>
+                      </Empty>
                     </TableCell>
                   </TableRow>
                 )}

@@ -5,9 +5,9 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/data-table';
-import { DataTableColumnHeader } from '@/components/data-table-column-header';
-import { AudienciasFiltrosAvancados } from '@/components/audiencias-filtros-avancados';
+import { DataTable } from '@/components/ui/data-table';
+import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { AudienciasFiltrosAvancados } from './components/audiencias-filtros-avancados';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -21,9 +21,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ChevronLeft, ChevronRight, Copy, Pencil, Plus } from 'lucide-react';
-import { AudienciasVisualizacaoSemana } from '@/components/audiencias-visualizacao-semana';
-import { AudienciasVisualizacaoMes } from '@/components/audiencias-visualizacao-mes';
-import { AudienciasVisualizacaoAno } from '@/components/audiencias-visualizacao-ano';
+import { AudienciasVisualizacaoSemana } from './components/audiencias-visualizacao-semana';
+import { AudienciasVisualizacaoMes } from './components/audiencias-visualizacao-mes';
+import { AudienciasVisualizacaoAno } from './components/audiencias-visualizacao-ano';
 import { useAudiencias } from '@/lib/hooks/use-audiencias';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { STATUS_AUDIENCIA_OPTIONS } from '@/lib/constants/audiencias';
