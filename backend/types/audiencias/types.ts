@@ -44,17 +44,18 @@ export interface Audiencia {
   trt: string;
   grau: GrauAudiencia;
   numero_processo: string;
-  classe_judicial: string | null; // Classe judicial via JOIN com acervo
+  classe_judicial: string | null; // Descrição da classe judicial via JOIN
+  classe_judicial_id: number | null; // FK para classe_judicial
   data_inicio: string; // ISO timestamp
   data_fim: string; // ISO timestamp
-  sala_audiencia_nome: string | null;
-  sala_audiencia_id: number | null;
+  sala_audiencia_nome: string | null; // Cache desnormalizado (histórico)
+  sala_audiencia_id: number | null; // FK para sala_audiencia
   status: string;
   status_descricao: string | null;
-  tipo_id: number | null;
-  tipo_descricao: string | null;
-  tipo_codigo: string | null;
-  tipo_is_virtual: boolean;
+  tipo_audiencia_id: number | null; // FK para tipo_audiencia
+  tipo_descricao: string | null; // Via JOIN com tipo_audiencia
+  tipo_codigo: string | null; // Via JOIN com tipo_audiencia
+  tipo_is_virtual: boolean; // Via JOIN com tipo_audiencia
   designada: boolean;
   em_andamento: boolean;
   documento_ativo: boolean;

@@ -136,13 +136,21 @@ export function Combobox({
                   {selectedOptions.slice(0, 2).map((opt) => (
                     <Badge key={opt.value} variant="secondary" className="text-xs">
                       {opt.label}
-                      <button
-                        type="button"
+                      <span
+                        role="button"
+                        tabIndex={0}
                         onClick={(e) => handleRemove(opt.value, e)}
-                        className="ml-1 hover:bg-secondary-foreground/20 rounded-full p-0.5"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            handleRemove(opt.value, e as any)
+                          }
+                        }}
+                        className="ml-1 hover:bg-secondary-foreground/20 rounded-full p-0.5 cursor-pointer inline-flex items-center"
+                        aria-label={`Remover ${opt.label}`}
                       >
                         <X className="h-3 w-3" />
-                      </button>
+                      </span>
                     </Badge>
                   ))}
                   <Badge variant="secondary" className="text-xs">
@@ -153,13 +161,21 @@ export function Combobox({
                 selectedOptions.map((opt) => (
                   <Badge key={opt.value} variant="secondary" className="text-xs">
                     {opt.label}
-                    <button
-                      type="button"
+                    <span
+                      role="button"
+                      tabIndex={0}
                       onClick={(e) => handleRemove(opt.value, e)}
-                      className="ml-1 hover:bg-secondary-foreground/20 rounded-full p-0.5"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          handleRemove(opt.value, e as any)
+                        }
+                      }}
+                      className="ml-1 hover:bg-secondary-foreground/20 rounded-full p-0.5 cursor-pointer inline-flex items-center"
+                      aria-label={`Remover ${opt.label}`}
                     >
                       <X className="h-3 w-3" />
-                    </button>
+                    </span>
                   </Badge>
                 ))
               )
@@ -170,7 +186,7 @@ export function Combobox({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start" sideOffset={4}>
+      <PopoverContent className="w-(--radix-popover-trigger-width) p-0" align="start" sideOffset={4}>
         <div className="flex flex-col">
           {/* Barra de busca */}
           <div className="p-2 border-b">

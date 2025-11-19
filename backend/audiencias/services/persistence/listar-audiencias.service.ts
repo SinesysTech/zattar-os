@@ -23,13 +23,14 @@ function converterParaAudiencia(data: Record<string, unknown>): Audiencia {
     grau: data.grau as 'primeiro_grau' | 'segundo_grau',
     numero_processo: data.numero_processo as string,
     classe_judicial: (data.classe_judicial as string | null) ?? null,
+    classe_judicial_id: (data.classe_judicial_id as number | null) ?? null,
     data_inicio: data.data_inicio as string,
     data_fim: data.data_fim as string,
     sala_audiencia_nome: (data.sala_audiencia_nome as string | null) ?? null,
     sala_audiencia_id: (data.sala_audiencia_id as number | null) ?? null,
     status: data.status as string,
     status_descricao: (data.status_descricao as string | null) ?? null,
-    tipo_id: (data.tipo_id as number | null) ?? null,
+    tipo_audiencia_id: (data.tipo_audiencia_id as number | null) ?? null,
     tipo_descricao: (data.tipo_descricao as string | null) ?? null,
     tipo_codigo: (data.tipo_codigo as string | null) ?? null,
     tipo_is_virtual: (data.tipo_is_virtual as boolean) ?? false,
@@ -60,13 +61,15 @@ export async function listarAudiencias(
   const limite = Math.min(params.limite ?? 50, 100); // Máximo 100
   const offset = (pagina - 1) * limite;
 
-  // Selecionar todos os campos da tabela audiencias e fazer JOIN com orgao_julgador e acervo
+  // Selecionar todos os campos da tabela audiencias e fazer JOIN com tabelas relacionadas
   let query = supabase
     .from('audiencias')
     .select(`
       *,
       orgao_julgador:orgao_julgador_id(descricao),
-      acervo:processo_id(classe_judicial)
+      classe_judicial:classe_judicial_id(descricao, sigla),
+      tipo_audiencia:tipo_audiencia_id(descricao, codigo, is_virtual),
+      sala_audiencia:sala_audiencia_id(nome)
     `, { count: 'exact' });
 
   // Filtros básicos (campos da tabela audiencias não precisam de prefixo)
@@ -161,13 +164,19 @@ export async function listarAudiencias(
   const audiencias = (data || []).map((row: Record<string, unknown>) => {
     // Extrair dados do JOIN
     const orgaoJulgador = row.orgao_julgador as Record<string, unknown> | null;
-    const acervo = row.acervo as Record<string, unknown> | null;
+    const classeJudicial = row.classe_judicial as Record<string, unknown> | null;
+    const tipoAudiencia = row.tipo_audiencia as Record<string, unknown> | null;
+    const salaAudiencia = row.sala_audiencia as Record<string, unknown> | null;
 
     // Adicionar campos do JOIN ao objeto
     const rowWithJoins = {
       ...row,
       orgao_julgador_descricao: orgaoJulgador?.descricao ?? null,
-      classe_judicial: acervo?.classe_judicial ?? null,
+      classe_judicial: classeJudicial?.descricao ?? null,
+      tipo_descricao: tipoAudiencia?.descricao ?? null,
+      tipo_codigo: tipoAudiencia?.codigo ?? null,
+      tipo_is_virtual: tipoAudiencia?.is_virtual ?? false,
+      sala_audiencia_nome: salaAudiencia?.nome ?? row.sala_audiencia_nome ?? null,
     };
 
     return converterParaAudiencia(rowWithJoins);

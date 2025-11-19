@@ -15,6 +15,7 @@
     "test:api-pendentes-manifestacao": "tsx dev_data/scripts/test-api-pendentes-manifestacao.ts",
     "debug:credentials": "tsx dev_data/scripts/debug-check-credentials.ts",
     "populate:tabelas-audiencias": "tsx dev_data/scripts/populate-tabelas-auxiliares-audiencias.ts",
+    "populate:classe-judicial-acervo": "tsx dev_data/scripts/populate-classe-judicial-acervo.ts",
     "sincronizar-usuarios": "tsx scripts/sincronizar-usuarios.ts"
   },
   "dependencies": {
