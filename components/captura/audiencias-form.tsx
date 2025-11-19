@@ -7,12 +7,20 @@ import { capturarAudiencias } from '@/lib/api/captura';
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export function AudienciasForm() {
   const [advogadoId, setAdvogadoId] = useState<number | null>(null);
   const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
   const [dataInicio, setDataInicio] = useState('');
   const [dataFim, setDataFim] = useState('');
+  const [status, setStatus] = useState<'M' | 'C' | 'F'>('M');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<{
     success: boolean | null;
@@ -44,9 +52,11 @@ export function AudienciasForm() {
         credencial_ids: number[];
         dataInicio?: string;
         dataFim?: string;
+        status?: 'M' | 'C' | 'F';
       } = {
         advogado_id: advogadoId,
         credencial_ids: credenciaisSelecionadas,
+        status,
       };
 
       if (dataInicio) params.dataInicio = dataInicio;
@@ -82,6 +92,24 @@ export function AudienciasForm() {
         onAdvogadoChange={setAdvogadoId}
         onCredenciaisChange={setCredenciaisSelecionadas}
       >
+        {/* Status */}
+        <div className="space-y-2">
+          <Label htmlFor="status">Status da Audiência</Label>
+          <Select value={status} onValueChange={(value) => setStatus(value as 'M' | 'C' | 'F')}>
+            <SelectTrigger id="status">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="M">Designada</SelectItem>
+              <SelectItem value="C">Cancelada</SelectItem>
+              <SelectItem value="F">Realizada</SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-sm text-muted-foreground">
+            Selecione o status das audiências que deseja capturar
+          </p>
+        </div>
+
         {/* Data Início */}
         <div className="space-y-2">
           <Label htmlFor="dataInicio">Data Início (opcional)</Label>
