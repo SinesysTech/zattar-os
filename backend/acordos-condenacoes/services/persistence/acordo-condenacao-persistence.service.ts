@@ -47,6 +47,7 @@ export interface AcordoCondenacaoAtualizacaoDados {
   dataVencimentoPrimeiraParcela?: string;
   percentualEscritorio?: number;
   honorariosSucumbenciaisTotal?: number;
+  formaDistribuicao?: FormaDistribuicao | null;
   status?: StatusAcordoCondenacao;
 }
 
@@ -306,6 +307,9 @@ export async function atualizarAcordoCondenacao(
     }
     if (dados.honorariosSucumbenciaisTotal !== undefined) {
       updateData.honorarios_sucumbenciais_total = dados.honorariosSucumbenciaisTotal;
+    }
+    if (dados.formaDistribuicao !== undefined) {
+      updateData.forma_distribuicao = dados.formaDistribuicao;
     }
     if (dados.status !== undefined) updateData.status = dados.status;
 

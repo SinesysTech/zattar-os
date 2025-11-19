@@ -5,6 +5,7 @@ import {
   Calendar,
   FileText,
   FolderOpen,
+  Handshake,
   LayoutDashboard,
   Scale,
   Users,
@@ -56,6 +57,11 @@ const navMain = [
     title: "Processos",
     url: "/processos",
     icon: Scale,
+  },
+  {
+    title: "Acordos e Condenações",
+    url: "/acordos-condenacoes",
+    icon: Handshake,
   },
   {
     title: "Audiências",

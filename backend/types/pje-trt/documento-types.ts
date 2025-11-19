@@ -1,0 +1,192 @@
+/**
+ * Arquivo: documento-types.ts
+ *
+ * PROPÓSITO:
+ * Este arquivo contém todas as interfaces e tipos relacionados a documentos/expedientes do PJE-TRT.
+ * Define estruturas para busca, download e upload de documentos PDF do sistema PJE.
+ *
+ * DEPENDÊNCIAS:
+ * Nenhuma dependência externa. Este arquivo contém apenas definições de tipos TypeScript.
+ *
+ * EXPORTAÇÕES:
+ * - DocumentoMetadata: Interface para metadados de documento retornados pela API do PJE
+ * - DocumentoConteudo: Interface para conteúdo do documento (PDF em base64)
+ * - FetchDocumentoParams: Parâmetros para buscar um documento específico
+ * - FetchDocumentoResult: Resultado da operação de fetch + upload de documento
+ * - ArquivoInfo: Informações do arquivo após upload no Google Drive
+ *
+ * QUEM USA ESTE ARQUIVO:
+ * - pje-expediente-documento.service.ts: Serviço principal de captura de documentos
+ * - pendentes-manifestacao.service.ts: Integração com scraper de pendentes
+ * - pendentes-persistence.service.ts: Persistência de informações de arquivo
+ * - app/api/pje/pendente-manifestacao/documento/route.ts: Endpoint REST
+ */
+
+/**
+ * Interface: DocumentoMetadata
+ *
+ * PROPÓSITO:
+ * Representa os metadados de um documento retornados pela API do PJE.
+ * Obtido via GET /api/processos/id/{processoId}/documentos/id/{documentoId}
+ *
+ * CAMPOS:
+ * - id: number - ID único do documento no PJE
+ * - nome: string - Nome do arquivo (geralmente inclui extensão)
+ * - mimetype: string - MIME type do arquivo (ex: "application/pdf")
+ * - tamanho?: number - Tamanho do arquivo em bytes (opcional)
+ * - dataHora?: string - Data/hora de criação do documento (opcional)
+ *
+ * USO:
+ * Usado para validar tipo do documento antes de fazer download completo.
+ * Valida se mimetype é "application/pdf" antes de prosseguir.
+ *
+ * EXEMPLO DE RESPOSTA DA API:
+ * {
+ *   "id": 123456,
+ *   "nome": "sentenca.pdf",
+ *   "mimetype": "application/pdf",
+ *   "tamanho": 1024000,
+ *   "dataHora": "2025-01-19T12:00:00Z"
+ * }
+ */
+export interface DocumentoMetadata {
+  id: number;
+  nome: string;
+  mimetype: string;
+  tamanho?: number;
+  dataHora?: string;
+}
+
+/**
+ * Interface: DocumentoConteudo
+ *
+ * PROPÓSITO:
+ * Representa o conteúdo de um documento PDF retornado pela API do PJE.
+ * Obtido via GET /api/processos/id/{processoId}/documentos/id/{documentoId}/conteudo
+ *
+ * CAMPOS:
+ * - documento: string - Conteúdo do PDF codificado em base64
+ * - mimetype: string - MIME type do arquivo (geralmente "application/pdf")
+ *
+ * USO:
+ * Usado para obter o conteúdo binário do documento para upload no Google Drive.
+ * O campo "documento" deve ser decodificado de base64 para Buffer antes do upload.
+ *
+ * EXEMPLO DE RESPOSTA DA API:
+ * {
+ *   "documento": "JVBERi0xLjQKJeLjz9MK...",
+ *   "mimetype": "application/pdf"
+ * }
+ */
+export interface DocumentoConteudo {
+  documento: string; // Base64 encoded
+  mimetype: string;
+}
+
+/**
+ * Interface: FetchDocumentoParams
+ *
+ * PROPÓSITO:
+ * Parâmetros necessários para buscar um documento específico do PJE.
+ *
+ * CAMPOS:
+ * - processoId: string - ID do processo no PJE (usado na URL da API)
+ * - documentoId: string - ID do documento/expediente no PJE
+ * - pendenteId: number - ID do registro na tabela pendente_manifestacao (para atualização)
+ * - numeroProcesso: string - Número do processo (ex: "0010702-80.2025.5.03.0111") - usado no webhook
+ * - trt: string - Código do TRT (ex: "TRT3") - usado para gerar path do arquivo
+ * - grau: string - Grau do processo ("1" ou "2") - usado para gerar path do arquivo
+ *
+ * USO:
+ * Passado para a função downloadAndUploadDocumento() que orquestra todo o fluxo.
+ *
+ * EXEMPLO:
+ * {
+ *   processoId: "12345678",
+ *   documentoId: "87654321",
+ *   pendenteId: 999,
+ *   numeroProcesso: "0010702-80.2025.5.03.0111",
+ *   trt: "TRT3",
+ *   grau: "1"
+ * }
+ */
+export interface FetchDocumentoParams {
+  processoId: string;
+  documentoId: string;
+  pendenteId: number;
+  numeroProcesso: string;
+  trt: string;
+  grau: string;
+}
+
+/**
+ * Interface: ArquivoInfo
+ *
+ * PROPÓSITO:
+ * Informações sobre o arquivo após upload bem-sucedido no Google Drive.
+ * Estas informações são armazenadas no banco de dados.
+ *
+ * CAMPOS:
+ * - arquivo_nome: string - Nome/path do arquivo no storage (ex: "pendentes/trt3g1/999_1705856400000.pdf")
+ * - arquivo_url_visualizacao: string - URL de visualização do Google Drive (webViewLink)
+ * - arquivo_url_download: string - URL de download do Google Drive (webContentLink)
+ *
+ * USO:
+ * Retornado pelo GoogleDriveStorageService após upload bem-sucedido.
+ * Usado para atualizar os campos correspondentes na tabela pendente_manifestacao.
+ *
+ * EXEMPLO:
+ * {
+ *   arquivo_nome: "pendentes/trt3g1/999_1705856400000.pdf",
+ *   arquivo_url_visualizacao: "https://drive.google.com/file/d/abc123/view",
+ *   arquivo_url_download: "https://drive.google.com/uc?id=abc123&export=download"
+ * }
+ */
+export interface ArquivoInfo {
+  arquivo_nome: string;
+  arquivo_url_visualizacao: string;
+  arquivo_url_download: string;
+}
+
+/**
+ * Interface: FetchDocumentoResult
+ *
+ * PROPÓSITO:
+ * Resultado completo da operação de fetch e upload de documento.
+ * Retornado pela função downloadAndUploadDocumento() e pelo endpoint REST.
+ *
+ * CAMPOS:
+ * - success: boolean - Indica se a operação foi bem-sucedida
+ * - pendenteId: number - ID do pendente que teve documento capturado
+ * - arquivoInfo?: ArquivoInfo - Informações do arquivo (presente se success=true)
+ * - error?: string - Mensagem de erro (presente se success=false)
+ *
+ * USO:
+ * Retornado pelo endpoint POST /api/pje/pendente-manifestacao/documento
+ * Usado pelo frontend para exibir feedback de sucesso/erro
+ * Usado pelo scraper para coletar estatísticas de captura
+ *
+ * EXEMPLO DE SUCESSO:
+ * {
+ *   success: true,
+ *   pendenteId: 999,
+ *   arquivoInfo: {
+ *     arquivo_nome: "pendentes/trt3g1/999_1705856400000.pdf",
+ *     arquivo_url_visualizacao: "https://drive.google.com/...",
+ *     arquivo_url_download: "https://drive.google.com/..."
+ *   }
+ * }
+ *
+ * EXEMPLO DE ERRO:
+ * {
+ *   success: false,
+ *   pendenteId: 999,
+ *   error: "Documento não é um PDF válido"
+ * }
+ */
+export interface FetchDocumentoResult {
+  success: boolean;
+  pendenteId: number;
+  arquivoInfo?: ArquivoInfo;
+  error?: string;
+}

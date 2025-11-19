@@ -16,23 +16,54 @@ import { CheckCircle2, XCircle } from 'lucide-react';
 
 interface AcordoCondenacaoFormProps {
   processoId?: number;
+  acordoId?: number; // Para modo de edição
+  initialData?: {
+    tipo: 'acordo' | 'condenacao' | 'custas_processuais';
+    direcao: 'recebimento' | 'pagamento';
+    valorTotal: number;
+    dataVencimentoPrimeiraParcela: string;
+    numeroParcelas: number;
+    formaDistribuicao?: string | null;
+    percentualEscritorio?: number;
+    honorariosSucumbenciaisTotal?: number;
+  };
   onSuccess?: (data: any) => void;
   onCancel?: () => void;
 }
 
 export function AcordoCondenacaoForm({
   processoId,
+  acordoId,
+  initialData,
   onSuccess,
   onCancel,
 }: AcordoCondenacaoFormProps) {
-  const [tipo, setTipo] = useState<'acordo' | 'condenacao' | 'custas_processuais' | ''>('');
-  const [direcao, setDirecao] = useState<'recebimento' | 'pagamento' | ''>('');
-  const [valorTotal, setValorTotal] = useState<string>('');
-  const [dataVencimento, setDataVencimento] = useState<string>('');
-  const [numeroParcelas, setNumeroParcelas] = useState<number>(1);
-  const [formaDistribuicao, setFormaDistribuicao] = useState<'integral' | 'dividido' | ''>('');
-  const [percentualEscritorio, setPercentualEscritorio] = useState<number>(30);
-  const [honorariosSucumbenciais, setHonorariosSucumbenciais] = useState<string>('0');
+  const isEditMode = !!acordoId;
+
+  const [tipo, setTipo] = useState<'acordo' | 'condenacao' | 'custas_processuais' | ''>(
+    initialData?.tipo || ''
+  );
+  const [direcao, setDirecao] = useState<'recebimento' | 'pagamento' | ''>(
+    initialData?.direcao || ''
+  );
+  const [valorTotal, setValorTotal] = useState<string>(
+    initialData?.valorTotal?.toString() || ''
+  );
+  const [dataVencimento, setDataVencimento] = useState<string>(
+    initialData?.dataVencimentoPrimeiraParcela?.split('T')[0] || ''
+  );
+  const [numeroParcelas, setNumeroParcelas] = useState<number>(
+    initialData?.numeroParcelas || 1
+  );
+  const [formaDistribuicao, setFormaDistribuicao] = useState<'integral' | 'dividido' | ''>(
+    (initialData?.formaDistribuicao as 'integral' | 'dividido') || ''
+  );
+  const [percentualEscritorio, setPercentualEscritorio] = useState<number>(
+    initialData?.percentualEscritorio || 30
+  );
+  const [honorariosSucumbenciais, setHonorariosSucumbenciais] = useState<string>(
+    initialData?.honorariosSucumbenciaisTotal?.toString() || '0'
+  );
   const [formaPagamento, setFormaPagamento] = useState<
     'transferencia_direta' | 'deposito_judicial' | 'deposito_recursal' | ''
   >('');
@@ -93,22 +124,33 @@ export function AcordoCondenacaoForm({
     setResult({ success: null });
 
     try {
-      const response = await fetch('/api/acordos-condenacoes', {
-        method: 'POST',
+      const url = isEditMode
+        ? `/api/acordos-condenacoes/${acordoId}`
+        : '/api/acordos-condenacoes';
+      const method = isEditMode ? 'PUT' : 'POST';
+
+      const payload: any = {
+        tipo,
+        direcao,
+        valorTotal: parseFloat(valorTotal),
+        dataVencimentoPrimeiraParcela: dataVencimento,
+        formaDistribuicao: formaDistribuicao || null,
+        percentualEscritorio,
+        honorariosSucumbenciaisTotal: parseFloat(honorariosSucumbenciais),
+      };
+
+      // Campos apenas para criação
+      if (!isEditMode) {
+        payload.processoId = processoId || 1; // TODO: Integrar com seletor de processo
+        payload.numeroParcelas = numeroParcelas;
+        payload.formaPagamentoPadrao = formaPagamento;
+        payload.intervaloEntreParcelas = intervaloEntreParcelas;
+      }
+
+      const response = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          processoId: processoId || 1, // TODO: Integrar com seletor de processo
-          tipo,
-          direcao,
-          valorTotal: parseFloat(valorTotal),
-          dataVencimentoPrimeiraParcela: dataVencimento,
-          numeroParcelas,
-          formaDistribuicao: formaDistribuicao || null,
-          percentualEscritorio,
-          honorariosSucumbenciaisTotal: parseFloat(honorariosSucumbenciais),
-          formaPagamentoPadrao: formaPagamento,
-          intervaloEntreParcelas,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -119,7 +161,10 @@ export function AcordoCondenacaoForm({
           setTimeout(() => onSuccess(data.data), 1500);
         }
       } else {
-        setResult({ success: false, error: data.error || 'Erro ao criar acordo/condenação' });
+        const errorMsg = isEditMode
+          ? 'Erro ao atualizar acordo/condenação'
+          : 'Erro ao criar acordo/condenação';
+        setResult({ success: false, error: data.error || errorMsg });
       }
     } catch (error) {
       setResult({ success: false, error: 'Erro ao comunicar com o servidor' });
@@ -135,7 +180,9 @@ export function AcordoCondenacaoForm({
         <Alert variant={result.success ? 'default' : 'destructive'}>
           {result.success ? <CheckCircle2 className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
           <AlertDescription>
-            {result.success ? 'Acordo/condenação criado com sucesso!' : result.error}
+            {result.success
+              ? (isEditMode ? 'Acordo/condenação atualizado com sucesso!' : 'Acordo/condenação criado com sucesso!')
+              : result.error}
           </AlertDescription>
         </Alert>
       )}
@@ -144,7 +191,7 @@ export function AcordoCondenacaoForm({
         {/* Tipo */}
         <div className="space-y-2">
           <Label htmlFor="tipo">Tipo *</Label>
-          <Select value={tipo} onValueChange={(v: any) => setTipo(v)}>
+          <Select value={tipo} onValueChange={(v: any) => setTipo(v)} disabled={isEditMode}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione o tipo" />
             </SelectTrigger>
@@ -162,7 +209,7 @@ export function AcordoCondenacaoForm({
           <Select
             value={direcao}
             onValueChange={(v: any) => setDirecao(v)}
-            disabled={tipo === 'custas_processuais'}
+            disabled={isEditMode || tipo === 'custas_processuais'}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione a direção" />
@@ -201,48 +248,51 @@ export function AcordoCondenacaoForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        {/* Número de Parcelas */}
-        <div className="space-y-2">
-          <Label htmlFor="numeroParcelas">Número de Parcelas *</Label>
-          <Input
-            id="numeroParcelas"
-            type="number"
-            min="1"
-            value={numeroParcelas}
-            onChange={(e) => setNumeroParcelas(parseInt(e.target.value) || 1)}
-            disabled={tipo === 'custas_processuais'}
-          />
-        </div>
+      {/* Campos de parcelas - apenas para criação */}
+      {!isEditMode && (
+        <div className="grid grid-cols-3 gap-4">
+          {/* Número de Parcelas */}
+          <div className="space-y-2">
+            <Label htmlFor="numeroParcelas">Número de Parcelas *</Label>
+            <Input
+              id="numeroParcelas"
+              type="number"
+              min="1"
+              value={numeroParcelas}
+              onChange={(e) => setNumeroParcelas(parseInt(e.target.value) || 1)}
+              disabled={tipo === 'custas_processuais'}
+            />
+          </div>
 
-        {/* Intervalo entre Parcelas */}
-        <div className="space-y-2">
-          <Label htmlFor="intervalo">Intervalo (dias)</Label>
-          <Input
-            id="intervalo"
-            type="number"
-            min="1"
-            value={intervaloEntreParcelas}
-            onChange={(e) => setIntervaloEntreParcelas(parseInt(e.target.value) || 30)}
-            disabled={numeroParcelas === 1}
-          />
-        </div>
+          {/* Intervalo entre Parcelas */}
+          <div className="space-y-2">
+            <Label htmlFor="intervalo">Intervalo (dias)</Label>
+            <Input
+              id="intervalo"
+              type="number"
+              min="1"
+              value={intervaloEntreParcelas}
+              onChange={(e) => setIntervaloEntreParcelas(parseInt(e.target.value) || 30)}
+              disabled={numeroParcelas === 1}
+            />
+          </div>
 
-        {/* Forma de Pagamento */}
-        <div className="space-y-2">
-          <Label htmlFor="formaPagamento">Forma de Pagamento *</Label>
-          <Select value={formaPagamento} onValueChange={(v: any) => setFormaPagamento(v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="transferencia_direta">Transferência Direta</SelectItem>
-              <SelectItem value="deposito_judicial">Depósito Judicial</SelectItem>
-              <SelectItem value="deposito_recursal">Depósito Recursal</SelectItem>
-            </SelectContent>
-          </Select>
+          {/* Forma de Pagamento */}
+          <div className="space-y-2">
+            <Label htmlFor="formaPagamento">Forma de Pagamento *</Label>
+            <Select value={formaPagamento} onValueChange={(v: any) => setFormaPagamento(v)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="transferencia_direta">Transferência Direta</SelectItem>
+                <SelectItem value="deposito_judicial">Depósito Judicial</SelectItem>
+                <SelectItem value="deposito_recursal">Depósito Recursal</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Forma de Distribuição (só para recebimentos) */}
       {direcao === 'recebimento' && tipo !== 'custas_processuais' && (
@@ -300,7 +350,9 @@ export function AcordoCondenacaoForm({
           </Button>
         )}
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? 'Criando...' : 'Criar Acordo/Condenação'}
+          {isLoading
+            ? (isEditMode ? 'Salvando...' : 'Criando...')
+            : (isEditMode ? 'Salvar Alterações' : 'Criar Acordo/Condenação')}
         </Button>
       </div>
     </form>

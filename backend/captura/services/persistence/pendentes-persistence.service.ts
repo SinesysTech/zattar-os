@@ -246,3 +246,40 @@ export async function salvarPendentes(
   };
 }
 
+/**
+ * Atualiza informações de arquivo/documento de um pendente de manifestação
+ * Usado após upload bem-sucedido de documento para Google Drive
+ *
+ * @param pendenteId - ID do pendente na tabela pendentes_manifestacao
+ * @param arquivoInfo - Informações do arquivo (nome, URLs de visualização e download)
+ * @returns Promise<void>
+ * @throws Error se a atualização falhar
+ */
+export async function atualizarDocumentoPendente(
+  pendenteId: number,
+  arquivoInfo: {
+    arquivo_nome: string;
+    arquivo_url_visualizacao: string;
+    arquivo_url_download: string;
+  }
+): Promise<void> {
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from('pendentes_manifestacao')
+    .update({
+      arquivo_nome: arquivoInfo.arquivo_nome,
+      arquivo_url_visualizacao: arquivoInfo.arquivo_url_visualizacao,
+      arquivo_url_download: arquivoInfo.arquivo_url_download,
+    })
+    .eq('id', pendenteId);
+
+  if (error) {
+    throw new Error(
+      `Erro ao atualizar documento do pendente ${pendenteId}: ${error.message}`
+    );
+  }
+
+  console.log(`✅ Documento atualizado no banco para pendente ${pendenteId}`);
+}
+

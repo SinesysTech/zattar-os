@@ -210,9 +210,11 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" disabled>
-            <Edit className="h-4 w-4 mr-1" />
-            Editar
+          <Button variant="outline" size="sm" asChild>
+            <Link href={`/acordos-condenacoes/${acordoId}/editar`}>
+              <Edit className="h-4 w-4 mr-1" />
+              Editar
+            </Link>
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>

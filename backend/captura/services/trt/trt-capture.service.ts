@@ -19,6 +19,7 @@ export interface CapturaTRTParams {
  */
 export interface CapturaPendentesManifestacaoParams extends CapturaTRTParams {
   filtroPrazo?: FiltroPrazoPendentes; // 'no_prazo' ou 'sem_prazo'
+  capturarDocumentos?: boolean; // Se true, baixa documentos PDF de cada pendente (default: false)
 }
 
 /**
