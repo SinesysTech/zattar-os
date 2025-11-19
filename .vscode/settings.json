@@ -1,4 +1,9 @@
 {
     "claudeCode.allowDangerouslySkipPermissions": true,
-    "claudeCode.respectGitIgnore": false
+    "claudeCode.respectGitIgnore": false,
+    "css.validate": false,
+    "css.customData": [".vscode/css-custom-data.json"],
+    "files.associations": {
+        "*.css": "tailwindcss"
+    }
 }

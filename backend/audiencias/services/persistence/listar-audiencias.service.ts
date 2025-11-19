@@ -66,10 +66,10 @@ export async function listarAudiencias(
     .from('audiencias')
     .select(`
       *,
-      orgao_julgador:orgao_julgador_id(descricao),
-      classe_judicial:classe_judicial_id(descricao, sigla),
-      tipo_audiencia:tipo_audiencia_id(descricao, codigo, is_virtual),
-      sala_audiencia:sala_audiencia_id(nome)
+      orgao_julgador!orgao_julgador_id(descricao),
+      classe_judicial!classe_judicial_id(descricao, sigla),
+      tipo_audiencia!tipo_audiencia_id(descricao, codigo, is_virtual),
+      sala_audiencia!sala_audiencia_id(nome)
     `, { count: 'exact' });
 
   // Filtros básicos (campos da tabela audiencias não precisam de prefixo)

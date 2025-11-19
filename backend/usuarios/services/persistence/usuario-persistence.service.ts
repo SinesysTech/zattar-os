@@ -494,7 +494,7 @@ export async function buscarUsuarioPorId(id: number): Promise<Usuario | null> {
 
   const { data, error } = await supabase
     .from('usuarios')
-    .select('*, cargos(id, nome, descricao, ativo)')
+    .select('*, cargos!cargo_id(id, nome, descricao, ativo)')
     .eq('id', id)
     .single();
 
@@ -517,7 +517,7 @@ export async function buscarUsuarioPorCpf(cpf: string): Promise<Usuario | null> 
 
   const { data, error } = await supabase
     .from('usuarios')
-    .select('*, cargos(id, nome, descricao, ativo)')
+    .select('*, cargos!cargo_id(id, nome, descricao, ativo)')
     .eq('cpf', cpfNormalizado)
     .single();
 
@@ -540,7 +540,7 @@ export async function buscarUsuarioPorEmail(email: string): Promise<Usuario | nu
 
   const { data, error } = await supabase
     .from('usuarios')
-    .select('*, cargos(id, nome, descricao, ativo)')
+    .select('*, cargos!cargo_id(id, nome, descricao, ativo)')
     .eq('email_corporativo', emailLower)
     .single();
 
@@ -566,7 +566,7 @@ export async function listarUsuarios(
   const limite = params.limite ?? 50;
   const offset = (pagina - 1) * limite;
 
-  let query = supabase.from('usuarios').select('*, cargos(id, nome, descricao, ativo)', { count: 'exact' });
+  let query = supabase.from('usuarios').select('*, cargos!cargo_id(id, nome, descricao, ativo)', { count: 'exact' });
 
   // Aplicar filtros
   if (params.busca) {

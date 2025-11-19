@@ -410,7 +410,7 @@ function criarColunas(
       enableSorting: true,
       size: 120,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm">
+        <div className="min-h-10 flex items-center justify-center text-sm">
           {formatarData(row.getValue('data_autuacao'))}
         </div>
       ),
@@ -432,7 +432,7 @@ function criarColunas(
         const grau = row.original.grau;
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -469,7 +469,7 @@ function criarColunas(
         const parteAutora = row.original.nome_parte_autora || '-';
         const parteRe = row.original.nome_parte_re || '-';
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
             <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
               {parteAutora}
             </Badge>
@@ -494,7 +494,7 @@ function criarColunas(
         const temAudiencia = !!dataProximaAudiencia;
 
         return (
-          <div className="min-h-[2.5rem] flex items-center justify-center gap-2">
+          <div className="min-h-10 flex items-center justify-center gap-2">
             <Button
               variant="ghost"
               size="icon"

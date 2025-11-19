@@ -146,7 +146,7 @@ export function ParcelasTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[80px]">Parcela</TableHead>
+            <TableHead className="w-20">Parcela</TableHead>
             <TableHead>Crédito Principal</TableHead>
             <TableHead>Hon. Contratuais</TableHead>
             <TableHead>Hon. Sucumbenciais</TableHead>
