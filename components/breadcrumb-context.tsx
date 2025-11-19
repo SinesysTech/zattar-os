@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 
 interface BreadcrumbOverride {
   path: string;
@@ -22,16 +22,16 @@ const BreadcrumbContext = createContext<BreadcrumbContextType>({
 export function BreadcrumbProvider({ children }: { children: ReactNode }) {
   const [overrides, setOverrides] = useState<BreadcrumbOverride[]>([]);
 
-  const setOverride = (path: string, label: string) => {
+  const setOverride = useCallback((path: string, label: string) => {
     setOverrides((prev) => {
       const filtered = prev.filter((o) => o.path !== path);
       return [...filtered, { path, label }];
     });
-  };
+  }, []);
 
-  const clearOverride = (path: string) => {
+  const clearOverride = useCallback((path: string) => {
     setOverrides((prev) => prev.filter((o) => o.path !== path));
-  };
+  }, []);
 
   return (
     <BreadcrumbContext.Provider value={{ overrides, setOverride, clearOverride }}>
@@ -52,5 +52,6 @@ export function useBreadcrumbOverride(path: string, label: string | undefined) {
       setOverride(path, label);
     }
     return () => clearOverride(path);
-  }, [path, label, setOverride, clearOverride]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, label]);
 }

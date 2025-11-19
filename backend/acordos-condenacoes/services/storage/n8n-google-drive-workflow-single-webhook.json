@@ -1,0 +1,361 @@
+{
+  "name": "Sinesys - Google Drive Storage (Single Webhook)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "google-drive-storage",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 500]
+    },
+    {
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "rules": [
+            {
+              "operation": "equals",
+              "value1": "={{ $json.body.operation }}",
+              "value2": "upload"
+            },
+            {
+              "operation": "equals",
+              "value1": "={{ $json.body.operation }}",
+              "value2": "delete"
+            },
+            {
+              "operation": "equals",
+              "value1": "={{ $json.body.operation }}",
+              "value2": "get-url"
+            },
+            {
+              "operation": "equals",
+              "value1": "={{ $json.body.operation }}",
+              "value2": "exists"
+            }
+          ]
+        }
+      },
+      "name": "Switch Operation",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 2,
+      "position": [450, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Decodificar base64 para buffer\nconst base64Content = $input.item.json.body.fileContent;\nconst buffer = Buffer.from(base64Content, 'base64');\n\nreturn {\n  json: {\n    fileName: $input.item.json.body.fileName,\n    path: $input.item.json.body.path,\n    contentType: $input.item.json.body.contentType\n  },\n  binary: {\n    data: {\n      data: buffer.toString('base64'),\n      mimeType: $input.item.json.body.contentType,\n      fileName: $input.item.json.body.fileName\n    }\n  }\n};"
+      },
+      "name": "Decode Base64",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "name": "={{ $json.fileName }}",
+        "binaryData": true,
+        "resolveData": true,
+        "parents": {
+          "parent": [
+            {
+              "id": "SEU_FOLDER_ID_AQUI"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Google Drive Upload",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [850, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"path\": \"{{ $node['Decode Base64'].json.path }}\",\n  \"url\": \"{{ $json.webViewLink }}\",\n  \"fileId\": \"{{ $json.id }}\",\n  \"success\": true\n}",
+        "options": {}
+      },
+      "name": "Respond Upload",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "queryString": "=name='{{ $json.body.path.split('/').pop() }}'",
+        "options": {}
+      },
+      "name": "Find File to Delete",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [650, 450],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        }
+      },
+      "name": "Delete File",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [850, 450],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": true }",
+        "options": {}
+      },
+      "name": "Respond Delete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 450]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "queryString": "=name='{{ $json.body.path.split('/').pop() }}'",
+        "options": {}
+      },
+      "name": "Find File for URL",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [650, 600],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"url\": \"{{ $json.webViewLink }}\",\n  \"success\": true\n}",
+        "options": {}
+      },
+      "name": "Respond URL",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 600]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "queryString": "=name='{{ $json.body.path.split('/').pop() }}'",
+        "options": {}
+      },
+      "name": "Find File Exists",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [650, 750],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.id !== undefined && $json.id !== null }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "File Found?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [850, 750]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"exists\": true }",
+        "options": {}
+      },
+      "name": "Respond Exists True",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 700]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"exists\": false }",
+        "options": {}
+      },
+      "name": "Respond Exists False",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 800]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch Operation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Operation": {
+      "main": [
+        [
+          {
+            "node": "Decode Base64",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Find File to Delete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Find File for URL",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Find File Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decode Base64": {
+      "main": [
+        [
+          {
+            "node": "Google Drive Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive Upload": {
+      "main": [
+        [
+          {
+            "node": "Respond Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find File to Delete": {
+      "main": [
+        [
+          {
+            "node": "Delete File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete File": {
+      "main": [
+        [
+          {
+            "node": "Respond Delete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find File for URL": {
+      "main": [
+        [
+          {
+            "node": "Respond URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find File Exists": {
+      "main": [
+        [
+          {
+            "node": "File Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File Found?": {
+      "main": [
+        [
+          {
+            "node": "Respond Exists True",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Exists False",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "pinData": {},
+  "versionId": "1"
+}

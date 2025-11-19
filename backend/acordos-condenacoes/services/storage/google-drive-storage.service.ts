@@ -118,27 +118,10 @@ export class GoogleDriveStorageService implements IStorageService {
    */
   async delete(path: string): Promise<DeleteResult> {
     try {
-      // Headers
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-      };
-      if (this.webhookToken) {
-        headers['Authorization'] = `Bearer ${this.webhookToken}`;
-      }
-
-      // Enviar requisição de deleção para webhook
-      const response = await fetch(`${this.webhookUrl}/delete`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ path }),
+      await this.callWebhook({
+        operation: 'delete',
+        path,
       });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(
-          `Erro ao deletar via webhook: ${response.status} - ${errorText}`
-        );
-      }
 
       return {
         success: true,
@@ -160,34 +143,11 @@ export class GoogleDriveStorageService implements IStorageService {
    */
   async getUrl(path: string, expiresIn?: number): Promise<GetUrlResult> {
     try {
-      // Headers
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-      };
-      if (this.webhookToken) {
-        headers['Authorization'] = `Bearer ${this.webhookToken}`;
-      }
-
-      // Montar query params
-      const params = new URLSearchParams({ path });
-      if (expiresIn) {
-        params.append('expiresIn', expiresIn.toString());
-      }
-
-      // Enviar requisição para obter URL
-      const response = await fetch(`${this.webhookUrl}/get-url?${params}`, {
-        method: 'GET',
-        headers,
+      const result = await this.callWebhook({
+        operation: 'get-url',
+        path,
+        expiresIn,
       });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(
-          `Erro ao obter URL via webhook: ${response.status} - ${errorText}`
-        );
-      }
-
-      const result = await response.json();
 
       return {
         success: true,
@@ -211,28 +171,11 @@ export class GoogleDriveStorageService implements IStorageService {
    */
   async exists(path: string): Promise<boolean> {
     try {
-      // Headers
-      const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-      };
-      if (this.webhookToken) {
-        headers['Authorization'] = `Bearer ${this.webhookToken}`;
-      }
+      const result = await this.callWebhook({
+        operation: 'exists',
+        path,
+      });
 
-      // Enviar requisição para verificar existência
-      const response = await fetch(
-        `${this.webhookUrl}/exists?path=${encodeURIComponent(path)}`,
-        {
-          method: 'GET',
-          headers,
-        }
-      );
-
-      if (!response.ok) {
-        return false;
-      }
-
-      const result = await response.json();
       return result.exists === true;
     } catch (error) {
       console.error('Erro ao verificar existência no Google Drive via n8n:', error);

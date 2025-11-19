@@ -6,7 +6,8 @@
       "Bash(find:*)",
       "Bash(rm:*)",
       "SlashCommand(/openspec:proposal acordos-condenacoes-pagamentos)",
-      "SlashCommand(/openspec:proposal:*)"
+      "SlashCommand(/openspec:proposal:*)",
+      "Bash(npx shadcn@latest add:*)"
     ],
     "deny": [],
     "ask": []

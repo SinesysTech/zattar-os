@@ -4,16 +4,17 @@
  * Página de detalhes do usuário com matriz de permissões
  */
 
-import { use, useEffect } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ArrowLeft, AlertCircle } from 'lucide-react';
+import { ArrowLeft, AlertCircle, Pencil } from 'lucide-react';
 import { UsuarioDadosBasicos } from '@/components/usuarios/usuario-dados-basicos';
 import { PermissoesMatriz } from '@/components/usuarios/permissoes-matriz';
+import { UsuarioEditDialog } from '@/components/usuarios/usuario-edit-dialog';
 import { useUsuarioDetail, useUsuarioPermissoes } from '@/lib/hooks/use-usuario-detail';
 import { usePermissoesMatriz } from '@/lib/hooks/use-permissoes-matriz';
 import { useBreadcrumbOverride } from '@/components/breadcrumb-context';
@@ -72,9 +73,20 @@ export default function UsuarioDetailPage({ params }: UsuarioDetailPageProps) {
     },
   });
 
-  // Atualizar breadcrumb com nome do usuário
-  const nomeUsuario = usuario?.nomeExibicao || usuario?.nomeCompleto || undefined;
-  useBreadcrumbOverride(`/usuarios/${usuarioId}`, nomeUsuario);
+  // Atualizar breadcrumb e título da página
+  const displayName = usuario?.nomeExibicao || usuario?.nomeCompleto;
+  useBreadcrumbOverride(`/usuarios/${usuarioId}`, displayName);
+
+  useEffect(() => {
+    if (displayName) {
+      document.title = `${displayName} - Usuários - Sinesys`;
+    } else {
+      document.title = `Usuário #${usuarioId} - Usuários - Sinesys`;
+    }
+  }, [displayName, usuarioId]);
+
+  // Estado para controlar o dialog de edição
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   // TODO: Verificar permissão do usuário logado (usuarios.visualizar e usuarios.gerenciar_permissoes)
   // Por enquanto, permitindo edição sempre
@@ -114,43 +126,56 @@ export default function UsuarioDetailPage({ params }: UsuarioDetailPageProps) {
     );
   }
 
-  // Atualizar título da página
-  useEffect(() => {
-    if (usuario) {
-      const nomeUsuario = usuario.nomeExibicao || usuario.nomeCompleto || `Usuário #${usuarioId}`;
-      document.title = `${nomeUsuario} - Usuários - Sinesys`;
-    }
-  }, [usuario, usuarioId]);
-
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <>
+      <div className="container mx-auto py-6 space-y-6">
+        {/* Botão de editar no canto superior direito */}
+        <div className="flex justify-end">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setEditDialogOpen(true)}
+          >
+            <Pencil className="h-4 w-4 mr-2" />
+            Editar Usuário
+          </Button>
+        </div>
 
-      {/* Dados básicos */}
-      <UsuarioDadosBasicos usuario={usuario} />
+        {/* Dados básicos */}
+        <UsuarioDadosBasicos usuario={usuario} />
 
-      <Separator />
+        <Separator />
 
-      {/* Matriz de permissões */}
-      {errorPermissoes ? (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Erro ao carregar permissões. Tente recarregar a página.
-          </AlertDescription>
-        </Alert>
-      ) : (
-        <PermissoesMatriz
-          matriz={matriz}
-          isSuperAdmin={isSuperAdmin}
-          hasChanges={hasChanges}
-          isSaving={isSaving}
-          isLoading={isLoadingPermissoes}
-          canEdit={canEdit}
-          onTogglePermissao={togglePermissao}
-          onSalvar={salvarPermissoes}
-          onResetar={resetarMudancas}
-        />
-      )}
-    </div>
+        {/* Matriz de permissões */}
+        {errorPermissoes ? (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Erro ao carregar permissões. Tente recarregar a página.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <PermissoesMatriz
+            matriz={matriz}
+            isSuperAdmin={isSuperAdmin}
+            hasChanges={hasChanges}
+            isSaving={isSaving}
+            isLoading={isLoadingPermissoes}
+            canEdit={canEdit}
+            onTogglePermissao={togglePermissao}
+            onSalvar={salvarPermissoes}
+            onResetar={resetarMudancas}
+          />
+        )}
+      </div>
+
+      {/* Dialog de edição */}
+      <UsuarioEditDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        usuario={usuario}
+        onSuccess={mutateUsuario}
+      />
+    </>
   );
 }
