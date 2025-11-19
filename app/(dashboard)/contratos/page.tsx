@@ -8,6 +8,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { ContratoViewSheet } from './components/contrato-view-sheet';
 import { ContratoEditSheet } from './components/contrato-edit-sheet';
@@ -228,15 +229,10 @@ export default function ContratosPage() {
   const [filtros, setFiltros] = React.useState<ContratosFilters>({});
   const [createOpen, setCreateOpen] = React.useState(false);
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
-  const [isSearching, setIsSearching] = React.useState(false);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
-
-  // Detectar se está buscando
-  React.useEffect(() => {
-    setIsSearching(busca !== buscaDebounced);
-  }, [busca, buscaDebounced]);
+  const isSearching = busca !== buscaDebounced;
 
   // Gerar opções de filtro
   const filterOptions = React.useMemo(() => buildContratosFilterOptions(), []);

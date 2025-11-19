@@ -722,10 +722,10 @@ export default function AudienciasPage() {
   const [mesAtual, setMesAtual] = React.useState(new Date());
   const [anoAtual, setAnoAtual] = React.useState(new Date().getFullYear());
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
-  const [isSearching, setIsSearching] = React.useState(false);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
+  const isSearching = busca !== buscaDebounced;
 
   // Parâmetros para buscar audiências
   const params = React.useMemo(
@@ -783,11 +783,6 @@ export default function AudienciasPage() {
     },
     []
   );
-
-  // Detectar quando está buscando
-  React.useEffect(() => {
-    setIsSearching(busca !== buscaDebounced);
-  }, [busca, buscaDebounced]);
 
   // Gerar opções de filtro
   const filterOptions = React.useMemo(() => buildAudienciasFilterOptions(usuarios), [usuarios]);

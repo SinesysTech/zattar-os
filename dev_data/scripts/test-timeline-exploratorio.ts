@@ -10,7 +10,7 @@ config(); // Carregar .env também se existir
 import { chromium } from 'playwright';
 import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
-import { autenticarPJE } from '@/backend/captura/services/trt/trt-auth.service';
+import { autenticarPJE, type AuthResult } from '@/backend/captura/services/trt/trt-auth.service';
 import { obterTimeline } from '@/backend/api/pje-trt';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
 
@@ -29,7 +29,7 @@ const RESULTS_DIR = join(__dirname, 'results', 'timeline-exploratorio');
  * Configurações fixas para teste
  */
 const TRT_CODIGO = 'TRT3'; // TRT3 - Minas Gerais
-const GRAU = '1g' as const;
+const GRAU = 'primeiro_grau' as const;
 const PROCESSO_ID = '2887163'; // ID do processo para teste (ajustar conforme necessário)
 
 /**
@@ -43,7 +43,7 @@ async function main() {
   console.log(`Grau: ${GRAU}`);
   console.log(`Processo ID: ${PROCESSO_ID}\n`);
 
-  let browser = null;
+  let authResult: AuthResult | null = null;
 
   try {
     // 1. Obter configuração do tribunal
@@ -54,47 +54,21 @@ async function main() {
 
     console.log(`✅ Configuração obtida: ${config.loginUrl}\n`);
 
-    // 2. Obter credenciais do ambiente
-    const cpf = process.env.PJE_CPF;
-    const senha = process.env.PJE_SENHA;
+    // 2. Credenciais fixas para teste (válidas para todos os TRTs)
+    const cpf = '07529294610';
+    const senha = '12345678A@';
 
-    if (!cpf || !senha) {
-      throw new Error('Credenciais não configuradas. Configure PJE_CPF e PJE_SENHA no .env.local');
-    }
+    console.log('🔐 Usando credenciais de teste\n');
 
-    console.log('🔐 Credenciais obtidas do ambiente\n');
-
-    // 3. Iniciar navegador
-    console.log('🚀 Iniciando navegador...\n');
-    browser = await chromium.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
-
-    const context = await browser.newContext({
-      viewport: { width: 1920, height: 1080 },
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-    });
-
-    const page = await context.newPage();
-
-    // 4. Autenticar no PJE
+    // 3. Autenticar no PJE
     console.log('🔑 Autenticando no PJE...\n');
-    const authResult = await autenticarPJE({
+    authResult = await autenticarPJE({
       credential: {
         cpf,
         senha,
-        twofa_secret: process.env.PJE_2FA_SECRET,
       },
       config,
-      twofauthConfig: {
-        host: process.env.TWOFA_HOST || 'http://localhost:8000',
-        apiKey: process.env.TWOFA_API_KEY || '',
-      },
       headless: true,
-      page,
-      browser,
-      context,
     });
 
     console.log('✅ Autenticação bem-sucedida!\n');
@@ -102,7 +76,9 @@ async function main() {
     console.log(`CPF: ${authResult.advogadoInfo.cpf}`);
     console.log(`ID Advogado: ${authResult.advogadoInfo.idAdvogado}\n`);
 
-    // 5. Testar diferentes combinações de parâmetros
+    const { page } = authResult;
+
+    // 4. Testar diferentes combinações de parâmetros
     console.log('📡 Testando API de Timeline...\n');
 
     const testes = [
@@ -150,7 +126,7 @@ async function main() {
       console.log(`${'='.repeat(80)}\n`);
 
       try {
-        const timeline = await obterTimeline(authResult.page, PROCESSO_ID, teste.options);
+        const timeline = await obterTimeline(page, PROCESSO_ID, teste.options);
 
         // Analisar estrutura
         console.log('📊 Análise da resposta:');
@@ -162,7 +138,7 @@ async function main() {
           
           // Verificar arrays
           for (const key of keys) {
-            const value = (timeline as any)[key];
+            const value = (timeline as Record<string, unknown>)[key];
             if (Array.isArray(value)) {
               console.log(`  - ${key}: Array com ${value.length} itens`);
               if (value.length > 0) {
@@ -214,8 +190,8 @@ async function main() {
     throw error;
   } finally {
     // Limpar recursos
-    if (browser) {
-      await browser.close();
+    if (authResult?.browser) {
+      await authResult.browser.close();
       console.log('\n🔒 Navegador fechado\n');
     }
   }

@@ -59,7 +59,6 @@ export default function CapturaPage() {
           <TableToolbar
             searchValue={buscaHistorico}
             onSearchChange={setBuscaHistorico}
-            isSearching={false}
             searchPlaceholder="Buscar capturas..."
             filterOptions={[]}
             selectedFilters={selectedFilterIdsHistorico}
@@ -75,7 +74,6 @@ export default function CapturaPage() {
           <TableToolbar
             searchValue={buscaAgendamentos}
             onSearchChange={setBuscaAgendamentos}
-            isSearching={false}
             searchPlaceholder="Buscar agendamentos..."
             filterOptions={[]}
             selectedFilters={selectedFilterIdsAgendamentos}
@@ -93,7 +91,6 @@ export default function CapturaPage() {
           <TableToolbar
             searchValue={buscaCredenciais}
             onSearchChange={setBuscaCredenciais}
-            isSearching={false}
             searchPlaceholder="Buscar credenciais..."
             filterOptions={[]}
             selectedFilters={selectedFilterIdsCredenciais}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useDebounce } from '@/hooks/use-debounce';
 import { TableToolbar, type ComboboxOption } from '@/components/ui/table-toolbar';
 import { AcordosCondenacoesList } from './components/acordos-condenacoes-list';
 
@@ -10,7 +11,9 @@ export default function AcordosCondecoesPage() {
   const [busca, setBusca] = useState('');
   const [filtros, setFiltros] = useState({ tipo: '', direcao: '', status: '', processoId: '' });
   const [selectedFilterIds, setSelectedFilterIds] = useState<string[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+
+  const buscaDebounced = useDebounce(busca, 500);
+  const isSearching = busca !== buscaDebounced;
 
   const filterOptions: ComboboxOption[] = [
     { value: 'tipo_acordo', label: 'Tipo: Acordo' },
