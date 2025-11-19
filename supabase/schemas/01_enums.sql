@@ -109,3 +109,11 @@ create type public.polo_processual as enum (
 );
 comment on type public.polo_processual is 'Polo processual (autor ou ré)';
 
+-- Enum para status de audiência
+create type public.status_audiencia as enum (
+  'C',  -- Cancelada
+  'M',  -- Designada (Marcada)
+  'F'   -- Realizada (Finalizada)
+);
+comment on type public.status_audiencia is 'Status da audiência: C=Cancelada, M=Designada, F=Realizada';
+
