@@ -10,6 +10,7 @@ import { ContratosFiltrosAvancados } from './components/contratos-filtros-avanca
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { ContratoViewSheet } from './components/contrato-view-sheet';
 import { ContratoEditSheet } from './components/contrato-edit-sheet';
 import { ContratoCreateSheet } from './components/contrato-create-sheet';
@@ -43,24 +44,26 @@ function ContratoActions({
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8"
-        onClick={() => setViewOpen(true)}
-      >
-        <Eye className="h-4 w-4" />
-        <span className="sr-only">Visualizar contrato</span>
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8"
-        onClick={() => setEditOpen(true)}
-      >
-        <Pencil className="h-4 w-4" />
-        <span className="sr-only">Editar contrato</span>
-      </Button>
+      <ButtonGroup>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={() => setViewOpen(true)}
+        >
+          <Eye className="h-4 w-4" />
+          <span className="sr-only">Visualizar contrato</span>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={() => setEditOpen(true)}
+        >
+          <Pencil className="h-4 w-4" />
+          <span className="sr-only">Editar contrato</span>
+        </Button>
+      </ButtonGroup>
       <ContratoViewSheet
         open={viewOpen}
         onOpenChange={setViewOpen}
@@ -210,7 +213,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Contrato>[] {
       cell: ({ row }) => {
         const contrato = row.original;
         return (
-          <div className="min-h-[2.5rem] flex items-center justify-center gap-2">
+          <div className="min-h-[2.5rem] flex items-center justify-center">
             <ContratoActions contrato={contrato} onEditSuccess={onEditSuccess} />
           </div>
         );

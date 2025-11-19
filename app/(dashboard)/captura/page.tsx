@@ -5,25 +5,34 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { HistoricoCapturas } from './components/historico-capturas';
 import { AgendamentosList } from './components/agendamentos/agendamentos-list';
+import { CredencialsList } from './components/credenciais/credenciais-list';
 import { CapturaDialog } from './components/captura-dialog';
 import { AgendamentoDialog } from './components/agendamento-dialog';
-import { History, Clock, Plus } from 'lucide-react';
+import { CredenciaisDialog } from './components/credenciais/credenciais-dialog';
+import { History, Clock, Key, Plus } from 'lucide-react';
 
 export default function CapturaPage() {
   const [capturaDialogOpen, setCapturaDialogOpen] = useState(false);
   const [agendamentoDialogOpen, setAgendamentoDialogOpen] = useState(false);
+  const [credencialDialogOpen, setCredencialDialogOpen] = useState(false);
   const [refreshAgendamentos, setRefreshAgendamentos] = useState(0);
+  const [refreshCredenciais, setRefreshCredenciais] = useState(0);
 
   const handleAgendamentoSuccess = () => {
     // Forçar refresh da lista de agendamentos
     setRefreshAgendamentos((prev) => prev + 1);
   };
 
+  const handleCredencialSuccess = () => {
+    // Forçar refresh da lista de credenciais
+    setRefreshCredenciais((prev) => prev + 1);
+  };
+
   return (
     <div className="space-y-6">
       <Tabs defaultValue="historico" className="w-full">
         {/* Abas principais */}
-        <TabsList className="grid grid-cols-2 w-fit">
+        <TabsList className="grid grid-cols-3 w-fit">
           <TabsTrigger value="historico" className="flex items-center gap-2">
             <History className="h-4 w-4" />
             <span>Histórico</span>
@@ -31,6 +40,10 @@ export default function CapturaPage() {
           <TabsTrigger value="agendamentos" className="flex items-center gap-2">
             <Clock className="h-4 w-4" />
             <span>Agendamentos</span>
+          </TabsTrigger>
+          <TabsTrigger value="credenciais" className="flex items-center gap-2">
+            <Key className="h-4 w-4" />
+            <span>Credenciais</span>
           </TabsTrigger>
         </TabsList>
 
@@ -58,6 +71,19 @@ export default function CapturaPage() {
             }
           />
         </TabsContent>
+
+        {/* Conteúdo da aba Credenciais */}
+        <TabsContent value="credenciais" className="mt-6">
+          <CredencialsList
+            key={refreshCredenciais}
+            actionButton={
+              <Button onClick={() => setCredencialDialogOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Nova Credencial
+              </Button>
+            }
+          />
+        </TabsContent>
       </Tabs>
 
       {/* Dialogs */}
@@ -69,6 +95,12 @@ export default function CapturaPage() {
         open={agendamentoDialogOpen}
         onOpenChange={setAgendamentoDialogOpen}
         onSuccess={handleAgendamentoSuccess}
+      />
+      <CredenciaisDialog
+        credencial={null}
+        open={credencialDialogOpen}
+        onOpenChange={setCredencialDialogOpen}
+        onSuccess={handleCredencialSuccess}
       />
     </div>
   );

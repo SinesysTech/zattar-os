@@ -10,6 +10,7 @@ import { ProcessosFiltrosAvancados } from './components/processos-filtros-avanca
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Dialog,
@@ -494,29 +495,31 @@ function criarColunas(
         const temAudiencia = !!dataProximaAudiencia;
 
         return (
-          <div className="min-h-10 flex items-center justify-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => {
-                // TODO: Navegar para página de visualização do processo
-                console.log('Visualizar processo:', row.original.id);
-              }}
-            >
-              <Eye className="h-4 w-4" />
-            </Button>
-            {temAudiencia && (
-              <AudienciaDialog dataProximaAudiencia={dataProximaAudiencia}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-red-700 hover:text-red-800 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-950"
-                >
-                  <CalendarClock className="h-4 w-4" />
-                </Button>
-              </AudienciaDialog>
-            )}
+          <div className="min-h-10 flex items-center justify-center">
+            <ButtonGroup>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => {
+                  // TODO: Navegar para página de visualização do processo
+                  console.log('Visualizar processo:', row.original.id);
+                }}
+              >
+                <Eye className="h-4 w-4" />
+              </Button>
+              {temAudiencia && (
+                <AudienciaDialog dataProximaAudiencia={dataProximaAudiencia}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-red-700 hover:text-red-800 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-950"
+                  >
+                    <CalendarClock className="h-4 w-4" />
+                  </Button>
+                </AudienciaDialog>
+              )}
+            </ButtonGroup>
           </div>
         );
       },

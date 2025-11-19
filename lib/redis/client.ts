@@ -23,7 +23,7 @@ export function getRedisClient(): Redis | null {
         maxMemory: REDIS_CACHE_MAX_MEMORY,
       });
 
-      redisClient.on('error', (err) => {
+      redisClient.on('error', (err: Error) => {
         console.error('Redis Client Error:', err);
       });
 
