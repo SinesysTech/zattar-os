@@ -1,65 +1,56 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { CredencialComAdvogado, ListarCredenciaisParams } from '@/backend/types/credenciais/types';
-
-interface CredenciaisApiResponse {
-  success: boolean;
-  data: CredencialComAdvogado[];
-}
+import type {
+  Credencial,
+  CredenciaisResponse,
+  CriarCredencialParams,
+  AtualizarCredencialParams,
+} from '@/lib/types/credenciais';
 
 interface UseCredenciaisResult {
-  credenciais: CredencialComAdvogado[];
+  credenciais: Credencial[];
+  tribunais: string[];
+  graus: string[];
   isLoading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
+  criarCredencial: (advogadoId: number, params: Omit<CriarCredencialParams, 'advogado_id'>) => Promise<void>;
+  atualizarCredencial: (advogadoId: number, credencialId: number, params: AtualizarCredencialParams) => Promise<void>;
+  toggleStatus: (advogadoId: number, credencialId: number, active: boolean) => Promise<void>;
 }
 
 /**
- * Hook para buscar credenciais de um advogado
+ * Hook para gerenciar credenciais de acesso aos tribunais
  */
-export const useCredenciais = (
-  advogadoId: number | null,
-  params: { active?: boolean } = {}
-): UseCredenciaisResult => {
-  const [credenciais, setCredenciais] = useState<CredencialComAdvogado[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+export const useCredenciais = (): UseCredenciaisResult => {
+  const [credenciais, setCredenciais] = useState<Credencial[]>([]);
+  const [tribunais, setTribunais] = useState<string[]>([]);
+  const [graus, setGraus] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const buscarCredenciais = useCallback(async () => {
-    if (!advogadoId) {
-      setCredenciais([]);
-      setIsLoading(false);
-      return;
-    }
-
     setIsLoading(true);
     setError(null);
 
     try {
-      // Construir query string
-      const searchParams = new URLSearchParams();
-
-      if (params.active !== undefined) {
-        searchParams.set('active', params.active.toString());
-      }
-
-      const response = await fetch(
-        `/api/advogados/${advogadoId}/credenciais?${searchParams.toString()}`
-      );
+      const response = await fetch('/api/captura/credenciais');
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
         throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
       }
 
-      const data: CredenciaisApiResponse = await response.json();
+      const data: CredenciaisResponse = await response.json();
 
       if (!data.success) {
         throw new Error('Resposta da API indicou falha');
       }
 
-      setCredenciais(data.data);
+      setCredenciais(data.data.credenciais);
+      setTribunais(data.data.tribunais_disponiveis);
+      setGraus(data.data.graus_disponiveis);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar credenciais';
       setError(errorMessage);
@@ -67,7 +58,66 @@ export const useCredenciais = (
     } finally {
       setIsLoading(false);
     }
-  }, [advogadoId, params.active]);
+  }, []);
+
+  const criarCredencial = useCallback(
+    async (advogadoId: number, params: Omit<CriarCredencialParams, 'advogado_id'>) => {
+      try {
+        const response = await fetch(`/api/advogados/${advogadoId}/credenciais`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+          throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
+        }
+
+        // Recarregar lista após criar
+        await buscarCredenciais();
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Erro ao criar credencial';
+        throw new Error(errorMessage);
+      }
+    },
+    [buscarCredenciais]
+  );
+
+  const atualizarCredencial = useCallback(
+    async (advogadoId: number, credencialId: number, params: AtualizarCredencialParams) => {
+      try {
+        const response = await fetch(`/api/advogados/${advogadoId}/credenciais/${credencialId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+          throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
+        }
+
+        // Recarregar lista após atualizar
+        await buscarCredenciais();
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Erro ao atualizar credencial';
+        throw new Error(errorMessage);
+      }
+    },
+    [buscarCredenciais]
+  );
+
+  const toggleStatus = useCallback(
+    async (advogadoId: number, credencialId: number, active: boolean) => {
+      await atualizarCredencial(advogadoId, credencialId, { active });
+    },
+    [atualizarCredencial]
+  );
 
   useEffect(() => {
     buscarCredenciais();
@@ -75,9 +125,13 @@ export const useCredenciais = (
 
   return {
     credenciais,
+    tribunais,
+    graus,
     isLoading,
     error,
     refetch: buscarCredenciais,
+    criarCredencial,
+    atualizarCredencial,
+    toggleStatus,
   };
 };
-
