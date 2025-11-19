@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye } from 'lucide-react';
+import { Eye, Pencil } from 'lucide-react';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import {
   formatarNomeExibicao,
@@ -17,9 +17,10 @@ import {
 interface UsuarioCardProps {
   usuario: Usuario;
   onView: (usuario: Usuario) => void;
+  onEdit?: (usuario: Usuario) => void;
 }
 
-export function UsuarioCard({ usuario, onView }: UsuarioCardProps) {
+export function UsuarioCard({ usuario, onView, onEdit }: UsuarioCardProps) {
   return (
     <Card className="relative flex flex-col h-full hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
@@ -73,16 +74,29 @@ export function UsuarioCard({ usuario, onView }: UsuarioCardProps) {
         )}
       </CardContent>
 
-      {/* Botão de visualizar no canto inferior direito */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute bottom-3 right-3 h-8 w-8"
-        onClick={() => onView(usuario)}
-      >
-        <Eye className="h-4 w-4" />
-        <span className="sr-only">Visualizar usuário</span>
-      </Button>
+      {/* Botões de ação no canto inferior direito */}
+      <div className="absolute bottom-3 right-3 flex gap-1">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={() => onView(usuario)}
+        >
+          <Eye className="h-4 w-4" />
+          <span className="sr-only">Visualizar usuário</span>
+        </Button>
+        {onEdit && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onEdit(usuario)}
+          >
+            <Pencil className="h-4 w-4" />
+            <span className="sr-only">Editar usuário</span>
+          </Button>
+        )}
+      </div>
     </Card>
   );
 }

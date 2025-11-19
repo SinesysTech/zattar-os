@@ -452,6 +452,9 @@ export async function atualizarUsuario(
     if (params.endereco !== undefined) {
       dadosAtualizacao.endereco = validarEndereco(params.endereco);
     }
+    if (params.cargoId !== undefined) {
+      dadosAtualizacao.cargo_id = params.cargoId;
+    }
     if (params.authUserId !== undefined) {
       dadosAtualizacao.auth_user_id = params.authUserId || null;
     }
@@ -491,7 +494,7 @@ export async function buscarUsuarioPorId(id: number): Promise<Usuario | null> {
 
   const { data, error } = await supabase
     .from('usuarios')
-    .select('*')
+    .select('*, cargos(id, nome, descricao, ativo)')
     .eq('id', id)
     .single();
 
@@ -514,7 +517,7 @@ export async function buscarUsuarioPorCpf(cpf: string): Promise<Usuario | null> 
 
   const { data, error } = await supabase
     .from('usuarios')
-    .select('*')
+    .select('*, cargos(id, nome, descricao, ativo)')
     .eq('cpf', cpfNormalizado)
     .single();
 
@@ -563,7 +566,7 @@ export async function listarUsuarios(
   const limite = params.limite ?? 50;
   const offset = (pagina - 1) * limite;
 
-  let query = supabase.from('usuarios').select('*', { count: 'exact' });
+  let query = supabase.from('usuarios').select('*, cargos(id, nome, descricao, ativo)', { count: 'exact' });
 
   // Aplicar filtros
   if (params.busca) {

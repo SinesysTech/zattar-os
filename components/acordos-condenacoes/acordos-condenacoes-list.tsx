@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Eye, Search } from 'lucide-react';
+import { Eye, Search, X } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
 interface AcordoCondenacao {
@@ -37,7 +37,7 @@ interface AcordoCondenacao {
 }
 
 interface ListagemResultado {
-  itens: AcordoCondenacao[];
+  acordos: AcordoCondenacao[];
   total: number;
   pagina: number;
   limite: number;
@@ -47,7 +47,7 @@ interface ListagemResultado {
 export function AcordosCondenacoesList() {
   const router = useRouter();
   const [dados, setDados] = useState<ListagemResultado>({
-    itens: [],
+    acordos: [],
     total: 0,
     pagina: 1,
     limite: 50,
@@ -126,6 +126,17 @@ export function AcordosCondenacoesList() {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
+  const limparFiltros = () => {
+    setFiltros({
+      tipo: '',
+      direcao: '',
+      status: '',
+      processoId: '',
+    });
+  };
+
+  const hasFiltrosAtivos = filtros.tipo || filtros.direcao || filtros.status || filtros.processoId;
+
   if (isLoading) {
     return (
       <div className="text-center py-8 text-muted-foreground">
@@ -153,11 +164,24 @@ export function AcordosCondenacoesList() {
     <div className="space-y-4">
       {/* Filtros */}
       <div className="rounded-lg border bg-card p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold">Filtros</h3>
+          {hasFiltrosAtivos && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={limparFiltros}
+            >
+              <X className="h-4 w-4 mr-1" />
+              Limpar Filtros
+            </Button>
+          )}
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="text-sm font-medium mb-2 block">Tipo</label>
             <Select
-              value={filtros.tipo}
+              value={filtros.tipo || undefined}
               onValueChange={(value) =>
                 setFiltros((prev) => ({ ...prev, tipo: value }))
               }
@@ -166,7 +190,6 @@ export function AcordosCondenacoesList() {
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
                 <SelectItem value="acordo">Acordo</SelectItem>
                 <SelectItem value="condenacao">Condenação</SelectItem>
                 <SelectItem value="custas_processuais">Custas</SelectItem>
@@ -177,7 +200,7 @@ export function AcordosCondenacoesList() {
           <div>
             <label className="text-sm font-medium mb-2 block">Direção</label>
             <Select
-              value={filtros.direcao}
+              value={filtros.direcao || undefined}
               onValueChange={(value) =>
                 setFiltros((prev) => ({ ...prev, direcao: value }))
               }
@@ -186,7 +209,6 @@ export function AcordosCondenacoesList() {
                 <SelectValue placeholder="Todas" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todas</SelectItem>
                 <SelectItem value="recebimento">Recebimento</SelectItem>
                 <SelectItem value="pagamento">Pagamento</SelectItem>
               </SelectContent>
@@ -196,7 +218,7 @@ export function AcordosCondenacoesList() {
           <div>
             <label className="text-sm font-medium mb-2 block">Status</label>
             <Select
-              value={filtros.status}
+              value={filtros.status || undefined}
               onValueChange={(value) =>
                 setFiltros((prev) => ({ ...prev, status: value }))
               }
@@ -205,7 +227,6 @@ export function AcordosCondenacoesList() {
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
                 <SelectItem value="pendente">Pendente</SelectItem>
                 <SelectItem value="pago_parcial">Pago Parcial</SelectItem>
                 <SelectItem value="pago_total">Pago Total</SelectItem>
@@ -233,7 +254,7 @@ export function AcordosCondenacoesList() {
       </div>
 
       {/* Tabela */}
-      {dados.itens.length === 0 ? (
+      {dados.acordos.length === 0 ? (
         <div className="rounded-md border p-8 text-center text-muted-foreground">
           <p>Nenhum acordo ou condenação encontrado</p>
           <p className="text-sm mt-2">
@@ -257,7 +278,7 @@ export function AcordosCondenacoesList() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {dados.itens.map((acordo) => (
+                {dados.acordos.map((acordo) => (
                   <TableRow
                     key={acordo.id}
                     className="cursor-pointer hover:bg-muted/50"
@@ -296,7 +317,7 @@ export function AcordosCondenacoesList() {
           {/* Paginação Info */}
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <p>
-              Mostrando {dados.itens.length} de {dados.total} registros
+              Mostrando {dados.acordos.length} de {dados.total} registros
             </p>
             <p>
               Página {dados.pagina} de {dados.totalPaginas}

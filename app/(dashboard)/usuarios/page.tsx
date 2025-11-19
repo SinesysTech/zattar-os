@@ -10,12 +10,14 @@ import { DataTableColumnHeader } from '@/components/data-table-column-header';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Plus } from 'lucide-react';
+import { Eye, Plus, Settings } from 'lucide-react';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { UsuariosGridView } from '@/components/usuarios/usuarios-grid-view';
 import { ViewToggle } from '@/components/usuarios/view-toggle';
 import { UsuariosFiltrosAvancados } from '@/components/usuarios/usuarios-filtros-avancados';
 import { UsuarioCreateSheet } from '@/components/usuarios/usuario-create-sheet';
+import { UsuarioEditDialog } from '@/components/usuarios/usuario-edit-dialog';
+import { CargosManagementDialog } from '@/components/usuarios/cargos-management-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import type { UsuariosFilters, ViewMode } from '@/lib/types/usuarios';
@@ -185,6 +187,9 @@ export default function UsuariosPage() {
   const [filtros, setFiltros] = React.useState<UsuariosFilters>({});
   const [viewMode, setViewMode] = React.useState<ViewMode>('table');
   const [createOpen, setCreateOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [selectedUsuario, setSelectedUsuario] = React.useState<Usuario | null>(null);
+  const [cargosManagementOpen, setCargosManagementOpen] = React.useState(false);
 
   // Carregar preferência de visualização do localStorage
   React.useEffect(() => {
@@ -252,6 +257,14 @@ export default function UsuariosPage() {
     [router]
   );
 
+  const handleEdit = React.useCallback(
+    (usuario: Usuario) => {
+      setSelectedUsuario(usuario);
+      setEditOpen(true);
+    },
+    []
+  );
+
   return (
     <div className="space-y-4">
       {/* Barra de busca, filtros e alternância de visualização */}
@@ -273,10 +286,20 @@ export default function UsuariosPage() {
           />
           <ViewToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
         </div>
-        <Button onClick={() => setCreateOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Novo Usuário
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setCargosManagementOpen(true)}
+            title="Gerenciar Cargos"
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+          <Button onClick={() => setCreateOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Novo Usuário
+          </Button>
+        </div>
       </div>
 
       {/* Mensagem de erro */}
@@ -293,6 +316,7 @@ export default function UsuariosPage() {
           usuarios={usuarios}
           paginacao={paginacao}
           onView={handleView}
+          onEdit={handleEdit}
           onPageChange={setPagina}
           onPageSizeChange={setLimite}
         />
@@ -316,6 +340,22 @@ export default function UsuariosPage() {
           isLoading={isLoading}
           error={error}
           emptyMessage="Nenhum usuário encontrado."
+        />
+      )}
+
+      {/* Dialog para gerenciar cargos */}
+      <CargosManagementDialog
+        open={cargosManagementOpen}
+        onOpenChange={setCargosManagementOpen}
+      />
+
+      {/* Dialog para editar usuário */}
+      {selectedUsuario && (
+        <UsuarioEditDialog
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          usuario={selectedUsuario}
+          onSuccess={handleCreateSuccess}
         />
       )}
 

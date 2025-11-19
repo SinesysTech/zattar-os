@@ -195,119 +195,36 @@ export function UsuarioEditDialog({
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Editar Usuário</DialogTitle>
-            <DialogDescription>
-              Atualize as informações do usuário {usuario.nomeExibicao}
-            </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
-            {/* Nome Completo */}
-            <div className="grid gap-2">
-              <Label htmlFor="nomeCompleto">
-                Nome Completo <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="nomeCompleto"
-                value={formData.nomeCompleto}
-                onChange={(e) =>
-                  setFormData({ ...formData, nomeCompleto: e.target.value })
-                }
-                required
-              />
-            </div>
-
-            {/* Nome de Exibição */}
-            <div className="grid gap-2">
-              <Label htmlFor="nomeExibicao">
-                Nome de Exibição <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="nomeExibicao"
-                value={formData.nomeExibicao}
-                onChange={(e) =>
-                  setFormData({ ...formData, nomeExibicao: e.target.value })
-                }
-                required
-              />
-            </div>
-
-            {/* Email Corporativo */}
-            <div className="grid gap-2">
-              <Label htmlFor="emailCorporativo">
-                Email Corporativo <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="emailCorporativo"
-                type="email"
-                value={formData.emailCorporativo}
-                onChange={(e) =>
-                  setFormData({ ...formData, emailCorporativo: e.target.value })
-                }
-                required
-              />
-            </div>
-
-            {/* Email Pessoal */}
-            <div className="grid gap-2">
-              <Label htmlFor="emailPessoal">Email Pessoal</Label>
-              <Input
-                id="emailPessoal"
-                type="email"
-                value={formData.emailPessoal}
-                onChange={(e) =>
-                  setFormData({ ...formData, emailPessoal: e.target.value })
-                }
-              />
-            </div>
-
-            {/* CPF e RG lado a lado */}
+            {/* Nome Completo e Nome de Exibição */}
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="cpf">CPF</Label>
+                <Label htmlFor="nomeCompleto">
+                  Nome Completo <span className="text-destructive">*</span>
+                </Label>
                 <Input
-                  id="cpf"
-                  value={formData.cpf}
+                  id="nomeCompleto"
+                  value={formData.nomeCompleto}
                   onChange={(e) =>
-                    setFormData({ ...formData, cpf: e.target.value })
+                    setFormData({ ...formData, nomeCompleto: e.target.value })
                   }
-                  disabled
-                  className="bg-muted"
+                  required
                 />
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="rg">RG</Label>
+                <Label htmlFor="nomeExibicao">
+                  Nome de Exibição <span className="text-destructive">*</span>
+                </Label>
                 <Input
-                  id="rg"
-                  value={formData.rg}
+                  id="nomeExibicao"
+                  value={formData.nomeExibicao}
                   onChange={(e) =>
-                    setFormData({ ...formData, rg: e.target.value })
+                    setFormData({ ...formData, nomeExibicao: e.target.value })
                   }
-                />
-              </div>
-            </div>
-
-            {/* Telefone e Ramal lado a lado */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="telefone">Telefone</Label>
-                <Input
-                  id="telefone"
-                  value={formData.telefone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, telefone: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="ramal">Ramal</Label>
-                <Input
-                  id="ramal"
-                  value={formData.ramal}
-                  onChange={(e) =>
-                    setFormData({ ...formData, ramal: e.target.value })
-                  }
+                  required
                 />
               </div>
             </div>
@@ -349,8 +266,114 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            {/* OAB e UF OAB */}
+            {/* CPF e RG */}
             <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="cpf">CPF</Label>
+                <Input
+                  id="cpf"
+                  value={formData.cpf}
+                  onChange={(e) =>
+                    setFormData({ ...formData, cpf: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="rg">RG</Label>
+                <Input
+                  id="rg"
+                  value={formData.rg}
+                  onChange={(e) =>
+                    setFormData({ ...formData, rg: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Telefone e Ramal */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="telefone">Telefone</Label>
+                <Input
+                  id="telefone"
+                  value={formData.telefone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, telefone: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="ramal">Ramal</Label>
+                <Input
+                  id="ramal"
+                  value={formData.ramal}
+                  onChange={(e) =>
+                    setFormData({ ...formData, ramal: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Email Corporativo e Email Pessoal */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="emailCorporativo">
+                  E-mail Corporativo <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="emailCorporativo"
+                  type="email"
+                  value={formData.emailCorporativo}
+                  onChange={(e) =>
+                    setFormData({ ...formData, emailCorporativo: e.target.value })
+                  }
+                  required
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="emailPessoal">E-mail Pessoal</Label>
+                <Input
+                  id="emailPessoal"
+                  type="email"
+                  value={formData.emailPessoal}
+                  onChange={(e) =>
+                    setFormData({ ...formData, emailPessoal: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Cargo, OAB e UF OAB */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="cargo">Cargo</Label>
+                <Select
+                  value={formData.cargoId?.toString() || 'none'}
+                  onValueChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      cargoId: value === 'none' ? null : parseInt(value, 10),
+                    })
+                  }
+                  disabled={isLoadingCargos}
+                >
+                  <SelectTrigger id="cargo">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Nenhum</SelectItem>
+                    {cargos.map((cargo) => (
+                      <SelectItem key={cargo.id} value={cargo.id.toString()}>
+                        {cargo.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="grid gap-2">
                 <Label htmlFor="oab">OAB</Label>
                 <Input
@@ -378,73 +401,47 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            {/* Cargo */}
-            <div className="grid gap-2">
-              <Label htmlFor="cargo">Cargo</Label>
-              <Select
-                value={formData.cargoId?.toString() || 'none'}
-                onValueChange={(value) =>
-                  setFormData({
-                    ...formData,
-                    cargoId: value === 'none' ? null : parseInt(value, 10),
-                  })
-                }
-                disabled={isLoadingCargos}
-              >
-                <SelectTrigger id="cargo">
-                  <SelectValue placeholder="Selecione um cargo..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Nenhum</SelectItem>
-                  {cargos.map((cargo) => (
-                    <SelectItem key={cargo.id} value={cargo.id.toString()}>
-                      {cargo.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
             {/* Endereço */}
             <div className="border-t pt-4 mt-2">
               <h3 className="font-medium mb-3">Endereço</h3>
 
-              {/* CEP e Logradouro */}
               <div className="grid gap-4">
+                {/* CEP */}
+                <div className="grid gap-2">
+                  <Label htmlFor="cep">CEP</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="cep"
+                      value={formData.endereco.cep}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          endereco: { ...formData.endereco, cep: e.target.value },
+                        })
+                      }
+                      placeholder="00000-000"
+                      maxLength={9}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={handleBuscarCep}
+                      disabled={isBuscandoCep}
+                      title="Buscar CEP"
+                    >
+                      {isBuscandoCep ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Search className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Logradouro, Número e Complemento */}
                 <div className="grid grid-cols-3 gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="cep">CEP</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="cep"
-                        value={formData.endereco.cep}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            endereco: { ...formData.endereco, cep: e.target.value },
-                          })
-                        }
-                        placeholder="00000-000"
-                        maxLength={9}
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        onClick={handleBuscarCep}
-                        disabled={isBuscandoCep}
-                        title="Buscar CEP"
-                      >
-                        {isBuscandoCep ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <Search className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="grid gap-2 col-span-2">
                     <Label htmlFor="logradouro">Logradouro</Label>
                     <Input
                       id="logradouro"
@@ -460,10 +457,7 @@ export function UsuarioEditDialog({
                       }
                     />
                   </div>
-                </div>
 
-                {/* Número e Complemento */}
-                <div className="grid grid-cols-3 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="numero">Número</Label>
                     <Input
@@ -478,7 +472,7 @@ export function UsuarioEditDialog({
                     />
                   </div>
 
-                  <div className="grid gap-2 col-span-2">
+                  <div className="grid gap-2">
                     <Label htmlFor="complemento">Complemento</Label>
                     <Input
                       id="complemento"
@@ -496,24 +490,23 @@ export function UsuarioEditDialog({
                   </div>
                 </div>
 
-                {/* Bairro */}
-                <div className="grid gap-2">
-                  <Label htmlFor="bairro">Bairro</Label>
-                  <Input
-                    id="bairro"
-                    value={formData.endereco.bairro}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        endereco: { ...formData.endereco, bairro: e.target.value },
-                      })
-                    }
-                  />
-                </div>
-
-                {/* Cidade e Estado */}
+                {/* Bairro, Cidade e Estado */}
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="grid gap-2 col-span-2">
+                  <div className="grid gap-2">
+                    <Label htmlFor="bairro">Bairro</Label>
+                    <Input
+                      id="bairro"
+                      value={formData.endereco.bairro}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          endereco: { ...formData.endereco, bairro: e.target.value },
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
                     <Label htmlFor="cidade">Cidade</Label>
                     <Input
                       id="cidade"

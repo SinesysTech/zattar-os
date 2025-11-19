@@ -16,6 +16,7 @@ interface UsuariosGridViewProps {
     totalPaginas: number;
   } | null;
   onView: (usuario: Usuario) => void;
+  onEdit?: (usuario: Usuario) => void;
   onPageChange?: (pageIndex: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
 }
@@ -24,6 +25,7 @@ export function UsuariosGridView({
   usuarios,
   paginacao,
   onView,
+  onEdit,
   onPageChange,
   onPageSizeChange,
 }: UsuariosGridViewProps) {
@@ -39,7 +41,7 @@ export function UsuariosGridView({
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {usuarios.map((usuario) => (
-          <UsuarioCard key={usuario.id} usuario={usuario} onView={onView} />
+          <UsuarioCard key={usuario.id} usuario={usuario} onView={onView} onEdit={onEdit} />
         ))}
       </div>
       

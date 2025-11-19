@@ -9,6 +9,7 @@ import { DataTable } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Copy, Pencil, Plus } from 'lucide-react';
 import {
   Select,
@@ -202,7 +203,7 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
 
   if (!audiencia.url_audiencia_virtual) {
     return (
-      <div className="relative group bg-white h-full w-full min-h-[60px] flex items-center justify-center p-2">
+      <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
         <Button
           size="sm"
           variant="ghost"
@@ -217,7 +218,7 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
   }
 
   return (
-    <div className="relative group bg-white h-full w-full min-h-[60px] flex items-center justify-center p-3">
+    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-3">
       {logoPath ? (
         <a
           href={audiencia.url_audiencia_virtual}
@@ -268,6 +269,104 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
 }
 
 /**
+ * Componente para editar observações da audiência
+ */
+function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [observacoes, setObservacoes] = React.useState(audiencia.observacoes || '');
+
+  React.useEffect(() => {
+    setObservacoes(audiencia.observacoes || '');
+  }, [audiencia.observacoes]);
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      const observacoesToSave = observacoes.trim() || null;
+
+      const response = await fetch(`/api/audiencias/${audiencia.id}/observacoes`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ observacoes: observacoesToSave }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao atualizar observações');
+      }
+
+      setIsEditing(false);
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao atualizar observações:', error);
+      onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setObservacoes(audiencia.observacoes || '');
+    setIsEditing(false);
+  };
+
+  if (isEditing) {
+    return (
+      <div className="flex items-center gap-2 min-w-[250px]">
+        <Input
+          value={observacoes}
+          onChange={(e) => setObservacoes(e.target.value)}
+          placeholder="Digite as observações..."
+          disabled={isLoading}
+          className="h-8 text-sm"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSave();
+            if (e.key === 'Escape') handleCancel();
+          }}
+        />
+        <Button
+          size="sm"
+          onClick={handleSave}
+          disabled={isLoading}
+          className="h-8 px-2"
+        >
+          ✓
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={handleCancel}
+          disabled={isLoading}
+          className="h-8 px-2"
+        >
+          ✕
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-start p-2">
+      <span className="text-sm truncate max-w-[200px]">
+        {audiencia.observacoes || '-'}
+      </span>
+      <Button
+        size="sm"
+        variant="ghost"
+        onClick={() => setIsEditing(true)}
+        className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
+        title="Editar observações"
+      >
+        <Pencil className="h-3 w-3" />
+      </Button>
+    </div>
+  );
+}
+
+/**
  * Componente para atribuir responsável a uma audiência
  */
 function ResponsavelCell({
@@ -279,9 +378,10 @@ function ResponsavelCell({
   onSuccess: () => void;
   usuarios: Usuario[];
 }) {
+  const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleChange = async (value: string) => {
+  const handleSelect = async (value: string) => {
     setIsLoading(true);
     try {
       const responsavelId = value === 'null' || value === '' ? null : parseInt(value, 10);
@@ -299,6 +399,7 @@ function ResponsavelCell({
         throw new Error(errorData.error || 'Erro ao atribuir responsável');
       }
 
+      setIsOpen(false);
       onSuccess();
     } catch (error) {
       console.error('Erro ao atribuir responsável:', error);
@@ -311,25 +412,47 @@ function ResponsavelCell({
   const responsavelAtual = usuarios.find(u => u.id === audiencia.responsavel_id);
 
   return (
-    <Select
-      value={audiencia.responsavel_id?.toString() || 'null'}
-      onValueChange={handleChange}
-      disabled={isLoading}
-    >
-      <SelectTrigger className="w-[200px]">
-        <SelectValue placeholder="Sem responsável">
-          {responsavelAtual ? responsavelAtual.nomeExibicao : 'Sem responsável'}
-        </SelectValue>
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="null">Sem responsável</SelectItem>
-        {usuarios.map((usuario) => (
-          <SelectItem key={usuario.id} value={usuario.id.toString()}>
-            {usuario.nomeExibicao}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
+      <span className="text-sm">
+        {responsavelAtual ? responsavelAtual.nomeExibicao : 'Sem responsável'}
+      </span>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
+            title="Editar responsável"
+            disabled={isLoading}
+          >
+            <Pencil className="h-3 w-3" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[250px] p-2">
+          <div className="space-y-1">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => handleSelect('null')}
+              disabled={isLoading}
+            >
+              Sem responsável
+            </Button>
+            {usuarios.map((usuario) => (
+              <Button
+                key={usuario.id}
+                variant="ghost"
+                className="w-full justify-start text-sm"
+                onClick={() => handleSelect(usuario.id.toString())}
+                disabled={isLoading}
+              >
+                {usuario.nomeExibicao}
+              </Button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }
 
@@ -369,9 +492,6 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
 
         return (
           <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
-            <div className="text-sm font-medium whitespace-nowrap">
-              {classeJudicial && `${classeJudicial} `}{numeroProcesso}
-            </div>
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -379,6 +499,9 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
               <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>
                 {formatarGrau(grau)}
               </Badge>
+            </div>
+            <div className="text-sm font-medium whitespace-nowrap">
+              {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
             <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}
@@ -445,7 +568,7 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
       accessorKey: 'url_audiencia_virtual',
       header: () => (
         <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">URL Virtual</div>
+          <div className="text-sm font-medium">Endereço</div>
         </div>
       ),
       enableSorting: false,
@@ -453,6 +576,21 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
       cell: ({ row }) => (
         <div className="h-full w-full">
           <UrlVirtualCell audiencia={row.original} onSuccess={onSuccess} />
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'observacoes',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Observações</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 250,
+      cell: ({ row }) => (
+        <div className="h-full w-full">
+          <ObservacoesCell audiencia={row.original} onSuccess={onSuccess} />
         </div>
       ),
     },
