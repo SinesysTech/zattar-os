@@ -62,7 +62,7 @@ export default function AcordosCondecoesPage() {
         onNewClick={() => router.push('/acordos-condenacoes/novo')}
         newButtonTooltip="Novo Acordo/Condenação"
       />
-      <AcordosCondenacoesList filtros={filtros} busca={busca} />
+      <AcordosCondenacoesList />
     </div>
   );
 }
