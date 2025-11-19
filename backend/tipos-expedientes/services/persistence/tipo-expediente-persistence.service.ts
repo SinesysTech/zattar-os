@@ -9,6 +9,7 @@ import type {
   ListarTiposExpedientesParams,
   ListarTiposExpedientesResult,
 } from '@/backend/types/tipos-expedientes/types';
+import { getCached, setCached, getTiposExpedientesListKey, invalidateCacheOnUpdate, CACHE_PREFIXES } from '@/lib/redis';
 
 /**
  * Criar um novo tipo de expediente
@@ -44,6 +45,9 @@ export async function criarTipoExpediente(params: CriarTipoExpedienteParams): Pr
     throw new Error('Erro ao criar tipo de expediente: nenhum dado retornado');
   }
 
+  // Invalidar cache após criação
+  await invalidateCacheOnUpdate('tiposExpedientes', data.id.toString());
+
   return data as TipoExpediente;
 }
 
@@ -51,6 +55,16 @@ export async function criarTipoExpediente(params: CriarTipoExpedienteParams): Pr
  * Buscar tipo de expediente por ID
  */
 export async function buscarTipoExpediente(id: number): Promise<TipoExpediente | null> {
+  const cacheKey = `${CACHE_PREFIXES.tiposExpedientes}:id:${id}`;
+
+  const cached = await getCached<TipoExpediente>(cacheKey);
+  if (cached) {
+    console.debug(`Cache hit for tipo expediente id ${id}`);
+    return cached;
+  }
+
+  console.debug(`Cache miss for tipo expediente id ${id}`);
+
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
@@ -66,7 +80,14 @@ export async function buscarTipoExpediente(id: number): Promise<TipoExpediente |
     throw new Error(`Erro ao buscar tipo de expediente: ${error.message}`);
   }
 
-  return data as TipoExpediente;
+  const result = data as TipoExpediente;
+
+  // Cache o resultado se encontrado
+  if (result) {
+    await setCached(cacheKey, result, 3600);
+  }
+
+  return result;
 }
 
 /**
@@ -138,6 +159,9 @@ export async function atualizarTipoExpediente(
     throw new Error('Erro ao atualizar tipo de expediente: nenhum dado retornado');
   }
 
+  // Invalidar cache após atualização
+  await invalidateCacheOnUpdate('tiposExpedientes', id.toString());
+
   return data as TipoExpediente;
 }
 
@@ -187,6 +211,9 @@ export async function deletarTipoExpediente(id: number): Promise<void> {
     }
     throw new Error(`Erro ao deletar tipo de expediente: ${error.message}`);
   }
+
+  // Invalidar cache após deleção
+  await invalidateCacheOnUpdate('tiposExpedientes', id.toString());
 }
 
 /**
@@ -195,6 +222,16 @@ export async function deletarTipoExpediente(id: number): Promise<void> {
 export async function listarTiposExpedientes(
   params: ListarTiposExpedientesParams = {}
 ): Promise<ListarTiposExpedientesResult> {
+  const cacheKey = getTiposExpedientesListKey(params);
+
+  const cached = await getCached<ListarTiposExpedientesResult>(cacheKey);
+  if (cached) {
+    console.debug(`Cache hit for tipos expedientes list: ${cacheKey}`);
+    return cached;
+  }
+
+  console.debug(`Cache miss for tipos expedientes list: ${cacheKey}`);
+
   const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
@@ -231,12 +268,16 @@ export async function listarTiposExpedientes(
   const total = count ?? 0;
   const totalPaginas = Math.ceil(total / limite);
 
-  return {
+  const result: ListarTiposExpedientesResult = {
     tipos_expedientes: (data || []) as TipoExpediente[],
     total,
     pagina,
     limite,
     totalPaginas,
   };
-}
 
+  // Cache o resultado
+  await setCached(cacheKey, result, 3600);
+
+  return result;
+}

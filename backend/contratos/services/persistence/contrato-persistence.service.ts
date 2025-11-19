@@ -2,6 +2,7 @@
 // Gerencia operações de CRUD na tabela contratos
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { getCached, setCached, getContratosListKey, invalidateContratosCache } from '@/lib/redis';
 
 /**
  * Área de direito
@@ -289,6 +290,9 @@ export async function criarContrato(
       return { sucesso: false, erro: `Erro ao criar contrato: ${error.message}` };
     }
 
+    // Invalidate cache after successful creation
+    await invalidateContratosCache();
+
     return {
       sucesso: true,
       contrato: converterParaContrato(data),
@@ -425,6 +429,9 @@ export async function atualizarContrato(
       return { sucesso: false, erro: `Erro ao atualizar contrato: ${error.message}` };
     }
 
+    // Invalidate cache after successful update
+    await invalidateContratosCache();
+
     return {
       sucesso: true,
       contrato: converterParaContrato(data),
@@ -440,6 +447,14 @@ export async function atualizarContrato(
  * Busca um contrato por ID
  */
 export async function buscarContratoPorId(id: number): Promise<Contrato | null> {
+  const cacheKey = `contratos:id:${id}`;
+  const cached = await getCached<Contrato>(cacheKey);
+  if (cached) {
+    console.debug(`Cache hit for buscarContratoPorId: ${cacheKey}`);
+    return cached;
+  }
+
+  console.debug(`Cache miss for buscarContratoPorId: ${cacheKey}`);
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
@@ -455,7 +470,11 @@ export async function buscarContratoPorId(id: number): Promise<Contrato | null> 
     throw new Error(`Erro ao buscar contrato: ${error.message}`);
   }
 
-  return data ? converterParaContrato(data) : null;
+  const contrato = data ? converterParaContrato(data) : null;
+  if (contrato) {
+    await setCached(cacheKey, contrato, 900); // 15 minutes TTL
+  }
+  return contrato;
 }
 
 /**
@@ -464,6 +483,14 @@ export async function buscarContratoPorId(id: number): Promise<Contrato | null> 
 export async function listarContratos(
   params: ListarContratosParams = {}
 ): Promise<ListarContratosResult> {
+  const cacheKey = getContratosListKey(params);
+  const cached = await getCached<ListarContratosResult>(cacheKey);
+  if (cached) {
+    console.debug(`Cache hit for listarContratos: ${cacheKey}`);
+    return cached;
+  }
+
+  console.debug(`Cache miss for listarContratos: ${cacheKey}`);
   const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
@@ -517,12 +544,14 @@ export async function listarContratos(
   const total = count ?? 0;
   const totalPaginas = Math.ceil(total / limite);
 
-  return {
+  const result: ListarContratosResult = {
     contratos,
     total,
     pagina,
     limite,
     totalPaginas,
   };
-}
 
+  await setCached(cacheKey, result, 900); // 15 minutes TTL
+  return result;
+}

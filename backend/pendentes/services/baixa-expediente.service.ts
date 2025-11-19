@@ -3,6 +3,7 @@
 
 import { baixarExpediente as baixarExpedienteDb } from './persistence/baixa-expediente-persistence.service';
 import { registrar_baixa_expediente } from './persistence/registrar-baixa-log.service';
+import { invalidatePendentesCache } from '@/lib/redis/invalidation';
 
 export interface BaixarExpedienteParams {
   expedienteId: number;
@@ -61,6 +62,9 @@ export async function baixarExpediente(
       justificativa: params.justificativa?.trim() || null,
     });
 
+    // Invalidar cache de pendentes após baixa bem-sucedida
+    await invalidatePendentesCache();
+
     return {
       success: true,
       data: resultado.data,
@@ -73,4 +77,3 @@ export async function baixarExpediente(
     };
   }
 }
-

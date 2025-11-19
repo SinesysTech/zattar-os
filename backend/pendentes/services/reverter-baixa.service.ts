@@ -5,6 +5,7 @@ import { reverterBaixa as reverterBaixaDb } from './persistence/reverter-baixa-p
 import {
   registrar_reversao_baixa_expediente,
 } from './persistence/registrar-baixa-log.service';
+import { invalidatePendentesCache } from '@/lib/redis/invalidation';
 
 export interface ReverterBaixaParams {
   expedienteId: number;
@@ -59,6 +60,9 @@ export async function reverterBaixa(
       justificativaAnterior: expedienteAnterior?.justificativa_baixa ?? null,
     });
 
+    // Invalidar cache de pendentes após reversão bem-sucedida
+    await invalidatePendentesCache();
+
     return {
       success: true,
       data: resultado.data,
@@ -71,4 +75,3 @@ export async function reverterBaixa(
     };
   }
 }
-

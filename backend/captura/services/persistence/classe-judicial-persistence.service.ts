@@ -7,6 +7,7 @@ import {
   compararObjetos,
   removerCamposControle,
 } from '@/backend/utils/captura/comparison.util';
+import { CACHE_PREFIXES, withCache } from '@/lib/redis/cache-utils';
 
 /**
  * Interface para classe judicial do PJE
@@ -43,24 +44,27 @@ export async function buscarClasseJudicial(
   trt: CodigoTRT,
   grau: GrauTRT
 ): Promise<{ id: number } | null> {
-  const supabase = createServiceClient();
+  const key = `${CACHE_PREFIXES.classeJudicial}:${trt}:${grau}:${idPje}`;
+  return withCache(key, async () => {
+    const supabase = createServiceClient();
 
-  const { data, error } = await supabase
-    .from('classe_judicial')
-    .select('id')
-    .eq('id_pje', idPje)
-    .eq('trt', trt)
-    .eq('grau', grau)
-    .single();
+    const { data, error } = await supabase
+      .from('classe_judicial')
+      .select('id')
+      .eq('id_pje', idPje)
+      .eq('trt', trt)
+      .eq('grau', grau)
+      .single();
 
-  if (error) {
-    if (error.code === 'PGRST116') {
-      return null;
+    if (error) {
+      if (error.code === 'PGRST116') {
+        return null;
+      }
+      throw new Error(`Erro ao buscar classe judicial: ${error.message}`);
     }
-    throw new Error(`Erro ao buscar classe judicial: ${error.message}`);
-  }
 
-  return data as { id: number };
+    return data as { id: number };
+  }, 3600);
 }
 
 /**

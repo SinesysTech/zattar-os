@@ -5,6 +5,7 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import {
   atribuirResponsavelPendente as rpcAtribuirResponsavel,
 } from '@/backend/utils/supabase/set-user-context';
+import { invalidatePendentesCache } from '@/lib/redis/invalidation';
 
 export interface AtribuirResponsavelPendenteParams {
   pendenteId: number;
@@ -138,6 +139,9 @@ export async function atribuirResponsavelPendente(
       };
     }
 
+    // Invalidar cache de pendentes após atribuição bem-sucedida
+    await invalidatePendentesCache();
+
     return {
       success: true,
       data: resultado,
@@ -150,4 +154,3 @@ export async function atribuirResponsavelPendente(
     };
   }
 }
-

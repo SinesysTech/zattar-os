@@ -2,6 +2,7 @@
 // Gerencia operações de CRUD na tabela usuarios
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { getCached, setCached, deleteCached, getUsuariosListKey, invalidateUsuariosCache } from '@/lib/redis';
 
 /**
  * Gênero do usuário
@@ -475,6 +476,16 @@ export async function atualizarUsuario(
       return { sucesso: false, erro: `Erro ao atualizar usuário: ${error.message}` };
     }
 
+    // Invalidate cache after successful update
+    await invalidateUsuariosCache();
+    await deleteCached(`usuarios:id:${id}`);
+    if (params.cpf) {
+      await deleteCached(`usuarios:cpf:${normalizarCpf(params.cpf)}`);
+    }
+    if (params.emailCorporativo) {
+      await deleteCached(`usuarios:email:${params.emailCorporativo.trim().toLowerCase()}`);
+    }
+
     return {
       sucesso: true,
       usuario: converterParaUsuario(data),
@@ -490,6 +501,13 @@ export async function atualizarUsuario(
  * Busca um usuário por ID
  */
 export async function buscarUsuarioPorId(id: number): Promise<Usuario | null> {
+  const cacheKey = `usuarios:id:${id}`;
+  const cached = await getCached<Usuario>(cacheKey);
+  if (cached !== null) {
+    console.log(`Cache hit for buscarUsuarioPorId: ${cacheKey}`);
+    return cached;
+  }
+
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
@@ -505,15 +523,26 @@ export async function buscarUsuarioPorId(id: number): Promise<Usuario | null> {
     throw new Error(`Erro ao buscar usuário: ${error.message}`);
   }
 
-  return data ? converterParaUsuario(data) : null;
+  const usuario = data ? converterParaUsuario(data) : null;
+  if (usuario) {
+    await setCached(cacheKey, usuario, 1800); // 30 minutes TTL
+  }
+  return usuario;
 }
 
 /**
  * Busca um usuário por CPF
  */
 export async function buscarUsuarioPorCpf(cpf: string): Promise<Usuario | null> {
-  const supabase = createServiceClient();
   const cpfNormalizado = normalizarCpf(cpf);
+  const cacheKey = `usuarios:cpf:${cpfNormalizado}`;
+  const cached = await getCached<Usuario>(cacheKey);
+  if (cached !== null) {
+    console.log(`Cache hit for buscarUsuarioPorCpf: ${cacheKey}`);
+    return cached;
+  }
+
+  const supabase = createServiceClient();
 
   const { data, error } = await supabase
     .from('usuarios')
@@ -528,15 +557,26 @@ export async function buscarUsuarioPorCpf(cpf: string): Promise<Usuario | null> 
     throw new Error(`Erro ao buscar usuário por CPF: ${error.message}`);
   }
 
-  return data ? converterParaUsuario(data) : null;
+  const usuario = data ? converterParaUsuario(data) : null;
+  if (usuario) {
+    await setCached(cacheKey, usuario, 1800); // 30 minutes TTL
+  }
+  return usuario;
 }
 
 /**
  * Busca um usuário por e-mail corporativo
  */
 export async function buscarUsuarioPorEmail(email: string): Promise<Usuario | null> {
-  const supabase = createServiceClient();
   const emailLower = email.trim().toLowerCase();
+  const cacheKey = `usuarios:email:${emailLower}`;
+  const cached = await getCached<Usuario>(cacheKey);
+  if (cached !== null) {
+    console.log(`Cache hit for buscarUsuarioPorEmail: ${cacheKey}`);
+    return cached;
+  }
+
+  const supabase = createServiceClient();
 
   const { data, error } = await supabase
     .from('usuarios')
@@ -551,7 +591,11 @@ export async function buscarUsuarioPorEmail(email: string): Promise<Usuario | nu
     throw new Error(`Erro ao buscar usuário por e-mail: ${error.message}`);
   }
 
-  return data ? converterParaUsuario(data) : null;
+  const usuario = data ? converterParaUsuario(data) : null;
+  if (usuario) {
+    await setCached(cacheKey, usuario, 1800); // 30 minutes TTL
+  }
+  return usuario;
 }
 
 /**
@@ -560,6 +604,13 @@ export async function buscarUsuarioPorEmail(email: string): Promise<Usuario | nu
 export async function listarUsuarios(
   params: ListarUsuariosParams = {}
 ): Promise<ListarUsuariosResult> {
+  const cacheKey = getUsuariosListKey(params);
+  const cached = await getCached<ListarUsuariosResult>(cacheKey);
+  if (cached !== null) {
+    console.log(`Cache hit for listarUsuarios: ${cacheKey}`);
+    return cached;
+  }
+
   const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
@@ -602,12 +653,14 @@ export async function listarUsuarios(
   const total = count ?? 0;
   const totalPaginas = Math.ceil(total / limite);
 
-  return {
+  const result: ListarUsuariosResult = {
     usuarios,
     total,
     pagina,
     limite,
     totalPaginas,
   };
-}
 
+  await setCached(cacheKey, result);
+  return result;
+}

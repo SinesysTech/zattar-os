@@ -3,6 +3,7 @@
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { criarUsuario as criarUsuarioDb, type UsuarioDados, type OperacaoUsuarioResult } from '../persistence/usuario-persistence.service';
+import { invalidateUsuariosCache } from '@/lib/redis/invalidation';
 
 /**
  * Dados necessários para criar um usuário completo
@@ -92,6 +93,9 @@ export async function criarUsuarioCompleto(
       emailCorporativo: resultado.usuario?.emailCorporativo,
     });
 
+    // Invalidar cache de usuários após criação bem-sucedida
+    await invalidateUsuariosCache();
+
     return resultado;
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);
@@ -102,4 +106,3 @@ export async function criarUsuarioCompleto(
     };
   }
 }
-

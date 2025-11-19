@@ -1,0 +1,149 @@
+import { getRedisClient, isRedisAvailable } from './client';
+
+const REDIS_CACHE_TTL = parseInt(process.env.REDIS_CACHE_TTL || '600', 10);
+
+export const CACHE_PREFIXES = {
+  pendentes: 'pendentes',
+  audiencias: 'audiencias',
+  acervo: 'acervo',
+  usuarios: 'usuarios',
+  clientes: 'clientes',
+  contratos: 'contratos',
+  tiposExpedientes: 'tipos_expedientes',
+  cargos: 'cargos',
+  classeJudicial: 'classe_judicial',
+  tipoAudiencia: 'tipo_audiencia',
+  salaAudiencia: 'sala_audiencia',
+  orgaoJulgador: 'orgao_julgador',
+} as const;
+
+/**
+ * Generates a consistent cache key from prefix and params.
+ * Serializes params deterministically by sorting object keys.
+ */
+export function generateCacheKey(prefix: string, params?: any): string {
+  if (!params) return prefix;
+  const sortedParams = sortObjectKeys(params);
+  return `${prefix}:${JSON.stringify(sortedParams)}`;
+}
+
+/**
+ * Recursively sorts object keys for deterministic serialization.
+ */
+function sortObjectKeys(obj: any): any {
+  if (obj === null || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) return obj.map(sortObjectKeys);
+  const sorted: any = {};
+  Object.keys(obj).sort().forEach(key => {
+    sorted[key] = sortObjectKeys(obj[key]);
+  });
+  return sorted;
+}
+
+/**
+ * Retrieves cached data for the given key.
+ * Returns null if not found or Redis unavailable.
+ */
+export async function getCached<T>(key: string): Promise<T | null> {
+  const client = getRedisClient();
+  if (!client || !isRedisAvailable()) return null;
+
+  try {
+    const data = await client.get(key);
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.warn(`Cache get failed for key ${key}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Sets data in cache with optional TTL.
+ * Does nothing if Redis unavailable.
+ */
+export async function setCached<T>(key: string, data: T, ttl: number = REDIS_CACHE_TTL): Promise<void> {
+  const client = getRedisClient();
+  if (!client || !isRedisAvailable()) return;
+
+  try {
+    await client.setex(key, ttl, JSON.stringify(data));
+  } catch (error) {
+    console.warn(`Cache set failed for key ${key}:`, error);
+  }
+}
+
+/**
+ * Deletes a specific cache key.
+ * Does nothing if Redis unavailable.
+ */
+export async function deleteCached(key: string): Promise<void> {
+  const client = getRedisClient();
+  if (!client || !isRedisAvailable()) return;
+
+  try {
+    await client.del(key);
+  } catch (error) {
+    console.warn(`Cache delete failed for key ${key}:`, error);
+  }
+}
+
+/**
+ * Deletes cache keys matching the pattern.
+ * Returns the number of deleted keys.
+ * Uses KEYS command (inefficient for large datasets, consider SCAN in production).
+ */
+export async function deletePattern(pattern: string): Promise<number> {
+  const client = getRedisClient();
+  if (!client || !isRedisAvailable()) return 0;
+
+  try {
+    const keys = await client.keys(pattern);
+    if (keys.length === 0) return 0;
+    const deleted = await client.del(...keys);
+    return deleted;
+  } catch (error) {
+    console.warn(`Cache delete pattern failed for ${pattern}:`, error);
+    return 0;
+  }
+}
+
+/**
+ * Retrieves Redis cache statistics.
+ * Returns an object with stats or empty if unavailable.
+ */
+export async function getCacheStats(): Promise<{ [key: string]: any }> {
+  const client = getRedisClient();
+  if (!client || !isRedisAvailable()) return {};
+
+  try {
+    const info = await client.info();
+    // Parse relevant stats from INFO output
+    const stats: { [key: string]: any } = {};
+    const lines = info.split('\n');
+    for (const line of lines) {
+      if (line.includes(':')) {
+        const [key, value] = line.split(':');
+        if (['used_memory', 'total_connections_received', 'keyspace_hits', 'keyspace_misses', 'uptime_in_seconds'].includes(key)) {
+          stats[key] = value.trim();
+        }
+      }
+    }
+    return stats;
+  } catch (error) {
+    console.warn('Failed to get cache stats:', error);
+    return {};
+  }
+}
+
+/**
+ * Higher-order function that wraps an async function with caching.
+ * Checks cache first, if miss, calls fn, caches result, returns.
+ */
+export async function withCache<T>(key: string, fn: () => Promise<T>, ttl: number = REDIS_CACHE_TTL): Promise<T> {
+  const cached = await getCached<T>(key);
+  if (cached !== null) return cached;
+
+  const result = await fn();
+  await setCached(key, result, ttl);
+  return result;
+}

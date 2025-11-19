@@ -4,6 +4,7 @@
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 import { compararObjetos } from '@/backend/utils/captura/comparison.util';
+import { getCached, setCached } from '@/lib/redis';
 
 /**
  * Interface para tipo de audiência do PJE
@@ -32,6 +33,12 @@ export async function buscarTipoAudiencia(
   trt: CodigoTRT,
   grau: GrauTRT
 ): Promise<{ id: number } | null> {
+  const key = `tipo_audiencia:${trt}:${grau}:${idPje}`;
+  const cached = await getCached<{ id: number }>(key);
+  if (cached !== null) {
+    return cached;
+  }
+
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
@@ -49,7 +56,9 @@ export async function buscarTipoAudiencia(
     throw new Error(`Erro ao buscar tipo de audiência: ${error.message}`);
   }
 
-  return data as { id: number };
+  const result = data as { id: number };
+  await setCached(key, result, 3600);
+  return result;
 }
 
 /**

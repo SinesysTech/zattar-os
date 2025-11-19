@@ -5,6 +5,7 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import {
   atribuirResponsavelAcervo as rpcAtribuirResponsavel,
 } from '@/backend/utils/supabase/set-user-context';
+import { invalidateAcervoCache } from '@/lib/redis/invalidation';
 
 export interface AtribuirResponsavelAcervoParams {
   processoId: number;
@@ -138,6 +139,9 @@ export async function atribuirResponsavelAcervo(
       };
     }
 
+    // Invalidar cache após atribuição bem-sucedida
+    await invalidateAcervoCache();
+
     return {
       success: true,
       data: resultado,
@@ -150,4 +154,3 @@ export async function atribuirResponsavelAcervo(
     };
   }
 }
-

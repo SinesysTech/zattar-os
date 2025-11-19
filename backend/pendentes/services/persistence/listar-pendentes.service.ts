@@ -2,6 +2,8 @@
 // Gerencia consultas na tabela pendentes_manifestacao com filtros, paginação, ordenação e agrupamento
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { getCached, setCached } from '@/lib/redis/cache-utils';
+import { getPendentesListKey, getPendentesGroupKey } from '@/lib/redis/cache-keys';
 import type {
   PendenteManifestacao,
   ListarPendentesParams,
@@ -58,6 +60,14 @@ function converterParaPendente(data: Record<string, unknown>): PendenteManifesta
 export async function listarPendentes(
   params: ListarPendentesParams = {}
 ): Promise<ListarPendentesResult> {
+  const cacheKey = getPendentesListKey(params);
+  const cached = await getCached<ListarPendentesResult>(cacheKey);
+  if (cached) {
+    console.debug(`Cache hit for pendentes list: ${cacheKey}`);
+    return cached;
+  }
+  console.debug(`Cache miss for pendentes list: ${cacheKey}`);
+
   const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
@@ -221,13 +231,16 @@ export async function listarPendentes(
   const total = count ?? 0;
   const totalPaginas = Math.ceil(total / limite);
 
-  return {
+  const result: ListarPendentesResult = {
     pendentes,
     total,
     pagina,
     limite,
     totalPaginas,
   };
+
+  await setCached(cacheKey, result);
+  return result;
 }
 
 /**
@@ -236,6 +249,14 @@ export async function listarPendentes(
 export async function listarPendentesAgrupado(
   params: ListarPendentesParams & { agrupar_por: string }
 ): Promise<ListarPendentesAgrupadoResult> {
+  const cacheKey = getPendentesGroupKey(params);
+  const cached = await getCached<ListarPendentesAgrupadoResult>(cacheKey);
+  if (cached) {
+    console.debug(`Cache hit for pendentes group: ${cacheKey}`);
+    return cached;
+  }
+  console.debug(`Cache miss for pendentes group: ${cacheKey}`);
+
   const supabase = createServiceClient();
   const incluirContagem = params.incluir_contagem !== false; // Padrão: true
 
@@ -436,8 +457,11 @@ export async function listarPendentesAgrupado(
   // Ordenar por quantidade (decrescente)
   agrupamentos.sort((a, b) => b.quantidade - a.quantidade);
 
-  return {
+  const result: ListarPendentesAgrupadoResult = {
     agrupamentos,
     total: pendentes.length,
   };
+
+  await setCached(cacheKey, result);
+  return result;
 }

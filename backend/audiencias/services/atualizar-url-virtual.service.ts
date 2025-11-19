@@ -1,6 +1,7 @@
 // Serviço para atualizar URL da audiência virtual
 
 import { createClient } from '@/backend/utils/supabase/server';
+import { invalidateAudienciasCache } from '@/lib/redis/invalidation';
 
 export interface AtualizarUrlVirtualParams {
   audienciaId: number;
@@ -55,6 +56,9 @@ export async function atualizarUrlVirtualAudiencia(
   if (!data) {
     throw new Error('Audiência não encontrada');
   }
+
+  // Invalidate cache after successful update
+  await invalidateAudienciasCache();
 
   return data;
 }

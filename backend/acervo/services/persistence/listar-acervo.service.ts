@@ -2,6 +2,8 @@
 // Gerencia consultas na tabela acervo com filtros, paginação, ordenação e agrupamento
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { getCached, setCached } from '@/lib/redis/cache-utils';
+import { getAcervoListKey, getAcervoGroupKey } from '@/lib/redis/cache-keys';
 import type {
   Acervo,
   ListarAcervoParams,
@@ -9,6 +11,8 @@ import type {
   ListarAcervoAgrupadoResult,
   AgrupamentoAcervo,
 } from '@/backend/types/acervo/types';
+
+const ACERVO_TTL = 900; // 15 minutos
 
 /**
  * Converte dados do banco para formato de retorno
@@ -49,6 +53,14 @@ function converterParaAcervo(data: Record<string, unknown>): Acervo {
 export async function listarAcervo(
   params: ListarAcervoParams = {}
 ): Promise<ListarAcervoResult> {
+  const cacheKey = getAcervoListKey(params);
+  const cached = await getCached<ListarAcervoResult>(cacheKey);
+  if (cached !== null) {
+    console.debug(`Cache hit for listarAcervo: ${cacheKey}`);
+    return cached;
+  }
+  console.debug(`Cache miss for listarAcervo: ${cacheKey}`);
+
   const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
@@ -175,13 +187,16 @@ export async function listarAcervo(
   const total = count ?? 0;
   const totalPaginas = Math.ceil(total / limite);
 
-  return {
+  const result: ListarAcervoResult = {
     processos,
     total,
     pagina,
     limite,
     totalPaginas,
   };
+
+  await setCached(cacheKey, result, ACERVO_TTL);
+  return result;
 }
 
 /**
@@ -190,6 +205,14 @@ export async function listarAcervo(
 export async function listarAcervoAgrupado(
   params: ListarAcervoParams & { agrupar_por: string }
 ): Promise<ListarAcervoAgrupadoResult> {
+  const cacheKey = getAcervoGroupKey(params);
+  const cached = await getCached<ListarAcervoAgrupadoResult>(cacheKey);
+  if (cached !== null) {
+    console.debug(`Cache hit for listarAcervoAgrupado: ${cacheKey}`);
+    return cached;
+  }
+  console.debug(`Cache miss for listarAcervoAgrupado: ${cacheKey}`);
+
   const supabase = createServiceClient();
   const incluirContagem = params.incluir_contagem !== false; // Padrão: true
 
@@ -367,16 +390,27 @@ export async function listarAcervoAgrupado(
   // Ordenar por quantidade (decrescente)
   agrupamentos.sort((a, b) => b.quantidade - a.quantidade);
 
-  return {
+  const result: ListarAcervoAgrupadoResult = {
     agrupamentos,
     total: processos.length,
   };
+
+  await setCached(cacheKey, result, ACERVO_TTL);
+  return result;
 }
 
 /**
  * Busca um processo do acervo por ID
  */
 export async function buscarAcervoPorId(id: number): Promise<Acervo | null> {
+  const cacheKey = `acervo:id:${id}`;
+  const cached = await getCached<Acervo>(cacheKey);
+  if (cached !== null) {
+    console.debug(`Cache hit for buscarAcervoPorId: ${cacheKey}`);
+    return cached;
+  }
+  console.debug(`Cache miss for buscarAcervoPorId: ${cacheKey}`);
+
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
@@ -392,6 +426,9 @@ export async function buscarAcervoPorId(id: number): Promise<Acervo | null> {
     throw new Error(`Erro ao buscar acervo: ${error.message}`);
   }
 
-  return data ? converterParaAcervo(data) : null;
+  const result = data ? converterParaAcervo(data) : null;
+  if (result) {
+    await setCached(cacheKey, result, ACERVO_TTL);
+  }
+  return result;
 }
-

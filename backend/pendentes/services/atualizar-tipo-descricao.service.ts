@@ -1,7 +1,5 @@
-// Serviço para atualizar tipo e descrição de expediente
-// Valida existência antes de atualizar e registra nos logs
-
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { invalidatePendentesCache } from '@/lib/redis/invalidation';
 
 export interface AtualizarTipoDescricaoParams {
   expedienteId: number;
@@ -143,6 +141,9 @@ export async function atualizarTipoDescricaoExpediente(
       };
     }
 
+    // Invalidate cache after successful update
+    await invalidatePendentesCache();
+
     return {
       success: true,
       data: data as Record<string, unknown>,
@@ -155,4 +156,3 @@ export async function atualizarTipoDescricaoExpediente(
     };
   }
 }
-

@@ -4,6 +4,7 @@
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { getCached, setCached, deletePattern, CACHE_PREFIXES, getCargosListKey } from '@/lib/redis';
 import type {
   Cargo,
   CriarCargoDTO,
@@ -33,6 +34,14 @@ const mapearCargo = (registro: any): Cargo => {
 export const listarCargos = async (
   params: ListarCargosParams
 ): Promise<ListarCargosResponse> => {
+  const cacheKey = getCargosListKey(params);
+  const cached = await getCached<ListarCargosResponse>(cacheKey);
+  if (cached) {
+    console.debug(`Cache hit for listarCargos: ${cacheKey}`);
+    return cached;
+  }
+  console.debug(`Cache miss for listarCargos: ${cacheKey}`);
+
   const {
     pagina = 1,
     limite = 50,
@@ -72,7 +81,7 @@ export const listarCargos = async (
   const total = count || 0;
   const totalPaginas = Math.ceil(total / limite);
 
-  return {
+  const result: ListarCargosResponse = {
     items: (data || []).map(mapearCargo),
     paginacao: {
       pagina,
@@ -81,12 +90,23 @@ export const listarCargos = async (
       totalPaginas,
     },
   };
+
+  await setCached(cacheKey, result, 3600); // 1 hour TTL
+  return result;
 };
 
 /**
  * Buscar cargo por ID
  */
 export const buscarCargoPorId = async (id: number): Promise<Cargo | null> => {
+  const cacheKey = `${CACHE_PREFIXES.cargos}:id:${id}`;
+  const cached = await getCached<Cargo>(cacheKey);
+  if (cached) {
+    console.debug(`Cache hit for buscarCargoPorId: ${cacheKey}`);
+    return cached;
+  }
+  console.debug(`Cache miss for buscarCargoPorId: ${cacheKey}`);
+
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
@@ -102,7 +122,9 @@ export const buscarCargoPorId = async (id: number): Promise<Cargo | null> => {
     throw new Error(`Erro ao buscar cargo: ${error.message}`);
   }
 
-  return mapearCargo(data);
+  const result = mapearCargo(data);
+  await setCached(cacheKey, result, 3600); // 1 hour TTL
+  return result;
 };
 
 /**
@@ -155,7 +177,9 @@ export const criarCargo = async (
     throw new Error(`Erro ao criar cargo: ${error.message}`);
   }
 
-  return mapearCargo(registro);
+  const result = mapearCargo(registro);
+  await deletePattern(`${CACHE_PREFIXES.cargos}:*`); // Invalidate all cargos cache
+  return result;
 };
 
 /**
@@ -193,7 +217,9 @@ export const atualizarCargo = async (
     throw new Error(`Erro ao atualizar cargo: ${error.message}`);
   }
 
-  return mapearCargo(registro);
+  const result = mapearCargo(registro);
+  await deletePattern(`${CACHE_PREFIXES.cargos}:*`); // Invalidate all cargos cache
+  return result;
 };
 
 /**
@@ -207,6 +233,8 @@ export const deletarCargo = async (id: number): Promise<void> => {
   if (error) {
     throw new Error(`Erro ao deletar cargo: ${error.message}`);
   }
+
+  await deletePattern(`${CACHE_PREFIXES.cargos}:*`); // Invalidate all cargos cache
 };
 
 /**

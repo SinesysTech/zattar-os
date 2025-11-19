@@ -2,6 +2,8 @@
 // Gerencia consultas na tabela audiencias com filtros, paginação e ordenação
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { getCached, setCached } from '@/lib/redis/cache-utils';
+import { getAudienciasListKey } from '@/lib/redis/cache-keys';
 import type {
   Audiencia,
   ListarAudienciasParams,
@@ -55,6 +57,16 @@ function converterParaAudiencia(data: Record<string, unknown>): Audiencia {
 export async function listarAudiencias(
   params: ListarAudienciasParams = {}
 ): Promise<ListarAudienciasResult> {
+  const cacheKey = getAudienciasListKey(params);
+  const cachedResult = await getCached<ListarAudienciasResult>(cacheKey);
+
+  if (cachedResult) {
+    console.log(`Cache hit for audiencias list: ${cacheKey}`);
+    return cachedResult;
+  }
+
+  console.log(`Cache miss for audiencias list: ${cacheKey}`);
+
   const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
@@ -62,14 +74,13 @@ export async function listarAudiencias(
   const offset = (pagina - 1) * limite;
 
   // Selecionar todos os campos da tabela audiencias e fazer JOIN com tabelas relacionadas
+  // NOTA: tipo_descricao vem de dados_anteriores JSONB, sala_audiencia_nome já está desnormalizado
   let query = supabase
     .from('audiencias')
     .select(`
       *,
       orgao_julgador!orgao_julgador_id(descricao),
-      classe_judicial!classe_judicial_id(descricao, sigla),
-      tipo_audiencia!tipo_audiencia_id(descricao, codigo, is_virtual),
-      sala_audiencia!sala_audiencia_id(nome)
+      classe_judicial!classe_judicial_id(descricao, sigla)
     `, { count: 'exact' });
 
   // Filtros básicos (campos da tabela audiencias não precisam de prefixo)
@@ -165,18 +176,20 @@ export async function listarAudiencias(
     // Extrair dados do JOIN
     const orgaoJulgador = row.orgao_julgador as Record<string, unknown> | null;
     const classeJudicial = row.classe_judicial as Record<string, unknown> | null;
-    const tipoAudiencia = row.tipo_audiencia as Record<string, unknown> | null;
-    const salaAudiencia = row.sala_audiencia as Record<string, unknown> | null;
 
-    // Adicionar campos do JOIN ao objeto
+    // Extrair tipo_descricao e tipo_is_virtual do campo dados_anteriores JSONB
+    const dadosAnteriores = row.dados_anteriores as Record<string, unknown> | null;
+    const tipoDescricao = dadosAnteriores?.tipo_descricao as string | null;
+    const tipoIsVirtual = dadosAnteriores?.tipo_is_virtual as boolean | undefined;
+
+    // Adicionar campos do JOIN e dados extraídos ao objeto
     const rowWithJoins = {
       ...row,
       orgao_julgador_descricao: orgaoJulgador?.descricao ?? null,
       classe_judicial: classeJudicial?.descricao ?? null,
-      tipo_descricao: tipoAudiencia?.descricao ?? null,
-      tipo_codigo: tipoAudiencia?.codigo ?? null,
-      tipo_is_virtual: tipoAudiencia?.is_virtual ?? false,
-      sala_audiencia_nome: salaAudiencia?.nome ?? row.sala_audiencia_nome ?? null,
+      tipo_descricao: tipoDescricao ?? null,
+      tipo_is_virtual: tipoIsVirtual ?? false,
+      // sala_audiencia_nome já vem diretamente da tabela audiencias
     };
 
     return converterParaAudiencia(rowWithJoins);
@@ -185,12 +198,15 @@ export async function listarAudiencias(
   const total = count ?? 0;
   const totalPaginas = Math.ceil(total / limite);
 
-  return {
+  const result: ListarAudienciasResult = {
     audiencias,
     total,
     pagina,
     limite,
     totalPaginas,
   };
-}
 
+  await setCached(cacheKey, result);
+
+  return result;
+}

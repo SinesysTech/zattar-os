@@ -4,6 +4,7 @@
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 import { compararObjetos } from '@/backend/utils/captura/comparison.util';
+import { getCached, setCached, generateCacheKey, CACHE_PREFIXES } from '@/lib/redis/cache-utils';
 
 /**
  * Interface para sala de audiência do PJE
@@ -32,12 +33,24 @@ export async function buscarSalaAudiencia(
   grau: GrauTRT,
   orgaoJulgadorId: number
 ): Promise<{ id: number } | null> {
+  const trimmedNome = nome.trim();
+  const cacheKey = generateCacheKey(CACHE_PREFIXES.salaAudiencia, { trt, grau, orgaoJulgadorId, nome: trimmedNome });
+
+  // Try to get from cache
+  const cached = await getCached<{ id: number }>(cacheKey);
+  if (cached !== null) {
+    console.debug(`Cache hit for sala_audiencia: ${cacheKey}`);
+    return cached;
+  }
+
+  console.debug(`Cache miss for sala_audiencia: ${cacheKey}`);
+
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
     .from('sala_audiencia')
     .select('id')
-    .eq('nome', nome.trim())
+    .eq('nome', trimmedNome)
     .eq('trt', trt)
     .eq('grau', grau)
     .eq('orgao_julgador_id', orgaoJulgadorId)
@@ -45,12 +58,19 @@ export async function buscarSalaAudiencia(
 
   if (error) {
     if (error.code === 'PGRST116') {
+      // Cache null result for 1 hour to avoid repeated misses
+      await setCached(cacheKey, null, 3600);
       return null;
     }
     throw new Error(`Erro ao buscar sala de audiência: ${error.message}`);
   }
 
-  return data as { id: number };
+  const result = data as { id: number };
+
+  // Cache the result for 1 hour
+  await setCached(cacheKey, result, 3600);
+
+  return result;
 }
 
 /**

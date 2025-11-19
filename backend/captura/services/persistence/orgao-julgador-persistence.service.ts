@@ -3,6 +3,7 @@
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
+import { getCached, setCached } from '@/lib/redis/cache-utils';
 
 /**
  * Dados de um órgão julgador vindo da API do PJE
@@ -78,6 +79,12 @@ export async function buscarOrgaoJulgador(
   trt: CodigoTRT,
   grau: GrauTRT
 ): Promise<{ id: number } | null> {
+  const cacheKey = `orgao_julgador:${trt}:${grau}:${idPje}`;
+  const cached = await getCached<{ id: number }>(cacheKey);
+  if (cached !== null) {
+    return cached;
+  }
+
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
@@ -96,6 +103,9 @@ export async function buscarOrgaoJulgador(
     throw new Error(`Erro ao buscar órgão julgador: ${error.message}`);
   }
 
-  return data ? { id: data.id } : null;
+  const result = data ? { id: data.id } : null;
+  if (result !== null) {
+    await setCached(cacheKey, result, 3600);
+  }
+  return result;
 }
-
