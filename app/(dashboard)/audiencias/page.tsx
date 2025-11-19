@@ -26,29 +26,11 @@ import { AudienciasVisualizacaoMes } from '@/components/audiencias-visualizacao-
 import { AudienciasVisualizacaoAno } from '@/components/audiencias-visualizacao-ano';
 import { useAudiencias } from '@/lib/hooks/use-audiencias';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
+import { STATUS_AUDIENCIA_OPTIONS } from '@/lib/constants/audiencias';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 import type { AudienciasFilters } from '@/lib/types/audiencias';
 
-
-/**
- * Formata data e hora ISO para formato brasileiro (DD/MM/YYYY HH:mm)
- */
-const formatarDataHora = (dataISO: string | null): string => {
-  if (!dataISO) return '-';
-  try {
-    const data = new Date(dataISO);
-    return data.toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return '-';
-  }
-};
 
 /**
  * Formata apenas data ISO para formato brasileiro (DD/MM/YYYY)
@@ -163,20 +145,6 @@ const getParteAutoraColorClass = (): string => {
  */
 const getParteReColorClass = (): string => {
   return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800';
-};
-
-/**
- * Formata status da audiência para exibição
- */
-const formatarStatus = (status: string | null): string => {
-  if (!status) return '-';
-  const statusMap: Record<string, string> = {
-    M: 'Designada',
-    R: 'Realizada',
-    C: 'Cancelada',
-    F: 'Realizada', // F também é Realizada (novo formato)
-  };
-  return statusMap[status] || status;
 };
 
 /**
@@ -913,9 +881,11 @@ export default function AudienciasPage() {
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="M">Designada</SelectItem>
-              <SelectItem value="F">Realizada</SelectItem>
-              <SelectItem value="C">Cancelada</SelectItem>
+              {STATUS_AUDIENCIA_OPTIONS.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
               <SelectItem value="todos">Todos os Status</SelectItem>
             </SelectContent>
           </Select>
