@@ -24,13 +24,11 @@ create table public.audiencias (
   em_andamento boolean not null default false,
   documento_ativo boolean not null default false,
   polo_ativo_nome text,
-  polo_ativo_cpf text,
   polo_passivo_nome text,
-  polo_passivo_cnpj text,
   url_audiencia_virtual text,
-  hora_inicial time,
-  hora_final time,
   responsavel_id bigint references public.usuarios(id) on delete set null,
+  observacoes text,
+  dados_anteriores jsonb,
   created_at timestamptz default now() not null,
   updated_at timestamptz default now() not null,
   -- Garantir unicidade da audiência: mesmo processo pode ter múltiplos advogados habilitados
@@ -59,13 +57,11 @@ comment on column public.audiencias.designada is 'Indica se a audiência está d
 comment on column public.audiencias.em_andamento is 'Indica se a audiência está em andamento';
 comment on column public.audiencias.documento_ativo is 'Indica se há documento ativo relacionado';
 comment on column public.audiencias.polo_ativo_nome is 'Nome da parte autora';
-comment on column public.audiencias.polo_ativo_cpf is 'CPF da parte autora';
 comment on column public.audiencias.polo_passivo_nome is 'Nome da parte ré';
-comment on column public.audiencias.polo_passivo_cnpj is 'CNPJ da parte ré';
 comment on column public.audiencias.url_audiencia_virtual is 'URL para audiências virtuais (Zoom, Google Meet, etc)';
-comment on column public.audiencias.hora_inicial is 'Hora inicial da audiência';
-comment on column public.audiencias.hora_final is 'Hora final da audiência';
 comment on column public.audiencias.responsavel_id is 'Usuário responsável pela audiência. Pode ser atribuído, transferido ou desatribuído. Todas as alterações são registradas em logs_alteracao';
+comment on column public.audiencias.observacoes is 'Observações sobre a audiência';
+comment on column public.audiencias.dados_anteriores is 'Armazena o estado anterior do registro antes da última atualização. Null quando o registro foi inserido ou quando não houve mudanças na última captura.';
 
 -- Índices para melhor performance
 create index idx_audiencias_advogado_id on public.audiencias using btree (advogado_id);
