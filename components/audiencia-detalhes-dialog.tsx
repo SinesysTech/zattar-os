@@ -410,16 +410,10 @@ export function AudienciaDetalhesDialog({
                   <div>
                     <div className="text-sm text-muted-foreground">Parte Autora</div>
                     <div className="font-medium">{audienciaUnica.polo_ativo_nome || '-'}</div>
-                    {audienciaUnica.polo_ativo_cpf && (
-                      <div className="text-xs text-muted-foreground">CPF: {audienciaUnica.polo_ativo_cpf}</div>
-                    )}
                   </div>
                   <div>
                     <div className="text-sm text-muted-foreground">Parte Ré</div>
                     <div className="font-medium">{audienciaUnica.polo_passivo_nome || '-'}</div>
-                    {audienciaUnica.polo_passivo_cnpj && (
-                      <div className="text-xs text-muted-foreground">CNPJ: {audienciaUnica.polo_passivo_cnpj}</div>
-                    )}
                   </div>
                 </div>
 
