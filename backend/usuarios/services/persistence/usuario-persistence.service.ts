@@ -540,7 +540,7 @@ export async function buscarUsuarioPorEmail(email: string): Promise<Usuario | nu
 
   const { data, error } = await supabase
     .from('usuarios')
-    .select('*')
+    .select('*, cargos(id, nome, descricao, ativo)')
     .eq('email_corporativo', emailLower)
     .single();
 

@@ -370,10 +370,17 @@ function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
   const [isEditing, setIsEditing] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [observacoes, setObservacoes] = React.useState(audiencia.observacoes || '');
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   React.useEffect(() => {
     setObservacoes(audiencia.observacoes || '');
   }, [audiencia.observacoes]);
+
+  React.useEffect(() => {
+    if (isEditing && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [isEditing]);
 
   const handleSave = async () => {
     setIsLoading(true);
@@ -410,42 +417,47 @@ function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
 
   if (isEditing) {
     return (
-      <div className="flex items-center gap-2 min-w-[250px]">
-        <Input
+      <div className="relative h-full w-full min-h-[60px] p-2">
+        <textarea
+          ref={textareaRef}
           value={observacoes}
           onChange={(e) => setObservacoes(e.target.value)}
           placeholder="Digite as observações..."
           disabled={isLoading}
-          className="h-8 text-sm"
+          className="w-full h-full min-h-[60px] resize-none border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSave();
             if (e.key === 'Escape') handleCancel();
           }}
         />
-        <Button
-          size="sm"
-          onClick={handleSave}
-          disabled={isLoading}
-          className="h-8 px-2"
-        >
-          ✓
-        </Button>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={handleCancel}
-          disabled={isLoading}
-          className="h-8 px-2"
-        >
-          ✕
-        </Button>
+        <div className="absolute bottom-2 right-2 flex gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={handleSave}
+            disabled={isLoading}
+            className="h-5 w-5 p-0 bg-green-100 hover:bg-green-200 shadow-sm"
+            title="Salvar"
+          >
+            <span className="text-green-700 text-xs font-bold">✓</span>
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={handleCancel}
+            disabled={isLoading}
+            className="h-5 w-5 p-0 bg-red-100 hover:bg-red-200 shadow-sm"
+            title="Cancelar"
+          >
+            <span className="text-red-700 text-xs font-bold">✕</span>
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-start p-2">
-      <span className="text-sm truncate max-w-[200px]">
+    <div className="relative group h-full w-full min-h-[60px] flex items-start justify-start p-2">
+      <span className="text-sm whitespace-pre-wrap break-words w-full">
         {audiencia.observacoes || '-'}
       </span>
       <Button
@@ -653,14 +665,14 @@ function criarColunas(
         </div>
       ),
       enableSorting: false,
-      size: 200,
+      size: 280,
       cell: ({ row }) => {
         const tipo = row.original.tipo_descricao || '-';
         const isVirtual = row.original.tipo_is_virtual;
         const sala = row.original.sala_audiencia_nome || '-';
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1 max-w-[200px]">
+          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1 max-w-[280px]">
             <div className="flex items-start gap-2">
               <span className="text-sm text-left">{tipo}</span>
               {isVirtual && (
@@ -713,7 +725,7 @@ function criarColunas(
           <div className="text-sm font-medium">Responsável</div>
         </div>
       ),
-      size: 220,
+      size: 160,
       cell: ({ row }) => (
         <div className="min-h-[2.5rem] flex items-center justify-center">
           <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} />
