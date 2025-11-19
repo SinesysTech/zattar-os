@@ -29,7 +29,7 @@ export type OrdemAudiencia = 'asc' | 'desc';
 /**
  * Status da audiência
  */
-export type StatusAudiencia = 'M' | 'R' | 'C'; // M=Marcada, R=Realizada, C=Cancelada
+export type StatusAudiencia = 'M' | 'F' | 'C'; // M=Designada, F=Realizada, C=Cancelada
 
 /**
  * Registro de audiência completo baseado no schema do banco
@@ -59,13 +59,11 @@ export interface Audiencia {
   em_andamento: boolean;
   documento_ativo: boolean;
   polo_ativo_nome: string | null;
-  polo_ativo_cpf: string | null;
   polo_passivo_nome: string | null;
-  polo_passivo_cnpj: string | null;
   url_audiencia_virtual: string | null;
-  hora_inicial: string | null; // Time format HH:mm:ss
-  hora_final: string | null; // Time format HH:mm:ss
   responsavel_id: number | null;
+  observacoes: string | null;
+  dados_anteriores: Record<string, unknown> | null; // jsonb
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }

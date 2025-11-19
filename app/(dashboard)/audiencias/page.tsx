@@ -171,9 +171,10 @@ const getParteReColorClass = (): string => {
 const formatarStatus = (status: string | null): string => {
   if (!status) return '-';
   const statusMap: Record<string, string> = {
-    M: 'Marcada',
+    M: 'Designada',
     R: 'Realizada',
     C: 'Cancelada',
+    F: 'Realizada', // F também é Realizada (novo formato)
   };
   return statusMap[status] || status;
 };
@@ -743,7 +744,7 @@ export default function AudienciasPage() {
     'data_inicio' | 'numero_processo' | 'polo_ativo_nome' | 'polo_passivo_nome' | null
   >('data_inicio');
   const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
-  const [status, setStatus] = React.useState<'M' | 'R' | 'C' | 'todos'>('M'); // Default: Marcada
+  const [status, setStatus] = React.useState<'M' | 'F' | 'C' | 'todos'>('M'); // Default: Designada
   const [filtros, setFiltros] = React.useState<AudienciasFilters>({});
   const [visualizacao, setVisualizacao] = React.useState<'tabela' | 'semana' | 'mes' | 'ano'>('tabela');
   const [semanaAtual, setSemanaAtual] = React.useState(new Date());
@@ -904,7 +905,7 @@ export default function AudienciasPage() {
           <Select
             value={status}
             onValueChange={(value) => {
-              setStatus(value as 'M' | 'R' | 'C' | 'todos');
+              setStatus(value as 'M' | 'F' | 'C' | 'todos');
               setPagina(0); // Resetar para primeira página ao mudar status
             }}
           >
@@ -912,8 +913,8 @@ export default function AudienciasPage() {
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="M">Marcada</SelectItem>
-              <SelectItem value="R">Realizada</SelectItem>
+              <SelectItem value="M">Designada</SelectItem>
+              <SelectItem value="F">Realizada</SelectItem>
               <SelectItem value="C">Cancelada</SelectItem>
               <SelectItem value="todos">Todos os Status</SelectItem>
             </SelectContent>
