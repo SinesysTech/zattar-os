@@ -3,23 +3,17 @@
 // Página de histórico de capturas
 
 import * as React from 'react';
+import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { TableToolbar } from '@/components/ui/table-toolbar';
+import { buildCapturasFilterOptions, buildCapturasFilterGroups, parseCapturasFilters } from './components/capturas-toolbar-filters';
 import { useCapturasLog } from '@/lib/hooks/use-capturas-log';
 import { useAdvogados } from '@/lib/hooks/use-advogados';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/backend/types/captura/capturas-log-types';
+import type { CapturasFilters } from './components/capturas-toolbar-filters';
 
 /**
  * Formata data e hora ISO para formato brasileiro (DD/MM/YYYY HH:mm)
@@ -205,34 +199,54 @@ function criarColunas(): ColumnDef<CapturaLog>[] {
 }
 
 export default function HistoricoCapturasPage() {
-  const [pagina, setPagina] = React.useState(1);
+  const [busca, setBusca] = React.useState('');
+  const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
-  const [tipoCaptura, setTipoCaptura] = React.useState<TipoCaptura | 'todos'>('todos');
-  const [status, setStatus] = React.useState<StatusCaptura | 'todos'>('todos');
-  const [advogadoId, setAdvogadoId] = React.useState<number | undefined>(undefined);
-  const [dataInicio, setDataInicio] = React.useState<Date | undefined>(undefined);
-  const [dataFim, setDataFim] = React.useState<Date | undefined>(undefined);
+  const [filtros, setFiltros] = React.useState<CapturasFilters>({});
+  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+
+  // Debounce da busca
+  const buscaDebounced = useDebounce(busca, 500);
+  const isSearching = busca !== buscaDebounced;
 
   // Buscar advogados para filtro
   const { advogados } = useAdvogados({ limite: 100 });
 
+  // Parâmetros para buscar capturas
+  const params = React.useMemo(
+    () => ({
+      pagina: pagina + 1, // API usa 1-indexed
+      limite,
+      ...filtros,
+    }),
+    [pagina, limite, filtros]
+  );
+
   // Buscar histórico de capturas
-  const { capturas, paginacao, isLoading, error, refetch } = useCapturasLog({
-    pagina,
-    limite,
-    tipo_captura: tipoCaptura !== 'todos' ? tipoCaptura : undefined,
-    status: status !== 'todos' ? status : undefined,
-    advogado_id: advogadoId,
-    data_inicio: dataInicio ? dataInicio.toISOString().split('T')[0] : undefined,
-    data_fim: dataFim ? dataFim.toISOString().split('T')[0] : undefined,
-  });
+  const { capturas, paginacao, isLoading, error, refetch } = useCapturasLog(params);
 
   const colunas = React.useMemo(() => criarColunas(), []);
 
-  // Resetar página quando filtros mudarem
-  React.useEffect(() => {
-    setPagina(1);
-  }, [tipoCaptura, status, advogadoId, dataInicio, dataFim]);
+  // Gerar opções de filtro
+  const filterOptions = React.useMemo(() => {
+    const opts = buildCapturasFilterOptions(advogados);
+    console.log('📊 Filter Options:', opts.length, opts);
+    return opts;
+  }, [advogados]);
+
+  const filterGroups = React.useMemo(() => {
+    const groups = buildCapturasFilterGroups(advogados);
+    console.log('📁 Filter Groups:', groups.length, groups);
+    return groups;
+  }, [advogados]);
+
+  // Converter IDs selecionados para filtros
+  const handleFilterIdsChange = React.useCallback((newSelectedIds: string[]) => {
+    setSelectedFilterIds(newSelectedIds);
+    const newFilters = parseCapturasFilters(newSelectedIds);
+    setFiltros(newFilters);
+    setPagina(0);
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -243,103 +257,21 @@ export default function HistoricoCapturasPage() {
         </p>
       </div>
 
-      {/* Filtros */}
-      <div className="flex flex-wrap items-center gap-4">
-        {/* Tipo de Captura */}
-        <Select
-          value={tipoCaptura}
-          onValueChange={(value) => setTipoCaptura(value as TipoCaptura | 'todos')}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Tipo" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="todos">Todos os Tipos</SelectItem>
-            <SelectItem value="acervo_geral">Acervo Geral</SelectItem>
-            <SelectItem value="arquivados">Arquivados</SelectItem>
-            <SelectItem value="audiencias">Audiências</SelectItem>
-            <SelectItem value="pendentes">Pendentes</SelectItem>
-          </SelectContent>
-        </Select>
-
-        {/* Status */}
-        <Select
-          value={status}
-          onValueChange={(value) => setStatus(value as StatusCaptura | 'todos')}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="todos">Todos os Status</SelectItem>
-            <SelectItem value="pending">Pendente</SelectItem>
-            <SelectItem value="in_progress">Em Progresso</SelectItem>
-            <SelectItem value="completed">Concluída</SelectItem>
-            <SelectItem value="failed">Falhou</SelectItem>
-          </SelectContent>
-        </Select>
-
-        {/* Advogado */}
-        <Select
-          value={advogadoId?.toString() || 'todos'}
-          onValueChange={(value) => setAdvogadoId(value === 'todos' ? undefined : parseInt(value, 10))}
-        >
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Advogado" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="todos">Todos os Advogados</SelectItem>
-            {advogados.map((advogado) => (
-              <SelectItem key={advogado.id} value={advogado.id.toString()}>
-                {advogado.nome_completo} - OAB {advogado.oab}/{advogado.uf_oab}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {/* Data Início */}
-        <div className="flex flex-col gap-1">
-          <Label htmlFor="data-inicio" className="text-xs text-muted-foreground">
-            Data Início
-          </Label>
-          <Input
-            id="data-inicio"
-            type="date"
-            value={dataInicio ? dataInicio.toISOString().split('T')[0] : ''}
-            onChange={(e) => setDataInicio(e.target.value ? new Date(e.target.value) : undefined)}
-            className="w-[180px]"
-          />
-        </div>
-
-        {/* Data Fim */}
-        <div className="flex flex-col gap-1">
-          <Label htmlFor="data-fim" className="text-xs text-muted-foreground">
-            Data Fim
-          </Label>
-          <Input
-            id="data-fim"
-            type="date"
-            value={dataFim ? dataFim.toISOString().split('T')[0] : ''}
-            onChange={(e) => setDataFim(e.target.value ? new Date(e.target.value) : undefined)}
-            className="w-[180px]"
-          />
-        </div>
-
-        {/* Botão Limpar Filtros */}
-        {(tipoCaptura !== 'todos' || status !== 'todos' || advogadoId !== undefined || dataInicio || dataFim) && (
-          <Button
-            variant="outline"
-            onClick={() => {
-              setTipoCaptura('todos');
-              setStatus('todos');
-              setAdvogadoId(undefined);
-              setDataInicio(undefined);
-              setDataFim(undefined);
-            }}
-          >
-            Limpar Filtros
-          </Button>
-        )}
+      {/* Barra de busca e filtros */}
+      <div className="flex items-center gap-4">
+        <TableToolbar
+          searchValue={busca}
+          onSearchChange={(value) => {
+            setBusca(value);
+            setPagina(0);
+          }}
+          isSearching={isSearching}
+          searchPlaceholder="Buscar capturas..."
+          filterOptions={filterOptions}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilterIds}
+          onFiltersChange={handleFilterIdsChange}
+        />
       </div>
 
       {/* Tabela */}
@@ -349,7 +281,7 @@ export default function HistoricoCapturasPage() {
         pagination={
           paginacao
             ? {
-                pageIndex: paginacao.pagina - 1,
+                pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
                 pageSize: paginacao.limite,
                 total: paginacao.total,
                 totalPages: paginacao.totalPaginas,

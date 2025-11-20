@@ -3,24 +3,19 @@
 // Componente de histórico de capturas (para usar dentro de abas)
 
 import * as React from 'react';
+import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
+import { TableToolbar } from '@/components/ui/table-toolbar';
+import { buildCapturasFilterOptions, buildCapturasFilterGroups, parseCapturasFilters } from '../historico/components/capturas-toolbar-filters';
 import { useCapturasLog } from '@/lib/hooks/use-capturas-log';
 import { useAdvogados } from '@/lib/hooks/use-advogados';
 import { deletarCapturaLog } from '@/lib/api/captura';
 import { CapturaDetailsDialog } from './captura-details-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/backend/types/captura/capturas-log-types';
+import type { CapturasFilters } from '../historico/components/capturas-toolbar-filters';
 import { Eye, Trash2 } from 'lucide-react';
 import {
   AlertDialog,
@@ -273,29 +268,33 @@ interface HistoricoCapturaProps {
 }
 
 export function HistoricoCapturas({ actionButton }: HistoricoCapturaProps = {}) {
-  const [pagina, setPagina] = React.useState(1);
+  const [busca, setBusca] = React.useState('');
+  const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
-  const [tipoCaptura, setTipoCaptura] = React.useState<TipoCaptura | 'todos'>('todos');
-  const [status, setStatus] = React.useState<StatusCaptura | 'todos'>('todos');
-  const [advogadoId, setAdvogadoId] = React.useState<number | undefined>(undefined);
-  const [dataInicio, setDataInicio] = React.useState<Date | undefined>(undefined);
-  const [dataFim, setDataFim] = React.useState<Date | undefined>(undefined);
+  const [filtros, setFiltros] = React.useState<CapturasFilters>({});
+  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
   const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
   const [selectedCaptura, setSelectedCaptura] = React.useState<CapturaLog | null>(null);
+
+  // Debounce da busca
+  const buscaDebounced = useDebounce(busca, 500);
+  const isSearching = busca !== buscaDebounced;
 
   // Buscar advogados para filtro
   const { advogados } = useAdvogados({ limite: 100 });
 
+  // Parâmetros para buscar capturas
+  const params = React.useMemo(
+    () => ({
+      pagina: pagina + 1, // API usa 1-indexed
+      limite,
+      ...filtros,
+    }),
+    [pagina, limite, filtros]
+  );
+
   // Buscar histórico de capturas
-  const { capturas, paginacao, isLoading, error, refetch } = useCapturasLog({
-    pagina,
-    limite,
-    tipo_captura: tipoCaptura !== 'todos' ? tipoCaptura : undefined,
-    status: status !== 'todos' ? status : undefined,
-    advogado_id: advogadoId,
-    data_inicio: dataInicio ? dataInicio.toISOString().split('T')[0] : undefined,
-    data_fim: dataFim ? dataFim.toISOString().split('T')[0] : undefined,
-  });
+  const { capturas, paginacao, isLoading, error, refetch } = useCapturasLog(params);
 
   const handleView = React.useCallback((captura: CapturaLog) => {
     setSelectedCaptura(captura);
