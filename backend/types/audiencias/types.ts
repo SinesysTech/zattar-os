@@ -125,10 +125,19 @@ export interface CriarAudienciaParams {
   advogado_id: number;
   data_inicio: string; // ISO timestamp
   data_fim: string; // ISO timestamp
-  tipo_descricao?: string;
-  tipo_is_virtual?: boolean;
-  sala_audiencia_nome?: string;
+  tipo_audiencia_id?: number;
+  sala_audiencia_id?: number;
   url_audiencia_virtual?: string;
+  endereco_presencial?: {
+    logradouro?: string;
+    numero?: string;
+    complemento?: string;
+    bairro?: string;
+    cidade?: string;
+    estado?: string;
+    pais?: string;
+    cep?: string;
+  };
   observacoes?: string;
   responsavel_id?: number;
 }

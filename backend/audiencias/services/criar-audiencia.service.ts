@@ -1,22 +1,7 @@
 // Serviço para criar nova audiência manualmente
 
 import { createClient } from '@/lib/server';
-
-/**
- * Parâmetros para criar uma nova audiência
- */
-export interface CriarAudienciaParams {
-  processo_id: number;
-  advogado_id: number;
-  data_inicio: string; // ISO timestamp
-  data_fim: string; // ISO timestamp
-  tipo_descricao?: string;
-  tipo_is_virtual?: boolean;
-  sala_audiencia_nome?: string;
-  url_audiencia_virtual?: string;
-  observacoes?: string;
-  responsavel_id?: number;
-}
+import type { CriarAudienciaParams } from '@/backend/types/audiencias/types';
 
 /**
  * Cria uma nova audiência manualmente
@@ -35,7 +20,37 @@ export async function criarAudiencia(params: CriarAudienciaParams): Promise<numb
     throw new Error('Processo não encontrado');
   }
 
-  // 2. Preparar dados da audiência
+  // 2. Buscar dados do tipo de audiência (se fornecido)
+  let tipoData = null;
+  if (params.tipo_audiencia_id) {
+    const { data: tipo, error: tipoError } = await supabase
+      .from('tipo_audiencia')
+      .select('id_pje, codigo, descricao, is_virtual')
+      .eq('id', params.tipo_audiencia_id)
+      .single();
+
+    if (tipoError || !tipo) {
+      throw new Error('Tipo de audiência não encontrado');
+    }
+    tipoData = tipo;
+  }
+
+  // 3. Buscar dados da sala de audiência (se fornecido)
+  let salaData = null;
+  if (params.sala_audiencia_id) {
+    const { data: sala, error: salaError } = await supabase
+      .from('sala_audiencia')
+      .select('id_pje, nome')
+      .eq('id', params.sala_audiencia_id)
+      .single();
+
+    if (salaError || !sala) {
+      throw new Error('Sala de audiência não encontrada');
+    }
+    salaData = sala;
+  }
+
+  // 4. Preparar dados da audiência
   const audienciaData = {
     // IDs e relações
     id_pje: 0, // Audiências manuais terão id_pje = 0
@@ -59,18 +74,27 @@ export async function criarAudiencia(params: CriarAudienciaParams): Promise<numb
     em_andamento: false,
     documento_ativo: false,
 
-    // Tipo e local
-    tipo_descricao: params.tipo_descricao || 'Audiência Manual',
-    tipo_is_virtual: params.tipo_is_virtual ?? false,
-    sala_audiencia_nome: params.sala_audiencia_nome || null,
+    // Dados do tipo de audiência (normalizados e desnormalizados)
+    tipo_audiencia_id: params.tipo_audiencia_id || null,
+    tipo_id: tipoData?.id_pje || null,
+    tipo_codigo: tipoData?.codigo || null,
+    tipo_descricao: tipoData?.descricao || 'Audiência Manual',
+    tipo_is_virtual: tipoData?.is_virtual ?? false,
+
+    // Dados da sala de audiência (normalizados e desnormalizados)
+    sala_audiencia_id: params.sala_audiencia_id || null,
+    sala_audiencia_nome: salaData?.nome || null,
+
+    // URL ou endereço conforme tipo
+    url_audiencia_virtual: params.url_audiencia_virtual || null,
+    endereco_presencial: params.endereco_presencial || null,
 
     // Campos opcionais
-    url_audiencia_virtual: params.url_audiencia_virtual || null,
     observacoes: params.observacoes || null,
     responsavel_id: params.responsavel_id || null,
   };
 
-  // 3. Inserir audiência
+  // 5. Inserir audiência
   const { data: audiencia, error: insertError } = await supabase
     .from('audiencias')
     .insert(audienciaData)
