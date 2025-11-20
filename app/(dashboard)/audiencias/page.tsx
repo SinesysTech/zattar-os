@@ -719,10 +719,21 @@ export default function AudienciasPage() {
   const [status, setStatus] = React.useState<'M' | 'F' | 'C' | 'todos'>('M'); // Default: Designada
   const [filtros, setFiltros] = React.useState<AudienciasFilters>({});
   const [visualizacao, setVisualizacao] = React.useState<'tabela' | 'semana' | 'mes' | 'ano'>('tabela');
-  const [semanaAtual, setSemanaAtual] = React.useState(new Date());
-  const [mesAtual, setMesAtual] = React.useState(new Date());
-  const [anoAtual, setAnoAtual] = React.useState(new Date().getFullYear());
+  
+  // Usar null como valor inicial para evitar hydration mismatch
+  // O valor real será definido no useEffect apenas no cliente
+  const [semanaAtual, setSemanaAtual] = React.useState<Date | null>(null);
+  const [mesAtual, setMesAtual] = React.useState<Date | null>(null);
+  const [anoAtual, setAnoAtual] = React.useState<number | null>(null);
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+
+  // Inicializar datas apenas no cliente para evitar hydration mismatch
+  React.useEffect(() => {
+    const agora = new Date();
+    setSemanaAtual(agora);
+    setMesAtual(agora);
+    setAnoAtual(agora.getFullYear());
+  }, []);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -798,10 +809,13 @@ export default function AudienciasPage() {
 
   // Funções para navegação de semana
   const navegarSemana = React.useCallback((direcao: 'anterior' | 'proxima') => {
-    const novaSemana = new Date(semanaAtual);
-    novaSemana.setDate(novaSemana.getDate() + (direcao === 'proxima' ? 7 : -7));
-    setSemanaAtual(novaSemana);
-  }, [semanaAtual]);
+    setSemanaAtual(prev => {
+      if (!prev) return new Date();
+      const novaSemana = new Date(prev);
+      novaSemana.setDate(novaSemana.getDate() + (direcao === 'proxima' ? 7 : -7));
+      return novaSemana;
+    });
+  }, []);
 
   const voltarSemanaAtual = React.useCallback(() => {
     setSemanaAtual(new Date());
@@ -809,10 +823,13 @@ export default function AudienciasPage() {
 
   // Funções para navegação de mês
   const navegarMes = React.useCallback((direcao: 'anterior' | 'proximo') => {
-    const novoMes = new Date(mesAtual);
-    novoMes.setMonth(novoMes.getMonth() + (direcao === 'proximo' ? 1 : -1));
-    setMesAtual(novoMes);
-  }, [mesAtual]);
+    setMesAtual(prev => {
+      if (!prev) return new Date();
+      const novoMes = new Date(prev);
+      novoMes.setMonth(novoMes.getMonth() + (direcao === 'proximo' ? 1 : -1));
+      return novoMes;
+    });
+  }, []);
 
   const voltarMesAtual = React.useCallback(() => {
     setMesAtual(new Date());
@@ -820,8 +837,11 @@ export default function AudienciasPage() {
 
   // Funções para navegação de ano
   const navegarAno = React.useCallback((direcao: 'anterior' | 'proximo') => {
-    setAnoAtual(direcao === 'proximo' ? anoAtual + 1 : anoAtual - 1);
-  }, [anoAtual]);
+    setAnoAtual(prev => {
+      if (prev === null) return new Date().getFullYear();
+      return direcao === 'proximo' ? prev + 1 : prev - 1;
+    });
+  }, []);
 
   const voltarAnoAtual = React.useCallback(() => {
     setAnoAtual(new Date().getFullYear());
@@ -829,6 +849,19 @@ export default function AudienciasPage() {
 
   // Calcular início e fim da semana para exibição
   const { inicioSemana, fimSemana } = React.useMemo(() => {
+    if (!semanaAtual) {
+      const agora = new Date();
+      agora.setHours(0, 0, 0, 0);
+      const day = agora.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      const inicio = new Date(agora);
+      inicio.setDate(agora.getDate() + diff);
+      const fim = new Date(inicio);
+      fim.setDate(fim.getDate() + 4);
+      fim.setHours(23, 59, 59, 999);
+      return { inicioSemana: inicio, fimSemana: fim };
+    }
+    
     const date = new Date(semanaAtual);
     date.setHours(0, 0, 0, 0);
     const day = date.getDay();
@@ -851,7 +884,8 @@ export default function AudienciasPage() {
     });
   };
 
-  const formatarMesAno = (data: Date) => {
+  const formatarMesAno = (data: Date | null) => {
+    if (!data) return '...';
     return data.toLocaleDateString('pt-BR', {
       month: 'long',
       year: 'numeric',
@@ -961,7 +995,7 @@ export default function AudienciasPage() {
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <ButtonGroupText className="whitespace-nowrap min-w-20 text-center">
-                {anoAtual}
+                {anoAtual ?? '...'}
               </ButtonGroupText>
               <Button
                 variant="outline"
@@ -1032,29 +1066,35 @@ export default function AudienciasPage() {
         </TabsContent>
 
         <TabsContent value="semana" className="mt-0">
-          <AudienciasVisualizacaoSemana
-            audiencias={audiencias}
-            isLoading={isLoading}
-            semanaAtual={semanaAtual}
-            usuarios={usuarios}
-            onRefresh={refetch}
-          />
+          {semanaAtual && (
+            <AudienciasVisualizacaoSemana
+              audiencias={audiencias}
+              isLoading={isLoading}
+              semanaAtual={semanaAtual as Date}
+              usuarios={usuarios}
+              onRefresh={refetch}
+            />
+          )}
         </TabsContent>
 
         <TabsContent value="mes" className="mt-0">
-          <AudienciasVisualizacaoMes
-            audiencias={audiencias}
-            isLoading={isLoading}
-            mesAtual={mesAtual}
-          />
+          {mesAtual && (
+            <AudienciasVisualizacaoMes
+              audiencias={audiencias}
+              isLoading={isLoading}
+              mesAtual={mesAtual as Date}
+            />
+          )}
         </TabsContent>
 
         <TabsContent value="ano" className="mt-0">
-          <AudienciasVisualizacaoAno
-            audiencias={audiencias}
-            isLoading={isLoading}
-            anoAtual={anoAtual}
-          />
+          {anoAtual !== null && (
+            <AudienciasVisualizacaoAno
+              audiencias={audiencias}
+              isLoading={isLoading}
+              anoAtual={anoAtual as number}
+            />
+          )}
         </TabsContent>
       </div>
     </Tabs>

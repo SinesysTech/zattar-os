@@ -2,7 +2,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/backend/utils/auth/require-permission';
-import { createClient } from '@/lib/server';
+import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { deletePattern } from '@/lib/redis/cache-utils';
+import { CACHE_PREFIXES } from '@/lib/redis/cache-utils';
 
 /**
  * @swagger
@@ -94,7 +96,8 @@ export async function PATCH(
     }
 
     // 4. Atualizar observações da audiência
-    const supabase = await createClient();
+    // Usar service client pois já verificamos permissões acima
+    const supabase = createServiceClient();
 
     const { data, error } = await supabase
       .from('audiencias')
@@ -114,6 +117,14 @@ export async function PATCH(
         );
       }
       throw error;
+    }
+
+    // 5. Invalidar cache de audiências
+    try {
+      await deletePattern(`${CACHE_PREFIXES.audiencias}:*`);
+    } catch (cacheError) {
+      console.warn('Erro ao invalidar cache de audiências:', cacheError);
+      // Não lançar erro, apenas logar aviso
     }
 
     return NextResponse.json({
