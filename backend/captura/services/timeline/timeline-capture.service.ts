@@ -13,13 +13,20 @@ import type { Page } from 'playwright';
 import { autenticarPJE, type AuthResult } from '../trt/trt-auth.service';
 import { getTribunalConfig } from '../trt/config';
 import { obterTimeline, obterDocumento, baixarDocumento } from '@/backend/api/pje-trt/timeline';
+import { uploadDocumentoToGoogleDrive } from '../google-drive/upload-documento.service';
+import { salvarTimelineNoMongoDB, atualizarTimelineMongoIdNoAcervo } from './timeline-persistence.service';
 import type { 
   TimelineResponse, 
   TimelineItem, 
   DocumentoDetalhes,
-  FiltroDocumentosTimeline 
+  FiltroDocumentosTimeline,
+  TimelineItemEnriquecido,
+  GoogleDriveInfo,
 } from '@/backend/types/pje-trt/timeline';
-import type { TRTCodigo, Grau } from '@/backend/types/captura/config';
+
+// Tipos locais para evitar dependência circular
+type TRTCodigo = string;
+type Grau = 'primeiro_grau' | 'segundo_grau';
 
 /**
  * Parâmetros para captura de timeline
@@ -69,6 +76,8 @@ export interface CapturaTimelineResult {
   totalBaixadosSucesso: number;
   /** Total de erros ao baixar */
   totalErros: number;
+  /** ID do documento MongoDB (se salvo) */
+  mongoId?: string;
 }
 
 /**
@@ -190,15 +199,17 @@ export async function capturarTimeline(
     const documentosBaixados: DocumentoBaixado[] = [];
     let totalBaixadosSucesso = 0;
     let totalErros = 0;
+    const timelineEnriquecida: TimelineItemEnriquecido[] = [...timeline];
 
     if (baixarDocumentos && documentosFiltrados.length > 0) {
       console.log('📥 [capturarTimeline] Iniciando download de documentos...');
 
-      for (const itemTimeline of documentosFiltrados) {
+      for (let i = 0; i < documentosFiltrados.length; i++) {
+        const itemTimeline = documentosFiltrados[i];
         const documentoId = String(itemTimeline.id);
 
         try {
-          console.log(`📄 [capturarTimeline] Baixando documento ${documentoId}...`);
+          console.log(`📄 [capturarTimeline] Baixando documento ${i + 1}/${documentosFiltrados.length}: ${documentoId}...`);
 
           // Obter detalhes do documento
           const detalhes = await obterDocumento(page, processoId, documentoId, {
@@ -214,6 +225,32 @@ export async function capturarTimeline(
             grau: grau === 'primeiro_grau' ? 1 : 2,
           });
 
+          // Upload para Google Drive
+          const driveResult = await uploadDocumentoToGoogleDrive({
+            pdfBuffer: pdf,
+            nomeBase: `${trtCodigo}_${processoId}_doc${documentoId}`,
+            processoId,
+            trtCodigo,
+            tipoDocumento: 'timeline',
+          });
+
+          // Enriquecer item da timeline com informações do Google Drive
+          const googleDriveInfo: GoogleDriveInfo = {
+            linkVisualizacao: driveResult.linkVisualizacao,
+            linkDownload: driveResult.linkDownload,
+            fileId: driveResult.fileId,
+            uploadedAt: new Date(),
+          };
+
+          // Encontrar o item na timeline enriquecida e adicionar googleDrive
+          const indexNaTimeline = timelineEnriquecida.findIndex(item => item.id === itemTimeline.id);
+          if (indexNaTimeline !== -1) {
+            timelineEnriquecida[indexNaTimeline] = {
+              ...timelineEnriquecida[indexNaTimeline],
+              googleDrive: googleDriveInfo,
+            };
+          }
+
           documentosBaixados.push({
             detalhes,
             pdf,
@@ -221,9 +258,10 @@ export async function capturarTimeline(
 
           totalBaixadosSucesso++;
 
-          console.log(`✅ [capturarTimeline] Documento ${documentoId} baixado`, {
+          console.log(`✅ [capturarTimeline] Documento ${documentoId} baixado e enviado para Google Drive`, {
             titulo: detalhes.titulo,
             tamanho: pdf.length,
+            fileId: driveResult.fileId,
           });
         } catch (error) {
           const mensagemErro = error instanceof Error ? error.message : String(error);
@@ -251,7 +289,34 @@ export async function capturarTimeline(
       });
     }
 
-    // 7. Retornar resultado
+    // 7. Salvar timeline enriquecida no MongoDB
+    let mongoId: string | undefined;
+    
+    try {
+      const persistenceResult = await salvarTimelineNoMongoDB({
+        processoId,
+        trtCodigo,
+        grau,
+        timeline: timelineEnriquecida,
+        advogadoId,
+      });
+
+      mongoId = persistenceResult.mongoId;
+
+      console.log(`🏛️ [capturarTimeline] Timeline salva no MongoDB`, {
+        mongoId,
+        criado: persistenceResult.criado,
+      });
+
+      // 8. Atualizar referência no PostgreSQL
+      await atualizarTimelineMongoIdNoAcervo(processoId, mongoId);
+
+    } catch (error) {
+      console.error('❌ [capturarTimeline] Erro ao salvar no MongoDB:', error);
+      // Não falhar a captura por erro no MongoDB, apenas logar
+    }
+
+    // 9. Retornar resultado
     const resultado: CapturaTimelineResult = {
       timeline,
       totalItens,
@@ -260,6 +325,7 @@ export async function capturarTimeline(
       documentosBaixados,
       totalBaixadosSucesso,
       totalErros,
+      mongoId,
     };
 
     console.log('✅ [capturarTimeline] Captura concluída com sucesso');

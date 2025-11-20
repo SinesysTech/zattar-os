@@ -7,35 +7,46 @@
 
 import { MongoClient, Db } from 'mongodb';
 
-if (!process.env.MONGODB_URL) {
-  throw new Error('MONGODB_URL não está definida no .env');
-}
-
-if (!process.env.MONGODB_DATABASE) {
-  throw new Error('MONGODB_DATABASE não está definida no .env');
-}
-
-const uri = process.env.MONGODB_URL;
-const dbName = process.env.MONGODB_DATABASE;
-const options = {
-  maxPoolSize: 10,
-  minPoolSize: 2,
-  maxIdleTimeMS: 60000,
-};
-
 let client: MongoClient | null = null;
 let clientPromise: Promise<MongoClient> | null = null;
+
+/**
+ * Obtém configurações do MongoDB do environment
+ */
+function getMongoConfig() {
+  const uri = process.env.MONGODB_URL;
+  const dbName = process.env.MONGODB_DATABASE;
+  
+  if (!uri) {
+    throw new Error('MONGODB_URL não está definida no .env');
+  }
+  
+  if (!dbName) {
+    throw new Error('MONGODB_DATABASE não está definida no .env');
+  }
+  
+  return { uri, dbName };
+}
 
 /**
  * Obtém o cliente MongoDB (singleton)
  */
 export async function getMongoClient(): Promise<MongoClient> {
+  const { uri } = getMongoConfig();
+  
   if (client) {
     return client;
   }
 
   if (!clientPromise) {
     console.log('🔌 [MongoDB] Conectando ao banco de dados...');
+    
+    const options = {
+      maxPoolSize: 10,
+      minPoolSize: 2,
+      maxIdleTimeMS: 60000,
+    };
+    
     clientPromise = MongoClient.connect(uri, options);
   }
 
@@ -49,6 +60,7 @@ export async function getMongoClient(): Promise<MongoClient> {
  * Obtém o banco de dados MongoDB
  */
 export async function getMongoDatabase(): Promise<Db> {
+  const { dbName } = getMongoConfig();
   const mongoClient = await getMongoClient();
   return mongoClient.db(dbName);
 }
