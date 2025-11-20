@@ -7,9 +7,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Database, Archive, Calendar, AlertCircle } from 'lucide-react';
+import { Database, Archive, Calendar, AlertCircle, FileText } from 'lucide-react';
 
-export type TipoCaptura = 'acervo-geral' | 'arquivados' | 'audiencias' | 'pendentes';
+export type TipoCaptura = 'acervo-geral' | 'arquivados' | 'audiencias' | 'pendentes' | 'timeline';
 
 interface TipoCapturaSelectProps {
   value: TipoCaptura;
@@ -41,6 +41,12 @@ const tiposCaptura = [
     label: 'Expedientes',
     description: 'Capturar pendências de manifestação',
     icon: AlertCircle,
+  },
+  {
+    value: 'timeline' as TipoCaptura,
+    label: 'Timeline do Processo',
+    description: 'Capturar movimentos e documentos do processo',
+    icon: FileText,
   },
 ];
 

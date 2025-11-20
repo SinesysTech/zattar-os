@@ -125,6 +125,47 @@ export interface PendentesParams extends BaseCapturaParams {
 }
 
 /**
+ * Filtro para documentos da timeline
+ */
+export interface FiltroDocumentosTimeline {
+  apenasAssinados?: boolean;
+  apenasNaoSigilosos?: boolean;
+  tipos?: string[];
+  dataInicial?: string;
+  dataFinal?: string;
+}
+
+/**
+ * Parâmetros para captura de timeline
+ */
+export interface TimelineParams {
+  processoId: string;
+  trtCodigo: CodigoTRT;
+  grau: GrauTRT;
+  advogadoId: number;
+  baixarDocumentos?: boolean;
+  filtroDocumentos?: FiltroDocumentosTimeline;
+}
+
+/**
+ * Resultado de captura de timeline
+ */
+export interface TimelineResult {
+  timeline?: unknown[];
+  totalItens?: number;
+  totalDocumentos?: number;
+  totalMovimentos?: number;
+  documentosBaixados?: Array<{
+    detalhes: unknown;
+    pdfTamanho?: number;
+    erro?: string;
+  }>;
+  totalBaixadosSucesso?: number;
+  totalErros?: number;
+  mongoId?: string;
+}
+
+/**
  * Cliente API para buscar credenciais disponíveis
  */
 export async function listarCredenciais(): Promise<CredenciaisApiResponse> {
@@ -282,6 +323,39 @@ export async function capturarPendentes(
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Erro desconhecido ao capturar pendências',
+    };
+  }
+}
+
+/**
+ * Cliente API para captura de timeline de processo
+ */
+export async function capturarTimeline(
+  params: TimelineParams
+): Promise<CapturaApiResponse<TimelineResult>> {
+  try {
+    const response = await fetch('/api/captura/trt/timeline', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+      };
+    }
+
+    return data;
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro desconhecido ao capturar timeline',
     };
   }
 }

@@ -14,6 +14,7 @@ import { AcervoGeralForm } from './acervo-geral-form';
 import { ArquivadosForm } from './arquivados-form';
 import { AudienciasForm } from './audiencias-form';
 import { PendentesForm } from './pendentes-form';
+import { TimelineForm } from './timeline-form';
 
 interface CapturaDialogProps {
   open: boolean;
@@ -41,6 +42,8 @@ export function CapturaDialog({ open, onOpenChange }: CapturaDialogProps) {
         return <AudienciasForm />;
       case 'pendentes':
         return <PendentesForm />;
+      case 'timeline':
+        return <TimelineForm />;
       default:
         return null;
     }

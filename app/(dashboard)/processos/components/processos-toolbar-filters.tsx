@@ -1,4 +1,5 @@
 import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/components/ui/table-toolbar-filter-config';
+import type { FilterGroup, ComboboxOption } from '@/components/ui/table-toolbar';
 import type { ProcessosFilters } from '@/lib/types/acervo';
 
 // Lista de TRTs disponíveis
@@ -148,6 +149,69 @@ export const PROCESSOS_FILTER_CONFIGS: FilterConfig[] = [
 
 export function buildProcessosFilterOptions(): ReturnType<typeof buildFilterOptions> {
   return buildFilterOptions(PROCESSOS_FILTER_CONFIGS);
+}
+
+export function buildProcessosFilterGroups(): FilterGroup[] {
+  // Criar mapeamento de configs por ID para fácil acesso
+  const configMap = new Map(PROCESSOS_FILTER_CONFIGS.map(c => [c.id, c]));
+
+  // Helper para construir opções sem prefixo do grupo
+  const buildOptionsWithoutPrefix = (configs: FilterConfig[]): ComboboxOption[] => {
+    const options: ComboboxOption[] = [];
+    
+    for (const config of configs) {
+      if (config.type === 'select' || config.type === 'multiselect') {
+        if (config.options) {
+          for (const opt of config.options) {
+            options.push({
+              value: `${config.id}_${opt.value}`,
+              label: opt.label, // Apenas o label da opção, sem prefixo
+              searchText: config.searchText || opt.searchText,
+            });
+          }
+        }
+      } else if (config.type === 'boolean') {
+        options.push({
+          value: config.id,
+          label: config.label,
+          searchText: config.searchText,
+        });
+      }
+    }
+    
+    return options;
+  };
+
+  return [
+    {
+      label: 'Tribunal',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('trt')!,
+      ]),
+    },
+    {
+      label: 'Grau',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('grau')!,
+      ]),
+    },
+    {
+      label: 'Origem',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('origem')!,
+      ]),
+    },
+    {
+      label: 'Características',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('segredo_justica')!,
+        configMap.get('juizo_digital')!,
+        configMap.get('tem_associacao')!,
+        configMap.get('tem_proxima_audiencia')!,
+        configMap.get('sem_responsavel')!,
+      ]),
+    },
+  ];
 }
 
 export function parseProcessosFilters(selectedFilters: string[]): ProcessosFilters {

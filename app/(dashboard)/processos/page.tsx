@@ -7,7 +7,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { buildProcessosFilterOptions, parseProcessosFilters } from './components/processos-toolbar-filters';
+import { buildProcessosFilterOptions, buildProcessosFilterGroups, parseProcessosFilters } from './components/processos-toolbar-filters';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ButtonGroup } from '@/components/ui/button-group';
@@ -649,6 +649,7 @@ export default function ProcessosPage() {
   );
 
   const filterOptions = React.useMemo(() => buildProcessosFilterOptions(), []);
+  const filterGroups = React.useMemo(() => buildProcessosFilterGroups(), []);
 
   const handleFilterIdsChange = React.useCallback((selectedIds: string[]) => {
     setSelectedFilterIds(selectedIds);
@@ -666,8 +667,9 @@ export default function ProcessosPage() {
           setPagina(0);
         }}
         isSearching={isSearching}
-        searchPlaceholder="Buscar por número, parte autora, parte ré, órgão julgador ou classe judicial..."
+        searchPlaceholder="Buscar processos..."
         filterOptions={filterOptions}
+        filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
         // Processos não tem botão de novo
