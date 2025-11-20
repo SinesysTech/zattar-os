@@ -106,8 +106,8 @@ export function TableToolbar({
   const useGroupedFilters = filterGroups && filterGroups.length > 0
 
   return (
-    <ButtonGroup className={cn("w-fit", className)}>
-      <InputGroup className="w-full max-w-lg">
+    <ButtonGroup className={cn("", className)}>
+      <InputGroup className="w-full min-w-[600px]">
         <InputGroupAddon>
           <Search className="h-4 w-4" />
         </InputGroupAddon>

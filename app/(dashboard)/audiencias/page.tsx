@@ -911,15 +911,19 @@ export default function AudienciasPage() {
           <TabsList>
             <TabsTrigger value="semana" aria-label="Visualização Semanal">
               <CalendarRange className="h-4 w-4" />
+              <span>Semana</span>
             </TabsTrigger>
             <TabsTrigger value="mes" aria-label="Visualização Mensal">
               <Calendar className="h-4 w-4" />
+              <span>Mês</span>
             </TabsTrigger>
             <TabsTrigger value="ano" aria-label="Visualização Anual">
               <CalendarDays className="h-4 w-4" />
+              <span>Ano</span>
             </TabsTrigger>
             <TabsTrigger value="tabela" aria-label="Visualização em Lista">
               <List className="h-4 w-4" />
+              <span>Lista</span>
             </TabsTrigger>
           </TabsList>
 
@@ -940,7 +944,7 @@ export default function AudienciasPage() {
               </Button>
 
               {/* Indicador de período atual */}
-              <ButtonGroupText className="whitespace-nowrap capitalize min-w-40 text-center text-sm font-normal">
+              <ButtonGroupText className="whitespace-nowrap capitalize min-w-40 text-center text-xs font-normal">
                 {visualizacao === 'semana' && `${formatarDataCabecalho(inicioSemana)} - ${formatarDataCabecalho(fimSemana)}`}
                 {visualizacao === 'mes' && formatarMesAno(mesAtual)}
                 {visualizacao === 'ano' && (anoAtual ?? '...')}

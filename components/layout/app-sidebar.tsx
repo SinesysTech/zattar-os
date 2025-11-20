@@ -59,11 +59,6 @@ const navMain = [
     icon: Scale,
   },
   {
-    title: "Acordos e Condenações",
-    url: "/acordos-condenacoes",
-    icon: Handshake,
-  },
-  {
     title: "Audiências",
     url: "/audiencias",
     icon: Calendar,
@@ -72,6 +67,11 @@ const navMain = [
     title: "Expedientes",
     url: "/expedientes",
     icon: FolderOpen,
+  },
+  {
+    title: "Obrigações",
+    url: "/acordos-condenacoes",
+    icon: Handshake,
   },
 ]
 

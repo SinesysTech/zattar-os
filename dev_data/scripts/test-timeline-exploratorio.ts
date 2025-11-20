@@ -135,10 +135,10 @@ async function main() {
         if (timeline && typeof timeline === 'object') {
           const keys = Object.keys(timeline);
           console.log(`  Propriedades (${keys.length}): ${keys.join(', ')}`);
-          
+
           // Verificar arrays
           for (const key of keys) {
-            const value = (timeline as Record<string, unknown>)[key];
+            const value = (timeline as unknown as Record<string, unknown>)[key];
             if (Array.isArray(value)) {
               console.log(`  - ${key}: Array com ${value.length} itens`);
               if (value.length > 0) {
