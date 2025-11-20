@@ -26,21 +26,7 @@
 
 import type { Page } from 'playwright';
 import { fetchPJEAPI } from '../shared/fetch';
-
-/**
- * Tipo de resposta da timeline (será refinado após análise da estrutura real)
- * Por enquanto, usando tipo genérico para capturar toda a estrutura
- */
-export type TimelineResponse = unknown;
-
-/**
- * Opções para busca de timeline
- */
-export interface ObterTimelineOptions {
-  somenteDocumentosAssinados?: boolean;
-  buscarMovimentos?: boolean;
-  buscarDocumentos?: boolean;
-}
+import type { TimelineResponse, ObterTimelineOptions } from '@/backend/types/pje-trt/timeline';
 
 /**
  * Função: obterTimeline
