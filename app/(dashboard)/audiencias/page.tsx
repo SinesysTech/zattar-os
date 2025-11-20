@@ -10,10 +10,11 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ChevronLeft, ChevronRight, Copy, Pencil, Plus } from 'lucide-react';
+import { Calendar, CalendarDays, CalendarRange, ChevronLeft, ChevronRight, Copy, List, Pencil, Plus, RotateCcw } from 'lucide-react';
 import { AudienciasVisualizacaoSemana } from './components/audiencias-visualizacao-semana';
 import { AudienciasVisualizacaoMes } from './components/audiencias-visualizacao-mes';
 import { AudienciasVisualizacaoAno } from './components/audiencias-visualizacao-ano';
@@ -887,7 +888,7 @@ export default function AudienciasPage() {
     <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
       <div className="space-y-4">
         {/* Barra de busca, filtros e tabs de visualização */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 pb-6">
           <TableToolbar
             searchValue={busca}
             onSearchChange={(value) => {
@@ -904,110 +905,145 @@ export default function AudienciasPage() {
           />
 
           {/* Tabs de visualização */}
-          <TabsList>
-            <TabsTrigger value="semana">Semana</TabsTrigger>
-            <TabsTrigger value="mes">Mês</TabsTrigger>
-            <TabsTrigger value="ano">Ano</TabsTrigger>
-            <TabsTrigger value="tabela">Lista</TabsTrigger>
-          </TabsList>
+          <ButtonGroup>
+            {/* Tab Semana */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setVisualizacao('semana')}
+                    aria-label="Visualização Semanal"
+                    className={visualizacao === 'semana' ? 'bg-accent' : ''}
+                  >
+                    <CalendarDays className="h-4 w-4" />
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className="px-2 py-1 text-xs">Semana</TooltipContent>
+            </Tooltip>
 
-          {/* Controles de navegação de semana (aparecem apenas na visualização de semana) */}
-          {visualizacao === 'semana' && (
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => navegarSemana('anterior')}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <div className="text-sm font-medium whitespace-nowrap">
-                {formatarDataCabecalho(inicioSemana)} - {formatarDataCabecalho(fimSemana)}
-              </div>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => navegarSemana('proxima')}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          )}
+            {/* Tab Mês */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setVisualizacao('mes')}
+                    aria-label="Visualização Mensal"
+                    className={visualizacao === 'mes' ? 'bg-accent' : ''}
+                  >
+                    <Calendar className="h-4 w-4" />
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className="px-2 py-1 text-xs">Mês</TooltipContent>
+            </Tooltip>
 
-          {/* Controles de navegação de mês (aparecem apenas na visualização de mês) */}
-          {visualizacao === 'mes' && (
+            {/* Tab Ano */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setVisualizacao('ano')}
+                    aria-label="Visualização Anual"
+                    className={visualizacao === 'ano' ? 'bg-accent' : ''}
+                  >
+                    <CalendarRange className="h-4 w-4" />
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className="px-2 py-1 text-xs">Ano</TooltipContent>
+            </Tooltip>
+
+            {/* Tab Lista */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setVisualizacao('tabela')}
+                    aria-label="Visualização em Lista"
+                    className={visualizacao === 'tabela' ? 'bg-accent' : ''}
+                  >
+                    <List className="h-4 w-4" />
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className="px-2 py-1 text-xs">Lista</TooltipContent>
+            </Tooltip>
+          </ButtonGroup>
+
+          {/* Controles de navegação e rollback - aparecem apenas quando não é visualização de lista */}
+          {visualizacao !== 'tabela' && (
             <ButtonGroup>
+              {/* Botão Anterior */}
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => navegarMes('anterior')}
+                onClick={() => {
+                  if (visualizacao === 'semana') navegarSemana('anterior');
+                  if (visualizacao === 'mes') navegarMes('anterior');
+                  if (visualizacao === 'ano') navegarAno('anterior');
+                }}
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
+
+              {/* Indicador de período atual */}
               <ButtonGroupText className="whitespace-nowrap capitalize min-w-40 text-center">
-                {formatarMesAno(mesAtual)}
+                {visualizacao === 'semana' && `${formatarDataCabecalho(inicioSemana)} - ${formatarDataCabecalho(fimSemana)}`}
+                {visualizacao === 'mes' && formatarMesAno(mesAtual)}
+                {visualizacao === 'ano' && (anoAtual ?? '...')}
               </ButtonGroupText>
+
+              {/* Botão Próximo */}
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => navegarMes('proximo')}
+                onClick={() => {
+                  if (visualizacao === 'semana') navegarSemana('proxima');
+                  if (visualizacao === 'mes') navegarMes('proximo');
+                  if (visualizacao === 'ano') navegarAno('proximo');
+                }}
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
-            </ButtonGroup>
-          )}
 
-          {/* Controles de navegação de ano (aparecem apenas na visualização de ano) */}
-          {visualizacao === 'ano' && (
-            <ButtonGroup>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => navegarAno('anterior')}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <ButtonGroupText className="whitespace-nowrap min-w-20 text-center">
-                {anoAtual ?? '...'}
-              </ButtonGroupText>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => navegarAno('proximo')}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+              {/* Botão Rollback (Voltar para atual) */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        if (visualizacao === 'semana') voltarSemanaAtual();
+                        if (visualizacao === 'mes') voltarMesAtual();
+                        if (visualizacao === 'ano') voltarAnoAtual();
+                      }}
+                      aria-label="Voltar para período atual"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent className="px-2 py-1 text-xs">
+                  {visualizacao === 'semana' && 'Semana Atual'}
+                  {visualizacao === 'mes' && 'Mês Atual'}
+                  {visualizacao === 'ano' && 'Ano Atual'}
+                </TooltipContent>
+              </Tooltip>
             </ButtonGroup>
-          )}
-
-          {/* Botão atual */}
-          {visualizacao === 'semana' && (
-            <Button
-              variant="outline"
-              onClick={voltarSemanaAtual}
-            >
-              Semana Atual
-            </Button>
-          )}
-          {visualizacao === 'mes' && (
-            <Button
-              variant="outline"
-              onClick={voltarMesAtual}
-            >
-              Mês Atual
-            </Button>
-          )}
-          {visualizacao === 'ano' && (
-            <Button
-              variant="outline"
-              onClick={voltarAnoAtual}
-            >
-              Ano Atual
-            </Button>
           )}
         </div>
 
-        <TabsContent value="tabela" className="mt-0">
+        <TabsContent value="tabela">
           {/* Tabela */}
           <DataTable
             data={audiencias}
@@ -1035,7 +1071,7 @@ export default function AudienciasPage() {
           />
         </TabsContent>
 
-        <TabsContent value="semana" className="mt-0">
+        <TabsContent value="semana">
           {semanaAtual && (
             <AudienciasVisualizacaoSemana
               audiencias={audiencias}
@@ -1047,7 +1083,7 @@ export default function AudienciasPage() {
           )}
         </TabsContent>
 
-        <TabsContent value="mes" className="mt-0">
+        <TabsContent value="mes">
           {mesAtual && (
             <AudienciasVisualizacaoMes
               audiencias={audiencias}
@@ -1057,7 +1093,7 @@ export default function AudienciasPage() {
           )}
         </TabsContent>
 
-        <TabsContent value="ano" className="mt-0">
+        <TabsContent value="ano">
           {anoAtual !== null && (
             <AudienciasVisualizacaoAno
               audiencias={audiencias}
