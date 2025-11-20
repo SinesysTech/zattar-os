@@ -9,9 +9,9 @@
  * 5. Retornar timeline + documentos baixados
  */
 
-import type { Page } from 'playwright';
 import { autenticarPJE, type AuthResult } from '../trt/trt-auth.service';
 import { getTribunalConfig } from '../trt/config';
+import type { CodigoTRT, GrauTRT } from '../trt/types';
 import { obterTimeline, obterDocumento, baixarDocumento } from '@/backend/api/pje-trt/timeline';
 import { uploadDocumentoToGoogleDrive } from '../google-drive/upload-documento.service';
 import { salvarTimelineNoMongoDB, atualizarTimelineMongoIdNoAcervo } from './timeline-persistence.service';
@@ -24,18 +24,14 @@ import type {
   GoogleDriveInfo,
 } from '@/backend/types/pje-trt/timeline';
 
-// Tipos locais para evitar dependência circular
-type TRTCodigo = string;
-type Grau = 'primeiro_grau' | 'segundo_grau';
-
 /**
  * Parâmetros para captura de timeline
  */
 export interface CapturaTimelineParams {
   /** Código do TRT (ex: 'TRT3') */
-  trtCodigo: TRTCodigo;
+  trtCodigo: CodigoTRT;
   /** Grau da instância */
-  grau: Grau;
+  grau: GrauTRT;
   /** ID do processo no PJE */
   processoId: string;
   /** ID do advogado (para obter credenciais) */

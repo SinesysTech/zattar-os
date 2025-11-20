@@ -5,7 +5,6 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config();
 
-import { chromium, Browser, Page } from 'playwright';
 import { capturarTimeline } from '@/backend/captura/services/timeline/timeline-capture.service';
 import { testMongoConnection, closeMongoConnection } from '@/lib/mongodb/client';
 import { createMongoIndexes } from '@/lib/mongodb/collections';
@@ -14,52 +13,37 @@ import { createMongoIndexes } from '@/lib/mongodb/collections';
  * Teste completo da captura de timeline
  */
 async function testarCapturaTimeline() {
-  let browser: Browser | undefined;
-  let page: Page | undefined;
-
   try {
     console.log('\n' + '='.repeat(80));
     console.log('🧪 TESTE COMPLETO: Captura Timeline + MongoDB + Google Drive');
     console.log('='.repeat(80) + '\n');
 
     // 1. Testar conexão MongoDB
-    console.log('📡 [1/5] Testando conexão MongoDB...\n');
+    console.log('📡 [1/4] Testando conexão MongoDB...\n');
     const mongoOk = await testMongoConnection();
     if (!mongoOk) {
       throw new Error('Falha na conexão com MongoDB');
     }
     console.log('✅ MongoDB conectado\n');
 
-    // 2. Criar índices MongoDB
-    console.log('📊 [2/5] Criando índices MongoDB...\n');
+    // 3. Criar índices MongoDB
+    console.log('📊 [2/4] Criando índices MongoDB...\n');
     await createMongoIndexes();
     console.log('✅ Índices criados\n');
 
-    // 3. Inicializar Playwright
-    console.log('🌐 [3/5] Inicializando browser...\n');
-    browser = await chromium.launch({ 
-      headless: false,
-      slowMo: 500,
-    });
-    page = await browser.newPage();
-    console.log('✅ Browser inicializado\n');
-
     // 4. Capturar timeline (COM DOWNLOADS E UPLOAD GOOGLE DRIVE)
-    console.log('📥 [4/5] Capturando timeline do processo...\n');
+    console.log('📥 [3/4] Capturando timeline do processo...\n');
     
     const resultado = await capturarTimeline({
-      page,
-      trtCodigo: 'TRT3', // Ajuste conforme necessário
-      processoId: '2887163', // Ajuste conforme necessário
+      trtCodigo: 'TRT3',
+      processoId: '2887163',
       grau: 'primeiro_grau',
-      advogadoId: 1, // Ajuste conforme necessário
-      // Filtros para documentos (opcional)
-      filtros: {
-        apenasNaoSigilosos: true, // Apenas documentos não sigilosos
-        // apenasAssinados: true, // Apenas documentos assinados
-      },
-      // IMPORTANTE: Ativar download de documentos
+      advogadoId: 1,
       baixarDocumentos: true,
+      filtroDocumentos: {
+        apenasNaoSigilosos: true,
+        apenasAssinados: true,
+      },
     });
 
     console.log('\n' + '='.repeat(80));
@@ -93,8 +77,8 @@ async function testarCapturaTimeline() {
     console.log('✅ TESTE CONCLUÍDO COM SUCESSO!');
     console.log('='.repeat(80) + '\n');
 
-    // 5. Aguardar confirmação do usuário
-    console.log('\n⏸️  Pressione ENTER para encerrar e fechar o browser...');
+    // 4. Aguardar confirmação do usuário
+    console.log('\n⏸️  Pressione ENTER para encerrar...');
     await new Promise((resolve) => {
       process.stdin.once('data', () => resolve(null));
     });
@@ -105,14 +89,6 @@ async function testarCapturaTimeline() {
   } finally {
     // Cleanup
     console.log('\n🧹 Limpando recursos...');
-    
-    if (page) {
-      await page.close();
-    }
-    
-    if (browser) {
-      await browser.close();
-    }
     
     await closeMongoConnection();
     

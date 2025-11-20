@@ -6,8 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { capturarTimeline, type CapturaTimelineParams } from '@/backend/captura/services/timeline/timeline-capture.service';
-import { authenticateRequest } from '@/backend/utils/auth/authenticate-request';
-import { createAPIResponse } from '@/backend/utils/api/response-formatter';
+import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 
 /**
  * @swagger
@@ -132,7 +131,7 @@ export async function POST(request: NextRequest) {
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
       return NextResponse.json(
-        createAPIResponse(null, 'Autenticação necessária', false),
+        { error: 'Unauthorized' },
         { status: 401 }
       );
     }
@@ -151,11 +150,7 @@ export async function POST(request: NextRequest) {
     // Validação básica
     if (!trtCodigo || !grau || !processoId || !advogadoId) {
       return NextResponse.json(
-        createAPIResponse(
-          null,
-          'Parâmetros obrigatórios: trtCodigo, grau, processoId, advogadoId',
-          false
-        ),
+        { error: 'Parâmetros obrigatórios: trtCodigo, grau, processoId, advogadoId' },
         { status: 400 }
       );
     }
@@ -190,7 +185,10 @@ export async function POST(request: NextRequest) {
     };
 
     return NextResponse.json(
-      createAPIResponse(resultadoSemPDFs, 'Timeline capturada com sucesso'),
+      {
+        success: true,
+        data: resultadoSemPDFs,
+      },
       { status: 200 }
     );
   } catch (error) {
@@ -199,7 +197,7 @@ export async function POST(request: NextRequest) {
     const mensagem = error instanceof Error ? error.message : 'Erro ao capturar timeline';
 
     return NextResponse.json(
-      createAPIResponse(null, mensagem, false),
+      { error: mensagem },
       { status: 500 }
     );
   }

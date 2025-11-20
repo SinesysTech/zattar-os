@@ -5,8 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/authenticate-request';
-import { createAPIResponse } from '@/backend/utils/api/response-formatter';
+import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { obterTimelinePorMongoId } from '@/backend/captura/services/timeline/timeline-persistence.service';
 
@@ -71,7 +70,7 @@ export async function GET(
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
       return NextResponse.json(
-        createAPIResponse(null, 'Autenticação necessária', false),
+        { error: 'Unauthorized' },
         { status: 401 }
       );
     }
@@ -80,7 +79,7 @@ export async function GET(
 
     if (isNaN(acervoId)) {
       return NextResponse.json(
-        createAPIResponse(null, 'ID do acervo inválido', false),
+        { error: 'ID do acervo inválido' },
         { status: 400 }
       );
     }
@@ -97,7 +96,7 @@ export async function GET(
 
     if (acervoError || !acervo) {
       return NextResponse.json(
-        createAPIResponse(null, 'Acervo não encontrado', false),
+        { error: 'Acervo não encontrado' },
         { status: 404 }
       );
     }
@@ -111,6 +110,7 @@ export async function GET(
         
         if (timelineDoc) {
           // Remover _id do MongoDB da resposta (não é serializável)
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { _id, ...timelineResto } = timelineDoc;
           timelineData = timelineResto;
         }
@@ -127,7 +127,10 @@ export async function GET(
     };
 
     return NextResponse.json(
-      createAPIResponse(resultado, 'Dados obtidos com sucesso'),
+      {
+        success: true,
+        data: resultado,
+      },
       { status: 200 }
     );
   } catch (error) {
@@ -136,7 +139,7 @@ export async function GET(
     const mensagem = error instanceof Error ? error.message : 'Erro ao obter timeline';
 
     return NextResponse.json(
-      createAPIResponse(null, mensagem, false),
+      { error: mensagem },
       { status: 500 }
     );
   }
