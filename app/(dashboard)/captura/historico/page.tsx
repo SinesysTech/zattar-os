@@ -228,17 +228,8 @@ export default function HistoricoCapturasPage() {
   const colunas = React.useMemo(() => criarColunas(), []);
 
   // Gerar opções de filtro
-  const filterOptions = React.useMemo(() => {
-    const opts = buildCapturasFilterOptions(advogados);
-    console.log('📊 Filter Options:', opts.length, opts);
-    return opts;
-  }, [advogados]);
-
-  const filterGroups = React.useMemo(() => {
-    const groups = buildCapturasFilterGroups(advogados);
-    console.log('📁 Filter Groups:', groups.length, groups);
-    return groups;
-  }, [advogados]);
+  const filterOptions = React.useMemo(() => buildCapturasFilterOptions(advogados), [advogados]);
+  const filterGroups = React.useMemo(() => buildCapturasFilterGroups(advogados), [advogados]);
 
   // Converter IDs selecionados para filtros
   const handleFilterIdsChange = React.useCallback((newSelectedIds: string[]) => {

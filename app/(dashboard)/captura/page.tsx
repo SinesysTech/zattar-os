@@ -18,10 +18,8 @@ export default function CapturaPage() {
   const [credencialDialogOpen, setCredencialDialogOpen] = useState(false);
   const [refreshAgendamentos, setRefreshAgendamentos] = useState(0);
   const [refreshCredenciais, setRefreshCredenciais] = useState(0);
-  const [buscaHistorico, setBuscaHistorico] = useState('');
   const [buscaAgendamentos, setBuscaAgendamentos] = useState('');
   const [buscaCredenciais, setBuscaCredenciais] = useState('');
-  const [selectedFilterIdsHistorico, setSelectedFilterIdsHistorico] = useState<string[]>([]);
   const [selectedFilterIdsAgendamentos, setSelectedFilterIdsAgendamentos] = useState<string[]>([]);
   const [selectedFilterIdsCredenciais, setSelectedFilterIdsCredenciais] = useState<string[]>([]);
 
@@ -56,17 +54,14 @@ export default function CapturaPage() {
 
         {/* Conteúdo da aba Histórico */}
         <TabsContent value="historico" className="mt-6">
-          <TableToolbar
-            searchValue={buscaHistorico}
-            onSearchChange={setBuscaHistorico}
-            searchPlaceholder="Buscar capturas..."
-            filterOptions={[]}
-            selectedFilters={selectedFilterIdsHistorico}
-            onFiltersChange={setSelectedFilterIdsHistorico}
-            onNewClick={() => setCapturaDialogOpen(true)}
-            newButtonTooltip="Nova Captura"
+          <HistoricoCapturas
+            actionButton={
+              <Button onClick={() => setCapturaDialogOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Nova Captura
+              </Button>
+            }
           />
-          <HistoricoCapturas />
         </TabsContent>
 
         {/* Conteúdo da aba Agendamentos */}

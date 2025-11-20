@@ -7,6 +7,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildCapturasFilterOptions, buildCapturasFilterGroups, parseCapturasFilters } from '../historico/components/capturas-toolbar-filters';
 import { useCapturasLog } from '@/lib/hooks/use-capturas-log';
@@ -323,104 +324,35 @@ export function HistoricoCapturas({ actionButton }: HistoricoCapturaProps = {}) 
 
   const colunas = React.useMemo(() => criarColunas(handleView, handleDelete), [handleView, handleDelete]);
 
-  // Resetar página quando filtros mudarem
-  React.useEffect(() => {
-    setPagina(1);
-  }, [tipoCaptura, status, advogadoId, dataInicio, dataFim]);
+  // Gerar opções de filtro
+  const filterOptions = React.useMemo(() => buildCapturasFilterOptions(advogados), [advogados]);
+  const filterGroups = React.useMemo(() => buildCapturasFilterGroups(advogados), [advogados]);
+
+  // Converter IDs selecionados para filtros
+  const handleFilterIdsChange = React.useCallback((newSelectedIds: string[]) => {
+    setSelectedFilterIds(newSelectedIds);
+    const newFilters = parseCapturasFilters(newSelectedIds);
+    setFiltros(newFilters);
+    setPagina(0);
+  }, []);
 
   return (
     <div className="space-y-4">
-      {/* Filtros e Ações */}
-      <div className="flex flex-wrap items-center gap-4 justify-between">
-        <div className="flex flex-wrap items-center gap-4">
-          {/* Tipo de Captura */}
-          <Select
-            value={tipoCaptura}
-            onValueChange={(value) => setTipoCaptura(value as TipoCaptura | 'todos')}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Tipo" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos os Tipos</SelectItem>
-              <SelectItem value="acervo_geral">Acervo Geral</SelectItem>
-              <SelectItem value="arquivados">Arquivados</SelectItem>
-              <SelectItem value="audiencias">Audiências</SelectItem>
-              <SelectItem value="pendentes">Pendentes</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* Status */}
-          <Select
-            value={status}
-            onValueChange={(value) => setStatus(value as StatusCaptura | 'todos')}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos os Status</SelectItem>
-              <SelectItem value="pending">Pendente</SelectItem>
-              <SelectItem value="in_progress">Em Progresso</SelectItem>
-              <SelectItem value="completed">Concluída</SelectItem>
-              <SelectItem value="failed">Falhou</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* Advogado */}
-          <Select
-            value={advogadoId?.toString() || 'todos'}
-            onValueChange={(value) => setAdvogadoId(value === 'todos' ? undefined : parseInt(value, 10))}
-          >
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Advogado" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos os Advogados</SelectItem>
-              {advogados.map((advogado) => (
-                <SelectItem key={advogado.id} value={advogado.id.toString()}>
-                  {advogado.nome_completo} - OAB {advogado.oab}/{advogado.uf_oab}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          {/* Data Início */}
-          <Input
-            id="data-inicio"
-            type="date"
-            placeholder="Data Início"
-            value={dataInicio ? dataInicio.toISOString().split('T')[0] : ''}
-            onChange={(e) => setDataInicio(e.target.value ? new Date(e.target.value) : undefined)}
-            className="w-[180px]"
-          />
-
-          {/* Data Fim */}
-          <Input
-            id="data-fim"
-            type="date"
-            placeholder="Data Fim"
-            value={dataFim ? dataFim.toISOString().split('T')[0] : ''}
-            onChange={(e) => setDataFim(e.target.value ? new Date(e.target.value) : undefined)}
-            className="w-[180px]"
-          />
-
-          {/* Botão Limpar Filtros */}
-          {(tipoCaptura !== 'todos' || status !== 'todos' || advogadoId !== undefined || dataInicio || dataFim) && (
-            <Button
-              variant="outline"
-              onClick={() => {
-                setTipoCaptura('todos');
-                setStatus('todos');
-                setAdvogadoId(undefined);
-                setDataInicio(undefined);
-                setDataFim(undefined);
-              }}
-            >
-              Limpar Filtros
-            </Button>
-          )}
-        </div>
+      {/* Barra de busca e filtros */}
+      <div className="flex items-center gap-4 justify-between">
+        <TableToolbar
+          searchValue={busca}
+          onSearchChange={(value) => {
+            setBusca(value);
+            setPagina(0);
+          }}
+          isSearching={isSearching}
+          searchPlaceholder="Buscar capturas..."
+          filterOptions={filterOptions}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilterIds}
+          onFiltersChange={handleFilterIdsChange}
+        />
 
         {/* Botão de Ação (ex: Nova Captura) */}
         {actionButton && <div>{actionButton}</div>}
@@ -433,7 +365,7 @@ export function HistoricoCapturas({ actionButton }: HistoricoCapturaProps = {}) 
         pagination={
           paginacao
             ? {
-                pageIndex: paginacao.pagina - 1,
+                pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
                 pageSize: paginacao.limite,
                 total: paginacao.total,
                 totalPages: paginacao.totalPaginas,
