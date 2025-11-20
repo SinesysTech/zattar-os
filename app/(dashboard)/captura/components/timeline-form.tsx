@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
 import { capturarTimeline, type TimelineParams, type FiltroDocumentosTimeline } from '@/lib/api/captura';
+import { useCredenciais } from '@/lib/hooks/use-credenciais';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ChevronDown, Info } from 'lucide-react';
 
 /**
  * Componente de formulário para captura de timeline de processo
@@ -47,6 +49,23 @@ export function TimelineForm() {
     data?: unknown;
   }>({ success: null });
 
+  // Buscar credenciais do advogado selecionado
+  const { credenciais } = useCredenciais(advogadoId ?? undefined, { active: true });
+
+  // Obter credencial selecionada (primeira da lista)
+  const credencialSelecionada = useMemo(() => {
+    if (credenciaisSelecionadas.length === 0) return null;
+    return credenciais.find((c) => c.id === credenciaisSelecionadas[0]) || null;
+  }, [credenciais, credenciaisSelecionadas]);
+
+  /**
+   * Validar formato do número do processo (apenas números)
+   */
+  const validarProcessoId = (valor: string): boolean => {
+    // Aceitar apenas números
+    return /^\d+$/.test(valor.trim());
+  };
+
   /**
    * Handler para iniciar captura de timeline
    */
@@ -68,8 +87,26 @@ export function TimelineForm() {
       return;
     }
 
+    // Validar formato do número do processo
+    if (!validarProcessoId(processoId)) {
+      setResult({
+        success: false,
+        error: 'Número do processo deve conter apenas dígitos',
+      });
+      return;
+    }
+
     if (!advogadoId) {
       setResult({ success: false, error: 'Advogado não selecionado' });
+      return;
+    }
+
+    // Verificar se temos a credencial selecionada
+    if (!credencialSelecionada) {
+      setResult({
+        success: false,
+        error: 'Credencial não encontrada',
+      });
       return;
     }
 
@@ -77,11 +114,6 @@ export function TimelineForm() {
     setResult({ success: null });
 
     try {
-      // Buscar credencial para obter TRT e grau
-      // Por enquanto, vamos usar a primeira credencial da lista
-      // TODO: Implementar lógica para buscar detalhes da credencial
-      // Por hora, vamos assumir que temos essa informação
-
       // Montar filtro de documentos (apenas se baixar documentos estiver habilitado)
       let filtroDocumentos: FiltroDocumentosTimeline | undefined;
 
@@ -108,15 +140,11 @@ export function TimelineForm() {
         }
       }
 
-      // Construir parâmetros
-      // NOTA: Como precisamos do trtCodigo e grau da credencial,
-      // vamos precisar fazer uma chamada para buscar esses detalhes
-      // Por enquanto, vou deixar hardcoded para TRT3 primeiro grau
-      // TODO: Implementar busca de detalhes da credencial
+      // Construir parâmetros usando dados da credencial selecionada
       const params: TimelineParams = {
         processoId: processoId.trim(),
-        trtCodigo: 'TRT3', // TODO: Obter da credencial
-        grau: 'primeiro_grau', // TODO: Obter da credencial
+        trtCodigo: credencialSelecionada.tribunal,
+        grau: credencialSelecionada.grau,
         advogadoId,
         baixarDocumentos,
         filtroDocumentos,
@@ -151,6 +179,20 @@ export function TimelineForm() {
         onAdvogadoChange={setAdvogadoId}
         onCredenciaisChange={setCredenciaisSelecionadas}
       >
+        {/* Informação da credencial selecionada */}
+        {credencialSelecionada && (
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              Timeline será capturada usando:{' '}
+              <strong>
+                {credencialSelecionada.tribunal} -{' '}
+                {credencialSelecionada.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
+              </strong>
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Campos específicos da timeline */}
         <div className="space-y-3">
           <Label htmlFor="processo-id">Número do Processo *</Label>
@@ -161,6 +203,9 @@ export function TimelineForm() {
             onChange={(e) => setProcessoId(e.target.value)}
             disabled={isLoading}
           />
+          <p className="text-xs text-muted-foreground">
+            Apenas números (ID do processo no PJE)
+          </p>
         </div>
 
         <div className="flex items-center space-x-2">

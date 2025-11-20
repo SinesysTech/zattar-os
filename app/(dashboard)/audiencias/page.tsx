@@ -9,13 +9,6 @@ import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
@@ -26,9 +19,8 @@ import { AudienciasVisualizacaoMes } from './components/audiencias-visualizacao-
 import { AudienciasVisualizacaoAno } from './components/audiencias-visualizacao-ano';
 import { useAudiencias } from '@/lib/hooks/use-audiencias';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
-import { STATUS_AUDIENCIA_OPTIONS } from '@/lib/constants/audiencias';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { buildAudienciasFilterOptions, parseAudienciasFilters } from './components/audiencias-toolbar-filters';
+import { buildAudienciasFilterOptions, buildAudienciasFilterGroups, parseAudienciasFilters } from './components/audiencias-toolbar-filters';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 import type { AudienciasFilters } from '@/lib/types/audiencias';
@@ -716,10 +708,9 @@ export default function AudienciasPage() {
     'data_inicio' | 'numero_processo' | 'polo_ativo_nome' | 'polo_passivo_nome' | null
   >('data_inicio');
   const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
-  const [status, setStatus] = React.useState<'M' | 'F' | 'C' | 'todos'>('M'); // Default: Designada
   const [filtros, setFiltros] = React.useState<AudienciasFilters>({});
-  const [visualizacao, setVisualizacao] = React.useState<'tabela' | 'semana' | 'mes' | 'ano'>('tabela');
-  
+  const [visualizacao, setVisualizacao] = React.useState<'tabela' | 'semana' | 'mes' | 'ano'>('semana');
+
   // Usar null como valor inicial para evitar hydration mismatch
   // O valor real será definido no useEffect apenas no cliente
   const [semanaAtual, setSemanaAtual] = React.useState<Date | null>(null);
@@ -747,10 +738,9 @@ export default function AudienciasPage() {
       busca: buscaDebounced || undefined,
       ordenar_por: ordenarPor || undefined,
       ordem,
-      status: status !== 'todos' ? status : undefined, // Filtro de status
-      ...filtros, // Spread dos filtros avançados
+      ...filtros, // Spread dos filtros avançados (inclui status agora)
     }),
-    [pagina, limite, buscaDebounced, ordenarPor, ordem, status, filtros]
+    [pagina, limite, buscaDebounced, ordenarPor, ordem, filtros]
   );
 
   const { audiencias: audienciasRaw, paginacao, isLoading, error, refetch } = useAudiencias(params);
@@ -798,6 +788,7 @@ export default function AudienciasPage() {
 
   // Gerar opções de filtro
   const filterOptions = React.useMemo(() => buildAudienciasFilterOptions(usuarios), [usuarios]);
+  const filterGroups = React.useMemo(() => buildAudienciasFilterGroups(usuarios), [usuarios]);
 
   // Converter IDs selecionados para filtros
   const handleFilterIdsChange = React.useCallback((newSelectedIds: string[]) => {
@@ -861,7 +852,7 @@ export default function AudienciasPage() {
       fim.setHours(23, 59, 59, 999);
       return { inicioSemana: inicio, fimSemana: fim };
     }
-    
+
     const date = new Date(semanaAtual);
     date.setHours(0, 0, 0, 0);
     const day = date.getDay();
@@ -904,38 +895,20 @@ export default function AudienciasPage() {
               setPagina(0);
             }}
             isSearching={isSearching}
-            searchPlaceholder="Buscar por número do processo, partes ou tipo de audiência..."
+            searchPlaceholder="Buscar audiências..."
             filterOptions={filterOptions}
+            filterGroups={filterGroups}
             selectedFilters={selectedFilterIds}
             onFiltersChange={handleFilterIdsChange}
-            // Audiências não tem botão de novo (usa tabs)
+          // Audiências não tem botão de novo (usa tabs)
           />
-          <Select
-            value={status}
-            onValueChange={(value) => {
-              setStatus(value as 'M' | 'F' | 'C' | 'todos');
-              setPagina(0); // Resetar para primeira página ao mudar status
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              {STATUS_AUDIENCIA_OPTIONS.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-              <SelectItem value="todos">Todos os Status</SelectItem>
-            </SelectContent>
-          </Select>
 
           {/* Tabs de visualização */}
           <TabsList>
-            <TabsTrigger value="tabela">Tabela</TabsTrigger>
             <TabsTrigger value="semana">Semana</TabsTrigger>
             <TabsTrigger value="mes">Mês</TabsTrigger>
             <TabsTrigger value="ano">Ano</TabsTrigger>
+            <TabsTrigger value="tabela">Lista</TabsTrigger>
           </TabsList>
 
           {/* Controles de navegação de semana (aparecem apenas na visualização de semana) */}
@@ -1007,12 +980,11 @@ export default function AudienciasPage() {
             </ButtonGroup>
           )}
 
-          {/* Botão atual na extremidade direita */}
+          {/* Botão atual */}
           {visualizacao === 'semana' && (
             <Button
               variant="outline"
               onClick={voltarSemanaAtual}
-              className="ml-auto"
             >
               Semana Atual
             </Button>
@@ -1021,7 +993,6 @@ export default function AudienciasPage() {
             <Button
               variant="outline"
               onClick={voltarMesAtual}
-              className="ml-auto"
             >
               Mês Atual
             </Button>
@@ -1030,7 +1001,6 @@ export default function AudienciasPage() {
             <Button
               variant="outline"
               onClick={voltarAnoAtual}
-              className="ml-auto"
             >
               Ano Atual
             </Button>
@@ -1045,13 +1015,13 @@ export default function AudienciasPage() {
             pagination={
               paginacao
                 ? {
-                    pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-                    pageSize: paginacao.limite,
-                    total: paginacao.total,
-                    totalPages: paginacao.totalPaginas,
-                    onPageChange: setPagina,
-                    onPageSizeChange: setLimite,
-                  }
+                  pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                  pageSize: paginacao.limite,
+                  total: paginacao.total,
+                  totalPages: paginacao.totalPaginas,
+                  onPageChange: setPagina,
+                  onPageSizeChange: setLimite,
+                }
                 : undefined
             }
             sorting={{

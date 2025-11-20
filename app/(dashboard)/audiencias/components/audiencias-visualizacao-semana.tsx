@@ -11,13 +11,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Copy, Pencil, Plus } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
@@ -478,8 +471,8 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       accessorKey: 'data_inicio',
       header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Hora</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Hora</div>
         </div>
       ),
       size: 80,
@@ -492,8 +485,8 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       id: 'processo',
       header: () => (
-        <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Processo</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Processo</div>
         </div>
       ),
       size: 250,
@@ -527,8 +520,8 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       id: 'partes',
       header: () => (
-        <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Partes</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Partes</div>
         </div>
       ),
       size: 250,
@@ -551,8 +544,8 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       id: 'tipo_local',
       header: () => (
-        <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Tipo/Local</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Tipo/Local</div>
         </div>
       ),
       size: 280,
@@ -581,8 +574,8 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       accessorKey: 'url_audiencia_virtual',
       header: () => (
-        <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Endereço</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Endereço</div>
         </div>
       ),
       enableSorting: false,
@@ -596,8 +589,8 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       accessorKey: 'observacoes',
       header: () => (
-        <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Observações</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Observações</div>
         </div>
       ),
       enableSorting: false,
@@ -611,8 +604,8 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       accessorKey: 'responsavel_id',
       header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Responsável</div>
+        <div className="flex items-center justify-center w-full">
+          <div className="text-sm font-medium text-center">Responsável</div>
         </div>
       ),
       size: 160,
@@ -669,17 +662,17 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading, semanaAtua
     // Normalizar início e fim da semana para comparação apenas por data
     const inicioNormalizado = new Date(inicioSemana);
     inicioNormalizado.setHours(0, 0, 0, 0);
-    
+
     const fimNormalizado = new Date(fimSemana);
     fimNormalizado.setHours(23, 59, 59, 999);
 
     audiencias.forEach((audiencia) => {
       const dataAudiencia = new Date(audiencia.data_inicio);
-      
+
       // Normalizar data da audiência para comparação apenas por dia
       const dataAudienciaNormalizada = new Date(dataAudiencia);
       dataAudienciaNormalizada.setHours(0, 0, 0, 0);
-      
+
       // Verificar se a audiência está dentro da semana atual (segunda a sexta)
       if (dataAudienciaNormalizada < inicioNormalizado || dataAudienciaNormalizada > fimNormalizado) {
         return; // Pular audiências fora da semana atual
@@ -737,49 +730,65 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading, semanaAtua
   };
 
   return (
-    <div className="space-y-4">
-      {/* Tabs de dias */}
-      <Tabs value={diaAtivo} onValueChange={setDiaAtivo}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="segunda">
-            <span className="text-xs">Segunda - {formatarDataTab(datasDiasSemana.segunda)}</span>
-          </TabsTrigger>
-          <TabsTrigger value="terca">
-            <span className="text-xs">Terça - {formatarDataTab(datasDiasSemana.terca)}</span>
-          </TabsTrigger>
-          <TabsTrigger value="quarta">
-            <span className="text-xs">Quarta - {formatarDataTab(datasDiasSemana.quarta)}</span>
-          </TabsTrigger>
-          <TabsTrigger value="quinta">
-            <span className="text-xs">Quinta - {formatarDataTab(datasDiasSemana.quinta)}</span>
-          </TabsTrigger>
-          <TabsTrigger value="sexta">
-            <span className="text-xs">Sexta - {formatarDataTab(datasDiasSemana.sexta)}</span>
-          </TabsTrigger>
-        </TabsList>
+    <Tabs value={diaAtivo} onValueChange={setDiaAtivo} className="gap-0">
+      <TabsList className="bg-background justify-start rounded-none border-b p-0 w-full">
+        <TabsTrigger
+          value="segunda"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Segunda - {formatarDataTab(datasDiasSemana.segunda)}</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="terca"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Terça - {formatarDataTab(datasDiasSemana.terca)}</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="quarta"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Quarta - {formatarDataTab(datasDiasSemana.quarta)}</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="quinta"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Quinta - {formatarDataTab(datasDiasSemana.quinta)}</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="sexta"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Sexta - {formatarDataTab(datasDiasSemana.sexta)}</span>
+        </TabsTrigger>
+      </TabsList>
 
-        {Object.entries(audienciasPorDia).map(([dia, audienciasDia]) => {
-          const dataDia = datasDiasSemana[dia];
-          const nomeDiaCompleto = {
-            segunda: 'Segunda-feira',
-            terca: 'Terça-feira',
-            quarta: 'Quarta-feira',
-            quinta: 'Quinta-feira',
-            sexta: 'Sexta-feira',
-          }[dia];
-          
-          return (
-            <TabsContent key={dia} value={dia}>
+      {Object.entries(audienciasPorDia).map(([dia, audienciasDia]) => {
+        const dataDia = datasDiasSemana[dia];
+        const nomeDiaCompleto = {
+          segunda: 'Segunda-feira',
+          terca: 'Terça-feira',
+          quarta: 'Quarta-feira',
+          quinta: 'Quinta-feira',
+          sexta: 'Sexta-feira',
+        }[dia];
+
+        return (
+          <TabsContent key={dia} value={dia} className="mt-0">
+            <div className="rounded-b-lg border border-t-0 bg-card text-card-foreground shadow-sm">
               <DataTable
                 data={audienciasDia}
                 columns={colunas}
                 isLoading={isLoading}
                 emptyMessage={`Nenhuma audiência agendada para ${nomeDiaCompleto}, ${formatarDataCompleta(dataDia)}.`}
+                hideTableBorder={true}
+                hideColumnBorders={true}
               />
-            </TabsContent>
-          );
-        })}
-      </Tabs>
-    </div>
+            </div>
+          </TabsContent>
+        );
+      })}
+    </Tabs>
   );
 }

@@ -1,4 +1,5 @@
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
+import type { FilterGroup } from '@/components/ui/table-toolbar';
 import type { AudienciasFilters } from '@/lib/types/audiencias';
 import type { Usuario } from '@/lib/types/usuarios';
 
@@ -90,6 +91,84 @@ export function buildAudienciasFilterOptions(usuarios?: Usuario[]): ComboboxOpti
   }
 
   return options;
+}
+
+export function buildAudienciasFilterGroups(usuarios?: Usuario[]): FilterGroup[] {
+  const configMap = new Map(AUDIENCIAS_FILTER_CONFIGS.map(c => [c.id, c]));
+
+  // Helper para construir opções sem prefixo do grupo
+  const buildOptionsWithoutPrefix = (configs: FilterConfig[], usuariosList?: Usuario[]): ComboboxOption[] => {
+    const options: ComboboxOption[] = [];
+    
+    for (const config of configs) {
+      if (config.type === 'select') {
+        if (config.id === 'responsavel_id' && usuariosList) {
+          // Build options for Responsável sem prefixo
+          const responsavelOptions: ComboboxOption[] = [
+            { value: 'null', label: 'Sem responsável' },
+            ...usuariosList.map(u => ({ value: u.id.toString(), label: u.nomeExibicao })),
+          ];
+          for (const opt of responsavelOptions) {
+            options.push({
+              value: `${config.id}_${opt.value}`,
+              label: opt.label, // Sem prefixo
+              searchText: config.searchText || opt.searchText,
+            });
+          }
+        } else if (config.options) {
+          for (const opt of config.options) {
+            options.push({
+              value: `${config.id}_${opt.value}`,
+              label: opt.label, // Apenas o label da opção, sem prefixo
+              searchText: config.searchText || opt.searchText,
+            });
+          }
+        }
+      } else if (config.type === 'boolean') {
+        options.push({
+          value: config.id,
+          label: config.label,
+          searchText: config.searchText,
+        });
+      }
+    }
+    
+    return options;
+  };
+
+  return [
+    {
+      label: 'Tribunal',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('trt')!,
+      ]),
+    },
+    {
+      label: 'Grau',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('grau')!,
+      ]),
+    },
+    {
+      label: 'Status',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('status')!,
+      ]),
+    },
+    {
+      label: 'Responsável',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('responsavel_id')!,
+      ], usuarios),
+    },
+    {
+      label: 'Características',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('tipo_is_virtual')!,
+        configMap.get('sem_responsavel')!,
+      ]),
+    },
+  ];
 }
 
 export function parseAudienciasFilters(selectedFilters: string[]): AudienciasFilters {

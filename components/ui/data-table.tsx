@@ -35,7 +35,7 @@ export interface DataTableProps<TData> {
   // Dados
   data: TData[];
   columns: ColumnDef<TData>[];
-  
+
   // Paginação server-side
   pagination?: {
     pageIndex: number;
@@ -45,22 +45,24 @@ export interface DataTableProps<TData> {
     onPageChange: (pageIndex: number) => void;
     onPageSizeChange: (pageSize: number) => void;
   };
-  
+
   // Ordenação server-side
   sorting?: {
     columnId: string | null;
     direction: 'asc' | 'desc' | null;
     onSortingChange: (columnId: string | null, direction: 'asc' | 'desc' | null) => void;
   };
-  
+
   // Estados
   isLoading?: boolean;
   error?: string | null;
-  
+
   // Configurações opcionais
   onRowClick?: (row: TData) => void;
   emptyMessage?: string;
   className?: string;
+  hideTableBorder?: boolean;
+  hideColumnBorders?: boolean;
 }
 
 export function DataTable<TData>({
@@ -73,6 +75,8 @@ export function DataTable<TData>({
   onRowClick,
   emptyMessage = 'Nenhum resultado encontrado.',
   className,
+  hideTableBorder = false,
+  hideColumnBorders = false,
 }: DataTableProps<TData>) {
   // Estado interno de ordenação (para UI)
   const [internalSorting, setInternalSorting] = React.useState<SortingState>([]);
@@ -119,7 +123,7 @@ export function DataTable<TData>({
     onSortingChange: (updater) => {
       const newSorting = typeof updater === 'function' ? updater(internalSorting) : updater;
       setInternalSorting(newSorting);
-      
+
       if (sorting && newSorting.length > 0) {
         const sort = newSorting[0];
         sorting.onSortingChange(sort.id, sort.desc ? 'desc' : 'asc');
@@ -144,20 +148,22 @@ export function DataTable<TData>({
   return (
     <div className={cn('space-y-4', className)}>
       {/* Tabela */}
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+      <div className={cn(
+        hideTableBorder ? '' : 'rounded-lg border bg-card text-card-foreground shadow-sm'
+      )}>
         <div className="relative w-full overflow-auto">
           {isLoading && (
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
             </div>
           )}
-          
+
           {error && (
             <div className="p-4 text-center text-sm text-destructive">
               {error}
             </div>
           )}
-          
+
           {!error && (
             <Table>
               <TableHeader>
@@ -169,9 +175,9 @@ export function DataTable<TData>({
                       const align = (header.column.columnDef.meta as { align?: 'left' | 'center' | 'right' })?.align || 'center';
                       const alignClass = align === 'left' ? 'text-left' : align === 'right' ? 'text-right' : 'text-center';
                       return (
-                        <TableHead 
-                          key={header.id} 
-                          className={`${alignClass} ${index < headerGroup.headers.length - 1 ? 'border-r border-border' : ''}`}
+                        <TableHead
+                          key={header.id}
+                          className={`${alignClass} ${!hideColumnBorders && index < headerGroup.headers.length - 1 ? 'border-r border-border' : ''}`}
                           style={maxWidth ? { maxWidth, width: maxWidth } : undefined}
                         >
                           {header.isPlaceholder
@@ -201,8 +207,8 @@ export function DataTable<TData>({
                         const align = (cell.column.columnDef.meta as { align?: 'left' | 'center' | 'right' })?.align || 'center';
                         const alignClass = align === 'left' ? 'text-left' : align === 'right' ? 'text-right' : 'text-center';
                         return (
-                          <TableCell 
-                            key={cell.id} 
+                          <TableCell
+                            key={cell.id}
                             className={`${alignClass} ${index < row.getVisibleCells().length - 1 ? 'border-r border-border' : ''}`}
                             style={maxWidth ? { maxWidth, width: maxWidth } : undefined}
                           >
@@ -257,7 +263,7 @@ export function DataTable<TData>({
               </SelectContent>
             </Select>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
