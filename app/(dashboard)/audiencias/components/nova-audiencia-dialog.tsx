@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
 import {
   Dialog,
   DialogContent,
@@ -23,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { Loader2 } from 'lucide-react';
 
 interface NovaAudienciaDialogProps {
@@ -31,23 +31,81 @@ interface NovaAudienciaDialogProps {
   onSuccess: () => void;
 }
 
+interface Processo {
+  id: number;
+  numero_processo: string;
+  polo_ativo_nome: string;
+  polo_passivo_nome: string;
+  trt: string;
+  grau: string;
+  orgao_julgador_id: number;
+}
+
+interface TipoAudiencia {
+  id: number;
+  descricao: string;
+  is_virtual: boolean;
+}
+
+interface SalaAudiencia {
+  id: number;
+  nome: string;
+}
+
+interface Usuario {
+  id: number;
+  nome_exibicao: string;
+  email_corporativo: string;
+}
+
 export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudienciaDialogProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-  const [processos, setProcessos] = React.useState<Array<{ id: number; numero_processo: string }>>([]);
+
+  // Estados de dados
+  const [processos, setProcessos] = React.useState<Processo[]>([]);
+  const [tiposAudiencia, setTiposAudiencia] = React.useState<TipoAudiencia[]>([]);
+  const [salas, setSalas] = React.useState<SalaAudiencia[]>([]);
+  const [usuarios, setUsuarios] = React.useState<Usuario[]>([]);
+
+  // Estados de loading
   const [loadingProcessos, setLoadingProcessos] = React.useState(false);
+  const [loadingTipos, setLoadingTipos] = React.useState(false);
+  const [loadingSalas, setLoadingSalas] = React.useState(false);
+  const [loadingUsuarios, setLoadingUsuarios] = React.useState(false);
 
   // Form state
-  const [processoId, setProcessoId] = React.useState<number | null>(null);
+  const [processoId, setProcessoId] = React.useState<string[]>([]);
   const [dataInicio, setDataInicio] = React.useState('');
   const [horaInicio, setHoraInicio] = React.useState('');
   const [dataFim, setDataFim] = React.useState('');
   const [horaFim, setHoraFim] = React.useState('');
-  const [tipoDescricao, setTipoDescricao] = React.useState('');
-  const [tipoIsVirtual, setTipoIsVirtual] = React.useState(false);
-  const [salaNome, setSalaNome] = React.useState('');
+  const [tipoAudienciaId, setTipoAudienciaId] = React.useState<string>('');
+  const [salaAudienciaId, setSalaAudienciaId] = React.useState<string>('');
   const [urlVirtual, setUrlVirtual] = React.useState('');
+  const [responsavelId, setResponsavelId] = React.useState<string>('');
   const [observacoes, setObservacoes] = React.useState('');
+
+  // Campos de endereço presencial
+  const [logradouro, setLogradouro] = React.useState('');
+  const [numero, setNumero] = React.useState('');
+  const [complemento, setComplemento] = React.useState('');
+  const [bairro, setBairro] = React.useState('');
+  const [cidade, setCidade] = React.useState('');
+  const [estado, setEstado] = React.useState('');
+  const [cep, setCep] = React.useState('');
+
+  // Processo selecionado
+  const processoSelecionado = React.useMemo(() => {
+    if (processoId.length === 0) return null;
+    return processos.find((p) => p.id.toString() === processoId[0]) || null;
+  }, [processoId, processos]);
+
+  // Tipo selecionado
+  const tipoSelecionado = React.useMemo(() => {
+    if (!tipoAudienciaId) return null;
+    return tiposAudiencia.find((t) => t.id.toString() === tipoAudienciaId) || null;
+  }, [tipoAudienciaId, tiposAudiencia]);
 
   // Buscar processos quando o dialog abrir
   React.useEffect(() => {
@@ -56,18 +114,42 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     }
   }, [open]);
 
+  // Buscar usuários quando o dialog abrir
+  React.useEffect(() => {
+    if (open && usuarios.length === 0) {
+      buscarUsuarios();
+    }
+  }, [open]);
+
+  // Buscar tipos de audiência quando processo for selecionado
+  React.useEffect(() => {
+    if (processoSelecionado) {
+      buscarTiposAudiencia(processoSelecionado.trt, processoSelecionado.grau);
+    } else {
+      setTiposAudiencia([]);
+      setTipoAudienciaId('');
+    }
+  }, [processoSelecionado]);
+
+  // Buscar salas quando processo for selecionado
+  React.useEffect(() => {
+    if (processoSelecionado) {
+      buscarSalas(processoSelecionado.trt, processoSelecionado.grau, processoSelecionado.orgao_julgador_id);
+    } else {
+      setSalas([]);
+      setSalaAudienciaId('');
+    }
+  }, [processoSelecionado]);
+
   const buscarProcessos = async () => {
     setLoadingProcessos(true);
     try {
-      const response = await fetch('/api/acervo?limite=100&ordenar_por=numero_processo&ordem=asc');
+      const response = await fetch('/api/acervo?limite=1000&ordenar_por=numero_processo&ordem=asc');
       if (!response.ok) throw new Error('Erro ao buscar processos');
 
       const data = await response.json();
-      if (data.success && data.data?.acervo) {
-        setProcessos(data.data.acervo.map((p: any) => ({
-          id: p.id,
-          numero_processo: p.numero_processo,
-        })));
+      if (data.success && data.data?.processos) {
+        setProcessos(data.data.processos);
       }
     } catch (err) {
       console.error('Erro ao buscar processos:', err);
@@ -77,12 +159,66 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     }
   };
 
+  const buscarTiposAudiencia = async (trt: string, grau: string) => {
+    setLoadingTipos(true);
+    try {
+      const response = await fetch(`/api/audiencias/tipos?trt=${trt}&grau=${grau}`);
+      if (!response.ok) throw new Error('Erro ao buscar tipos de audiência');
+
+      const data = await response.json();
+      if (data.success && data.data) {
+        setTiposAudiencia(data.data);
+      }
+    } catch (err) {
+      console.error('Erro ao buscar tipos de audiência:', err);
+      setError('Erro ao carregar tipos de audiência');
+    } finally {
+      setLoadingTipos(false);
+    }
+  };
+
+  const buscarSalas = async (trt: string, grau: string, orgaoJulgadorId: number) => {
+    setLoadingSalas(true);
+    try {
+      const response = await fetch(`/api/audiencias/salas?trt=${trt}&grau=${grau}&orgao_julgador_id=${orgaoJulgadorId}`);
+      if (!response.ok) throw new Error('Erro ao buscar salas de audiência');
+
+      const data = await response.json();
+      if (data.success && data.data) {
+        setSalas(data.data);
+      }
+    } catch (err) {
+      console.error('Erro ao buscar salas de audiência:', err);
+      setError('Erro ao carregar salas de audiência');
+    } finally {
+      setLoadingSalas(false);
+    }
+  };
+
+  const buscarUsuarios = async () => {
+    setLoadingUsuarios(true);
+    try {
+      const response = await fetch('/api/usuarios?ativo=true&limite=1000');
+      if (!response.ok) throw new Error('Erro ao buscar usuários');
+
+      const data = await response.json();
+      if (data.success && data.data?.usuarios) {
+        setUsuarios(data.data.usuarios);
+      }
+    } catch (err) {
+      console.error('Erro ao buscar usuários:', err);
+      setError('Erro ao carregar usuários');
+    } finally {
+      setLoadingUsuarios(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
     // Validações
-    if (!processoId) {
+    if (processoId.length === 0) {
       setError('Selecione um processo');
       return;
     }
@@ -101,6 +237,22 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     const dataInicioISO = `${dataInicio}T${horaInicio}:00.000Z`;
     const dataFimISO = `${dataFim}T${horaFim}:00.000Z`;
 
+    // Montar endereço presencial se aplicável
+    let enderecoPresencial = null;
+    if (tipoSelecionado && !tipoSelecionado.is_virtual) {
+      if (logradouro || numero || complemento || bairro || cidade || estado || cep) {
+        enderecoPresencial = {
+          logradouro: logradouro || undefined,
+          numero: numero || undefined,
+          complemento: complemento || undefined,
+          bairro: bairro || undefined,
+          cidade: cidade || undefined,
+          estado: estado || undefined,
+          cep: cep || undefined,
+        };
+      }
+    }
+
     setIsLoading(true);
 
     try {
@@ -110,15 +262,16 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          processo_id: processoId,
+          processo_id: parseInt(processoId[0]),
           advogado_id: 1,
           data_inicio: dataInicioISO,
           data_fim: dataFimISO,
-          tipo_descricao: tipoDescricao || undefined,
-          tipo_is_virtual: tipoIsVirtual,
-          sala_audiencia_nome: salaNome || undefined,
+          tipo_audiencia_id: tipoAudienciaId ? parseInt(tipoAudienciaId) : undefined,
+          sala_audiencia_id: salaAudienciaId ? parseInt(salaAudienciaId) : undefined,
           url_audiencia_virtual: urlVirtual || undefined,
+          endereco_presencial: enderecoPresencial,
           observacoes: observacoes || undefined,
+          responsavel_id: responsavelId ? parseInt(responsavelId) : undefined,
         }),
       });
 
@@ -141,16 +294,23 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   };
 
   const resetForm = () => {
-    setProcessoId(null);
+    setProcessoId([]);
     setDataInicio('');
     setHoraInicio('');
     setDataFim('');
     setHoraFim('');
-    setTipoDescricao('');
-    setTipoIsVirtual(false);
-    setSalaNome('');
+    setTipoAudienciaId('');
+    setSalaAudienciaId('');
     setUrlVirtual('');
+    setResponsavelId('');
     setObservacoes('');
+    setLogradouro('');
+    setNumero('');
+    setComplemento('');
+    setBairro('');
+    setCidade('');
+    setEstado('');
+    setCep('');
     setError(null);
   };
 
@@ -159,9 +319,18 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     onOpenChange(false);
   };
 
+  // Opções para o combobox de processos
+  const processosOptions: ComboboxOption[] = React.useMemo(() => {
+    return processos.map((p) => ({
+      value: p.id.toString(),
+      label: `${p.numero_processo} - ${p.polo_ativo_nome} vs ${p.polo_passivo_nome}`,
+      searchText: `${p.numero_processo} ${p.polo_ativo_nome} ${p.polo_passivo_nome}`,
+    }));
+  }, [processos]);
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Nova Audiência</DialogTitle>
           <DialogDescription>
@@ -176,25 +345,25 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             </div>
           )}
 
-          {/* Processo */}
+          {/* Processo - Combobox com busca */}
           <div className="space-y-2">
             <Label htmlFor="processo">Processo *</Label>
-            <Select
-              value={processoId?.toString()}
-              onValueChange={(value) => setProcessoId(parseInt(value))}
-              disabled={loadingProcessos}
-            >
-              <SelectTrigger id="processo">
-                <SelectValue placeholder={loadingProcessos ? 'Carregando...' : 'Selecione um processo'} />
-              </SelectTrigger>
-              <SelectContent>
-                {processos.map((processo) => (
-                  <SelectItem key={processo.id} value={processo.id.toString()}>
-                    {processo.numero_processo}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {loadingProcessos ? (
+              <div className="flex items-center gap-2 p-2 border rounded-md">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm text-muted-foreground">Carregando processos...</span>
+              </div>
+            ) : (
+              <Combobox
+                options={processosOptions}
+                value={processoId}
+                onValueChange={setProcessoId}
+                placeholder="Buscar por número ou nome das partes..."
+                searchPlaceholder="Buscar processo..."
+                emptyText="Nenhum processo encontrado."
+                multiple={false}
+              />
+            )}
           </div>
 
           {/* Data e Hora de Início */}
@@ -247,50 +416,185 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
 
           {/* Tipo de Audiência */}
           <div className="space-y-2">
-            <Label htmlFor="tipoDescricao">Tipo de Audiência</Label>
-            <Input
-              id="tipoDescricao"
-              placeholder="Ex: Una, Instrução, Conciliação"
-              value={tipoDescricao}
-              onChange={(e) => setTipoDescricao(e.target.value)}
-            />
+            <Label htmlFor="tipo">Tipo de Audiência</Label>
+            {loadingTipos ? (
+              <div className="flex items-center gap-2 p-2 border rounded-md">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm text-muted-foreground">Carregando tipos...</span>
+              </div>
+            ) : !processoSelecionado ? (
+              <Select disabled>
+                <SelectTrigger id="tipo">
+                  <SelectValue placeholder="Selecione um processo primeiro" />
+                </SelectTrigger>
+              </Select>
+            ) : (
+              <Select value={tipoAudienciaId} onValueChange={setTipoAudienciaId}>
+                <SelectTrigger id="tipo">
+                  <SelectValue placeholder="Selecione o tipo de audiência" />
+                </SelectTrigger>
+                <SelectContent>
+                  {tiposAudiencia.map((tipo) => (
+                    <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                      {tipo.descricao} {tipo.is_virtual && '(Virtual)'}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
 
-          {/* Audiência Virtual */}
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="virtual"
-              checked={tipoIsVirtual}
-              onCheckedChange={setTipoIsVirtual}
-            />
-            <Label htmlFor="virtual" className="cursor-pointer">
-              Audiência Virtual
-            </Label>
+          {/* Sala de Audiência */}
+          <div className="space-y-2">
+            <Label htmlFor="sala">Sala de Audiência</Label>
+            {loadingSalas ? (
+              <div className="flex items-center gap-2 p-2 border rounded-md">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm text-muted-foreground">Carregando salas...</span>
+              </div>
+            ) : !processoSelecionado ? (
+              <Select disabled>
+                <SelectTrigger id="sala">
+                  <SelectValue placeholder="Selecione um processo primeiro" />
+                </SelectTrigger>
+              </Select>
+            ) : (
+              <Select value={salaAudienciaId} onValueChange={setSalaAudienciaId}>
+                <SelectTrigger id="sala">
+                  <SelectValue placeholder="Selecione a sala de audiência" />
+                </SelectTrigger>
+                <SelectContent>
+                  {salas.map((sala) => (
+                    <SelectItem key={sala.id} value={sala.id.toString()}>
+                      {sala.nome}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
 
-          {/* Sala ou URL */}
-          {tipoIsVirtual ? (
-            <div className="space-y-2">
-              <Label htmlFor="urlVirtual">URL da Audiência Virtual</Label>
-              <Input
-                id="urlVirtual"
-                type="url"
-                placeholder="https://zoom.us/..."
-                value={urlVirtual}
-                onChange={(e) => setUrlVirtual(e.target.value)}
-              />
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <Label htmlFor="sala">Sala de Audiência</Label>
-              <Input
-                id="sala"
-                placeholder="Ex: Sala 101"
-                value={salaNome}
-                onChange={(e) => setSalaNome(e.target.value)}
-              />
-            </div>
+          {/* Condicional: Virtual ou Presencial */}
+          {tipoSelecionado && (
+            <>
+              {tipoSelecionado.is_virtual ? (
+                // Audiência Virtual - Campo URL
+                <div className="space-y-2">
+                  <Label htmlFor="urlVirtual">URL da Audiência Virtual</Label>
+                  <Input
+                    id="urlVirtual"
+                    type="url"
+                    placeholder="https://zoom.us/..."
+                    value={urlVirtual}
+                    onChange={(e) => setUrlVirtual(e.target.value)}
+                  />
+                </div>
+              ) : (
+                // Audiência Presencial - Campos de Endereço
+                <>
+                  <div className="space-y-2">
+                    <Label className="text-base font-semibold">Endereço da Audiência Presencial</Label>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="col-span-2 space-y-2">
+                      <Label htmlFor="logradouro">Logradouro</Label>
+                      <Input
+                        id="logradouro"
+                        placeholder="Rua, Avenida, etc."
+                        value={logradouro}
+                        onChange={(e) => setLogradouro(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="numero">Número</Label>
+                      <Input
+                        id="numero"
+                        placeholder="123"
+                        value={numero}
+                        onChange={(e) => setNumero(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="complemento">Complemento</Label>
+                      <Input
+                        id="complemento"
+                        placeholder="Sala, Bloco, etc."
+                        value={complemento}
+                        onChange={(e) => setComplemento(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="bairro">Bairro</Label>
+                      <Input
+                        id="bairro"
+                        value={bairro}
+                        onChange={(e) => setBairro(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="col-span-2 space-y-2">
+                      <Label htmlFor="cidade">Cidade</Label>
+                      <Input
+                        id="cidade"
+                        value={cidade}
+                        onChange={(e) => setCidade(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="estado">Estado</Label>
+                      <Input
+                        id="estado"
+                        placeholder="UF"
+                        maxLength={2}
+                        value={estado}
+                        onChange={(e) => setEstado(e.target.value.toUpperCase())}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="cep">CEP</Label>
+                    <Input
+                      id="cep"
+                      placeholder="00000-000"
+                      value={cep}
+                      onChange={(e) => setCep(e.target.value)}
+                    />
+                  </div>
+                </>
+              )}
+            </>
           )}
+
+          {/* Responsável */}
+          <div className="space-y-2">
+            <Label htmlFor="responsavel">Responsável (opcional)</Label>
+            {loadingUsuarios ? (
+              <div className="flex items-center gap-2 p-2 border rounded-md">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm text-muted-foreground">Carregando usuários...</span>
+              </div>
+            ) : (
+              <Select value={responsavelId} onValueChange={setResponsavelId}>
+                <SelectTrigger id="responsavel">
+                  <SelectValue placeholder="Selecione um responsável" />
+                </SelectTrigger>
+                <SelectContent>
+                  {usuarios.map((usuario) => (
+                    <SelectItem key={usuario.id} value={usuario.id.toString()}>
+                      {usuario.nome_exibicao} ({usuario.email_corporativo})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
 
           {/* Observações */}
           <div className="space-y-2">
