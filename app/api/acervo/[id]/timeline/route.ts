@@ -63,7 +63,7 @@ import { obterTimelinePorMongoId } from '@/backend/captura/services/timeline/tim
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // 1. Autenticar requisição
@@ -75,7 +75,8 @@ export async function GET(
       );
     }
 
-    const acervoId = parseInt(params.id);
+    const { id } = await params;
+    const acervoId = parseInt(id);
 
     if (isNaN(acervoId)) {
       return NextResponse.json(

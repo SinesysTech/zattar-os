@@ -731,7 +731,7 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading, semanaAtua
 
   return (
     <Tabs value={diaAtivo} onValueChange={setDiaAtivo} className="gap-0">
-      <TabsList className="bg-background justify-start rounded-none border-b p-0 w-full">
+      <TabsList className="bg-background justify-start rounded-t-lg rounded-b-none border-b p-0 w-full">
         <TabsTrigger
           value="segunda"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"

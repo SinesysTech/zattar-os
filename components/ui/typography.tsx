@@ -18,7 +18,8 @@ type PolymorphicComponentProp<
 function createTypographyComponent<T extends React.ElementType>(
   defaultElement: T,
   className: string,
-  displayName: string
+  displayName: string,
+  additionalProps?: Record<string, any>
 ) {
   type TypographyProps<C extends React.ElementType = T> = PolymorphicComponentProp<
     C,
@@ -37,6 +38,7 @@ function createTypographyComponent<T extends React.ElementType>(
       <Element
         ref={ref}
         className={cn(className, userClassName)}
+        {...additionalProps}
         {...(props as any)}
       >
         {children}
@@ -59,7 +61,7 @@ const Blockquote = createTypographyComponent(
   'typography-blockquote',
   'Typography.Blockquote'
 );
-const List = createTypographyComponent('ul', 'typography-list', 'Typography.List');
+const List = createTypographyComponent('ul', 'typography-list', 'Typography.List', { role: 'list' });
 const InlineCode = createTypographyComponent(
   'code',
   'typography-inline-code',

@@ -18,6 +18,7 @@ import { Calendar, CalendarDays, CalendarRange, ChevronLeft, ChevronRight, Copy,
 import { AudienciasVisualizacaoSemana } from './components/audiencias-visualizacao-semana';
 import { AudienciasVisualizacaoMes } from './components/audiencias-visualizacao-mes';
 import { AudienciasVisualizacaoAno } from './components/audiencias-visualizacao-ano';
+import { NovaAudienciaDialog } from './components/nova-audiencia-dialog';
 import { useAudiencias } from '@/lib/hooks/use-audiencias';
 import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -711,6 +712,7 @@ export default function AudienciasPage() {
   const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
   const [filtros, setFiltros] = React.useState<AudienciasFilters>({});
   const [visualizacao, setVisualizacao] = React.useState<'tabela' | 'semana' | 'mes' | 'ano'>('semana');
+  const [novaAudienciaOpen, setNovaAudienciaOpen] = React.useState(false);
 
   // Usar null como valor inicial para evitar hydration mismatch
   // O valor real será definido no useEffect apenas no cliente
@@ -901,83 +903,25 @@ export default function AudienciasPage() {
             filterGroups={filterGroups}
             selectedFilters={selectedFilterIds}
             onFiltersChange={handleFilterIdsChange}
-          // Audiências não tem botão de novo (usa tabs)
+            onNewClick={() => setNovaAudienciaOpen(true)}
+            newButtonTooltip="Nova audiência"
           />
 
           {/* Tabs de visualização */}
-          <ButtonGroup>
-            {/* Tab Semana */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setVisualizacao('semana')}
-                    aria-label="Visualização Semanal"
-                    className={visualizacao === 'semana' ? 'bg-accent' : ''}
-                  >
-                    <CalendarDays className="h-4 w-4" />
-                  </Button>
-                </span>
-              </TooltipTrigger>
-              <TooltipContent className="px-2 py-1 text-xs">Semana</TooltipContent>
-            </Tooltip>
-
-            {/* Tab Mês */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setVisualizacao('mes')}
-                    aria-label="Visualização Mensal"
-                    className={visualizacao === 'mes' ? 'bg-accent' : ''}
-                  >
-                    <Calendar className="h-4 w-4" />
-                  </Button>
-                </span>
-              </TooltipTrigger>
-              <TooltipContent className="px-2 py-1 text-xs">Mês</TooltipContent>
-            </Tooltip>
-
-            {/* Tab Ano */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setVisualizacao('ano')}
-                    aria-label="Visualização Anual"
-                    className={visualizacao === 'ano' ? 'bg-accent' : ''}
-                  >
-                    <CalendarRange className="h-4 w-4" />
-                  </Button>
-                </span>
-              </TooltipTrigger>
-              <TooltipContent className="px-2 py-1 text-xs">Ano</TooltipContent>
-            </Tooltip>
-
-            {/* Tab Lista */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setVisualizacao('tabela')}
-                    aria-label="Visualização em Lista"
-                    className={visualizacao === 'tabela' ? 'bg-accent' : ''}
-                  >
-                    <List className="h-4 w-4" />
-                  </Button>
-                </span>
-              </TooltipTrigger>
-              <TooltipContent className="px-2 py-1 text-xs">Lista</TooltipContent>
-            </Tooltip>
-          </ButtonGroup>
+          <TabsList>
+            <TabsTrigger value="semana" aria-label="Visualização Semanal">
+              <CalendarRange className="h-4 w-4" />
+            </TabsTrigger>
+            <TabsTrigger value="mes" aria-label="Visualização Mensal">
+              <Calendar className="h-4 w-4" />
+            </TabsTrigger>
+            <TabsTrigger value="ano" aria-label="Visualização Anual">
+              <CalendarDays className="h-4 w-4" />
+            </TabsTrigger>
+            <TabsTrigger value="tabela" aria-label="Visualização em Lista">
+              <List className="h-4 w-4" />
+            </TabsTrigger>
+          </TabsList>
 
           {/* Controles de navegação e rollback - aparecem apenas quando não é visualização de lista */}
           {visualizacao !== 'tabela' && (
@@ -996,7 +940,7 @@ export default function AudienciasPage() {
               </Button>
 
               {/* Indicador de período atual */}
-              <ButtonGroupText className="whitespace-nowrap capitalize min-w-40 text-center">
+              <ButtonGroupText className="whitespace-nowrap capitalize min-w-40 text-center text-sm font-normal">
                 {visualizacao === 'semana' && `${formatarDataCabecalho(inicioSemana)} - ${formatarDataCabecalho(fimSemana)}`}
                 {visualizacao === 'mes' && formatarMesAno(mesAtual)}
                 {visualizacao === 'ano' && (anoAtual ?? '...')}
@@ -1018,20 +962,19 @@ export default function AudienciasPage() {
               {/* Botão Rollback (Voltar para atual) */}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <span>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => {
-                        if (visualizacao === 'semana') voltarSemanaAtual();
-                        if (visualizacao === 'mes') voltarMesAtual();
-                        if (visualizacao === 'ano') voltarAnoAtual();
-                      }}
-                      aria-label="Voltar para período atual"
-                    >
-                      <RotateCcw className="h-4 w-4" />
-                    </Button>
-                  </span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      if (visualizacao === 'semana') voltarSemanaAtual();
+                      if (visualizacao === 'mes') voltarMesAtual();
+                      if (visualizacao === 'ano') voltarAnoAtual();
+                    }}
+                    aria-label="Voltar para período atual"
+                    className="bg-muted hover:bg-muted/80"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent className="px-2 py-1 text-xs">
                   {visualizacao === 'semana' && 'Semana Atual'}
@@ -1103,6 +1046,13 @@ export default function AudienciasPage() {
           )}
         </TabsContent>
       </div>
+
+      {/* Dialog para criar nova audiência */}
+      <NovaAudienciaDialog
+        open={novaAudienciaOpen}
+        onOpenChange={setNovaAudienciaOpen}
+        onSuccess={handleSuccess}
+      />
     </Tabs>
   );
 }

@@ -4,7 +4,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { obterAudiencias } from '@/backend/audiencias/services/listar-audiencias.service';
-import type { ListarAudienciasParams } from '@/backend/types/audiencias/types';
+import { criarAudiencia } from '@/backend/audiencias/services/criar-audiencia.service';
+import type { ListarAudienciasParams, CriarAudienciaParams } from '@/backend/types/audiencias/types';
 
 /**
  * Helper para parsear booleanos de query params
@@ -299,6 +300,190 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Erro ao listar audiências:', error);
+    const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
+    return NextResponse.json({ error: erroMsg }, { status: 500 });
+  }
+}
+
+/**
+ * @swagger
+ * /api/audiencias:
+ *   post:
+ *     summary: Cria nova audiência
+ *     description: |
+ *       Cria uma nova audiência manualmente no sistema.
+ *       As audiências manuais terão id_pje = 0 para diferenciá-las das capturadas do PJE.
+ *     tags:
+ *       - Audiências
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *       - serviceApiKey: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - processo_id
+ *               - advogado_id
+ *               - data_inicio
+ *               - data_fim
+ *             properties:
+ *               processo_id:
+ *                 type: number
+ *                 description: ID do processo na tabela acervo
+ *               advogado_id:
+ *                 type: number
+ *                 description: ID do advogado responsável pela captura
+ *               data_inicio:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Data e hora de início da audiência (ISO 8601)
+ *               data_fim:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Data e hora de fim da audiência (ISO 8601)
+ *               tipo_descricao:
+ *                 type: string
+ *                 description: Tipo da audiência (ex "Una", "Instrução")
+ *               tipo_is_virtual:
+ *                 type: boolean
+ *                 description: Se a audiência é virtual
+ *               sala_audiencia_nome:
+ *                 type: string
+ *                 description: Nome da sala de audiência
+ *               url_audiencia_virtual:
+ *                 type: string
+ *                 description: URL da audiência virtual (Zoom, Meet, etc)
+ *               observacoes:
+ *                 type: string
+ *                 description: Observações sobre a audiência
+ *               responsavel_id:
+ *                 type: number
+ *                 description: ID do usuário responsável pela audiência
+ *     responses:
+ *       201:
+ *         description: Audiência criada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: number
+ *                       description: ID da audiência criada
+ *       400:
+ *         description: Dados inválidos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Não autenticado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+export async function POST(request: NextRequest) {
+  try {
+    // 1. Autenticação
+    const authResult = await authenticateRequest(request);
+    if (!authResult.authenticated) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // 2. Parsear body
+    const body = await request.json();
+
+    // 3. Validar campos obrigatórios
+    if (!body.processo_id || typeof body.processo_id !== 'number') {
+      return NextResponse.json(
+        { error: 'Campo processo_id é obrigatório e deve ser um número' },
+        { status: 400 }
+      );
+    }
+
+    if (!body.advogado_id || typeof body.advogado_id !== 'number') {
+      return NextResponse.json(
+        { error: 'Campo advogado_id é obrigatório e deve ser um número' },
+        { status: 400 }
+      );
+    }
+
+    if (!body.data_inicio || typeof body.data_inicio !== 'string') {
+      return NextResponse.json(
+        { error: 'Campo data_inicio é obrigatório e deve ser uma string ISO 8601' },
+        { status: 400 }
+      );
+    }
+
+    if (!body.data_fim || typeof body.data_fim !== 'string') {
+      return NextResponse.json(
+        { error: 'Campo data_fim é obrigatório e deve ser uma string ISO 8601' },
+        { status: 400 }
+      );
+    }
+
+    // 4. Validar datas
+    const dataInicio = new Date(body.data_inicio);
+    const dataFim = new Date(body.data_fim);
+
+    if (isNaN(dataInicio.getTime()) || isNaN(dataFim.getTime())) {
+      return NextResponse.json(
+        { error: 'Datas inválidas. Use formato ISO 8601' },
+        { status: 400 }
+      );
+    }
+
+    if (dataFim <= dataInicio) {
+      return NextResponse.json(
+        { error: 'data_fim deve ser posterior a data_inicio' },
+        { status: 400 }
+      );
+    }
+
+    // 5. Preparar parâmetros
+    const params: CriarAudienciaParams = {
+      processo_id: body.processo_id,
+      advogado_id: body.advogado_id,
+      data_inicio: body.data_inicio,
+      data_fim: body.data_fim,
+      tipo_descricao: body.tipo_descricao,
+      tipo_is_virtual: body.tipo_is_virtual,
+      sala_audiencia_nome: body.sala_audiencia_nome,
+      url_audiencia_virtual: body.url_audiencia_virtual,
+      observacoes: body.observacoes,
+      responsavel_id: body.responsavel_id,
+    };
+
+    // 6. Criar audiência
+    const audienciaId = await criarAudiencia(params);
+
+    // 7. Retornar sucesso
+    return NextResponse.json(
+      {
+        success: true,
+        data: { id: audienciaId },
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error('Erro ao criar audiência:', error);
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
     return NextResponse.json({ error: erroMsg }, { status: 500 });
   }

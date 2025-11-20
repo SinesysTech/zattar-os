@@ -1,11 +1,57 @@
 {
   "mcpServers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    },
+    "fetch": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch"]
+    },
+    "postgres": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://localhost/mydb"
+      ]
+    },
+    "shadcn.io": {
+      "url": "https://www.shadcn.io/api/mcp"
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "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"
+      }
+    },
     "supabase": {
       "type": "http",
       "url": "https://mcp.supabase.com/mcp?project_ref=cxxdivtgeslrujpfpivs",
       "headers": {
         "Authorization": "Bearer sbp_5a053d85849b9f63cbdae5d2e2c76439b70d6b8c"
       }
+    },
+    "redis": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-redis",
+        "redis://:xMw8VzBKibvzxg10@jusbro-redis.service.sinesys.app:6379"
+      ]
     }
   }
 }

@@ -117,3 +117,19 @@ export interface ListarAudienciasResult {
   totalPaginas: number;
 }
 
+/**
+ * Parâmetros para criar uma nova audiência manualmente
+ */
+export interface CriarAudienciaParams {
+  processo_id: number;
+  advogado_id: number;
+  data_inicio: string; // ISO timestamp
+  data_fim: string; // ISO timestamp
+  tipo_descricao?: string;
+  tipo_is_virtual?: boolean;
+  sala_audiencia_nome?: string;
+  url_audiencia_virtual?: string;
+  observacoes?: string;
+  responsavel_id?: number;
+}
+
