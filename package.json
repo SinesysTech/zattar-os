@@ -56,7 +56,7 @@
     "react-dom": "19.2.0",
     "sonner": "^2.0.7",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-react": "^3.23.3",
+    "@scalar/api-reference-react": "^0.8.6",
     "swr": "^2.3.6",
     "tailwind-merge": "^3.4.0"
   },
@@ -67,7 +67,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/swagger-jsdoc": "^6.0.4",
-    "@types/swagger-ui-react": "^5.18.0",
     "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",

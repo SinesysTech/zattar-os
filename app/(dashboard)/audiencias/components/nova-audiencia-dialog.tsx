@@ -58,6 +58,21 @@ interface Usuario {
   email_corporativo: string;
 }
 
+// Opções de TRT (TRT1 a TRT24)
+const TRTS = Array.from({ length: 24 }, (_, i) => {
+  const num = i + 1;
+  return {
+    value: `TRT${num}`,
+    label: `TRT${num}`,
+  };
+});
+
+// Opções de Grau
+const GRAUS = [
+  { value: 'primeiro_grau', label: '1º Grau' },
+  { value: 'segundo_grau', label: '2º Grau' },
+];
+
 export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudienciaDialogProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -75,6 +90,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   const [loadingUsuarios, setLoadingUsuarios] = React.useState(false);
 
   // Form state
+  const [trt, setTrt] = React.useState<string>('');
+  const [grau, setGrau] = React.useState<string>('');
   const [processoId, setProcessoId] = React.useState<string[]>([]);
   const [dataInicio, setDataInicio] = React.useState('');
   const [horaInicio, setHoraInicio] = React.useState('');
@@ -107,12 +124,15 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     return tiposAudiencia.find((t) => t.id.toString() === tipoAudienciaId) || null;
   }, [tipoAudienciaId, tiposAudiencia]);
 
-  // Buscar processos quando o dialog abrir
+  // Buscar processos quando TRT e Grau forem selecionados
   React.useEffect(() => {
-    if (open && processos.length === 0) {
-      buscarProcessos();
+    if (trt && grau) {
+      buscarProcessos(trt, grau);
+    } else {
+      setProcessos([]);
+      setProcessoId([]);
     }
-  }, [open]);
+  }, [trt, grau]);
 
   // Buscar usuários quando o dialog abrir
   React.useEffect(() => {
@@ -121,17 +141,17 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     }
   }, [open]);
 
-  // Buscar tipos de audiência quando processo for selecionado
+  // Buscar tipos de audiência quando TRT e Grau forem selecionados
   React.useEffect(() => {
-    if (processoSelecionado) {
-      buscarTiposAudiencia(processoSelecionado.trt, processoSelecionado.grau);
+    if (trt && grau) {
+      buscarTiposAudiencia(trt, grau);
     } else {
       setTiposAudiencia([]);
       setTipoAudienciaId('');
     }
-  }, [processoSelecionado]);
+  }, [trt, grau]);
 
-  // Buscar salas quando processo for selecionado
+  // Buscar salas quando processo for selecionado (precisa do orgao_julgador_id)
   React.useEffect(() => {
     if (processoSelecionado) {
       buscarSalas(processoSelecionado.trt, processoSelecionado.grau, processoSelecionado.orgao_julgador_id);
@@ -141,10 +161,12 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     }
   }, [processoSelecionado]);
 
-  const buscarProcessos = async () => {
+  const buscarProcessos = async (trtParam: string, grauParam: string) => {
     setLoadingProcessos(true);
     try {
-      const response = await fetch('/api/acervo?limite=1000&ordenar_por=numero_processo&ordem=asc');
+      const response = await fetch(
+        `/api/acervo?trt=${trtParam}&grau=${grauParam}&limite=2000&ordenar_por=numero_processo&ordem=asc`
+      );
       if (!response.ok) throw new Error('Erro ao buscar processos');
 
       const data = await response.json();
@@ -218,6 +240,16 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     setError(null);
 
     // Validações
+    if (!trt) {
+      setError('Selecione o TRT');
+      return;
+    }
+
+    if (!grau) {
+      setError('Selecione o grau');
+      return;
+    }
+
     if (processoId.length === 0) {
       setError('Selecione um processo');
       return;
@@ -294,6 +326,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   };
 
   const resetForm = () => {
+    setTrt('');
+    setGrau('');
     setProcessoId([]);
     setDataInicio('');
     setHoraInicio('');
@@ -345,10 +379,48 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             </div>
           )}
 
+          {/* TRT e Grau */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="trt">Tribunal (TRT) *</Label>
+              <Select value={trt} onValueChange={setTrt}>
+                <SelectTrigger id="trt">
+                  <SelectValue placeholder="Selecione o TRT" />
+                </SelectTrigger>
+                <SelectContent>
+                  {TRTS.map((tribunal) => (
+                    <SelectItem key={tribunal.value} value={tribunal.value}>
+                      {tribunal.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="grau">Grau *</Label>
+              <Select value={grau} onValueChange={setGrau}>
+                <SelectTrigger id="grau">
+                  <SelectValue placeholder="Selecione o grau" />
+                </SelectTrigger>
+                <SelectContent>
+                  {GRAUS.map((g) => (
+                    <SelectItem key={g.value} value={g.value}>
+                      {g.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           {/* Processo - Combobox com busca */}
           <div className="space-y-2">
             <Label htmlFor="processo">Processo *</Label>
-            {loadingProcessos ? (
+            {!trt || !grau ? (
+              <div className="flex items-center gap-2 p-2 border rounded-md bg-muted">
+                <span className="text-sm text-muted-foreground">Selecione o TRT e Grau primeiro</span>
+              </div>
+            ) : loadingProcessos ? (
               <div className="flex items-center gap-2 p-2 border rounded-md">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 <span className="text-sm text-muted-foreground">Carregando processos...</span>
@@ -422,10 +494,10 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                 <Loader2 className="h-4 w-4 animate-spin" />
                 <span className="text-sm text-muted-foreground">Carregando tipos...</span>
               </div>
-            ) : !processoSelecionado ? (
+            ) : !trt || !grau ? (
               <Select disabled>
                 <SelectTrigger id="tipo">
-                  <SelectValue placeholder="Selecione um processo primeiro" />
+                  <SelectValue placeholder="Selecione TRT e Grau primeiro" />
                 </SelectTrigger>
               </Select>
             ) : (
