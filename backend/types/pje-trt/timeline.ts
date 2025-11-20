@@ -158,11 +158,33 @@ export interface FiltroDocumentosTimeline {
   /** Apenas documentos assinados */
   apenasAssinados?: boolean;
   /** Apenas documentos não sigilosos */
-  apenasnaoSigilosos?: boolean;
+  apenasNaoSigilosos?: boolean;
   /** Tipos de documento a incluir */
   tipos?: string[];
   /** Data inicial (ISO 8601) */
   dataInicial?: string;
   /** Data final (ISO 8601) */
   dataFinal?: string;
+}
+
+/**
+ * Informações do Google Drive adicionadas ao documento
+ */
+export interface GoogleDriveInfo {
+  /** Link de visualização do Google Drive */
+  linkVisualizacao: string;
+  /** Link de download do Google Drive */
+  linkDownload: string;
+  /** ID do arquivo no Google Drive */
+  fileId: string;
+  /** Data do upload */
+  uploadedAt: Date;
+}
+
+/**
+ * Item da timeline enriquecido com informações do Google Drive
+ */
+export interface TimelineItemEnriquecido extends TimelineItem {
+  /** Informações do Google Drive (se documento foi enviado) */
+  googleDrive?: GoogleDriveInfo;
 }
