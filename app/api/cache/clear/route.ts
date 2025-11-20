@@ -50,7 +50,7 @@ async function verificarPermissaoAdmin(usuarioId: number): Promise<boolean> {
  *             properties:
  *               pattern:
  *                 type: string
- *                 description: Padrão de chaves a remover (ex: "pendentes:*"). Se não informado, limpa todo o cache.
+ *                 description: 'Padrão de chaves a remover (ex: pendentes:*). Se não informado, limpa todo o cache.'
  *     responses:
  *       200:
  *         description: Cache limpo com sucesso
