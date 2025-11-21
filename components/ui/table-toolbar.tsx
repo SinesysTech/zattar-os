@@ -176,7 +176,7 @@ export function TableToolbar({
 
               {/* Submenu com opções (lado direito) */}
               {activeGroup && (
-                <div className="w-80 border-l">
+                <div className="min-w-80 max-w-[600px] border-l">
                   <div className="p-2 border-b">
                     <div className="text-sm font-semibold px-2 py-1.5">{activeGroup}</div>
                   </div>
@@ -194,13 +194,13 @@ export function TableToolbar({
                         >
                           <div
                             className={cn(
-                              "flex h-4 w-4 items-center justify-center rounded-sm border mr-2",
+                              "flex h-4 w-4 items-center justify-center rounded-sm border mr-2 shrink-0",
                               isSelected && "bg-primary border-primary"
                             )}
                           >
                             {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
                           </div>
-                          <span className="flex-1">{option.label}</span>
+                          <span className="flex-1 whitespace-nowrap">{option.label}</span>
                         </div>
                       )
                     })}
