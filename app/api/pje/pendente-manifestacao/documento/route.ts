@@ -1,6 +1,6 @@
 /**
  * Rota de API para buscar documento PDF de pendente de manifestação do PJE
- * POST: Buscar documento, fazer upload para Google Drive e atualizar banco de dados
+ * POST: Buscar documento, fazer upload para Backblaze B2 e atualizar banco de dados
  *
  * Este endpoint pode ser usado de duas formas:
  * 1. Standalone: Usuário clica em "Buscar Documento" na interface
@@ -30,15 +30,15 @@ interface DocumentoRequestBody {
  *   post:
  *     summary: Busca documento PDF de um pendente de manifestação do PJE
  *     description: |
- *       Busca documento PDF de um expediente pendente do PJE, faz upload para Google Drive
+ *       Busca documento PDF de um expediente pendente do PJE, faz upload para Backblaze B2
  *       e atualiza as informações do arquivo no banco de dados.
  *
  *       **Fluxo:**
  *       1. Autentica no PJE usando credencial fornecida
  *       2. Busca metadados do documento (valida que é PDF)
  *       3. Busca conteúdo do documento (base64)
- *       4. Converte para Buffer e faz upload para Google Drive
- *       5. Atualiza banco com nome do arquivo e URLs de visualização/download
+ *       4. Converte para Buffer e faz upload para Backblaze B2
+ *       5. Atualiza banco com nome do arquivo e URL do Backblaze
  *
  *       **Uso:**
  *       - Standalone: Botão "Buscar Documento" na interface para pendentes sem documento
@@ -102,16 +102,16 @@ interface DocumentoRequestBody {
  *                       example: 999
  *                     arquivo_nome:
  *                       type: string
- *                       example: "pendentes/trt3g1/999_1705856400000.pdf"
- *                     arquivo_url_visualizacao:
+ *                       example: "exp_789_doc_234517663_20251121.pdf"
+ *                     arquivo_url:
  *                       type: string
- *                       example: "https://drive.google.com/file/d/abc123/view"
- *                     arquivo_url_download:
+ *                       example: "https://s3.us-east-005.backblazeb2.com/zattar-advogados/processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf"
+ *                     arquivo_key:
  *                       type: string
- *                       example: "https://drive.google.com/uc?id=abc123&export=download"
- *                     arquivo_file_id:
+ *                       example: "processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf"
+ *                     arquivo_bucket:
  *                       type: string
- *                       example: "abc123def456"
+ *                       example: "zattar-advogados"
  *       400:
  *         description: Parâmetros inválidos ou documento não é PDF
  *         content:
@@ -141,7 +141,7 @@ interface DocumentoRequestBody {
  *                 value:
  *                   error: "Documento não encontrado no PJE"
  *       500:
- *         description: Erro interno (autenticação PJE, upload Google Drive, etc.)
+ *         description: Erro interno (autenticação PJE, upload Backblaze B2, etc.)
  *         content:
  *           application/json:
  *             schema:
@@ -264,10 +264,9 @@ export async function POST(request: NextRequest) {
         data: {
           pendente_id: result.pendenteId,
           arquivo_nome: result.arquivoInfo?.arquivo_nome,
-          arquivo_url_visualizacao:
-            result.arquivoInfo?.arquivo_url_visualizacao,
-          arquivo_url_download: result.arquivoInfo?.arquivo_url_download,
-          arquivo_file_id: result.arquivoInfo?.arquivo_file_id,
+          arquivo_url: result.arquivoInfo?.arquivo_url,
+          arquivo_key: result.arquivoInfo?.arquivo_key,
+          arquivo_bucket: result.arquivoInfo?.arquivo_bucket,
         },
       });
     } finally {

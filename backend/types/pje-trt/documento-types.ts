@@ -135,32 +135,32 @@ export interface FetchDocumentoParams {
  * Interface: ArquivoInfo
  *
  * PROPÓSITO:
- * Informações sobre o arquivo após upload bem-sucedido no Google Drive.
+ * Informações sobre o arquivo após upload bem-sucedido no Backblaze B2.
  * Estas informações são armazenadas no banco de dados.
  *
  * CAMPOS:
- * - arquivo_nome: string - Nome/path do arquivo no storage (ex: "pendentes/trt3g1/999_1705856400000.pdf")
- * - arquivo_url_visualizacao: string - URL de visualização do Google Drive (webViewLink)
- * - arquivo_url_download: string - URL de download do Google Drive (webContentLink)
- * - arquivo_file_id: string - ID do arquivo no Google Drive (file_id)
+ * - arquivo_nome: string - Nome do arquivo (ex: "exp_789_doc_234517663_20251121.pdf")
+ * - arquivo_url: string - URL pública do arquivo no Backblaze B2
+ * - arquivo_key: string - Chave (path) do arquivo no bucket S3 (ex: "processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf")
+ * - arquivo_bucket: string - Nome do bucket no Backblaze B2 (ex: "zattar-advogados")
  *
  * USO:
- * Retornado pelo GoogleDriveStorageService após upload bem-sucedido.
+ * Retornado pelo serviço Backblaze após upload bem-sucedido.
  * Usado para atualizar os campos correspondentes na tabela pendente_manifestacao.
  *
  * EXEMPLO:
  * {
- *   arquivo_nome: "pendentes/trt3g1/999_1705856400000.pdf",
- *   arquivo_url_visualizacao: "https://drive.google.com/file/d/abc123/view",
- *   arquivo_url_download: "https://drive.google.com/uc?id=abc123&export=download",
- *   arquivo_file_id: "abc123def456"
+ *   arquivo_nome: "exp_789_doc_234517663_20251121.pdf",
+ *   arquivo_url: "https://s3.us-east-005.backblazeb2.com/zattar-advogados/processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf",
+ *   arquivo_key: "processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf",
+ *   arquivo_bucket: "zattar-advogados"
  * }
  */
 export interface ArquivoInfo {
   arquivo_nome: string;
-  arquivo_url_visualizacao: string;
-  arquivo_url_download: string;
-  arquivo_file_id: string;
+  arquivo_url: string;
+  arquivo_key: string;
+  arquivo_bucket: string;
 }
 
 /**
@@ -186,10 +186,10 @@ export interface ArquivoInfo {
  *   success: true,
  *   pendenteId: 999,
  *   arquivoInfo: {
- *     arquivo_nome: "pendentes/trt3g1/999_1705856400000.pdf",
- *     arquivo_url_visualizacao: "https://drive.google.com/...",
- *     arquivo_url_download: "https://drive.google.com/...",
- *     arquivo_file_id: "abc123def456"
+ *     arquivo_nome: "exp_789_doc_234517663_20251121.pdf",
+ *     arquivo_url: "https://s3.us-east-005.backblazeb2.com/zattar-advogados/processos/.../exp_789_doc_234517663_20251121.pdf",
+ *     arquivo_key: "processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf",
+ *     arquivo_bucket: "zattar-advogados"
  *   }
  * }
  *

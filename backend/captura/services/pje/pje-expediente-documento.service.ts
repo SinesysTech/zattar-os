@@ -3,7 +3,7 @@
  *
  * PROPÓSITO:
  * Serviço especializado para buscar documentos PDF de expedientes pendentes do PJE-TRT.
- * Orquestra o processo completo: fetch do PJE → upload Google Drive → persistência no banco.
+ * Orquestra o processo completo: fetch do PJE → upload Backblaze B2 → persistência no banco.
  *
  * IMPORTANTE:
  * Este serviço é específico para documentos de PENDENTES DE MANIFESTAÇÃO.
@@ -12,7 +12,8 @@
  * DEPENDÊNCIAS:
  * - playwright: Para executar fetch no contexto do navegador com cookies
  * - documento-types.ts: Tipos TypeScript para documentos PJE
- * - storage: GoogleDriveStorageService para upload de arquivos
+ * - backblaze-b2: Serviço de upload para Backblaze B2
+ * - file-naming.utils: Utilitários para nomeação de arquivos
  * - pendentes-persistence: Para atualizar informações de arquivo no banco
  *
  * EXPORTAÇÕES:
@@ -33,7 +34,8 @@ import type {
   FetchDocumentoResult,
   ArquivoInfo,
 } from '@/backend/types/pje-trt/documento-types';
-import { createStorageService } from '@/backend/acordos-condenacoes/services/storage/storage-factory';
+import { uploadToBackblaze } from '@/backend/storage/backblaze-b2.service';
+import { gerarCaminhoCompletoPendente } from '@/backend/storage/file-naming.utils';
 import { atualizarDocumentoPendente } from '@/backend/captura/services/persistence/pendentes-persistence.service';
 
 /**
@@ -175,7 +177,7 @@ export async function fetchDocumentoConteudo(
  * 2. Valida que é PDF
  * 3. Busca conteúdo (base64)
  * 4. Converte para Buffer
- * 5. Faz upload para Google Drive
+ * 5. Faz upload para Backblaze B2
  * 6. Atualiza banco de dados
  *
  * PARÂMETROS:
@@ -200,9 +202,10 @@ export async function fetchDocumentoConteudo(
  *   success: true,
  *   pendenteId: 999,
  *   arquivoInfo: {
- *     arquivo_nome: "pendentes/trt3g1/999_1705856400000.pdf",
- *     arquivo_url_visualizacao: "https://drive.google.com/...",
- *     arquivo_url_download: "https://drive.google.com/..."
+ *     arquivo_nome: "exp_789_doc_234517663_20251121.pdf",
+ *     arquivo_url: "https://s3.us-east-005.backblazeb2.com/zattar-advogados/processos/.../exp_789_doc_234517663_20251121.pdf",
+ *     arquivo_key: "processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf",
+ *     arquivo_bucket: "zattar-advogados"
  *   }
  * }
  *
@@ -239,65 +242,31 @@ export async function downloadAndUploadDocumento(
     const buffer = Buffer.from(conteudo.documento, 'base64');
     console.log(`📦 Buffer criado: ${buffer.length} bytes`);
 
-    // 5. Gerar timestamp formatado para nome do arquivo
-    const now = new Date();
-    const formattedDateTime = now
-      .toISOString()
-      .replace(/T/, '_')
-      .replace(/\..+/, '')
-      .replace(/:/g, '-')
-      .slice(0, 19); // "2025-11-08_15-28-35"
+    // 5. Gerar caminho e nome do arquivo no Backblaze
+    const key = gerarCaminhoCompletoPendente(numeroProcesso, pendenteId, documentoId);
+    const nomeArquivo = key.split('/').pop()!; // Extrair nome do arquivo do path
 
-    // 6. Preparar payload para webhook n8n
-    const webhookUrl = process.env.GOOGLE_DRIVE_WEBHOOK_URL;
-    if (!webhookUrl) {
-      throw new Error('GOOGLE_DRIVE_WEBHOOK_URL não configurada');
-    }
+    console.log(`📂 Caminho no Backblaze: ${key}`);
+    console.log(`📝 Nome do arquivo: ${nomeArquivo}`);
 
-    const payload = {
-      domain: 'pendente_manifestacao',
-      data: {
-        id: pendenteId,
-        numeroProcesso: numeroProcesso,
-        idDocumento: documentoId,
-        formattedDateTime,
-      },
-      file: {
-        content: conteudo.documento, // Já está em base64
-      },
-    };
-
-    console.log(`📤 Enviando para webhook n8n: ${webhookUrl}`);
-    console.log(`Processo: ${payload.data.numeroProcesso}`);
-
-    // 7. Fazer upload via webhook n8n
-    const webhookResponse = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
+    // 6. Fazer upload para Backblaze B2
+    const uploadResult = await uploadToBackblaze({
+      buffer,
+      key,
+      contentType: 'application/pdf',
     });
 
-    if (!webhookResponse.ok) {
-      const errorText = await webhookResponse.text();
-      throw new Error(
-        `Erro no webhook n8n: ${webhookResponse.status} - ${errorText}`
-      );
-    }
+    console.log(`✅ Upload concluído no Backblaze B2`);
+    console.log(`URL: ${uploadResult.url}`);
+    console.log(`Key: ${uploadResult.key}`);
+    console.log(`Bucket: ${uploadResult.bucket}`);
 
-    const webhookResult = await webhookResponse.json();
-
-    console.log(`✅ Upload concluído no Google Drive`);
-    console.log(`File ID: ${webhookResult.file_id}`);
-    console.log(`File Name: ${webhookResult.file_name}`);
-
-    // 8. Preparar informações do arquivo
+    // 7. Preparar informações do arquivo
     const arquivoInfo: ArquivoInfo = {
-      arquivo_nome: webhookResult.file_name || `${payload.domain}_${formattedDateTime}_${pendenteId}_${documentoId}`,
-      arquivo_url_visualizacao: webhookResult.web_view_link || '',
-      arquivo_url_download: webhookResult.web_content_link || '',
-      arquivo_file_id: webhookResult.file_id || '',
+      arquivo_nome: nomeArquivo,
+      arquivo_url: uploadResult.url,
+      arquivo_key: uploadResult.key,
+      arquivo_bucket: uploadResult.bucket,
     };
 
     // 8. Atualizar banco de dados

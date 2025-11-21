@@ -259,9 +259,9 @@ export async function atualizarDocumentoPendente(
   pendenteId: number,
   arquivoInfo: {
     arquivo_nome: string;
-    arquivo_url_visualizacao: string;
-    arquivo_url_download: string;
-    arquivo_file_id: string;
+    arquivo_url: string;
+    arquivo_key: string;
+    arquivo_bucket: string;
   }
 ): Promise<void> {
   const supabase = createServiceClient();
@@ -270,9 +270,9 @@ export async function atualizarDocumentoPendente(
     .from('pendentes_manifestacao')
     .update({
       arquivo_nome: arquivoInfo.arquivo_nome,
-      arquivo_url_visualizacao: arquivoInfo.arquivo_url_visualizacao,
-      arquivo_url_download: arquivoInfo.arquivo_url_download,
-      arquivo_file_id: arquivoInfo.arquivo_file_id,
+      arquivo_url: arquivoInfo.arquivo_url,
+      arquivo_key: arquivoInfo.arquivo_key,
+      arquivo_bucket: arquivoInfo.arquivo_bucket,
     })
     .eq('id', pendenteId);
 
