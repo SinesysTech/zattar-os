@@ -2,7 +2,7 @@
  * Tipos TypeScript para Timeline de Processos
  *
  * Representa a estrutura de dados da timeline capturada do PJE-TRT,
- * incluindo movimentos processuais e documentos com links do Google Drive.
+ * incluindo movimentos processuais e documentos com arquivos no Backblaze B2.
  */
 
 /**
@@ -39,7 +39,19 @@ export interface TimelineItem {
 }
 
 /**
+ * Informações do Backblaze B2 para um documento
+ */
+export interface BackblazeB2Info {
+  url: string; // URL pública do arquivo
+  key: string; // Chave (path) do arquivo no bucket
+  bucket: string; // Nome do bucket
+  fileName: string; // Nome do arquivo
+  uploadedAt: Date | string; // Data do upload
+}
+
+/**
  * Informações do Google Drive para um documento
+ * @deprecated Use BackblazeB2Info no lugar. Google Drive será removido.
  */
 export interface GoogleDriveInfo {
   linkVisualizacao: string; // URL para visualizar no Google Drive
@@ -49,10 +61,11 @@ export interface GoogleDriveInfo {
 }
 
 /**
- * Item da timeline enriquecido com links do Google Drive
+ * Item da timeline enriquecido com informações de armazenamento
  */
 export interface TimelineItemEnriquecido extends TimelineItem {
-  googleDrive?: GoogleDriveInfo; // Presente apenas em documentos baixados com sucesso
+  backblaze?: BackblazeB2Info; // Informações do Backblaze B2 (atual)
+  googleDrive?: GoogleDriveInfo; // Deprecated, manter por compatibilidade
 }
 
 /**

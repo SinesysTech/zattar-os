@@ -168,7 +168,24 @@ export interface FiltroDocumentosTimeline {
 }
 
 /**
+ * Informações do Backblaze B2 adicionadas ao documento
+ */
+export interface BackblazeB2Info {
+  /** URL pública do arquivo no Backblaze B2 */
+  url: string;
+  /** Chave (path) do arquivo no bucket */
+  key: string;
+  /** Nome do bucket */
+  bucket: string;
+  /** Nome do arquivo */
+  fileName: string;
+  /** Data do upload */
+  uploadedAt: Date;
+}
+
+/**
  * Informações do Google Drive adicionadas ao documento
+ * @deprecated Use BackblazeB2Info no lugar. Google Drive será removido.
  */
 export interface GoogleDriveInfo {
   /** Link de visualização do Google Drive */
@@ -182,9 +199,11 @@ export interface GoogleDriveInfo {
 }
 
 /**
- * Item da timeline enriquecido com informações do Google Drive
+ * Item da timeline enriquecido com informações de armazenamento
  */
 export interface TimelineItemEnriquecido extends TimelineItem {
-  /** Informações do Google Drive (se documento foi enviado) */
+  /** Informações do Backblaze B2 (se documento foi enviado) */
+  backblaze?: BackblazeB2Info;
+  /** Informações do Google Drive (deprecated, use backblaze) */
   googleDrive?: GoogleDriveInfo;
 }

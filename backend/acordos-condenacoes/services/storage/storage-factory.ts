@@ -5,12 +5,13 @@ import type { IStorageService, StorageProvider } from './storage.interface';
 import { MinioStorageService } from './minio-storage.service';
 import { S3StorageService } from './s3-storage.service';
 import { GoogleDriveStorageService } from './google-drive-storage.service';
+import { BackblazeB2StorageService } from './backblaze-b2-storage.service';
 
 /**
  * Cria instância de storage service baseado no provider configurado
  *
  * Variável de ambiente:
- * - STORAGE_PROVIDER: "minio" | "s3" | "aws" | "google-drive" (padrão: "minio")
+ * - STORAGE_PROVIDER: "minio" | "s3" | "aws" | "google-drive" | "backblaze" (padrão: "minio")
  *
  * @returns Instância do storage service configurado
  */
@@ -26,6 +27,9 @@ export function createStorageService(): IStorageService {
     case 's3':
     case 'aws':
       return new S3StorageService();
+
+    case 'backblaze':
+      return new BackblazeB2StorageService();
 
     case 'google-drive':
       return new GoogleDriveStorageService();

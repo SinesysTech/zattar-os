@@ -2,16 +2,16 @@
 
 <cite>
 **Arquivos Referenciados neste Documento**   
-- [use-processo-timeline.ts](file://app/_lib/hooks/use-processo-timeline.ts)
-- [timeline-container.tsx](file://components/processos/timeline-container.tsx)
-- [timeline-item.tsx](file://components/processos/timeline-item.tsx)
-- [timeline-loading.tsx](file://components/processos/timeline-loading.tsx)
-- [timeline-empty.tsx](file://components/processos/timeline-empty.tsx)
-- [timeline-error.tsx](file://components/processos/timeline-error.tsx)
-- [page.tsx](file://app/(dashboard)/processos/[id]/page.tsx)
-- [route.ts](file://app/api/acervo/[id]/timeline/route.ts)
-- [route.ts](file://app/api/captura/trt/timeline/route.ts)
-- [timeline-persistence.service.ts](file://backend/captura/services/timeline/timeline-persistence.service.ts)
+- [use-processo-timeline.ts](file://app/_lib/hooks/use-processo-timeline.ts) - *Implementação completa do hook para gerenciamento de timeline*
+- [timeline-container.tsx](file://components/processos/timeline-container.tsx) - *Container principal da timeline atualizado*
+- [timeline-item.tsx](file://components/processos/timeline-item.tsx) - *Renderização de itens individuais da timeline*
+- [timeline-loading.tsx](file://components/processos/timeline-loading.tsx) - *Estado de carregamento e captura*
+- [timeline-empty.tsx](file://components/processos/timeline-empty.tsx) - *Estado vazio da timeline*
+- [timeline-error.tsx](file://components/processos/timeline-error.tsx) - *Tratamento de erros na timeline*
+- [page.tsx](file://app/(dashboard)/processos/[id]/page.tsx) - *Página de visualização do processo*
+- [route.ts](file://app/api/acervo/[id]/timeline/route.ts) - *Rota de API para timeline existente*
+- [route.ts](file://app/api/captura/trt/timeline/route.ts) - *Rota de API para captura de timeline*
+- [timeline-persistence.service.ts](file://backend/captura/services/timeline/timeline-persistence.service.ts) - *Serviço de persistência da timeline no MongoDB*
 </cite>
 
 ## Sumário
@@ -29,9 +29,9 @@ O sistema de visualização de processo com timeline no Sinesys implementa uma s
 
 A implementação segue o padrão de "lazy loading", onde a timeline é capturada apenas quando o usuário expressa interesse em visualizá-la, otimizando recursos e tempo de processamento. O sistema verifica automaticamente a existência da timeline no MongoDB e, caso não exista, inicia o processo de captura através dos endpoints de integração com o PJE-TRT.
 
-**Section sources**
-- [use-processo-timeline.ts](file://app/_lib/hooks/use-processo-timeline.ts#L1-L316)
-- [page.tsx](file://app/(dashboard)/processos/[id]/page.tsx#L1-L86)
+**Fontes da seção**
+- [use-processo-timeline.ts](file://app/_lib/hooks/use-processo-timeline.ts#L1-L316) - *Hook principal atualizado com lógica completa de captura*
+- [page.tsx](file://app/(dashboard)/processos/[id]/page.tsx#L1-L86) - *Página de processo com integração ao hook*
 
 ## Estrutura de Componentes
 A visualização de processo com timeline é composta por uma hierarquia de componentes React que trabalham em conjunto para fornecer uma experiência de usuário completa. A estrutura principal é organizada em torno do componente `ProcessoVisualizacao`, que coordena os diferentes estados e componentes da interface.
@@ -62,9 +62,9 @@ style F fill:#f66,stroke:#333
 style G fill:#6f9,stroke:#333
 ```
 
-**Diagram sources**
-- [timeline-container.tsx](file://components/processos/timeline-container.tsx#L1-L88)
-- [timeline-item.tsx](file://components/processos/timeline-item.tsx#L1-L193)
+**Fontes do diagrama**
+- [timeline-container.tsx](file://components/processos/timeline-container.tsx#L1-L88) - *Implementação do container principal*
+- [timeline-item.tsx](file://components/processos/timeline-item.tsx#L1-L193) - *Componente de item individual*
 
 ## Fluxo de Dados e Processamento
 O fluxo de dados na visualização de processo com timeline segue um padrão bem definido que começa com a navegação do usuário e termina com a renderização completa da interface. O processo envolve múltiplas etapas de verificação, captura e exibição de dados.
@@ -114,10 +114,10 @@ Hook-->>Page : Dados completos
 Page->>User : Renderiza interface
 ```
 
-**Diagram sources**
-- [use-processo-timeline.ts](file://app/_lib/hooks/use-processo-timeline.ts#L1-L316)
-- [route.ts](file://app/api/acervo/[id]/timeline/route.ts#L1-L148)
-- [route.ts](file://app/api/captura/trt/timeline/route.ts#L1-L205)
+**Fontes do diagrama**
+- [use-processo-timeline.ts](file://app/_lib/hooks/use-processo-timeline.ts#L1-L316) - *Lógica completa do hook de timeline*
+- [route.ts](file://app/api/acervo/[id]/timeline/route.ts#L1-L148) - *Rota de obtenção da timeline*
+- [route.ts](file://app/api/captura/trt/timeline/route.ts#L1-L205) - *Rota de captura da timeline*
 
 ## Estados de Interface
 O sistema implementa quatro estados principais de interface para cobrir todos os cenários possíveis durante a visualização de um processo:
@@ -128,7 +128,7 @@ O estado de carregamento é exibido durante a inicialização da página e duran
 ### Estado de Captura
 Durante a captura da timeline, o sistema exibe mensagens de progresso contextualizadas que evoluem com o tempo decorrido:
 - Até 10 segundos: "Iniciando captura da timeline..."
-- 10-60 segundos: "Capturando movimentos e documentos do PJE..."
+- 10-60 segundos: "Capturando movimentos e documentos do PJE... (isso pode levar alguns minutos)"
 - 60-120 segundos: "Baixando documentos e enviando para Google Drive..."
 - Após 120 segundos: "Processando documentos... Quase pronto!"
 
@@ -144,10 +144,10 @@ O sistema implementa tratamento de erros granular com mensagens específicas par
 
 Cada erro tem uma mensagem de solução específica e, quando aplicável, um botão de tentativa novamente.
 
-**Section sources**
-- [timeline-loading.tsx](file://components/processos/timeline-loading.tsx#L1-L92)
-- [timeline-empty.tsx](file://components/processos/timeline-empty.tsx#L1-L46)
-- [timeline-error.tsx](file://components/processos/timeline-error.tsx#L1-L114)
+**Fontes da seção**
+- [timeline-loading.tsx](file://components/processos/timeline-loading.tsx#L1-L92) - *Implementação do estado de carregamento*
+- [timeline-empty.tsx](file://components/processos/timeline-empty.tsx#L1-L46) - *Estado vazio da timeline*
+- [timeline-error.tsx](file://components/processos/timeline-error.tsx#L1-L114) - *Tratamento de erros com mensagens específicas*
 
 ## Arquitetura de Dados
 A arquitetura de dados da visualização de processo com timeline utiliza um modelo híbrido que combina PostgreSQL e MongoDB para otimizar o armazenamento e recuperação de diferentes tipos de dados.
@@ -209,9 +209,9 @@ json metadata
 ACERVO ||--o{ TIMELINE : "referencia"
 ```
 
-**Diagram sources**
-- [route.ts](file://app/api/acervo/[id]/timeline/route.ts#L1-L148)
-- [timeline-persistence.service.ts](file://backend/captura/services/timeline/timeline-persistence.service.ts#L1-L203)
+**Fontes do diagrama**
+- [route.ts](file://app/api/acervo/[id]/timeline/route.ts#L1-L148) - *Estrutura de dados da timeline*
+- [timeline-persistence.service.ts](file://backend/captura/services/timeline/timeline-persistence.service.ts#L1-L203) - *Serviço de persistência no MongoDB*
 
 ## Análise Detalhada dos Componentes
 
@@ -229,8 +229,8 @@ O hook retorna um objeto com as seguintes propriedades:
 
 A implementação utiliza `useEffect` para carregar os dados iniciais e `useCallback` para memoizar funções importantes, garantindo eficiência na renderização.
 
-**Section sources**
-- [use-processo-timeline.ts](file://app/_lib/hooks/use-processo-timeline.ts#L1-L316)
+**Fontes da seção**
+- [use-processo-timeline.ts](file://app/_lib/hooks/use-processo-timeline.ts#L1-L316) - *Implementação completa do hook com todas as funcionalidades*
 
 ### Componente TimelineContainer
 O `TimelineContainer` é responsável por renderizar a lista completa de itens da timeline, ordenados cronologicamente (descendente - mais recente primeiro). Ele implementa otimizações de performance utilizando `useMemo` para memorizar a ordenação dos itens.
@@ -242,8 +242,8 @@ O componente exibe um cabeçalho com estatísticas da timeline:
 
 A ordenação é feita pelo campo `data` de cada item, garantindo que os eventos mais recentes apareçam no topo da lista.
 
-**Section sources**
-- [timeline-container.tsx](file://components/processos/timeline-container.tsx#L1-L88)
+**Fontes da seção**
+- [timeline-container.tsx](file://components/processos/timeline-container.tsx#L1-L88) - *Implementação do container com ordenação e estatísticas*
 
 ### Componente TimelineItem
 O `TimelineItem` renderiza um item individual da timeline com uma representação visual diferenciada para documentos e movimentos. Documentos são representados com ícone azul de documento, enquanto movimentos usam ícone cinza de atividade.
@@ -255,8 +255,8 @@ Para documentos, o componente exibe ações específicas:
 
 O componente utiliza animações de entrada com Framer Motion para uma experiência de usuário mais suave, com um pequeno delay entre os itens para criar um efeito de sequência.
 
-**Section sources**
-- [timeline-item.tsx](file://components/processos/timeline-item.tsx#L1-L193)
+**Fontes da seção**
+- [timeline-item.tsx](file://components/processos/timeline-item.tsx#L1-L193) - *Implementação completa do item com ações e animações*
 
 ## Considerações de Performance
 O sistema implementa várias otimizações de performance para garantir uma experiência de usuário fluida, mesmo com timelines extensas contendo centenas de itens.
