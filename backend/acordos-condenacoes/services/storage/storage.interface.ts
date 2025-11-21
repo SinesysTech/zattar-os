@@ -73,7 +73,7 @@ export interface IStorageService {
 /**
  * Provider de storage
  */
-export type StorageProvider = 'minio' | 's3' | 'aws' | 'local' | 'google-drive';
+export type StorageProvider = 'minio' | 's3' | 'aws' | 'local' | 'google-drive' | 'backblaze';
 
 /**
  * Configuração de storage

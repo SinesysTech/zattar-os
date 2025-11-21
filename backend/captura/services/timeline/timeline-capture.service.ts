@@ -13,7 +13,7 @@ import { autenticarPJE, type AuthResult } from '../trt/trt-auth.service';
 import { getTribunalConfig } from '../trt/config';
 import type { CodigoTRT, GrauTRT } from '../trt/types';
 import { obterTimeline, obterDocumento, baixarDocumento } from '@/backend/api/pje-trt/timeline';
-import { uploadDocumentoToGoogleDrive } from '../google-drive/upload-documento.service';
+import { uploadDocumentoTimeline } from '../backblaze/upload-documento-timeline.service';
 import { salvarTimelineNoMongoDB, atualizarTimelineMongoIdNoAcervo } from './timeline-persistence.service';
 import type { 
   TimelineResponse, 
@@ -21,7 +21,7 @@ import type {
   DocumentoDetalhes,
   FiltroDocumentosTimeline,
   TimelineItemEnriquecido,
-  GoogleDriveInfo,
+  BackblazeB2Info,
 } from '@/backend/types/pje-trt/timeline';
 
 /**
@@ -34,6 +34,8 @@ export interface CapturaTimelineParams {
   grau: GrauTRT;
   /** ID do processo no PJE */
   processoId: string;
+  /** Número do processo (ex: 0010702-80.2025.5.03.0111) */
+  numeroProcesso: string;
   /** ID do advogado (para obter credenciais) */
   advogadoId: number;
   /** Baixar PDFs dos documentos assinados */
@@ -124,6 +126,7 @@ export async function capturarTimeline(
     trtCodigo,
     grau,
     processoId,
+    numeroProcesso,
     advogadoId,
     baixarDocumentos = true,
     filtroDocumentos = {},
@@ -133,6 +136,7 @@ export async function capturarTimeline(
     trtCodigo,
     grau,
     processoId,
+    numeroProcesso,
     advogadoId,
     baixarDocumentos,
   });
@@ -221,29 +225,28 @@ export async function capturarTimeline(
             grau: grau === 'primeiro_grau' ? 1 : 2,
           });
 
-          // Upload para Google Drive
-          const driveResult = await uploadDocumentoToGoogleDrive({
+          // Upload para Backblaze B2
+          const backblazeResult = await uploadDocumentoTimeline({
             pdfBuffer: pdf,
-            nomeBase: `${trtCodigo}_${processoId}_doc${documentoId}`,
-            processoId,
-            trtCodigo,
-            tipoDocumento: 'timeline',
+            numeroProcesso,
+            documentoId,
           });
 
-          // Enriquecer item da timeline com informações do Google Drive
-          const googleDriveInfo: GoogleDriveInfo = {
-            linkVisualizacao: driveResult.linkVisualizacao,
-            linkDownload: driveResult.linkDownload,
-            fileId: driveResult.fileId,
-            uploadedAt: new Date(),
+          // Enriquecer item da timeline com informações do Backblaze B2
+          const backblazeInfo: BackblazeB2Info = {
+            url: backblazeResult.url,
+            key: backblazeResult.key,
+            bucket: backblazeResult.bucket,
+            fileName: backblazeResult.fileName,
+            uploadedAt: backblazeResult.uploadedAt,
           };
 
-          // Encontrar o item na timeline enriquecida e adicionar googleDrive
+          // Encontrar o item na timeline enriquecida e adicionar backblaze
           const indexNaTimeline = timelineEnriquecida.findIndex(item => item.id === itemTimeline.id);
           if (indexNaTimeline !== -1) {
             timelineEnriquecida[indexNaTimeline] = {
               ...timelineEnriquecida[indexNaTimeline],
-              googleDrive: googleDriveInfo,
+              backblaze: backblazeInfo,
             };
           }
 
@@ -254,10 +257,10 @@ export async function capturarTimeline(
 
           totalBaixadosSucesso++;
 
-          console.log(`✅ [capturarTimeline] Documento ${documentoId} baixado e enviado para Google Drive`, {
+          console.log(`✅ [capturarTimeline] Documento ${documentoId} baixado e enviado para Backblaze B2`, {
             titulo: detalhes.titulo,
             tamanho: pdf.length,
-            fileId: driveResult.fileId,
+            url: backblazeResult.url,
           });
         } catch (error) {
           const mensagemErro = error instanceof Error ? error.message : String(error);
