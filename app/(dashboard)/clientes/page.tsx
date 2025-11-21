@@ -6,15 +6,14 @@ import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ButtonGroup } from '@/components/ui/button-group';
+import { TableToolbar } from '@/components/ui/table-toolbar';
 import { ClienteViewSheet } from './components/cliente-view-sheet';
 import { ClienteEditSheet } from './components/cliente-edit-sheet';
 import { ClienteCreateSheet } from './components/cliente-create-sheet';
-import { Eye, Pencil, Plus } from 'lucide-react';
+import { Eye, Pencil } from 'lucide-react';
 import { useClientes } from '@/app/_lib/hooks/use-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Cliente } from '@/backend/clientes/services/persistence/cliente-persistence.service';
@@ -26,6 +25,11 @@ import {
   formatarNome,
   formatarTipoPessoa,
 } from '@/app/_lib/utils/format-clientes';
+import {
+  buildClientesFilterOptions,
+  buildClientesFilterGroups,
+  parseClientesFilters,
+} from './components/clientes-toolbar-filters';
 
 /**
  * Define as colunas da tabela de clientes
@@ -43,7 +47,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       size: 250,
       meta: { align: 'left' },
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-start text-sm">
+        <div className="min-h-10 flex items-center justify-start text-sm">
           {formatarNome(row.getValue('nome'))}
         </div>
       ),
@@ -60,8 +64,8 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       cell: ({ row }) => {
         const tipoPessoa = row.getValue('tipoPessoa') as 'pf' | 'pj';
         return (
-          <div className="min-h-[2.5rem] flex items-center justify-center">
-            <Badge variant="outline">
+          <div className="min-h-10 flex items-center justify-center">
+            <Badge variant="outline" tone="neutral">
               {formatarTipoPessoa(tipoPessoa)}
             </Badge>
           </div>
@@ -83,7 +87,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
           ? formatarCpf(cliente.cpf)
           : formatarCnpj(cliente.cnpj);
         return (
-          <div className="min-h-[2.5rem] flex items-center justify-center text-sm">
+          <div className="min-h-10 flex items-center justify-center text-sm">
             {documento}
           </div>
         );
@@ -100,7 +104,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       size: 200,
       meta: { align: 'left' },
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-start text-sm">
+        <div className="min-h-10 flex items-center justify-start text-sm">
           {row.getValue('email') || '-'}
         </div>
       ),
@@ -115,7 +119,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       enableSorting: false,
       size: 150,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm">
+        <div className="min-h-10 flex items-center justify-center text-sm">
           {formatarTelefone(row.getValue('telefonePrimario'))}
         </div>
       ),
@@ -132,8 +136,8 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       cell: ({ row }) => {
         const ativo = row.getValue('ativo') as boolean;
         return (
-          <div className="min-h-[2.5rem] flex items-center justify-center">
-            <Badge variant={ativo ? 'default' : 'secondary'}>
+          <div className="min-h-10 flex items-center justify-center">
+            <Badge tone={ativo ? 'success' : 'neutral'} variant={ativo ? 'soft' : 'outline'}>
               {ativo ? 'Ativo' : 'Inativo'}
             </Badge>
           </div>
@@ -152,7 +156,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       cell: ({ row }) => {
         const cliente = row.original;
         return (
-          <div className="min-h-[2.5rem] flex items-center justify-center">
+          <div className="min-h-10 flex items-center justify-center">
             <ClienteActions cliente={cliente} onEditSuccess={onEditSuccess} />
           </div>
         );
@@ -211,145 +215,18 @@ function ClienteActions({
   );
 }
 
-/**
- * Componente de filtros avançados
- */
-interface ClientesFiltrosAvancadosProps {
-  filters: ClientesFilters;
-  onFiltersChange: (filters: ClientesFilters) => void;
-  onReset: () => void;
-}
-
-function ClientesFiltrosAvancados({
-  filters,
-  onFiltersChange,
-  onReset,
-}: ClientesFiltrosAvancadosProps) {
-  const [open, setOpen] = React.useState(false);
-
-  const handleTipoPessoaChange = (tipo: 'pf' | 'pj' | null) => {
-    onFiltersChange({ ...filters, tipoPessoa: tipo || undefined });
-  };
-
-  const handleAtivoChange = (ativo: boolean | null) => {
-    onFiltersChange({ ...filters, ativo: ativo ?? undefined });
-  };
-
-  const hasFilters = filters.tipoPessoa !== undefined || filters.ativo !== undefined;
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" className="relative">
-          Filtros Avançados
-          {hasFilters && (
-            <span className="ml-2 h-2 w-2 rounded-full bg-primary" />
-          )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-64 p-4" align="start">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <div className="text-sm font-semibold">Tipo de Pessoa</div>
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="tipoPessoa"
-                  checked={filters.tipoPessoa === 'pf'}
-                  onChange={() => handleTipoPessoaChange('pf')}
-                  className="h-4 w-4"
-                />
-                <span className="text-sm">Pessoa Física</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="tipoPessoa"
-                  checked={filters.tipoPessoa === 'pj'}
-                  onChange={() => handleTipoPessoaChange('pj')}
-                  className="h-4 w-4"
-                />
-                <span className="text-sm">Pessoa Jurídica</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="tipoPessoa"
-                  checked={filters.tipoPessoa === undefined}
-                  onChange={() => handleTipoPessoaChange(null)}
-                  className="h-4 w-4"
-                />
-                <span className="text-sm">Todos</span>
-              </label>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="text-sm font-semibold">Status</div>
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="ativo"
-                  checked={filters.ativo === true}
-                  onChange={() => handleAtivoChange(true)}
-                  className="h-4 w-4"
-                />
-                <span className="text-sm">Ativo</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="ativo"
-                  checked={filters.ativo === false}
-                  onChange={() => handleAtivoChange(false)}
-                  className="h-4 w-4"
-                />
-                <span className="text-sm">Inativo</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="ativo"
-                  checked={filters.ativo === undefined}
-                  onChange={() => handleAtivoChange(null)}
-                  className="h-4 w-4"
-                />
-                <span className="text-sm">Todos</span>
-              </label>
-            </div>
-          </div>
-          {hasFilters && (
-            <>
-              <div className="h-px bg-border" />
-              <Button
-                variant="ghost"
-                className="w-full justify-start"
-                onClick={() => {
-                  onReset();
-                  setOpen(false);
-                }}
-              >
-                Limpar Filtros
-              </Button>
-            </>
-          )}
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
 export default function ClientesPage() {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<ClientesFilters>({});
+  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
   const [createOpen, setCreateOpen] = React.useState(false);
-  
+
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
-  
+  const isSearching = busca !== buscaDebounced;
+
   // Parâmetros para buscar clientes
   const params = React.useMemo(() => {
     return {
@@ -359,51 +236,46 @@ export default function ClientesPage() {
       ...filtros,
     };
   }, [pagina, limite, buscaDebounced, filtros]);
-  
+
   const { clientes, paginacao, isLoading, error, refetch } = useClientes(params);
-  
+
   // Função para atualizar após edição
   const handleEditSuccess = React.useCallback(() => {
     refetch();
   }, [refetch]);
 
   const colunas = React.useMemo(() => criarColunas(handleEditSuccess), [handleEditSuccess]);
-  
-  const handleFiltersChange = React.useCallback((newFilters: ClientesFilters) => {
-    setFiltros(newFilters);
-    setPagina(0); // Resetar para primeira página ao aplicar filtros
-  }, []);
-  
-  const handleFiltersReset = React.useCallback(() => {
-    setFiltros({});
-    setPagina(0);
+
+  // Construir opções e grupos de filtros
+  const filterOptions = React.useMemo(() => buildClientesFilterOptions(), []);
+  const filterGroups = React.useMemo(() => buildClientesFilterGroups(), []);
+
+  // Handler para mudança de filtros
+  const handleFilterIdsChange = React.useCallback((ids: string[]) => {
+    setSelectedFilterIds(ids);
+    const parsed = parseClientesFilters(ids);
+    setFiltros(parsed);
+    setPagina(0); // Reset página ao aplicar filtros
   }, []);
   
   return (
     <div className="space-y-4">
       {/* Barra de busca e filtros */}
-      <div className="flex items-center gap-4 justify-between">
-        <ButtonGroup>
-          <Input
-            placeholder="Buscar por nome, CPF, CNPJ ou e-mail..."
-            value={busca}
-            onChange={(e) => {
-              setBusca(e.target.value);
-              setPagina(0); // Resetar para primeira página ao buscar
-            }}
-            className="max-w-sm"
-          />
-          <ClientesFiltrosAvancados
-            filters={filtros}
-            onFiltersChange={handleFiltersChange}
-            onReset={handleFiltersReset}
-          />
-        </ButtonGroup>
-        <Button onClick={() => setCreateOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Novo Cliente
-        </Button>
-      </div>
+      <TableToolbar
+        searchValue={busca}
+        onSearchChange={(value) => {
+          setBusca(value);
+          setPagina(0);
+        }}
+        isSearching={isSearching}
+        searchPlaceholder="Buscar por nome, CPF, CNPJ ou e-mail..."
+        filterOptions={filterOptions}
+        filterGroups={filterGroups}
+        selectedFilters={selectedFilterIds}
+        onFiltersChange={handleFilterIdsChange}
+        onNewClick={() => setCreateOpen(true)}
+        newButtonTooltip="Novo Cliente"
+      />
       
       {/* Tabela */}
       <DataTable
@@ -436,4 +308,3 @@ export default function ClientesPage() {
     </div>
   );
 }
-

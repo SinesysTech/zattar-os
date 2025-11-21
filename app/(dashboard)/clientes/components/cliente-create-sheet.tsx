@@ -108,11 +108,11 @@ export function ClienteCreateSheet({
           <SheetHeader className="pb-5">
             <SheetTitle className="text-xl font-semibold flex items-center gap-2">
               Novo Cliente
-              {formData.tipoPessoa && (
-                <Badge variant="outline">
-                  {isPessoaFisica ? 'Pessoa Física' : 'Pessoa Jurídica'}
-                </Badge>
-              )}
+                {formData.tipoPessoa && (
+                  <Badge variant="outline" tone="neutral">
+                    {isPessoaFisica ? 'Pessoa Física' : 'Pessoa Jurídica'}
+                  </Badge>
+                )}
             </SheetTitle>
           </SheetHeader>
 

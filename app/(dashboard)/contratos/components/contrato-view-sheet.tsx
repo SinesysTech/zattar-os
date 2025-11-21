@@ -19,8 +19,8 @@ import {
   formatarStatusContrato,
   formatarPoloProcessual,
   formatarData,
-  getStatusBadgeVariant,
-  getTipoContratoBadgeVariant,
+  getStatusBadgeStyle,
+  getTipoContratoBadgeStyle,
 } from '@/app/_lib/utils/format-contratos';
 import type { Contrato } from '@/backend/contratos/services/persistence/contrato-persistence.service';
 
@@ -43,7 +43,7 @@ export function ContratoViewSheet({
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             Contrato #{contrato.id}
-            <Badge variant={getStatusBadgeVariant(contrato.status)}>
+            <Badge {...getStatusBadgeStyle(contrato.status)}>
               {formatarStatusContrato(contrato.status)}
             </Badge>
           </SheetTitle>
@@ -69,9 +69,9 @@ export function ContratoViewSheet({
                 <div className="text-sm font-medium text-muted-foreground mb-1">
                   Tipo de Contrato
                 </div>
-                <Badge variant={getTipoContratoBadgeVariant(contrato.tipoContrato)}>
-                  {formatarTipoContrato(contrato.tipoContrato)}
-                </Badge>
+                  <Badge {...getTipoContratoBadgeStyle(contrato.tipoContrato)}>
+                    {formatarTipoContrato(contrato.tipoContrato)}
+                  </Badge>
               </div>
               <div>
                 <div className="text-sm font-medium text-muted-foreground mb-1">
@@ -83,9 +83,9 @@ export function ContratoViewSheet({
                 <div className="text-sm font-medium text-muted-foreground mb-1">
                   Status
                 </div>
-                <Badge variant={getStatusBadgeVariant(contrato.status)}>
-                  {formatarStatusContrato(contrato.status)}
-                </Badge>
+                  <Badge {...getStatusBadgeStyle(contrato.status)}>
+                    {formatarStatusContrato(contrato.status)}
+                  </Badge>
               </div>
             </div>
           </div>

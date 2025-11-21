@@ -113,7 +113,7 @@ export function criarColunasCredenciais({
         const active = row.getValue('active') as boolean;
         return (
           <div className="flex justify-center">
-            <Badge variant={active ? 'default' : 'secondary'}>
+            <Badge tone={active ? 'success' : 'neutral'} variant={active ? 'soft' : 'outline'}>
               {active ? 'Ativo' : 'Inativo'}
             </Badge>
           </div>

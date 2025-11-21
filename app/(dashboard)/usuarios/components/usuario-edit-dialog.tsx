@@ -13,6 +13,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
@@ -20,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, Save, Search } from 'lucide-react';
+import { Loader2, Save, Search, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Usuario, Endereco } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import { useCargosAtivos } from '@/app/_lib/hooks/use-cargos';
@@ -174,7 +176,35 @@ export function UsuarioEditDialog({
         throw new Error(error.error || 'Erro ao atualizar usuário');
       }
 
-      toast.success('Usuário atualizado com sucesso!');
+      const result = await response.json();
+
+      // Detectar desativação e mostrar feedback detalhado
+      if (result.itensDesatribuidos) {
+        const { total, processos, audiencias, pendentes, expedientes_manuais, contratos } =
+          result.itensDesatribuidos;
+
+        if (total > 0) {
+          const itens = [];
+          if (processos > 0) itens.push(`${processos} processo(s)`);
+          if (audiencias > 0) itens.push(`${audiencias} audiência(s)`);
+          if (pendentes > 0) itens.push(`${pendentes} pendente(s)`);
+          if (expedientes_manuais > 0) itens.push(`${expedientes_manuais} expediente(s)`);
+          if (contratos > 0) itens.push(`${contratos} contrato(s)`);
+
+          toast.success(
+            `Usuário desativado e desatribuído de ${total} ${total === 1 ? 'item' : 'itens'}`,
+            {
+              description: itens.join(', '),
+              duration: 6000,
+            }
+          );
+        } else {
+          toast.success('Usuário desativado com sucesso!');
+        }
+      } else {
+        toast.success('Usuário atualizado com sucesso!');
+      }
+
       onOpenChange(false);
       onSuccess?.();
     } catch (error) {
@@ -538,6 +568,48 @@ export function UsuarioEditDialog({
                     />
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Status do Usuário */}
+            <div className="border-t pt-4 mt-2">
+              <h3 className="font-medium mb-3">Status do Usuário</h3>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="ativo"
+                    checked={formData.ativo}
+                    onCheckedChange={(checked) =>
+                      setFormData({ ...formData, ativo: !!checked })
+                    }
+                  />
+                  <Label htmlFor="ativo" className="cursor-pointer font-normal">
+                    Usuário ativo
+                  </Label>
+                </div>
+
+                {/* Warning quando desativar */}
+                {!formData.ativo && usuario.ativo && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      <strong>Atenção:</strong> Desativar este usuário irá desatribuí-lo
+                      automaticamente de todos os processos, audiências, pendentes,
+                      expedientes e contratos atribuídos a ele. Você receberá um relatório
+                      detalhado dos itens desatribuídos.
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Info quando reativar */}
+                {formData.ativo && !usuario.ativo && (
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      Este usuário será reativado e poderá acessar o sistema normalmente.
+                    </AlertDescription>
+                  </Alert>
+                )}
               </div>
             </div>
           </div>

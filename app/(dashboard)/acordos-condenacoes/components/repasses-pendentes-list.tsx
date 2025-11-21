@@ -65,17 +65,19 @@ export function RepassesPendentesList({
     const configs = {
       pendente_declaracao: {
         label: 'Aguardando Declaração',
-        variant: 'secondary' as const,
+        tone: 'warning' as const,
+        variant: 'soft' as const,
       },
       pendente_transferencia: {
         label: 'Pronto para Transferir',
-        variant: 'default' as const,
+        tone: 'info' as const,
+        variant: 'soft' as const,
       },
     };
 
-    const config = configs[status];
+    const config = configs[status] || { label: status, tone: 'neutral' as const, variant: 'outline' as const };
 
-    return <Badge variant={config.variant}>{config.label}</Badge>;
+    return <Badge tone={config.tone} variant={config.variant}>{config.label}</Badge>;
   };
 
   // Agrupar por status

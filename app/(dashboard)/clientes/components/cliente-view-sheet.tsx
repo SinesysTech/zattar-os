@@ -43,10 +43,10 @@ export function ClienteViewSheet({
         <SheetHeader className="pb-5">
           <SheetTitle className="text-xl font-semibold flex items-center gap-2">
             {formatarNome(cliente.nome)}
-            <Badge variant={cliente.ativo ? 'default' : 'secondary'}>
+            <Badge tone={cliente.ativo ? 'success' : 'neutral'} variant={cliente.ativo ? 'soft' : 'outline'}>
               {cliente.ativo ? 'Ativo' : 'Inativo'}
             </Badge>
-            <Badge variant="outline">
+            <Badge variant="outline" tone="neutral">
               {formatarTipoPessoa(cliente.tipoPessoa)}
             </Badge>
           </SheetTitle>

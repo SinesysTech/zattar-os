@@ -49,6 +49,10 @@ function converterParaPendente(data: Record<string, unknown>): PendenteManifesta
     responsavel_id: (data.responsavel_id as number | null) ?? null,
     tipo_expediente_id: (data.tipo_expediente_id as number | null) ?? null,
     descricao_arquivos: (data.descricao_arquivos as string | null) ?? null,
+    arquivo_nome: (data.arquivo_nome as string | null) ?? null,
+    arquivo_url: (data.arquivo_url as string | null) ?? null,
+    arquivo_key: (data.arquivo_key as string | null) ?? null,
+    arquivo_bucket: (data.arquivo_bucket as string | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };

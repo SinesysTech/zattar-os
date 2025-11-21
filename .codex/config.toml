@@ -1,0 +1,43 @@
+# MCP servers converted to Codex TOML config.
+# Copy or symlink this file to `$CODEX_HOME/config.toml` (default `~/.codex/config.toml`)
+# so Codex CLI can load these servers.
+
+[mcp_servers.sequential-thinking]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["@playwright/mcp@latest"]
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
+
+[mcp_servers.fetch]
+command = "uvx"
+args = ["mcp-server-fetch"]
+
+[mcp_servers.postgres]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-postgres", "postgresql://localhost/mydb"]
+
+[mcp_servers."shadcn.io"]
+url = "https://www.shadcn.io/api/mcp"
+
+[mcp_servers.shadcn]
+command = "npx"
+args = ["shadcn@latest", "mcp"]
+
+[mcp_servers.github]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+env = { GITHUB_PERSONAL_ACCESS_TOKEN = "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" }
+
+[mcp_servers.supabase]
+url = "https://mcp.supabase.com/mcp?project_ref=cxxdivtgeslrujpfpivs"
+http_headers = { Authorization = "Bearer sbp_5a053d85849b9f63cbdae5d2e2c76439b70d6b8c" }
+
+[mcp_servers.redis]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-redis", "redis://:xMw8VzBKibvzxg10@jusbro-redis.service.sinesys.app:6379"]

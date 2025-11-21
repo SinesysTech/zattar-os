@@ -184,7 +184,7 @@ export function AgendamentosList({ onEdit, onRefresh, actionButton }: Agendament
         size: 100,
         cell: ({ row }) => (
           <div className="flex justify-center">
-            <Badge variant={row.getValue('ativo') ? 'default' : 'secondary'}>
+            <Badge tone={row.getValue('ativo') ? 'success' : 'neutral'} variant={row.getValue('ativo') ? 'soft' : 'outline'}>
               {row.getValue('ativo') ? 'Ativo' : 'Inativo'}
             </Badge>
           </div>
@@ -315,4 +315,3 @@ export function AgendamentosList({ onEdit, onRefresh, actionButton }: Agendament
     </div>
   );
 }
-

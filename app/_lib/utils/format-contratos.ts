@@ -124,31 +124,35 @@ export function formatarDataHora(dataISO: string | null | undefined): string {
 }
 
 /**
- * Retorna variante de badge para status do contrato
+ * Retorna tom e estilo de badge para status do contrato
  */
-export function getStatusBadgeVariant(status: StatusContrato | null | undefined): 'default' | 'secondary' | 'destructive' | 'outline' {
-  if (!status) return 'outline';
+export function getStatusBadgeStyle(
+  status: StatusContrato | null | undefined,
+): { tone: 'warning' | 'success' | 'info' | 'danger' | 'neutral'; variant: 'soft' | 'solid' | 'outline' } {
+  if (!status) return { tone: 'neutral', variant: 'outline' };
 
-  const variants: Record<StatusContrato, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-    em_contratacao: 'outline',
-    contratado: 'default',
-    distribuido: 'secondary',
-    desistencia: 'destructive',
+  const styles: Record<StatusContrato, { tone: 'warning' | 'success' | 'info' | 'danger' | 'neutral'; variant: 'soft' | 'solid' | 'outline' }> = {
+    em_contratacao: { tone: 'warning', variant: 'soft' },
+    contratado: { tone: 'success', variant: 'soft' },
+    distribuido: { tone: 'info', variant: 'soft' },
+    desistencia: { tone: 'danger', variant: 'solid' },
   };
 
-  return variants[status] || 'outline';
+  return styles[status] || { tone: 'neutral', variant: 'outline' };
 }
 
 /**
- * Retorna variante de badge para tipo de contrato
+ * Retorna tom e estilo de badge para tipo de contrato
  */
-export function getTipoContratoBadgeVariant(tipo: TipoContrato | null | undefined): 'default' | 'secondary' | 'outline' {
-  if (!tipo) return 'outline';
+export function getTipoContratoBadgeStyle(
+  tipo: TipoContrato | null | undefined,
+): { tone: 'primary' | 'neutral'; variant: 'soft' | 'outline' } {
+  if (!tipo) return { tone: 'neutral', variant: 'outline' };
 
   // Ajuizamento e defesa são mais importantes, outros são secundários
   if (tipo === 'ajuizamento' || tipo === 'defesa') {
-    return 'default';
+    return { tone: 'primary', variant: 'soft' };
   }
 
-  return 'secondary';
+  return { tone: 'neutral', variant: 'soft' };
 }

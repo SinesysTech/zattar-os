@@ -1,4 +1,5 @@
-import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/components/ui/table-toolbar-filter-config';
+import { FilterConfig, buildFilterOptions, parseFilterValues, type ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
+import type { FilterGroup } from '@/components/ui/table-toolbar';
 import type { ContratosFilters } from '@/app/_lib/types/contratos';
 
 export const CONTRATOS_FILTER_CONFIGS: FilterConfig[] = [
@@ -57,6 +58,56 @@ export const CONTRATOS_FILTER_CONFIGS: FilterConfig[] = [
 
 export function buildContratosFilterOptions() {
   return buildFilterOptions(CONTRATOS_FILTER_CONFIGS);
+}
+
+/**
+ * Constrói grupos de filtros para interface hierárquica
+ */
+export function buildContratosFilterGroups(): FilterGroup[] {
+  const configMap = new Map(CONTRATOS_FILTER_CONFIGS.map(c => [c.id, c]));
+
+  const buildOptionsWithoutPrefix = (configs: FilterConfig[]): ComboboxOption[] => {
+    const options: ComboboxOption[] = [];
+
+    for (const config of configs) {
+      if (config.type === 'select' && config.options) {
+        for (const opt of config.options) {
+          options.push({
+            value: `${config.id}_${opt.value}`,
+            label: opt.label, // SEM prefixo do grupo
+            searchText: config.searchText || opt.searchText,
+          });
+        }
+      } else if (config.type === 'boolean') {
+        options.push({
+          value: config.id,
+          label: config.label,
+          searchText: config.searchText,
+        });
+      }
+    }
+
+    return options;
+  };
+
+  return [
+    {
+      label: 'Área de Direito',
+      options: buildOptionsWithoutPrefix([configMap.get('areaDireito')!]),
+    },
+    {
+      label: 'Tipo de Contrato',
+      options: buildOptionsWithoutPrefix([configMap.get('tipoContrato')!]),
+    },
+    {
+      label: 'Tipo de Cobrança',
+      options: buildOptionsWithoutPrefix([configMap.get('tipoCobranca')!]),
+    },
+    {
+      label: 'Status',
+      options: buildOptionsWithoutPrefix([configMap.get('status')!]),
+    },
+  ];
 }
 
 export function parseContratosFilters(selectedFilters: string[]): ContratosFilters {

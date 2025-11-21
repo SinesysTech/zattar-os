@@ -101,7 +101,7 @@ export function ExpedienteVisualizarDialog({
                 {expediente.baixado_em ? 'Baixado' : 'Pendente'}
               </Badge>
               {expediente.prazo_vencido && (
-                <Badge variant="destructive">Prazo Vencido</Badge>
+                <Badge tone="danger" variant="solid">Prazo Vencido</Badge>
               )}
             </div>
           </div>
@@ -146,12 +146,12 @@ export function ExpedienteVisualizarDialog({
                     {expediente.segredo_justica ? 'Sim' : 'Não'}
                   </Badge>
                 </div>
-                <div>
-                  <div className="text-xs text-muted-foreground mb-1">Juízo Digital</div>
-                  <Badge variant={expediente.juizo_digital ? 'default' : 'secondary'}>
-                    {expediente.juizo_digital ? 'Sim' : 'Não'}
-                  </Badge>
-                </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Juízo Digital</div>
+                    <Badge tone={expediente.juizo_digital ? 'success' : 'neutral'} variant={expediente.juizo_digital ? 'soft' : 'outline'}>
+                      {expediente.juizo_digital ? 'Sim' : 'Não'}
+                    </Badge>
+                  </div>
               </div>
             </div>
 

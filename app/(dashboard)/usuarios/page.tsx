@@ -21,7 +21,7 @@ import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { UsuariosGridView } from './components/usuarios-grid-view';
 import { ViewToggle } from './components/view-toggle';
 import { UsuariosFiltrosAvancados } from './components/usuarios-filtros-avancados';
-import { UsuarioCreateSheet } from './components/usuario-create-sheet';
+import { UsuarioCreateDialog } from './components/usuario-create-dialog';
 import { UsuarioEditDialog } from './components/usuario-edit-dialog';
 import { CargosManagementDialog } from './components/cargos-management-dialog';
 import { RedefinirSenhaDialog } from './components/redefinir-senha-dialog';
@@ -265,8 +265,6 @@ export default function UsuariosPage() {
     refetchRef.current();
   }, []);
 
-  const colunas = React.useMemo(() => criarColunas(handleRedefinirSenha), [handleRedefinirSenha]);
-
   const handleFiltersChange = React.useCallback(
     (newFilters: UsuariosFilters) => {
       setFiltros(newFilters);
@@ -307,6 +305,8 @@ export default function UsuariosPage() {
     // Senha redefinida com sucesso
     // Não precisa refetch pois não afeta dados exibidos na listagem
   }, []);
+
+  const colunas = React.useMemo(() => criarColunas(handleRedefinirSenha), [handleRedefinirSenha]);
 
   return (
     <div className="space-y-4">
@@ -403,8 +403,8 @@ export default function UsuariosPage() {
         />
       )}
 
-      {/* Sheet para criação de novo usuário */}
-      <UsuarioCreateSheet
+      {/* Dialog para criação de novo usuário */}
+      <UsuarioCreateDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
         onSuccess={handleCreateSuccess}

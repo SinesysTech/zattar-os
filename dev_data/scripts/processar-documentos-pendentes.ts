@@ -4,7 +4,7 @@
  * Este script:
  * 1. Busca todos os pendentes sem documento (arquivo_nome IS NULL)
  * 2. Para cada pendente, captura o documento PDF do PJE
- * 3. Faz upload para o Google Drive
+ * 3. Faz upload para o Backblaze B2
  * 4. Atualiza o banco de dados com as informações do arquivo
  * 
  * Uso:

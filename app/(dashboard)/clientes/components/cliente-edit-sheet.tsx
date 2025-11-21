@@ -113,12 +113,12 @@ export function ClienteEditSheet({
       <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto p-6">
         <form onSubmit={handleSubmit}>
           <SheetHeader className="pb-5">
-            <SheetTitle className="text-xl font-semibold flex items-center gap-2">
-              Editar Cliente
-              <Badge variant="outline">
-                {isPessoaFisica ? 'Pessoa Física' : 'Pessoa Jurídica'}
-              </Badge>
-            </SheetTitle>
+              <SheetTitle className="text-xl font-semibold flex items-center gap-2">
+                Editar Cliente
+                <Badge variant="outline" tone="neutral">
+                  {isPessoaFisica ? 'Pessoa Física' : 'Pessoa Jurídica'}
+                </Badge>
+              </SheetTitle>
           </SheetHeader>
 
           <div className="space-y-6">

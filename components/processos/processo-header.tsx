@@ -46,20 +46,20 @@ export function ProcessoHeader({ processo }: ProcessoHeaderProps) {
             {processo.numero_processo}
           </h1>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="outline">{processo.trt}</Badge>
-            <Badge variant="outline">{getGrauLabel(processo.grau)}</Badge>
-            <Badge variant="secondary">{getOrigemLabel(processo.origem)}</Badge>
+            <Badge variant="outline" tone="neutral">{processo.trt}</Badge>
+            <Badge variant="outline" tone="neutral">{getGrauLabel(processo.grau)}</Badge>
+            <Badge tone="info" variant="soft">{getOrigemLabel(processo.origem)}</Badge>
             {processo.classe_judicial && (
-              <Badge variant="secondary">{processo.classe_judicial}</Badge>
+              <Badge tone="neutral" variant="soft">{processo.classe_judicial}</Badge>
             )}
             {processo.segredo_justica && (
-              <Badge variant="destructive" className="gap-1">
+              <Badge tone="danger" variant="solid" className="gap-1">
                 <Lock className="h-3 w-3" />
                 Segredo de Justiça
               </Badge>
             )}
             {processo.juizo_digital && (
-              <Badge variant="default">Juízo Digital</Badge>
+              <Badge tone="success" variant="soft">Juízo Digital</Badge>
             )}
           </div>
         </div>
@@ -113,10 +113,7 @@ export function ProcessoHeader({ processo }: ProcessoHeaderProps) {
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-muted-foreground">Parte Autora</h3>
           <div className="flex items-start gap-2">
-            <Badge
-              variant="outline"
-              className="bg-green-50 text-green-700 border-green-200"
-            >
+            <Badge tone="success" variant="soft">
               {processo.nome_parte_autora}
               {processo.qtde_parte_autora > 1 &&
                 ` e outros (${processo.qtde_parte_autora})`}
@@ -128,10 +125,7 @@ export function ProcessoHeader({ processo }: ProcessoHeaderProps) {
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-muted-foreground">Parte Ré</h3>
           <div className="flex items-start gap-2">
-            <Badge
-              variant="outline"
-              className="bg-red-50 text-red-700 border-red-200"
-            >
+            <Badge tone="danger" variant="soft">
               {processo.nome_parte_re}
               {processo.qtde_parte_re > 1 && ` e outros (${processo.qtde_parte_re})`}
             </Badge>
