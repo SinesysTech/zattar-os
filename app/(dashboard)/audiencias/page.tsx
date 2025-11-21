@@ -176,8 +176,8 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [tipoEndereco, setTipoEndereco] = React.useState<'virtual' | 'presencial'>(
-    audiencia.url_audiencia_virtual ? 'virtual' : 
-    audiencia.endereco_presencial ? 'presencial' : 'virtual'
+    audiencia.url_audiencia_virtual ? 'virtual' :
+      audiencia.endereco_presencial ? 'presencial' : 'virtual'
   );
   const [url, setUrl] = React.useState(audiencia.url_audiencia_virtual || '');
   const [endereco, setEndereco] = React.useState({
@@ -221,10 +221,10 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
     setError(null);
     try {
       let bodyData;
-      
+
       if (tipoEndereco === 'virtual') {
         const urlToSave = url.trim() || null;
-        
+
         // Validar URL se fornecida
         if (urlToSave) {
           try {
@@ -235,7 +235,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
             return;
           }
         }
-        
+
         bodyData = {
           tipo: 'virtual',
           urlAudienciaVirtual: urlToSave
@@ -247,7 +247,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
           setIsLoading(false);
           return;
         }
-        
+
         bodyData = {
           tipo: 'presencial',
           enderecoPresencial: endereco
@@ -350,7 +350,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
         audiencia.endereco_presencial.pais,
         audiencia.endereco_presencial.cep
       ].filter(Boolean).join(', ');
-      
+
       return (
         <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
           {enderecoStr || '-'}
@@ -396,7 +396,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
                   Escolha entre URL de videoconferência ou endereço físico
                 </p>
               </div>
-              
+
               <div className="flex gap-2">
                 <Button
                   variant={tipoEndereco === 'virtual' ? 'default' : 'outline'}
@@ -415,7 +415,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
                   Endereço Físico
                 </Button>
               </div>
-              
+
               {tipoEndereco === 'virtual' ? (
                 <div className="space-y-1">
                   <label htmlFor="url-input" className="text-sm font-medium">
@@ -474,7 +474,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
                       />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-1">
                     <label htmlFor="complemento" className="text-sm font-medium">
                       Complemento
@@ -491,7 +491,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
                       className="h-9 text-sm"
                     />
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-1">
                       <label htmlFor="bairro" className="text-sm font-medium">
@@ -526,7 +526,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
                       />
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-3 gap-2">
                     <div className="space-y-1">
                       <label htmlFor="estado" className="text-sm font-medium">
@@ -579,11 +579,11 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
                   </div>
                 </div>
               )}
-              
+
               {error && (
                 <p className="text-xs text-red-600">{error}</p>
               )}
-              
+
               <div className="flex gap-2 justify-end">
                 <Button
                   size="sm"
@@ -613,23 +613,26 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
  * Componente para editar observações da audiência
  */
 function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
-  const [isEditing, setIsEditing] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [observacoes, setObservacoes] = React.useState(audiencia.observacoes || '');
+  const [error, setError] = React.useState<string | null>(null);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   React.useEffect(() => {
     setObservacoes(audiencia.observacoes || '');
+    setError(null);
   }, [audiencia.observacoes]);
 
   React.useEffect(() => {
-    if (isEditing && textareaRef.current) {
+    if (isOpen && textareaRef.current) {
       textareaRef.current.focus();
     }
-  }, [isEditing]);
+  }, [isOpen]);
 
   const handleSave = async () => {
     setIsLoading(true);
+    setError(null);
     try {
       const observacoesToSave = observacoes.trim() || null;
 
@@ -646,11 +649,11 @@ function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
         throw new Error(errorData.error || 'Erro ao atualizar observações');
       }
 
-      setIsEditing(false);
+      setIsOpen(false);
       onSuccess();
     } catch (error) {
       console.error('Erro ao atualizar observações:', error);
-      // Não chamar onSuccess() em caso de erro para evitar falsa impressão de sucesso
+      setError(error instanceof Error ? error.message : 'Erro ao salvar observações');
     } finally {
       setIsLoading(false);
     }
@@ -658,63 +661,81 @@ function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
 
   const handleCancel = () => {
     setObservacoes(audiencia.observacoes || '');
-    setIsEditing(false);
+    setError(null);
+    setIsOpen(false);
   };
-
-  if (isEditing) {
-    return (
-      <div className="relative h-full w-full min-h-[60px] p-2">
-        <textarea
-          ref={textareaRef}
-          value={observacoes}
-          onChange={(e) => setObservacoes(e.target.value)}
-          placeholder="Digite as observações..."
-          disabled={isLoading}
-          className="w-full h-full min-h-[60px] resize-none border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') handleCancel();
-          }}
-        />
-        <div className="absolute bottom-2 right-2 flex gap-1">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={handleSave}
-            disabled={isLoading}
-            className="h-5 w-5 p-0 bg-green-100 hover:bg-green-200 shadow-sm"
-            title="Salvar"
-          >
-            <span className="text-green-700 text-xs font-bold">✓</span>
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={handleCancel}
-            disabled={isLoading}
-            className="h-5 w-5 p-0 bg-red-100 hover:bg-red-200 shadow-sm"
-            title="Cancelar"
-          >
-            <span className="text-red-700 text-xs font-bold">✕</span>
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="relative group h-full w-full min-h-[60px] flex items-start justify-start p-2">
       <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
         {audiencia.observacoes || '-'}
       </span>
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={() => setIsEditing(true)}
-        className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
-        title="Editar observações"
-      >
-        <Pencil className="h-3 w-3" />
-      </Button>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1 bg-gray-100 hover:bg-gray-200 shadow-sm"
+            title="Editar observações"
+            disabled={isLoading}
+          >
+            <Pencil className="h-3 w-3" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[500px]" align="start">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <h4 className="font-medium">Editar Observações</h4>
+              <p className="text-sm text-muted-foreground">
+                Adicione observações sobre a audiência
+              </p>
+            </div>
+
+            <div className="space-y-1">
+              <label htmlFor="observacoes-textarea" className="text-sm font-medium">
+                Observações
+              </label>
+              <textarea
+                ref={textareaRef}
+                id="observacoes-textarea"
+                value={observacoes}
+                onChange={(e) => {
+                  setObservacoes(e.target.value);
+                  setError(null);
+                }}
+                placeholder="Digite as observações sobre a audiência..."
+                disabled={isLoading}
+                className="w-full min-h-[150px] resize-y border rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') handleCancel();
+                }}
+              />
+            </div>
+
+            {error && (
+              <p className="text-xs text-red-600">{error}</p>
+            )}
+
+            <div className="flex gap-2 justify-end">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleCancel}
+                disabled={isLoading}
+              >
+                Cancelar
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleSave}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Salvando...' : 'Salvar'}
+              </Button>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
