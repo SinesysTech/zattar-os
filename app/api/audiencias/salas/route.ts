@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/backend/utils/supabase/server-client';
-import { authenticateRequest } from '@/backend/auth/services/authenticateRequest';
+import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 
 /**
  * GET /api/audiencias/salas

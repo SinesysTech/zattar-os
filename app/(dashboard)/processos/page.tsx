@@ -505,17 +505,25 @@ function criarColunas(
         return (
           <div className="min-h-10 flex items-center justify-center">
             <ButtonGroup>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => {
-                  // TODO: Navegar para página de visualização do processo
-                  console.log('Visualizar processo:', row.original.id);
-                }}
-              >
-                <Eye className="h-4 w-4" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => {
+                        router.push(`/processos/${row.original.id}`);
+                      }}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Visualizar processo completo</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               {temAudiencia && (
                 <AudienciaDialog dataProximaAudiencia={dataProximaAudiencia}>
                   <Button
@@ -653,8 +661,8 @@ export default function ProcessosPage() {
   }, [processos, ordenarPor, ordem]);
 
   const colunas = React.useMemo(
-    () => criarColunas(ordenarPor, ordem, handlePartesSortChange, handleTribunalSortChange),
-    [ordenarPor, ordem, handlePartesSortChange, handleTribunalSortChange]
+    () => criarColunas(ordenarPor, ordem, handlePartesSortChange, handleTribunalSortChange, router),
+    [ordenarPor, ordem, handlePartesSortChange, handleTribunalSortChange, router]
   );
 
   const filterOptions = React.useMemo(() => buildProcessosFilterOptions(), []);
