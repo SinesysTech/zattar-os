@@ -35,7 +35,8 @@ export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: Usuar
             </p>
           </div>
           <Badge
-            variant={usuario.ativo ? 'default' : 'secondary'}
+            tone={usuario.ativo ? 'success' : 'neutral'}
+            variant={usuario.ativo ? 'soft' : 'outline'}
             className="shrink-0"
           >
             {usuario.ativo ? 'Ativo' : 'Inativo'}

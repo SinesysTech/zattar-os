@@ -51,16 +51,18 @@ const formatarTipoCaptura = (tipo: TipoCaptura): string => {
  * Retorna badge de status com cor apropriada
  */
 const StatusBadge = ({ status }: { status: StatusCaptura }) => {
-  const variants: Record<StatusCaptura, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-    pending: { label: 'Pendente', variant: 'outline' },
-    in_progress: { label: 'Em Progresso', variant: 'secondary' },
-    completed: { label: 'Concluída', variant: 'default' },
-    failed: { label: 'Falhou', variant: 'destructive' },
+  type StatusTone = 'warning' | 'info' | 'success' | 'danger' | 'neutral';
+
+  const variants: Record<StatusCaptura, { label: string; tone: StatusTone; variant: 'soft' | 'solid' | 'outline' }> = {
+    pending: { label: 'Pendente', tone: 'warning', variant: 'soft' },
+    in_progress: { label: 'Em Progresso', tone: 'info', variant: 'soft' },
+    completed: { label: 'Concluída', tone: 'success', variant: 'soft' },
+    failed: { label: 'Falhou', tone: 'danger', variant: 'solid' },
   };
 
-  const { label, variant } = variants[status] || { label: status, variant: 'outline' };
+  const { label, variant, tone } = variants[status] || { label: status, tone: 'neutral', variant: 'outline' as const };
 
-  return <Badge variant={variant}>{label}</Badge>;
+  return <Badge tone={tone} variant={variant}>{label}</Badge>;
 };
 
 /**
@@ -122,12 +124,12 @@ function criarColunas(): ColumnDef<CapturaLog>[] {
             {credencialIds.length > 0 ? (
               <div className="flex flex-wrap gap-1">
                 {credencialIds.slice(0, 3).map((id) => (
-                  <Badge key={id} variant="outline" className="text-xs">
+                  <Badge key={id} variant="outline" tone="neutral" className="text-xs">
                     #{id}
                   </Badge>
                 ))}
                 {credencialIds.length > 3 && (
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="outline" tone="neutral" className="text-xs">
                     +{credencialIds.length - 3}
                   </Badge>
                 )}
@@ -289,4 +291,3 @@ export default function HistoricoCapturasPage() {
     </div>
   );
 }
-

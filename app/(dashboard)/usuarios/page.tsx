@@ -137,7 +137,7 @@ function criarColunas(
         const ativo = row.getValue('ativo') as boolean;
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge variant={ativo ? 'default' : 'secondary'}>
+            <Badge tone={ativo ? 'success' : 'neutral'} variant={ativo ? 'soft' : 'outline'}>
               {ativo ? 'Ativo' : 'Inativo'}
             </Badge>
           </div>
@@ -420,4 +420,3 @@ export default function UsuariosPage() {
     </div>
   );
 }
-

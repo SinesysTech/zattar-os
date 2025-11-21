@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/backend/utils/auth/require-permission';
 import { obterUsuarioPorId } from '@/backend/usuarios/services/usuarios/buscar-usuario.service';
 import { atualizarUsuario } from '@/backend/usuarios/services/usuarios/atualizar-usuario.service';
+import { desativarUsuarioComDesatribuicao } from '@/backend/usuarios/services/usuarios/desativar-usuario.service';
 import type { UsuarioDados } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 /**
@@ -172,7 +173,46 @@ export async function PATCH(
     const body = await request.json();
     const dadosAtualizacao = body as Partial<UsuarioDados>;
 
-    // 4. Atualizar usuário
+    // 4. Detectar desativação: ativo mudando de true para false
+    if (dadosAtualizacao.ativo === false) {
+      const usuarioAtual = await obterUsuarioPorId(usuarioId);
+
+      if (!usuarioAtual) {
+        return NextResponse.json(
+          { error: 'Usuário não encontrado' },
+          { status: 404 }
+        );
+      }
+
+      // Se estava ativo e agora está sendo desativado
+      if (usuarioAtual.ativo === true) {
+        console.log(`[API] Detectado desativação do usuário ${usuarioId}`);
+
+        // Usar service de desativação com desatribuição
+        const resultadoDesativacao = await desativarUsuarioComDesatribuicao(
+          usuarioId,
+          authOrError.usuarioId!
+        );
+
+        if (!resultadoDesativacao.sucesso) {
+          return NextResponse.json(
+            { error: resultadoDesativacao.erro },
+            { status: 500 }
+          );
+        }
+
+        // Retornar usuário atualizado + contagens de desatribuição
+        const usuarioAtualizado = await obterUsuarioPorId(usuarioId);
+
+        return NextResponse.json({
+          success: true,
+          data: usuarioAtualizado,
+          itensDesatribuidos: resultadoDesativacao.itensDesatribuidos,
+        });
+      }
+    }
+
+    // 5. Fluxo normal para outras atualizações (incluindo reativação)
     const resultado = await atualizarUsuario(usuarioId, dadosAtualizacao);
 
     if (!resultado.sucesso) {

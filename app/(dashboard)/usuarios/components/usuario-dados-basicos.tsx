@@ -27,17 +27,17 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
             <User className="h-5 w-5" />
             Dados do Usuário
           </CardTitle>
-          <div className="flex items-center gap-2">
-            {usuario.isSuperAdmin && (
-              <Badge variant="default" className="bg-purple-600">
-                <Shield className="h-3 w-3 mr-1" />
-                Super Admin
+            <div className="flex items-center gap-2">
+              {usuario.isSuperAdmin && (
+                <Badge tone="info" variant="solid">
+                  <Shield className="h-3 w-3 mr-1" />
+                  Super Admin
+                </Badge>
+              )}
+              <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'soft' : 'outline'}>
+                {usuario.ativo ? 'Ativo' : 'Inativo'}
               </Badge>
-            )}
-            <Badge variant={usuario.ativo ? 'default' : 'secondary'}>
-              {usuario.ativo ? 'Ativo' : 'Inativo'}
-            </Badge>
-          </div>
+            </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
