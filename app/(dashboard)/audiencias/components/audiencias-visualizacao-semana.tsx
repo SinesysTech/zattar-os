@@ -103,19 +103,44 @@ const getLogoPlataforma = (plataforma: PlataformaVideo): string | null => {
 };
 
 /**
- * Componente para editar URL da audiência virtual
+ * Componente para editar endereço da audiência (URL virtual ou endereço físico)
  */
-function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
+function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [tipoEndereco, setTipoEndereco] = React.useState<'virtual' | 'presencial'>(
+    audiencia.url_audiencia_virtual ? 'virtual' :
+      audiencia.endereco_presencial ? 'presencial' : 'virtual'
+  );
   const [url, setUrl] = React.useState(audiencia.url_audiencia_virtual || '');
+  const [endereco, setEndereco] = React.useState({
+    logradouro: audiencia.endereco_presencial?.logradouro || '',
+    numero: audiencia.endereco_presencial?.numero || '',
+    complemento: audiencia.endereco_presencial?.complemento || '',
+    bairro: audiencia.endereco_presencial?.bairro || '',
+    cidade: audiencia.endereco_presencial?.cidade || '',
+    estado: audiencia.endereco_presencial?.estado || '',
+    pais: audiencia.endereco_presencial?.pais || '',
+    cep: audiencia.endereco_presencial?.cep || '',
+  });
   const [error, setError] = React.useState<string | null>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   React.useEffect(() => {
     setUrl(audiencia.url_audiencia_virtual || '');
+    setEndereco({
+      logradouro: audiencia.endereco_presencial?.logradouro || '',
+      numero: audiencia.endereco_presencial?.numero || '',
+      complemento: audiencia.endereco_presencial?.complemento || '',
+      bairro: audiencia.endereco_presencial?.bairro || '',
+      cidade: audiencia.endereco_presencial?.cidade || '',
+      estado: audiencia.endereco_presencial?.estado || '',
+      pais: audiencia.endereco_presencial?.pais || '',
+      cep: audiencia.endereco_presencial?.cep || '',
+    });
     setError(null);
-  }, [audiencia.url_audiencia_virtual]);
+  }, [audiencia.url_audiencia_virtual, audiencia.endereco_presencial]);
 
   React.useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -128,37 +153,59 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
     setIsLoading(true);
     setError(null);
     try {
-      const urlToSave = url.trim() || null;
+      let bodyData;
 
-      // Validar URL se fornecida
-      if (urlToSave) {
-        try {
-          new URL(urlToSave);
-        } catch {
-          setError('URL inválida. Use o formato: https://exemplo.com');
+      if (tipoEndereco === 'virtual') {
+        const urlToSave = url.trim() || null;
+
+        // Validar URL se fornecida
+        if (urlToSave) {
+          try {
+            new URL(urlToSave);
+          } catch {
+            setError('URL inválida. Use o formato: https://exemplo.com');
+            setIsLoading(false);
+            return;
+          }
+        }
+
+        bodyData = {
+          tipo: 'virtual',
+          urlAudienciaVirtual: urlToSave
+        };
+      } else {
+        // Validar se pelo menos logradouro ou cidade estão preenchidos
+        if (!endereco.logradouro.trim() && !endereco.cidade.trim()) {
+          setError('Informe pelo menos o logradouro ou a cidade');
           setIsLoading(false);
           return;
         }
+
+        bodyData = {
+          tipo: 'presencial',
+          enderecoPresencial: endereco
+        };
       }
 
-      const response = await fetch(`/api/audiencias/${audiencia.id}/url-virtual`, {
+      const response = await fetch(`/api/audiencias/${audiencia.id}/endereco`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ urlAudienciaVirtual: urlToSave }),
+        body: JSON.stringify(bodyData),
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || 'Erro ao atualizar URL');
+        throw new Error(errorData.error || 'Erro ao atualizar endereço');
       }
 
       setIsOpen(false);
       onSuccess();
     } catch (error) {
-      console.error('Erro ao atualizar URL:', error);
-      setError(error instanceof Error ? error.message : 'Erro ao salvar URL');
+      console.error('Erro ao atualizar endereço:', error);
+      setError(error instanceof Error ? error.message : 'Erro ao salvar endereço');
+      // Não chamar onSuccess() em caso de erro para evitar falsa impressão de sucesso
     } finally {
       setIsLoading(false);
     }
@@ -166,6 +213,16 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
 
   const handleCancel = () => {
     setUrl(audiencia.url_audiencia_virtual || '');
+    setEndereco({
+      logradouro: audiencia.endereco_presencial?.logradouro || '',
+      numero: audiencia.endereco_presencial?.numero || '',
+      complemento: audiencia.endereco_presencial?.complemento || '',
+      bairro: audiencia.endereco_presencial?.bairro || '',
+      cidade: audiencia.endereco_presencial?.cidade || '',
+      estado: audiencia.endereco_presencial?.estado || '',
+      pais: audiencia.endereco_presencial?.pais || '',
+      cep: audiencia.endereco_presencial?.cep || '',
+    });
     setError(null);
     setIsOpen(false);
   };
@@ -182,9 +239,10 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
   const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
   const logoPath = getLogoPlataforma(plataforma);
 
-  return (
-    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
-      {audiencia.url_audiencia_virtual ? (
+  // Exibir endereço atual
+  const renderEnderecoAtual = () => {
+    if (audiencia.url_audiencia_virtual) {
+      return (
         <>
           {logoPath ? (
             <a
@@ -213,115 +271,253 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
               {audiencia.url_audiencia_virtual}
             </a>
           )}
-          <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={handleCopyUrl}
-              className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
-              title="Copiar URL"
-            >
-              <Copy className="h-3 w-3" />
-            </Button>
-            <Popover open={isOpen} onOpenChange={setIsOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
-                  title="Editar URL"
-                  disabled={isLoading}
-                >
-                  <Pencil className="h-3 w-3" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[350px]" align="start">
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <label htmlFor="url-input" className="text-sm font-medium">
-                      URL da Audiência Virtual
-                    </label>
-                    <Input
-                      ref={inputRef}
-                      id="url-input"
-                      value={url}
-                      onChange={(e) => {
-                        setUrl(e.target.value);
-                        setError(null);
-                      }}
-                      placeholder="https://meet.google.com/..."
-                      disabled={isLoading}
-                      className="h-9 text-sm"
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleSave();
-                        if (e.key === 'Escape') handleCancel();
-                      }}
-                    />
-                    {error && (
-                      <p className="text-xs text-red-600">{error}</p>
-                    )}
-                  </div>
-                  <div className="flex gap-2 justify-end">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={handleCancel}
-                      disabled={isLoading}
-                    >
-                      Cancelar
-                    </Button>
-                    <Button
-                      size="sm"
-                      onClick={handleSave}
-                      disabled={isLoading}
-                    >
-                      {isLoading ? 'Salvando...' : 'Salvar'}
-                    </Button>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-          </div>
         </>
-      ) : (
+      );
+    } else if (audiencia.endereco_presencial) {
+      const enderecoStr = [
+        audiencia.endereco_presencial.logradouro,
+        audiencia.endereco_presencial.numero,
+        audiencia.endereco_presencial.complemento,
+        audiencia.endereco_presencial.bairro,
+        audiencia.endereco_presencial.cidade,
+        audiencia.endereco_presencial.estado,
+        audiencia.endereco_presencial.pais,
+        audiencia.endereco_presencial.cep
+      ].filter(Boolean).join(', ');
+
+      return (
+        <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+          {enderecoStr || '-'}
+        </span>
+      );
+    } else {
+      return <span className="text-sm text-muted-foreground">-</span>;
+    }
+  };
+
+  return (
+    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
+      {renderEnderecoAtual()}
+      <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        {audiencia.url_audiencia_virtual && (
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={handleCopyUrl}
+            className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
+            title="Copiar URL"
+          >
+            <Copy className="h-3 w-3" />
+          </Button>
+        )}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <Button
               size="sm"
               variant="ghost"
-              className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
-              title="Adicionar URL"
+              className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
+              title="Editar Endereço"
               disabled={isLoading}
             >
-              <Plus className="h-3.5 w-3.5" />
+              <Pencil className="h-3 w-3" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[350px]" align="start">
-            <div className="space-y-3">
-              <div className="space-y-1">
-                <label htmlFor="url-input" className="text-sm font-medium">
-                  URL da Audiência Virtual
-                </label>
-                <Input
-                  ref={inputRef}
-                  id="url-input"
-                  value={url}
-                  onChange={(e) => {
-                    setUrl(e.target.value);
-                    setError(null);
-                  }}
-                  placeholder="https://meet.google.com/..."
-                  disabled={isLoading}
-                  className="h-9 text-sm"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleSave();
-                    if (e.key === 'Escape') handleCancel();
-                  }}
-                />
-                {error && (
-                  <p className="text-xs text-red-600">{error}</p>
-                )}
+          <PopoverContent className="w-[450px]" align="start">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <h4 className="font-medium">Editar Endereço</h4>
+                <p className="text-sm text-muted-foreground">
+                  Escolha entre URL de videoconferência ou endereço físico
+                </p>
               </div>
+
+              <div className="flex gap-2">
+                <Button
+                  variant={tipoEndereco === 'virtual' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setTipoEndereco('virtual')}
+                  className="flex-1"
+                >
+                  URL Virtual
+                </Button>
+                <Button
+                  variant={tipoEndereco === 'presencial' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setTipoEndereco('presencial')}
+                  className="flex-1"
+                >
+                  Endereço Físico
+                </Button>
+              </div>
+
+              {tipoEndereco === 'virtual' ? (
+                <div className="space-y-1">
+                  <label htmlFor="url-input" className="text-sm font-medium">
+                    URL da Audiência Virtual
+                  </label>
+                  <Input
+                    ref={inputRef}
+                    id="url-input"
+                    value={url}
+                    onChange={(e) => {
+                      setUrl(e.target.value);
+                      setError(null);
+                    }}
+                    placeholder="https://meet.google.com/..."
+                    disabled={isLoading}
+                    className="h-9 text-sm"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSave();
+                      if (e.key === 'Escape') handleCancel();
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <label htmlFor="logradouro" className="text-sm font-medium">
+                        Logradouro
+                      </label>
+                      <Input
+                        id="logradouro"
+                        value={endereco.logradouro}
+                        onChange={(e) => {
+                          setEndereco(prev => ({ ...prev, logradouro: e.target.value }));
+                          setError(null);
+                        }}
+                        placeholder="Rua, Avenida, etc."
+                        disabled={isLoading}
+                        className="h-9 text-sm"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label htmlFor="numero" className="text-sm font-medium">
+                        Número
+                      </label>
+                      <Input
+                        id="numero"
+                        value={endereco.numero}
+                        onChange={(e) => {
+                          setEndereco(prev => ({ ...prev, numero: e.target.value }));
+                          setError(null);
+                        }}
+                        placeholder="Nº"
+                        disabled={isLoading}
+                        className="h-9 text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label htmlFor="complemento" className="text-sm font-medium">
+                      Complemento
+                    </label>
+                    <Input
+                      id="complemento"
+                      value={endereco.complemento}
+                      onChange={(e) => {
+                        setEndereco(prev => ({ ...prev, complemento: e.target.value }));
+                        setError(null);
+                      }}
+                      placeholder="Apartamento, sala, etc."
+                      disabled={isLoading}
+                      className="h-9 text-sm"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <label htmlFor="bairro" className="text-sm font-medium">
+                        Bairro
+                      </label>
+                      <Input
+                        id="bairro"
+                        value={endereco.bairro}
+                        onChange={(e) => {
+                          setEndereco(prev => ({ ...prev, bairro: e.target.value }));
+                          setError(null);
+                        }}
+                        placeholder="Bairro"
+                        disabled={isLoading}
+                        className="h-9 text-sm"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label htmlFor="cidade" className="text-sm font-medium">
+                        Cidade
+                      </label>
+                      <Input
+                        id="cidade"
+                        value={endereco.cidade}
+                        onChange={(e) => {
+                          setEndereco(prev => ({ ...prev, cidade: e.target.value }));
+                          setError(null);
+                        }}
+                        placeholder="Cidade"
+                        disabled={isLoading}
+                        className="h-9 text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="space-y-1">
+                      <label htmlFor="estado" className="text-sm font-medium">
+                        Estado
+                      </label>
+                      <Input
+                        id="estado"
+                        value={endereco.estado}
+                        onChange={(e) => {
+                          setEndereco(prev => ({ ...prev, estado: e.target.value }));
+                          setError(null);
+                        }}
+                        placeholder="UF"
+                        disabled={isLoading}
+                        className="h-9 text-sm"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label htmlFor="pais" className="text-sm font-medium">
+                        País
+                      </label>
+                      <Input
+                        id="pais"
+                        value={endereco.pais}
+                        onChange={(e) => {
+                          setEndereco(prev => ({ ...prev, pais: e.target.value }));
+                          setError(null);
+                        }}
+                        placeholder="País"
+                        disabled={isLoading}
+                        className="h-9 text-sm"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label htmlFor="cep" className="text-sm font-medium">
+                        CEP
+                      </label>
+                      <Input
+                        id="cep"
+                        value={endereco.cep}
+                        onChange={(e) => {
+                          setEndereco(prev => ({ ...prev, cep: e.target.value }));
+                          setError(null);
+                        }}
+                        placeholder="00000-000"
+                        disabled={isLoading}
+                        className="h-9 text-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {error && (
+                <p className="text-xs text-red-600">{error}</p>
+              )}
+
               <div className="flex gap-2 justify-end">
                 <Button
                   size="sm"
@@ -342,7 +538,7 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
             </div>
           </PopoverContent>
         </Popover>
-      )}
+      </div>
     </div>
   );
 }
@@ -666,7 +862,7 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
       size: 120,
       cell: ({ row }) => (
         <div className="h-full w-full">
-          <UrlVirtualCell audiencia={row.original} onSuccess={onSuccess} />
+          <EnderecoCell audiencia={row.original} onSuccess={onSuccess} />
         </div>
       ),
     },
