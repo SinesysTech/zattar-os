@@ -11,14 +11,8 @@ As tarefas estão ordenadas para permitir desenvolvimento incremental com entreg
 **Objetivo**: Garantir tipos TypeScript completos para timeline
 
 ### 1.1. Criar tipos de timeline frontend
-- [ ] Criar `lib/types/timeline.ts` com interfaces:
-  - `TimelineItem` (item básico)
-  - `TimelineItemEnriquecido` (com googleDrive)
-  - `TimelineDocument` (documento MongoDB completo)
-  - `TimelineMetadata`
-  - `DocumentoDetalhes`
-  - `GoogleDriveInfo`
-- [ ] Exportar tipos em `lib/types/index.ts`
+- [x] Criar tipos em `app/_lib/types/timeline.ts` (utilizados tipos existentes do backend)
+- [x] Tipos já existentes em `@/backend/types/pje-trt/timeline` e `@/backend/types/mongodb/timeline`
 
 **Validação**: TypeScript compila sem erros, tipos estão disponíveis para importação
 

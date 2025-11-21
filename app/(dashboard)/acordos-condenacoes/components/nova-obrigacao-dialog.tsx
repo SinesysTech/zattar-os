@@ -75,7 +75,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
     return {
       trt,
       grau: grau as 'primeiro_grau' | 'segundo_grau',
-      limite: 2000,
+      limite: 100,
       ordenar_por: 'numero_processo' as const,
       ordem: 'asc' as const,
     };
