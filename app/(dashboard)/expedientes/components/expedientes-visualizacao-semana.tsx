@@ -424,13 +424,13 @@ function criarColunasSemanais(
     {
       id: 'tipo_descricao',
       header: () => (
-        <div className="flex items-center justify-start">
+        <div className="relative flex items-center justify-start w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
           <div className="text-sm font-medium">Tipo / Descrição</div>
         </div>
       ),
       size: 250,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-start justify-center max-w-[250px]">
+        <div className="min-h-10 flex items-start justify-center max-w-[250px]">
           <TipoDescricaoCell
             expediente={row.original}
             onSuccess={onSuccess}
@@ -442,13 +442,13 @@ function criarColunasSemanais(
     {
       accessorKey: 'data_ciencia_parte',
       header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Ciência</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Ciência</div>
         </div>
       ),
       size: 100,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
+        <div className="min-h-10 flex items-center justify-center text-sm font-medium">
           {formatarData(row.getValue('data_ciencia_parte'))}
         </div>
       ),
@@ -456,13 +456,13 @@ function criarColunasSemanais(
     {
       accessorKey: 'data_prazo_legal_parte',
       header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Prazo</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Prazo</div>
         </div>
       ),
       size: 100,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
+        <div className="min-h-10 flex items-center justify-center text-sm font-medium">
           {formatarData(row.getValue('data_prazo_legal_parte'))}
         </div>
       ),
@@ -470,7 +470,7 @@ function criarColunasSemanais(
     {
       id: 'processo',
       header: () => (
-        <div className="flex items-center justify-start">
+        <div className="relative flex items-center justify-start w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
           <div className="text-sm font-medium">Processo</div>
         </div>
       ),
@@ -483,7 +483,7 @@ function criarColunasSemanais(
         const grau = row.original.grau;
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[330px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[330px]">
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
@@ -505,7 +505,7 @@ function criarColunasSemanais(
     {
       id: 'partes',
       header: () => (
-        <div className="flex items-center justify-start">
+        <div className="relative flex items-center justify-start w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
           <div className="text-sm font-medium">Partes</div>
         </div>
       ),
@@ -515,7 +515,7 @@ function criarColunasSemanais(
         const parteRe = row.original.nome_parte_re || '-';
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[220px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[220px]">
             <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left text-xs`}>
               {parteAutora}
             </Badge>
@@ -529,13 +529,13 @@ function criarColunasSemanais(
     {
       accessorKey: 'responsavel_id',
       header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Responsável</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Responsável</div>
         </div>
       ),
       size: 220,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center">
+        <div className="min-h-10 flex items-center justify-center">
           <ResponsavelCell expediente={row.original} onSuccess={onSuccess} usuarios={usuarios} />
         </div>
       ),
@@ -543,13 +543,13 @@ function criarColunasSemanais(
     {
       id: 'acoes',
       header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Ações</div>
+        <div className="flex items-center justify-center w-full">
+          <div className="text-sm font-medium text-center">Ações</div>
         </div>
       ),
       size: 80,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center">
+        <div className="min-h-10 flex items-center justify-center">
           {handleAcoes(row.original)}
         </div>
       ),
@@ -640,39 +640,74 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     });
   };
 
-  return (
-    <div className="space-y-4">
-      {/* Tabs de dias */}
-      <Tabs value={diaAtivo} onValueChange={setDiaAtivo}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="segunda">
-            <span className="text-xs">Segunda - {formatarDataTab(datasDiasSemana.segunda)}</span>
-          </TabsTrigger>
-          <TabsTrigger value="terca">
-            <span className="text-xs">Terça - {formatarDataTab(datasDiasSemana.terca)}</span>
-          </TabsTrigger>
-          <TabsTrigger value="quarta">
-            <span className="text-xs">Quarta - {formatarDataTab(datasDiasSemana.quarta)}</span>
-          </TabsTrigger>
-          <TabsTrigger value="quinta">
-            <span className="text-xs">Quinta - {formatarDataTab(datasDiasSemana.quinta)}</span>
-          </TabsTrigger>
-          <TabsTrigger value="sexta">
-            <span className="text-xs">Sexta - {formatarDataTab(datasDiasSemana.sexta)}</span>
-          </TabsTrigger>
-        </TabsList>
+  const formatarDataCompleta = (data: Date) => {
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
 
-        {Object.entries(expedientesPorDia).map(([dia, expedientesDia]) => (
-          <TabsContent key={dia} value={dia}>
-            <DataTable
-              data={expedientesDia}
-              columns={colunas}
-              isLoading={isLoading}
-              emptyMessage={`Nenhum expediente com prazo para ${dia}.`}
-            />
+  return (
+    <Tabs value={diaAtivo} onValueChange={setDiaAtivo} className="gap-0">
+      <TabsList className="bg-background justify-start rounded-t-lg rounded-b-none border-b p-0 w-full">
+        <TabsTrigger
+          value="segunda"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Segunda - {formatarDataTab(datasDiasSemana.segunda)}</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="terca"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Terça - {formatarDataTab(datasDiasSemana.terca)}</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="quarta"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Quarta - {formatarDataTab(datasDiasSemana.quarta)}</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="quinta"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Quinta - {formatarDataTab(datasDiasSemana.quinta)}</span>
+        </TabsTrigger>
+        <TabsTrigger
+          value="sexta"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Sexta - {formatarDataTab(datasDiasSemana.sexta)}</span>
+        </TabsTrigger>
+      </TabsList>
+
+      {Object.entries(expedientesPorDia).map(([dia, expedientesDia]) => {
+        const dataDia = datasDiasSemana[dia];
+        const nomeDiaCompleto = {
+          segunda: 'Segunda-feira',
+          terca: 'Terça-feira',
+          quarta: 'Quarta-feira',
+          quinta: 'Quinta-feira',
+          sexta: 'Sexta-feira',
+        }[dia];
+
+        return (
+          <TabsContent key={dia} value={dia} className="mt-0">
+            <div className="rounded-b-lg border border-t-0 bg-card text-card-foreground shadow-sm">
+              <DataTable
+                data={expedientesDia}
+                columns={colunas}
+                isLoading={isLoading}
+                emptyMessage={`Nenhum expediente com prazo para ${nomeDiaCompleto}, ${formatarDataCompleta(dataDia)}.`}
+                hideTableBorder={true}
+                hideColumnBorders={true}
+              />
+            </div>
           </TabsContent>
-        ))}
-      </Tabs>
-    </div>
+        );
+      })}
+    </Tabs>
   );
 }
