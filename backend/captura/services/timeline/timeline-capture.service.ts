@@ -15,9 +15,9 @@ import type { CodigoTRT, GrauTRT } from '../trt/types';
 import { obterTimeline, obterDocumento, baixarDocumento } from '@/backend/api/pje-trt/timeline';
 import { uploadDocumentoTimeline } from '../backblaze/upload-documento-timeline.service';
 import { salvarTimelineNoMongoDB, atualizarTimelineMongoIdNoAcervo } from './timeline-persistence.service';
-import type { 
-  TimelineResponse, 
-  TimelineItem, 
+import type {
+  TimelineResponse,
+  TimelineItem,
   DocumentoDetalhes,
   FiltroDocumentosTimeline,
   TimelineItemEnriquecido,
@@ -290,7 +290,7 @@ export async function capturarTimeline(
 
     // 7. Salvar timeline enriquecida no MongoDB
     let mongoId: string | undefined;
-    
+
     try {
       const persistenceResult = await salvarTimelineNoMongoDB({
         processoId,

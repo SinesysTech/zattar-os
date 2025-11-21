@@ -219,7 +219,17 @@ SERVICE_API_KEY=sua_chave_api_segura_gerada_aleatoriamente
 ### Storage (Configurar conforme provider)
 
 ```bash
-STORAGE_PROVIDER=google-drive  # minio | s3 | aws | google-drive
+# Provider de storage (minio | s3 | aws | google-drive | backblaze)
+STORAGE_PROVIDER=backblaze
+
+# Backblaze B2 (Recomendado)
+B2_ENDPOINT=https://s3.us-east-005.backblazeb2.com
+B2_REGION=us-east-005
+B2_BUCKET=seu-bucket
+B2_KEY_ID=sua_key_id
+B2_APPLICATION_KEY=sua_application_key
+
+# Google Drive (Deprecated - migrar para Backblaze)
 GOOGLE_DRIVE_WEBHOOK_URL=https://webhook.sinesys.app/webhook/drive
 ```
 
