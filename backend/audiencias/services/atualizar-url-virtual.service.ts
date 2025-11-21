@@ -1,6 +1,6 @@
 // Serviço para atualizar URL da audiência virtual
 
-import { createClient } from '@/backend/utils/supabase/server';
+import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { invalidateAudienciasCache } from '@/backend/utils/redis/invalidation';
 
 export interface AtualizarUrlVirtualParams {
@@ -33,7 +33,7 @@ export async function atualizarUrlVirtualAudiencia(
     }
   }
 
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   // Atualizar URL da audiência
   const { data, error } = await supabase
