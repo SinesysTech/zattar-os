@@ -109,6 +109,9 @@ interface DocumentoRequestBody {
  *                     arquivo_url_download:
  *                       type: string
  *                       example: "https://drive.google.com/uc?id=abc123&export=download"
+ *                     arquivo_file_id:
+ *                       type: string
+ *                       example: "abc123def456"
  *       400:
  *         description: Parâmetros inválidos ou documento não é PDF
  *         content:
@@ -222,9 +225,8 @@ export async function POST(request: NextRequest) {
       console.error('❌ Erro ao autenticar no PJE:', error);
       return NextResponse.json(
         {
-          error: `Erro de autenticação no PJE: ${
-            error instanceof Error ? error.message : 'Erro desconhecido'
-          }`,
+          error: `Erro de autenticação no PJE: ${error instanceof Error ? error.message : 'Erro desconhecido'
+            }`,
         },
         { status: 500 }
       );
@@ -265,6 +267,7 @@ export async function POST(request: NextRequest) {
           arquivo_url_visualizacao:
             result.arquivoInfo?.arquivo_url_visualizacao,
           arquivo_url_download: result.arquivoInfo?.arquivo_url_download,
+          arquivo_file_id: result.arquivoInfo?.arquivo_file_id,
         },
       });
     } finally {

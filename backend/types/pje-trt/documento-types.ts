@@ -130,6 +130,7 @@ export interface FetchDocumentoParams {
  * - arquivo_nome: string - Nome/path do arquivo no storage (ex: "pendentes/trt3g1/999_1705856400000.pdf")
  * - arquivo_url_visualizacao: string - URL de visualização do Google Drive (webViewLink)
  * - arquivo_url_download: string - URL de download do Google Drive (webContentLink)
+ * - arquivo_file_id: string - ID do arquivo no Google Drive (file_id)
  *
  * USO:
  * Retornado pelo GoogleDriveStorageService após upload bem-sucedido.
@@ -139,13 +140,15 @@ export interface FetchDocumentoParams {
  * {
  *   arquivo_nome: "pendentes/trt3g1/999_1705856400000.pdf",
  *   arquivo_url_visualizacao: "https://drive.google.com/file/d/abc123/view",
- *   arquivo_url_download: "https://drive.google.com/uc?id=abc123&export=download"
+ *   arquivo_url_download: "https://drive.google.com/uc?id=abc123&export=download",
+ *   arquivo_file_id: "abc123def456"
  * }
  */
 export interface ArquivoInfo {
   arquivo_nome: string;
   arquivo_url_visualizacao: string;
   arquivo_url_download: string;
+  arquivo_file_id: string;
 }
 
 /**
@@ -173,7 +176,8 @@ export interface ArquivoInfo {
  *   arquivoInfo: {
  *     arquivo_nome: "pendentes/trt3g1/999_1705856400000.pdf",
  *     arquivo_url_visualizacao: "https://drive.google.com/...",
- *     arquivo_url_download: "https://drive.google.com/..."
+ *     arquivo_url_download: "https://drive.google.com/...",
+ *     arquivo_file_id: "abc123def456"
  *   }
  * }
  *

@@ -281,6 +281,7 @@ export async function downloadAndUploadDocumento(
       arquivo_nome: webhookResult.file_name || `${payload.domain}_${formattedDateTime}_${pendenteId}_${documentoId}`,
       arquivo_url_visualizacao: webhookResult.web_view_link || '',
       arquivo_url_download: webhookResult.web_content_link || '',
+      arquivo_file_id: webhookResult.file_id || '',
     };
 
     // 8. Atualizar banco de dados

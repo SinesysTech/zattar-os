@@ -801,75 +801,79 @@ export default function ExpedientesPage() {
   return (
     <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
       <div className="space-y-4">
-        {/* Barra de busca e filtros consolidados */}
-        <TableToolbar
-          searchValue={busca}
-          onSearchChange={(value) => {
-            setBusca(value);
-            setPagina(0);
-          }}
-          isSearching={isSearching}
-          searchPlaceholder="Buscar expedientes..."
-          filterOptions={filterOptions}
-          filterGroups={filterGroups}
-          selectedFilters={selectedFilterIds}
-          onFiltersChange={handleFilterIdsChange}
-          onNewClick={() => setNovoExpedienteOpen(true)}
-          newButtonTooltip="Novo expediente manual"
-        />
+        {/* Barra de busca, filtros, tabs e controles de navegação - tudo na mesma linha */}
+        <div className="flex items-center gap-4 pb-6">
+          <TableToolbar
+            searchValue={busca}
+            onSearchChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar expedientes..."
+            filterOptions={filterOptions}
+            filterGroups={filterGroups}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            onNewClick={() => setNovoExpedienteOpen(true)}
+            newButtonTooltip="Novo expediente manual"
+          />
 
-        {/* Tabs de visualização com ícones e controles de navegação */}
-        <div className="flex items-center gap-4">
+          {/* Tabs de visualização */}
           <TabsList>
-            <TabsTrigger value="semana">
-              <CalendarRange className="h-4 w-4 mr-2" />
+            <TabsTrigger value="semana" aria-label="Visualização Semanal">
+              <CalendarRange className="h-4 w-4" />
               <span>Semana</span>
             </TabsTrigger>
-            <TabsTrigger value="mes">
-              <Calendar className="h-4 w-4 mr-2" />
+            <TabsTrigger value="mes" aria-label="Visualização Mensal">
+              <Calendar className="h-4 w-4" />
               <span>Mês</span>
             </TabsTrigger>
-            <TabsTrigger value="ano">
-              <CalendarDays className="h-4 w-4 mr-2" />
+            <TabsTrigger value="ano" aria-label="Visualização Anual">
+              <CalendarDays className="h-4 w-4" />
               <span>Ano</span>
             </TabsTrigger>
-            <TabsTrigger value="tabela">
-              <List className="h-4 w-4 mr-2" />
+            <TabsTrigger value="tabela" aria-label="Visualização em Lista">
+              <List className="h-4 w-4" />
               <span>Lista</span>
             </TabsTrigger>
           </TabsList>
 
-          {/* Controles de navegação temporal unificados */}
+          {/* Controles de navegação temporal - aparecem apenas quando não é visualização de lista */}
           {visualizacao !== 'tabela' && (
             <ButtonGroup>
+              {/* Botão Anterior */}
               <Button
                 variant="outline"
                 size="icon"
                 onClick={() => {
                   if (visualizacao === 'semana') navegarSemana('anterior');
-                  else if (visualizacao === 'mes') navegarMes('anterior');
-                  else navegarAno('anterior');
+                  if (visualizacao === 'mes') navegarMes('anterior');
+                  if (visualizacao === 'ano') navegarAno('anterior');
                 }}
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
 
-              <ButtonGroupText>
+              {/* Indicador de período atual */}
+              <ButtonGroupText className="whitespace-nowrap capitalize min-w-40 text-center text-xs font-normal">
                 {formatarPeriodo}
               </ButtonGroupText>
 
+              {/* Botão Próximo */}
               <Button
                 variant="outline"
                 size="icon"
                 onClick={() => {
                   if (visualizacao === 'semana') navegarSemana('proxima');
-                  else if (visualizacao === 'mes') navegarMes('proxima');
-                  else navegarAno('proxima');
+                  if (visualizacao === 'mes') navegarMes('proxima');
+                  if (visualizacao === 'ano') navegarAno('proxima');
                 }}
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
 
+              {/* Botão Rollback (Voltar para atual) */}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -877,15 +881,19 @@ export default function ExpedientesPage() {
                     size="icon"
                     onClick={() => {
                       if (visualizacao === 'semana') voltarSemanaAtual();
-                      else if (visualizacao === 'mes') voltarMesAtual();
-                      else voltarAnoAtual();
+                      if (visualizacao === 'mes') voltarMesAtual();
+                      if (visualizacao === 'ano') voltarAnoAtual();
                     }}
+                    aria-label="Voltar para período atual"
+                    className="bg-muted hover:bg-muted/80"
                   >
                     <RotateCcw className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p>Voltar para {visualizacao === 'semana' ? 'semana' : visualizacao === 'mes' ? 'mês' : 'ano'} atual</p>
+                <TooltipContent className="px-2 py-1 text-xs">
+                  {visualizacao === 'semana' && 'Semana Atual'}
+                  {visualizacao === 'mes' && 'Mês Atual'}
+                  {visualizacao === 'ano' && 'Ano Atual'}
                 </TooltipContent>
               </Tooltip>
             </ButtonGroup>
