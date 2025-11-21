@@ -16,7 +16,8 @@
       "Bash(npm install:*)",
       "Bash(ls:*)",
       "Bash(npx supabase:*)",
-      "Bash(npm run type-check:skip-lib:*)"
+      "Bash(npm run type-check:skip-lib:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []

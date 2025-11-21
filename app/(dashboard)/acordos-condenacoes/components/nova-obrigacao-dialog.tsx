@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { Loader2 } from 'lucide-react';
+import { useAcervo } from '@/lib/hooks/use-acervo';
 
 interface NovaObrigacaoDialogProps {
   open: boolean;
@@ -31,22 +32,9 @@ interface NovaObrigacaoDialogProps {
   onSuccess: () => void;
 }
 
-interface Processo {
-  id: number;
-  numero_processo: string;
-  polo_ativo_nome: string;
-  polo_passivo_nome: string;
-  trt: string;
-  grau: string;
-}
-
 export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrigacaoDialogProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-
-  // Estados de dados
-  const [processos, setProcessos] = React.useState<Processo[]>([]);
-  const [loadingProcessos, setLoadingProcessos] = React.useState(false);
 
   // Form state
   const [processoId, setProcessoId] = React.useState<string[]>([]);
@@ -58,30 +46,23 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
   const [formaDistribuicao, setFormaDistribuicao] = React.useState('');
   const [observacoes, setObservacoes] = React.useState('');
 
-  // Buscar processos quando o dialog abrir
+  // Buscar processos com hook quando o dialog abrir
+  const { processos, isLoading: loadingProcessos, error: processoError } = useAcervo(
+    open
+      ? {
+          limite: 200,
+          ordenar_por: 'numero_processo',
+          ordem: 'desc',
+        }
+      : { limite: 0 } // Não busca se dialog fechado
+  );
+
+  // Atualizar erro se houver problema ao buscar processos
   React.useEffect(() => {
-    if (open && processos.length === 0) {
-      buscarProcessos();
+    if (processoError && !error) {
+      setError(`Erro ao carregar processos: ${processoError}`);
     }
-  }, [open]);
-
-  const buscarProcessos = async () => {
-    setLoadingProcessos(true);
-    try {
-      const response = await fetch('/api/acervo?limite=2000&ordenar_por=numero_processo&ordem=asc');
-      if (!response.ok) throw new Error('Erro ao buscar processos');
-
-      const data = await response.json();
-      if (data.success && data.data?.processos) {
-        setProcessos(data.data.processos);
-      }
-    } catch (err) {
-      console.error('Erro ao buscar processos:', err);
-      setError('Erro ao carregar processos');
-    } finally {
-      setLoadingProcessos(false);
-    }
-  };
+  }, [processoError, error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -177,8 +158,8 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
   const processosOptions: ComboboxOption[] = React.useMemo(() => {
     return processos.map((p) => ({
       value: p.id.toString(),
-      label: `${p.numero_processo} - ${p.polo_ativo_nome} vs ${p.polo_passivo_nome}`,
-      searchText: `${p.numero_processo} ${p.polo_ativo_nome} ${p.polo_passivo_nome}`,
+      label: `${p.numero_processo} - ${p.polo_ativo_nome || 'Sem nome'} vs ${p.polo_passivo_nome || 'Sem nome'}`,
+      searchText: `${p.numero_processo} ${p.polo_ativo_nome || ''} ${p.polo_passivo_nome || ''}`,
     }));
   }, [processos]);
 
@@ -214,9 +195,14 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
                 onValueChange={setProcessoId}
                 placeholder="Buscar por número ou nome das partes..."
                 searchPlaceholder="Buscar processo..."
-                emptyText="Nenhum processo encontrado."
+                emptyText="Nenhum processo encontrado"
                 multiple={false}
               />
+            )}
+            {processos.length > 0 && (
+              <p className="text-xs text-muted-foreground">
+                Mostrando os {processos.length} processos mais recentes
+              </p>
             )}
           </div>
 
