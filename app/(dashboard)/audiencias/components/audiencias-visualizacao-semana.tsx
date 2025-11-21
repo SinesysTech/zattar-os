@@ -388,7 +388,7 @@ function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
       onSuccess();
     } catch (error) {
       console.error('Erro ao atualizar observações:', error);
-      onSuccess();
+      // Não chamar onSuccess() em caso de erro para evitar falsa impressão de sucesso
     } finally {
       setIsLoading(false);
     }
@@ -494,7 +494,7 @@ function ResponsavelCell({
       onSuccess();
     } catch (error) {
       console.error('Erro ao atribuir responsável:', error);
-      onSuccess();
+      // Não chamar onSuccess() em caso de erro para evitar falsa impressão de sucesso
     } finally {
       setIsLoading(false);
     }
