@@ -251,7 +251,7 @@ export async function salvarPendentes(
  * Usado após upload bem-sucedido de documento para Google Drive
  *
  * @param pendenteId - ID do pendente na tabela pendentes_manifestacao
- * @param arquivoInfo - Informações do arquivo (nome, URLs de visualização e download)
+ * @param arquivoInfo - Informações do arquivo (nome, URLs de visualização e download, file_id)
  * @returns Promise<void>
  * @throws Error se a atualização falhar
  */
@@ -261,6 +261,7 @@ export async function atualizarDocumentoPendente(
     arquivo_nome: string;
     arquivo_url_visualizacao: string;
     arquivo_url_download: string;
+    arquivo_file_id: string;
   }
 ): Promise<void> {
   const supabase = createServiceClient();
@@ -271,6 +272,7 @@ export async function atualizarDocumentoPendente(
       arquivo_nome: arquivoInfo.arquivo_nome,
       arquivo_url_visualizacao: arquivoInfo.arquivo_url_visualizacao,
       arquivo_url_download: arquivoInfo.arquivo_url_download,
+      arquivo_file_id: arquivoInfo.arquivo_file_id,
     })
     .eq('id', pendenteId);
 
