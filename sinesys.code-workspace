@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"claudeCode.allowDangerouslySkipPermissions": true,
+		"claudeCode.respectGitIgnore": false,
+		"files.associations": {
+			"*.css": "tailwindcss"
+		}
+	}
+}

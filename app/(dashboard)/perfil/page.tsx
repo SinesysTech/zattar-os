@@ -82,7 +82,7 @@ export default function PerfilPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
             {usuario.nomeExibicao}
-            <Badge variant={usuario.ativo ? 'default' : 'secondary'}>
+            <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'soft' : 'outline'}>
               {usuario.ativo ? 'Ativo' : 'Inativo'}
             </Badge>
           </h1>

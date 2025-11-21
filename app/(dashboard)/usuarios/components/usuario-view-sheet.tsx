@@ -41,7 +41,7 @@ export function UsuarioViewSheet({
         <SheetHeader className="pb-5">
           <SheetTitle className="text-xl font-semibold flex items-center gap-2">
             {formatarNomeExibicao(usuario.nomeExibicao)}
-            <Badge variant={usuario.ativo ? 'default' : 'secondary'}>
+            <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'soft' : 'outline'}>
               {usuario.ativo ? 'Ativo' : 'Inativo'}
             </Badge>
           </SheetTitle>
