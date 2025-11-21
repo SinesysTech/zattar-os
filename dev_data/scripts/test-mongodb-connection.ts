@@ -16,8 +16,8 @@ console.log('✅ .env.local carregado de:', envPath);
 console.log('🔑 MONGODB_URL:', process.env.MONGODB_URL ? '✅ Definida' : '❌ Não definida');
 console.log('📁 MONGODB_DATABASE:', process.env.MONGODB_DATABASE || '❌ Não definida');
 
-import { testMongoConnection, closeMongoConnection } from '@/backend/utils/mongodb/client';
-import { createMongoIndexes } from '@/backend/utils/mongodb/collections';
+import { testMongoConnection, closeMongoConnection } from '../../backend/utils/mongodb/client';
+import { createMongoIndexes } from '../../backend/utils/mongodb/collections';
 
 async function main() {
   console.log('\n🧪 Teste de Conexão MongoDB\n');

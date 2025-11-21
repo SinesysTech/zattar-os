@@ -55,12 +55,8 @@ export default function CapturaPage() {
         {/* Conteúdo da aba Histórico */}
         <TabsContent value="historico" className="mt-6">
           <HistoricoCapturas
-            actionButton={
-              <Button onClick={() => setCapturaDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Nova Captura
-              </Button>
-            }
+            onNewClick={() => setCapturaDialogOpen(true)}
+            newButtonTooltip="Nova Captura"
           />
         </TabsContent>
 

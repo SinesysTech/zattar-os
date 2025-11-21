@@ -585,12 +585,6 @@ function AcoesExpediente({
         expediente={expediente}
         onSuccess={handleSuccess}
       />
-
-      <NovoExpedienteDialog
-        open={novoExpedienteOpen}
-        onOpenChange={setNovoExpedienteOpen}
-        onSuccess={handleSuccess}
-      />
     </TooltipProvider>
   );
 }
@@ -953,6 +947,12 @@ export default function ExpedientesPage() {
           />
         </TabsContent>
       </div>
+
+      <NovoExpedienteDialog
+        open={novoExpedienteOpen}
+        onOpenChange={setNovoExpedienteOpen}
+        onSuccess={handleSuccess}
+      />
     </Tabs>
   );
 }

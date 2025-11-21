@@ -9,14 +9,14 @@ import { Metadata } from 'next';
 import { ProcessoVisualizacao } from './processo-visualizacao';
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 /**
  * Gera metadata dinâmica para a página
  */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = params;
+  const { id } = await params;
 
   // Validar ID
   const acervoId = parseInt(id);
@@ -58,8 +58,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 /**
  * Página do processo (Server Component)
  */
-export default function ProcessoPage({ params }: PageProps) {
-  const { id } = params;
+export default async function ProcessoPage({ params }: PageProps) {
+  const { id } = await params;
 
   // Validar ID
   const acervoId = parseInt(id);

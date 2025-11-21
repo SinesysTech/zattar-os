@@ -265,10 +265,11 @@ function criarColunas(
 }
 
 interface HistoricoCapturaProps {
-  actionButton?: React.ReactNode;
+  onNewClick?: () => void;
+  newButtonTooltip?: string;
 }
 
-export function HistoricoCapturas({ actionButton }: HistoricoCapturaProps = {}) {
+export function HistoricoCapturas({ onNewClick, newButtonTooltip = 'Nova Captura' }: HistoricoCapturaProps = {}) {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
@@ -339,24 +340,21 @@ export function HistoricoCapturas({ actionButton }: HistoricoCapturaProps = {}) 
   return (
     <div className="space-y-4">
       {/* Barra de busca e filtros */}
-      <div className="flex items-center gap-4 justify-between">
-        <TableToolbar
-          searchValue={busca}
-          onSearchChange={(value) => {
-            setBusca(value);
-            setPagina(0);
-          }}
-          isSearching={isSearching}
-          searchPlaceholder="Buscar capturas..."
-          filterOptions={filterOptions}
-          filterGroups={filterGroups}
-          selectedFilters={selectedFilterIds}
-          onFiltersChange={handleFilterIdsChange}
-        />
-
-        {/* Botão de Ação (ex: Nova Captura) */}
-        {actionButton && <div>{actionButton}</div>}
-      </div>
+      <TableToolbar
+        searchValue={busca}
+        onSearchChange={(value) => {
+          setBusca(value);
+          setPagina(0);
+        }}
+        isSearching={isSearching}
+        searchPlaceholder="Buscar capturas..."
+        filterOptions={filterOptions}
+        filterGroups={filterGroups}
+        selectedFilters={selectedFilterIds}
+        onFiltersChange={handleFilterIdsChange}
+        onNewClick={onNewClick}
+        newButtonTooltip={newButtonTooltip}
+      />
 
       {/* Tabela */}
       <DataTable
