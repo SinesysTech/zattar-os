@@ -62,6 +62,16 @@ export interface Audiencia {
   polo_ativo_nome: string | null;
   polo_passivo_nome: string | null;
   url_audiencia_virtual: string | null;
+  endereco_presencial: {
+    logradouro?: string;
+    numero?: string;
+    complemento?: string;
+    bairro?: string;
+    cidade?: string;
+    estado?: string;
+    pais?: string;
+    cep?: string;
+  } | null;
   responsavel_id: number | null;
   observacoes: string | null;
   dados_anteriores: Record<string, unknown> | null; // jsonb
