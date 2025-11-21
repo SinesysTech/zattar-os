@@ -10,7 +10,13 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Plus, Settings } from 'lucide-react';
+import { Eye, Plus, Settings, MoreHorizontal, KeyRound } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { UsuariosGridView } from './components/usuarios-grid-view';
 import { ViewToggle } from './components/view-toggle';
@@ -18,6 +24,7 @@ import { UsuariosFiltrosAvancados } from './components/usuarios-filtros-avancado
 import { UsuarioCreateSheet } from './components/usuario-create-sheet';
 import { UsuarioEditDialog } from './components/usuario-edit-dialog';
 import { CargosManagementDialog } from './components/cargos-management-dialog';
+import { RedefinirSenhaDialog } from './components/redefinir-senha-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import type { UsuariosFilters, ViewMode } from '@/app/_lib/types/usuarios';
@@ -33,7 +40,9 @@ const VIEW_MODE_STORAGE_KEY = 'usuarios-view-mode';
 /**
  * Define as colunas da tabela de usuários
  */
-function criarColunas(): ColumnDef<Usuario>[] {
+function criarColunas(
+  onRedefinirSenha: (usuario: Usuario) => void
+): ColumnDef<Usuario>[] {
   return [
     {
       accessorKey: 'nomeExibicao',
@@ -148,7 +157,7 @@ function criarColunas(): ColumnDef<Usuario>[] {
         const usuario = row.original;
         return (
           <div className="min-h-10 flex items-center justify-center gap-2">
-            <UsuarioActions usuario={usuario} />
+            <UsuarioActions usuario={usuario} onRedefinirSenha={onRedefinirSenha} />
           </div>
         );
       },
@@ -159,7 +168,13 @@ function criarColunas(): ColumnDef<Usuario>[] {
 /**
  * Componente de ações para cada usuário
  */
-function UsuarioActions({ usuario }: { usuario: Usuario }) {
+function UsuarioActions({
+  usuario,
+  onRedefinirSenha
+}: {
+  usuario: Usuario;
+  onRedefinirSenha: (usuario: Usuario) => void;
+}) {
   const router = useRouter();
 
   const handleViewClick = () => {
@@ -167,15 +182,28 @@ function UsuarioActions({ usuario }: { usuario: Usuario }) {
   };
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="h-8 w-8"
-      onClick={handleViewClick}
-    >
-      <Eye className="h-4 w-4" />
-      <span className="sr-only">Visualizar usuário</span>
-    </Button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+        >
+          <MoreHorizontal className="h-4 w-4" />
+          <span className="sr-only">Ações do usuário</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={handleViewClick}>
+          <Eye className="mr-2 h-4 w-4" />
+          Visualizar
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onRedefinirSenha(usuario)}>
+          <KeyRound className="mr-2 h-4 w-4" />
+          Redefinir Senha
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -190,6 +218,8 @@ export default function UsuariosPage() {
   const [editOpen, setEditOpen] = React.useState(false);
   const [selectedUsuario, setSelectedUsuario] = React.useState<Usuario | null>(null);
   const [cargosManagementOpen, setCargosManagementOpen] = React.useState(false);
+  const [redefinirSenhaOpen, setRedefinirSenhaOpen] = React.useState(false);
+  const [usuarioParaRedefinirSenha, setUsuarioParaRedefinirSenha] = React.useState<Usuario | null>(null);
 
   // Carregar preferência de visualização do localStorage
   React.useEffect(() => {
@@ -235,7 +265,7 @@ export default function UsuariosPage() {
     refetchRef.current();
   }, []);
 
-  const colunas = React.useMemo(() => criarColunas(), []);
+  const colunas = React.useMemo(() => criarColunas(handleRedefinirSenha), [handleRedefinirSenha]);
 
   const handleFiltersChange = React.useCallback(
     (newFilters: UsuariosFilters) => {
@@ -264,6 +294,19 @@ export default function UsuariosPage() {
     },
     []
   );
+
+  const handleRedefinirSenha = React.useCallback(
+    (usuario: Usuario) => {
+      setUsuarioParaRedefinirSenha(usuario);
+      setRedefinirSenhaOpen(true);
+    },
+    []
+  );
+
+  const handleRedefinirSenhaSuccess = React.useCallback(() => {
+    // Senha redefinida com sucesso
+    // Não precisa refetch pois não afeta dados exibidos na listagem
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -317,6 +360,7 @@ export default function UsuariosPage() {
           paginacao={paginacao}
           onView={handleView}
           onEdit={handleEdit}
+          onRedefinirSenha={handleRedefinirSenha}
           onPageChange={setPagina}
           onPageSizeChange={setLimite}
         />
@@ -364,6 +408,14 @@ export default function UsuariosPage() {
         open={createOpen}
         onOpenChange={setCreateOpen}
         onSuccess={handleCreateSuccess}
+      />
+
+      {/* Dialog para redefinir senha */}
+      <RedefinirSenhaDialog
+        open={redefinirSenhaOpen}
+        onOpenChange={setRedefinirSenhaOpen}
+        usuario={usuarioParaRedefinirSenha}
+        onSuccess={handleRedefinirSenhaSuccess}
       />
     </div>
   );

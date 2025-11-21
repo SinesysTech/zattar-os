@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, Pencil, KeyRound } from 'lucide-react';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import {
   formatarNomeExibicao,
@@ -18,9 +18,10 @@ interface UsuarioCardProps {
   usuario: Usuario;
   onView: (usuario: Usuario) => void;
   onEdit?: (usuario: Usuario) => void;
+  onRedefinirSenha?: (usuario: Usuario) => void;
 }
 
-export function UsuarioCard({ usuario, onView, onEdit }: UsuarioCardProps) {
+export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: UsuarioCardProps) {
   return (
     <Card className="relative flex flex-col h-full hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
@@ -81,6 +82,7 @@ export function UsuarioCard({ usuario, onView, onEdit }: UsuarioCardProps) {
           size="icon"
           className="h-8 w-8"
           onClick={() => onView(usuario)}
+          title="Visualizar usuário"
         >
           <Eye className="h-4 w-4" />
           <span className="sr-only">Visualizar usuário</span>
@@ -91,9 +93,22 @@ export function UsuarioCard({ usuario, onView, onEdit }: UsuarioCardProps) {
             size="icon"
             className="h-8 w-8"
             onClick={() => onEdit(usuario)}
+            title="Editar usuário"
           >
             <Pencil className="h-4 w-4" />
             <span className="sr-only">Editar usuário</span>
+          </Button>
+        )}
+        {onRedefinirSenha && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onRedefinirSenha(usuario)}
+            title="Redefinir senha"
+          >
+            <KeyRound className="h-4 w-4" />
+            <span className="sr-only">Redefinir senha</span>
           </Button>
         )}
       </div>
