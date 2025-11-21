@@ -269,3 +269,8 @@ export const substituirPermissoes = async (
 
   return data || [];
 };
+
+/**
+ * Alias para verificarPermissao (plural para compatibilidade)
+ */
+export const verificarPermissoes = verificarPermissao;

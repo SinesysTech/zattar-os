@@ -463,10 +463,10 @@ export async function POST(request: NextRequest) {
       advogado_id: body.advogado_id,
       data_inicio: body.data_inicio,
       data_fim: body.data_fim,
-      tipo_descricao: body.tipo_descricao,
-      tipo_is_virtual: body.tipo_is_virtual,
-      sala_audiencia_nome: body.sala_audiencia_nome,
+      tipo_audiencia_id: body.tipo_audiencia_id,
+      sala_audiencia_id: body.sala_audiencia_id,
       url_audiencia_virtual: body.url_audiencia_virtual,
+      endereco_presencial: body.endereco_presencial,
       observacoes: body.observacoes,
       responsavel_id: body.responsavel_id,
     };
