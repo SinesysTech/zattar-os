@@ -39,6 +39,7 @@ import {
   List,
   RotateCcw,
   FileText,
+  Pencil,
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -315,9 +316,10 @@ function ResponsavelCell({
   onSuccess: () => void;
   usuarios: Usuario[];
 }) {
+  const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleChange = async (value: string) => {
+  const handleSelect = async (value: string) => {
     setIsLoading(true);
     try {
       const responsavelId = value === 'null' || value === '' ? null : parseInt(value, 10);
@@ -335,11 +337,10 @@ function ResponsavelCell({
         throw new Error(errorData.error || 'Erro ao atribuir responsável');
       }
 
-      // Atualizar a lista após sucesso
+      setIsOpen(false);
       onSuccess();
     } catch (error) {
       console.error('Erro ao atribuir responsável:', error);
-      // Em caso de erro, ainda atualizamos para mostrar o estado atual
       onSuccess();
     } finally {
       setIsLoading(false);
@@ -349,25 +350,47 @@ function ResponsavelCell({
   const responsavelAtual = usuarios.find(u => u.id === expediente.responsavel_id);
 
   return (
-    <Select
-      value={expediente.responsavel_id?.toString() || 'null'}
-      onValueChange={handleChange}
-      disabled={isLoading}
-    >
-      <SelectTrigger className="w-[200px]">
-        <SelectValue placeholder="Sem responsável">
-          {responsavelAtual ? responsavelAtual.nomeExibicao : 'Sem responsável'}
-        </SelectValue>
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="null">Sem responsável</SelectItem>
-        {usuarios.map((usuario) => (
-          <SelectItem key={usuario.id} value={usuario.id.toString()}>
-            {usuario.nomeExibicao}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
+      <span className="text-sm">
+        {responsavelAtual ? responsavelAtual.nomeExibicao : 'Sem responsável'}
+      </span>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
+            title="Editar responsável"
+            disabled={isLoading}
+          >
+            <Pencil className="h-3 w-3" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[250px] p-2">
+          <div className="space-y-1">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => handleSelect('null')}
+              disabled={isLoading}
+            >
+              Sem responsável
+            </Button>
+            {usuarios.map((usuario) => (
+              <Button
+                key={usuario.id}
+                variant="ghost"
+                className="w-full justify-start text-sm"
+                onClick={() => handleSelect(usuario.id.toString())}
+                disabled={isLoading}
+              >
+                {usuario.nomeExibicao}
+              </Button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }
 
@@ -498,7 +521,7 @@ function criarColunas(
           <div className="text-sm font-medium">Responsável</div>
         </div>
       ),
-      size: 220,
+      size: 160,
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center">
           <ResponsavelCell expediente={row.original} onSuccess={onSuccess} usuarios={usuarios} />
@@ -698,7 +721,7 @@ export default function ExpedientesPage() {
     []
   );
 
-// Funções para navegação de semana
+  // Funções para navegação de semana
   const navegarSemana = React.useCallback((direcao: 'anterior' | 'proxima') => {
     const novaSemana = new Date(semanaAtual);
     novaSemana.setDate(novaSemana.getDate() + (direcao === 'proxima' ? 7 : -7));
