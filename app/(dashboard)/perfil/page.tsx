@@ -5,12 +5,13 @@
 import * as React from 'react';
 import { usePerfil } from '@/app/_lib/hooks/use-perfil';
 import { PerfilEditSheet } from './components/perfil-edit-sheet';
+import { AlterarSenhaDialog } from './components/alterar-senha-dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Edit, Mail, Phone, MapPin, Briefcase, User, Calendar } from 'lucide-react';
+import { Edit, Mail, Phone, MapPin, Briefcase, User, Calendar, KeyRound } from 'lucide-react';
 import {
   formatarCpf,
   formatarTelefone,
@@ -23,9 +24,15 @@ import {
 export default function PerfilPage() {
   const { usuario, isLoading, error, refetch } = usePerfil();
   const [editSheetOpen, setEditSheetOpen] = React.useState(false);
+  const [alterarSenhaDialogOpen, setAlterarSenhaDialogOpen] = React.useState(false);
 
   const handleEditSuccess = () => {
     refetch();
+  };
+
+  const handleAlterarSenhaSuccess = () => {
+    // Senha alterada com sucesso
+    // Não precisa refetch pois não afeta dados exibidos
   };
 
   if (error) {
@@ -83,10 +90,16 @@ export default function PerfilPage() {
             Visualize e edite suas informações pessoais
           </p>
         </div>
-        <Button onClick={() => setEditSheetOpen(true)}>
-          <Edit className="mr-2 h-4 w-4" />
-          Editar Perfil
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setAlterarSenhaDialogOpen(true)}>
+            <KeyRound className="mr-2 h-4 w-4" />
+            Alterar Senha
+          </Button>
+          <Button onClick={() => setEditSheetOpen(true)}>
+            <Edit className="mr-2 h-4 w-4" />
+            Editar Perfil
+          </Button>
+        </div>
       </div>
 
       {/* Cards de Informação */}
@@ -255,6 +268,13 @@ export default function PerfilPage() {
         onOpenChange={setEditSheetOpen}
         usuario={usuario}
         onSuccess={handleEditSuccess}
+      />
+
+      {/* Alterar Senha Dialog */}
+      <AlterarSenhaDialog
+        open={alterarSenhaDialogOpen}
+        onOpenChange={setAlterarSenhaDialogOpen}
+        onSuccess={handleAlterarSenhaSuccess}
       />
     </div>
   );

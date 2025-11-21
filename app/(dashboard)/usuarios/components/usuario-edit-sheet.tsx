@@ -184,9 +184,13 @@ export function UsuarioEditSheet({
                   />
                 </div>
                 <div>
-                  <Label htmlFor="genero">Gênero</Label>
+                  <Label htmlFor="genero" id="genero-label">
+                    Gênero
+                  </Label>
                   <select
                     id="genero"
+                    aria-labelledby="genero-label"
+                    aria-label="Genero"
                     className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                     value={formData.genero || ''}
                     onChange={(e) =>
@@ -307,13 +311,19 @@ export function UsuarioEditSheet({
                 <input
                   type="checkbox"
                   id="ativo"
+                  aria-labelledby="ativo-label"
+                  aria-label="Usuario ativo"
                   checked={formData.ativo ?? true}
                   onChange={(e) =>
                     setFormData({ ...formData, ativo: e.target.checked })
                   }
                   className="h-4 w-4"
                 />
-                <Label htmlFor="ativo" className="cursor-pointer">
+                <Label
+                  id="ativo-label"
+                  htmlFor="ativo"
+                  className="cursor-pointer"
+                >
                   Usuário ativo
                 </Label>
               </div>
