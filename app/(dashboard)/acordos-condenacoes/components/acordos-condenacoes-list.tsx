@@ -1,29 +1,16 @@
 'use client';
 
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { ButtonGroup } from '@/components/ui/button-group';
+import { DataTable } from '@/components/ui/data-table';
+import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Eye, Search, X, Loader2, AlertCircle, FileX } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Eye } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from '@/components/ui/empty';
+import type { ColumnDef } from '@tanstack/react-table';
+import type { ObrigacoesFilters } from './obrigacoes-toolbar-filters';
 
 interface AcordoCondenacao {
   id: number;
@@ -46,7 +33,255 @@ interface ListagemResultado {
   totalPaginas: number;
 }
 
-export function AcordosCondenacoesList() {
+interface AcordosCondenacoesListProps {
+  busca: string;
+  filtros: ObrigacoesFilters;
+  refreshKey: number;
+}
+
+/**
+ * Retorna a classe CSS de cor para badge do tipo
+ */
+const getTipoColorClass = (tipo: AcordoCondenacao['tipo']): string => {
+  const tipoColors: Record<string, string> = {
+    'acordo': 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
+    'condenacao': 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
+    'custas_processuais': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+  };
+
+  return tipoColors[tipo] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge da direção
+ */
+const getDirecaoColorClass = (direcao: AcordoCondenacao['direcao']): string => {
+  const direcaoColors: Record<string, string> = {
+    'recebimento': 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
+    'pagamento': 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800',
+  };
+
+  return direcaoColors[direcao] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge do status
+ */
+const getStatusColorClass = (status: AcordoCondenacao['status']): string => {
+  const statusColors: Record<string, string> = {
+    'pendente': 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-800',
+    'pago_parcial': 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-200 dark:border-orange-800',
+    'pago_total': 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
+    'atrasado': 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800',
+  };
+
+  return statusColors[status] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
+};
+
+/**
+ * Formata o tipo para exibição
+ */
+const formatarTipo = (tipo: AcordoCondenacao['tipo']): string => {
+  const tipoLabels: Record<string, string> = {
+    'acordo': 'Acordo',
+    'condenacao': 'Condenação',
+    'custas_processuais': 'Custas',
+  };
+  return tipoLabels[tipo] || tipo;
+};
+
+/**
+ * Formata a direção para exibição
+ */
+const formatarDirecao = (direcao: AcordoCondenacao['direcao']): string => {
+  const direcaoLabels: Record<string, string> = {
+    'recebimento': 'Recebimento',
+    'pagamento': 'Pagamento',
+  };
+  return direcaoLabels[direcao] || direcao;
+};
+
+/**
+ * Formata o status para exibição
+ */
+const formatarStatus = (status: AcordoCondenacao['status']): string => {
+  const statusLabels: Record<string, string> = {
+    'pendente': 'Pendente',
+    'pago_parcial': 'Pago Parcial',
+    'pago_total': 'Pago Total',
+    'atrasado': 'Atrasado',
+  };
+  return statusLabels[status] || status;
+};
+
+/**
+ * Define as colunas da tabela de obrigações
+ */
+function criarColunas(router: ReturnType<typeof useRouter>): ColumnDef<AcordoCondenacao>[] {
+  return [
+    {
+      accessorKey: 'processoId',
+      header: ({ column }) => (
+        <div className="flex items-center justify-start">
+          <DataTableColumnHeader column={column} title="Processo" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 150,
+      cell: ({ row }) => {
+        const processoId = row.getValue('processoId') as number;
+        return (
+          <div className="min-h-10 flex items-center justify-start">
+            <span className="text-sm font-medium">{processoId}</span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'tipo',
+      header: ({ column }) => (
+        <div className="flex items-center justify-start">
+          <DataTableColumnHeader column={column} title="Tipo" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 150,
+      cell: ({ row }) => {
+        const tipo = row.getValue('tipo') as AcordoCondenacao['tipo'];
+        return (
+          <div className="min-h-10 flex items-center justify-start">
+            <Badge variant="outline" className={getTipoColorClass(tipo)}>
+              {formatarTipo(tipo)}
+            </Badge>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'direcao',
+      header: ({ column }) => (
+        <div className="flex items-center justify-start">
+          <DataTableColumnHeader column={column} title="Direção" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 150,
+      cell: ({ row }) => {
+        const direcao = row.getValue('direcao') as AcordoCondenacao['direcao'];
+        return (
+          <div className="min-h-10 flex items-center justify-start">
+            <Badge variant="outline" className={getDirecaoColorClass(direcao)}>
+              {formatarDirecao(direcao)}
+            </Badge>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'valorTotal',
+      header: ({ column }) => (
+        <div className="flex items-center justify-end">
+          <DataTableColumnHeader column={column} title="Valor Total" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 150,
+      cell: ({ row }) => {
+        const valor = row.getValue('valorTotal') as number;
+        return (
+          <div className="min-h-10 flex items-center justify-end">
+            <span className="text-sm font-medium">{formatCurrency(valor)}</span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'numeroParcelas',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="Parcelas" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 100,
+      cell: ({ row }) => {
+        const parcelas = row.getValue('numeroParcelas') as number;
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            <span className="text-sm">{parcelas}x</span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'dataVencimentoPrimeiraParcela',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="1ª Parcela" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 120,
+      cell: ({ row }) => {
+        const data = row.getValue('dataVencimentoPrimeiraParcela') as string;
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            <span className="text-sm">{formatDate(data)}</span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'status',
+      header: ({ column }) => (
+        <div className="flex items-center justify-start">
+          <DataTableColumnHeader column={column} title="Status" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 150,
+      cell: ({ row }) => {
+        const status = row.getValue('status') as AcordoCondenacao['status'];
+        return (
+          <div className="min-h-10 flex items-center justify-start">
+            <Badge variant="outline" className={getStatusColorClass(status)}>
+              {formatarStatus(status)}
+            </Badge>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'acoes',
+      header: () => (
+        <div className="flex items-center justify-end">
+          <div className="text-sm font-medium">Ações</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 100,
+      cell: ({ row }) => {
+        return (
+          <div className="min-h-10 flex items-center justify-end">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/acordos-condenacoes/${row.original.id}`);
+              }}
+            >
+              <Eye className="h-4 w-4 mr-1" />
+              Detalhes
+            </Button>
+          </div>
+        );
+      },
+    },
+  ];
+}
+
+export function AcordosCondenacoesList({ busca, filtros, refreshKey }: AcordosCondenacoesListProps) {
   const router = useRouter();
   const [dados, setDados] = useState<ListagemResultado>({
     acordos: [],
@@ -57,18 +292,14 @@ export function AcordosCondenacoesList() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Filtros
-  const [filtros, setFiltros] = useState({
-    tipo: '',
-    direcao: '',
-    status: '',
-    processoId: '',
-  });
+  const [pagina, setPagina] = useState(0);
+  const [limite, setLimite] = useState(50);
+  const [ordenarPor, setOrdenarPor] = useState<string | null>(null);
+  const [ordem, setOrdem] = useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
     loadData();
-  }, [filtros]);
+  }, [filtros, busca, pagina, limite, ordenarPor, ordem, refreshKey]);
 
   const loadData = async () => {
     try {
@@ -76,12 +307,17 @@ export function AcordosCondenacoesList() {
       setError(null);
 
       const params = new URLSearchParams();
+      params.append('pagina', (pagina + 1).toString()); // API usa 1-indexed
+      params.append('limite', limite.toString());
+
       if (filtros.tipo) params.append('tipo', filtros.tipo);
       if (filtros.direcao) params.append('direcao', filtros.direcao);
       if (filtros.status) params.append('status', filtros.status);
-      if (filtros.processoId) params.append('processoId', filtros.processoId);
+      if (busca) params.append('busca', busca);
+      if (ordenarPor) params.append('ordenar_por', ordenarPor);
+      if (ordem) params.append('ordem', ordem);
 
-      const url = `/api/acordos-condenacoes${params.toString() ? `?${params.toString()}` : ''}`;
+      const url = `/api/acordos-condenacoes?${params.toString()}`;
       const response = await fetch(url);
       const result = await response.json();
 
@@ -98,247 +334,42 @@ export function AcordosCondenacoesList() {
     }
   };
 
-  const getTipoBadge = (tipo: AcordoCondenacao['tipo']) => {
-    const configs = {
-      acordo: { label: 'Acordo', variant: 'default' as const },
-      condenacao: { label: 'Condenação', variant: 'secondary' as const },
-      custas_processuais: { label: 'Custas', variant: 'outline' as const },
-    };
-    const config = configs[tipo];
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
+  const colunas = React.useMemo(() => criarColunas(router), [router]);
 
-  const getDirecaoBadge = (direcao: AcordoCondenacao['direcao']) => {
-    const configs = {
-      recebimento: { label: 'Recebimento', variant: 'default' as const },
-      pagamento: { label: 'Pagamento', variant: 'secondary' as const },
-    };
-    const config = configs[direcao];
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
-
-  const getStatusBadge = (status: AcordoCondenacao['status']) => {
-    const configs = {
-      pendente: { label: 'Pendente', variant: 'secondary' as const },
-      pago_parcial: { label: 'Pago Parcial', variant: 'default' as const },
-      pago_total: { label: 'Pago Total', variant: 'default' as const },
-      atrasado: { label: 'Atrasado', variant: 'destructive' as const },
-    };
-    const config = configs[status];
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
-
-  const limparFiltros = () => {
-    setFiltros({
-      tipo: '',
-      direcao: '',
-      status: '',
-      processoId: '',
-    });
-  };
-
-  const hasFiltrosAtivos = filtros.tipo || filtros.direcao || filtros.status || filtros.processoId;
-
-  if (isLoading) {
-    return (
-      <Empty>
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <Loader2 className="h-6 w-6 animate-spin" />
-          </EmptyMedia>
-          <EmptyTitle>Carregando acordos e condenações...</EmptyTitle>
-        </EmptyHeader>
-      </Empty>
-    );
-  }
-
-  if (error) {
-    return (
-      <Empty className="border-destructive">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <AlertCircle className="h-6 w-6 text-destructive" />
-          </EmptyMedia>
-          <EmptyTitle className="text-destructive">{error}</EmptyTitle>
-        </EmptyHeader>
-        <EmptyContent>
-          <Button
-            variant="outline"
-            onClick={loadData}
-          >
-            Tentar Novamente
-          </Button>
-        </EmptyContent>
-      </Empty>
-    );
-  }
+  const handleSortingChange = React.useCallback(
+    (columnId: string | null, direction: 'asc' | 'desc' | null) => {
+      if (columnId && direction) {
+        setOrdenarPor(columnId);
+        setOrdem(direction);
+      } else {
+        setOrdenarPor(null);
+        setOrdem('asc');
+      }
+    },
+    []
+  );
 
   return (
-    <div className="space-y-4">
-      {/* Filtros */}
-      <div className="rounded-lg border bg-card p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold">Filtros</h3>
-          {hasFiltrosAtivos && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={limparFiltros}
-            >
-              <X className="h-4 w-4 mr-1" />
-              Limpar Filtros
-            </Button>
-          )}
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="text-sm font-medium mb-2 block">Filtros</label>
-            <ButtonGroup>
-              <Select
-                value={filtros.tipo || undefined}
-                onValueChange={(value) =>
-                  setFiltros((prev) => ({ ...prev, tipo: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="acordo">Acordo</SelectItem>
-                  <SelectItem value="condenacao">Condenação</SelectItem>
-                  <SelectItem value="custas_processuais">Custas</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={filtros.direcao || undefined}
-                onValueChange={(value) =>
-                  setFiltros((prev) => ({ ...prev, direcao: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Direção" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="recebimento">Recebimento</SelectItem>
-                  <SelectItem value="pagamento">Pagamento</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={filtros.status || undefined}
-                onValueChange={(value) =>
-                  setFiltros((prev) => ({ ...prev, status: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pendente">Pendente</SelectItem>
-                  <SelectItem value="pago_parcial">Pago Parcial</SelectItem>
-                  <SelectItem value="pago_total">Pago Total</SelectItem>
-                  <SelectItem value="atrasado">Atrasado</SelectItem>
-                </SelectContent>
-              </Select>
-            </ButtonGroup>
-          </div>
-
-          <div>
-            <label className="text-sm font-medium mb-2 block">Busca</label>
-            <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground z-10" />
-              <Input
-                type="text"
-                placeholder="Buscar por processo"
-                value={filtros.processoId}
-                onChange={(e) =>
-                  setFiltros((prev) => ({ ...prev, processoId: e.target.value }))
-                }
-                className="pl-8"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Tabela */}
-      {dados.acordos.length === 0 ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <FileX className="h-6 w-6" />
-            </EmptyMedia>
-            <EmptyTitle>Nenhum acordo ou condenação encontrado</EmptyTitle>
-            <EmptyDescription>
-              Use os filtros acima ou cadastre um novo registro
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      ) : (
-        <>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Processo</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead>Direção</TableHead>
-                  <TableHead>Valor Total</TableHead>
-                  <TableHead>Parcelas</TableHead>
-                  <TableHead>Primeira Parcela</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {dados.acordos.map((acordo) => (
-                  <TableRow
-                    key={acordo.id}
-                    className="cursor-pointer hover:bg-muted/50"
-                    onClick={() => router.push(`/acordos-condenacoes/${acordo.id}`)}
-                  >
-                    <TableCell className="font-medium">
-                      {acordo.processoId}
-                    </TableCell>
-                    <TableCell>{getTipoBadge(acordo.tipo)}</TableCell>
-                    <TableCell>{getDirecaoBadge(acordo.direcao)}</TableCell>
-                    <TableCell>{formatCurrency(acordo.valorTotal)}</TableCell>
-                    <TableCell>{acordo.numeroParcelas}x</TableCell>
-                    <TableCell>
-                      {formatDate(acordo.dataVencimentoPrimeiraParcela)}
-                    </TableCell>
-                    <TableCell>{getStatusBadge(acordo.status)}</TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(`/acordos-condenacoes/${acordo.id}`);
-                        }}
-                      >
-                        <Eye className="h-4 w-4 mr-1" />
-                        Ver Detalhes
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-
-          {/* Paginação Info */}
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <p>
-              Mostrando {dados.acordos.length} de {dados.total} registros
-            </p>
-            <p>
-              Página {dados.pagina} de {dados.totalPaginas}
-            </p>
-          </div>
-        </>
-      )}
-    </div>
+    <DataTable
+      data={dados.acordos}
+      columns={colunas}
+      pagination={{
+        pageIndex: pagina,
+        pageSize: limite,
+        total: dados.total,
+        totalPages: dados.totalPaginas,
+        onPageChange: setPagina,
+        onPageSizeChange: setLimite,
+      }}
+      sorting={{
+        columnId: ordenarPor,
+        direction: ordem,
+        onSortingChange: handleSortingChange,
+      }}
+      isLoading={isLoading}
+      error={error}
+      emptyMessage="Nenhuma obrigação encontrada."
+      onRowClick={(row) => router.push(`/acordos-condenacoes/${row.id}`)}
+    />
   );
 }

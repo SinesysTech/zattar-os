@@ -38,6 +38,7 @@ const routeLabels: Record<string, string> = {
   historico: "Histórico",
   movimentacoes: "Movimentações",
   andamentos: "Andamentos",
+  "acordos-condenacoes": "Obrigações",
 }
 
 // Função para formatar o segmento da rota em um label legível
