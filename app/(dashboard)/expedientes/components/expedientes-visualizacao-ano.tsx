@@ -11,10 +11,25 @@ import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 interface ExpedientesVisualizacaoAnoProps {
   expedientes: PendenteManifestacao[];
   isLoading: boolean;
+  anoAtual?: Date;
+  onAnoAtualChange?: (novoAno: Date) => void;
 }
 
-export function ExpedientesVisualizacaoAno({ expedientes, isLoading }: ExpedientesVisualizacaoAnoProps) {
-  const [anoAtual, setAnoAtual] = React.useState(new Date().getFullYear());
+export function ExpedientesVisualizacaoAno({
+  expedientes,
+  isLoading,
+  anoAtual,
+  onAnoAtualChange,
+}: ExpedientesVisualizacaoAnoProps) {
+  const [anoLocal, setAnoLocal] = React.useState(new Date());
+  const anoSelecionado = (anoAtual ?? anoLocal).getFullYear();
+
+  React.useEffect(() => {
+    if (anoAtual) {
+      setAnoLocal(anoAtual);
+    }
+  }, [anoAtual]);
+
   const [expedientesDia, setExpedientesDia] = React.useState<PendenteManifestacao[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
@@ -28,17 +43,21 @@ export function ExpedientesVisualizacaoAno({ expedientes, isLoading }: Expedient
       const data = new Date(expediente.data_prazo_legal_parte);
 
       // Verificar se o expediente está no ano selecionado
-      if (data.getFullYear() === anoAtual) {
+      if (data.getFullYear() === anoSelecionado) {
         const chave = `${data.getFullYear()}-${data.getMonth()}-${data.getDate()}`;
         mapa.add(chave);
       }
     });
 
     return mapa;
-  }, [expedientes, anoAtual]);
+  }, [expedientes, anoSelecionado]);
 
   const navegarAno = (direcao: 'anterior' | 'proximo') => {
-    setAnoAtual(direcao === 'proximo' ? anoAtual + 1 : anoAtual - 1);
+    const novoAno = new Date(anoSelecionado + (direcao === 'proximo' ? 1 : -1), 0, 1);
+    onAnoAtualChange?.(novoAno);
+    if (!anoAtual) {
+      setAnoLocal(novoAno);
+    }
   };
 
   const temExpediente = (ano: number, mes: number, dia: number) => {
@@ -48,7 +67,7 @@ export function ExpedientesVisualizacaoAno({ expedientes, isLoading }: Expedient
 
   const getExpedientesDia = (ano: number, mes: number, dia: number): PendenteManifestacao[] => {
     // Apenas retornar expedientes do ano selecionado
-    if (ano !== anoAtual) return [];
+    if (ano !== anoSelecionado) return [];
 
     return expedientes.filter((exp) => {
       if (!exp.data_prazo_legal_parte) return false;
@@ -72,8 +91,8 @@ export function ExpedientesVisualizacaoAno({ expedientes, isLoading }: Expedient
 
   // Gerar dias de um mês específico
   const getDiasMes = (mes: number) => {
-    const primeiroDia = new Date(anoAtual, mes, 1);
-    const ultimoDia = new Date(anoAtual, mes + 1, 0);
+    const primeiroDia = new Date(anoSelecionado, mes, 1);
+    const ultimoDia = new Date(anoSelecionado, mes + 1, 0);
     const diasAnteriores = primeiroDia.getDay() === 0 ? 6 : primeiroDia.getDay() - 1;
 
     const dias: (number | null)[] = [];
@@ -101,7 +120,7 @@ export function ExpedientesVisualizacaoAno({ expedientes, isLoading }: Expedient
     return (
       dia === hoje.getDate() &&
       mes === hoje.getMonth() &&
-      anoAtual === hoje.getFullYear()
+      anoSelecionado === hoje.getFullYear()
     );
   };
 
@@ -122,7 +141,7 @@ export function ExpedientesVisualizacaoAno({ expedientes, isLoading }: Expedient
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <div className="text-lg font-semibold min-w-[100px] text-center">
-            {anoAtual}
+            {anoSelecionado}
           </div>
           <Button
             variant="outline"
@@ -134,7 +153,13 @@ export function ExpedientesVisualizacaoAno({ expedientes, isLoading }: Expedient
         </div>
         <Button
           variant="outline"
-          onClick={() => setAnoAtual(new Date().getFullYear())}
+          onClick={() => {
+            const agora = new Date();
+            onAnoAtualChange?.(agora);
+            if (!anoAtual) {
+              setAnoLocal(agora);
+            }
+          }}
         >
           Ano Atual
         </Button>
@@ -166,7 +191,7 @@ export function ExpedientesVisualizacaoAno({ expedientes, isLoading }: Expedient
                 {/* Grade de dias */}
                 <div className="grid grid-cols-7 gap-1">
                   {diasMes.map((dia, index) => {
-                    const temExp = dia ? temExpediente(anoAtual, mes, dia) : false;
+                    const temExp = dia ? temExpediente(anoSelecionado, mes, dia) : false;
                     const hoje = dia ? ehHoje(mes, dia) : false;
 
                     return (
@@ -179,7 +204,7 @@ export function ExpedientesVisualizacaoAno({ expedientes, isLoading }: Expedient
                           ${temExp && !hoje ? 'bg-primary text-primary-foreground font-medium cursor-pointer hover:opacity-80 transition-opacity' : ''}
                           ${!temExp && !hoje ? 'text-muted-foreground' : ''}
                         `}
-                        onClick={() => dia && temExp && handleDiaClick(anoAtual, mes, dia)}
+                        onClick={() => dia && temExp && handleDiaClick(anoSelecionado, mes, dia)}
                       >
                         {dia}
                       </div>

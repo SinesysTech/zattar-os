@@ -78,6 +78,10 @@ export interface PendenteManifestacao {
   responsavel_id: number | null;
   tipo_expediente_id: number | null; // Tipo de expediente associado
   descricao_arquivos: string | null; // Descrição ou referência a arquivos relacionados
+  arquivo_nome: string | null; // Nome do arquivo PDF no Backblaze B2
+  arquivo_url: string | null; // URL pública do arquivo no Backblaze B2
+  arquivo_key: string | null; // Chave (path) do arquivo no bucket
+  arquivo_bucket: string | null; // Nome do bucket no Backblaze B2
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }

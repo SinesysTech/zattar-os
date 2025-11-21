@@ -5,7 +5,8 @@
  * Utiliza AWS SDK v3 para compatibilidade com a API S3 do Backblaze.
  */
 
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 /**
  * Parâmetros para upload de arquivo no Backblaze B2
@@ -147,6 +148,47 @@ export async function deleteFromBackblaze(key: string): Promise<void> {
         console.error(`❌ [Backblaze] Erro ao deletar: ${key}`, error);
         throw new Error(
             `Falha ao deletar arquivo do Backblaze B2: ${error instanceof Error ? error.message : String(error)}`
+        );
+    }
+}
+
+/**
+ * Gera uma URL assinada (presigned URL) para acesso temporário a um arquivo privado
+ * 
+ * Esta função permite que buckets privados compartilhem arquivos de forma segura
+ * sem tornar o bucket público. A URL expira após o tempo especificado.
+ * 
+ * @param key - Chave (path) do arquivo no bucket
+ * @param expiresIn - Tempo em segundos até a URL expirar (padrão: 3600 = 1 hora)
+ * @returns URL assinada que permite acesso temporário ao arquivo
+ */
+export async function generatePresignedUrl(
+    key: string,
+    expiresIn: number = 3600
+): Promise<string> {
+    console.log(`🔐 [Backblaze] Gerando URL assinada: ${key}`);
+    console.log(`   Expira em: ${expiresIn} segundos (${Math.floor(expiresIn / 60)} minutos)`);
+
+    const bucket = process.env.B2_BUCKET;
+    if (!bucket) {
+        throw new Error('B2_BUCKET não configurado nas variáveis de ambiente');
+    }
+
+    const client = getS3Client();
+
+    const command = new GetObjectCommand({
+        Bucket: bucket,
+        Key: key,
+    });
+
+    try {
+        const signedUrl = await getSignedUrl(client, command, { expiresIn });
+        console.log(`✅ [Backblaze] URL assinada gerada com sucesso`);
+        return signedUrl;
+    } catch (error) {
+        console.error(`❌ [Backblaze] Erro ao gerar URL assinada: ${key}`, error);
+        throw new Error(
+            `Falha ao gerar URL assinada: ${error instanceof Error ? error.message : String(error)}`
         );
     }
 }

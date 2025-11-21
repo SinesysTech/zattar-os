@@ -65,11 +65,13 @@ const formatarStatus = (status: string): string => {
 /**
  * Retorna variante do badge de status
  */
-const getStatusVariant = (status: string): 'default' | 'secondary' | 'destructive' | 'outline' => {
-  if (status === 'M') return 'default';
-  if (status === 'R') return 'secondary';
-  if (status === 'C') return 'destructive';
-  return 'outline';
+const getStatusBadgeStyle = (
+  status: string,
+): { tone: 'info' | 'success' | 'danger' | 'neutral'; variant: 'soft' | 'solid' | 'outline' } => {
+  if (status === 'M') return { tone: 'info', variant: 'soft' }; // Marcada
+  if (status === 'R') return { tone: 'success', variant: 'soft' }; // Realizada
+  if (status === 'C') return { tone: 'danger', variant: 'solid' }; // Cancelada
+  return { tone: 'neutral', variant: 'outline' };
 };
 
 /**
@@ -307,7 +309,7 @@ export function AudienciaDetalhesDialog({
                     <div className="font-semibold text-lg">
                       {formatarHora(aud.data_inicio)}
                     </div>
-                    <Badge variant={getStatusVariant(aud.status)}>
+                    <Badge {...getStatusBadgeStyle(aud.status)}>
                       {formatarStatus(aud.status)}
                     </Badge>
                   </div>
@@ -373,7 +375,7 @@ export function AudienciaDetalhesDialog({
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm text-muted-foreground">Status</div>
-                  <Badge variant={getStatusVariant(audienciaUnica.status)} className="mt-1">
+                  <Badge {...getStatusBadgeStyle(audienciaUnica.status)} className="mt-1">
                     {formatarStatus(audienciaUnica.status)}
                   </Badge>
                 </div>

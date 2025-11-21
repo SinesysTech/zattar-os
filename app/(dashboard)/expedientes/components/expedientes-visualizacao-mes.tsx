@@ -20,18 +20,32 @@ const formatarData = (dataISO: string): string => {
 interface ExpedientesVisualizacaoMesProps {
   expedientes: PendenteManifestacao[];
   isLoading: boolean;
+  mesAtual?: Date;
+  onMesAtualChange?: (novoMes: Date) => void;
 }
 
-export function ExpedientesVisualizacaoMes({ expedientes, isLoading }: ExpedientesVisualizacaoMesProps) {
-  const [mesAtual, setMesAtual] = React.useState(new Date());
+export function ExpedientesVisualizacaoMes({
+  expedientes,
+  isLoading,
+  mesAtual,
+  onMesAtualChange,
+}: ExpedientesVisualizacaoMesProps) {
+  const [mesLocal, setMesLocal] = React.useState(new Date());
+  const mesSelecionado = mesAtual ?? mesLocal;
+
+  React.useEffect(() => {
+    if (mesAtual) {
+      setMesLocal(mesAtual);
+    }
+  }, [mesAtual]);
   const [expedienteSelecionado, setExpedienteSelecionado] = React.useState<PendenteManifestacao | null>(null);
   const [expedientesDia, setExpedientesDia] = React.useState<PendenteManifestacao[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
   // Gerar dias do mês
   const diasMes = React.useMemo(() => {
-    const ano = mesAtual.getFullYear();
-    const mes = mesAtual.getMonth();
+    const ano = mesSelecionado.getFullYear();
+    const mes = mesSelecionado.getMonth();
     const primeiroDia = new Date(ano, mes, 1);
     const ultimoDia = new Date(ano, mes + 1, 0);
     const diasAnteriores = primeiroDia.getDay() === 0 ? 6 : primeiroDia.getDay() - 1;
@@ -49,13 +63,13 @@ export function ExpedientesVisualizacaoMes({ expedientes, isLoading }: Expedient
     }
 
     return dias;
-  }, [mesAtual]);
+  }, [mesSelecionado]);
 
   // Agrupar expedientes por dia (usando data de prazo legal)
   const expedientesPorDia = React.useMemo(() => {
     const mapa = new Map<string, PendenteManifestacao[]>();
-    const anoAtual = mesAtual.getFullYear();
-    const mesAtualNum = mesAtual.getMonth();
+    const anoAtual = mesSelecionado.getFullYear();
+    const mesAtualNum = mesSelecionado.getMonth();
 
     expedientes.forEach((expediente) => {
       if (!expediente.data_prazo_legal_parte) return;
@@ -74,20 +88,23 @@ export function ExpedientesVisualizacaoMes({ expedientes, isLoading }: Expedient
     });
 
     return mapa;
-  }, [expedientes, mesAtual]);
+  }, [expedientes, mesSelecionado]);
 
   const navegarMes = (direcao: 'anterior' | 'proximo') => {
-    const novoMes = new Date(mesAtual);
+    const novoMes = new Date(mesSelecionado);
     if (direcao === 'proximo') {
       novoMes.setMonth(novoMes.getMonth() + 1);
     } else {
       novoMes.setMonth(novoMes.getMonth() - 1);
     }
-    setMesAtual(novoMes);
+    onMesAtualChange?.(novoMes);
+    if (!mesAtual) {
+      setMesLocal(novoMes);
+    }
   };
 
   const formatarMesAno = () => {
-    return mesAtual.toLocaleDateString('pt-BR', {
+    return mesSelecionado.toLocaleDateString('pt-BR', {
       month: 'long',
       year: 'numeric',
     });
@@ -151,7 +168,13 @@ export function ExpedientesVisualizacaoMes({ expedientes, isLoading }: Expedient
         </div>
         <Button
           variant="outline"
-          onClick={() => setMesAtual(new Date())}
+          onClick={() => {
+            const agora = new Date();
+            onMesAtualChange?.(agora);
+            if (!mesAtual) {
+              setMesLocal(agora);
+            }
+          }}
         >
           Mês Atual
         </Button>

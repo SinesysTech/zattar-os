@@ -6,7 +6,6 @@ import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
-import { DataTableColumnHeaderWithFilter } from '@/components/ui/data-table-column-header-with-filter';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { NovoExpedienteDialog } from './components/novo-expediente-dialog';
 import {
@@ -14,7 +13,6 @@ import {
   buildExpedientesFilterGroups,
   parseExpedientesFilters,
 } from './components/expedientes-toolbar-filters';
-import type { ExpedientesFilters as ToolbarFilters } from './components/expedientes-toolbar-filters';
 import { Badge } from '@/components/ui/badge';
 import {
   Select,
@@ -40,6 +38,7 @@ import {
   CalendarDays,
   List,
   RotateCcw,
+  FileText,
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -57,7 +56,8 @@ import { useTiposExpedientes } from '@/app/_lib/hooks/use-tipos-expedientes';
 import { ExpedientesBaixarDialog } from './components/expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './components/expedientes-reverter-baixa-dialog';
 import { ExpedienteVisualizarDialog } from './components/expediente-visualizar-dialog';
-import { CheckCircle2, XCircle, Undo2, Eye } from 'lucide-react';
+import { PdfViewerDialog } from './components/pdf-viewer-dialog';
+import { CheckCircle2, Undo2, Eye } from 'lucide-react';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
@@ -139,6 +139,7 @@ function TipoDescricaoCell({
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isPdfViewerOpen, setIsPdfViewerOpen] = React.useState(false);
   const [tipoSelecionado, setTipoSelecionado] = React.useState<string>(
     expediente.tipo_expediente_id?.toString() || 'null'
   );
@@ -189,97 +190,128 @@ function TipoDescricaoCell({
   const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipo_expediente_id);
   const tipoNome = tipoExpediente ? tipoExpediente.tipo_expediente : 'Sem tipo';
   const descricaoExibicao = expediente.descricao_arquivos || '-';
+  const temDocumento = !!expediente.arquivo_key; // Usar arquivo_key ao invés de arquivo_url
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[300px] text-left hover:opacity-80 transition-opacity cursor-pointer"
-        >
-          <Badge variant="outline" className="w-fit text-xs">
-            {tipoNome}
-          </Badge>
-          <div className="text-xs text-muted-foreground max-w-full truncate">
-            {descricaoExibicao}
-          </div>
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80" align="start">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Tipo de Expediente</label>
-            <Select
-              value={tipoSelecionado}
-              onValueChange={setTipoSelecionado}
-              disabled={isLoading || tiposExpedientes.length === 0}
+    <>
+      <div className="relative min-h-10 max-w-[300px]">
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              className="w-full min-h-10 flex items-start gap-2 text-left hover:opacity-80 transition-opacity cursor-pointer"
             >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecione o tipo">
-                  {tipoSelecionado === 'null' 
-                    ? 'Sem tipo' 
-                    : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipo_expediente || 'Selecione o tipo'}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent className="max-h-[300px]">
-                <SelectItem value="null">Sem tipo</SelectItem>
-                {tiposExpedientes.length > 0 ? (
-                  tiposExpedientes.map((tipo) => (
-                    <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                      {tipo.tipo_expediente}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                    {isLoadingTipos ? 'Carregando tipos...' : 'Nenhum tipo disponível'}
-                  </div>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Descrição / Arquivos</label>
-            <Textarea
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-              placeholder="Digite a descrição ou referência aos arquivos..."
-              disabled={isLoading}
-              rows={3}
-            />
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsOpen(false)}
-              disabled={isLoading}
-            >
-              Cancelar
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleSave}
-              disabled={isLoading}
-            >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Salvar
-            </Button>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+              {/* Conteúdo tipo e descrição */}
+              <div className="flex flex-col items-start justify-center gap-1.5 flex-1">
+                <Badge variant="outline" className="w-fit text-xs">
+                  {tipoNome}
+                </Badge>
+                <div className="text-xs text-muted-foreground max-w-full truncate">
+                  {descricaoExibicao}
+                </div>
+              </div>
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80" align="start">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Tipo de Expediente</label>
+                <Select
+                  value={tipoSelecionado}
+                  onValueChange={setTipoSelecionado}
+                  disabled={isLoading || tiposExpedientes.length === 0}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione o tipo">
+                      {tipoSelecionado === 'null'
+                        ? 'Sem tipo'
+                        : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipo_expediente || 'Selecione o tipo'}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    <SelectItem value="null">Sem tipo</SelectItem>
+                    {tiposExpedientes.length > 0 ? (
+                      tiposExpedientes.map((tipo) => (
+                        <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                          {tipo.tipo_expediente}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                        {isLoadingTipos ? 'Carregando tipos...' : 'Nenhum tipo disponível'}
+                      </div>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Descrição / Arquivos</label>
+                <Textarea
+                  value={descricao}
+                  onChange={(e) => setDescricao(e.target.value)}
+                  placeholder="Digite a descrição ou referência aos arquivos..."
+                  disabled={isLoading}
+                  rows={3}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsOpen(false)}
+                  disabled={isLoading}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={handleSave}
+                  disabled={isLoading}
+                >
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Salvar
+                </Button>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* Botão de visualização do documento - posicionado no canto inferior direito */}
+        {temDocumento && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsPdfViewerOpen(true);
+            }}
+            className="absolute bottom-1 right-1 p-1 hover:bg-accent rounded-md transition-colors z-10"
+            title="Visualizar documento"
+          >
+            <FileText className="h-3.5 w-3.5 text-primary" />
+          </button>
+        )}
+      </div>
+
+      {/* Modal de visualização do PDF */}
+      <PdfViewerDialog
+        open={isPdfViewerOpen}
+        onOpenChange={setIsPdfViewerOpen}
+        fileKey={expediente.arquivo_key}
+        documentTitle={`Documento - ${expediente.numero_processo}`}
+      />
+    </>
   );
 }
 
 /**
  * Componente para atribuir responsável a um expediente
  */
-function ResponsavelCell({ 
-  expediente, 
-  onSuccess, 
-  usuarios 
-}: { 
-  expediente: PendenteManifestacao; 
+function ResponsavelCell({
+  expediente,
+  onSuccess,
+  usuarios
+}: {
+  expediente: PendenteManifestacao;
   onSuccess: () => void;
   usuarios: Usuario[];
 }) {
@@ -378,7 +410,7 @@ function criarColunas(
       enableSorting: true,
       size: 120,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
+        <div className="min-h-10 flex items-center justify-center text-sm font-medium">
           {formatarData(row.getValue('data_ciencia_parte'))}
         </div>
       ),
@@ -393,7 +425,7 @@ function criarColunas(
       enableSorting: true,
       size: 120,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
+        <div className="min-h-10 flex items-center justify-center text-sm font-medium">
           {formatarData(row.getValue('data_prazo_legal_parte'))}
         </div>
       ),
@@ -415,7 +447,7 @@ function criarColunas(
         const grau = row.original.grau;
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
@@ -448,7 +480,7 @@ function criarColunas(
         const parteRe = row.original.nome_parte_re || '-';
 
         return (
-          <div className="min-h-[2.5rem] flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
             <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
               {parteAutora}
             </Badge>
@@ -468,7 +500,7 @@ function criarColunas(
       ),
       size: 220,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center">
+        <div className="min-h-10 flex items-center justify-center">
           <ResponsavelCell expediente={row.original} onSuccess={onSuccess} usuarios={usuarios} />
         </div>
       ),
@@ -491,11 +523,11 @@ function criarColunas(
 /**
  * Componente de ações para cada expediente
  */
-function AcoesExpediente({ 
-  expediente, 
-  usuarios, 
-  tiposExpedientes 
-}: { 
+function AcoesExpediente({
+  expediente,
+  usuarios,
+  tiposExpedientes
+}: {
   expediente: PendenteManifestacao;
   usuarios: Usuario[];
   tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
@@ -630,10 +662,10 @@ export default function ExpedientesPage() {
 
   // Buscar usuários uma única vez para compartilhar entre todas as células
   const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 100 });
-  
+
   // Buscar tipos de expedientes uma única vez para compartilhar entre todas as células
   const { tiposExpedientes, isLoading: isLoadingTipos, error: errorTipos } = useTiposExpedientes({ limite: 100 });
-  
+
   // Debug: verificar se tipos estão sendo carregados
   React.useEffect(() => {
     if (errorTipos) {
@@ -666,17 +698,7 @@ export default function ExpedientesPage() {
     []
   );
 
-  const handleFiltersChange = React.useCallback((newFilters: ExpedientesFilters) => {
-    setFiltros(newFilters);
-    setPagina(0); // Resetar para primeira página ao aplicar filtros
-  }, []);
-
-  const handleFiltersReset = React.useCallback(() => {
-    setFiltros({});
-    setPagina(0);
-  }, []);
-
-  // Funções para navegação de semana
+// Funções para navegação de semana
   const navegarSemana = React.useCallback((direcao: 'anterior' | 'proxima') => {
     const novaSemana = new Date(semanaAtual);
     novaSemana.setDate(novaSemana.getDate() + (direcao === 'proxima' ? 7 : -7));
@@ -908,13 +930,13 @@ export default function ExpedientesPage() {
             pagination={
               paginacao
                 ? {
-                    pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-                    pageSize: paginacao.limite,
-                    total: paginacao.total,
-                    totalPages: paginacao.totalPaginas,
-                    onPageChange: setPagina,
-                    onPageSizeChange: setLimite,
-                  }
+                  pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                  pageSize: paginacao.limite,
+                  total: paginacao.total,
+                  totalPages: paginacao.totalPaginas,
+                  onPageChange: setPagina,
+                  onPageSizeChange: setLimite,
+                }
                 : undefined
             }
             sorting={{
@@ -944,6 +966,7 @@ export default function ExpedientesPage() {
             expedientes={expedientes}
             isLoading={isLoading}
             mesAtual={mesAtual}
+            onMesAtualChange={setMesAtual}
           />
         </TabsContent>
 
@@ -952,6 +975,7 @@ export default function ExpedientesPage() {
             expedientes={expedientes}
             isLoading={isLoading}
             anoAtual={anoAtual}
+            onAnoAtualChange={setAnoAtual}
           />
         </TabsContent>
       </div>
@@ -964,4 +988,5 @@ export default function ExpedientesPage() {
     </Tabs>
   );
 }
+
 

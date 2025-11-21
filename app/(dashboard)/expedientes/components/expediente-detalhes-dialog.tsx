@@ -30,8 +30,8 @@ const formatarData = (dataISO: string | null): string => {
 /**
  * Retorna variante do badge de status
  */
-const getStatusVariant = (baixadoEm: string | null): 'default' | 'secondary' => {
-  return baixadoEm ? 'secondary' : 'default';
+const getStatusBadgeStyle = (baixadoEm: string | null): { tone: 'info' | 'success'; variant: 'soft' } => {
+  return baixadoEm ? { tone: 'success', variant: 'soft' } : { tone: 'info', variant: 'soft' };
 };
 
 /**
@@ -83,7 +83,7 @@ export function ExpedienteDetalhesDialog({
                       {exp.classe_judicial} {exp.numero_processo}
                     </div>
                     <div className="flex gap-2">
-                      <Badge variant={getStatusVariant(exp.baixado_em)}>
+                      <Badge {...getStatusBadgeStyle(exp.baixado_em)}>
                         {getStatusTexto(exp.baixado_em)}
                       </Badge>
                       <Badge variant={exp.prazo_vencido ? 'destructive' : 'default'}>
@@ -127,7 +127,7 @@ export function ExpedienteDetalhesDialog({
                 <div>
                   <div className="text-sm text-muted-foreground">Status</div>
                   <div className="flex gap-2 mt-1">
-                    <Badge variant={getStatusVariant(expedienteUnico.baixado_em)}>
+                    <Badge {...getStatusBadgeStyle(expedienteUnico.baixado_em)}>
                       {getStatusTexto(expedienteUnico.baixado_em)}
                     </Badge>
                     <Badge variant={expedienteUnico.prazo_vencido ? 'destructive' : 'default'}>

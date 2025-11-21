@@ -15,7 +15,7 @@ import { ContratoEditSheet } from './components/contrato-edit-sheet';
 import { ContratoCreateSheet } from './components/contrato-create-sheet';
 import { Eye, Pencil } from 'lucide-react';
 import { useContratos } from '@/app/_lib/hooks/use-contratos';
-import { buildContratosFilterOptions, parseContratosFilters } from './components/contratos-toolbar-filters';
+import { buildContratosFilterOptions, buildContratosFilterGroups, parseContratosFilters } from './components/contratos-toolbar-filters';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Contrato } from '@/backend/contratos/services/persistence/contrato-persistence.service';
 import type { ContratosFilters } from '@/app/_lib/types/contratos';
@@ -25,8 +25,8 @@ import {
   formatarTipoCobranca,
   formatarStatusContrato,
   formatarData,
-  getStatusBadgeVariant,
-  getTipoContratoBadgeVariant,
+  getStatusBadgeStyle,
+  getTipoContratoBadgeStyle,
 } from '@/app/_lib/utils/format-contratos';
 
 /**
@@ -94,7 +94,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Contrato>[] {
       enableSorting: true,
       size: 80,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm font-medium">
+        <div className="min-h-10 flex items-center justify-center text-sm font-medium">
           #{row.getValue('id')}
         </div>
       ),
@@ -109,7 +109,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Contrato>[] {
       enableSorting: true,
       size: 120,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm">
+        <div className="min-h-10 flex items-center justify-center text-sm">
           {formatarData(row.getValue('dataContratacao'))}
         </div>
       ),
@@ -124,7 +124,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Contrato>[] {
       enableSorting: true,
       size: 150,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center">
+        <div className="min-h-10 flex items-center justify-center">
           <Badge variant="outline">
             {formatarAreaDireito(row.getValue('areaDireito'))}
           </Badge>
@@ -143,8 +143,8 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Contrato>[] {
       cell: ({ row }) => {
         const tipo = row.getValue('tipoContrato') as Contrato['tipoContrato'];
         return (
-          <div className="min-h-[2.5rem] flex items-center justify-center">
-            <Badge variant={getTipoContratoBadgeVariant(tipo)}>
+          <div className="min-h-10 flex items-center justify-center">
+            <Badge {...getTipoContratoBadgeStyle(tipo)}>
               {formatarTipoContrato(tipo)}
             </Badge>
           </div>
@@ -161,7 +161,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Contrato>[] {
       enableSorting: true,
       size: 120,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm">
+        <div className="min-h-10 flex items-center justify-center text-sm">
           {formatarTipoCobranca(row.getValue('tipoCobranca'))}
         </div>
       ),
@@ -176,7 +176,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Contrato>[] {
       enableSorting: true,
       size: 100,
       cell: ({ row }) => (
-        <div className="min-h-[2.5rem] flex items-center justify-center text-sm">
+        <div className="min-h-10 flex items-center justify-center text-sm">
           ID: {row.getValue('clienteId')}
         </div>
       ),
@@ -193,8 +193,8 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Contrato>[] {
       cell: ({ row }) => {
         const status = row.getValue('status') as Contrato['status'];
         return (
-          <div className="min-h-[2.5rem] flex items-center justify-center">
-            <Badge variant={getStatusBadgeVariant(status)}>
+          <div className="min-h-10 flex items-center justify-center">
+            <Badge {...getStatusBadgeStyle(status)}>
               {formatarStatusContrato(status)}
             </Badge>
           </div>
@@ -213,7 +213,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Contrato>[] {
       cell: ({ row }) => {
         const contrato = row.original;
         return (
-          <div className="min-h-[2.5rem] flex items-center justify-center">
+          <div className="min-h-10 flex items-center justify-center">
             <ContratoActions contrato={contrato} onEditSuccess={onEditSuccess} />
           </div>
         );
@@ -234,8 +234,9 @@ export default function ContratosPage() {
   const buscaDebounced = useDebounce(busca, 500);
   const isSearching = busca !== buscaDebounced;
 
-  // Gerar opções de filtro
+  // Gerar opções e grupos de filtro
   const filterOptions = React.useMemo(() => buildContratosFilterOptions(), []);
+  const filterGroups = React.useMemo(() => buildContratosFilterGroups(), []);
 
   // Parâmetros para buscar contratos
   const params = React.useMemo(() => {
@@ -275,6 +276,7 @@ export default function ContratosPage() {
         isSearching={isSearching}
         searchPlaceholder="Buscar por observações..."
         filterOptions={filterOptions}
+        filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
         onNewClick={() => setCreateOpen(true)}

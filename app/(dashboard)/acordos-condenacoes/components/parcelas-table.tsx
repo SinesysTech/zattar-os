@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import type { BadgeProps } from '@/components/ui/badge';
 import { CheckCircle2, Edit2, XCircle, FileX } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/app/_lib/utils';
 import { toast } from 'sonner';
@@ -51,49 +52,51 @@ export function ParcelasTable({
 }: ParcelasTableProps) {
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
-  const getStatusBadge = (status: Parcela['status']) => {
-    const variants = {
-      pendente: 'secondary' as const,
-      recebida: 'default' as const,
-      paga: 'default' as const,
-      atrasado: 'destructive' as const,
+    const getStatusBadge = (status: Parcela['status']) => {
+      const styles: Record<Parcela['status'], { tone: 'warning' | 'success' | 'danger'; variant: 'soft' | 'solid' }> = {
+        pendente: { tone: 'warning', variant: 'soft' },
+        recebida: { tone: 'success', variant: 'soft' },
+        paga: { tone: 'success', variant: 'soft' },
+        atrasado: { tone: 'danger', variant: 'solid' },
+      };
+
+      const labels = {
+        pendente: 'Pendente',
+        recebida: 'Recebida',
+        paga: 'Paga',
+        atrasado: 'Atrasado',
+      };
+
+      return (
+        <Badge {...styles[status]}>
+          {labels[status]}
+        </Badge>
+      );
     };
 
-    const labels = {
-      pendente: 'Pendente',
-      recebida: 'Recebida',
-      paga: 'Paga',
-      atrasado: 'Atrasado',
+    const getStatusRepasseBadge = (status: string) => {
+      const styles: Record<string, { tone: BadgeProps['tone']; variant: BadgeProps['variant'] }> = {
+        nao_aplicavel: { tone: 'neutral', variant: 'outline' },
+        pendente_declaracao: { tone: 'warning', variant: 'soft' },
+        pendente_transferencia: { tone: 'info', variant: 'soft' },
+        repassado: { tone: 'success', variant: 'soft' },
+      };
+
+      const labels: Record<string, string> = {
+        nao_aplicavel: 'N/A',
+        pendente_declaracao: 'Pendente Declaração',
+        pendente_transferencia: 'Pendente Transferência',
+        repassado: 'Repassado',
+      };
+
+      const style = styles[status] || { tone: 'neutral' as const, variant: 'outline' as const };
+
+      return (
+        <Badge {...style}>
+          {labels[status] || status}
+        </Badge>
+      );
     };
-
-    return (
-      <Badge variant={variants[status]}>
-        {labels[status]}
-      </Badge>
-    );
-  };
-
-  const getStatusRepasseBadge = (status: string) => {
-    const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-      nao_aplicavel: 'outline',
-      pendente_declaracao: 'secondary',
-      pendente_transferencia: 'default',
-      repassado: 'default',
-    };
-
-    const labels: Record<string, string> = {
-      nao_aplicavel: 'N/A',
-      pendente_declaracao: 'Pendente Declaração',
-      pendente_transferencia: 'Pendente Transferência',
-      repassado: 'Repassado',
-    };
-
-    return (
-      <Badge variant={variants[status] || 'outline'}>
-        {labels[status] || status}
-      </Badge>
-    );
-  };
 
   const handleMarcar = async (parcelaId: number, tipo: 'recebida' | 'paga') => {
     setLoadingId(parcelaId);
