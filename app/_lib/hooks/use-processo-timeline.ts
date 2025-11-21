@@ -12,11 +12,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Acervo } from '@/backend/types/acervo/types';
-import type {
-  TimelineDocument,
-  TimelineAPIResponse,
-  CapturaTimelineAPIResponse,
-} from '@/lib/types/timeline';
+import type { TimelineDocument } from '@/backend/types/mongodb/timeline';
 
 interface UseProcessoTimelineReturn {
   processo: Acervo | null;
@@ -116,7 +112,7 @@ export function useProcessoTimeline(acervoId: number): UseProcessoTimelineReturn
         throw new Error('Erro ao carregar timeline');
       }
 
-      const data: TimelineAPIResponse = await response.json();
+      const data: { success: boolean; data: { timeline: TimelineDocument | null }; error?: string } = await response.json();
 
       if (!data.success) {
         throw new Error(data.error || 'Erro ao carregar timeline');
@@ -177,7 +173,7 @@ export function useProcessoTimeline(acervoId: number): UseProcessoTimelineReturn
           throw new Error('Erro ao capturar timeline');
         }
 
-        const data: CapturaTimelineAPIResponse = await response.json();
+        const data: { success: boolean; error?: string } = await response.json();
 
         if (!data.success) {
           throw new Error(data.error || 'Erro ao capturar timeline');
