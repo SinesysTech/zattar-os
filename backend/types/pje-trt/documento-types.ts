@@ -31,30 +31,42 @@
  *
  * CAMPOS:
  * - id: number - ID único do documento no PJE
- * - nome: string - Nome do arquivo (geralmente inclui extensão)
- * - mimetype: string - MIME type do arquivo (ex: "application/pdf")
+ * - nomeArquivo: string - Nome do arquivo (geralmente inclui extensão)
+ * - tipoArquivo: string - Tipo do arquivo (ex: "PDF")
+ * - titulo: string - Título do documento
+ * - tipo: string - Tipo de documento (ex: "Intimação")
  * - tamanho?: number - Tamanho do arquivo em bytes (opcional)
- * - dataHora?: string - Data/hora de criação do documento (opcional)
+ * - criadoEm?: string - Data/hora de criação do documento (opcional)
+ * - assinado?: boolean - Se o documento está assinado
+ * - sigiloso?: boolean - Se o documento é sigiloso
  *
  * USO:
  * Usado para validar tipo do documento antes de fazer download completo.
- * Valida se mimetype é "application/pdf" antes de prosseguir.
+ * Valida se tipoArquivo é "PDF" antes de prosseguir.
  *
  * EXEMPLO DE RESPOSTA DA API:
  * {
- *   "id": 123456,
- *   "nome": "sentenca.pdf",
- *   "mimetype": "application/pdf",
- *   "tamanho": 1024000,
- *   "dataHora": "2025-01-19T12:00:00Z"
+ *   "id": 234517663,
+ *   "nomeArquivo": "1º Grau-234517663.pdf",
+ *   "tipoArquivo": "PDF",
+ *   "titulo": "Intimação",
+ *   "tipo": "Intimação",
+ *   "tamanho": 102795,
+ *   "criadoEm": "2025-11-21T11:24:25.754387",
+ *   "assinado": true,
+ *   "sigiloso": false
  * }
  */
 export interface DocumentoMetadata {
   id: number;
-  nome: string;
-  mimetype: string;
+  nomeArquivo: string;
+  tipoArquivo: string;
+  titulo: string;
+  tipo: string;
   tamanho?: number;
-  dataHora?: string;
+  criadoEm?: string;
+  assinado?: boolean;
+  sigiloso?: boolean;
 }
 
 /**

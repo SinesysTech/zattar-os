@@ -106,18 +106,40 @@ const getLogoPlataforma = (plataforma: PlataformaVideo): string | null => {
  * Componente para editar URL da audiência virtual
  */
 function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
-  const [isEditing, setIsEditing] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [url, setUrl] = React.useState(audiencia.url_audiencia_virtual || '');
+  const [error, setError] = React.useState<string | null>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
     setUrl(audiencia.url_audiencia_virtual || '');
+    setError(null);
   }, [audiencia.url_audiencia_virtual]);
+
+  React.useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isOpen]);
 
   const handleSave = async () => {
     setIsLoading(true);
+    setError(null);
     try {
       const urlToSave = url.trim() || null;
+
+      // Validar URL se fornecida
+      if (urlToSave) {
+        try {
+          new URL(urlToSave);
+        } catch {
+          setError('URL inválida. Use o formato: https://exemplo.com');
+          setIsLoading(false);
+          return;
+        }
+      }
 
       const response = await fetch(`/api/audiencias/${audiencia.id}/url-virtual`, {
         method: 'PATCH',
@@ -132,11 +154,11 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
         throw new Error(errorData.error || 'Erro ao atualizar URL');
       }
 
-      setIsEditing(false);
+      setIsOpen(false);
       onSuccess();
     } catch (error) {
       console.error('Erro ao atualizar URL:', error);
-      onSuccess();
+      setError(error instanceof Error ? error.message : 'Erro ao salvar URL');
     } finally {
       setIsLoading(false);
     }
@@ -144,43 +166,9 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
 
   const handleCancel = () => {
     setUrl(audiencia.url_audiencia_virtual || '');
-    setIsEditing(false);
+    setError(null);
+    setIsOpen(false);
   };
-
-  if (isEditing) {
-    return (
-      <div className="flex items-center gap-2 min-w-[250px]">
-        <Input
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="https://..."
-          disabled={isLoading}
-          className="h-8 text-sm"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSave();
-            if (e.key === 'Escape') handleCancel();
-          }}
-        />
-        <Button
-          size="sm"
-          onClick={handleSave}
-          disabled={isLoading}
-          className="h-8 px-2"
-        >
-          OK
-        </Button>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={handleCancel}
-          disabled={isLoading}
-          className="h-8 px-2"
-        >
-          ✕
-        </Button>
-      </div>
-    );
-  }
 
   const handleCopyUrl = async () => {
     if (!audiencia.url_audiencia_virtual) return;
@@ -194,71 +182,167 @@ function UrlVirtualCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucc
   const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
   const logoPath = getLogoPlataforma(plataforma);
 
-  if (!audiencia.url_audiencia_virtual) {
-    return (
-      <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => setIsEditing(true)}
-          className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
-          title="Adicionar URL"
-        >
-          <Plus className="h-3.5 w-3.5" />
-        </Button>
-      </div>
-    );
-  }
-
   return (
-    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-3">
-      {logoPath ? (
-        <a
-          href={audiencia.url_audiencia_virtual}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Acessar audiência virtual via ${plataforma}`}
-          className="hover:opacity-70 transition-opacity flex items-center justify-center"
-        >
-          <Image
-            src={logoPath}
-            alt={plataforma || 'Plataforma de vídeo'}
-            width={80}
-            height={30}
-            className="object-contain"
-          />
-        </a>
+    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
+      {audiencia.url_audiencia_virtual ? (
+        <>
+          {logoPath ? (
+            <a
+              href={audiencia.url_audiencia_virtual}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Acessar audiência virtual via ${plataforma}`}
+              className="hover:opacity-70 transition-opacity flex items-center justify-center"
+            >
+              <Image
+                src={logoPath}
+                alt={plataforma || 'Plataforma de vídeo'}
+                width={80}
+                height={30}
+                className="object-contain"
+              />
+            </a>
+          ) : (
+            <a
+              href={audiencia.url_audiencia_virtual}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Acessar audiência virtual"
+              className="text-xs text-blue-600 hover:underline truncate max-w-[100px]"
+            >
+              {audiencia.url_audiencia_virtual}
+            </a>
+          )}
+          <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleCopyUrl}
+              className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
+              title="Copiar URL"
+            >
+              <Copy className="h-3 w-3" />
+            </Button>
+            <Popover open={isOpen} onOpenChange={setIsOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
+                  title="Editar URL"
+                  disabled={isLoading}
+                >
+                  <Pencil className="h-3 w-3" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[350px]" align="start">
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <label htmlFor="url-input" className="text-sm font-medium">
+                      URL da Audiência Virtual
+                    </label>
+                    <Input
+                      ref={inputRef}
+                      id="url-input"
+                      value={url}
+                      onChange={(e) => {
+                        setUrl(e.target.value);
+                        setError(null);
+                      }}
+                      placeholder="https://meet.google.com/..."
+                      disabled={isLoading}
+                      className="h-9 text-sm"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleSave();
+                        if (e.key === 'Escape') handleCancel();
+                      }}
+                    />
+                    {error && (
+                      <p className="text-xs text-red-600">{error}</p>
+                    )}
+                  </div>
+                  <div className="flex gap-2 justify-end">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleCancel}
+                      disabled={isLoading}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleSave}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? 'Salvando...' : 'Salvar'}
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </>
       ) : (
-        <a
-          href={audiencia.url_audiencia_virtual}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Acessar audiência virtual"
-          className="text-xs text-blue-600 hover:underline truncate max-w-[100px]"
-        >
-          {audiencia.url_audiencia_virtual}
-        </a>
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
+              title="Adicionar URL"
+              disabled={isLoading}
+            >
+              <Plus className="h-3.5 w-3.5" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[350px]" align="start">
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <label htmlFor="url-input" className="text-sm font-medium">
+                  URL da Audiência Virtual
+                </label>
+                <Input
+                  ref={inputRef}
+                  id="url-input"
+                  value={url}
+                  onChange={(e) => {
+                    setUrl(e.target.value);
+                    setError(null);
+                  }}
+                  placeholder="https://meet.google.com/..."
+                  disabled={isLoading}
+                  className="h-9 text-sm"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSave();
+                    if (e.key === 'Escape') handleCancel();
+                  }}
+                />
+                {error && (
+                  <p className="text-xs text-red-600">{error}</p>
+                )}
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleCancel}
+                  disabled={isLoading}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={handleSave}
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Salvando...' : 'Salvar'}
+                </Button>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
       )}
-      <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={handleCopyUrl}
-          className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
-          title="Copiar URL"
-        >
-          <Copy className="h-3 w-3" />
-        </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => setIsEditing(true)}
-          className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
-          title="Editar URL"
-        >
-          <Pencil className="h-3 w-3" />
-        </Button>
-      </div>
     </div>
   );
 }

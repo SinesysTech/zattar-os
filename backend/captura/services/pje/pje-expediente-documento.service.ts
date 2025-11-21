@@ -69,7 +69,7 @@ export async function fetchDocumentoMetadata(
   documentoId: string
 ): Promise<DocumentoMetadata> {
   const baseUrl = await page.evaluate(() => window.location.origin);
-  const url = `${baseUrl}/pje-comum-api/api/processos/id/${processoId}/documentos/id/${documentoId}`;
+  const url = `${baseUrl}/pje-comum-api/api/processos/id/${processoId}/documentos/id/${documentoId}?incluirAssinatura=false&incluirAnexos=false`;
 
   console.log(`📄 Buscando metadados do documento: ${documentoId} do processo: ${processoId}`);
 
@@ -77,7 +77,7 @@ export async function fetchDocumentoMetadata(
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        Accept: 'application/json',
+        Accept: 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
       },
       credentials: 'include',
@@ -88,10 +88,12 @@ export async function fetchDocumentoMetadata(
       throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log('DEBUG - Response JSON:', JSON.stringify(data));
+    return data;
   }, { url });
 
-  console.log(`✅ Metadados obtidos: ${response.nome} (${response.mimetype})`);
+  console.log(`✅ Metadados obtidos: ${response.nomeArquivo} (${response.tipoArquivo})`);
   return response as DocumentoMetadata;
 }
 
@@ -124,7 +126,7 @@ export async function fetchDocumentoConteudo(
   documentoId: string
 ): Promise<DocumentoConteudo> {
   const baseUrl = await page.evaluate(() => window.location.origin);
-  const url = `${baseUrl}/pje-comum-api/api/processos/id/${processoId}/documentos/id/${documentoId}/conteudo`;
+  const url = `${baseUrl}/pje-comum-api/api/processos/id/${processoId}/documentos/id/${documentoId}/conteudo?incluirCapa=false&incluirAssinatura=true`;
 
   console.log(`📥 Baixando conteúdo do documento: ${documentoId}`);
 
@@ -132,8 +134,7 @@ export async function fetchDocumentoConteudo(
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: 'application/pdf',
       },
       credentials: 'include',
     });
@@ -143,7 +144,22 @@ export async function fetchDocumentoConteudo(
       throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
 
-    return response.json();
+    // O endpoint retorna PDF direto, precisamos converter para base64
+    const blob = await response.blob();
+    const arrayBuffer = await blob.arrayBuffer();
+    const bytes = new Uint8Array(arrayBuffer);
+
+    // Converter para base64
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    const base64 = btoa(binary);
+
+    return {
+      documento: base64,
+      mimetype: 'application/pdf'
+    };
   }, { url });
 
   console.log(`✅ Conteúdo obtido (${response.documento.length} caracteres base64)`);
@@ -210,9 +226,9 @@ export async function downloadAndUploadDocumento(
     const metadata = await fetchDocumentoMetadata(page, processoId, documentoId);
 
     // 2. Validar que é PDF
-    if (metadata.mimetype !== 'application/pdf') {
+    if (metadata.tipoArquivo !== 'PDF') {
       throw new Error(
-        `Documento não é um PDF válido. Mimetype: ${metadata.mimetype}`
+        `Documento não é um PDF válido. Tipo: ${metadata.tipoArquivo}`
       );
     }
 

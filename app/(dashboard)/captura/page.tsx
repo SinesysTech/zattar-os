@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ClientOnlyTabs as Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { Button } from '@/components/ui/button';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { HistoricoCapturas } from './components/historico-capturas';

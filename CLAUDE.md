@@ -216,6 +216,7 @@ Button, Input, Select, Checkbox, Dialog, Sheet, Popover, Table, Card, Badge, Ava
 - **Combobox**: Select com busca
 - **Field, InputGroup, Item**: Sistema de formulários
 - **Empty**: Estado vazio com ilustração
+- **ClientOnlyTabs**: Wrapper para Tabs que evita hydration mismatch com React 19 (usar em vez de Tabs quando houver erros de hidratação)
 
 ## APIs Principais
 
@@ -311,6 +312,7 @@ npm run type-check              # Verificar tipos TypeScript
 - PJE tem rate limiting e requer 2FA
 - Next.js 16 App Router obrigatório
 - TypeScript strict mode
+- **React 19 + Radix UI**: Usar `ClientOnlyTabs` para evitar hydration mismatch com componentes Tabs (incompatibilidade conhecida entre React 19 e versões atuais do Radix UI)
 
 ### Regulatórios
 - LGPD: Proteção de dados pessoais
