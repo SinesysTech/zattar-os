@@ -4,7 +4,7 @@
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { getCached, setCached, deletePattern, CACHE_PREFIXES, getCargosListKey } from '@/lib/redis';
+import { getCached, setCached, deletePattern, CACHE_PREFIXES, getCargosListKey } from '@/backend/utils/redis';
 import type {
   Cargo,
   CriarCargoDTO,

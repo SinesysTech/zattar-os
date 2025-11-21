@@ -19,7 +19,7 @@ import {
   formatarData,
   formatarEnderecoCompleto,
   formatarGenero,
-} from '@/lib/utils/format-usuarios';
+} from '@/app/_lib/utils/format-usuarios';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 interface UsuarioViewSheetProps {

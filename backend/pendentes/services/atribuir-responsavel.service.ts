@@ -5,7 +5,7 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import {
   atribuirResponsavelPendente as rpcAtribuirResponsavel,
 } from '@/backend/utils/supabase/set-user-context';
-import { invalidatePendentesCache } from '@/lib/redis/invalidation';
+import { invalidatePendentesCache } from '@/backend/utils/redis/invalidation';
 
 export interface AtribuirResponsavelPendenteParams {
   pendenteId: number;

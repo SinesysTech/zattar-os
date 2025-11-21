@@ -3,6 +3,7 @@
 // Página de processos - Lista processos do acervo
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
@@ -13,6 +14,12 @@ import { Badge } from '@/components/ui/badge';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -21,10 +28,10 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { ArrowUpDown, ArrowUp, ArrowDown, Eye, CalendarClock } from 'lucide-react';
-import { useAcervo } from '@/lib/hooks/use-acervo';
+import { useAcervo } from '@/app/_lib/hooks/use-acervo';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Acervo } from '@/backend/types/acervo/types';
-import type { ProcessosFilters } from '@/lib/types/acervo';
+import type { ProcessosFilters } from '@/app/_lib/types/acervo';
 
 /**
  * Formata data ISO para formato brasileiro (DD/MM/YYYY)
@@ -398,7 +405,8 @@ function criarColunas(
   ordenarPor: 'data_autuacao' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau' | null,
   ordem: 'asc' | 'desc',
   onPartesSortChange: (columnId: 'nome_parte_autora' | 'nome_parte_re' | null, direction: 'asc' | 'desc' | null) => void,
-  onTribunalSortChange: (sortType: 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau' | null, direction: 'asc' | 'desc' | null) => void
+  onTribunalSortChange: (sortType: 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau' | null, direction: 'asc' | 'desc' | null) => void,
+  router: ReturnType<typeof useRouter>
 ): ColumnDef<Acervo>[] {
   return [
     {
@@ -528,6 +536,7 @@ function criarColunas(
 }
 
 export default function ProcessosPage() {
+  const router = useRouter();
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);

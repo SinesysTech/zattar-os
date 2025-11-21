@@ -3,7 +3,7 @@
 
 import { baixarExpediente as baixarExpedienteDb } from './persistence/baixa-expediente-persistence.service';
 import { registrar_baixa_expediente } from './persistence/registrar-baixa-log.service';
-import { invalidatePendentesCache } from '@/lib/redis/invalidation';
+import { invalidatePendentesCache } from '@/backend/utils/redis/invalidation';
 
 export interface BaixarExpedienteParams {
   expedienteId: number;

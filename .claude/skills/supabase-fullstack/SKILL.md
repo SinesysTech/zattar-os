@@ -9,25 +9,25 @@ You are a Senior Full-Stack Developer and expert in React, Next.js, Supabase, an
 
 ## Core Responsibilities
 
-* Follow user requirements precisely and to the letter
-* Think step-by-step: describe your full-stack architecture plan in detailed pseudocode first
-* Confirm approach, then write complete, working full-stack code
-* Write correct, best practice, type-safe, secure full-stack code
-* Prioritize authentication security, data validation, and user experience
-* Implement all requested functionality completely
-* Leave NO todos, placeholders, or missing pieces
-* Include all required imports, environment variables, and proper configurations
-* Be concise and minimize unnecessary prose
+- Follow user requirements precisely and to the letter
+- Think step-by-step: describe your full-stack architecture plan in detailed pseudocode first
+- Confirm approach, then write complete, working full-stack code
+- Write correct, best practice, type-safe, secure full-stack code
+- Prioritize authentication security, data validation, and user experience
+- Implement all requested functionality completely
+- Leave NO todos, placeholders, or missing pieces
+- Include all required imports, environment variables, and proper configurations
+- Be concise and minimize unnecessary prose
 
 ## Technology Stack Focus
 
-* **Supabase**: Database, Auth, Storage, Realtime, Edge Functions
-* **Supabase UI Library**: Official shadcn/ui-based components
-* **shadcn/ui**: Component library with Supabase UI integration
-* **React Query (TanStack Query)**: Server state management and caching
-* **Next.js 16**: App Router, Server Components, Server Actions
-* **TypeScript**: Strict typing for database models and API responses
-* **Zod**: Schema validation for forms and API data
+- **Supabase**: Database, Auth, Storage, Realtime, Edge Functions
+- **Supabase UI Library**: Official shadcn/ui-based components
+- **shadcn/ui**: Component library with Supabase UI integration
+- **React Query (TanStack Query)**: Server state management and caching
+- **Next.js 16**: App Router, Server Components, Server Actions
+- **TypeScript**: Strict typing for database models and API responses
+- **Zod**: Schema validation for forms and API data
 
 ## Supabase Setup
 
@@ -36,20 +36,20 @@ You are a Senior Full-Stack Developer and expert in React, Next.js, Supabase, an
 ```bash
 # .env.local
 NEXT_PUBLIC_SUPABASE_URL=your-project-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=your-publishble-or-anon-key
+UPABASE_SECRET_KEY=your-secret-key
 ```
 
 ### Supabase Client Initialization
 
 ```typescript
 // lib/supabase/client.ts
-import { createBrowserClient } from '@supabase/ssr';
+import { createBrowserClient } from "@supabase/ssr";
 
 export const createClient = () => {
   return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!
   );
 };
 ```
@@ -58,15 +58,15 @@ export const createClient = () => {
 
 ```typescript
 // lib/supabase/server.ts
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 export const createClient = () => {
   const cookieStore = cookies();
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!,
     {
       cookies: {
         get(name: string) {
@@ -81,7 +81,7 @@ export const createClient = () => {
         },
         remove(name: string, options: CookieOptions) {
           try {
-            cookieStore.set({ name, value: '', ...options });
+            cookieStore.set({ name, value: "", ...options });
           } catch (error) {
             // Handle cookie removal errors
           }
@@ -133,11 +133,11 @@ export type Database = {
 
 ```typescript
 // components/providers/auth-provider.tsx
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
-import { createClient } from '@/lib/supabase/client';
+import { createContext, useContext, useEffect, useState } from "react";
+import { User } from "@supabase/supabase-js";
+import { createClient } from "@/lib/supabase/client";
 
 interface AuthContextType {
   user: User | null;
@@ -184,7 +184,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -194,14 +194,14 @@ export const useAuth = () => {
 
 ```typescript
 // components/auth/login-form.tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { createClient } from '@/lib/supabase/client';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -209,13 +209,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { toast } from 'sonner';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres'),
+  email: z.string().email("Email inválido"),
+  password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -227,8 +227,8 @@ export const LoginForm = () => {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -243,9 +243,11 @@ export const LoginForm = () => {
 
       if (error) throw error;
 
-      toast.success('Login realizado com sucesso!');
+      toast.success("Login realizado com sucesso!");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao fazer login');
+      toast.error(
+        error instanceof Error ? error.message : "Erro ao fazer login"
+      );
     } finally {
       setLoading(false);
     }
@@ -283,7 +285,7 @@ export const LoginForm = () => {
         />
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Entrando...' : 'Entrar'}
+          {loading ? "Entrando..." : "Entrar"}
         </Button>
       </form>
     </Form>
@@ -295,8 +297,8 @@ export const LoginForm = () => {
 
 ```typescript
 // middleware.ts
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
-import { NextResponse, type NextRequest } from 'next/server';
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -333,7 +335,7 @@ export async function middleware(request: NextRequest) {
         remove(name: string, options: CookieOptions) {
           request.cookies.set({
             name,
-            value: '',
+            value: "",
             ...options,
           });
           response = NextResponse.next({
@@ -343,7 +345,7 @@ export async function middleware(request: NextRequest) {
           });
           response.cookies.set({
             name,
-            value: '',
+            value: "",
             ...options,
           });
         },
@@ -356,20 +358,20 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Protected routes
-  if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  if (request.nextUrl.pathname.startsWith("/dashboard") && !user) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   // Auth routes (redirect if already logged in)
-  if (request.nextUrl.pathname.startsWith('/login') && user) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+  if (request.nextUrl.pathname.startsWith("/login") && user) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
 ```
 
@@ -379,26 +381,26 @@ export const config = {
 
 ```typescript
 // hooks/use-processos.ts
-'use client';
+"use client";
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { createClient } from '@/lib/supabase/client';
-import type { Database } from '@/lib/supabase/database.types';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { createClient } from "@/lib/supabase/client";
+import type { Database } from "@/lib/supabase/database.types";
 
-type Processo = Database['public']['Tables']['processos']['Row'];
-type ProcessoInsert = Database['public']['Tables']['processos']['Insert'];
-type ProcessoUpdate = Database['public']['Tables']['processos']['Update'];
+type Processo = Database["public"]["Tables"]["processos"]["Row"];
+type ProcessoInsert = Database["public"]["Tables"]["processos"]["Insert"];
+type ProcessoUpdate = Database["public"]["Tables"]["processos"]["Update"];
 
 export const useProcessos = () => {
   const supabase = createClient();
 
   return useQuery({
-    queryKey: ['processos'],
+    queryKey: ["processos"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('processos')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .from("processos")
+        .select("*")
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
       return data as Processo[];
@@ -410,12 +412,12 @@ export const useProcesso = (id: string) => {
   const supabase = createClient();
 
   return useQuery({
-    queryKey: ['processos', id],
+    queryKey: ["processos", id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('processos')
-        .select('*')
-        .eq('id', id)
+        .from("processos")
+        .select("*")
+        .eq("id", id)
         .single();
 
       if (error) throw error;
@@ -432,7 +434,7 @@ export const useCreateProcesso = () => {
   return useMutation({
     mutationFn: async (processo: ProcessoInsert) => {
       const { data, error } = await supabase
-        .from('processos')
+        .from("processos")
         .insert(processo)
         .select()
         .single();
@@ -441,7 +443,7 @@ export const useCreateProcesso = () => {
       return data as Processo;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['processos'] });
+      queryClient.invalidateQueries({ queryKey: ["processos"] });
     },
   });
 };
@@ -451,11 +453,14 @@ export const useUpdateProcesso = () => {
   const supabase = createClient();
 
   return useMutation({
-    mutationFn: async ({ id, ...processo }: ProcessoUpdate & { id: string }) => {
+    mutationFn: async ({
+      id,
+      ...processo
+    }: ProcessoUpdate & { id: string }) => {
       const { data, error } = await supabase
-        .from('processos')
+        .from("processos")
         .update(processo)
-        .eq('id', id)
+        .eq("id", id)
         .select()
         .single();
 
@@ -463,8 +468,8 @@ export const useUpdateProcesso = () => {
       return data as Processo;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['processos'] });
-      queryClient.invalidateQueries({ queryKey: ['processos', data.id] });
+      queryClient.invalidateQueries({ queryKey: ["processos"] });
+      queryClient.invalidateQueries({ queryKey: ["processos", data.id] });
     },
   });
 };
@@ -475,12 +480,12 @@ export const useDeleteProcesso = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from('processos').delete().eq('id', id);
+      const { error } = await supabase.from("processos").delete().eq("id", id);
 
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['processos'] });
+      queryClient.invalidateQueries({ queryKey: ["processos"] });
     },
   });
 };
@@ -490,19 +495,19 @@ export const useDeleteProcesso = () => {
 
 ```typescript
 // app/processos/page.tsx
-import { createClient } from '@/lib/supabase/server';
-import { ProcessosTable } from '@/components/processos/processos-table';
+import { createClient } from "@/lib/supabase/server";
+import { ProcessosTable } from "@/components/processos/processos-table";
 
 export default async function ProcessosPage() {
   const supabase = createClient();
 
   const { data: processos, error } = await supabase
-    .from('processos')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .from("processos")
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if (error) {
-    throw new Error('Erro ao carregar processos');
+    throw new Error("Erro ao carregar processos");
   }
 
   return (
@@ -520,14 +525,14 @@ export default async function ProcessosPage() {
 
 ```typescript
 // hooks/use-realtime-processos.ts
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { createClient } from '@/lib/supabase/client';
-import type { Database } from '@/lib/supabase/database.types';
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { createClient } from "@/lib/supabase/client";
+import type { Database } from "@/lib/supabase/database.types";
 
-type Processo = Database['public']['Tables']['processos']['Row'];
+type Processo = Database["public"]["Tables"]["processos"]["Row"];
 
 export const useRealtimeProcessos = () => {
   const queryClient = useQueryClient();
@@ -535,39 +540,39 @@ export const useRealtimeProcessos = () => {
 
   useEffect(() => {
     const channel = supabase
-      .channel('processos-changes')
+      .channel("processos-changes")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'processos',
+          event: "*",
+          schema: "public",
+          table: "processos",
         },
         (payload) => {
-          console.log('Change received:', payload);
+          console.log("Change received:", payload);
 
           // Invalidate queries to refetch data
-          queryClient.invalidateQueries({ queryKey: ['processos'] });
+          queryClient.invalidateQueries({ queryKey: ["processos"] });
 
-          if (payload.eventType === 'INSERT') {
+          if (payload.eventType === "INSERT") {
             // Optimistic update for insert
-            queryClient.setQueryData<Processo[]>(['processos'], (old) => {
+            queryClient.setQueryData<Processo[]>(["processos"], (old) => {
               if (!old) return [payload.new as Processo];
               return [payload.new as Processo, ...old];
             });
           }
 
-          if (payload.eventType === 'DELETE') {
+          if (payload.eventType === "DELETE") {
             // Optimistic update for delete
-            queryClient.setQueryData<Processo[]>(['processos'], (old) => {
+            queryClient.setQueryData<Processo[]>(["processos"], (old) => {
               if (!old) return [];
               return old.filter((p) => p.id !== payload.old.id);
             });
           }
 
-          if (payload.eventType === 'UPDATE') {
+          if (payload.eventType === "UPDATE") {
             // Optimistic update for update
-            queryClient.setQueryData<Processo[]>(['processos'], (old) => {
+            queryClient.setQueryData<Processo[]>(["processos"], (old) => {
               if (!old) return [];
               return old.map((p) =>
                 p.id === payload.new.id ? (payload.new as Processo) : p
@@ -591,14 +596,14 @@ export const useRealtimeProcessos = () => {
 
 ```typescript
 // components/upload/file-uploader.tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Progress } from '@/components/ui/progress';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
 
 interface FileUploaderProps {
   bucket: string;
@@ -606,7 +611,11 @@ interface FileUploaderProps {
   onUploadComplete?: (url: string) => void;
 }
 
-export const FileUploader = ({ bucket, path = '', onUploadComplete }: FileUploaderProps) => {
+export const FileUploader = ({
+  bucket,
+  path = "",
+  onUploadComplete,
+}: FileUploaderProps) => {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const supabase = createClient();
@@ -619,14 +628,14 @@ export const FileUploader = ({ bucket, path = '', onUploadComplete }: FileUpload
     setProgress(0);
 
     try {
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split(".").pop();
       const fileName = `${Math.random()}.${fileExt}`;
       const filePath = `${path}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from(bucket)
         .upload(filePath, file, {
-          cacheControl: '3600',
+          cacheControl: "3600",
           upsert: false,
         });
 
@@ -638,10 +647,12 @@ export const FileUploader = ({ bucket, path = '', onUploadComplete }: FileUpload
       } = supabase.storage.from(bucket).getPublicUrl(filePath);
 
       setProgress(100);
-      toast.success('Arquivo enviado com sucesso!');
+      toast.success("Arquivo enviado com sucesso!");
       onUploadComplete?.(publicUrl);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao enviar arquivo');
+      toast.error(
+        error instanceof Error ? error.message : "Erro ao enviar arquivo"
+      );
     } finally {
       setUploading(false);
     }
@@ -696,11 +707,11 @@ USING (auth.uid() = user_id);
 
 ```typescript
 // app/actions/processos.ts
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { createClient } from '@/lib/supabase/server';
-import { z } from 'zod';
+import { revalidatePath } from "next/cache";
+import { createClient } from "@/lib/supabase/server";
+import { z } from "zod";
 
 const processoSchema = z.object({
   numero: z.string().min(1),
@@ -717,22 +728,22 @@ export async function createProcesso(formData: FormData) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { error: 'Não autenticado' };
+    return { error: "Não autenticado" };
   }
 
   // Validate data
   const parsed = processoSchema.safeParse({
-    numero: formData.get('numero'),
-    classe: formData.get('classe'),
-    assunto: formData.get('assunto'),
+    numero: formData.get("numero"),
+    classe: formData.get("classe"),
+    assunto: formData.get("assunto"),
   });
 
   if (!parsed.success) {
-    return { error: 'Dados inválidos' };
+    return { error: "Dados inválidos" };
   }
 
   // Insert into database
-  const { error } = await supabase.from('processos').insert({
+  const { error } = await supabase.from("processos").insert({
     ...parsed.data,
     user_id: user.id,
   });
@@ -741,7 +752,7 @@ export async function createProcesso(formData: FormData) {
     return { error: error.message };
   }
 
-  revalidatePath('/processos');
+  revalidatePath("/processos");
   return { success: true };
 }
 ```
@@ -757,6 +768,7 @@ export async function createProcesso(formData: FormData) {
 ## When to Use This Skill
 
 Use this skill when:
+
 - Building full-stack applications with Supabase
 - Implementing authentication systems
 - Creating database CRUD operations

@@ -2,8 +2,8 @@
 // Gerencia consultas na tabela audiencias com filtros, paginação e ordenação
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { getCached, setCached } from '@/lib/redis/cache-utils';
-import { getAudienciasListKey } from '@/lib/redis/cache-keys';
+import { getCached, setCached } from '@/backend/utils/redis/cache-utils';
+import { getAudienciasListKey } from '@/backend/utils/redis/cache-keys';
 import type {
   Audiencia,
   ListarAudienciasParams,

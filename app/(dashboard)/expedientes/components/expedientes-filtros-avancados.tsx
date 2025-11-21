@@ -23,8 +23,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Filter, X } from 'lucide-react';
-import { useUsuarios } from '@/lib/hooks/use-usuarios';
-import type { ExpedientesFilters } from '@/lib/types/expedientes';
+import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
+import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
 
 // Lista de TRTs disponíveis
 const TRTS = [

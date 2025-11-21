@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { Loader2 } from 'lucide-react';
-import { useAcervo } from '@/lib/hooks/use-acervo';
+import { useAcervo } from '@/app/_lib/hooks/use-acervo';
 
 interface NovaObrigacaoDialogProps {
   open: boolean;
@@ -32,11 +32,28 @@ interface NovaObrigacaoDialogProps {
   onSuccess: () => void;
 }
 
+// Opções de TRT (TRT1 a TRT24)
+const TRTS = Array.from({ length: 24 }, (_, i) => {
+  const num = i + 1;
+  return {
+    value: `TRT${num}`,
+    label: `TRT${num}`,
+  };
+});
+
+// Opções de Grau
+const GRAUS = [
+  { value: 'primeiro_grau', label: '1º Grau' },
+  { value: 'segundo_grau', label: '2º Grau' },
+];
+
 export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrigacaoDialogProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
   // Form state
+  const [trt, setTrt] = React.useState<string>('');
+  const [grau, setGrau] = React.useState<string>('');
   const [processoId, setProcessoId] = React.useState<string[]>([]);
   const [tipo, setTipo] = React.useState<string>('');
   const [direcao, setDirecao] = React.useState<string>('');
@@ -46,16 +63,28 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
   const [formaDistribuicao, setFormaDistribuicao] = React.useState('');
   const [observacoes, setObservacoes] = React.useState('');
 
-  // Buscar processos com hook quando o dialog abrir
-  const { processos, isLoading: loadingProcessos, error: processoError } = useAcervo(
-    open
-      ? {
-          limite: 200,
-          ordenar_por: 'numero_processo',
-          ordem: 'desc',
-        }
-      : { limite: 0 } // Não busca se dialog fechado
-  );
+  // Buscar processos com hook quando TRT e Grau forem selecionados
+  const shouldFetchProcessos = open && !!trt && !!grau;
+
+  // Hook com params fixos para evitar re-renders
+  const acervoParams = React.useMemo(() => {
+    if (!shouldFetchProcessos) {
+      // Retorna params que não fazem requisição real
+      return { limite: 1, pagina: 1 };
+    }
+    return {
+      trt,
+      grau: grau as 'primeiro_grau' | 'segundo_grau',
+      limite: 2000,
+      ordenar_por: 'numero_processo' as const,
+      ordem: 'asc' as const,
+    };
+  }, [shouldFetchProcessos, trt, grau]);
+
+  const { processos: processosRaw, isLoading: loadingProcessos, error: processoError } = useAcervo(acervoParams);
+
+  // Só usa processos quando deve buscar
+  const processos = shouldFetchProcessos ? processosRaw : [];
 
   // Atualizar erro se houver problema ao buscar processos
   React.useEffect(() => {
@@ -63,6 +92,11 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
       setError(`Erro ao carregar processos: ${processoError}`);
     }
   }, [processoError, error]);
+
+  // Resetar processo quando TRT ou Grau mudarem
+  React.useEffect(() => {
+    setProcessoId([]);
+  }, [trt, grau]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,6 +172,8 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
   };
 
   const resetForm = () => {
+    setTrt('');
+    setGrau('');
     setProcessoId([]);
     setTipo('');
     setDirecao('');
@@ -158,8 +194,8 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
   const processosOptions: ComboboxOption[] = React.useMemo(() => {
     return processos.map((p) => ({
       value: p.id.toString(),
-      label: `${p.numero_processo} - ${p.polo_ativo_nome || 'Sem nome'} vs ${p.polo_passivo_nome || 'Sem nome'}`,
-      searchText: `${p.numero_processo} ${p.polo_ativo_nome || ''} ${p.polo_passivo_nome || ''}`,
+      label: `${p.numero_processo} - ${p.nome_parte_autora || 'Sem nome'} vs ${p.nome_parte_re || 'Sem nome'}`,
+      searchText: `${p.numero_processo} ${p.nome_parte_autora || ''} ${p.nome_parte_re || ''}`,
     }));
   }, [processos]);
 
@@ -180,10 +216,48 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
             </div>
           )}
 
+          {/* TRT e Grau */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="trt">Tribunal (TRT) *</Label>
+              <Select value={trt} onValueChange={setTrt}>
+                <SelectTrigger id="trt">
+                  <SelectValue placeholder="Selecione o TRT" />
+                </SelectTrigger>
+                <SelectContent>
+                  {TRTS.map((tribunal) => (
+                    <SelectItem key={tribunal.value} value={tribunal.value}>
+                      {tribunal.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="grau">Grau *</Label>
+              <Select value={grau} onValueChange={setGrau}>
+                <SelectTrigger id="grau">
+                  <SelectValue placeholder="Selecione o grau" />
+                </SelectTrigger>
+                <SelectContent>
+                  {GRAUS.map((g) => (
+                    <SelectItem key={g.value} value={g.value}>
+                      {g.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
           {/* Processo - Combobox com busca */}
           <div className="space-y-2">
             <Label htmlFor="processo">Processo *</Label>
-            {loadingProcessos ? (
+            {!trt || !grau ? (
+              <div className="flex items-center gap-2 p-2 border rounded-md bg-muted">
+                <span className="text-sm text-muted-foreground">Selecione o TRT e Grau primeiro</span>
+              </div>
+            ) : loadingProcessos ? (
               <div className="flex items-center gap-2 p-2 border rounded-md">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 <span className="text-sm text-muted-foreground">Carregando processos...</span>
@@ -198,11 +272,6 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
                 emptyText="Nenhum processo encontrado"
                 multiple={false}
               />
-            )}
-            {processos.length > 0 && (
-              <p className="text-xs text-muted-foreground">
-                Mostrando os {processos.length} processos mais recentes
-              </p>
             )}
           </div>
 

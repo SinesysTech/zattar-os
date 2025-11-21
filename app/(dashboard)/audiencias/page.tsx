@@ -19,13 +19,13 @@ import { AudienciasVisualizacaoSemana } from './components/audiencias-visualizac
 import { AudienciasVisualizacaoMes } from './components/audiencias-visualizacao-mes';
 import { AudienciasVisualizacaoAno } from './components/audiencias-visualizacao-ano';
 import { NovaAudienciaDialog } from './components/nova-audiencia-dialog';
-import { useAudiencias } from '@/lib/hooks/use-audiencias';
-import { useUsuarios } from '@/lib/hooks/use-usuarios';
+import { useAudiencias } from '@/app/_lib/hooks/use-audiencias';
+import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildAudienciasFilterOptions, buildAudienciasFilterGroups, parseAudienciasFilters } from './components/audiencias-toolbar-filters';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Audiencia } from '@/backend/types/audiencias/types';
-import type { AudienciasFilters } from '@/lib/types/audiencias';
+import type { AudienciasFilters } from '@/app/_lib/types/audiencias';
 
 
 /**

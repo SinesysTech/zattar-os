@@ -4,7 +4,7 @@
 
 import useSWR from 'swr';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import type { Permissao } from '@/lib/types/usuarios';
+import type { Permissao } from '@/app/_lib/types/usuarios';
 
 interface UsuarioDetailResponse {
   success: boolean;

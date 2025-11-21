@@ -2,7 +2,7 @@
 // Gerencia operações de CRUD na tabela usuarios
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { getCached, setCached, deleteCached, getUsuariosListKey, invalidateUsuariosCache } from '@/lib/redis';
+import { getCached, setCached, deleteCached, getUsuariosListKey, invalidateUsuariosCache } from '@/backend/utils/redis';
 
 /**
  * Gênero do usuário

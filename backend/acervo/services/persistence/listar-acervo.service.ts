@@ -2,8 +2,8 @@
 // Gerencia consultas na tabela acervo com filtros, paginação, ordenação e agrupamento
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { getCached, setCached } from '@/lib/redis/cache-utils';
-import { getAcervoListKey, getAcervoGroupKey } from '@/lib/redis/cache-keys';
+import { getCached, setCached } from '@/backend/utils/redis/cache-utils';
+import { getAcervoListKey, getAcervoGroupKey } from '@/backend/utils/redis/cache-keys';
 import type {
   Acervo,
   ListarAcervoParams,

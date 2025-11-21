@@ -7,8 +7,14 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { DataTableColumnHeaderWithFilter } from '@/components/ui/data-table-column-header-with-filter';
-import { ExpedientesFiltrosAvancados } from './components/expedientes-filtros-avancados';
-import { Input } from '@/components/ui/input';
+import { TableToolbar } from '@/components/ui/table-toolbar';
+import { NovoExpedienteDialog } from './components/novo-expediente-dialog';
+import {
+  buildExpedientesFilterOptions,
+  buildExpedientesFilterGroups,
+  parseExpedientesFilters,
+} from './components/expedientes-toolbar-filters';
+import type { ExpedientesFilters as ToolbarFilters } from './components/expedientes-toolbar-filters';
 import { Badge } from '@/components/ui/badge';
 import {
   Select,
@@ -24,7 +30,17 @@ import {
 } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
+import {
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+  CalendarRange,
+  Calendar,
+  CalendarDays,
+  List,
+  RotateCcw,
+} from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Tooltip,
@@ -35,16 +51,16 @@ import {
 import { ExpedientesVisualizacaoSemana } from './components/expedientes-visualizacao-semana';
 import { ExpedientesVisualizacaoMes } from './components/expedientes-visualizacao-mes';
 import { ExpedientesVisualizacaoAno } from './components/expedientes-visualizacao-ano';
-import { usePendentes } from '@/lib/hooks/use-pendentes';
-import { useUsuarios } from '@/lib/hooks/use-usuarios';
-import { useTiposExpedientes } from '@/lib/hooks/use-tipos-expedientes';
+import { usePendentes } from '@/app/_lib/hooks/use-pendentes';
+import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
+import { useTiposExpedientes } from '@/app/_lib/hooks/use-tipos-expedientes';
 import { ExpedientesBaixarDialog } from './components/expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './components/expedientes-reverter-baixa-dialog';
 import { ExpedienteVisualizarDialog } from './components/expediente-visualizar-dialog';
 import { CheckCircle2, XCircle, Undo2, Eye } from 'lucide-react';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
-import type { ExpedientesFilters } from '@/lib/types/expedientes';
+import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 /**
@@ -569,6 +585,12 @@ function AcoesExpediente({
         expediente={expediente}
         onSuccess={handleSuccess}
       />
+
+      <NovoExpedienteDialog
+        open={novoExpedienteOpen}
+        onOpenChange={setNovoExpedienteOpen}
+        onSuccess={handleSuccess}
+      />
     </TooltipProvider>
   );
 }
@@ -586,6 +608,11 @@ export default function ExpedientesPage() {
   const [filtros, setFiltros] = React.useState<ExpedientesFilters>({});
   const [visualizacao, setVisualizacao] = React.useState<'tabela' | 'semana' | 'mes' | 'ano'>('tabela');
   const [semanaAtual, setSemanaAtual] = React.useState(new Date());
+  const [mesAtual, setMesAtual] = React.useState(new Date());
+  const [anoAtual, setAnoAtual] = React.useState(new Date());
+  const [novoExpedienteOpen, setNovoExpedienteOpen] = React.useState(false);
+  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+  const [isSearching, setIsSearching] = React.useState(false);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -666,6 +693,63 @@ export default function ExpedientesPage() {
     setSemanaAtual(new Date());
   }, []);
 
+  // Funções para navegação de mês
+  const navegarMes = React.useCallback((direcao: 'anterior' | 'proxima') => {
+    const novoMes = new Date(mesAtual);
+    novoMes.setMonth(novoMes.getMonth() + (direcao === 'proxima' ? 1 : -1));
+    setMesAtual(novoMes);
+  }, [mesAtual]);
+
+  const voltarMesAtual = React.useCallback(() => {
+    setMesAtual(new Date());
+  }, []);
+
+  // Funções para navegação de ano
+  const navegarAno = React.useCallback((direcao: 'anterior' | 'proxima') => {
+    const novoAno = new Date(anoAtual);
+    novoAno.setFullYear(novoAno.getFullYear() + (direcao === 'proxima' ? 1 : -1));
+    setAnoAtual(novoAno);
+  }, [anoAtual]);
+
+  const voltarAnoAtual = React.useCallback(() => {
+    setAnoAtual(new Date());
+  }, []);
+
+  // Handler para mudança de filtros consolidados
+  const handleFilterIdsChange = React.useCallback(
+    (ids: string[]) => {
+      setSelectedFilterIds(ids);
+      const parsed = parseExpedientesFilters(ids);
+
+      // Atualizar estados baseados nos filtros
+      if (parsed.baixado !== undefined) {
+        setStatusBaixa(parsed.baixado ? 'baixado' : 'pendente');
+      } else {
+        setStatusBaixa('todos');
+      }
+
+      if (parsed.prazo_vencido !== undefined) {
+        setStatusPrazo(parsed.prazo_vencido ? 'vencido' : 'no_prazo');
+      } else {
+        setStatusPrazo('todos');
+      }
+
+      // Atualizar outros filtros
+      const newFiltros: ExpedientesFilters = {};
+      if (parsed.trt) newFiltros.trt = parsed.trt;
+      if (parsed.grau) newFiltros.grau = parsed.grau;
+      if (parsed.responsavel_id) newFiltros.responsavel_id = parsed.responsavel_id;
+      if (parsed.tipo_expediente_id) newFiltros.tipo_expediente_id = parsed.tipo_expediente_id;
+      if (parsed.segredo_justica) newFiltros.segredo_justica = parsed.segredo_justica;
+      if (parsed.juizo_digital) newFiltros.juizo_digital = parsed.juizo_digital;
+      if (parsed.sem_responsavel) newFiltros.sem_responsavel = parsed.sem_responsavel;
+
+      setFiltros(newFiltros);
+      setPagina(0);
+    },
+    []
+  );
+
   // Calcular início e fim da semana para exibição
   const { inicioSemana, fimSemana } = React.useMemo(() => {
     const date = new Date(semanaAtual);
@@ -690,98 +774,127 @@ export default function ExpedientesPage() {
     });
   };
 
+  // Formatar período para controles de navegação
+  const formatarPeriodo = React.useMemo(() => {
+    if (visualizacao === 'semana') {
+      return `${formatarDataCabecalho(inicioSemana)} - ${formatarDataCabecalho(fimSemana)}`;
+    } else if (visualizacao === 'mes') {
+      return mesAtual.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+    } else if (visualizacao === 'ano') {
+      return anoAtual.getFullYear().toString();
+    }
+    return '';
+  }, [visualizacao, inicioSemana, fimSemana, mesAtual, anoAtual]);
+
+  // Construir opções e grupos de filtros
+  const filterOptions = React.useMemo(
+    () => buildExpedientesFilterOptions(usuariosLista, tiposExpedientes),
+    [usuariosLista, tiposExpedientes]
+  );
+
+  const filterGroups = React.useMemo(
+    () => buildExpedientesFilterGroups(usuariosLista, tiposExpedientes),
+    [usuariosLista, tiposExpedientes]
+  );
+
+  // Efeito para indicar pesquisa ativa
+  React.useEffect(() => {
+    setIsSearching(true);
+    const timer = setTimeout(() => setIsSearching(false), 300);
+    return () => clearTimeout(timer);
+  }, [buscaDebounced]);
+
   return (
     <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
       <div className="space-y-4">
-        {/* Barra de busca e filtros */}
-        <div className="flex items-center gap-4">
-          <Input
-            placeholder="Buscar por número do processo, parte autora, parte ré, órgão julgador ou classe judicial..."
-            value={busca}
-            onChange={(e) => {
-              setBusca(e.target.value);
-              setPagina(0); // Resetar para primeira página ao buscar
-            }}
-            className="max-w-sm"
-          />
-          <ExpedientesFiltrosAvancados
-            filters={filtros}
-            onFiltersChange={handleFiltersChange}
-            onReset={handleFiltersReset}
-          />
-          <Select
-            value={statusBaixa}
-            onValueChange={(value) => {
-              setStatusBaixa(value as 'pendente' | 'baixado' | 'todos');
-              setPagina(0); // Resetar para primeira página ao mudar status
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="pendente">Pendente</SelectItem>
-              <SelectItem value="baixado">Baixado</SelectItem>
-              <SelectItem value="todos">Todos os Status</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select
-            value={statusPrazo}
-            onValueChange={(value) => {
-              setStatusPrazo(value as 'no_prazo' | 'vencido' | 'todos');
-              setPagina(0); // Resetar para primeira página ao mudar prazo
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Prazo" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="no_prazo">No Prazo</SelectItem>
-              <SelectItem value="vencido">Vencido</SelectItem>
-              <SelectItem value="todos">Todos os Prazos</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* Barra de busca e filtros consolidados */}
+        <TableToolbar
+          searchValue={busca}
+          onSearchChange={(value) => {
+            setBusca(value);
+            setPagina(0);
+          }}
+          isSearching={isSearching}
+          searchPlaceholder="Buscar expedientes..."
+          filterOptions={filterOptions}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilterIds}
+          onFiltersChange={handleFilterIdsChange}
+          onNewClick={() => setNovoExpedienteOpen(true)}
+          newButtonTooltip="Novo expediente manual"
+        />
 
-          {/* Tabs de visualização */}
+        {/* Tabs de visualização com ícones e controles de navegação */}
+        <div className="flex items-center gap-4">
           <TabsList>
-            <TabsTrigger value="tabela">Tabela</TabsTrigger>
-            <TabsTrigger value="semana">Semana</TabsTrigger>
-            <TabsTrigger value="mes">Mês</TabsTrigger>
-            <TabsTrigger value="ano">Ano</TabsTrigger>
+            <TabsTrigger value="semana">
+              <CalendarRange className="h-4 w-4 mr-2" />
+              <span>Semana</span>
+            </TabsTrigger>
+            <TabsTrigger value="mes">
+              <Calendar className="h-4 w-4 mr-2" />
+              <span>Mês</span>
+            </TabsTrigger>
+            <TabsTrigger value="ano">
+              <CalendarDays className="h-4 w-4 mr-2" />
+              <span>Ano</span>
+            </TabsTrigger>
+            <TabsTrigger value="tabela">
+              <List className="h-4 w-4 mr-2" />
+              <span>Lista</span>
+            </TabsTrigger>
           </TabsList>
 
-          {/* Controles de navegação de semana (aparecem apenas na visualização de semana) */}
-          {visualizacao === 'semana' && (
-            <div className="flex items-center gap-2">
+          {/* Controles de navegação temporal unificados */}
+          {visualizacao !== 'tabela' && (
+            <ButtonGroup>
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => navegarSemana('anterior')}
+                onClick={() => {
+                  if (visualizacao === 'semana') navegarSemana('anterior');
+                  else if (visualizacao === 'mes') navegarMes('anterior');
+                  else navegarAno('anterior');
+                }}
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <div className="text-sm font-medium whitespace-nowrap">
-                {formatarDataCabecalho(inicioSemana)} - {formatarDataCabecalho(fimSemana)}
-              </div>
+
+              <ButtonGroupText>
+                {formatarPeriodo}
+              </ButtonGroupText>
+
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => navegarSemana('proxima')}
+                onClick={() => {
+                  if (visualizacao === 'semana') navegarSemana('proxima');
+                  else if (visualizacao === 'mes') navegarMes('proxima');
+                  else navegarAno('proxima');
+                }}
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
-            </div>
-          )}
 
-          {/* Botão semana atual na extremidade direita */}
-          {visualizacao === 'semana' && (
-            <Button
-              variant="outline"
-              onClick={voltarSemanaAtual}
-              className="ml-auto"
-            >
-              Semana Atual
-            </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => {
+                      if (visualizacao === 'semana') voltarSemanaAtual();
+                      else if (visualizacao === 'mes') voltarMesAtual();
+                      else voltarAnoAtual();
+                    }}
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Voltar para {visualizacao === 'semana' ? 'semana' : visualizacao === 'mes' ? 'mês' : 'ano'} atual</p>
+                </TooltipContent>
+              </Tooltip>
+            </ButtonGroup>
           )}
         </div>
 
@@ -825,11 +938,19 @@ export default function ExpedientesPage() {
         </TabsContent>
 
         <TabsContent value="mes" className="mt-0">
-          <ExpedientesVisualizacaoMes expedientes={expedientes} isLoading={isLoading} />
+          <ExpedientesVisualizacaoMes
+            expedientes={expedientes}
+            isLoading={isLoading}
+            mesAtual={mesAtual}
+          />
         </TabsContent>
 
         <TabsContent value="ano" className="mt-0">
-          <ExpedientesVisualizacaoAno expedientes={expedientes} isLoading={isLoading} />
+          <ExpedientesVisualizacaoAno
+            expedientes={expedientes}
+            isLoading={isLoading}
+            anoAtual={anoAtual}
+          />
         </TabsContent>
       </div>
     </Tabs>

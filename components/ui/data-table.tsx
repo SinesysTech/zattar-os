@@ -28,7 +28,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2, FileX } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/app/_lib/utils';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 
 export interface DataTableProps<TData> {

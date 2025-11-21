@@ -21,7 +21,7 @@ import {
   formatarData,
   getStatusBadgeVariant,
   getTipoContratoBadgeVariant,
-} from '@/lib/utils/format-contratos';
+} from '@/app/_lib/utils/format-contratos';
 import type { Contrato } from '@/backend/contratos/services/persistence/contrato-persistence.service';
 
 interface ContratoViewSheetProps {

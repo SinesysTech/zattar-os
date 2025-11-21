@@ -15,8 +15,8 @@ import { ArrowLeft, AlertCircle, Pencil } from 'lucide-react';
 import { UsuarioDadosBasicos } from '../components/usuario-dados-basicos';
 import { PermissoesMatriz } from '../components/permissoes-matriz';
 import { UsuarioEditDialog } from '../components/usuario-edit-dialog';
-import { useUsuarioDetail, useUsuarioPermissoes } from '@/lib/hooks/use-usuario-detail';
-import { usePermissoesMatriz } from '@/lib/hooks/use-permissoes-matriz';
+import { useUsuarioDetail, useUsuarioPermissoes } from '@/app/_lib/hooks/use-usuario-detail';
+import { usePermissoesMatriz } from '@/app/_lib/hooks/use-permissoes-matriz';
 import { useBreadcrumbOverride } from '@/components/layout/breadcrumb-context';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from '@/components/ui/empty';
 

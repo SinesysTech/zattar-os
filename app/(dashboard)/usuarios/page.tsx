@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Eye, Plus, Settings } from 'lucide-react';
-import { useUsuarios } from '@/lib/hooks/use-usuarios';
+import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { UsuariosGridView } from './components/usuarios-grid-view';
 import { ViewToggle } from './components/view-toggle';
 import { UsuariosFiltrosAvancados } from './components/usuarios-filtros-avancados';
@@ -20,13 +20,13 @@ import { UsuarioEditDialog } from './components/usuario-edit-dialog';
 import { CargosManagementDialog } from './components/cargos-management-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import type { UsuariosFilters, ViewMode } from '@/lib/types/usuarios';
+import type { UsuariosFilters, ViewMode } from '@/app/_lib/types/usuarios';
 import {
   formatarCpf,
   formatarTelefone,
   formatarOab,
   formatarNomeExibicao,
-} from '@/lib/utils/format-usuarios';
+} from '@/app/_lib/utils/format-usuarios';
 
 const VIEW_MODE_STORAGE_KEY = 'usuarios-view-mode';
 

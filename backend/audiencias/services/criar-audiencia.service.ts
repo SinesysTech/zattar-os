@@ -1,6 +1,6 @@
 // Serviço para criar nova audiência manualmente
 
-import { createClient } from '@/lib/server';
+import { createClient } from '@/backend/utils/supabase/server-client';
 import type { CriarAudienciaParams } from '@/backend/types/audiencias/types';
 
 /**

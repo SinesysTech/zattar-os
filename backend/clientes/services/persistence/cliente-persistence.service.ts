@@ -2,7 +2,7 @@
 // Gerencia operações de CRUD na tabela clientes
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { getCached, setCached, getClientesListKey, invalidateClientesCache } from '@/lib/redis';
+import { getCached, setCached, getClientesListKey, invalidateClientesCache } from '@/backend/utils/redis';
 
 /**
  * Tipo de pessoa

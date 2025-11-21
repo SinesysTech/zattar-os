@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { criarAgendamento } from '@/lib/api/agendamentos';
+import { criarAgendamento } from '@/app/_lib/api/agendamentos';
 import type { TipoCaptura } from '@/backend/types/captura/capturas-log-types';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, XCircle } from 'lucide-react';

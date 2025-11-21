@@ -10,11 +10,8 @@ Antes de iniciar uma captura custosa de timeline do PJE, o sistema deve verifica
 
 ## ADDED Requirements
 
-### REQ-VTE-001: Verificar Existência de Timeline
-**Priority**: High
-**Type**: Functional
-
-Quando um usuário solicita visualização de um processo, o sistema deve verificar se a timeline já existe no MongoDB antes de iniciar qualquer captura.
+### Requirement: Verificar Existência de Timeline
+O sistema SHALL verificar se a timeline já existe no MongoDB antes de iniciar qualquer captura quando um usuário solicita visualização de um processo.
 
 #### Scenario: Timeline já existe no MongoDB
 **Given** um processo com `timeline_mongodb_id` preenchido no PostgreSQL
@@ -45,11 +42,8 @@ Quando um usuário solicita visualização de um processo, o sistema deve verifi
 
 ---
 
-### REQ-VTE-002: Endpoint de Consulta de Timeline
-**Priority**: High
-**Type**: API
-
-Deve existir um endpoint dedicado para consulta de timeline que retorne tanto os dados do processo quanto a timeline (se existir).
+### Requirement: Endpoint de Consulta de Timeline
+O sistema SHALL fornecer um endpoint dedicado para consulta de timeline que retorne tanto os dados do processo quanto a timeline (se existir).
 
 #### Scenario: Consulta bem-sucedida com timeline existente
 **Given** processo com ID válido e timeline capturada
@@ -67,8 +61,7 @@ Deve existir um endpoint dedicado para consulta de timeline que retorne tanto os
       "timeline_mongodb_id": "507f1f77bcf86cd799439011",
       "numero_processo": "0001234-56.2024.5.03.0001",
       "nome_parte_autora": "João Silva",
-      "nome_parte_re": "Empresa XYZ",
-      ...
+      "nome_parte_re": "Empresa XYZ"
     },
     "timeline": {
       "_id": "507f1f77bcf86cd799439011",
@@ -76,7 +69,7 @@ Deve existir um endpoint dedicado para consulta de timeline que retorne tanto os
       "trtCodigo": "TRT3",
       "grau": "primeiro_grau",
       "capturadoEm": "2025-01-20T10:30:00Z",
-      "timeline": [...],
+      "timeline": [],
       "metadata": {
         "totalDocumentos": 15,
         "totalMovimentos": 8,
@@ -90,31 +83,17 @@ Deve existir um endpoint dedicado para consulta de timeline que retorne tanto os
 #### Scenario: Consulta bem-sucedida sem timeline
 **Given** processo com ID válido mas timeline não capturada
 **When** GET /api/acervo/{acervoId}/timeline é chamado
-**Then** a resposta deve ser:
-```json
-{
-  "success": true,
-  "data": {
-    "acervo": { ... },
-    "timeline": null
-  }
-}
-```
+**Then** a resposta deve ter `timeline: null`
 
 #### Scenario: Processo não encontrado
 **Given** ID de processo inexistente
 **When** GET /api/acervo/{acervoId}/timeline é chamado
-**Then** a resposta deve ser:
-- Status 404
-- Mensagem de erro clara: "Processo não encontrado"
+**Then** a resposta deve ter status 404 e mensagem "Processo não encontrado"
 
 ---
 
-### REQ-VTE-003: Hook React de Verificação
-**Priority**: High
-**Type**: Frontend
-
-Deve existir um hook customizado que encapsule a lógica de verificação e forneça interface consistente para componentes.
+### Requirement: Hook React de Verificação
+O sistema SHALL fornecer um hook customizado que encapsule a lógica de verificação e forneça interface consistente para componentes.
 
 #### Scenario: Hook inicializa verificação automaticamente
 **Given** hook `useProcessoTimeline(acervoId)` é invocado
@@ -129,67 +108,40 @@ Deve existir um hook customizado que encapsule a lógica de verificação e forn
 #### Scenario: Hook detecta timeline ausente
 **Given** hook recebe resposta com `timeline: null`
 **When** verificação é concluída
-**Then** o hook deve:
-- Setar `timeline: null`
-- Setar flag `needsCapture: true` (interno)
-- Expor função `captureTimeline()` para iniciar captura
-- NÃO iniciar captura automaticamente ainda (será em captura-timeline-automatica)
+**Then** o hook deve setar `timeline: null` e expor função `captureTimeline()` para iniciar captura
 
 #### Scenario: Hook trata erro de rede
 **Given** requisição falha por timeout ou erro de rede
 **When** verificação é executada
-**Then** o hook deve:
-- Capturar erro
-- Setar `error` com mensagem amigável
-- Setar `isLoading: false`
-- Permitir retry via `refetch()`
+**Then** o hook deve capturar erro, setar `error` com mensagem amigável, e permitir retry via `refetch()`
 
 ---
 
-### REQ-VTE-004: Performance da Verificação
-**Priority**: Medium
-**Type**: Non-Functional
-
-A verificação deve ser rápida e não bloquear a interface.
+### Requirement: Performance da Verificação
+O sistema SHALL garantir que a verificação seja rápida e não bloqueie a interface.
 
 #### Scenario: Verificação rápida para timeline existente
-**Given** timeline já está no MongoDB
-**And** conexão de rede estável
+**Given** timeline já está no MongoDB e conexão de rede estável
 **When** verificação é executada
 **Then** o resultado deve retornar em < 1 segundo
 
 #### Scenario: Timeout apropriado
 **Given** MongoDB ou PostgreSQL estão lentos/indisponíveis
 **When** verificação demora mais de 10 segundos
-**Then** o sistema deve:
-- Cancelar requisição
-- Retornar erro de timeout
-- Sugerir tentar novamente
+**Then** o sistema deve cancelar requisição, retornar erro de timeout e sugerir tentar novamente
 
 ---
 
-### REQ-VTE-005: Dados Retornados
-**Priority**: High
-**Type**: Functional
-
-A verificação deve retornar todos os dados necessários para renderização completa da página.
+### Requirement: Dados Retornados Completos
+O sistema SHALL retornar todos os dados necessários para renderização completa da página de visualização.
 
 #### Scenario: Dados completos do processo
 **Given** verificação bem-sucedida
-**Then** os dados do processo devem incluir:
-- Dados básicos: id, id_pje, numero_processo, trt, grau
-- Partes: nome_parte_autora, qtde_parte_autora, nome_parte_re, qtde_parte_re
-- Datas: data_autuacao, data_proxima_audiencia, data_arquivamento
-- Metadados: classe_judicial, orgao_julgador, status, responsavel_id
-- Referência: timeline_mongodb_id (se houver)
+**Then** os dados do processo devem incluir: id, id_pje, numero_processo, trt, grau, partes (autora e ré), datas (autuação, próxima audiência, arquivamento), classe_judicial, orgao_julgador, status, responsavel_id e timeline_mongodb_id
 
 #### Scenario: Dados completos da timeline
 **Given** timeline existe no MongoDB
-**Then** a timeline deve incluir:
-- Array de items ordenados por data (desc)
-- Cada item com campos obrigatórios: id, titulo, data, documento (boolean)
-- Documentos enriquecidos com googleDrive (se disponível)
-- Metadata: totalDocumentos, totalMovimentos, capturadoEm
+**Then** a timeline deve incluir array de items ordenados por data (desc), cada item com campos obrigatórios, documentos enriquecidos com googleDrive (se disponível) e metadata completa
 
 ---
 
@@ -202,31 +154,3 @@ Nenhum requirement modificado nesta spec.
 ## REMOVED Requirements
 
 Nenhum requirement removido nesta spec.
-
----
-
-## Implementation Notes
-
-### Ordem de Execução
-1. Criar tipos TypeScript para timeline (lib/types/timeline.ts)
-2. Implementar função de busca no hook
-3. Implementar tratamento de erros
-4. Adicionar estados de loading
-
-### Referências de Código
-- Endpoint existente: `app/api/acervo/[id]/timeline/route.ts` (já implementado)
-- Serviço de persistência: `backend/captura/services/timeline/timeline-persistence.service.ts`
-- Hook inspirado em: `lib/hooks/use-acervo.ts`
-
-### Considerações de Segurança
-- Endpoint deve validar autenticação do usuário
-- RLS do Supabase deve garantir acesso apenas a processos autorizados
-- MongoDB queries devem usar índices apropriados
-
-### Testes Necessários
-- [ ] Verificação com timeline existente retorna dados corretos
-- [ ] Verificação sem timeline retorna null
-- [ ] Referência inválida é tratada corretamente
-- [ ] Erro de rede é capturado e exposto
-- [ ] Timeout funciona após 10 segundos
-- [ ] Performance: verificação < 1s (timeline existente)

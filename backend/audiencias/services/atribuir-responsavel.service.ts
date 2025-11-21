@@ -5,7 +5,7 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import {
   atribuirResponsavelAudiencia as rpcAtribuirResponsavel,
 } from '@/backend/utils/supabase/set-user-context';
-import { invalidateAudienciasCache } from '@/lib/redis/invalidation';
+import { invalidateAudienciasCache } from '@/backend/utils/redis/invalidation';
 
 export interface AtribuirResponsavelAudienciaParams {
   audienciaId: number;
