@@ -15,17 +15,17 @@ import { ClienteViewSheet } from './components/cliente-view-sheet';
 import { ClienteEditSheet } from './components/cliente-edit-sheet';
 import { ClienteCreateSheet } from './components/cliente-create-sheet';
 import { Eye, Pencil, Plus } from 'lucide-react';
-import { useClientes } from '@/lib/hooks/use-clientes';
+import { useClientes } from '@/app/_lib/hooks/use-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Cliente } from '@/backend/clientes/services/persistence/cliente-persistence.service';
-import type { ClientesFilters } from '@/lib/types/clientes';
+import type { ClientesFilters } from '@/app/_lib/types/clientes';
 import {
   formatarCpf,
   formatarCnpj,
   formatarTelefone,
   formatarNome,
   formatarTipoPessoa,
-} from '@/lib/utils/format-clientes';
+} from '@/app/_lib/utils/format-clientes';
 
 /**
  * Define as colunas da tabela de clientes

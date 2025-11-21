@@ -23,8 +23,8 @@ import {
 import { Loader2, Save, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Usuario, Endereco } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import { useCargosAtivos } from '@/lib/hooks/use-cargos';
-import { buscarEnderecoPorCep, limparCep, formatarCep } from '@/lib/utils/viacep';
+import { useCargosAtivos } from '@/app/_lib/hooks/use-cargos';
+import { buscarEnderecoPorCep, limparCep, formatarCep } from '@/app/_lib/utils/viacep';
 
 interface UsuarioEditDialogProps {
   open: boolean;

@@ -6,8 +6,8 @@ config({ path: resolve(process.cwd(), '.env.local') });
 config();
 
 import { capturarTimeline } from '@/backend/captura/services/timeline/timeline-capture.service';
-import { testMongoConnection, closeMongoConnection } from '@/lib/mongodb/client';
-import { createMongoIndexes } from '@/lib/mongodb/collections';
+import { testMongoConnection, closeMongoConnection } from '@/backend/utils/mongodb/client';
+import { createMongoIndexes } from '@/backend/utils/mongodb/collections';
 
 /**
  * Teste completo da captura de timeline

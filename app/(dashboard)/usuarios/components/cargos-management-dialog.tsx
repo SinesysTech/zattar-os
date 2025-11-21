@@ -25,7 +25,7 @@ import {
   FileX,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCargos } from '@/lib/hooks/use-cargos';
+import { useCargos } from '@/app/_lib/hooks/use-cargos';
 import type { Cargo } from '@/backend/types/cargos/types';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import {

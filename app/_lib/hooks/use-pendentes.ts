@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type {
   ExpedientesApiResponse,
   BuscarExpedientesParams,
-} from '@/lib/types/expedientes';
+} from '@/app/_lib/types/expedientes';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 
 interface UsePendentesResult {

@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/server'
+import { createClient } from '@/backend/utils/supabase/server-client'
 import { type EmailOtpType } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
 import { type NextRequest } from 'next/server'

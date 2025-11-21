@@ -14,11 +14,11 @@ import { ContratoViewSheet } from './components/contrato-view-sheet';
 import { ContratoEditSheet } from './components/contrato-edit-sheet';
 import { ContratoCreateSheet } from './components/contrato-create-sheet';
 import { Eye, Pencil } from 'lucide-react';
-import { useContratos } from '@/lib/hooks/use-contratos';
+import { useContratos } from '@/app/_lib/hooks/use-contratos';
 import { buildContratosFilterOptions, parseContratosFilters } from './components/contratos-toolbar-filters';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Contrato } from '@/backend/contratos/services/persistence/contrato-persistence.service';
-import type { ContratosFilters } from '@/lib/types/contratos';
+import type { ContratosFilters } from '@/app/_lib/types/contratos';
 import {
   formatarAreaDireito,
   formatarTipoContrato,
@@ -27,7 +27,7 @@ import {
   formatarData,
   getStatusBadgeVariant,
   getTipoContratoBadgeVariant,
-} from '@/lib/utils/format-contratos';
+} from '@/app/_lib/utils/format-contratos';
 
 /**
  * Componente de ações para cada contrato

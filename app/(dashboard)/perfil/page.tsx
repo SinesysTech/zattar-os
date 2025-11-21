@@ -3,7 +3,7 @@
 // Página de perfil do usuário
 
 import * as React from 'react';
-import { usePerfil } from '@/lib/hooks/use-perfil';
+import { usePerfil } from '@/app/_lib/hooks/use-perfil';
 import { PerfilEditSheet } from './components/perfil-edit-sheet';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,7 @@ import {
   formatarData,
   formatarEnderecoCompleto,
   formatarGenero,
-} from '@/lib/utils/format-usuarios';
+} from '@/app/_lib/utils/format-usuarios';
 
 export default function PerfilPage() {
   const { usuario, isLoading, error, refetch } = usePerfil();

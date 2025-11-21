@@ -12,7 +12,7 @@ import {
   formatarNomeExibicao,
   formatarOab,
   formatarTelefone,
-} from '@/lib/utils/format-usuarios';
+} from '@/app/_lib/utils/format-usuarios';
 
 interface UsuarioCardProps {
   usuario: Usuario;

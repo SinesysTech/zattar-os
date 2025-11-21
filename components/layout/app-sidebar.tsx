@@ -24,7 +24,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { createClient } from "@/lib/client"
+import { createClient } from "@/app/_lib/supabase/client"
 
 const teams = [
   {

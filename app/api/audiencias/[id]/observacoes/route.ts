@@ -3,8 +3,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/backend/utils/auth/require-permission';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { deletePattern } from '@/lib/redis/cache-utils';
-import { CACHE_PREFIXES } from '@/lib/redis/cache-utils';
+import { deletePattern } from '@/backend/utils/redis/cache-utils';
+import { CACHE_PREFIXES } from '@/backend/utils/redis/cache-utils';
 
 /**
  * @swagger

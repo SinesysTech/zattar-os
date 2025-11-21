@@ -2,7 +2,7 @@
 // Gerencia operações de CRUD na tabela contratos
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { getCached, setCached, getContratosListKey, invalidateContratosCache } from '@/lib/redis';
+import { getCached, setCached, getContratosListKey, invalidateContratosCache } from '@/backend/utils/redis';
 
 /**
  * Área de direito

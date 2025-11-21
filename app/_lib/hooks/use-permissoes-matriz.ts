@@ -4,12 +4,12 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
-import type { PermissaoMatriz, Permissao } from '@/lib/types/usuarios';
+import type { PermissaoMatriz, Permissao } from '@/app/_lib/types/usuarios';
 import {
   formatarPermissoesParaMatriz,
   formatarMatrizParaPermissoes,
   detectarMudancas,
-} from '@/lib/utils/permissoes-utils';
+} from '@/app/_lib/utils/permissoes-utils';
 
 interface UsePermissoesMatrizProps {
   usuarioId: number;

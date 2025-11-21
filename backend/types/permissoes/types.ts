@@ -12,6 +12,7 @@ export type Recurso =
   | 'acervo'
   | 'audiencias'
   | 'pendentes'
+  | 'expedientes_manuais'
   | 'usuarios'
   | 'clientes'
   | 'partes_contrarias'
@@ -109,6 +110,19 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'baixar_expediente',
     'reverter_baixa',
     'editar_tipo_descricao',
+  ],
+
+  // Expedientes Manuais (9 permissões)
+  expedientes_manuais: [
+    'listar',
+    'visualizar',
+    'criar',
+    'editar',
+    'deletar',
+    'atribuir_responsavel',
+    'desatribuir_responsavel',
+    'transferir_responsavel',
+    'baixar_expediente',
   ],
 
   // Usuários (8 permissões)

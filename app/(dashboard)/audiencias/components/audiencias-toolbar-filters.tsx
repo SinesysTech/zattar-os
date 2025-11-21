@@ -1,7 +1,7 @@
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { AudienciasFilters } from '@/lib/types/audiencias';
-import type { Usuario } from '@/lib/types/usuarios';
+import type { AudienciasFilters } from '@/app/_lib/types/audiencias';
+import type { Usuario } from '@/app/_lib/types/usuarios';
 
 // Lista de TRTs disponíveis
 const TRTS = [

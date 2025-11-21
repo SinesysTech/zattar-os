@@ -7,7 +7,7 @@ import {
   compararObjetos,
   removerCamposControle,
 } from '@/backend/utils/captura/comparison.util';
-import { CACHE_PREFIXES, withCache } from '@/lib/redis/cache-utils';
+import { CACHE_PREFIXES, withCache } from '@/backend/utils/redis/cache-utils';
 
 /**
  * Interface para classe judicial do PJE

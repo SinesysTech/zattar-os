@@ -1,7 +1,7 @@
 // Serviço para atualizar URL da audiência virtual
 
 import { createClient } from '@/backend/utils/supabase/server';
-import { invalidateAudienciasCache } from '@/lib/redis/invalidation';
+import { invalidateAudienciasCache } from '@/backend/utils/redis/invalidation';
 
 export interface AtualizarUrlVirtualParams {
   audienciaId: number;

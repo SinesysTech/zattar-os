@@ -2,7 +2,7 @@
  * Utilidades para manipulação de permissões
  */
 
-import type { Permissao, PermissaoMatriz } from '@/lib/types/usuarios';
+import type { Permissao, PermissaoMatriz } from '@/app/_lib/types/usuarios';
 import { MATRIZ_PERMISSOES } from '@/backend/types/permissoes/types';
 
 /**

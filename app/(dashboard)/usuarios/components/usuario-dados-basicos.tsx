@@ -11,7 +11,7 @@ import {
   formatarTelefone,
   formatarOab,
   formatarNomeExibicao,
-} from '@/lib/utils/format-usuarios';
+} from '@/app/_lib/utils/format-usuarios';
 import { User, Mail, Phone, FileText, Shield, MapPin, Calendar, UserCircle, Briefcase } from 'lucide-react';
 
 interface UsuarioDadosBasicosProps {

@@ -39,6 +39,7 @@ export interface ExpedientesFilters {
   trt?: string;
   grau?: 'primeiro_grau' | 'segundo_grau';
   responsavel_id?: number | 'null';
+  tipo_expediente_id?: number;
   sem_responsavel?: boolean;
   baixado?: boolean; // true = apenas baixados, false = apenas pendentes, undefined = todos
   prazo_vencido?: boolean;

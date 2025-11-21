@@ -9,7 +9,7 @@ import type {
   ListarTiposExpedientesParams,
   ListarTiposExpedientesResult,
 } from '@/backend/types/tipos-expedientes/types';
-import { getCached, setCached, getTiposExpedientesListKey, invalidateCacheOnUpdate, CACHE_PREFIXES } from '@/lib/redis';
+import { getCached, setCached, getTiposExpedientesListKey, invalidateCacheOnUpdate, CACHE_PREFIXES } from '@/backend/utils/redis';
 
 /**
  * Criar um novo tipo de expediente

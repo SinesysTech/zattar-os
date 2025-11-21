@@ -3,7 +3,7 @@
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { criarUsuario as criarUsuarioDb, type UsuarioDados, type OperacaoUsuarioResult } from '../persistence/usuario-persistence.service';
-import { invalidateUsuariosCache } from '@/lib/redis/invalidation';
+import { invalidateUsuariosCache } from '@/backend/utils/redis/invalidation';
 
 /**
  * Dados necessários para criar um usuário completo

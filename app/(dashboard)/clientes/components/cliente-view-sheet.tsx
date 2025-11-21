@@ -19,7 +19,7 @@ import {
   formatarData,
   formatarNome,
   formatarTipoPessoa,
-} from '@/lib/utils/format-clientes';
+} from '@/app/_lib/utils/format-clientes';
 import type { Cliente } from '@/backend/clientes/services/persistence/cliente-persistence.service';
 
 interface ClienteViewSheetProps {

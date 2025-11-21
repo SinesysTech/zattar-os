@@ -1,0 +1,91 @@
+/**
+ * Timeline Loading State
+ *
+ * Exibe skeleton e mensagens contextuais durante carregamento ou captura.
+ */
+
+'use client';
+
+import { Loader2 } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Progress } from '@/components/ui/progress';
+
+interface TimelineLoadingProps {
+  message?: string;
+  isCapturing?: boolean;
+}
+
+export function TimelineLoading({
+  message = 'Carregando processo...',
+  isCapturing = false,
+}: TimelineLoadingProps) {
+  return (
+    <div className="space-y-6">
+      {/* Header Skeleton */}
+      <Card className="p-6 space-y-4">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-3/4" />
+          <div className="flex gap-2">
+            <Skeleton className="h-6 w-20" />
+            <Skeleton className="h-6 w-32" />
+            <Skeleton className="h-6 w-24" />
+          </div>
+        </div>
+        <div className="h-px bg-border" />
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-full" />
+          </div>
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-full" />
+          </div>
+        </div>
+      </Card>
+
+      {/* Timeline Loading Message */}
+      <Card className="p-6 space-y-4">
+        <div className="flex items-center justify-center gap-3 py-8">
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+          <div className="text-center space-y-2">
+            <p className="text-base font-medium">{message}</p>
+            {isCapturing && (
+              <>
+                <Progress value={undefined} className="w-64 mx-auto" />
+                <p className="text-sm text-muted-foreground">
+                  Você pode navegar para outras páginas. A captura continuará em segundo
+                  plano.
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      </Card>
+
+      {/* Timeline Items Skeleton (apenas se não estiver capturando) */}
+      {!isCapturing && (
+        <div className="space-y-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="flex gap-4">
+              <div className="relative flex flex-col items-center">
+                <Skeleton className="w-10 h-10 rounded-full" />
+                <div className="w-0.5 h-20 bg-border" />
+              </div>
+              <Card className="flex-1 p-4 space-y-3">
+                <Skeleton className="h-5 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+                <Skeleton className="h-4 w-2/3" />
+                <div className="flex gap-2 mt-3">
+                  <Skeleton className="h-9 w-32" />
+                  <Skeleton className="h-9 w-24" />
+                </div>
+              </Card>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

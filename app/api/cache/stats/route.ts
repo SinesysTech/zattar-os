@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
-import { getCacheStats, isRedisAvailable } from '@/lib/redis/cache-utils';
+import { getCacheStats, isRedisAvailable } from '@/backend/utils/redis/cache-utils';
 
 /**
  * @swagger

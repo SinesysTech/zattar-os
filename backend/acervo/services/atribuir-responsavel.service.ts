@@ -5,7 +5,7 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import {
   atribuirResponsavelAcervo as rpcAtribuirResponsavel,
 } from '@/backend/utils/supabase/set-user-context';
-import { invalidateAcervoCache } from '@/lib/redis/invalidation';
+import { invalidateAcervoCache } from '@/backend/utils/redis/invalidation';
 
 export interface AtribuirResponsavelAcervoParams {
   processoId: number;

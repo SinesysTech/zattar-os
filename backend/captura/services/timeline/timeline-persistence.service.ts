@@ -8,7 +8,7 @@
  */
 
 import { ObjectId } from 'mongodb';
-import { getTimelineCollection } from '@/lib/mongodb/collections';
+import { getTimelineCollection } from '@/backend/utils/mongodb/collections';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type { TimelineDocument, TimelinePersistenceResult } from '@/backend/types/mongodb/timeline';
 import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';

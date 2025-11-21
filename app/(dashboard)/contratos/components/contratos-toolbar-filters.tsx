@@ -1,5 +1,5 @@
 import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/components/ui/table-toolbar-filter-config';
-import type { ContratosFilters } from '@/lib/types/contratos';
+import type { ContratosFilters } from '@/app/_lib/types/contratos';
 
 export const CONTRATOS_FILTER_CONFIGS: FilterConfig[] = [
   {

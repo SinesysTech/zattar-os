@@ -22,12 +22,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useCredenciais } from '@/lib/hooks/use-credenciais';
+import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
 import { criarColunasCredenciais } from './credenciais-columns';
 import { AdvogadoViewDialog } from './advogado-view-dialog';
 import { CredenciaisDialog } from './credenciais-dialog';
 import { toast } from 'sonner';
-import type { Credencial, CodigoTRT, GrauTRT } from '@/lib/types/credenciais';
+import type { Credencial, CodigoTRT, GrauTRT } from '@/app/_lib/types/credenciais';
 
 interface CredenciaisListProps {
   actionButton?: React.ReactNode;

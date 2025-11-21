@@ -5,7 +5,7 @@ import { reverterBaixa as reverterBaixaDb } from './persistence/reverter-baixa-p
 import {
   registrar_reversao_baixa_expediente,
 } from './persistence/registrar-baixa-log.service';
-import { invalidatePendentesCache } from '@/lib/redis/invalidation';
+import { invalidatePendentesCache } from '@/backend/utils/redis/invalidation';
 
 export interface ReverterBaixaParams {
   expedienteId: number;

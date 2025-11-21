@@ -9,8 +9,8 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { Badge } from '@/components/ui/badge';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildCapturasFilterOptions, buildCapturasFilterGroups, parseCapturasFilters } from './components/capturas-toolbar-filters';
-import { useCapturasLog } from '@/lib/hooks/use-capturas-log';
-import { useAdvogados } from '@/lib/hooks/use-advogados';
+import { useCapturasLog } from '@/app/_lib/hooks/use-capturas-log';
+import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/backend/types/captura/capturas-log-types';
 import type { CapturasFilters } from './components/capturas-toolbar-filters';

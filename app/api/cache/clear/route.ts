@@ -3,8 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
-import { getRedisClient, isRedisAvailable } from '@/lib/redis/client';
-import { deletePattern } from '@/lib/redis/cache-utils';
+import { getRedisClient, isRedisAvailable } from '@/backend/utils/redis/client';
+import { deletePattern } from '@/backend/utils/redis/cache-utils';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 
 /**

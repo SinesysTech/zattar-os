@@ -2,8 +2,8 @@
 
 // Hook para buscar processos do acervo
 
-import { useState, useEffect, useCallback } from 'react';
-import type { AcervoApiResponse, BuscarProcessosParams } from '@/lib/types/acervo';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import type { AcervoApiResponse, BuscarProcessosParams } from '@/app/_lib/types/acervo';
 import type { Acervo } from '@/backend/types/acervo/types';
 
 interface UseAcervoResult {
@@ -28,58 +28,73 @@ export const useAcervo = (params: BuscarProcessosParams = {}): UseAcervoResult =
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Memoizar query string para evitar re-renders infinitos
+  const queryString = useMemo(() => {
+    const searchParams = new URLSearchParams();
+
+    if (params.pagina !== undefined) {
+      searchParams.set('pagina', params.pagina.toString());
+    }
+    if (params.limite !== undefined) {
+      searchParams.set('limite', params.limite.toString());
+    }
+    if (params.busca) {
+      searchParams.set('busca', params.busca);
+    }
+    if (params.ordenar_por) {
+      searchParams.set('ordenar_por', params.ordenar_por);
+    }
+    if (params.ordem) {
+      searchParams.set('ordem', params.ordem);
+    }
+
+    // Adicionar outros filtros
+    Object.entries(params).forEach(([key, value]) => {
+      if (
+        value !== undefined &&
+        value !== null &&
+        key !== 'pagina' &&
+        key !== 'limite' &&
+        key !== 'busca' &&
+        key !== 'ordenar_por' &&
+        key !== 'ordem'
+      ) {
+        if (typeof value === 'boolean') {
+          searchParams.set(key, value.toString());
+        } else {
+          searchParams.set(key, String(value));
+        }
+      }
+    });
+
+    return searchParams.toString();
+  }, [
+    params.pagina,
+    params.limite,
+    params.busca,
+    params.ordenar_por,
+    params.ordem,
+    params.trt,
+    params.grau,
+    params.origem,
+    params.responsavel_id,
+    params.sem_responsavel,
+  ]);
+
   const buscarProcessos = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Construir query string
-      const searchParams = new URLSearchParams();
-      
-      if (params.pagina !== undefined) {
-        searchParams.set('pagina', params.pagina.toString());
-      }
-      if (params.limite !== undefined) {
-        searchParams.set('limite', params.limite.toString());
-      }
-      if (params.busca) {
-        searchParams.set('busca', params.busca);
-      }
-      if (params.ordenar_por) {
-        searchParams.set('ordenar_por', params.ordenar_por);
-      }
-      if (params.ordem) {
-        searchParams.set('ordem', params.ordem);
-      }
-      
-      // Adicionar outros filtros
-      Object.entries(params).forEach(([key, value]) => {
-        if (
-          value !== undefined &&
-          value !== null &&
-          key !== 'pagina' &&
-          key !== 'limite' &&
-          key !== 'busca' &&
-          key !== 'ordenar_por' &&
-          key !== 'ordem'
-        ) {
-          if (typeof value === 'boolean') {
-            searchParams.set(key, value.toString());
-          } else {
-            searchParams.set(key, String(value));
-          }
-        }
-      });
+      const response = await fetch(`/api/acervo?${queryString}`);
 
-      const response = await fetch(`/api/acervo?${searchParams.toString()}`);
-      
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
         throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
       }
 
       const data: AcervoApiResponse = await response.json();
-      
+
       if (!data.success) {
         throw new Error('Resposta da API indicou falha');
       }
@@ -94,7 +109,7 @@ export const useAcervo = (params: BuscarProcessosParams = {}): UseAcervoResult =
     } finally {
       setIsLoading(false);
     }
-  }, [params]);
+  }, [queryString]);
 
   useEffect(() => {
     buscarProcessos();

@@ -3,7 +3,7 @@
 // Hook para buscar clientes
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { ClientesApiResponse, BuscarClientesParams } from '@/lib/types/clientes';
+import type { ClientesApiResponse, BuscarClientesParams } from '@/app/_lib/types/clientes';
 import type { Cliente } from '@/backend/clientes/services/persistence/cliente-persistence.service';
 
 interface UseClientesResult {

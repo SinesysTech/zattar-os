@@ -8,7 +8,7 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Eye } from 'lucide-react';
-import { formatCurrency, formatDate } from '@/lib/utils';
+import { formatCurrency, formatDate } from '@/app/_lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { ObrigacoesFilters } from './obrigacoes-toolbar-filters';
 
