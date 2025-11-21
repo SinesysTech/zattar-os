@@ -87,7 +87,8 @@ export function NavProjects({
                 </DropdownMenu>
               )}
             </SidebarMenuItem>
-          ))}
+          )
+        })}
         {showActions && (
           <SidebarMenuItem>
             <SidebarMenuButton className="text-sidebar-foreground/70">
