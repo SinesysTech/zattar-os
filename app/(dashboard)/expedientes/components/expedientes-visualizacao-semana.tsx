@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { CheckCircle2, Undo2, Loader2, Eye } from 'lucide-react';
+import { CheckCircle2, Undo2, Loader2, Eye, Pencil } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -357,18 +357,19 @@ function TipoDescricaoCell({
 /**
  * Componente para atribuir responsável a um expediente
  */
-function ResponsavelCell({ 
-  expediente, 
-  onSuccess, 
-  usuarios 
-}: { 
-  expediente: PendenteManifestacao; 
+function ResponsavelCell({
+  expediente,
+  onSuccess,
+  usuarios
+}: {
+  expediente: PendenteManifestacao;
   onSuccess: () => void;
   usuarios: Usuario[];
 }) {
+  const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleChange = async (value: string) => {
+  const handleSelect = async (value: string) => {
     setIsLoading(true);
     try {
       const responsavelId = value === 'null' || value === '' ? null : parseInt(value, 10);
@@ -386,6 +387,7 @@ function ResponsavelCell({
         throw new Error(errorData.error || 'Erro ao atribuir responsável');
       }
 
+      setIsOpen(false);
       onSuccess();
     } catch (error) {
       console.error('Erro ao atribuir responsável:', error);
@@ -398,25 +400,47 @@ function ResponsavelCell({
   const responsavelAtual = usuarios.find(u => u.id === expediente.responsavel_id);
 
   return (
-    <Select
-      value={expediente.responsavel_id?.toString() || 'null'}
-      onValueChange={handleChange}
-      disabled={isLoading}
-    >
-      <SelectTrigger className="w-[200px]">
-        <SelectValue placeholder="Sem responsável">
-          {responsavelAtual ? responsavelAtual.nomeExibicao : 'Sem responsável'}
-        </SelectValue>
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="null">Sem responsável</SelectItem>
-        {usuarios.map((usuario) => (
-          <SelectItem key={usuario.id} value={usuario.id.toString()}>
-            {usuario.nomeExibicao}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
+      <span className="text-sm">
+        {responsavelAtual ? responsavelAtual.nomeExibicao : 'Sem responsável'}
+      </span>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
+            title="Editar responsável"
+            disabled={isLoading}
+          >
+            <Pencil className="h-3 w-3" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[250px] p-2">
+          <div className="space-y-1">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => handleSelect('null')}
+              disabled={isLoading}
+            >
+              Sem responsável
+            </Button>
+            {usuarios.map((usuario) => (
+              <Button
+                key={usuario.id}
+                variant="ghost"
+                className="w-full justify-start text-sm"
+                onClick={() => handleSelect(usuario.id.toString())}
+                disabled={isLoading}
+              >
+                {usuario.nomeExibicao}
+              </Button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }
 
@@ -543,9 +567,10 @@ function criarColunasSemanais(
           <div className="text-sm font-medium text-center">Tipo e Descrição</div>
         </div>
       ),
-      size: 250,
+      enableSorting: false,
+      size: 300,
       cell: ({ row }) => (
-        <div className="min-h-10 flex items-start justify-center max-w-[250px]">
+        <div className="min-h-10 flex items-start justify-start max-w-[300px]">
           <TipoDescricaoCell
             expediente={row.original}
             onSuccess={onSuccess}
@@ -561,6 +586,7 @@ function criarColunasSemanais(
           <div className="text-sm font-medium text-center">Prazo</div>
         </div>
       ),
+      enableSorting: false,
       size: 170,
       cell: ({ row }) => {
         const dataInicio = row.original.data_ciencia_parte;
@@ -591,7 +617,8 @@ function criarColunasSemanais(
           <div className="text-sm font-medium text-center">Processo</div>
         </div>
       ),
-      size: 330,
+      enableSorting: false,
+      size: 380,
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
@@ -600,7 +627,7 @@ function criarColunasSemanais(
         const grau = row.original.grau;
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[330px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
@@ -626,17 +653,18 @@ function criarColunasSemanais(
           <div className="text-sm font-medium text-center">Partes</div>
         </div>
       ),
-      size: 220,
+      enableSorting: false,
+      size: 250,
       cell: ({ row }) => {
         const parteAutora = row.original.nome_parte_autora || '-';
         const parteRe = row.original.nome_parte_re || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[220px]">
-            <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left text-xs`}>
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+            <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
               {parteAutora}
             </Badge>
-            <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left text-xs`}>
+            <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
               {parteRe}
             </Badge>
           </div>
@@ -650,7 +678,7 @@ function criarColunasSemanais(
           <div className="text-sm font-medium text-center">Responsável</div>
         </div>
       ),
-      size: 220,
+      size: 160,
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center">
           <ResponsavelCell expediente={row.original} onSuccess={onSuccess} usuarios={usuarios} />
@@ -660,16 +688,14 @@ function criarColunasSemanais(
     {
       id: 'acoes',
       header: () => (
-        <div className="flex items-center justify-center w-full">
-          <div className="text-sm font-medium text-center">Ações</div>
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Ações</div>
         </div>
       ),
-      size: 80,
-      cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-center">
-          {handleAcoes(row.original)}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const expediente = row.original;
+        return handleAcoes(expediente);
+      },
     },
   ];
 }

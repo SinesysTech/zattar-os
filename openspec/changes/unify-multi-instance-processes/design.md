@@ -218,29 +218,89 @@ Se necessário reverter:
 ### Data Migration
 **Não requer migração de dados** - mudança é apenas na camada de apresentação.
 
-## Open Questions
+### Decision 7: Responsável Unificado por Processo
+**O que**: Responsável é atribuído ao processo unificado (por `numero_processo`), não por instância individual.
 
-1. **Filtros e busca**: Como funcionam quando aplicados a processos unificados?
-   - **Proposta**: Aplicar filtros a qualquer instância (OR lógico entre instâncias)
-   - **Exemplo**: Se usuário filtra "segundo grau", mostrar processos que TÊMM uma instância em segundo grau
+**Por que**:
+- Do ponto de vista jurídico, o processo é uma entidade única mesmo transitando entre graus
+- Simplifica gestão (um responsável por processo, não múltiplos)
+- Evita confusão sobre quem é responsável por qual instância
 
-2. **Atribuição de responsável**: Responsável é por processo (número) ou por instância (grau)?
-   - **Situação atual**: Campo `responsavel_id` existe em cada registro separado
-   - **Proposta**: Manter responsável por instância, mas UI mostra responsável da instância principal
-   - **Alternativa**: Adicionar campo `responsavel_id` unificado (requer mudança de schema)
+**Implementação**:
+- Manter campo `responsavel_id` em cada registro do banco (compatibilidade)
+- Ao atribuir responsável, atualizar **todas as instâncias** do mesmo `numero_processo`
+- API de atribuição (`PUT /api/acervo/[id]/responsavel`) deve propagar para todas as instâncias
+- UI mostra um único responsável por processo unificado
 
-3. **Ordenação**: Como ordenar por campos que podem diferir entre instâncias?
-   - **Proposta**: Usar valor da instância principal para ordenação
-   - **Exemplo**: Se ordenar por `updated_at`, usar `MAX(updated_at)` do grupo
+**SQL de atribuição**:
+```sql
+UPDATE acervo_geral
+SET responsavel_id = $1, updated_at = NOW()
+WHERE numero_processo = (
+  SELECT numero_processo FROM acervo_geral WHERE id = $2
+);
+```
 
-4. **Audiências e pendências**: Como lidar com audiências/pendências de instâncias diferentes?
-   - **Proposta**: Agregar (mostrar todas as audiências de todas as instâncias)
-   - **UI**: Indicar a qual grau pertence cada audiência/pendência
+### Decision 8: Grau Atual Baseado em Data de Autuação
+**O que**: Determinar grau atual do processo pela instância com **maior data de autuação**.
 
-5. **Cache Redis**: Chave de cache deve considerar parâmetro `unified`?
-   - **Proposta**: Sim, incluir `unified` na chave: `acervo:list:unified=${unified}:...`
-   - **Razão**: Evitar retornar dados em formato errado
+**Por que**:
+- Data de autuação do primeiro grau = data de distribuição original
+- Quando processo vai para segundo grau, nova data de autuação é registrada
+- Data de autuação mais recente indica onde o processo está atualmente
+- Última movimentação (`updated_at`) também serve como indicador secundário
 
-**Resolver antes de implementação**:
-- [ ] Decisão sobre atribuição de responsável (questão 2)
-- [ ] Validar comportamento de filtros com stakeholders (questão 1)
+**Implementação**:
+```sql
+-- Identificar instância atual (grau atual)
+SELECT id, grau, data_autuacao, updated_at
+FROM acervo_geral
+WHERE numero_processo = $1
+ORDER BY data_autuacao DESC, updated_at DESC
+LIMIT 1;
+```
+
+**Uso**:
+- Filtro por grau: aplica ao grau atual (instância com maior data de autuação)
+- Classificação por grau: usa grau da instância atual
+- Badge "Grau Atual" destacado na UI
+
+### Decision 9: Agregação de Audiências e Pendências
+**O que**: Audiências e pendências (expedientes) são agregadas de **todas as instâncias** do processo.
+
+**Por que**:
+- Audiências e expedientes pertencem ao processo jurídico, não à instância específica
+- Advogado precisa visualizar todas as pendências independente de grau
+- Ordenação por data permite priorização correta
+
+**Implementação**:
+```sql
+-- Buscar audiências de todas as instâncias
+SELECT a.*
+FROM audiencias a
+JOIN acervo_geral ag ON a.processo_id = ag.id
+WHERE ag.numero_processo = $1
+ORDER BY a.data_audiencia ASC;
+
+-- Buscar expedientes de todas as instâncias
+SELECT e.*
+FROM expedientes e
+JOIN acervo_geral ag ON e.processo_id = ag.id
+WHERE ag.numero_processo = $1
+ORDER BY e.data_criacao DESC;
+```
+
+**UI**:
+- Exibir todas as audiências/expedientes em lista única
+- Incluir badge de grau ao lado de cada item (indicar origem)
+- Ordenar por data (prioridade: audiências mais próximas primeiro)
+
+## Resolved Decisions Summary
+
+Todas as questões abertas foram resolvidas:
+
+✅ **Responsável**: Unificado por processo (Decision 7)
+✅ **Grau atual**: Baseado em maior data de autuação (Decision 8)
+✅ **Audiências/Pendências**: Agregadas de todas as instâncias (Decision 9)
+✅ **Filtros**: Aplicados à instância atual para grau, OR lógico para outros (Decisions 1, 8)
+✅ **Cache**: Chave inclui parâmetro `unified` (Decision 6)

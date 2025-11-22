@@ -89,6 +89,60 @@ O sistema MUST cachear resultados de queries unificadas separadamente de queries
 - **THEN** cache de todas as variações (`unified=true` e `unified=false`) deve ser invalidado
 - **AND** incluir invalidação de cache de timeline unificada
 
+### Requirement: Atribuição de Responsável Unificado
+O sistema MUST atribuir responsável ao processo unificado (por `numero_processo`), propagando para todas as instâncias.
+
+#### Scenario: Atribuir responsável a processo unificado
+- **WHEN** responsável é atribuído via `PUT /api/acervo/[id]/responsavel`
+- **THEN** o sistema deve atualizar `responsavel_id` em **todas as instâncias** do mesmo `numero_processo`
+- **AND** não permitir responsáveis diferentes para instâncias do mesmo processo
+
+#### Scenario: Remover responsável de processo unificado
+- **WHEN** responsável é removido (responsavel_id = null)
+- **THEN** o sistema deve remover de todas as instâncias do mesmo `numero_processo`
+- **AND** registrar a remoção no log de auditoria
+
+#### Scenario: Buscar processo com responsável unificado
+- **WHEN** processo unificado é retornado
+- **THEN** campo `responsavel_id` deve ser o mesmo em todas as instâncias
+- **AND** UI deve exibir um único responsável por processo
+
+### Requirement: Identificação de Grau Atual
+O sistema MUST identificar o grau atual do processo baseado na instância com maior data de autuação.
+
+#### Scenario: Determinar grau atual
+- **WHEN** processo possui múltiplas instâncias
+- **THEN** o sistema deve identificar instância com maior `data_autuacao` como grau atual
+- **AND** usar `updated_at` como critério de desempate se necessário
+
+#### Scenario: Filtro por grau atual
+- **WHEN** usuário filtra por grau específico
+- **THEN** o sistema deve retornar processos cujo grau atual corresponde ao filtro
+- **AND** não incluir processos que apenas transitaram pelo grau
+
+#### Scenario: Badge de grau atual
+- **WHEN** processo unificado é retornado
+- **THEN** metadados devem incluir identificação de qual instância é o grau atual
+- **AND** permitir UI destacar o grau atual visualmente
+
+### Requirement: Agregação de Audiências e Pendências
+O sistema MUST agregar audiências e pendências de todas as instâncias do processo unificado.
+
+#### Scenario: Buscar audiências de processo unificado
+- **WHEN** audiências de processo são solicitadas
+- **THEN** o sistema deve buscar audiências de todas as instâncias do `numero_processo`
+- **AND** ordenar por data da audiência
+
+#### Scenario: Buscar expedientes de processo unificado
+- **WHEN** expedientes (pendentes de manifestação) de processo são solicitados
+- **THEN** o sistema deve buscar de todas as instâncias do `numero_processo`
+- **AND** ordenar por data de criação descendente
+
+#### Scenario: Indicar grau de origem
+- **WHEN** audiência ou expediente é retornado
+- **THEN** deve incluir metadado sobre qual instância/grau originou o item
+- **AND** permitir UI exibir badge de grau ao lado de cada item
+
 ## MODIFIED Requirements
 
 ### Requirement: Listagem de Processos do Acervo
