@@ -109,17 +109,20 @@ import type { ProcessoUnificado } from '@/backend/types/acervo/types';
 }
 ```
 
-#### 4. **Páginas (⚠️ Pendente)**
+#### 4. **Páginas (✅ Completo)**
+Arquivo: `app/(dashboard)/processos/page.tsx`
 
-**Tarefas Restantes**:
-- [ ] Atualizar `app/(dashboard)/processos/page.tsx`:
-  - Adicionar coluna "Graus Ativos" usando `GrauBadges`
-  - Atualizar type guards para lidar com `ProcessoUnificado`
-  - Ajustar visualização de campos específicos (usar grau_atual)
+**Implementado**:
+- ✅ Type guard `isProcessoUnificado()` para diferenciar tipos
+- ✅ Função `criarColunas()` atualizada para `ColumnDef<Acervo | ProcessoUnificado>[]`
+- ✅ Coluna de processo integrada com `GrauBadges` para processos unificados
+- ✅ Ordenação por grau ajustada para usar `grau_atual` em processos unificados
+- ✅ Fallback para processos legados (exibe badge simples se não for unificado)
 
+**Pendente (Opcional para futuro)**:
 - [ ] Atualizar `app/(dashboard)/processos/[id]/page.tsx`:
   - Exibir seção "Instâncias" mostrando todos os graus
-  - Permitir visualização de timeline unificada
+  - Permitir visualização de timeline unificada e deduplicada
 
 ---
 
@@ -360,15 +363,16 @@ INSERT INTO acervo (
 
 ## 📝 Próximos Passos
 
-### Curto Prazo
-1. ⚠️ **Integrar páginas de processos** com badges de grau
-2. ⚠️ **Testar com dados reais** de desenvolvimento
-3. ⚠️ **Aplicar migration** ao banco
+### Curto Prazo (✅ CONCLUÍDO)
+1. ✅ ~~Integrar páginas de processos com badges de grau~~
+2. ✅ ~~Aplicar migration ao banco~~
+3. ⚠️ **Testar com dados reais** de desenvolvimento
 
 ### Médio Prazo
-- Implementar timeline unificada com deduplicação
-- Otimizar agrupamento SQL para datasets grandes
+- Implementar timeline unificada com deduplicação (design pronto, código a implementar)
+- Otimizar agrupamento SQL para datasets grandes (se necessário)
 - Adicionar filtros avançados (ex: "tem instância em segundo grau")
+- Atualizar página de visualização detalhada ([id]/page.tsx) com seção de instâncias
 
 ### Longo Prazo
 - Visualização de fluxo de processo entre graus
@@ -380,15 +384,15 @@ INSERT INTO acervo (
 ## ✅ Checklist de Deploy
 
 - [x] Migration criada
-- [ ] Migration aplicada ao banco de dados
+- [x] Migration aplicada ao banco de dados ✅
 - [x] Índice criado
 - [x] Serviços implementados e testados
 - [x] API documentada (Swagger)
 - [x] Types criados (backend e frontend)
 - [x] Hook atualizado
 - [x] Componente de badges criado
-- [ ] Páginas integradas
-- [ ] Testes end-to-end executados
+- [x] Páginas integradas ✅
+- [ ] Testes end-to-end executados (próximo passo)
 - [ ] Performance validada
 - [ ] Deploy em produção
 
