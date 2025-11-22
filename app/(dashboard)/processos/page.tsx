@@ -29,9 +29,17 @@ import {
 } from '@/components/ui/dialog';
 import { ArrowUpDown, ArrowUp, ArrowDown, Eye, CalendarClock } from 'lucide-react';
 import { useAcervo } from '@/app/_lib/hooks/use-acervo';
+import { GrauBadges } from './components/grau-badges';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Acervo } from '@/backend/types/acervo/types';
+import type { Acervo, ProcessoUnificado } from '@/backend/types/acervo/types';
 import type { ProcessosFilters } from '@/app/_lib/types/acervo';
+
+/**
+ * Type guard para verificar se é ProcessoUnificado
+ */
+const isProcessoUnificado = (processo: Acervo | ProcessoUnificado): processo is ProcessoUnificado => {
+  return 'instances' in processo && 'grau_atual' in processo;
+};
 
 /**
  * Formata data ISO para formato brasileiro (DD/MM/YYYY)
@@ -407,7 +415,7 @@ function criarColunas(
   onPartesSortChange: (columnId: 'nome_parte_autora' | 'nome_parte_re' | null, direction: 'asc' | 'desc' | null) => void,
   onTribunalSortChange: (sortType: 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau' | null, direction: 'asc' | 'desc' | null) => void,
   router: ReturnType<typeof useRouter>
-): ColumnDef<Acervo>[] {
+): ColumnDef<Acervo | ProcessoUnificado>[] {
   return [
     {
       accessorKey: 'data_autuacao',
@@ -434,11 +442,12 @@ function criarColunas(
       enableSorting: false,
       size: 380,
       cell: ({ row }) => {
-        const classeJudicial = row.original.classe_judicial || '';
-        const numeroProcesso = row.original.numero_processo;
-        const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
-        const trt = row.original.trt;
-        const grau = row.original.grau;
+        const processo = row.original;
+        const classeJudicial = processo.classe_judicial || '';
+        const numeroProcesso = processo.numero_processo;
+        const orgaoJulgador = processo.descricao_orgao_julgador || '-';
+        const trt = processo.trt;
+        const isUnificado = isProcessoUnificado(processo);
 
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
@@ -446,9 +455,16 @@ function criarColunas(
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
               </Badge>
-              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>
-                {formatarGrau(grau)}
-              </Badge>
+              {isUnificado ? (
+                <GrauBadges
+                  instances={processo.instances}
+                  grauAtual={processo.grau_atual}
+                />
+              ) : (
+                <Badge variant="outline" className={`${getGrauColorClass(processo.grau)} w-fit text-xs`}>
+                  {formatarGrau(processo.grau)}
+                </Badge>
+              )}
             </div>
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
@@ -652,7 +668,9 @@ export default function ProcessosPage() {
       processosCopy.sort((a, b) => {
         // primeiro_grau vem antes de segundo_grau
         const grauOrder = { 'primeiro_grau': 1, 'segundo_grau': 2 };
-        const comparison = grauOrder[a.grau] - grauOrder[b.grau];
+        const grauA = isProcessoUnificado(a) ? a.grau_atual : a.grau;
+        const grauB = isProcessoUnificado(b) ? b.grau_atual : b.grau;
+        const comparison = grauOrder[grauA] - grauOrder[grauB];
         return ordem === 'asc' ? comparison : -comparison;
       });
     }
