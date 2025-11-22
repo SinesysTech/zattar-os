@@ -23,7 +23,7 @@ interface UseAcervoResult {
  * Hook para buscar processos do acervo
  */
 export const useAcervo = (params: BuscarProcessosParams = {}): UseAcervoResult => {
-  const [processos, setProcessos] = useState<Acervo[]>([]);
+  const [processos, setProcessos] = useState<(Acervo | ProcessoUnificado)[]>([]);
   const [paginacao, setPaginacao] = useState<UseAcervoResult['paginacao']>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
