@@ -97,6 +97,8 @@ export async function listarAcervoUnificado(
   // === APLICAR FILTROS ===
 
   // Filtros básicos
+  // Filtro por origem: filtra pela origem da instância principal (grau atual)
+  // A VIEW materializada inclui o campo origem da instância principal
   if (params.origem) {
     query = query.eq('origem', params.origem);
   }

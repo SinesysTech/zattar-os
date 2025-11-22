@@ -152,6 +152,7 @@ create index idx_acervo_unificado_trt on public.acervo_unificado using btree (tr
 create index idx_acervo_unificado_grau_atual on public.acervo_unificado using btree (grau_atual);
 create index idx_acervo_unificado_data_autuacao on public.acervo_unificado using btree (data_autuacao);
 create index idx_acervo_unificado_responsavel_id on public.acervo_unificado using btree (responsavel_id);
+create index idx_acervo_unificado_origem on public.acervo_unificado using btree (origem);
 create index idx_acervo_unificado_advogado_trt on public.acervo_unificado using btree (advogado_id, trt);
 create index idx_acervo_unificado_numero_processo_advogado on public.acervo_unificado using btree (numero_processo, advogado_id);
 
