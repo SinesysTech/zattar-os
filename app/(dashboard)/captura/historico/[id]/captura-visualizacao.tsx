@@ -1,5 +1,5 @@
 /**
- * Componente de Visualização de Captura (Client Component)
+ * Componente de Visualizaï¿½ï¿½o de Captura (Client Component)
  *
  * Exibe detalhes completos de uma captura com loading/error states.
  */
@@ -51,7 +51,7 @@ const formatarTipoCaptura = (tipo: TipoCaptura): string => {
   const tipos: Record<TipoCaptura, string> = {
     acervo_geral: 'Acervo Geral',
     arquivados: 'Arquivados',
-    audiencias: 'Audiências',
+    audiencias: 'Audiï¿½ncias',
     pendentes: 'Pendentes',
   };
   return tipos[tipo] || tipo;
@@ -63,7 +63,7 @@ const StatusBadge = ({ status }: { status: StatusCaptura }) => {
   const variants: Record<StatusCaptura, { label: string; tone: StatusTone; variant: 'soft' | 'solid' | 'outline' }> = {
     pending: { label: 'Pendente', tone: 'warning', variant: 'soft' },
     in_progress: { label: 'Em Progresso', tone: 'info', variant: 'soft' },
-    completed: { label: 'Concluída', tone: 'success', variant: 'soft' },
+    completed: { label: 'Concluï¿½da', tone: 'success', variant: 'soft' },
     failed: { label: 'Falhou', tone: 'danger', variant: 'solid' },
   };
 
@@ -80,28 +80,51 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    fetchCaptura();
-  }, [id]);
+    // AbortController para cancelar requisiÃ§Ãµes anteriores
+    const abortController = new AbortController();
 
-  const fetchCaptura = async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
+    const fetchCaptura = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
 
-      const response = await fetch(`/api/captura/historico/${id}`);
-      const result = await response.json();
+        const response = await fetch(`/api/captura/historico/${id}`, {
+          signal: abortController.signal,
+        });
+        const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(result.error || 'Erro ao buscar captura');
+        if (!response.ok) {
+          throw new Error(result.error || 'Erro ao buscar captura');
+        }
+
+        // Verificar se a requisiÃ§Ã£o foi abortada antes de atualizar o estado
+        if (!abortController.signal.aborted) {
+          setCaptura(result.data);
+        }
+      } catch (err) {
+        // Ignorar erros de abort (AbortError)
+        if (err instanceof Error && err.name === 'AbortError') {
+          return;
+        }
+        // SÃ³ atualizar erro se a requisiÃ§Ã£o nÃ£o foi abortada
+        if (!abortController.signal.aborted) {
+          setError(err instanceof Error ? err.message : 'Erro desconhecido');
+        }
+      } finally {
+        // SÃ³ atualizar loading se a requisiÃ§Ã£o nÃ£o foi abortada
+        if (!abortController.signal.aborted) {
+          setIsLoading(false);
+        }
       }
+    };
 
-      setCaptura(result.data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    fetchCaptura();
+
+    // Cleanup: cancelar requisiÃ§Ã£o quando o id mudar ou componente desmontar
+    return () => {
+      abortController.abort();
+    };
+  }, [id]);
 
   const handleDelete = async () => {
     try {
@@ -114,7 +137,7 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
         throw new Error('Erro ao deletar captura');
       }
 
-      // Redirecionar para listagem após sucesso
+      // Redirecionar para listagem apï¿½s sucesso
       router.push('/captura');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao deletar');
@@ -157,13 +180,13 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Erro ao carregar captura</AlertTitle>
             <AlertDescription>
-              {error || 'Captura não encontrada ou você não tem permissão para acessá-la.'}
+              {error || 'Captura nï¿½o encontrada ou vocï¿½ nï¿½o tem permissï¿½o para acessï¿½-la.'}
             </AlertDescription>
           </Alert>
           <div className="mt-6">
             <Button onClick={() => router.push('/captura')} className="gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Voltar para Histórico
+              Voltar para Histï¿½rico
             </Button>
           </div>
         </Card>
@@ -180,19 +203,19 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
             variant="ghost"
             size="icon"
             onClick={() => router.push('/captura')}
-            title="Voltar para Histórico"
+            title="Voltar para Histï¿½rico"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
             <p className="text-sm text-muted-foreground">
-              Captura ’ Histórico ’ #{captura.id}
+              Captura ï¿½ Histï¿½rico ï¿½ #{captura.id}
             </p>
             <h1 className="text-2xl font-bold">Detalhes da Captura #{captura.id}</h1>
           </div>
         </div>
 
-        {/* Botão deletar */}
+        {/* Botï¿½o deletar */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive" size="sm" disabled={isDeleting}>
@@ -202,9 +225,9 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+              <AlertDialogTitle>Confirmar exclusï¿½o</AlertDialogTitle>
               <AlertDialogDescription>
-                Tem certeza que deseja deletar esta captura? Esta ação não pode ser desfeita.
+                Tem certeza que deseja deletar esta captura? Esta aï¿½ï¿½o nï¿½o pode ser desfeita.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -220,10 +243,10 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
         </AlertDialog>
       </div>
 
-      {/* Informações Básicas */}
+      {/* Informaï¿½ï¿½es Bï¿½sicas */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm">Informações Básicas</CardTitle>
+          <CardTitle className="text-sm">Informaï¿½ï¿½es Bï¿½sicas</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -266,7 +289,7 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
       {/* Datas */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm">Datas e Horários</CardTitle>
+          <CardTitle className="text-sm">Datas e Horï¿½rios</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -275,7 +298,7 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
               <p className="text-sm">{formatarDataHora(captura.iniciado_em)}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Concluído Em</p>
+              <p className="text-sm font-medium text-muted-foreground">Concluï¿½do Em</p>
               <p className="text-sm">{formatarDataHora(captura.concluido_em)}</p>
             </div>
           </div>
