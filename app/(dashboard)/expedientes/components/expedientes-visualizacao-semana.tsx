@@ -7,13 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { CheckCircle2, Undo2, Loader2, Eye, Pencil } from 'lucide-react';
 import {
   Tooltip,
@@ -694,7 +687,11 @@ function criarColunasSemanais(
       ),
       cell: ({ row }) => {
         const expediente = row.original;
-        return handleAcoes(expediente);
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            {handleAcoes(expediente)}
+          </div>
+        );
       },
     },
   ];

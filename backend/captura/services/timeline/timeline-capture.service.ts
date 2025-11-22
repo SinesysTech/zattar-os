@@ -145,7 +145,17 @@ export async function capturarTimeline(
 
   try {
     // 1. Obter configuração do tribunal
-    const config = await getTribunalConfig(trtCodigo, grau);
+    let config;
+    try {
+      config = await getTribunalConfig(trtCodigo, grau);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      console.error(`❌ [capturarTimeline] Erro ao obter configuração do tribunal: ${errorMessage}`);
+      throw new Error(
+        `Configuração do tribunal não encontrada para ${trtCodigo} (${grau}). ` +
+        `Verifique se existe registro na tabela tribunais_config. Erro original: ${errorMessage}`
+      );
+    }
 
     // 2. Obter credenciais do advogado
     // TODO: Implementar getCredenciais quando necessário
