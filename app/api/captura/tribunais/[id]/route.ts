@@ -167,6 +167,14 @@ export async function PUT(
       ? configAtual.tribunais[0]
       : configAtual.tribunais;
 
+    if (!tribunal || !tribunal.codigo) {
+      console.error('Erro: dados do tribunal não encontrados na configuração');
+      return NextResponse.json(
+        { error: 'Dados do tribunal não encontrados' },
+        { status: 500 }
+      );
+    }
+
     const tribunalCodigo = tribunal.codigo as CodigoTRT;
 
     // Limpar cache para todas as combinações deste tribunal

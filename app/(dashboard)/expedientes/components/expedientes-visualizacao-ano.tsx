@@ -69,7 +69,7 @@ export function ExpedientesVisualizacaoAno({
     // Apenas retornar expedientes do ano selecionado
     if (ano !== anoSelecionado) return [];
 
-    return expedientes.filter((exp) => {
+    const expedientesDoDia = expedientes.filter((exp) => {
       if (!exp.data_prazo_legal_parte) return false;
 
       const data = new Date(exp.data_prazo_legal_parte);
@@ -78,6 +78,13 @@ export function ExpedientesVisualizacaoAno({
         data.getMonth() === mes &&
         data.getDate() === dia
       );
+    });
+
+    // Ordenar por data de vencimento (mais antigas primeiro)
+    return expedientesDoDia.sort((a, b) => {
+      const dataA = a.data_prazo_legal_parte ? new Date(a.data_prazo_legal_parte).getTime() : 0;
+      const dataB = b.data_prazo_legal_parte ? new Date(b.data_prazo_legal_parte).getTime() : 0;
+      return dataA - dataB; // Crescente: mais antigas primeiro
     });
   };
 

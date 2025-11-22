@@ -87,6 +87,15 @@ export function ExpedientesVisualizacaoMes({
       }
     });
 
+    // Ordenar expedientes de cada dia por data de vencimento (mais antigas primeiro)
+    mapa.forEach((expedientesDia) => {
+      expedientesDia.sort((a, b) => {
+        const dataA = a.data_prazo_legal_parte ? new Date(a.data_prazo_legal_parte).getTime() : 0;
+        const dataB = b.data_prazo_legal_parte ? new Date(b.data_prazo_legal_parte).getTime() : 0;
+        return dataA - dataB; // Crescente: mais antigas primeiro
+      });
+    });
+
     return mapa;
   }, [expedientes, mesSelecionado]);
 

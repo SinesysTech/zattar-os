@@ -1119,8 +1119,8 @@ export default function ExpedientesPage() {
   const [limite, setLimite] = React.useState(50);
   const [ordenarPor, setOrdenarPor] = React.useState<
     'data_prazo_legal_parte' | 'data_ciencia_parte' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | 'trt' | 'grau' | 'descricao_orgao_julgador' | 'responsavel_id' | null
-  >('data_ciencia_parte'); // Padrão: ordenar por data de ciência
-  const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
+  >('data_prazo_legal_parte'); // Padrão: ordenar por data de vencimento (prazo legal)
+  const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc'); // Crescente: mais antigas primeiro
   const [statusBaixa, setStatusBaixa] = React.useState<'pendente' | 'baixado' | 'todos'>('pendente'); // Padrão: pendente
   const [statusPrazo, setStatusPrazo] = React.useState<'no_prazo' | 'vencido' | 'todos'>('no_prazo'); // Padrão: no prazo
   const [filtros, setFiltros] = React.useState<ExpedientesFilters>({});
