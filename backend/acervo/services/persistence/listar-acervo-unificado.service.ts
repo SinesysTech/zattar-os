@@ -289,7 +289,11 @@ export async function listarAcervoUnificado(
   query = query.order(ordenarPor, { ascending: ordem === 'asc' });
 
   // Buscar TODOS os registros que satisfazem os filtros
+  // IMPORTANTE: Especificar range amplo para buscar todos os registros
   // (sem paginação ainda - paginação será aplicada após agrupamento)
+  // Supabase limita a 1000 por padrão, então usamos range para buscar até 100k registros
+  query = query.range(0, 100000);
+
   const { data, error } = await query;
 
   if (error) {

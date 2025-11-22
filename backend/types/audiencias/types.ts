@@ -18,6 +18,11 @@ export type OrdenarPorAudiencia =
   | 'polo_passivo_nome'
   | 'status'
   | 'tipo_descricao'
+  | 'trt'
+  | 'grau'
+  | 'orgao_julgador_descricao'
+  | 'sala_audiencia_nome'
+  | 'responsavel_id'
   | 'created_at'
   | 'updated_at';
 

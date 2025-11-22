@@ -451,7 +451,7 @@ function PrazoColumnHeader({
 function ProcessoColumnHeader({
   onSort,
 }: {
-  onSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador', direction: 'asc' | 'desc') => void;
+  onSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void;
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -548,6 +548,29 @@ function ProcessoColumnHeader({
               className="w-full justify-start text-sm"
               onClick={() => {
                 onSort('descricao_orgao_julgador', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+              Ordenar por Classe Judicial
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('classe_judicial', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('classe_judicial', 'desc');
                 setIsOpen(false);
               }}
             >
@@ -1118,7 +1141,7 @@ export default function ExpedientesPage() {
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
   const [ordenarPor, setOrdenarPor] = React.useState<
-    'data_prazo_legal_parte' | 'data_ciencia_parte' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | 'trt' | 'grau' | 'descricao_orgao_julgador' | 'responsavel_id' | null
+    'data_prazo_legal_parte' | 'data_ciencia_parte' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial' | 'tipo_expediente_id' | 'responsavel_id' | null
   >('data_prazo_legal_parte'); // Padrão: ordenar por data de vencimento (prazo legal)
   const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc'); // Crescente: mais antigas primeiro
   const [statusBaixa, setStatusBaixa] = React.useState<'pendente' | 'baixado' | 'todos'>('pendente'); // Padrão: pendente
@@ -1226,8 +1249,16 @@ export default function ExpedientesPage() {
     [handleSortingChange]
   );
 
+  const handleTipoExpedienteSort = React.useCallback(
+    (direction: 'asc' | 'desc') => {
+      setOrdenarPor('tipo_expediente_id');
+      setOrdem(direction);
+    },
+    []
+  );
+
   const handleProcessoSort = React.useCallback(
-    (field: 'trt' | 'grau' | 'descricao_orgao_julgador', direction: 'asc' | 'desc') => {
+    (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => {
       handleSortingChange(field, direction);
     },
     [handleSortingChange]
@@ -1524,6 +1555,11 @@ export default function ExpedientesPage() {
             usuarios={usuariosLista}
             tiposExpedientes={tiposExpedientes}
             semanaAtual={semanaAtual}
+            onTipoExpedienteSort={handleTipoExpedienteSort}
+            onPrazoSort={handlePrazoSort}
+            onProcessoSort={handleProcessoSort}
+            onPartesSort={handlePartesSort}
+            onResponsavelSort={handleResponsavelSort}
           />
         </TabsContent>
 

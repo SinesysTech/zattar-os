@@ -175,6 +175,353 @@ const getLogoPlataforma = (plataforma: PlataformaVideo): string | null => {
 };
 
 /**
+ * Componente de header com popover para ordenação da coluna Processo
+ */
+function ProcessoColumnHeader({
+  onSort,
+}: {
+  onSort: (field: 'trt' | 'grau' | 'orgao_julgador_descricao', direction: 'asc' | 'desc') => void;
+}) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <div className="flex items-center justify-start">
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 data-[state=open]:bg-accent"
+          >
+            <span className="text-sm font-medium">Processo</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="ml-1 h-4 w-4"
+            >
+              <path d="m7 15 5 5 5-5" />
+              <path d="m7 9 5-5 5 5" />
+            </svg>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[220px] p-2" align="start">
+          <div className="space-y-1">
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+              Ordenar por Tribunal
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('trt', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('trt', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+              Ordenar por Grau
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('grau', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('grau', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+              Ordenar por Órgão Julgador
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('orgao_julgador_descricao', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('orgao_julgador_descricao', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+/**
+ * Componente de header com popover para ordenação da coluna Partes
+ */
+function PartesColumnHeader({
+  onSort,
+}: {
+  onSort: (field: 'polo_ativo_nome' | 'polo_passivo_nome', direction: 'asc' | 'desc') => void;
+}) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <div className="flex items-center justify-start">
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 data-[state=open]:bg-accent"
+          >
+            <span className="text-sm font-medium">Partes</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="ml-1 h-4 w-4"
+            >
+              <path d="m7 15 5 5 5-5" />
+              <path d="m7 9 5-5 5 5" />
+            </svg>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-2" align="start">
+          <div className="space-y-1">
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+              Ordenar por Parte Autora
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('polo_ativo_nome', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('polo_ativo_nome', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+              Ordenar por Parte Ré
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('polo_passivo_nome', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('polo_passivo_nome', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+/**
+ * Componente de header com popover para ordenação da coluna Tipo e Local
+ */
+function TipoLocalColumnHeader({
+  onSort,
+}: {
+  onSort: (field: 'tipo_descricao' | 'sala_audiencia_nome', direction: 'asc' | 'desc') => void;
+}) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <div className="flex items-center justify-start">
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 data-[state=open]:bg-accent"
+          >
+            <span className="text-sm font-medium">Tipo e Local</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="ml-1 h-4 w-4"
+            >
+              <path d="m7 15 5 5 5-5" />
+              <path d="m7 9 5-5 5 5" />
+            </svg>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[180px] p-2" align="start">
+          <div className="space-y-1">
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+              Ordenar por Tipo
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('tipo_descricao', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('tipo_descricao', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+              Ordenar por Local
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('sala_audiencia_nome', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('sala_audiencia_nome', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+/**
+ * Componente de header com ordenação simples para coluna Responsável
+ */
+function ResponsavelColumnHeader({
+  onSort,
+}: {
+  onSort: (direction: 'asc' | 'desc') => void;
+}) {
+  const [currentDirection, setCurrentDirection] = React.useState<'asc' | 'desc'>('asc');
+
+  const handleClick = () => {
+    const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+    setCurrentDirection(newDirection);
+    onSort(newDirection);
+  };
+
+  return (
+    <div className="flex items-center justify-center">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="-ml-3 h-8 hover:bg-accent"
+        onClick={handleClick}
+      >
+        <span className="text-sm font-medium">Responsável</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="ml-1 h-4 w-4"
+        >
+          {currentDirection === 'asc' ? (
+            <path d="m7 15 5 5 5-5" />
+          ) : (
+            <path d="m7 9 5-5 5 5" />
+          )}
+        </svg>
+      </Button>
+    </div>
+  );
+}
+
+/**
  * Componente para exibir e editar endereço da audiência (URL virtual ou endereço físico)
  */
 function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
@@ -412,7 +759,11 @@ function ResponsavelCell({
  */
 function criarColunas(
   onSuccess: () => void,
-  usuarios: Array<{ id: number; nomeExibicao: string }>
+  usuarios: Array<{ id: number; nomeExibicao: string }>,
+  onProcessoSort: (field: 'trt' | 'grau' | 'orgao_julgador_descricao', direction: 'asc' | 'desc') => void,
+  onPartesSort: (field: 'polo_ativo_nome' | 'polo_passivo_nome', direction: 'asc' | 'desc') => void,
+  onTipoLocalSort: (field: 'tipo_descricao' | 'sala_audiencia_nome', direction: 'asc' | 'desc') => void,
+  onResponsavelSort: (direction: 'asc' | 'desc') => void
 ): ColumnDef<Audiencia>[] {
   return [
     {
@@ -442,11 +793,7 @@ function criarColunas(
     },
     {
       id: 'processo',
-      header: () => (
-        <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Processo</div>
-        </div>
-      ),
+      header: () => <ProcessoColumnHeader onSort={onProcessoSort} />,
       enableSorting: false,
       size: 250,
       cell: ({ row }) => {
@@ -478,11 +825,7 @@ function criarColunas(
     },
     {
       id: 'partes',
-      header: () => (
-        <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Partes</div>
-        </div>
-      ),
+      header: () => <PartesColumnHeader onSort={onPartesSort} />,
       enableSorting: false,
       size: 250,
       cell: ({ row }) => {
@@ -503,11 +846,7 @@ function criarColunas(
     },
     {
       id: 'tipo_local',
-      header: () => (
-        <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Tipo/Local</div>
-        </div>
-      ),
+      header: () => <TipoLocalColumnHeader onSort={onTipoLocalSort} />,
       enableSorting: false,
       size: 280,
       cell: ({ row }) => {
@@ -564,11 +903,8 @@ function criarColunas(
     },
     {
       accessorKey: 'responsavel_id',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Responsável</div>
-        </div>
-      ),
+      header: () => <ResponsavelColumnHeader onSort={onResponsavelSort} />,
+      enableSorting: false,
       size: 160,
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center">
@@ -584,7 +920,17 @@ export default function AudienciasPage() {
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
   const [ordenarPor, setOrdenarPor] = React.useState<
-    'data_inicio' | 'numero_processo' | 'polo_ativo_nome' | 'polo_passivo_nome' | null
+    | 'data_inicio'
+    | 'numero_processo'
+    | 'polo_ativo_nome'
+    | 'polo_passivo_nome'
+    | 'trt'
+    | 'grau'
+    | 'orgao_julgador_descricao'
+    | 'tipo_descricao'
+    | 'sala_audiencia_nome'
+    | 'responsavel_id'
+    | null
   >('data_inicio');
   const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
   const [filtros, setFiltros] = React.useState<AudienciasFilters>({});
@@ -648,11 +994,6 @@ export default function AudienciasPage() {
     refetch();
   }, [refetch]);
 
-  const colunas = React.useMemo(
-    () => criarColunas(handleSuccess, usuarios),
-    [handleSuccess, usuarios]
-  );
-
   const handleSortingChange = React.useCallback(
     (columnId: string | null, direction: 'asc' | 'desc' | null) => {
       if (columnId && direction) {
@@ -664,6 +1005,49 @@ export default function AudienciasPage() {
       }
     },
     []
+  );
+
+  // Callbacks para sorting de cada coluna
+  const handleProcessoSort = React.useCallback(
+    (field: 'trt' | 'grau' | 'orgao_julgador_descricao', direction: 'asc' | 'desc') => {
+      handleSortingChange(field, direction);
+    },
+    [handleSortingChange]
+  );
+
+  const handlePartesSort = React.useCallback(
+    (field: 'polo_ativo_nome' | 'polo_passivo_nome', direction: 'asc' | 'desc') => {
+      handleSortingChange(field, direction);
+    },
+    [handleSortingChange]
+  );
+
+  const handleTipoLocalSort = React.useCallback(
+    (field: 'tipo_descricao' | 'sala_audiencia_nome', direction: 'asc' | 'desc') => {
+      handleSortingChange(field, direction);
+    },
+    [handleSortingChange]
+  );
+
+  const handleResponsavelSort = React.useCallback(
+    (direction: 'asc' | 'desc') => {
+      setOrdenarPor('responsavel_id');
+      setOrdem(direction);
+    },
+    []
+  );
+
+  const colunas = React.useMemo(
+    () =>
+      criarColunas(
+        handleSuccess,
+        usuarios,
+        handleProcessoSort,
+        handlePartesSort,
+        handleTipoLocalSort,
+        handleResponsavelSort
+      ),
+    [handleSuccess, usuarios, handleProcessoSort, handlePartesSort, handleTipoLocalSort, handleResponsavelSort]
   );
 
   // Gerar opções de filtro

@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Undo2, Loader2, Eye, Pencil } from 'lucide-react';
+import { CheckCircle2, Undo2, Loader2, Eye, Pencil, FileText, ChevronsUpDown } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -30,6 +30,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dialog';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
+import { PdfViewerDialog } from './pdf-viewer-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
@@ -209,17 +210,18 @@ const getCorBadgeDias = (dias: number): string => {
 /**
  * Componente para editar tipo e descrição de um expediente
  */
-function TipoDescricaoCell({ 
-  expediente, 
-  onSuccess, 
-  tiposExpedientes 
-}: { 
-  expediente: PendenteManifestacao; 
+function TipoDescricaoCell({
+  expediente,
+  onSuccess,
+  tiposExpedientes
+}: {
+  expediente: PendenteManifestacao;
   onSuccess: () => void;
   tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isPdfViewerOpen, setIsPdfViewerOpen] = React.useState(false);
   const [tipoSelecionado, setTipoSelecionado] = React.useState<string>(
     expediente.tipo_expediente_id?.toString() || 'null'
   );
@@ -232,6 +234,8 @@ function TipoDescricaoCell({
     setTipoSelecionado(expediente.tipo_expediente_id?.toString() || 'null');
     setDescricao(expediente.descricao_arquivos || '');
   }, [expediente.tipo_expediente_id, expediente.descricao_arquivos]);
+
+  const temDocumento = !!expediente.arquivo_key;
 
   const handleSave = async () => {
     setIsLoading(true);
@@ -271,86 +275,113 @@ function TipoDescricaoCell({
   const descricaoExibicao = expediente.descricao_arquivos || '-';
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer w-full"
-        >
-          <Badge
-            variant="outline"
-            className={`text-xs w-fit ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
+    <>
+      <div className="relative w-full group">
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer w-full pr-6"
+            >
+              <Badge
+                variant="outline"
+                className={`text-xs w-fit ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
+              >
+                {tipoNome}
+              </Badge>
+              <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed text-justify">
+                {descricaoExibicao}
+              </div>
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80" align="start">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Tipo de Expediente</label>
+                <Select
+                  value={tipoSelecionado}
+                  onValueChange={setTipoSelecionado}
+                  disabled={isLoading || tiposExpedientes.length === 0}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione o tipo">
+                      {tipoSelecionado === 'null'
+                        ? 'Sem tipo'
+                        : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipo_expediente || 'Selecione o tipo'}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    <SelectItem value="null">Sem tipo</SelectItem>
+                    {tiposExpedientes.length > 0 ? (
+                      tiposExpedientes.map((tipo) => (
+                        <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                          {tipo.tipo_expediente}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                        Carregando tipos...
+                      </div>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Descrição / Arquivos</label>
+                <Textarea
+                  value={descricao}
+                  onChange={(e) => setDescricao(e.target.value)}
+                  placeholder="Digite a descrição ou referência aos arquivos..."
+                  disabled={isLoading}
+                  rows={3}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsOpen(false)}
+                  disabled={isLoading}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={handleSave}
+                  disabled={isLoading}
+                >
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Salvar
+                </Button>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* Botão de visualização do documento - posicionado no canto inferior direito */}
+        {temDocumento && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsPdfViewerOpen(true);
+            }}
+            className="absolute bottom-1 right-1 p-1 hover:bg-accent rounded-md transition-colors z-10 opacity-0 group-hover:opacity-100"
+            title="Visualizar documento"
           >
-            {tipoNome}
-          </Badge>
-          <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed text-justify">
-            {descricaoExibicao}
-          </div>
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80" align="start">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Tipo de Expediente</label>
-            <Select
-              value={tipoSelecionado}
-              onValueChange={setTipoSelecionado}
-              disabled={isLoading || tiposExpedientes.length === 0}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecione o tipo">
-                  {tipoSelecionado === 'null' 
-                    ? 'Sem tipo' 
-                    : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipo_expediente || 'Selecione o tipo'}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent className="max-h-[300px]">
-                <SelectItem value="null">Sem tipo</SelectItem>
-                {tiposExpedientes.length > 0 ? (
-                  tiposExpedientes.map((tipo) => (
-                    <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                      {tipo.tipo_expediente}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                    Carregando tipos...
-                  </div>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Descrição / Arquivos</label>
-            <Textarea
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-              placeholder="Digite a descrição ou referência aos arquivos..."
-              disabled={isLoading}
-              rows={3}
-            />
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsOpen(false)}
-              disabled={isLoading}
-            >
-              Cancelar
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleSave}
-              disabled={isLoading}
-            >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Salvar
-            </Button>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+            <FileText className="h-3.5 w-3.5 text-primary" />
+          </button>
+        )}
+      </div>
+
+      {/* Modal de visualização do PDF */}
+      <PdfViewerDialog
+        open={isPdfViewerOpen}
+        onOpenChange={setIsPdfViewerOpen}
+        fileKey={expediente.arquivo_key}
+        documentTitle={`Documento - ${expediente.numero_processo}`}
+      />
+    </>
   );
 }
 
@@ -545,12 +576,415 @@ function AcoesExpediente({
 }
 
 /**
+ * Componente de header para a coluna Tipo e Descrição com ordenação direta
+ */
+function TipoExpedienteColumnHeader({
+  onSort,
+}: {
+  onSort: (direction: 'asc' | 'desc') => void;
+}) {
+  const [currentDirection, setCurrentDirection] = React.useState<'asc' | 'desc'>('asc');
+
+  const handleClick = () => {
+    const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+    setCurrentDirection(newDirection);
+    onSort(newDirection);
+  };
+
+  return (
+    <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="-ml-3 h-8 hover:bg-accent"
+        onClick={handleClick}
+      >
+        <span className="text-sm font-medium">Tipo e Descrição</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="ml-1 h-4 w-4"
+        >
+          <path d="m7 15 5 5 5-5" />
+          <path d="m7 9 5-5 5 5" />
+        </svg>
+      </Button>
+    </div>
+  );
+}
+
+/**
+ * Componente de header para a coluna Prazo com opções de ordenação
+ */
+function PrazoColumnHeader({
+  onSort,
+}: {
+  onSort: (field: 'data_ciencia_parte' | 'data_prazo_legal_parte', direction: 'asc' | 'desc') => void;
+}) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 data-[state=open]:bg-accent"
+          >
+            <span className="text-sm font-medium">Prazo</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="ml-1 h-4 w-4"
+            >
+              <path d="m7 15 5 5 5-5" />
+              <path d="m7 9 5-5 5 5" />
+            </svg>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-2" align="center">
+          <div className="space-y-1">
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+              Ordenar por Data de Início
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('data_ciencia_parte', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('data_ciencia_parte', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+              Ordenar por Data de Fim
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('data_prazo_legal_parte', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('data_prazo_legal_parte', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+/**
+ * Componente de header para a coluna Processo com opções de ordenação
+ */
+function ProcessoColumnHeaderSemanal({
+  onSort,
+}: {
+  onSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void;
+}) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 data-[state=open]:bg-accent"
+          >
+            <span className="text-sm font-medium">Processo</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="ml-1 h-4 w-4"
+            >
+              <path d="m7 15 5 5 5-5" />
+              <path d="m7 9 5-5 5 5" />
+            </svg>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[220px] p-2" align="center">
+          <div className="space-y-1">
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+              Ordenar por Tribunal
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('trt', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('trt', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+              Ordenar por Grau
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('grau', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('grau', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+              Ordenar por Órgão Julgador
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('descricao_orgao_julgador', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('descricao_orgao_julgador', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+              Ordenar por Classe Judicial
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('classe_judicial', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('classe_judicial', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+/**
+ * Componente de header para a coluna Partes com opções de ordenação
+ */
+function PartesColumnHeader({
+  onSort,
+}: {
+  onSort: (field: 'nome_parte_autora' | 'nome_parte_re', direction: 'asc' | 'desc') => void;
+}) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 data-[state=open]:bg-accent"
+          >
+            <span className="text-sm font-medium">Partes</span>
+            <ChevronsUpDown className="ml-1 h-4 w-4" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-2" align="center">
+          <div className="space-y-1">
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
+              Ordenar por Parte Autora
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('nome_parte_autora', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('nome_parte_autora', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
+              Ordenar por Parte Ré
+            </div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick(() => {
+                onSort('nome_parte_re', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              ↑ Crescente
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                onSort('nome_parte_re', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              ↓ Decrescente
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+/**
+ * Componente de header para a coluna Responsável com ordenação direta
+ */
+function ResponsavelColumnHeaderSemanal({
+  onSort,
+}: {
+  onSort: (direction: 'asc' | 'desc') => void;
+}) {
+  const [currentDirection, setCurrentDirection] = React.useState<'asc' | 'desc'>('asc');
+
+  const handleClick = () => {
+    const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+    setCurrentDirection(newDirection);
+    onSort(newDirection);
+  };
+
+  return (
+    <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="-ml-3 h-8 hover:bg-accent"
+        onClick={handleClick}
+      >
+        <span className="text-sm font-medium">Responsável</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="ml-1 h-4 w-4"
+        >
+          <path d="m7 15 5 5 5-5" />
+          <path d="m7 9 5-5 5 5" />
+        </svg>
+      </Button>
+    </div>
+  );
+}
+
+/**
  * Define as colunas da tabela de expedientes para visualização semanal
  */
 function criarColunasSemanais(
-  onSuccess: () => void, 
+  onSuccess: () => void,
   usuarios: Usuario[],
-  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>
+  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>,
+  onTipoExpedienteSort: (direction: 'asc' | 'desc') => void,
+  onPrazoSort: (field: 'data_ciencia_parte' | 'data_prazo_legal_parte', direction: 'asc' | 'desc') => void,
+  onProcessoSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void,
+  onPartesSort: (field: 'nome_parte_autora' | 'nome_parte_re', direction: 'asc' | 'desc') => void,
+  onResponsavelSort: (direction: 'asc' | 'desc') => void
 ): ColumnDef<PendenteManifestacao>[] {
   const handleAcoes = (expediente: PendenteManifestacao) => (
     <AcoesExpediente 
@@ -562,11 +996,7 @@ function criarColunasSemanais(
   return [
     {
       id: 'tipo_descricao',
-      header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-center">Tipo e Descrição</div>
-        </div>
-      ),
+      header: () => <TipoExpedienteColumnHeader onSort={onTipoExpedienteSort} />,
       enableSorting: false,
       size: 300,
       cell: ({ row }) => (
@@ -581,11 +1011,7 @@ function criarColunasSemanais(
     },
     {
       id: 'prazo',
-      header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-center">Prazo</div>
-        </div>
-      ),
+      header: () => <PrazoColumnHeader onSort={onPrazoSort} />,
       enableSorting: false,
       size: 170,
       cell: ({ row }) => {
@@ -612,11 +1038,7 @@ function criarColunasSemanais(
     },
     {
       id: 'processo',
-      header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-center">Processo</div>
-        </div>
-      ),
+      header: () => <ProcessoColumnHeaderSemanal onSort={onProcessoSort} />,
       enableSorting: false,
       size: 380,
       cell: ({ row }) => {
@@ -648,11 +1070,7 @@ function criarColunasSemanais(
     },
     {
       id: 'partes',
-      header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-center">Partes</div>
-        </div>
-      ),
+      header: () => <PartesColumnHeader onSort={onPartesSort} />,
       enableSorting: false,
       size: 250,
       cell: ({ row }) => {
@@ -673,11 +1091,7 @@ function criarColunasSemanais(
     },
     {
       accessorKey: 'responsavel_id',
-      header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-center">Responsável</div>
-        </div>
-      ),
+      header: () => <ResponsavelColumnHeaderSemanal onSort={onResponsavelSort} />,
       size: 160,
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center">
@@ -711,9 +1125,14 @@ interface ExpedientesVisualizacaoSemanaProps {
   usuarios: Usuario[];
   tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
   semanaAtual: Date;
+  onTipoExpedienteSort: (direction: 'asc' | 'desc') => void;
+  onPrazoSort: (field: 'data_ciencia_parte' | 'data_prazo_legal_parte', direction: 'asc' | 'desc') => void;
+  onProcessoSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void;
+  onPartesSort: (field: 'nome_parte_autora' | 'nome_parte_re', direction: 'asc' | 'desc') => void;
+  onResponsavelSort: (direction: 'asc' | 'desc') => void;
 }
 
-export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefresh, usuarios, tiposExpedientes, semanaAtual }: ExpedientesVisualizacaoSemanaProps) {
+export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefresh, usuarios, tiposExpedientes, semanaAtual, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort }: ExpedientesVisualizacaoSemanaProps) {
   const [diaAtivo, setDiaAtivo] = React.useState<string>('segunda');
 
   const handleSuccess = React.useCallback(() => {
@@ -782,7 +1201,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     return dias;
   }, [expedientes, inicioSemana, fimSemana]);
 
-  const colunas = React.useMemo(() => criarColunasSemanais(handleSuccess, usuarios, tiposExpedientes), [handleSuccess, usuarios, tiposExpedientes]);
+  const colunas = React.useMemo(() => criarColunasSemanais(handleSuccess, usuarios, tiposExpedientes, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort), [handleSuccess, usuarios, tiposExpedientes, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort]);
 
   // Calcular datas de cada dia da semana
   const datasDiasSemana = React.useMemo(() => {

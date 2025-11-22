@@ -21,6 +21,8 @@ export type OrdenarPorPendente =
   | 'trt'
   | 'grau'
   | 'descricao_orgao_julgador'
+  | 'classe_judicial'
+  | 'tipo_expediente_id'
   | 'responsavel_id' // TODO: Implementar ordenação por nome do responsável (join com usuarios)
   | 'created_at'
   | 'updated_at';
