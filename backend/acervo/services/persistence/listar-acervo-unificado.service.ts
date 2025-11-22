@@ -70,7 +70,8 @@ function converterParaProcessoUnificado(data: Record<string, unknown>): Processo
 
 /**
  * Lista acervo unificado com filtros, paginação e ordenação
- * Agrupa processos com mesmo numero_processo em um único item
+ * Usa VIEW materializada acervo_unificado para agrupamento eficiente no banco
+ * Elimina necessidade de carregar grandes volumes em memória
  */
 export async function listarAcervoUnificado(
   params: ListarAcervoParams = {}
@@ -87,13 +88,11 @@ export async function listarAcervoUnificado(
 
   const pagina = params.pagina ?? 1;
   const limite = Math.min(params.limite ?? 50, 100); // Máximo 100
+  const offset = (pagina - 1) * limite;
 
-  // Estratégia: Buscar TODAS as instâncias que satisfazem os filtros,
-  // agrupar em memória, depois paginar os grupos resultantes
-  // NOTA: Para datasets muito grandes, pode ser necessário implementar
-  // agrupamento via SQL com window functions, mas isso é mais complexo
-
-  let query = supabase.from('acervo').select('*');
+  // Usar VIEW materializada acervo_unificado
+  // A VIEW já faz o agrupamento por numero_processo no banco
+  let query = supabase.from('acervo_unificado').select('*', { count: 'exact' });
 
   // === APLICAR FILTROS ===
 
@@ -106,12 +105,10 @@ export async function listarAcervoUnificado(
     query = query.eq('trt', params.trt);
   }
 
-  // Filtro de grau: aplicar ao grau atual (maior data_autuacao)
-  // Por enquanto, buscamos todos os graus e filtramos depois do agrupamento
-  // TODO: Otimizar com window function no SQL se necessário
-  // if (params.grau) {
-  //   query = query.eq('grau', params.grau);
-  // }
+  // Filtro de grau: aplicar ao grau atual
+  if (params.grau) {
+    query = query.eq('grau_atual', params.grau);
+  }
 
   // Filtro de responsável
   if (params.sem_responsavel === true) {
@@ -200,62 +197,27 @@ export async function listarAcervoUnificado(
     query = query.is('data_proxima_audiencia', null);
   }
 
-  // Ordenação: aplicar ordenação básica, depois reordenar grupos se necessário
+  // Ordenação
   const ordenarPor = params.ordenar_por ?? 'data_autuacao';
   const ordem = params.ordem ?? 'desc';
   query = query.order(ordenarPor, { ascending: ordem === 'asc' });
 
-  // Buscar TODOS os registros que satisfazem os filtros
-  // IMPORTANTE: Especificar range amplo para buscar todos os registros
-  // (sem paginação ainda - paginação será aplicada após agrupamento)
-  // Supabase limita a 1000 por padrão, então usamos range para buscar até 100k registros
-  query = query.range(0, 100000);
+  // Aplicar paginação (agora no banco, não em memória!)
+  query = query.range(offset, offset + limite - 1);
 
-  const { data, error } = await query;
+  const { data, error, count } = await query;
 
   if (error) {
     throw new Error(`Erro ao listar acervo unificado: ${error.message}`);
   }
 
-  // Converter para Acervo e agrupar
-  const processos = (data || []).map(converterParaAcervo);
-  let processosUnificados = agruparInstancias(processos);
-
-  // Filtro de grau: aplicar APÓS agrupamento (filtrar por grau atual)
-  if (params.grau) {
-    processosUnificados = processosUnificados.filter(
-      p => p.grau_atual === params.grau
-    );
-  }
-
-  // Total de processos únicos (APÓS filtro de grau se aplicável)
-  const total = processosUnificados.length;
-
-  // Ordenar processos unificados se necessário
-  // (já vem ordenado pela query inicial, mas se filtro de grau foi aplicado pode precisar reordenar)
-  if (params.ordenar_por) {
-    const campo = params.ordenar_por;
-    const asc = ordem === 'asc';
-    processosUnificados.sort((a, b) => {
-      const valA = a[campo as keyof ProcessoUnificado];
-      const valB = b[campo as keyof ProcessoUnificado];
-      if (valA == null && valB == null) return 0;
-      if (valA == null) return asc ? 1 : -1;
-      if (valB == null) return asc ? -1 : 1;
-      if (valA < valB) return asc ? -1 : 1;
-      if (valA > valB) return asc ? 1 : -1;
-      return 0;
-    });
-  }
-
-  // Aplicar paginação nos processos unificados
-  const offset = (pagina - 1) * limite;
-  const processosPaginados = processosUnificados.slice(offset, offset + limite);
-
+  // Converter dados da VIEW para ProcessoUnificado
+  const processosUnificados = (data || []).map(converterParaProcessoUnificado);
+  const total = count ?? 0;
   const totalPaginas = Math.ceil(total / limite);
 
   const result: ListarAcervoUnificadoResult = {
-    processos: processosPaginados,
+    processos: processosUnificados,
     total,
     pagina,
     limite,
