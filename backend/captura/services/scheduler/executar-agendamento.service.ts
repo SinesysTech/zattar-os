@@ -62,13 +62,15 @@ export async function executarAgendamento(
     for (const credCompleta of credenciaisCompletas) {
       if (!credCompleta) continue;
 
-      const tribunalConfig = getTribunalConfig(credCompleta.tribunal, credCompleta.grau);
-      if (!tribunalConfig) {
+      let tribunalConfig;
+      try {
+        tribunalConfig = await getTribunalConfig(credCompleta.tribunal, credCompleta.grau);
+      } catch (error) {
         resultados.push({
           credencial_id: credCompleta.credentialId,
           tribunal: credCompleta.tribunal,
           grau: credCompleta.grau,
-          erro: 'Configuração do tribunal não encontrada',
+          erro: `Configuração do tribunal não encontrada: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
         });
         continue;
       }

@@ -145,10 +145,7 @@ export async function capturarTimeline(
 
   try {
     // 1. Obter configuração do tribunal
-    const config = getTribunalConfig(trtCodigo, grau);
-    if (!config) {
-      throw new Error(`Configuração não encontrada para ${trtCodigo} - ${grau}`);
-    }
+    const config = await getTribunalConfig(trtCodigo, grau);
 
     // 2. Obter credenciais do advogado
     // TODO: Implementar getCredenciais quando necessário

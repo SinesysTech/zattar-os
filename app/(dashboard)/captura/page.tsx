@@ -7,21 +7,27 @@ import { TableToolbar } from '@/components/ui/table-toolbar';
 import { HistoricoCapturas } from './components/historico-capturas';
 import { AgendamentosList } from './components/agendamentos/agendamentos-list';
 import { CredencialsList } from './components/credenciais/credenciais-list';
+import { TribunaisList } from './components/tribunais/tribunais-list';
 import { CapturaDialog } from './components/captura-dialog';
 import { AgendamentoDialog } from './components/agendamento-dialog';
 import { CredenciaisDialog } from './components/credenciais/credenciais-dialog';
-import { History, Clock, Key, Plus } from 'lucide-react';
+import { TribunaisDialog } from './components/tribunais/tribunais-dialog';
+import { History, Clock, Key, Plus, Building2 } from 'lucide-react';
 
 export default function CapturaPage() {
   const [capturaDialogOpen, setCapturaDialogOpen] = useState(false);
   const [agendamentoDialogOpen, setAgendamentoDialogOpen] = useState(false);
   const [credencialDialogOpen, setCredencialDialogOpen] = useState(false);
+  const [tribunalDialogOpen, setTribunalDialogOpen] = useState(false);
   const [refreshAgendamentos, setRefreshAgendamentos] = useState(0);
   const [refreshCredenciais, setRefreshCredenciais] = useState(0);
+  const [refreshTribunais, setRefreshTribunais] = useState(0);
   const [buscaAgendamentos, setBuscaAgendamentos] = useState('');
   const [buscaCredenciais, setBuscaCredenciais] = useState('');
+  const [buscaTribunais, setBuscaTribunais] = useState('');
   const [selectedFilterIdsAgendamentos, setSelectedFilterIdsAgendamentos] = useState<string[]>([]);
   const [selectedFilterIdsCredenciais, setSelectedFilterIdsCredenciais] = useState<string[]>([]);
+  const [selectedFilterIdsTribunais, setSelectedFilterIdsTribunais] = useState<string[]>([]);
 
   const handleAgendamentoSuccess = () => {
     // Forçar refresh da lista de agendamentos
@@ -31,6 +37,11 @@ export default function CapturaPage() {
   const handleCredencialSuccess = () => {
     // Forçar refresh da lista de credenciais
     setRefreshCredenciais((prev) => prev + 1);
+  };
+
+  const handleTribunalSuccess = () => {
+    // Forçar refresh da lista de tribunais
+    setRefreshTribunais((prev) => prev + 1);
   };
 
   return (
