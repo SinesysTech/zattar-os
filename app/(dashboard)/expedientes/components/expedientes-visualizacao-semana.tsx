@@ -275,7 +275,7 @@ function TipoDescricaoCell({
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer"
+          className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer w-full"
         >
           <Badge
             variant="outline"
@@ -283,7 +283,7 @@ function TipoDescricaoCell({
           >
             {tipoNome}
           </Badge>
-          <div className="text-xs text-muted-foreground truncate">
+          <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed text-justify">
             {descricaoExibicao}
           </div>
         </button>
