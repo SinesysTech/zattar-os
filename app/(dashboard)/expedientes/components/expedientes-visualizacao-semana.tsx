@@ -120,6 +120,93 @@ const getTipoExpedienteColorClass = (tipoId: number): string => {
 };
 
 /**
+ * Feriados nacionais brasileiros fixos (formato MM-DD)
+ */
+const feriadosNacionaisFixos = [
+  '01-01', // Ano Novo
+  '04-21', // Tiradentes
+  '05-01', // Dia do Trabalho
+  '09-07', // Independência do Brasil
+  '10-12', // Nossa Senhora Aparecida
+  '11-02', // Finados
+  '11-15', // Proclamação da República
+  '12-25', // Natal
+];
+
+/**
+ * Verifica se uma data é feriado nacional fixo
+ */
+const ehFeriadoNacional = (data: Date): boolean => {
+  const mes = String(data.getMonth() + 1).padStart(2, '0');
+  const dia = String(data.getDate()).padStart(2, '0');
+  const dataFormatada = `${mes}-${dia}`;
+  return feriadosNacionaisFixos.includes(dataFormatada);
+};
+
+/**
+ * Verifica se uma data é dia útil (não é fim de semana nem feriado)
+ */
+const ehDiaUtil = (data: Date): boolean => {
+  const diaSemana = data.getDay();
+  // 0 = Domingo, 6 = Sábado
+  if (diaSemana === 0 || diaSemana === 6) return false;
+  if (ehFeriadoNacional(data)) return false;
+  return true;
+};
+
+/**
+ * Calcula a diferença em dias ÚTEIS entre duas datas
+ * (exclui finais de semana e feriados nacionais)
+ * A contagem começa no PRÓXIMO dia útil após a data de ciência
+ */
+const calcularDiasUteis = (dataInicio: string | null, dataFim: string | null): number | null => {
+  if (!dataInicio || !dataFim) return null;
+  try {
+    const inicio = new Date(dataInicio);
+    const fim = new Date(dataFim);
+
+    // Avançar para o próximo dia após a data de ciência
+    const dataAtual = new Date(inicio);
+    dataAtual.setDate(dataAtual.getDate() + 1);
+
+    // Encontrar o próximo dia útil
+    while (!ehDiaUtil(dataAtual)) {
+      dataAtual.setDate(dataAtual.getDate() + 1);
+    }
+
+    let diasUteis = 0;
+
+    // Percorre dia por dia até a data fim, contando apenas dias úteis
+    while (dataAtual <= fim) {
+      if (ehDiaUtil(dataAtual)) {
+        diasUteis++;
+      }
+      dataAtual.setDate(dataAtual.getDate() + 1);
+    }
+
+    return diasUteis;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Retorna a classe CSS de cor do badge baseado na quantidade de dias úteis
+ */
+const getCorBadgeDias = (dias: number): string => {
+  switch (dias) {
+    case 3:
+      return 'bg-green-600 text-white hover:bg-green-700 border-0';
+    case 5:
+      return 'bg-orange-600 text-white hover:bg-orange-700 border-0';
+    case 8:
+      return 'bg-blue-600 text-white hover:bg-blue-700 border-0';
+    default:
+      return 'bg-purple-600 text-white hover:bg-purple-700 border-0';
+  }
+};
+
+/**
  * Componente para editar tipo e descrição de um expediente
  */
 function TipoDescricaoCell({ 
@@ -452,8 +539,8 @@ function criarColunasSemanais(
     {
       id: 'tipo_descricao',
       header: () => (
-        <div className="relative flex items-center justify-start w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium">Tipo / Descrição</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Tipo e Descrição</div>
         </div>
       ),
       size: 250,
@@ -468,38 +555,40 @@ function criarColunasSemanais(
       ),
     },
     {
-      accessorKey: 'data_ciencia_parte',
-      header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-center">Ciência</div>
-        </div>
-      ),
-      size: 100,
-      cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-center text-sm font-medium">
-          {formatarData(row.getValue('data_ciencia_parte'))}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'data_prazo_legal_parte',
+      id: 'prazo',
       header: () => (
         <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
           <div className="text-sm font-medium text-center">Prazo</div>
         </div>
       ),
-      size: 100,
-      cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-center text-sm font-medium">
-          {formatarData(row.getValue('data_prazo_legal_parte'))}
-        </div>
-      ),
+      size: 170,
+      cell: ({ row }) => {
+        const dataInicio = row.original.data_ciencia_parte;
+        const dataFim = row.original.data_prazo_legal_parte;
+        const diasUteis = calcularDiasUteis(dataInicio, dataFim);
+
+        return (
+          <div className="min-h-10 flex flex-col items-center justify-center gap-2 py-2">
+            <div className="text-sm">
+              <span className="font-semibold">Início:</span> {formatarData(dataInicio)}
+            </div>
+            <div className="text-sm">
+              <span className="font-semibold">Fim:</span> {formatarData(dataFim)}
+            </div>
+            {diasUteis !== null && (
+              <Badge className={`${getCorBadgeDias(diasUteis)} text-sm font-medium mt-1 px-3 py-1`}>
+                {diasUteis} {diasUteis === 1 ? 'dia' : 'dias'}
+              </Badge>
+            )}
+          </div>
+        );
+      },
     },
     {
       id: 'processo',
       header: () => (
-        <div className="relative flex items-center justify-start w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium">Processo</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Processo</div>
         </div>
       ),
       size: 330,
@@ -533,8 +622,8 @@ function criarColunasSemanais(
     {
       id: 'partes',
       header: () => (
-        <div className="relative flex items-center justify-start w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium">Partes</div>
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Partes</div>
         </div>
       ),
       size: 220,
@@ -617,7 +706,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     return date;
   }, [inicioSemana]);
 
-  // Filtrar expedientes por dia da semana (usando data de prazo legal)
+  // Filtrar expedientes por dia da semana (usando data de ciência - início do prazo)
   const expedientesPorDia = React.useMemo(() => {
     const dias = {
       segunda: [] as PendenteManifestacao[],
@@ -628,9 +717,9 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     };
 
     expedientes.forEach((expediente) => {
-      if (!expediente.data_prazo_legal_parte) return;
+      if (!expediente.data_ciencia_parte) return;
 
-      const data = new Date(expediente.data_prazo_legal_parte);
+      const data = new Date(expediente.data_ciencia_parte);
 
       // Verificar se o expediente está dentro da semana atual
       if (data >= inicioSemana && data <= fimSemana) {

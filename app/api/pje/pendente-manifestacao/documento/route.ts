@@ -202,11 +202,13 @@ export async function POST(request: NextRequest) {
     // 4. Obter configuração do tribunal
     const trt = credential.tribunal as CodigoTRT;
     const grau = credential.grau as GrauTRT;
-    const config = getTribunalConfig(trt, grau);
 
-    if (!config) {
+    let config;
+    try {
+      config = await getTribunalConfig(trt, grau);
+    } catch (error) {
       return NextResponse.json(
-        { error: `Configuração não encontrada para TRT ${trt} ${grau}º grau` },
+        { error: `Configuração não encontrada para TRT ${trt} ${grau}: ${error instanceof Error ? error.message : 'Erro desconhecido'}` },
         { status: 404 }
       );
     }

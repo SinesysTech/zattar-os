@@ -1158,18 +1158,29 @@ export default function ExpedientesPage() {
 
   // Parâmetros para buscar expedientes
   const params = React.useMemo(
-    () => ({
-      pagina: pagina + 1, // API usa 1-indexed
-      limite,
-      busca: buscaDebounced || undefined,
-      ordenar_por: ordenarPor || undefined,
-      ordem,
-      baixado: statusBaixa === 'baixado' ? true : statusBaixa === 'pendente' ? false : undefined,
-      prazo_vencido: statusPrazo === 'vencido' ? true : statusPrazo === 'no_prazo' ? false : undefined,
-      // Filtro contextual: usuários não-admin veem apenas seus expedientes
-      responsavel_id: !isSuperAdmin && currentUserId ? currentUserId : filtros.responsavel_id,
-      ...filtros, // Spread dos filtros avançados
-    }),
+    () => {
+      // Excluir responsavel_id dos filtros para evitar sobrescrever a restrição de segurança
+      const { responsavel_id: _, ...filtrosSemResponsavel } = filtros;
+      
+      // Determinar responsavel_id: usuários não-admin veem apenas seus expedientes
+      const responsavelIdFinal = !isSuperAdmin && currentUserId 
+        ? currentUserId 
+        : filtros.responsavel_id;
+
+      return {
+        pagina: pagina + 1, // API usa 1-indexed
+        limite,
+        busca: buscaDebounced || undefined,
+        ordenar_por: ordenarPor || undefined,
+        ordem,
+        baixado: statusBaixa === 'baixado' ? true : statusBaixa === 'pendente' ? false : undefined,
+        prazo_vencido: statusPrazo === 'vencido' ? true : statusPrazo === 'no_prazo' ? false : undefined,
+        // Filtro contextual: usuários não-admin veem apenas seus expedientes
+        // Super admins podem usar filtros.responsavel_id se fornecido
+        responsavel_id: responsavelIdFinal,
+        ...filtrosSemResponsavel, // Spread dos filtros avançados (sem responsavel_id)
+      };
+    },
     [pagina, limite, buscaDebounced, ordenarPor, ordem, statusBaixa, statusPrazo, filtros, isSuperAdmin, currentUserId]
   );
 

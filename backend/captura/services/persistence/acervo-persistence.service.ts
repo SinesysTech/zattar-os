@@ -123,7 +123,7 @@ export async function salvarAcervo(
         trt,
         grau,
         numero_processo: numeroProcesso,
-        numero: processo.numero,
+        numero: processo.numero ?? 0,
         descricao_orgao_julgador: processo.descricaoOrgaoJulgador?.trim() || '',
         classe_judicial: classeJudicial,
         segredo_justica: processo.segredoDeJustica ?? false,

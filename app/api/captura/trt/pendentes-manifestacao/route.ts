@@ -254,14 +254,16 @@ export async function POST(request: NextRequest) {
       for (const credCompleta of credenciaisOrdenadas) {
         console.log(`[Pendentes] Iniciando captura: ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);
 
-        const tribunalConfig = getTribunalConfig(credCompleta.tribunal, credCompleta.grau);
-        if (!tribunalConfig) {
-          console.error(`Tribunal configuration not found for ${credCompleta.tribunal} ${credCompleta.grau}`);
+        let tribunalConfig;
+        try {
+          tribunalConfig = await getTribunalConfig(credCompleta.tribunal, credCompleta.grau);
+        } catch (error) {
+          console.error(`Tribunal configuration not found for ${credCompleta.tribunal} ${credCompleta.grau}:`, error);
           resultados.push({
             credencial_id: credCompleta.credentialId,
             tribunal: credCompleta.tribunal,
             grau: credCompleta.grau,
-            erro: 'Configuração do tribunal não encontrada',
+            erro: `Configuração do tribunal não encontrada: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
           });
           continue;
         }
