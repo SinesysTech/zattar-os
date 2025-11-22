@@ -15,9 +15,10 @@ import { Card } from '@/components/ui/card';
 interface TimelineErrorProps {
   error: Error;
   onRetry: () => void;
+  message?: string;
 }
 
-export function TimelineError({ error, onRetry }: TimelineErrorProps) {
+export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
   const router = useRouter();
 
   // Determinar tipo de erro e mensagem apropriada
@@ -76,6 +77,7 @@ export function TimelineError({ error, onRetry }: TimelineErrorProps) {
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>{title}</AlertTitle>
           <AlertDescription className="mt-2 space-y-2">
+            {message && <p className="font-medium">{message}</p>}
             <p>{description}</p>
 
             {/* Detalhes técnicos (colapsível) */}
