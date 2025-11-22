@@ -653,6 +653,51 @@ function PartesColumnHeader({
 }
 
 /**
+ * Componente de header para a coluna Responsável com ordenação direta
+ */
+function ResponsavelColumnHeader({
+  onSort,
+}: {
+  onSort: (direction: 'asc' | 'desc') => void;
+}) {
+  const [currentDirection, setCurrentDirection] = React.useState<'asc' | 'desc'>('asc');
+
+  const handleClick = () => {
+    const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+    setCurrentDirection(newDirection);
+    onSort(newDirection);
+  };
+
+  return (
+    <div className="flex items-center justify-center">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="-ml-3 h-8 hover:bg-accent"
+        onClick={handleClick}
+      >
+        <span className="text-sm font-medium">Responsável</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="ml-1 h-4 w-4"
+        >
+          <path d="m7 15 5 5 5-5" />
+          <path d="m7 9 5-5 5 5" />
+        </svg>
+      </Button>
+    </div>
+  );
+}
+
+/**
  * Feriados nacionais brasileiros fixos (formato MM-DD)
  */
 const feriadosNacionaisFixos = [
@@ -944,33 +989,7 @@ function criarColunas(
     },
     {
       accessorKey: 'responsavel_id',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="-ml-3 h-8 hover:bg-accent"
-            onClick={() => onResponsavelSort('asc')}
-          >
-            <span className="text-sm font-medium">Responsável</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="ml-1 h-4 w-4"
-            >
-              <path d="m7 15 5 5 5-5" />
-              <path d="m7 9 5-5 5 5" />
-            </svg>
-          </Button>
-        </div>
-      ),
+      header: () => <ResponsavelColumnHeader onSort={onResponsavelSort} />,
       size: 160,
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center">
@@ -1099,7 +1118,7 @@ export default function ExpedientesPage() {
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
   const [ordenarPor, setOrdenarPor] = React.useState<
-    'data_prazo_legal_parte' | 'data_ciencia_parte' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | 'trt' | 'grau' | 'descricao_orgao_julgador' | null
+    'data_prazo_legal_parte' | 'data_ciencia_parte' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | 'trt' | 'grau' | 'descricao_orgao_julgador' | 'responsavel_id' | null
   >('data_ciencia_parte'); // Padrão: ordenar por data de ciência
   const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
   const [statusBaixa, setStatusBaixa] = React.useState<'pendente' | 'baixado' | 'todos'>('pendente'); // Padrão: pendente
@@ -1212,13 +1231,10 @@ export default function ExpedientesPage() {
 
   const handleResponsavelSort = React.useCallback(
     (direction: 'asc' | 'desc') => {
-      // Para responsável, vamos ordenar pelo nome do usuário
-      // Como não temos um campo direto, vamos usar responsavel_id
-      // O backend pode precisar ser ajustado para suportar isso
+      // Ordenar por responsavel_id
+      // TODO: Backend poderia implementar join com usuarios para ordenar por nome
+      setOrdenarPor('responsavel_id');
       setOrdem(direction);
-      // Temporariamente, vamos ordenar por responsavel_id
-      // TODO: Backend precisa suportar ordenação por nome do responsável
-      setOrdenarPor('nome_parte_autora'); // Placeholder - backend precisa implementar
     },
     []
   );

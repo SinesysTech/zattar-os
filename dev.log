@@ -2562,3 +2562,16 @@ Cache hit for tipos expedientes list: tipos_expedientes:{"limite":100,"pagina":1
  GET /expedientes 200 in 1044ms (compile: 13ms, proxy.ts: 196ms, render: 835ms)
  GET /expedientes 200 in 592ms (compile: 9ms, proxy.ts: 177ms, render: 406ms)
  GET /expedientes 200 in 827ms (compile: 286ms, proxy.ts: 96ms, render: 446ms)
+ ✓ Compiled in 1046ms
+Cache miss for pendentes list: pendentes:{"agrupar_por":null,"baixado":false,"grau":null,"limite":50,"ordem":"asc","ordenar_por":"data_ciencia_parte","pagina":1,"prazo_vencido":false}
+Redis Client Connected
+Redis Client Ready
+ GET /api/pendentes-manifestacao?pagina=1&limite=50&ordenar_por=data_ciencia_parte&ordem=asc&baixado=false&prazo_vencido=false 200 in 2.2s (compile: 179ms, proxy.ts: 335ms, render: 1639ms)
+Cache miss for pendentes list: pendentes:{"agrupar_por":null,"baixado":false,"grau":null,"limite":50,"ordem":"asc","ordenar_por":"responsavel_id","pagina":1,"prazo_vencido":false}
+ ✓ Compiled in 1269ms
+ GET /api/pendentes-manifestacao?pagina=1&limite=50&ordenar_por=responsavel_id&ordem=asc&baixado=false&prazo_vencido=false 200 in 671ms (compile: 8ms, proxy.ts: 184ms, render: 480ms)
+Cache hit for pendentes list: pendentes:{"agrupar_por":null,"baixado":false,"grau":null,"limite":50,"ordem":"asc","ordenar_por":"responsavel_id","pagina":1,"prazo_vencido":false}
+ GET /api/pendentes-manifestacao?pagina=1&limite=50&ordenar_por=responsavel_id&ordem=asc&baixado=false&prazo_vencido=false 200 in 385ms (compile: 6ms, proxy.ts: 112ms, render: 267ms)
+ ✓ Compiled in 2.1s
+Cache hit for pendentes list: pendentes:{"agrupar_por":null,"baixado":false,"grau":null,"limite":50,"ordem":"asc","ordenar_por":"responsavel_id","pagina":1,"prazo_vencido":false}
+ GET /api/pendentes-manifestacao?pagina=1&limite=50&ordenar_por=responsavel_id&ordem=asc&baixado=false&prazo_vencido=false 200 in 369ms (compile: 11ms, proxy.ts: 115ms, render: 242ms)
