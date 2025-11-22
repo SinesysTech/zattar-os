@@ -130,41 +130,6 @@ export function ExpedientesVisualizacaoAno({
 
   return (
     <div className="space-y-4">
-      {/* Navegação de ano */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarAno('anterior')}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <div className="text-lg font-semibold min-w-[100px] text-center">
-            {anoSelecionado}
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarAno('proximo')}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-        <Button
-          variant="outline"
-          onClick={() => {
-            const agora = new Date();
-            onAnoAtualChange?.(agora);
-            if (!anoAtual) {
-              setAnoLocal(agora);
-            }
-          }}
-        >
-          Ano Atual
-        </Button>
-      </div>
-
       {/* Grid de meses */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {meses.map((nomeMes, mes) => {

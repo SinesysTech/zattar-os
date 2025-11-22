@@ -37,7 +37,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
   };
 
   const isDocumento = item.documento;
-  const hasGoogleDrive = !!item.googleDrive;
+  const hasBackblaze = !!item.backblaze;
   const isAssinado = item.idSignatario !== null && item.idSignatario !== undefined;
 
   return (
@@ -140,16 +140,16 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
           </div>
         </div>
 
-        {/* Ações (apenas para documentos com Google Drive) */}
+        {/* Ações (apenas para documentos com Backblaze) */}
         {isDocumento && (
           <div className="mt-4 flex gap-2">
-            {hasGoogleDrive ? (
+            {hasBackblaze ? (
               <>
                 <Button
                   size="sm"
                   variant="default"
                   className="gap-2"
-                  onClick={() => window.open(item.googleDrive!.linkVisualizacao, '_blank')}
+                  onClick={() => window.open(item.backblaze!.url, '_blank')}
                 >
                   <ExternalLink className="h-4 w-4" />
                   Ver Documento
@@ -158,7 +158,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
                   size="sm"
                   variant="outline"
                   className="gap-2"
-                  onClick={() => window.open(item.googleDrive!.linkDownload, '_blank')}
+                  onClick={() => window.open(item.backblaze!.url, '_blank')}
                 >
                   <Download className="h-4 w-4" />
                   Download
@@ -178,7 +178,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
                     <p>
                       {item.documentoSigiloso
                         ? 'Documento sigiloso não pode ser baixado'
-                        : 'Documento não foi enviado para o Google Drive'}
+                        : 'Documento não foi capturado ou enviado para o Backblaze'}
                     </p>
                   </TooltipContent>
                 </Tooltip>

@@ -7,7 +7,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle } from 'lucide-react';
+import { ArrowLeft, AlertCircle, RefreshCw } from 'lucide-react';
 import { useProcessoTimeline } from '@/lib/hooks/use-processo-timeline';
 import { ProcessoHeader } from '@/components/processos/processo-header';
 import { TimelineContainer } from '@/components/processos/timeline-container';
@@ -23,13 +23,13 @@ interface ProcessoVisualizacaoProps {
 
 export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   const router = useRouter();
-  const { processo, timeline, isLoading, isCapturing, error, refetch } =
+  const { processo, timeline, isLoading, isCapturing, error, refetch, forceRecapture } =
     useProcessoTimeline(id);
 
   // Loading inicial
   if (isLoading) {
     return (
-      <div className="container max-w-5xl py-8 space-y-6">
+      <div className="w-full py-8 space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push('/processos')}>
             <ArrowLeft className="h-5 w-5" />
@@ -44,7 +44,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Erro ao carregar
   if (error && !processo) {
     return (
-      <div className="container max-w-5xl py-8 space-y-6">
+      <div className="w-full py-8 space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push('/processos')}>
             <ArrowLeft className="h-5 w-5" />
@@ -59,7 +59,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Processo não encontrado
   if (!processo) {
     return (
-      <div className="container max-w-5xl py-8 space-y-6">
+      <div className="w-full py-8 space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push('/processos')}>
             <ArrowLeft className="h-5 w-5" />
@@ -78,7 +78,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   }
 
   return (
-    <div className="container max-w-5xl py-8 space-y-6">
+    <div className="w-full py-8 space-y-6">
       {/* Header com breadcrumb */}
       <div className="flex items-center gap-4">
         <Button
@@ -94,6 +94,17 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
             Processos → {processo.numero_processo}
           </p>
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={forceRecapture}
+          disabled={isCapturing}
+          className="gap-2"
+          title="Atualizar timeline do processo"
+        >
+          <RefreshCw className={`h-4 w-4 ${isCapturing ? 'animate-spin' : ''}`} />
+          Atualizar Timeline
+        </Button>
       </div>
 
       {/* Dados do processo */}

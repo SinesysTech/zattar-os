@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/hooks/use-toast';
+// import { useToast } from '@/hooks/use-toast'; // TODO: Implementar hook de toast
 
 interface Usuario {
   id: number;
@@ -100,7 +100,7 @@ const OPERACAO_LABELS: Record<string, string> = {
 
 export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   const router = useRouter();
-  const { toast } = useToast();
+  // const { toast } = useToast(); // TODO: Implementar hook de toast
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [permissoesData, setPermissoesData] = useState<PermissoesData | null>(null);
   const [permissoesMap, setPermissoesMap] = useState<Map<string, boolean>>(new Map());
@@ -156,11 +156,13 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   const togglePermissao = (recurso: string, operacao: string) => {
     if (permissoesData?.is_super_admin) {
-      toast({
-        title: 'Super Admin',
-        description: 'Super Admins têm todas as permissões implicitamente.',
-        variant: 'default',
-      });
+      // TODO: Implementar toast
+      // toast({
+      //   title: 'Super Admin',
+      //   description: 'Super Admins têm todas as permissões implicitamente.',
+      //   variant: 'default',
+      // });
+      console.log('Super Admin: Super Admins têm todas as permissões implicitamente.');
       return;
     }
 
@@ -202,10 +204,12 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         throw new Error(result.error || 'Erro ao salvar permissões');
       }
 
-      toast({
-        title: 'Sucesso',
-        description: 'Permissões atualizadas com sucesso',
-      });
+      // TODO: Implementar toast
+      // toast({
+      //   title: 'Sucesso',
+      //   description: 'Permissões atualizadas com sucesso',
+      // });
+      console.log('Sucesso: Permissões atualizadas com sucesso');
 
       // Atualizar permissões originais
       setPermissoesOriginais(new Map(permissoesMap));
@@ -213,11 +217,13 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
       // Recarregar dados
       await fetchUsuario();
     } catch (err) {
-      toast({
-        title: 'Erro',
-        description: err instanceof Error ? err.message : 'Erro ao salvar',
-        variant: 'destructive',
-      });
+      // TODO: Implementar toast
+      // toast({
+      //   title: 'Erro',
+      //   description: err instanceof Error ? err.message : 'Erro ao salvar',
+      //   variant: 'destructive',
+      // });
+      console.error('Erro ao salvar permissões:', err);
     } finally {
       setIsSaving(false);
     }

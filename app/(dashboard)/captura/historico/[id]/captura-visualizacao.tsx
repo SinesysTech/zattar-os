@@ -1,5 +1,5 @@
 /**
- * Componente de Visualiza��o de Captura (Client Component)
+ * Componente de Visualização de Captura (Client Component)
  *
  * Exibe detalhes completos de uma captura com loading/error states.
  */
@@ -51,7 +51,7 @@ const formatarTipoCaptura = (tipo: TipoCaptura): string => {
   const tipos: Record<TipoCaptura, string> = {
     acervo_geral: 'Acervo Geral',
     arquivados: 'Arquivados',
-    audiencias: 'Audi�ncias',
+    audiencias: 'Audiências',
     pendentes: 'Pendentes',
   };
   return tipos[tipo] || tipo;
@@ -63,7 +63,7 @@ const StatusBadge = ({ status }: { status: StatusCaptura }) => {
   const variants: Record<StatusCaptura, { label: string; tone: StatusTone; variant: 'soft' | 'solid' | 'outline' }> = {
     pending: { label: 'Pendente', tone: 'warning', variant: 'soft' },
     in_progress: { label: 'Em Progresso', tone: 'info', variant: 'soft' },
-    completed: { label: 'Conclu�da', tone: 'success', variant: 'soft' },
+    completed: { label: 'Concluída', tone: 'success', variant: 'soft' },
     failed: { label: 'Falhou', tone: 'danger', variant: 'solid' },
   };
 
@@ -137,7 +137,7 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
         throw new Error('Erro ao deletar captura');
       }
 
-      // Redirecionar para listagem ap�s sucesso
+      // Redirecionar para listagem após sucesso
       router.push('/captura');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao deletar');
@@ -148,7 +148,7 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
   // Loading state
   if (isLoading) {
     return (
-      <div className="container max-w-5xl py-8 space-y-6">
+      <div className="w-full py-8 space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push('/captura')}>
             <ArrowLeft className="h-5 w-5" />
@@ -168,7 +168,7 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
   // Error state
   if (error || !captura) {
     return (
-      <div className="container max-w-5xl py-8 space-y-6">
+      <div className="w-full py-8 space-y-6">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push('/captura')}>
             <ArrowLeft className="h-5 w-5" />
@@ -180,13 +180,13 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Erro ao carregar captura</AlertTitle>
             <AlertDescription>
-              {error || 'Captura n�o encontrada ou voc� n�o tem permiss�o para acess�-la.'}
+              {error || 'Captura não encontrada ou você não tem permissão para acessá-la.'}
             </AlertDescription>
           </Alert>
           <div className="mt-6">
             <Button onClick={() => router.push('/captura')} className="gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Voltar para Hist�rico
+              Voltar para Histórico
             </Button>
           </div>
         </Card>
@@ -195,7 +195,7 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
   }
 
   return (
-    <div className="container max-w-5xl py-8 space-y-6">
+    <div className="w-full py-8 space-y-6">
       {/* Header com breadcrumb */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -203,19 +203,19 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
             variant="ghost"
             size="icon"
             onClick={() => router.push('/captura')}
-            title="Voltar para Hist�rico"
+            title="Voltar para Histórico"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
             <p className="text-sm text-muted-foreground">
-              Captura � Hist�rico � #{captura.id}
+              Captura • Histórico • #{captura.id}
             </p>
             <h1 className="text-2xl font-bold">Detalhes da Captura #{captura.id}</h1>
           </div>
         </div>
 
-        {/* Bot�o deletar */}
+        {/* Botão deletar */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive" size="sm" disabled={isDeleting}>
@@ -225,9 +225,9 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Confirmar exclus�o</AlertDialogTitle>
+              <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
               <AlertDialogDescription>
-                Tem certeza que deseja deletar esta captura? Esta a��o n�o pode ser desfeita.
+                Tem certeza que deseja deletar esta captura? Esta ação não pode ser desfeita.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -243,13 +243,13 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
         </AlertDialog>
       </div>
 
-      {/* Informa��es B�sicas */}
+      {/* Informações Básicas */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm">Informa��es B�sicas</CardTitle>
+          <CardTitle className="text-sm">Informações Básicas</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground">ID</p>
               <p className="text-sm font-mono">#{captura.id}</p>
@@ -289,16 +289,16 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
       {/* Datas */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm">Datas e Hor�rios</CardTitle>
+          <CardTitle className="text-sm">Datas e Horários</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground">Iniciado Em</p>
               <p className="text-sm">{formatarDataHora(captura.iniciado_em)}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Conclu�do Em</p>
+              <p className="text-sm font-medium text-muted-foreground">Concluído Em</p>
               <p className="text-sm">{formatarDataHora(captura.concluido_em)}</p>
             </div>
           </div>

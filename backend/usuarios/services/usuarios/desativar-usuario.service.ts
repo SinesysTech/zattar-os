@@ -1,7 +1,7 @@
 // Serviço de desativação de usuário com desatribuição automática
 // Conta itens atribuídos antes de desativar e retorna estatísticas
 
-import { createClient } from '@/backend/utils/supabase/server';
+import { createServiceClient } from '@/backend/utils/supabase/service-client';
 
 /**
  * Resultado da desativação de usuário
@@ -37,7 +37,7 @@ export async function desativarUsuarioComDesatribuicao(
   usuarioId: number,
   usuarioQueExecutouId: number
 ): Promise<DesativacaoResult> {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   try {
     // ========================================================================
