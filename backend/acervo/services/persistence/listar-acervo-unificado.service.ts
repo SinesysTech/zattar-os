@@ -1,134 +1,48 @@
 // Serviço de persistência para listar acervo unificado
-// Agrupa processos com mesmo numero_processo (multi-instância) em uma única visualização
+// Usa VIEW materializada acervo_unificado para agrupamento eficiente no banco
+// Elimina necessidade de carregar e agrupar grandes volumes em memória
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { getCached, setCached } from '@/backend/utils/redis/cache-utils';
 import { getAcervoListKey } from '@/backend/utils/redis/cache-keys';
 import type {
-  Acervo,
   ListarAcervoParams,
   ProcessoUnificado,
   ProcessoInstancia,
   ListarAcervoUnificadoResult,
   GrauAcervo,
-  OrigemAcervo,
 } from '@/backend/types/acervo/types';
 
 const ACERVO_UNIFICADO_TTL = 900; // 15 minutos
 
 /**
- * Determina qual instância é o grau atual do processo
- * Baseado em maior data_autuacao (critério primário) e updated_at (desempate)
+ * Converte JSONB de instâncias da VIEW para formato ProcessoInstancia[]
  */
-function identificarGrauAtual(instances: ProcessoInstancia[]): number {
-  if (instances.length === 0) return -1;
-  if (instances.length === 1) return 0;
-
-  let idxAtual = 0;
-  let maiorDataAutuacao = new Date(instances[0].data_autuacao);
-  let maiorUpdated = new Date(instances[0].updated_at);
-
-  for (let i = 1; i < instances.length; i++) {
-    const dataAutuacao = new Date(instances[i].data_autuacao);
-    const updated = new Date(instances[i].updated_at);
-
-    // Critério primário: maior data_autuacao
-    if (dataAutuacao > maiorDataAutuacao) {
-      idxAtual = i;
-      maiorDataAutuacao = dataAutuacao;
-      maiorUpdated = updated;
-    }
-    // Desempate: maior updated_at
-    else if (dataAutuacao.getTime() === maiorDataAutuacao.getTime() && updated > maiorUpdated) {
-      idxAtual = i;
-      maiorUpdated = updated;
-    }
+function converterInstances(instancesJson: unknown): ProcessoInstancia[] {
+  if (!Array.isArray(instancesJson)) {
+    return [];
   }
 
-  return idxAtual;
+  return instancesJson.map((inst: Record<string, unknown>) => ({
+    id: inst.id as number,
+    grau: inst.grau as GrauAcervo,
+    origem: inst.origem as 'acervo_geral' | 'arquivado',
+    trt: inst.trt as string,
+    data_autuacao: inst.data_autuacao as string,
+    updated_at: inst.updated_at as string,
+    is_grau_atual: (inst.is_grau_atual as boolean) ?? false,
+  }));
 }
 
 /**
- * Agrupa instâncias de processo em ProcessoUnificado
+ * Converte dados da VIEW materializada para formato ProcessoUnificado
  */
-function agruparInstancias(processos: Acervo[]): ProcessoUnificado[] {
-  // Agrupar por numero_processo
-  const grupos = new Map<string, Acervo[]>();
-  for (const processo of processos) {
-    const existing = grupos.get(processo.numero_processo) || [];
-    existing.push(processo);
-    grupos.set(processo.numero_processo, existing);
-  }
-
-  // Converter cada grupo em ProcessoUnificado
-  const processosUnificados: ProcessoUnificado[] = [];
-
-  for (const [numero_processo, instancias] of grupos) {
-    // Criar metadados de instâncias
-    const instances: ProcessoInstancia[] = instancias.map(inst => ({
-      id: inst.id,
-      grau: inst.grau,
-      origem: inst.origem,
-      trt: inst.trt,
-      data_autuacao: inst.data_autuacao,
-      updated_at: inst.updated_at,
-      is_grau_atual: false, // Será atualizado abaixo
-    }));
-
-    // Identificar grau atual
-    const idxGrauAtual = identificarGrauAtual(instances);
-    instances[idxGrauAtual].is_grau_atual = true;
-
-    const instanciaPrincipal = instancias[idxGrauAtual];
-    const grausAtivos = instances.map(i => i.grau);
-
-    // Montar ProcessoUnificado usando instância principal
-    const processoUnificado: ProcessoUnificado = {
-      id: instanciaPrincipal.id,
-      id_pje: instanciaPrincipal.id_pje,
-      advogado_id: instanciaPrincipal.advogado_id,
-      trt: instanciaPrincipal.trt,
-      numero_processo,
-      numero: instanciaPrincipal.numero,
-      descricao_orgao_julgador: instanciaPrincipal.descricao_orgao_julgador,
-      classe_judicial: instanciaPrincipal.classe_judicial,
-      segredo_justica: instanciaPrincipal.segredo_justica,
-      codigo_status_processo: instanciaPrincipal.codigo_status_processo,
-      prioridade_processual: instanciaPrincipal.prioridade_processual,
-      nome_parte_autora: instanciaPrincipal.nome_parte_autora,
-      qtde_parte_autora: instanciaPrincipal.qtde_parte_autora,
-      nome_parte_re: instanciaPrincipal.nome_parte_re,
-      qtde_parte_re: instanciaPrincipal.qtde_parte_re,
-      data_autuacao: instanciaPrincipal.data_autuacao,
-      juizo_digital: instanciaPrincipal.juizo_digital,
-      data_arquivamento: instanciaPrincipal.data_arquivamento,
-      data_proxima_audiencia: instanciaPrincipal.data_proxima_audiencia,
-      tem_associacao: instanciaPrincipal.tem_associacao,
-      responsavel_id: instanciaPrincipal.responsavel_id,
-      created_at: instanciaPrincipal.created_at,
-      updated_at: instanciaPrincipal.updated_at,
-      grau_atual: instances[idxGrauAtual].grau,
-      instances,
-      graus_ativos: grausAtivos as GrauAcervo[],
-    };
-
-    processosUnificados.push(processoUnificado);
-  }
-
-  return processosUnificados;
-}
-
-/**
- * Converte dados do banco para formato Acervo
- */
-function converterParaAcervo(data: Record<string, unknown>): Acervo {
+function converterParaProcessoUnificado(data: Record<string, unknown>): ProcessoUnificado {
   return {
     id: data.id as number,
     id_pje: data.id_pje as number,
     advogado_id: data.advogado_id as number,
-    origem: data.origem as OrigemAcervo,
     trt: data.trt as string,
-    grau: data.grau as GrauAcervo,
     numero_processo: data.numero_processo as string,
     numero: data.numero as number,
     descricao_orgao_julgador: data.descricao_orgao_julgador as string,
@@ -148,6 +62,9 @@ function converterParaAcervo(data: Record<string, unknown>): Acervo {
     responsavel_id: (data.responsavel_id as number | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
+    grau_atual: data.grau_atual as GrauAcervo,
+    graus_ativos: (data.graus_ativos as GrauAcervo[]) ?? [],
+    instances: converterInstances(data.instances),
   };
 }
 

@@ -904,7 +904,7 @@ function PartesColumnHeader({
             <Button
               variant="ghost"
               className="w-full justify-start text-sm"
-              onClick(() => {
+              onClick={() => {
                 onSort('nome_parte_re', 'asc');
                 setIsOpen(false);
               }}
