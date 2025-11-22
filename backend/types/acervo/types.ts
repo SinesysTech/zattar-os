@@ -82,6 +82,9 @@ export interface ListarAcervoParams {
   pagina?: number;
   limite?: number;
 
+  // Unificação de processos multi-instância
+  unified?: boolean; // Padrão: true - Agrupa processos com mesmo numero_processo
+
   // Filtros básicos
   origem?: OrigemAcervo;
   trt?: string;
@@ -147,5 +150,39 @@ export interface AgrupamentoAcervo {
 export interface ListarAcervoAgrupadoResult {
   agrupamentos: AgrupamentoAcervo[];
   total: number;
+}
+
+/**
+ * Metadados de uma instância de processo (grau específico)
+ */
+export interface ProcessoInstancia {
+  id: number;
+  grau: GrauAcervo;
+  origem: OrigemAcervo;
+  trt: string;
+  data_autuacao: string;
+  updated_at: string;
+  is_grau_atual: boolean; // Indica se é a instância do grau atual
+}
+
+/**
+ * Processo unificado - agrega todas as instâncias do mesmo numero_processo
+ */
+export interface ProcessoUnificado extends Omit<Acervo, 'id' | 'grau' | 'origem'> {
+  id: number; // ID da instância principal (grau atual)
+  grau_atual: GrauAcervo; // Grau atual do processo
+  instances: ProcessoInstancia[]; // Todas as instâncias (graus) do processo
+  graus_ativos: GrauAcervo[]; // Lista de graus onde o processo está ativo
+}
+
+/**
+ * Resultado da listagem de processos unificados
+ */
+export interface ListarAcervoUnificadoResult {
+  processos: ProcessoUnificado[];
+  total: number; // Total de processos únicos (não instâncias)
+  pagina: number;
+  limite: number;
+  totalPaginas: number;
 }
 
