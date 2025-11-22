@@ -42,7 +42,7 @@ O sistema MUST redistribuir valores automaticamente quando uma parcela é editad
 #### Scenario: Editar crédito principal de uma parcela
 - **WHEN** usuário altera valor_bruto_credito_principal da parcela X
 - **THEN** o sistema deve marcar parcela X como editado_manualmente = true
-- **AND** calcular saldo_restante = valor_total_acordo - valor_parcela_X
+- **AND** calcular saldo_restante = valor_total_acordo - soma(valor_bruto_credito_principal de todas as parcelas editadas)
 - **AND** buscar todas as parcelas onde editado_manualmente = false
 - **AND** distribuir saldo_restante igualmente entre essas parcelas
 - **AND** recalcular honorarios_contratuais de todas as parcelas
@@ -51,7 +51,7 @@ O sistema MUST redistribuir valores automaticamente quando uma parcela é editad
 #### Scenario: Editar honorários sucumbenciais de uma parcela
 - **WHEN** usuário altera honorarios_sucumbenciais da parcela X
 - **THEN** o sistema deve marcar parcela X como editado_manualmente = true
-- **AND** calcular saldo_sucumbenciais = total_sucumbenciais - valor_parcela_X
+- **AND** calcular saldo_sucumbenciais = total_sucumbenciais - soma(honorarios_sucumbenciais de todas as parcelas editadas)
 - **AND** buscar parcelas não editadas
 - **AND** redistribuir saldo_sucumbenciais entre parcelas não editadas
 - **AND** garantir que soma total = honorarios_sucumbenciais_total

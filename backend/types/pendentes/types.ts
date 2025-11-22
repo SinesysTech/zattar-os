@@ -18,6 +18,10 @@ export type OrdenarPorPendente =
   | 'data_ciencia_parte'
   | 'data_criacao_expediente'
   | 'prioridade_processual'
+  | 'trt'
+  | 'grau'
+  | 'descricao_orgao_julgador'
+  | 'responsavel_id' // TODO: Implementar ordenação por nome do responsável (join com usuarios)
   | 'created_at'
   | 'updated_at';
 

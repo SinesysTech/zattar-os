@@ -182,9 +182,11 @@ O sistema SHALL permitir associar usuários a cargos para organização interna.
 - **WHEN** usuário é criado ou atualizado sem `cargo_id`
 - **THEN** sistema aceita `cargo_id = null`
 
-#### Scenario: Deletar cargo em uso
-- **WHEN** cargo associado a usuários é deletado
-- **THEN** sistema define `cargo_id = null` automaticamente para usuários afetados via `ON DELETE SET NULL`
+#### Scenario: Impedir deleção de cargo em uso
+- **WHEN** tentativa de deletar cargo que está associado a usuários
+- **THEN** sistema retorna erro 400 "Não é possível deletar o cargo. X usuário(s) associado(s): [lista de nomes]"
+- **AND** cargo não é deletado
+- **AND** usuários mantêm suas associações intactas
 
 ### Requirement: Super Admin
 O sistema SHALL permitir marcar usuários como super admins que bypassam verificações de permissão.
