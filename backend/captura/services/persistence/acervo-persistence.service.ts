@@ -111,6 +111,11 @@ export async function salvarAcervo(
       const numeroProcesso = processo.numeroProcesso.trim();
 
       // Converter processo para formato do banco
+      // Tratar valores nulos/vazios com valores padrão seguros
+      const classeJudicial = processo.classeJudicial
+        ? processo.classeJudicial.trim()
+        : 'Não informada';
+      
       const dadosNovos = {
         id_pje: processo.id,
         advogado_id: advogadoId,
@@ -119,17 +124,17 @@ export async function salvarAcervo(
         grau,
         numero_processo: numeroProcesso,
         numero: processo.numero,
-        descricao_orgao_julgador: processo.descricaoOrgaoJulgador.trim(),
-        classe_judicial: processo.classeJudicial.trim(),
-        segredo_justica: processo.segredoDeJustica,
-        codigo_status_processo: processo.codigoStatusProcesso.trim(),
-        prioridade_processual: processo.prioridadeProcessual,
-        nome_parte_autora: processo.nomeParteAutora.trim(),
-        qtde_parte_autora: processo.qtdeParteAutora,
-        nome_parte_re: processo.nomeParteRe.trim(),
-        qtde_parte_re: processo.qtdeParteRe,
+        descricao_orgao_julgador: processo.descricaoOrgaoJulgador?.trim() || '',
+        classe_judicial: classeJudicial,
+        segredo_justica: processo.segredoDeJustica ?? false,
+        codigo_status_processo: processo.codigoStatusProcesso?.trim() || '',
+        prioridade_processual: processo.prioridadeProcessual ?? 0,
+        nome_parte_autora: processo.nomeParteAutora?.trim() || '',
+        qtde_parte_autora: processo.qtdeParteAutora ?? 1,
+        nome_parte_re: processo.nomeParteRe?.trim() || '',
+        qtde_parte_re: processo.qtdeParteRe ?? 1,
         data_autuacao: parseDate(processo.dataAutuacao),
-        juizo_digital: processo.juizoDigital,
+        juizo_digital: processo.juizoDigital ?? false,
         data_arquivamento: parseDate(processo.dataArquivamento),
         data_proxima_audiencia: parseDate(processo.dataProximaAudiencia),
         tem_associacao: processo.temAssociacao ?? false,

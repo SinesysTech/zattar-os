@@ -143,7 +143,11 @@ export async function PATCH(
                         { status: 400 }
                     );
                 }
-                updateData.endereco_presencial = enderecoPresencial;
+                // Sempre definir "Brasil" como país padrão
+                updateData.endereco_presencial = {
+                    ...enderecoPresencial,
+                    pais: 'Brasil'
+                };
             } else {
                 updateData.endereco_presencial = null;
             }

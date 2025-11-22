@@ -33,6 +33,8 @@ interface UseProcessoTimelineReturn {
   error: Error | null;
   /** Re-buscar timeline */
   refetch: () => Promise<void>;
+  /** Forçar recaptura da timeline (mesmo se já existir) */
+  forceRecapture: () => Promise<void>;
 }
 
 const POLLING_INTERVAL = 5000; // 5 segundos
@@ -91,11 +93,16 @@ export function useProcessoTimeline(id: number): UseProcessoTimelineReturn {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          processo_id: processo.id,
-          trt: processo.trt,
+          trtCodigo: processo.trt,
           grau: processo.grau,
-          id_pje: processo.id_pje,
-          advogado_id: processo.advogado_id,
+          processoId: processo.id_pje,
+          numeroProcesso: processo.numero_processo,
+          advogadoId: processo.advogado_id,
+          baixarDocumentos: true,
+          filtroDocumentos: {
+            apenasAssinados: false, // Baixar todos os documentos
+            apenasNaoSigilosos: false, // Incluir sigilosos também
+          },
         }),
       });
 
@@ -166,6 +173,25 @@ export function useProcessoTimeline(id: number): UseProcessoTimelineReturn {
   }, [fetchData]);
 
   /**
+   * Forçar recaptura da timeline (mesmo se já existir)
+   */
+  const forceRecapture = useCallback(async () => {
+    if (isCapturing) {
+      console.log('[useProcessoTimeline] Captura já em andamento, ignorando');
+      return;
+    }
+
+    console.log('[useProcessoTimeline] Forçando recaptura da timeline');
+
+    // Limpar timeline atual para forçar nova captura
+    setTimeline(null);
+    setError(null);
+
+    // Acionar captura manualmente
+    await captureTimeline();
+  }, [isCapturing, captureTimeline]);
+
+  /**
    * Efeito: Carregar dados iniciais
    */
   useEffect(() => {
@@ -221,5 +247,6 @@ export function useProcessoTimeline(id: number): UseProcessoTimelineReturn {
     isCapturing,
     error,
     refetch,
+    forceRecapture,
   };
 }

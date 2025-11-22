@@ -145,41 +145,6 @@ export function ExpedientesVisualizacaoMes({
 
   return (
     <div className="space-y-4">
-      {/* Navegação de mês */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarMes('anterior')}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <div className="text-lg font-semibold capitalize min-w-[200px] text-center">
-            {formatarMesAno()}
-          </div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navegarMes('proximo')}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-        <Button
-          variant="outline"
-          onClick={() => {
-            const agora = new Date();
-            onMesAtualChange?.(agora);
-            if (!mesAtual) {
-              setMesLocal(agora);
-            }
-          }}
-        >
-          Mês Atual
-        </Button>
-      </div>
-
       {/* Calendário */}
       <div className="border rounded-lg overflow-hidden">
         {/* Cabeçalho dos dias da semana */}
