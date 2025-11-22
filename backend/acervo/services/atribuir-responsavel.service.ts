@@ -83,8 +83,45 @@ async function validarUsuarioExecutouExiste(usuarioId: number): Promise<boolean>
 }
 
 /**
+ * Atribui responsável a TODAS as instâncias de um processo unificado
+ * Propaga a atribuição para todas as instâncias do mesmo numero_processo
+ */
+async function atribuirResponsavelTodasInstancias(
+  processoId: number,
+  responsavelId: number | null
+): Promise<boolean> {
+  const supabase = createServiceClient();
+
+  // 1. Buscar numero_processo do processo fornecido
+  const { data: processo, error: errorProcesso } = await supabase
+    .from('acervo')
+    .select('numero_processo')
+    .eq('id', processoId)
+    .single();
+
+  if (errorProcesso || !processo) {
+    throw new Error('Processo não encontrado para propagação');
+  }
+
+  const numeroProcesso = processo.numero_processo;
+
+  // 2. Atualizar TODAS as instâncias com o mesmo numero_processo
+  const { error: errorUpdate } = await supabase
+    .from('acervo')
+    .update({ responsavel_id: responsavelId, updated_at: new Date().toISOString() })
+    .eq('numero_processo', numeroProcesso);
+
+  if (errorUpdate) {
+    throw new Error(`Erro ao propagar atribuição: ${errorUpdate.message}`);
+  }
+
+  return true;
+}
+
+/**
  * Atribui responsável a um processo do acervo
- * 
+ * IMPORTANTE: Propaga a atribuição para TODAS as instâncias do mesmo numero_processo (unificação)
+ *
  * @param params - Parâmetros da atribuição
  * @returns Resultado da operação
  */
@@ -122,7 +159,10 @@ export async function atribuirResponsavelAcervo(
       };
     }
 
-    // Executar atribuição via RPC (já define contexto de usuário)
+    // NOVO: Propagar atribuição para todas as instâncias do processo unificado
+    await atribuirResponsavelTodasInstancias(processoId, responsavelId);
+
+    // Ainda executar RPC para logging/auditoria na instância específica
     const supabase = createServiceClient();
     const resultado = await rpcAtribuirResponsavel(
       supabase,

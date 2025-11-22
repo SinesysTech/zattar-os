@@ -45,6 +45,15 @@ import type { ListarAcervoParams } from '@/backend/types/acervo/types';
  *           maximum: 100
  *         description: Quantidade de itens por página (máximo 100)
  *       - in: query
+ *         name: unified
+ *         schema:
+ *           type: boolean
+ *           default: true
+ *         description: |
+ *           Unificar processos multi-instância (mesmo numero_processo em graus diferentes).
+ *           - true (padrão): Agrupa processos com mesmo numero_processo em um único item
+ *           - false: Retorna todas as instâncias separadamente (modo legado)
+ *       - in: query
  *         name: origem
  *         schema:
  *           type: string
@@ -344,6 +353,9 @@ export async function GET(request: NextRequest) {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
 
+      // Unificação de processos multi-instância
+      unified: parseBoolean(searchParams.get('unified')),
+
       // Filtros básicos
       origem: searchParams.get('origem') as 'acervo_geral' | 'arquivado' | undefined,
       trt: searchParams.get('trt') || undefined,
@@ -409,7 +421,7 @@ export async function GET(request: NextRequest) {
         data: resultado,
       });
     } else {
-      // Resposta padrão com paginação
+      // Resposta padrão com paginação (unificado ou instâncias separadas)
       return NextResponse.json({
         success: true,
         data: {

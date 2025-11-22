@@ -1,14 +1,14 @@
 // Tipos para integração com API de acervo no frontend
 
-import type { Acervo, ListarAcervoParams } from '@/backend/types/acervo/types';
+import type { Acervo, ProcessoUnificado, ListarAcervoParams } from '@/backend/types/acervo/types';
 
 /**
- * Resposta da API de acervo (formato padrão)
+ * Resposta da API de acervo (formato padrão ou unificado)
  */
 export interface AcervoApiResponse {
   success: boolean;
   data: {
-    processos: Acervo[];
+    processos: (Acervo | ProcessoUnificado)[];
     paginacao: {
       pagina: number;
       limite: number;

@@ -1,13 +1,13 @@
 'use client';
 
-// Hook para buscar processos do acervo
+// Hook para buscar processos do acervo (suporta unificação de multi-instância)
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { AcervoApiResponse, BuscarProcessosParams } from '@/app/_lib/types/acervo';
-import type { Acervo } from '@/backend/types/acervo/types';
+import type { Acervo, ProcessoUnificado } from '@/backend/types/acervo/types';
 
 interface UseAcervoResult {
-  processos: Acervo[];
+  processos: (Acervo | ProcessoUnificado)[];
   paginacao: {
     pagina: number;
     limite: number;
@@ -38,6 +38,10 @@ export const useAcervo = (params: BuscarProcessosParams = {}): UseAcervoResult =
     if (params.limite !== undefined) {
       searchParams.set('limite', params.limite.toString());
     }
+    // unified default é true no backend, mas vamos ser explícitos aqui se fornecido
+    if (params.unified !== undefined) {
+      searchParams.set('unified', params.unified.toString());
+    }
     if (params.busca) {
       searchParams.set('busca', params.busca);
     }
@@ -55,6 +59,7 @@ export const useAcervo = (params: BuscarProcessosParams = {}): UseAcervoResult =
         value !== null &&
         key !== 'pagina' &&
         key !== 'limite' &&
+        key !== 'unified' &&
         key !== 'busca' &&
         key !== 'ordenar_por' &&
         key !== 'ordem'
@@ -71,6 +76,7 @@ export const useAcervo = (params: BuscarProcessosParams = {}): UseAcervoResult =
   }, [
     params.pagina,
     params.limite,
+    params.unified,
     params.busca,
     params.ordenar_por,
     params.ordem,

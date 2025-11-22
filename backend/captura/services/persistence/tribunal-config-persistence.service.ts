@@ -1,4 +1,4 @@
-import { createClient } from '@/backend/utils/supabase/server-client';
+import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type {
   CodigoTRT,
   GrauTRT,
@@ -9,6 +9,7 @@ import type {
 /**
  * Serviço de persistência para configurações de tribunais
  * Busca dados da tabela tribunais_config com JOIN em tribunais
+ * Usa service client para bypass de RLS
  */
 
 /**
@@ -21,7 +22,7 @@ export const getConfigByTribunalAndTipoAcesso = async (
   codigo: string,
   tipoAcesso: TipoAcessoTribunal,
 ): Promise<TribunalConfigDb | null> => {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const { data, error } = await supabase
     .from('tribunais_config')
@@ -119,7 +120,7 @@ export const getConfigByTRTAndGrau = async (
  * @returns Array de configurações
  */
 export const listAllConfigs = async (): Promise<TribunalConfigDb[]> => {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const { data, error } = await supabase.from('tribunais_config').select(
     `
@@ -188,7 +189,7 @@ export const listAllConfigs = async (): Promise<TribunalConfigDb[]> => {
 export const isValidTribunalCode = async (
   codigo: string,
 ): Promise<boolean> => {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const { count, error } = await supabase
     .from('tribunais_config')
