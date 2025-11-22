@@ -85,3 +85,4 @@ docker build -t zattar_advogados:latest .
    - O Swarm vai fazer rolling update automaticamente
 
 
+

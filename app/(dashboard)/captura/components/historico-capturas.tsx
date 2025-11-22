@@ -3,6 +3,7 @@
 // Componente de histórico de capturas (para usar dentro de abas)
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
@@ -13,7 +14,6 @@ import { buildCapturasFilterOptions, buildCapturasFilterGroups, parseCapturasFil
 import { useCapturasLog } from '@/app/_lib/hooks/use-capturas-log';
 import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
 import { deletarCapturaLog } from '@/app/_lib/api/captura';
-import { CapturaDetailsDialog } from './captura-details-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/backend/types/captura/capturas-log-types';
 import type { CapturasFilters } from '../historico/components/capturas-toolbar-filters';
@@ -84,7 +84,7 @@ const StatusBadge = ({ status }: { status: StatusCaptura }) => {
  * Colunas da tabela de histórico
  */
 function criarColunas(
-  onView: (captura: CapturaLog) => void,
+  router: ReturnType<typeof useRouter>,
   onDelete: (captura: CapturaLog) => void
 ): ColumnDef<CapturaLog>[] {
   return [
@@ -230,7 +230,7 @@ function criarColunas(
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => onView(captura)}
+              onClick={() => router.push(`/captura/historico/${captura.id}`)}
               title="Visualizar detalhes"
             >
               <Eye className="h-4 w-4" />
@@ -272,13 +272,12 @@ interface HistoricoCapturaProps {
 }
 
 export function HistoricoCapturas({ onNewClick, newButtonTooltip = 'Nova Captura' }: HistoricoCapturaProps = {}) {
+  const router = useRouter();
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<CapturasFilters>({});
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
-  const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
-  const [selectedCaptura, setSelectedCaptura] = React.useState<CapturaLog | null>(null);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -300,11 +299,6 @@ export function HistoricoCapturas({ onNewClick, newButtonTooltip = 'Nova Captura
   // Buscar histórico de capturas
   const { capturas, paginacao, isLoading, error, refetch } = useCapturasLog(params);
 
-  const handleView = React.useCallback((captura: CapturaLog) => {
-    setSelectedCaptura(captura);
-    setDetailsDialogOpen(true);
-  }, []);
-
   const handleDelete = React.useCallback(
     async (captura: CapturaLog) => {
       try {
@@ -317,15 +311,7 @@ export function HistoricoCapturas({ onNewClick, newButtonTooltip = 'Nova Captura
     [refetch]
   );
 
-  const handleDeleteFromDialog = React.useCallback(async () => {
-    if (selectedCaptura) {
-      await handleDelete(selectedCaptura);
-      setDetailsDialogOpen(false);
-      setSelectedCaptura(null);
-    }
-  }, [selectedCaptura, handleDelete]);
-
-  const colunas = React.useMemo(() => criarColunas(handleView, handleDelete), [handleView, handleDelete]);
+  const colunas = React.useMemo(() => criarColunas(router, handleDelete), [router, handleDelete]);
 
   // Gerar opções de filtro
   const filterOptions = React.useMemo(() => buildCapturasFilterOptions(advogados), [advogados]);
@@ -378,14 +364,6 @@ export function HistoricoCapturas({ onNewClick, newButtonTooltip = 'Nova Captura
         isLoading={isLoading}
         error={error}
         emptyMessage="Nenhuma captura encontrada no histórico."
-      />
-
-      {/* Dialog de Detalhes */}
-      <CapturaDetailsDialog
-        open={detailsDialogOpen}
-        onOpenChange={setDetailsDialogOpen}
-        captura={selectedCaptura}
-        onDelete={handleDeleteFromDialog}
       />
     </div>
   );

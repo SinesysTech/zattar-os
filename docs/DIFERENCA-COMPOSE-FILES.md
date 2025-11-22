@@ -149,3 +149,4 @@ docker build -t sinesys:latest .
 3. O Portainer fará o build automaticamente
 
 
+
