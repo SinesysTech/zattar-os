@@ -48,7 +48,7 @@ export default function CapturaPage() {
     <div className="space-y-6">
       <Tabs defaultValue="historico" className="w-full">
         {/* Abas principais */}
-        <TabsList className="grid grid-cols-3 w-fit">
+        <TabsList className="grid grid-cols-4 w-fit">
           <TabsTrigger value="historico" className="flex items-center gap-2">
             <History className="h-4 w-4" />
             <span>Histórico</span>
@@ -60,6 +60,10 @@ export default function CapturaPage() {
           <TabsTrigger value="credenciais" className="flex items-center gap-2">
             <Key className="h-4 w-4" />
             <span>Credenciais</span>
+          </TabsTrigger>
+          <TabsTrigger value="tribunais" className="flex items-center gap-2">
+            <Building2 className="h-4 w-4" />
+            <span>Tribunais</span>
           </TabsTrigger>
         </TabsList>
 
@@ -104,6 +108,23 @@ export default function CapturaPage() {
             key={refreshCredenciais}
           />
         </TabsContent>
+
+        {/* Conteúdo da aba Tribunais */}
+        <TabsContent value="tribunais" className="mt-6">
+          <TableToolbar
+            searchValue={buscaTribunais}
+            onSearchChange={setBuscaTribunais}
+            searchPlaceholder="Buscar tribunais..."
+            filterOptions={[]}
+            selectedFilters={selectedFilterIdsTribunais}
+            onFiltersChange={setSelectedFilterIdsTribunais}
+            onNewClick={() => setTribunalDialogOpen(true)}
+            newButtonTooltip="Nova Configuração de Tribunal"
+          />
+          <TribunaisList
+            key={refreshTribunais}
+          />
+        </TabsContent>
       </Tabs>
 
       {/* Dialogs */}
@@ -121,6 +142,12 @@ export default function CapturaPage() {
         open={credencialDialogOpen}
         onOpenChange={setCredencialDialogOpen}
         onSuccess={handleCredencialSuccess}
+      />
+      <TribunaisDialog
+        tribunal={null}
+        open={tribunalDialogOpen}
+        onOpenChange={setTribunalDialogOpen}
+        onSuccess={handleTribunalSuccess}
       />
     </div>
   );

@@ -692,21 +692,24 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     }
   }, [onRefresh]);
 
-  // Calcular início e fim da semana
+  // Calcular início e fim da semana (normalizando para meia-noite)
   const inicioSemana = React.useMemo(() => {
     const date = new Date(semanaAtual);
+    date.setHours(0, 0, 0, 0); // Normalizar para meia-noite
     const day = date.getDay();
     const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Ajustar para segunda
-    return new Date(date.setDate(diff));
+    date.setDate(diff);
+    return date;
   }, [semanaAtual]);
 
   const fimSemana = React.useMemo(() => {
     const date = new Date(inicioSemana);
     date.setDate(date.getDate() + 4); // Até sexta
+    date.setHours(23, 59, 59, 999); // Final do dia de sexta
     return date;
   }, [inicioSemana]);
 
-  // Filtrar expedientes por dia da semana (usando data de ciência - início do prazo)
+  // Filtrar expedientes por dia da semana (usando data de vencimento - prazo legal)
   const expedientesPorDia = React.useMemo(() => {
     const dias = {
       segunda: [] as PendenteManifestacao[],
@@ -717,13 +720,17 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     };
 
     expedientes.forEach((expediente) => {
-      if (!expediente.data_ciencia_parte) return;
+      if (!expediente.data_prazo_legal_parte) return;
 
-      const data = new Date(expediente.data_ciencia_parte);
+      // Criar data a partir do ISO string e normalizar para timezone local
+      const data = new Date(expediente.data_prazo_legal_parte);
+
+      // Extrair apenas a parte da data (ignorando timezone)
+      const dataLocal = new Date(data.getFullYear(), data.getMonth(), data.getDate());
 
       // Verificar se o expediente está dentro da semana atual
-      if (data >= inicioSemana && data <= fimSemana) {
-        const diaSemana = data.getDay();
+      if (dataLocal >= inicioSemana && dataLocal <= fimSemana) {
+        const diaSemana = dataLocal.getDay();
 
         if (diaSemana === 1) dias.segunda.push(expediente);
         else if (diaSemana === 2) dias.terca.push(expediente);
@@ -731,6 +738,15 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
         else if (diaSemana === 4) dias.quinta.push(expediente);
         else if (diaSemana === 5) dias.sexta.push(expediente);
       }
+    });
+
+    // Ordenar cada dia por data de vencimento (mais antigas primeiro)
+    Object.keys(dias).forEach((dia) => {
+      (dias as any)[dia].sort((a: PendenteManifestacao, b: PendenteManifestacao) => {
+        const dataA = a.data_prazo_legal_parte ? new Date(a.data_prazo_legal_parte).getTime() : 0;
+        const dataB = b.data_prazo_legal_parte ? new Date(b.data_prazo_legal_parte).getTime() : 0;
+        return dataA - dataB; // Crescente: mais antigas primeiro
+      });
     });
 
     return dias;

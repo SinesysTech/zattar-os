@@ -66,6 +66,12 @@ export const getConfigByTribunalAndTipoAcesso = async (
     ? data.tribunais[0]
     : data.tribunais;
 
+  // Verificação defensiva: garantir que tribunal existe e tem propriedades necessárias
+  if (!tribunal || !tribunal.codigo || !tribunal.nome) {
+    console.error(`Erro: dados do tribunal incompletos para ${codigo} (${tipoAcesso})`);
+    return null;
+  }
+
   return {
     id: data.id,
     sistema: data.sistema,
@@ -144,26 +150,34 @@ export const listAllConfigs = async (): Promise<TribunalConfigDb[]> => {
     return [];
   }
 
-  return data.map((row: any) => {
-    const tribunal = Array.isArray(row.tribunais)
-      ? row.tribunais[0]
-      : row.tribunais;
+  return data
+    .map((row: any) => {
+      const tribunal = Array.isArray(row.tribunais)
+        ? row.tribunais[0]
+        : row.tribunais;
 
-    return {
-      id: row.id,
-      sistema: row.sistema,
-      tipo_acesso: row.tipo_acesso as TipoAcessoTribunal,
-      url_base: row.url_base,
-      url_login_seam: row.url_login_seam,
-      url_api: row.url_api,
-      custom_timeouts: row.custom_timeouts as any,
-      created_at: row.created_at,
-      updated_at: row.updated_at,
-      tribunal_id: row.tribunal_id,
-      tribunal_codigo: tribunal.codigo,
-      tribunal_nome: tribunal.nome,
-    };
-  });
+      // Verificação defensiva: pular registros com dados incompletos
+      if (!tribunal || !tribunal.codigo || !tribunal.nome) {
+        console.warn(`Aviso: dados do tribunal incompletos para configuração ${row.id}, pulando...`);
+        return null;
+      }
+
+      return {
+        id: row.id,
+        sistema: row.sistema,
+        tipo_acesso: row.tipo_acesso as TipoAcessoTribunal,
+        url_base: row.url_base,
+        url_login_seam: row.url_login_seam,
+        url_api: row.url_api,
+        custom_timeouts: row.custom_timeouts as any,
+        created_at: row.created_at,
+        updated_at: row.updated_at,
+        tribunal_id: row.tribunal_id,
+        tribunal_codigo: tribunal.codigo,
+        tribunal_nome: tribunal.nome,
+      };
+    })
+    .filter((config): config is TribunalConfigDb => config !== null);
 };
 
 /**
