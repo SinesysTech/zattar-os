@@ -10,14 +10,14 @@ import type { TribunalConfig } from '@/app/_lib/types/tribunais';
 /**
  * Formata o tipo de acesso do tribunal
  */
-const formatarTipoAcesso = (tipo: string): { label: string; description: string } => {
-  const tipos: Record<string, { label: string; description: string }> = {
-    primeiro_grau: { label: '1º Grau', description: 'Login específico 1º grau' },
-    segundo_grau: { label: '2º Grau', description: 'Login específico 2º grau' },
-    unificado: { label: 'Unificado', description: 'Login único 1º e 2º grau' },
-    unico: { label: 'Único', description: 'Tribunal Superior' },
+const formatarTipoAcesso = (tipo: string): string => {
+  const tipos: Record<string, string> = {
+    primeiro_grau: '1º Grau',
+    segundo_grau: '2º Grau',
+    unificado: 'Unificado',
+    unico: 'Único',
   };
-  return tipos[tipo] || { label: tipo, description: '-' };
+  return tipos[tipo] || tipo;
 };
 
 /**
@@ -54,12 +54,7 @@ export function criarColunasTribunais({
       cell: ({ row }) => {
         const tribunal = row.original;
         return (
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold">{tribunal.tribunal_codigo}</span>
-            <span className="text-xs text-muted-foreground line-clamp-1" title={tribunal.tribunal_nome}>
-              {tribunal.tribunal_nome}
-            </span>
-          </div>
+          <div className="text-sm font-semibold">{tribunal.tribunal_codigo}</div>
         );
       },
     },
@@ -72,13 +67,12 @@ export function criarColunasTribunais({
       size: 150,
       cell: ({ row }) => {
         const tipo = row.getValue('tipo_acesso') as string;
-        const formatado = formatarTipoAcesso(tipo);
+        const label = formatarTipoAcesso(tipo);
         return (
-          <div className="flex flex-col">
-            <Badge tone={getBadgeTone(tipo)} variant="soft">
-              {formatado.label}
+          <div className="flex justify-start">
+            <Badge tone={getBadgeTone(tipo)} variant="soft" className="w-fit">
+              {label}
             </Badge>
-            <span className="text-xs text-muted-foreground mt-1">{formatado.description}</span>
           </div>
         );
       },

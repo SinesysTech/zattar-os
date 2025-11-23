@@ -33,21 +33,26 @@ export interface Endereco {
   id_pje: number | null;
   entidade_tipo: EntidadeTipoEndereco;
   entidade_id: number;
-  trt: string;
-  grau: GrauEndereco;
-  numero_processo: string;
   logradouro: string | null;
   numero: string | null;
   complemento: string | null;
   bairro: string | null;
+  id_municipio_pje: number | null;
   municipio: string | null;
-  estado: string | null;
-  pais: string | null;
+  municipio_ibge: string | null;
+  estado_id_pje: number | null;
+  estado_sigla: string | null;
+  estado_descricao: string | null;
+  pais_id_pje: number | null;
+  pais_codigo: string | null;
+  pais_descricao: string | null;
   cep: string | null;
   classificacoes_endereco: ClassificacaoEndereco[] | null; // JSONB array
   correspondencia: boolean | null;
   situacao: SituacaoEndereco | null;
-  dados_pje_completo: Record<string, unknown> | null; // JSONB
+  id_usuario_cadastrador_pje: number | null;
+  data_alteracao_pje: string | null; // ISO timestamp
+  ativo: boolean | null;
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }
@@ -59,21 +64,26 @@ export interface CriarEnderecoParams {
   id_pje?: number;
   entidade_tipo: EntidadeTipoEndereco;
   entidade_id: number;
-  trt: string;
-  grau: GrauEndereco;
-  numero_processo: string;
   logradouro?: string;
   numero?: string;
   complemento?: string;
   bairro?: string;
+  id_municipio_pje?: number;
   municipio?: string;
-  estado?: string;
-  pais?: string;
+  municipio_ibge?: string;
+  estado_id_pje?: number;
+  estado_sigla?: string;
+  estado_descricao?: string;
+  pais_id_pje?: number;
+  pais_codigo?: string;
+  pais_descricao?: string;
   cep?: string;
   classificacoes_endereco?: ClassificacaoEndereco[];
   correspondencia?: boolean;
   situacao?: SituacaoEndereco;
-  dados_pje_completo?: Record<string, unknown>;
+  id_usuario_cadastrador_pje?: number;
+  data_alteracao_pje?: string;
+  ativo?: boolean;
 }
 
 /**
@@ -84,21 +94,26 @@ export interface AtualizarEnderecoParams {
   id_pje?: number;
   entidade_tipo?: EntidadeTipoEndereco;
   entidade_id?: number;
-  trt?: string;
-  grau?: GrauEndereco;
-  numero_processo?: string;
   logradouro?: string;
   numero?: string;
   complemento?: string;
   bairro?: string;
+  id_municipio_pje?: number;
   municipio?: string;
-  estado?: string;
-  pais?: string;
+  municipio_ibge?: string;
+  estado_id_pje?: number;
+  estado_sigla?: string;
+  estado_descricao?: string;
+  pais_id_pje?: number;
+  pais_codigo?: string;
+  pais_descricao?: string;
   cep?: string;
   classificacoes_endereco?: ClassificacaoEndereco[];
   correspondencia?: boolean;
   situacao?: SituacaoEndereco;
-  dados_pje_completo?: Record<string, unknown>;
+  id_usuario_cadastrador_pje?: number;
+  data_alteracao_pje?: string;
+  ativo?: boolean;
 }
 
 /**
@@ -107,10 +122,11 @@ export interface AtualizarEnderecoParams {
 export type OrdenarPorEndereco =
   | 'logradouro'
   | 'municipio'
-  | 'estado'
+  | 'estado_sigla'
   | 'cep'
   | 'correspondencia'
   | 'situacao'
+  | 'ativo'
   | 'created_at'
   | 'updated_at';
 
@@ -131,21 +147,17 @@ export interface ListarEnderecosParams {
   entidade_tipo?: EntidadeTipoEndereco;
   entidade_id?: number;
 
-  // Filtros básicos
-  trt?: string;
-  grau?: GrauEndereco;
-  numero_processo?: string;
-
   // Busca textual
   busca?: string; // Busca em logradouro, bairro, municipio, estado
 
   // Filtros específicos
   municipio?: string;
-  estado?: string;
-  pais?: string;
+  estado_sigla?: string;
+  pais_codigo?: string;
   cep?: string;
   correspondencia?: boolean;
   situacao?: SituacaoEndereco;
+  ativo?: boolean;
 
   // Ordenação
   ordenar_por?: OrdenarPorEndereco;

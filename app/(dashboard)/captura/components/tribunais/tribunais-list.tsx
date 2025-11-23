@@ -1,25 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { DataTable } from '@/components/ui/data-table';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { TableToolbar } from '@/components/ui/table-toolbar';
+import { useDebounce } from '@/hooks/use-debounce';
 import { useTribunais } from '@/app/_lib/hooks/use-tribunais';
 import { criarColunasTribunais } from './tribunais-columns';
 import { TribunaisDialog } from './tribunais-dialog';
+import {
+  buildTribunaisFilterOptions,
+  buildTribunaisFilterGroups,
+  parseTribunaisFilters,
+} from './tribunais-toolbar-filters';
 import type { TribunalConfig } from '@/app/_lib/types/tribunais';
+import type { TribunaisFilters } from './tribunais-toolbar-filters';
+
+interface TribunaisListProps {
+  onNewClick?: () => void;
+  newButtonTooltip?: string;
+}
 
 /**
  * Componente de listagem de configurações de tribunais
  */
-export function TribunaisList() {
+export function TribunaisList({ onNewClick, newButtonTooltip = 'Nova Configuração de Tribunal' }: TribunaisListProps) {
   const {
     tribunais,
     tribunaisCodigos,
@@ -29,10 +33,16 @@ export function TribunaisList() {
     refetch,
   } = useTribunais();
 
-  // Estados de filtros
+  // Estados de busca e filtros
   const [busca, setBusca] = useState('');
-  const [filtroCodigo, setFiltroCodigo] = useState<string>('todos');
-  const [filtroTipoAcesso, setFiltroTipoAcesso] = useState<string>('todos');
+  const [selectedFilterIds, setSelectedFilterIds] = useState<string[]>([]);
+  
+  // Debounce da busca
+  const buscaDebounced = useDebounce(busca, 500);
+  const isSearching = busca !== buscaDebounced;
+  
+  // Converter IDs selecionados para filtros
+  const filtros = useMemo(() => parseTribunaisFilters(selectedFilterIds), [selectedFilterIds]);
 
   // Estado do dialog
   const [tribunalDialog, setTribunalDialog] = useState<{
@@ -49,40 +59,43 @@ export function TribunaisList() {
   };
 
   // Filtrar tribunais
-  const tribunaisFiltrados = tribunais.filter((tribunal) => {
-    // Filtro de busca
-    if (busca) {
-      const buscaLower = busca.toLowerCase();
-      const match =
-        tribunal.tribunal_codigo.toLowerCase().includes(buscaLower) ||
-        tribunal.tribunal_nome.toLowerCase().includes(buscaLower) ||
-        tribunal.url_base.toLowerCase().includes(buscaLower) ||
-        tribunal.url_login_seam.toLowerCase().includes(buscaLower) ||
-        tribunal.url_api.toLowerCase().includes(buscaLower);
+  const tribunaisFiltrados = useMemo(() => {
+    return tribunais.filter((tribunal) => {
+      // Filtro de busca
+      if (buscaDebounced) {
+        const buscaLower = buscaDebounced.toLowerCase();
+        const match =
+          tribunal.tribunal_codigo.toLowerCase().includes(buscaLower) ||
+          tribunal.tribunal_nome.toLowerCase().includes(buscaLower) ||
+          tribunal.url_base.toLowerCase().includes(buscaLower) ||
+          tribunal.url_login_seam.toLowerCase().includes(buscaLower) ||
+          tribunal.url_api.toLowerCase().includes(buscaLower);
 
-      if (!match) return false;
-    }
+        if (!match) return false;
+      }
 
-    // Filtro de código do tribunal
-    if (filtroCodigo !== 'todos' && tribunal.tribunal_codigo !== filtroCodigo) {
-      return false;
-    }
+      // Filtro de código do tribunal
+      if (filtros.tribunal_codigo && tribunal.tribunal_codigo !== filtros.tribunal_codigo) {
+        return false;
+      }
 
-    // Filtro de tipo de acesso
-    if (filtroTipoAcesso !== 'todos' && tribunal.tipo_acesso !== filtroTipoAcesso) {
-      return false;
-    }
+      // Filtro de tipo de acesso
+      if (filtros.tipo_acesso && tribunal.tipo_acesso !== filtros.tipo_acesso) {
+        return false;
+      }
 
-    return true;
-  });
-
-  // Calcular estatísticas
-  const totalTribunais = tribunais.length;
-  const totalComTimeouts = tribunais.filter(
-    (t) => t.custom_timeouts && Object.keys(t.custom_timeouts).length > 0
-  ).length;
-  const totalPrimeiroGrau = tribunais.filter((t) => t.tipo_acesso === 'primeiro_grau').length;
-  const totalSegundoGrau = tribunais.filter((t) => t.tipo_acesso === 'segundo_grau').length;
+      return true;
+    });
+  }, [tribunais, buscaDebounced, filtros]);
+  
+  // Gerar opções de filtro
+  const filterOptions = useMemo(() => buildTribunaisFilterOptions(), []);
+  const filterGroups = useMemo(() => buildTribunaisFilterGroups(), []);
+  
+  // Handler para mudança de filtros
+  const handleFilterIdsChange = useCallback((newSelectedIds: string[]) => {
+    setSelectedFilterIds(newSelectedIds);
+  }, []);
 
   const colunas = criarColunasTribunais({
     onEdit: handleEdit,
@@ -91,93 +104,19 @@ export function TribunaisList() {
   return (
     <>
       <div className="space-y-4">
-        {/* Cabeçalho e estatísticas */}
-        <div className="grid gap-4 md:grid-cols-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Total de Configurações</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalTribunais}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {tribunaisCodigos.length} tribunais diferentes
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Primeiro Grau</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-primary">{totalPrimeiroGrau}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Login específico 1º grau
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Segundo Grau</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-info">{totalSegundoGrau}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Login específico 2º grau
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Timeouts Customizados</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-warning">{totalComTimeouts}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Com configurações especiais
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filtros */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <Input
-            placeholder="Buscar por tribunal, código ou URL..."
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
-            className="max-w-sm"
-          />
-
-          <Select value={filtroCodigo} onValueChange={setFiltroCodigo}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Tribunal" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos os Tribunais</SelectItem>
-              {tribunaisCodigos.map((codigo) => (
-                <SelectItem key={codigo} value={codigo}>
-                  {codigo}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={filtroTipoAcesso} onValueChange={setFiltroTipoAcesso}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Tipo de Acesso" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos os Tipos</SelectItem>
-              <SelectItem value="primeiro_grau">1º Grau</SelectItem>
-              <SelectItem value="segundo_grau">2º Grau</SelectItem>
-              <SelectItem value="unificado">Unificado</SelectItem>
-              <SelectItem value="unico">Único</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {/* Barra de busca e filtros */}
+        <TableToolbar
+          searchValue={busca}
+          onSearchChange={(value) => setBusca(value)}
+          isSearching={isSearching}
+          searchPlaceholder="Buscar por tribunal, código ou URL..."
+          filterOptions={filterOptions}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilterIds}
+          onFiltersChange={handleFilterIdsChange}
+          onNewClick={onNewClick}
+          newButtonTooltip={newButtonTooltip}
+        />
 
         {/* Tabela */}
         {error ? (

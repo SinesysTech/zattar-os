@@ -134,14 +134,18 @@ export function TableToolbar({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 p-0" align="start" sideOffset={4}>
+        <PopoverContent 
+          className="p-0 w-auto max-w-[600px]" 
+          align="start" 
+          sideOffset={4}
+        >
           {useGroupedFilters ? (
             // Renderização hierarquizada com grupos
-            <div className="flex">
+            <div className="flex overflow-hidden">
               {/* Lista de grupos (lado esquerdo) */}
-              <div className="w-full border-r">
+              <div className="border-r shrink-0" style={{ width: 'max-content' }}>
                 <div className="p-2 border-b">
-                  <div className="text-sm font-semibold px-2 py-1.5">Filtros</div>
+                  <div className="text-sm font-semibold px-2 py-1.5 whitespace-nowrap">Filtros</div>
                 </div>
                 <div className="max-h-[400px] overflow-auto">
                   {filterGroups!.map((group) => {
@@ -159,15 +163,15 @@ export function TableToolbar({
                         )}
                         onMouseEnter={() => setActiveGroup(group.label)}
                       >
-                        <div className="flex items-center gap-2 flex-1">
-                          <span>{group.label}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="whitespace-nowrap">{group.label}</span>
                           {groupSelectedCount > 0 && (
-                            <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+                            <Badge variant="secondary" className="h-5 px-1.5 text-xs shrink-0">
                               {groupSelectedCount}
                             </Badge>
                           )}
                         </div>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 ml-1" />
                       </div>
                     )
                   })}
@@ -176,9 +180,9 @@ export function TableToolbar({
 
               {/* Submenu com opções (lado direito) */}
               {activeGroup && (
-                <div className="min-w-80 max-w-[600px] border-l">
+                <div className="border-l overflow-hidden" style={{ width: 'max-content', maxWidth: '400px' }}>
                   <div className="p-2 border-b">
-                    <div className="text-sm font-semibold px-2 py-1.5">{activeGroup}</div>
+                    <div className="text-sm font-semibold px-2 py-1.5 whitespace-nowrap">{activeGroup}</div>
                   </div>
                   <div className="max-h-[400px] overflow-auto p-1">
                     {filterGroups!.find(g => g.label === activeGroup)?.options.map((option) => {
@@ -200,7 +204,7 @@ export function TableToolbar({
                           >
                             {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
                           </div>
-                          <span className="flex-1 whitespace-nowrap">{option.label}</span>
+                          <span className="whitespace-nowrap">{option.label}</span>
                         </div>
                       )
                     })}

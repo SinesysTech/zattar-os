@@ -9,8 +9,8 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
  * @swagger
  * /api/captura/credenciais:
  *   get:
- *     summary: Lista credenciais ativas para captura
- *     description: Retorna uma lista de credenciais ativas com informações dos advogados, tribunais e graus disponíveis
+ *     summary: Lista credenciais para captura
+ *     description: Retorna uma lista de credenciais com informações dos advogados, tribunais e graus disponíveis. Por padrão retorna todas as credenciais, mas pode ser filtrado por active=true ou active=false
  *     tags:
  *       - Captura TRT
  *     security:
@@ -76,10 +76,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 2. Buscar credenciais ativas com informações dos advogados
+    // 2. Buscar credenciais com informações dos advogados
     const supabase = createServiceClient();
     
-    const { data: credenciais, error } = await supabase
+    // Verificar se há filtro de active na query string
+    const { searchParams } = new URL(request.url);
+    const activeFilter = searchParams.get('active');
+    
+    let query = supabase
       .from('credenciais')
       .select(`
         id,
@@ -87,6 +91,8 @@ export async function GET(request: NextRequest) {
         tribunal,
         grau,
         active,
+        created_at,
+        updated_at,
         advogados (
           id,
           nome_completo,
@@ -94,8 +100,14 @@ export async function GET(request: NextRequest) {
           oab,
           uf_oab
         )
-      `)
-      .eq('active', true)
+      `);
+    
+    // Aplicar filtro de active se fornecido
+    if (activeFilter !== null) {
+      query = query.eq('active', activeFilter === 'true');
+    }
+    
+    const { data: credenciais, error } = await query
       .order('advogado_id')
       .order('tribunal')
       .order('grau');
@@ -124,6 +136,9 @@ export async function GET(request: NextRequest) {
         advogado_uf_oab: advogado?.uf_oab || '',
         tribunal: credencial.tribunal,
         grau: credencial.grau,
+        active: credencial.active ?? true,
+        created_at: credencial.created_at || new Date().toISOString(),
+        updated_at: credencial.updated_at,
       };
     });
 

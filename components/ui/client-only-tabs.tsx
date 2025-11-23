@@ -5,10 +5,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useIsClient } from '@/hooks/use-is-client';
 
 interface ClientOnlyTabsProps {
-  defaultValue: string;
+  defaultValue?: string;
+  value?: string;
   className?: string;
   children: React.ReactNode;
   fallback?: React.ReactNode;
+  onValueChange?: (value: string) => void;
 }
 
 /**
@@ -17,9 +19,11 @@ interface ClientOnlyTabsProps {
  */
 export function ClientOnlyTabs({
   defaultValue,
+  value,
   className,
   children,
-  fallback
+  fallback,
+  onValueChange
 }: ClientOnlyTabsProps) {
   const isClient = useIsClient();
 
@@ -37,7 +41,11 @@ export function ClientOnlyTabs({
   }
 
   return (
-    <Tabs defaultValue={defaultValue} className={className}>
+    <Tabs 
+      {...(value !== undefined ? { value } : { defaultValue })}
+      className={className} 
+      onValueChange={onValueChange}
+    >
       {children}
     </Tabs>
   );

@@ -1,15 +1,14 @@
-// Configuração de filtros da toolbar de clientes
-
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { ClientesFilters } from '@/app/_lib/types/clientes';
 
-/**
- * Configuração de filtros para a página de clientes
- */
+export interface ClientesFilters {
+  tipo_pessoa?: 'pf' | 'pj';
+  situacao?: 'A' | 'I';
+}
+
 export const CLIENTES_FILTER_CONFIGS: FilterConfig[] = [
   {
-    id: 'tipoPessoa',
+    id: 'tipo_pessoa',
     label: 'Tipo de Pessoa',
     type: 'select',
     options: [
@@ -18,20 +17,16 @@ export const CLIENTES_FILTER_CONFIGS: FilterConfig[] = [
     ],
   },
   {
-    id: 'ativo',
-    label: 'Status',
+    id: 'situacao',
+    label: 'Situação',
     type: 'select',
     options: [
-      { value: 'true', label: 'Ativo' },
-      { value: 'false', label: 'Inativo' },
+      { value: 'A', label: 'Ativo' },
+      { value: 'I', label: 'Inativo' },
     ],
   },
 ];
 
-/**
- * Constrói as opções de filtros para o combobox (lista flat)
- * Labels incluem o prefixo do grupo para facilitar a busca
- */
 export function buildClientesFilterOptions(): ComboboxOption[] {
   const options: ComboboxOption[] = [];
 
@@ -56,10 +51,6 @@ export function buildClientesFilterOptions(): ComboboxOption[] {
   return options;
 }
 
-/**
- * Constrói grupos de filtros para interface hierárquica
- * Labels dentro dos grupos NÃO incluem o prefixo
- */
 export function buildClientesFilterGroups(): FilterGroup[] {
   const configMap = new Map(CLIENTES_FILTER_CONFIGS.map(c => [c.id, c]));
 
@@ -71,7 +62,7 @@ export function buildClientesFilterGroups(): FilterGroup[] {
         for (const opt of config.options) {
           options.push({
             value: `${config.id}_${opt.value}`,
-            label: opt.label, // SEM prefixo do grupo
+            label: opt.label,
             searchText: config.searchText || opt.searchText,
           });
         }
@@ -90,37 +81,44 @@ export function buildClientesFilterGroups(): FilterGroup[] {
   return [
     {
       label: 'Tipo de Pessoa',
-      options: buildOptionsWithoutPrefix([configMap.get('tipoPessoa')!]),
+      options: buildOptionsWithoutPrefix([
+        configMap.get('tipo_pessoa')!,
+      ]),
     },
     {
-      label: 'Status',
-      options: buildOptionsWithoutPrefix([configMap.get('ativo')!]),
+      label: 'Situação',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('situacao')!,
+      ]),
     },
   ];
 }
 
-/**
- * Converte IDs de filtros selecionados em objeto de filtros para a API
- */
 export function parseClientesFilters(selectedFilters: string[]): ClientesFilters {
   const filters: ClientesFilters = {};
   const configMap = new Map(CLIENTES_FILTER_CONFIGS.map(c => [c.id, c]));
 
   for (const selected of selectedFilters) {
     if (selected.includes('_')) {
-      // Select: formato "id_value"
       const [id, value] = selected.split('_', 2);
       const config = configMap.get(id);
-
       if (config && config.type === 'select') {
-        if (id === 'tipoPessoa') {
-          filters.tipoPessoa = value as 'pf' | 'pj';
-        } else if (id === 'ativo') {
-          filters.ativo = value === 'true';
+        if (id === 'tipo' && id === 'pessoa') {
+          // Skip - é parte do tipo_pessoa
+          continue;
+        } else if (selected.startsWith('tipo_pessoa_')) {
+          const tipoPessoaValue = selected.replace('tipo_pessoa_', '');
+          filters.tipo_pessoa = tipoPessoaValue as 'pf' | 'pj';
+        } else if (id === 'situacao') {
+          filters.situacao = value as 'A' | 'I';
         }
       }
+    } else {
+      const config = configMap.get(selected);
+      if (config && config.type === 'boolean') {
+        // Não temos booleans ainda, mas deixo preparado
+      }
     }
-    // Nota: não há filtros boolean em clientes, apenas select
   }
 
   return filters;

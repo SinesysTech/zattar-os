@@ -23,11 +23,7 @@ export default function CapturaPage() {
   const [refreshCredenciais, setRefreshCredenciais] = useState(0);
   const [refreshTribunais, setRefreshTribunais] = useState(0);
   const [buscaAgendamentos, setBuscaAgendamentos] = useState('');
-  const [buscaCredenciais, setBuscaCredenciais] = useState('');
-  const [buscaTribunais, setBuscaTribunais] = useState('');
   const [selectedFilterIdsAgendamentos, setSelectedFilterIdsAgendamentos] = useState<string[]>([]);
-  const [selectedFilterIdsCredenciais, setSelectedFilterIdsCredenciais] = useState<string[]>([]);
-  const [selectedFilterIdsTribunais, setSelectedFilterIdsTribunais] = useState<string[]>([]);
 
   const handleAgendamentoSuccess = () => {
     // Forçar refresh da lista de agendamentos
@@ -77,52 +73,38 @@ export default function CapturaPage() {
 
         {/* Conteúdo da aba Agendamentos */}
         <TabsContent value="agendamentos" className="mt-6">
-          <TableToolbar
-            searchValue={buscaAgendamentos}
-            onSearchChange={setBuscaAgendamentos}
-            searchPlaceholder="Buscar agendamentos..."
-            filterOptions={[]}
-            selectedFilters={selectedFilterIdsAgendamentos}
-            onFiltersChange={setSelectedFilterIdsAgendamentos}
-            onNewClick={() => setAgendamentoDialogOpen(true)}
-            newButtonTooltip="Novo Agendamento"
-          />
-          <AgendamentosList
-            key={refreshAgendamentos}
-          />
+          <div className="space-y-4">
+            <TableToolbar
+              searchValue={buscaAgendamentos}
+              onSearchChange={setBuscaAgendamentos}
+              searchPlaceholder="Buscar agendamentos..."
+              filterOptions={[]}
+              selectedFilters={selectedFilterIdsAgendamentos}
+              onFiltersChange={setSelectedFilterIdsAgendamentos}
+              onNewClick={() => setAgendamentoDialogOpen(true)}
+              newButtonTooltip="Novo Agendamento"
+            />
+            <AgendamentosList
+              key={refreshAgendamentos}
+            />
+          </div>
         </TabsContent>
 
         {/* Conteúdo da aba Credenciais */}
         <TabsContent value="credenciais" className="mt-6">
-          <TableToolbar
-            searchValue={buscaCredenciais}
-            onSearchChange={setBuscaCredenciais}
-            searchPlaceholder="Buscar credenciais..."
-            filterOptions={[]}
-            selectedFilters={selectedFilterIdsCredenciais}
-            onFiltersChange={setSelectedFilterIdsCredenciais}
-            onNewClick={() => setCredencialDialogOpen(true)}
-            newButtonTooltip="Nova Credencial"
-          />
           <CredencialsList
             key={refreshCredenciais}
+            onNewClick={() => setCredencialDialogOpen(true)}
+            newButtonTooltip="Nova Credencial"
           />
         </TabsContent>
 
         {/* Conteúdo da aba Tribunais */}
         <TabsContent value="tribunais" className="mt-6">
-          <TableToolbar
-            searchValue={buscaTribunais}
-            onSearchChange={setBuscaTribunais}
-            searchPlaceholder="Buscar tribunais..."
-            filterOptions={[]}
-            selectedFilters={selectedFilterIdsTribunais}
-            onFiltersChange={setSelectedFilterIdsTribunais}
-            onNewClick={() => setTribunalDialogOpen(true)}
-            newButtonTooltip="Nova Configuração de Tribunal"
-          />
           <TribunaisList
             key={refreshTribunais}
+            onNewClick={() => setTribunalDialogOpen(true)}
+            newButtonTooltip="Nova Configuração de Tribunal"
           />
         </TabsContent>
       </Tabs>
