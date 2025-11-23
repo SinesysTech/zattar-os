@@ -29,6 +29,8 @@ export const useAcervo = (params: BuscarProcessosParams = {}): UseAcervoResult =
   const [error, setError] = useState<string | null>(null);
 
   // Memoizar query string para evitar re-renders infinitos
+  // Usa propriedades individuais como dependências para evitar recálculos desnecessários
+  // quando apenas a referência do objeto params muda
   const queryString = useMemo(() => {
     const searchParams = new URLSearchParams();
 
@@ -73,7 +75,37 @@ export const useAcervo = (params: BuscarProcessosParams = {}): UseAcervoResult =
     });
 
     return searchParams.toString();
-  }, [params]);
+  }, [
+    params.pagina,
+    params.limite,
+    params.unified,
+    params.busca,
+    params.ordenar_por,
+    params.ordem,
+    params.trt,
+    params.grau,
+    params.origem,
+    params.responsavel_id,
+    params.sem_responsavel,
+    params.numero_processo,
+    params.nome_parte_autora,
+    params.nome_parte_re,
+    params.descricao_orgao_julgador,
+    params.classe_judicial,
+    params.codigo_status_processo,
+    params.segredo_justica,
+    params.juizo_digital,
+    params.tem_associacao,
+    params.data_autuacao_inicio,
+    params.data_autuacao_fim,
+    params.data_arquivamento_inicio,
+    params.data_arquivamento_fim,
+    params.data_proxima_audiencia_inicio,
+    params.data_proxima_audiencia_fim,
+    params.tem_proxima_audiencia,
+    params.agrupar_por,
+    params.incluir_contagem,
+  ]);
 
   const buscarProcessos = useCallback(async () => {
     setIsLoading(true);

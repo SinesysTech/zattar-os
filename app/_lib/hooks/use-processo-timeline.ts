@@ -301,7 +301,7 @@ export function useProcessoTimeline(acervoId: number): UseProcessoTimelineReturn
       mounted = false;
       clearPolling();
     };
-  }, [acervoId, fetchProcesso, fetchTimeline, captureTimeline, clearPolling, isCapturing]);
+  }, [acervoId, fetchProcesso, fetchTimeline, captureTimeline, clearPolling]);
 
   return {
     processo,
