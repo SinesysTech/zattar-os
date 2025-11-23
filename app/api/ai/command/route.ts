@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
               : ['generate', 'comment'],
             model: gatewayProvider(model || 'google/gemini-2.5-flash'),
             output: 'enum',
-            prompt: getChooseToolPrompt(messagesRaw),
+            prompt: getChooseToolPrompt({ messages: messagesRaw }),
           });
 
           writer.write({
