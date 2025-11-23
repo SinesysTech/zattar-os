@@ -23,7 +23,7 @@
  * Formato: Cada objeto contém dados da parte + array de representantes
  *
  * ENDPOINT HTTP:
- * GET /pje-backend-api/api/processos/{idProcesso}/partes
+ * GET /pje-comum-api/api/processos/id/{idProcesso}/partes?retornaEndereco=true
  *
  * IMPORTANTE:
  * - Endpoint não é documentado oficialmente pelo PJE
@@ -66,7 +66,7 @@ import { obterRepresentantesPartePorID } from './obter-representantes';
  * Função: obterPartesProcesso
  *
  * FLUXO DE EXECUÇÃO:
- * 1. Faz requisição GET para /pje-backend-api/api/processos/{idProcesso}/partes
+ * 1. Faz requisição GET para /pje-comum-api/api/processos/id/{idProcesso}/partes?retornaEndereco=true
  * 2. Recebe array de objetos com dados das partes
  * 3. Para cada parte, busca seus representantes via obterRepresentantesPartePorID()
  * 4. Mapeia resposta do PJE para tipo PartePJE padronizado
@@ -92,7 +92,8 @@ export async function obterPartesProcesso(
     // Faz requisição para obter partes do processo
     const response = await fetchPJEAPI<any[]>(
       page,
-      `/pje-backend-api/api/processos/${idProcesso}/partes`
+      `/pje-comum-api/api/processos/id/${idProcesso}/partes`,
+      { retornaEndereco: true }
     );
 
     // Se resposta for vazia ou não for array, retorna array vazio

@@ -13,7 +13,7 @@
  * - Garantir unicidade: processo_id + tipo_entidade + entidade_id + grau
  */
 
-import { createServerSupabaseClient } from '@/lib/server';
+import { createServiceClient } from '@/backend/utils/supabase/service-client';
 
 import type {
   ProcessoParte,
@@ -123,7 +123,7 @@ function validarGrau(grau: string): boolean {
 export async function criarProcessoParte(
   params: CriarProcessoParteParams
 ): Promise<OperacaoProcessoParteResult> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createServiceClient();
 
   // Validações obrigatórias
   if (!params.processo_id) {
@@ -248,7 +248,7 @@ export async function criarProcessoParte(
 export async function atualizarProcessoParte(
   params: AtualizarProcessoParteParams
 ): Promise<OperacaoProcessoParteResult> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createServiceClient();
 
   if (!params.id) {
     return {
@@ -348,7 +348,7 @@ export async function atualizarProcessoParte(
  * Busca um vínculo por ID
  */
 export async function buscarProcessoPartePorId(id: number): Promise<ProcessoParte | null> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createServiceClient();
 
   const { data, error } = await supabase
     .from('processo_partes')
@@ -375,7 +375,7 @@ export async function buscarProcessoPartePorId(id: number): Promise<ProcessoPart
 export async function buscarPartesPorProcesso(
   params: BuscarPartesPorProcessoParams
 ): Promise<ParteComDadosCompletos[]> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createServiceClient();
 
   // Busca todas as participações
   let query = supabase
@@ -452,7 +452,7 @@ export async function buscarPartesPorProcesso(
 export async function buscarProcessosPorEntidade(
   params: BuscarProcessosPorEntidadeParams
 ): Promise<ProcessoComParticipacao[]> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createServiceClient();
 
   if (!validarTipoEntidade(params.tipo_entidade)) {
     console.error('tipo_entidade inválido:', params.tipo_entidade);
@@ -519,7 +519,7 @@ export async function buscarProcessosPorEntidade(
 export async function listarProcessoPartes(
   params: ListarProcessoPartesParams = {}
 ): Promise<ListarProcessoPartesResult> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
   const limite = params.limite ?? 50;
@@ -610,7 +610,7 @@ export async function vincularParteProcesso(
 export async function desvincularParteProcesso(
   params: DesvincularParteProcessoParams
 ): Promise<OperacaoProcessoParteResult> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createServiceClient();
 
   if (!params.id) {
     return {

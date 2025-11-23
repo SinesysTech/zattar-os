@@ -20,7 +20,10 @@ import type { GrauAcervo } from '@/backend/types/acervo/types';
 // CONFIGURAÇÕES DE TESTE (HARDCODED)
 // ==========================================
 
-const PROCESSO_ID = 2887163; // ID do processo na tabela acervo
+// Dados do processo (hardcoded para teste)
+const PROCESSO_ID_ACERVO = 2887163; // ID na tabela acervo (se precisar persistir vínculos)
+const PROCESSO_ID_PJE = 2887163; // ID no PJE (usado na URL da API)
+const PROCESSO_NUMERO = '0010344-62.2024.5.03.0030'; // Número CNJ (opcional, pode deixar genérico)
 const TRT = '03'; // TRT3
 const GRAU: GrauAcervo = '1'; // Primeiro grau
 
@@ -43,36 +46,11 @@ async function main() {
   let page: any = null;
 
   try {
-    // 1. Buscar dados do processo no banco
-    console.log(`[1/5] Buscando processo ID ${PROCESSO_ID} no banco...`);
-    const { data: processoData, error: processoError } = await supabase
-      .from('acervo')
-      .select('id, numero_processo, id_pje, trt, grau')
-      .eq('id', PROCESSO_ID)
-      .single();
-
-    if (processoError || !processoData) {
-      throw new Error(`Processo ${PROCESSO_ID} não encontrado no banco: ${processoError?.message}`);
-    }
-
-    console.log(`✓ Processo encontrado: ${processoData.numero_processo}`);
-    console.log(`  - TRT: ${processoData.trt}`);
-    console.log(`  - Grau: ${processoData.grau}`);
-    console.log(`  - ID PJE: ${processoData.id_pje}\n`);
-
-    const processo: ProcessoParaCaptura = {
-      id: processoData.id,
-      numero_processo: processoData.numero_processo,
-      id_pje: processoData.id_pje,
-      trt: processoData.trt,
-      grau: processoData.grau,
-    };
-
-    // 2. Buscar advogado pelo CPF
-    console.log(`[2/5] Buscando advogado com CPF ${CREDENCIAIS.cpf}...`);
+    // 1. Buscar advogado pelo CPF (apenas para pegar o ID)
+    console.log(`[1/4] Buscando advogado com CPF ${CREDENCIAIS.cpf}...`);
     const { data: advogadoData, error: advogadoError } = await supabase
       .from('advogados')
-      .select('id, nome, cpf')
+      .select('id, nome_completo, cpf')
       .eq('cpf', CREDENCIAIS.cpf)
       .single();
 
@@ -80,20 +58,34 @@ async function main() {
       throw new Error(`Advogado não encontrado: ${advogadoError?.message}`);
     }
 
-    console.log(`✓ Advogado encontrado: ${advogadoData.nome} (ID: ${advogadoData.id})\n`);
+    console.log(`✓ Advogado encontrado: ${advogadoData.nome_completo} (ID: ${advogadoData.id})\n`);
 
     const advogado = {
       id: advogadoData.id,
       cpf: advogadoData.cpf,
     };
 
-    // 3. Obter configuração do tribunal
-    console.log(`[3/5] Obtendo configuração do TRT ${TRT} (${GRAU}º grau)...`);
-    const config = await getTribunalConfig(TRT, GRAU);
-    console.log(`✓ Configuração obtida: ${config.nome}\n`);
+    // 2. Criar objeto do processo com dados hardcoded
+    console.log(`[2/4] Preparando dados do processo...`);
+    const processo: ProcessoParaCaptura = {
+      id: PROCESSO_ID_ACERVO,
+      numero_processo: PROCESSO_NUMERO,
+      id_pje: PROCESSO_ID_PJE,
+      trt: TRT,
+      grau: GRAU,
+    };
+    console.log(`✓ Processo: ${processo.numero_processo}`);
+    console.log(`  - TRT: ${processo.trt}`);
+    console.log(`  - Grau: ${processo.grau}`);
+    console.log(`  - ID PJE: ${processo.id_pje}\n`);
 
-    // 4. Autenticar no PJE
-    console.log(`[4/5] Autenticando no PJE...`);
+    // 3. Obter configuração do tribunal e autenticar no PJE
+    console.log(`[3/4] Obtendo configuração do TRT ${TRT} e autenticando...`);
+    const grauTRT = GRAU === '1' ? 'primeiro_grau' : 'segundo_grau';
+    const codigoTRT = `TRT${TRT}` as any; // TRT + código = TRT03
+    const config = await getTribunalConfig(codigoTRT, grauTRT);
+    console.log(`✓ Configuração obtida: ${config.nome}`);
+
     const authResult = await autenticarPJE({
       credential: CREDENCIAIS,
       config,
@@ -105,18 +97,19 @@ async function main() {
     page = authResult.page;
     console.log(`✓ Autenticação bem-sucedida\n`);
 
-    // 5. Capturar partes do processo
-    console.log(`[5/5] Capturando partes do processo ${processo.numero_processo}...`);
-    console.log('─'.repeat(60));
+    // 4. Capturar partes do processo
+    console.log(`[4/4] Capturando partes do processo ${processo.numero_processo}...`);
+    console.log(`URL da API: https://pje.trt${TRT}.jus.br/pje-comum-api/api/processos/id/${PROCESSO_ID_PJE}/partes?retornaEndereco=true`);
+    console.log('─'.repeat(80));
 
     const resultado = await capturarPartesProcesso(page, processo, advogado);
 
-    console.log('─'.repeat(60));
+    console.log('─'.repeat(80));
     console.log('\n========================================');
     console.log('RESULTADO DA CAPTURA');
     console.log('========================================\n');
 
-    console.log(`Processo: ${resultado.numeroProcesso} (ID: ${resultado.processoId})`);
+    console.log(`Processo: ${resultado.numeroProcesso} (ID Acervo: ${resultado.processoId})`);
     console.log(`\nEstatísticas:`);
     console.log(`  • Total de partes encontradas: ${resultado.totalPartes}`);
     console.log(`  • Clientes: ${resultado.clientes}`);

@@ -22,7 +22,7 @@
  * Formato: Cada objeto contém dados cadastrais do representante
  *
  * ENDPOINT HTTP:
- * GET /pje-backend-api/api/partes/{idParte}/representantes
+ * GET /pje-comum-api/api/partes/{idParte}/representantes
  *
  * IMPORTANTE:
  * - Endpoint não é documentado oficialmente pelo PJE
@@ -88,7 +88,7 @@ export async function obterRepresentantesPartePorID(
     // Faz requisição para obter representantes da parte
     const response = await fetchPJEAPI<any[]>(
       page,
-      `/pje-backend-api/api/partes/${idParte}/representantes`
+      `/pje-comum-api/api/partes/${idParte}/representantes`
     );
 
     // Se resposta for vazia ou não for array, retorna array vazio
