@@ -37,6 +37,7 @@ async function testarCapturaTimeline() {
     const resultado = await capturarTimeline({
       trtCodigo: 'TRT3',
       processoId: '2887163',
+      numeroProcesso: '0010702-80.2025.5.03.0111',
       grau: 'primeiro_grau',
       advogadoId: 1,
       baixarDocumentos: true,

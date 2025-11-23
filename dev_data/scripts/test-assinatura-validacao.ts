@@ -38,7 +38,7 @@ async function main() {
 
   try {
     // 1. Obter configuração
-    const config = getTribunalConfig(TRT_CODIGO, GRAU);
+    const config = await getTribunalConfig(TRT_CODIGO, GRAU);
     if (!config) {
       throw new Error(`Configuração não encontrada para ${TRT_CODIGO} - ${GRAU}`);
     }
