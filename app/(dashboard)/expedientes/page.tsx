@@ -906,7 +906,7 @@ function criarColunas(
   usuarios: Usuario[],
   tiposExpedientes: Array<{ id: number; tipo_expediente: string }>,
   onPrazoSort: (field: 'data_ciencia_parte' | 'data_prazo_legal_parte', direction: 'asc' | 'desc') => void,
-  onProcessoSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador', direction: 'asc' | 'desc') => void,
+  onProcessoSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void,
   onPartesSort: (field: 'nome_parte_autora' | 'nome_parte_re', direction: 'asc' | 'desc') => void,
   onResponsavelSort: (direction: 'asc' | 'desc') => void,
   isLoadingTipos?: boolean

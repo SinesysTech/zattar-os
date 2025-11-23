@@ -42,6 +42,16 @@ function converterParaAudiencia(data: Record<string, unknown>): Audiencia {
     polo_ativo_nome: (data.polo_ativo_nome as string | null) ?? null,
     polo_passivo_nome: (data.polo_passivo_nome as string | null) ?? null,
     url_audiencia_virtual: (data.url_audiencia_virtual as string | null) ?? null,
+    endereco_presencial: (data.endereco_presencial as {
+      logradouro?: string;
+      numero?: string;
+      complemento?: string;
+      bairro?: string;
+      cidade?: string;
+      estado?: string;
+      pais?: string;
+      cep?: string;
+    } | null) ?? null,
     responsavel_id: (data.responsavel_id as number | null) ?? null,
     observacoes: (data.observacoes as string | null) ?? null,
     dados_anteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,

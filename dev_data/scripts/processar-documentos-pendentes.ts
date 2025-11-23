@@ -187,7 +187,7 @@ async function processarDocumentos() {
                 continue;
             }
 
-            const config = getTribunalConfig(credencialCompleta.tribunal, credencialCompleta.grau);
+            const config = await getTribunalConfig(credencialCompleta.tribunal, credencialCompleta.grau);
 
             if (!config) {
                 console.log(`❌ Configuração não encontrada para ${trt} ${grau} `);

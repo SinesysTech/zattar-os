@@ -12,6 +12,7 @@
 import { autenticarPJE, type AuthResult } from '../trt/trt-auth.service';
 import { getTribunalConfig } from '../trt/config';
 import type { CodigoTRT, GrauTRT } from '../trt/types';
+import type { ConfigTRT } from '@/backend/types/captura/trt-types';
 import { obterTimeline, obterDocumento, baixarDocumento } from '@/backend/api/pje-trt/timeline';
 import { uploadDocumentoTimeline } from '../backblaze/upload-documento-timeline.service';
 import { salvarTimelineNoMongoDB, atualizarTimelineMongoIdNoAcervo } from './timeline-persistence.service';
@@ -145,7 +146,7 @@ export async function capturarTimeline(
 
   try {
     // 1. Obter configuração do tribunal
-    let config;
+    let config: ConfigTRT;
     try {
       config = await getTribunalConfig(trtCodigo, grau);
     } catch (error) {

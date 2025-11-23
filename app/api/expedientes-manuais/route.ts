@@ -20,8 +20,8 @@ import { CriarExpedienteManualParams } from '@/backend/types/expedientes-manuais
 export async function GET(request: NextRequest) {
   try {
     // Autenticação
-    const { user } = await authenticateRequest();
-    if (!user) {
+    const authResult = await authenticateRequest(request);
+    if (!authResult.authenticated || !authResult.usuarioId) {
       return NextResponse.json(
         { success: false, error: 'Não autenticado' },
         { status: 401 }
@@ -30,9 +30,9 @@ export async function GET(request: NextRequest) {
 
     // Permissão
     const temPermissao = await verificarPermissoes(
-      user.id,
+      authResult.usuarioId,
       'expedientes_manuais',
-      'read'
+      'visualizar'
     );
     if (!temPermissao) {
       return NextResponse.json(
@@ -110,8 +110,8 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Autenticação
-    const { user } = await authenticateRequest();
-    if (!user) {
+    const authResult = await authenticateRequest(request);
+    if (!authResult.authenticated || !authResult.usuarioId) {
       return NextResponse.json(
         { success: false, error: 'Não autenticado' },
         { status: 401 }
@@ -120,9 +120,9 @@ export async function POST(request: NextRequest) {
 
     // Permissão
     const temPermissao = await verificarPermissoes(
-      user.id,
+      authResult.usuarioId,
       'expedientes_manuais',
-      'create'
+      'criar'
     );
     if (!temPermissao) {
       return NextResponse.json(
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Criar expediente
-    const expediente = await criarExpedienteManual(body, user.id);
+    const expediente = await criarExpedienteManual(body, authResult.usuarioId);
 
     return NextResponse.json(
       { success: true, data: expediente },
