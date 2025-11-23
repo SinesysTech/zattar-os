@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { ClientOnlyTabs as Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
-import { Button } from '@/components/ui/button';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { HistoricoCapturas } from './components/historico-capturas';
 import { AgendamentosList } from './components/agendamentos/agendamentos-list';
@@ -12,7 +11,7 @@ import { CapturaDialog } from './components/captura-dialog';
 import { AgendamentoDialog } from './components/agendamento-dialog';
 import { CredenciaisDialog } from './components/credenciais/credenciais-dialog';
 import { TribunaisDialog } from './components/tribunais/tribunais-dialog';
-import { History, Clock, Key, Plus, Building2 } from 'lucide-react';
+import { History, Clock, Key, Building2 } from 'lucide-react';
 
 export default function CapturaPage() {
   const [capturaDialogOpen, setCapturaDialogOpen] = useState(false);
