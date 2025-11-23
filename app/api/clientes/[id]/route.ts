@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { obterClientePorId } from '@/backend/clientes/services/clientes/buscar-cliente.service';
 import { atualizarCliente } from '@/backend/clientes/services/clientes/atualizar-cliente.service';
-import type { ClienteDados } from '@/backend/clientes/services/persistence/cliente-persistence.service';
+import type { AtualizarClienteParams } from '@/backend/types/partes';
 
 /**
  * @swagger
@@ -183,7 +183,7 @@ export async function PATCH(
 
     // 3. Validar e parsear body da requisição
     const body = await request.json();
-    const dadosAtualizacao = body as Partial<ClienteDados>;
+    const dadosAtualizacao = body as Omit<AtualizarClienteParams, 'id'>;
 
     // 4. Atualizar cliente
     const resultado = await atualizarCliente(clienteId, dadosAtualizacao);

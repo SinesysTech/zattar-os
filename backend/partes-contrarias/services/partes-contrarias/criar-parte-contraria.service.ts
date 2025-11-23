@@ -3,13 +3,13 @@
 
 import {
   criarParteContraria as criarParteContrariaDb,
-  type ParteContrariaDados,
   type OperacaoParteContrariaResult,
 } from '../persistence/parte-contraria-persistence.service';
+import type { CriarParteContrariaParams } from '@/backend/types/partes';
 
 /**
  * Cadastra uma nova parte contrária no sistema
- * 
+ *
  * Fluxo:
  * 1. Valida os dados de entrada
  * 2. Verifica duplicidades (CPF/CNPJ)
@@ -17,12 +17,12 @@ import {
  * 4. Retorna a parte contrária criada ou erro
  */
 export async function cadastrarParteContraria(
-  params: ParteContrariaDados
+  params: CriarParteContrariaParams
 ): Promise<OperacaoParteContrariaResult> {
   console.log('📝 Iniciando cadastro de parte contrária...', {
-    tipoPessoa: params.tipoPessoa,
+    tipo_pessoa: params.tipo_pessoa,
     nome: params.nome,
-    documento: params.tipoPessoa === 'pf' 
+    documento: params.tipo_pessoa === 'pf'
       ? params.cpf?.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '***.***.$3-$4')
       : params.cnpj?.replace(/\D/g, '').replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.***.$3/$4-$5'),
   });
@@ -33,7 +33,7 @@ export async function cadastrarParteContraria(
     if (resultado.sucesso && resultado.parteContraria) {
       console.log('✅ Parte contrária cadastrada com sucesso:', {
         id: resultado.parteContraria.id,
-        tipoPessoa: resultado.parteContraria.tipoPessoa,
+        tipo_pessoa: resultado.parteContraria.tipo_pessoa,
         nome: resultado.parteContraria.nome,
       });
     } else {

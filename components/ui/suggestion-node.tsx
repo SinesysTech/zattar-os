@@ -9,7 +9,7 @@ import { cva } from 'class-variance-authority';
 import { CornerDownLeftIcon } from 'lucide-react';
 import { PlateLeaf, useEditorPlugin, usePluginOption } from 'platejs/react';
 
-import { cn } from '@/app/api/ai/command/utils';
+import { cn } from '@/app/_lib/utils';
 import {
   type SuggestionConfig,
   suggestionPlugin,

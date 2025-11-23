@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { obterClientes } from '@/backend/clientes/services/clientes/listar-clientes.service';
 import { cadastrarCliente } from '@/backend/clientes/services/clientes/criar-cliente.service';
-import type { ClienteDados, ListarClientesParams } from '@/backend/clientes/services/persistence/cliente-persistence.service';
+import type { CriarClienteParams, ListarClientesParams } from '@/backend/types/partes';
 
 /**
  * @swagger
@@ -178,8 +178,10 @@ export async function GET(request: NextRequest) {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,
-      tipoPessoa: (searchParams.get('tipoPessoa') as 'pf' | 'pj' | null) || undefined,
-      ativo: searchParams.get('ativo') === 'true' ? true : searchParams.get('ativo') === 'false' ? false : undefined,
+      tipo_pessoa: (searchParams.get('tipo_pessoa') as 'pf' | 'pj' | null) || undefined,
+      situacao: (searchParams.get('situacao') as 'A' | 'I' | 'E' | 'H' | null) || undefined,
+      trt: searchParams.get('trt') || undefined,
+      grau: (searchParams.get('grau') as 'primeiro_grau' | 'segundo_grau' | null) || undefined,
     };
 
     // 3. Listar clientes
@@ -212,12 +214,12 @@ export async function POST(request: NextRequest) {
 
     // 2. Validar e parsear body da requisição
     const body = await request.json();
-    const dadosCliente = body as ClienteDados;
+    const dadosCliente = body as CriarClienteParams;
 
     // Validações básicas
-    if (!dadosCliente.tipoPessoa || !dadosCliente.nome) {
+    if (!dadosCliente.tipo_pessoa || !dadosCliente.nome) {
       return NextResponse.json(
-        { error: 'Missing required fields: tipoPessoa, nome' },
+        { error: 'Missing required fields: tipo_pessoa, nome' },
         { status: 400 }
       );
     }

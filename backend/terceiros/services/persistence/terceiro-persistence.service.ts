@@ -1,22 +1,23 @@
-// Serviço de persistência de partes contrárias
-// Gerencia operações de CRUD na tabela partes_contrarias (60 campos com discriminated union PF/PJ)
+// Serviço de persistência de terceiros
+// Gerencia operações de CRUD na tabela terceiros (78 campos: 60 base + tipo_parte, polo, processo_id)
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type {
-  ParteContraria,
-  CriarParteContrariaParams,
-  AtualizarParteContrariaParams,
-  ListarPartesContrariasParams,
-  ListarPartesContrariasResult,
-  UpsertParteContrariaPorIdPessoaParams,
-} from '@/backend/types/partes/partes-contrarias-types';
+  Terceiro,
+  CriarTerceiroParams,
+  AtualizarTerceiroParams,
+  ListarTerceirosParams,
+  ListarTerceirosResult,
+  UpsertTerceiroPorIdPessoaParams,
+  BuscarTerceirosPorProcessoParams,
+} from '@/backend/types/partes/terceiros-types';
 
 /**
  * Resultado de operação
  */
-export interface OperacaoParteContrariaResult {
+export interface OperacaoTerceiroResult {
   sucesso: boolean;
-  parteContraria?: ParteContraria;
+  terceiro?: Terceiro;
   erro?: string;
 }
 
@@ -61,13 +62,23 @@ function normalizarCnpj(cnpj: string): string {
 /**
  * Converte dados do banco para formato de retorno
  */
-function converterParaParteContraria(data: Record<string, unknown>): ParteContraria {
+function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
   const tipo_pessoa = data.tipo_pessoa as 'pf' | 'pj';
 
   const base = {
     id: data.id as number,
-    id_pje: (data.id_pje as number | null) ?? null,
-    id_pessoa_pje: (data.id_pessoa_pje as number | null) ?? null,
+    id_pje: data.id_pje as number,
+    id_pessoa_pje: data.id_pessoa_pje as number,
+    processo_id: data.processo_id as number,
+    tipo_parte: data.tipo_parte as
+      | 'PERITO'
+      | 'MINISTERIO_PUBLICO'
+      | 'ASSISTENTE'
+      | 'TESTEMUNHA'
+      | 'CUSTOS_LEGIS'
+      | 'AMICUS_CURIAE'
+      | 'OUTRO',
+    polo: data.polo as 'ATIVO' | 'PASSIVO' | 'NEUTRO' | 'TERCEIRO',
     trt: data.trt as string,
     grau: data.grau as 'primeiro_grau' | 'segundo_grau',
     numero_processo: data.numero_processo as string,
@@ -177,11 +188,11 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
 }
 
 /**
- * Cria uma nova parte contrária no sistema
+ * Cria um novo terceiro no sistema
  */
-export async function criarParteContraria(
-  params: CriarParteContrariaParams
-): Promise<OperacaoParteContrariaResult> {
+export async function criarTerceiro(
+  params: CriarTerceiroParams
+): Promise<OperacaoTerceiroResult> {
   const supabase = createServiceClient();
 
   try {
@@ -194,6 +205,14 @@ export async function criarParteContraria(
       return { sucesso: false, erro: 'Nome é obrigatório' };
     }
 
+    if (!params.tipo_parte) {
+      return { sucesso: false, erro: 'Tipo de parte é obrigatório' };
+    }
+
+    if (!params.polo) {
+      return { sucesso: false, erro: 'Polo é obrigatório' };
+    }
+
     // Validações específicas por tipo de pessoa
     if (params.tipo_pessoa === 'pf') {
       if (!params.cpf?.trim()) {
@@ -203,23 +222,6 @@ export async function criarParteContraria(
       if (!validarCpf(params.cpf)) {
         return { sucesso: false, erro: 'CPF inválido (deve conter 11 dígitos)' };
       }
-
-      const cpfNormalizado = normalizarCpf(params.cpf);
-      const { data: existente } = await supabase
-        .from('partes_contrarias')
-        .select('id, cpf')
-        .eq('cpf', cpfNormalizado)
-        .eq('trt', params.trt)
-        .eq('grau', params.grau)
-        .eq('numero_processo', params.numero_processo)
-        .maybeSingle();
-
-      if (existente) {
-        return {
-          sucesso: false,
-          erro: 'Parte contrária com este CPF já existe para este processo',
-        };
-      }
     } else if (params.tipo_pessoa === 'pj') {
       if (!params.cnpj?.trim()) {
         return { sucesso: false, erro: 'CNPJ é obrigatório para pessoa jurídica' };
@@ -227,23 +229,6 @@ export async function criarParteContraria(
 
       if (!validarCnpj(params.cnpj)) {
         return { sucesso: false, erro: 'CNPJ inválido (deve conter 14 dígitos)' };
-      }
-
-      const cnpjNormalizado = normalizarCnpj(params.cnpj);
-      const { data: existente } = await supabase
-        .from('partes_contrarias')
-        .select('id, cnpj')
-        .eq('cnpj', cnpjNormalizado)
-        .eq('trt', params.trt)
-        .eq('grau', params.grau)
-        .eq('numero_processo', params.numero_processo)
-        .maybeSingle();
-
-      if (existente) {
-        return {
-          sucesso: false,
-          erro: 'Parte contrária com este CNPJ já existe para este processo',
-        };
       }
     }
 
@@ -258,8 +243,11 @@ export async function criarParteContraria(
 
     // Preparar dados para inserção
     const dadosNovos: Record<string, unknown> = {
-      id_pje: params.id_pje ?? null,
-      id_pessoa_pje: params.id_pessoa_pje ?? null,
+      id_pje: params.id_pje,
+      id_pessoa_pje: params.id_pessoa_pje,
+      processo_id: params.processo_id,
+      tipo_parte: params.tipo_parte,
+      polo: params.polo,
       trt: params.trt,
       grau: params.grau,
       numero_processo: params.numero_processo,
@@ -319,46 +307,41 @@ export async function criarParteContraria(
       dadosNovos.status_pje = params.status_pje?.trim() || null;
     }
 
-    // Inserir parte contrária
-    const { data, error } = await supabase
-      .from('partes_contrarias')
-      .insert(dadosNovos)
-      .select()
-      .single();
+    const { data, error } = await supabase.from('terceiros').insert(dadosNovos).select().single();
 
     if (error) {
-      console.error('Erro ao criar parte contrária:', error);
-      return { sucesso: false, erro: `Erro ao criar parte contrária: ${error.message}` };
+      console.error('Erro ao criar terceiro:', error);
+      return { sucesso: false, erro: `Erro ao criar terceiro: ${error.message}` };
     }
 
     return {
       sucesso: true,
-      parteContraria: converterParaParteContraria(data),
+      terceiro: converterParaTerceiro(data),
     };
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);
-    console.error('Erro inesperado ao criar parte contrária:', error);
+    console.error('Erro inesperado ao criar terceiro:', error);
     return { sucesso: false, erro: `Erro inesperado: ${erroMsg}` };
   }
 }
 
 /**
- * Atualiza uma parte contrária existente
+ * Atualiza um terceiro existente
  */
-export async function atualizarParteContraria(
-  params: AtualizarParteContrariaParams
-): Promise<OperacaoParteContrariaResult> {
+export async function atualizarTerceiro(
+  params: AtualizarTerceiroParams
+): Promise<OperacaoTerceiroResult> {
   const supabase = createServiceClient();
 
   try {
     const { data: existente, error: erroBusca } = await supabase
-      .from('partes_contrarias')
+      .from('terceiros')
       .select('id, tipo_pessoa')
       .eq('id', params.id)
       .single();
 
     if (erroBusca || !existente) {
-      return { sucesso: false, erro: 'Parte contrária não encontrada' };
+      return { sucesso: false, erro: 'Terceiro não encontrado' };
     }
 
     const tipoPessoaAtual = existente.tipo_pessoa as 'pf' | 'pj';
@@ -367,11 +350,14 @@ export async function atualizarParteContraria(
       return { sucesso: false, erro: 'Não é permitido alterar o tipo de pessoa' };
     }
 
-    // Preparar dados para atualização (apenas campos fornecidos)
+    // Preparar dados para atualização
     const dadosAtualizacao: Record<string, unknown> = {};
 
     if (params.id_pje !== undefined) dadosAtualizacao.id_pje = params.id_pje;
     if (params.id_pessoa_pje !== undefined) dadosAtualizacao.id_pessoa_pje = params.id_pessoa_pje;
+    if (params.processo_id !== undefined) dadosAtualizacao.processo_id = params.processo_id;
+    if (params.tipo_parte !== undefined) dadosAtualizacao.tipo_parte = params.tipo_parte;
+    if (params.polo !== undefined) dadosAtualizacao.polo = params.polo;
     if (params.trt !== undefined) dadosAtualizacao.trt = params.trt;
     if (params.grau !== undefined) dadosAtualizacao.grau = params.grau;
     if (params.numero_processo !== undefined)
@@ -395,7 +381,7 @@ export async function atualizarParteContraria(
     if (params.dados_pje_completo !== undefined)
       dadosAtualizacao.dados_pje_completo = params.dados_pje_completo;
 
-    // Campos específicos por tipo de pessoa
+    // Campos específicos por tipo de pessoa (mesma lógica de clientes/partes_contrarias)
     if (tipoPessoaAtual === 'pf' && params.tipo_pessoa === 'pf') {
       if (params.cpf !== undefined) dadosAtualizacao.cpf = normalizarCpf(params.cpf);
       if (params.tipo_documento !== undefined)
@@ -472,60 +458,54 @@ export async function atualizarParteContraria(
     }
 
     const { data, error } = await supabase
-      .from('partes_contrarias')
+      .from('terceiros')
       .update(dadosAtualizacao)
       .eq('id', params.id)
       .select()
       .single();
 
     if (error) {
-      console.error('Erro ao atualizar parte contrária:', error);
+      console.error('Erro ao atualizar terceiro:', error);
       return { sucesso: false, erro: `Erro ao atualizar: ${error.message}` };
     }
 
     return {
       sucesso: true,
-      parteContraria: converterParaParteContraria(data),
+      terceiro: converterParaTerceiro(data),
     };
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);
-    console.error('Erro inesperado ao atualizar parte contrária:', error);
+    console.error('Erro inesperado ao atualizar terceiro:', error);
     return { sucesso: false, erro: `Erro inesperado: ${erroMsg}` };
   }
 }
 
 /**
- * Busca uma parte contrária por ID
+ * Busca um terceiro por ID
  */
-export async function buscarParteContrariaPorId(id: number): Promise<ParteContraria | null> {
+export async function buscarTerceiroPorId(id: number): Promise<Terceiro | null> {
   const supabase = createServiceClient();
 
-  const { data, error } = await supabase
-    .from('partes_contrarias')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from('terceiros').select('*').eq('id', id).single();
 
   if (error) {
     if (error.code === 'PGRST116') {
       return null;
     }
-    throw new Error(`Erro ao buscar parte contrária: ${error.message}`);
+    throw new Error(`Erro ao buscar terceiro: ${error.message}`);
   }
 
-  return data ? converterParaParteContraria(data) : null;
+  return data ? converterParaTerceiro(data) : null;
 }
 
 /**
- * Busca uma parte contrária por id_pessoa_pje
+ * Busca um terceiro por id_pessoa_pje
  */
-export async function buscarParteContrariaPorIdPessoaPje(
-  id_pessoa_pje: number
-): Promise<ParteContraria | null> {
+export async function buscarTerceiroPorIdPessoaPje(id_pessoa_pje: number): Promise<Terceiro | null> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('partes_contrarias')
+    .from('terceiros')
     .select('*')
     .eq('id_pessoa_pje', id_pessoa_pje)
     .maybeSingle();
@@ -534,22 +514,45 @@ export async function buscarParteContrariaPorIdPessoaPje(
     throw new Error(`Erro ao buscar por id_pessoa_pje: ${error.message}`);
   }
 
-  return data ? converterParaParteContraria(data) : null;
+  return data ? converterParaTerceiro(data) : null;
 }
 
 /**
- * Lista partes contrárias com filtros e paginação
+ * Busca terceiros por processo
  */
-export async function listarPartesContrarias(
-  params: ListarPartesContrariasParams = {}
-): Promise<ListarPartesContrariasResult> {
+export async function buscarTerceirosPorProcesso(
+  params: BuscarTerceirosPorProcessoParams
+): Promise<Terceiro[]> {
+  const supabase = createServiceClient();
+
+  let query = supabase.from('terceiros').select('*').eq('processo_id', params.processo_id);
+
+  if (params.tipo_parte) {
+    query = query.eq('tipo_parte', params.tipo_parte);
+  }
+
+  const { data, error } = await query.order('tipo_parte', { ascending: true });
+
+  if (error) {
+    throw new Error(`Erro ao buscar terceiros por processo: ${error.message}`);
+  }
+
+  return (data || []).map(converterParaTerceiro);
+}
+
+/**
+ * Lista terceiros com filtros e paginação
+ */
+export async function listarTerceiros(
+  params: ListarTerceirosParams = {}
+): Promise<ListarTerceirosResult> {
   const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
   const limite = params.limite ?? 50;
   const offset = (pagina - 1) * limite;
 
-  let query = supabase.from('partes_contrarias').select('*', { count: 'exact' });
+  let query = supabase.from('terceiros').select('*', { count: 'exact' });
 
   if (params.busca) {
     const busca = params.busca.trim();
@@ -560,6 +563,18 @@ export async function listarPartesContrarias(
 
   if (params.tipo_pessoa) {
     query = query.eq('tipo_pessoa', params.tipo_pessoa);
+  }
+
+  if (params.tipo_parte) {
+    query = query.eq('tipo_parte', params.tipo_parte);
+  }
+
+  if (params.polo) {
+    query = query.eq('polo', params.polo);
+  }
+
+  if (params.processo_id) {
+    query = query.eq('processo_id', params.processo_id);
   }
 
   if (params.trt) {
@@ -599,15 +614,15 @@ export async function listarPartesContrarias(
   const { data, error, count } = await query;
 
   if (error) {
-    throw new Error(`Erro ao listar partes contrárias: ${error.message}`);
+    throw new Error(`Erro ao listar terceiros: ${error.message}`);
   }
 
-  const partesContrarias = (data || []).map(converterParaParteContraria);
+  const terceiros = (data || []).map(converterParaTerceiro);
   const total = count ?? 0;
   const totalPaginas = Math.ceil(total / limite);
 
   return {
-    partesContrarias,
+    terceiros,
     total,
     pagina,
     limite,
@@ -618,19 +633,19 @@ export async function listarPartesContrarias(
 /**
  * Upsert por id_pessoa_pje (cria se não existir, atualiza se existir)
  */
-export async function upsertParteContrariaPorIdPessoa(
-  params: UpsertParteContrariaPorIdPessoaParams
-): Promise<OperacaoParteContrariaResult> {
+export async function upsertTerceiroPorIdPessoa(
+  params: UpsertTerceiroPorIdPessoaParams
+): Promise<OperacaoTerceiroResult> {
   try {
-    const existente = await buscarParteContrariaPorIdPessoaPje(params.id_pessoa_pje);
+    const existente = await buscarTerceiroPorIdPessoaPje(params.id_pessoa_pje);
 
     if (existente) {
-      return await atualizarParteContraria({
+      return await atualizarTerceiro({
         id: existente.id,
         ...params,
       });
     } else {
-      return await criarParteContraria(params);
+      return await criarTerceiro(params);
     }
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);
@@ -640,18 +655,16 @@ export async function upsertParteContrariaPorIdPessoa(
 }
 
 /**
- * Deleta uma parte contrária por ID
+ * Deleta um terceiro por ID
  */
-export async function deletarParteContraria(
-  id: number
-): Promise<OperacaoParteContrariaResult> {
+export async function deletarTerceiro(id: number): Promise<OperacaoTerceiroResult> {
   const supabase = createServiceClient();
 
   try {
-    const { error } = await supabase.from('partes_contrarias').delete().eq('id', id);
+    const { error } = await supabase.from('terceiros').delete().eq('id', id);
 
     if (error) {
-      console.error('Erro ao deletar parte contrária:', error);
+      console.error('Erro ao deletar terceiro:', error);
       return { sucesso: false, erro: `Erro ao deletar: ${error.message}` };
     }
 

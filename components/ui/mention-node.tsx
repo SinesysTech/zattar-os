@@ -14,7 +14,7 @@ import {
   useSelected,
 } from 'platejs/react';
 
-import { cn } from '@/app/api/ai/command/utils';
+import { cn } from '@/app/_lib/utils';
 import { useMounted } from '@/hooks/use-mounted';
 
 import {

@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/app/api/ai/command/utils';
+import { cn } from '@/app/_lib/utils';
 
 import { Toolbar } from './toolbar';
 
