@@ -46,7 +46,7 @@ interface ClienteBase {
 /**
  * Campos específicos de Pessoa Física
  */
-interface ClientePessoaFisica extends ClienteBase {
+export interface ClientePessoaFisica extends ClienteBase {
   tipo_pessoa: 'pf';
   cpf: string; // Required para PF
   cnpj: null;
@@ -92,7 +92,7 @@ interface ClientePessoaFisica extends ClienteBase {
 /**
  * Campos específicos de Pessoa Jurídica
  */
-interface ClientePessoaJuridica extends ClienteBase {
+export interface ClientePessoaJuridica extends ClienteBase {
   tipo_pessoa: 'pj';
   cnpj: string; // Required para PJ
   cpf: null;

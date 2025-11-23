@@ -3,6 +3,9 @@
  * Re-exporta tipos do backend e adiciona utilitários para uso em componentes React
  */
 
+// Importa o tipo ProcessoParte para uso nas funções
+import type { ProcessoParte } from '@/backend/types/partes/processo-partes-types';
+
 // Re-exporta todos os tipos de processo-partes do backend
 export type {
   EntidadeTipoProcessoParte,

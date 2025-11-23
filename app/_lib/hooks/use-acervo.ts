@@ -73,19 +73,7 @@ export const useAcervo = (params: BuscarProcessosParams = {}): UseAcervoResult =
     });
 
     return searchParams.toString();
-  }, [
-    params.pagina,
-    params.limite,
-    params.unified,
-    params.busca,
-    params.ordenar_por,
-    params.ordem,
-    params.trt,
-    params.grau,
-    params.origem,
-    params.responsavel_id,
-    params.sem_responsavel,
-  ]);
+  }, [params]);
 
   const buscarProcessos = useCallback(async () => {
     setIsLoading(true);

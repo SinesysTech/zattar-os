@@ -66,7 +66,7 @@ interface TerceiroBase {
 /**
  * Campos específicos de Pessoa Física
  */
-interface TerceiroPessoaFisica extends TerceiroBase {
+export interface TerceiroPessoaFisica extends TerceiroBase {
   tipo_pessoa: 'pf';
   cpf: string; // Required para PF
   cnpj: null;
@@ -112,7 +112,7 @@ interface TerceiroPessoaFisica extends TerceiroBase {
 /**
  * Campos específicos de Pessoa Jurídica
  */
-interface TerceiroPessoaJuridica extends TerceiroBase {
+export interface TerceiroPessoaJuridica extends TerceiroBase {
   tipo_pessoa: 'pj';
   cnpj: string; // Required para PJ
   cpf: null;

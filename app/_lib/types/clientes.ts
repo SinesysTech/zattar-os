@@ -1,6 +1,6 @@
 // Tipos para integração com API de clientes no frontend
 
-import type { Cliente, ListarClientesParams } from '@/backend/clientes/services/persistence/cliente-persistence.service';
+import type { Cliente, ListarClientesParams } from '@/backend/types/partes/clientes-types';
 
 /**
  * Resposta da API de clientes (formato padrão)

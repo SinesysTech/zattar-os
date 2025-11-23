@@ -2,7 +2,6 @@
 // Comunicação exclusiva via REST - sem importações do back-end
 
 import type {
-  BaseCapturaTRTParams,
   CodigoTRT,
   GrauTRT,
   FiltroPrazoPendentes,

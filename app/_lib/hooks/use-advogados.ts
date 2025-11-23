@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Advogado, ListarAdvogadosParams } from '@/backend/types/advogados/types';
 
 interface AdvogadosApiResponse {

@@ -97,10 +97,27 @@ export function parseTribunaisFilters(selectedFilters: string[]): TribunaisFilte
 
   for (const selected of selectedFilters) {
     if (selected.includes('_')) {
-      const [id, value] = selected.split('_', 2);
-      const config = configMap.get(id);
-      if (config && config.type === 'select') {
-        filters[id as keyof TribunaisFilters] = value as any;
+      // Tenta encontrar o ID completo no configMap primeiro
+      let matchedConfig: FilterConfig | undefined;
+      let matchedId: string | undefined;
+      let value: string | undefined;
+
+      // Verifica todos os IDs possíveis do configMap
+      for (const [configId] of configMap) {
+        if (selected.startsWith(`${configId}_`)) {
+          matchedId = configId;
+          value = selected.slice(configId.length + 1); // Remove o ID e o underscore
+          matchedConfig = configMap.get(configId);
+          break;
+        }
+      }
+
+      if (matchedConfig && matchedId && value && matchedConfig.type === 'select') {
+        if (matchedId === 'tribunal_codigo') {
+          filters.tribunal_codigo = value as CodigoTRT;
+        } else if (matchedId === 'tipo_acesso') {
+          filters.tipo_acesso = value as 'primeiro_grau' | 'segundo_grau' | 'unificado' | 'unico';
+        }
       }
     }
   }

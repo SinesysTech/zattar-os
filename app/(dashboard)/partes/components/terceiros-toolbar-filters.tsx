@@ -137,19 +137,29 @@ export function parseTerceirosFilters(selectedFilters: string[]): TerceirosFilte
 
   for (const selected of selectedFilters) {
     if (selected.includes('_')) {
-      const parts = selected.split('_');
-      const id = parts[0] + (parts[1] === 'pessoa' || parts[1] === 'parte' ? '_' + parts[1] : '');
-      const value = parts[id === 'tipo_pessoa' || id === 'tipo_parte' ? 2 : 1];
+      // Tenta encontrar o ID completo no configMap primeiro
+      let matchedConfig: FilterConfig | undefined;
+      let matchedId: string | undefined;
+      let value: string | undefined;
 
-      const config = configMap.get(id);
-      if (config && config.type === 'select') {
-        if (id === 'tipo_pessoa') {
+      // Verifica todos os IDs possíveis do configMap
+      for (const [configId] of configMap) {
+        if (selected.startsWith(`${configId}_`)) {
+          matchedId = configId;
+          value = selected.slice(configId.length + 1); // Remove o ID e o underscore
+          matchedConfig = configMap.get(configId);
+          break;
+        }
+      }
+
+      if (matchedConfig && matchedId && value && matchedConfig.type === 'select') {
+        if (matchedId === 'tipo_pessoa') {
           filters.tipo_pessoa = value as 'pf' | 'pj';
-        } else if (id === 'tipo_parte') {
+        } else if (matchedId === 'tipo_parte') {
           filters.tipo_parte = value;
-        } else if (id === 'polo') {
+        } else if (matchedId === 'polo') {
           filters.polo = value;
-        } else if (id === 'situacao') {
+        } else if (matchedId === 'situacao') {
           filters.situacao = value as 'A' | 'I';
         }
       }

@@ -142,7 +142,6 @@ export function detectarMudancas(
     if (itemOriginal.recurso !== itemAtual.recurso) return true;
 
     const operacoesOriginais = Object.entries(itemOriginal.operacoes);
-    const operacoesAtuais = Object.entries(itemAtual.operacoes);
 
     return operacoesOriginais.some(([operacao, valor]) => {
       return itemAtual.operacoes[operacao] !== valor;

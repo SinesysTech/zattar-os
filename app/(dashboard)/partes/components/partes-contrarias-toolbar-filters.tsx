@@ -100,16 +100,25 @@ export function parsePartesContrariasFilters(selectedFilters: string[]): PartesC
 
   for (const selected of selectedFilters) {
     if (selected.includes('_')) {
-      const [id, value] = selected.split('_', 2);
-      const config = configMap.get(id);
-      if (config && config.type === 'select') {
-        if (id === 'tipo' || id === 'pessoa') {
-          // Skip - é parte do tipo_pessoa
-          continue;
-        } else if (selected.startsWith('tipo_pessoa_')) {
-          const tipoPessoaValue = selected.replace('tipo_pessoa_', '');
-          filters.tipo_pessoa = tipoPessoaValue as 'pf' | 'pj';
-        } else if (id === 'situacao') {
+      // Tenta encontrar o ID completo no configMap primeiro
+      let matchedConfig: FilterConfig | undefined;
+      let matchedId: string | undefined;
+      let value: string | undefined;
+
+      // Verifica todos os IDs possíveis do configMap
+      for (const [configId] of configMap) {
+        if (selected.startsWith(`${configId}_`)) {
+          matchedId = configId;
+          value = selected.slice(configId.length + 1); // Remove o ID e o underscore
+          matchedConfig = configMap.get(configId);
+          break;
+        }
+      }
+
+      if (matchedConfig && matchedId && value && matchedConfig.type === 'select') {
+        if (matchedId === 'tipo_pessoa') {
+          filters.tipo_pessoa = value as 'pf' | 'pj';
+        } else if (matchedId === 'situacao') {
           filters.situacao = value as 'A' | 'I';
         }
       }

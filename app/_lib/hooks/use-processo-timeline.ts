@@ -126,6 +126,44 @@ export function useProcessoTimeline(acervoId: number): UseProcessoTimelineReturn
   }, [acervoId]);
 
   /**
+   * Inicia polling para verificar se timeline foi salva
+   */
+  const startPolling = useCallback(() => {
+    pollingAttempts.current = 0;
+    setCaptureProgress('Salvando timeline no banco de dados...');
+
+    // Aguarda 10 segundos iniciais antes de começar polling
+    setTimeout(() => {
+      pollingInterval.current = setInterval(async () => {
+        pollingAttempts.current += 1;
+
+        try {
+          const timelineData = await fetchTimeline();
+
+          if (timelineData !== null) {
+            // Timeline foi salva com sucesso
+            setTimeline(timelineData);
+            setIsCapturing(false);
+            clearPolling();
+            setCaptureProgress('');
+          } else if (pollingAttempts.current >= MAX_POLLING_ATTEMPTS) {
+            // Timeout: máximo de tentativas atingido
+            clearPolling();
+            setIsCapturing(false);
+            throw new Error(
+              'Timeout na captura. A operação pode estar em andamento. Recarregue a página em alguns minutos.'
+            );
+          }
+        } catch (err) {
+          clearPolling();
+          setIsCapturing(false);
+          setError(err as Error);
+        }
+      }, POLLING_INTERVAL);
+    }, 10000); // 10 segundos de delay inicial
+  }, [fetchTimeline, clearPolling]);
+
+  /**
    * Inicia captura de timeline no PJE
    */
   const captureTimeline = useCallback(
@@ -187,46 +225,8 @@ export function useProcessoTimeline(acervoId: number): UseProcessoTimelineReturn
         throw err;
       }
     },
-    [updateCaptureProgress]
+    [updateCaptureProgress, startPolling]
   );
-
-  /**
-   * Inicia polling para verificar se timeline foi salva
-   */
-  const startPolling = useCallback(() => {
-    pollingAttempts.current = 0;
-    setCaptureProgress('Salvando timeline no banco de dados...');
-
-    // Aguarda 10 segundos iniciais antes de começar polling
-    setTimeout(() => {
-      pollingInterval.current = setInterval(async () => {
-        pollingAttempts.current += 1;
-
-        try {
-          const timelineData = await fetchTimeline();
-
-          if (timelineData !== null) {
-            // Timeline foi salva com sucesso
-            setTimeline(timelineData);
-            setIsCapturing(false);
-            clearPolling();
-            setCaptureProgress('');
-          } else if (pollingAttempts.current >= MAX_POLLING_ATTEMPTS) {
-            // Timeout: máximo de tentativas atingido
-            clearPolling();
-            setIsCapturing(false);
-            throw new Error(
-              'Timeout na captura. A operação pode estar em andamento. Recarregue a página em alguns minutos.'
-            );
-          }
-        } catch (err) {
-          clearPolling();
-          setIsCapturing(false);
-          setError(err as Error);
-        }
-      }, POLLING_INTERVAL);
-    }, 10000); // 10 segundos de delay inicial
-  }, [fetchTimeline, clearPolling]);
 
   /**
    * Re-busca dados (retry)
@@ -301,7 +301,7 @@ export function useProcessoTimeline(acervoId: number): UseProcessoTimelineReturn
       mounted = false;
       clearPolling();
     };
-  }, [acervoId]); // Apenas acervoId como dependência
+  }, [acervoId, fetchProcesso, fetchTimeline, captureTimeline, clearPolling, isCapturing]);
 
   return {
     processo,

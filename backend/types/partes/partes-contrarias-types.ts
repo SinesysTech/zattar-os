@@ -47,7 +47,7 @@ interface ParteContrariaBase {
 /**
  * Campos específicos de Pessoa Física
  */
-interface ParteContrariaPessoaFisica extends ParteContrariaBase {
+export interface ParteContrariaPessoaFisica extends ParteContrariaBase {
   tipo_pessoa: 'pf';
   cpf: string; // Required para PF
   cnpj: null;
@@ -93,7 +93,7 @@ interface ParteContrariaPessoaFisica extends ParteContrariaBase {
 /**
  * Campos específicos de Pessoa Jurídica
  */
-interface ParteContrariaPessoaJuridica extends ParteContrariaBase {
+export interface ParteContrariaPessoaJuridica extends ParteContrariaBase {
   tipo_pessoa: 'pj';
   cnpj: string; // Required para PJ
   cpf: null;

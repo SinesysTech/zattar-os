@@ -21,11 +21,11 @@ import { identificarTipoParte, type AdvogadoIdentificacao } from './identificaca
 import { upsertClientePorIdPessoa } from '@/backend/clientes/services/persistence/cliente-persistence.service';
 import { upsertParteContrariaPorIdPessoa } from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
 import { upsertTerceiroPorIdPessoa } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
-import { upsertProcessoParte } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
-import { upsertRepresentante } from '@/backend/representantes/services/representantes-persistence.service';
+import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
+import { upsertRepresentantePorIdPessoa } from '@/backend/representantes/services/representantes-persistence.service';
 import type { CriarClientePFParams, CriarClientePJParams } from '@/backend/types/partes/clientes-types';
 import type { CriarParteContrariaPFParams, CriarParteContrariaPJParams } from '@/backend/types/partes/partes-contrarias-types';
-import type { CriarTerceiroPFParams, CriarTerceiroPJParams } from '@/lib/types/partes/terceiros';
+import type { CriarTerceiroPFParams, CriarTerceiroPJParams } from '@/backend/types/partes/terceiros-types';
 import type { GrauAcervo } from '@/backend/types/acervo/types';
 
 /**
@@ -135,6 +135,8 @@ export async function capturarPartesProcesso(
               parte.representantes,
               tipoParte,
               entidadeId,
+              processo.trt,
+              processo.grau,
               processo.numero_processo
             );
             resultado.representantes += repsCount;
@@ -213,11 +215,11 @@ async function processarParte(
     grau: processo.grau,
     numero_processo: processo.numero_processo,
     nome: parte.nome,
-    emails: parte.emails.length > 0 ? parte.emails : null,
-    ddd_celular: parte.telefones[0]?.ddd || null,
-    numero_celular: parte.telefones[0]?.numero || null,
-    ddd_telefone: parte.telefones[1]?.ddd || null,
-    numero_telefone: parte.telefones[1]?.numero || null,
+    emails: parte.emails.length > 0 ? parte.emails : undefined,
+    ddd_celular: parte.telefones[0]?.ddd || undefined,
+    numero_celular: parte.telefones[0]?.numero || undefined,
+    ddd_telefone: parte.telefones[1]?.ddd || undefined,
+    numero_telefone: parte.telefones[1]?.numero || undefined,
     dados_pje_completo: parte.dadosCompletos,
   };
 
@@ -263,23 +265,23 @@ async function processarParte(
     } else {
       // Upsert em tabela terceiros
       if (isPessoaFisica) {
-        const params: CriarTerceiroPFParams & { id_pessoa_pje: number } = {
+        const params = {
           ...dadosComuns,
-          tipo_pessoa: 'pf',
+          tipo_pessoa: 'pf' as const,
           cpf: parte.numeroDocumento,
           tipo_parte: parte.tipoParte as any,
           polo: parte.polo as any,
-        };
+        } as any;
         const result = await upsertTerceiroPorIdPessoa(params);
         return result.sucesso && result.terceiro ? result.terceiro.id : null;
       } else {
-        const params: CriarTerceiroPJParams & { id_pessoa_pje: number } = {
+        const params = {
           ...dadosComuns,
-          tipo_pessoa: 'pj',
+          tipo_pessoa: 'pj' as const,
           cnpj: parte.numeroDocumento,
           tipo_parte: parte.tipoParte as any,
           polo: parte.polo as any,
-        };
+        } as any;
         const result = await upsertTerceiroPorIdPessoa(params);
         return result.sucesso && result.terceiro ? result.terceiro.id : null;
       }
@@ -298,27 +300,33 @@ async function processarRepresentantes(
   representantes: any[],
   tipoParte: TipoParteClassificacao,
   parteId: number,
+  trt: string,
+  grau: GrauAcervo,
   numeroProcesso: string
 ): Promise<number> {
   let count = 0;
 
   for (const rep of representantes) {
     try {
-      const result = await upsertRepresentante({
+      const tipo_pessoa: 'pf' | 'pj' = rep.tipoDocumento === 'CPF' ? 'pf' : 'pj';
+
+      const result = await upsertRepresentantePorIdPessoa({
         id_pessoa_pje: rep.idPessoa,
+        trt,
+        grau: grau as any,
         parte_tipo: tipoParte,
         parte_id: parteId,
         numero_processo: numeroProcesso,
+        tipo_pessoa,
         nome: rep.nome,
-        cpf: rep.tipoDocumento === 'CPF' ? rep.numeroDocumento : null,
-        cnpj: rep.tipoDocumento === 'CNPJ' ? rep.numeroDocumento : null,
-        numero_oab: rep.numeroOAB,
-        uf_oab: rep.ufOAB,
-        situacao_oab: rep.situacaoOAB,
-        tipo: rep.tipo,
-        email: rep.email,
-        ddd_celular: rep.telefones[0]?.ddd || null,
-        numero_celular: rep.telefones[0]?.numero || null,
+        cpf: tipo_pessoa === 'pf' ? rep.numeroDocumento : undefined,
+        cnpj: tipo_pessoa === 'pj' ? rep.numeroDocumento : undefined,
+        numero_oab: rep.numeroOAB || undefined,
+        situacao_oab: rep.situacaoOAB || undefined,
+        tipo: rep.tipo || undefined,
+        emails: rep.email ? [rep.email] : undefined,
+        ddd_celular: rep.telefones[0]?.ddd || undefined,
+        numero_celular: rep.telefones[0]?.numero || undefined,
         dados_pje_completo: rep.dadosCompletos,
       });
 
@@ -344,18 +352,23 @@ async function criarVinculoProcessoParte(
   ordem: number
 ): Promise<boolean> {
   try {
-    const result = await upsertProcessoParte({
+    const result = await vincularParteProcesso({
       processo_id: processo.id,
-      entidade_tipo: tipoParte,
+      tipo_entidade: tipoParte,
       entidade_id: entidadeId,
-      polo: parte.polo.toLowerCase() as 'ativo' | 'passivo' | 'outros',
-      tipo_parte: parte.tipoParte,
+      id_pje: parte.idParte,
+      id_pessoa_pje: parte.idPessoa,
+      tipo_parte: parte.tipoParte as any,
+      polo: parte.polo.toLowerCase() as any,
+      trt: processo.trt,
+      grau: processo.grau,
+      numero_processo: processo.numero_processo,
       principal: parte.principal,
       ordem,
       dados_pje_completo: parte.dadosCompletos,
     });
 
-    return result.sucesso;
+    return result.success;
   } catch (error) {
     console.error(
       `[CAPTURA-PARTES] Erro ao criar vínculo processo-parte para ${parte.nome}:`,

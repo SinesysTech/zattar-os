@@ -9,7 +9,10 @@ export function useIsClient() {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    // Usa queueMicrotask para evitar chamada síncrona de setState
+    queueMicrotask(() => {
+      setIsClient(true);
+    });
   }, []);
 
   return isClient;
