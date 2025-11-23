@@ -228,7 +228,6 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
         isLoading={isLoading}
         error={error}
         emptyMessage="Nenhuma parte contrária encontrada"
-        emptyDescription="Adicione partes contrárias para visualizá-las aqui"
       />
     </div>
   );

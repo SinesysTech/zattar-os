@@ -1,11 +1,7 @@
 import { AppSidebar } from "@/components/layout/app-sidebar"
-import { AppBreadcrumb } from "@/components/layout/app-breadcrumb"
-import { BreadcrumbProvider } from "@/components/layout/breadcrumb-context"
-import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar"
 
 export default function DashboardLayout({
@@ -15,24 +11,12 @@ export default function DashboardLayout({
 }>) {
   return (
     <SidebarProvider>
-      <BreadcrumbProvider>
-        <AppSidebar />
-        <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 bg-background transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
-            />
-            <AppBreadcrumb />
-          </div>
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-6">
+      <AppSidebar />
+      <SidebarInset>
+        <div className="flex flex-1 flex-col gap-4 p-6 overflow-x-hidden">
           {children}
         </div>
       </SidebarInset>
-      </BreadcrumbProvider>
     </SidebarProvider>
   );
 }

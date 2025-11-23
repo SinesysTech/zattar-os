@@ -103,7 +103,7 @@ export function parseClientesFilters(selectedFilters: string[]): ClientesFilters
       const [id, value] = selected.split('_', 2);
       const config = configMap.get(id);
       if (config && config.type === 'select') {
-        if (id === 'tipo' && id === 'pessoa') {
+        if (id === 'tipo' || id === 'pessoa') {
           // Skip - é parte do tipo_pessoa
           continue;
         } else if (selected.startsWith('tipo_pessoa_')) {

@@ -261,14 +261,6 @@ export default function TerceiroPage() {
                       </div>
                     </div>
                   )}
-                  {terceiro.tipo_empresa && (
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground mb-1">
-                        Tipo de Empresa
-                      </div>
-                      <div className="text-base">{terceiro.tipo_empresa}</div>
-                    </div>
-                  )}
                 </>
               )}
             </div>

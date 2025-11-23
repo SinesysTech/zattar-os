@@ -17,7 +17,7 @@ export function PlateEditor() {
 
   return (
     <Plate editor={editor}>
-      <EditorContainer>
+      <EditorContainer variant="default" className="h-full">
         <Editor variant="demo" />
       </EditorContainer>
 

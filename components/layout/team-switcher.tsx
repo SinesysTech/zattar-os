@@ -43,7 +43,7 @@ export function TeamSwitcher({
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton size="lg" className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-full">
-          <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:mx-auto">
+          <div className="bg-white text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg shadow-md group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:mx-auto">
             {logoSrc ? (
               <Image
                 src={logoSrc}

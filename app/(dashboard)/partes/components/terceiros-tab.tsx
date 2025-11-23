@@ -254,7 +254,6 @@ export function TerceirosTab({}: TerceirosTabProps) {
         isLoading={isLoading}
         error={error}
         emptyMessage="Nenhum terceiro encontrado"
-        emptyDescription="Adicione terceiros para visualizá-los aqui"
       />
     </div>
   );
