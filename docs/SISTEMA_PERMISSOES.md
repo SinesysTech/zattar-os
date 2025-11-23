@@ -18,7 +18,7 @@ O sistema de permissões do Sinesys é **granular** e baseado em **usuários** (
 
 ### Características Principais:
 
-✅ **81 permissões granulares** distribuídas em 13 recursos
+✅ **82 permissões granulares** distribuídas em 13 recursos
 ✅ **Super Admin**: Bypass total de permissões
 ✅ **Cargos**: Organização interna (sem relação com permissões)
 ✅ **Cache in-memory**: TTL de 5 minutos para performance
@@ -73,7 +73,7 @@ Requisição → Autenticação → Autorização → Lógica de Negócio
 
 ## Matriz de Permissões
 
-### Recursos e Operações (81 permissões)
+### Recursos e Operações (82 permissões)
 
 | # | Recurso | Operações | Total |
 |---|---------|-----------|-------|
@@ -82,16 +82,17 @@ Requisição → Autenticação → Autorização → Lógica de Negócio
 | 3 | **acervo** | listar, visualizar, editar, atribuir_responsavel, desatribuir_responsavel, transferir_responsavel | 6 |
 | 4 | **audiencias** | listar, visualizar, editar, atribuir_responsavel, desatribuir_responsavel, transferir_responsavel, editar_url_virtual | 7 |
 | 5 | **pendentes** | listar, visualizar, atribuir_responsavel, desatribuir_responsavel, transferir_responsavel, baixar_expediente, reverter_baixa, editar_tipo_descricao | 8 |
-| 6 | **usuarios** | listar, visualizar, criar, editar, deletar, ativar_desativar, gerenciar_permissoes, sincronizar | 8 |
-| 7 | **clientes** | listar, visualizar, criar, editar, deletar | 5 |
-| 8 | **partes_contrarias** | listar, visualizar, criar, editar, deletar | 5 |
-| 9 | **contratos** | listar, visualizar, criar, editar, deletar, associar_processo, desassociar_processo | 7 |
-| 10 | **agendamentos** | listar, visualizar, criar, editar, deletar, executar, ativar_desativar | 7 |
-| 11 | **captura** | executar_acervo_geral, executar_arquivados, executar_audiencias, executar_pendentes, visualizar_historico, gerenciar_credenciais | 6 |
-| 12 | **tipos_expedientes** | listar, visualizar, criar, editar, deletar | 5 |
-| 13 | **cargos** | listar, visualizar, criar, editar, deletar, ativar_desativar | 6 |
+| 6 | **expedientes_manuais** | listar, visualizar, criar, editar, deletar, atribuir_responsavel, desatribuir_responsavel, transferir_responsavel, baixar_expediente, reverter_baixa | 10 |
+| 7 | **usuarios** | listar, visualizar, criar, editar, deletar, ativar_desativar, gerenciar_permissoes, sincronizar | 8 |
+| 8 | **clientes** | listar, visualizar, criar, editar, deletar | 5 |
+| 9 | **partes_contrarias** | listar, visualizar, criar, editar, deletar | 5 |
+| 10 | **contratos** | listar, visualizar, criar, editar, deletar, associar_processo, desassociar_processo | 7 |
+| 11 | **agendamentos** | listar, visualizar, criar, editar, deletar, executar, ativar_desativar | 7 |
+| 12 | **captura** | executar_acervo_geral, executar_arquivados, executar_audiencias, executar_pendentes, visualizar_historico, gerenciar_credenciais | 6 |
+| 13 | **tipos_expedientes** | listar, visualizar, criar, editar, deletar | 5 |
+| 14 | **cargos** | listar, visualizar, criar, editar, deletar, ativar_desativar | 6 |
 
-**TOTAL: 81 permissões**
+**TOTAL: 82 permissões**
 
 ---
 

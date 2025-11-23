@@ -21,7 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Shield, Save, RotateCcw, Info, Loader2, AlertCircle } from 'lucide-react';
 import type { PermissaoMatriz } from '@/app/_lib/types/usuarios';
 import { formatarNomeRecurso, formatarNomeOperacao, contarPermissoesAtivas } from '@/app/_lib/utils/permissoes-utils';
-import { MATRIZ_PERMISSOES } from '@/backend/types/permissoes/types';
+import { MATRIZ_PERMISSOES, obterTotalPermissoes } from '@/backend/types/permissoes/types';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 
 interface PermissoesMatrizProps {
@@ -61,6 +61,7 @@ export function PermissoesMatriz({
   };
 
   const totalPermissoesAtivas = contarPermissoesAtivas(matriz);
+  const totalPermissoes = obterTotalPermissoes();
 
   if (isLoading) {
     return (
@@ -89,7 +90,7 @@ export function PermissoesMatriz({
               <CardDescription className="mt-1.5">
                 {isSuperAdmin
                   ? 'Como Super Admin, este usuário tem acesso total a todos os recursos'
-                  : `${totalPermissoesAtivas} de 81 permissões ativas`}
+                  : `${totalPermissoesAtivas} de ${totalPermissoes} permissões ativas`}
               </CardDescription>
             </div>
             {canEdit && !isSuperAdmin && hasChanges && (
@@ -208,7 +209,7 @@ export function PermissoesMatriz({
           </DialogHeader>
           <div className="py-4">
             <p className="text-sm text-muted-foreground">
-              <strong>Total de permissões ativas:</strong> {totalPermissoesAtivas} de 81
+              <strong>Total de permissões ativas:</strong> {totalPermissoesAtivas} de {totalPermissoes}
             </p>
           </div>
           <DialogFooter>

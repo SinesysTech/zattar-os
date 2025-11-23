@@ -30,7 +30,7 @@ export async function POST(
     const temPermissao = await verificarPermissoes(
       authResult.usuarioId,
       'expedientes_manuais',
-      'editar'
+      'reverter_baixa'
     );
     if (!temPermissao) {
       return NextResponse.json(
