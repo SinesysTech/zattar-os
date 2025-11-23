@@ -1,91 +1,16 @@
 // Serviço de persistência de clientes
-// Gerencia operações de CRUD na tabela clientes
+// Gerencia operações de CRUD na tabela clientes (60 campos com discriminated union PF/PJ)
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { getCached, setCached, getClientesListKey, invalidateClientesCache } from '@/backend/utils/redis';
-
-/**
- * Tipo de pessoa
- */
-export type TipoPessoa = 'pf' | 'pj';
-
-/**
- * Gênero do cliente (reutilizando enum de usuários)
- */
-export type GeneroCliente = 'masculino' | 'feminino' | 'outro' | 'prefiro_nao_informar';
-
-/**
- * Estado civil
- */
-export type EstadoCivil = 'solteiro' | 'casado' | 'divorciado' | 'viuvo' | 'uniao_estavel' | 'outro';
-
-/**
- * Estrutura do endereço em JSONB
- */
-export interface Endereco {
-  logradouro?: string;
-  numero?: string;
-  complemento?: string;
-  bairro?: string;
-  cidade?: string;
-  estado?: string;
-  pais?: string;
-  cep?: string;
-}
-
-/**
- * Dados para cadastro/atualização de cliente
- */
-export interface ClienteDados {
-  tipoPessoa: TipoPessoa;
-  nome: string;
-  nomeFantasia?: string;
-  cpf?: string; // Obrigatório se tipoPessoa = 'pf'
-  cnpj?: string; // Obrigatório se tipoPessoa = 'pj'
-  rg?: string;
-  dataNascimento?: string; // ISO date string (YYYY-MM-DD)
-  genero?: GeneroCliente;
-  estadoCivil?: EstadoCivil;
-  nacionalidade?: string;
-  naturalidade?: string;
-  inscricaoEstadual?: string;
-  email?: string;
-  telefonePrimario?: string;
-  telefoneSecundario?: string;
-  endereco?: Endereco;
-  observacoes?: string;
-  createdBy?: number;
-  ativo?: boolean;
-}
-
-/**
- * Dados retornados do banco
- */
-export interface Cliente {
-  id: number;
-  tipoPessoa: TipoPessoa;
-  nome: string;
-  nomeFantasia: string | null;
-  cpf: string | null;
-  cnpj: string | null;
-  rg: string | null;
-  dataNascimento: string | null;
-  genero: GeneroCliente | null;
-  estadoCivil: EstadoCivil | null;
-  nacionalidade: string | null;
-  naturalidade: string | null;
-  inscricaoEstadual: string | null;
-  email: string | null;
-  telefonePrimario: string | null;
-  telefoneSecundario: string | null;
-  endereco: Endereco | null;
-  observacoes: string | null;
-  createdBy: number | null;
-  dadosAnteriores: Record<string, unknown> | null;
-  ativo: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+import { getCached, setCached, invalidateClientesCache } from '@/backend/utils/redis';
+import type {
+  Cliente,
+  CriarClienteParams,
+  AtualizarClienteParams,
+  ListarClientesParams,
+  ListarClientesResult,
+  UpsertClientePorIdPessoaParams,
+} from '@/backend/types/partes/clientes-types';
 
 /**
  * Resultado de operação
@@ -94,44 +19,6 @@ export interface OperacaoClienteResult {
   sucesso: boolean;
   cliente?: Cliente;
   erro?: string;
-}
-
-/**
- * Parâmetros para listar clientes
- */
-export interface ListarClientesParams {
-  pagina?: number;
-  limite?: number;
-  busca?: string; // Busca em nome, nome_fantasia, cpf, cnpj, email
-  tipoPessoa?: TipoPessoa;
-  ativo?: boolean;
-}
-
-/**
- * Resultado da listagem
- */
-export interface ListarClientesResult {
-  clientes: Cliente[];
-  total: number;
-  pagina: number;
-  limite: number;
-  totalPaginas: number;
-}
-
-/**
- * Converte data ISO string para date ou null
- */
-function parseDate(dateString: string | null | undefined): string | null {
-  if (!dateString) return null;
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      return null;
-    }
-    return date.toISOString().split('T')[0];
-  } catch {
-    return null;
-  }
 }
 
 /**
@@ -173,85 +60,134 @@ function normalizarCnpj(cnpj: string): string {
 }
 
 /**
- * Valida e normaliza endereço JSONB
- */
-function validarEndereco(endereco: Endereco | undefined): Endereco | null {
-  if (!endereco) return null;
-  
-  // Retorna objeto com apenas campos válidos (remove campos vazios)
-  const enderecoLimpo: Endereco = {};
-  
-  if (endereco.logradouro?.trim()) {
-    enderecoLimpo.logradouro = endereco.logradouro.trim();
-  }
-  if (endereco.numero?.trim()) {
-    enderecoLimpo.numero = endereco.numero.trim();
-  }
-  if (endereco.complemento?.trim()) {
-    enderecoLimpo.complemento = endereco.complemento.trim();
-  }
-  if (endereco.bairro?.trim()) {
-    enderecoLimpo.bairro = endereco.bairro.trim();
-  }
-  if (endereco.cidade?.trim()) {
-    enderecoLimpo.cidade = endereco.cidade.trim();
-  }
-  if (endereco.estado?.trim()) {
-    enderecoLimpo.estado = endereco.estado.trim();
-  }
-  if (endereco.pais?.trim()) {
-    enderecoLimpo.pais = endereco.pais.trim();
-  }
-  if (endereco.cep?.trim()) {
-    enderecoLimpo.cep = endereco.cep.replace(/\D/g, ''); // Remove formatação do CEP
-  }
-  
-  // Retorna null se objeto estiver vazio
-  return Object.keys(enderecoLimpo).length > 0 ? enderecoLimpo : null;
-}
-
-/**
  * Converte dados do banco para formato de retorno
  */
 function converterParaCliente(data: Record<string, unknown>): Cliente {
-  return {
+  const tipo_pessoa = data.tipo_pessoa as 'pf' | 'pj';
+
+  const base = {
     id: data.id as number,
-    tipoPessoa: data.tipo_pessoa as TipoPessoa,
+    id_pje: (data.id_pje as number | null) ?? null,
+    id_pessoa_pje: (data.id_pessoa_pje as number | null) ?? null,
+    trt: data.trt as string,
+    grau: data.grau as 'primeiro_grau' | 'segundo_grau',
+    numero_processo: data.numero_processo as string,
+    tipo_pessoa,
     nome: data.nome as string,
-    nomeFantasia: (data.nome_fantasia as string | null) ?? null,
-    cpf: (data.cpf as string | null) ?? null,
-    cnpj: (data.cnpj as string | null) ?? null,
-    rg: (data.rg as string | null) ?? null,
-    dataNascimento: (data.data_nascimento as string | null) ?? null,
-    genero: (data.genero as GeneroCliente | null) ?? null,
-    estadoCivil: (data.estado_civil as EstadoCivil | null) ?? null,
-    nacionalidade: (data.nacionalidade as string | null) ?? null,
-    naturalidade: (data.naturalidade as string | null) ?? null,
-    inscricaoEstadual: (data.inscricao_estadual as string | null) ?? null,
-    email: (data.email as string | null) ?? null,
-    telefonePrimario: (data.telefone_primario as string | null) ?? null,
-    telefoneSecundario: (data.telefone_secundario as string | null) ?? null,
-    endereco: (data.endereco as Endereco | null) ?? null,
+    nome_social: (data.nome_social as string | null) ?? null,
+    emails: (data.emails as string[] | null) ?? null,
+    ddd_celular: (data.ddd_celular as string | null) ?? null,
+    numero_celular: (data.numero_celular as string | null) ?? null,
+    ddd_telefone: (data.ddd_telefone as string | null) ?? null,
+    numero_telefone: (data.numero_telefone as string | null) ?? null,
+    fax: (data.fax as string | null) ?? null,
+    situacao: (data.situacao as 'A' | 'I' | 'E' | 'H' | null) ?? null,
     observacoes: (data.observacoes as string | null) ?? null,
-    createdBy: (data.created_by as number | null) ?? null,
-    dadosAnteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
-    ativo: data.ativo as boolean,
-    createdAt: data.created_at as string,
-    updatedAt: data.updated_at as string,
+    dados_pje_completo: (data.dados_pje_completo as Record<string, unknown> | null) ?? null,
+    created_at: data.created_at as string,
+    updated_at: data.updated_at as string,
   };
+
+  if (tipo_pessoa === 'pf') {
+    return {
+      ...base,
+      tipo_pessoa: 'pf',
+      cpf: data.cpf as string,
+      cnpj: null,
+      tipo_documento: (data.tipo_documento as string | null) ?? null,
+      numero_rg: (data.numero_rg as string | null) ?? null,
+      orgao_emissor_rg: (data.orgao_emissor_rg as string | null) ?? null,
+      uf_rg: (data.uf_rg as string | null) ?? null,
+      data_expedicao_rg: (data.data_expedicao_rg as string | null) ?? null,
+      sexo: (data.sexo as string | null) ?? null,
+      nome_genitora: (data.nome_genitora as string | null) ?? null,
+      data_nascimento: (data.data_nascimento as string | null) ?? null,
+      nacionalidade: (data.nacionalidade as string | null) ?? null,
+      naturalidade: (data.naturalidade as string | null) ?? null,
+      municipio_nascimento: (data.municipio_nascimento as string | null) ?? null,
+      uf_nascimento: (data.uf_nascimento as string | null) ?? null,
+      pais_nacionalidade: (data.pais_nacionalidade as string | null) ?? null,
+      profissao: (data.profissao as string | null) ?? null,
+      cartao_nacional_saude: (data.cartao_nacional_saude as string | null) ?? null,
+      certificado_militar: (data.certificado_militar as string | null) ?? null,
+      numero_titulo_eleitor: (data.numero_titulo_eleitor as string | null) ?? null,
+      zona_titulo_eleitor: (data.zona_titulo_eleitor as string | null) ?? null,
+      secao_titulo_eleitor: (data.secao_titulo_eleitor as string | null) ?? null,
+      tipo_sanguineo: (data.tipo_sanguineo as string | null) ?? null,
+      raca_cor: (data.raca_cor as string | null) ?? null,
+      estado_civil: (data.estado_civil as string | null) ?? null,
+      grau_instrucao: (data.grau_instrucao as string | null) ?? null,
+      necessidade_especial: (data.necessidade_especial as string | null) ?? null,
+      inscricao_estadual: null,
+      inscricao_municipal: null,
+      data_abertura: null,
+      orgao_publico: null,
+      ds_tipo_pessoa: null,
+      ramo_atividade: null,
+      porte_codigo: null,
+      porte_descricao: null,
+      qualificacao_responsavel: null,
+      capital_social: null,
+      nome_fantasia: null,
+      status_pje: null,
+    };
+  } else {
+    return {
+      ...base,
+      tipo_pessoa: 'pj',
+      cnpj: data.cnpj as string,
+      cpf: null,
+      inscricao_estadual: (data.inscricao_estadual as string | null) ?? null,
+      inscricao_municipal: (data.inscricao_municipal as string | null) ?? null,
+      data_abertura: (data.data_abertura as string | null) ?? null,
+      orgao_publico: (data.orgao_publico as boolean | null) ?? null,
+      ds_tipo_pessoa: (data.ds_tipo_pessoa as string | null) ?? null,
+      ramo_atividade: (data.ramo_atividade as string | null) ?? null,
+      porte_codigo: (data.porte_codigo as string | null) ?? null,
+      porte_descricao: (data.porte_descricao as string | null) ?? null,
+      qualificacao_responsavel: (data.qualificacao_responsavel as string | null) ?? null,
+      capital_social: (data.capital_social as number | null) ?? null,
+      nome_fantasia: (data.nome_fantasia as string | null) ?? null,
+      status_pje: (data.status_pje as string | null) ?? null,
+      tipo_documento: null,
+      numero_rg: null,
+      orgao_emissor_rg: null,
+      uf_rg: null,
+      data_expedicao_rg: null,
+      sexo: null,
+      nome_genitora: null,
+      data_nascimento: null,
+      nacionalidade: null,
+      naturalidade: null,
+      municipio_nascimento: null,
+      uf_nascimento: null,
+      pais_nacionalidade: null,
+      profissao: null,
+      cartao_nacional_saude: null,
+      certificado_militar: null,
+      numero_titulo_eleitor: null,
+      zona_titulo_eleitor: null,
+      secao_titulo_eleitor: null,
+      tipo_sanguineo: null,
+      raca_cor: null,
+      estado_civil: null,
+      grau_instrucao: null,
+      necessidade_especial: null,
+    };
+  }
 }
 
 /**
  * Cria um novo cliente no sistema
  */
 export async function criarCliente(
-  params: ClienteDados
+  params: CriarClienteParams
 ): Promise<OperacaoClienteResult> {
   const supabase = createServiceClient();
 
   try {
     // Validações obrigatórias
-    if (!params.tipoPessoa) {
+    if (!params.tipo_pessoa) {
       return { sucesso: false, erro: 'Tipo de pessoa é obrigatório' };
     }
 
@@ -260,7 +196,7 @@ export async function criarCliente(
     }
 
     // Validações específicas por tipo de pessoa
-    if (params.tipoPessoa === 'pf') {
+    if (params.tipo_pessoa === 'pf') {
       if (!params.cpf?.trim()) {
         return { sucesso: false, erro: 'CPF é obrigatório para pessoa física' };
       }
@@ -269,23 +205,21 @@ export async function criarCliente(
         return { sucesso: false, erro: 'CPF inválido (deve conter 11 dígitos)' };
       }
 
-      // CPF deve ser único
+      // CPF deve ser único por TRT+Grau+NumeroProcesso
       const cpfNormalizado = normalizarCpf(params.cpf);
       const { data: clienteExistenteCpf } = await supabase
         .from('clientes')
         .select('id, cpf')
         .eq('cpf', cpfNormalizado)
-        .single();
+        .eq('trt', params.trt)
+        .eq('grau', params.grau)
+        .eq('numero_processo', params.numero_processo)
+        .maybeSingle();
 
       if (clienteExistenteCpf) {
-        return { sucesso: false, erro: 'CPF já cadastrado no sistema' };
+        return { sucesso: false, erro: 'Cliente com este CPF já existe para este processo' };
       }
-
-      // CNPJ não deve ser preenchido para PF
-      if (params.cnpj) {
-        return { sucesso: false, erro: 'CNPJ não deve ser preenchido para pessoa física' };
-      }
-    } else if (params.tipoPessoa === 'pj') {
+    } else if (params.tipo_pessoa === 'pj') {
       if (!params.cnpj?.trim()) {
         return { sucesso: false, erro: 'CNPJ é obrigatório para pessoa jurídica' };
       }
@@ -294,54 +228,93 @@ export async function criarCliente(
         return { sucesso: false, erro: 'CNPJ inválido (deve conter 14 dígitos)' };
       }
 
-      // CNPJ deve ser único
+      // CNPJ deve ser único por TRT+Grau+NumeroProcesso
       const cnpjNormalizado = normalizarCnpj(params.cnpj);
       const { data: clienteExistenteCnpj } = await supabase
         .from('clientes')
         .select('id, cnpj')
         .eq('cnpj', cnpjNormalizado)
-        .single();
+        .eq('trt', params.trt)
+        .eq('grau', params.grau)
+        .eq('numero_processo', params.numero_processo)
+        .maybeSingle();
 
       if (clienteExistenteCnpj) {
-        return { sucesso: false, erro: 'CNPJ já cadastrado no sistema' };
-      }
-
-      // CPF não deve ser preenchido para PJ
-      if (params.cpf) {
-        return { sucesso: false, erro: 'CPF não deve ser preenchido para pessoa jurídica' };
+        return { sucesso: false, erro: 'Cliente com este CNPJ já existe para este processo' };
       }
     }
 
-    // Validação de email se fornecido
-    if (params.email && !validarEmail(params.email)) {
-      return { sucesso: false, erro: 'E-mail inválido' };
+    // Validação de emails se fornecidos
+    if (params.emails) {
+      for (const email of params.emails) {
+        if (email && !validarEmail(email)) {
+          return { sucesso: false, erro: `E-mail inválido: ${email}` };
+        }
+      }
     }
-
-    // Validar e normalizar endereço
-    const enderecoNormalizado = validarEndereco(params.endereco);
 
     // Preparar dados para inserção
     const dadosNovos: Record<string, unknown> = {
-      tipo_pessoa: params.tipoPessoa,
+      id_pje: params.id_pje ?? null,
+      id_pessoa_pje: params.id_pessoa_pje ?? null,
+      trt: params.trt,
+      grau: params.grau,
+      numero_processo: params.numero_processo,
+      tipo_pessoa: params.tipo_pessoa,
       nome: params.nome.trim(),
-      nome_fantasia: params.nomeFantasia?.trim() || null,
-      cpf: params.tipoPessoa === 'pf' ? normalizarCpf(params.cpf!) : null,
-      cnpj: params.tipoPessoa === 'pj' ? normalizarCnpj(params.cnpj!) : null,
-      rg: params.tipoPessoa === 'pf' ? (params.rg?.trim() || null) : null,
-      data_nascimento: params.tipoPessoa === 'pf' ? parseDate(params.dataNascimento) : null,
-      genero: params.tipoPessoa === 'pf' ? (params.genero || null) : null,
-      estado_civil: params.tipoPessoa === 'pf' ? (params.estadoCivil || null) : null,
-      nacionalidade: params.tipoPessoa === 'pf' ? (params.nacionalidade?.trim() || null) : null,
-      naturalidade: params.tipoPessoa === 'pf' ? (params.naturalidade?.trim() || null) : null,
-      inscricao_estadual: params.tipoPessoa === 'pj' ? (params.inscricaoEstadual?.trim() || null) : null,
-      email: params.email?.trim().toLowerCase() || null,
-      telefone_primario: params.telefonePrimario?.trim() || null,
-      telefone_secundario: params.telefoneSecundario?.trim() || null,
-      endereco: enderecoNormalizado,
+      nome_social: params.nome_social?.trim() || null,
+      emails: params.emails ?? null,
+      ddd_celular: params.ddd_celular?.trim() || null,
+      numero_celular: params.numero_celular?.trim() || null,
+      ddd_telefone: params.ddd_telefone?.trim() || null,
+      numero_telefone: params.numero_telefone?.trim() || null,
+      fax: params.fax?.trim() || null,
+      situacao: params.situacao ?? null,
       observacoes: params.observacoes?.trim() || null,
-      created_by: params.createdBy || null,
-      ativo: params.ativo ?? true,
+      dados_pje_completo: params.dados_pje_completo ?? null,
     };
+
+    if (params.tipo_pessoa === 'pf') {
+      dadosNovos.cpf = normalizarCpf(params.cpf);
+      dadosNovos.tipo_documento = params.tipo_documento?.trim() || null;
+      dadosNovos.numero_rg = params.numero_rg?.trim() || null;
+      dadosNovos.orgao_emissor_rg = params.orgao_emissor_rg?.trim() || null;
+      dadosNovos.uf_rg = params.uf_rg?.trim() || null;
+      dadosNovos.data_expedicao_rg = params.data_expedicao_rg || null;
+      dadosNovos.sexo = params.sexo?.trim() || null;
+      dadosNovos.nome_genitora = params.nome_genitora?.trim() || null;
+      dadosNovos.data_nascimento = params.data_nascimento || null;
+      dadosNovos.nacionalidade = params.nacionalidade?.trim() || null;
+      dadosNovos.naturalidade = params.naturalidade?.trim() || null;
+      dadosNovos.municipio_nascimento = params.municipio_nascimento?.trim() || null;
+      dadosNovos.uf_nascimento = params.uf_nascimento?.trim() || null;
+      dadosNovos.pais_nacionalidade = params.pais_nacionalidade?.trim() || null;
+      dadosNovos.profissao = params.profissao?.trim() || null;
+      dadosNovos.cartao_nacional_saude = params.cartao_nacional_saude?.trim() || null;
+      dadosNovos.certificado_militar = params.certificado_militar?.trim() || null;
+      dadosNovos.numero_titulo_eleitor = params.numero_titulo_eleitor?.trim() || null;
+      dadosNovos.zona_titulo_eleitor = params.zona_titulo_eleitor?.trim() || null;
+      dadosNovos.secao_titulo_eleitor = params.secao_titulo_eleitor?.trim() || null;
+      dadosNovos.tipo_sanguineo = params.tipo_sanguineo?.trim() || null;
+      dadosNovos.raca_cor = params.raca_cor?.trim() || null;
+      dadosNovos.estado_civil = params.estado_civil?.trim() || null;
+      dadosNovos.grau_instrucao = params.grau_instrucao?.trim() || null;
+      dadosNovos.necessidade_especial = params.necessidade_especial?.trim() || null;
+    } else {
+      dadosNovos.cnpj = normalizarCnpj(params.cnpj);
+      dadosNovos.inscricao_estadual = params.inscricao_estadual?.trim() || null;
+      dadosNovos.inscricao_municipal = params.inscricao_municipal?.trim() || null;
+      dadosNovos.data_abertura = params.data_abertura || null;
+      dadosNovos.orgao_publico = params.orgao_publico ?? null;
+      dadosNovos.ds_tipo_pessoa = params.ds_tipo_pessoa?.trim() || null;
+      dadosNovos.ramo_atividade = params.ramo_atividade?.trim() || null;
+      dadosNovos.porte_codigo = params.porte_codigo?.trim() || null;
+      dadosNovos.porte_descricao = params.porte_descricao?.trim() || null;
+      dadosNovos.qualificacao_responsavel = params.qualificacao_responsavel?.trim() || null;
+      dadosNovos.capital_social = params.capital_social ?? null;
+      dadosNovos.nome_fantasia = params.nome_fantasia?.trim() || null;
+      dadosNovos.status_pje = params.status_pje?.trim() || null;
+    }
 
     // Inserir cliente
     const { data, error } = await supabase
@@ -373,8 +346,7 @@ export async function criarCliente(
  * Atualiza um cliente existente
  */
 export async function atualizarCliente(
-  id: number,
-  params: Partial<ClienteDados>
+  params: AtualizarClienteParams
 ): Promise<OperacaoClienteResult> {
   const supabase = createServiceClient();
 
@@ -382,130 +354,129 @@ export async function atualizarCliente(
     // Verificar se cliente existe
     const { data: clienteExistente, error: erroBusca } = await supabase
       .from('clientes')
-      .select('id, tipo_pessoa, cpf, cnpj')
-      .eq('id', id)
+      .select('id, tipo_pessoa')
+      .eq('id', params.id)
       .single();
 
     if (erroBusca || !clienteExistente) {
       return { sucesso: false, erro: 'Cliente não encontrado' };
     }
 
-    const tipoPessoaAtual = clienteExistente.tipo_pessoa as TipoPessoa;
+    const tipoPessoaAtual = clienteExistente.tipo_pessoa as 'pf' | 'pj';
 
-    // Se está alterando o tipo de pessoa, validar
-    if (params.tipoPessoa && params.tipoPessoa !== tipoPessoaAtual) {
+    // Não permite alterar tipo_pessoa
+    if (params.tipo_pessoa && params.tipo_pessoa !== tipoPessoaAtual) {
       return { sucesso: false, erro: 'Não é permitido alterar o tipo de pessoa do cliente' };
-    }
-
-    // Validações condicionais
-    if (params.cpf && !validarCpf(params.cpf)) {
-      return { sucesso: false, erro: 'CPF inválido (deve conter 11 dígitos)' };
-    }
-
-    if (params.cnpj && !validarCnpj(params.cnpj)) {
-      return { sucesso: false, erro: 'CNPJ inválido (deve conter 14 dígitos)' };
-    }
-
-    if (params.email && !validarEmail(params.email)) {
-      return { sucesso: false, erro: 'E-mail inválido' };
-    }
-
-    // Verificar duplicidades se campos únicos foram alterados
-    if (params.cpf && tipoPessoaAtual === 'pf') {
-      const cpfNormalizado = normalizarCpf(params.cpf);
-      if (cpfNormalizado !== clienteExistente.cpf) {
-        const { data: clienteComCpf } = await supabase
-          .from('clientes')
-          .select('id')
-          .eq('cpf', cpfNormalizado)
-          .neq('id', id)
-          .single();
-
-        if (clienteComCpf) {
-          return { sucesso: false, erro: 'CPF já cadastrado para outro cliente' };
-        }
-      }
-    }
-
-    if (params.cnpj && tipoPessoaAtual === 'pj') {
-      const cnpjNormalizado = normalizarCnpj(params.cnpj);
-      if (cnpjNormalizado !== clienteExistente.cnpj) {
-        const { data: clienteComCnpj } = await supabase
-          .from('clientes')
-          .select('id')
-          .eq('cnpj', cnpjNormalizado)
-          .neq('id', id)
-          .single();
-
-        if (clienteComCnpj) {
-          return { sucesso: false, erro: 'CNPJ já cadastrado para outro cliente' };
-        }
-      }
     }
 
     // Preparar dados para atualização (apenas campos fornecidos)
     const dadosAtualizacao: Record<string, unknown> = {};
 
-    if (params.nome !== undefined) {
-      dadosAtualizacao.nome = params.nome.trim();
-    }
-    if (params.nomeFantasia !== undefined) {
-      dadosAtualizacao.nome_fantasia = params.nomeFantasia?.trim() || null;
-    }
-    if (params.cpf !== undefined && tipoPessoaAtual === 'pf') {
-      dadosAtualizacao.cpf = normalizarCpf(params.cpf);
-    }
-    if (params.cnpj !== undefined && tipoPessoaAtual === 'pj') {
-      dadosAtualizacao.cnpj = normalizarCnpj(params.cnpj);
-    }
-    if (params.rg !== undefined && tipoPessoaAtual === 'pf') {
-      dadosAtualizacao.rg = params.rg?.trim() || null;
-    }
-    if (params.dataNascimento !== undefined && tipoPessoaAtual === 'pf') {
-      dadosAtualizacao.data_nascimento = parseDate(params.dataNascimento);
-    }
-    if (params.genero !== undefined && tipoPessoaAtual === 'pf') {
-      dadosAtualizacao.genero = params.genero || null;
-    }
-    if (params.estadoCivil !== undefined && tipoPessoaAtual === 'pf') {
-      dadosAtualizacao.estado_civil = params.estadoCivil || null;
-    }
-    if (params.nacionalidade !== undefined && tipoPessoaAtual === 'pf') {
-      dadosAtualizacao.nacionalidade = params.nacionalidade?.trim() || null;
-    }
-    if (params.naturalidade !== undefined && tipoPessoaAtual === 'pf') {
-      dadosAtualizacao.naturalidade = params.naturalidade?.trim() || null;
-    }
-    if (params.inscricaoEstadual !== undefined && tipoPessoaAtual === 'pj') {
-      dadosAtualizacao.inscricao_estadual = params.inscricaoEstadual?.trim() || null;
-    }
-    if (params.email !== undefined) {
-      dadosAtualizacao.email = params.email?.trim().toLowerCase() || null;
-    }
-    if (params.telefonePrimario !== undefined) {
-      dadosAtualizacao.telefone_primario = params.telefonePrimario?.trim() || null;
-    }
-    if (params.telefoneSecundario !== undefined) {
-      dadosAtualizacao.telefone_secundario = params.telefoneSecundario?.trim() || null;
-    }
-    if (params.endereco !== undefined) {
-      dadosAtualizacao.endereco = validarEndereco(params.endereco);
-    }
-    if (params.observacoes !== undefined) {
+    if (params.id_pje !== undefined) dadosAtualizacao.id_pje = params.id_pje;
+    if (params.id_pessoa_pje !== undefined) dadosAtualizacao.id_pessoa_pje = params.id_pessoa_pje;
+    if (params.trt !== undefined) dadosAtualizacao.trt = params.trt;
+    if (params.grau !== undefined) dadosAtualizacao.grau = params.grau;
+    if (params.numero_processo !== undefined)
+      dadosAtualizacao.numero_processo = params.numero_processo;
+    if (params.nome !== undefined) dadosAtualizacao.nome = params.nome.trim();
+    if (params.nome_social !== undefined)
+      dadosAtualizacao.nome_social = params.nome_social?.trim() || null;
+    if (params.emails !== undefined) dadosAtualizacao.emails = params.emails;
+    if (params.ddd_celular !== undefined)
+      dadosAtualizacao.ddd_celular = params.ddd_celular?.trim() || null;
+    if (params.numero_celular !== undefined)
+      dadosAtualizacao.numero_celular = params.numero_celular?.trim() || null;
+    if (params.ddd_telefone !== undefined)
+      dadosAtualizacao.ddd_telefone = params.ddd_telefone?.trim() || null;
+    if (params.numero_telefone !== undefined)
+      dadosAtualizacao.numero_telefone = params.numero_telefone?.trim() || null;
+    if (params.fax !== undefined) dadosAtualizacao.fax = params.fax?.trim() || null;
+    if (params.situacao !== undefined) dadosAtualizacao.situacao = params.situacao;
+    if (params.observacoes !== undefined)
       dadosAtualizacao.observacoes = params.observacoes?.trim() || null;
-    }
-    if (params.createdBy !== undefined) {
-      dadosAtualizacao.created_by = params.createdBy || null;
-    }
-    if (params.ativo !== undefined) {
-      dadosAtualizacao.ativo = params.ativo;
+    if (params.dados_pje_completo !== undefined)
+      dadosAtualizacao.dados_pje_completo = params.dados_pje_completo;
+
+    // Campos específicos por tipo de pessoa
+    if (tipoPessoaAtual === 'pf' && params.tipo_pessoa === 'pf') {
+      if (params.cpf !== undefined) dadosAtualizacao.cpf = normalizarCpf(params.cpf);
+      if (params.tipo_documento !== undefined)
+        dadosAtualizacao.tipo_documento = params.tipo_documento?.trim() || null;
+      if (params.numero_rg !== undefined)
+        dadosAtualizacao.numero_rg = params.numero_rg?.trim() || null;
+      if (params.orgao_emissor_rg !== undefined)
+        dadosAtualizacao.orgao_emissor_rg = params.orgao_emissor_rg?.trim() || null;
+      if (params.uf_rg !== undefined) dadosAtualizacao.uf_rg = params.uf_rg?.trim() || null;
+      if (params.data_expedicao_rg !== undefined)
+        dadosAtualizacao.data_expedicao_rg = params.data_expedicao_rg;
+      if (params.sexo !== undefined) dadosAtualizacao.sexo = params.sexo?.trim() || null;
+      if (params.nome_genitora !== undefined)
+        dadosAtualizacao.nome_genitora = params.nome_genitora?.trim() || null;
+      if (params.data_nascimento !== undefined)
+        dadosAtualizacao.data_nascimento = params.data_nascimento;
+      if (params.nacionalidade !== undefined)
+        dadosAtualizacao.nacionalidade = params.nacionalidade?.trim() || null;
+      if (params.naturalidade !== undefined)
+        dadosAtualizacao.naturalidade = params.naturalidade?.trim() || null;
+      if (params.municipio_nascimento !== undefined)
+        dadosAtualizacao.municipio_nascimento = params.municipio_nascimento?.trim() || null;
+      if (params.uf_nascimento !== undefined)
+        dadosAtualizacao.uf_nascimento = params.uf_nascimento?.trim() || null;
+      if (params.pais_nacionalidade !== undefined)
+        dadosAtualizacao.pais_nacionalidade = params.pais_nacionalidade?.trim() || null;
+      if (params.profissao !== undefined)
+        dadosAtualizacao.profissao = params.profissao?.trim() || null;
+      if (params.cartao_nacional_saude !== undefined)
+        dadosAtualizacao.cartao_nacional_saude = params.cartao_nacional_saude?.trim() || null;
+      if (params.certificado_militar !== undefined)
+        dadosAtualizacao.certificado_militar = params.certificado_militar?.trim() || null;
+      if (params.numero_titulo_eleitor !== undefined)
+        dadosAtualizacao.numero_titulo_eleitor = params.numero_titulo_eleitor?.trim() || null;
+      if (params.zona_titulo_eleitor !== undefined)
+        dadosAtualizacao.zona_titulo_eleitor = params.zona_titulo_eleitor?.trim() || null;
+      if (params.secao_titulo_eleitor !== undefined)
+        dadosAtualizacao.secao_titulo_eleitor = params.secao_titulo_eleitor?.trim() || null;
+      if (params.tipo_sanguineo !== undefined)
+        dadosAtualizacao.tipo_sanguineo = params.tipo_sanguineo?.trim() || null;
+      if (params.raca_cor !== undefined) dadosAtualizacao.raca_cor = params.raca_cor?.trim() || null;
+      if (params.estado_civil !== undefined)
+        dadosAtualizacao.estado_civil = params.estado_civil?.trim() || null;
+      if (params.grau_instrucao !== undefined)
+        dadosAtualizacao.grau_instrucao = params.grau_instrucao?.trim() || null;
+      if (params.necessidade_especial !== undefined)
+        dadosAtualizacao.necessidade_especial = params.necessidade_especial?.trim() || null;
+    } else if (tipoPessoaAtual === 'pj' && params.tipo_pessoa === 'pj') {
+      if (params.cnpj !== undefined) dadosAtualizacao.cnpj = normalizarCnpj(params.cnpj);
+      if (params.inscricao_estadual !== undefined)
+        dadosAtualizacao.inscricao_estadual = params.inscricao_estadual?.trim() || null;
+      if (params.inscricao_municipal !== undefined)
+        dadosAtualizacao.inscricao_municipal = params.inscricao_municipal?.trim() || null;
+      if (params.data_abertura !== undefined) dadosAtualizacao.data_abertura = params.data_abertura;
+      if (params.orgao_publico !== undefined) dadosAtualizacao.orgao_publico = params.orgao_publico;
+      if (params.ds_tipo_pessoa !== undefined)
+        dadosAtualizacao.ds_tipo_pessoa = params.ds_tipo_pessoa?.trim() || null;
+      if (params.ramo_atividade !== undefined)
+        dadosAtualizacao.ramo_atividade = params.ramo_atividade?.trim() || null;
+      if (params.porte_codigo !== undefined)
+        dadosAtualizacao.porte_codigo = params.porte_codigo?.trim() || null;
+      if (params.porte_descricao !== undefined)
+        dadosAtualizacao.porte_descricao = params.porte_descricao?.trim() || null;
+      if (params.qualificacao_responsavel !== undefined)
+        dadosAtualizacao.qualificacao_responsavel =
+          params.qualificacao_responsavel?.trim() || null;
+      if (params.capital_social !== undefined)
+        dadosAtualizacao.capital_social = params.capital_social;
+      if (params.nome_fantasia !== undefined)
+        dadosAtualizacao.nome_fantasia = params.nome_fantasia?.trim() || null;
+      if (params.status_pje !== undefined)
+        dadosAtualizacao.status_pje = params.status_pje?.trim() || null;
     }
 
     // Atualizar cliente
     const { data, error } = await supabase
       .from('clientes')
       .update(dadosAtualizacao)
-      .eq('id', id)
+      .eq('id', params.id)
       .select()
       .single();
 
@@ -541,11 +512,7 @@ export async function buscarClientePorId(id: number): Promise<Cliente | null> {
 
   const supabase = createServiceClient();
 
-  const { data, error } = await supabase
-    .from('clientes')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from('clientes').select('*').eq('id', id).single();
 
   if (error) {
     if (error.code === 'PGRST116') {
@@ -562,14 +529,15 @@ export async function buscarClientePorId(id: number): Promise<Cliente | null> {
 }
 
 /**
- * Busca um cliente por CPF
+ * Busca um cliente por id_pessoa_pje
  */
-export async function buscarClientePorCpf(cpf: string): Promise<Cliente | null> {
-  const cpfNormalizado = normalizarCpf(cpf);
-  const cacheKey = `clientes:cpf:${cpfNormalizado}`;
+export async function buscarClientePorIdPessoaPje(
+  id_pessoa_pje: number
+): Promise<Cliente | null> {
+  const cacheKey = `clientes:id_pessoa_pje:${id_pessoa_pje}`;
   const cached = await getCached<Cliente>(cacheKey);
   if (cached) {
-    console.log(`Cache hit for buscarClientePorCpf: ${cpfNormalizado}`);
+    console.log(`Cache hit for buscarClientePorIdPessoaPje: ${id_pessoa_pje}`);
     return cached;
   }
 
@@ -578,48 +546,11 @@ export async function buscarClientePorCpf(cpf: string): Promise<Cliente | null> 
   const { data, error } = await supabase
     .from('clientes')
     .select('*')
-    .eq('cpf', cpfNormalizado)
-    .single();
+    .eq('id_pessoa_pje', id_pessoa_pje)
+    .maybeSingle();
 
   if (error) {
-    if (error.code === 'PGRST116') {
-      return null;
-    }
-    throw new Error(`Erro ao buscar cliente por CPF: ${error.message}`);
-  }
-
-  const cliente = data ? converterParaCliente(data) : null;
-  if (cliente) {
-    await setCached(cacheKey, cliente, 1200); // 20 minutes TTL
-  }
-  return cliente;
-}
-
-/**
- * Busca um cliente por CNPJ
- */
-export async function buscarClientePorCnpj(cnpj: string): Promise<Cliente | null> {
-  const cnpjNormalizado = normalizarCnpj(cnpj);
-  const cacheKey = `clientes:cnpj:${cnpjNormalizado}`;
-  const cached = await getCached<Cliente>(cacheKey);
-  if (cached) {
-    console.log(`Cache hit for buscarClientePorCnpj: ${cnpjNormalizado}`);
-    return cached;
-  }
-
-  const supabase = createServiceClient();
-
-  const { data, error } = await supabase
-    .from('clientes')
-    .select('*')
-    .eq('cnpj', cnpjNormalizado)
-    .single();
-
-  if (error) {
-    if (error.code === 'PGRST116') {
-      return null;
-    }
-    throw new Error(`Erro ao buscar cliente por CNPJ: ${error.message}`);
+    throw new Error(`Erro ao buscar cliente por id_pessoa_pje: ${error.message}`);
   }
 
   const cliente = data ? converterParaCliente(data) : null;
@@ -635,13 +566,6 @@ export async function buscarClientePorCnpj(cnpj: string): Promise<Cliente | null
 export async function listarClientes(
   params: ListarClientesParams = {}
 ): Promise<ListarClientesResult> {
-  const cacheKey = getClientesListKey(params);
-  const cached = await getCached<ListarClientesResult>(cacheKey);
-  if (cached) {
-    console.log(`Cache hit for listarClientes: ${cacheKey}`);
-    return cached;
-  }
-
   const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
@@ -654,20 +578,49 @@ export async function listarClientes(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(
-      `nome.ilike.%${busca}%,nome_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%,email.ilike.%${busca}%`
+      `nome.ilike.%${busca}%,nome_social.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
     );
   }
 
-  if (params.tipoPessoa) {
-    query = query.eq('tipo_pessoa', params.tipoPessoa);
+  if (params.tipo_pessoa) {
+    query = query.eq('tipo_pessoa', params.tipo_pessoa);
   }
 
-  if (params.ativo !== undefined) {
-    query = query.eq('ativo', params.ativo);
+  if (params.trt) {
+    query = query.eq('trt', params.trt);
   }
+
+  if (params.grau) {
+    query = query.eq('grau', params.grau);
+  }
+
+  if (params.nome) {
+    query = query.ilike('nome', `%${params.nome}%`);
+  }
+
+  if (params.cpf) {
+    query = query.eq('cpf', normalizarCpf(params.cpf));
+  }
+
+  if (params.cnpj) {
+    query = query.eq('cnpj', normalizarCnpj(params.cnpj));
+  }
+
+  if (params.id_pessoa_pje) {
+    query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
+  }
+
+  if (params.numero_processo) {
+    query = query.eq('numero_processo', params.numero_processo);
+  }
+
+  // Ordenação
+  const ordenarPor = params.ordenar_por ?? 'created_at';
+  const ordem = params.ordem ?? 'desc';
+  query = query.order(ordenarPor, { ascending: ordem === 'asc' });
 
   // Aplicar paginação
-  query = query.order('created_at', { ascending: false }).range(offset, offset + limite - 1);
+  query = query.range(offset, offset + limite - 1);
 
   const { data, error, count } = await query;
 
@@ -679,14 +632,65 @@ export async function listarClientes(
   const total = count ?? 0;
   const totalPaginas = Math.ceil(total / limite);
 
-  const result: ListarClientesResult = {
+  return {
     clientes,
     total,
     pagina,
     limite,
     totalPaginas,
   };
+}
 
-  await setCached(cacheKey, result, 1200); // 20 minutes TTL
-  return result;
+/**
+ * Upsert cliente por id_pessoa_pje (cria se não existir, atualiza se existir)
+ */
+export async function upsertClientePorIdPessoa(
+  params: UpsertClientePorIdPessoaParams
+): Promise<OperacaoClienteResult> {
+  const supabase = createServiceClient();
+
+  try {
+    // Buscar cliente existente por id_pessoa_pje
+    const clienteExistente = await buscarClientePorIdPessoaPje(params.id_pessoa_pje);
+
+    if (clienteExistente) {
+      // Atualizar cliente existente
+      return await atualizarCliente({
+        id: clienteExistente.id,
+        ...params,
+      });
+    } else {
+      // Criar novo cliente
+      return await criarCliente(params);
+    }
+  } catch (error) {
+    const erroMsg = error instanceof Error ? error.message : String(error);
+    console.error('Erro inesperado ao fazer upsert de cliente:', error);
+    return { sucesso: false, erro: `Erro inesperado: ${erroMsg}` };
+  }
+}
+
+/**
+ * Deleta um cliente por ID
+ */
+export async function deletarCliente(id: number): Promise<OperacaoClienteResult> {
+  const supabase = createServiceClient();
+
+  try {
+    const { error } = await supabase.from('clientes').delete().eq('id', id);
+
+    if (error) {
+      console.error('Erro ao deletar cliente:', error);
+      return { sucesso: false, erro: `Erro ao deletar cliente: ${error.message}` };
+    }
+
+    // Invalidate cache after successful deletion
+    await invalidateClientesCache();
+
+    return { sucesso: true };
+  } catch (error) {
+    const erroMsg = error instanceof Error ? error.message : String(error);
+    console.error('Erro inesperado ao deletar cliente:', error);
+    return { sucesso: false, erro: `Erro inesperado: ${erroMsg}` };
+  }
 }
