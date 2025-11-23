@@ -63,7 +63,7 @@ export type Operacao =
 
 /**
  * Matriz de permissões completa do sistema
- * Total: 81 permissões granulares
+ * Total: 82 permissões granulares
  */
 export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
   // Advogados (5 permissões)
@@ -112,7 +112,7 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'editar_tipo_descricao',
   ],
 
-  // Expedientes Manuais (9 permissões)
+  // Expedientes Manuais (10 permissões)
   expedientes_manuais: [
     'listar',
     'visualizar',
@@ -123,6 +123,7 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'desatribuir_responsavel',
     'transferir_responsavel',
     'baixar_expediente',
+    'reverter_baixa',
   ],
 
   // Usuários (8 permissões)

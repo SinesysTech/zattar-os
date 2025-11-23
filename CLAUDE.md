@@ -155,7 +155,7 @@ supabase/                    # Configurações Supabase
 - Controle de repasses para clientes
 
 ### 5. Sistema de Permissões
-- 81 permissões em 13 recursos
+- 82 permissões em 13 recursos
 - Cargos para organização interna
 - Cache in-memory com TTL de 5 minutos
 - Logs de auditoria completos
