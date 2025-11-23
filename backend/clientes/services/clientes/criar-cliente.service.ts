@@ -3,13 +3,13 @@
 
 import {
   criarCliente as criarClienteDb,
-  type ClienteDados,
   type OperacaoClienteResult,
 } from '../persistence/cliente-persistence.service';
+import type { CriarClienteParams } from '@/backend/types/partes';
 
 /**
  * Cadastra um novo cliente no sistema
- * 
+ *
  * Fluxo:
  * 1. Valida os dados de entrada
  * 2. Verifica duplicidades (CPF/CNPJ)
@@ -17,12 +17,12 @@ import {
  * 4. Retorna o cliente criado ou erro
  */
 export async function cadastrarCliente(
-  params: ClienteDados
+  params: CriarClienteParams
 ): Promise<OperacaoClienteResult> {
   console.log('📝 Iniciando cadastro de cliente...', {
-    tipoPessoa: params.tipoPessoa,
+    tipo_pessoa: params.tipo_pessoa,
     nome: params.nome,
-    documento: params.tipoPessoa === 'pf' 
+    documento: params.tipo_pessoa === 'pf'
       ? params.cpf?.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '***.***.$3-$4')
       : params.cnpj?.replace(/\D/g, '').replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.***.$3/$4-$5'),
   });
@@ -33,7 +33,7 @@ export async function cadastrarCliente(
     if (resultado.sucesso && resultado.cliente) {
       console.log('✅ Cliente cadastrado com sucesso:', {
         id: resultado.cliente.id,
-        tipoPessoa: resultado.cliente.tipoPessoa,
+        tipo_pessoa: resultado.cliente.tipo_pessoa,
         nome: resultado.cliente.nome,
       });
     } else {

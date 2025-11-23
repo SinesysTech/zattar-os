@@ -6,9 +6,9 @@ import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { obterPartesContrarias } from '@/backend/partes-contrarias/services/partes-contrarias/listar-partes-contrarias.service';
 import { cadastrarParteContraria } from '@/backend/partes-contrarias/services/partes-contrarias/criar-parte-contraria.service';
 import type {
-  ParteContrariaDados,
+  CriarParteContrariaParams,
   ListarPartesContrariasParams,
-} from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
+} from '@/backend/types/partes';
 
 /**
  * @swagger
@@ -165,13 +165,10 @@ export async function GET(request: NextRequest) {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,
-      tipoPessoa: (searchParams.get('tipoPessoa') as 'pf' | 'pj' | null) || undefined,
-      ativo:
-        searchParams.get('ativo') === 'true'
-          ? true
-          : searchParams.get('ativo') === 'false'
-            ? false
-            : undefined,
+      tipo_pessoa: (searchParams.get('tipo_pessoa') as 'pf' | 'pj' | null) || undefined,
+      situacao: (searchParams.get('situacao') as 'A' | 'I' | 'E' | 'H' | null) || undefined,
+      trt: searchParams.get('trt') || undefined,
+      grau: (searchParams.get('grau') as 'primeiro_grau' | 'segundo_grau' | null) || undefined,
     };
 
     const resultado = await obterPartesContrarias(params);
@@ -198,11 +195,11 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const dadosParteContraria = body as ParteContrariaDados;
+    const dadosParteContraria = body as CriarParteContrariaParams;
 
-    if (!dadosParteContraria.tipoPessoa || !dadosParteContraria.nome) {
+    if (!dadosParteContraria.tipo_pessoa || !dadosParteContraria.nome) {
       return NextResponse.json(
-        { error: 'Missing required fields: tipoPessoa, nome' },
+        { error: 'Missing required fields: tipo_pessoa, nome' },
         { status: 400 },
       );
     }

@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import { obterParteContrariaPorId } from '@/backend/partes-contrarias/services/partes-contrarias/buscar-parte-contraria.service';
 import { atualizarParteContraria } from '@/backend/partes-contrarias/services/partes-contrarias/atualizar-parte-contraria.service';
-import type { ParteContrariaDados } from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
+import type { AtualizarParteContrariaParams } from '@/backend/types/partes';
 
 /**
  * @swagger
@@ -157,7 +157,7 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const dadosAtualizacao = body as Partial<ParteContrariaDados>;
+    const dadosAtualizacao = body as Omit<AtualizarParteContrariaParams, 'id'>;
 
     const resultado = await atualizarParteContraria(parteId, dadosAtualizacao);
 

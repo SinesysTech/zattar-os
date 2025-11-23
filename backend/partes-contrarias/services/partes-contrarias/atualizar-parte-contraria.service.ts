@@ -3,13 +3,13 @@
 
 import {
   atualizarParteContraria as atualizarParteContrariaDb,
-  type ParteContrariaDados,
   type OperacaoParteContrariaResult,
 } from '../persistence/parte-contraria-persistence.service';
+import type { AtualizarParteContrariaParams } from '@/backend/types/partes';
 
 /**
  * Atualiza uma parte contrária existente
- * 
+ *
  * Fluxo:
  * 1. Verifica se a parte contrária existe
  * 2. Valida os dados fornecidos
@@ -19,12 +19,12 @@ import {
  */
 export async function atualizarParteContraria(
   id: number,
-  params: Partial<ParteContrariaDados>
+  params: Omit<AtualizarParteContrariaParams, 'id'>
 ): Promise<OperacaoParteContrariaResult> {
   console.log('📝 Atualizando parte contrária...', { id, campos: Object.keys(params) });
 
   try {
-    const resultado = await atualizarParteContrariaDb(id, params);
+    const resultado = await atualizarParteContrariaDb({ id, ...params });
 
     if (resultado.sucesso && resultado.parteContraria) {
       console.log('✅ Parte contrária atualizada com sucesso:', {

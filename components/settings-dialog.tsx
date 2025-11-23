@@ -39,9 +39,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/app/api/ai/command/utils';
+import { cn } from '@/app/_lib/utils';
 
-import { aiChatPlugin } from './plugins/ai-kit';
+import { aiChatPlugin } from './ai-kit';
 
 type Model = {
   label: string;

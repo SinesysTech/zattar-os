@@ -3,13 +3,13 @@
 
 import {
   atualizarCliente as atualizarClienteDb,
-  type ClienteDados,
   type OperacaoClienteResult,
 } from '../persistence/cliente-persistence.service';
+import type { AtualizarClienteParams } from '@/backend/types/partes';
 
 /**
  * Atualiza um cliente existente
- * 
+ *
  * Fluxo:
  * 1. Verifica se o cliente existe
  * 2. Valida os dados fornecidos
@@ -19,12 +19,12 @@ import {
  */
 export async function atualizarCliente(
   id: number,
-  params: Partial<ClienteDados>
+  params: Omit<AtualizarClienteParams, 'id'>
 ): Promise<OperacaoClienteResult> {
   console.log('📝 Atualizando cliente...', { id, campos: Object.keys(params) });
 
   try {
-    const resultado = await atualizarClienteDb(id, params);
+    const resultado = await atualizarClienteDb({ id, ...params });
 
     if (resultado.sucesso && resultado.cliente) {
       console.log('✅ Cliente atualizado com sucesso:', {
