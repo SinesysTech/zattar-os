@@ -3,7 +3,7 @@
 ## ADDED Requirements
 
 ### Requirement: Tabela enderecos normalizada
-A tabela `enderecos` armazena endereços de clientes, partes contrárias e terceiros de forma normalizada, permitindo múltiplos endereços por entidade.
+The system SHALL provide a `enderecos` armazena endereços de clientes, partes contrárias e terceiros de forma normalizada, permitindo múltiplos endereços por entidade.
 
 #### Scenario: Criar endereço para cliente
 **Given** um cliente existe no banco
@@ -22,7 +22,7 @@ A tabela `enderecos` armazena endereços de clientes, partes contrárias e terce
 ---
 
 ### Requirement: Tabela clientes reestruturada com campos PJE
-A tabela `clientes` foi reestruturada para seguir fielmente a estrutura do PJE, com 60 campos totais.
+The system SHALL provide a `clientes` foi reestruturada para seguir fielmente a estrutura do PJE, com 60 campos totais.
 
 #### Scenario: Criar cliente PF com dados completos
 **Given** dados de uma pessoa física do PJE
@@ -47,7 +47,7 @@ A tabela `clientes` foi reestruturada para seguir fielmente a estrutura do PJE, 
 ---
 
 ### Requirement: Tabela partes_contrarias com estrutura idêntica a clientes
-A tabela `partes_contrarias` tem a mesma estrutura de `clientes` para manter consistência.
+The system SHALL provide a `partes_contrarias` tem a mesma estrutura de `clientes` para manter consistência.
 
 #### Scenario: CRUD de parte contrária
 **Given** a estrutura de clientes
@@ -58,7 +58,7 @@ A tabela `partes_contrarias` tem a mesma estrutura de `clientes` para manter con
 ---
 
 ### Requirement: Tabela terceiros para terceiros interessados
-A tabela `terceiros` armazena peritos, ministério público, assistentes e outros terceiros interessados em processos.
+The system SHALL provide a `terceiros` armazena peritos, ministério público, assistentes e outros terceiros interessados em processos.
 
 #### Scenario: Criar terceiro tipo PERITO
 **Given** dados de um perito do PJE
@@ -76,7 +76,7 @@ A tabela `terceiros` armazena peritos, ministério público, assistentes e outro
 ---
 
 ### Requirement: Tabela processo_partes para relacionamento N:N
-A tabela `processo_partes` relaciona processos com suas partes (clientes, partes contrárias, terceiros), armazenando dados específicos da participação.
+The system SHALL provide a `processo_partes` relaciona processos com suas partes (clientes, partes contrárias, terceiros), armazenando dados específicos da participação.
 
 #### Scenario: Vincular cliente a processo como AUTOR
 **Given** um cliente e um processo existem
@@ -101,7 +101,7 @@ A tabela `processo_partes` relaciona processos com suas partes (clientes, partes
 ---
 
 ### Requirement: Índices otimizados para queries comuns
-Índices garantem performance em queries frequentes.
+Indexes SHALL garantem performance em queries frequentes.
 
 #### Scenario: Busca por id_pessoa_pje
 **Given** índice único em `id_pessoa_pje` em cada tabela

@@ -3,7 +3,7 @@
 ## ADDED Requirements
 
 ### Requirement: Página /partes com navegação por tabs
-A página `/partes` unifica gestão de clientes, partes contrárias e terceiros em uma interface única com tabs.
+The page SHALL `/partes` unifica gestão de clientes, partes contrárias e terceiros em uma interface única com tabs.
 
 #### Scenario: Acessar página de partes
 **Given** usuário autenticado
@@ -30,7 +30,7 @@ A página `/partes` unifica gestão de clientes, partes contrárias e terceiros 
 ---
 
 ### Requirement: Tab Clientes com CRUD completo
-A tab "Clientes" permite criar, visualizar, editar e deletar clientes com todos os campos do PJE.
+The tab SHALL "Clientes" permite criar, visualizar, editar e deletar clientes com todos os campos do PJE.
 
 #### Scenario: Listar clientes com filtros
 **Given** existem clientes no banco
@@ -86,7 +86,7 @@ A tab "Clientes" permite criar, visualizar, editar e deletar clientes com todos 
 ---
 
 ### Requirement: Tab Partes Contrárias com CRUD completo
-A tab "Partes Contrárias" tem funcionalidade idêntica a Clientes.
+The tab SHALL "Partes Contrárias" tem funcionalidade idêntica a Clientes.
 
 #### Scenario: CRUD de parte contrária
 **Given** tab "Partes Contrárias" aberta
@@ -98,7 +98,7 @@ A tab "Partes Contrárias" tem funcionalidade idêntica a Clientes.
 ---
 
 ### Requirement: Tab Terceiros (estrutura básica)
-A tab "Terceiros" exibe mensagem informativa e estrutura pronta para futuro desenvolvimento.
+The tab SHALL "Terceiros" exibe mensagem informativa e estrutura pronta para futuro desenvolvimento.
 
 #### Scenario: Visualizar tab Terceiros vazia
 **Given** não existem terceiros cadastrados
@@ -116,7 +116,7 @@ A tab "Terceiros" exibe mensagem informativa e estrutura pronta para futuro dese
 ---
 
 ### Requirement: Responsividade e UX consistente
-Todos os componentes são responsivos e seguem padrão shadcn/ui.
+All components SHALL be responsive and follow shadcn/ui patterns.
 
 #### Scenario: Layout responsivo em mobile
 **Given** usuário acessa em dispositivo mobile
@@ -142,7 +142,7 @@ Todos os componentes são responsivos e seguem padrão shadcn/ui.
 ---
 
 ### Requirement: Validação de formulários com feedback visual
-Campos obrigatórios e validações são indicados claramente.
+Forms SHALL provide visual feedback for required fields and validations.
 
 #### Scenario: Campo obrigatório não preenchido
 **Given** formulário de criação aberto
@@ -165,7 +165,7 @@ Campos obrigatórios e validações são indicados claramente.
 ---
 
 ### Requirement: Navegação no menu atualizada
-Menu lateral reflete nova estrutura de partes.
+The menu SHALL lateral reflete nova estrutura de partes.
 
 #### Scenario: Item de menu "Partes"
 **Given** menu lateral do dashboard
@@ -191,7 +191,7 @@ _(Nenhum requirement existente foi modificado diretamente. A página /clientes f
 ## REMOVED Requirements
 
 ### Requirement: Página /clientes standalone (REMOVIDO)
-A página `/clientes` foi substituída pela página `/partes` com tabs.
+The page SHALL `/clientes` foi substituída pela página `/partes` com tabs.
 
 **Rationale**: Unificação de UX para todas as partes processuais em uma interface única.
 
