@@ -18,8 +18,8 @@ export async function POST(
 ) {
   try {
     // Autenticação
-    const { user } = await authenticateRequest();
-    if (!user) {
+    const authResult = await authenticateRequest(request);
+    if (!authResult.authenticated || !authResult.usuarioId) {
       return NextResponse.json(
         { success: false, error: 'Não autenticado' },
         { status: 401 }
@@ -28,9 +28,9 @@ export async function POST(
 
     // Permissão
     const temPermissao = await verificarPermissoes(
-      user.id,
+      authResult.usuarioId,
       'expedientes_manuais',
-      'update'
+      'editar'
     );
     if (!temPermissao) {
       return NextResponse.json(

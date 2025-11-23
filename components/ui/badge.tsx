@@ -72,9 +72,9 @@ const badgeVariants = cva(
       },
     },
     compoundVariants: Object.entries(toneStyles).flatMap(([tone, styles]) => [
-      { tone, variant: "solid", class: styles.solid },
-      { tone, variant: "soft", class: styles.soft },
-      { tone, variant: "outline", class: styles.outline },
+      { tone: tone as BadgeTone, variant: "solid" as const, class: styles.solid },
+      { tone: tone as BadgeTone, variant: "soft" as const, class: styles.soft },
+      { tone: tone as BadgeTone, variant: "outline" as const, class: styles.outline },
     ]),
     defaultVariants: {
       variant: "soft",
@@ -108,7 +108,6 @@ function normalizeVariant(variant: BadgeProps["variant"]): BadgeVariants["varian
   if (variant === "solid" || variant === "soft" || variant === "outline") {
     return variant;
   }
-  if (variant === "outline") return "outline";
   if (variant === "default" || variant === "destructive") return "solid";
   return "soft";
 }

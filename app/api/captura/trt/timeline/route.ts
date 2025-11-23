@@ -31,6 +31,7 @@ import { authenticateRequest } from '@/backend/utils/auth/api-auth';
  *               - trtCodigo
  *               - grau
  *               - processoId
+ *               - numeroProcesso
  *               - advogadoId
  *             properties:
  *               trtCodigo:
@@ -47,6 +48,10 @@ import { authenticateRequest } from '@/backend/utils/auth/api-auth';
  *                 type: string
  *                 description: ID do processo no sistema PJE
  *                 example: "2887163"
+ *               numeroProcesso:
+ *                 type: string
+ *                 description: Número do processo (ex: 0010702-80.2025.5.03.0111)
+ *                 example: "0010702-80.2025.5.03.0111"
  *               advogadoId:
  *                 type: number
  *                 description: ID do advogado (para obter credenciais)
@@ -142,15 +147,16 @@ export async function POST(request: NextRequest) {
       trtCodigo,
       grau,
       processoId,
+      numeroProcesso,
       advogadoId,
       baixarDocumentos,
       filtroDocumentos,
     } = body;
 
     // Validação básica
-    if (!trtCodigo || !grau || !processoId || !advogadoId) {
+    if (!trtCodigo || !grau || !processoId || !numeroProcesso || !advogadoId) {
       return NextResponse.json(
-        { error: 'Parâmetros obrigatórios: trtCodigo, grau, processoId, advogadoId' },
+        { error: 'Parâmetros obrigatórios: trtCodigo, grau, processoId, numeroProcesso, advogadoId' },
         { status: 400 }
       );
     }
@@ -160,6 +166,7 @@ export async function POST(request: NextRequest) {
       trtCodigo,
       grau,
       processoId: String(processoId),
+      numeroProcesso: String(numeroProcesso),
       advogadoId: Number(advogadoId),
       baixarDocumentos: baixarDocumentos !== undefined ? baixarDocumentos : true,
       filtroDocumentos: filtroDocumentos || {},
