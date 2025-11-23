@@ -1,7 +1,7 @@
 import type {
   ChatMessage,
   ToolName,
-} from '@/components/editor/use-chat';
+} from '@/components/use-chat';
 import type { NextRequest } from 'next/server';
 
 import { createGateway } from '@ai-sdk/gateway';
@@ -19,8 +19,8 @@ import { NextResponse } from 'next/server';
 import { type SlateEditor, createSlateEditor, nanoid } from 'platejs';
 import { z } from 'zod';
 
-import { BaseEditorKit } from '@/components/editor/editor-base-kit';
-import { markdownJoinerTransform } from '@/components/markdown-joiner-transform';
+import { BaseEditorKit } from '@/components/editor-base-kit';
+import { markdownJoinerTransform } from '@/lib/markdown-joiner-transform';
 
 import {
   getChooseToolPrompt,
