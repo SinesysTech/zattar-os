@@ -18,13 +18,12 @@ import type { AtualizarParteContrariaParams } from '@/backend/types/partes';
  * 5. Retorna a parte contrária atualizada ou erro
  */
 export async function atualizarParteContraria(
-  id: number,
-  params: Omit<AtualizarParteContrariaParams, 'id'>
+  params: AtualizarParteContrariaParams
 ): Promise<OperacaoParteContrariaResult> {
-  console.log('📝 Atualizando parte contrária...', { id, campos: Object.keys(params) });
+  console.log('📝 Atualizando parte contrária...', { id: params.id, campos: Object.keys(params) });
 
   try {
-    const resultado = await atualizarParteContrariaDb({ id, ...params });
+    const resultado = await atualizarParteContrariaDb(params);
 
     if (resultado.sucesso && resultado.parteContraria) {
       console.log('✅ Parte contrária atualizada com sucesso:', {

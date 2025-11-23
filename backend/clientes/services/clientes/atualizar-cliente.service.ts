@@ -18,13 +18,12 @@ import type { AtualizarClienteParams } from '@/backend/types/partes';
  * 5. Retorna o cliente atualizado ou erro
  */
 export async function atualizarCliente(
-  id: number,
-  params: Omit<AtualizarClienteParams, 'id'>
+  params: AtualizarClienteParams
 ): Promise<OperacaoClienteResult> {
-  console.log('📝 Atualizando cliente...', { id, campos: Object.keys(params) });
+  console.log('📝 Atualizando cliente...', { id: params.id, campos: Object.keys(params) });
 
   try {
-    const resultado = await atualizarClienteDb({ id, ...params });
+    const resultado = await atualizarClienteDb(params);
 
     if (resultado.sucesso && resultado.cliente) {
       console.log('✅ Cliente atualizado com sucesso:', {

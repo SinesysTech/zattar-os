@@ -183,10 +183,13 @@ export async function PATCH(
 
     // 3. Validar e parsear body da requisição
     const body = await request.json();
-    const dadosAtualizacao = body as Omit<AtualizarClienteParams, 'id'>;
+    const dadosAtualizacao: AtualizarClienteParams = {
+      id: clienteId,
+      ...body,
+    };
 
     // 4. Atualizar cliente
-    const resultado = await atualizarCliente(clienteId, dadosAtualizacao);
+    const resultado = await atualizarCliente(dadosAtualizacao);
 
     if (!resultado.sucesso) {
       if (resultado.erro?.includes('não encontrado')) {

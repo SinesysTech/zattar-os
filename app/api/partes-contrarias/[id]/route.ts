@@ -157,9 +157,12 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const dadosAtualizacao = body as Omit<AtualizarParteContrariaParams, 'id'>;
+    const dadosAtualizacao: AtualizarParteContrariaParams = {
+      id: parteId,
+      ...body,
+    };
 
-    const resultado = await atualizarParteContraria(parteId, dadosAtualizacao);
+    const resultado = await atualizarParteContraria(dadosAtualizacao);
 
     if (!resultado.sucesso) {
       if (resultado.erro?.includes('não encontrada')) {
