@@ -44,8 +44,8 @@ const navMain = [
     isActive: true,
   },
   {
-    title: "Clientes",
-    url: "/clientes",
+    title: "Partes",
+    url: "/partes",
     icon: Users,
   },
   {
