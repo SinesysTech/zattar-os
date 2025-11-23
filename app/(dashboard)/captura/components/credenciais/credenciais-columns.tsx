@@ -10,9 +10,14 @@ import type { Credencial } from '@/app/_lib/types/credenciais';
 /**
  * Formata data ISO para formato brasileiro (DD/MM/YYYY)
  */
-const formatarData = (dataISO: string): string => {
+const formatarData = (dataISO: string | null | undefined): string => {
+  if (!dataISO) return '-';
   try {
     const data = new Date(dataISO);
+    // Verificar se a data é válida
+    if (isNaN(data.getTime())) {
+      return '-';
+    }
     return data.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
@@ -110,11 +115,12 @@ export function criarColunasCredenciais({
       enableSorting: true,
       size: 100,
       cell: ({ row }) => {
-        const active = row.getValue('active') as boolean;
+        const active = row.getValue('active') as boolean | null | undefined;
+        const isActive = active === true;
         return (
           <div className="flex justify-center">
-            <Badge tone={active ? 'success' : 'neutral'} variant={active ? 'soft' : 'outline'}>
-              {active ? 'Ativo' : 'Inativo'}
+            <Badge tone={isActive ? 'success' : 'neutral'} variant={isActive ? 'soft' : 'outline'}>
+              {isActive ? 'Ativo' : 'Inativo'}
             </Badge>
           </div>
         );

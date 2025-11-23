@@ -1,0 +1,137 @@
+'use client';
+
+// Hook para buscar partes contrárias
+
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import type { ParteContraria } from '@/lib/types/partes';
+
+export interface PartesContrariasApiResponse {
+  success: boolean;
+  data: {
+    partesContrarias: ParteContraria[];
+    total: number;
+    pagina: number;
+    limite: number;
+    totalPaginas: number;
+  };
+}
+
+export interface BuscarPartesContrariasParams {
+  pagina?: number;
+  limite?: number;
+  busca?: string;
+  tipo_pessoa?: 'pf' | 'pj';
+  situacao?: 'A' | 'I';
+}
+
+interface UsePartesContrariasResult {
+  partesContrarias: ParteContraria[];
+  paginacao: {
+    pagina: number;
+    limite: number;
+    total: number;
+    totalPaginas: number;
+  } | null;
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+}
+
+/**
+ * Hook para buscar partes contrárias
+ */
+export const usePartesContrarias = (params: BuscarPartesContrariasParams = {}): UsePartesContrariasResult => {
+  const [partesContrarias, setPartesContrarias] = useState<ParteContraria[]>([]);
+  const [paginacao, setPaginacao] = useState<UsePartesContrariasResult['paginacao']>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Extrair valores primitivos para usar no callback
+  const pagina = params.pagina ?? 1;
+  const limite = params.limite ?? 50;
+  const busca = params.busca || '';
+  const tipo_pessoa = params.tipo_pessoa || '';
+  const situacao = params.situacao || '';
+
+  // Normalizar parâmetros para comparação estável
+  const paramsKey = useMemo(() => {
+    return JSON.stringify({
+      pagina,
+      limite,
+      busca,
+      tipo_pessoa,
+      situacao,
+    });
+  }, [pagina, limite, busca, tipo_pessoa, situacao]);
+
+  // Usar ref para comparar valores anteriores e evitar loops
+  const paramsRef = useRef<string>('');
+
+  const buscarPartesContrarias = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Construir query string
+      const searchParams = new URLSearchParams();
+
+      searchParams.set('pagina', pagina.toString());
+      searchParams.set('limite', limite.toString());
+
+      if (busca) {
+        searchParams.set('busca', busca);
+      }
+      if (tipo_pessoa) {
+        searchParams.set('tipo_pessoa', tipo_pessoa);
+      }
+      if (situacao) {
+        searchParams.set('situacao', situacao);
+      }
+
+      const response = await fetch(`/api/partes/partes-contrarias?${searchParams.toString()}`);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
+      }
+
+      const data: PartesContrariasApiResponse = await response.json();
+
+      if (!data.success) {
+        throw new Error('Resposta da API indicou falha');
+      }
+
+      setPartesContrarias(data.data.partesContrarias);
+      setPaginacao({
+        pagina: data.data.pagina,
+        limite: data.data.limite,
+        total: data.data.total,
+        totalPaginas: data.data.totalPaginas,
+      });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar partes contrárias';
+      setError(errorMessage);
+      setPartesContrarias([]);
+      setPaginacao(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [pagina, limite, busca, tipo_pessoa, situacao]);
+
+  useEffect(() => {
+    // Só executar se os parâmetros realmente mudaram
+    if (paramsRef.current !== paramsKey) {
+      paramsRef.current = paramsKey;
+      buscarPartesContrarias();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramsKey]);
+
+  return {
+    partesContrarias,
+    paginacao,
+    isLoading,
+    error,
+    refetch: buscarPartesContrarias,
+  };
+};

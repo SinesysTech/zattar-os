@@ -214,12 +214,15 @@ export function AgendamentosList({ onEdit, onRefresh, actionButton }: Agendament
       },
       {
         id: 'acoes',
-        header: 'Ações',
+        header: () => (
+          <div className="text-center">Ações</div>
+        ),
+        enableSorting: false,
         size: 200,
         cell: ({ row }) => {
           const agendamento = row.original;
           return (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2">
               <Button
                 variant="ghost"
                 size="sm"

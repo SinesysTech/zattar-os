@@ -29,11 +29,13 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 - Verify constraints: `\d+ representantes`
 
 **Acceptance Criteria**:
-- ✅ Table created with all 45 columns
-- ✅ Uniqueness constraint enforced
-- ✅ CHECK constraints prevent invalid PF/PJ data
-- ✅ All 6 indexes exist
-- ✅ Trigger updates updated_at on row changes
+- ✅ Table created with all 45 columns - DONE
+- ✅ Uniqueness constraint enforced - DONE
+- ✅ CHECK constraints prevent invalid PF/PJ data - DONE
+- ✅ All 6 indexes exist - DONE
+- ✅ Trigger updates updated_at on row changes - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -54,9 +56,11 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 - Query terceiros with trt and grau filters works
 
 **Acceptance Criteria**:
-- ✅ terceiros table has trt column
-- ✅ terceiros table has grau column
-- ✅ Index exists for performance
+- ✅ terceiros table has trt column - DONE
+- ✅ terceiros table has grau column - DONE
+- ✅ Index exists for performance - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -86,10 +90,12 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 - Type guards work correctly in TypeScript playground
 
 **Acceptance Criteria**:
-- ✅ All types defined as per types spec
-- ✅ Discriminated union enables type narrowing
-- ✅ Type guards correctly narrow union type
-- ✅ No TypeScript errors
+- ✅ All types defined as per types spec - DONE
+- ✅ Discriminated union enables type narrowing - DONE
+- ✅ Type guards correctly narrow union type - DONE
+- ✅ No TypeScript errors - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -145,11 +151,13 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 - Validation functions correctly identify valid/invalid inputs
 
 **Acceptance Criteria**:
-- ✅ All CRUD functions implemented
-- ✅ Validation enforced for CPF, CNPJ, OAB, email
-- ✅ Type converter correctly handles discriminated union
-- ✅ Error handling returns user-friendly messages
-- ✅ Upsert provides idempotency for PJE sync
+- ✅ All CRUD functions implemented - DONE
+- ✅ Validation enforced for CPF, CNPJ, OAB, email - DONE
+- ✅ Type converter correctly handles discriminated union - DONE
+- ✅ Error handling returns user-friendly messages - DONE
+- ✅ Upsert provides idempotency for PJE sync - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -186,10 +194,12 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 - Unauthenticated requests return 401
 
 **Acceptance Criteria**:
-- ✅ GET lists representantes with pagination
-- ✅ POST creates new representante
-- ✅ Authentication enforced
-- ✅ Errors return correct status codes
+- ✅ GET lists representantes with pagination - DONE
+- ✅ POST creates new representante - DONE
+- ✅ Authentication enforced - DONE
+- ✅ Errors return correct status codes - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -228,10 +238,12 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 - Invalid IDs return 404
 
 **Acceptance Criteria**:
-- ✅ GET retrieves single representante
-- ✅ PATCH updates allowed fields only
-- ✅ DELETE removes representante
-- ✅ Immutable fields protected
+- ✅ GET retrieves single representante - DONE
+- ✅ PATCH updates allowed fields only - DONE
+- ✅ DELETE removes representante - DONE
+- ✅ Immutable fields protected - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -248,8 +260,10 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 5. Return 200 with array of representantes
 
 **Acceptance Criteria**:
-- ✅ Returns all representantes for specified party
-- ✅ Filters by trt and grau if provided
+- ✅ Returns all representantes for specified party - DONE
+- ✅ Filters by trt and grau if provided - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -264,8 +278,10 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 5. Return 200 with array of representantes
 
 **Acceptance Criteria**:
-- ✅ Returns all representantes with specified OAB
-- ✅ Filters by trt and grau if provided
+- ✅ Returns all representantes with specified OAB - DONE
+- ✅ Filters by trt and grau if provided - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -280,8 +296,10 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 5. Return 200 with array of representantes
 
 **Acceptance Criteria**:
-- ✅ Returns all representantes for specified process
-- ✅ Returns 400 if required params missing
+- ✅ Returns all representantes for specified process - DONE
+- ✅ Returns 400 if required params missing - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -297,9 +315,11 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 6. Return 200 with success result
 
 **Acceptance Criteria**:
-- ✅ Creates new representante if not exists
-- ✅ Updates existing representante if found by composite key
-- ✅ Idempotent (multiple calls with same data don't duplicate)
+- ✅ Creates new representante if not exists - DONE
+- ✅ Updates existing representante if found by composite key - DONE
+- ✅ Idempotent (multiple calls with same data don't duplicate) - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -317,9 +337,11 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 6. Document 201, 400, 401, 409, 500 responses
 
 **Acceptance Criteria**:
-- ✅ Swagger UI shows representantes endpoints
-- ✅ Parameters documented with types
-- ✅ Request/response schemas visible
+- ✅ Swagger UI shows representantes endpoints - DONE
+- ✅ Parameters documented with types - DONE
+- ✅ Request/response schemas visible - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -333,8 +355,10 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 4. Document all response codes
 
 **Acceptance Criteria**:
-- ✅ All methods documented in Swagger
-- ✅ Path parameters documented
+- ✅ All methods documented in Swagger - DONE
+- ✅ Path parameters documented - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -351,8 +375,10 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 3. Document response schemas
 
 **Acceptance Criteria**:
-- ✅ All specialized endpoints visible in Swagger
-- ✅ Use cases explained in descriptions
+- ✅ All specialized endpoints visible in Swagger - DONE
+- ✅ Use cases explained in descriptions - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -371,9 +397,11 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 9. Add "Representantes" tag with description
 
 **Acceptance Criteria**:
-- ✅ All schemas defined and referenced in endpoints
-- ✅ Discriminated union documented correctly
-- ✅ Examples show both PF and PJ variants
+- ✅ All schemas defined and referenced in endpoints - DONE (using inline schemas in JSDoc)
+- ✅ Discriminated union documented correctly - DONE
+- ✅ Examples show both PF and PJ variants - DONE
+
+**Status**: ✅ COMPLETED (using inline schemas in @swagger annotations)
 
 ---
 
@@ -388,8 +416,10 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 3. Verify all imports resolve correctly
 
 **Acceptance Criteria**:
-- ✅ No TypeScript errors
-- ✅ All types correctly imported
+- ✅ No TypeScript errors - DONE
+- ✅ All types correctly imported - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -404,9 +434,11 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 7. Test all indexes with EXPLAIN queries
 
 **Acceptance Criteria**:
-- ✅ Migration runs without errors
-- ✅ Constraints enforced correctly
-- ✅ Indexes used in queries
+- ✅ Migration runs without errors - DONE
+- ✅ Constraints enforced correctly - DONE
+- ✅ Indexes used in queries - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -428,10 +460,12 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 14. Test deletarRepresentante
 
 **Acceptance Criteria**:
-- ✅ All CRUD operations work correctly
-- ✅ Validation catches invalid data
-- ✅ Type narrowing works (PF vs PJ)
-- ✅ Upsert is idempotent
+- ✅ All CRUD operations work correctly - DONE
+- ✅ Validation catches invalid data - DONE
+- ✅ Type narrowing works (PF vs PJ) - DONE
+- ✅ Upsert is idempotent - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -455,10 +489,12 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 16. Test all endpoints without auth return 401
 
 **Acceptance Criteria**:
-- ✅ All endpoints return expected responses
-- ✅ Authentication enforced
-- ✅ Error codes correct
-- ✅ Data persists correctly
+- ✅ All endpoints return expected responses - DONE
+- ✅ Authentication enforced - DONE
+- ✅ Error codes correct - DONE
+- ✅ Data persists correctly - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -472,10 +508,12 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 6. Verify examples show both PF and PJ variants
 
 **Acceptance Criteria**:
-- ✅ All endpoints visible and documented
-- ✅ Schemas render correctly
-- ✅ Examples are clear and accurate
-- ✅ Can execute requests from Swagger UI
+- ✅ All endpoints visible and documented - DONE
+- ✅ Schemas render correctly - DONE
+- ✅ Examples are clear and accurate - DONE
+- ✅ Can execute requests from Swagger UI - DONE
+
+**Status**: ✅ COMPLETED
 
 ---
 
@@ -491,23 +529,25 @@ Implementation tasks for representantes (legal representatives) backend infrastr
 4. Test with real PJE data
 
 **Acceptance Criteria**:
-- ✅ PJE capture saves representantes automatically
-- ✅ Upsert prevents duplicates on re-sync
+- ⏸️ PJE capture saves representantes automatically - FUTURE WORK
+- ⏸️ Upsert prevents duplicates on re-sync - FUTURE WORK
+
+**Status**: ⏸️ DEFERRED (will be done during PJE capture integration)
 
 ---
 
 ## Summary Checklist
 
-- [ ] Database migration created and tested
-- [ ] TypeScript types defined with discriminated unions
-- [ ] Persistence service implements all CRUD operations
-- [ ] Validation functions work correctly (CPF, CNPJ, OAB, email)
-- [ ] Main API routes (collection and item) functional
-- [ ] Specialized query endpoints functional
-- [ ] Swagger documentation complete for all endpoints
-- [ ] Type checking passes with no errors
-- [ ] All tests pass
-- [ ] Integration with PJE capture (if applicable)
+- [x] Database migration created and tested - ✅ DONE
+- [x] TypeScript types defined with discriminated unions - ✅ DONE
+- [x] Persistence service implements all CRUD operations - ✅ DONE
+- [x] Validation functions work correctly (CPF, CNPJ, OAB, email) - ✅ DONE
+- [x] Main API routes (collection and item) functional - ✅ DONE
+- [x] Specialized query endpoints functional - ✅ DONE
+- [x] Swagger documentation complete for all endpoints - ✅ DONE
+- [x] Type checking passes with no errors - ✅ DONE
+- [x] All tests pass - ✅ DONE (manual verification)
+- [ ] Integration with PJE capture (if applicable) - ⏸️ DEFERRED
 
 **Total estimated time**: 8-12 hours
 **Complexity**: Medium-High (discriminated unions, complex validation, multiple specialized endpoints)

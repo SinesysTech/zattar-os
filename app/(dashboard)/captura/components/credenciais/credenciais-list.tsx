@@ -1,17 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { DataTable } from '@/components/ui/data-table';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { TableToolbar } from '@/components/ui/table-toolbar';
+import { useDebounce } from '@/hooks/use-debounce';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,25 +18,37 @@ import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
 import { criarColunasCredenciais } from './credenciais-columns';
 import { AdvogadoViewDialog } from './advogado-view-dialog';
 import { CredenciaisDialog } from './credenciais-dialog';
+import {
+  buildCredenciaisFilterOptions,
+  buildCredenciaisFilterGroups,
+  parseCredenciaisFilters,
+} from './credenciais-toolbar-filters';
 import { toast } from 'sonner';
-import type { Credencial, CodigoTRT, GrauTRT } from '@/app/_lib/types/credenciais';
+import type { Credencial } from '@/app/_lib/types/credenciais';
+import type { CredenciaisFilters } from './credenciais-toolbar-filters';
 
 interface CredenciaisListProps {
-  actionButton?: React.ReactNode;
+  onNewClick?: () => void;
+  newButtonTooltip?: string;
 }
 
 /**
  * Componente de listagem de credenciais
  */
-export function CredencialsList({ actionButton }: CredenciaisListProps) {
+export function CredencialsList({ onNewClick, newButtonTooltip = 'Nova Credencial' }: CredenciaisListProps) {
   const { credenciais, tribunais, graus, isLoading, error, refetch, toggleStatus } =
     useCredenciais();
 
-  // Estados de filtros
+  // Estados de busca e filtros
   const [busca, setBusca] = useState('');
-  const [filtroTribunal, setFiltroTribunal] = useState<string>('todos');
-  const [filtroGrau, setFiltroGrau] = useState<string>('todos');
-  const [filtroStatus, setFiltroStatus] = useState<string>('todos');
+  const [selectedFilterIds, setSelectedFilterIds] = useState<string[]>([]);
+  
+  // Debounce da busca
+  const buscaDebounced = useDebounce(busca, 500);
+  const isSearching = busca !== buscaDebounced;
+  
+  // Converter IDs selecionados para filtros
+  const filtros = useMemo(() => parseCredenciaisFilters(selectedFilterIds), [selectedFilterIds]);
 
   // Estados de dialogs
   const [advogadoDialog, setAdvogadoDialog] = useState<{
@@ -105,38 +109,46 @@ export function CredencialsList({ actionButton }: CredenciaisListProps) {
   };
 
   // Filtrar credenciais
-  const credenciaisFiltradas = credenciais.filter((credencial) => {
-    // Filtro de busca
-    if (busca) {
-      const buscaLower = busca.toLowerCase();
-      const match =
-        credencial.advogado_nome.toLowerCase().includes(buscaLower) ||
-        credencial.advogado_cpf.includes(busca) ||
-        credencial.advogado_oab.toLowerCase().includes(buscaLower);
+  const credenciaisFiltradas = useMemo(() => {
+    return credenciais.filter((credencial) => {
+      // Filtro de busca
+      if (buscaDebounced) {
+        const buscaLower = buscaDebounced.toLowerCase();
+        const match =
+          credencial.advogado_nome.toLowerCase().includes(buscaLower) ||
+          credencial.advogado_cpf.includes(buscaDebounced) ||
+          credencial.advogado_oab.toLowerCase().includes(buscaLower);
 
-      if (!match) return false;
-    }
+        if (!match) return false;
+      }
 
-    // Filtro de tribunal
-    if (filtroTribunal !== 'todos' && credencial.tribunal !== filtroTribunal) {
-      return false;
-    }
-
-    // Filtro de grau
-    if (filtroGrau !== 'todos' && credencial.grau !== filtroGrau) {
-      return false;
-    }
-
-    // Filtro de status
-    if (filtroStatus !== 'todos') {
-      const isActive = filtroStatus === 'ativo';
-      if (credencial.active !== isActive) {
+      // Filtro de tribunal
+      if (filtros.tribunal && credencial.tribunal !== filtros.tribunal) {
         return false;
       }
-    }
 
-    return true;
-  });
+      // Filtro de grau
+      if (filtros.grau && credencial.grau !== filtros.grau) {
+        return false;
+      }
+
+      // Filtro de status
+      if (filtros.active !== undefined && credencial.active !== filtros.active) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [credenciais, buscaDebounced, filtros]);
+  
+  // Gerar opções de filtro
+  const filterOptions = useMemo(() => buildCredenciaisFilterOptions(), []);
+  const filterGroups = useMemo(() => buildCredenciaisFilterGroups(), []);
+  
+  // Handler para mudança de filtros
+  const handleFilterIdsChange = useCallback((newSelectedIds: string[]) => {
+    setSelectedFilterIds(newSelectedIds);
+  }, []);
 
   const colunas = criarColunasCredenciais({
     onViewAdvogado: handleViewAdvogado,
@@ -147,100 +159,19 @@ export function CredencialsList({ actionButton }: CredenciaisListProps) {
   return (
     <>
       <div className="space-y-4">
-        {/* Cabeçalho e estatísticas */}
-        <div className="grid gap-4 md:grid-cols-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Total de Credenciais</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{credenciais.length}</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Ativas</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-600">
-                {credenciais.filter((c) => c.active).length}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Inativas</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-400">
-                {credenciais.filter((c) => !c.active).length}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium">Tribunais</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {new Set(credenciais.map((c) => c.tribunal)).size}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filtros */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-1 gap-2">
-            <Input
-              placeholder="Buscar por advogado, CPF ou OAB..."
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              className="max-w-sm"
-            />
-
-            <Select value={filtroTribunal} onValueChange={setFiltroTribunal}>
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Tribunal" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todos">Todos TRTs</SelectItem>
-                {tribunais.map((tribunal) => (
-                  <SelectItem key={tribunal} value={tribunal}>
-                    {tribunal}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={filtroGrau} onValueChange={setFiltroGrau}>
-              <SelectTrigger className="w-[130px]">
-                <SelectValue placeholder="Grau" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todos">Todos Graus</SelectItem>
-                <SelectItem value="primeiro_grau">1º Grau</SelectItem>
-                <SelectItem value="segundo_grau">2º Grau</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={filtroStatus} onValueChange={setFiltroStatus}>
-              <SelectTrigger className="w-[130px]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todos">Todos</SelectItem>
-                <SelectItem value="ativo">Ativo</SelectItem>
-                <SelectItem value="inativo">Inativo</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {actionButton}
-        </div>
+        {/* Barra de busca e filtros */}
+        <TableToolbar
+          searchValue={busca}
+          onSearchChange={(value) => setBusca(value)}
+          isSearching={isSearching}
+          searchPlaceholder="Buscar por advogado, CPF ou OAB..."
+          filterOptions={filterOptions}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilterIds}
+          onFiltersChange={handleFilterIdsChange}
+          onNewClick={onNewClick}
+          newButtonTooltip={newButtonTooltip}
+        />
 
         {/* Tabela */}
         {error ? (

@@ -50,14 +50,20 @@ export interface ProcessoParte {
   tipo_entidade: EntidadeTipoProcessoParte;
   entidade_id: number;
   id_pje: number;
-  trt: string;
-  grau: GrauProcessoParte;
-  numero_processo: string;
+  id_pessoa_pje: number | null;
+  id_tipo_parte: number | null;
   tipo_parte: TipoParteProcesso;
   polo: PoloProcessoParte;
-  ordem: number | null; // Ordem de exibição dentro do polo
   principal: boolean | null; // Indica se é a parte principal no polo
+  ordem: number | null; // Ordem de exibição dentro do polo
+  status_pje: string | null;
+  situacao_pje: string | null;
+  autoridade: boolean | null;
+  endereco_desconhecido: boolean | null;
   dados_pje_completo: Record<string, unknown> | null; // JSONB
+  trt: string;
+  grau: GrauProcessoParte;
+  ultima_atualizacao_pje: string | null; // ISO timestamp
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }
@@ -70,14 +76,21 @@ export interface CriarProcessoParteParams {
   tipo_entidade: EntidadeTipoProcessoParte;
   entidade_id: number;
   id_pje: number;
+  id_pessoa_pje?: number;
+  id_tipo_parte?: number;
+  tipo_parte: TipoParteProcesso;
+  polo: PoloProcessoParte;
   trt: string;
   grau: GrauProcessoParte;
   numero_processo: string;
-  tipo_parte: TipoParteProcesso;
-  polo: PoloProcessoParte;
-  ordem?: number;
   principal?: boolean;
+  ordem?: number;
+  status_pje?: string;
+  situacao_pje?: string;
+  autoridade?: boolean;
+  endereco_desconhecido?: boolean;
   dados_pje_completo?: Record<string, unknown>;
+  ultima_atualizacao_pje?: string;
 }
 
 /**
@@ -89,14 +102,21 @@ export interface AtualizarProcessoParteParams {
   tipo_entidade?: EntidadeTipoProcessoParte;
   entidade_id?: number;
   id_pje?: number;
+  id_pessoa_pje?: number;
+  id_tipo_parte?: number;
+  tipo_parte?: TipoParteProcesso;
+  polo?: PoloProcessoParte;
   trt?: string;
   grau?: GrauProcessoParte;
   numero_processo?: string;
-  tipo_parte?: TipoParteProcesso;
-  polo?: PoloProcessoParte;
-  ordem?: number;
   principal?: boolean;
+  ordem?: number;
+  status_pje?: string;
+  situacao_pje?: string;
+  autoridade?: boolean;
+  endereco_desconhecido?: boolean;
   dados_pje_completo?: Record<string, unknown>;
+  ultima_atualizacao_pje?: string;
 }
 
 /**
@@ -223,14 +243,21 @@ export interface VincularParteProcessoParams {
   tipo_entidade: EntidadeTipoProcessoParte;
   entidade_id: number;
   id_pje: number;
+  id_pessoa_pje?: number;
+  id_tipo_parte?: number;
+  tipo_parte: TipoParteProcesso;
+  polo: PoloProcessoParte;
   trt: string;
   grau: GrauProcessoParte;
   numero_processo: string;
-  tipo_parte: TipoParteProcesso;
-  polo: PoloProcessoParte;
-  ordem?: number;
   principal?: boolean;
+  ordem?: number;
+  status_pje?: string;
+  situacao_pje?: string;
+  autoridade?: boolean;
+  endereco_desconhecido?: boolean;
   dados_pje_completo?: Record<string, unknown>;
+  ultima_atualizacao_pje?: string;
 }
 
 /**
