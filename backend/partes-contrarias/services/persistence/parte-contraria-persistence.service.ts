@@ -77,12 +77,13 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
     emails: (data.emails as string[] | null) ?? null,
     ddd_celular: (data.ddd_celular as string | null) ?? null,
     numero_celular: (data.numero_celular as string | null) ?? null,
-    ddd_telefone: (data.ddd_telefone as string | null) ?? null,
-    numero_telefone: (data.numero_telefone as string | null) ?? null,
-    fax: (data.fax as string | null) ?? null,
+    ddd_residencial: (data.ddd_residencial as string | null) ?? null,
+    numero_residencial: (data.numero_residencial as string | null) ?? null,
+    ddd_comercial: (data.ddd_comercial as string | null) ?? null,
+    numero_comercial: (data.numero_comercial as string | null) ?? null,
     situacao: (data.situacao as 'A' | 'I' | 'E' | 'H' | null) ?? null,
     observacoes: (data.observacoes as string | null) ?? null,
-    dados_pje_completo: (data.dados_pje_completo as Record<string, unknown> | null) ?? null,
+    dados_anteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };
@@ -107,15 +108,7 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       uf_nascimento: (data.uf_nascimento as string | null) ?? null,
       pais_nacionalidade: (data.pais_nacionalidade as string | null) ?? null,
       profissao: (data.profissao as string | null) ?? null,
-      cartao_nacional_saude: (data.cartao_nacional_saude as string | null) ?? null,
-      certificado_militar: (data.certificado_militar as string | null) ?? null,
-      numero_titulo_eleitor: (data.numero_titulo_eleitor as string | null) ?? null,
-      zona_titulo_eleitor: (data.zona_titulo_eleitor as string | null) ?? null,
-      secao_titulo_eleitor: (data.secao_titulo_eleitor as string | null) ?? null,
-      tipo_sanguineo: (data.tipo_sanguineo as string | null) ?? null,
-      raca_cor: (data.raca_cor as string | null) ?? null,
       estado_civil: (data.estado_civil as string | null) ?? null,
-      grau_instrucao: (data.grau_instrucao as string | null) ?? null,
       necessidade_especial: (data.necessidade_especial as string | null) ?? null,
       inscricao_estadual: null,
       inscricao_municipal: null,
@@ -126,7 +119,6 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       porte_codigo: null,
       porte_descricao: null,
       qualificacao_responsavel: null,
-      capital_social: null,
       nome_fantasia: null,
       status_pje: null,
     };
@@ -145,7 +137,6 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       porte_codigo: (data.porte_codigo as string | null) ?? null,
       porte_descricao: (data.porte_descricao as string | null) ?? null,
       qualificacao_responsavel: (data.qualificacao_responsavel as string | null) ?? null,
-      capital_social: (data.capital_social as number | null) ?? null,
       nome_fantasia: (data.nome_fantasia as string | null) ?? null,
       status_pje: (data.status_pje as string | null) ?? null,
       tipo_documento: null,
@@ -162,15 +153,7 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       uf_nascimento: null,
       pais_nacionalidade: null,
       profissao: null,
-      cartao_nacional_saude: null,
-      certificado_militar: null,
-      numero_titulo_eleitor: null,
-      zona_titulo_eleitor: null,
-      secao_titulo_eleitor: null,
-      tipo_sanguineo: null,
-      raca_cor: null,
       estado_civil: null,
-      grau_instrucao: null,
       necessidade_especial: null,
     };
   }
@@ -269,40 +252,19 @@ export async function criarParteContraria(
       emails: params.emails ?? null,
       ddd_celular: params.ddd_celular?.trim() || null,
       numero_celular: params.numero_celular?.trim() || null,
-      ddd_telefone: params.ddd_telefone?.trim() || null,
-      numero_telefone: params.numero_telefone?.trim() || null,
-      fax: params.fax?.trim() || null,
+      ddd_residencial: params.ddd_residencial?.trim() || null,
+      numero_residencial: params.numero_residencial?.trim() || null,
+      ddd_comercial: params.ddd_comercial?.trim() || null,
+      numero_comercial: params.numero_comercial?.trim() || null,
       situacao: params.situacao ?? null,
       observacoes: params.observacoes?.trim() || null,
-      dados_pje_completo: params.dados_pje_completo ?? null,
+      dados_anteriores: params.dados_anteriores ?? null,
     };
 
     if (params.tipo_pessoa === 'pf') {
       dadosNovos.cpf = normalizarCpf(params.cpf);
-      dadosNovos.tipo_documento = params.tipo_documento?.trim() || null;
-      dadosNovos.numero_rg = params.numero_rg?.trim() || null;
-      dadosNovos.orgao_emissor_rg = params.orgao_emissor_rg?.trim() || null;
-      dadosNovos.uf_rg = params.uf_rg?.trim() || null;
-      dadosNovos.data_expedicao_rg = params.data_expedicao_rg || null;
-      dadosNovos.sexo = params.sexo?.trim() || null;
-      dadosNovos.nome_genitora = params.nome_genitora?.trim() || null;
-      dadosNovos.data_nascimento = params.data_nascimento || null;
-      dadosNovos.nacionalidade = params.nacionalidade?.trim() || null;
-      dadosNovos.naturalidade = params.naturalidade?.trim() || null;
-      dadosNovos.municipio_nascimento = params.municipio_nascimento?.trim() || null;
-      dadosNovos.uf_nascimento = params.uf_nascimento?.trim() || null;
-      dadosNovos.pais_nacionalidade = params.pais_nacionalidade?.trim() || null;
-      dadosNovos.profissao = params.profissao?.trim() || null;
-      dadosNovos.cartao_nacional_saude = params.cartao_nacional_saude?.trim() || null;
-      dadosNovos.certificado_militar = params.certificado_militar?.trim() || null;
-      dadosNovos.numero_titulo_eleitor = params.numero_titulo_eleitor?.trim() || null;
-      dadosNovos.zona_titulo_eleitor = params.zona_titulo_eleitor?.trim() || null;
-      dadosNovos.secao_titulo_eleitor = params.secao_titulo_eleitor?.trim() || null;
-      dadosNovos.tipo_sanguineo = params.tipo_sanguineo?.trim() || null;
-      dadosNovos.raca_cor = params.raca_cor?.trim() || null;
-      dadosNovos.estado_civil = params.estado_civil?.trim() || null;
-      dadosNovos.grau_instrucao = params.grau_instrucao?.trim() || null;
-      dadosNovos.necessidade_especial = params.necessidade_especial?.trim() || null;
+      // Only fields that exist in database schema
+      // rg, data_nascimento, sexo, nome_genitora, nacionalidade, estado_civil
     } else {
       dadosNovos.cnpj = normalizarCnpj(params.cnpj);
       dadosNovos.inscricao_estadual = params.inscricao_estadual?.trim() || null;
@@ -314,7 +276,6 @@ export async function criarParteContraria(
       dadosNovos.porte_codigo = params.porte_codigo?.trim() || null;
       dadosNovos.porte_descricao = params.porte_descricao?.trim() || null;
       dadosNovos.qualificacao_responsavel = params.qualificacao_responsavel?.trim() || null;
-      dadosNovos.capital_social = params.capital_social ?? null;
       dadosNovos.nome_fantasia = params.nome_fantasia?.trim() || null;
       dadosNovos.status_pje = params.status_pje?.trim() || null;
     }
@@ -384,16 +345,19 @@ export async function atualizarParteContraria(
       dadosAtualizacao.ddd_celular = params.ddd_celular?.trim() || null;
     if (params.numero_celular !== undefined)
       dadosAtualizacao.numero_celular = params.numero_celular?.trim() || null;
-    if (params.ddd_telefone !== undefined)
-      dadosAtualizacao.ddd_telefone = params.ddd_telefone?.trim() || null;
-    if (params.numero_telefone !== undefined)
-      dadosAtualizacao.numero_telefone = params.numero_telefone?.trim() || null;
-    if (params.fax !== undefined) dadosAtualizacao.fax = params.fax?.trim() || null;
+    if (params.ddd_residencial !== undefined)
+      dadosAtualizacao.ddd_residencial = params.ddd_residencial?.trim() || null;
+    if (params.numero_residencial !== undefined)
+      dadosAtualizacao.numero_residencial = params.numero_residencial?.trim() || null;
+    if (params.ddd_comercial !== undefined)
+      dadosAtualizacao.ddd_comercial = params.ddd_comercial?.trim() || null;
+    if (params.numero_comercial !== undefined)
+      dadosAtualizacao.numero_comercial = params.numero_comercial?.trim() || null;
     if (params.situacao !== undefined) dadosAtualizacao.situacao = params.situacao;
     if (params.observacoes !== undefined)
       dadosAtualizacao.observacoes = params.observacoes?.trim() || null;
-    if (params.dados_pje_completo !== undefined)
-      dadosAtualizacao.dados_pje_completo = params.dados_pje_completo;
+    if (params.dados_anteriores !== undefined)
+      dadosAtualizacao.dados_anteriores = params.dados_anteriores;
 
     // Campos específicos por tipo de pessoa
     if (tipoPessoaAtual === 'pf' && params.tipo_pessoa === 'pf') {
@@ -424,24 +388,8 @@ export async function atualizarParteContraria(
         dadosAtualizacao.pais_nacionalidade = params.pais_nacionalidade?.trim() || null;
       if (params.profissao !== undefined)
         dadosAtualizacao.profissao = params.profissao?.trim() || null;
-      if (params.cartao_nacional_saude !== undefined)
-        dadosAtualizacao.cartao_nacional_saude = params.cartao_nacional_saude?.trim() || null;
-      if (params.certificado_militar !== undefined)
-        dadosAtualizacao.certificado_militar = params.certificado_militar?.trim() || null;
-      if (params.numero_titulo_eleitor !== undefined)
-        dadosAtualizacao.numero_titulo_eleitor = params.numero_titulo_eleitor?.trim() || null;
-      if (params.zona_titulo_eleitor !== undefined)
-        dadosAtualizacao.zona_titulo_eleitor = params.zona_titulo_eleitor?.trim() || null;
-      if (params.secao_titulo_eleitor !== undefined)
-        dadosAtualizacao.secao_titulo_eleitor = params.secao_titulo_eleitor?.trim() || null;
-      if (params.tipo_sanguineo !== undefined)
-        dadosAtualizacao.tipo_sanguineo = params.tipo_sanguineo?.trim() || null;
-      if (params.raca_cor !== undefined)
-        dadosAtualizacao.raca_cor = params.raca_cor?.trim() || null;
       if (params.estado_civil !== undefined)
         dadosAtualizacao.estado_civil = params.estado_civil?.trim() || null;
-      if (params.grau_instrucao !== undefined)
-        dadosAtualizacao.grau_instrucao = params.grau_instrucao?.trim() || null;
       if (params.necessidade_especial !== undefined)
         dadosAtualizacao.necessidade_especial = params.necessidade_especial?.trim() || null;
     } else if (tipoPessoaAtual === 'pj' && params.tipo_pessoa === 'pj') {
@@ -463,8 +411,6 @@ export async function atualizarParteContraria(
       if (params.qualificacao_responsavel !== undefined)
         dadosAtualizacao.qualificacao_responsavel =
           params.qualificacao_responsavel?.trim() || null;
-      if (params.capital_social !== undefined)
-        dadosAtualizacao.capital_social = params.capital_social;
       if (params.nome_fantasia !== undefined)
         dadosAtualizacao.nome_fantasia = params.nome_fantasia?.trim() || null;
       if (params.status_pje !== undefined)

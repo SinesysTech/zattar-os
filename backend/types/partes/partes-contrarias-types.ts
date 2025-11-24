@@ -20,26 +20,25 @@ export type SituacaoPJE = 'A' | 'I' | 'E' | 'H'; // A=Ativo, I=Inativo, E=Exclu�
 
 /**
  * Campos base comuns a PF e PJ
+ * NOTA: Partes Contrárias é uma tabela global - conexão com processo via processo_partes
  */
 interface ParteContrariaBase {
   id: number;
   id_pje: number | null;
   id_pessoa_pje: number | null; // Unique constraint
-  trt: string;
-  grau: GrauParteContraria;
-  numero_processo: string;
   tipo_pessoa: TipoPessoa;
   nome: string;
   nome_social: string | null;
   emails: string[] | null; // JSONB array
   ddd_celular: string | null;
   numero_celular: string | null;
-  ddd_telefone: string | null;
-  numero_telefone: string | null;
-  fax: string | null;
+  ddd_residencial: string | null;
+  numero_residencial: string | null;
+  ddd_comercial: string | null;
+  numero_comercial: string | null;
   situacao: SituacaoPJE | null;
   observacoes: string | null;
-  dados_pje_completo: Record<string, unknown> | null; // JSONB
+  dados_anteriores: Record<string, unknown> | null; // JSONB
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }
@@ -65,13 +64,6 @@ export interface ParteContrariaPessoaFisica extends ParteContrariaBase {
   uf_nascimento: string | null;
   pais_nacionalidade: string | null;
   profissao: string | null;
-  cartao_nacional_saude: string | null;
-  certificado_militar: string | null;
-  numero_titulo_eleitor: string | null;
-  zona_titulo_eleitor: string | null;
-  secao_titulo_eleitor: string | null;
-  tipo_sanguineo: string | null;
-  raca_cor: string | null;
   estado_civil: string | null;
   grau_instrucao: string | null;
   necessidade_especial: string | null;
@@ -85,7 +77,6 @@ export interface ParteContrariaPessoaFisica extends ParteContrariaBase {
   porte_codigo: null;
   porte_descricao: null;
   qualificacao_responsavel: null;
-  capital_social: null;
   nome_fantasia: null;
   status_pje: null;
 }
@@ -124,13 +115,6 @@ export interface ParteContrariaPessoaJuridica extends ParteContrariaBase {
   uf_nascimento: null;
   pais_nacionalidade: null;
   profissao: null;
-  cartao_nacional_saude: null;
-  certificado_militar: null;
-  numero_titulo_eleitor: null;
-  zona_titulo_eleitor: null;
-  secao_titulo_eleitor: null;
-  tipo_sanguineo: null;
-  raca_cor: null;
   estado_civil: null;
   grau_instrucao: null;
   necessidade_especial: null;
@@ -147,9 +131,6 @@ export type ParteContraria = ParteContrariaPessoaFisica | ParteContrariaPessoaJu
 export interface CriarParteContrariaPFParams {
   id_pje?: number;
   id_pessoa_pje?: number;
-  trt: string;
-  grau: GrauParteContraria;
-  numero_processo: string;
   tipo_pessoa: 'pf';
   nome: string;
   cpf: string;
@@ -157,9 +138,10 @@ export interface CriarParteContrariaPFParams {
   emails?: string[];
   ddd_celular?: string;
   numero_celular?: string;
-  ddd_telefone?: string;
-  numero_telefone?: string;
-  fax?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
   tipo_documento?: string;
   numero_rg?: string;
   orgao_emissor_rg?: string;
@@ -174,19 +156,12 @@ export interface CriarParteContrariaPFParams {
   uf_nascimento?: string;
   pais_nacionalidade?: string;
   profissao?: string;
-  cartao_nacional_saude?: string;
-  certificado_militar?: string;
-  numero_titulo_eleitor?: string;
-  zona_titulo_eleitor?: string;
-  secao_titulo_eleitor?: string;
-  tipo_sanguineo?: string;
-  raca_cor?: string;
   estado_civil?: string;
   grau_instrucao?: string;
   necessidade_especial?: string;
   situacao?: SituacaoPJE;
   observacoes?: string;
-  dados_pje_completo?: Record<string, unknown>;
+  dados_anteriores?: Record<string, unknown>;
 }
 
 /**
@@ -195,9 +170,6 @@ export interface CriarParteContrariaPFParams {
 export interface CriarParteContrariaPJParams {
   id_pje?: number;
   id_pessoa_pje?: number;
-  trt: string;
-  grau: GrauParteContraria;
-  numero_processo: string;
   tipo_pessoa: 'pj';
   nome: string;
   cnpj: string;
@@ -206,9 +178,10 @@ export interface CriarParteContrariaPJParams {
   emails?: string[];
   ddd_celular?: string;
   numero_celular?: string;
-  ddd_telefone?: string;
-  numero_telefone?: string;
-  fax?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
   inscricao_estadual?: string;
   inscricao_municipal?: string;
   data_abertura?: string;
@@ -222,7 +195,7 @@ export interface CriarParteContrariaPJParams {
   status_pje?: string;
   situacao?: SituacaoPJE;
   observacoes?: string;
-  dados_pje_completo?: Record<string, unknown>;
+  dados_anteriores?: Record<string, unknown>;
 }
 
 /**
@@ -239,9 +212,6 @@ export interface AtualizarParteContrariaPFParams {
   id: number;
   id_pje?: number;
   id_pessoa_pje?: number;
-  trt?: string;
-  grau?: GrauParteContraria;
-  numero_processo?: string;
   tipo_pessoa?: 'pf';
   nome?: string;
   cpf?: string;
@@ -249,9 +219,10 @@ export interface AtualizarParteContrariaPFParams {
   emails?: string[];
   ddd_celular?: string;
   numero_celular?: string;
-  ddd_telefone?: string;
-  numero_telefone?: string;
-  fax?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
   tipo_documento?: string;
   numero_rg?: string;
   orgao_emissor_rg?: string;
@@ -266,19 +237,12 @@ export interface AtualizarParteContrariaPFParams {
   uf_nascimento?: string;
   pais_nacionalidade?: string;
   profissao?: string;
-  cartao_nacional_saude?: string;
-  certificado_militar?: string;
-  numero_titulo_eleitor?: string;
-  zona_titulo_eleitor?: string;
-  secao_titulo_eleitor?: string;
-  tipo_sanguineo?: string;
-  raca_cor?: string;
   estado_civil?: string;
   grau_instrucao?: string;
   necessidade_especial?: string;
   situacao?: SituacaoPJE;
   observacoes?: string;
-  dados_pje_completo?: Record<string, unknown>;
+  dados_anteriores?: Record<string, unknown>;
 }
 
 /**
@@ -288,9 +252,6 @@ export interface AtualizarParteContrariaPJParams {
   id: number;
   id_pje?: number;
   id_pessoa_pje?: number;
-  trt?: string;
-  grau?: GrauParteContraria;
-  numero_processo?: string;
   tipo_pessoa?: 'pj';
   nome?: string;
   cnpj?: string;
@@ -299,9 +260,10 @@ export interface AtualizarParteContrariaPJParams {
   emails?: string[];
   ddd_celular?: string;
   numero_celular?: string;
-  ddd_telefone?: string;
-  numero_telefone?: string;
-  fax?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
   inscricao_estadual?: string;
   inscricao_municipal?: string;
   data_abertura?: string;
@@ -315,7 +277,7 @@ export interface AtualizarParteContrariaPJParams {
   status_pje?: string;
   situacao?: SituacaoPJE;
   observacoes?: string;
-  dados_pje_completo?: Record<string, unknown>;
+  dados_anteriores?: Record<string, unknown>;
 }
 
 /**
