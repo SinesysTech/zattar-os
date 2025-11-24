@@ -67,6 +67,7 @@ export function TableToolbar({
   filterGroups,
   selectedFilters,
   onFiltersChange,
+  extraButtons,
   onNewClick,
   newButtonTooltip = "Novo",
   className,
@@ -278,6 +279,12 @@ export function TableToolbar({
           )}
         </PopoverContent>
       </Popover>
+      {extraButtons && (
+        <>
+          <ButtonGroupSeparator />
+          {extraButtons}
+        </>
+      )}
       {onNewClick && (
         <>
           <ButtonGroupSeparator />
