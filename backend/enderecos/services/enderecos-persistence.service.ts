@@ -87,7 +87,7 @@ export function converterParaEndereco(data: Record<string, unknown>): Endereco {
 
 function mapSupabaseError(error: { code?: string; message: string }): string {
   if (error.code === '23505') {
-    return 'Endereço já cadastrado';
+    return 'Endereço já existe para esta entidade e ID PJE';
   }
   if (error.code === '23503') {
     return 'Entidade não encontrada';
@@ -99,6 +99,27 @@ function mapSupabaseError(error: { code?: string; message: string }): string {
     return 'Valor inválido para campo';
   }
   return error.message || 'Erro ao processar operação';
+}
+
+// ============================================================================
+// Validation Helper
+// ============================================================================
+
+/**
+ * Valida se o endereço tem pelo menos um campo mínimo preenchido
+ */
+function validarEnderecoMinimo(params: CriarEnderecoParams): { valido: boolean; avisos: string[] } {
+  const avisos: string[] = [];
+  const hasLogradouro = !!params.logradouro;
+  const hasMunicipio = !!params.municipio;
+  const hasCep = !!params.cep;
+
+  if (!hasLogradouro) avisos.push('Endereço sem logradouro');
+  if (!hasMunicipio) avisos.push('Endereço sem município');
+  if (!hasCep) avisos.push('Endereço sem CEP');
+
+  const valido = hasLogradouro || hasMunicipio || hasCep;
+  return { valido, avisos };
 }
 
 // ============================================================================
@@ -118,6 +139,12 @@ export async function criarEndereco(
         sucesso: false,
         erro: 'entidade_tipo e entidade_id são obrigatórios',
       };
+    }
+
+    // Validação de campos mínimos
+    const { valido, avisos } = validarEnderecoMinimo(params);
+    if (avisos.length > 0) {
+      console.warn('[ENDERECOS] Endereço incompleto:', avisos);
     }
 
     const supabase = createServiceClient();
@@ -370,25 +397,26 @@ export async function upsertEnderecoPorIdPje(
   try {
     const supabase = createServiceClient();
 
-    // Buscar endereço existente
-    const { data: existing } = await supabase
+    const { data, error } = await supabase
       .from('enderecos')
-      .select('id')
-      .eq('id_pje', params.id_pje)
-      .eq('entidade_tipo', params.entidade_tipo)
-      .eq('entidade_id', params.entidade_id)
+      .upsert(params, {
+        onConflict: 'id_pje,entidade_tipo,entidade_id',
+        ignoreDuplicates: false // Always update on conflict
+      })
+      .select()
       .single();
 
-    if (existing) {
-      // Atualizar existente
-      return await atualizarEndereco({
-        id: existing.id,
-        ...params,
-      });
-    } else {
-      // Criar novo
-      return await criarEndereco(params);
+    if (error) {
+      return {
+        sucesso: false,
+        erro: mapSupabaseError(error),
+      };
     }
+
+    return {
+      sucesso: true,
+      endereco: converterParaEndereco(data),
+    };
   } catch (error) {
     console.error('Erro ao fazer upsert de endereço:', error);
     return {

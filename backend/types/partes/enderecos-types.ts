@@ -3,7 +3,12 @@
 import type { GrauAcervo } from '@/backend/types/acervo/types';
 
 /**
- * Tipo de entidade proprietária do endereço
+ * Tipo de entidade proprietária do endereço (relação polimórfica)
+ * 
+ * IMPORTANTE: Representantes NÃO usam esta tabela diretamente.
+ * Eles possuem FK endereco_id que aponta para endereços de suas partes.
+ * 
+ * @see enderecos table schema
  */
 export type EntidadeTipoEndereco = 'cliente' | 'parte_contraria' | 'terceiro';
 
@@ -16,6 +21,12 @@ export type GrauEndereco = GrauAcervo;
  * Situação do endereço no PJE
  */
 export type SituacaoEndereco = 'A' | 'I' | 'P' | 'H'; // A=Ativo, I=Inativo, P=Principal, H=Histórico
+
+/** Situações de endereço válidas */
+export const SITUACOES_ENDERECO = ['A', 'I', 'P', 'H'] as const;
+
+/** Campos mínimos para endereço válido (pelo menos um deve estar presente) */
+export const CAMPOS_MINIMOS_ENDERECO = ['logradouro', 'municipio', 'cep'] as const;
 
 /**
  * Classificação de endereço
@@ -31,7 +42,9 @@ export interface ClassificacaoEndereco {
 export interface Endereco {
   id: number;
   id_pje: number | null;
+  // Tipo da entidade dona do endereço (não inclui 'representante')
   entidade_tipo: EntidadeTipoEndereco;
+  // ID da entidade na tabela correspondente (clientes.id, partes_contrarias.id, terceiros.id)
   entidade_id: number;
   trt: string | null;
   grau: 'primeiro_grau' | 'segundo_grau' | null;
@@ -46,10 +59,12 @@ export interface Endereco {
   estado_id_pje: number | null;
   estado_sigla: string | null;
   estado_descricao: string | null;
+  // Nome completo do estado (ex: 'Minas Gerais') - campo adicional ao estado_sigla
   estado: string | null;
   pais_id_pje: number | null;
   pais_codigo: string | null;
   pais_descricao: string | null;
+  // Nome completo do país (ex: 'Brasil') - campo adicional ao pais_codigo
   pais: string | null;
   cep: string | null;
   classificacoes_endereco: ClassificacaoEndereco[] | null; // JSONB array
@@ -65,6 +80,8 @@ export interface Endereco {
 
 /**
  * Dados para criar endereço
+ * 
+ * Campos opcionais, mas recomenda-se preencher ao menos logradouro, municipio ou cep
  */
 export interface CriarEnderecoParams {
   id_pje?: number;
@@ -92,6 +109,7 @@ export interface CriarEnderecoParams {
   classificacoes_endereco?: ClassificacaoEndereco[];
   correspondencia?: boolean;
   situacao?: SituacaoEndereco;
+  // OBRIGATÓRIO para endereços capturados do PJE (auditoria)
   dados_pje_completo?: Record<string, unknown>;
   id_usuario_cadastrador_pje?: number;
   data_alteracao_pje?: string;
@@ -206,6 +224,14 @@ export interface ListarEnderecosResult {
 export interface BuscarEnderecosPorEntidadeParams {
   entidade_tipo: EntidadeTipoEndereco;
   entidade_id: number;
+}
+
+/**
+ * Resultado de validação de endereço
+ */
+export interface ValidacaoEnderecoResult {
+  valido: boolean;
+  avisos: string[];
 }
 
 /**

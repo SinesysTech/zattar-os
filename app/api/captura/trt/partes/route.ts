@@ -457,7 +457,7 @@ export async function POST(request: NextRequest) {
             // Capturar partes do processo (reutilizando a página autenticada)
             const resultado = await capturarPartesProcesso(page, processo, {
               id: advogado.id,
-              cpf: advogado.cpf,
+              documento: advogado.cpf,
             });
 
             // Salvar log bruto no MongoDB para auditoria

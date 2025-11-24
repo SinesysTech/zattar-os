@@ -79,6 +79,28 @@ interface EnderecoPJE {
 }
 
 /**
+ * Função auxiliar para validar endereço do PJE
+ */
+function validarEnderecoPJE(endereco: EnderecoPJE): { valido: boolean; avisos: string[] } {
+  const avisos: string[] = [];
+
+  if (!endereco.id || endereco.id <= 0) {
+    avisos.push('ID do endereço inválido ou ausente');
+  }
+
+  const hasLogradouro = !!endereco.logradouro;
+  const hasMunicipio = !!endereco.municipio;
+  const hasCep = !!endereco.cep;
+
+  if (!hasLogradouro) avisos.push('Endereço sem logradouro');
+  if (!hasMunicipio) avisos.push('Endereço sem município');
+  if (!hasCep) avisos.push('Endereço sem CEP');
+
+  const valido = (endereco.id && endereco.id > 0) && (hasLogradouro || hasMunicipio || hasCep);
+  return { valido, avisos };
+}
+
+/**
  * Interface para dados básicos do processo necessários para captura
  */
 export interface ProcessoParaCaptura {
@@ -551,7 +573,9 @@ async function processarRepresentantes(
         if (rep.dadosCompletos?.endereco) {
           const enderecoId = await processarEnderecoRepresentante(
             rep,
-            result.representante.id
+            tipoParte,
+            parteId,
+            processo
           );
 
           // Se conseguiu salvar o endereço, atualiza o representante com o endereco_id
@@ -673,6 +697,12 @@ async function processarEndereco(
 
   const enderecoPJE = parte.dadosCompletos.endereco as unknown as EnderecoPJE;
 
+  const { valido, avisos } = validarEnderecoPJE(enderecoPJE);
+  if (!valido) {
+    console.warn(`[CAPTURA-PARTES] Endereço inválido para ${parte.nome}: ${avisos.join(', ')}`);
+    return null;
+  }
+
   try {
     const result = await upsertEnderecoPorIdPje({
       id_pje: Number(enderecoPJE?.id || 0),
@@ -688,15 +718,18 @@ async function processarEndereco(
       estado_id_pje: enderecoPJE?.estado?.id ? Number(enderecoPJE.estado.id) : undefined,
       estado_sigla: enderecoPJE?.estado?.sigla ? String(enderecoPJE.estado.sigla) : undefined,
       estado_descricao: enderecoPJE?.estado?.descricao ? String(enderecoPJE.estado.descricao) : undefined,
+      estado: enderecoPJE?.estado?.sigla || enderecoPJE?.estado || undefined, // Fallback to top-level
       pais_id_pje: enderecoPJE?.pais?.id ? Number(enderecoPJE.pais.id) : undefined,
       pais_codigo: enderecoPJE?.pais?.codigo ? String(enderecoPJE.pais.codigo) : undefined,
       pais_descricao: enderecoPJE?.pais?.descricao ? String(enderecoPJE.pais.descricao) : undefined,
+      pais: enderecoPJE?.pais?.descricao || enderecoPJE?.pais || undefined,
       cep: enderecoPJE?.nroCep ? String(enderecoPJE.nroCep) : undefined,
       classificacoes_endereco: enderecoPJE?.classificacoesEndereco || undefined,
       correspondencia: enderecoPJE?.correspondencia !== undefined ? Boolean(enderecoPJE.correspondencia) : undefined,
       situacao: (enderecoPJE?.situacao as unknown as SituacaoEndereco) || undefined,
       id_usuario_cadastrador_pje: enderecoPJE?.idUsuarioCadastrador ? Number(enderecoPJE.idUsuarioCadastrador) : undefined,
       data_alteracao_pje: enderecoPJE?.dtAlteracao ? String(enderecoPJE.dtAlteracao) : undefined,
+      dados_pje_completo: enderecoPJE, // Store complete PJE address JSON for audit
     });
 
     if (result.sucesso && result.endereco) {
@@ -708,7 +741,7 @@ async function processarEndereco(
 
     return null;
   } catch (error) {
-    console.error(`[CAPTURA-PARTES] Erro ao processar endereço de ${parte.nome}:`, error);
+    console.error(`[CAPTURA-PARTES] Erro ao processar endereço de ${parte.nome} (ID: ${enderecoPJE?.id}, Tipo: ${tipoParte}):`, error);
     return null;
   }
 }
@@ -719,7 +752,9 @@ async function processarEndereco(
  */
 async function processarEnderecoRepresentante(
   rep: RepresentantePJE,
-  representanteId: number
+  tipoParte: TipoParteClassificacao,
+  parteId: number,
+  processo: ProcessoParaCaptura
 ): Promise<number | null> {
   // Verifica se o representante tem endereço
   if (!rep.dadosCompletos?.endereco) {
@@ -728,11 +763,20 @@ async function processarEnderecoRepresentante(
 
   const enderecoPJE = rep.dadosCompletos.endereco as unknown as EnderecoPJE;
 
+  const { valido, avisos } = validarEnderecoPJE(enderecoPJE);
+  if (!valido) {
+    console.warn(`[CAPTURA-PARTES] Endereço inválido para representante ${rep.nome}: ${avisos.join(', ')}`);
+    return null;
+  }
+
   try {
     const result = await upsertEnderecoPorIdPje({
       id_pje: Number(enderecoPJE?.id || 0),
-      entidade_tipo: 'representante' as EntidadeTipoEndereco,
-      entidade_id: representanteId, // Now using the correct representante ID
+      entidade_tipo: tipoParte as EntidadeTipoEndereco,
+      entidade_id: parteId,
+      trt: processo.trt,
+      grau: processo.grau,
+      numero_processo: processo.numero_processo,
       logradouro: enderecoPJE?.logradouro ? String(enderecoPJE.logradouro) : undefined,
       numero: enderecoPJE?.numero ? String(enderecoPJE.numero) : undefined,
       complemento: enderecoPJE?.complemento ? String(enderecoPJE.complemento) : undefined,
@@ -743,15 +787,18 @@ async function processarEnderecoRepresentante(
       estado_id_pje: enderecoPJE?.estado?.id ? Number(enderecoPJE.estado.id) : undefined,
       estado_sigla: enderecoPJE?.estado?.sigla ? String(enderecoPJE.estado.sigla) : undefined,
       estado_descricao: enderecoPJE?.estado?.descricao ? String(enderecoPJE.estado.descricao) : undefined,
+      estado: enderecoPJE?.estado?.sigla || enderecoPJE?.estado || undefined, // Fallback to top-level
       pais_id_pje: enderecoPJE?.pais?.id ? Number(enderecoPJE.pais.id) : undefined,
       pais_codigo: enderecoPJE?.pais?.codigo ? String(enderecoPJE.pais.codigo) : undefined,
       pais_descricao: enderecoPJE?.pais?.descricao ? String(enderecoPJE.pais.descricao) : undefined,
+      pais: enderecoPJE?.pais?.descricao || enderecoPJE?.pais || undefined,
       cep: enderecoPJE?.nroCep ? String(enderecoPJE.nroCep) : undefined,
       classificacoes_endereco: enderecoPJE?.classificacoesEndereco || undefined,
       correspondencia: enderecoPJE?.correspondencia !== undefined ? Boolean(enderecoPJE.correspondencia) : undefined,
       situacao: (enderecoPJE?.situacao as unknown as SituacaoEndereco) || undefined,
       id_usuario_cadastrador_pje: enderecoPJE?.idUsuarioCadastrador ? Number(enderecoPJE.idUsuarioCadastrador) : undefined,
       data_alteracao_pje: enderecoPJE?.dtAlteracao ? String(enderecoPJE.dtAlteracao) : undefined,
+      dados_pje_completo: enderecoPJE, // Store complete PJE address JSON for audit
     });
 
     if (result.sucesso && result.endereco) {
@@ -763,7 +810,7 @@ async function processarEnderecoRepresentante(
 
     return null;
   } catch (error) {
-    console.error(`[CAPTURA-PARTES] Erro ao processar endereço de representante ${rep.nome}:`, error);
+    console.error(`[CAPTURA-PARTES] Erro ao processar endereço de representante ${rep.nome} (ID: ${enderecoPJE?.id}, Tipo: ${tipoParte}):`, error);
     return null;
   }
 }

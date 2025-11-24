@@ -136,7 +136,6 @@ O PJE retorna `tipoParte` como string livre. O sistema valida contra enum `TipoP
 ┌──────────────────────────────────────────────────────────┐
 │  3. obterPartesProcesso() (API PJE)                      │
 │     - Busca todas as partes do processo via browser      │
-│     - Retorna: PartePJE[]                                │
 └──────────────┬───────────────────────────────────────────┘
                │
                ▼
@@ -471,8 +470,7 @@ A deduplicação de entidades (clientes, partes contrárias e terceiros) é base
 
 - **Chave primária de deduplicação**: `id_pessoa_pje` com constraint UNIQUE, garantindo que não há duplicatas de pessoas oriundas do PJE.
 - **Upsert por `id_pessoa_pje`**: Se o ID já existe, os dados são atualizados; caso contrário, um novo registro é criado.
-- **Fallback para CPF/CNPJ**: Mesmo sem `id_pessoa_pje` (registros criados manualmente), há constraints UNIQUE em CPF e CNPJ para evitar duplicatas.
-- **Registros manuais**: O campo `id_pessoa_pje` é nullable para permitir clientes/partes criados manualmente (sem origem no PJE).
+- **Vantagem**: Evita duplicatas ao recapturar mesmo processo
 
 ## Tratamento de Erros
 
@@ -689,6 +687,77 @@ const representanteMultiplo2 = {
 };
 // Resultado: Dois registros na tabela representantes
 ```
+
+### Address Processing
+
+**Overview**:
+
+- Addresses are extracted from `parte.dadosCompletos.endereco` (PJE API response)
+- Stored in normalized `enderecos` table (not JSONB)
+- Linked to entities via `endereco_id` FK in entity tables
+
+**Flow**:
+
+1. `processarEndereco()` extracts address from `PartePJE.dadosCompletos.endereco`
+2. Maps PJE fields to database columns (see field mapping table below)
+3. Calls `upsertEnderecoPorIdPje()` with `id_pje` + `entidade_tipo` + `entidade_id`
+4. Returns `endereco.id` or `null` if failed
+5. `vincularEnderecoNaEntidade()` updates entity's `endereco_id` FK
+
+**Field Mapping** (PJE → Database):
+
+| PJE Field                | Database Column              | Notes                                |
+| ------------------------ | ---------------------------- | ------------------------------------ |
+| `id`                     | `id_pje`                     | Required, must be > 0                |
+| `logradouro`             | `logradouro`                 | Street address                       |
+| `numero`                 | `numero`                     | Street number                        |
+| `complemento`            | `complemento`                | Address complement                   |
+| `bairro`                 | `bairro`                     | Neighborhood                         |
+| `idMunicipio`            | `id_municipio_pje`           | Municipality ID in PJE               |
+| `municipio`              | `municipio`                  | Municipality name                    |
+| `municipioIbge`          | `municipio_ibge`             | IBGE municipality code               |
+| `estado.id`              | `estado_id_pje`              | State ID in PJE                      |
+| `estado.sigla`           | `estado_sigla`               | State abbreviation (2 chars)         |
+| `estado.descricao`       | `estado_descricao`           | State full name                      |
+| `estado` (top-level)     | `estado`                     | Fallback to top-level state string   |
+| `pais.id`                | `pais_id_pje`                | Country ID in PJE                    |
+| `pais.codigo`            | `pais_codigo`                | Country code                         |
+| `pais.descricao`         | `pais_descricao`             | Country full name                    |
+| `pais` (top-level)       | `pais`                       | Fallback to top-level country string |
+| `nroCep`                 | `cep`                        | Postal code                          |
+| `classificacoesEndereco` | `classificacoes_endereco`    | JSONB array of {codigo, descricao}   |
+| `correspondencia`        | `correspondencia`            | Boolean flag for mailing address     |
+| `situacao`               | `situacao`                   | Address situation (A, I, P, H)       |
+| `idUsuarioCadastrador`   | `id_usuario_cadastrador_pje` | PJE user who registered              |
+| `dtAlteracao`            | `data_alteracao_pje`         | Last modification date               |
+| `endereco` (full object) | `dados_pje_completo`         | Complete PJE address JSON for audit  |
+
+**Validation**:
+
+- `id_pje` must be > 0 (PJE address ID)
+- At least one of: `logradouro`, `municipio`, `cep` should be present
+- Incomplete addresses logged as warnings but not rejected
+- Invalid addresses return `null` (capture continues)
+
+**Representative Addresses**:
+
+- Representatives' addresses created with **party's** `entidade_tipo` + `entidade_id`
+- Representative's `endereco_id` FK links to this address
+- Rationale: Avoid duplication (reps typically share party's address)
+- See `processarEnderecoRepresentante()` implementation
+
+**Error Handling**:
+
+- Address processing errors don't stop party capture
+- Errors logged with context (party name, `id_pje`, `tipoParte`)
+- Returns `null` on failure (entity still created, just without address link)
+
+**Related Files**:
+
+- `backend/enderecos/services/enderecos-persistence.service.ts` - Address CRUD
+- `backend/types/partes/enderecos-types.ts` - Type definitions
+- `supabase/migrations/20251126000000_create_enderecos_table.sql` - Table schema
+- `supabase/migrations/20251124000000_add_endereco_id_to_partes.sql` - FK columns
 
 ## Performance
 
