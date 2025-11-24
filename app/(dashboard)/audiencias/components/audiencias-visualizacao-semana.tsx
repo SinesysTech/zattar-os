@@ -8,9 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Copy, Pencil, Plus } from 'lucide-react';
+import { Copy, Pencil } from 'lucide-react';
+import { EditarEnderecoDialog } from './editar-endereco-dialog';
+import { EditarObservacoesDialog } from './editar-observacoes-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
@@ -751,11 +752,12 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       accessorKey: 'data_inicio',
       header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+        <div className="relative flex items-center justify-center w-full text-center after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
           <div className="text-sm font-medium text-center">Hora</div>
         </div>
       ),
       size: 80,
+      meta: { align: 'left' },
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center text-sm font-medium">
           {formatarHora(row.getValue('data_inicio'))}
@@ -765,11 +767,11 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       id: 'processo',
       header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+        <div className="relative flex items-center justify-center w-full text-center after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
           <div className="text-sm font-medium text-center">Processo</div>
         </div>
       ),
-      size: 250,
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
@@ -778,7 +780,7 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
         const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[220px]">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -800,11 +802,12 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       id: 'partes',
       header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+        <div className="relative flex items-center justify-center w-full text-center after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
           <div className="text-sm font-medium text-center">Partes</div>
         </div>
       ),
       size: 250,
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const parteAutora = row.original.polo_ativo_nome || '-';
         const parteRe = row.original.polo_passivo_nome || '-';
@@ -824,18 +827,18 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       id: 'tipo_local',
       header: () => (
-        <div className="relative flex items-center justify-start w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-left">tipo e local</div>
+        <div className="relative flex items-center justify-center w-full text-center after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Tipo e Local</div>
         </div>
       ),
-      size: 280,
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const tipo = row.original.tipo_descricao || '-';
         const isVirtual = row.original.tipo_is_virtual;
         const sala = row.original.sala_audiencia_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1 max-w-[280px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1 max-w-[240px]">
             <div className="flex items-start gap-2">
               <span className="text-sm text-left">{tipo}</span>
               {isVirtual && (
@@ -854,12 +857,13 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       accessorKey: 'url_audiencia_virtual',
       header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+        <div className="relative flex items-center justify-center w-full text-center after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
           <div className="text-sm font-medium text-center">Endereço</div>
         </div>
       ),
       enableSorting: false,
-      size: 120,
+      size: 180,
+      meta: { align: 'left' },
       cell: ({ row }) => (
         <div className="h-full w-full">
           <EnderecoCell audiencia={row.original} onSuccess={onSuccess} />
@@ -869,12 +873,13 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       accessorKey: 'observacoes',
       header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+        <div className="relative flex items-center justify-center w-full text-center after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
           <div className="text-sm font-medium text-center">Observações</div>
         </div>
       ),
       enableSorting: false,
       size: 250,
+      meta: { align: 'left' },
       cell: ({ row }) => (
         <div className="h-full w-full">
           <ObservacoesCell audiencia={row.original} onSuccess={onSuccess} />
@@ -884,11 +889,11 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       accessorKey: 'responsavel_id',
       header: () => (
-        <div className="flex items-center justify-center w-full">
+        <div className="flex items-center justify-center w-full text-center">
           <div className="text-sm font-medium text-center">Responsável</div>
         </div>
       ),
-      size: 160,
+      meta: { align: 'left' },
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center">
           <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} />

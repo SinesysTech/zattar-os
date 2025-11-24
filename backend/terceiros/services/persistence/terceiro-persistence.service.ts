@@ -131,7 +131,6 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       cnpj: data.cnpj as string,
       cpf: null,
       inscricao_estadual: (data.inscricao_estadual as string | null) ?? null,
-      inscricao_municipal: (data.inscricao_municipal as string | null) ?? null,
       data_abertura: (data.data_abertura as string | null) ?? null,
       orgao_publico: (data.orgao_publico as boolean | null) ?? null,
       ds_tipo_pessoa: (data.ds_tipo_pessoa as string | null) ?? null,

@@ -72,7 +72,6 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
     id_pessoa_pje: (data.id_pessoa_pje as number | null) ?? null,
     tipo_pessoa,
     nome: data.nome as string,
-    nome_social: (data.nome_social as string | null) ?? null,
     emails: (data.emails as string[] | null) ?? null,
     ddd_celular: (data.ddd_celular as string | null) ?? null,
     numero_celular: (data.numero_celular as string | null) ?? null,
@@ -129,7 +128,6 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       cnpj: data.cnpj as string,
       cpf: null,
       inscricao_estadual: (data.inscricao_estadual as string | null) ?? null,
-      inscricao_municipal: (data.inscricao_municipal as string | null) ?? null,
       data_abertura: (data.data_abertura as string | null) ?? null,
       orgao_publico: (data.orgao_publico as boolean | null) ?? null,
       ds_tipo_pessoa: (data.ds_tipo_pessoa as string | null) ?? null,
@@ -241,7 +239,6 @@ export async function criarParteContraria(
       id_pessoa_pje: params.id_pessoa_pje ?? null,
       tipo_pessoa: params.tipo_pessoa,
       nome: params.nome.trim(),
-      nome_social: params.nome_social?.trim() || null,
       emails: params.emails ?? null,
       ddd_celular: params.ddd_celular?.trim() || null,
       numero_celular: params.numero_celular?.trim() || null,
@@ -326,8 +323,6 @@ export async function atualizarParteContraria(
     // if (params.id_pje !== undefined) dadosAtualizacao.id_pje = params.id_pje; // Removido
     if (params.id_pessoa_pje !== undefined) dadosAtualizacao.id_pessoa_pje = params.id_pessoa_pje;
     if (params.nome !== undefined) dadosAtualizacao.nome = params.nome.trim();
-    if (params.nome_social !== undefined)
-      dadosAtualizacao.nome_social = params.nome_social?.trim() || null;
     if (params.emails !== undefined) dadosAtualizacao.emails = params.emails;
     if (params.ddd_celular !== undefined)
       dadosAtualizacao.ddd_celular = params.ddd_celular?.trim() || null;
@@ -525,7 +520,7 @@ export async function listarPartesContrarias(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(
-      `nome.ilike.%${busca}%,nome_social.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+      `nome.ilike.%${busca}%,nome_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
     );
   }
 
@@ -685,7 +680,7 @@ export async function listarPartesContrariasComEndereco(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(
-      `nome.ilike.%${busca}%,nome_social.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+      `nome.ilike.%${busca}%,nome_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
     );
   }
 
