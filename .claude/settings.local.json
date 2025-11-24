@@ -29,7 +29,8 @@
       "mcp__supabase__execute_sql",
       "Bash(npx playwright:*)",
       "*",
-      "Bash(openspec list:*)"
+      "Bash(openspec list:*)",
+      "Bash(if exist .next rmdir /s /q .next)"
     ],
     "deny": [],
     "ask": []
