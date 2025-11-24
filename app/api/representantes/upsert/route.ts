@@ -108,8 +108,7 @@ export async function POST(request: NextRequest) {
     const params: UpsertRepresentantePorIdPessoaParams = body;
 
     // Validate required fields (same as create)
-    if (!params.id_pessoa_pje || !params.trt || !params.grau ||
-        !params.parte_tipo || !params.parte_id || !params.numero_processo ||
+    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id ||
         !params.tipo_pessoa || !params.nome) {
       return NextResponse.json(
         { success: false, error: 'Campos obrigatórios não informados' },

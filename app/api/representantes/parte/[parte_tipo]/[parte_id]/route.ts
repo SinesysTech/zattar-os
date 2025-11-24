@@ -100,12 +100,9 @@ export async function GET(request: NextRequest, context: RouteContext) {
     }
 
     // Parse query params
-    const searchParams = request.nextUrl.searchParams;
     const params: BuscarRepresentantesPorParteParams = {
       parte_tipo: parte_tipo as ParteTipo,
       parte_id: parteId,
-      trt: searchParams.get('trt') || undefined,
-      grau: searchParams.get('grau') as Grau | undefined,
     };
 
     // Find representantes

@@ -145,9 +145,6 @@ export async function GET(request: NextRequest) {
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!) : undefined,
       parte_tipo: searchParams.get('parte_tipo') as any,
       parte_id: searchParams.get('parte_id') ? parseInt(searchParams.get('parte_id')!) : undefined,
-      trt: searchParams.get('trt') || undefined,
-      grau: searchParams.get('grau') as any,
-      numero_processo: searchParams.get('numero_processo') || undefined,
       numero_oab: searchParams.get('numero_oab') || undefined,
       situacao_oab: searchParams.get('situacao_oab') as any,
       tipo_pessoa: searchParams.get('tipo_pessoa') as any,
@@ -185,24 +182,14 @@ export async function GET(request: NextRequest) {
  *             type: object
  *             required:
  *               - id_pessoa_pje
- *               - trt
- *               - grau
  *               - parte_tipo
  *               - parte_id
- *               - numero_processo
  *               - tipo_pessoa
  *               - nome
  *             properties:
  *               id_pessoa_pje:
  *                 type: integer
  *                 description: ID da pessoa no PJE
- *               trt:
- *                 type: string
- *                 description: Tribunal Regional do Trabalho
- *               grau:
- *                 type: string
- *                 enum: ["1", "2"]
- *                 description: Grau do processo
  *               parte_tipo:
  *                 type: string
  *                 enum: [cliente, parte_contraria, terceiro]
@@ -210,9 +197,6 @@ export async function GET(request: NextRequest) {
  *               parte_id:
  *                 type: integer
  *                 description: ID da parte representada
- *               numero_processo:
- *                 type: string
- *                 description: Número do processo
  *               tipo_pessoa:
  *                 type: string
  *                 enum: [pf, pj]
@@ -270,8 +254,7 @@ export async function POST(request: NextRequest) {
     const params: CriarRepresentanteParams = body;
 
     // Validate required fields
-    if (!params.id_pessoa_pje || !params.trt || !params.grau ||
-        !params.parte_tipo || !params.parte_id || !params.numero_processo ||
+    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id ||
         !params.tipo_pessoa || !params.nome) {
       return NextResponse.json(
         { success: false, error: 'Campos obrigatórios não informados' },
