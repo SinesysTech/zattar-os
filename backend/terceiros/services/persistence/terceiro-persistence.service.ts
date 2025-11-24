@@ -10,9 +10,17 @@ import type {
   ListarTerceirosParams,
   ListarTerceirosResult,
   UpsertTerceiroPorIdPessoaParams,
-  OperacaoTerceiroResult,
 } from '@/backend/types/partes/terceiros-types';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
+
+/**
+ * Resultado de operação
+ */
+export interface OperacaoTerceiroResult {
+  sucesso: boolean;
+  terceiro?: Terceiro;
+  erro?: string;
+}
 
 /**
  * Valida CPF básico (formato)

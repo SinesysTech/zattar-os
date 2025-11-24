@@ -239,7 +239,7 @@ export async function criarTerceiro(
 ): Promise<{ sucesso: boolean; terceiro?: Terceiro; erro?: string }> {
   try {
     // Validate required fields
-    if (!params.id_pje || !params.id_pessoa_pje || !params.processo_id ||
+    if (!params.id_pessoa_pje || !params.processo_id ||
         !params.tipo_parte || !params.polo || !params.trt ||
         !params.grau || !params.numero_processo || !params.tipo_pessoa || !params.nome) {
       return {
