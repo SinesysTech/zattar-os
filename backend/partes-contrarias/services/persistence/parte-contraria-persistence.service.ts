@@ -221,20 +221,6 @@ export async function criarParteContraria(
       if (!validarCpf(params.cpf)) {
         return { sucesso: false, erro: 'CPF inválido (deve conter 11 dígitos)' };
       }
-
-      const cpfNormalizado = normalizarCpf(params.cpf);
-      const { data: existente } = await supabase
-        .from('partes_contrarias')
-        .select('id, cpf')
-        .eq('cpf', cpfNormalizado)
-        .maybeSingle();
-
-      if (existente) {
-        return {
-          sucesso: false,
-          erro: 'Parte contrária com este CPF já existe',
-        };
-      }
     } else if (params.tipo_pessoa === 'pj') {
       if (!params.cnpj?.trim()) {
         return { sucesso: false, erro: 'CNPJ é obrigatório para pessoa jurídica' };
@@ -242,20 +228,6 @@ export async function criarParteContraria(
 
       if (!validarCnpj(params.cnpj)) {
         return { sucesso: false, erro: 'CNPJ inválido (deve conter 14 dígitos)' };
-      }
-
-      const cnpjNormalizado = normalizarCnpj(params.cnpj);
-      const { data: existente } = await supabase
-        .from('partes_contrarias')
-        .select('id, cnpj')
-        .eq('cnpj', cnpjNormalizado)
-        .maybeSingle();
-
-      if (existente) {
-        return {
-          sucesso: false,
-          erro: 'Parte contrária com este CNPJ já existe',
-        };
       }
     }
 
@@ -288,7 +260,7 @@ export async function criarParteContraria(
       login_pje: params.login_pje?.trim() || null,
       autoridade: params.autoridade ?? null,
       observacoes: params.observacoes?.trim() || null,
-      dados_anteriores: params.dados_anteriores ?? null,
+      dados_anteriores: null,
       endereco_id: params.endereco_id ?? null,
     };
 
@@ -349,6 +321,17 @@ export async function criarParteContraria(
       .single();
 
     if (error) {
+      // Tratamento específico para UNIQUE violation
+      if (error.code === '23505') {
+        if (error.message.includes('cpf')) {
+          return { sucesso: false, erro: 'Parte contrária com este CPF já cadastrada' };
+        } else if (error.message.includes('cnpj')) {
+          return { sucesso: false, erro: 'Parte contrária com este CNPJ já cadastrada' };
+        } else if (error.message.includes('id_pessoa_pje')) {
+          return { sucesso: false, erro: 'Pessoa PJE já cadastrada como parte contrária' };
+        }
+      }
+
       console.error('Erro ao criar parte contrária:', error);
       return { sucesso: false, erro: `Erro ao criar parte contrária: ${error.message}` };
     }
@@ -375,7 +358,7 @@ export async function atualizarParteContraria(
   try {
     const { data: existente, error: erroBusca } = await supabase
       .from('partes_contrarias')
-      .select('id, tipo_pessoa')
+      .select('*')
       .eq('id', params.id)
       .single();
 
@@ -390,7 +373,9 @@ export async function atualizarParteContraria(
     }
 
     // Preparar dados para atualização (apenas campos fornecidos)
-    const dadosAtualizacao: Record<string, unknown> = {};
+    const dadosAtualizacao: Record<string, unknown> = {
+      dados_anteriores: converterParaParteContraria(existente),
+    };
 
     // if (params.id_pje !== undefined) dadosAtualizacao.id_pje = params.id_pje; // Removido
     if (params.id_pessoa_pje !== undefined) dadosAtualizacao.id_pessoa_pje = params.id_pessoa_pje;
@@ -421,8 +406,6 @@ export async function atualizarParteContraria(
     if (params.autoridade !== undefined) dadosAtualizacao.autoridade = params.autoridade;
     if (params.observacoes !== undefined)
       dadosAtualizacao.observacoes = params.observacoes?.trim() || null;
-    if (params.dados_anteriores !== undefined)
-      dadosAtualizacao.dados_anteriores = params.dados_anteriores;
     if (params.endereco_id !== undefined) dadosAtualizacao.endereco_id = params.endereco_id;
 
     // Campos específicos por tipo de pessoa
@@ -515,6 +498,17 @@ export async function atualizarParteContraria(
       .single();
 
     if (error) {
+      // Tratamento específico para UNIQUE violation
+      if (error.code === '23505') {
+        if (error.message.includes('cpf')) {
+          return { sucesso: false, erro: 'Parte contrária com este CPF já cadastrada' };
+        } else if (error.message.includes('cnpj')) {
+          return { sucesso: false, erro: 'Parte contrária com este CNPJ já cadastrada' };
+        } else if (error.message.includes('id_pessoa_pje')) {
+          return { sucesso: false, erro: 'Pessoa PJE já cadastrada como parte contrária' };
+        }
+      }
+
       console.error('Erro ao atualizar parte contrária:', error);
       return { sucesso: false, erro: `Erro ao atualizar: ${error.message}` };
     }
@@ -538,7 +532,7 @@ export async function buscarParteContrariaPorId(id: number): Promise<ParteContra
 
   const { data, error } = await supabase
     .from('partes_contrarias')
-    .select('*')
+    .select('*, endereco:enderecos(*)')
     .eq('id', id)
     .single();
 

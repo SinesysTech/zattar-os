@@ -256,12 +256,20 @@ export async function criarRepresentante(
   params: CriarRepresentanteParams
 ): Promise<OperacaoRepresentanteResult> {
   try {
-    // Validate required fields (sem trt, grau, numero_processo pois não existem na tabela)
+    // Validate required fields
     if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id ||
-        !params.tipo_pessoa || !params.nome) {
+      !params.tipo_pessoa || !params.nome) {
       return {
         sucesso: false,
         erro: 'Campos obrigatórios não informados',
+      };
+    }
+
+    // Validate trt, grau, numero_processo as required
+    if (!params.trt || !params.grau || !params.numero_processo) {
+      return {
+        sucesso: false,
+        erro: 'Campos trt, grau e numero_processo são obrigatórios',
       };
     }
 
@@ -294,12 +302,9 @@ export async function criarRepresentante(
 
     const supabase = await createClient();
 
-    // Remover campos que não existem na tabela (trt, grau, numero_processo)
-    const { trt, grau, numero_processo, ...paramsLimpos } = params as any;
-
     const { data, error } = await supabase
       .from('representantes')
-      .insert(paramsLimpos)
+      .insert(params)
       .select()
       .single();
 
@@ -352,15 +357,33 @@ export async function atualizarRepresentante(
       return { sucesso: false, erro: 'Número OAB inválido' };
     }
 
+    // Note: CPF/CNPJ validation removed because tipo_pessoa is immutable.
+    // Document numbers cannot be changed after creation.
+    // If cpf/cnpj are provided in params, they will be ignored by the type system.
+
     const supabase = await createClient();
 
-    // Remover campos que não existem na tabela (trt, grau, numero_processo)
-    const { id, trt, grau, numero_processo, ...updates } = params as any;
+    // Buscar registro atual para dados_anteriores
+    const { data: current } = await supabase
+      .from('representantes')
+      .select('*')
+      .eq('id', params.id)
+      .single();
+
+    const updates = { ...params };
+    delete updates.id;
+
+    // dados_anteriores armazena o estado anterior do registro, não os dados do PJE
+    if (current) {
+      updates.dados_anteriores = current;
+    } else {
+      updates.dados_anteriores = null;
+    }
 
     const { data, error } = await supabase
       .from('representantes')
       .update(updates)
-      .eq('id', id)
+      .eq('id', params.id)
       .select()
       .single();
 
@@ -601,13 +624,16 @@ export async function upsertRepresentantePorIdPessoa(
   try {
     const supabase = await createClient();
 
-    // Search for existing record by composite key (sem trt, grau, numero_processo pois não existem na tabela)
+    // Busca pela chave composta completa (id_pessoa_pje + parte_id + parte_tipo + trt + grau + numero_processo) para respeitar constraint UNIQUE
     const { data: existing } = await supabase
       .from('representantes')
       .select('id')
       .eq('id_pessoa_pje', params.id_pessoa_pje)
       .eq('parte_id', params.parte_id)
       .eq('parte_tipo', params.parte_tipo)
+      .eq('trt', params.trt)
+      .eq('grau', params.grau)
+      .eq('numero_processo', params.numero_processo)
       .maybeSingle();
 
     if (existing) {

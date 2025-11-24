@@ -14,6 +14,7 @@
 import {
   identificarTipoParte,
   normalizarCpf,
+  normalizarCnpj, // ADICIONAR
   isTipoEspecial,
   type AdvogadoIdentificacao,
 } from '../identificacao-partes.service';
@@ -81,7 +82,7 @@ function expect(actual: any) {
 
 const mockAdvogado: AdvogadoIdentificacao = {
   id: 1,
-  cpf: '123.456.789-00',
+  documento: '123.456.789-00',
   nome: 'Dr. João Silva',
 };
 
@@ -105,8 +106,8 @@ const createParteMock = (overrides: ParteOverrides = {}): PartePJE => {
     principal: true,
     representantes: representantes
       ? representantes.map((rep) =>
-          createRepresentanteMock(rep as Partial<RepresentantePJE>)
-        )
+        createRepresentanteMock(rep as Partial<RepresentantePJE>)
+      )
       : [],
     dadosCompletos: {},
     ...rest,
@@ -157,6 +158,37 @@ describe('normalizarCpf()', () => {
 
   it('deve lidar com CPF já normalizado', () => {
     expect(normalizarCpf('12345678900')).toBe('12345678900');
+  });
+});
+
+// ============================================================================
+// TESTES: normalizarCnpj
+// ============================================================================
+
+describe('normalizarCnpj()', () => {
+  it('deve remover pontos, barras e hífens', () => {
+    expect(normalizarCnpj('12.345.678/0001-90')).toBe('12345678000190');
+  });
+
+  it('deve remover espaços', () => {
+    expect(normalizarCnpj(' 12 345 678 0001 90 ')).toBe('12345678000190');
+  });
+
+  it('deve retornar vazio se CNPJ for vazio', () => {
+    expect(normalizarCnpj('')).toBe('');
+  });
+
+  it('deve retornar vazio se CNPJ for null/undefined', () => {
+    expect(normalizarCnpj(null as any)).toBe('');
+    expect(normalizarCnpj(undefined as any)).toBe('');
+  });
+
+  it('deve preservar apenas números', () => {
+    expect(normalizarCnpj('abc12def345ghi678jkl0001mno90')).toBe('12345678000190');
+  });
+
+  it('deve lidar com CNPJ já normalizado', () => {
+    expect(normalizarCnpj('12345678000190')).toBe('12345678000190');
   });
 });
 
@@ -227,10 +259,22 @@ describe('identificarTipoParte() - Validações', () => {
     expect(() => identificarTipoParte(parte, null as any)).toThrow();
   });
 
-  it('deve lançar erro se CPF do advogado estiver ausente', () => {
+  it('deve lançar erro se documento do advogado estiver ausente', () => {
     const parte = createParteMock();
-    const advogadoSemCpf = { id: 1, cpf: '', nome: 'Dr. João' };
-    expect(() => identificarTipoParte(parte, advogadoSemCpf)).toThrow();
+    const advogadoSemDocumento = { id: 1, documento: '', nome: 'Dr. João' };
+    expect(() => identificarTipoParte(parte, advogadoSemDocumento)).toThrow();
+  });
+
+  it('deve lançar erro se documento do advogado for inválido (menos de 11 dígitos)', () => {
+    const parte = createParteMock();
+    const advogadoDocumentoInvalido = { id: 1, documento: '123456789', nome: 'Dr. João' };
+    expect(() => identificarTipoParte(parte, advogadoDocumentoInvalido)).toThrow();
+  });
+
+  it('deve lançar erro se documento do advogado for sequência de zeros', () => {
+    const parte = createParteMock();
+    const advogadoDocumentoInvalido = { id: 1, documento: '00000000000', nome: 'Dr. João' };
+    expect(() => identificarTipoParte(parte, advogadoDocumentoInvalido)).toThrow();
   });
 });
 
@@ -321,7 +365,7 @@ describe('identificarTipoParte() - Cliente', () => {
   it('deve identificar cliente quando advogado CPF não formatado', () => {
     const advogadoSemFormatacao: AdvogadoIdentificacao = {
       id: 1,
-      cpf: '12345678900',
+      documento: '12345678900',
       nome: 'Dr. João Silva',
     };
     const parte = createParteMock({
@@ -396,6 +440,65 @@ describe('identificarTipoParte() - Cliente', () => {
           idPessoa: 2,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
+          tipoDocumento: 'CPF',
+        }),
+      ],
+    });
+    expect(identificarTipoParte(parte, mockAdvogado)).toBe('cliente');
+  });
+
+  it('deve identificar cliente com representante PJ (CNPJ)', () => {
+    const advogadoPJ: AdvogadoIdentificacao = {
+      id: 1,
+      documento: '12.345.678/0001-90', // CNPJ do escritório
+      nome: 'Escritório de Advocacia Ltda',
+    };
+    const parte = createParteMock({
+      tipoParte: 'AUTOR',
+      representantes: [
+        createRepresentanteMock({
+          idPessoa: 1,
+          nome: 'Escritório de Advocacia Ltda',
+          numeroDocumento: '12345678000190', // Mesmo CNPJ
+          tipoDocumento: 'CNPJ',
+        }),
+      ],
+    });
+    expect(identificarTipoParte(parte, advogadoPJ)).toBe('cliente');
+  });
+
+  it('deve identificar cliente com representante PJ formatado', () => {
+    const advogadoPJ: AdvogadoIdentificacao = {
+      id: 1,
+      documento: '12345678000190', // CNPJ sem formatação
+      nome: 'Escritório de Advocacia Ltda',
+    };
+    const parte = createParteMock({
+      representantes: [
+        createRepresentanteMock({
+          idPessoa: 1,
+          nome: 'Escritório de Advocacia Ltda',
+          numeroDocumento: '12.345.678/0001-90', // Com formatação
+          tipoDocumento: 'CNPJ',
+        }),
+      ],
+    });
+    expect(identificarTipoParte(parte, advogadoPJ)).toBe('cliente');
+  });
+
+  it('deve ignorar representantes com CNPJ inválido', () => {
+    const parte = createParteMock({
+      representantes: [
+        createRepresentanteMock({
+          idPessoa: 1,
+          nome: 'Escritório Inválido',
+          numeroDocumento: '123', // CNPJ inválido (menos de 14 dígitos)
+          tipoDocumento: 'CNPJ',
+        }),
+        createRepresentanteMock({
+          idPessoa: 2,
+          nome: 'Dr. João Silva',
+          numeroDocumento: '123.456.789-00', // CPF válido
           tipoDocumento: 'CPF',
         }),
       ],
@@ -527,7 +630,7 @@ describe('identificarTipoParte() - Edge Cases', () => {
   it('deve lidar com advogado CPF com espaços', () => {
     const advogadoComEspacos: AdvogadoIdentificacao = {
       id: 1,
-      cpf: '  123.456.789-00  ',
+      documento: '  123.456.789-00  ',
       nome: 'Dr. João Silva',
     };
     const parte = createParteMock({
@@ -549,7 +652,7 @@ describe('identificarTipoParte() - Edge Cases', () => {
 // ============================================================================
 
 console.log('\n🧪 TESTES UNITÁRIOS: identificacao-partes.service.ts\n');
-console.log('=' .repeat(60));
+console.log('='.repeat(60));
 
 describe('normalizarCpf()', () => {
   it('deve remover pontos e hífens', () => {
@@ -637,10 +740,10 @@ describe('identificarTipoParte() - Validações', () => {
     expect(() => identificarTipoParte(parte, null as any)).toThrow();
   });
 
-  it('deve lançar erro se CPF do advogado estiver ausente', () => {
+  it('deve lançar erro se documento do advogado estiver ausente', () => {
     const parte = createParteMock();
-    const advogadoSemCpf = { id: 1, cpf: '', nome: 'Dr. João' };
-    expect(() => identificarTipoParte(parte, advogadoSemCpf)).toThrow();
+    const advogadoSemDocumento = { id: 1, documento: '', nome: 'Dr. João' };
+    expect(() => identificarTipoParte(parte, advogadoSemDocumento)).toThrow();
   });
 });
 
@@ -722,7 +825,7 @@ describe('identificarTipoParte() - Cliente', () => {
   it('deve identificar cliente quando advogado CPF não formatado', () => {
     const advogadoSemFormatacao: AdvogadoIdentificacao = {
       id: 1,
-      cpf: '12345678900',
+      documento: '12345678900',
       nome: 'Dr. João Silva',
     };
     const parte = createParteMock({
@@ -919,7 +1022,7 @@ describe('identificarTipoParte() - Edge Cases', () => {
   it('deve lidar com advogado CPF com espaços', () => {
     const advogadoComEspacos: AdvogadoIdentificacao = {
       id: 1,
-      cpf: '  123.456.789-00  ',
+      documento: '  123.456.789-00  ',
       nome: 'Dr. João Silva',
     };
     const parte = createParteMock({

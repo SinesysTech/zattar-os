@@ -24,7 +24,10 @@ export type SituacaoPJE = 'A' | 'I' | 'E' | 'H'; // A=Ativo, I=Inativo, E=Exclu�
  */
 export interface ClienteBase {
   id: number;
-  id_pessoa_pje: number | null; // Unique constraint
+  /**
+   * ID da pessoa no sistema PJE. Usado para deduplicação em capturas. UNIQUE constraint garante que não há duplicatas. Null para clientes criados manualmente.
+   */
+  id_pessoa_pje: number | null;
   tipo_pessoa: TipoPessoa;
   nome: string;
   nome_social_fantasia: string | null; // Serve para PF (nome social) e PJ (nome fantasia)
@@ -41,7 +44,10 @@ export interface ClienteBase {
   login_pje: string | null;
   autoridade: boolean | null;
   observacoes: string | null;
-  dados_anteriores: Record<string, unknown> | null; // JSONB
+  /**
+   * Estado anterior do registro antes da última atualização. Usado para auditoria. Null na criação, populado automaticamente no update.
+   */
+  dados_anteriores: Record<string, unknown> | null;
   endereco_id: number | null; // FK para tabela enderecos
   ativo: boolean;
   created_by: number | null;
@@ -217,7 +223,10 @@ export interface CriarClientePFParams {
   situacao_cpf_receita_descricao?: string | null;
   pode_usar_celular_mensagem?: boolean | null;
   observacoes?: string | null;
-  dados_anteriores?: Record<string, unknown> | null;
+  /**
+   * Dados completos brutos do PJE (JSON). Usado para capturar todos os campos disponíveis no sistema PJE.
+   */
+  dados_pje_completo?: Record<string, unknown> | null;
   endereco_id?: number | null;
   ativo?: boolean;
   created_by?: number | null;
@@ -262,7 +271,10 @@ export interface CriarClientePJParams {
   porte_descricao?: string | null;
   ultima_atualizacao_pje?: string | null;
   observacoes?: string | null;
-  dados_anteriores?: Record<string, unknown> | null;
+  /**
+   * Dados completos brutos do PJE (JSON). Usado para capturar todos os campos disponíveis no sistema PJE.
+   */
+  dados_pje_completo?: Record<string, unknown> | null;
   endereco_id?: number | null;
   ativo?: boolean;
   created_by?: number | null;

@@ -17,20 +17,47 @@ import type { Page } from 'playwright';
 import type { CapturaPartesResult, CapturaPartesErro, TipoParteClassificacao } from './types';
 import type { PartePJE, RepresentantePJE } from '@/backend/api/pje-trt/partes/types';
 import { obterPartesProcesso } from '@/backend/api/pje-trt/partes';
-import { identificarTipoParte, type AdvogadoIdentificacao } from './identificacao-partes.service';
+import { identificarTipoParte, validarDocumentoAdvogado, type AdvogadoIdentificacao } from './identificacao-partes.service';
 import { upsertClientePorIdPessoa } from '@/backend/clientes/services/persistence/cliente-persistence.service';
 import { upsertParteContrariaPorIdPessoa } from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
 import { upsertTerceiroPorIdPessoa } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
 import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
-import { upsertRepresentantePorIdPessoa } from '@/backend/representantes/services/representantes-persistence.service';
+import { upsertRepresentantePorIdPessoa, atualizarRepresentante } from '@/backend/representantes/services/representantes-persistence.service';
 import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
 import type { CriarClientePFParams, CriarClientePJParams } from '@/backend/types/partes/clientes-types';
 import type { CriarParteContrariaPFParams, CriarParteContrariaPJParams } from '@/backend/types/partes/partes-contrarias-types';
 import type { UpsertTerceiroPorIdPessoaParams } from '@/backend/types/partes/terceiros-types';
 import type { TipoParteProcesso, PoloProcessoParte } from '@/backend/types/partes';
+import { TIPOS_PARTE_PROCESSO_VALIDOS } from '@/backend/types/partes/processo-partes-types';
 import type { GrauAcervo } from '@/backend/types/acervo/types';
 import type { EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } from '@/backend/types/partes/enderecos-types';
-import type { SituacaoOAB, TipoRepresentante } from '@/backend/types/representantes/representantes-types';
+import type { SituacaoOAB, TipoRepresentante, Polo } from '@/backend/types/representantes/representantes-types';
+
+/**
+ * Normaliza o valor de polo do PJE para o formato interno
+ * PJE pode retornar valores em diferentes formatos (uppercase, lowercase, variações)
+ */
+function normalizarPolo(poloStr: unknown): Polo | null {
+  if (!poloStr || typeof poloStr !== 'string') {
+    return null;
+  }
+
+  const poloNormalizado = poloStr.trim().toLowerCase();
+
+  switch (poloNormalizado) {
+    case 'ativo':
+      return 'ativo';
+    case 'passivo':
+      return 'passivo';
+    case 'outros':
+    case 'outro':
+    case 'terceiro':
+      return 'outros';
+    default:
+      console.warn(`[CAPTURA-PARTES] Valor de polo desconhecido '${poloStr}', retornando 'outros'`);
+      return 'outros';
+  }
+}
 
 interface EnderecoPJE {
   id?: number;
@@ -65,6 +92,149 @@ export interface ProcessoParaCaptura {
   trt: string;
   /** Grau do processo */
   grau: GrauAcervo;
+}
+
+/**
+ * Função auxiliar para extrair campos específicos do PJE de dadosCompletos
+ */
+function extrairCamposPJE(parte: PartePJE) {
+  const dados = parte.dadosCompletos;
+  const camposExtraidos: Record<string, unknown> = {};
+
+  // Campos comuns
+  camposExtraidos.tipo_documento = parte.tipoDocumento;
+  camposExtraidos.status_pje = dados?.status as string | undefined;
+  camposExtraidos.situacao_pje = dados?.situacao as string | undefined;
+  camposExtraidos.login_pje = dados?.login as string | undefined;
+  camposExtraidos.autoridade = dados?.autoridade !== undefined ? Boolean(dados.autoridade) : undefined;
+
+  // Campos específicos de PF
+  if (parte.tipoDocumento === 'CPF') {
+    camposExtraidos.sexo = dados?.sexo as string | undefined;
+    camposExtraidos.nome_genitora = dados?.nomeGenitora as string | undefined;
+    camposExtraidos.naturalidade_id_pje = dados?.naturalidade?.id !== undefined ? Number(dados.naturalidade.id) : undefined;
+    camposExtraidos.naturalidade_municipio = dados?.naturalidade?.municipio as string | undefined;
+    camposExtraidos.naturalidade_estado_id_pje = dados?.naturalidade?.estado?.id !== undefined ? Number(dados.naturalidade.estado.id) : undefined;
+    camposExtraidos.naturalidade_estado_sigla = dados?.naturalidade?.estado?.sigla as string | undefined;
+    camposExtraidos.uf_nascimento_id_pje = dados?.ufNascimento?.id !== undefined ? Number(dados.ufNascimento.id) : undefined;
+    camposExtraidos.uf_nascimento_sigla = dados?.ufNascimento?.sigla as string | undefined;
+    camposExtraidos.uf_nascimento_descricao = dados?.ufNascimento?.descricao as string | undefined;
+    camposExtraidos.pais_nascimento_id_pje = dados?.paisNascimento?.id !== undefined ? Number(dados.paisNascimento.id) : undefined;
+    camposExtraidos.pais_nascimento_codigo = dados?.paisNascimento?.codigo as string | undefined;
+    camposExtraidos.pais_nascimento_descricao = dados?.paisNascimento?.descricao as string | undefined;
+    camposExtraidos.escolaridade_codigo = dados?.escolaridade !== undefined ? Number(dados.escolaridade) : undefined;
+    camposExtraidos.situacao_cpf_receita_id = dados?.situacaoCpfReceita?.id !== undefined ? Number(dados.situacaoCpfReceita.id) : undefined;
+    camposExtraidos.situacao_cpf_receita_descricao = dados?.situacaoCpfReceita?.descricao as string | undefined;
+    camposExtraidos.pode_usar_celular_mensagem = dados?.podeUsarCelularMensagem !== undefined ? Boolean(dados.podeUsarCelularMensagem) : undefined;
+  }
+
+  // Campos específicos de PJ
+  if (parte.tipoDocumento === 'CNPJ') {
+    camposExtraidos.inscricao_estadual = dados?.inscricaoEstadual as string | undefined;
+    camposExtraidos.data_abertura = dados?.dataAbertura as string | undefined;
+    camposExtraidos.orgao_publico = dados?.orgaoPublico !== undefined ? Boolean(dados.orgaoPublico) : undefined;
+    camposExtraidos.tipo_pessoa_codigo_pje = dados?.tipoPessoa?.codigo as string | undefined;
+    camposExtraidos.tipo_pessoa_label_pje = dados?.tipoPessoa?.label as string | undefined;
+    camposExtraidos.situacao_cnpj_receita_id = dados?.situacaoCnpjReceita?.id !== undefined ? Number(dados.situacaoCnpjReceita.id) : undefined;
+    camposExtraidos.situacao_cnpj_receita_descricao = dados?.situacaoCnpjReceita?.descricao as string | undefined;
+    camposExtraidos.ramo_atividade = dados?.ramoAtividade as string | undefined;
+    camposExtraidos.cpf_responsavel = dados?.cpfResponsavel as string | undefined;
+    camposExtraidos.oficial = dados?.oficial !== undefined ? Boolean(dados.oficial) : undefined;
+    camposExtraidos.porte_codigo = dados?.porte?.codigo !== undefined ? Number(dados.porte.codigo) : undefined;
+    camposExtraidos.porte_descricao = dados?.porte?.descricao as string | undefined;
+    camposExtraidos.ultima_atualizacao_pje = dados?.ultimaAtualizacao as string | undefined;
+  }
+
+  // Logs para campos não encontrados (debug)
+  const camposComunsEsperados = ['status', 'situacao', 'login', 'autoridade'];
+  const camposPFEsperados = ['sexo', 'nomeGenitora', 'naturalidade', 'ufNascimento', 'paisNascimento', 'escolaridade', 'situacaoCpfReceita', 'podeUsarCelularMensagem'];
+  const camposPJEsperados = ['inscricaoEstadual', 'dataAbertura', 'orgaoPublico', 'tipoPessoa', 'situacaoCnpjReceita', 'ramoAtividade', 'cpfResponsavel', 'oficial', 'porte', 'ultimaAtualizacao'];
+
+  const camposNaoEncontrados: string[] = [];
+
+  camposComunsEsperados.forEach(campo => {
+    if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
+  });
+
+  if (parte.tipoDocumento === 'CPF') {
+    camposPFEsperados.forEach(campo => {
+      if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
+    });
+  } else if (parte.tipoDocumento === 'CNPJ') {
+    camposPJEsperados.forEach(campo => {
+      if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
+    });
+  }
+
+  if (camposNaoEncontrados.length > 0) {
+    console.debug(`[DEBUG-CAMPOS-PJE] Campos não encontrados em dadosCompletos para parte ${parte.nome}: ${camposNaoEncontrados.join(', ')}`);
+  }
+
+  return camposExtraidos;
+}
+
+/**
+ * Função auxiliar para extrair campos específicos do PJE de dadosCompletos para representantes
+ */
+function extrairCamposRepresentantePJE(rep: RepresentantePJE) {
+  const dados = rep.dadosCompletos;
+  const camposExtraidos: Record<string, unknown> = {};
+
+  // Campos comuns
+  camposExtraidos.situacao = dados?.situacao as string | undefined;
+  camposExtraidos.status = dados?.status as string | undefined;
+  camposExtraidos.principal = dados?.principal !== undefined ? Boolean(dados.principal) : undefined;
+  camposExtraidos.endereco_desconhecido = dados?.enderecoDesconhecido !== undefined ? Boolean(dados.enderecoDesconhecido) : undefined;
+  camposExtraidos.id_tipo_parte = dados?.idTipoParte !== undefined ? Number(dados.idTipoParte) : undefined;
+  camposExtraidos.polo = normalizarPolo(dados?.polo);
+
+  // Campos específicos de PF
+  if (rep.tipoDocumento === 'CPF') {
+    camposExtraidos.sexo = dados?.sexo as string | undefined;
+    camposExtraidos.data_nascimento = dados?.dataNascimento as string | undefined;
+    camposExtraidos.nome_mae = dados?.nomeMae as string | undefined;
+    camposExtraidos.nome_pai = dados?.nomePai as string | undefined;
+    camposExtraidos.nacionalidade = dados?.nacionalidade as string | undefined;
+    camposExtraidos.estado_civil = dados?.estadoCivil as string | undefined;
+    camposExtraidos.uf_nascimento = dados?.ufNascimento as string | undefined;
+    camposExtraidos.municipio_nascimento = dados?.municipioNascimento as string | undefined;
+    camposExtraidos.pais_nascimento = dados?.paisNascimento as string | undefined;
+  }
+
+  // Campos específicos de PJ
+  if (rep.tipoDocumento === 'CNPJ') {
+    camposExtraidos.razao_social = dados?.razaoSocial as string | undefined;
+    camposExtraidos.nome_fantasia = dados?.nomeFantasia as string | undefined;
+    camposExtraidos.inscricao_estadual = dados?.inscricaoEstadual as string | undefined;
+    camposExtraidos.tipo_empresa = dados?.tipoEmpresa as string | undefined;
+  }
+
+  // Logs para campos não encontrados (debug)
+  const camposComunsEsperados = ['situacao', 'status', 'principal', 'enderecoDesconhecido', 'idTipoParte', 'polo'];
+  const camposPFEsperados = ['sexo', 'dataNascimento', 'nomeMae', 'nomePai', 'nacionalidade', 'estadoCivil', 'ufNascimento', 'municipioNascimento', 'paisNascimento'];
+  const camposPJEsperados = ['razaoSocial', 'nomeFantasia', 'inscricaoEstadual', 'tipoEmpresa'];
+
+  const camposNaoEncontrados: string[] = [];
+
+  camposComunsEsperados.forEach(campo => {
+    if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
+  });
+
+  if (rep.tipoDocumento === 'CPF') {
+    camposPFEsperados.forEach(campo => {
+      if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
+    });
+  } else if (rep.tipoDocumento === 'CNPJ') {
+    camposPJEsperados.forEach(campo => {
+      if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
+    });
+  }
+
+  if (camposNaoEncontrados.length > 0) {
+    console.debug(`[DEBUG-CAMPOS-PJE] Campos não encontrados em dadosCompletos para representante ${rep.nome}: ${camposNaoEncontrados.join(', ')}`);
+  }
+
+  return camposExtraidos;
 }
 
 /**
@@ -119,7 +289,11 @@ export async function capturarPartesProcesso(
       `[CAPTURA-PARTES] Iniciando captura de partes do processo ${processo.numero_processo} (ID: ${processo.id})`
     );
 
-    // 1. Busca partes via API PJE
+    // 1. Valida documento do advogado UMA ÚNICA VEZ (antes de processar qualquer parte)
+    // Se inválido, lança erro e interrompe toda a captura (evita erros repetidos por parte)
+    validarDocumentoAdvogado(advogado);
+
+    // 2. Busca partes via API PJE
     const { partes, payloadBruto } = await obterPartesProcesso(page, processo.id_pje);
     resultado.totalPartes = partes.length;
     resultado.payloadBruto = payloadBruto;
@@ -134,7 +308,7 @@ export async function capturarPartesProcesso(
       return resultado;
     }
 
-    // 2. Processa cada parte sequencialmente
+    // 3. Processa cada parte sequencialmente
     for (let i = 0; i < partes.length; i++) {
       const parte = partes[i];
 
@@ -155,8 +329,11 @@ export async function capturarPartesProcesso(
           else if (tipoParte === 'parte_contraria') resultado.partesContrarias++;
           else if (tipoParte === 'terceiro') resultado.terceiros++;
 
-          // 2c. Processa e salva endereço (se houver)
-          await processarEndereco(parte, tipoParte, entidadeId);
+          // 2c. Processa e salva endereço (se houver) e vincula à entidade
+          const enderecoId = await processarEndereco(parte, tipoParte, entidadeId);
+          if (enderecoId) {
+            await vincularEnderecoNaEntidade(tipoParte, entidadeId, enderecoId);
+          }
 
           // 2d. Salva representantes da parte
           if (parte.representantes && parte.representantes.length > 0) {
@@ -243,15 +420,21 @@ async function processarParte(
     numero_celular: parte.telefones[0]?.numero || undefined,
     ddd_residencial: parte.telefones[1]?.ddd || undefined,
     numero_residencial: parte.telefones[1]?.numero || undefined,
-    dados_anteriores: parte.dadosCompletos,
+    dados_pje_completo: parte.dadosCompletos,
   };
+
+  // Extrai campos adicionais do PJE
+  const camposExtras = extrairCamposPJE(parte);
+
+  // Mescla dados comuns com campos extras
+  const dadosCompletos = { ...dadosComuns, ...camposExtras };
 
   try {
     if (tipoParte === 'cliente') {
       // Upsert em tabela clientes
       if (isPessoaFisica) {
         const params: CriarClientePFParams & { id_pessoa_pje: number } = {
-          ...dadosComuns,
+          ...dadosCompletos,
           tipo_pessoa: 'pf',
           cpf: parte.numeroDocumento,
         };
@@ -259,7 +442,7 @@ async function processarParte(
         return result.sucesso && result.cliente ? result.cliente.id : null;
       } else {
         const params: CriarClientePJParams & { id_pessoa_pje: number } = {
-          ...dadosComuns,
+          ...dadosCompletos,
           tipo_pessoa: 'pj',
           cnpj: parte.numeroDocumento,
         };
@@ -270,7 +453,7 @@ async function processarParte(
       // Upsert em tabela partes_contrarias
       if (isPessoaFisica) {
         const params: CriarParteContrariaPFParams & { id_pessoa_pje: number } = {
-          ...dadosComuns,
+          ...dadosCompletos,
           tipo_pessoa: 'pf',
           cpf: parte.numeroDocumento,
         };
@@ -278,7 +461,7 @@ async function processarParte(
         return result.sucesso && result.parteContraria ? result.parteContraria.id : null;
       } else {
         const params: CriarParteContrariaPJParams & { id_pessoa_pje: number } = {
-          ...dadosComuns,
+          ...dadosCompletos,
           tipo_pessoa: 'pj',
           cnpj: parte.numeroDocumento,
         };
@@ -288,7 +471,7 @@ async function processarParte(
     } else {
       // Upsert em tabela terceiros
       const params = {
-        ...dadosComuns,
+        ...dadosCompletos,
         tipo_pessoa: isPessoaFisica ? ('pf' as const) : ('pj' as const),
         cpf: isPessoaFisica ? parte.numeroDocumento : undefined,
         cnpj: !isPessoaFisica ? parte.numeroDocumento : undefined,
@@ -325,10 +508,16 @@ async function processarRepresentantes(
     `[CAPTURA-PARTES] Processando ${representantes.length} representante(s) da ${tipoParte} (ID: ${parteId})`
   );
 
-  for (const rep of representantes) {
+  for (let index = 0; index < representantes.length; index++) {
+    const rep = representantes[index];
+
     try {
       const tipo_pessoa: 'pf' | 'pj' = rep.tipoDocumento === 'CPF' ? 'pf' : 'pj';
 
+      // Extrai campos extras do PJE
+      const camposExtras = extrairCamposRepresentantePJE(rep);
+
+      // Primeiro cria/atualiza o representante SEM endereco_id
       const result = await upsertRepresentantePorIdPessoa({
         id_pessoa_pje: rep.idPessoa,
         parte_tipo: tipoParte,
@@ -346,21 +535,47 @@ async function processarRepresentantes(
         emails: rep.email ? [rep.email] : undefined,
         ddd_celular: rep.telefones?.[0]?.ddd || undefined,
         numero_celular: rep.telefones?.[0]?.numero || undefined,
-        dados_anteriores: rep.dadosCompletos as Record<string, unknown> | null | undefined,
+        // dados_anteriores será populado automaticamente pelo persistence service com o estado anterior do registro
+        dados_anteriores: null,
+        ordem: index,
+        ...camposExtras,
       });
 
-      if (result.sucesso) {
+      if (result.sucesso && result.representante) {
         count++;
         console.log(
           `[CAPTURA-PARTES] ✓ Representante salvo: ${rep.nome} (${tipo_pessoa === 'pf' ? 'CPF' : 'CNPJ'}: ${rep.numeroDocumento}) - OAB: ${rep.numeroOAB || 'N/A'}`
         );
+
+        // Agora processa o endereço usando o ID do representante
+        if (rep.dadosCompletos?.endereco) {
+          const enderecoId = await processarEnderecoRepresentante(
+            rep,
+            result.representante.id
+          );
+
+          // Se conseguiu salvar o endereço, atualiza o representante com o endereco_id
+          if (enderecoId) {
+            await atualizarRepresentante({
+              id: result.representante.id,
+              endereco_id: enderecoId,
+            });
+          }
+        }
       } else {
         console.warn(
           `[CAPTURA-PARTES] ✗ Falha ao salvar representante: ${rep.nome} - ${result.erro}`
         );
       }
     } catch (error) {
-      console.error(`[CAPTURA-PARTES] Erro ao salvar representante ${rep.nome}:`, error);
+      // Capturar erro de constraint violation (CPF/CNPJ duplicado, constraint UNIQUE)
+      if (error instanceof Error && error.message.includes('Representante já cadastrado')) {
+        console.error(
+          `[CAPTURA-PARTES] Constraint UNIQUE violation para representante ${rep.nome} (CPF/CNPJ: ${rep.numeroDocumento}, parte_id: ${parteId}, processo: ${processo.numero_processo}): ${error.message}`
+        );
+      } else {
+        console.error(`[CAPTURA-PARTES] Erro ao salvar representante ${rep.nome}:`, error);
+      }
       // Continua com próximo representante
     }
   }
@@ -370,6 +585,38 @@ async function processarRepresentantes(
   );
 
   return count;
+}
+
+/**
+ * Mapeia polo do PJE para o sistema interno
+ */
+function mapearPoloParaSistema(poloPJE: 'ATIVO' | 'PASSIVO' | 'OUTROS'): PoloProcessoParte {
+  switch (poloPJE) {
+    case 'ATIVO':
+      return 'ATIVO';
+    case 'PASSIVO':
+      return 'PASSIVO';
+    case 'OUTROS':
+      console.warn(`[CAPTURA-PARTES] Mapeando polo 'OUTROS' para 'TERCEIRO'`);
+      return 'TERCEIRO';
+    default:
+      console.warn(`[CAPTURA-PARTES] Polo desconhecido '${poloPJE}', mapeando para 'TERCEIRO'`);
+      return 'TERCEIRO';
+  }
+}
+
+/**
+ * Valida tipo de parte do PJE contra tipos válidos do sistema
+ * Usa TIPOS_PARTE_PROCESSO_VALIDOS como fonte única de verdade
+ */
+function validarTipoParteProcesso(tipoParte: string): TipoParteProcesso {
+  // Verifica se o tipo existe nas chaves do objeto Record
+  if (tipoParte in TIPOS_PARTE_PROCESSO_VALIDOS) {
+    return tipoParte as TipoParteProcesso;
+  } else {
+    console.warn(`[CAPTURA-PARTES] Tipo de parte desconhecido '${tipoParte}', usando 'OUTRO' como fallback`);
+    return 'OUTRO';
+  }
 }
 
 /**
@@ -390,8 +637,8 @@ async function criarVinculoProcessoParte(
       entidade_id: entidadeId,
       id_pje: parte.idParte,
       id_pessoa_pje: parte.idPessoa,
-      tipo_parte: parte.tipoParte as TipoParteProcesso,
-      polo: parte.polo as PoloProcessoParte, // É do tipo 'ATIVO' | 'PASSIVO' | 'OUTROS' mas a interface espera 'PoloProcessoParte'
+      tipo_parte: validarTipoParteProcesso(parte.tipoParte),
+      polo: mapearPoloParaSistema(parte.polo),
       trt: processo.trt,
       grau: processo.grau,
       numero_processo: processo.numero_processo,
@@ -463,5 +710,105 @@ async function processarEndereco(
   } catch (error) {
     console.error(`[CAPTURA-PARTES] Erro ao processar endereço de ${parte.nome}:`, error);
     return null;
+  }
+}
+
+/**
+ * Processa e salva endereço de um representante
+ * Retorna ID do endereço criado/atualizado ou null se falhou
+ */
+async function processarEnderecoRepresentante(
+  rep: RepresentantePJE,
+  representanteId: number
+): Promise<number | null> {
+  // Verifica se o representante tem endereço
+  if (!rep.dadosCompletos?.endereco) {
+    return null;
+  }
+
+  const enderecoPJE = rep.dadosCompletos.endereco as unknown as EnderecoPJE;
+
+  try {
+    const result = await upsertEnderecoPorIdPje({
+      id_pje: Number(enderecoPJE?.id || 0),
+      entidade_tipo: 'representante' as EntidadeTipoEndereco,
+      entidade_id: representanteId, // Now using the correct representante ID
+      logradouro: enderecoPJE?.logradouro ? String(enderecoPJE.logradouro) : undefined,
+      numero: enderecoPJE?.numero ? String(enderecoPJE.numero) : undefined,
+      complemento: enderecoPJE?.complemento ? String(enderecoPJE.complemento) : undefined,
+      bairro: enderecoPJE?.bairro ? String(enderecoPJE.bairro) : undefined,
+      id_municipio_pje: enderecoPJE?.idMunicipio ? Number(enderecoPJE.idMunicipio) : undefined,
+      municipio: enderecoPJE?.municipio ? String(enderecoPJE.municipio) : undefined,
+      municipio_ibge: enderecoPJE?.municipioIbge ? String(enderecoPJE.municipioIbge) : undefined,
+      estado_id_pje: enderecoPJE?.estado?.id ? Number(enderecoPJE.estado.id) : undefined,
+      estado_sigla: enderecoPJE?.estado?.sigla ? String(enderecoPJE.estado.sigla) : undefined,
+      estado_descricao: enderecoPJE?.estado?.descricao ? String(enderecoPJE.estado.descricao) : undefined,
+      pais_id_pje: enderecoPJE?.pais?.id ? Number(enderecoPJE.pais.id) : undefined,
+      pais_codigo: enderecoPJE?.pais?.codigo ? String(enderecoPJE.pais.codigo) : undefined,
+      pais_descricao: enderecoPJE?.pais?.descricao ? String(enderecoPJE.pais.descricao) : undefined,
+      cep: enderecoPJE?.nroCep ? String(enderecoPJE.nroCep) : undefined,
+      classificacoes_endereco: enderecoPJE?.classificacoesEndereco || undefined,
+      correspondencia: enderecoPJE?.correspondencia !== undefined ? Boolean(enderecoPJE.correspondencia) : undefined,
+      situacao: (enderecoPJE?.situacao as unknown as SituacaoEndereco) || undefined,
+      id_usuario_cadastrador_pje: enderecoPJE?.idUsuarioCadastrador ? Number(enderecoPJE.idUsuarioCadastrador) : undefined,
+      data_alteracao_pje: enderecoPJE?.dtAlteracao ? String(enderecoPJE.dtAlteracao) : undefined,
+    });
+
+    if (result.sucesso && result.endereco) {
+      console.log(
+        `[CAPTURA-PARTES] Endereço salvo para representante ${rep.nome}: ${result.endereco.logradouro}, ${result.endereco.municipio}-${result.endereco.estado_sigla}`
+      );
+      return result.endereco.id;
+    }
+
+    return null;
+  } catch (error) {
+    console.error(`[CAPTURA-PARTES] Erro ao processar endereço de representante ${rep.nome}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Vincula endereço à entidade (cliente, parte_contraria ou terceiro)
+ * Atualiza o campo endereco_id na tabela apropriada
+ */
+async function vincularEnderecoNaEntidade(
+  tipoParte: TipoParteClassificacao,
+  entidadeId: number,
+  enderecoId: number
+): Promise<void> {
+  try {
+    const { createClient } = await import('@/backend/utils/supabase/server-client');
+    const supabase = await createClient();
+
+    let tableName: string;
+    if (tipoParte === 'cliente') {
+      tableName = 'clientes';
+    } else if (tipoParte === 'parte_contraria') {
+      tableName = 'partes_contrarias';
+    } else {
+      tableName = 'terceiros';
+    }
+
+    const { error } = await supabase
+      .from(tableName)
+      .update({ endereco_id: enderecoId })
+      .eq('id', entidadeId);
+
+    if (error) {
+      console.error(
+        `[CAPTURA-PARTES] Erro ao vincular endereço ${enderecoId} à ${tipoParte} ${entidadeId}:`,
+        error
+      );
+    } else {
+      console.log(
+        `[CAPTURA-PARTES] ✓ Endereço ${enderecoId} vinculado à ${tipoParte} ${entidadeId}`
+      );
+    }
+  } catch (error) {
+    console.error(
+      `[CAPTURA-PARTES] Erro ao vincular endereço à ${tipoParte}:`,
+      error
+    );
   }
 }

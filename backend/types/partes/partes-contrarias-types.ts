@@ -24,7 +24,7 @@ export type SituacaoPJE = 'A' | 'I' | 'E' | 'H'; // A=Ativo, I=Inativo, E=Exclu�
  */
 interface ParteContrariaBase {
   id: number;
-  id_pessoa_pje: number | null; // Unique constraint
+  id_pessoa_pje: number | null; // ID da pessoa no sistema PJE. Usado para deduplicação em capturas. UNIQUE constraint garante que não há duplicatas. Null para partes contrárias criadas manualmente.
   tipo_pessoa: TipoPessoa;
   nome: string;
   nome_social_fantasia: string | null; // Serve para PF (nome social) e PJ (nome fantasia)
@@ -41,7 +41,7 @@ interface ParteContrariaBase {
   login_pje: string | null;
   autoridade: boolean | null;
   observacoes: string | null;
-  dados_anteriores: Record<string, unknown> | null; // JSONB
+  dados_anteriores: Record<string, unknown> | null; // Estado anterior do registro antes da última atualização. Usado para auditoria. Null na criação, populado automaticamente no update.
   endereco_id: number | null; // FK para tabela enderecos
   ativo: boolean;
   created_by: number | null;
@@ -213,7 +213,7 @@ export interface CriarParteContrariaPFParams {
   situacao_cpf_receita_descricao?: string | null;
   pode_usar_celular_mensagem?: boolean | null;
   observacoes?: string | null;
-  dados_anteriores?: Record<string, unknown> | null;
+  dados_pje_completo?: Record<string, unknown> | null;
   endereco_id?: number | null;
   ativo?: boolean;
   created_by?: number | null;
@@ -258,7 +258,7 @@ export interface CriarParteContrariaPJParams {
   porte_descricao?: string | null;
   ultima_atualizacao_pje?: string | null;
   observacoes?: string | null;
-  dados_anteriores?: Record<string, unknown> | null;
+  dados_pje_completo?: Record<string, unknown> | null;
   endereco_id?: number | null;
   ativo?: boolean;
   created_by?: number | null;

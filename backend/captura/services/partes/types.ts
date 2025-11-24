@@ -22,6 +22,10 @@ import type { PartePJE } from '@/backend/api/pje-trt/partes/types';
  *
  * PROPÓSITO:
  * Union type para os três tipos possíveis de classificação de partes.
+ * 
+ * IMPORTANTE:
+ * Este tipo é idêntico a `EntidadeTipoProcessoParte` do sistema interno.
+ * Mantido separado para clareza semântica (classificação vs entidade).
  *
  * VALORES POSSÍVEIS:
  * - 'cliente': Parte representada por advogado do nosso escritório

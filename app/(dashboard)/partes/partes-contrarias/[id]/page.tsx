@@ -18,14 +18,21 @@ import {
   formatarNome,
   formatarTipoPessoa,
 } from '@/app/_lib/utils/format-clientes';
+import { formatarCep } from '@/app/_lib/types';
 import type { ParteContraria } from '@/app/_lib/types';
+import type { Endereco } from '@/backend/types/partes/enderecos-types';
+
+// Extend ParteContraria to include optional endereco
+type ParteContrariaComEndereco = ParteContraria & {
+  endereco?: Endereco | null;
+};
 
 export default function ParteContrariaPage() {
   const params = useParams();
   const router = useRouter();
   const parteId = params.id as string;
 
-  const [parte, setParte] = React.useState<ParteContraria | null>(null);
+  const [parte, setParte] = React.useState<ParteContrariaComEndereco | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -255,6 +262,61 @@ export default function ParteContrariaPage() {
               )}
             </div>
           </div>
+
+          {/* Endereço */}
+          {parte.endereco && (
+            <div className="rounded-lg border p-6 space-y-4">
+              <h2 className="text-xl font-semibold">Endereço</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {parte.endereco.logradouro && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                      Logradouro
+                    </div>
+                    <div className="text-base">
+                      {parte.endereco.logradouro}
+                      {parte.endereco.numero && `, ${parte.endereco.numero}`}
+                    </div>
+                  </div>
+                )}
+                {parte.endereco.complemento && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                      Complemento
+                    </div>
+                    <div className="text-base">{parte.endereco.complemento}</div>
+                  </div>
+                )}
+                {parte.endereco.bairro && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                      Bairro
+                    </div>
+                    <div className="text-base">{parte.endereco.bairro}</div>
+                  </div>
+                )}
+                {parte.endereco.municipio && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                      Município
+                    </div>
+                    <div className="text-base">
+                      {parte.endereco.municipio}
+                      {parte.endereco.estado_sigla && ` - ${parte.endereco.estado_sigla}`}
+                    </div>
+                  </div>
+                )}
+                {parte.endereco.cep && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                      CEP
+                    </div>
+                    <div className="text-base">{formatarCep(parte.endereco.cep)}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Observações */}
           {parte.observacoes && (

@@ -75,15 +75,19 @@ interface RepresentanteBase {
 
   // Contact
   emails: string[];
+  /** Telefone celular do representante */
   ddd_celular: string | null;
   numero_celular: string | null;
+  /** Telefone residencial do representante */
   ddd_residencial: string | null;
   numero_residencial: string | null;
+  /** Telefone comercial do representante */
   ddd_comercial: string | null;
   numero_comercial: string | null;
   email: string | null;
 
   // Metadata
+  /** Estado anterior do registro para auditoria (não confundir com dados do PJE) */
   dados_anteriores: Record<string, unknown> | null;
   ordem: number | null;
   data_habilitacao: Date | null;
@@ -275,7 +279,7 @@ export interface AtualizarRepresentanteParams {
   tipo_empresa?: string | null;
 
   // Metadata
-  dados_pje_completo?: Record<string, unknown> | null;
+  dados_anteriores?: Record<string, unknown> | null;
   ordem?: number | null;
   data_habilitacao?: Date | null;
   endereco_id?: number | null;

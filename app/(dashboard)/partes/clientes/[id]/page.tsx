@@ -18,14 +18,21 @@ import {
   formatarNome,
   formatarTipoPessoa,
 } from '@/app/_lib/utils/format-clientes';
+import { formatarCep } from '@/app/_lib/types';
 import type { Cliente } from '@/app/_lib/types';
+import type { Endereco } from '@/backend/types/partes/enderecos-types';
+
+// Extend Cliente to include optional endereco
+type ClienteComEndereco = Cliente & {
+  endereco?: Endereco | null;
+};
 
 export default function ClientePage() {
   const params = useParams();
   const router = useRouter();
   const clienteId = params.id as string;
 
-  const [cliente, setCliente] = React.useState<Cliente | null>(null);
+  const [cliente, setCliente] = React.useState<ClienteComEndereco | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -255,6 +262,61 @@ export default function ClientePage() {
               )}
             </div>
           </div>
+
+          {/* Endereço */}
+          {cliente.endereco && (
+            <div className="rounded-lg border p-6 space-y-4">
+              <h2 className="text-xl font-semibold">Endereço</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {cliente.endereco.logradouro && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                      Logradouro
+                    </div>
+                    <div className="text-base">
+                      {cliente.endereco.logradouro}
+                      {cliente.endereco.numero && `, ${cliente.endereco.numero}`}
+                    </div>
+                  </div>
+                )}
+                {cliente.endereco.complemento && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                      Complemento
+                    </div>
+                    <div className="text-base">{cliente.endereco.complemento}</div>
+                  </div>
+                )}
+                {cliente.endereco.bairro && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                      Bairro
+                    </div>
+                    <div className="text-base">{cliente.endereco.bairro}</div>
+                  </div>
+                )}
+                {cliente.endereco.municipio && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                      Município
+                    </div>
+                    <div className="text-base">
+                      {cliente.endereco.municipio}
+                      {cliente.endereco.estado_sigla && ` - ${cliente.endereco.estado_sigla}`}
+                    </div>
+                  </div>
+                )}
+                {cliente.endereco.cep && (
+                  <div>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                      CEP
+                    </div>
+                    <div className="text-base">{formatarCep(cliente.endereco.cep)}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Observações */}
           {cliente.observacoes && (

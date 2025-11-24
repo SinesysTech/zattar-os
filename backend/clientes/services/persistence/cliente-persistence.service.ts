@@ -221,18 +221,6 @@ export async function criarCliente(
       if (!validarCpf(params.cpf)) {
         return { sucesso: false, erro: 'CPF inválido (deve conter 11 dígitos)' };
       }
-
-      // CPF deve ser único
-      const cpfNormalizado = normalizarCpf(params.cpf);
-      const { data: clienteExistenteCpf } = await supabase
-        .from('clientes')
-        .select('id, cpf')
-        .eq('cpf', cpfNormalizado)
-        .maybeSingle();
-
-      if (clienteExistenteCpf) {
-        return { sucesso: false, erro: 'Cliente com este CPF já existe' };
-      }
     } else if (params.tipo_pessoa === 'pj') {
       if (!params.cnpj?.trim()) {
         return { sucesso: false, erro: 'CNPJ é obrigatório para pessoa jurídica' };
@@ -240,18 +228,6 @@ export async function criarCliente(
 
       if (!validarCnpj(params.cnpj)) {
         return { sucesso: false, erro: 'CNPJ inválido (deve conter 14 dígitos)' };
-      }
-
-      // CNPJ deve ser único
-      const cnpjNormalizado = normalizarCnpj(params.cnpj);
-      const { data: clienteExistenteCnpj } = await supabase
-        .from('clientes')
-        .select('id, cnpj')
-        .eq('cnpj', cnpjNormalizado)
-        .maybeSingle();
-
-      if (clienteExistenteCnpj) {
-        return { sucesso: false, erro: 'Cliente com este CNPJ já existe' };
       }
     }
 
@@ -283,7 +259,7 @@ export async function criarCliente(
       login_pje: params.login_pje?.trim() || null,
       autoridade: params.autoridade ?? null,
       observacoes: params.observacoes?.trim() || null,
-      dados_anteriores: params.dados_anteriores ?? null,
+      dados_anteriores: null, // Novo registro não tem estado anterior
       endereco_id: params.endereco_id ?? null,
       ativo: params.ativo ?? true,
       created_by: params.created_by ?? null,
@@ -346,6 +322,16 @@ export async function criarCliente(
       .single();
 
     if (error) {
+      // Melhorar tratamento de erros de constraint
+      if (error.code === '23505') {
+        if (error.message.includes('cpf')) {
+          return { sucesso: false, erro: `Cliente com este CPF já cadastrado (id_pessoa_pje: ${params.id_pessoa_pje || 'N/A'})` };
+        } else if (error.message.includes('cnpj')) {
+          return { sucesso: false, erro: `Cliente com este CNPJ já cadastrado (id_pessoa_pje: ${params.id_pessoa_pje || 'N/A'})` };
+        } else if (error.message.includes('id_pessoa_pje')) {
+          return { sucesso: false, erro: `Pessoa PJE já cadastrada como cliente (ID: ${params.id_pessoa_pje})` };
+        }
+      }
       console.error('Erro ao criar cliente:', error);
       return { sucesso: false, erro: `Erro ao criar cliente: ${error.message}` };
     }
@@ -360,6 +346,21 @@ export async function criarCliente(
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);
     console.error('Erro inesperado ao criar cliente:', error);
+
+    // Tratamento de UNIQUE violation caso o client Supabase venha a lançar exceções
+    if (error && typeof error === 'object' && 'code' in error) {
+      const dbError = error as { code: string; message: string };
+      if (dbError.code === '23505') {
+        if (dbError.message.includes('cpf')) {
+          return { sucesso: false, erro: `Cliente com este CPF já cadastrado (id_pessoa_pje: ${params.id_pessoa_pje || 'N/A'})` };
+        } else if (dbError.message.includes('cnpj')) {
+          return { sucesso: false, erro: `Cliente com este CNPJ já cadastrado (id_pessoa_pje: ${params.id_pessoa_pje || 'N/A'})` };
+        } else if (dbError.message.includes('id_pessoa_pje')) {
+          return { sucesso: false, erro: `Pessoa PJE já cadastrada como cliente (ID: ${params.id_pessoa_pje})` };
+        }
+      }
+    }
+
     return { sucesso: false, erro: `Erro inesperado: ${erroMsg}` };
   }
 }
@@ -376,7 +377,7 @@ export async function atualizarCliente(
     // Verificar se cliente existe
     const { data: clienteExistente, error: erroBusca } = await supabase
       .from('clientes')
-      .select('id, tipo_pessoa')
+      .select('*')
       .eq('id', params.id)
       .single();
 
@@ -394,6 +395,9 @@ export async function atualizarCliente(
     // Preparar dados para atualização (apenas campos fornecidos)
     const dadosAtualizacao: Record<string, unknown> = {};
 
+    // Buscar estado atual completo para guardar em dados_anteriores
+    const clienteAtual = converterParaCliente(clienteExistente);
+    dadosAtualizacao.dados_anteriores = clienteAtual; // Estado antes da atualização
 
     if (params.id_pessoa_pje !== undefined) dadosAtualizacao.id_pessoa_pje = params.id_pessoa_pje;
     if (params.nome !== undefined) dadosAtualizacao.nome = params.nome.trim();
@@ -415,8 +419,6 @@ export async function atualizarCliente(
     if (params.situacao_pje !== undefined) dadosAtualizacao.situacao_pje = params.situacao_pje;
     if (params.observacoes !== undefined)
       dadosAtualizacao.observacoes = params.observacoes?.trim() || null;
-    if (params.dados_anteriores !== undefined)
-      dadosAtualizacao.dados_anteriores = params.dados_anteriores;
 
     // Campos específicos por tipo de pessoa
     if (tipoPessoaAtual === 'pf' && params.tipo_pessoa === 'pf') {
@@ -512,6 +514,16 @@ export async function atualizarCliente(
       .single();
 
     if (error) {
+      // Melhorar tratamento de erros de constraint
+      if (error.code === '23505') {
+        if (error.message.includes('cpf')) {
+          return { sucesso: false, erro: `Cliente com este CPF já cadastrado (id_pessoa_pje: ${params.id_pessoa_pje || 'N/A'})` };
+        } else if (error.message.includes('cnpj')) {
+          return { sucesso: false, erro: `Cliente com este CNPJ já cadastrado (id_pessoa_pje: ${params.id_pessoa_pje || 'N/A'})` };
+        } else if (error.message.includes('id_pessoa_pje')) {
+          return { sucesso: false, erro: `Pessoa PJE já cadastrada como cliente (ID: ${params.id_pessoa_pje})` };
+        }
+      }
       console.error('Erro ao atualizar cliente:', error);
       return { sucesso: false, erro: `Erro ao atualizar cliente: ${error.message}` };
     }
@@ -526,6 +538,21 @@ export async function atualizarCliente(
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);
     console.error('Erro inesperado ao atualizar cliente:', error);
+
+    // Tratamento de UNIQUE violation caso o client Supabase venha a lançar exceções
+    if (error && typeof error === 'object' && 'code' in error) {
+      const dbError = error as { code: string; message: string };
+      if (dbError.code === '23505') {
+        if (dbError.message.includes('cpf')) {
+          return { sucesso: false, erro: `Cliente com este CPF já cadastrado (id_pessoa_pje: ${params.id_pessoa_pje || 'N/A'})` };
+        } else if (dbError.message.includes('cnpj')) {
+          return { sucesso: false, erro: `Cliente com este CNPJ já cadastrado (id_pessoa_pje: ${params.id_pessoa_pje || 'N/A'})` };
+        } else if (dbError.message.includes('id_pessoa_pje')) {
+          return { sucesso: false, erro: `Pessoa PJE já cadastrada como cliente (ID: ${params.id_pessoa_pje})` };
+        }
+      }
+    }
+
     return { sucesso: false, erro: `Erro inesperado: ${erroMsg}` };
   }
 }
@@ -543,7 +570,11 @@ export async function buscarClientePorId(id: number): Promise<Cliente | null> {
 
   const supabase = createServiceClient();
 
-  const { data, error } = await supabase.from('clientes').select('*').eq('id', id).single();
+  const { data, error} = await supabase
+    .from('clientes')
+    .select('*, endereco:enderecos(*)')
+    .eq('id', id)
+    .single();
 
   if (error) {
     if (error.code === 'PGRST116') {

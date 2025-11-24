@@ -42,6 +42,33 @@ export type TipoParteProcesso =
   | 'OUTRO';
 
 /**
+ * Objeto Record com todos os tipos válidos de parte do processo
+ * Serve como fonte única de verdade para validação de tipo de parte
+ * Qualquer adição no enum TipoParteProcesso deve ser refletida aqui
+ */
+export const TIPOS_PARTE_PROCESSO_VALIDOS: Record<TipoParteProcesso, true> = {
+  AUTOR: true,
+  REU: true,
+  RECLAMANTE: true,
+  RECLAMADO: true,
+  EXEQUENTE: true,
+  EXECUTADO: true,
+  EMBARGANTE: true,
+  EMBARGADO: true,
+  APELANTE: true,
+  APELADO: true,
+  AGRAVANTE: true,
+  AGRAVADO: true,
+  PERITO: true,
+  MINISTERIO_PUBLICO: true,
+  ASSISTENTE: true,
+  TESTEMUNHA: true,
+  CUSTOS_LEGIS: true,
+  AMICUS_CURIAE: true,
+  OUTRO: true,
+};
+
+/**
  * Registro de participação no processo
  */
 export interface ProcessoParte {

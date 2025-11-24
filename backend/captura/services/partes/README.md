@@ -20,6 +20,7 @@ backend/captura/services/partes/
 ### Separação de Responsabilidades
 
 1. **partes-capture.service.ts**: Orquestra todo o fluxo de captura
+
    - Busca partes via API PJE
    - Chama identificação de tipo
    - Faz upsert nas tabelas apropriadas
@@ -27,6 +28,7 @@ backend/captura/services/partes/
    - Cria vínculos processo-partes
 
 2. **identificacao-partes.service.ts**: Lógica pura de classificação
+
    - Sem dependências de banco de dados
    - Algoritmo determinístico
    - Testável unitariamente
@@ -38,68 +40,81 @@ backend/captura/services/partes/
 
 ## Algoritmo de Identificação
 
-A função `identificarTipoParte()` classifica cada parte usando um algoritmo de prioridade:
+1. **Verifica tipo especial** (prioridade máxima)
 
-### 1. Tipos Especiais (Terceiros) - Prioridade Máxima
+   - Se `tipoParte` está em TIPOS_ESPECIAIS → `terceiro`
+   - Exemplos: PERITO, MINISTERIO_PUBLICO, ASSISTENTE, etc.
 
-Se o `tipoParte` retornado pelo PJE está na lista de tipos especiais, a parte é classificada como **terceiro**, independentemente dos representantes:
+2. **Valida documento do advogado** (executado UMA ÚNICA VEZ no início do fluxo de captura)
 
-```typescript
-const TIPOS_ESPECIAIS = [
-  'PERITO',
-  'PERITO_CONTADOR',
-  'PERITO_MEDICO',
-  'PERITO_JUDICIAL',
-  'MINISTERIO_PUBLICO',
-  'MINISTERIO_PUBLICO_TRABALHO',
-  'ASSISTENTE',
-  'ASSISTENTE_TECNICO',
-  'TESTEMUNHA',
-  'CUSTOS_LEGIS',
-  'AMICUS_CURIAE',
-  // ... e outros
-];
-```
+   - Normaliza documento do advogado (remove pontos, hífens, barras)
+   - **IMPORTANTE**: Valida documento do advogado - aceita CPF (11 dígitos) ou CNPJ (14 dígitos)
+   - Rejeita sequências de números iguais (00000000000, 11111111111111, etc.)
+   - Se inválido, lança erro e interrompe toda a captura (evita erros repetidos por parte)
 
-**Exemplo**: Um perito, mesmo que representado por advogado do escritório, será sempre classificado como terceiro.
+3. **Verifica representantes**
 
-### 2. Matching de Representantes (Cliente)
+   - Para cada representante:
+     - Normaliza CPF/CNPJ do representante conforme tipo
+     - Valida CPF/CNPJ (11/14 dígitos, não sequência)
+     - Compara com documento do advogado
+     - Se match → `cliente`
 
-Se não é tipo especial, o algoritmo verifica se algum representante da parte tem CPF igual ao CPF do advogado dono da credencial:
+4. **Fallback**
+   - Se nenhum representante deu match → `parte_contraria`
 
-```typescript
-// Normaliza CPFs (remove formatação)
-const cpfAdvogado = normalizarCpf(advogado.cpf);          // "123.456.789-00" → "12345678900"
-const cpfRepresentante = normalizarCpf(rep.numeroDocumento);
+## Mapeamento de Tipos
 
-// Compara CPFs normalizados
-if (cpfRepresentante === cpfAdvogado) {
-  return 'cliente'; // ✅ Parte é nosso cliente
-}
-```
+### Polo Processual
 
-**Comportamento**:
-- Comparação case-insensitive
-- Aceita CPF formatado ou não formatado
-- Valida CPFs (11 dígitos, não pode ser sequência de zeros)
+O PJE retorna polo como `'ATIVO' | 'PASSIVO' | 'OUTROS'`, mas o sistema interno usa `'ATIVO' | 'PASSIVO' | 'NEUTRO' | 'TERCEIRO'`.
 
-### 3. Fallback (Parte Contrária)
+**Mapeamento:**
 
-Se nenhum representante deu match, a parte é classificada como **parte_contraria**:
+- `ATIVO` → `ATIVO`
+- `PASSIVO` → `PASSIVO`
+- `OUTROS` → `TERCEIRO`
 
-```typescript
-// Nenhum representante é do escritório
-return 'parte_contraria';
-```
+### Tipo de Parte
 
-### Casos Especiais
+O PJE retorna `tipoParte` como string livre. O sistema valida contra enum `TipoParteProcesso`.
 
-| Situação | Classificação | Comportamento |
-|----------|---------------|---------------|
-| Parte sem representantes | `parte_contraria` | Log de warning |
-| CPF do advogado inválido | `parte_contraria` | Log de warning |
-| Representante com CPF inválido | Continua verificação | Pula representante |
-| Parte sem dados | Exceção | Lança erro |
+**Tipos válidos:**
+
+- Partes principais: AUTOR, REU, RECLAMANTE, RECLAMADO, EXEQUENTE, EXECUTADO, etc.
+- Terceiros: PERITO, MINISTERIO_PUBLICO, ASSISTENTE, TESTEMUNHA, etc.
+- Fallback: OUTRO (para tipos desconhecidos)
+
+## Validações
+
+### Documento do Advogado (CPF ou CNPJ)
+
+- **Suporta tanto CPF quanto CNPJ** do advogado (pessoa física ou jurídica)
+- Remove caracteres não numéricos (pontos, hífens, barras)
+- Valida 11 dígitos (CPF) ou 14 dígitos (CNPJ)
+- Rejeita sequências de números iguais (00000000000, 11111111111111, etc.)
+- **Não valida dígitos verificadores** (validação básica suficiente)
+- **Validação executada UMA ÚNICA VEZ** no início do fluxo de captura
+
+### CPF de Representante
+
+- Remove caracteres não numéricos
+- Valida 11 dígitos
+- Rejeita sequências de números iguais (00000000000, 11111111111, etc.)
+- **Não valida dígitos verificadores** (validação básica suficiente)
+
+### CNPJ de Representante
+
+- Remove caracteres não numéricos
+- Valida 14 dígitos
+- Rejeita sequências de números iguais (00000000000000, 11111111111111, etc.)
+- **Não valida dígitos verificadores** (validação básica suficiente)
+
+### Tratamento de Erros
+
+- **Documento do advogado inválido**: lança erro e interrompe captura completa (evita erros repetidos)
+- **CPF/CNPJ do representante inválido**: pula representante (continua com próximo)
+- **Tipo de parte desconhecido**: usa 'OUTRO' como fallback (não interrompe captura)
 
 ## Fluxo de Captura Completo
 
@@ -111,14 +126,22 @@ return 'parte_contraria';
                │
                ▼
 ┌──────────────────────────────────────────────────────────┐
-│  2. obterPartesProcesso() (API PJE)                      │
+│  2. validarDocumentoAdvogado()                           │
+│     - Valida CPF (11 dígitos) ou CNPJ (14 dígitos)      │
+│     - Se inválido, lança erro e interrompe captura      │
+│     - ⚠️ EXECUTADO UMA ÚNICA VEZ (evita erros repetidos)│
+└──────────────┬───────────────────────────────────────────┘
+               │
+               ▼
+┌──────────────────────────────────────────────────────────┐
+│  3. obterPartesProcesso() (API PJE)                      │
 │     - Busca todas as partes do processo via browser      │
 │     - Retorna: PartePJE[]                                │
 └──────────────┬───────────────────────────────────────────┘
                │
                ▼
 ┌──────────────────────────────────────────────────────────┐
-│  3. Loop: Para cada parte                                │
+│  4. Loop: Para cada parte                                │
 └──────────────┬───────────────────────────────────────────┘
                │
                ├──► identificarTipoParte()
@@ -231,7 +254,7 @@ const processo = {
 
 const advogado = {
   id: 1,
-  cpf: '123.456.789-00',
+  documento: '123.456.789-00',
   nome: 'Dr. João Silva',
 };
 
@@ -244,26 +267,26 @@ console.log(`Erros: ${resultado.erros.length}`);
 ### Exemplo 2: Identificação Manual
 
 ```typescript
-import { identificarTipoParte } from '@/backend/captura/services/partes/identificacao-partes.service';
-import type { PartePJE } from '@/backend/api/pje-trt/partes/types';
+import { identificarTipoParte } from "@/backend/captura/services/partes/identificacao-partes.service";
+import type { PartePJE } from "@/backend/api/pje-trt/partes/types";
 
 const parte: PartePJE = {
   idParte: 123,
   idPessoa: 456,
-  nome: 'Maria Santos',
-  tipoParte: 'AUTOR',
-  polo: 'ATIVO',
-  numeroDocumento: '987.654.321-00',
-  tipoDocumento: 'CPF',
+  nome: "Maria Santos",
+  tipoParte: "AUTOR",
+  polo: "ATIVO",
+  numeroDocumento: "987.654.321-00",
+  tipoDocumento: "CPF",
   representantes: [
     {
       idRepresentante: 1,
       idPessoa: 789,
-      nome: 'Dr. João Silva',
-      numeroDocumento: '123.456.789-00', // Mesmo CPF do advogado
-      tipoDocumento: 'CPF',
-      numeroOAB: '12345',
-      ufOAB: 'MG',
+      nome: "Dr. João Silva",
+      numeroDocumento: "123.456.789-00", // Mesmo documento do advogado
+      tipoDocumento: "CPF",
+      numeroOAB: "12345",
+      ufOAB: "MG",
       // ...
     },
   ],
@@ -272,7 +295,7 @@ const parte: PartePJE = {
 
 const advogado = {
   id: 1,
-  cpf: '123.456.789-00',
+  cpf: "123.456.789-00",
 };
 
 const tipo = identificarTipoParte(parte, advogado);
@@ -282,27 +305,27 @@ const tipo = identificarTipoParte(parte, advogado);
 ### Exemplo 3: Normalização de CPF
 
 ```typescript
-import { normalizarCpf } from '@/backend/captura/services/partes/identificacao-partes.service';
+import { normalizarCpf } from "@/backend/captura/services/partes/identificacao-partes.service";
 
-normalizarCpf('123.456.789-00');    // "12345678900"
-normalizarCpf('123 456 789 00');    // "12345678900"
-normalizarCpf('12345678900');       // "12345678900"
-normalizarCpf('');                  // ""
-normalizarCpf(null);                // ""
+normalizarCpf("123.456.789-00"); // "12345678900"
+normalizarCpf("123 456 789 00"); // "12345678900"
+normalizarCpf("12345678900"); // "12345678900"
+normalizarCpf(""); // ""
+normalizarCpf(null); // ""
 ```
 
 ### Exemplo 4: Verificação de Tipo Especial
 
 ```typescript
-import { isTipoEspecial } from '@/backend/captura/services/partes/identificacao-partes.service';
+import { isTipoEspecial } from "@/backend/captura/services/partes/identificacao-partes.service";
 
-isTipoEspecial('PERITO');                    // true
-isTipoEspecial('perito');                    // true (case-insensitive)
-isTipoEspecial('PERITO_CONTADOR');          // true
-isTipoEspecial('MINISTERIO_PUBLICO');       // true
-isTipoEspecial('AUTOR');                     // false
-isTipoEspecial('REU');                       // false
-isTipoEspecial('');                          // false
+isTipoEspecial("PERITO"); // true
+isTipoEspecial("perito"); // true (case-insensitive)
+isTipoEspecial("PERITO_CONTADOR"); // true
+isTipoEspecial("MINISTERIO_PUBLICO"); // true
+isTipoEspecial("AUTOR"); // false
+isTipoEspecial("REU"); // false
+isTipoEspecial(""); // false
 ```
 
 ## Testes
@@ -315,6 +338,7 @@ npx tsx backend/captura/services/partes/__tests__/identificacao-partes.test.ts
 ```
 
 **Cobertura de testes**:
+
 - ✅ `normalizarCpf()` - 6 testes
 - ✅ `isTipoEspecial()` - 11 testes
 - ✅ `identificarTipoParte()` validações - 3 testes
@@ -331,16 +355,18 @@ npx tsx dev_data/scripts/test-pje-partes-api.ts
 ```
 
 **Configuração necessária** em `dev_data/scripts/test-pje-partes-api.ts`:
+
 ```typescript
 const CONFIG_TESTE = {
-  credencialId: 1,              // ID da credencial no banco
-  idProcesso: 0,                // ⚠️ AJUSTAR! ID PJE do processo
-  trt: 5,                       // TRT do processo
+  credencialId: 1, // ID da credencial no banco
+  idProcesso: 0, // ⚠️ AJUSTAR! ID PJE do processo
+  trt: 5, // TRT do processo
   timeout: 60000,
 };
 ```
 
 **O que o teste verifica**:
+
 - Autenticação no PJE com 2FA
 - Busca de partes via `obterPartesProcesso()`
 - Busca de representantes via `obterRepresentantesPartePorID()`
@@ -388,15 +414,291 @@ Todas as entidades (clientes, partes_contrarias, terceiros, representantes, ende
 - **INSERT**: Se não existe, cria novo registro
 - **Vantagem**: Evita duplicatas ao recapturar mesmo processo
 
+## Mapeamento de Campos PJE → Banco
+
+O serviço `processarParte()` mapeia os campos do JSON do PJE (`PartePJE.dadosCompletos`) para as tabelas do banco de dados. Abaixo, a tabela completa dos campos mapeados, separados por categoria.
+
+### Campos Comuns (PF e PJ)
+
+| Campo Banco      | Campo PJE                   | Obrigatório | Descrição                        |
+| ---------------- | --------------------------- | ----------- | -------------------------------- |
+| `tipo_documento` | `parte.tipoDocumento`       | Sim         | Tipo do documento (CPF/CNPJ)     |
+| `status_pje`     | `dadosCompletos.status`     | Não         | Status da pessoa no PJE          |
+| `situacao_pje`   | `dadosCompletos.situacao`   | Não         | Situação da pessoa no PJE        |
+| `login_pje`      | `dadosCompletos.login`      | Não         | Login da pessoa no PJE           |
+| `autoridade`     | `dadosCompletos.autoridade` | Não         | Indica se é autoridade (boolean) |
+
+### Campos Específicos de PF (Pessoa Física)
+
+| Campo Banco                  | Campo PJE                                | Obrigatório | Descrição                                      |
+| ---------------------------- | ---------------------------------------- | ----------- | ---------------------------------------------- |
+| `sexo`                       | `dadosCompletos.sexo`                    | Não         | Sexo da pessoa                                 |
+| `nome_genitora`              | `dadosCompletos.nomeGenitora`            | Não         | Nome da genitora                               |
+| `naturalidade_*`             | `dadosCompletos.naturalidade`            | Não         | Estrutura completa da naturalidade             |
+| `uf_nascimento_*`            | `dadosCompletos.ufNascimento`            | Não         | UF de nascimento                               |
+| `pais_nascimento_*`          | `dadosCompletos.paisNascimento`          | Não         | País de nascimento                             |
+| `escolaridade_codigo`        | `dadosCompletos.escolaridade`            | Não         | Código da escolaridade                         |
+| `situacao_cpf_receita_*`     | `dadosCompletos.situacaoCpfReceita`      | Não         | Situação do CPF na Receita                     |
+| `pode_usar_celular_mensagem` | `dadosCompletos.podeUsarCelularMensagem` | Não         | Permissão para mensagens via celular (boolean) |
+
+### Campos Específicos de PJ (Pessoa Jurídica)
+
+| Campo Banco               | Campo PJE                            | Obrigatório | Descrição                              |
+| ------------------------- | ------------------------------------ | ----------- | -------------------------------------- |
+| `inscricao_estadual`      | `dadosCompletos.inscricaoEstadual`   | Não         | Inscrição estadual                     |
+| `data_abertura`           | `dadosCompletos.dataAbertura`        | Não         | Data de abertura da empresa            |
+| `orgao_publico`           | `dadosCompletos.orgaoPublico`        | Não         | Indica se é órgão público (boolean)    |
+| `tipo_pessoa_codigo_pje`  | `dadosCompletos.tipoPessoa.codigo`   | Não         | Código do tipo de pessoa no PJE        |
+| `tipo_pessoa_label_pje`   | `dadosCompletos.tipoPessoa.label`    | Não         | Label do tipo de pessoa no PJE         |
+| `situacao_cnpj_receita_*` | `dadosCompletos.situacaoCnpjReceita` | Não         | Situação do CNPJ na Receita            |
+| `ramo_atividade`          | `dadosCompletos.ramoAtividade`       | Não         | Ramo de atividade                      |
+| `cpf_responsavel`         | `dadosCompletos.cpfResponsavel`      | Não         | CPF do responsável                     |
+| `oficial`                 | `dadosCompletos.oficial`             | Não         | Indica se é oficial (boolean)          |
+| `porte_codigo`            | `dadosCompletos.porte.codigo`        | Não         | Código do porte                        |
+| `porte_descricao`         | `dadosCompletos.porte.descricao`     | Não         | Descrição do porte                     |
+| `ultima_atualizacao_pje`  | `dadosCompletos.ultimaAtualizacao`   | Não         | Timestamp da última atualização no PJE |
+
+**Notas sobre o mapeamento:**
+
+- Campos marcados como "Não" são opcionais e usam optional chaining (`?.`) para evitar erros se não estiverem presentes no JSON do PJE.
+- Tipos são convertidos conforme necessário (strings para números, datas para ISO).
+- Logs de debug são adicionados para campos não encontrados.
+- O campo `dados_anteriores` é usado para auditoria: armazena o estado anterior do registro antes da atualização. É sempre `null` na criação e populado automaticamente no update com o estado completo anterior.
+
+## Deduplicação
+
+A deduplicação de entidades (clientes, partes contrárias e terceiros) é baseada no campo `id_pessoa_pje`, que representa o ID único da pessoa no sistema PJE.
+
+- **Chave primária de deduplicação**: `id_pessoa_pje` com constraint UNIQUE, garantindo que não há duplicatas de pessoas oriundas do PJE.
+- **Upsert por `id_pessoa_pje`**: Se o ID já existe, os dados são atualizados; caso contrário, um novo registro é criado.
+- **Fallback para CPF/CNPJ**: Mesmo sem `id_pessoa_pje` (registros criados manualmente), há constraints UNIQUE em CPF e CNPJ para evitar duplicatas.
+- **Registros manuais**: O campo `id_pessoa_pje` é nullable para permitir clientes/partes criados manualmente (sem origem no PJE).
+
+## Tratamento de Erros
+
+Erros de persistência são tratados especificamente para fornecer mensagens claras e facilitar o debug.
+
+### Códigos de Erro Específicos
+
+- **23505 (UNIQUE violation)**: Violação de constraint UNIQUE (duplicata de CPF, CNPJ ou `id_pessoa_pje`).
+
+### Como os Erros de Constraint São Tratados
+
+- No `catch` dos serviços de persistência (`cliente-persistence.service.ts` e `parte-contraria-persistence.service.ts`), o código detecta erros de constraint e retorna mensagens específicas.
+- Para erros genéricos, uma mensagem padrão é usada.
+
+### Mensagens de Erro Retornadas
+
+- **CPF duplicado**: `'Cliente com este CPF já cadastrado (id_pessoa_pje: X)'` ou `'Parte contrária com este CPF já cadastrada (id_pessoa_pje: X)'`
+- **CNPJ duplicado**: `'Cliente com este CNPJ já cadastrado (id_pessoa_pje: X)'` ou `'Parte contrária com este CNPJ já cadastrada (id_pessoa_pje: X)'`
+- **`id_pessoa_pje` duplicado**: `'Pessoa PJE já cadastrada como cliente (ID: X)'` ou `'Pessoa PJE já cadastrada como parte contrária (ID: X)'`
+- **Outros erros**: Mensagem genérica com detalhes do erro original.
+
+## Captura de Representantes
+
+Representantes são advogados, defensores públicos, procuradores e outros profissionais que atuam em nome das partes em um processo judicial. Eles são capturados automaticamente durante o processamento de partes do PJE-TRT e armazenados na tabela `representantes` com vínculo à parte específica.
+
+A tabela `representantes` possui uma constraint UNIQUE `(id_pessoa_pje, trt, grau, parte_id, parte_tipo, numero_processo)` que garante um representante único por contexto completo (parte + processo). Isso significa que o mesmo representante pode atuar em múltiplos processos, mas cada atuação é registrada como um registro separado na tabela.
+
+### Campos Obrigatórios
+
+- `id_pessoa_pje`: ID único da pessoa no PJE
+- `parte_tipo`: Tipo da parte ('cliente', 'parte_contraria', 'terceiro')
+- `parte_id`: ID da parte na tabela correspondente
+- `trt`: Tribunal Regional do Trabalho (ex: '03')
+- `grau`: Grau do processo ('primeiro_grau', 'segundo_grau')
+- `numero_processo`: Número completo do processo
+- `tipo_pessoa`: Tipo da pessoa ('pf' para pessoa física, 'pj' para pessoa jurídica)
+- `nome`: Nome completo do representante
+- `cpf`: CPF do representante (obrigatório para PF)
+- `cnpj`: CNPJ do representante (obrigatório para PJ)
+
+### Campos Opcionais
+
+- `numero_oab`: Número da Ordem dos Advogados do Brasil
+- `situacao_oab`: Situação atual na OAB
+- `tipo`: Tipo do representante (advogado, defensor, procurador, etc.)
+- `emails`: Lista de endereços de email
+- `ddd_telefone` / `numero_telefone`: Telefone residencial
+- `ddd_celular` / `numero_celular`: Telefone celular
+- `ddd_comercial` / `numero_comercial`: Telefone comercial
+- Campos específicos de PF: `sexo`, `data_nascimento`, `nome_mae`, `nome_pai`, `nacionalidade`, `estado_civil`, `uf_nascimento`, `municipio_nascimento`, `pais_nascimento`
+- Campos específicos de PJ: `razao_social`, `nome_fantasia`, `inscricao_estadual`, `tipo_empresa`
+- `endereco_id`: ID do endereço vinculado (se disponível)
+
+## Validações de Representantes
+
+### CPF (Pessoa Física)
+
+- Validação completa com dígitos verificadores usando algoritmo oficial
+- Obrigatório para representantes do tipo pessoa física
+- Rejeita CPFs com todos os dígitos iguais (sequências como "11111111111")
+- Remove formatação automática (pontos e hífens)
+
+### CNPJ (Pessoa Jurídica)
+
+- Validação completa com dígitos verificadores usando algoritmo oficial
+- Obrigatório para representantes do tipo pessoa jurídica
+- Rejeita CNPJs com todos os dígitos iguais (sequências como "00000000000000")
+- Remove formatação automática (pontos, barras e hífens)
+
+### OAB (Ordem dos Advogados do Brasil)
+
+- Formato: UF (2 letras maiúsculas) + número (3-6 dígitos)
+- Exemplos válidos: "MG123456", "SP12345", "RJ1234"
+- Opcional: Defensores públicos e procuradores não possuem registro na OAB
+- Valida UF contra lista oficial de estados brasileiros
+
+### Email
+
+- Formato simplificado RFC 5322: `usuario@dominio.tld`
+- Opcional: Nem todos os representantes possuem email cadastrado
+- Validação básica: presença de '@' e domínio
+
+## Mapeamento de Campos PJE → Banco
+
+O serviço `extrairCamposRepresentantePJE()` mapeia os campos do JSON do PJE (`RepresentantePJE.dadosCompletos`) para a tabela `representantes`. Abaixo, a tabela completa dos campos mapeados.
+
+### Campos Comuns (PF e PJ)
+
+| Campo PJE                              | Campo Banco             | Observações                         |
+| -------------------------------------- | ----------------------- | ----------------------------------- |
+| `dadosCompletos.situacao`              | `situacao_pje`          | Status da pessoa no PJE             |
+| `dadosCompletos.status`                | `status_pje`            | Situação da pessoa no PJE           |
+| `dadosCompletos.principal`             | `principal`             | Indica se é representante principal |
+| `dadosCompletos.endereco_desconhecido` | `endereco_desconhecido` | Flag para endereço desconhecido     |
+| `dadosCompletos.id_tipo_parte`         | `id_tipo_parte`         | ID do tipo de parte no PJE          |
+| `dadosCompletos.polo`                  | `polo`                  | Polo processual (ATIVO/PASSIVO)     |
+
+### Campos Específicos de PF (Pessoa Física)
+
+| Campo PJE                             | Campo Banco            | Observações                        |
+| ------------------------------------- | ---------------------- | ---------------------------------- |
+| `dadosCompletos.sexo`                 | `sexo`                 | Campo aninhado em `dadosCompletos` |
+| `dadosCompletos.data_nascimento`      | `data_nascimento`      | Campo aninhado em `dadosCompletos` |
+| `dadosCompletos.nome_mae`             | `nome_mae`             | Campo aninhado em `dadosCompletos` |
+| `dadosCompletos.nome_pai`             | `nome_pai`             | Campo aninhado em `dadosCompletos` |
+| `dadosCompletos.nacionalidade`        | `nacionalidade`        | Campo aninhado em `dadosCompletos` |
+| `dadosCompletos.estado_civil`         | `estado_civil`         | Campo aninhado em `dadosCompletos` |
+| `dadosCompletos.uf_nascimento`        | `uf_nascimento`        | Campo aninhado em `dadosCompletos` |
+| `dadosCompletos.municipio_nascimento` | `municipio_nascimento` | Campo aninhado em `dadosCompletos` |
+| `dadosCompletos.pais_nascimento`      | `pais_nascimento`      | Campo aninhado em `dadosCompletos` |
+
+### Campos Específicos de PJ (Pessoa Jurídica)
+
+| Campo PJE                           | Campo Banco          | Observações                        |
+| ----------------------------------- | -------------------- | ---------------------------------- |
+| `dadosCompletos.razao_social`       | `razao_social`       | Campo aninhado em `dadosCompletos` |
+| `dadosCompletos.nome_fantasia`      | `nome_fantasia`      | Campo aninhado em `dadosCompletos` |
+| `dadosCompletos.inscricao_estadual` | `inscricao_estadual` | Campo aninhado em `dadosCompletos` |
+| `dadosCompletos.tipo_empresa`       | `tipo_empresa`       | Campo aninhado em `dadosCompletos` |
+
+**Notas sobre o mapeamento:**
+
+- Campos extraídos de `dadosCompletos` são aninhados no JSON do PJE
+- Logs de debug são adicionados para campos não encontrados
+- Mapeamento é feito via função auxiliar `extrairCamposRepresentantePJE()`
+
+## Tratamento de Erros
+
+Erros durante o processamento de representantes são tratados de forma a não interromper a captura das demais partes e representantes.
+
+### Tipos de Erro
+
+- **Constraint UNIQUE violation**: Representante já existe para esta parte neste processo (código 23505)
+- **CPF/CNPJ inválido**: Validação dos dígitos verificadores falhou
+- **Parte não encontrada**: Violação de chave estrangeira (FK violation, código 23503)
+- **Campos obrigatórios ausentes**: Violação de NOT NULL (código 23502)
+
+### Comportamento
+
+- Erro em um representante não interrompe o processamento dos demais
+- Erros são coletados no array `erros[]` do resultado da captura
+- Logs detalhados são gerados para facilitar debug
+- Contadores refletem apenas sucessos (representantes salvos com sucesso)
+
+## Exemplos de Casos Edge
+
+### Representante sem OAB (Defensor Público)
+
+```typescript
+// Defensor público não possui número OAB
+const representanteDefensor = {
+  id_pessoa_pje: 12345,
+  nome: "Dr. João Defensor",
+  tipo_pessoa: "pf",
+  cpf: "12345678900",
+  numero_oab: null, // Campo opcional
+  situacao_oab: null,
+  // ... outros campos
+};
+```
+
+### Representante PJ (Escritório de Advocacia)
+
+```typescript
+// Escritório de advocacia com CNPJ
+const representanteEscritorio = {
+  id_pessoa_pje: 67890,
+  nome: "Escritório Silva & Associados",
+  tipo_pessoa: "pj",
+  cnpj: "12345678000123",
+  razao_social: "Silva & Associados Advogados Ltda",
+  numero_oab: null, // Escritórios podem não ter OAB própria
+  // ... outros campos
+};
+```
+
+### Representante sem Endereço
+
+```typescript
+// Representante com endereço desconhecido
+const representanteSemEndereco = {
+  id_pessoa_pje: 11111,
+  nome: "Dra. Maria Santos",
+  tipo_pessoa: "pf",
+  cpf: "98765432100",
+  endereco_desconhecido: true,
+  endereco_id: null, // Sem vínculo de endereço
+  // ... outros campos
+};
+```
+
+### Representante Atuando em Múltiplos Processos
+
+```typescript
+// Mesmo representante em dois processos diferentes
+const representanteMultiplo1 = {
+  id_pessoa_pje: 22222,
+  nome: "Dr. Carlos Oliveira",
+  tipo_pessoa: "pf",
+  cpf: "11122233344",
+  parte_id: 1, // Parte no processo A
+  numero_processo: "0001234-56.2024.5.03.0001",
+  // ... outros campos
+};
+
+const representanteMultiplo2 = {
+  id_pessoa_pje: 22222, // Mesmo ID PJE
+  nome: "Dr. Carlos Oliveira", // Mesmo nome
+  tipo_pessoa: "pf",
+  cpf: "11122233344", // Mesmo CPF
+  parte_id: 2, // Parte diferente no processo B
+  numero_processo: "0005678-90.2024.5.03.0002", // Processo diferente
+  // ... outros campos
+};
+// Resultado: Dois registros na tabela representantes
+```
+
 ## Performance
 
 ### Métricas Típicas
 
-| Cenário | Partes | Representantes | Duração | Observações |
-|---------|--------|----------------|---------|-------------|
-| Processo simples | 2 | 2 | 1.5-2s | Autor + Réu com 1 advogado cada |
-| Processo médio | 4 | 6 | 2-3s | Múltiplas partes e advogados |
-| Processo complexo | 10+ | 15+ | 4-6s | Litisconsórcio, assistentes, peritos |
+| Cenário           | Partes | Representantes | Duração | Observações                          |
+| ----------------- | ------ | -------------- | ------- | ------------------------------------ |
+| Processo simples  | 2      | 2              | 1.5-2s  | Autor + Réu com 1 advogado cada      |
+| Processo médio    | 4      | 6              | 2-3s    | Múltiplas partes e advogados         |
+| Processo complexo | 10+    | 15+            | 4-6s    | Litisconsórcio, assistentes, peritos |
 
 ### Otimizações
 
@@ -410,15 +712,17 @@ Todas as entidades (clientes, partes_contrarias, terceiros, representantes, ende
 
 ### Problema: Todas as partes sendo classificadas como parte_contraria
 
-**Causa**: CPF do advogado não está cadastrado corretamente ou representantes não têm CPF
+**Causa**: Documento do advogado não está cadastrado corretamente ou representantes não têm CPF/CNPJ
 
 **Solução**:
-1. Verificar CPF do advogado no banco: `SELECT id, nome, cpf FROM advogados WHERE id = X`
-2. Verificar se representantes têm CPF no PJE
+
+1. Verificar documento do advogado no banco: `SELECT id, nome, documento FROM advogados WHERE id = X`
+2. Verificar se representantes têm CPF/CNPJ no PJE
 3. Adicionar logs para debug:
+
 ```typescript
-console.log('CPF advogado:', advogado.cpf);
-console.log('CPF representante:', representante.numeroDocumento);
+console.log("Documento advogado:", advogado.documento);
+console.log("Documento representante:", representante.numeroDocumento);
 ```
 
 ### Problema: Perito sendo classificado como cliente
@@ -426,13 +730,21 @@ console.log('CPF representante:', representante.numeroDocumento);
 **Causa**: Tipo não está na lista TIPOS_ESPECIAIS ou tem formatação diferente
 
 **Solução**:
+
 1. Verificar `tipoParte` retornado pelo PJE
 2. Adicionar novo tipo à lista em `identificacao-partes.service.ts`:
+
 ```typescript
 const TIPOS_ESPECIAIS = [
   // ...
-  'NOVO_TIPO_PERITO',
+  "NOVO_TIPO_PERITO",
 ];
+```
+
+3. Executar testes:
+
+```bash
+npx tsx backend/captura/services/partes/__tests__/identificacao-partes.test.ts
 ```
 
 ### Problema: Erro "Parte e advogado são obrigatórios"
@@ -440,11 +752,12 @@ const TIPOS_ESPECIAIS = [
 **Causa**: Parâmetros null/undefined sendo passados
 
 **Solução**:
+
 ```typescript
 // ✅ Correto
 const advogado = {
   id: 1,
-  cpf: '123.456.789-00',
+  cpf: "123.456.789-00",
 };
 
 // ❌ Incorreto
@@ -456,7 +769,9 @@ const advogado = null;
 **Causa**: Upsert por id_pessoa_pje não está funcionando (chave duplicada ou índice ausente)
 
 **Solução**:
+
 1. Verificar constraint UNIQUE em id_pessoa_pje:
+
 ```sql
 -- Deve ter constraint UNIQUE
 SELECT constraint_name, constraint_type
@@ -465,6 +780,7 @@ WHERE table_name = 'clientes' AND constraint_type = 'UNIQUE';
 ```
 
 2. Verificar migrações aplicadas:
+
 ```bash
 npx supabase db remote commit
 ```
@@ -474,9 +790,11 @@ npx supabase db remote commit
 **Causa**: Muitas queries ao banco ou API PJE lenta
 
 **Solução**:
+
 1. Verificar logs do banco (query lenta)
 2. Verificar latência da API PJE (timeout)
 3. Considerar aumentar timeout:
+
 ```typescript
 const resultado = await capturarPartesProcesso(page, processo, advogado);
 // Se timeout, aumentar SCRAPING_TIMEOUT em .env.local
@@ -488,16 +806,16 @@ const resultado = await capturarPartesProcesso(page, processo, advogado);
 
 ```typescript
 // INFO - Operações normais
-console.log('[CAPTURA-PARTES] Iniciando captura...');
+console.log("[CAPTURA-PARTES] Iniciando captura...");
 
 // WARNING - Situações incomuns mas não fatais
-console.warn('[IDENTIFICACAO] Parte sem representantes');
+console.warn("[IDENTIFICACAO] Parte sem representantes");
 
 // ERROR - Falhas que requerem atenção
-console.error('[CAPTURA-PARTES] Erro ao processar parte:', error);
+console.error("[CAPTURA-PARTES] Erro ao processar parte:", error);
 
 // DEBUG - Informações detalhadas (comentar em produção)
-console.debug('[IDENTIFICACAO] CPF do representante não corresponde');
+console.debug("[IDENTIFICACAO] CPF do representante não corresponde");
 ```
 
 ### Exemplo de Logs Completos
@@ -519,25 +837,28 @@ console.debug('[IDENTIFICACAO] CPF do representante não corresponde');
 ### Adicionar Novo Tipo Especial
 
 1. Editar `identificacao-partes.service.ts`:
+
 ```typescript
 const TIPOS_ESPECIAIS = [
   // ... tipos existentes
-  'NOVO_TIPO',
+  "NOVO_TIPO",
 ] as const;
 ```
 
 2. Adicionar teste em `__tests__/identificacao-partes.test.ts`:
+
 ```typescript
-it('deve identificar NOVO_TIPO como terceiro', () => {
+it("deve identificar NOVO_TIPO como terceiro", () => {
   const parte = createParteMock({
-    tipoParte: 'NOVO_TIPO',
+    tipoParte: "NOVO_TIPO",
     representantes: [],
   });
-  expect(identificarTipoParte(parte, mockAdvogado)).toBe('terceiro');
+  expect(identificarTipoParte(parte, mockAdvogado)).toBe("terceiro");
 });
 ```
 
 3. Executar testes:
+
 ```bash
 npx tsx backend/captura/services/partes/__tests__/identificacao-partes.test.ts
 ```
@@ -547,6 +868,7 @@ npx tsx backend/captura/services/partes/__tests__/identificacao-partes.test.ts
 ⚠️ **CUIDADO**: Mudanças no algoritmo afetam classificação de todos os processos
 
 **Processo recomendado**:
+
 1. Adicionar testes para novo comportamento
 2. Modificar função
 3. Executar todos os 78 testes
@@ -562,7 +884,7 @@ npx tsx backend/captura/services/partes/__tests__/identificacao-partes.test.ts
   - Terceiros: [`backend/terceiros/services/persistence/`](../../../terceiros/services/persistence/)
   - Representantes: [`backend/representantes/services/`](../../../representantes/services/)
   - Endereços: [`backend/enderecos/services/`](../../../enderecos/services/)
-- **Vínculo Processo-Partes**: [`backend/processo-partes/services/persistence/`](../../../processo-partes/services/persistence/)
+  - Vínculo Processo-Partes: [`backend/processo-partes/services/persistence/`](../../../processo-partes/services/persistence/)
 - **OpenSpec Change**: [`openspec/changes/captura-partes-pje/`](../../../../openspec/changes/captura-partes-pje/)
 
 ---
