@@ -405,12 +405,11 @@ export async function POST(request: NextRequest) {
         );
 
         // Autenticar no PJE
+        // Nota: twofauthConfig não é passado aqui, então a função autenticarPJE
+        // usará as variáveis de ambiente (TWOFAUTH_API_URL, TWOFAUTH_API_TOKEN, TWOFAUTH_ACCOUNT_ID)
         const { page } = await autenticarPJE({
           credential: credencial.credenciais,
           config,
-          twofauthConfig: credencial.credenciais.cpf
-            ? { accountId: credencial.credenciais.cpf }
-            : undefined,
         });
 
         // Capturar partes do processo
