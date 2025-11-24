@@ -23,29 +23,22 @@ interface UsuarioCardProps {
 }
 
 export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: UsuarioCardProps) {
+  // Verifica se deve exibir OAB (apenas para Advogado e Diretor)
+  const cargoNome = usuario.cargo?.nome?.toLowerCase();
+  const deveExibirOab = cargoNome === 'advogado' || cargoNome === 'diretor';
+
   return (
     <Card className="relative flex flex-col h-full hover:shadow-md transition-shadow">
-      <CardHeader className="p-3 pb-2">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-sm leading-tight truncate">
-              {formatarNomeExibicao(usuario.nomeExibicao)}
-            </CardTitle>
-            <p className="text-xs text-muted-foreground mt-0.5 truncate">
-              {usuario.emailCorporativo}
-            </p>
-          </div>
-          <Badge
-            tone={usuario.ativo ? 'success' : 'neutral'}
-            variant={usuario.ativo ? 'soft' : 'outline'}
-            className="shrink-0 text-xs h-5 px-1.5"
-          >
-            {usuario.ativo ? 'Ativo' : 'Inativo'}
-          </Badge>
-        </div>
+      <CardHeader className="p-2.5 pb-1.5">
+        <CardTitle className="text-sm leading-tight truncate">
+          {formatarNomeExibicao(usuario.nomeExibicao)}
+        </CardTitle>
+        <p className="text-xs text-muted-foreground mt-0.5 truncate">
+          {usuario.emailCorporativo}
+        </p>
       </CardHeader>
 
-      <CardContent className="flex-1 space-y-1 text-xs p-3 pt-0 pb-9">
+      <CardContent className="flex-1 space-y-0.5 text-xs p-2.5 pt-0 pb-7">
         <div className="flex items-center gap-1.5">
           <span className="text-muted-foreground">CPF:</span>
           <span className="font-medium">
@@ -67,13 +60,26 @@ export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: Usuar
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          <span className="text-muted-foreground">OAB:</span>
-          <span className="font-medium">
-            {formatarOab(usuario.oab, usuario.ufOab)}
-          </span>
-        </div>
+        {deveExibirOab && (
+          <div className="flex items-center gap-1.5">
+            <span className="text-muted-foreground">OAB:</span>
+            <span className="font-medium">
+              {formatarOab(usuario.oab, usuario.ufOab)}
+            </span>
+          </div>
+        )}
       </CardContent>
+
+      {/* Badge de status no canto inferior esquerdo */}
+      <div className="absolute bottom-2 left-2">
+        <Badge
+          tone={usuario.ativo ? 'success' : 'neutral'}
+          variant={usuario.ativo ? 'soft' : 'outline'}
+          className="text-xs h-5 px-1.5"
+        >
+          {usuario.ativo ? 'Ativo' : 'Inativo'}
+        </Badge>
+      </div>
 
       {/* Botões de ação no canto inferior direito */}
       <div className="absolute bottom-2 right-2 flex gap-0.5">

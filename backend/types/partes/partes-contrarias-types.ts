@@ -69,7 +69,6 @@ export interface ParteContrariaPessoaFisica extends ParteContrariaBase {
   necessidade_especial: string | null;
   // Campos que são null em PF (específicos de PJ)
   inscricao_estadual: null;
-  inscricao_municipal: null;
   data_abertura: null;
   orgao_publico: null;
   ds_tipo_pessoa: null;
@@ -89,7 +88,6 @@ export interface ParteContrariaPessoaJuridica extends ParteContrariaBase {
   cnpj: string; // Required para PJ
   cpf: null;
   inscricao_estadual: string | null;
-  inscricao_municipal: string | null;
   data_abertura: string | null; // ISO date
   orgao_publico: boolean | null;
   ds_tipo_pessoa: string | null;
@@ -198,7 +196,6 @@ export interface CriarParteContrariaPJParams {
   ddd_comercial?: string | null;
   numero_comercial?: string | null;
   inscricao_estadual?: string | null;
-  inscricao_municipal?: string | null;
   data_abertura?: string | null;
   orgao_publico?: boolean | null;
   ds_tipo_pessoa?: string | null;
@@ -280,7 +277,6 @@ export interface AtualizarParteContrariaPJParams {
   ddd_comercial?: string | null;
   numero_comercial?: string | null;
   inscricao_estadual?: string | null;
-  inscricao_municipal?: string | null;
   data_abertura?: string | null;
   orgao_publico?: boolean | null;
   ds_tipo_pessoa?: string | null;
