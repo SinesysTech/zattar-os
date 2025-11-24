@@ -321,6 +321,10 @@ async function processarRepresentantes(
 ): Promise<number> {
   let count = 0;
 
+  console.log(
+    `[CAPTURA-PARTES] Processando ${representantes.length} representante(s) da ${tipoParte} (ID: ${parteId})`
+  );
+
   for (const rep of representantes) {
     try {
       const tipo_pessoa: 'pf' | 'pj' = rep.tipoDocumento === 'CPF' ? 'pf' : 'pj';
@@ -345,12 +349,25 @@ async function processarRepresentantes(
         dados_anteriores: rep.dadosCompletos as Record<string, unknown> | null | undefined,
       });
 
-      if (result.sucesso) count++;
+      if (result.sucesso) {
+        count++;
+        console.log(
+          `[CAPTURA-PARTES] ✓ Representante salvo: ${rep.nome} (${tipo_pessoa === 'pf' ? 'CPF' : 'CNPJ'}: ${rep.numeroDocumento}) - OAB: ${rep.numeroOAB || 'N/A'}`
+        );
+      } else {
+        console.warn(
+          `[CAPTURA-PARTES] ✗ Falha ao salvar representante: ${rep.nome} - ${result.erro}`
+        );
+      }
     } catch (error) {
       console.error(`[CAPTURA-PARTES] Erro ao salvar representante ${rep.nome}:`, error);
       // Continua com próximo representante
     }
   }
+
+  console.log(
+    `[CAPTURA-PARTES] Representantes salvos: ${count}/${representantes.length} para ${tipoParte} (ID: ${parteId})`
+  );
 
   return count;
 }

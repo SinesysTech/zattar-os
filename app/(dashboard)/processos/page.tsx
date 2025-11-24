@@ -27,7 +27,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { ArrowUpDown, ArrowUp, ArrowDown, Eye, CalendarClock, Pencil, Loader2 } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, Eye, CalendarClock, Pencil, Loader2, Copy } from 'lucide-react';
 import { useAcervo } from '@/app/_lib/hooks/use-acervo';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { GrauBadges } from './components/grau-badges';
@@ -614,6 +614,17 @@ function criarColunas(
         const orgaoJulgador = processo.descricao_orgao_julgador || '-';
         const trt = processo.trt;
         const isUnificado = isProcessoUnificado(processo);
+        const [copiado, setCopiado] = React.useState(false);
+
+        const copiarNumeroProcesso = async () => {
+          try {
+            await navigator.clipboard.writeText(numeroProcesso);
+            setCopiado(true);
+            setTimeout(() => setCopiado(false), 2000);
+          } catch (err) {
+            console.error('Erro ao copiar número do processo:', err);
+          }
+        };
 
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
@@ -632,8 +643,27 @@ function criarColunas(
                 </Badge>
               )}
             </div>
-            <div className="text-sm font-medium whitespace-nowrap">
-              {classeJudicial && `${classeJudicial} `}{numeroProcesso}
+            <div className="flex items-center gap-2">
+              <div className="text-sm font-medium whitespace-nowrap">
+                {classeJudicial && `${classeJudicial} `}{numeroProcesso}
+              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={copiarNumeroProcesso}
+                    >
+                      <Copy className={`h-3 w-3 ${copiado ? 'text-green-600' : ''}`} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{copiado ? 'Copiado!' : 'Copiar número do processo'}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
             <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}

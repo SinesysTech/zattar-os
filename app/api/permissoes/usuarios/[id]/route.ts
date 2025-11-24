@@ -103,11 +103,11 @@ export async function POST(
     const usuarioId = parseInt(id, 10);
     const body = await request.json();
 
-    if (!validarAtribuirPermissoesDTO({ permissoes: body })) {
+    if (!validarAtribuirPermissoesDTO(body)) {
       return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 });
     }
 
-    const permissoes = await atribuirPermissoesBatch(usuarioId, body, executadoPor);
+    const permissoes = await atribuirPermissoesBatch(usuarioId, body.permissoes, executadoPor);
 
     return NextResponse.json({ success: true, data: permissoes }, { status: 201 });
   } catch (error: any) {
@@ -131,11 +131,11 @@ export async function PUT(
     const usuarioId = parseInt(id, 10);
     const body = await request.json();
 
-    if (!validarAtribuirPermissoesDTO({ permissoes: body })) {
+    if (!validarAtribuirPermissoesDTO(body)) {
       return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 });
     }
 
-    const permissoes = await substituirPermissoes(usuarioId, body, executadoPor);
+    const permissoes = await substituirPermissoes(usuarioId, body.permissoes, executadoPor);
 
     return NextResponse.json({ success: true, data: permissoes }, { status: 200 });
   } catch (error: any) {
