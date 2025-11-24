@@ -132,29 +132,29 @@ export async function obterPartesProcesso(
           
           // Mapear representantes para o formato esperado pela interface
           const representantes = representantesRaw.map((rep: Record<string, unknown>) => ({
-            idPessoa: rep.idPessoa || rep.id_pessoa || 0,
-            nome: rep.nome || '',
+            idPessoa: Number(rep.idPessoa || rep.id_pessoa || 0),
+            nome: String(rep.nome || ''),
             tipoDocumento: (rep.tipoDocumento || rep.tipo_documento || 'CPF') as 'CPF' | 'CNPJ',
-            numeroDocumento: rep.documento || rep.numeroDocumento || rep.numero_documento || rep.cpf || '',
-            numeroOAB: rep.numeroOab || rep.numero_oab || null,
-            ufOAB: rep.ufOab || rep.uf_oab || null,
-            situacaoOAB: rep.situacaoOab || rep.situacao_oab || null,
-            tipo: rep.tipo || 'ADVOGADO',
-            email: rep.email || null,
+            numeroDocumento: String(rep.documento || rep.numeroDocumento || rep.numero_documento || rep.cpf || ''),
+            numeroOAB: rep.numeroOab || rep.numero_oab ? String(rep.numeroOab || rep.numero_oab) : null,
+            ufOAB: rep.ufOab || rep.uf_oab ? String(rep.ufOab || rep.uf_oab) : null,
+            situacaoOAB: rep.situacaoOab || rep.situacao_oab ? String(rep.situacaoOab || rep.situacao_oab) : null,
+            tipo: String(rep.tipo || 'ADVOGADO'),
+            email: rep.email ? String(rep.email) : null,
             telefones: extrairTelefones(rep),
             dadosCompletos: rep,
           }));
 
           // Mapeia dados da API PJE para tipo PartePJE
           const parte: PartePJE = {
-            idParte: parteData.id || parteData.idParte,
-            idPessoa: parteData.idPessoa || parteData.id_pessoa,
-            nome: parteData.nome || parteData.nomeCompleto || '',
-            tipoParte: parteData.tipo || parteData.tipoParte || parteData.tipo_parte || 'OUTRO',
-            polo: mapearPolo(parteData.polo),
-            principal: parteData.principal || parteData.partePrincipal || false,
-            tipoDocumento: mapearTipoDocumento(parteData.tipoDocumento || parteData.tipo_documento),
-            numeroDocumento: parteData.documento || parteData.numeroDocumento || parteData.numero_documento || '',
+            idParte: Number(parteData.id || parteData.idParte),
+            idPessoa: Number(parteData.idPessoa || parteData.id_pessoa),
+            nome: String(parteData.nome || parteData.nomeCompleto || ''),
+            tipoParte: String(parteData.tipo || parteData.tipoParte || parteData.tipo_parte || 'OUTRO'),
+            polo: mapearPolo(parteData.polo as string | undefined),
+            principal: Boolean(parteData.principal || parteData.partePrincipal),
+            tipoDocumento: mapearTipoDocumento(parteData.tipoDocumento as string | undefined || parteData.tipo_documento as string | undefined),
+            numeroDocumento: String(parteData.documento || parteData.numeroDocumento || parteData.numero_documento || ''),
             emails: extrairEmails(parteData),
             telefones: extrairTelefones(parteData),
             representantes,
@@ -175,14 +175,14 @@ export async function obterPartesProcesso(
 
           // Retorna parte sem representantes
           const parte: PartePJE = {
-            idParte: parteData.id || parteData.idParte,
-            idPessoa: parteData.idPessoa || parteData.id_pessoa,
-            nome: parteData.nome || parteData.nomeCompleto || '',
-            tipoParte: parteData.tipo || parteData.tipoParte || parteData.tipo_parte || 'OUTRO',
-            polo: mapearPolo(parteData.polo),
-            principal: parteData.principal || parteData.partePrincipal || false,
-            tipoDocumento: mapearTipoDocumento(parteData.tipoDocumento || parteData.tipo_documento),
-            numeroDocumento: parteData.documento || parteData.numeroDocumento || parteData.numero_documento || '',
+            idParte: Number(parteData.id || parteData.idParte),
+            idPessoa: Number(parteData.idPessoa || parteData.id_pessoa),
+            nome: String(parteData.nome || parteData.nomeCompleto || ''),
+            tipoParte: String(parteData.tipo || parteData.tipoParte || parteData.tipo_parte || 'OUTRO'),
+            polo: mapearPolo(parteData.polo as string | undefined),
+            principal: Boolean(parteData.principal || parteData.partePrincipal),
+            tipoDocumento: mapearTipoDocumento(parteData.tipoDocumento as string | undefined || parteData.tipo_documento as string | undefined),
+            numeroDocumento: String(parteData.documento || parteData.numeroDocumento || parteData.numero_documento || ''),
             emails: extrairEmails(parteData),
             telefones: extrairTelefones(parteData),
             representantes: [], // Vazio por conta do erro

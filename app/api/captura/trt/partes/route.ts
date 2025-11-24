@@ -376,84 +376,135 @@ export async function POST(request: NextRequest) {
 
     const inicio = Date.now();
 
-    // 8. Processar cada processo
+    // 8. Agrupar processos por TRT + grau para reutilizar sessão autenticada
+    type GrupoChave = string; // Formato: "TRT{numero}_{grau}"
+    const gruposProcessos = new Map<GrupoChave, typeof processos>();
+    
     for (const processo of processos) {
-      try {
-        console.log(
-          `[API-PARTES] Processando processo ${processo.numero_processo}`
+      const chaveGrupo: GrupoChave = `${processo.trt}_${processo.grau}`;
+      if (!gruposProcessos.has(chaveGrupo)) {
+        gruposProcessos.set(chaveGrupo, []);
+      }
+      gruposProcessos.get(chaveGrupo)!.push(processo);
+    }
+
+    console.log(
+      `[API-PARTES] Processos agrupados em ${gruposProcessos.size} grupos (por TRT + grau)`
+    );
+
+    // 9. Processar cada grupo (um login por grupo)
+    for (const [chaveGrupo, processosDoGrupo] of gruposProcessos) {
+      // Usar o primeiro processo do grupo para obter os dados de TRT e grau corretos
+      // Isso evita erros de parse na string da chave (ex: split('_') em "primeiro_grau")
+      const processoModelo = processosDoGrupo[0];
+      
+      console.log(
+        `[API-PARTES] Processando grupo ${chaveGrupo}: ${processosDoGrupo.length} processos`
+      );
+
+      // Encontra credencial para este grupo usando os dados originais
+      const credencial = credenciais.find((c) => c.tribunal === processoModelo.trt && c.grau === processoModelo.grau);
+
+      if (!credencial) {
+        console.warn(
+          `[API-PARTES] Nenhuma credencial encontrada para ${chaveGrupo}, pulando ${processosDoGrupo.length} processos`
         );
-
-        // Encontra credencial do mesmo TRT do processo
-        const credencial = credenciais.find((c) => c.tribunal === processo.trt);
-
-        if (!credencial) {
-          console.warn(
-            `[API-PARTES] Nenhuma credencial encontrada para TRT${processo.trt}, pulando processo ${processo.numero_processo}`
-          );
+        for (const proc of processosDoGrupo) {
           resultadoTotal.erros.push({
-            processo_id: processo.id,
-            numero_processo: processo.numero_processo,
-            erro: `Nenhuma credencial disponível para TRT${processo.trt}`,
+            processo_id: proc.id,
+            numero_processo: proc.numero_processo,
+            erro: `Nenhuma credencial disponível para ${chaveGrupo}`,
           });
-          continue;
         }
+        continue;
+      }
 
-        // Buscar configuração do tribunal
-        const config = await getTribunalConfig(
-          credencial.tribunal,
-          credencial.grau
-        );
+      // Buscar configuração do tribunal
+      const config = await getTribunalConfig(credencial.tribunal, credencial.grau);
 
-        // Autenticar no PJE
-        // Nota: twofauthConfig não é passado aqui, então a função autenticarPJE
-        // usará as variáveis de ambiente (TWOFAUTH_API_URL, TWOFAUTH_API_TOKEN, TWOFAUTH_ACCOUNT_ID)
-        const { page } = await autenticarPJE({
+      let browser = null;
+      let page = null;
+
+      try {
+        // ✅ AUTENTICAR UMA VEZ POR GRUPO
+        console.log(`[API-PARTES] Autenticando no ${chaveGrupo}...`);
+        const authResult = await autenticarPJE({
           credential: credencial.credenciais,
           config,
         });
+        browser = authResult.browser;
+        page = authResult.page;
+        console.log(
+          `[API-PARTES] Autenticado com sucesso! Processando ${processosDoGrupo.length} processos com a mesma sessão`
+        );
 
-        // Capturar partes do processo
-        const resultado = await capturarPartesProcesso(page, processo, {
-          id: advogado.id,
-          cpf: advogado.cpf,
-        });
+        // ✅ PROCESSAR TODOS OS PROCESSOS DO GRUPO COM A MESMA SESSÃO
+        for (const processo of processosDoGrupo) {
+          try {
+            console.log(
+              `[API-PARTES] [${chaveGrupo}] Processando processo ${processo.numero_processo}`
+            );
 
-        // Agregar resultados
-        resultadoTotal.total_partes += resultado.totalPartes;
-        resultadoTotal.clientes += resultado.clientes;
-        resultadoTotal.partes_contrarias += resultado.partesContrarias;
-        resultadoTotal.terceiros += resultado.terceiros;
-        resultadoTotal.representantes += resultado.representantes;
-        resultadoTotal.vinculos += resultado.vinculos;
+            // Capturar partes do processo (reutilizando a página autenticada)
+            const resultado = await capturarPartesProcesso(page, processo, {
+              id: advogado.id,
+              cpf: advogado.cpf,
+            });
 
-        // Agregar erros
-        if (resultado.erros.length > 0) {
-          for (const erro of resultado.erros) {
+            // Agregar resultados
+            resultadoTotal.total_partes += resultado.totalPartes;
+            resultadoTotal.clientes += resultado.clientes;
+            resultadoTotal.partes_contrarias += resultado.partesContrarias;
+            resultadoTotal.terceiros += resultado.terceiros;
+            resultadoTotal.representantes += resultado.representantes;
+            resultadoTotal.vinculos += resultado.vinculos;
+
+            // Agregar erros
+            if (resultado.erros.length > 0) {
+              for (const erro of resultado.erros) {
+                resultadoTotal.erros.push({
+                  processo_id: processo.id,
+                  numero_processo: processo.numero_processo,
+                  erro: erro.erro,
+                });
+              }
+            }
+
+            console.log(
+              `[API-PARTES] [${chaveGrupo}] Processo ${processo.numero_processo} concluído: ${resultado.totalPartes} partes`
+            );
+          } catch (error) {
+            console.error(
+              `[API-PARTES]  [${chaveGrupo}] Erro ao processar processo ${processo.numero_processo}:`,
+              error
+            );
+
             resultadoTotal.erros.push({
               processo_id: processo.id,
               numero_processo: processo.numero_processo,
-              erro: erro.erro,
+              erro: error instanceof Error ? error.message : String(error),
             });
           }
         }
-
-        // Fechar página
-        await page.close();
-
-        console.log(
-          `[API-PARTES] Processo ${processo.numero_processo} concluído: ${resultado.totalPartes} partes`
-        );
       } catch (error) {
         console.error(
-          `[API-PARTES] Erro ao processar processo ${processo.numero_processo}:`,
+          `[API-PARTES] Erro ao autenticar no ${chaveGrupo}:`,
           error
         );
-
-        resultadoTotal.erros.push({
-          processo_id: processo.id,
-          numero_processo: processo.numero_processo,
-          erro: error instanceof Error ? error.message : String(error),
-        });
+        // Se falhar a autenticação, marca todos os processos do grupo com erro
+        for (const proc of processosDoGrupo) {
+          resultadoTotal.erros.push({
+            processo_id: proc.id,
+            numero_processo: proc.numero_processo,
+            erro: `Falha na autenticação: ${error instanceof Error ? error.message : String(error)}`,
+          });
+        }
+      } finally {
+        // ✅ FECHAR BROWSER APENAS AO TERMINAR O GRUPO
+        if (browser) {
+          await browser.close();
+          console.log(`[API-PARTES] Browser fechado para ${chaveGrupo}`);
+        }
       }
     }
 
