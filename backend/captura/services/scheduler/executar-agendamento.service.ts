@@ -3,14 +3,15 @@
 import type { Agendamento } from '@/backend/types/captura/agendamentos-types';
 import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import { acervoGeralCapture } from '@/backend/captura/services/trt/acervo-geral.service';
-import { arquivadosCapture } from '@/backend/captura/services/trt/arquivados.service';
-import { audienciasCapture } from '@/backend/captura/services/trt/audiencias.service';
-import { pendentesManifestacaoCapture } from '@/backend/captura/services/trt/pendentes-manifestacao.service';
+import { acervoGeralCapture, type AcervoGeralResult } from '@/backend/captura/services/trt/acervo-geral.service';
+import { arquivadosCapture, type ArquivadosResult } from '@/backend/captura/services/trt/arquivados.service';
+import { audienciasCapture, type AudienciasResult } from '@/backend/captura/services/trt/audiencias.service';
+import { pendentesManifestacaoCapture, type PendentesManifestacaoResult } from '@/backend/captura/services/trt/pendentes-manifestacao.service';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
 import { atualizarAgendamento } from '../agendamentos/atualizar-agendamento.service';
 import { recalcularProximaExecucaoAposExecucao } from '../agendamentos/calcular-proxima-execucao.service';
 import type { FiltroPrazoPendentes } from '@/backend/types/captura/trt-types';
+import { registrarCapturaRawLog } from '@/backend/captura/services/persistence/captura-raw-log.service';
 
 const ORDEM_FILTROS_PENDENTES: FiltroPrazoPendentes[] = ['sem_prazo', 'no_prazo'];
 
@@ -86,6 +87,21 @@ export async function executarAgendamento(
           grau: credCompleta.grau,
           erro: `Configuração do tribunal não encontrada: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
         });
+        await registrarCapturaRawLog({
+          captura_log_id: logId ?? undefined,
+          tipo_captura: agendamento.tipo_captura,
+          advogado_id: agendamento.advogado_id,
+          credencial_id: credCompleta.credentialId,
+          credencial_ids: agendamento.credencial_ids,
+          trt: credCompleta.tribunal,
+          grau: credCompleta.grau,
+          status: 'error',
+          requisicao: {
+            agendamento_id: agendamento.id,
+            parametros_extras: agendamento.parametros_extras,
+          },
+          erro: error instanceof Error ? error.message : 'Erro desconhecido',
+        });
         continue;
       }
 
@@ -98,11 +114,43 @@ export async function executarAgendamento(
               credential: credCompleta.credenciais,
               config: tribunalConfig,
             });
+            await registrarCapturaRawLog({
+              captura_log_id: logId ?? undefined,
+              tipo_captura: agendamento.tipo_captura,
+              advogado_id: agendamento.advogado_id,
+              credencial_id: credCompleta.credentialId,
+              credencial_ids: agendamento.credencial_ids,
+              trt: credCompleta.tribunal,
+              grau: credCompleta.grau,
+              status: 'success',
+              requisicao: {
+                agendamento_id: agendamento.id,
+              },
+              payload_bruto: (resultado as AcervoGeralResult).payloadBruto ?? (resultado as AcervoGeralResult).processos,
+              resultado_processado: (resultado as AcervoGeralResult).persistencia,
+              logs: (resultado as AcervoGeralResult).logs,
+            });
             break;
           case 'arquivados':
             resultado = await arquivadosCapture({
               credential: credCompleta.credenciais,
               config: tribunalConfig,
+            });
+            await registrarCapturaRawLog({
+              captura_log_id: logId ?? undefined,
+              tipo_captura: agendamento.tipo_captura,
+              advogado_id: agendamento.advogado_id,
+              credencial_id: credCompleta.credentialId,
+              credencial_ids: agendamento.credencial_ids,
+              trt: credCompleta.tribunal,
+              grau: credCompleta.grau,
+              status: 'success',
+              requisicao: {
+                agendamento_id: agendamento.id,
+              },
+              payload_bruto: (resultado as ArquivadosResult).payloadBruto ?? (resultado as ArquivadosResult).processos,
+              resultado_processado: (resultado as ArquivadosResult).persistencia,
+              logs: (resultado as ArquivadosResult).logs,
             });
             break;
           case 'audiencias':
@@ -112,6 +160,26 @@ export async function executarAgendamento(
               config: tribunalConfig,
               dataInicio: paramsAudiencias?.dataInicio,
               dataFim: paramsAudiencias?.dataFim,
+            });
+            await registrarCapturaRawLog({
+              captura_log_id: logId ?? undefined,
+              tipo_captura: agendamento.tipo_captura,
+              advogado_id: agendamento.advogado_id,
+              credencial_id: credCompleta.credentialId,
+              credencial_ids: agendamento.credencial_ids,
+              trt: credCompleta.tribunal,
+              grau: credCompleta.grau,
+              status: 'success',
+              requisicao: {
+                agendamento_id: agendamento.id,
+                dataInicioSolicitado: paramsAudiencias?.dataInicio,
+                dataFimSolicitado: paramsAudiencias?.dataFim,
+                dataInicioExecutado: (resultado as AudienciasResult).dataInicio,
+                dataFimExecutado: (resultado as AudienciasResult).dataFim,
+              },
+              payload_bruto: (resultado as AudienciasResult).paginasBrutas ?? (resultado as AudienciasResult).audiencias,
+              resultado_processado: (resultado as AudienciasResult).persistencia,
+              logs: (resultado as AudienciasResult).logs,
             });
             break;
           case 'pendentes': {
@@ -133,9 +201,50 @@ export async function executarAgendamento(
                 });
 
                 resultadosPendentes.push({ filtroPrazo: filtro, resultado: captura });
+
+                await registrarCapturaRawLog({
+                  captura_log_id: logId ?? undefined,
+                  tipo_captura: agendamento.tipo_captura,
+                  advogado_id: agendamento.advogado_id,
+                  credencial_id: credCompleta.credentialId,
+                  credencial_ids: agendamento.credencial_ids,
+                  trt: credCompleta.tribunal,
+                  grau: credCompleta.grau,
+                  status: 'success',
+                  requisicao: {
+                    agendamento_id: agendamento.id,
+                    filtroPrazo: filtro,
+                    filtrosSolicitados: filtrosParaExecutar,
+                  },
+                  payload_bruto: (captura as PendentesManifestacaoResult).payloadBruto ?? (captura as PendentesManifestacaoResult).processos,
+                  resultado_processado: {
+                    persistencia: (captura as PendentesManifestacaoResult).persistencia,
+                    documentosCapturados: (captura as PendentesManifestacaoResult).documentosCapturados,
+                    documentosFalhados: (captura as PendentesManifestacaoResult).documentosFalhados,
+                    errosDocumentos: (captura as PendentesManifestacaoResult).errosDocumentos,
+                  },
+                  logs: (captura as PendentesManifestacaoResult).logs,
+                });
               } catch (error) {
                 resultadosPendentes.push({
                   filtroPrazo: filtro,
+                  erro: error instanceof Error ? error.message : 'Erro desconhecido',
+                });
+
+                await registrarCapturaRawLog({
+                  captura_log_id: logId ?? undefined,
+                  tipo_captura: agendamento.tipo_captura,
+                  advogado_id: agendamento.advogado_id,
+                  credencial_id: credCompleta.credentialId,
+                  credencial_ids: agendamento.credencial_ids,
+                  trt: credCompleta.tribunal,
+                  grau: credCompleta.grau,
+                  status: 'error',
+                  requisicao: {
+                    agendamento_id: agendamento.id,
+                    filtroPrazo: filtro,
+                    filtrosSolicitados: filtrosParaExecutar,
+                  },
                   erro: error instanceof Error ? error.message : 'Erro desconhecido',
                 });
               }
@@ -163,6 +272,22 @@ export async function executarAgendamento(
           credencial_id: credCompleta.credentialId,
           tribunal: credCompleta.tribunal,
           grau: credCompleta.grau,
+          erro: error instanceof Error ? error.message : 'Erro desconhecido',
+        });
+
+        await registrarCapturaRawLog({
+          captura_log_id: logId ?? undefined,
+          tipo_captura: agendamento.tipo_captura,
+          advogado_id: agendamento.advogado_id,
+          credencial_id: credCompleta.credentialId,
+          credencial_ids: agendamento.credencial_ids,
+          trt: credCompleta.tribunal,
+          grau: credCompleta.grau,
+          status: 'error',
+          requisicao: {
+            agendamento_id: agendamento.id,
+            parametros_extras: agendamento.parametros_extras,
+          },
           erro: error instanceof Error ? error.message : 'Erro desconhecido',
         });
       }

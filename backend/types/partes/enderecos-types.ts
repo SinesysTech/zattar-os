@@ -33,9 +33,9 @@ export interface Endereco {
   id_pje: number | null;
   entidade_tipo: EntidadeTipoEndereco;
   entidade_id: number;
-  trt: string;
-  grau: 'primeiro_grau' | 'segundo_grau';
-  numero_processo: string;
+  trt: string | null;
+  grau: 'primeiro_grau' | 'segundo_grau' | null;
+  numero_processo: string | null;
   logradouro: string | null;
   numero: string | null;
   complemento: string | null;

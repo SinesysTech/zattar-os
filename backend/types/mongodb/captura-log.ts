@@ -24,5 +24,5 @@ export interface CapturaRawLogDocument {
   atualizado_em: Date;
 }
 
-export type CapturaRawLogCreate = Omit<CapturaRawLogDocument, '_id' | 'criado_em' | 'atualizado_em'>;
+export type CapturaRawLogCreate = Omit<CapturaRawLogDocument, '_id'>;
 
