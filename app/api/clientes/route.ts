@@ -183,7 +183,7 @@ export async function GET(request: NextRequest) {
 
     // 2. Obter parâmetros da query string
     const { searchParams } = new URL(request.url);
-    const params: ObterClientesParams = {
+    const params = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,

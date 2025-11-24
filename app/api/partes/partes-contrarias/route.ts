@@ -69,11 +69,12 @@ export async function GET(request: NextRequest) {
 
     // 2. Obter parâmetros da query string
     const { searchParams } = new URL(request.url);
-    const params: ListarClientesParams = {
+    const params = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,
       tipo_pessoa: (searchParams.get('tipo_pessoa') as 'pf' | 'pj' | null) || undefined,
+      incluir_endereco: false,
     };
 
     // 3. Listar partes contrárias (usa o mesmo serviço de clientes)

@@ -512,6 +512,68 @@ export async function buscarClientePorIdPessoaPje(
 }
 
 /**
+ * Busca um cliente por CPF
+ */
+export async function buscarClientePorCpf(cpf: string): Promise<Cliente | null> {
+  const cpfNormalizado = normalizarCpf(cpf);
+  const cacheKey = `clientes:cpf:${cpfNormalizado}`;
+  const cached = await getCached<Cliente>(cacheKey);
+  if (cached) {
+    console.log(`Cache hit for buscarClientePorCpf: ${cpfNormalizado}`);
+    return cached;
+  }
+
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('clientes')
+    .select('*')
+    .eq('cpf', cpfNormalizado)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Erro ao buscar cliente por CPF: ${error.message}`);
+  }
+
+  const cliente = data ? converterParaCliente(data) : null;
+  if (cliente) {
+    await setCached(cacheKey, cliente, 1200); // 20 minutes TTL
+  }
+  return cliente;
+}
+
+/**
+ * Busca um cliente por CNPJ
+ */
+export async function buscarClientePorCnpj(cnpj: string): Promise<Cliente | null> {
+  const cnpjNormalizado = normalizarCnpj(cnpj);
+  const cacheKey = `clientes:cnpj:${cnpjNormalizado}`;
+  const cached = await getCached<Cliente>(cacheKey);
+  if (cached) {
+    console.log(`Cache hit for buscarClientePorCnpj: ${cnpjNormalizado}`);
+    return cached;
+  }
+
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('clientes')
+    .select('*')
+    .eq('cnpj', cnpjNormalizado)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Erro ao buscar cliente por CNPJ: ${error.message}`);
+  }
+
+  const cliente = data ? converterParaCliente(data) : null;
+  if (cliente) {
+    await setCached(cacheKey, cliente, 1200); // 20 minutes TTL
+  }
+  return cliente;
+}
+
+/**
  * Lista clientes com filtros e paginação
  */
 export async function listarClientes(

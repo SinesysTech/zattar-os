@@ -115,7 +115,7 @@ export function parseCredenciaisFilters(selectedFilters: string[]): CredenciaisF
       const config = configMap.get(id);
       if (config && config.type === 'select') {
         if (id === 'active') {
-          filters[id as keyof CredenciaisFilters] = value === 'true';
+          filters.active = value === 'true';
         } else {
           filters[id as keyof CredenciaisFilters] = value as any;
         }

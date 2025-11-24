@@ -13,6 +13,25 @@ interface PendentesManifestacaoParams {
   advogado_id: number;
   credencial_ids: number[];
   filtroPrazo?: FiltroPrazoPendentes;
+  filtrosPrazo?: FiltroPrazoPendentes[];
+}
+
+const FILTROS_VALIDOS: FiltroPrazoPendentes[] = ['sem_prazo', 'no_prazo'];
+
+function normalizarFiltrosPrazo(
+  filtros?: FiltroPrazoPendentes[],
+  filtroUnico?: FiltroPrazoPendentes
+): FiltroPrazoPendentes[] {
+  const candidatos = filtros && Array.isArray(filtros) ? filtros : (filtroUnico ? [filtroUnico] : []);
+  const valores: FiltroPrazoPendentes[] = candidatos.length > 0 ? candidatos : ['sem_prazo'];
+  const invalidos = valores.filter((valor) => !FILTROS_VALIDOS.includes(valor));
+
+  if (invalidos.length > 0) {
+    throw new Error(`filtroPrazo/filtrosPrazo inválido(s): ${invalidos.join(', ')}`);
+  }
+
+  const unicos = Array.from(new Set(valores));
+  return unicos.sort((a, b) => FILTROS_VALIDOS.indexOf(a) - FILTROS_VALIDOS.indexOf(b));
 }
 
 /**
@@ -58,15 +77,21 @@ interface PendentesManifestacaoParams {
  *                 items:
  *                   type: integer
  *                 description: Array de IDs das credenciais a serem utilizadas na captura
- *               filtroPrazo:
- *                 type: string
- *                 enum: [no_prazo, sem_prazo]
- *                 default: sem_prazo
- *                 description: Filtro de prazo para processos pendentes
- *           example:
- *             advogado_id: 1
- *             credencial_ids: [1, 2, 3]
- *             filtroPrazo: "sem_prazo"
+             *               filtroPrazo:
+             *                 type: string
+             *                 enum: [no_prazo, sem_prazo]
+             *                 default: sem_prazo
+             *                 description: Filtro de prazo para processos pendentes
+             *               filtrosPrazo:
+             *                 type: array
+             *                 items:
+             *                   type: string
+             *                   enum: [no_prazo, sem_prazo]
+             *                 description: Lista de filtros de prazo para executar sequencialmente (ordem fixa: sem_prazo -> no_prazo)
+             *           example:
+             *             advogado_id: 1
+             *             credencial_ids: [1, 2, 3]
+             *             filtrosPrazo: ["sem_prazo", "no_prazo"]
  *     responses:
  *       200:
  *         description: Captura iniciada com sucesso (resposta assíncrona)
@@ -164,7 +189,7 @@ export async function POST(request: NextRequest) {
 
     // 2. Validar e parsear body da requisição
     const body = await request.json();
-    const { advogado_id, credencial_ids, filtroPrazo } = body as PendentesManifestacaoParams;
+    const { advogado_id, credencial_ids, filtroPrazo, filtrosPrazo } = body as PendentesManifestacaoParams;
 
     // Validações básicas
     if (!advogado_id || !credencial_ids || !Array.isArray(credencial_ids) || credencial_ids.length === 0) {
@@ -174,10 +199,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validar filtroPrazo se fornecido
-    if (filtroPrazo && filtroPrazo !== 'no_prazo' && filtroPrazo !== 'sem_prazo') {
+    // Normalizar filtros de prazo (permite filtro único ou lista)
+    let filtrosParaExecutar: FiltroPrazoPendentes[];
+    try {
+      filtrosParaExecutar = normalizarFiltrosPrazo(filtrosPrazo, filtroPrazo);
+    } catch (error) {
       return NextResponse.json(
-        { error: 'filtroPrazo deve ser "no_prazo" ou "sem_prazo"' },
+        { error: error instanceof Error ? error.message : 'Filtro de prazo inválido' },
         { status: 400 }
       );
     }
@@ -249,6 +277,7 @@ export async function POST(request: NextRequest) {
         grau: string;
         resultado?: unknown;
         erro?: string;
+        filtros?: Array<{ filtroPrazo: FiltroPrazoPendentes; resultado?: unknown; erro?: string }>;
       }> = [];
 
       for (const credCompleta of credenciaisOrdenadas) {
@@ -263,56 +292,76 @@ export async function POST(request: NextRequest) {
             credencial_id: credCompleta.credentialId,
             tribunal: credCompleta.tribunal,
             grau: credCompleta.grau,
+            filtros: [],
             erro: `Configuração do tribunal não encontrada: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
           });
           continue;
         }
 
-        try {
-          const resultado = await pendentesManifestacaoCapture({
-            credential: credCompleta.credenciais,
-            config: tribunalConfig,
-            filtroPrazo: filtroPrazo || 'sem_prazo',
-          });
+        const resultadosPorFiltro: Array<{
+          filtroPrazo: FiltroPrazoPendentes;
+          resultado?: unknown;
+          erro?: string;
+        }> = [];
 
-          console.log(`[Pendentes] Captura concluída: ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);
+        for (const filtro of filtrosParaExecutar) {
+          try {
+            const resultado = await pendentesManifestacaoCapture({
+              credential: credCompleta.credenciais,
+              config: tribunalConfig,
+              filtroPrazo: filtro,
+              capturarDocumentos: true,
+            });
 
-          resultados.push({
-            credencial_id: credCompleta.credentialId,
-            tribunal: credCompleta.tribunal,
-            grau: credCompleta.grau,
-            resultado,
-          });
-        } catch (error) {
-          console.error(`[Pendentes] Erro ao capturar ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId}):`, error);
-          
-          // Retornar erro específico se for erro de validação
-          const erroMsg = error instanceof Error && error.message.includes('Quantidade de processos')
-            ? error.message
-            : (error instanceof Error ? error.message : 'Erro desconhecido');
-          
-          resultados.push({
-            credencial_id: credCompleta.credentialId,
-            tribunal: credCompleta.tribunal,
-            grau: credCompleta.grau,
-            erro: erroMsg,
-          });
+            console.log(`[Pendentes] Captura concluída (${filtro}): ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);
+
+            resultadosPorFiltro.push({
+              filtroPrazo: filtro,
+              resultado,
+            });
+          } catch (error) {
+            console.error(`[Pendentes] Erro ao capturar ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId}) para filtro ${filtro}:`, error);
+            
+            const erroMsg = error instanceof Error && error.message.includes('Quantidade de processos')
+              ? error.message
+              : (error instanceof Error ? error.message : 'Erro desconhecido');
+            
+            resultadosPorFiltro.push({
+              filtroPrazo: filtro,
+              erro: erroMsg,
+            });
+          }
         }
+
+        resultados.push({
+          credencial_id: credCompleta.credentialId,
+          tribunal: credCompleta.tribunal,
+          grau: credCompleta.grau,
+          filtros: resultadosPorFiltro,
+        });
       }
 
       // Atualizar histórico após conclusão
       if (logId) {
         try {
-          const temErros = resultados.some((r) => 'erro' in r);
-          if (temErros) {
-            const erros = resultados
-              .filter((r) => 'erro' in r)
-              .map((r) => `${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${r.erro}`)
-              .join('; ');
-            await finalizarCapturaLogErro(logId, erros);
+          const errosColetados = resultados.flatMap((r) => {
+            const errosFiltro = r.filtros
+              ?.filter((f) => f.erro)
+              .map((f) => `${r.tribunal} ${r.grau} (ID ${r.credencial_id}) - ${f.filtroPrazo}: ${f.erro}`) || [];
+
+            if ((r as any).erro) {
+              return [`${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${(r as any).erro}`, ...errosFiltro];
+            }
+
+            return errosFiltro;
+          });
+
+          if (errosColetados.length > 0) {
+            await finalizarCapturaLogErro(logId, errosColetados.join('; '));
           } else {
             await finalizarCapturaLogSucesso(logId, {
               credenciais_processadas: resultados.length,
+              filtros_prazo: filtrosParaExecutar,
               resultados,
             });
           }
@@ -338,6 +387,7 @@ export async function POST(request: NextRequest) {
       capture_id: logId,
       data: {
         credenciais_processadas: credenciaisCompletas.length,
+        filtros_prazo: filtrosParaExecutar,
         message: 'A captura está sendo processada em background. Consulte o histórico para acompanhar o progresso.',
       },
     });
@@ -359,3 +409,11 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+
+
+
+
+
+
+

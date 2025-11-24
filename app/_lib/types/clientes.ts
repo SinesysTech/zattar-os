@@ -3,6 +3,8 @@
  * Re-exporta tipos do backend para uso em componentes React
  */
 
+import type { Cliente } from '@/backend/types/partes/clientes-types';
+
 // Re-exporta todos os tipos de clientes do backend
 export type {
   TipoPessoa,
@@ -19,6 +21,27 @@ export type {
   OrdenarPorCliente,
   OrdemCliente,
 } from '@/backend/types/partes/clientes-types';
+
+// Tipos para API de clientes
+export interface BuscarClientesParams {
+  pagina?: number;
+  limite?: number;
+  busca?: string;
+  tipoPessoa?: string;
+  ativo?: boolean;
+  incluirEndereco?: boolean;
+}
+
+export interface ClientesApiResponse {
+  success: boolean;
+  data: {
+    clientes: Cliente[];
+    pagina: number;
+    limite: number;
+    total: number;
+    totalPaginas: number;
+  };
+}
 
 // Tipos auxiliares para formulários
 export interface ClienteFormData {

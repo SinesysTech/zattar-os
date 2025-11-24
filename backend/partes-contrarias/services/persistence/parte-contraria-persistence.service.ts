@@ -467,6 +467,46 @@ export async function buscarParteContrariaPorIdPessoaPje(
 }
 
 /**
+ * Busca uma parte contrária por CPF
+ */
+export async function buscarParteContrariaPorCpf(cpf: string): Promise<ParteContraria | null> {
+  const cpfNormalizado = normalizarCpf(cpf);
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('partes_contrarias')
+    .select('*')
+    .eq('cpf', cpfNormalizado)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Erro ao buscar parte contrária por CPF: ${error.message}`);
+  }
+
+  return data ? converterParaParteContraria(data) : null;
+}
+
+/**
+ * Busca uma parte contrária por CNPJ
+ */
+export async function buscarParteContrariaPorCnpj(cnpj: string): Promise<ParteContraria | null> {
+  const cnpjNormalizado = normalizarCnpj(cnpj);
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('partes_contrarias')
+    .select('*')
+    .eq('cnpj', cnpjNormalizado)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Erro ao buscar parte contrária por CNPJ: ${error.message}`);
+  }
+
+  return data ? converterParaParteContraria(data) : null;
+}
+
+/**
  * Lista partes contrárias com filtros e paginação
  */
 export async function listarPartesContrarias(

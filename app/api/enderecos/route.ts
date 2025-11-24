@@ -147,9 +147,9 @@ export async function POST(request: NextRequest) {
 
     const resultado = await criarEndereco(dadosEndereco);
 
-    if (!resultado.success) {
+    if (!resultado.sucesso) {
       return NextResponse.json(
-        { error: resultado.error || 'Erro ao criar endereço' },
+        { error: resultado.erro || 'Erro ao criar endereço' },
         { status: 400 }
       );
     }
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        data: resultado.data,
+        data: resultado.endereco,
       },
       { status: 201 }
     );

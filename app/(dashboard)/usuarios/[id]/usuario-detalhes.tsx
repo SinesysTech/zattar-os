@@ -50,22 +50,11 @@ interface UsuarioDetalhesProps {
   id: number;
 }
 
-// Recursos e suas operações disponíveis
-const RECURSOS_CONFIG: Record<string, string[]> = {
-  advogados: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
-  credenciais: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
-  acervo: ['listar', 'visualizar', 'criar', 'editar', 'deletar', 'atribuir_responsavel'],
-  audiencias: ['listar', 'visualizar', 'criar', 'editar', 'deletar', 'atribuir_responsavel'],
-  pendentes: ['listar', 'visualizar', 'criar', 'editar', 'deletar', 'baixar'],
-  expedientes: ['listar', 'visualizar', 'criar', 'editar', 'deletar', 'baixar'],
-  clientes: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
-  contratos: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
-  processos: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
-  captura: ['executar', 'visualizar_historico', 'deletar_historico'],
-  agendamentos: ['listar', 'visualizar', 'criar', 'editar', 'deletar', 'executar'],
-  usuarios: ['listar', 'visualizar', 'criar', 'editar', 'deletar', 'gerenciar_permissoes'],
-  cargos: ['listar', 'visualizar', 'criar', 'editar', 'deletar', 'atribuir'],
-};
+// Importar matriz de permissões do backend
+import { MATRIZ_PERMISSOES } from '@/backend/types/permissoes/types';
+
+// Usar a matriz oficial do backend
+const RECURSOS_CONFIG = MATRIZ_PERMISSOES;
 
 const RECURSO_LABELS: Record<string, string> = {
   advogados: 'Advogados',
@@ -73,13 +62,20 @@ const RECURSO_LABELS: Record<string, string> = {
   acervo: 'Acervo',
   audiencias: 'Audiências',
   pendentes: 'Pendentes',
-  expedientes: 'Expedientes',
-  clientes: 'Clientes',
-  contratos: 'Contratos',
-  processos: 'Processos',
-  captura: 'Captura',
-  agendamentos: 'Agendamentos',
+  expedientes_manuais: 'Expedientes Manuais',
   usuarios: 'Usuários',
+  clientes: 'Clientes',
+  partes_contrarias: 'Partes Contrárias',
+  terceiros: 'Terceiros',
+  representantes: 'Representantes',
+  enderecos: 'Endereços',
+  contratos: 'Contratos',
+  processo_partes: 'Processo Partes',
+  acordos_condenacoes: 'Acordos e Condenações',
+  parcelas: 'Parcelas',
+  agendamentos: 'Agendamentos',
+  captura: 'Captura',
+  tipos_expedientes: 'Tipos de Expedientes',
   cargos: 'Cargos',
 };
 
@@ -89,13 +85,35 @@ const OPERACAO_LABELS: Record<string, string> = {
   criar: 'Criar',
   editar: 'Editar',
   deletar: 'Deletar',
-  atribuir_responsavel: 'Atribuir',
-  baixar: 'Baixar',
-  executar: 'Executar',
-  visualizar_historico: 'Ver Histórico',
-  deletar_historico: 'Del. Histórico',
+  atribuir_responsavel: 'Atribuir Resp.',
+  desatribuir_responsavel: 'Desatribuir Resp.',
+  transferir_responsavel: 'Transferir Resp.',
+  editar_url_virtual: 'Editar URL Virtual',
+  baixar_expediente: 'Baixar Expediente',
+  reverter_baixa: 'Reverter Baixa',
+  editar_tipo_descricao: 'Editar Tipo/Desc.',
+  ativar_desativar: 'Ativar/Desativar',
   gerenciar_permissoes: 'Ger. Permissões',
-  atribuir: 'Atribuir',
+  sincronizar: 'Sincronizar',
+  associar_processo: 'Associar Processo',
+  desassociar_processo: 'Desassociar Proc.',
+  vincular_parte: 'Vincular Parte',
+  desvincular_parte: 'Desvincular Parte',
+  gerenciar_parcelas: 'Ger. Parcelas',
+  receber_pagamento: 'Receber Pagamento',
+  pagar: 'Pagar',
+  registrar_repasse: 'Registrar Repasse',
+  editar_valores: 'Editar Valores',
+  marcar_como_recebida: 'Marcar Recebida',
+  marcar_como_paga: 'Marcar Paga',
+  anexar_comprovante: 'Anexar Comprov.',
+  executar: 'Executar',
+  executar_acervo_geral: 'Exec. Acervo',
+  executar_arquivados: 'Exec. Arquivados',
+  executar_audiencias: 'Exec. Audiências',
+  executar_pendentes: 'Exec. Pendentes',
+  visualizar_historico: 'Ver Histórico',
+  gerenciar_credenciais: 'Ger. Credenciais',
 };
 
 export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
@@ -242,7 +260,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   // Loading state
   if (isLoading) {
     return (
-      <div className="container max-w-6xl py-8 space-y-6">
+      <div className="container mx-auto px-4 py-8 space-y-6 max-w-[1600px]">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push('/usuarios')}>
             <ArrowLeft className="h-5 w-5" />
@@ -262,7 +280,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   // Error state
   if (error || !usuario) {
     return (
-      <div className="container max-w-6xl py-8 space-y-6">
+      <div className="container mx-auto px-4 py-8 space-y-6 max-w-[1600px]">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push('/usuarios')}>
             <ArrowLeft className="h-5 w-5" />
@@ -288,8 +306,25 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     );
   }
 
+  // Funções de formatação
+  const formatarCPF = (cpf: string | null) => {
+    if (!cpf) return '-';
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+  };
+
+  const formatarTelefone = (telefone: string | null) => {
+    if (!telefone) return '-';
+    const cleaned = telefone.replace(/\D/g, '');
+    if (cleaned.length === 11) {
+      return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    } else if (cleaned.length === 10) {
+      return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+    }
+    return telefone;
+  };
+
   return (
-    <div className="container max-w-6xl py-8 space-y-6">
+    <div className="container mx-auto px-4 py-8 space-y-6 max-w-[1600px]">
       {/* Header com breadcrumb */}
       <div className="flex items-center gap-4">
         <Button
@@ -333,11 +368,11 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">CPF</p>
-              <p className="text-sm">{usuario.cpf || '-'}</p>
+              <p className="text-sm">{formatarCPF(usuario.cpf)}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">Telefone</p>
-              <p className="text-sm">{usuario.telefone || '-'}</p>
+              <p className="text-sm">{formatarTelefone(usuario.telefone)}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">OAB</p>

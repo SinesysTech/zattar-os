@@ -4,9 +4,11 @@
 import {
   listarClientes as listarClientesDb,
   listarClientesComEndereco as listarClientesComEnderecoDb,
-  type ListarClientesParams,
-  type ListarClientesResult,
 } from '../persistence/cliente-persistence.service';
+import type {
+  ListarClientesParams,
+  ListarClientesResult,
+} from '@/backend/types/partes/clientes-types';
 
 /**
  * Parâmetros estendidos para incluir endereços

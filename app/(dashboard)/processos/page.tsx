@@ -27,12 +27,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { ArrowUpDown, ArrowUp, ArrowDown, Eye, CalendarClock } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, Eye, CalendarClock, Pencil, Loader2 } from 'lucide-react';
 import { useAcervo } from '@/app/_lib/hooks/use-acervo';
+import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { GrauBadges } from './components/grau-badges';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Acervo, ProcessoUnificado } from '@/backend/types/acervo/types';
 import type { ProcessosFilters } from '@/app/_lib/types/acervo';
+import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 /**
  * Type guard para verificar se é ProcessoUnificado
@@ -407,13 +409,177 @@ function PartesColumnHeader({ ordenarPor, ordem, onSortChange }: PartesColumnHea
 }
 
 /**
+ * Componente para atribuir responsável a um processo
+ */
+function ResponsavelCell({
+  processo,
+  onSuccess,
+  usuarios
+}: {
+  processo: Acervo | ProcessoUnificado;
+  onSuccess: () => void;
+  usuarios: Usuario[];
+}) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleSelect = async (value: string) => {
+    setIsLoading(true);
+    try {
+      const responsavelId = value === 'null' || value === '' ? null : parseInt(value, 10);
+
+      const response = await fetch(`/api/acervo/${processo.id}/responsavel`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ responsavelId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao atribuir responsável');
+      }
+
+      setIsOpen(false);
+      onSuccess();
+    } catch (error) {
+      console.error('Erro:', error);
+      onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const responsavelAtual = usuarios.find(u => u.id === processo.responsavel_id);
+
+  return (
+    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
+      <span className="text-sm">
+        {responsavelAtual ? responsavelAtual.nomeExibicao : 'Sem responsável'}
+      </span>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
+            title="Editar responsável"
+            disabled={isLoading}
+          >
+            {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Pencil className="h-3 w-3" />}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[250px] p-2">
+          <div className="space-y-1">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => handleSelect('null')}
+              disabled={isLoading}
+            >
+              Sem responsável
+            </Button>
+            {usuarios.map((usuario) => (
+              <Button
+                key={usuario.id}
+                variant="ghost"
+                className="w-full justify-start text-sm"
+                onClick={() => handleSelect(usuario.id.toString())}
+                disabled={isLoading}
+              >
+                {usuario.nomeExibicao}
+              </Button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+/**
+ * Componente de header customizado para coluna de Responsável
+ */
+interface ResponsavelColumnHeaderProps {
+  ordenarPor: 'responsavel_id' | null;
+  ordem: 'asc' | 'desc';
+  onSortChange: (columnId: 'responsavel_id' | null, direction: 'asc' | 'desc' | null) => void;
+}
+
+function ResponsavelColumnHeader({ ordenarPor, ordem, onSortChange }: ResponsavelColumnHeaderProps) {
+  const [open, setOpen] = React.useState(false);
+
+  const handleSort = (direction: 'asc' | 'desc') => {
+    onSortChange('responsavel_id', direction);
+    setOpen(false);
+  };
+
+  const handleClear = () => {
+    onSortChange(null, null);
+    setOpen(false);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          className="h-8 p-0 hover:bg-transparent text-sm font-medium"
+        >
+          <span>Responsável</span>
+          {ordenarPor === 'responsavel_id' ? (
+            ordem === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />
+          ) : (
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-48 p-2" align="start">
+        <div className="space-y-1">
+          <div className="px-2 py-1.5 text-sm font-semibold">Ordenar por:</div>
+          <Button
+            variant="ghost"
+            className="w-full justify-start"
+            onClick={() => handleSort('asc')}
+          >
+            A-Z
+            {ordenarPor === 'responsavel_id' && ordem === 'asc' && <ArrowUp className="ml-1 h-3 w-3" />}
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start"
+            onClick={() => handleSort('desc')}
+          >
+            Z-A
+            {ordenarPor === 'responsavel_id' && ordem === 'desc' && <ArrowDown className="ml-1 h-3 w-3" />}
+          </Button>
+          {ordenarPor === 'responsavel_id' && (
+            <>
+              <div className="my-1 h-px bg-border" />
+              <Button
+                variant="ghost"
+                className="w-full justify-start"
+                onClick={handleClear}
+              >
+                Limpar ordenação
+              </Button>
+            </>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+/**
  * Define as colunas da tabela de processos
  */
 function criarColunas(
-  ordenarPor: 'data_autuacao' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau' | null,
+  ordenarPor: 'data_autuacao' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | 'responsavel_id' | 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau' | null,
   ordem: 'asc' | 'desc',
   onPartesSortChange: (columnId: 'nome_parte_autora' | 'nome_parte_re' | null, direction: 'asc' | 'desc' | null) => void,
   onTribunalSortChange: (sortType: 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau' | null, direction: 'asc' | 'desc' | null) => void,
+  onResponsavelSortChange: (columnId: 'responsavel_id' | null, direction: 'asc' | 'desc' | null) => void,
+  usuarios: Usuario[],
+  onSuccess: () => void,
   router: ReturnType<typeof useRouter>
 ): ColumnDef<Acervo | ProcessoUnificado>[] {
   return [
@@ -506,6 +672,27 @@ function criarColunas(
       },
     },
     {
+      id: 'responsavel',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <ResponsavelColumnHeader
+            ordenarPor={ordenarPor === 'responsavel_id' ? 'responsavel_id' : null}
+            ordem={ordem}
+            onSortChange={onResponsavelSortChange}
+          />
+        </div>
+      ),
+      enableSorting: false,
+      size: 180,
+      cell: ({ row }) => (
+        <ResponsavelCell
+          processo={row.original}
+          onSuccess={onSuccess}
+          usuarios={usuarios}
+        />
+      ),
+    },
+    {
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-center">
@@ -564,10 +751,13 @@ export default function ProcessosPage() {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
-  const [ordenarPor, setOrdenarPor] = React.useState<'data_autuacao' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau' | null>('data_autuacao');
+  const [ordenarPor, setOrdenarPor] = React.useState<'data_autuacao' | 'numero_processo' | 'nome_parte_autora' | 'nome_parte_re' | 'responsavel_id' | 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau' | null>('data_autuacao');
   const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('desc');
   const [filtros, setFiltros] = React.useState<ProcessosFilters>({});
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+
+  // Buscar usuários ativos
+  const { usuarios } = useUsuarios({ ativo: true, limite: 100 });
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -585,6 +775,9 @@ export default function ProcessosPage() {
       ordenarPorApi = 'data_autuacao';
     } else if (ordenarPor === 'grau') {
       // Para ordenação por grau, também não temos campo na API
+      ordenarPorApi = 'data_autuacao';
+    } else if (ordenarPor === 'responsavel_id') {
+      // responsavel_id não é suportado pela API, usar data_autuacao
       ordenarPorApi = 'data_autuacao';
     } else if (ordenarPor) {
       ordenarPorApi = ordenarPor;
@@ -613,8 +806,8 @@ export default function ProcessosPage() {
     };
   }, [pagina, limite, buscaDebounced, ordenarPor, ordem, filtros]);
   
-  const { processos, paginacao, isLoading, error } = useAcervo(params);
-  
+  const { processos, paginacao, isLoading, error, refetch } = useAcervo(params);
+
   const handleSortingChange = React.useCallback((columnId: string | null, direction: 'asc' | 'desc' | null) => {
     if (columnId && direction) {
       setOrdenarPor(columnId as typeof ordenarPor);
@@ -645,6 +838,16 @@ export default function ProcessosPage() {
       setOrdem('desc');
       // Remover filtro de grau apenas se foi adicionado automaticamente (não pelo usuário)
       // Isso será tratado no useMemo dos params
+    }
+  }, []);
+
+  const handleResponsavelSortChange = React.useCallback((columnId: 'responsavel_id' | null, direction: 'asc' | 'desc' | null) => {
+    if (columnId && direction) {
+      setOrdenarPor(columnId);
+      setOrdem(direction);
+    } else {
+      setOrdenarPor(null);
+      setOrdem('desc');
     }
   }, []);
 
@@ -679,8 +882,17 @@ export default function ProcessosPage() {
   }, [processos, ordenarPor, ordem]);
 
   const colunas = React.useMemo(
-    () => criarColunas(ordenarPor, ordem, handlePartesSortChange, handleTribunalSortChange, router),
-    [ordenarPor, ordem, handlePartesSortChange, handleTribunalSortChange, router]
+    () => criarColunas(
+      ordenarPor,
+      ordem,
+      handlePartesSortChange,
+      handleTribunalSortChange,
+      handleResponsavelSortChange,
+      usuarios || [],
+      refetch,
+      router
+    ),
+    [ordenarPor, ordem, handlePartesSortChange, handleTribunalSortChange, handleResponsavelSortChange, usuarios, refetch, router]
   );
 
   const filterOptions = React.useMemo(() => buildProcessosFilterOptions(), []);

@@ -5,8 +5,8 @@ import {
   buscarClientePorId,
   buscarClientePorCpf,
   buscarClientePorCnpj,
-  type Cliente,
 } from '../persistence/cliente-persistence.service';
+import type { Cliente } from '@/backend/types/partes/clientes-types';
 
 /**
  * Busca um cliente por ID

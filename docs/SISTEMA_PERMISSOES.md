@@ -18,7 +18,7 @@ O sistema de permissões do Sinesys é **granular** e baseado em **usuários** (
 
 ### Características Principais:
 
-✅ **82 permissões granulares** distribuídas em 13 recursos
+✅ **126 permissões granulares** distribuídas em 20 recursos
 ✅ **Super Admin**: Bypass total de permissões
 ✅ **Cargos**: Organização interna (sem relação com permissões)
 ✅ **Cache in-memory**: TTL de 5 minutos para performance
@@ -73,7 +73,7 @@ Requisição → Autenticação → Autorização → Lógica de Negócio
 
 ## Matriz de Permissões
 
-### Recursos e Operações (82 permissões)
+### Recursos e Operações (126 permissões)
 
 | # | Recurso | Operações | Total |
 |---|---------|-----------|-------|
@@ -86,13 +86,19 @@ Requisição → Autenticação → Autorização → Lógica de Negócio
 | 7 | **usuarios** | listar, visualizar, criar, editar, deletar, ativar_desativar, gerenciar_permissoes, sincronizar | 8 |
 | 8 | **clientes** | listar, visualizar, criar, editar, deletar | 5 |
 | 9 | **partes_contrarias** | listar, visualizar, criar, editar, deletar | 5 |
-| 10 | **contratos** | listar, visualizar, criar, editar, deletar, associar_processo, desassociar_processo | 7 |
-| 11 | **agendamentos** | listar, visualizar, criar, editar, deletar, executar, ativar_desativar | 7 |
-| 12 | **captura** | executar_acervo_geral, executar_arquivados, executar_audiencias, executar_pendentes, visualizar_historico, gerenciar_credenciais | 6 |
-| 13 | **tipos_expedientes** | listar, visualizar, criar, editar, deletar | 5 |
-| 14 | **cargos** | listar, visualizar, criar, editar, deletar, ativar_desativar | 6 |
+| 10 | **terceiros** | listar, visualizar, criar, editar, deletar | 5 |
+| 11 | **representantes** | listar, visualizar, criar, editar, deletar | 5 |
+| 12 | **enderecos** | listar, visualizar, criar, editar, deletar | 5 |
+| 13 | **contratos** | listar, visualizar, criar, editar, deletar, associar_processo, desassociar_processo | 7 |
+| 14 | **processo_partes** | listar, visualizar, criar, editar, deletar, vincular_parte, desvincular_parte | 7 |
+| 15 | **acordos_condenacoes** | listar, visualizar, criar, editar, deletar, gerenciar_parcelas, receber_pagamento, pagar, registrar_repasse | 9 |
+| 16 | **parcelas** | listar, visualizar, criar, editar, deletar, editar_valores, marcar_como_recebida, marcar_como_paga, anexar_comprovante, registrar_repasse | 10 |
+| 17 | **agendamentos** | listar, visualizar, criar, editar, deletar, executar, ativar_desativar | 7 |
+| 18 | **captura** | executar_acervo_geral, executar_arquivados, executar_audiencias, executar_pendentes, visualizar_historico, gerenciar_credenciais | 6 |
+| 19 | **tipos_expedientes** | listar, visualizar, criar, editar, deletar | 5 |
+| 20 | **cargos** | listar, visualizar, criar, editar, deletar, ativar_desativar | 6 |
 
-**TOTAL: 82 permissões**
+**TOTAL: 126 permissões**
 
 ---
 
@@ -174,7 +180,7 @@ GET /api/permissoes/usuarios/1
     "usuario_id": 1,
     "is_super_admin": true,
     "permissoes": [
-      // ... todas as 81 permissões
+      // ... todas as 126 permissões
     ]
   }
 }
@@ -213,8 +219,8 @@ GET /api/permissoes/recursos
       },
       // ... outros recursos
     ],
-    "totalRecursos": 13,
-    "totalPermissoes": 81
+    "totalRecursos": 20,
+    "totalPermissoes": 126
   }
 }
 ```
@@ -393,7 +399,13 @@ As seguintes rotas ainda usam apenas autenticação (`authenticateRequest`) e po
 - **Usuários**: `/api/usuarios/*` - Permissões: listar, visualizar, criar, editar, deletar, ativar_desativar, gerenciar_permissoes, sincronizar
 - **Clientes**: `/api/clientes/*` - Permissões: listar, visualizar, criar, editar, deletar
 - **Partes Contrárias**: `/api/partes-contrarias/*` - Permissões: listar, visualizar, criar, editar, deletar
+- **Terceiros**: `/api/terceiros/*` - Permissões: listar, visualizar, criar, editar, deletar
+- **Representantes**: `/api/representantes/*` - Permissões: listar, visualizar, criar, editar, deletar
+- **Endereços**: `/api/enderecos/*` - Permissões: listar, visualizar, criar, editar, deletar
 - **Contratos**: `/api/contratos/*` - Permissões: listar, visualizar, criar, editar, deletar, associar_processo, desassociar_processo
+- **Processo Partes**: `/api/processo-partes/*` - Permissões: listar, visualizar, criar, editar, deletar, vincular_parte, desvincular_parte
+- **Acordos e Condenações**: `/api/acordos-condenacoes/*` - Permissões: listar, visualizar, criar, editar, deletar, gerenciar_parcelas, receber_pagamento, pagar, registrar_repasse
+- **Parcelas**: `/api/parcelas/*` - Permissões: listar, visualizar, criar, editar, deletar, editar_valores, marcar_como_recebida, marcar_como_paga, anexar_comprovante, registrar_repasse
 - **Agendamentos**: `/api/agendamentos/*` - Permissões: listar, visualizar, criar, editar, deletar, executar, ativar_desativar
 - **Captura**: `/api/captura/*` - Permissões: executar_acervo_geral, executar_arquivados, executar_audiencias, executar_pendentes, visualizar_historico, gerenciar_credenciais
 - **Tipos de Expedientes**: `/api/tipos-expedientes/*` - Permissões: listar, visualizar, criar, editar, deletar

@@ -386,7 +386,7 @@ async function processarEndereco(
     return null;
   }
 
-  const enderecoPJE = parte.dadosCompletos.endereco;
+  const enderecoPJE = parte.dadosCompletos.endereco as any;
 
   try {
     const result = await upsertEnderecoPorIdPje({

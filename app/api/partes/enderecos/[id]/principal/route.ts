@@ -85,7 +85,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     // Set as principal
     const result = await definirEnderecoPrincipal({
-      endereco_id: enderecoId,
+      id: enderecoId,
       entidade_tipo: endereco.entidade_tipo,
       entidade_id: endereco.entidade_id,
     });

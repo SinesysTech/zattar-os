@@ -10,6 +10,19 @@ import { pendentesManifestacaoCapture } from '@/backend/captura/services/trt/pen
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
 import { atualizarAgendamento } from '../agendamentos/atualizar-agendamento.service';
 import { recalcularProximaExecucaoAposExecucao } from '../agendamentos/calcular-proxima-execucao.service';
+import type { FiltroPrazoPendentes } from '@/backend/types/captura/trt-types';
+
+const ORDEM_FILTROS_PENDENTES: FiltroPrazoPendentes[] = ['sem_prazo', 'no_prazo'];
+
+const resolverFiltrosPendentes = (
+  filtros?: FiltroPrazoPendentes[] | null,
+  filtroUnico?: FiltroPrazoPendentes | null
+): FiltroPrazoPendentes[] => {
+  const candidatos = filtros && filtros.length ? filtros : (filtroUnico ? [filtroUnico] : []);
+  const valores: FiltroPrazoPendentes[] = candidatos.length ? candidatos : ['sem_prazo'];
+  const unicos = Array.from(new Set(valores));
+  return unicos.sort((a, b) => ORDEM_FILTROS_PENDENTES.indexOf(a) - ORDEM_FILTROS_PENDENTES.indexOf(b));
+};
 
 /**
  * Executa um agendamento de captura
@@ -57,6 +70,7 @@ export async function executarAgendamento(
       grau: string;
       resultado?: unknown;
       erro?: string;
+      filtros?: Array<{ filtroPrazo: FiltroPrazoPendentes; resultado?: unknown; erro?: string }>;
     }> = [];
 
     for (const credCompleta of credenciaisCompletas) {
@@ -100,23 +114,48 @@ export async function executarAgendamento(
               dataFim: paramsAudiencias?.dataFim,
             });
             break;
-          case 'pendentes':
-            const paramsPendentes = agendamento.parametros_extras as { filtroPrazo?: 'no_prazo' | 'sem_prazo' } | null;
-            resultado = await pendentesManifestacaoCapture({
-              credential: credCompleta.credenciais,
-              config: tribunalConfig,
-              filtroPrazo: paramsPendentes?.filtroPrazo || 'sem_prazo',
-            });
+          case 'pendentes': {
+            const paramsPendentes = agendamento.parametros_extras as { filtroPrazo?: FiltroPrazoPendentes; filtrosPrazo?: FiltroPrazoPendentes[] } | null;
+            const filtrosParaExecutar = resolverFiltrosPendentes(
+              paramsPendentes?.filtrosPrazo || null,
+              paramsPendentes?.filtroPrazo || null
+            );
+
+            const resultadosPendentes: Array<{ filtroPrazo: FiltroPrazoPendentes; resultado?: unknown; erro?: string }> = [];
+
+            for (const filtro of filtrosParaExecutar) {
+              try {
+                const captura = await pendentesManifestacaoCapture({
+                  credential: credCompleta.credenciais,
+                  config: tribunalConfig,
+                  filtroPrazo: filtro,
+                  capturarDocumentos: true,
+                });
+
+                resultadosPendentes.push({ filtroPrazo: filtro, resultado: captura });
+              } catch (error) {
+                resultadosPendentes.push({
+                  filtroPrazo: filtro,
+                  erro: error instanceof Error ? error.message : 'Erro desconhecido',
+                });
+              }
+            }
+
+            resultado = { filtros: resultadosPendentes };
             break;
+          }
           default:
             throw new Error(`Tipo de captura não suportado: ${agendamento.tipo_captura}`);
         }
+
+        const filtrosResultado = (resultado as { filtros?: Array<{ filtroPrazo: FiltroPrazoPendentes; resultado?: unknown; erro?: string }> } | null)?.filtros;
 
         resultados.push({
           credencial_id: credCompleta.credentialId,
           tribunal: credCompleta.tribunal,
           grau: credCompleta.grau,
           resultado,
+          ...(filtrosResultado ? { filtros: filtrosResultado } : {}),
         });
       } catch (error) {
         console.error(`Erro ao capturar ${credCompleta.tribunal} ${credCompleta.grau}:`, error);
@@ -137,16 +176,30 @@ export async function executarAgendamento(
     .then(async (resultados) => {
       if (logId) {
         try {
-          const temErros = resultados.some((r) => 'erro' in r);
-          if (temErros) {
-            const erros = resultados
-              .filter((r) => 'erro' in r)
-              .map((r) => `${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${r.erro}`)
-              .join('; ');
-            await finalizarCapturaLogErro(logId, erros);
+          const errosColetados = resultados.flatMap((r) => {
+            const errosFiltro = r.filtros
+              ?.filter((f) => f.erro)
+              .map((f) => `${r.tribunal} ${r.grau} (ID ${r.credencial_id}) - ${f.filtroPrazo}: ${f.erro}`) || [];
+
+            if ((r as any).erro) {
+              return [`${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${(r as any).erro}`, ...errosFiltro];
+            }
+
+            return errosFiltro;
+          });
+
+          if (errosColetados.length > 0) {
+            await finalizarCapturaLogErro(logId, errosColetados.join('; '));
           } else {
+            const filtrosExecutados = Array.from(
+              new Set(
+                resultados.flatMap((r) => r.filtros?.map((f) => f.filtroPrazo) || [])
+              )
+            );
+
             await finalizarCapturaLogSucesso(logId, {
               credenciais_processadas: resultados.length,
+              filtros_prazo: filtrosExecutados.length > 0 ? filtrosExecutados : undefined,
               resultados,
             });
           }
@@ -185,4 +238,3 @@ export async function executarAgendamento(
 
   return { captureId: logId };
 }
-

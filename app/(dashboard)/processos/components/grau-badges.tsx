@@ -41,10 +41,15 @@ export function GrauBadges({ instances, grauAtual, grausAtivos }: GrauBadgesProp
     return null;
   }
 
+  // Ordenar instâncias: primeiro grau primeiro, depois segundo grau
+  const instancesOrdenadas = [...instances].sort((a, b) => {
+    const ordem = { primeiro_grau: 1, segundo_grau: 2 };
+    return ordem[a.grau] - ordem[b.grau];
+  });
+
   return (
     <div className="flex items-center gap-1.5 flex-wrap">
-      {instances.map((instance) => {
-        const isGrauAtual = instance.is_grau_atual || instance.grau === grauAtual;
+      {instancesOrdenadas.map((instance) => {
         const label = GRAU_LABELS[instance.grau];
         const variant = GRAU_VARIANTS[instance.grau];
 
@@ -52,12 +57,8 @@ export function GrauBadges({ instances, grauAtual, grausAtivos }: GrauBadgesProp
           <TooltipProvider key={instance.id}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge
-                  variant={isGrauAtual ? 'default' : variant}
-                  className={isGrauAtual ? 'font-semibold' : ''}
-                >
+                <Badge variant={variant}>
                   {label}
-                  {isGrauAtual && ' (Atual)'}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
@@ -76,11 +77,6 @@ export function GrauBadges({ instances, grauAtual, grausAtivos }: GrauBadgesProp
                     <strong>Data Autuação:</strong>{' '}
                     {new Date(instance.data_autuacao).toLocaleDateString('pt-BR')}
                   </div>
-                  {isGrauAtual && (
-                    <div className="mt-2 pt-2 border-t text-muted-foreground">
-                      Este é o grau atual do processo
-                    </div>
-                  )}
                 </div>
               </TooltipContent>
             </Tooltip>

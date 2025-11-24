@@ -147,6 +147,7 @@ export interface AudienciasParams extends BaseCapturaParams {
  */
 export interface PendentesParams extends BaseCapturaParams {
   filtroPrazo?: FiltroPrazoPendentes;
+  filtrosPrazo?: FiltroPrazoPendentes[];
 }
 
 /**

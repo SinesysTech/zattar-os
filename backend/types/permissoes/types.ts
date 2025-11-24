@@ -16,7 +16,13 @@ export type Recurso =
   | 'usuarios'
   | 'clientes'
   | 'partes_contrarias'
+  | 'terceiros'
+  | 'representantes'
+  | 'enderecos'
   | 'contratos'
+  | 'processo_partes'
+  | 'acordos_condenacoes'
+  | 'parcelas'
   | 'agendamentos'
   | 'captura'
   | 'tipos_expedientes'
@@ -51,6 +57,19 @@ export type Operacao =
   // Operações específicas de contratos
   | 'associar_processo'
   | 'desassociar_processo'
+  // Operações específicas de processo_partes
+  | 'vincular_parte'
+  | 'desvincular_parte'
+  // Operações específicas de acordos/condenações
+  | 'gerenciar_parcelas'
+  | 'receber_pagamento'
+  | 'pagar'
+  | 'registrar_repasse'
+  // Operações específicas de parcelas
+  | 'editar_valores'
+  | 'marcar_como_recebida'
+  | 'marcar_como_paga'
+  | 'anexar_comprovante'
   // Operações específicas de agendamentos
   | 'executar'
   // Operações específicas de captura
@@ -63,7 +82,7 @@ export type Operacao =
 
 /**
  * Matriz de permissões completa do sistema
- * Total: 82 permissões granulares
+ * Total: 126 permissões granulares
  */
 export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
   // Advogados (5 permissões)
@@ -144,6 +163,15 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
   // Partes Contrárias (5 permissões)
   partes_contrarias: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
 
+  // Terceiros (5 permissões)
+  terceiros: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
+
+  // Representantes (5 permissões)
+  representantes: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
+
+  // Endereços (5 permissões)
+  enderecos: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
+
   // Contratos (7 permissões)
   contratos: [
     'listar',
@@ -153,6 +181,44 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'deletar',
     'associar_processo',
     'desassociar_processo',
+  ],
+
+  // Processo Partes - Vínculo de partes com processos (7 permissões)
+  processo_partes: [
+    'listar',
+    'visualizar',
+    'criar',
+    'editar',
+    'deletar',
+    'vincular_parte',
+    'desvincular_parte',
+  ],
+
+  // Acordos e Condenações (9 permissões)
+  acordos_condenacoes: [
+    'listar',
+    'visualizar',
+    'criar',
+    'editar',
+    'deletar',
+    'gerenciar_parcelas',
+    'receber_pagamento',
+    'pagar',
+    'registrar_repasse',
+  ],
+
+  // Parcelas - Gestão de pagamentos parcelados (10 permissões)
+  parcelas: [
+    'listar',
+    'visualizar',
+    'criar',
+    'editar',
+    'deletar',
+    'editar_valores',
+    'marcar_como_recebida',
+    'marcar_como_paga',
+    'anexar_comprovante',
+    'registrar_repasse',
   ],
 
   // Agendamentos de Captura (7 permissões)

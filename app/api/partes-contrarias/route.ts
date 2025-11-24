@@ -169,7 +169,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const params: ObterPartesContrariasParams = {
+    const params = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,
