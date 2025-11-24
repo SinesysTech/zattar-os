@@ -112,7 +112,6 @@ function converterParaCliente(data: Record<string, unknown>): Cliente {
       grau_instrucao: (data.grau_instrucao as string | null) ?? null,
       necessidade_especial: (data.necessidade_especial as string | null) ?? null,
       inscricao_estadual: null,
-      inscricao_municipal: null,
       data_abertura: null,
       orgao_publico: null,
       ds_tipo_pessoa: null,
@@ -270,7 +269,6 @@ export async function criarCliente(
     } else {
       dadosNovos.cnpj = normalizarCnpj(params.cnpj);
       dadosNovos.inscricao_estadual = params.inscricao_estadual?.trim() || null;
-      dadosNovos.inscricao_municipal = params.inscricao_municipal?.trim() || null;
       dadosNovos.data_abertura = params.data_abertura || null;
       dadosNovos.orgao_publico = params.orgao_publico ?? null;
       dadosNovos.ds_tipo_pessoa = params.ds_tipo_pessoa?.trim() || null;
@@ -399,8 +397,6 @@ export async function atualizarCliente(
       if (params.cnpj !== undefined) dadosAtualizacao.cnpj = normalizarCnpj(params.cnpj);
       if (params.inscricao_estadual !== undefined)
         dadosAtualizacao.inscricao_estadual = params.inscricao_estadual?.trim() || null;
-      if (params.inscricao_municipal !== undefined)
-        dadosAtualizacao.inscricao_municipal = params.inscricao_municipal?.trim() || null;
       if (params.data_abertura !== undefined) dadosAtualizacao.data_abertura = params.data_abertura;
       if (params.orgao_publico !== undefined) dadosAtualizacao.orgao_publico = params.orgao_publico;
       if (params.ds_tipo_pessoa !== undefined)

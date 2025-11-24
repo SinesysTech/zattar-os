@@ -207,7 +207,6 @@ export interface CriarClientePJParams {
   numero_comercial?: string | null;
   fax?: string | null;
   inscricao_estadual?: string | null;
-  inscricao_municipal?: string | null;
   data_abertura?: string | null;
   orgao_publico?: boolean | null;
   ds_tipo_pessoa?: string | null;
@@ -291,7 +290,6 @@ export interface AtualizarClientePJParams {
   numero_comercial?: string | null;
   fax?: string | null;
   inscricao_estadual?: string | null;
-  inscricao_municipal?: string | null;
   data_abertura?: string | null;
   orgao_publico?: boolean | null;
   ds_tipo_pessoa?: string | null;
