@@ -52,6 +52,7 @@ interface TableToolbarProps {
   filterGroups?: FilterGroup[]
   selectedFilters: string[]
   onFiltersChange: (filters: string[]) => void
+  extraButtons?: React.ReactNode
   onNewClick?: () => void
   newButtonTooltip?: string
   className?: string

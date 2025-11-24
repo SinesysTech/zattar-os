@@ -7,6 +7,7 @@ import { audienciasCapture } from '@/backend/captura/services/trt/audiencias.ser
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
 import { ordenarCredenciaisPorTRT } from '@/backend/captura/utils/ordenar-credenciais';
+import { registrarCapturaRawLog } from '@/backend/captura/services/persistence/captura-raw-log.service';
 
 interface AudienciasParams {
   advogado_id: number;
@@ -270,6 +271,23 @@ export async function POST(request: NextRequest) {
             grau: credCompleta.grau,
             erro: `Configuração do tribunal não encontrada: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
           });
+
+          await registrarCapturaRawLog({
+            captura_log_id: logId ?? undefined,
+            tipo_captura: 'audiencias',
+            advogado_id,
+            credencial_id: credCompleta.credentialId,
+            credencial_ids: credencial_ids,
+            trt: credCompleta.tribunal,
+            grau: credCompleta.grau,
+            status: 'error',
+            requisicao: {
+              dataInicioSolicitado: dataInicio,
+              dataFimSolicitado: dataFim,
+              codigoSituacao: status || 'M',
+            },
+            erro: error instanceof Error ? error.message : 'Erro desconhecido',
+          });
           continue;
         }
 
@@ -290,12 +308,50 @@ export async function POST(request: NextRequest) {
             grau: credCompleta.grau,
             resultado,
           });
+
+          await registrarCapturaRawLog({
+            captura_log_id: logId ?? undefined,
+            tipo_captura: 'audiencias',
+            advogado_id,
+            credencial_id: credCompleta.credentialId,
+            credencial_ids: credencial_ids,
+            trt: credCompleta.tribunal,
+            grau: credCompleta.grau,
+            status: 'success',
+            requisicao: {
+              dataInicioSolicitado: dataInicio,
+              dataFimSolicitado: dataFim,
+              codigoSituacao: status || 'M',
+              dataInicioExecutado: resultado.dataInicio,
+              dataFimExecutado: resultado.dataFim,
+            },
+            payload_bruto: resultado.paginasBrutas ?? resultado.audiencias,
+            resultado_processado: resultado.persistencia,
+            logs: resultado.logs,
+          });
         } catch (error) {
           console.error(`[Audiências] Erro ao capturar ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId}):`, error);
           resultados.push({
             credencial_id: credCompleta.credentialId,
             tribunal: credCompleta.tribunal,
             grau: credCompleta.grau,
+            erro: error instanceof Error ? error.message : 'Erro desconhecido',
+          });
+
+          await registrarCapturaRawLog({
+            captura_log_id: logId ?? undefined,
+            tipo_captura: 'audiencias',
+            advogado_id,
+            credencial_id: credCompleta.credentialId,
+            credencial_ids: credencial_ids,
+            trt: credCompleta.tribunal,
+            grau: credCompleta.grau,
+            status: 'error',
+            requisicao: {
+              dataInicioSolicitado: dataInicio,
+              dataFimSolicitado: dataFim,
+              codigoSituacao: status || 'M',
+            },
             erro: error instanceof Error ? error.message : 'Erro desconhecido',
           });
         }

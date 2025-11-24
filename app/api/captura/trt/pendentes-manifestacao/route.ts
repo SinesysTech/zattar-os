@@ -7,6 +7,7 @@ import { pendentesManifestacaoCapture } from '@/backend/captura/services/trt/pen
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
 import { ordenarCredenciaisPorTRT } from '@/backend/captura/utils/ordenar-credenciais';
+import { registrarCapturaRawLog } from '@/backend/captura/services/persistence/captura-raw-log.service';
 import type { FiltroPrazoPendentes } from '@/backend/types/captura/trt-types';
 
 interface PendentesManifestacaoParams {
@@ -295,6 +296,21 @@ export async function POST(request: NextRequest) {
             filtros: [],
             erro: `Configuração do tribunal não encontrada: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
           });
+
+          await registrarCapturaRawLog({
+            captura_log_id: logId ?? undefined,
+            tipo_captura: 'pendentes',
+            advogado_id,
+            credencial_id: credCompleta.credentialId,
+            credencial_ids: credencial_ids,
+            trt: credCompleta.tribunal,
+            grau: credCompleta.grau,
+            status: 'error',
+            requisicao: {
+              filtrosSolicitados: filtrosParaExecutar,
+            },
+            erro: error instanceof Error ? error.message : 'Erro desconhecido',
+          });
           continue;
         }
 
@@ -319,6 +335,29 @@ export async function POST(request: NextRequest) {
               filtroPrazo: filtro,
               resultado,
             });
+
+            await registrarCapturaRawLog({
+              captura_log_id: logId ?? undefined,
+              tipo_captura: 'pendentes',
+              advogado_id,
+              credencial_id: credCompleta.credentialId,
+              credencial_ids: credencial_ids,
+              trt: credCompleta.tribunal,
+              grau: credCompleta.grau,
+              status: 'success',
+              requisicao: {
+                filtroPrazo: filtro,
+                filtrosSolicitados: filtrosParaExecutar,
+              },
+              payload_bruto: resultado.payloadBruto ?? resultado.processos,
+              resultado_processado: {
+                persistencia: resultado.persistencia,
+                documentosCapturados: resultado.documentosCapturados,
+                documentosFalhados: resultado.documentosFalhados,
+                errosDocumentos: resultado.errosDocumentos,
+              },
+              logs: resultado.logs,
+            });
           } catch (error) {
             console.error(`[Pendentes] Erro ao capturar ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId}) para filtro ${filtro}:`, error);
             
@@ -328,6 +367,22 @@ export async function POST(request: NextRequest) {
             
             resultadosPorFiltro.push({
               filtroPrazo: filtro,
+              erro: erroMsg,
+            });
+
+            await registrarCapturaRawLog({
+              captura_log_id: logId ?? undefined,
+              tipo_captura: 'pendentes',
+              advogado_id,
+              credencial_id: credCompleta.credentialId,
+              credencial_ids: credencial_ids,
+              trt: credCompleta.tribunal,
+              grau: credCompleta.grau,
+              status: 'error',
+              requisicao: {
+                filtroPrazo: filtro,
+                filtrosSolicitados: filtrosParaExecutar,
+              },
               erro: erroMsg,
             });
           }

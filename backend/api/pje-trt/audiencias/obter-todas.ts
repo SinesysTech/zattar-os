@@ -108,7 +108,7 @@ export async function obterTodasAudiencias(
   // Mas ainda assim retornamos array vazio para não quebrar o fluxo
   if (primeiraPagina.resultado.length === 0) {
     console.log('ℹ️ [obterTodasAudiencias] Array resultado está vazio (mas totalRegistros > 0)');
-    return [];
+    return { audiencias: [], paginas: [primeiraPagina] };
   }
 
   console.log(`✅ [obterTodasAudiencias] Adicionando ${primeiraPagina.resultado.length} audiências da primeira página`);

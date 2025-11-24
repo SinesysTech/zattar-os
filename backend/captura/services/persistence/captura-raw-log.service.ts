@@ -1,7 +1,7 @@
 import type { CapturaRawLogCreate, StatusCapturaRaw } from '@/backend/types/mongodb/captura-log';
 import { getCapturaRawLogsCollection } from '@/backend/utils/mongodb/collections';
 
-export interface RegistrarCapturaRawLogParams extends Omit<CapturaRawLogCreate, 'status'> {
+export interface RegistrarCapturaRawLogParams extends Omit<CapturaRawLogCreate, 'status' | 'criado_em' | 'atualizado_em'> {
   status?: StatusCapturaRaw;
 }
 
@@ -28,8 +28,8 @@ export async function registrarCapturaRawLog(
       resultado_processado: params.resultado_processado,
       logs: params.logs,
       erro: params.erro,
-      created_at: new Date(),
-      updated_at: new Date(),
+      criado_em: new Date(),
+      atualizado_em: new Date(),
     };
 
     await collection.insertOne(documento);
