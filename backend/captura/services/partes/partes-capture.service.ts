@@ -23,10 +23,12 @@ import { upsertParteContrariaPorIdPessoa } from '@/backend/partes-contrarias/ser
 import { upsertTerceiroPorIdPessoa } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
 import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
 import { upsertRepresentantePorIdPessoa } from '@/backend/representantes/services/representantes-persistence.service';
+import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
 import type { CriarClientePFParams, CriarClientePJParams } from '@/backend/types/partes/clientes-types';
 import type { CriarParteContrariaPFParams, CriarParteContrariaPJParams } from '@/backend/types/partes/partes-contrarias-types';
 import type { CriarTerceiroPFParams, CriarTerceiroPJParams } from '@/backend/types/partes/terceiros-types';
 import type { GrauAcervo } from '@/backend/types/acervo/types';
+import type { EntidadeTipoEndereco } from '@/backend/types/partes/enderecos-types';
 
 /**
  * Interface para dados básicos do processo necessários para captura
@@ -56,8 +58,9 @@ export interface ProcessoParaCaptura {
  * 2. Para cada parte:
  *    a. Identifica tipo (cliente/parte_contraria/terceiro)
  *    b. Faz upsert da entidade apropriada
- *    c. Salva representantes da parte
- *    d. Cria vínculo em processo_partes
+ *    c. Processa e salva endereço (se houver)
+ *    d. Salva representantes da parte
+ *    e. Cria vínculo em processo_partes
  * 3. Retorna resultado com contadores e erros
  *
  * TRATAMENTO DE ERROS:
@@ -129,7 +132,10 @@ export async function capturarPartesProcesso(
           else if (tipoParte === 'parte_contraria') resultado.partesContrarias++;
           else if (tipoParte === 'terceiro') resultado.terceiros++;
 
-          // 2c. Salva representantes da parte
+          // 2c. Processa e salva endereço (se houver)
+          await processarEndereco(parte, tipoParte, entidadeId);
+
+          // 2d. Salva representantes da parte
           if (parte.representantes && parte.representantes.length > 0) {
             const repsCount = await processarRepresentantes(
               parte.representantes,
@@ -139,7 +145,7 @@ export async function capturarPartesProcesso(
             resultado.representantes += repsCount;
           }
 
-          // 2d. Cria vínculo processo-parte
+          // 2e. Cria vínculo processo-parte
           const vinculoCriado = await criarVinculoProcessoParte(
             processo,
             tipoParte,
@@ -363,5 +369,61 @@ async function criarVinculoProcessoParte(
       error
     );
     return false;
+  }
+}
+
+/**
+ * Processa e salva endereço de uma parte
+ * Retorna ID do endereço criado/atualizado ou null se falhou
+ */
+async function processarEndereco(
+  parte: PartePJE,
+  tipoParte: TipoParteClassificacao,
+  entidadeId: number
+): Promise<number | null> {
+  // Verifica se a parte tem endereço
+  if (!parte.dadosCompletos?.endereco) {
+    return null;
+  }
+
+  const enderecoPJE = parte.dadosCompletos.endereco;
+
+  try {
+    const result = await upsertEnderecoPorIdPje({
+      id_pje: enderecoPJE.id,
+      entidade_tipo: tipoParte as EntidadeTipoEndereco,
+      entidade_id: entidadeId,
+      logradouro: enderecoPJE.logradouro || undefined,
+      numero: enderecoPJE.numero || undefined,
+      complemento: enderecoPJE.complemento || undefined,
+      bairro: enderecoPJE.bairro || undefined,
+      id_municipio_pje: enderecoPJE.idMunicipio || undefined,
+      municipio: enderecoPJE.municipio || undefined,
+      municipio_ibge: enderecoPJE.municipioIbge || undefined,
+      estado_id_pje: enderecoPJE.estado?.id || undefined,
+      estado_sigla: enderecoPJE.estado?.sigla || undefined,
+      estado_descricao: enderecoPJE.estado?.descricao || undefined,
+      pais_id_pje: enderecoPJE.pais?.id || undefined,
+      pais_codigo: enderecoPJE.pais?.codigo || undefined,
+      pais_descricao: enderecoPJE.pais?.descricao || undefined,
+      cep: enderecoPJE.nroCep || undefined,
+      classificacoes_endereco: enderecoPJE.classificacoesEndereco || undefined,
+      correspondencia: enderecoPJE.correspondencia ?? undefined,
+      situacao: enderecoPJE.situacao || undefined,
+      id_usuario_cadastrador_pje: enderecoPJE.idUsuarioCadastrador || undefined,
+      data_alteracao_pje: enderecoPJE.dtAlteracao || undefined,
+    });
+
+    if (result.sucesso && result.endereco) {
+      console.log(
+        `[CAPTURA-PARTES] Endereço salvo para ${parte.nome}: ${result.endereco.logradouro}, ${result.endereco.municipio}-${result.endereco.estado_sigla}`
+      );
+      return result.endereco.id;
+    }
+
+    return null;
+  } catch (error) {
+    console.error(`[CAPTURA-PARTES] Erro ao processar endereço de ${parte.nome}:`, error);
+    return null;
   }
 }

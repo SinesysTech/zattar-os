@@ -8,12 +8,13 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
-import { Users, UserX, UserCog } from 'lucide-react';
+import { Users, UserX, UserCog, Scale } from 'lucide-react';
 import { ClientesTab } from './components/clientes-tab';
 import { PartesContrariasTab } from './components/partes-contrarias-tab';
 import { TerceirosTab } from './components/terceiros-tab';
+import { RepresentantesTab } from './components/representantes-tab';
 
-type TabValue = 'clientes' | 'partes-contrarias' | 'terceiros';
+type TabValue = 'clientes' | 'partes-contrarias' | 'terceiros' | 'representantes';
 
 export default function PartesPage() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function PartesPage() {
   const tabParam = searchParams.get('tab') as TabValue | null;
 
   // Define a aba ativa baseada no query param, com fallback para 'clientes'
-  const activeTab: TabValue = tabParam && ['clientes', 'partes-contrarias', 'terceiros'].includes(tabParam)
+  const activeTab: TabValue = tabParam && ['clientes', 'partes-contrarias', 'terceiros', 'representantes'].includes(tabParam)
     ? tabParam
     : 'clientes';
 
@@ -38,7 +39,7 @@ export default function PartesPage() {
         onValueChange={handleTabChange}
         className="space-y-4"
       >
-        <TabsList className="grid w-full max-w-md grid-cols-3">
+        <TabsList className="grid w-full max-w-3xl grid-cols-4">
           <TabsTrigger value="clientes" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Clientes
@@ -50,6 +51,10 @@ export default function PartesPage() {
           <TabsTrigger value="terceiros" className="flex items-center gap-2">
             <UserCog className="h-4 w-4" />
             Terceiros
+          </TabsTrigger>
+          <TabsTrigger value="representantes" className="flex items-center gap-2">
+            <Scale className="h-4 w-4" />
+            Representantes
           </TabsTrigger>
         </TabsList>
 
@@ -63,6 +68,10 @@ export default function PartesPage() {
 
         <TabsContent value="terceiros" className="space-y-4">
           <TerceirosTab />
+        </TabsContent>
+
+        <TabsContent value="representantes" className="space-y-4">
+          <RepresentantesTab />
         </TabsContent>
       </ClientOnlyTabs>
     </div>
