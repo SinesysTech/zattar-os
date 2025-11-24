@@ -4,10 +4,10 @@
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaAudienciasParams } from './trt-capture.service';
 import { obterTodasAudiencias } from '@/backend/api/pje-trt';
-import type { Audiencia } from '@/backend/types/pje-trt/types';
+import type { Audiencia, PagedResponse } from '@/backend/types/pje-trt/types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
-import { captureLogService } from '../persistence/capture-log.service';
+import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 
 /**
  * Resultado da captura de audiências
@@ -18,6 +18,8 @@ export interface AudienciasResult {
   dataInicio: string;
   dataFim: string;
   persistencia?: SalvarAudienciasResult;
+  paginasBrutas?: PagedResponse<Audiencia>[];
+  logs?: LogEntry[];
 }
 
 /**
@@ -119,7 +121,7 @@ export async function audienciasCapture(
       codigoSituacao,
     });
 
-    const audiencias = await obterTodasAudiencias(
+    const { audiencias, paginas } = await obterTodasAudiencias(
       page,
       dataInicio,
       dataFim,
@@ -137,6 +139,7 @@ export async function audienciasCapture(
 
     // 4. Salvar audiências no banco de dados
     let persistencia: SalvarAudienciasResult | undefined;
+    let logsPersistencia: LogEntry[] | undefined;
     try {
       const advogadoDb = await buscarOuCriarAdvogadoPorCpf(
         authResult.advogadoInfo.cpf,
@@ -159,11 +162,12 @@ export async function audienciasCapture(
         orgaosJulgadoresCriados: persistencia.orgaosJulgadoresCriados,
       });
 
-      // Imprimir resumo dos logs
-      captureLogService.imprimirResumo();
     } catch (error) {
       console.error('❌ Erro ao salvar audiências no banco:', error);
       // Não falha a captura se a persistência falhar - apenas loga o erro
+    } finally {
+      captureLogService.imprimirResumo();
+      logsPersistencia = captureLogService.consumirLogs();
     }
 
     return {
@@ -172,6 +176,8 @@ export async function audienciasCapture(
       dataInicio,
       dataFim,
       persistencia,
+      paginasBrutas: paginas,
+      logs: logsPersistencia,
     };
   } finally {
     // 4. Limpar recursos (fechar navegador)

@@ -126,6 +126,23 @@ export interface ParteContrariaPessoaJuridica extends ParteContrariaBase {
 export type ParteContraria = ParteContrariaPessoaFisica | ParteContrariaPessoaJuridica;
 
 /**
+ * Tipos com endereço populado (para queries com JOIN)
+ */
+import type { Endereco } from '@/backend/types/partes/enderecos-types';
+
+export interface ParteContrariaPessoaFisicaComEndereco extends ParteContrariaPessoaFisica {
+  endereco?: Endereco | null;
+}
+
+export interface ParteContrariaPessoaJuridicaComEndereco extends ParteContrariaPessoaJuridica {
+  endereco?: Endereco | null;
+}
+
+export type ParteContrariaComEndereco =
+  | ParteContrariaPessoaFisicaComEndereco
+  | ParteContrariaPessoaJuridicaComEndereco;
+
+/**
  * Dados para criar parte contrária PF
  */
 export interface CriarParteContrariaPFParams {

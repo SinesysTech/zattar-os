@@ -9,7 +9,7 @@ import {
 import type { Processo } from '@/backend/types/pje-trt/types';
 import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
-import { captureLogService } from '../persistence/capture-log.service';
+import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 
 /**
  * Resultado da captura de processos arquivados
@@ -18,6 +18,8 @@ export interface ArquivadosResult {
   processos: Processo[];
   total: number;
   persistencia?: SalvarAcervoResult;
+  logs?: LogEntry[];
+  payloadBruto?: Processo[];
 }
 
 /**
@@ -75,6 +77,7 @@ export async function arquivadosCapture(
 
     // 5. Salvar processos no banco de dados
     let persistencia: SalvarAcervoResult | undefined;
+    let logsPersistencia: LogEntry[] | undefined;
     try {
       const advogadoDb = await buscarOuCriarAdvogadoPorCpf(
         advogadoInfo.cpf,
@@ -96,18 +99,20 @@ export async function arquivadosCapture(
         naoAtualizados: persistencia.naoAtualizados,
         erros: persistencia.erros,
       });
-
-      // Imprimir resumo dos logs
-      captureLogService.imprimirResumo();
     } catch (error) {
       console.error('❌ Erro ao salvar processos arquivados no banco:', error);
       // Não falha a captura se a persistência falhar - apenas loga o erro
+    } finally {
+      captureLogService.imprimirResumo();
+      logsPersistencia = captureLogService.consumirLogs();
     }
 
     return {
       processos,
       total: processos.length,
       persistencia,
+      logs: logsPersistencia,
+      payloadBruto: processos,
     };
   } finally {
     // 5. Limpar recursos (fechar navegador)

@@ -33,6 +33,9 @@ export interface Endereco {
   id_pje: number | null;
   entidade_tipo: EntidadeTipoEndereco;
   entidade_id: number;
+  trt: string;
+  grau: 'primeiro_grau' | 'segundo_grau';
+  numero_processo: string;
   logradouro: string | null;
   numero: string | null;
   complemento: string | null;
@@ -43,13 +46,16 @@ export interface Endereco {
   estado_id_pje: number | null;
   estado_sigla: string | null;
   estado_descricao: string | null;
+  estado: string | null;
   pais_id_pje: number | null;
   pais_codigo: string | null;
   pais_descricao: string | null;
+  pais: string | null;
   cep: string | null;
   classificacoes_endereco: ClassificacaoEndereco[] | null; // JSONB array
   correspondencia: boolean | null;
   situacao: SituacaoEndereco | null;
+  dados_pje_completo: Record<string, unknown> | null;
   id_usuario_cadastrador_pje: number | null;
   data_alteracao_pje: string | null; // ISO timestamp
   ativo: boolean | null;
@@ -64,6 +70,9 @@ export interface CriarEnderecoParams {
   id_pje?: number;
   entidade_tipo: EntidadeTipoEndereco;
   entidade_id: number;
+  trt?: string;
+  grau?: 'primeiro_grau' | 'segundo_grau';
+  numero_processo?: string;
   logradouro?: string;
   numero?: string;
   complemento?: string;
@@ -74,13 +83,16 @@ export interface CriarEnderecoParams {
   estado_id_pje?: number;
   estado_sigla?: string;
   estado_descricao?: string;
+  estado?: string;
   pais_id_pje?: number;
   pais_codigo?: string;
   pais_descricao?: string;
+  pais?: string;
   cep?: string;
   classificacoes_endereco?: ClassificacaoEndereco[];
   correspondencia?: boolean;
   situacao?: SituacaoEndereco;
+  dados_pje_completo?: Record<string, unknown>;
   id_usuario_cadastrador_pje?: number;
   data_alteracao_pje?: string;
   ativo?: boolean;
@@ -94,6 +106,9 @@ export interface AtualizarEnderecoParams {
   id_pje?: number;
   entidade_tipo?: EntidadeTipoEndereco;
   entidade_id?: number;
+  trt?: string;
+  grau?: 'primeiro_grau' | 'segundo_grau';
+  numero_processo?: string;
   logradouro?: string;
   numero?: string;
   complemento?: string;
@@ -104,13 +119,16 @@ export interface AtualizarEnderecoParams {
   estado_id_pje?: number;
   estado_sigla?: string;
   estado_descricao?: string;
+  estado?: string;
   pais_id_pje?: number;
   pais_codigo?: string;
   pais_descricao?: string;
+  pais?: string;
   cep?: string;
   classificacoes_endereco?: ClassificacaoEndereco[];
   correspondencia?: boolean;
   situacao?: SituacaoEndereco;
+  dados_pje_completo?: Record<string, unknown>;
   id_usuario_cadastrador_pje?: number;
   data_alteracao_pje?: string;
   ativo?: boolean;
@@ -147,13 +165,20 @@ export interface ListarEnderecosParams {
   entidade_tipo?: EntidadeTipoEndereco;
   entidade_id?: number;
 
+  // Filtros por processo
+  trt?: string;
+  grau?: 'primeiro_grau' | 'segundo_grau';
+  numero_processo?: string;
+
   // Busca textual
   busca?: string; // Busca em logradouro, bairro, municipio, estado
 
   // Filtros específicos
   municipio?: string;
   estado_sigla?: string;
+  estado?: string;
   pais_codigo?: string;
+  pais?: string;
   cep?: string;
   correspondencia?: boolean;
   situacao?: SituacaoEndereco;

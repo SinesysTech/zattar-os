@@ -135,6 +135,15 @@ class CaptureLogService {
   }
 
   /**
+   * Retorna os logs acumulados e limpa o buffer
+   */
+  consumirLogs(): LogEntry[] {
+    const logs = [...this.logs];
+    this.limpar();
+    return logs;
+  }
+
+  /**
    * Retorna estatísticas dos logs
    */
   getEstatisticas(): {

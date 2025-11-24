@@ -3,8 +3,10 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { obterClientes } from '@/backend/clientes/services/clientes/listar-clientes.service';
-import type { ListarClientesParams } from '@/backend/types/partes';
+import {
+  obterPartesContrarias,
+  type ObterPartesContrariasParams,
+} from '@/backend/partes-contrarias/services/partes-contrarias/listar-partes-contrarias.service';
 
 /**
  * @swagger
@@ -69,7 +71,7 @@ export async function GET(request: NextRequest) {
 
     // 2. Obter parâmetros da query string
     const { searchParams } = new URL(request.url);
-    const params = {
+    const params: ObterPartesContrariasParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,
@@ -77,19 +79,13 @@ export async function GET(request: NextRequest) {
       incluir_endereco: false,
     };
 
-    // 3. Listar partes contrárias (usa o mesmo serviço de clientes)
-    const resultado = await obterClientes(params);
+    // 3. Listar partes contrárias com o serviço dedicado
+    const resultado = await obterPartesContrarias(params);
 
-    // 4. Adaptar resposta para o formato esperado pelo frontend
+    // 4. Responder no formato esperado pelo frontend
     return NextResponse.json({
       success: true,
-      data: {
-        partesContrarias: resultado.clientes,
-        total: resultado.total,
-        pagina: resultado.pagina,
-        limite: resultado.limite,
-        totalPaginas: resultado.totalPaginas,
-      },
+      data: resultado,
     });
   } catch (error) {
     console.error('Erro ao listar partes contrárias:', error);
