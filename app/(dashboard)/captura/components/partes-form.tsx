@@ -4,21 +4,18 @@ import { useMemo, useState } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
-import { capturarPartes, GRAUS, TRT_CODIGOS, type CapturaPartesParams } from '@/app/api/captura/captura';
-import type { CodigoTRT, GrauTRT } from '@/app/_lib/types/credenciais';
-import { Checkbox } from '@/components/ui/checkbox';
+import { capturarPartes, type CapturaPartesParams } from '@/app/api/captura/captura';
+import type { Credencial } from '@/app/_lib/types/credenciais';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
 const parseListaProcessos = (value: string): string[] => {
   if (!value) return [];
-
   const items = value
     .split(/[\n,;]+/)
     .map((item) => item.trim().replace(/\s+/g, ''))
     .filter((item) => item.length > 0);
-
   return Array.from(new Set(items));
 };
 
@@ -27,8 +24,7 @@ const normalizeNumeroProcesso = (value: string): string => value.trim().replace(
 export function PartesForm() {
   const [advogadoId, setAdvogadoId] = useState<number | null>(null);
   const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
-  const [trtsSelecionados, setTrtsSelecionados] = useState<CodigoTRT[]>([]);
-  const [grausSelecionados, setGrausSelecionados] = useState<GrauTRT[]>([]);
+  const [credenciaisDisponiveis, setCredenciaisDisponiveis] = useState<Credencial[]>([]);
   const [numeroProcesso, setNumeroProcesso] = useState('');
   const [numerosProcessoTexto, setNumerosProcessoTexto] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -42,21 +38,27 @@ export function PartesForm() {
   const numerosProcesso = useMemo(() => parseListaProcessos(numerosProcessoTexto), [numerosProcessoTexto]);
   const numeroProcessoUnico = useMemo(() => normalizeNumeroProcesso(numeroProcesso), [numeroProcesso]);
   const totalProcessosManuais = useMemo(() => {
-    const extras = numeroProcessoUnico ? 1 : 0;
-    const conjunto = new Set(numerosProcesso);
+    const conjunto = new Set<string>(numerosProcesso);
     if (numeroProcessoUnico) {
       conjunto.add(numeroProcessoUnico);
     }
     return conjunto.size;
   }, [numerosProcesso, numeroProcessoUnico]);
 
-  const toggleValor = <T,>(lista: T[], valor: T, ativo: boolean): T[] => {
-    if (ativo) {
-      if (lista.includes(valor)) return lista;
-      return [...lista, valor];
-    }
-    return lista.filter((item) => item !== valor);
-  };
+  const credSelecionadasDetalhes = useMemo(
+    () => credenciaisDisponiveis.filter((credencial) => credenciaisSelecionadas.includes(credencial.id)),
+    [credenciaisDisponiveis, credenciaisSelecionadas]
+  );
+
+  const trtsDerivados = useMemo(
+    () => Array.from(new Set(credSelecionadasDetalhes.map((cred) => cred.tribunal))),
+    [credSelecionadasDetalhes]
+  );
+
+  const grausDerivados = useMemo(
+    () => Array.from(new Set(credSelecionadasDetalhes.map((cred) => cred.grau))),
+    [credSelecionadasDetalhes]
+  );
 
   const handleCaptura = async () => {
     if (!validarCamposCaptura(advogadoId, credenciaisSelecionadas)) {
@@ -73,14 +75,14 @@ export function PartesForm() {
     }
 
     const possuiFiltros =
-      trtsSelecionados.length > 0 ||
-      grausSelecionados.length > 0 ||
+      trtsDerivados.length > 0 ||
+      grausDerivados.length > 0 ||
       totalProcessosManuais > 0;
 
     if (!possuiFiltros) {
       setResult({
         success: false,
-        error: 'Selecione pelo menos um TRT, um grau ou informe números de processo para iniciar a captura.',
+        error: 'Selecione pelo menos uma credencial válida ou informe números de processo para iniciar a captura.',
       });
       return;
     }
@@ -90,11 +92,11 @@ export function PartesForm() {
       credencial_ids: credenciaisSelecionadas,
     };
 
-    if (trtsSelecionados.length > 0) {
-      payload.trts = trtsSelecionados;
+    if (trtsDerivados.length > 0) {
+      payload.trts = trtsDerivados;
     }
-    if (grausSelecionados.length > 0) {
-      payload.graus = grausSelecionados;
+    if (grausDerivados.length > 0) {
+      payload.graus = grausDerivados;
     }
     if (numeroProcessoUnico) {
       payload.numero_processo = numeroProcessoUnico;
@@ -136,53 +138,25 @@ export function PartesForm() {
         credenciaisSelecionadas={credenciaisSelecionadas}
         onAdvogadoChange={setAdvogadoId}
         onCredenciaisChange={setCredenciaisSelecionadas}
+        onCredenciaisDisponiveisChange={setCredenciaisDisponiveis}
       >
         <div className="space-y-6">
-          <div className="space-y-2">
-            <Label>Tribunais (TRT)</Label>
-            <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
-              {TRT_CODIGOS.map((codigo) => (
-                <label
-                  key={codigo}
-                  className="flex items-center gap-2 rounded-md border border-border/60 px-3 py-2 text-sm"
-                >
-                  <Checkbox
-                    checked={trtsSelecionados.includes(codigo)}
-                    onCheckedChange={(checked) =>
-                      setTrtsSelecionados((prev) => toggleValor(prev, codigo, checked === true))
-                    }
-                  />
-                  <span>{codigo}</span>
-                </label>
-              ))}
+          {credSelecionadasDetalhes.length > 0 && (
+            <div className="space-y-2">
+              <Label>Escopo da captura</Label>
+              <div className="rounded-md border border-dashed border-border/60 p-3 text-xs text-muted-foreground space-y-1">
+                <p>
+                  Tribunais (TRTs) incluídos: <span className="font-medium text-foreground">{trtsDerivados.join(', ') || '-'}</span>
+                </p>
+                <p>
+                  Graus considerados: <span className="font-medium text-foreground">{grausDerivados.join(', ') || '-'}</span>
+                </p>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Os filtros acima são derivados automaticamente das credenciais selecionadas.
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Use os filtros acima para capturar todas as partes dos processos pertencentes aos TRTs selecionados.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Graus</Label>
-            <div className="flex flex-wrap gap-3">
-              {GRAUS.map(({ value, label }) => (
-                <label
-                  key={value}
-                  className="flex items-center gap-2 rounded-md border border-border/60 px-3 py-2 text-sm"
-                >
-                  <Checkbox
-                    checked={grausSelecionados.includes(value)}
-                    onCheckedChange={(checked) =>
-                      setGrausSelecionados((prev) => toggleValor(prev, value, checked === true))
-                    }
-                  />
-                  <span>{label}</span>
-                </label>
-              ))}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Combine grau com TRT para restringir os processos capturados. Se nenhum grau for selecionado, ambos serão considerados.
-            </p>
-          </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="numeroProcesso">Número do processo (único)</Label>
@@ -231,3 +205,4 @@ export function PartesForm() {
     </div>
   );
 }
+
