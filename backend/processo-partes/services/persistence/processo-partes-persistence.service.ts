@@ -46,30 +46,31 @@ interface OperacaoProcessoParteResult {
  * Converte registro do banco em ProcessoParte tipado
  */
 function converterParaProcessoParte(data: Record<string, unknown>): ProcessoParte {
-  return {
+  const resultado: ProcessoParte = {
     id: data.id as number,
     processo_id: data.processo_id as number,
     tipo_entidade: data.tipo_entidade as EntidadeTipoProcessoParte,
     entidade_id: data.entidade_id as number,
     id_pje: data.id_pje as number,
-    id_pessoa_pje: (data.id_pessoa_pje as number) ?? null,
-    id_tipo_parte: (data.id_tipo_parte as number) ?? null,
+    trt: data.trt as string,
+    numero_processo: data.numero_processo as string,
+    grau: data.grau as GrauProcessoParte,
+    id_pessoa_pje: (data.id_pessoa_pje as number | null) ?? null,
+    id_tipo_parte: (data.id_tipo_parte as number | null) ?? null,
     tipo_parte: data.tipo_parte as TipoParteProcesso,
     polo: data.polo as PoloProcessoParte,
-    principal: (data.principal as boolean) ?? null,
-    ordem: (data.ordem as number) ?? null,
-    status_pje: (data.status_pje as string) ?? null,
-    situacao_pje: (data.situacao_pje as string) ?? null,
-    autoridade: (data.autoridade as boolean) ?? null,
-    endereco_desconhecido: (data.endereco_desconhecido as boolean) ?? null,
-    dados_pje_completo: (data.dados_pje_completo as Record<string, unknown>) ?? null,
-    trt: data.trt as string,
-    grau: data.grau as GrauProcessoParte,
-    numero_processo: data.numero_processo as string,
-    ultima_atualizacao_pje: (data.ultima_atualizacao_pje as string) ?? null,
+    principal: (data.principal as boolean | null) ?? null,
+    ordem: (data.ordem as number | null) ?? null,
+    status_pje: (data.status_pje as string | null) ?? null,
+    situacao_pje: (data.situacao_pje as string | null) ?? null,
+    autoridade: (data.autoridade as boolean | null) ?? null,
+    endereco_desconhecido: (data.endereco_desconhecido as boolean | null) ?? null,
+    dados_pje_completo: (data.dados_pje_completo as Record<string, unknown> | null) ?? null,
+    ultima_atualizacao_pje: (data.ultima_atualizacao_pje as string | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };
+  return resultado;
 }
 
 /**
