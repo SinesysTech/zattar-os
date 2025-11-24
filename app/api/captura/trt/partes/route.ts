@@ -16,6 +16,7 @@ import { registrarCapturaRawLog } from "@/backend/captura/services/persistence/c
 import { criarCapturaLog, atualizarCapturaLog } from "@/backend/captura/services/persistence/captura-log-persistence.service";
 import type { CodigoTRT, GrauTRT } from "@/backend/types/captura/trt-types";
 import type { GrauAcervo } from "@/backend/types/acervo/types";
+import type { CapturaLog } from "@/backend/types/captura/capturas-log-types";
 
 const GRAUS_VALIDOS: GrauTRT[] = [
   "primeiro_grau",
@@ -216,6 +217,8 @@ function sanitizeListaNumerosProcesso(value: unknown): string[] {
  *               error: "Internal server error"
  */
 export async function POST(request: NextRequest) {
+  let capturaLog: CapturaLog | undefined;
+
   try {
     // 1. Autenticação
     const authResult = await authenticateRequest(request);
@@ -353,7 +356,7 @@ export async function POST(request: NextRequest) {
     }));
 
     // 6. Iniciar log de captura
-    const capturaLog = await criarCapturaLog({
+    capturaLog = await criarCapturaLog({
       tipo_captura: 'partes',
       advogado_id: advogado.id,
       credencial_ids: credencial_ids,
@@ -461,11 +464,11 @@ export async function POST(request: NextRequest) {
             const mongodbId = await registrarCapturaRawLog({
               tipo_captura: 'partes',
               advogado_id: advogado.id,
-              credencial_id: credencial.credencial_id,
+              credencial_id: credencial.credentialId,
               captura_log_id: capturaLog.id,
-              trt: processo.trt,
-              grau: processo.grau,
-              status: resultado.erros.length === 0 ? 'success' : 'partial_success',
+              trt: processo.trt as CodigoTRT,
+              grau: processo.grau as GrauTRT,
+              status: resultado.erros.length === 0 ? 'success' : 'error',
               requisicao: {
                 numero_processo: processo.numero_processo,
                 id_pje: processo.id_pje,
@@ -480,7 +483,12 @@ export async function POST(request: NextRequest) {
                 representantes: resultado.representantes,
                 vinculos: resultado.vinculos,
               },
-              logs: resultado.erros.map(e => e.erro),
+              logs: resultado.erros.map(e => ({
+                tipo: 'erro' as const,
+                entidade: 'acervo' as const,
+                erro: e.erro,
+                contexto: { processo_id: processo.id }
+              })),
               erro: resultado.erros.length > 0 ? resultado.erros[0].erro : undefined,
             });
 
@@ -523,10 +531,10 @@ export async function POST(request: NextRequest) {
             const mongodbId = await registrarCapturaRawLog({
               tipo_captura: 'partes',
               advogado_id: advogado.id,
-              credencial_id: credencial.credencial_id,
+              credencial_id: credencial.credentialId,
               captura_log_id: capturaLog.id,
-              trt: processo.trt,
-              grau: processo.grau,
+              trt: processo.trt as CodigoTRT,
+              grau: processo.grau as GrauTRT,
               status: 'error',
               requisicao: {
                 numero_processo: processo.numero_processo,
@@ -535,7 +543,12 @@ export async function POST(request: NextRequest) {
               },
               payload_bruto: null,
               resultado_processado: null,
-              logs: [erroMensagem],
+              logs: [{
+                tipo: 'erro' as const,
+                entidade: 'acervo' as const,
+                erro: erroMensagem,
+                contexto: { processo_id: processo.id }
+              }],
               erro: erroMensagem,
             });
 
@@ -611,7 +624,7 @@ export async function POST(request: NextRequest) {
     // Finalizar log com erro se foi iniciado
     try {
       // Verifica se capturaLog foi criado (pode não ter sido se o erro ocorreu antes)
-      if (typeof capturaLog !== 'undefined') {
+      if (capturaLog) {
         await atualizarCapturaLog(capturaLog.id, {
           status: 'failed',
           erro: error instanceof Error ? error.message : String(error),
