@@ -25,7 +25,7 @@ const PROCESSO_ID_ACERVO = 2887163; // ID na tabela acervo (se precisar persisti
 const PROCESSO_ID_PJE = 2887163; // ID no PJE (usado na URL da API)
 const PROCESSO_NUMERO = '0010344-62.2024.5.03.0030'; // Número CNJ (opcional, pode deixar genérico)
 const TRT = '03'; // TRT3
-const GRAU: GrauAcervo = '1'; // Primeiro grau
+const GRAU: GrauAcervo = 'primeiro_grau'; // Primeiro grau
 
 // Credenciais hardcoded para teste
 const CREDENCIAIS = {
@@ -81,9 +81,8 @@ async function main() {
 
     // 3. Obter configuração do tribunal e autenticar no PJE
     console.log(`[3/4] Obtendo configuração do TRT ${TRT} e autenticando...`);
-    const grauTRT = GRAU === '1' ? 'primeiro_grau' : 'segundo_grau';
     const codigoTRT = `TRT${TRT}` as any; // TRT + código = TRT03
-    const config = await getTribunalConfig(codigoTRT, grauTRT);
+    const config = await getTribunalConfig(codigoTRT, GRAU);
     console.log(`✓ Configuração obtida: ${config.nome}`);
 
     const authResult = await autenticarPJE({

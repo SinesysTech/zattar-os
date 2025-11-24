@@ -166,7 +166,6 @@ export async function GET(request: NextRequest) {
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,
       tipo_pessoa: (searchParams.get('tipo_pessoa') as 'pf' | 'pj' | null) || undefined,
-      situacao: (searchParams.get('situacao') as 'A' | 'I' | 'E' | 'H' | null) || undefined,
       trt: searchParams.get('trt') || undefined,
       grau: (searchParams.get('grau') as 'primeiro_grau' | 'segundo_grau' | null) || undefined,
     };

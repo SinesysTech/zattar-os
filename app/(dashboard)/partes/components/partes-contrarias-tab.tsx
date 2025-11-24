@@ -132,8 +132,8 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
           if (parte.ddd_celular && parte.numero_celular) {
             return formatarTelefone(`${parte.ddd_celular}${parte.numero_celular}`);
           }
-          if (parte.ddd_telefone && parte.numero_telefone) {
-            return formatarTelefone(`${parte.ddd_telefone}${parte.numero_telefone}`);
+          if (parte.ddd_residencial && parte.numero_residencial) {
+            return formatarTelefone(`${parte.ddd_residencial}${parte.numero_residencial}`);
           }
           return '-';
         },

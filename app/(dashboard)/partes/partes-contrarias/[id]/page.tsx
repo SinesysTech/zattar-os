@@ -241,13 +241,13 @@ export default function ParteContrariaPage() {
                   </div>
                 </div>
               )}
-              {parte.ddd_telefone && parte.numero_telefone && (
+              {parte.ddd_residencial && parte.numero_residencial && (
                 <div>
                   <div className="text-sm font-medium text-muted-foreground mb-1">
                     Telefone
                   </div>
                   <div className="text-base">
-                    {formatarTelefone(`${parte.ddd_telefone}${parte.numero_telefone}`)}
+                    {formatarTelefone(`${parte.ddd_residencial}${parte.numero_residencial}`)}
                   </div>
                 </div>
               )}

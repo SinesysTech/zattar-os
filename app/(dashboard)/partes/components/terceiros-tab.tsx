@@ -158,8 +158,8 @@ export function TerceirosTab({}: TerceirosTabProps) {
           if (terceiro.ddd_celular && terceiro.numero_celular) {
             return formatarTelefone(`${terceiro.ddd_celular}${terceiro.numero_celular}`);
           }
-          if (terceiro.ddd_telefone && terceiro.numero_telefone) {
-            return formatarTelefone(`${terceiro.ddd_telefone}${terceiro.numero_telefone}`);
+          if (terceiro.ddd_residencial && terceiro.numero_residencial) {
+            return formatarTelefone(`${terceiro.ddd_residencial}${terceiro.numero_residencial}`);
           }
           return '-';
         },

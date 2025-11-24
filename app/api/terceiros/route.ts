@@ -94,8 +94,6 @@ export async function GET(request: NextRequest) {
       busca: searchParams.get('busca') || undefined,
       tipo_pessoa: (searchParams.get('tipo_pessoa') as 'pf' | 'pj' | null) || undefined,
       tipo_parte: searchParams.get('tipo_parte') as any || undefined,
-      processo_id: searchParams.get('processo_id') ? parseInt(searchParams.get('processo_id')!, 10) : undefined,
-      situacao: (searchParams.get('situacao') as 'A' | 'I' | 'E' | 'H' | null) || undefined,
     };
 
     const resultado = await listarTerceiros(params);
@@ -121,9 +119,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const dadosTerceiro = body as CriarTerceiroParams;
 
-    if (!dadosTerceiro.tipo_pessoa || !dadosTerceiro.nome || !dadosTerceiro.tipo_parte || !dadosTerceiro.polo || !dadosTerceiro.processo_id) {
+    if (!dadosTerceiro.tipo_pessoa || !dadosTerceiro.nome || !dadosTerceiro.tipo_parte || !dadosTerceiro.polo) {
       return NextResponse.json(
-        { error: 'Missing required fields: tipo_pessoa, nome, tipo_parte, polo, processo_id' },
+        { error: 'Missing required fields: tipo_pessoa, nome, tipo_parte, polo' },
         { status: 400 }
       );
     }

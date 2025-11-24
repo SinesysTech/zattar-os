@@ -125,8 +125,8 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       size: 150,
       cell: ({ row }) => {
         const cliente = row.original;
-        const telefone = cliente.ddd_telefone && cliente.numero_telefone
-          ? `${cliente.ddd_telefone}${cliente.numero_telefone}`
+        const telefone = cliente.ddd_residencial && cliente.numero_residencial
+          ? `${cliente.ddd_residencial}${cliente.numero_residencial}`
           : null;
         return (
           <div className="min-h-10 flex items-center justify-center text-sm">

@@ -280,13 +280,13 @@ export default function TerceiroPage() {
                   </div>
                 </div>
               )}
-              {terceiro.ddd_telefone && terceiro.numero_telefone && (
+              {terceiro.ddd_residencial && terceiro.numero_residencial && (
                 <div>
                   <div className="text-sm font-medium text-muted-foreground mb-1">
                     Telefone
                   </div>
                   <div className="text-base">
-                    {formatarTelefone(`${terceiro.ddd_telefone}${terceiro.numero_telefone}`)}
+                    {formatarTelefone(`${terceiro.ddd_residencial}${terceiro.numero_residencial}`)}
                   </div>
                 </div>
               )}

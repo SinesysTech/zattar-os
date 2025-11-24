@@ -98,11 +98,11 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json();
-    const params: UpsertTerceiroPorIdPessoaParams = body;
+    const params = body as UpsertTerceiroPorIdPessoaParams;
 
     // Validate required fields
-    if (!params.id_pessoa_pje || !params.tipo_pessoa ||
-        !params.nome || !params.tipo_parte) {
+    if (!('id_pessoa_pje' in params) || !('tipo_pessoa' in params) ||
+        !('nome' in params) || !('tipo_parte' in params)) {
       return NextResponse.json(
         { success: false, error: 'Campos obrigatórios não informados' },
         { status: 400 }
@@ -110,14 +110,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate conditional required fields
-    if (params.tipo_pessoa === 'pf' && !params.cpf) {
+    if (params.tipo_pessoa === 'pf' && !('cpf' in params)) {
       return NextResponse.json(
         { success: false, error: 'CPF é obrigatório para pessoa física' },
         { status: 400 }
       );
     }
 
-    if (params.tipo_pessoa === 'pj' && !params.cnpj) {
+    if (params.tipo_pessoa === 'pj' && !('cnpj' in params)) {
       return NextResponse.json(
         { success: false, error: 'CNPJ é obrigatório para pessoa jurídica' },
         { status: 400 }
