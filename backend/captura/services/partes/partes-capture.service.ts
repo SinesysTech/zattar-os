@@ -15,7 +15,7 @@
 
 import type { Page } from 'playwright';
 import type { CapturaPartesResult, CapturaPartesErro, TipoParteClassificacao } from './types';
-import type { PartePJE } from '@/backend/api/pje-trt/partes/types';
+import type { PartePJE, RepresentantePJE } from '@/backend/api/pje-trt/partes/types';
 import { obterPartesProcesso } from '@/backend/api/pje-trt/partes';
 import { identificarTipoParte, type AdvogadoIdentificacao } from './identificacao-partes.service';
 import { upsertClientePorIdPessoa } from '@/backend/clientes/services/persistence/cliente-persistence.service';
@@ -262,28 +262,23 @@ async function processarParte(
         return result.sucesso && result.parteContraria ? result.parteContraria.id : null;
       }
     } else {
-      // Upsert em tabela terceiros
-      if (isPessoaFisica) {
-        const params = {
-          ...dadosComuns,
-          tipo_pessoa: 'pf' as const,
-          cpf: parte.numeroDocumento,
-          tipo_parte: parte.tipoParte,
-          polo: parte.polo,
-        };
-        const result = await upsertTerceiroPorIdPessoa(params);
-        return result.sucesso && result.terceiro ? result.terceiro.id : null;
-      } else {
-        const params = {
-          ...dadosComuns,
-          tipo_pessoa: 'pj' as const,
-          cnpj: parte.numeroDocumento,
-          tipo_parte: parte.tipoParte,
-          polo: parte.polo,
-        };
-        const result = await upsertTerceiroPorIdPessoa(params);
-        return result.sucesso && result.terceiro ? result.terceiro.id : null;
-      }
+      // Upsert em tabela terceiros  
+      const params = {
+        ...dadosComuns,
+        tipo_pessoa: isPessoaFisica ? ('pf' as const) : ('pj' as const),
+        cpf: isPessoaFisica ? parte.numeroDocumento : undefined,
+        cnpj: !isPessoaFisica ? parte.numeroDocumento : undefined,
+        tipo_parte: parte.tipoParte,
+        polo: parte.polo,
+        id_pje: parte.idParte,
+        processo_id: 0,
+        trt: '',
+        grau: '',
+        numero_processo: '',
+      } as any;
+      
+      const result = await upsertTerceiroPorIdPessoa(params);
+      return result.sucesso && result.terceiro ? result.terceiro.id : null;
     }
   } catch (error) {
     console.error(`[CAPTURA-PARTES] Erro ao processar parte ${parte.nome}:`, error);
@@ -296,7 +291,7 @@ async function processarParte(
  * Retorna quantidade de representantes salvos com sucesso
  */
 async function processarRepresentantes(
-  representantes: Array<Record<string, unknown>>,
+  representantes: RepresentantePJE[],
   tipoParte: TipoParteClassificacao,
   parteId: number,
   processo: ProcessoParaCaptura
@@ -319,12 +314,12 @@ async function processarRepresentantes(
         cpf: tipo_pessoa === 'pf' ? rep.numeroDocumento : undefined,
         cnpj: tipo_pessoa === 'pj' ? rep.numeroDocumento : undefined,
         numero_oab: rep.numeroOAB || undefined,
-        situacao_oab: rep.situacaoOAB || undefined,
-        tipo: rep.tipo || undefined,
+        situacao_oab: rep.situacaoOAB as any || undefined,
+        tipo: rep.tipo as any || undefined,
         emails: rep.email ? [rep.email] : undefined,
-        ddd_celular: rep.telefones[0]?.ddd || undefined,
-        numero_celular: rep.telefones[0]?.numero || undefined,
-        dados_anteriores: rep.dadosCompletos,
+        ddd_celular: rep.telefones?.[0]?.ddd || undefined,
+        numero_celular: rep.telefones?.[0]?.numero || undefined,
+        dados_anteriores: rep.dadosCompletos as Record<string, unknown> | null | undefined,
       });
 
       if (result.sucesso) count++;
@@ -355,8 +350,8 @@ async function criarVinculoProcessoParte(
       entidade_id: entidadeId,
       id_pje: parte.idParte,
       id_pessoa_pje: parte.idPessoa,
-      tipo_parte: parte.tipoParte,
-      polo: parte.polo.toLowerCase() as 'ativo' | 'passivo' | 'outros',
+      tipo_parte: parte.tipoParte as any,
+      polo: parte.polo as any, // É do tipo 'ATIVO' | 'PASSIVO' | 'OUTROS' mas a interface espera 'PoloProcessoParte'
       trt: processo.trt,
       grau: processo.grau,
       numero_processo: processo.numero_processo,
@@ -389,32 +384,32 @@ async function processarEndereco(
     return null;
   }
 
-  const enderecoPJE = parte.dadosCompletos.endereco as Record<string, unknown>;
+  const enderecoPJE = parte.dadosCompletos.endereco as any;
 
   try {
     const result = await upsertEnderecoPorIdPje({
-      id_pje: enderecoPJE.id,
+      id_pje: Number(enderecoPJE?.id || 0),
       entidade_tipo: tipoParte as EntidadeTipoEndereco,
       entidade_id: entidadeId,
-      logradouro: enderecoPJE.logradouro || undefined,
-      numero: enderecoPJE.numero || undefined,
-      complemento: enderecoPJE.complemento || undefined,
-      bairro: enderecoPJE.bairro || undefined,
-      id_municipio_pje: enderecoPJE.idMunicipio || undefined,
-      municipio: enderecoPJE.municipio || undefined,
-      municipio_ibge: enderecoPJE.municipioIbge || undefined,
-      estado_id_pje: enderecoPJE.estado?.id || undefined,
-      estado_sigla: enderecoPJE.estado?.sigla || undefined,
-      estado_descricao: enderecoPJE.estado?.descricao || undefined,
-      pais_id_pje: enderecoPJE.pais?.id || undefined,
-      pais_codigo: enderecoPJE.pais?.codigo || undefined,
-      pais_descricao: enderecoPJE.pais?.descricao || undefined,
-      cep: enderecoPJE.nroCep || undefined,
-      classificacoes_endereco: enderecoPJE.classificacoesEndereco || undefined,
-      correspondencia: enderecoPJE.correspondencia ?? undefined,
-      situacao: enderecoPJE.situacao || undefined,
-      id_usuario_cadastrador_pje: enderecoPJE.idUsuarioCadastrador || undefined,
-      data_alteracao_pje: enderecoPJE.dtAlteracao || undefined,
+      logradouro: enderecoPJE?.logradouro ? String(enderecoPJE.logradouro) : undefined,
+      numero: enderecoPJE?.numero ? String(enderecoPJE.numero) : undefined,
+      complemento: enderecoPJE?.complemento ? String(enderecoPJE.complemento) : undefined,
+      bairro: enderecoPJE?.bairro ? String(enderecoPJE.bairro) : undefined,
+      id_municipio_pje: enderecoPJE?.idMunicipio ? Number(enderecoPJE.idMunicipio) : undefined,
+      municipio: enderecoPJE?.municipio ? String(enderecoPJE.municipio) : undefined,
+      municipio_ibge: enderecoPJE?.municipioIbge ? String(enderecoPJE.municipioIbge) : undefined,
+      estado_id_pje: enderecoPJE?.estado?.id ? Number(enderecoPJE.estado.id) : undefined,
+      estado_sigla: enderecoPJE?.estado?.sigla ? String(enderecoPJE.estado.sigla) : undefined,
+      estado_descricao: enderecoPJE?.estado?.descricao ? String(enderecoPJE.estado.descricao) : undefined,
+      pais_id_pje: enderecoPJE?.pais?.id ? Number(enderecoPJE.pais.id) : undefined,
+      pais_codigo: enderecoPJE?.pais?.codigo ? String(enderecoPJE.pais.codigo) : undefined,
+      pais_descricao: enderecoPJE?.pais?.descricao ? String(enderecoPJE.pais.descricao) : undefined,
+      cep: enderecoPJE?.nroCep ? String(enderecoPJE.nroCep) : undefined,
+      classificacoes_endereco: enderecoPJE?.classificacoesEndereco as any || undefined,
+      correspondencia: enderecoPJE?.correspondencia !== undefined ? Boolean(enderecoPJE.correspondencia) : undefined,
+      situacao: enderecoPJE?.situacao as any || undefined,
+      id_usuario_cadastrador_pje: enderecoPJE?.idUsuarioCadastrador ? Number(enderecoPJE.idUsuarioCadastrador) : undefined,
+      data_alteracao_pje: enderecoPJE?.dtAlteracao ? String(enderecoPJE.dtAlteracao) : undefined,
     });
 
     if (result.sucesso && result.endereco) {

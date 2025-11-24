@@ -10,17 +10,9 @@ import type {
   ListarTerceirosParams,
   ListarTerceirosResult,
   UpsertTerceiroPorIdPessoaParams,
+  OperacaoTerceiroResult,
 } from '@/backend/types/partes/terceiros-types';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
-
-/**
- * Resultado de operação
- */
-export interface OperacaoTerceiroResult {
-  sucesso: boolean;
-  terceiro?: Terceiro;
-  erro?: string;
-}
 
 /**
  * Valida CPF básico (formato)
@@ -68,7 +60,7 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
 
   const base = {
     id: data.id as number,
-    id_pje: data.id_pje as number,
+    // id_pje removido
     id_pessoa_pje: data.id_pessoa_pje as number,
     tipo_parte: data.tipo_parte as
       | 'PERITO'
@@ -108,7 +100,7 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       numero_rg: (data.numero_rg as string | null) ?? null,
       orgao_emissor_rg: (data.orgao_emissor_rg as string | null) ?? null,
       uf_rg: (data.uf_rg as string | null) ?? null,
-      data_expedicao_rg: (data.data_expedicao_rg as string | null) ?? null,
+      // data_expedicao_rg removido
       sexo: (data.sexo as string | null) ?? null,
       nome_genitora: (data.nome_genitora as string | null) ?? null,
       data_nascimento: (data.data_nascimento as string | null) ?? null,
@@ -155,7 +147,7 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       numero_rg: null,
       orgao_emissor_rg: null,
       uf_rg: null,
-      data_expedicao_rg: null,
+      // data_expedicao_rg removido
       sexo: null,
       nome_genitora: null,
       data_nascimento: null,
@@ -228,7 +220,7 @@ export async function criarTerceiro(
 
     // Preparar dados para inserção
     const dadosNovos: Record<string, unknown> = {
-      id_pje: params.id_pje,
+      // id_pje removido
       id_pessoa_pje: params.id_pessoa_pje,
       tipo_parte: params.tipo_parte,
       polo: params.polo,
@@ -254,7 +246,7 @@ export async function criarTerceiro(
       dadosNovos.numero_rg = params.numero_rg?.trim() || null;
       dadosNovos.orgao_emissor_rg = params.orgao_emissor_rg?.trim() || null;
       dadosNovos.uf_rg = params.uf_rg?.trim() || null;
-      dadosNovos.data_expedicao_rg = params.data_expedicao_rg || null;
+      // dadosNovos.data_expedicao_rg = params.data_expedicao_rg || null; // Removido
       dadosNovos.sexo = params.sexo?.trim() || null;
       dadosNovos.nome_genitora = params.nome_genitora?.trim() || null;
       dadosNovos.data_nascimento = params.data_nascimento || null;
@@ -328,7 +320,7 @@ export async function atualizarTerceiro(
     // Preparar dados para atualização
     const dadosAtualizacao: Record<string, unknown> = {};
 
-    if (params.id_pje !== undefined) dadosAtualizacao.id_pje = params.id_pje;
+    // if (params.id_pje !== undefined) dadosAtualizacao.id_pje = params.id_pje; // Removido
     if (params.id_pessoa_pje !== undefined) dadosAtualizacao.id_pessoa_pje = params.id_pessoa_pje;
     if (params.tipo_parte !== undefined) dadosAtualizacao.tipo_parte = params.tipo_parte;
     if (params.polo !== undefined) dadosAtualizacao.polo = params.polo;
@@ -365,8 +357,8 @@ export async function atualizarTerceiro(
       if (params.orgao_emissor_rg !== undefined)
         dadosAtualizacao.orgao_emissor_rg = params.orgao_emissor_rg?.trim() || null;
       if (params.uf_rg !== undefined) dadosAtualizacao.uf_rg = params.uf_rg?.trim() || null;
-      if (params.data_expedicao_rg !== undefined)
-        dadosAtualizacao.data_expedicao_rg = params.data_expedicao_rg;
+      // if (params.data_expedicao_rg !== undefined)
+      //   dadosAtualizacao.data_expedicao_rg = params.data_expedicao_rg; // Removido
       if (params.sexo !== undefined) dadosAtualizacao.sexo = params.sexo?.trim() || null;
       if (params.nome_genitora !== undefined)
         dadosAtualizacao.nome_genitora = params.nome_genitora?.trim() || null;
@@ -573,9 +565,10 @@ export async function upsertTerceiroPorIdPessoa(
 
     if (existente) {
       return await atualizarTerceiro({
-        id: existente.id,
         ...params,
-      });
+        id: existente.id,
+        id_pje: params.id_pje ?? undefined,
+      } as any);
     } else {
       return await criarTerceiro(params);
     }

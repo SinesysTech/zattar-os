@@ -22,9 +22,9 @@ export type SituacaoPJE = 'A' | 'I' | 'E' | 'H'; // A=Ativo, I=Inativo, E=Exclu�
  * Campos base comuns a PF e PJ
  * NOTA: Clientes é uma tabela global - conexão com processo via processo_partes
  */
-interface ClienteBase {
+export interface ClienteBase {
   id: number;
-  id_pje: number | null;
+  // id_pje removido
   id_pessoa_pje: number | null; // Unique constraint
   tipo_pessoa: TipoPessoa;
   nome: string;
@@ -56,7 +56,7 @@ export interface ClientePessoaFisica extends ClienteBase {
   numero_rg: string | null;
   orgao_emissor_rg: string | null;
   uf_rg: string | null;
-  data_expedicao_rg: string | null; // ISO date
+  // data_expedicao_rg removido
   sexo: string | null;
   nome_genitora: string | null;
   data_nascimento: string | null; // ISO date
@@ -107,7 +107,7 @@ export interface ClientePessoaJuridica extends ClienteBase {
   numero_rg: null;
   orgao_emissor_rg: null;
   uf_rg: null;
-  data_expedicao_rg: null;
+  // data_expedicao_rg removido
   sexo: null;
   nome_genitora: null;
   data_nascimento: null;
@@ -150,77 +150,79 @@ export type ClienteComEndereco = ClientePessoaFisicaComEndereco | ClientePessoaJ
  * Dados para criar cliente PF
  */
 export interface CriarClientePFParams {
-  id_pje?: number;
-  id_pessoa_pje?: number;
+  // id_pje removido
+  id_pje?: number | null; // Mantido opcional para compatibilidade
+  id_pessoa_pje?: number | null;
   tipo_pessoa: 'pf';
   nome: string;
   cpf: string;
-  nome_social?: string;
-  emails?: string[];
-  ddd_celular?: string;
-  numero_celular?: string;
-  ddd_residencial?: string;
-  numero_residencial?: string;
-  ddd_comercial?: string;
-  numero_comercial?: string;
-  fax?: string;
-  tipo_documento?: string;
-  numero_rg?: string;
-  orgao_emissor_rg?: string;
-  uf_rg?: string;
-  data_expedicao_rg?: string;
-  sexo?: string;
-  nome_genitora?: string;
-  data_nascimento?: string;
-  nacionalidade?: string;
-  naturalidade?: string;
-  municipio_nascimento?: string;
-  uf_nascimento?: string;
-  pais_nacionalidade?: string;
-  profissao?: string;
-  estado_civil?: string;
-  grau_instrucao?: string;
-  necessidade_especial?: string;
-  situacao?: SituacaoPJE;
-  observacoes?: string;
-  dados_anteriores?: Record<string, unknown>;
-  endereco_id?: number;
+  nome_social?: string | null;
+  emails?: string[] | null;
+  ddd_celular?: string | null;
+  numero_celular?: string | null;
+  ddd_residencial?: string | null;
+  numero_residencial?: string | null;
+  ddd_comercial?: string | null;
+  numero_comercial?: string | null;
+  fax?: string | null;
+  tipo_documento?: string | null;
+  numero_rg?: string | null;
+  orgao_emissor_rg?: string | null;
+  uf_rg?: string | null;
+  // data_expedicao_rg removido
+  sexo?: string | null;
+  nome_genitora?: string | null;
+  data_nascimento?: string | null;
+  nacionalidade?: string | null;
+  naturalidade?: string | null;
+  municipio_nascimento?: string | null;
+  uf_nascimento?: string | null;
+  pais_nacionalidade?: string | null;
+  profissao?: string | null;
+  estado_civil?: string | null;
+  grau_instrucao?: string | null;
+  necessidade_especial?: string | null;
+  situacao?: SituacaoPJE | null;
+  observacoes?: string | null;
+  dados_anteriores?: Record<string, unknown> | null;
+  endereco_id?: number | null;
 }
 
 /**
  * Dados para criar cliente PJ
  */
 export interface CriarClientePJParams {
-  id_pje?: number;
-  id_pessoa_pje?: number;
+  // id_pje removido
+  id_pje?: number | null; // Mantido opcional
+  id_pessoa_pje?: number | null;
   tipo_pessoa: 'pj';
   nome: string;
   cnpj: string;
-  nome_social?: string;
-  nome_fantasia?: string;
-  emails?: string[];
-  ddd_celular?: string;
-  numero_celular?: string;
-  ddd_residencial?: string;
-  numero_residencial?: string;
-  ddd_comercial?: string;
-  numero_comercial?: string;
-  fax?: string;
-  inscricao_estadual?: string;
-  inscricao_municipal?: string;
-  data_abertura?: string;
-  orgao_publico?: boolean;
-  ds_tipo_pessoa?: string;
-  ramo_atividade?: string;
-  porte_codigo?: string;
-  porte_descricao?: string;
-  qualificacao_responsavel?: string;
-  capital_social?: number;
-  status_pje?: string;
-  situacao?: SituacaoPJE;
-  observacoes?: string;
-  dados_anteriores?: Record<string, unknown>;
-  endereco_id?: number;
+  nome_social?: string | null;
+  nome_fantasia?: string | null;
+  emails?: string[] | null;
+  ddd_celular?: string | null;
+  numero_celular?: string | null;
+  ddd_residencial?: string | null;
+  numero_residencial?: string | null;
+  ddd_comercial?: string | null;
+  numero_comercial?: string | null;
+  fax?: string | null;
+  inscricao_estadual?: string | null;
+  inscricao_municipal?: string | null;
+  data_abertura?: string | null;
+  orgao_publico?: boolean | null;
+  ds_tipo_pessoa?: string | null;
+  ramo_atividade?: string | null;
+  porte_codigo?: string | null;
+  porte_descricao?: string | null;
+  qualificacao_responsavel?: string | null;
+  capital_social?: number | null;
+  status_pje?: string | null;
+  situacao?: SituacaoPJE | null;
+  observacoes?: string | null;
+  dados_anteriores?: Record<string, unknown> | null;
+  endereco_id?: number | null;
 }
 
 /**
@@ -233,41 +235,42 @@ export type CriarClienteParams = CriarClientePFParams | CriarClientePJParams;
  */
 export interface AtualizarClientePFParams {
   id: number;
-  id_pje?: number;
+  // id_pje removido
+  id_pje?: number; // Mantido opcional
   id_pessoa_pje?: number;
   tipo_pessoa?: 'pf';
   nome?: string;
   cpf?: string;
-  nome_social?: string;
-  emails?: string[];
-  ddd_celular?: string;
-  numero_celular?: string;
-  ddd_residencial?: string;
-  numero_residencial?: string;
-  ddd_comercial?: string;
-  numero_comercial?: string;
-  fax?: string;
-  tipo_documento?: string;
-  numero_rg?: string;
-  orgao_emissor_rg?: string;
-  uf_rg?: string;
-  data_expedicao_rg?: string;
-  sexo?: string;
-  nome_genitora?: string;
-  data_nascimento?: string;
-  nacionalidade?: string;
-  naturalidade?: string;
-  municipio_nascimento?: string;
-  uf_nascimento?: string;
-  pais_nacionalidade?: string;
-  profissao?: string;
-  estado_civil?: string;
-  grau_instrucao?: string;
-  necessidade_especial?: string;
-  situacao?: SituacaoPJE;
-  observacoes?: string;
-  dados_anteriores?: Record<string, unknown>;
-  endereco_id?: number;
+  nome_social?: string | null;
+  emails?: string[] | null;
+  ddd_celular?: string | null;
+  numero_celular?: string | null;
+  ddd_residencial?: string | null;
+  numero_residencial?: string | null;
+  ddd_comercial?: string | null;
+  numero_comercial?: string | null;
+  fax?: string | null;
+  tipo_documento?: string | null;
+  numero_rg?: string | null;
+  orgao_emissor_rg?: string | null;
+  uf_rg?: string | null;
+  // data_expedicao_rg removido
+  sexo?: string | null;
+  nome_genitora?: string | null;
+  data_nascimento?: string | null;
+  nacionalidade?: string | null;
+  naturalidade?: string | null;
+  municipio_nascimento?: string | null;
+  uf_nascimento?: string | null;
+  pais_nacionalidade?: string | null;
+  profissao?: string | null;
+  estado_civil?: string | null;
+  grau_instrucao?: string | null;
+  necessidade_especial?: string | null;
+  situacao?: SituacaoPJE | null;
+  observacoes?: string | null;
+  dados_anteriores?: Record<string, unknown> | null;
+  endereco_id?: number | null;
 }
 
 /**
@@ -275,36 +278,37 @@ export interface AtualizarClientePFParams {
  */
 export interface AtualizarClientePJParams {
   id: number;
-  id_pje?: number;
+  // id_pje removido
+  id_pje?: number; // Mantido opcional
   id_pessoa_pje?: number;
   tipo_pessoa?: 'pj';
   nome?: string;
   cnpj?: string;
-  nome_social?: string;
-  nome_fantasia?: string;
-  emails?: string[];
-  ddd_celular?: string;
-  numero_celular?: string;
-  ddd_residencial?: string;
-  numero_residencial?: string;
-  ddd_comercial?: string;
-  numero_comercial?: string;
-  fax?: string;
-  inscricao_estadual?: string;
-  inscricao_municipal?: string;
-  data_abertura?: string;
-  orgao_publico?: boolean;
-  ds_tipo_pessoa?: string;
-  ramo_atividade?: string;
-  porte_codigo?: string;
-  porte_descricao?: string;
-  qualificacao_responsavel?: string;
-  capital_social?: number;
-  status_pje?: string;
-  situacao?: SituacaoPJE;
-  observacoes?: string;
-  dados_anteriores?: Record<string, unknown>;
-  endereco_id?: number;
+  nome_social?: string | null;
+  nome_fantasia?: string | null;
+  emails?: string[] | null;
+  ddd_celular?: string | null;
+  numero_celular?: string | null;
+  ddd_residencial?: string | null;
+  numero_residencial?: string | null;
+  ddd_comercial?: string | null;
+  numero_comercial?: string | null;
+  fax?: string | null;
+  inscricao_estadual?: string | null;
+  inscricao_municipal?: string | null;
+  data_abertura?: string | null;
+  orgao_publico?: boolean | null;
+  ds_tipo_pessoa?: string | null;
+  ramo_atividade?: string | null;
+  porte_codigo?: string | null;
+  porte_descricao?: string | null;
+  qualificacao_responsavel?: string | null;
+  capital_social?: number | null;
+  status_pje?: string | null;
+  situacao?: SituacaoPJE | null;
+  observacoes?: string | null;
+  dados_anteriores?: Record<string, unknown> | null;
+  endereco_id?: number | null;
 }
 
 /**
@@ -370,79 +374,20 @@ export interface ListarClientesResult {
 /**
  * Método upsert por id_pessoa_pje para cliente PF
  */
-export interface UpsertClientePorIdPessoaPFParams {
+export interface UpsertClientePorIdPessoaPFParams extends CriarClientePFParams {
   id_pessoa_pje: number; // Required para upsert
-  id_pje?: number;
-  tipo_pessoa: 'pf';
-  nome: string;
-  cpf: string;
-  nome_social?: string;
-  emails?: string[];
-  ddd_celular?: string;
-  numero_celular?: string;
-  ddd_residencial?: string;
-  numero_residencial?: string;
-  ddd_comercial?: string;
-  numero_comercial?: string;
-  fax?: string;
-  tipo_documento?: string;
-  numero_rg?: string;
-  orgao_emissor_rg?: string;
-  uf_rg?: string;
-  data_expedicao_rg?: string;
-  sexo?: string;
-  nome_genitora?: string;
-  data_nascimento?: string;
-  nacionalidade?: string;
-  naturalidade?: string;
-  municipio_nascimento?: string;
-  uf_nascimento?: string;
-  pais_nacionalidade?: string;
-  profissao?: string;
-  estado_civil?: string;
-  grau_instrucao?: string;
-  necessidade_especial?: string;
-  situacao?: SituacaoPJE;
-  observacoes?: string;
-  dados_anteriores?: Record<string, unknown>;
 }
 
 /**
  * Método upsert por id_pessoa_pje para cliente PJ
  */
-export interface UpsertClientePorIdPessoaPJParams {
+export interface UpsertClientePorIdPessoaPJParams extends CriarClientePJParams {
   id_pessoa_pje: number; // Required para upsert
-  id_pje?: number;
-  tipo_pessoa: 'pj';
-  nome: string;
-  cnpj: string;
-  nome_social?: string;
-  nome_fantasia?: string;
-  emails?: string[];
-  ddd_celular?: string;
-  numero_celular?: string;
-  ddd_residencial?: string;
-  numero_residencial?: string;
-  ddd_comercial?: string;
-  numero_comercial?: string;
-  fax?: string;
-  inscricao_estadual?: string;
-  inscricao_municipal?: string;
-  data_abertura?: string;
-  orgao_publico?: boolean;
-  ds_tipo_pessoa?: string;
-  ramo_atividade?: string;
-  porte_codigo?: string;
-  porte_descricao?: string;
-  qualificacao_responsavel?: string;
-  capital_social?: number;
-  status_pje?: string;
-  situacao?: SituacaoPJE;
-  observacoes?: string;
-  dados_anteriores?: Record<string, unknown>;
 }
 
 /**
  * Método upsert por id_pessoa_pje (união)
  */
-export type UpsertClientePorIdPessoaParams = UpsertClientePorIdPessoaPFParams | UpsertClientePorIdPessoaPJParams;
+export type UpsertClientePorIdPessoaParams =
+  | UpsertClientePorIdPessoaPFParams
+  | UpsertClientePorIdPessoaPJParams;
