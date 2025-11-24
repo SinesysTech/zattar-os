@@ -256,9 +256,8 @@ export async function criarRepresentante(
   params: CriarRepresentanteParams
 ): Promise<OperacaoRepresentanteResult> {
   try {
-    // Validate required fields
-    if (!params.id_pessoa_pje || !params.trt || !params.grau ||
-        !params.parte_tipo || !params.parte_id || !params.numero_processo ||
+    // Validate required fields (sem trt, grau, numero_processo pois não existem na tabela)
+    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id ||
         !params.tipo_pessoa || !params.nome) {
       return {
         sucesso: false,
@@ -295,9 +294,12 @@ export async function criarRepresentante(
 
     const supabase = await createClient();
 
+    // Remover campos que não existem na tabela (trt, grau, numero_processo)
+    const { trt, grau, numero_processo, ...paramsLimpos } = params as any;
+
     const { data, error } = await supabase
       .from('representantes')
-      .insert(params)
+      .insert(paramsLimpos)
       .select()
       .single();
 
@@ -598,17 +600,14 @@ export async function upsertRepresentantePorIdPessoa(
   try {
     const supabase = await createClient();
 
-    // Search for existing record by composite key
+    // Search for existing record by composite key (sem trt, grau, numero_processo pois não existem na tabela)
     const { data: existing } = await supabase
       .from('representantes')
       .select('id')
       .eq('id_pessoa_pje', params.id_pessoa_pje)
-      .eq('trt', params.trt)
-      .eq('grau', params.grau)
       .eq('parte_id', params.parte_id)
       .eq('parte_tipo', params.parte_tipo)
-      .eq('numero_processo', params.numero_processo)
-      .single();
+      .maybeSingle();
 
     if (existing) {
       // Update existing
