@@ -22,7 +22,6 @@ export type {
   UpsertClientePorIdPessoaParams,
   OrdenarPorCliente,
   OrdemCliente,
-  ClienteFormData,
 } from './clientes-types';
 
 export type {

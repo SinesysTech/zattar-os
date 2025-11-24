@@ -13,6 +13,7 @@ import type {
   BuscarEnderecosPorEntidadeParams,
   DefinirEnderecoPrincipalParams,
   EntidadeTipoEndereco,
+  SituacaoEndereco,
 } from '@/backend/types/partes/enderecos-types';
 
 // ============================================================================
@@ -52,9 +53,12 @@ export function validarUF(uf: string): boolean {
 export function converterParaEndereco(data: Record<string, unknown>): Endereco {
   return {
     id: data.id as number,
-    id_pje: data.id_pje as number | null,
+    id_pje: (data.id_pje as number) ?? null,
     entidade_tipo: data.entidade_tipo as EntidadeTipoEndereco,
     entidade_id: data.entidade_id as number,
+    trt: (data.trt as string) ?? null,
+    grau: (data.grau as 'primeiro_grau' | 'segundo_grau') ?? null,
+    numero_processo: (data.numero_processo as string) ?? null,
     logradouro: data.logradouro as string | null,
     numero: data.numero as string | null,
     complemento: data.complemento as string | null,
@@ -69,9 +73,9 @@ export function converterParaEndereco(data: Record<string, unknown>): Endereco {
     pais_codigo: data.pais_codigo as string | null,
     pais_descricao: data.pais_descricao as string | null,
     cep: data.cep as string | null,
-    classificacoes_endereco: data.classificacoes_endereco as any[] | null,
+    classificacoes_endereco: (data.classificacoes_endereco as any[]) ?? null,
     correspondencia: data.correspondencia as boolean | null,
-    situacao: data.situacao as string | null,
+    situacao: data.situacao as SituacaoEndereco | null,
     id_usuario_cadastrador_pje: data.id_usuario_cadastrador_pje as number | null,
     data_alteracao_pje: data.data_alteracao_pje as string | null,
     ativo: data.ativo as boolean | null,

@@ -15,6 +15,9 @@ import type {
   VincularParteProcessoParams,
   DesvincularParteProcessoParams,
   EntidadeTipoProcessoParte,
+  TipoParteProcesso,
+  PoloProcessoParte,
+  GrauProcessoParte,
 } from '@/backend/types/partes/processo-partes-types';
 
 // ============================================================================
@@ -33,8 +36,8 @@ export function converterParaProcessoParte(data: Record<string, unknown>): Proce
     id_pje: data.id_pje as number,
     id_pessoa_pje: data.id_pessoa_pje as number | null,
     id_tipo_parte: data.id_tipo_parte as number | null,
-    tipo_parte: data.tipo_parte as string,
-    polo: data.polo as string,
+    tipo_parte: data.tipo_parte as TipoParteProcesso,
+    polo: data.polo as PoloProcessoParte,
     principal: data.principal as boolean | null,
     ordem: data.ordem as number | null,
     status_pje: data.status_pje as string | null,
@@ -43,7 +46,8 @@ export function converterParaProcessoParte(data: Record<string, unknown>): Proce
     endereco_desconhecido: data.endereco_desconhecido as boolean | null,
     dados_pje_completo: data.dados_pje_completo as Record<string, unknown> | null,
     trt: data.trt as string,
-    grau: data.grau as string,
+    grau: data.grau as GrauProcessoParte,
+    numero_processo: data.numero_processo as string,
     ultima_atualizacao_pje: data.ultima_atualizacao_pje as string | null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,

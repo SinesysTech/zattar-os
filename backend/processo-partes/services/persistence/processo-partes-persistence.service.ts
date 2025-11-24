@@ -113,7 +113,7 @@ function validarTipoEntidade(tipo_entidade: string): boolean {
  * Valida se grau é válido
  */
 function validarGrau(grau: string): boolean {
-  const grausValidos: GrauProcessoParte[] = ['1', '2'];
+  const grausValidos: GrauProcessoParte[] = ['primeiro_grau', 'segundo_grau'];
   return grausValidos.includes(grau as GrauProcessoParte);
 }
 

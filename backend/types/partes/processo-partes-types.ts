@@ -62,6 +62,7 @@ export interface ProcessoParte {
   endereco_desconhecido: boolean | null;
   dados_pje_completo: Record<string, unknown> | null; // JSONB
   trt: string;
+  numero_processo: string;
   grau: GrauProcessoParte;
   ultima_atualizacao_pje: string | null; // ISO timestamp
   created_at: string; // ISO timestamp

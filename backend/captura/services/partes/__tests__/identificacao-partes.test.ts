@@ -85,21 +85,29 @@ const mockAdvogado: AdvogadoIdentificacao = {
   nome: 'Dr. João Silva',
 };
 
-const createParteMock = (overrides: Partial<PartePJE> = {}): PartePJE => ({
-  idParte: 12345,
-  idPessoa: 67890,
-  nome: 'Maria Santos',
-  tipoParte: 'AUTOR',
-  polo: 'ATIVO',
-  numeroDocumento: '987.654.321-00',
-  tipoDocumento: 'CPF',
-  emails: [],
-  telefones: [],
-  principal: true,
-  representantes: [],
-  dadosCompletos: {},
-  ...overrides,
-});
+const createParteMock = (overrides: Partial<PartePJE> = {}): PartePJE => {
+  const { representantes, ...rest } = overrides;
+
+  return {
+    idParte: 12345,
+    idPessoa: 67890,
+    nome: 'Maria Santos',
+    tipoParte: 'AUTOR',
+    polo: 'ATIVO',
+    numeroDocumento: '987.654.321-00',
+    tipoDocumento: 'CPF',
+    emails: [],
+    telefones: [],
+    principal: true,
+    representantes: representantes
+      ? representantes.map((rep) =>
+          createRepresentanteMock(rep as Partial<RepresentantePJE>)
+        )
+      : [],
+    dadosCompletos: {},
+    ...rest,
+  };
+};
 
 const createRepresentanteMock = (
   overrides: Partial<RepresentantePJE> = {}

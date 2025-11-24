@@ -168,6 +168,10 @@ export type TerceiroComEndereco =
 export interface CriarTerceiroPFParams {
   id_pje: number;
   id_pessoa_pje: number;
+  processo_id: number;
+  trt: string;
+  grau: GrauTerceiro;
+  numero_processo: string;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
   tipo_pessoa: 'pf';
@@ -211,6 +215,10 @@ export interface CriarTerceiroPFParams {
 export interface CriarTerceiroPJParams {
   id_pje: number;
   id_pessoa_pje: number;
+  processo_id: number;
+  trt: string;
+  grau: GrauTerceiro;
+  numero_processo: string;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
   tipo_pessoa: 'pj';
@@ -373,6 +381,10 @@ export interface ListarTerceirosParams {
   cpf?: string;
   cnpj?: string;
   id_pessoa_pje?: number;
+  processo_id?: number;
+  trt?: string;
+  grau?: GrauTerceiro;
+  numero_processo?: string;
 
   // Ordenação
   ordenar_por?: OrdenarPorTerceiro;
@@ -397,8 +409,8 @@ export interface UpsertTerceiroPorIdPessoaPFParams {
   id_pessoa_pje: number; // Required para upsert
   id_pje: number;
   processo_id: number;
-  trt: number;
-  grau: number;
+  trt: string;
+  grau: GrauTerceiro;
   numero_processo: string;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
@@ -443,8 +455,8 @@ export interface UpsertTerceiroPorIdPessoaPJParams {
   id_pessoa_pje: number; // Required para upsert
   id_pje: number;
   processo_id: number;
-  trt: number;
-  grau: number;
+  trt: string;
+  grau: GrauTerceiro;
   numero_processo: string;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;

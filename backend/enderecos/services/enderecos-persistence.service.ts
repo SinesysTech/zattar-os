@@ -18,6 +18,7 @@ import type {
   ListarEnderecosResult,
   BuscarEnderecosPorEntidadeParams,
   EntidadeTipoEndereco,
+  SituacaoEndereco,
 } from '@/backend/types/partes/enderecos-types';
 
 /**
@@ -49,9 +50,9 @@ export function converterParaEndereco(data: Record<string, unknown>): Endereco {
     id_pje: (data.id_pje as number) ?? null,
     entidade_tipo: data.entidade_tipo as EntidadeTipoEndereco,
     entidade_id: data.entidade_id as number,
-    trt: data.trt as string,
-    grau: data.grau as 'primeiro_grau' | 'segundo_grau',
-    numero_processo: data.numero_processo as string,
+    trt: (data.trt as string) ?? null,
+    grau: (data.grau as 'primeiro_grau' | 'segundo_grau') ?? null,
+    numero_processo: (data.numero_processo as string) ?? null,
     logradouro: (data.logradouro as string) ?? null,
     numero: (data.numero as string) ?? null,
     complemento: (data.complemento as string) ?? null,
@@ -70,7 +71,7 @@ export function converterParaEndereco(data: Record<string, unknown>): Endereco {
     cep: (data.cep as string) ?? null,
     classificacoes_endereco: (data.classificacoes_endereco as any[]) ?? null,
     correspondencia: (data.correspondencia as boolean) ?? null,
-    situacao: (data.situacao as any) ?? null,
+    situacao: (data.situacao as SituacaoEndereco | null) ?? null,
     dados_pje_completo: (data.dados_pje_completo as Record<string, unknown>) ?? null,
     id_usuario_cadastrador_pje: (data.id_usuario_cadastrador_pje as number) ?? null,
     data_alteracao_pje: (data.data_alteracao_pje as string) ?? null,

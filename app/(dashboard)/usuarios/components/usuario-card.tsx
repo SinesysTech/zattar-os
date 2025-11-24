@@ -12,6 +12,7 @@ import {
   formatarNomeExibicao,
   formatarOab,
   formatarTelefone,
+  formatarCpf,
 } from '@/app/_lib/utils/format-usuarios';
 
 interface UsuarioCardProps {
@@ -45,35 +46,33 @@ export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: Usuar
       </CardHeader>
 
       <CardContent className="flex-1 space-y-2 text-sm pb-12">
-        {usuario.oab && (
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground">OAB:</span>
-            <span className="font-medium">
-              {formatarOab(usuario.oab, usuario.ufOab)}
-            </span>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground">CPF:</span>
+          <span className="font-medium">
+            {formatarCpf(usuario.cpf)}
+          </span>
+        </div>
 
-        {usuario.telefone && (
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground">Telefone:</span>
-            <span className="font-medium">
-              {formatarTelefone(usuario.telefone)}
-            </span>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground">Telefone:</span>
+          <span className="font-medium">
+            {formatarTelefone(usuario.telefone)}
+          </span>
+        </div>
 
-        {usuario.nomeCompleto !== usuario.nomeExibicao && (
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground">Nome completo:</span>
-            <span
-              className="font-medium truncate"
-              title={usuario.nomeCompleto}
-            >
-              {usuario.nomeCompleto}
-            </span>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground">Cargo:</span>
+          <span className="font-medium truncate" title={usuario.cargo?.nome || '-'}>
+            {usuario.cargo?.nome || '-'}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground">OAB:</span>
+          <span className="font-medium">
+            {formatarOab(usuario.oab, usuario.ufOab)}
+          </span>
+        </div>
       </CardContent>
 
       {/* Botões de ação no canto inferior direito */}
