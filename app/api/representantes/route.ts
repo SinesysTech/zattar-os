@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import {
   listarRepresentantes,
+  listarRepresentantesComEndereco,
   criarRepresentante,
 } from '@/backend/representantes/services/representantes-persistence.service';
 import type {
@@ -98,6 +99,12 @@ import type {
  *           enum: [asc, desc]
  *           default: asc
  *         description: Direção da ordenação
+ *       - in: query
+ *         name: incluir_endereco
+ *         schema:
+ *           type: boolean
+ *           default: false
+ *         description: Se true, inclui dados de endereço via JOIN
  *     responses:
  *       200:
  *         description: Lista de representantes retornada com sucesso
@@ -140,6 +147,7 @@ export async function GET(request: NextRequest) {
 
     // Parse query parameters
     const searchParams = request.nextUrl.searchParams;
+    const incluirEndereco = searchParams.get('incluir_endereco') === 'true';
     const params: ListarRepresentantesParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!) : undefined,
@@ -154,7 +162,9 @@ export async function GET(request: NextRequest) {
     };
 
     // List representantes
-    const result = await listarRepresentantes(params);
+    const result = incluirEndereco
+      ? await listarRepresentantesComEndereco(params)
+      : await listarRepresentantes(params);
 
     return NextResponse.json({ success: true, data: result }, { status: 200 });
   } catch (error) {
@@ -216,6 +226,9 @@ export async function GET(request: NextRequest) {
  *               uf_oab:
  *                 type: string
  *                 description: UF da OAB
+ *               endereco_id:
+ *                 type: integer
+ *                 description: ID do endereço na tabela enderecos (FK)
  *     responses:
  *       201:
  *         description: Representante criado com sucesso

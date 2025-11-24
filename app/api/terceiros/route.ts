@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
 import {
   listarTerceiros,
+  listarTerceirosComEndereco,
   criarTerceiro,
 } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
 import type { CriarTerceiroParams, ListarTerceirosParams } from '@/backend/types/partes';
@@ -39,6 +40,12 @@ import type { CriarTerceiroParams, ListarTerceirosParams } from '@/backend/types
  *         name: processo_id
  *         schema:
  *           type: integer
+ *       - in: query
+ *         name: incluir_endereco
+ *         schema:
+ *           type: boolean
+ *           default: false
+ *         description: Se true, inclui dados de endereço via JOIN
  *     responses:
  *       200:
  *         description: Lista de terceiros
@@ -76,6 +83,9 @@ import type { CriarTerceiroParams, ListarTerceirosParams } from '@/backend/types
  *                 enum: [ATIVO, PASSIVO, NEUTRO, TERCEIRO]
  *               processo_id:
  *                 type: integer
+ *               endereco_id:
+ *                 type: integer
+ *                 description: ID do endereço na tabela enderecos (FK)
  *     responses:
  *       201:
  *         description: Terceiro criado com sucesso
@@ -88,6 +98,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
+    const incluirEndereco = searchParams.get('incluir_endereco') === 'true';
     const params: ListarTerceirosParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
@@ -96,7 +107,9 @@ export async function GET(request: NextRequest) {
       tipo_parte: searchParams.get('tipo_parte') as any || undefined,
     };
 
-    const resultado = await listarTerceiros(params);
+    const resultado = incluirEndereco
+      ? await listarTerceirosComEndereco(params)
+      : await listarTerceiros(params);
 
     return NextResponse.json({
       success: true,
