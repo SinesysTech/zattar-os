@@ -9,7 +9,6 @@ import type {
   ListarTerceirosParams,
   ListarTerceirosResult,
   UpsertTerceiroPorIdPessoaParams,
-  BuscarTerceirosPorProcessoParams,
 } from '@/backend/types/partes/terceiros-types';
 
 /**
@@ -474,26 +473,16 @@ export async function buscarTerceiroPorIdPessoaPje(id_pessoa_pje: number): Promi
 }
 
 /**
- * Busca terceiros por processo
+ * @deprecated Esta função está obsoleta pois terceiros agora é uma tabela global.
+ * Use uma query via processo_partes para buscar terceiros de um processo específico.
+ * A vinculação é feita através da tabela processo_partes com tipo_entidade='terceiro'.
  */
 export async function buscarTerceirosPorProcesso(
-  params: BuscarTerceirosPorProcessoParams
+  _params: { processo_id: number; tipo_parte?: string }
 ): Promise<Terceiro[]> {
-  const supabase = createServiceClient();
-
-  let query = supabase.from('terceiros').select('*').eq('processo_id', params.processo_id);
-
-  if (params.tipo_parte) {
-    query = query.eq('tipo_parte', params.tipo_parte);
-  }
-
-  const { data, error } = await query.order('tipo_parte', { ascending: true });
-
-  if (error) {
-    throw new Error(`Erro ao buscar terceiros por processo: ${error.message}`);
-  }
-
-  return (data || []).map(converterParaTerceiro);
+  throw new Error(
+    'buscarTerceirosPorProcesso está obsoleto. Use query via processo_partes para buscar terceiros de um processo.'
+  );
 }
 
 /**

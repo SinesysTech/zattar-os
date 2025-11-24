@@ -374,6 +374,10 @@ export interface ListarTerceirosResult {
 export interface UpsertTerceiroPorIdPessoaPFParams {
   id_pessoa_pje: number; // Required para upsert
   id_pje: number;
+  processo_id: number;
+  trt: number;
+  grau: number;
+  numero_processo: string;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
   tipo_pessoa: 'pf';
@@ -416,6 +420,10 @@ export interface UpsertTerceiroPorIdPessoaPFParams {
 export interface UpsertTerceiroPorIdPessoaPJParams {
   id_pessoa_pje: number; // Required para upsert
   id_pje: number;
+  processo_id: number;
+  trt: number;
+  grau: number;
+  numero_processo: string;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
   tipo_pessoa: 'pj';
