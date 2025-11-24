@@ -3,7 +3,7 @@
 // Hook para buscar terceiros
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { Terceiro } from '@/lib/types/partes';
+import type { Terceiro } from '@/app/_lib/types';
 
 export interface TerceirosApiResponse {
   success: boolean;
@@ -24,6 +24,7 @@ export interface BuscarTerceirosParams {
   tipo_parte?: string;
   polo?: string;
   situacao?: 'A' | 'I';
+  incluirEndereco?: boolean;
 }
 
 interface UseTerceirosResult {
@@ -56,6 +57,7 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
   const tipo_parte = params.tipo_parte || '';
   const polo = params.polo || '';
   const situacao = params.situacao || '';
+  const incluirEndereco = params.incluirEndereco ?? false;
 
   // Normalizar parâmetros para comparação estável
   const paramsKey = useMemo(() => {
@@ -67,8 +69,9 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
       tipo_parte,
       polo,
       situacao,
+      incluirEndereco,
     });
-  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao]);
+  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao, incluirEndereco]);
 
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
@@ -99,8 +102,11 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
       if (situacao) {
         searchParams.set('situacao', situacao);
       }
+      if (incluirEndereco) {
+        searchParams.set('incluir_endereco', 'true');
+      }
 
-      const response = await fetch(`/api/partes/terceiros?${searchParams.toString()}`);
+      const response = await fetch(`/api/terceiros?${searchParams.toString()}`);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
@@ -128,7 +134,7 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao]);
+  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao, incluirEndereco]);
 
   useEffect(() => {
     // Só executar se os parâmetros realmente mudaram

@@ -18,7 +18,7 @@ import {
   formatarNome,
   formatarTipoPessoa,
 } from '@/app/_lib/utils/format-clientes';
-import type { ParteContraria } from '@/lib/types/partes';
+import type { ParteContraria } from '@/app/_lib/types';
 
 export default function ParteContrariaPage() {
   const params = useParams();

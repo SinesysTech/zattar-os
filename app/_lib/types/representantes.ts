@@ -31,6 +31,7 @@ export interface BuscarRepresentantesParams extends Partial<ListarRepresentantes
   tipo_pessoa?: 'pf' | 'pj';
   numero_oab?: string;
   situacao_oab?: 'REGULAR' | 'SUSPENSO' | 'CANCELADO' | 'LICENCIADO' | 'FALECIDO';
+  incluirEndereco?: boolean;
 }
 
 /**

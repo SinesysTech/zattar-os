@@ -18,7 +18,7 @@ import {
   formatarNome,
   formatarTipoPessoa,
 } from '@/app/_lib/utils/format-clientes';
-import type { Cliente } from '@/lib/types/partes';
+import type { Cliente } from '@/app/_lib/types';
 
 export default function ClientePage() {
   const params = useParams();

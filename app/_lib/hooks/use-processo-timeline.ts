@@ -1,307 +1,244 @@
 /**
- * Hook para gerenciar visualização e captura de timeline de processo
+ * Hook para gerenciar consulta e captura de timeline de processo
  *
- * Encapsula a lógica de:
- * - Verificação de timeline existente
- * - Captura automática se necessário
- * - Polling durante captura
- * - Tratamento de erros
+ * Este hook encapsula a lógica de:
+ * 1. Buscar dados do processo (acervo)
+ * 2. Verificar se timeline existe no MongoDB
+ * 3. Acionar captura automática se necessário
+ * 4. Polling durante a captura
+ * 5. Gerenciar estados de loading e erro
  */
 
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Acervo } from '@/backend/types/acervo/types';
 import type { TimelineDocument } from '@/backend/types/mongodb/timeline';
 
-interface UseProcessoTimelineReturn {
-  processo: Acervo | null;
+interface ProcessoTimelineData {
+  acervo: Acervo;
   timeline: TimelineDocument | null;
-  isLoading: boolean;
-  isCapturing: boolean;
-  error: Error | null;
-  captureProgress: string; // Mensagem de progresso contextual
-  refetch: () => Promise<void>;
 }
 
-const MAX_POLLING_ATTEMPTS = 60; // 60 tentativas * 5s = 5 minutos
-const POLLING_INTERVAL = 5000; // 5 segundos
+interface UseProcessoTimelineReturn {
+  /** Dados do processo */
+  processo: Acervo | null;
+  /** Timeline do processo (se existir) */
+  timeline: TimelineDocument | null;
+  /** Carregando dados iniciais */
+  isLoading: boolean;
+  /** Capturando timeline no PJE */
+  isCapturing: boolean;
+  /** Erro ocorrido */
+  error: Error | null;
+  /** Re-buscar timeline */
+  refetch: () => Promise<void>;
+  /** Forçar recaptura da timeline (mesmo se já existir) */
+  forceRecapture: () => Promise<void>;
+}
 
-/**
- * Hook para buscar e gerenciar timeline de um processo
- * @param acervoId - ID do processo no acervo
- */
-export function useProcessoTimeline(acervoId: number): UseProcessoTimelineReturn {
+const POLLING_INTERVAL = 5000; // 5 segundos
+const MAX_POLLING_ATTEMPTS = 120; // 10 minutos (120 * 5s)
+
+export function useProcessoTimeline(id: number): UseProcessoTimelineReturn {
   const [processo, setProcesso] = useState<Acervo | null>(null);
   const [timeline, setTimeline] = useState<TimelineDocument | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCapturing, setIsCapturing] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [captureProgress, setCaptureProgress] = useState('');
-
-  const pollingAttempts = useRef(0);
-  const pollingInterval = useRef<NodeJS.Timeout | null>(null);
-  const captureStartTime = useRef<number>(0);
+  const [pollingAttempts, setPollingAttempts] = useState(0);
 
   /**
-   * Atualiza mensagem de progresso baseada no tempo decorrido
+   * Buscar processo e timeline
    */
-  const updateCaptureProgress = useCallback(() => {
-    const elapsed = Date.now() - captureStartTime.current;
-    const seconds = Math.floor(elapsed / 1000);
-
-    if (seconds < 10) {
-      setCaptureProgress('Iniciando captura da timeline...');
-    } else if (seconds < 60) {
-      setCaptureProgress(
-        'Capturando movimentos e documentos do PJE... (isso pode levar alguns minutos)'
-      );
-    } else if (seconds < 120) {
-      setCaptureProgress('Baixando documentos e enviando para Google Drive...');
-    } else {
-      setCaptureProgress('Processando documentos... Quase pronto!');
-    }
-  }, []);
-
-  /**
-   * Limpa polling interval
-   */
-  const clearPolling = useCallback(() => {
-    if (pollingInterval.current) {
-      clearInterval(pollingInterval.current);
-      pollingInterval.current = null;
-    }
-    pollingAttempts.current = 0;
-  }, []);
-
-  /**
-   * Busca dados do processo
-   */
-  const fetchProcesso = useCallback(async (): Promise<Acervo | null> => {
+  const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(`/api/acervo/${acervoId}`);
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('Processo não encontrado');
-        }
-        throw new Error('Erro ao carregar processo');
-      }
-
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error(data.error || 'Erro ao carregar processo');
-      }
-
-      return data.data as Acervo;
-    } catch (err) {
-      console.error('Erro ao buscar processo:', err);
-      throw err;
-    }
-  }, [acervoId]);
-
-  /**
-   * Busca timeline do processo
-   */
-  const fetchTimeline = useCallback(async (): Promise<TimelineDocument | null> => {
-    try {
-      const response = await fetch(`/api/acervo/${acervoId}/timeline`);
-
-      if (!response.ok) {
-        throw new Error('Erro ao carregar timeline');
-      }
-
-      const data: { success: boolean; data: { timeline: TimelineDocument | null }; error?: string } = await response.json();
-
-      if (!data.success) {
-        throw new Error(data.error || 'Erro ao carregar timeline');
-      }
-
-      return data.data.timeline;
-    } catch (err) {
-      console.error('Erro ao buscar timeline:', err);
-      throw err;
-    }
-  }, [acervoId]);
-
-  /**
-   * Inicia polling para verificar se timeline foi salva
-   */
-  const startPolling = useCallback(() => {
-    pollingAttempts.current = 0;
-    setCaptureProgress('Salvando timeline no banco de dados...');
-
-    // Aguarda 10 segundos iniciais antes de começar polling
-    setTimeout(() => {
-      pollingInterval.current = setInterval(async () => {
-        pollingAttempts.current += 1;
-
-        try {
-          const timelineData = await fetchTimeline();
-
-          if (timelineData !== null) {
-            // Timeline foi salva com sucesso
-            setTimeline(timelineData);
-            setIsCapturing(false);
-            clearPolling();
-            setCaptureProgress('');
-          } else if (pollingAttempts.current >= MAX_POLLING_ATTEMPTS) {
-            // Timeout: máximo de tentativas atingido
-            clearPolling();
-            setIsCapturing(false);
-            throw new Error(
-              'Timeout na captura. A operação pode estar em andamento. Recarregue a página em alguns minutos.'
-            );
-          }
-        } catch (err) {
-          clearPolling();
-          setIsCapturing(false);
-          setError(err as Error);
-        }
-      }, POLLING_INTERVAL);
-    }, 10000); // 10 segundos de delay inicial
-  }, [fetchTimeline, clearPolling]);
-
-  /**
-   * Inicia captura de timeline no PJE
-   */
-  const captureTimeline = useCallback(
-    async (processoData: Acervo): Promise<void> => {
-      if (!processoData.advogado_id) {
-        throw new Error(
-          'Não é possível capturar timeline: advogado não configurado para este processo'
-        );
-      }
-
-      try {
-        setIsCapturing(true);
-        captureStartTime.current = Date.now();
-        updateCaptureProgress();
-
-        // Atualizar mensagem de progresso periodicamente
-        const progressInterval = setInterval(updateCaptureProgress, 5000);
-
-        const response = await fetch('/api/captura/trt/timeline', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            trtCodigo: processoData.trt,
-            grau: processoData.grau,
-            processoId: processoData.id_pje.toString(),
-            advogadoId: processoData.advogado_id,
-            baixarDocumentos: true,
-            filtroDocumentos: {
-              apenasAssinados: true,
-              apenasNaoSigilosos: true,
-            },
-          }),
-        });
-
-        clearInterval(progressInterval);
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error(
-              'Erro de autenticação no PJE. Verifique as credenciais do advogado.'
-            );
-          }
-          throw new Error('Erro ao capturar timeline');
-        }
-
-        const data: { success: boolean; error?: string } = await response.json();
-
-        if (!data.success) {
-          throw new Error(data.error || 'Erro ao capturar timeline');
-        }
-
-        // Inicia polling para aguardar salvar no MongoDB
-        startPolling();
-      } catch (err) {
-        console.error('Erro ao capturar timeline:', err);
-        setIsCapturing(false);
-        throw err;
-      }
-    },
-    [updateCaptureProgress, startPolling]
-  );
-
-  /**
-   * Re-busca dados (retry)
-   */
-  const refetch = useCallback(async () => {
-    try {
-      setIsLoading(true);
       setError(null);
 
-      const processoData = await fetchProcesso();
-      setProcesso(processoData);
+      const response = await fetch(`/api/acervo/${id}/timeline`);
+      const result = await response.json();
 
-      if (processoData) {
-        const timelineData = await fetchTimeline();
-        setTimeline(timelineData);
+      if (!response.ok) {
+        throw new Error(result.error || 'Erro ao buscar dados do processo');
+      }
 
-        // Se timeline não existe e não está capturando, inicia captura
-        if (timelineData === null && !isCapturing) {
-          await captureTimeline(processoData);
-        }
+      const data = result.data as ProcessoTimelineData;
+      setProcesso(data.acervo);
+      setTimeline(data.timeline);
+
+      return data;
+    } catch (err) {
+      const errorObj = err instanceof Error ? err : new Error('Erro desconhecido');
+      setError(errorObj);
+      throw errorObj;
+    }
+  }, [id]);
+
+  /**
+   * Acionar captura de timeline
+   */
+  const captureTimeline = useCallback(async () => {
+    if (!processo) return;
+
+    try {
+      setIsCapturing(true);
+      setError(null);
+
+      console.log('[useProcessoTimeline] Iniciando captura de timeline', {
+        processoId: processo.id,
+        numeroProcesso: processo.numero_processo,
+      });
+
+      const response = await fetch('/api/captura/trt/timeline', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          trtCodigo: processo.trt,
+          grau: processo.grau,
+          processoId: processo.id_pje,
+          numeroProcesso: processo.numero_processo,
+          advogadoId: processo.advogado_id,
+          baixarDocumentos: true,
+          filtroDocumentos: {
+            apenasAssinados: false, // Baixar todos os documentos
+            apenasNaoSigilosos: false, // Incluir sigilosos também
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erro ao iniciar captura da timeline');
+      }
+
+      console.log('[useProcessoTimeline] Captura iniciada com sucesso');
+
+      // Resetar contador de polling
+      setPollingAttempts(0);
+    } catch (err) {
+      const errorObj = err instanceof Error ? err : new Error('Erro ao capturar timeline');
+      setError(errorObj);
+      setIsCapturing(false);
+      throw errorObj;
+    }
+  }, [processo]);
+
+  /**
+   * Polling para verificar se timeline foi capturada
+   */
+  const pollTimeline = useCallback(async () => {
+    if (!isCapturing) return;
+
+    try {
+      const data = await fetchData();
+
+      // Se timeline foi capturada, parar polling
+      if (data.timeline) {
+        console.log('[useProcessoTimeline] Timeline capturada com sucesso!');
+        setIsCapturing(false);
+        setPollingAttempts(0);
+        return;
+      }
+
+      // Incrementar tentativas
+      setPollingAttempts((prev) => prev + 1);
+
+      // Verificar limite de tentativas
+      if (pollingAttempts >= MAX_POLLING_ATTEMPTS) {
+        throw new Error(
+          'Timeout: A captura da timeline está demorando mais que o esperado. ' +
+          'Por favor, tente novamente mais tarde.'
+        );
       }
     } catch (err) {
-      setError(err as Error);
+      const errorObj = err instanceof Error ? err : new Error('Erro no polling');
+      setError(errorObj);
+      setIsCapturing(false);
+      setPollingAttempts(0);
+    }
+  }, [isCapturing, fetchData, pollingAttempts]);
+
+  /**
+   * Re-buscar dados (útil após erro)
+   */
+  const refetch = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await fetchData();
     } finally {
       setIsLoading(false);
     }
-  }, [fetchProcesso, fetchTimeline, captureTimeline, isCapturing]);
+  }, [fetchData]);
 
   /**
-   * Efeito principal: carrega dados iniciais
+   * Forçar recaptura da timeline (mesmo se já existir)
+   */
+  const forceRecapture = useCallback(async () => {
+    if (isCapturing) {
+      console.log('[useProcessoTimeline] Captura já em andamento, ignorando');
+      return;
+    }
+
+    console.log('[useProcessoTimeline] Forçando recaptura da timeline');
+
+    // Limpar timeline atual para forçar nova captura
+    setTimeline(null);
+    setError(null);
+
+    // Acionar captura manualmente
+    await captureTimeline();
+  }, [isCapturing, captureTimeline]);
+
+  /**
+   * Efeito: Carregar dados iniciais
    */
   useEffect(() => {
     let mounted = true;
 
-    const loadData = async () => {
+    (async () => {
       try {
-        setIsLoading(true);
-        setError(null);
-
-        // 1. Busca dados do processo
-        const processoData = await fetchProcesso();
-        if (!mounted) return;
-        setProcesso(processoData);
-
-        if (!processoData) {
-          return;
-        }
-
-        // 2. Busca timeline existente
-        const timelineData = await fetchTimeline();
-        if (!mounted) return;
-        setTimeline(timelineData);
-
-        // 3. Se timeline não existe, inicia captura automaticamente
-        if (timelineData === null && !isCapturing) {
-          await captureTimeline(processoData);
-        }
-      } catch (err) {
-        if (mounted) {
-          setError(err as Error);
-        }
+        await fetchData();
       } finally {
         if (mounted) {
           setIsLoading(false);
         }
       }
-    };
-
-    loadData();
+    })();
 
     return () => {
       mounted = false;
-      clearPolling();
     };
-  }, [acervoId, fetchProcesso, fetchTimeline, captureTimeline, clearPolling]);
+  }, [fetchData]);
+
+  /**
+   * Efeito: Verificar se precisa capturar timeline
+   */
+  useEffect(() => {
+    if (isLoading || isCapturing || error) return;
+    if (!processo) return;
+    if (timeline !== null) return; // Timeline já existe
+
+    // Timeline não existe, iniciar captura
+    console.log('[useProcessoTimeline] Timeline não encontrada, iniciando captura automática');
+    captureTimeline();
+  }, [processo, timeline, isLoading, isCapturing, error, captureTimeline]);
+
+  /**
+   * Efeito: Polling durante captura
+   */
+  useEffect(() => {
+    if (!isCapturing) return;
+
+    const intervalId = setInterval(() => {
+      pollTimeline();
+    }, POLLING_INTERVAL);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isCapturing, pollTimeline]);
 
   return {
     processo,
@@ -309,7 +246,7 @@ export function useProcessoTimeline(acervoId: number): UseProcessoTimelineReturn
     isLoading,
     isCapturing,
     error,
-    captureProgress,
     refetch,
+    forceRecapture,
   };
 }

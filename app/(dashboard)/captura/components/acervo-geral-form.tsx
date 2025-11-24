@@ -3,7 +3,7 @@
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
-import { capturarAcervoGeral } from '@/app/_lib/api/captura';
+import { capturarAcervoGeral } from '@/app/api/captura/captura';
 import { useState } from 'react';
 
 export function AcervoGeralForm() {

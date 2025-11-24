@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,7 @@ import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Eye, Pencil } from 'lucide-react';
 import { useClientes } from '@/app/_lib/hooks/use-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Cliente } from '@/lib/types/partes';
+import type { Cliente } from '@/app/_lib/types';
 import {
   formatarCpf,
   formatarCnpj,

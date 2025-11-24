@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useIsClient } from '@/hooks/use-is-client';
+import { useIsClient } from '@/app/_lib/hooks/use-is-client';
 
 interface ClientOnlyTabsProps {
   defaultValue?: string;
