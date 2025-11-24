@@ -24,6 +24,7 @@ import {
   formatarTelefone,
   formatarNome,
   formatarTipoPessoa,
+  formatarEnderecoCompleto,
 } from '@/app/_lib/utils/format-clientes';
 import {
   buildClientesFilterOptions,
@@ -70,6 +71,26 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
                 {documento}
               </span>
             </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'endereco',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Endereço</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 300,
+      meta: { align: 'left' },
+      cell: ({ row }) => {
+        const cliente = row.original as Cliente & { endereco?: any };
+        const enderecoFormatado = formatarEnderecoCompleto(cliente.endereco);
+        return (
+          <div className="min-h-10 flex items-center justify-start text-sm">
+            {enderecoFormatado}
           </div>
         );
       },

@@ -27,6 +27,7 @@ import {
   formatarTelefone,
   formatarNome,
   formatarTipoPessoa,
+  formatarEnderecoCompleto,
 } from '@/app/_lib/utils/format-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { ParteContraria } from '@/app/_lib/types';
@@ -68,6 +69,7 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
     pagina: pagina + 1,
     limite,
     busca: buscaDebounced || undefined,
+    incluirEndereco: true, // Incluir endereços nas respostas
     ...filtros,
   }), [pagina, limite, buscaDebounced, filtros]);
 
@@ -76,89 +78,140 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
   const columns = React.useMemo<ColumnDef<ParteContraria>[]>(
     () => [
       {
-        accessorKey: 'nome',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Nome" />,
-        enableSorting: true,
-        cell: ({ row }) => (
-          <div className="flex flex-col gap-1">
-            <span className="font-medium">{formatarNome(row.original.nome)}</span>
-            {row.original.nome_social_fantasia && (
-              <span className="text-xs text-muted-foreground">
-                {row.original.nome_social_fantasia}
-              </span>
-            )}
+        id: 'identificacao',
+        header: ({ column }) => (
+          <div className="flex items-center justify-start">
+            <DataTableColumnHeader column={column} title="Identificação" />
           </div>
         ),
-      },
-      {
-        accessorKey: 'tipo_pessoa',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tipo" />,
         enableSorting: true,
-        cell: ({ row }) => (
-          <Badge variant="outline" tone="neutral">
-            {formatarTipoPessoa(row.original.tipo_pessoa)}
-          </Badge>
-        ),
-      },
-      {
-        id: 'documento',
-        header: 'Documento',
+        accessorKey: 'nome',
+        size: 300,
+        meta: { align: 'left' },
         cell: ({ row }) => {
           const parte = row.original;
-          if (parte.tipo_pessoa === 'pf') {
-            return parte.cpf ? formatarCpf(parte.cpf) : '-';
-          }
-          return parte.cnpj ? formatarCnpj(parte.cnpj) : '-';
+          const isPF = parte.tipo_pessoa === 'pf';
+          const documento = isPF ? formatarCpf(parte.cpf) : formatarCnpj(parte.cnpj);
+
+          return (
+            <div className="min-h-10 flex items-start justify-start py-2">
+              <div className="flex flex-col gap-1">
+                <Badge
+                  variant="soft"
+                  tone={isPF ? 'info' : 'warning'}
+                  className="w-fit"
+                >
+                  {isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}
+                </Badge>
+                <span className="text-sm font-medium">
+                  {formatarNome(parte.nome)}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {documento}
+                </span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        id: 'endereco',
+        header: () => (
+          <div className="flex items-center justify-start">
+            <div className="text-sm font-medium">Endereço</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 300,
+        meta: { align: 'left' },
+        cell: ({ row }) => {
+          const parte = row.original as ParteContraria & { endereco?: any };
+          const enderecoFormatado = formatarEnderecoCompleto(parte.endereco);
+          return (
+            <div className="min-h-10 flex items-center justify-start text-sm">
+              {enderecoFormatado}
+            </div>
+          );
         },
       },
       {
         id: 'email',
-        header: 'E-mail',
+        header: () => (
+          <div className="flex items-center justify-start">
+            <div className="text-sm font-medium">E-mail</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 200,
+        meta: { align: 'left' },
         cell: ({ row }) => {
-          const emails = row.original.emails;
-          if (!emails || emails.length === 0) return '-';
+          const parte = row.original;
+          const emails = parte.emails;
           return (
-            <span className="text-sm text-muted-foreground truncate max-w-[200px] block">
-              {emails[0]}
-            </span>
+            <div className="min-h-10 flex items-center justify-start text-sm">
+              {emails && emails.length > 0 ? emails[0] : '-'}
+            </div>
           );
         },
       },
       {
         id: 'telefone',
-        header: 'Telefone',
+        header: () => (
+          <div className="flex items-center justify-center">
+            <div className="text-sm font-medium">Telefone</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 150,
         cell: ({ row }) => {
           const parte = row.original;
-          if (parte.ddd_celular && parte.numero_celular) {
-            return formatarTelefone(`${parte.ddd_celular}${parte.numero_celular}`);
-          }
-          if (parte.ddd_residencial && parte.numero_residencial) {
-            return formatarTelefone(`${parte.ddd_residencial}${parte.numero_residencial}`);
-          }
-          return '-';
+          const telefone = parte.ddd_residencial && parte.numero_residencial
+            ? `${parte.ddd_residencial}${parte.numero_residencial}`
+            : null;
+          return (
+            <div className="min-h-10 flex items-center justify-center text-sm">
+              {telefone ? formatarTelefone(telefone) : '-'}
+            </div>
+          );
         },
       },
       {
         accessorKey: 'situacao_pje',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+        header: ({ column }) => (
+          <div className="flex items-center justify-center">
+            <DataTableColumnHeader column={column} title="Status" />
+          </div>
+        ),
         enableSorting: true,
+        size: 100,
         cell: ({ row }) => {
-          const situacao = row.original.situacao_pje;
-          if (!situacao) return '-';
+          const situacao = row.getValue('situacao_pje') as string | null;
+          const ativo = situacao === 'A';
           return (
-            <Badge
-              tone={situacao === 'A' ? 'success' : 'neutral'}
-              variant={situacao === 'A' ? 'soft' : 'outline'}
-            >
-              {situacao === 'A' ? 'Ativo' : 'Inativo'}
-            </Badge>
+            <div className="min-h-10 flex items-center justify-center">
+              <Badge tone={ativo ? 'success' : 'neutral'} variant={ativo ? 'soft' : 'outline'}>
+                {ativo ? 'Ativo' : 'Inativo'}
+              </Badge>
+            </div>
           );
         },
       },
       {
         id: 'acoes',
-        header: 'Ações',
-        cell: ({ row }) => <ParteContrariaActions parte={row.original} />,
+        header: () => (
+          <div className="flex items-center justify-center">
+            <div className="text-sm font-medium">Ações</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 120,
+        cell: ({ row }) => {
+          return (
+            <div className="min-h-10 flex items-center justify-center">
+              <ParteContrariaActions parte={row.original} />
+            </div>
+          );
+        },
       },
     ],
     []

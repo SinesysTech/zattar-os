@@ -56,15 +56,14 @@ export const formatarEnderecoCompleto = (endereco: {
   numero?: string | null;
   complemento?: string | null;
   bairro?: string | null;
-  cidade?: string | null;
-  estado?: string | null;
-  pais?: string | null;
+  municipio?: string | null;
+  estado_sigla?: string | null;
   cep?: string | null;
 } | null | undefined): string => {
   if (!endereco) return '-';
-  
+
   const partes: string[] = [];
-  
+
   if (endereco.logradouro) {
     let logradouroCompleto = endereco.logradouro;
     if (endereco.numero) {
@@ -75,21 +74,21 @@ export const formatarEnderecoCompleto = (endereco: {
     }
     partes.push(logradouroCompleto);
   }
-  
+
   if (endereco.bairro) {
     partes.push(endereco.bairro);
   }
-  
-  if (endereco.cidade && endereco.estado) {
-    partes.push(`${endereco.cidade} - ${endereco.estado}`);
-  } else if (endereco.cidade) {
-    partes.push(endereco.cidade);
+
+  if (endereco.municipio && endereco.estado_sigla) {
+    partes.push(`${endereco.municipio} - ${endereco.estado_sigla}`);
+  } else if (endereco.municipio) {
+    partes.push(endereco.municipio);
   }
-  
+
   if (endereco.cep) {
     partes.push(`CEP: ${formatarCep(endereco.cep)}`);
   }
-  
+
   return partes.length > 0 ? partes.join(', ') : '-';
 };
 

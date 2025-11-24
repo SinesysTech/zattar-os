@@ -27,6 +27,7 @@ import {
   formatarTelefone,
   formatarNome,
   formatarTipoPessoa,
+  formatarEnderecoCompleto,
 } from '@/app/_lib/utils/format-clientes';
 import { getTipoParteLabel, getPoloLabel } from '@/app/_lib/types/terceiros';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -69,6 +70,7 @@ export function TerceirosTab({}: TerceirosTabProps) {
     pagina: pagina + 1,
     limite,
     busca: buscaDebounced || undefined,
+    incluirEndereco: true, // Incluir endereços nas respostas
     ...filtros,
   }), [pagina, limite, buscaDebounced, filtros]);
 
@@ -77,114 +79,180 @@ export function TerceirosTab({}: TerceirosTabProps) {
   const columns = React.useMemo<ColumnDef<Terceiro>[]>(
     () => [
       {
-        accessorKey: 'nome',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Nome" />,
-        enableSorting: true,
-        cell: ({ row }) => (
-          <div className="flex flex-col gap-1">
-            <span className="font-medium">{formatarNome(row.original.nome)}</span>
-            {row.original.nome_social && (
-              <span className="text-xs text-muted-foreground">
-                {row.original.nome_social}
-              </span>
-            )}
+        id: 'identificacao',
+        header: ({ column }) => (
+          <div className="flex items-center justify-start">
+            <DataTableColumnHeader column={column} title="Identificação" />
           </div>
         ),
-      },
-      {
-        accessorKey: 'tipo_pessoa',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tipo" />,
         enableSorting: true,
-        cell: ({ row }) => (
-          <Badge variant="outline" tone="neutral">
-            {formatarTipoPessoa(row.original.tipo_pessoa)}
-          </Badge>
-        ),
-      },
-      {
-        id: 'documento',
-        header: 'Documento',
+        accessorKey: 'nome',
+        size: 300,
+        meta: { align: 'left' },
         cell: ({ row }) => {
           const terceiro = row.original;
-          if (terceiro.tipo_pessoa === 'pf') {
-            return terceiro.cpf ? formatarCpf(terceiro.cpf) : '-';
-          }
-          return terceiro.cnpj ? formatarCnpj(terceiro.cnpj) : '-';
+          const isPF = terceiro.tipo_pessoa === 'pf';
+          const documento = isPF ? formatarCpf(terceiro.cpf) : formatarCnpj(terceiro.cnpj);
+
+          return (
+            <div className="min-h-10 flex items-start justify-start py-2">
+              <div className="flex flex-col gap-1">
+                <Badge
+                  variant="soft"
+                  tone={isPF ? 'info' : 'warning'}
+                  className="w-fit"
+                >
+                  {isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}
+                </Badge>
+                <span className="text-sm font-medium">
+                  {formatarNome(terceiro.nome)}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {documento}
+                </span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        id: 'endereco',
+        header: () => (
+          <div className="flex items-center justify-start">
+            <div className="text-sm font-medium">Endereço</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 300,
+        meta: { align: 'left' },
+        cell: ({ row }) => {
+          const terceiro = row.original as Terceiro & { endereco?: any };
+          const enderecoFormatado = formatarEnderecoCompleto(terceiro.endereco);
+          return (
+            <div className="min-h-10 flex items-center justify-start text-sm">
+              {enderecoFormatado}
+            </div>
+          );
         },
       },
       {
         accessorKey: 'tipo_parte',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tipo de Parte" />,
+        header: ({ column }) => (
+          <div className="flex items-center justify-center">
+            <DataTableColumnHeader column={column} title="Tipo de Parte" />
+          </div>
+        ),
         enableSorting: true,
+        size: 150,
         cell: ({ row }) => {
           if (!row.original.tipo_parte) return '-';
           return (
-            <Badge variant="outline" tone="info">
-              {getTipoParteLabel(row.original.tipo_parte)}
-            </Badge>
+            <div className="min-h-10 flex items-center justify-center">
+              <Badge variant="outline" tone="info">
+                {getTipoParteLabel(row.original.tipo_parte)}
+              </Badge>
+            </div>
           );
         },
       },
       {
         accessorKey: 'polo',
-        header: 'Polo',
+        header: () => (
+          <div className="flex items-center justify-center">
+            <div className="text-sm font-medium">Polo</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 100,
         cell: ({ row }) => {
           if (!row.original.polo) return '-';
           return (
-            <Badge variant="soft" tone="neutral">
-              {getPoloLabel(row.original.polo)}
-            </Badge>
+            <div className="min-h-10 flex items-center justify-center">
+              <Badge variant="soft" tone="neutral">
+                {getPoloLabel(row.original.polo)}
+              </Badge>
+            </div>
           );
         },
       },
       {
         id: 'email',
-        header: 'E-mail',
+        header: () => (
+          <div className="flex items-center justify-start">
+            <div className="text-sm font-medium">E-mail</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 200,
+        meta: { align: 'left' },
         cell: ({ row }) => {
-          const emails = row.original.emails;
-          if (!emails || emails.length === 0) return '-';
+          const terceiro = row.original;
+          const emails = terceiro.emails;
           return (
-            <span className="text-sm text-muted-foreground truncate max-w-[200px] block">
-              {emails[0]}
-            </span>
+            <div className="min-h-10 flex items-center justify-start text-sm">
+              {emails && emails.length > 0 ? emails[0] : '-'}
+            </div>
           );
         },
       },
       {
         id: 'telefone',
-        header: 'Telefone',
+        header: () => (
+          <div className="flex items-center justify-center">
+            <div className="text-sm font-medium">Telefone</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 150,
         cell: ({ row }) => {
           const terceiro = row.original;
-          if (terceiro.ddd_celular && terceiro.numero_celular) {
-            return formatarTelefone(`${terceiro.ddd_celular}${terceiro.numero_celular}`);
-          }
-          if (terceiro.ddd_residencial && terceiro.numero_residencial) {
-            return formatarTelefone(`${terceiro.ddd_residencial}${terceiro.numero_residencial}`);
-          }
-          return '-';
+          const telefone = terceiro.ddd_residencial && terceiro.numero_residencial
+            ? `${terceiro.ddd_residencial}${terceiro.numero_residencial}`
+            : null;
+          return (
+            <div className="min-h-10 flex items-center justify-center text-sm">
+              {telefone ? formatarTelefone(telefone) : '-'}
+            </div>
+          );
         },
       },
       {
         accessorKey: 'situacao',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+        header: ({ column }) => (
+          <div className="flex items-center justify-center">
+            <DataTableColumnHeader column={column} title="Status" />
+          </div>
+        ),
         enableSorting: true,
+        size: 100,
         cell: ({ row }) => {
-          const situacao = row.original.situacao;
-          if (!situacao) return '-';
+          const situacao = row.getValue('situacao') as string | null;
+          const ativo = situacao === 'A';
           return (
-            <Badge
-              tone={situacao === 'A' ? 'success' : 'neutral'}
-              variant={situacao === 'A' ? 'soft' : 'outline'}
-            >
-              {situacao === 'A' ? 'Ativo' : 'Inativo'}
-            </Badge>
+            <div className="min-h-10 flex items-center justify-center">
+              <Badge tone={ativo ? 'success' : 'neutral'} variant={ativo ? 'soft' : 'outline'}>
+                {ativo ? 'Ativo' : 'Inativo'}
+              </Badge>
+            </div>
           );
         },
       },
       {
         id: 'acoes',
-        header: 'Ações',
-        cell: ({ row }) => <TerceiroActions terceiro={row.original} />,
+        header: () => (
+          <div className="flex items-center justify-center">
+            <div className="text-sm font-medium">Ações</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 120,
+        cell: ({ row }) => {
+          return (
+            <div className="min-h-10 flex items-center justify-center">
+              <TerceiroActions terceiro={row.original} />
+            </div>
+          );
+        },
       },
     ],
     []
