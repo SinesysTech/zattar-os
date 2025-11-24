@@ -109,6 +109,8 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       pais_nacionalidade: (data.pais_nacionalidade as string | null) ?? null,
       profissao: (data.profissao as string | null) ?? null,
       estado_civil: (data.estado_civil as string | null) ?? null,
+      grau_instrucao: (data.grau_instrucao as string | null) ?? null,
+      necessidade_especial: (data.necessidade_especial as string | null) ?? null,
       inscricao_estadual: null,
       inscricao_municipal: null,
       data_abertura: null,
@@ -136,6 +138,7 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       porte_codigo: (data.porte_codigo as string | null) ?? null,
       porte_descricao: (data.porte_descricao as string | null) ?? null,
       qualificacao_responsavel: (data.qualificacao_responsavel as string | null) ?? null,
+      capital_social: (data.capital_social as number | null) ?? null,
       nome_fantasia: (data.nome_fantasia as string | null) ?? null,
       status_pje: (data.status_pje as string | null) ?? null,
       tipo_documento: null,
@@ -153,6 +156,8 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       pais_nacionalidade: null,
       profissao: null,
       estado_civil: null,
+      grau_instrucao: null,
+      necessidade_especial: null,
     };
   }
 }

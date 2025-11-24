@@ -17,21 +17,35 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 // import { useToast } from '@/hooks/use-toast'; // TODO: Implementar hook de toast
 
+// Importar tipos do backend
+import type { GeneroUsuario, Endereco } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+
 interface Usuario {
   id: number;
-  nome: string;
-  email: string;
-  cpf: string | null;
+  authUserId: string | null;
+  nomeCompleto: string;
+  nomeExibicao: string;
+  cpf: string;
+  rg: string | null;
+  dataNascimento: string | null;
+  genero: GeneroUsuario | null;
+  oab: string | null;
+  ufOab: string | null;
+  emailPessoal: string | null;
+  emailCorporativo: string;
   telefone: string | null;
-  numero_oab: string | null;
-  uf_oab: string | null;
-  is_super_admin: boolean;
-  ativo: boolean;
-  cargo_id: number | null;
+  ramal: string | null;
+  endereco: Endereco | null;
+  cargoId: number | null;
   cargo?: {
+    id: number;
     nome: string;
     descricao: string | null;
   } | null;
+  isSuperAdmin: boolean;
+  ativo: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Permissao {
@@ -337,11 +351,11 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         </Button>
         <div className="flex-1">
           <p className="text-sm text-muted-foreground">
-            Usuários → {usuario.nome}
+            Usuários → {usuario.nomeExibicao}
           </p>
-          <h1 className="text-2xl font-bold">{usuario.nome}</h1>
+          <h1 className="text-2xl font-bold">{usuario.nomeExibicao}</h1>
         </div>
-        {usuario.is_super_admin && (
+        {usuario.isSuperAdmin && (
           <Badge tone="danger" variant="solid" className="gap-1">
             <Shield className="h-3 w-3" />
             Super Admin
@@ -363,22 +377,52 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">E-mail</p>
-              <p className="text-sm">{usuario.email}</p>
+              <p className="text-sm font-medium text-muted-foreground">Nome Completo</p>
+              <p className="text-sm">{usuario.nomeCompleto}</p>
             </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">E-mail Corporativo</p>
+              <p className="text-sm">{usuario.emailCorporativo}</p>
+            </div>
+            {usuario.emailPessoal && (
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">E-mail Pessoal</p>
+                <p className="text-sm">{usuario.emailPessoal}</p>
+              </div>
+            )}
             <div>
               <p className="text-sm font-medium text-muted-foreground">CPF</p>
               <p className="text-sm">{formatarCPF(usuario.cpf)}</p>
             </div>
+            {usuario.rg && (
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">RG</p>
+                <p className="text-sm">{usuario.rg}</p>
+              </div>
+            )}
+            {usuario.dataNascimento && (
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Data de Nascimento</p>
+                <p className="text-sm">
+                  {new Date(usuario.dataNascimento).toLocaleDateString('pt-BR')}
+                </p>
+              </div>
+            )}
             <div>
               <p className="text-sm font-medium text-muted-foreground">Telefone</p>
               <p className="text-sm">{formatarTelefone(usuario.telefone)}</p>
             </div>
+            {usuario.ramal && (
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Ramal</p>
+                <p className="text-sm">{usuario.ramal}</p>
+              </div>
+            )}
             <div>
               <p className="text-sm font-medium text-muted-foreground">OAB</p>
               <p className="text-sm">
-                {usuario.numero_oab && usuario.uf_oab
-                  ? `${usuario.numero_oab} / ${usuario.uf_oab}`
+                {usuario.oab && usuario.ufOab
+                  ? `${usuario.oab} / ${usuario.ufOab}`
                   : '-'}
               </p>
             </div>
@@ -421,7 +465,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               </Button>
             )}
           </div>
-          {usuario.is_super_admin && (
+          {usuario.isSuperAdmin && (
             <Alert className="mt-4">
               <Shield className="h-4 w-4" />
               <AlertTitle>Super Administrador</AlertTitle>
@@ -475,7 +519,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                             <Checkbox
                               checked={checked}
                               onCheckedChange={() => togglePermissao(recurso, operacao)}
-                              disabled={usuario.is_super_admin}
+                              disabled={usuario.isSuperAdmin}
                             />
                           </div>
                         </td>

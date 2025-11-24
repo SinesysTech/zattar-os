@@ -87,15 +87,17 @@ const mockAdvogado: AdvogadoIdentificacao = {
 
 const createParteMock = (overrides: Partial<PartePJE> = {}): PartePJE => ({
   idParte: 12345,
+  idPessoa: 67890,
   nome: 'Maria Santos',
   tipoParte: 'AUTOR',
   polo: 'ATIVO',
   numeroDocumento: '987.654.321-00',
   tipoDocumento: 'CPF',
-  tipoPessoa: 'F',
+  emails: [],
+  telefones: [],
   principal: true,
-  ordem: 1,
   representantes: [],
+  dadosCompletos: {},
   ...overrides,
 });
 
@@ -232,7 +234,7 @@ describe('identificarTipoParte() - Tipos Especiais (Terceiros)', () => {
       nome: 'Dr. Carlos Perito',
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Mesmo CPF do advogado!
           tipoDocumento: 'CPF',
@@ -264,7 +266,7 @@ describe('identificarTipoParte() - Cliente', () => {
       nome: 'Maria Santos',
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Mesmo CPF do advogado
           tipoDocumento: 'CPF',
@@ -280,7 +282,7 @@ describe('identificarTipoParte() - Cliente', () => {
       tipoParte: 'RECLAMANTE',
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '12345678900', // Sem formatação
           tipoDocumento: 'CPF',
@@ -300,7 +302,7 @@ describe('identificarTipoParte() - Cliente', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Com formatação
           tipoDocumento: 'CPF',
@@ -315,7 +317,7 @@ describe('identificarTipoParte() - Cliente', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dra. Maria Oliveira',
           numeroDocumento: '111.222.333-44',
           tipoDocumento: 'CPF',
@@ -344,7 +346,7 @@ describe('identificarTipoParte() - Cliente', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Defensor Público',
           numeroDocumento: null as any,
           tipoDocumento: 'CPF',
@@ -366,7 +368,7 @@ describe('identificarTipoParte() - Cliente', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Sem CPF',
           numeroDocumento: '',
           tipoDocumento: 'CPF',
@@ -404,7 +406,7 @@ describe('identificarTipoParte() - Parte Contrária', () => {
       tipoParte: 'RECLAMADA',
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dra. Maria Oliveira',
           numeroDocumento: '111.222.333-44',
           tipoDocumento: 'CPF',
@@ -426,7 +428,7 @@ describe('identificarTipoParte() - Parte Contrária', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Defensor Público',
           numeroDocumento: null as any,
           tipoDocumento: 'CPF',
@@ -448,7 +450,7 @@ describe('identificarTipoParte() - Parte Contrária', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. Quase João',
           numeroDocumento: '123.456.789-01', // Último dígito diferente
           tipoDocumento: 'CPF',
@@ -485,7 +487,7 @@ describe('identificarTipoParte() - Edge Cases', () => {
       tipoParte: 'ASSISTENTE_TECNICO',
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
@@ -501,7 +503,7 @@ describe('identificarTipoParte() - Edge Cases', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '  123.456.789-00  ',
           tipoDocumento: 'CPF',
@@ -521,7 +523,7 @@ describe('identificarTipoParte() - Edge Cases', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
@@ -657,7 +659,7 @@ describe('identificarTipoParte() - Tipos Especiais (Terceiros)', () => {
       nome: 'Dr. Carlos Perito',
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
@@ -684,7 +686,7 @@ describe('identificarTipoParte() - Cliente', () => {
       nome: 'Maria Santos',
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
@@ -700,7 +702,7 @@ describe('identificarTipoParte() - Cliente', () => {
       tipoParte: 'RECLAMANTE',
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '12345678900',
           tipoDocumento: 'CPF',
@@ -720,7 +722,7 @@ describe('identificarTipoParte() - Cliente', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
@@ -735,7 +737,7 @@ describe('identificarTipoParte() - Cliente', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dra. Maria Oliveira',
           numeroDocumento: '111.222.333-44',
           tipoDocumento: 'CPF',
@@ -764,7 +766,7 @@ describe('identificarTipoParte() - Cliente', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Defensor Público',
           numeroDocumento: null as any,
           tipoDocumento: 'CPF',
@@ -786,7 +788,7 @@ describe('identificarTipoParte() - Cliente', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Sem CPF',
           numeroDocumento: '',
           tipoDocumento: 'CPF',
@@ -820,7 +822,7 @@ describe('identificarTipoParte() - Parte Contrária', () => {
       tipoParte: 'RECLAMADA',
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dra. Maria Oliveira',
           numeroDocumento: '111.222.333-44',
           tipoDocumento: 'CPF',
@@ -842,7 +844,7 @@ describe('identificarTipoParte() - Parte Contrária', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Defensor Público',
           numeroDocumento: null as any,
           tipoDocumento: 'CPF',
@@ -864,7 +866,7 @@ describe('identificarTipoParte() - Parte Contrária', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. Quase João',
           numeroDocumento: '123.456.789-01',
           tipoDocumento: 'CPF',
@@ -897,7 +899,7 @@ describe('identificarTipoParte() - Edge Cases', () => {
       tipoParte: 'ASSISTENTE_TECNICO',
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
@@ -912,7 +914,7 @@ describe('identificarTipoParte() - Edge Cases', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '  123.456.789-00  ',
           tipoDocumento: 'CPF',
@@ -932,7 +934,7 @@ describe('identificarTipoParte() - Edge Cases', () => {
     const parte = createParteMock({
       representantes: [
         {
-          idRepresentante: 1,
+          idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',

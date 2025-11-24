@@ -90,23 +90,28 @@ export function GrauBadges({ instances, grauAtual, grausAtivos }: GrauBadgesProp
 /**
  * Versão simplificada sem tooltip (para células de tabela compactas)
  */
-export function GrauBadgesSimple({ grausAtivos, grauAtual }: GrauBadgesProps) {
+export function GrauBadgesSimple({ grausAtivos }: GrauBadgesProps) {
   if (!grausAtivos || grausAtivos.length === 0) {
     return null;
   }
 
+  // Ordenar graus: primeiro grau primeiro, depois segundo grau
+  const grausOrdenados = [...grausAtivos].sort((a, b) => {
+    const ordem = { primeiro_grau: 1, segundo_grau: 2 };
+    return ordem[a] - ordem[b];
+  });
+
   return (
     <div className="flex items-center gap-1 flex-wrap">
-      {grausAtivos.map((grau) => {
-        const isGrauAtual = grau === grauAtual;
+      {grausOrdenados.map((grau) => {
         const label = GRAU_LABELS[grau];
         const variant = GRAU_VARIANTS[grau];
 
         return (
           <Badge
             key={grau}
-            variant={isGrauAtual ? 'default' : variant}
-            className={isGrauAtual ? 'font-semibold text-xs' : 'text-xs'}
+            variant={variant}
+            className="text-xs"
           >
             {label}
           </Badge>

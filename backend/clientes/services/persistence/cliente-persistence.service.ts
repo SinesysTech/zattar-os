@@ -111,6 +111,8 @@ function converterParaCliente(data: Record<string, unknown>): Cliente {
       pais_nacionalidade: (data.pais_nacionalidade as string | null) ?? null,
       profissao: (data.profissao as string | null) ?? null,
       estado_civil: (data.estado_civil as string | null) ?? null,
+      grau_instrucao: (data.grau_instrucao as string | null) ?? null,
+      necessidade_especial: (data.necessidade_especial as string | null) ?? null,
       inscricao_estadual: null,
       inscricao_municipal: null,
       data_abertura: null,
@@ -120,7 +122,6 @@ function converterParaCliente(data: Record<string, unknown>): Cliente {
       porte_codigo: null,
       porte_descricao: null,
       qualificacao_responsavel: null,
-      capital_social: null,
       nome_fantasia: null,
       status_pje: null,
     };
@@ -157,6 +158,8 @@ function converterParaCliente(data: Record<string, unknown>): Cliente {
       pais_nacionalidade: null,
       profissao: null,
       estado_civil: null,
+      grau_instrucao: null,
+      necessidade_especial: null,
     };
   }
 }
