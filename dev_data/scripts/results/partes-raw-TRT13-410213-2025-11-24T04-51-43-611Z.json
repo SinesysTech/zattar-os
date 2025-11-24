@@ -1,0 +1,201 @@
+{
+  "metadata": {
+    "processo": {
+      "id": 10131,
+      "numero_processo": "0000527-84.2025.5.13.0002",
+      "id_pje": 410213,
+      "trt": "TRT13",
+      "grau": "primeiro_grau"
+    },
+    "timestamp": "2025-11-24T04:51:43.612Z",
+    "duracaoMs": 245,
+    "totalPartes": 0
+  },
+  "partesRaw": {
+    "ATIVO": [
+      {
+        "id": 2097355,
+        "polo": "ativo",
+        "principal": true,
+        "enderecoDesconhecido": false,
+        "tipo": "AUTOR",
+        "idTipoParte": 65,
+        "nome": "FABRICIO SOARES PESSOA",
+        "documento": "085.552.764-11",
+        "tipoDocumento": "CPF",
+        "representantes": [
+          {
+            "id": 2097358,
+            "polo": "ativo",
+            "principal": false,
+            "enderecoDesconhecido": false,
+            "tipo": "ADVOGADO",
+            "idTipoParte": 7,
+            "nome": "PEDRO PAULO POLASTRI DE CASTRO E ALMEIDA                    ",
+            "documento": "052.348.856-40",
+            "tipoDocumento": "CPF",
+            "numeroOab": "MG124974",
+            "situacaoOab": "REGULAR",
+            "emails": [
+              "processos@pzadvogados.com"
+            ],
+            "idPessoa": 326592,
+            "tipoPessoa": "F",
+            "status": "A",
+            "situacao": "Ativo",
+            "cpf": "052.348.856-40",
+            "autoridade": false,
+            "sexo": "MASCULINO",
+            "dddCelular": "31",
+            "numeroCelular": "99159-1777",
+            "email": "processos@pzadvogados.com"
+          },
+          {
+            "id": 2097356,
+            "polo": "ativo",
+            "principal": false,
+            "enderecoDesconhecido": false,
+            "tipo": "ADVOGADO",
+            "idTipoParte": 7,
+            "nome": "PEDRO ZATTAR EUGENIO",
+            "documento": "075.292.946-10",
+            "tipoDocumento": "CPF",
+            "numeroOab": "MG128404",
+            "situacaoOab": "REGULAR",
+            "emails": [
+              "push@pzadvogados.com"
+            ],
+            "idPessoa": 328574,
+            "tipoPessoa": "F",
+            "status": "A",
+            "situacao": "Ativo",
+            "cpf": "075.292.946-10",
+            "autoridade": false,
+            "sexo": "MASCULINO",
+            "dddCelular": "31",
+            "numeroCelular": "9830-87495",
+            "email": "push@pzadvogados.com"
+          }
+        ],
+        "idPessoa": 144787,
+        "tipoPessoa": "F",
+        "status": "A",
+        "situacao": "Ativo",
+        "endereco": {
+          "id": 914288,
+          "logradouro": "RUA CANTORA ROSEANE VENANCIO DA SILVA ",
+          "numero": "76",
+          "bairro": "GRAMAME",
+          "idMunicipio": 2604,
+          "municipio": "JOAO PESSOA",
+          "municipioIbge": "2507507",
+          "estado": {
+            "id": 16,
+            "sigla": "PB",
+            "descricao": "PARAÍBA"
+          },
+          "pais": {
+            "id": 25,
+            "codigo": "076",
+            "descricao": "Brasil"
+          },
+          "nroCep": "58068-428",
+          "idPessoa": 144787,
+          "correspondencia": false,
+          "situacao": "P",
+          "classificacoesEndereco": [
+            "R"
+          ],
+          "idUsuarioCadastrador": 328574,
+          "dtAlteracao": "2024-08-29T09:31:58.179389"
+        },
+        "cpf": "085.552.764-11",
+        "ordem": 1,
+        "autoridade": false,
+        "pessoaFisica": {
+          "id": 144787,
+          "nome": "FABRICIO SOARES PESSOA",
+          "situacao": true,
+          "login": "08555276411",
+          "codigoSexo": "M",
+          "sexo": "Masculino",
+          "dataNascimento": "1990-03-01",
+          "nomeGenitora": "VERONICA SOARES DA SILVA",
+          "podeUsarCelularParaMensagem": false
+        },
+        "sexo": "MASCULINO"
+      }
+    ],
+    "PASSIVO": [
+      {
+        "id": 2097359,
+        "polo": "passivo",
+        "principal": true,
+        "enderecoDesconhecido": false,
+        "tipo": "RÉU",
+        "idTipoParte": 66,
+        "nome": "PREVENT HOME CARE LTDA",
+        "documento": "36.447.917/0001-86",
+        "tipoDocumento": "CNPJ",
+        "idPessoa": 577954,
+        "tipoPessoa": "J",
+        "status": "A",
+        "situacao": "Ativo",
+        "endereco": {
+          "id": 1030933,
+          "logradouro": "RUA ARQUITETO HERMENEGILDO DI LASCIO ",
+          "numero": "534",
+          "bairro": "TAMBAUZINHO",
+          "idMunicipio": 2604,
+          "municipio": "JOAO PESSOA",
+          "municipioIbge": "2507507",
+          "estado": {
+            "id": 16,
+            "sigla": "PB",
+            "descricao": "PARAÍBA"
+          },
+          "pais": {
+            "id": 25,
+            "codigo": "076",
+            "descricao": "Brasil"
+          },
+          "nroCep": "58042-140",
+          "idPessoa": 577954,
+          "correspondencia": true,
+          "situacao": "P",
+          "classificacoesEndereco": [
+            "R"
+          ],
+          "idUsuarioCadastrador": 328574,
+          "dtAlteracao": "2025-04-30T17:18:09.926407"
+        },
+        "ordem": 1,
+        "autoridade": false,
+        "pessoaJuridica": {
+          "id": 577954,
+          "nomeFantasia": "PREVENT HOME CARE",
+          "nome": "PREVENT HOME CARE LTDA",
+          "cnpj": "36.447.917/0001-86",
+          "numeroCpfResponsavel": "39503321468",
+          "dataAbertura": "2020-02-21T00:00:00",
+          "orgaoPublico": false,
+          "tipoPessoaCodigo": "J",
+          "tipoPessoaLabel": "Jurídica",
+          "tipoPessoaTipoValidacaoReceita": "T",
+          "situacao": true,
+          "dsTipoPessoa": "Sociedade Empresária Limitada",
+          "situacaoCnpjReceitaFederal": {
+            "id": 2,
+            "descricao": "ATIVA"
+          },
+          "dsRamoAtividade": "SERVIÇOS DE REMOÇÃO DE PACIENTES, EXCETO OS SERVIÇOS MÓVEIS DE ATENDIMENTO A URGÊNCIAS",
+          "oficial": false,
+          "dsTpPrazoExpedienteAutomatico": "Simples",
+          "login": "36447917000186",
+          "porteCodigo": 1,
+          "porteLabel": "Microempresa"
+        }
+      }
+    ]
+  }
+}

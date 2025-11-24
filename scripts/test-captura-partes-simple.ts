@@ -41,14 +41,14 @@ const CREDENCIAIS = {
 };
 
 // Configuração do TRT1 (obtida do banco via MCP)
-const CONFIG_TRT13: Con13igTRT = {
+const CONFIG_TRT13: ConfigTRT = {
   codigo: 'TRT13' as any,
   nome: 'TRT da 13ª Região',
   grau: 'primeiro_grau',
   tipoAcesso: 'primeiro_grau',
-  loginUrl: 'https://pje.trt1.jus.br/primeirograu/login.seam',
-  baseUrl: 'https://pje.trt1.jus.br',
-  apiUrl: 'https://pje.trt1.jus.br/pje-comum-api/api',
+  loginUrl: 'https://pje.trt13.jus.br/primeirograu/login.seam',
+  baseUrl: 'https://pje.trt13.jus.br',
+  apiUrl: 'https://pje.trt13.jus.br/pje-comum-api/api',
 };
 
 // ==========================================
@@ -65,11 +65,11 @@ async function main() {
   try {
     // 1. Autenticar no PJE
     console.log(`[1/2] Autenticando no PJE TRT1...`);
-    console.log(`  URL: ${CONFIG_TRT1.loginUrl}`);
+    console.log(`  URL: ${CONFIG_TRT13.loginUrl}`);
 
     const authResult = await autenticarPJE({
       credential: CREDENCIAIS,
-      config: CONFIG_TRT1,
+      config: CONFIG_TRT13,
       // twofauthConfig não precisa ser passado - usa variáveis de ambiente do .env.local
       // TWOFAUTH_ACCOUNT_ID=3 (ID da conta no 2FAuth)
     });
@@ -80,7 +80,7 @@ async function main() {
     // 2. Capturar partes do processo
     console.log(`[2/2] Capturando partes do processo ${PROCESSO.numero_processo}...`);
     console.log(`  Processo ID PJE: ${PROCESSO.id_pje}`);
-    console.log(`  URL da API: ${CONFIG_TRT1.baseUrl}/pje-comum-api/api/processos/id/${PROCESSO.id_pje}/partes?retornaEndereco=true`);
+    console.log(`  URL da API: ${CONFIG_TRT13.baseUrl}/pje-comum-api/api/processos/id/${PROCESSO.id_pje}/partes`);
     console.log('─'.repeat(80));
 
     const resultado = await capturarPartesProcesso(page, PROCESSO, ADVOGADO);

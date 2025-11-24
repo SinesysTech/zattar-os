@@ -23,7 +23,7 @@
  * Formato: Cada objeto contém dados da parte + array de representantes
  *
  * ENDPOINT HTTP:
- * GET /pje-comum-api/api/processos/id/{idProcesso}/partes?retornaEndereco=true
+ * GET /pje-comum-api/api/processos/id/{idProcesso}/partes
  *
  * IMPORTANTE:
  * - Endpoint não é documentado oficialmente pelo PJE
@@ -60,15 +60,14 @@
 import type { Page } from 'playwright';
 import { fetchPJEAPI } from '../shared/fetch';
 import type { PartePJE } from './types';
-import { obterRepresentantesPartePorID } from './obter-representantes';
 
 /**
  * Função: obterPartesProcesso
  *
  * FLUXO DE EXECUÇÃO:
- * 1. Faz requisição GET para /pje-comum-api/api/processos/id/{idProcesso}/partes?retornaEndereco=true
- * 2. Recebe array de objetos com dados das partes
- * 3. Para cada parte, busca seus representantes via obterRepresentantesPartePorID()
+ * 1. Faz requisição GET para /pje-comum-api/api/processos/id/{idProcesso}/partes
+ * 2. Normaliza resposta (pode vir como array ou objeto com polos ATIVO/PASSIVO/OUTROS)
+ * 3. Para cada parte, extrai representantes do campo 'representantes' do JSON
  * 4. Mapeia resposta do PJE para tipo PartePJE padronizado
  * 5. Retorna array de PartePJE com representantes incluídos
  *
@@ -79,8 +78,8 @@ import { obterRepresentantesPartePorID } from './obter-representantes';
  * - Se erro ao buscar representantes: loga warning e continua (representantes = [])
  *
  * PERFORMANCE:
- * - Busca representantes em paralelo usando Promise.all()
- * - Tempo típico: 500-2000ms (depende de quantidade de partes)
+ * - Representantes já vêm no JSON (não precisa fazer chamadas extras)
+ * - Tempo típico: 200-500ms (depende de quantidade de partes)
  */
 export async function obterPartesProcesso(
   page: Page,
@@ -90,37 +89,57 @@ export async function obterPartesProcesso(
     console.log(`[PJE-PARTES-API] Buscando partes do processo ${idProcesso}`);
 
     // Faz requisição para obter partes do processo
-    const response = await fetchPJEAPI<any[]>(
+    const response = await fetchPJEAPI<any>(
       page,
-      `/pje-comum-api/api/processos/id/${idProcesso}/partes`,
-      { retornaEndereco: true }
+      `/pje-comum-api/api/processos/id/${idProcesso}/partes`
     );
 
-    // Se resposta for vazia ou não for array, retorna array vazio
-    if (!response || !Array.isArray(response)) {
+    // Se resposta for vazia, retorna array vazio
+    if (!response) {
       console.log(`[PJE-PARTES-API] Processo ${idProcesso} não possui partes cadastradas`);
       return [];
     }
 
-    console.log(`[PJE-PARTES-API] Encontradas ${response.length} partes no processo ${idProcesso}`);
+    // Normalizar resposta: pode vir como array OU objeto com polos { ATIVO: [], PASSIVO: [], OUTROS: [] }
+    let partesArray: any[] = [];
 
-    // Para cada parte, busca seus representantes em paralelo
+    if (Array.isArray(response)) {
+      // Formato array direto (usado por alguns TRTs)
+      partesArray = response;
+    } else if (typeof response === 'object') {
+      // Formato objeto com polos { ATIVO: [...], PASSIVO: [...], OUTROS: [...] }
+      const polos = ['ATIVO', 'PASSIVO', 'OUTROS', 'ativo', 'passivo', 'outros'];
+      for (const polo of polos) {
+        if (Array.isArray(response[polo])) {
+          partesArray.push(...response[polo]);
+        }
+      }
+    }
+
+    if (partesArray.length === 0) {
+      console.log(`[PJE-PARTES-API] Processo ${idProcesso} não possui partes cadastradas`);
+      return [];
+    }
+
+    console.log(`[PJE-PARTES-API] Encontradas ${partesArray.length} partes no processo ${idProcesso}`);
+
+    // Mapeia cada parte para o tipo PartePJE
     const partesComRepresentantes = await Promise.all(
-      response.map(async (parteData: any, index: number) => {
+      partesArray.map(async (parteData: any, index: number) => {
         try {
-          // Busca representantes da parte
-          const representantes = await obterRepresentantesPartePorID(page, parteData.id || parteData.idParte);
+          // Representantes sempre vêm no JSON de partes
+          const representantes = Array.isArray(parteData.representantes) ? parteData.representantes : [];
 
           // Mapeia dados da API PJE para tipo PartePJE
           const parte: PartePJE = {
             idParte: parteData.id || parteData.idParte,
             idPessoa: parteData.idPessoa || parteData.id_pessoa,
             nome: parteData.nome || parteData.nomeCompleto || '',
-            tipoParte: parteData.tipoParte || parteData.tipo_parte || 'OUTRO',
+            tipoParte: parteData.tipo || parteData.tipoParte || parteData.tipo_parte || 'OUTRO',
             polo: mapearPolo(parteData.polo),
             principal: parteData.principal || parteData.partePrincipal || false,
             tipoDocumento: mapearTipoDocumento(parteData.tipoDocumento || parteData.tipo_documento),
-            numeroDocumento: parteData.numeroDocumento || parteData.numero_documento || '',
+            numeroDocumento: parteData.documento || parteData.numeroDocumento || parteData.numero_documento || '',
             emails: extrairEmails(parteData),
             telefones: extrairTelefones(parteData),
             representantes,
@@ -128,7 +147,7 @@ export async function obterPartesProcesso(
           };
 
           console.log(
-            `[PJE-PARTES-API] Parte ${index + 1}/${response.length}: ${parte.nome} (${parte.tipoParte}) - ${representantes.length} representantes`
+            `[PJE-PARTES-API] Parte ${index + 1}/${partesArray.length}: ${parte.nome} (${parte.tipoParte}) - ${representantes.length} representantes`
           );
 
           return parte;
@@ -144,11 +163,11 @@ export async function obterPartesProcesso(
             idParte: parteData.id || parteData.idParte,
             idPessoa: parteData.idPessoa || parteData.id_pessoa,
             nome: parteData.nome || parteData.nomeCompleto || '',
-            tipoParte: parteData.tipoParte || parteData.tipo_parte || 'OUTRO',
+            tipoParte: parteData.tipo || parteData.tipoParte || parteData.tipo_parte || 'OUTRO',
             polo: mapearPolo(parteData.polo),
             principal: parteData.principal || parteData.partePrincipal || false,
             tipoDocumento: mapearTipoDocumento(parteData.tipoDocumento || parteData.tipo_documento),
-            numeroDocumento: parteData.numeroDocumento || parteData.numero_documento || '',
+            numeroDocumento: parteData.documento || parteData.numeroDocumento || parteData.numero_documento || '',
             emails: extrairEmails(parteData),
             telefones: extrairTelefones(parteData),
             representantes: [], // Vazio por conta do erro
@@ -236,7 +255,7 @@ function extrairTelefones(parteData: any): Array<{ ddd: string; numero: string }
     }
   }
 
-  // Pode vir como campos separados
+  // Pode vir como campos separados (snake_case)
   if (parteData.ddd_telefone && parteData.numero_telefone) {
     telefones.push({
       ddd: String(parteData.ddd_telefone),
@@ -251,5 +270,32 @@ function extrairTelefones(parteData: any): Array<{ ddd: string; numero: string }
     });
   }
 
-  return telefones;
+  // Pode vir como campos separados (camelCase)
+  if (parteData.dddCelular && parteData.numeroCelular) {
+    telefones.push({
+      ddd: String(parteData.dddCelular),
+      numero: String(parteData.numeroCelular),
+    });
+  }
+
+  if (parteData.dddResidencial && parteData.numeroResidencial) {
+    telefones.push({
+      ddd: String(parteData.dddResidencial),
+      numero: String(parteData.numeroResidencial),
+    });
+  }
+
+  if (parteData.dddComercial && parteData.numeroComercial) {
+    telefones.push({
+      ddd: String(parteData.dddComercial),
+      numero: String(parteData.numeroComercial),
+    });
+  }
+
+  // Remove duplicatas
+  const uniqueTelefones = telefones.filter((tel, index, self) =>
+    index === self.findIndex(t => t.ddd === tel.ddd && t.numero === tel.numero)
+  );
+
+  return uniqueTelefones;
 }
