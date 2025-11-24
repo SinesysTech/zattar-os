@@ -238,7 +238,6 @@ describe('identificarTipoParte() - Tipos Especiais (Terceiros)', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Mesmo CPF do advogado!
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -270,7 +269,6 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Mesmo CPF do advogado
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -286,7 +284,6 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '12345678900', // Sem formatação
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -306,7 +303,6 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Com formatação
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -321,21 +317,18 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Dra. Maria Oliveira',
           numeroDocumento: '111.222.333-44',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 2,
+          idPessoa: 2,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Match!
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 3,
+          idPessoa: 3,
           nome: 'Dr. Pedro Costa',
           numeroDocumento: '555.666.777-88',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -350,14 +343,12 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Defensor Público',
           numeroDocumento: null as any,
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 2,
+          idPessoa: 2,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Match!
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -372,14 +363,12 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Sem CPF',
           numeroDocumento: '',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 2,
+          idPessoa: 2,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -410,14 +399,12 @@ describe('identificarTipoParte() - Parte Contrária', () => {
           nome: 'Dra. Maria Oliveira',
           numeroDocumento: '111.222.333-44',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 2,
+          idPessoa: 2,
           nome: 'Dr. Pedro Costa',
           numeroDocumento: '555.666.777-88',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -432,14 +419,12 @@ describe('identificarTipoParte() - Parte Contrária', () => {
           nome: 'Defensor Público',
           numeroDocumento: null as any,
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 2,
+          idPessoa: 2,
           nome: 'Outro Defensor',
           numeroDocumento: '',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -454,7 +439,6 @@ describe('identificarTipoParte() - Parte Contrária', () => {
           nome: 'Dr. Quase João',
           numeroDocumento: '123.456.789-01', // Último dígito diferente
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -491,7 +475,6 @@ describe('identificarTipoParte() - Edge Cases', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -507,7 +490,6 @@ describe('identificarTipoParte() - Edge Cases', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '  123.456.789-00  ',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -527,7 +509,6 @@ describe('identificarTipoParte() - Edge Cases', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -663,7 +644,6 @@ describe('identificarTipoParte() - Tipos Especiais (Terceiros)', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -690,7 +670,6 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -706,7 +685,6 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '12345678900',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -726,7 +704,6 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -741,21 +718,18 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Dra. Maria Oliveira',
           numeroDocumento: '111.222.333-44',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 2,
+          idPessoa: 2,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 3,
+          idPessoa: 3,
           nome: 'Dr. Pedro Costa',
           numeroDocumento: '555.666.777-88',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -770,14 +744,12 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Defensor Público',
           numeroDocumento: null as any,
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 2,
+          idPessoa: 2,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -792,14 +764,12 @@ describe('identificarTipoParte() - Cliente', () => {
           nome: 'Sem CPF',
           numeroDocumento: '',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 2,
+          idPessoa: 2,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -826,14 +796,12 @@ describe('identificarTipoParte() - Parte Contrária', () => {
           nome: 'Dra. Maria Oliveira',
           numeroDocumento: '111.222.333-44',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 2,
+          idPessoa: 2,
           nome: 'Dr. Pedro Costa',
           numeroDocumento: '555.666.777-88',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -848,14 +816,12 @@ describe('identificarTipoParte() - Parte Contrária', () => {
           nome: 'Defensor Público',
           numeroDocumento: null as any,
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
         {
-          idRepresentante: 2,
+          idPessoa: 2,
           nome: 'Outro Defensor',
           numeroDocumento: '',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -870,7 +836,6 @@ describe('identificarTipoParte() - Parte Contrária', () => {
           nome: 'Dr. Quase João',
           numeroDocumento: '123.456.789-01',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -903,7 +868,6 @@ describe('identificarTipoParte() - Edge Cases', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -918,7 +882,6 @@ describe('identificarTipoParte() - Edge Cases', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '  123.456.789-00  ',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });
@@ -938,7 +901,6 @@ describe('identificarTipoParte() - Edge Cases', () => {
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-          tipoPessoa: 'F',
         },
       ],
     });

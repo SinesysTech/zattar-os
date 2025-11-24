@@ -4,9 +4,11 @@
 import {
   listarPartesContrarias as listarPartesContrariasDb,
   listarPartesContrariasComEndereco as listarPartesContrariasComEnderecoDb,
-  type ListarPartesContrariasParams,
-  type ListarPartesContrariasResult,
 } from '../persistence/parte-contraria-persistence.service';
+import type {
+  ListarPartesContrariasParams,
+  ListarPartesContrariasResult,
+} from '@/backend/types/partes/partes-contrarias-types';
 
 /**
  * Parâmetros estendidos para incluir endereços

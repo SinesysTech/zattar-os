@@ -5,8 +5,8 @@ import {
   buscarParteContrariaPorId,
   buscarParteContrariaPorCpf,
   buscarParteContrariaPorCnpj,
-  type ParteContraria,
 } from '../persistence/parte-contraria-persistence.service';
+import type { ParteContraria } from '@/backend/types/partes/partes-contrarias-types';
 
 /**
  * Busca uma parte contrária por ID

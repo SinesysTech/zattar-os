@@ -65,7 +65,7 @@ interface UsuarioDetalhesProps {
 }
 
 // Importar matriz de permissões do backend
-import { MATRIZ_PERMISSOES } from '@/backend/types/permissoes/types';
+import { MATRIZ_PERMISSOES, type Operacao } from '@/backend/types/permissoes/types';
 
 // Usar a matriz oficial do backend
 const RECURSOS_CONFIG = MATRIZ_PERMISSOES;
@@ -337,42 +337,58 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     return telefone;
   };
 
+  const formatarData = (data: string | null) => {
+    if (!data) return '-';
+    try {
+      return new Date(data).toLocaleDateString('pt-BR');
+    } catch {
+      return '-';
+    }
+  };
+
+  const formatarGenero = (genero: GeneroUsuario | null) => {
+    if (!genero) return '-';
+    const generos: Record<GeneroUsuario, string> = {
+      masculino: 'Masculino',
+      feminino: 'Feminino',
+      outro: 'Outro',
+      prefiro_nao_informar: 'Prefiro não informar',
+    };
+    return generos[genero] || '-';
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 space-y-6 max-w-[1600px]">
-      {/* Header com breadcrumb */}
+      {/* Header */}
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
+        <button
+          type="button"
           onClick={() => router.push('/usuarios')}
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-muted hover:bg-muted/80 transition-colors"
           title="Voltar para Usuários"
         >
           <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <div className="flex-1">
-          <p className="text-sm text-muted-foreground">
-            Usuários → {usuario.nomeExibicao}
-          </p>
-          <h1 className="text-2xl font-bold">{usuario.nomeExibicao}</h1>
-        </div>
+        </button>
         {usuario.isSuperAdmin && (
           <Badge tone="danger" variant="solid" className="gap-1">
             <Shield className="h-3 w-3" />
             Super Admin
           </Badge>
         )}
-        <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant="soft">
-          {usuario.ativo ? 'Ativo' : 'Inativo'}
-        </Badge>
       </div>
 
       {/* Dados do Usuário */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <User className="h-4 w-4" />
-            Dados do Usuário
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <User className="h-4 w-4" />
+              Dados do Usuário
+            </CardTitle>
+            <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant="soft">
+              {usuario.ativo ? 'Ativo' : 'Inativo'}
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -381,60 +397,54 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               <p className="text-sm">{usuario.nomeCompleto}</p>
             </div>
             <div>
+              <p className="text-sm font-medium text-muted-foreground">Nome de Exibição</p>
+              <p className="text-sm">{usuario.nomeExibicao}</p>
+            </div>
+            <div>
               <p className="text-sm font-medium text-muted-foreground">E-mail Corporativo</p>
               <p className="text-sm">{usuario.emailCorporativo}</p>
             </div>
-            {usuario.emailPessoal && (
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">E-mail Pessoal</p>
-                <p className="text-sm">{usuario.emailPessoal}</p>
-              </div>
-            )}
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">E-mail Pessoal</p>
+              <p className="text-sm">{usuario.emailPessoal || '-'}</p>
+            </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">CPF</p>
               <p className="text-sm">{formatarCPF(usuario.cpf)}</p>
             </div>
-            {usuario.rg && (
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">RG</p>
-                <p className="text-sm">{usuario.rg}</p>
-              </div>
-            )}
-            {usuario.dataNascimento && (
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Data de Nascimento</p>
-                <p className="text-sm">
-                  {new Date(usuario.dataNascimento).toLocaleDateString('pt-BR')}
-                </p>
-              </div>
-            )}
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">RG</p>
+              <p className="text-sm">{usuario.rg || '-'}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Data de Nascimento</p>
+              <p className="text-sm">{formatarData(usuario.dataNascimento)}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Gênero</p>
+              <p className="text-sm">{formatarGenero(usuario.genero)}</p>
+            </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">Telefone</p>
               <p className="text-sm">{formatarTelefone(usuario.telefone)}</p>
             </div>
-            {usuario.ramal && (
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Ramal</p>
-                <p className="text-sm">{usuario.ramal}</p>
-              </div>
-            )}
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Ramal</p>
+              <p className="text-sm">{usuario.ramal || '-'}</p>
+            </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">OAB</p>
               <p className="text-sm">
-                {usuario.oab && usuario.ufOab
-                  ? `${usuario.oab} / ${usuario.ufOab}`
-                  : '-'}
+                {usuario.oab && usuario.ufOab ? `${usuario.oab} / ${usuario.ufOab}` : '-'}
               </p>
             </div>
-            {usuario.cargo && (
-              <div className="md:col-span-2">
-                <p className="text-sm font-medium text-muted-foreground">Cargo</p>
-                <p className="text-sm font-semibold">{usuario.cargo.nome}</p>
-                {usuario.cargo.descricao && (
-                  <p className="text-xs text-muted-foreground">{usuario.cargo.descricao}</p>
-                )}
-              </div>
-            )}
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Cargo</p>
+              <p className="text-sm">{usuario.cargo ? usuario.cargo.nome : '-'}</p>
+              {usuario.cargo?.descricao && (
+                <p className="text-xs text-muted-foreground mt-0.5">{usuario.cargo.descricao}</p>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -481,7 +491,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               <thead>
                 <tr className="border-b">
                   <th className="text-left p-2 font-medium text-sm">Recurso</th>
-                  {Object.entries(RECURSOS_CONFIG).reduce<string[]>((acc, [_, operacoes]) => {
+                  {Object.entries(RECURSOS_CONFIG).reduce<Operacao[]>((acc, [_, operacoes]) => {
                     operacoes.forEach((op) => {
                       if (!acc.includes(op)) acc.push(op);
                     });
@@ -499,7 +509,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                     <td className="p-2 font-medium text-sm">
                       {RECURSO_LABELS[recurso] || recurso}
                     </td>
-                    {Object.entries(RECURSOS_CONFIG).reduce<string[]>((acc, [_, ops]) => {
+                    {Object.entries(RECURSOS_CONFIG).reduce<Operacao[]>((acc, [_, ops]) => {
                       ops.forEach((op) => {
                         if (!acc.includes(op)) acc.push(op);
                       });

@@ -10,7 +10,7 @@ import {
 import type { Processo } from '@/backend/types/pje-trt/types';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
-import { captureLogService } from '../persistence/capture-log.service';
+import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import { downloadAndUploadDocumento } from '../pje/pje-expediente-documento.service';
 import type { FetchDocumentoParams } from '@/backend/types/pje-trt/documento-types';
 
@@ -25,6 +25,8 @@ export interface PendentesManifestacaoResult {
   documentosCapturados?: number;
   documentosFalhados?: number;
   errosDocumentos?: string[];
+  logs?: LogEntry[];
+  payloadBruto?: Processo[];
 }
 
 /**
@@ -110,6 +112,7 @@ export async function pendentesManifestacaoCapture(
 
     // 7. Salvar processos pendentes no banco de dados
     let persistencia: SalvarPendentesResult | undefined;
+    let logsPersistencia: LogEntry[] | undefined;
     try {
       const advogadoDb = await buscarOuCriarAdvogadoPorCpf(
         advogadoInfo.cpf,
@@ -130,12 +133,12 @@ export async function pendentesManifestacaoCapture(
         naoAtualizados: persistencia.naoAtualizados,
         erros: persistencia.erros,
       });
-
-      // Imprimir resumo dos logs
-      captureLogService.imprimirResumo();
     } catch (error) {
       console.error('❌ Erro ao salvar processos pendentes no banco:', error);
       // Não falha a captura se a persistência falhar - apenas loga o erro
+    } finally {
+      captureLogService.imprimirResumo();
+      logsPersistencia = captureLogService.consumirLogs();
     }
 
     // 8. Capturar documentos PDF se solicitado
@@ -225,6 +228,8 @@ export async function pendentesManifestacaoCapture(
       documentosCapturados,
       documentosFalhados,
       errosDocumentos: errosDocumentos.length > 0 ? errosDocumentos : undefined,
+      logs: logsPersistencia,
+      payloadBruto: processos,
     };
   } finally {
     // 7. Limpar recursos (fechar navegador)

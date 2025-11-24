@@ -35,8 +35,13 @@
  */
 
 import type { Page } from 'playwright';
-import type { Audiencia } from '@/backend/types/pje-trt/types';
+import type { Audiencia, PagedResponse } from '@/backend/types/pje-trt/types';
 import { obterPautaAudiencias } from './obter-pauta';
+
+export interface TodasAudienciasComPaginas {
+  audiencias: Audiencia[];
+  paginas: PagedResponse<Audiencia>[];
+}
 
 export async function obterTodasAudiencias(
   page: Page,
@@ -44,8 +49,9 @@ export async function obterTodasAudiencias(
   dataFim: string,
   codigoSituacao: string = 'M',
   delayEntrePaginas: number = 500
-): Promise<Audiencia[]> {
+): Promise<TodasAudienciasComPaginas> {
   const todasAudiencias: Audiencia[] = [];
+  const paginasBrutas: PagedResponse<Audiencia>[] = [];
 
   console.log('🔍 [obterTodasAudiencias] Iniciando busca de audiências...', {
     dataInicio,
@@ -72,6 +78,8 @@ export async function obterTodasAudiencias(
     temResultado: 'resultado' in primeiraPagina,
   });
 
+  paginasBrutas.push(primeiraPagina);
+
   // Validar estrutura da resposta
   if (!primeiraPagina || typeof primeiraPagina !== 'object') {
     console.error('❌ [obterTodasAudiencias] Resposta inválida:', primeiraPagina);
@@ -82,7 +90,10 @@ export async function obterTodasAudiencias(
   // Neste caso, retornar array vazio sem erro
   if (primeiraPagina.totalRegistros === 0 || primeiraPagina.qtdPaginas === 0) {
     console.log('ℹ️ [obterTodasAudiencias] Nenhum resultado encontrado (totalRegistros=0 ou qtdPaginas=0)');
-    return [];
+    return {
+      audiencias: [],
+      paginas: paginasBrutas,
+    };
   }
 
   // Validar que resultado existe e é um array (apenas se houver resultados esperados)
@@ -132,9 +143,13 @@ export async function obterTodasAudiencias(
 
       console.log(`✅ [obterTodasAudiencias] Adicionando ${pagina.resultado.length} audiências da página ${p}`);
       todasAudiencias.push(...pagina.resultado);
+      paginasBrutas.push(pagina);
     }
   }
 
   console.log(`✅ [obterTodasAudiencias] Total de audiências obtidas: ${todasAudiencias.length}`);
-  return todasAudiencias;
+  return {
+    audiencias: todasAudiencias,
+    paginas: paginasBrutas,
+  };
 }

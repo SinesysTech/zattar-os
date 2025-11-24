@@ -316,6 +316,15 @@ export interface BuscarRepresentantesPorOABParams {
 }
 
 /**
+ * Buscar representantes por processo
+ */
+export interface BuscarRepresentantesPorProcessoParams {
+  trt: string;
+  grau: string;
+  numero_processo: string;
+}
+
+/**
  * Upsert representante por id_pessoa_pje + context
  * Create if not exists, update if exists
  */
