@@ -52,6 +52,7 @@ const formatarTipoCaptura = (tipo: TipoCaptura): string => {
     arquivados: 'Arquivados',
     audiencias: 'Audiências',
     pendentes: 'Pendentes',
+    partes: 'Partes',
   };
   return tipos[tipo] || tipo;
 };

@@ -5,6 +5,7 @@ import { AlertCircle } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
 import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
+import type { Credencial } from '@/app/_lib/types/credenciais';
 import { AdvogadoCombobox } from './advogado-combobox';
 import { CredenciaisCombobox } from './credenciais-combobox';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
@@ -14,6 +15,7 @@ interface CapturaFormBaseProps {
   credenciaisSelecionadas: number[];
   onAdvogadoChange: (advogadoId: number | null) => void;
   onCredenciaisChange: (ids: number[]) => void;
+  onCredenciaisDisponiveisChange?: (credenciais: Credencial[]) => void;
   children?: React.ReactNode;
 }
 
@@ -26,6 +28,7 @@ export function CapturaFormBase({
   credenciaisSelecionadas,
   onAdvogadoChange,
   onCredenciaisChange,
+  onCredenciaisDisponiveisChange,
   children,
 }: CapturaFormBaseProps) {
   // Buscar advogados com credenciais ativas
@@ -52,6 +55,10 @@ export function CapturaFormBase({
       onCredenciaisChange([]);
     }
   }, [advogadoId, credenciais]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    onCredenciaisDisponiveisChange?.(credenciais);
+  }, [credenciais, onCredenciaisDisponiveisChange]);
 
 
   return (

@@ -403,9 +403,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (params.limite !== undefined && (params.limite < 1 || params.limite > 100)) {
+    if (params.limite !== undefined && (params.limite < 1 || params.limite > 2000)) {
       return NextResponse.json(
-        { error: "Parâmetro 'limite' deve estar entre 1 e 100" },
+        { error: "Parâmetro 'limite' deve estar entre 1 e 2000" },
         { status: 400 }
       );
     }

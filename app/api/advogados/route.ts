@@ -31,7 +31,8 @@ import type { ListarAdvogadosParams, CriarAdvogadoParams } from '@/backend/types
  *         schema:
  *           type: integer
  *           default: 50
- *         description: Quantidade de itens por página
+ *           maximum: 1000
+ *         description: Quantidade de itens por página (máximo 1000)
  *       - in: query
  *         name: busca
  *         schema:

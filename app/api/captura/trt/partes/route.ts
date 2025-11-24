@@ -10,6 +10,35 @@ import { capturarPartesProcesso, type ProcessoParaCaptura } from '@/backend/capt
 import { autenticarPJE } from '@/backend/captura/services/trt/trt-auth.service';
 import { buscarAdvogado } from '@/backend/advogados/services/persistence/advogado-persistence.service';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
+
+const GRAUS_VALIDOS: GrauTRT[] = ['primeiro_grau', 'segundo_grau', 'tribunal_superior'];
+
+function isCodigoTRT(value: unknown): value is CodigoTRT {
+  return typeof value === 'string' && /^TRT([1-9]|1[0-9]|2[0-4])$/.test(value);
+}
+
+function isGrauTRT(value: unknown): value is GrauTRT {
+  return typeof value === 'string' && GRAUS_VALIDOS.includes(value as GrauTRT);
+}
+
+function sanitizeNumeroProcesso(value: unknown): string | undefined {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+  const sanitized = value.trim().replace(/\s+/g, '');
+  return sanitized.length > 0 ? sanitized : undefined;
+}
+
+function sanitizeListaNumerosProcesso(value: unknown): string[] {
+  if (!value) return [];
+  const list = Array.isArray(value) ? value : [value];
+  const numeros = list
+    .map((n) => (typeof n === 'string' ? n.trim() : ''))
+    .map((n) => n.replace(/\s+/g, ''))
+    .filter((n) => n.length > 0);
+  return Array.from(new Set(numeros));
+}
 
 /**
  * @swagger
@@ -23,6 +52,7 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
  *       - Faz upsert na tabela apropriada (clientes, partes_contrarias ou terceiros)
  *       - Salva representantes legais (advogados, defensores, etc.)
  *       - Cria vínculo processo-parte na tabela processo_partes
+ *       - Permite filtrar processos por IDs, TRTs, graus ou números de processo (único ou múltiplos)
  *     tags:
  *       - Captura TRT
  *       - Partes
@@ -53,10 +83,31 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
  *                 items:
  *                   type: integer
  *                 description: Array de IDs dos processos (opcional - se vazio, captura todos os processos do advogado)
+ *               trts:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Lista de códigos TRT (ex: TRT3) para filtrar processos
+ *               graus:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   enum: [primeiro_grau, segundo_grau]
+ *                 description: Lista de graus para filtrar processos
+ *               numero_processo:
+ *                 type: string
+ *                 description: Número específico de processo para captura
+ *               numeros_processo:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Lista de números de processos (um por item)
  *           example:
  *             advogado_id: 1
  *             credencial_ids: [5, 6]
  *             processo_ids: [100, 101, 102]
+ *             trts: ['TRT3', 'TRT5']
+ *             graus: ['primeiro_grau']
  *     responses:
  *       200:
  *         description: Captura concluída com sucesso
@@ -170,10 +221,22 @@ export async function POST(request: NextRequest) {
 
     // 2. Validar e parsear body da requisição
     const body = await request.json();
-    const { advogado_id, credencial_ids, processo_ids } = body as {
+    const {
+      advogado_id,
+      credencial_ids,
+      processo_ids,
+      trts,
+      graus,
+      numero_processo,
+      numeros_processo,
+    } = body as {
       advogado_id: number;
       credencial_ids: number[];
       processo_ids?: number[];
+      trts?: CodigoTRT[];
+      graus?: GrauTRT[];
+      numero_processo?: string;
+      numeros_processo?: string[];
     };
 
     // Validações básicas
@@ -213,39 +276,69 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 5. Buscar processos (se processo_ids fornecido, senão buscar todos do advogado)
-    let processos: ProcessoParaCaptura[] = [];
+    // Sanitizar filtros opcionais
+    const trtsFiltrados = Array.isArray(trts) ? trts.filter(isCodigoTRT) : [];
+    const grausFiltrados = Array.isArray(graus) ? graus.filter(isGrauTRT) : [];
+    const numeroProcessoUnico = sanitizeNumeroProcesso(numero_processo);
+    const numerosProcessoLista = sanitizeListaNumerosProcesso(numeros_processo);
+    const numerosParaFiltro = new Set<string>(numerosProcessoLista);
+    if (numeroProcessoUnico) {
+      numerosParaFiltro.add(numeroProcessoUnico);
+    }
+    const numerosFiltroArray = Array.from(numerosParaFiltro);
 
-    if (processo_ids && processo_ids.length > 0) {
-      // Buscar processos específicos por IDs
-      const supabase = createServiceClient();
-      const { data: processosData, error: processosError } = await supabase
-        .from('acervo')
-        .select('id, numero_processo, id_pje, trt, grau')
-        .in('id', processo_ids);
-
-      if (processosError || !processosData || processosData.length === 0) {
-        return NextResponse.json(
-          { error: 'Nenhum processo encontrado' },
-          { status: 404 }
-        );
-      }
-
-      processos = processosData.map((p: any) => ({
-        id: p.id,
-        numero_processo: p.numero_processo,
-        id_pje: p.id_pje,
-        trt: p.trt,
-        grau: p.grau,
-      }));
-    } else {
-      // TODO: Buscar todos os processos do advogado
-      // Por enquanto, retorna erro pedindo processo_ids explícitos
+    if (
+      (!processo_ids || processo_ids.length === 0) &&
+      trtsFiltrados.length === 0 &&
+      grausFiltrados.length === 0 &&
+      numerosFiltroArray.length === 0
+    ) {
       return NextResponse.json(
-        { error: 'Por favor, forneça processo_ids explícitos. Captura de todos os processos ainda não implementada.' },
+        {
+          error:
+            'É necessário informar pelo menos um filtro: processo_ids, numero_processo, numeros_processo, trts ou graus',
+        },
         { status: 400 }
       );
     }
+
+    // 5. Buscar processos com base nos filtros fornecidos
+    let processos: ProcessoParaCaptura[] = [];
+
+    const supabase = createServiceClient();
+    let processosQuery = supabase
+      .from('acervo')
+      .select('id, numero_processo, id_pje, trt, grau');
+
+    if (processo_ids && processo_ids.length > 0) {
+      processosQuery = processosQuery.in('id', processo_ids);
+    }
+    if (numerosFiltroArray.length > 0) {
+      processosQuery = processosQuery.in('numero_processo', numerosFiltroArray);
+    }
+    if (trtsFiltrados.length > 0) {
+      processosQuery = processosQuery.in('trt', trtsFiltrados);
+    }
+    if (grausFiltrados.length > 0) {
+      processosQuery = processosQuery.in('grau', grausFiltrados);
+    }
+
+    const { data: processosData, error: processosError } = await processosQuery;
+
+    if (processosError || !processosData || processosData.length === 0) {
+      return NextResponse.json(
+        { error: 'Nenhum processo encontrado com os filtros fornecidos' },
+        { status: 404 }
+      );
+    }
+
+    processos = processosData.map((p: any) => ({
+      id: p.id,
+      numero_processo: p.numero_processo,
+      id_pje: p.id_pje,
+      trt: p.trt,
+      grau: p.grau,
+    }));
 
     // 6. Iniciar log de captura
     // const capturaLogId = await iniciarCapturaLog({

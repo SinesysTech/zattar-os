@@ -14,8 +14,8 @@ export async function listarAdvogados(
     throw new Error('Página deve ser maior ou igual a 1');
   }
 
-  if (params.limite !== undefined && (params.limite < 1 || params.limite > 100)) {
-    throw new Error('Limite deve estar entre 1 e 100');
+  if (params.limite !== undefined && (params.limite < 1 || params.limite > 1000)) {
+    throw new Error('Limite deve estar entre 1 e 1000');
   }
 
   return listarAdvogadosPersistence(params);

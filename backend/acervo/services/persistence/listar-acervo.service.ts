@@ -64,7 +64,7 @@ export async function listarAcervo(
   const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
-  const limite = Math.min(params.limite ?? 50, 100); // Máximo 100
+  const limite = Math.min(params.limite ?? 50, 2000); // Máximo 2000
   const offset = (pagina - 1) * limite;
 
   let query = supabase.from('acervo').select('*', { count: 'exact' });

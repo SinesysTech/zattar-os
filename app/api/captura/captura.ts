@@ -100,11 +100,37 @@ export interface PendentesResult {
 }
 
 /**
+ * Resultado de captura de partes
+ */
+export interface CapturaPartesResult {
+  total_processos: number;
+  total_partes: number;
+  clientes: number;
+  partes_contrarias: number;
+  terceiros: number;
+  representantes: number;
+  vinculos: number;
+  erros: Array<{ processo_id: number; numero_processo: string; erro: string }>;
+  duracao_ms: number;
+}
+
+/**
  * Parâmetros base para captura (novo formato)
  */
 export interface BaseCapturaParams {
   advogado_id: number;
   credencial_ids: number[];
+}
+
+/**
+ * Parâmetros para captura de partes
+ */
+export interface CapturaPartesParams extends BaseCapturaParams {
+  processo_ids?: number[];
+  trts?: CodigoTRT[];
+  graus?: GrauTRT[];
+  numero_processo?: string;
+  numeros_processo?: string[];
 }
 
 /**
@@ -322,6 +348,39 @@ export async function capturarPendentes(
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Erro desconhecido ao capturar pendências',
+    };
+  }
+}
+
+/**
+ * Cliente API para captura de partes
+ */
+export async function capturarPartes(
+  params: CapturaPartesParams
+): Promise<CapturaApiResponse<CapturaPartesResult>> {
+  try {
+    const response = await fetch('/api/captura/trt/partes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+      };
+    }
+
+    return data;
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro desconhecido ao capturar partes',
     };
   }
 }
