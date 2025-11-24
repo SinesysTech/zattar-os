@@ -25,6 +25,7 @@ export interface BuscarClientesParams extends Partial<ListarClientesParams> {
   busca?: string;
   tipoPessoa?: 'pf' | 'pj';
   ativo?: boolean;
+  incluirEndereco?: boolean;
 }
 
 /**
