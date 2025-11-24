@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { Users, UserX, UserCog, Scale } from 'lucide-react';
@@ -16,7 +17,7 @@ import { RepresentantesTab } from './components/representantes-tab';
 
 type TabValue = 'clientes' | 'partes-contrarias' | 'terceiros' | 'representantes';
 
-export default function PartesPage() {
+function PartesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab') as TabValue | null;
@@ -75,5 +76,13 @@ export default function PartesPage() {
         </TabsContent>
       </ClientOnlyTabs>
     </div>
+  );
+}
+
+export default function PartesPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center p-8">Carregando...</div>}>
+      <PartesContent />
+    </Suspense>
   );
 }

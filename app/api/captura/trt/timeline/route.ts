@@ -50,7 +50,7 @@ import { authenticateRequest } from '@/backend/auth/api-auth';
  *                 example: "2887163"
  *               numeroProcesso:
  *                 type: string
- *                 description: Número do processo (ex: 0010702-80.2025.5.03.0111)
+ *                 description: "Número do processo (ex: 0010702-80.2025.5.03.0111)"
  *                 example: "0010702-80.2025.5.03.0111"
  *               advogadoId:
  *                 type: number

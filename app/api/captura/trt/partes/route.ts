@@ -1,32 +1,43 @@
 // Rota de API para captura de partes de processos do PJE-TRT
 // Captura partes, representantes e cria vínculos processo-partes
 
-import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
-import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
-import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
-import { capturarPartesProcesso, type ProcessoParaCaptura } from '@/backend/captura/services/partes/partes-capture.service';
-import { autenticarPJE } from '@/backend/captura/services/trt/trt-auth.service';
-import { buscarAdvogado } from '@/backend/advogados/services/persistence/advogado-persistence.service';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
+import { NextRequest, NextResponse } from "next/server";
+import { authenticateRequest } from "@/backend/auth/api-auth";
+import { getCredentialComplete } from "@/backend/captura/credentials/credential.service";
+import { getTribunalConfig } from "@/backend/captura/services/trt/config";
+import {
+  iniciarCapturaLog,
+  finalizarCapturaLogSucesso,
+  finalizarCapturaLogErro,
+} from "@/backend/captura/services/captura-log.service";
+import {
+  capturarPartesProcesso,
+  type ProcessoParaCaptura,
+} from "@/backend/captura/services/partes/partes-capture.service";
+import { autenticarPJE } from "@/backend/captura/services/trt/trt-auth.service";
+import { buscarAdvogado } from "@/backend/advogados/services/persistence/advogado-persistence.service";
+import { createServiceClient } from "@/backend/utils/supabase/service-client";
+import type { CodigoTRT, GrauTRT } from "@/backend/types/captura/trt-types";
 
-const GRAUS_VALIDOS: GrauTRT[] = ['primeiro_grau', 'segundo_grau', 'tribunal_superior'];
+const GRAUS_VALIDOS: GrauTRT[] = [
+  "primeiro_grau",
+  "segundo_grau",
+  "tribunal_superior",
+];
 
 function isCodigoTRT(value: unknown): value is CodigoTRT {
-  return typeof value === 'string' && /^TRT([1-9]|1[0-9]|2[0-4])$/.test(value);
+  return typeof value === "string" && /^TRT([1-9]|1[0-9]|2[0-4])$/.test(value);
 }
 
 function isGrauTRT(value: unknown): value is GrauTRT {
-  return typeof value === 'string' && GRAUS_VALIDOS.includes(value as GrauTRT);
+  return typeof value === "string" && GRAUS_VALIDOS.includes(value as GrauTRT);
 }
 
 function sanitizeNumeroProcesso(value: unknown): string | undefined {
-  if (typeof value !== 'string') {
+  if (typeof value !== "string") {
     return undefined;
   }
-  const sanitized = value.trim().replace(/\s+/g, '');
+  const sanitized = value.trim().replace(/\s+/g, "");
   return sanitized.length > 0 ? sanitized : undefined;
 }
 
@@ -34,8 +45,8 @@ function sanitizeListaNumerosProcesso(value: unknown): string[] {
   if (!value) return [];
   const list = Array.isArray(value) ? value : [value];
   const numeros = list
-    .map((n) => (typeof n === 'string' ? n.trim() : ''))
-    .map((n) => n.replace(/\s+/g, ''))
+    .map((n) => (typeof n === "string" ? n.trim() : ""))
+    .map((n) => n.replace(/\s+/g, ""))
     .filter((n) => n.length > 0);
   return Array.from(new Set(numeros));
 }
@@ -87,7 +98,7 @@ function sanitizeListaNumerosProcesso(value: unknown): string[] {
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: Lista de códigos TRT (ex: TRT3) para filtrar processos
+ *                 description: "Lista de códigos TRT (ex: TRT3) para filtrar processos"
  *               graus:
  *                 type: array
  *                 items:
@@ -213,10 +224,7 @@ export async function POST(request: NextRequest) {
     // 1. Autenticação
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // 2. Validar e parsear body da requisição
@@ -240,9 +248,17 @@ export async function POST(request: NextRequest) {
     };
 
     // Validações básicas
-    if (!advogado_id || !credencial_ids || !Array.isArray(credencial_ids) || credencial_ids.length === 0) {
+    if (
+      !advogado_id ||
+      !credencial_ids ||
+      !Array.isArray(credencial_ids) ||
+      credencial_ids.length === 0
+    ) {
       return NextResponse.json(
-        { error: 'Missing required parameters: advogado_id, credencial_ids (array não vazio)' },
+        {
+          error:
+            "Missing required parameters: advogado_id, credencial_ids (array não vazio)",
+        },
         { status: 400 }
       );
     }
@@ -271,7 +287,7 @@ export async function POST(request: NextRequest) {
 
     if (credenciais.length === 0) {
       return NextResponse.json(
-        { error: 'Nenhuma credencial válida encontrada' },
+        { error: "Nenhuma credencial válida encontrada" },
         { status: 404 }
       );
     }
@@ -296,7 +312,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            'É necessário informar pelo menos um filtro: processo_ids, numero_processo, numeros_processo, trts ou graus',
+            "É necessário informar pelo menos um filtro: processo_ids, numero_processo, numeros_processo, trts ou graus",
         },
         { status: 400 }
       );
@@ -307,27 +323,27 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServiceClient();
     let processosQuery = supabase
-      .from('acervo')
-      .select('id, numero_processo, id_pje, trt, grau');
+      .from("acervo")
+      .select("id, numero_processo, id_pje, trt, grau");
 
     if (processo_ids && processo_ids.length > 0) {
-      processosQuery = processosQuery.in('id', processo_ids);
+      processosQuery = processosQuery.in("id", processo_ids);
     }
     if (numerosFiltroArray.length > 0) {
-      processosQuery = processosQuery.in('numero_processo', numerosFiltroArray);
+      processosQuery = processosQuery.in("numero_processo", numerosFiltroArray);
     }
     if (trtsFiltrados.length > 0) {
-      processosQuery = processosQuery.in('trt', trtsFiltrados);
+      processosQuery = processosQuery.in("trt", trtsFiltrados);
     }
     if (grausFiltrados.length > 0) {
-      processosQuery = processosQuery.in('grau', grausFiltrados);
+      processosQuery = processosQuery.in("grau", grausFiltrados);
     }
 
     const { data: processosData, error: processosError } = await processosQuery;
 
     if (processosError || !processosData || processosData.length === 0) {
       return NextResponse.json(
-        { error: 'Nenhum processo encontrado com os filtros fornecidos' },
+        { error: "Nenhum processo encontrado com os filtros fornecidos" },
         { status: 404 }
       );
     }
@@ -356,7 +372,11 @@ export async function POST(request: NextRequest) {
       terceiros: 0,
       representantes: 0,
       vinculos: 0,
-      erros: [] as Array<{ processo_id: number; numero_processo: string; erro: string }>,
+      erros: [] as Array<{
+        processo_id: number;
+        numero_processo: string;
+        erro: string;
+      }>,
       duracao_ms: 0,
     };
 
@@ -365,13 +385,17 @@ export async function POST(request: NextRequest) {
     // 8. Processar cada processo
     for (const processo of processos) {
       try {
-        console.log(`[API-PARTES] Processando processo ${processo.numero_processo}`);
+        console.log(
+          `[API-PARTES] Processando processo ${processo.numero_processo}`
+        );
 
         // Encontra credencial do mesmo TRT do processo
-        const credencial = credenciais.find(c => c.tribunal === processo.trt);
+        const credencial = credenciais.find((c) => c.tribunal === processo.trt);
 
         if (!credencial) {
-          console.warn(`[API-PARTES] Nenhuma credencial encontrada para TRT${processo.trt}, pulando processo ${processo.numero_processo}`);
+          console.warn(
+            `[API-PARTES] Nenhuma credencial encontrada para TRT${processo.trt}, pulando processo ${processo.numero_processo}`
+          );
           resultadoTotal.erros.push({
             processo_id: processo.id,
             numero_processo: processo.numero_processo,
@@ -381,13 +405,18 @@ export async function POST(request: NextRequest) {
         }
 
         // Buscar configuração do tribunal
-        const config = await getTribunalConfig(credencial.tribunal, credencial.grau);
+        const config = await getTribunalConfig(
+          credencial.tribunal,
+          credencial.grau
+        );
 
         // Autenticar no PJE
         const { page } = await autenticarPJE({
           credential: credencial.credenciais,
           config,
-          twofauthConfig: credencial.credenciais.cpf ? { accountId: credencial.credenciais.cpf } : undefined,
+          twofauthConfig: credencial.credenciais.cpf
+            ? { accountId: credencial.credenciais.cpf }
+            : undefined,
         });
 
         // Capturar partes do processo
@@ -418,9 +447,14 @@ export async function POST(request: NextRequest) {
         // Fechar página
         await page.close();
 
-        console.log(`[API-PARTES] Processo ${processo.numero_processo} concluído: ${resultado.totalPartes} partes`);
+        console.log(
+          `[API-PARTES] Processo ${processo.numero_processo} concluído: ${resultado.totalPartes} partes`
+        );
       } catch (error) {
-        console.error(`[API-PARTES] Erro ao processar processo ${processo.numero_processo}:`, error);
+        console.error(
+          `[API-PARTES] Erro ao processar processo ${processo.numero_processo}:`,
+          error
+        );
 
         resultadoTotal.erros.push({
           processo_id: processo.id,
@@ -440,12 +474,11 @@ export async function POST(request: NextRequest) {
     // 10. Retornar resultado
     return NextResponse.json({
       success: true,
-      message: 'Captura de partes concluída',
+      message: "Captura de partes concluída",
       data: resultadoTotal,
     });
-
   } catch (error) {
-    console.error('[API-PARTES] Erro na captura:', error);
+    console.error("[API-PARTES] Erro na captura:", error);
 
     // Finalizar log com erro se foi iniciado
     // if (capturaLogId) {
@@ -453,7 +486,9 @@ export async function POST(request: NextRequest) {
     // }
 
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Internal server error' },
+      {
+        error: error instanceof Error ? error.message : "Internal server error",
+      },
       { status: 500 }
     );
   }
