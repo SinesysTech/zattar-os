@@ -18,8 +18,8 @@ import {
   formatarNome,
   formatarTipoPessoa,
 } from '@/app/_lib/utils/format-clientes';
-import { getTipoParteLabel, getPoloLabel } from '@/lib/types/partes/terceiros';
-import type { Terceiro } from '@/lib/types/partes';
+import { getTipoParteLabel, getPoloLabel } from '@/app/_lib/types/terceiros';
+import type { Terceiro } from '@/app/_lib/types';
 
 export default function TerceiroPage() {
   const params = useParams();

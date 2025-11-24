@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -28,9 +28,9 @@ import {
   formatarNome,
   formatarTipoPessoa,
 } from '@/app/_lib/utils/format-clientes';
-import { getTipoParteLabel, getPoloLabel } from '@/lib/types/partes/terceiros';
+import { getTipoParteLabel, getPoloLabel } from '@/app/_lib/types/terceiros';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Terceiro } from '@/lib/types/partes';
+import type { Terceiro } from '@/app/_lib/types';
 import { useTerceiros } from '@/app/_lib/hooks/use-terceiros';
 
 interface TerceirosTabProps {}

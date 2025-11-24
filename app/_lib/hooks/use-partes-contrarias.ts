@@ -3,7 +3,7 @@
 // Hook para buscar partes contrárias
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { ParteContraria } from '@/lib/types/partes';
+import type { ParteContraria } from '@/app/_lib/types';
 
 export interface PartesContrariasApiResponse {
   success: boolean;
@@ -22,6 +22,7 @@ export interface BuscarPartesContrariasParams {
   busca?: string;
   tipo_pessoa?: 'pf' | 'pj';
   situacao?: 'A' | 'I';
+  incluirEndereco?: boolean;
 }
 
 interface UsePartesContrariasResult {
@@ -52,6 +53,7 @@ export const usePartesContrarias = (params: BuscarPartesContrariasParams = {}): 
   const busca = params.busca || '';
   const tipo_pessoa = params.tipo_pessoa || '';
   const situacao = params.situacao || '';
+  const incluirEndereco = params.incluirEndereco ?? false;
 
   // Normalizar parâmetros para comparação estável
   const paramsKey = useMemo(() => {
@@ -61,8 +63,9 @@ export const usePartesContrarias = (params: BuscarPartesContrariasParams = {}): 
       busca,
       tipo_pessoa,
       situacao,
+      incluirEndereco,
     });
-  }, [pagina, limite, busca, tipo_pessoa, situacao]);
+  }, [pagina, limite, busca, tipo_pessoa, situacao, incluirEndereco]);
 
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
@@ -87,8 +90,11 @@ export const usePartesContrarias = (params: BuscarPartesContrariasParams = {}): 
       if (situacao) {
         searchParams.set('situacao', situacao);
       }
+      if (incluirEndereco) {
+        searchParams.set('incluir_endereco', 'true');
+      }
 
-      const response = await fetch(`/api/partes/partes-contrarias?${searchParams.toString()}`);
+      const response = await fetch(`/api/partes-contrarias?${searchParams.toString()}`);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
@@ -116,7 +122,7 @@ export const usePartesContrarias = (params: BuscarPartesContrariasParams = {}): 
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, tipo_pessoa, situacao]);
+  }, [pagina, limite, busca, tipo_pessoa, situacao, incluirEndereco]);
 
   useEffect(() => {
     // Só executar se os parâmetros realmente mudaram

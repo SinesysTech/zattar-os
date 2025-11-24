@@ -3,7 +3,7 @@
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
-import { capturarAudiencias } from '@/app/_lib/api/captura';
+import { capturarAudiencias } from '@/app/api/captura/captura';
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { STATUS_AUDIENCIA_OPTIONS } from '@/app/_lib/constants/audiencias';
+import { STATUS_AUDIENCIA_OPTIONS } from '@/app/api/audiencias/audiencias';
 
 export function AudienciasForm() {
   const [advogadoId, setAdvogadoId] = useState<number | null>(null);

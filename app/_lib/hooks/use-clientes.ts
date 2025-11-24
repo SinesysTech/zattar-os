@@ -34,7 +34,8 @@ export const useClientes = (params: BuscarClientesParams = {}): UseClientesResul
   const busca = params.busca || '';
   const tipoPessoa = params.tipoPessoa || '';
   const ativo = params.ativo;
-  
+  const incluirEndereco = params.incluirEndereco ?? false;
+
   // Normalizar parâmetros para comparação estável
   const paramsKey = useMemo(() => {
     return JSON.stringify({
@@ -43,8 +44,9 @@ export const useClientes = (params: BuscarClientesParams = {}): UseClientesResul
       busca,
       tipoPessoa,
       ativo,
+      incluirEndereco,
     });
-  }, [pagina, limite, busca, tipoPessoa, ativo]);
+  }, [pagina, limite, busca, tipoPessoa, ativo, incluirEndereco]);
   
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
@@ -68,6 +70,9 @@ export const useClientes = (params: BuscarClientesParams = {}): UseClientesResul
       }
       if (ativo !== undefined) {
         searchParams.set('ativo', ativo.toString());
+      }
+      if (incluirEndereco) {
+        searchParams.set('incluir_endereco', 'true');
       }
 
       const response = await fetch(`/api/clientes?${searchParams.toString()}`);
@@ -98,7 +103,7 @@ export const useClientes = (params: BuscarClientesParams = {}): UseClientesResul
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, tipoPessoa, ativo]);
+  }, [pagina, limite, busca, tipoPessoa, ativo, incluirEndereco]);
 
   useEffect(() => {
     // Só executar se os parâmetros realmente mudaram

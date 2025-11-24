@@ -42,6 +42,7 @@ export const useRepresentantes = (
   const tipoPessoa = params.tipo_pessoa || '';
   const numeroOab = params.numero_oab || '';
   const situacaoOab = params.situacao_oab || '';
+  const incluirEndereco = params.incluirEndereco ?? false;
 
   // Normalizar parâmetros para comparação estável
   const paramsKey = useMemo(() => {
@@ -54,8 +55,9 @@ export const useRepresentantes = (
       tipoPessoa,
       numeroOab,
       situacaoOab,
+      incluirEndereco,
     });
-  }, [pagina, limite, busca, parteTipo, parteId, tipoPessoa, numeroOab, situacaoOab]);
+  }, [pagina, limite, busca, parteTipo, parteId, tipoPessoa, numeroOab, situacaoOab, incluirEndereco]);
 
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
@@ -89,6 +91,9 @@ export const useRepresentantes = (
       if (situacaoOab) {
         searchParams.set('situacao_oab', situacaoOab);
       }
+      if (incluirEndereco) {
+        searchParams.set('incluir_endereco', 'true');
+      }
 
       const response = await fetch(`/api/representantes?${searchParams.toString()}`);
 
@@ -119,7 +124,7 @@ export const useRepresentantes = (
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, parteTipo, parteId, tipoPessoa, numeroOab, situacaoOab]);
+  }, [pagina, limite, busca, parteTipo, parteId, tipoPessoa, numeroOab, situacaoOab, incluirEndereco]);
 
   useEffect(() => {
     // Só executar se os parâmetros realmente mudaram

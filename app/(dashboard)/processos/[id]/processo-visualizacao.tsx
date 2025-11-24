@@ -8,7 +8,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle, RefreshCw } from 'lucide-react';
-import { useProcessoTimeline } from '@/lib/hooks/use-processo-timeline';
+import { useProcessoTimeline } from '@/app/_lib/hooks/use-processo-timeline';
 import { ProcessoHeader } from '@/components/processos/processo-header';
 import { TimelineContainer } from '@/components/processos/timeline-container';
 import { TimelineLoading } from '@/components/processos/timeline-loading';

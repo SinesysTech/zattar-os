@@ -3,7 +3,7 @@
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
-import { capturarArquivados } from '@/app/_lib/api/captura';
+import { capturarArquivados } from '@/app/api/captura/captura';
 import { useState } from 'react';
 
 export function ArquivadosForm() {

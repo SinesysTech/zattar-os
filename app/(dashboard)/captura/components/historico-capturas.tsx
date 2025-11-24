@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
@@ -14,7 +14,7 @@ import { buildCapturasFilterOptions, buildCapturasFilterGroups, parseCapturasFil
 import { useCapturasLog } from '@/app/_lib/hooks/use-capturas-log';
 import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
 import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
-import { deletarCapturaLog } from '@/app/_lib/api/captura';
+import { deletarCapturaLog } from '@/app/api/captura/captura';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/backend/types/captura/capturas-log-types';
 import type { CapturasFilters } from '../historico/components/capturas-toolbar-filters';

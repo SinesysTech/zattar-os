@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { GRAUS } from '@/app/_lib/api/captura';
+import { GRAUS } from '@/app/api/captura/captura';
 import type { Credencial } from '@/app/_lib/types/credenciais';
 
 interface CredenciaisComboboxProps {

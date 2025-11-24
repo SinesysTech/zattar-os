@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -29,7 +29,7 @@ import {
   formatarTipoPessoa,
 } from '@/app/_lib/utils/format-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { ParteContraria } from '@/lib/types/partes';
+import type { ParteContraria } from '@/app/_lib/types';
 import { usePartesContrarias } from '@/app/_lib/hooks/use-partes-contrarias';
 
 interface PartesContrariasTabProps {}

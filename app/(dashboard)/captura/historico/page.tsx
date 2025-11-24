@@ -3,7 +3,7 @@
 // Página de histórico de capturas
 
 import * as React from 'react';
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';

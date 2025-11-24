@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
-import { cn } from "@/app/_lib/utils";
+import { cn } from "@/app/_lib/utils/utils";
 
 type BadgeTone = "primary" | "neutral" | "info" | "success" | "warning" | "danger" | "muted";
 type BadgeAppearance = "solid" | "soft" | "outline";
