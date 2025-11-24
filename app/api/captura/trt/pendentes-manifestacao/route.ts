@@ -404,8 +404,8 @@ export async function POST(request: NextRequest) {
               ?.filter((f) => f.erro)
               .map((f) => `${r.tribunal} ${r.grau} (ID ${r.credencial_id}) - ${f.filtroPrazo}: ${f.erro}`) || [];
 
-            if ((r as any).erro) {
-              return [`${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${(r as any).erro}`, ...errosFiltro];
+            if (r.erro) {
+              return [`${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${r.erro}`, ...errosFiltro];
             }
 
             return errosFiltro;

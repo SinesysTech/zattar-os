@@ -6,11 +6,6 @@ import { authenticateRequest } from "@/backend/auth/api-auth";
 import { getCredentialComplete } from "@/backend/captura/credentials/credential.service";
 import { getTribunalConfig } from "@/backend/captura/services/trt/config";
 import {
-  iniciarCapturaLog,
-  finalizarCapturaLogSucesso,
-  finalizarCapturaLogErro,
-} from "@/backend/captura/services/captura-log.service";
-import {
   capturarPartesProcesso,
   type ProcessoParaCaptura,
 } from "@/backend/captura/services/partes/partes-capture.service";
@@ -18,6 +13,7 @@ import { autenticarPJE } from "@/backend/captura/services/trt/trt-auth.service";
 import { buscarAdvogado } from "@/backend/advogados/services/persistence/advogado-persistence.service";
 import { createServiceClient } from "@/backend/utils/supabase/service-client";
 import type { CodigoTRT, GrauTRT } from "@/backend/types/captura/trt-types";
+import type { GrauAcervo } from "@/backend/types/acervo/types";
 
 const GRAUS_VALIDOS: GrauTRT[] = [
   "primeiro_grau",
@@ -218,8 +214,6 @@ function sanitizeListaNumerosProcesso(value: unknown): string[] {
  *               error: "Internal server error"
  */
 export async function POST(request: NextRequest) {
-  const capturaLogId = null; // Será preenchido ao criar log de captura
-
   try {
     // 1. Autenticação
     const authResult = await authenticateRequest(request);
@@ -348,12 +342,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    processos = processosData.map((p: any) => ({
-      id: p.id,
-      numero_processo: p.numero_processo,
-      id_pje: p.id_pje,
-      trt: p.trt,
-      grau: p.grau,
+    processos = processosData.map((p) => ({
+      id: p.id as number,
+      numero_processo: p.numero_processo as string,
+      id_pje: p.id_pje as number,
+      trt: p.trt as CodigoTRT,
+      grau: p.grau as GrauAcervo,
     }));
 
     // 6. Iniciar log de captura
