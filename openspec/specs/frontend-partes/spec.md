@@ -1,7 +1,8 @@
-# Spec: Frontend - Página Unificada de Partes
+# frontend-partes Specification
 
-## ADDED Requirements
-
+## Purpose
+TBD - created by archiving change refatoracao-sistema-partes. Update Purpose after archive.
+## Requirements
 ### Requirement: Página /partes com navegação por tabs
 The page SHALL `/partes` unifica gestão de clientes, partes contrárias e terceiros em uma interface única com tabs.
 
@@ -182,24 +183,3 @@ The menu SHALL lateral reflete nova estrutura de partes.
 
 ---
 
-## MODIFIED Requirements
-
-_(Nenhum requirement existente foi modificado diretamente. A página /clientes foi renomeada para /partes, mas a funcionalidade é expandida, não modificada)_
-
----
-
-## REMOVED Requirements
-
-### Requirement: Página /clientes standalone (REMOVIDO)
-The page SHALL `/clientes` foi substituída pela página `/partes` com tabs.
-
-**Rationale**: Unificação de UX para todas as partes processuais em uma interface única.
-
----
-
-## Cross-References
-
-- **Depends on**: `database-partes` (tabelas criadas)
-- **Depends on**: API routes de clientes, partes_contrarias, enderecos
-- **Related**: `ui-components` (usa componentes shadcn/ui)
-- **Related**: `clientes-frontend` (spec antigo, será deprecated)

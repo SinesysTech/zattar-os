@@ -659,3 +659,135 @@ export async function deletarRepresentante(id: number): Promise<OperacaoRepresen
     };
   }
 }
+
+// ============================================================================
+// Funções com JOIN para endereços
+// ============================================================================
+
+/**
+ * Busca um representante por ID com endereço populado via LEFT JOIN
+ */
+export async function buscarRepresentanteComEndereco(
+  id: number
+): Promise<RepresentanteComEndereco | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('representantes')
+    .select(`
+      *,
+      endereco:enderecos(*)
+    `)
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return null;
+    }
+    throw new Error(`Erro ao buscar representante com endereço: ${error.message}`);
+  }
+
+  if (!data) return null;
+
+  const representante = converterParaRepresentante(data);
+  const endereco = data.endereco ? converterParaEndereco(data.endereco) : null;
+
+  return {
+    ...representante,
+    endereco,
+  } as RepresentanteComEndereco;
+}
+
+/**
+ * Lista representantes com endereços populados via LEFT JOIN
+ */
+export async function listarRepresentantesComEndereco(
+  params: ListarRepresentantesParams = {}
+): Promise<ListarRepresentantesResult & { representantes: RepresentanteComEndereco[] }> {
+  const supabase = await createClient();
+
+  const pagina = params.pagina ?? 1;
+  const limite = params.limite ?? 50;
+  const offset = (pagina - 1) * limite;
+
+  let query = supabase.from('representantes').select(
+    `
+      *,
+      endereco:enderecos(*)
+    `,
+    { count: 'exact' }
+  );
+
+  // Aplicar filtros
+  if (params.busca) {
+    const busca = params.busca.trim();
+    query = query.or(`nome.ilike.%${busca}%,numero_oab.ilike.%${busca}%,cpf.ilike.%${busca}%`);
+  }
+
+  if (params.tipo_pessoa) {
+    query = query.eq('tipo_pessoa', params.tipo_pessoa);
+  }
+
+  if (params.parte_tipo) {
+    query = query.eq('parte_tipo', params.parte_tipo);
+  }
+
+  if (params.parte_id) {
+    query = query.eq('parte_id', params.parte_id);
+  }
+
+  if (params.numero_processo) {
+    query = query.eq('numero_processo', params.numero_processo);
+  }
+
+  if (params.nome) {
+    query = query.ilike('nome', `%${params.nome}%`);
+  }
+
+  if (params.numero_oab) {
+    query = query.eq('numero_oab', params.numero_oab);
+  }
+
+  if (params.situacao_oab) {
+    query = query.eq('situacao_oab', params.situacao_oab);
+  }
+
+  if (params.id_pessoa_pje) {
+    query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
+  }
+
+  // Ordenação
+  const ordenarPor = params.ordenar_por ?? 'created_at';
+  const ordem = params.ordem ?? 'desc';
+  query = query.order(ordenarPor, { ascending: ordem === 'asc' });
+
+  // Aplicar paginação
+  query = query.range(offset, offset + limite - 1);
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    throw new Error(`Erro ao listar representantes com endereço: ${error.message}`);
+  }
+
+  const representantes = (data || []).map((row) => {
+    const representante = converterParaRepresentante(row);
+    const endereco = row.endereco ? converterParaEndereco(row.endereco) : null;
+    return {
+      ...representante,
+      endereco,
+    } as RepresentanteComEndereco;
+  });
+
+  const total = count ?? 0;
+  const totalPaginas = Math.ceil(total / limite);
+
+  return {
+    representantes,
+    total,
+    pagina,
+    limite,
+    totalPaginas,
+  };
+}

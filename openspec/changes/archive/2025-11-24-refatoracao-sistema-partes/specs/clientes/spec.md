@@ -1,6 +1,6 @@
 # Spec: Clientes (Backend) - Modificações para estrutura PJE
 
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Cliente com 60 campos alinhados ao PJE
 The entity SHALL Cliente foi expandida para incluir todos os campos retornados pelo PJE.
@@ -55,8 +55,6 @@ The field SHALL `id_pessoa_pje` garante que mesma pessoa do PJE não seja duplic
 **And** operação é idempotente
 
 ---
-
-## ADDED Requirements
 
 ### Requirement: Tipos TypeScript com discriminated union para PF/PJ
 Types SHALL garantem type-safety para campos específicos de PF ou PJ.

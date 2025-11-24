@@ -3,21 +3,36 @@
 
 import {
   listarClientes as listarClientesDb,
+  listarClientesComEndereco as listarClientesComEnderecoDb,
   type ListarClientesParams,
   type ListarClientesResult,
 } from '../persistence/cliente-persistence.service';
 
 /**
+ * Parâmetros estendidos para incluir endereços
+ */
+export interface ObterClientesParams extends ListarClientesParams {
+  incluir_endereco?: boolean;
+}
+
+/**
  * Lista clientes com filtros e paginação
- * 
+ *
  * Fluxo:
  * 1. Aplica filtros de busca, tipo de pessoa, status, etc.
  * 2. Aplica paginação
  * 3. Retorna lista paginada de clientes
+ * 4. Se incluir_endereco=true, popula dados de endereço via JOIN
  */
 export async function obterClientes(
-  params: ListarClientesParams = {}
+  params: ObterClientesParams = {}
 ): Promise<ListarClientesResult> {
-  return listarClientesDb(params);
+  const { incluir_endereco, ...listParams } = params;
+
+  if (incluir_endereco) {
+    return listarClientesComEnderecoDb(listParams);
+  }
+
+  return listarClientesDb(listParams);
 }
 
