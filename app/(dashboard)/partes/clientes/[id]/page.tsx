@@ -241,13 +241,13 @@ export default function ClientePage() {
                   </div>
                 </div>
               )}
-              {cliente.ddd_telefone && cliente.numero_telefone && (
+              {cliente.ddd_residencial && cliente.numero_residencial && (
                 <div>
                   <div className="text-sm font-medium text-muted-foreground mb-1">
                     Telefone
                   </div>
                   <div className="text-base">
-                    {formatarTelefone(`${cliente.ddd_telefone}${cliente.numero_telefone}`)}
+                    {formatarTelefone(`${cliente.ddd_residencial}${cliente.numero_residencial}`)}
                   </div>
                 </div>
               )}

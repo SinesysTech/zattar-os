@@ -14,7 +14,6 @@ export type {
   ListarTerceirosParams,
   ListarTerceirosResult,
   UpsertTerceiroPorIdPessoaParams,
-  BuscarTerceirosPorProcessoParams,
   OrdenarPorTerceiro,
   OrdemTerceiro,
 } from '@/backend/types/partes/terceiros-types';

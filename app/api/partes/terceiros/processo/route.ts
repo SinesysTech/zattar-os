@@ -68,35 +68,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Parse query parameters
-    const searchParams = request.nextUrl.searchParams;
-    const processoIdStr = searchParams.get('processo_id');
-
-    if (!processoIdStr) {
-      return NextResponse.json(
-        { success: false, error: 'processo_id é obrigatório' },
-        { status: 400 }
-      );
-    }
-
-    const processoId = parseInt(processoIdStr);
-    if (isNaN(processoId) || processoId <= 0) {
-      return NextResponse.json(
-        { success: false, error: 'processo_id inválido' },
-        { status: 400 }
-      );
-    }
-
-    const params: BuscarTerceirosPorProcessoParams = {
-      processo_id: processoId,
-      tipo_parte: searchParams.get('tipo_parte') || undefined,
-      tipo_pessoa: searchParams.get('tipo_pessoa') as any,
-    };
-
-    // Find terceiros
-    const terceiros = await buscarTerceirosPorProcesso(params);
-
-    return NextResponse.json({ success: true, data: terceiros }, { status: 200 });
+    // TODO: Refactor to query terceiros via JOIN with processo_partes
+    // Since terceiros no longer has processo_id column,
+    // need to query: processo_partes -> get entidade_id where tipo_entidade='terceiro' -> terceiros
+    return NextResponse.json(
+      { success: false, error: 'Endpoint temporariamente desabilitado - necessita refatoração' },
+      { status: 501 }
+    );
   } catch (error) {
     console.error('Erro ao buscar terceiros por processo:', error);
     return NextResponse.json(
