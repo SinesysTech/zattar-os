@@ -10,9 +10,30 @@ import {
   vincularParteProcesso,
 } from '@/backend/partes/services/processo-partes-persistence.service';
 import type {
+  GrauProcessoParte,
   ListarProcessoPartesParams,
   VincularParteProcessoParams,
 } from '@/backend/types/partes/processo-partes-types';
+
+function normalizeGrauInput(value: unknown): GrauProcessoParte | undefined {
+  if (typeof value === 'number') {
+    return normalizeGrauInput(String(value));
+  }
+
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  if (value === '1' || value === 'primeiro_grau') {
+    return 'primeiro_grau';
+  }
+
+  if (value === '2' || value === 'segundo_grau') {
+    return 'segundo_grau';
+  }
+
+  return undefined;
+}
 
 /**
  * @swagger
@@ -148,7 +169,7 @@ export async function GET(request: NextRequest) {
       entidade_id: searchParams.get('entidade_id') ? parseInt(searchParams.get('entidade_id')!) : undefined,
       processo_id: searchParams.get('processo_id') ? parseInt(searchParams.get('processo_id')!) : undefined,
       trt: searchParams.get('trt') || undefined,
-      grau: searchParams.get('grau') as any,
+      grau: normalizeGrauInput(searchParams.get('grau')),
       numero_processo: searchParams.get('numero_processo') || undefined,
       polo: searchParams.get('polo') as any,
       tipo_parte: searchParams.get('tipo_parte') as any,
@@ -272,7 +293,19 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json();
-    const params: VincularParteProcessoParams = body;
+    const grauNormalizado = normalizeGrauInput(body?.grau);
+
+    if (!grauNormalizado) {
+      return NextResponse.json(
+        { success: false, error: 'grau inválido (use valores "1" ou "2")' },
+        { status: 400 }
+      );
+    }
+
+    const params: VincularParteProcessoParams = {
+      ...body,
+      grau: grauNormalizado,
+    };
 
     // Validate required fields
     if (!params.processo_id || !params.tipo_entidade || !params.entidade_id ||

@@ -316,9 +316,9 @@ export default function UsuariosPage() {
   const colunas = React.useMemo(() => criarColunas(handleRedefinirSenha), [handleRedefinirSenha]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Toolbar com busca, filtros e ações */}
-      <div className="flex items-center gap-4 justify-between">
+      <div className="flex items-center gap-3 justify-between">
         <TableToolbar
           searchValue={busca}
           onSearchChange={(value) => {

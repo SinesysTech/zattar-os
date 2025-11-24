@@ -7,7 +7,31 @@ import {
   listarProcessoPartes,
   vincularParteProcesso,
 } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
-import type { ListarProcessoPartesParams, VincularParteProcessoParams } from '@/backend/types/partes';
+import type {
+  GrauProcessoParte,
+  ListarProcessoPartesParams,
+  VincularParteProcessoParams,
+} from '@/backend/types/partes';
+
+function normalizeGrauInput(value: unknown): GrauProcessoParte | undefined {
+  if (typeof value === 'number') {
+    return normalizeGrauInput(String(value));
+  }
+
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  if (value === '1' || value === 'primeiro_grau') {
+    return 'primeiro_grau';
+  }
+
+  if (value === '2' || value === 'segundo_grau') {
+    return 'segundo_grau';
+  }
+
+  return undefined;
+}
 
 /**
  * @swagger
@@ -103,12 +127,7 @@ export async function GET(request: NextRequest) {
 
     // Convert grau from "1"/"2" to "primeiro_grau"/"segundo_grau"
     const grauParam = searchParams.get('grau');
-    let grau: 'primeiro_grau' | 'segundo_grau' | undefined;
-    if (grauParam === '1') {
-      grau = 'primeiro_grau';
-    } else if (grauParam === '2') {
-      grau = 'segundo_grau';
-    }
+    const grau = normalizeGrauInput(grauParam);
 
     const params: ListarProcessoPartesParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
@@ -143,7 +162,19 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const dadosVinculo = body as VincularParteProcessoParams;
+    const grauNormalizado = normalizeGrauInput(body?.grau);
+
+    if (!grauNormalizado) {
+      return NextResponse.json(
+        { error: 'grau inválido (use valores "1" ou "2")' },
+        { status: 400 }
+      );
+    }
+
+    const dadosVinculo = {
+      ...body,
+      grau: grauNormalizado,
+    } as VincularParteProcessoParams;
 
     const resultado = await vincularParteProcesso(dadosVinculo);
 
