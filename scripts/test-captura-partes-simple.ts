@@ -3,6 +3,12 @@
  * Usa configurações hardcoded e apenas funções essenciais
  */
 
+import { config } from 'dotenv';
+import path from 'path';
+
+// Carregar variáveis de ambiente do .env.local
+config({ path: path.resolve(process.cwd(), '.env.local') });
+
 import { autenticarPJE } from '@/backend/captura/services/trt/trt-auth.service';
 import { capturarPartesProcesso } from '@/backend/captura/services/partes/partes-capture.service';
 import type { ProcessoParaCaptura } from '@/backend/captura/services/partes/partes-capture.service';
@@ -15,11 +21,11 @@ import type { GrauAcervo } from '@/backend/types/acervo/types';
 
 // Dados do processo
 const PROCESSO: ProcessoParaCaptura = {
-  id: 2887163, // ID na tabela acervo
-  numero_processo: '0010344-62.2024.5.03.0030',
-  id_pje: 2887163, // ID no PJE (usado na API)
-  trt: '03',
-  grau: '1' as GrauAcervo,
+  id: 10131, // ID na tabela acervo
+  numero_processo: '0000527-84.2025.5.13.0002',
+  id_pje: 410213, // ID no PJE (usado na API)
+  trt: 'TRT13',
+  grau: 'primeiro_grau' as GrauAcervo,
 };
 
 // Dados do advogado
@@ -34,15 +40,15 @@ const CREDENCIAIS = {
   senha: '12345678A@',
 };
 
-// Configuração do TRT3 (obtida do banco via MCP)
-const CONFIG_TRT3: ConfigTRT = {
-  codigo: 'TRT3' as any,
-  nome: 'TRT da 3ª Região',
+// Configuração do TRT1 (obtida do banco via MCP)
+const CONFIG_TRT13: Con13igTRT = {
+  codigo: 'TRT13' as any,
+  nome: 'TRT da 13ª Região',
   grau: 'primeiro_grau',
   tipoAcesso: 'primeiro_grau',
-  loginUrl: 'https://pje.trt3.jus.br/primeirograu/login.seam',
-  baseUrl: 'https://pje.trt3.jus.br',
-  apiUrl: 'https://pje.trt3.jus.br/pje-comum-api/api',
+  loginUrl: 'https://pje.trt1.jus.br/primeirograu/login.seam',
+  baseUrl: 'https://pje.trt1.jus.br',
+  apiUrl: 'https://pje.trt1.jus.br/pje-comum-api/api',
 };
 
 // ==========================================
@@ -58,15 +64,14 @@ async function main() {
 
   try {
     // 1. Autenticar no PJE
-    console.log(`[1/2] Autenticando no PJE TRT3...`);
-    console.log(`  URL: ${CONFIG_TRT3.loginUrl}`);
+    console.log(`[1/2] Autenticando no PJE TRT1...`);
+    console.log(`  URL: ${CONFIG_TRT1.loginUrl}`);
 
     const authResult = await autenticarPJE({
       credential: CREDENCIAIS,
-      config: CONFIG_TRT3,
-      twofauthConfig: {
-        accountId: CREDENCIAIS.cpf,
-      },
+      config: CONFIG_TRT1,
+      // twofauthConfig não precisa ser passado - usa variáveis de ambiente do .env.local
+      // TWOFAUTH_ACCOUNT_ID=3 (ID da conta no 2FAuth)
     });
 
     page = authResult.page;
@@ -75,7 +80,7 @@ async function main() {
     // 2. Capturar partes do processo
     console.log(`[2/2] Capturando partes do processo ${PROCESSO.numero_processo}...`);
     console.log(`  Processo ID PJE: ${PROCESSO.id_pje}`);
-    console.log(`  URL da API: ${CONFIG_TRT3.baseUrl}/pje-comum-api/api/processos/id/${PROCESSO.id_pje}/partes?retornaEndereco=true`);
+    console.log(`  URL da API: ${CONFIG_TRT1.baseUrl}/pje-comum-api/api/processos/id/${PROCESSO.id_pje}/partes?retornaEndereco=true`);
     console.log('─'.repeat(80));
 
     const resultado = await capturarPartesProcesso(page, PROCESSO, ADVOGADO);

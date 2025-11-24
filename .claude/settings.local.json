@@ -21,7 +21,14 @@
       "Bash(npm run type-check:*)",
       "Bash(claude mcp add:*)",
       "Bash(npx tsx:*)",
-      "Bash(npx playwright install firefox)"
+      "Bash(npx playwright install firefox)",
+      "Bash(claude mcp invoke supabase query:*)",
+      "Bash(claude mcp --help:*)",
+      "Bash(claude mcp get:*)",
+      "mcp__supabase__list_tables",
+      "mcp__supabase__execute_sql",
+      "Bash(npx playwright:*)",
+      "*"
     ],
     "deny": [],
     "ask": []
