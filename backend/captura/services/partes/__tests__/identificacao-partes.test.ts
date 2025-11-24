@@ -17,7 +17,7 @@ import {
   isTipoEspecial,
   type AdvogadoIdentificacao,
 } from '../identificacao-partes.service';
-import type { PartePJE } from '@/backend/api/pje-trt/partes/types';
+import type { PartePJE, RepresentantePJE } from '@/backend/api/pje-trt/partes/types';
 
 // ============================================================================
 // HELPERS DE TESTE
@@ -99,6 +99,22 @@ const createParteMock = (overrides: Partial<PartePJE> = {}): PartePJE => ({
   representantes: [],
   dadosCompletos: {},
   ...overrides,
+});
+
+const createRepresentanteMock = (
+  overrides: Partial<RepresentantePJE> = {}
+): RepresentantePJE => ({
+  idPessoa: overrides.idPessoa ?? 1,
+  nome: overrides.nome ?? 'Dr. Representante',
+  tipoDocumento: overrides.tipoDocumento ?? 'CPF',
+  numeroDocumento: overrides.numeroDocumento ?? '00000000000',
+  numeroOAB: overrides.numeroOAB ?? null,
+  ufOAB: overrides.ufOAB ?? null,
+  situacaoOAB: overrides.situacaoOAB ?? null,
+  tipo: overrides.tipo ?? 'ADVOGADO',
+  email: overrides.email ?? null,
+  telefones: overrides.telefones ?? [],
+  dadosCompletos: overrides.dadosCompletos ?? {},
 });
 
 // ============================================================================
@@ -233,12 +249,12 @@ describe('identificarTipoParte() - Tipos Especiais (Terceiros)', () => {
       tipoParte: 'PERITO',
       nome: 'Dr. Carlos Perito',
       representantes: [
-        {
+        createRepresentanteMock({
           idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Mesmo CPF do advogado!
           tipoDocumento: 'CPF',
-        },
+        }),
       ],
     });
     // Tipo especial tem PRIORIDADE sobre representante
@@ -264,12 +280,12 @@ describe('identificarTipoParte() - Cliente', () => {
       tipoParte: 'AUTOR',
       nome: 'Maria Santos',
       representantes: [
-        {
+        createRepresentanteMock({
           idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Mesmo CPF do advogado
           tipoDocumento: 'CPF',
-        },
+        }),
       ],
     });
     expect(identificarTipoParte(parte, mockAdvogado)).toBe('cliente');
@@ -279,12 +295,12 @@ describe('identificarTipoParte() - Cliente', () => {
     const parte = createParteMock({
       tipoParte: 'RECLAMANTE',
       representantes: [
-        {
+        createRepresentanteMock({
           idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '12345678900', // Sem formatação
           tipoDocumento: 'CPF',
-        },
+        }),
       ],
     });
     expect(identificarTipoParte(parte, mockAdvogado)).toBe('cliente');
@@ -298,12 +314,12 @@ describe('identificarTipoParte() - Cliente', () => {
     };
     const parte = createParteMock({
       representantes: [
-        {
+        createRepresentanteMock({
           idPessoa: 1,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Com formatação
           tipoDocumento: 'CPF',
-        },
+        }),
       ],
     });
     expect(identificarTipoParte(parte, advogadoSemFormatacao)).toBe('cliente');
@@ -312,24 +328,24 @@ describe('identificarTipoParte() - Cliente', () => {
   it('deve identificar cliente entre múltiplos representantes', () => {
     const parte = createParteMock({
       representantes: [
-        {
+        createRepresentanteMock({
           idPessoa: 1,
           nome: 'Dra. Maria Oliveira',
           numeroDocumento: '111.222.333-44',
           tipoDocumento: 'CPF',
-        },
-        {
+        }),
+        createRepresentanteMock({
           idPessoa: 2,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Match!
           tipoDocumento: 'CPF',
-        },
-        {
+        }),
+        createRepresentanteMock({
           idPessoa: 3,
           nome: 'Dr. Pedro Costa',
           numeroDocumento: '555.666.777-88',
           tipoDocumento: 'CPF',
-        },
+        }),
       ],
     });
     expect(identificarTipoParte(parte, mockAdvogado)).toBe('cliente');
@@ -338,18 +354,18 @@ describe('identificarTipoParte() - Cliente', () => {
   it('deve ignorar representantes com CPF null', () => {
     const parte = createParteMock({
       representantes: [
-        {
+        createRepresentanteMock({
           idPessoa: 1,
           nome: 'Defensor Público',
           numeroDocumento: null as any,
           tipoDocumento: 'CPF',
-        },
-        {
+        }),
+        createRepresentanteMock({
           idPessoa: 2,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00', // Match!
           tipoDocumento: 'CPF',
-        },
+        }),
       ],
     });
     expect(identificarTipoParte(parte, mockAdvogado)).toBe('cliente');
@@ -358,18 +374,18 @@ describe('identificarTipoParte() - Cliente', () => {
   it('deve ignorar representantes com CPF vazio', () => {
     const parte = createParteMock({
       representantes: [
-        {
+        createRepresentanteMock({
           idPessoa: 1,
           nome: 'Sem CPF',
           numeroDocumento: '',
           tipoDocumento: 'CPF',
-        },
-        {
+        }),
+        createRepresentanteMock({
           idPessoa: 2,
           nome: 'Dr. João Silva',
           numeroDocumento: '123.456.789-00',
           tipoDocumento: 'CPF',
-        },
+        }),
       ],
     });
     expect(identificarTipoParte(parte, mockAdvogado)).toBe('cliente');

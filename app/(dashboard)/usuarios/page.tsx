@@ -7,10 +7,16 @@ import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
-import { Input } from '@/components/ui/input';
+import { TableToolbar } from '@/components/ui/table-toolbar';
+import { buildUsuariosFilterOptions, buildUsuariosFilterGroups, parseUsuariosFilters } from './components/usuarios-toolbar-filters';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Plus, Settings, MoreHorizontal, KeyRound } from 'lucide-react';
+import { Eye, Settings, MoreHorizontal, KeyRound } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,7 +26,6 @@ import {
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { UsuariosGridView } from './components/usuarios-grid-view';
 import { ViewToggle } from './components/view-toggle';
-import { UsuariosFiltrosAvancados } from './components/usuarios-filtros-avancados';
 import { UsuarioCreateDialog } from './components/usuario-create-dialog';
 import { UsuarioEditDialog } from './components/usuario-edit-dialog';
 import { CargosManagementDialog } from './components/cargos-management-dialog';
@@ -212,7 +217,8 @@ export default function UsuariosPage() {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
-  const [filtros, setFiltros] = React.useState<UsuariosFilters>({});
+  const [filtros, setFiltros] = React.useState<UsuariosFilters>({ ativo: true }); // Default: apenas ativos
+  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['ativo_true']); // Default: apenas ativos
   const [viewMode, setViewMode] = React.useState<ViewMode>('table');
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
@@ -220,6 +226,10 @@ export default function UsuariosPage() {
   const [cargosManagementOpen, setCargosManagementOpen] = React.useState(false);
   const [redefinirSenhaOpen, setRedefinirSenhaOpen] = React.useState(false);
   const [usuarioParaRedefinirSenha, setUsuarioParaRedefinirSenha] = React.useState<Usuario | null>(null);
+
+  // Preparar opções e grupos de filtros
+  const filterOptions = React.useMemo(() => buildUsuariosFilterOptions(), []);
+  const filterGroups = React.useMemo(() => buildUsuariosFilterGroups(), []);
 
   // Carregar preferência de visualização do localStorage
   React.useEffect(() => {
@@ -255,6 +265,9 @@ export default function UsuariosPage() {
 
   const { usuarios, paginacao, isLoading, error, refetch } = useUsuarios(params);
 
+  // Definir se está buscando (debounced)
+  const isSearching = busca !== buscaDebounced && busca.length > 0;
+
   // Função para atualizar após criação de novo usuário
   const refetchRef = React.useRef(refetch);
   React.useEffect(() => {
@@ -265,16 +278,10 @@ export default function UsuariosPage() {
     refetchRef.current();
   }, []);
 
-  const handleFiltersChange = React.useCallback(
-    (newFilters: UsuariosFilters) => {
-      setFiltros(newFilters);
-      setPagina(0); // Resetar para primeira página ao aplicar filtros
-    },
-    []
-  );
-
-  const handleFiltersReset = React.useCallback(() => {
-    setFiltros({});
+  const handleFilterIdsChange = React.useCallback((selectedIds: string[]) => {
+    setSelectedFilterIds(selectedIds);
+    const newFilters = parseUsuariosFilters(selectedIds);
+    setFiltros(newFilters);
     setPagina(0);
   }, []);
 
@@ -310,39 +317,41 @@ export default function UsuariosPage() {
 
   return (
     <div className="space-y-4">
-      {/* Barra de busca, filtros e alternância de visualização */}
+      {/* Toolbar com busca, filtros e ações */}
       <div className="flex items-center gap-4 justify-between">
-        <div className="flex items-center gap-2">
-          <Input
-            placeholder="Buscar por nome, CPF ou e-mail..."
-            value={busca}
-            onChange={(e) => {
-              setBusca(e.target.value);
-              setPagina(0); // Resetar para primeira página ao buscar
-            }}
-            className="max-w-sm"
-          />
-          <UsuariosFiltrosAvancados
-            filters={filtros}
-            onFiltersChange={handleFiltersChange}
-            onReset={handleFiltersReset}
-          />
-          <ViewToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setCargosManagementOpen(true)}
-            title="Gerenciar Cargos"
-          >
-            <Settings className="h-4 w-4" />
-          </Button>
-          <Button onClick={() => setCreateOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Novo Usuário
-          </Button>
-        </div>
+        <TableToolbar
+          searchValue={busca}
+          onSearchChange={(value) => {
+            setBusca(value);
+            setPagina(0);
+          }}
+          isSearching={isSearching}
+          searchPlaceholder="Buscar por nome, CPF ou e-mail..."
+          filterOptions={filterOptions}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilterIds}
+          onFiltersChange={handleFilterIdsChange}
+          extraButtons={
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setCargosManagementOpen(true)}
+                  aria-label="Gerenciar Cargos"
+                >
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Gerenciar Cargos
+              </TooltipContent>
+            </Tooltip>
+          }
+          onNewClick={() => setCreateOpen(true)}
+          newButtonTooltip="Novo Usuário"
+        />
+        <ViewToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
       </div>
 
       {/* Mensagem de erro */}
