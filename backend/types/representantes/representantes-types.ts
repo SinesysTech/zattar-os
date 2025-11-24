@@ -84,6 +84,7 @@ interface RepresentanteBase {
   dados_anteriores: Record<string, unknown> | null;
   ordem: number | null;
   data_habilitacao: Date | null;
+  endereco_id: number | null; // FK para tabela enderecos
   created_at: Date;
   updated_at: Date;
 }
@@ -142,6 +143,23 @@ export interface RepresentantePessoaJuridica extends RepresentanteBase {
  * Representante union type - automatically discriminates between PF and PJ
  */
 export type Representante = RepresentantePessoaFisica | RepresentantePessoaJuridica;
+
+/**
+ * Tipos com endereço populado (para queries com JOIN)
+ */
+import type { Endereco } from '@/backend/types/partes/enderecos-types';
+
+export interface RepresentantePessoaFisicaComEndereco extends RepresentantePessoaFisica {
+  endereco?: Endereco | null;
+}
+
+export interface RepresentantePessoaJuridicaComEndereco extends RepresentantePessoaJuridica {
+  endereco?: Endereco | null;
+}
+
+export type RepresentanteComEndereco =
+  | RepresentantePessoaFisicaComEndereco
+  | RepresentantePessoaJuridicaComEndereco;
 
 // ============================================================================
 // CRUD Parameter Types
@@ -203,6 +221,7 @@ export interface CriarRepresentanteParams {
   dados_anteriores?: Record<string, unknown> | null;
   ordem?: number | null;
   data_habilitacao?: Date | null;
+  endereco_id?: number | null;
 }
 
 /**
@@ -253,6 +272,7 @@ export interface AtualizarRepresentanteParams {
   dados_pje_completo?: Record<string, unknown> | null;
   ordem?: number | null;
   data_habilitacao?: Date | null;
+  endereco_id?: number | null;
 }
 
 /**

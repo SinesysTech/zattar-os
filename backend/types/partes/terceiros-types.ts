@@ -58,6 +58,7 @@ interface TerceiroBase {
   situacao: SituacaoPJE | null;
   observacoes: string | null;
   dados_anteriores: Record<string, unknown> | null; // JSONB
+  endereco_id: number | null; // FK para tabela enderecos
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }
@@ -145,6 +146,23 @@ export interface TerceiroPessoaJuridica extends TerceiroBase {
 export type Terceiro = TerceiroPessoaFisica | TerceiroPessoaJuridica;
 
 /**
+ * Tipos com endereço populado (para queries com JOIN)
+ */
+import type { Endereco } from '@/backend/types/partes/enderecos-types';
+
+export interface TerceiroPessoaFisicaComEndereco extends TerceiroPessoaFisica {
+  endereco?: Endereco | null;
+}
+
+export interface TerceiroPessoaJuridicaComEndereco extends TerceiroPessoaJuridica {
+  endereco?: Endereco | null;
+}
+
+export type TerceiroComEndereco =
+  | TerceiroPessoaFisicaComEndereco
+  | TerceiroPessoaJuridicaComEndereco;
+
+/**
  * Dados para criar terceiro PF
  */
 export interface CriarTerceiroPFParams {
@@ -184,6 +202,7 @@ export interface CriarTerceiroPFParams {
   situacao?: SituacaoPJE;
   observacoes?: string;
   dados_anteriores?: Record<string, unknown>;
+  endereco_id?: number;
 }
 
 /**
@@ -220,6 +239,7 @@ export interface CriarTerceiroPJParams {
   situacao?: SituacaoPJE;
   observacoes?: string;
   dados_anteriores?: Record<string, unknown>;
+  endereco_id?: number;
 }
 
 /**
@@ -268,6 +288,7 @@ export interface AtualizarTerceiroPFParams {
   situacao?: SituacaoPJE;
   observacoes?: string;
   dados_anteriores?: Record<string, unknown>;
+  endereco_id?: number;
 }
 
 /**
@@ -305,6 +326,7 @@ export interface AtualizarTerceiroPJParams {
   situacao?: SituacaoPJE;
   observacoes?: string;
   dados_anteriores?: Record<string, unknown>;
+  endereco_id?: number;
 }
 
 /**

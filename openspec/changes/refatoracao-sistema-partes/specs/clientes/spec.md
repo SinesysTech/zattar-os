@@ -107,31 +107,6 @@ The service SHALL inclui métodos para operações específicas de integração 
 
 ---
 
-## REMOVED Requirements
-
-### Requirement: Campo email único (REMOVIDO)
-The field SHALL `email` text foi substituído por `emails` JSONB array.
-
-**Rationale**: PJE retorna array de emails, estrutura deve refletir isso.
-
----
-
-### Requirement: Campo endereco JSONB único (REMOVIDO)
-The field SHALL `endereco` JSONB foi removido. Endereços agora em tabela `enderecos`.
-
-**Rationale**: Normalização permite múltiplos endereços e queries diretas.
-
----
-
-### Requirement: Campos telefone_primario e telefone_secundario (REMOVIDOS)
-Campos `telefone_primario` e `telefone_secundario` foram removidos.
-
-**Rationale**: PJE retorna telefones separados por tipo (celular, residencial, comercial) com DDD e número separados.
-
-**Replacement**: Campos `ddd_celular`, `numero_celular`, `ddd_residencial`, `numero_residencial`, `ddd_comercial`, `numero_comercial`.
-
----
-
 ## Cross-References
 
 - **Depends on**: `database-partes` (migrations de `clientes` aplicadas)
