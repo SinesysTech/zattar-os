@@ -3,9 +3,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
-import { obterClientes } from '@/backend/clientes/services/clientes/listar-clientes.service';
+import { obterClientes, type ObterClientesParams } from '@/backend/clientes/services/clientes/listar-clientes.service';
 import { cadastrarCliente } from '@/backend/clientes/services/clientes/criar-cliente.service';
-import type { CriarClienteParams, ListarClientesParams } from '@/backend/types/partes';
+import type { CriarClienteParams } from '@/backend/types/partes';
 
 /**
  * @swagger
@@ -48,6 +48,12 @@ import type { CriarClienteParams, ListarClientesParams } from '@/backend/types/p
  *         schema:
  *           type: boolean
  *         description: Filtrar por status ativo/inativo
+ *       - in: query
+ *         name: incluir_endereco
+ *         schema:
+ *           type: boolean
+ *           default: false
+ *         description: Se true, inclui dados de endereço via JOIN
  *     responses:
  *       200:
  *         description: Lista de clientes retornada com sucesso
@@ -145,6 +151,9 @@ import type { CriarClienteParams, ListarClientesParams } from '@/backend/types/p
  *               observacoes:
  *                 type: string
  *                 description: Observações gerais sobre o cliente
+ *               endereco_id:
+ *                 type: integer
+ *                 description: ID do endereço na tabela enderecos (FK)
  *               createdBy:
  *                 type: integer
  *                 description: ID do usuário que está criando o cliente
@@ -174,13 +183,14 @@ export async function GET(request: NextRequest) {
 
     // 2. Obter parâmetros da query string
     const { searchParams } = new URL(request.url);
-    const params: ListarClientesParams = {
+    const params: ObterClientesParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,
       tipo_pessoa: (searchParams.get('tipo_pessoa') as 'pf' | 'pj' | null) || undefined,
       trt: searchParams.get('trt') || undefined,
       grau: (searchParams.get('grau') as 'primeiro_grau' | 'segundo_grau' | null) || undefined,
+      incluir_endereco: searchParams.get('incluir_endereco') === 'true',
     };
 
     // 3. Listar clientes
