@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { capturarTimeline, type CapturaTimelineParams } from '@/backend/captura/services/timeline/timeline-capture.service';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 
 /**
  * @swagger

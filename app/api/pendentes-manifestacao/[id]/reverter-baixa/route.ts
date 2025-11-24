@@ -2,7 +2,7 @@
 // PATCH: Reverter baixa (marcar como pendente novamente)
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { reverterBaixa } from '@/backend/pendentes/services/reverter-baixa.service';
 
 /**

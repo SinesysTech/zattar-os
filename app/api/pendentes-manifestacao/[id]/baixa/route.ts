@@ -2,7 +2,7 @@
 // PATCH: Baixar expediente (marcar como respondido)
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { baixarExpediente } from '@/backend/pendentes/services/baixa-expediente.service';
 
 /**

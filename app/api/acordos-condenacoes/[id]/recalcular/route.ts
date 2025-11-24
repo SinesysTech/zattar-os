@@ -1,7 +1,7 @@
 // Rota de API para recalcular distribuição de valores entre parcelas
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { recalcularDistribuicao } from '@/backend/acordos-condenacoes/services/parcelas/recalcular-distribuicao.service';
 
 export async function POST(

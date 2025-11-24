@@ -2,7 +2,7 @@
 // GET: Listar tipos de expedientes | POST: Criar tipo de expediente
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { listarTiposExpedientes } from '@/backend/tipos-expedientes/services/tipos-expedientes/listar-tipos-expedientes.service';
 import { criarTipoExpediente } from '@/backend/tipos-expedientes/services/tipos-expedientes/criar-tipo-expediente.service';
 import type { ListarTiposExpedientesParams } from '@/backend/types/tipos-expedientes/types';

@@ -2,7 +2,7 @@
 // GET: Listar terceiros
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { listarTerceiros } from '@/backend/partes/services/terceiros-persistence.service';
 import type { ListarTerceirosParams } from '@/backend/types/partes/terceiros-types';
 

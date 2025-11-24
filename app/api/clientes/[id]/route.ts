@@ -2,7 +2,7 @@
 // GET: Buscar cliente por ID | PATCH: Atualizar cliente
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { obterClientePorId } from '@/backend/clientes/services/clientes/buscar-cliente.service';
 import { atualizarCliente } from '@/backend/clientes/services/clientes/atualizar-cliente.service';
 import type { AtualizarClienteParams } from '@/backend/types/partes';

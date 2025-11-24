@@ -2,7 +2,7 @@
 // POST: Executa a sincronização
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { sincronizarUsuariosAuth } from '@/backend/usuarios/services/persistence/sincronizar-usuarios-auth.service';
 
 /**

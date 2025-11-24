@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/utils/auth/require-permission';
+import { requirePermission } from '@/backend/auth/require-permission';
 import {
   listarCargos,
   criarCargo,

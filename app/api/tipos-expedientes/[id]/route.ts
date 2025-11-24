@@ -2,7 +2,7 @@
 // GET: Buscar tipo por ID | PATCH: Atualizar tipo | DELETE: Deletar tipo
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { buscarTipoExpediente } from '@/backend/tipos-expedientes/services/tipos-expedientes/buscar-tipo-expediente.service';
 import { atualizarTipoExpediente } from '@/backend/tipos-expedientes/services/tipos-expedientes/atualizar-tipo-expediente.service';
 import { deletarTipoExpediente } from '@/backend/tipos-expedientes/services/tipos-expedientes/deletar-tipo-expediente.service';

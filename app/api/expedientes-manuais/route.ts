@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { verificarPermissoes } from '@/backend/permissoes/services/persistence/permissao-persistence.service';
 import {
   criarExpedienteManual,

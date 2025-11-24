@@ -2,7 +2,7 @@
 // GET: Buscar agendamento | PATCH: Atualizar agendamento | DELETE: Deletar agendamento
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { buscarAgendamento } from '@/backend/captura/services/agendamentos/buscar-agendamento.service';
 import { atualizarAgendamento } from '@/backend/captura/services/agendamentos/atualizar-agendamento.service';
 import { deletarAgendamento } from '@/backend/captura/services/agendamentos/deletar-agendamento.service';

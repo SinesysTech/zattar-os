@@ -2,7 +2,7 @@
 // PATCH: Atualizar tipo_expediente_id e descricao_arquivos
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { atualizarTipoDescricaoExpediente } from '@/backend/pendentes/services/atualizar-tipo-descricao.service';
 
 /**

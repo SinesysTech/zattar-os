@@ -4,7 +4,7 @@
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { invalidarCacheUsuario } from '@/backend/utils/auth/authorization';
+import { invalidarCacheUsuario } from '@/backend/auth/authorization';
 import {
   registrarAtribuicaoPermissao,
   registrarRevogacaoPermissao,

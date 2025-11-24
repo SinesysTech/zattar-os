@@ -2,7 +2,7 @@
 // GET: Retorna id e isSuperAdmin do usuário autenticado
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 
 /**

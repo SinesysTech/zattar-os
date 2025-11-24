@@ -2,7 +2,7 @@
 // GET: Listar credenciais | POST: Criar credencial
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { listarCredenciais } from '@/backend/advogados/services/credenciais/listar-credenciais.service';
 import { criarCredencial } from '@/backend/advogados/services/credenciais/criar-credencial.service';
 import type { ListarCredenciaisParams, CriarCredencialParams } from '@/backend/types/credenciais/types';

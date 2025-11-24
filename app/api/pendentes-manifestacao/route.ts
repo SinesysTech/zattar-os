@@ -2,7 +2,7 @@
 // GET: Listar processos pendentes de manifestação com filtros, paginação, ordenação e agrupamento
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { obterPendentes } from '@/backend/pendentes/services/listar-pendentes.service';
 import type { ListarPendentesParams } from '@/backend/types/pendentes/types';
 

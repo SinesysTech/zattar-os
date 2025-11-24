@@ -2,7 +2,7 @@
 // POST: Executa um agendamento imediatamente
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { buscarAgendamento } from '@/backend/captura/services/agendamentos/buscar-agendamento.service';
 import { executarAgendamento } from '@/backend/captura/services/scheduler/executar-agendamento.service';
 

@@ -2,7 +2,7 @@
 // GET: Buscar usuário por ID | PATCH: Atualizar usuário
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/utils/auth/require-permission';
+import { requirePermission } from '@/backend/auth/require-permission';
 import { obterUsuarioPorId } from '@/backend/usuarios/services/usuarios/buscar-usuario.service';
 import { atualizarUsuario } from '@/backend/usuarios/services/usuarios/atualizar-usuario.service';
 import { desativarUsuarioComDesatribuicao } from '@/backend/usuarios/services/usuarios/desativar-usuario.service';
