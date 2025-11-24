@@ -211,6 +211,7 @@ export function ClientesTab() {
       pagina: pagina + 1, // API usa 1-indexed
       limite,
       busca: buscaDebounced || undefined,
+      incluirEndereco: true, // Incluir endereços nas respostas
       ...filtros,
     };
   }, [pagina, limite, buscaDebounced, filtros]);
