@@ -89,7 +89,7 @@ export async function obterPartesProcesso(
     console.log(`[PJE-PARTES-API] Buscando partes do processo ${idProcesso}`);
 
     // Faz requisição para obter partes do processo
-    const response = await fetchPJEAPI<any>(
+    const response = await fetchPJEAPI<Record<string, unknown>>(
       page,
       `/pje-comum-api/api/processos/id/${idProcesso}/partes`
     );
@@ -101,7 +101,7 @@ export async function obterPartesProcesso(
     }
 
     // Normalizar resposta: pode vir como array OU objeto com polos { ATIVO: [], PASSIVO: [], OUTROS: [] }
-    let partesArray: any[] = [];
+    let partesArray: Record<string, unknown>[] = [];
 
     if (Array.isArray(response)) {
       // Formato array direto (usado por alguns TRTs)
@@ -125,10 +125,25 @@ export async function obterPartesProcesso(
 
     // Mapeia cada parte para o tipo PartePJE
     const partesComRepresentantes = await Promise.all(
-      partesArray.map(async (parteData: any, index: number) => {
+      partesArray.map(async (parteData: Record<string, unknown>, index: number) => {
         try {
           // Representantes sempre vêm no JSON de partes
-          const representantes = Array.isArray(parteData.representantes) ? parteData.representantes : [];
+          const representantesRaw = Array.isArray(parteData.representantes) ? parteData.representantes : [];
+          
+          // Mapear representantes para o formato esperado pela interface
+          const representantes = representantesRaw.map((rep: Record<string, unknown>) => ({
+            idPessoa: rep.idPessoa || rep.id_pessoa || 0,
+            nome: rep.nome || '',
+            tipoDocumento: (rep.tipoDocumento || rep.tipo_documento || 'CPF') as 'CPF' | 'CNPJ',
+            numeroDocumento: rep.documento || rep.numeroDocumento || rep.numero_documento || rep.cpf || '',
+            numeroOAB: rep.numeroOab || rep.numero_oab || null,
+            ufOAB: rep.ufOab || rep.uf_oab || null,
+            situacaoOAB: rep.situacaoOab || rep.situacao_oab || null,
+            tipo: rep.tipo || 'ADVOGADO',
+            email: rep.email || null,
+            telefones: extrairTelefones(rep),
+            dadosCompletos: rep,
+          }));
 
           // Mapeia dados da API PJE para tipo PartePJE
           const parte: PartePJE = {
@@ -223,12 +238,12 @@ function mapearTipoDocumento(tipo: string | undefined): 'CPF' | 'CNPJ' | 'OUTRO'
 /**
  * Extrai emails da parte (pode estar em diferentes formatos)
  */
-function extrairEmails(parteData: any): string[] {
+function extrairEmails(parteData: Record<string, unknown>): string[] {
   const emails: string[] = [];
 
   // Pode vir como array
   if (Array.isArray(parteData.emails)) {
-    emails.push(...parteData.emails.filter((e: any) => typeof e === 'string'));
+    emails.push(...parteData.emails.filter((e: unknown) => typeof e === 'string'));
   }
 
   // Pode vir como string única
@@ -243,7 +258,7 @@ function extrairEmails(parteData: any): string[] {
 /**
  * Extrai telefones da parte (pode estar em diferentes formatos)
  */
-function extrairTelefones(parteData: any): Array<{ ddd: string; numero: string }> {
+function extrairTelefones(parteData: Record<string, unknown>): Array<{ ddd: string; numero: string }> {
   const telefones: Array<{ ddd: string; numero: string }> = [];
 
   // Pode vir como array de objetos

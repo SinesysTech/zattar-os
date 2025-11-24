@@ -26,7 +26,7 @@ import { upsertRepresentantePorIdPessoa } from '@/backend/representantes/service
 import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
 import type { CriarClientePFParams, CriarClientePJParams } from '@/backend/types/partes/clientes-types';
 import type { CriarParteContrariaPFParams, CriarParteContrariaPJParams } from '@/backend/types/partes/partes-contrarias-types';
-import type { CriarTerceiroPFParams, CriarTerceiroPJParams } from '@/backend/types/partes/terceiros-types';
+// Types para terceiros são inferidos dinamicamente
 import type { GrauAcervo } from '@/backend/types/acervo/types';
 import type { EntidadeTipoEndereco } from '@/backend/types/partes/enderecos-types';
 
@@ -124,7 +124,7 @@ export async function capturarPartesProcesso(
         const tipoParte = identificarTipoParte(parte, advogado);
 
         // 2b. Faz upsert da entidade apropriada
-        const entidadeId = await processarParte(parte, tipoParte, processo);
+        const entidadeId = await processarParte(parte, tipoParte);
 
         if (entidadeId) {
           // Incrementa contador do tipo apropriado
@@ -206,14 +206,12 @@ export async function capturarPartesProcesso(
  */
 async function processarParte(
   parte: PartePJE,
-  tipoParte: TipoParteClassificacao,
-  processo: ProcessoParaCaptura
+  tipoParte: TipoParteClassificacao
 ): Promise<number | null> {
   const isPessoaFisica = parte.tipoDocumento === 'CPF';
 
-  // Mapeia dados comuns (SEM trt/grau/numero_processo - vão para processo_partes)
+  // Mapeia dados comuns (SEM trt/grau/numero_processo/id_pje - vão para processo_partes)
   const dadosComuns = {
-    id_pje: parte.idParte,
     id_pessoa_pje: parte.idPessoa,
     nome: parte.nome,
     emails: parte.emails.length > 0 ? parte.emails : undefined,
@@ -270,9 +268,9 @@ async function processarParte(
           ...dadosComuns,
           tipo_pessoa: 'pf' as const,
           cpf: parte.numeroDocumento,
-          tipo_parte: parte.tipoParte as any,
-          polo: parte.polo as any,
-        } as any;
+          tipo_parte: parte.tipoParte,
+          polo: parte.polo,
+        };
         const result = await upsertTerceiroPorIdPessoa(params);
         return result.sucesso && result.terceiro ? result.terceiro.id : null;
       } else {
@@ -280,9 +278,9 @@ async function processarParte(
           ...dadosComuns,
           tipo_pessoa: 'pj' as const,
           cnpj: parte.numeroDocumento,
-          tipo_parte: parte.tipoParte as any,
-          polo: parte.polo as any,
-        } as any;
+          tipo_parte: parte.tipoParte,
+          polo: parte.polo,
+        };
         const result = await upsertTerceiroPorIdPessoa(params);
         return result.sucesso && result.terceiro ? result.terceiro.id : null;
       }
@@ -298,7 +296,7 @@ async function processarParte(
  * Retorna quantidade de representantes salvos com sucesso
  */
 async function processarRepresentantes(
-  representantes: any[],
+  representantes: Array<Record<string, unknown>>,
   tipoParte: TipoParteClassificacao,
   parteId: number,
   processo: ProcessoParaCaptura
@@ -357,8 +355,8 @@ async function criarVinculoProcessoParte(
       entidade_id: entidadeId,
       id_pje: parte.idParte,
       id_pessoa_pje: parte.idPessoa,
-      tipo_parte: parte.tipoParte as any,
-      polo: parte.polo.toLowerCase() as any,
+      tipo_parte: parte.tipoParte,
+      polo: parte.polo.toLowerCase() as 'ativo' | 'passivo' | 'outros',
       trt: processo.trt,
       grau: processo.grau,
       numero_processo: processo.numero_processo,
@@ -391,7 +389,7 @@ async function processarEndereco(
     return null;
   }
 
-  const enderecoPJE = parte.dadosCompletos.endereco as any;
+  const enderecoPJE = parte.dadosCompletos.endereco as Record<string, unknown>;
 
   try {
     const result = await upsertEnderecoPorIdPje({
