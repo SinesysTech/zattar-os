@@ -25,49 +25,49 @@ interface UsuarioCardProps {
 export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: UsuarioCardProps) {
   return (
     <Card className="relative flex flex-col h-full hover:shadow-md transition-shadow">
-      <CardHeader className="pb-3">
+      <CardHeader className="p-3 pb-2">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-base leading-tight truncate">
+            <CardTitle className="text-sm leading-tight truncate">
               {formatarNomeExibicao(usuario.nomeExibicao)}
             </CardTitle>
-            <p className="text-sm text-muted-foreground mt-1 truncate">
+            <p className="text-xs text-muted-foreground mt-0.5 truncate">
               {usuario.emailCorporativo}
             </p>
           </div>
           <Badge
             tone={usuario.ativo ? 'success' : 'neutral'}
             variant={usuario.ativo ? 'soft' : 'outline'}
-            className="shrink-0"
+            className="shrink-0 text-xs h-5 px-1.5"
           >
             {usuario.ativo ? 'Ativo' : 'Inativo'}
           </Badge>
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 space-y-2 text-sm pb-12">
-        <div className="flex items-center gap-2">
+      <CardContent className="flex-1 space-y-1 text-xs p-3 pt-0 pb-9">
+        <div className="flex items-center gap-1.5">
           <span className="text-muted-foreground">CPF:</span>
           <span className="font-medium">
             {formatarCpf(usuario.cpf)}
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <span className="text-muted-foreground">Telefone:</span>
           <span className="font-medium">
             {formatarTelefone(usuario.telefone)}
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <span className="text-muted-foreground">Cargo:</span>
           <span className="font-medium truncate" title={usuario.cargo?.nome || '-'}>
             {usuario.cargo?.nome || '-'}
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <span className="text-muted-foreground">OAB:</span>
           <span className="font-medium">
             {formatarOab(usuario.oab, usuario.ufOab)}
@@ -76,7 +76,7 @@ export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: Usuar
       </CardContent>
 
       {/* Botões de ação no canto inferior direito */}
-      <div className="absolute bottom-3 right-3 flex gap-1">
+      <div className="absolute bottom-2 right-2 flex gap-0.5">
         <Button
           variant="ghost"
           size="icon"
