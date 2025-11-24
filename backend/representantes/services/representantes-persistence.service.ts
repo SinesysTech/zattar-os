@@ -6,6 +6,7 @@
 import { createClient } from '@/backend/utils/supabase/server-client';
 import type {
   Representante,
+  RepresentanteComEndereco,
   RepresentantePessoaFisica,
   RepresentantePessoaJuridica,
   CriarRepresentanteParams,
@@ -18,6 +19,7 @@ import type {
   UpsertRepresentantePorIdPessoaParams,
   OperacaoRepresentanteResult,
 } from '@/backend/types/representantes/representantes-types';
+import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
 
 // ============================================================================
 // Validation Functions
@@ -170,6 +172,7 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
     dados_anteriores,
     ordem: data.ordem as number | null,
     data_habilitacao: parseDate(data.data_habilitacao),
+    endereco_id: data.endereco_id as number | null,
     created_at: new Date(data.created_at as string),
     updated_at: new Date(data.updated_at as string),
   };
