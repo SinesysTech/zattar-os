@@ -26,9 +26,30 @@ import { upsertRepresentantePorIdPessoa } from '@/backend/representantes/service
 import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
 import type { CriarClientePFParams, CriarClientePJParams } from '@/backend/types/partes/clientes-types';
 import type { CriarParteContrariaPFParams, CriarParteContrariaPJParams } from '@/backend/types/partes/partes-contrarias-types';
-// Types para terceiros são inferidos dinamicamente
+import type { UpsertTerceiroPorIdPessoaParams } from '@/backend/types/partes/terceiros-types';
+import type { TipoParteProcesso, PoloProcessoParte } from '@/backend/types/partes';
 import type { GrauAcervo } from '@/backend/types/acervo/types';
-import type { EntidadeTipoEndereco } from '@/backend/types/partes/enderecos-types';
+import type { EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } from '@/backend/types/partes/enderecos-types';
+import type { SituacaoOAB, TipoRepresentante } from '@/backend/types/representantes/representantes-types';
+
+interface EnderecoPJE {
+  id?: number;
+  logradouro?: string;
+  numero?: string;
+  complemento?: string;
+  bairro?: string;
+  idMunicipio?: number;
+  municipio?: string;
+  municipioIbge?: string;
+  estado?: { id?: number; sigla?: string; descricao?: string };
+  pais?: { id?: number; codigo?: string; descricao?: string };
+  nroCep?: string;
+  classificacoesEndereco?: ClassificacaoEndereco[];
+  correspondencia?: boolean;
+  situacao?: string;
+  idUsuarioCadastrador?: number;
+  dtAlteracao?: string;
+}
 
 /**
  * Interface para dados básicos do processo necessários para captura
@@ -270,12 +291,12 @@ async function processarParte(
         cnpj: !isPessoaFisica ? parte.numeroDocumento : undefined,
         tipo_parte: parte.tipoParte,
         polo: parte.polo,
-        id_pje: parte.idParte,
+        // id_pje removido
         processo_id: 0,
         trt: '',
         grau: '',
         numero_processo: '',
-      } as any;
+      } as unknown as UpsertTerceiroPorIdPessoaParams;
       
       const result = await upsertTerceiroPorIdPessoa(params);
       return result.sucesso && result.terceiro ? result.terceiro.id : null;
@@ -314,8 +335,8 @@ async function processarRepresentantes(
         cpf: tipo_pessoa === 'pf' ? rep.numeroDocumento : undefined,
         cnpj: tipo_pessoa === 'pj' ? rep.numeroDocumento : undefined,
         numero_oab: rep.numeroOAB || undefined,
-        situacao_oab: rep.situacaoOAB as any || undefined,
-        tipo: rep.tipo as any || undefined,
+        situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
+        tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,
         emails: rep.email ? [rep.email] : undefined,
         ddd_celular: rep.telefones?.[0]?.ddd || undefined,
         numero_celular: rep.telefones?.[0]?.numero || undefined,
@@ -350,8 +371,8 @@ async function criarVinculoProcessoParte(
       entidade_id: entidadeId,
       id_pje: parte.idParte,
       id_pessoa_pje: parte.idPessoa,
-      tipo_parte: parte.tipoParte as any,
-      polo: parte.polo as any, // É do tipo 'ATIVO' | 'PASSIVO' | 'OUTROS' mas a interface espera 'PoloProcessoParte'
+      tipo_parte: parte.tipoParte as TipoParteProcesso,
+      polo: parte.polo as PoloProcessoParte, // É do tipo 'ATIVO' | 'PASSIVO' | 'OUTROS' mas a interface espera 'PoloProcessoParte'
       trt: processo.trt,
       grau: processo.grau,
       numero_processo: processo.numero_processo,
@@ -384,7 +405,7 @@ async function processarEndereco(
     return null;
   }
 
-  const enderecoPJE = parte.dadosCompletos.endereco as any;
+  const enderecoPJE = parte.dadosCompletos.endereco as unknown as EnderecoPJE;
 
   try {
     const result = await upsertEnderecoPorIdPje({
@@ -405,9 +426,9 @@ async function processarEndereco(
       pais_codigo: enderecoPJE?.pais?.codigo ? String(enderecoPJE.pais.codigo) : undefined,
       pais_descricao: enderecoPJE?.pais?.descricao ? String(enderecoPJE.pais.descricao) : undefined,
       cep: enderecoPJE?.nroCep ? String(enderecoPJE.nroCep) : undefined,
-      classificacoes_endereco: enderecoPJE?.classificacoesEndereco as any || undefined,
+      classificacoes_endereco: enderecoPJE?.classificacoesEndereco || undefined,
       correspondencia: enderecoPJE?.correspondencia !== undefined ? Boolean(enderecoPJE.correspondencia) : undefined,
-      situacao: enderecoPJE?.situacao as any || undefined,
+      situacao: (enderecoPJE?.situacao as unknown as SituacaoEndereco) || undefined,
       id_usuario_cadastrador_pje: enderecoPJE?.idUsuarioCadastrador ? Number(enderecoPJE.idUsuarioCadastrador) : undefined,
       data_alteracao_pje: enderecoPJE?.dtAlteracao ? String(enderecoPJE.dtAlteracao) : undefined,
     });

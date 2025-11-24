@@ -567,7 +567,6 @@ export async function upsertTerceiroPorIdPessoa(
       return await atualizarTerceiro({
         ...params,
         id: existente.id,
-        id_pje: params.id_pje ?? undefined,
       } as any);
     } else {
       return await criarTerceiro(params);
