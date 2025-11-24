@@ -93,33 +93,50 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       tipo_pessoa: 'pf',
       cpf: data.cpf as string,
       cnpj: null,
-      tipo_documento: (data.tipo_documento as string | null) ?? null,
-      numero_rg: (data.numero_rg as string | null) ?? null,
-      orgao_emissor_rg: (data.orgao_emissor_rg as string | null) ?? null,
-      uf_rg: (data.uf_rg as string | null) ?? null,
-      // data_expedicao_rg removido
+      rg: (data.rg as string | null) ?? null,
+      data_nascimento: (data.data_nascimento as string | null) ?? null,
+      genero: (data.genero as string | null) ?? null,
+      estado_civil: (data.estado_civil as string | null) ?? null,
+      nacionalidade: (data.nacionalidade as string | null) ?? null,
       sexo: (data.sexo as string | null) ?? null,
       nome_genitora: (data.nome_genitora as string | null) ?? null,
-      data_nascimento: (data.data_nascimento as string | null) ?? null,
-      nacionalidade: (data.nacionalidade as string | null) ?? null,
-      naturalidade: (data.naturalidade as string | null) ?? null,
-      municipio_nascimento: (data.municipio_nascimento as string | null) ?? null,
-      uf_nascimento: (data.uf_nascimento as string | null) ?? null,
-      pais_nacionalidade: (data.pais_nacionalidade as string | null) ?? null,
-      profissao: (data.profissao as string | null) ?? null,
-      estado_civil: (data.estado_civil as string | null) ?? null,
-      grau_instrucao: (data.grau_instrucao as string | null) ?? null,
-      necessidade_especial: (data.necessidade_especial as string | null) ?? null,
+      // Naturalidade (estrutura completa do PJE)
+      naturalidade_id_pje: (data.naturalidade_id_pje as number | null) ?? null,
+      naturalidade_municipio: (data.naturalidade_municipio as string | null) ?? null,
+      naturalidade_estado_id_pje: (data.naturalidade_estado_id_pje as number | null) ?? null,
+      naturalidade_estado_sigla: (data.naturalidade_estado_sigla as string | null) ?? null,
+      // UF Nascimento (estrutura completa do PJE)
+      uf_nascimento_id_pje: (data.uf_nascimento_id_pje as number | null) ?? null,
+      uf_nascimento_sigla: (data.uf_nascimento_sigla as string | null) ?? null,
+      uf_nascimento_descricao: (data.uf_nascimento_descricao as string | null) ?? null,
+      // País Nascimento (estrutura completa do PJE)
+      pais_nascimento_id_pje: (data.pais_nascimento_id_pje as number | null) ?? null,
+      pais_nascimento_codigo: (data.pais_nascimento_codigo as string | null) ?? null,
+      pais_nascimento_descricao: (data.pais_nascimento_descricao as string | null) ?? null,
+      // Escolaridade
+      escolaridade_codigo: (data.escolaridade_codigo as number | null) ?? null,
+      // Situação CPF Receita
+      situacao_cpf_receita_id: (data.situacao_cpf_receita_id as number | null) ?? null,
+      situacao_cpf_receita_descricao: (data.situacao_cpf_receita_descricao as string | null) ?? null,
+      pode_usar_celular_mensagem: (data.pode_usar_celular_mensagem as boolean | null) ?? null,
+      // Campos que são null em PF (específicos de PJ)
       inscricao_estadual: null,
       data_abertura: null,
+      data_fim_atividade: null,
       orgao_publico: null,
+      tipo_pessoa_codigo_pje: null,
+      tipo_pessoa_label_pje: null,
+      tipo_pessoa_validacao_receita: null,
       ds_tipo_pessoa: null,
+      situacao_cnpj_receita_id: null,
+      situacao_cnpj_receita_descricao: null,
       ramo_atividade: null,
+      cpf_responsavel: null,
+      oficial: null,
+      ds_prazo_expediente_automatico: null,
       porte_codigo: null,
       porte_descricao: null,
-      qualificacao_responsavel: null,
-      nome_fantasia: null,
-      status_pje: null,
+      ultima_atualizacao_pje: null,
     };
   } else {
     return {
@@ -129,32 +146,43 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       cpf: null,
       inscricao_estadual: (data.inscricao_estadual as string | null) ?? null,
       data_abertura: (data.data_abertura as string | null) ?? null,
+      data_fim_atividade: (data.data_fim_atividade as string | null) ?? null,
       orgao_publico: (data.orgao_publico as boolean | null) ?? null,
+      tipo_pessoa_codigo_pje: (data.tipo_pessoa_codigo_pje as string | null) ?? null,
+      tipo_pessoa_label_pje: (data.tipo_pessoa_label_pje as string | null) ?? null,
+      tipo_pessoa_validacao_receita: (data.tipo_pessoa_validacao_receita as string | null) ?? null,
       ds_tipo_pessoa: (data.ds_tipo_pessoa as string | null) ?? null,
+      situacao_cnpj_receita_id: (data.situacao_cnpj_receita_id as number | null) ?? null,
+      situacao_cnpj_receita_descricao: (data.situacao_cnpj_receita_descricao as string | null) ?? null,
       ramo_atividade: (data.ramo_atividade as string | null) ?? null,
-      porte_codigo: (data.porte_codigo as string | null) ?? null,
+      cpf_responsavel: (data.cpf_responsavel as string | null) ?? null,
+      oficial: (data.oficial as boolean | null) ?? null,
+      ds_prazo_expediente_automatico: (data.ds_prazo_expediente_automatico as string | null) ?? null,
+      porte_codigo: (data.porte_codigo as number | null) ?? null,
       porte_descricao: (data.porte_descricao as string | null) ?? null,
-      qualificacao_responsavel: (data.qualificacao_responsavel as string | null) ?? null,
-      capital_social: (data.capital_social as number | null) ?? null,
-      nome_fantasia: (data.nome_fantasia as string | null) ?? null,
-      status_pje: (data.status_pje as string | null) ?? null,
-      tipo_documento: null,
-      numero_rg: null,
-      orgao_emissor_rg: null,
-      uf_rg: null,
-      // data_expedicao_rg removido
+      ultima_atualizacao_pje: (data.ultima_atualizacao_pje as string | null) ?? null,
+      // Campos que são null em PJ (específicos de PF)
+      rg: null,
+      data_nascimento: null,
+      genero: null,
+      estado_civil: null,
+      nacionalidade: null,
       sexo: null,
       nome_genitora: null,
-      data_nascimento: null,
-      nacionalidade: null,
-      naturalidade: null,
-      municipio_nascimento: null,
-      uf_nascimento: null,
-      pais_nacionalidade: null,
-      profissao: null,
-      estado_civil: null,
-      grau_instrucao: null,
-      necessidade_especial: null,
+      naturalidade_id_pje: null,
+      naturalidade_municipio: null,
+      naturalidade_estado_id_pje: null,
+      naturalidade_estado_sigla: null,
+      uf_nascimento_id_pje: null,
+      uf_nascimento_sigla: null,
+      uf_nascimento_descricao: null,
+      pais_nascimento_id_pje: null,
+      pais_nascimento_codigo: null,
+      pais_nascimento_descricao: null,
+      escolaridade_codigo: null,
+      situacao_cpf_receita_id: null,
+      situacao_cpf_receita_descricao: null,
+      pode_usar_celular_mensagem: null,
     };
   }
 }
@@ -265,7 +293,7 @@ export async function criarParteContraria(
       dadosNovos.porte_codigo = params.porte_codigo?.trim() || null;
       dadosNovos.porte_descricao = params.porte_descricao?.trim() || null;
       dadosNovos.qualificacao_responsavel = params.qualificacao_responsavel?.trim() || null;
-      dadosNovos.nome_fantasia = params.nome_fantasia?.trim() || null;
+      dadosNovos.nome_social_fantasia = params.nome_social_fantasia?.trim() || null;
       dadosNovos.status_pje = params.status_pje?.trim() || null;
     }
 
@@ -391,8 +419,8 @@ export async function atualizarParteContraria(
       if (params.qualificacao_responsavel !== undefined)
         dadosAtualizacao.qualificacao_responsavel =
           params.qualificacao_responsavel?.trim() || null;
-      if (params.nome_fantasia !== undefined)
-        dadosAtualizacao.nome_fantasia = params.nome_fantasia?.trim() || null;
+      if (params.nome_social_fantasia !== undefined)
+        dadosAtualizacao.nome_social_fantasia = params.nome_social_fantasia?.trim() || null;
       if (params.status_pje !== undefined)
         dadosAtualizacao.status_pje = params.status_pje?.trim() || null;
     }
@@ -520,7 +548,7 @@ export async function listarPartesContrarias(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(
-      `nome.ilike.%${busca}%,nome_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+      `nome.ilike.%${busca}%,nome_social_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
     );
   }
 
@@ -680,7 +708,7 @@ export async function listarPartesContrariasComEndereco(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(
-      `nome.ilike.%${busca}%,nome_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+      `nome.ilike.%${busca}%,nome_social_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
     );
   }
 

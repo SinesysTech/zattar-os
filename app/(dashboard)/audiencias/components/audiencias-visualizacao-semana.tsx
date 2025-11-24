@@ -9,6 +9,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Input } from '@/components/ui/input';
 import { Copy, Pencil } from 'lucide-react';
 import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';

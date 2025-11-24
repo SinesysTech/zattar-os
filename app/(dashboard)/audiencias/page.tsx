@@ -792,6 +792,7 @@ function criarColunas(
       id: 'processo',
       header: () => <ProcessoColumnHeader onSort={onProcessoSort} />,
       enableSorting: false,
+      size: 250,
       meta: { align: 'left' },
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
@@ -801,7 +802,7 @@ function criarColunas(
         const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[220px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}

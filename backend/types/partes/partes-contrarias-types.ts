@@ -27,7 +27,7 @@ interface ParteContrariaBase {
   id_pessoa_pje: number | null; // Unique constraint
   tipo_pessoa: TipoPessoa;
   nome: string;
-  nome_fantasia: string | null; // Serve para PF (nome social) e PJ (nome fantasia)
+  nome_social_fantasia: string | null; // Serve para PF (nome social) e PJ (nome fantasia)
   emails: string[] | null; // JSONB array
   ddd_celular: string | null;
   numero_celular: string | null;
@@ -178,7 +178,7 @@ export interface CriarParteContrariaPFParams {
   tipo_pessoa: 'pf';
   nome: string;
   cpf: string;
-  nome_fantasia?: string | null;
+  nome_social_fantasia?: string | null;
   emails?: string[] | null;
   ddd_celular?: string | null;
   numero_celular?: string | null;
@@ -227,7 +227,7 @@ export interface CriarParteContrariaPJParams {
   tipo_pessoa: 'pj';
   nome: string;
   cnpj: string;
-  nome_fantasia?: string | null;
+  nome_social_fantasia?: string | null;
   emails?: string[] | null;
   ddd_celular?: string | null;
   numero_celular?: string | null;
@@ -280,7 +280,7 @@ export interface AtualizarParteContrariaPFParams {
   tipo_pessoa?: 'pf';
   nome?: string;
   cpf?: string;
-  nome_fantasia?: string | null;
+  nome_social_fantasia?: string | null;
   emails?: string[] | null;
   ddd_celular?: string | null;
   numero_celular?: string | null;
@@ -329,7 +329,7 @@ export interface AtualizarParteContrariaPJParams {
   tipo_pessoa?: 'pj';
   nome?: string;
   cnpj?: string;
-  nome_fantasia?: string | null;
+  nome_social_fantasia?: string | null;
   emails?: string[] | null;
   ddd_celular?: string | null;
   numero_celular?: string | null;
