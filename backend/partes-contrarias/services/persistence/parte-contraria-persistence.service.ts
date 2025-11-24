@@ -72,6 +72,7 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
     id_pessoa_pje: (data.id_pessoa_pje as number | null) ?? null,
     tipo_pessoa,
     nome: data.nome as string,
+    nome_social_fantasia: (data.nome_social_fantasia as string | null) ?? null,
     emails: (data.emails as string[] | null) ?? null,
     ddd_celular: (data.ddd_celular as string | null) ?? null,
     numero_celular: (data.numero_celular as string | null) ?? null,
@@ -79,7 +80,11 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
     numero_residencial: (data.numero_residencial as string | null) ?? null,
     ddd_comercial: (data.ddd_comercial as string | null) ?? null,
     numero_comercial: (data.numero_comercial as string | null) ?? null,
-    situacao: (data.situacao as 'A' | 'I' | 'E' | 'H' | null) ?? null,
+    tipo_documento: (data.tipo_documento as string | null) ?? null,
+    status_pje: (data.status_pje as string | null) ?? null,
+    situacao_pje: (data.situacao_pje as string | null) ?? null,
+    login_pje: (data.login_pje as string | null) ?? null,
+    autoridade: (data.autoridade as boolean | null) ?? null,
     observacoes: (data.observacoes as string | null) ?? null,
     dados_anteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
     endereco_id: (data.endereco_id as number | null) ?? null,
@@ -267,6 +272,7 @@ export async function criarParteContraria(
       id_pessoa_pje: params.id_pessoa_pje ?? null,
       tipo_pessoa: params.tipo_pessoa,
       nome: params.nome.trim(),
+      nome_social_fantasia: params.nome_social_fantasia?.trim() || null,
       emails: params.emails ?? null,
       ddd_celular: params.ddd_celular?.trim() || null,
       numero_celular: params.numero_celular?.trim() || null,
@@ -274,27 +280,63 @@ export async function criarParteContraria(
       numero_residencial: params.numero_residencial?.trim() || null,
       ddd_comercial: params.ddd_comercial?.trim() || null,
       numero_comercial: params.numero_comercial?.trim() || null,
-      situacao: params.situacao ?? null,
+      tipo_documento: params.tipo_documento?.trim() || null,
+      status_pje: params.status_pje?.trim() || null,
+      situacao_pje: params.situacao_pje?.trim() || null,
+      login_pje: params.login_pje?.trim() || null,
+      autoridade: params.autoridade ?? null,
       observacoes: params.observacoes?.trim() || null,
       dados_anteriores: params.dados_anteriores ?? null,
+      endereco_id: params.endereco_id ?? null,
     };
 
     if (params.tipo_pessoa === 'pf') {
       dadosNovos.cpf = normalizarCpf(params.cpf);
-      // Only fields that exist in database schema
-      // rg, data_nascimento, sexo, nome_genitora, nacionalidade, estado_civil
+      dadosNovos.rg = params.rg?.trim() || null;
+      dadosNovos.data_nascimento = params.data_nascimento || null;
+      dadosNovos.genero = params.genero?.trim() || null;
+      dadosNovos.estado_civil = params.estado_civil?.trim() || null;
+      dadosNovos.nacionalidade = params.nacionalidade?.trim() || null;
+      dadosNovos.sexo = params.sexo?.trim() || null;
+      dadosNovos.nome_genitora = params.nome_genitora?.trim() || null;
+      // Naturalidade (estrutura completa do PJE)
+      dadosNovos.naturalidade_id_pje = params.naturalidade_id_pje ?? null;
+      dadosNovos.naturalidade_municipio = params.naturalidade_municipio?.trim() || null;
+      dadosNovos.naturalidade_estado_id_pje = params.naturalidade_estado_id_pje ?? null;
+      dadosNovos.naturalidade_estado_sigla = params.naturalidade_estado_sigla?.trim() || null;
+      // UF Nascimento (estrutura completa do PJE)
+      dadosNovos.uf_nascimento_id_pje = params.uf_nascimento_id_pje ?? null;
+      dadosNovos.uf_nascimento_sigla = params.uf_nascimento_sigla?.trim() || null;
+      dadosNovos.uf_nascimento_descricao = params.uf_nascimento_descricao?.trim() || null;
+      // País Nascimento (estrutura completa do PJE)
+      dadosNovos.pais_nascimento_id_pje = params.pais_nascimento_id_pje ?? null;
+      dadosNovos.pais_nascimento_codigo = params.pais_nascimento_codigo?.trim() || null;
+      dadosNovos.pais_nascimento_descricao = params.pais_nascimento_descricao?.trim() || null;
+      // Escolaridade
+      dadosNovos.escolaridade_codigo = params.escolaridade_codigo ?? null;
+      // Situação CPF Receita
+      dadosNovos.situacao_cpf_receita_id = params.situacao_cpf_receita_id ?? null;
+      dadosNovos.situacao_cpf_receita_descricao = params.situacao_cpf_receita_descricao?.trim() || null;
+      dadosNovos.pode_usar_celular_mensagem = params.pode_usar_celular_mensagem ?? null;
     } else {
       dadosNovos.cnpj = normalizarCnpj(params.cnpj);
       dadosNovos.inscricao_estadual = params.inscricao_estadual?.trim() || null;
       dadosNovos.data_abertura = params.data_abertura || null;
+      dadosNovos.data_fim_atividade = params.data_fim_atividade || null;
       dadosNovos.orgao_publico = params.orgao_publico ?? null;
+      dadosNovos.tipo_pessoa_codigo_pje = params.tipo_pessoa_codigo_pje?.trim() || null;
+      dadosNovos.tipo_pessoa_label_pje = params.tipo_pessoa_label_pje?.trim() || null;
+      dadosNovos.tipo_pessoa_validacao_receita = params.tipo_pessoa_validacao_receita?.trim() || null;
       dadosNovos.ds_tipo_pessoa = params.ds_tipo_pessoa?.trim() || null;
+      dadosNovos.situacao_cnpj_receita_id = params.situacao_cnpj_receita_id ?? null;
+      dadosNovos.situacao_cnpj_receita_descricao = params.situacao_cnpj_receita_descricao?.trim() || null;
       dadosNovos.ramo_atividade = params.ramo_atividade?.trim() || null;
-      dadosNovos.porte_codigo = params.porte_codigo?.trim() || null;
+      dadosNovos.cpf_responsavel = params.cpf_responsavel?.trim() || null;
+      dadosNovos.oficial = params.oficial ?? null;
+      dadosNovos.ds_prazo_expediente_automatico = params.ds_prazo_expediente_automatico?.trim() || null;
+      dadosNovos.porte_codigo = params.porte_codigo ?? null; // É number, não string
       dadosNovos.porte_descricao = params.porte_descricao?.trim() || null;
-      dadosNovos.qualificacao_responsavel = params.qualificacao_responsavel?.trim() || null;
-      dadosNovos.nome_social_fantasia = params.nome_social_fantasia?.trim() || null;
-      dadosNovos.status_pje = params.status_pje?.trim() || null;
+      dadosNovos.ultima_atualizacao_pje = params.ultima_atualizacao_pje?.trim() || null;
     }
 
     // Inserir parte contrária
