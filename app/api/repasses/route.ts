@@ -1,7 +1,7 @@
 // Rota de API para repasses pendentes
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { listarRepassesPendentes, type FiltrosRepassesPendentes } from '@/backend/acordos-condenacoes/services/persistence/repasse-persistence.service';
 
 export async function GET(request: NextRequest) {

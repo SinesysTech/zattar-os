@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { buscarRepresentantesPorParte } from '@/backend/representantes/services/representantes-persistence.service';
 import type { BuscarRepresentantesPorParteParams, ParteTipo, Grau } from '@/backend/types/representantes/representantes-types';
 

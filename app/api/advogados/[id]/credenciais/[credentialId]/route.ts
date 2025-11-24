@@ -2,7 +2,7 @@
 // PATCH: Atualizar credencial
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { atualizarCredencial } from '@/backend/advogados/services/credenciais/atualizar-credencial.service';
 import type { AtualizarCredencialParams } from '@/backend/types/credenciais/types';
 

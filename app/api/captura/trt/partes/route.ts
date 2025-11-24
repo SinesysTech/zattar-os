@@ -2,7 +2,7 @@
 // Captura partes, representantes e cria vínculos processo-partes
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';

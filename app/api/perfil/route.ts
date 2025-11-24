@@ -2,7 +2,7 @@
 // GET: Retorna os dados completos do usuário autenticado
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { obterUsuarioPorId } from '@/backend/usuarios/services/usuarios/buscar-usuario.service';
 
 /**

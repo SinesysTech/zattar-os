@@ -2,7 +2,7 @@
 // GET: Listar partes contrárias
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { obterClientes } from '@/backend/clientes/services/clientes/listar-clientes.service';
 import type { ListarClientesParams } from '@/backend/types/partes';
 

@@ -2,7 +2,7 @@
 // GET: Listar partes contrárias | POST: Criar parte contrária
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { obterPartesContrarias, type ObterPartesContrariasParams } from '@/backend/partes-contrarias/services/partes-contrarias/listar-partes-contrarias.service';
 import { cadastrarParteContraria } from '@/backend/partes-contrarias/services/partes-contrarias/criar-parte-contraria.service';
 import type {

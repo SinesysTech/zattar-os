@@ -2,7 +2,7 @@
 // GET: Listar acordos/condenações | POST: Criar acordo/condenação
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { criarAcordoComParcelas, type CriarAcordoComParcelasParams } from '@/backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service';
 import { listarAcordosCondenacoes, type ListarAcordosParams } from '@/backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service';
 

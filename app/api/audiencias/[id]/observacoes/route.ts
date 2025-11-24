@@ -1,7 +1,7 @@
 // Rota de API para atualizar observações de audiência
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/utils/auth/require-permission';
+import { requirePermission } from '@/backend/auth/require-permission';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { deletePattern } from '@/backend/utils/redis/cache-utils';
 import { CACHE_PREFIXES } from '@/backend/utils/redis/cache-utils';

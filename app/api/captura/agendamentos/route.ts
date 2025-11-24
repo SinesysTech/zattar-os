@@ -2,7 +2,7 @@
 // GET: Listar agendamentos | POST: Criar agendamento
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { listarAgendamentos } from '@/backend/captura/services/agendamentos/listar-agendamentos.service';
 import { criarAgendamento } from '@/backend/captura/services/agendamentos/criar-agendamento.service';
 import type { CriarAgendamentoParams, ListarAgendamentosParams } from '@/backend/types/captura/agendamentos-types';

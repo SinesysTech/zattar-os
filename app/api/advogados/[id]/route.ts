@@ -2,7 +2,7 @@
 // GET: Buscar advogado | PATCH: Atualizar advogado
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { buscarAdvogado } from '@/backend/advogados/services/advogados/buscar-advogado.service';
 import { atualizarAdvogado } from '@/backend/advogados/services/advogados/atualizar-advogado.service';
 import type { AtualizarAdvogadoParams } from '@/backend/types/advogados/types';

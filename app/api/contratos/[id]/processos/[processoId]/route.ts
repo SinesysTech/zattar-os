@@ -1,7 +1,7 @@
 // Rota de API para remover processo do contrato
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { desassociarProcessoDoContrato } from '@/backend/contratos/services/contratos/gerenciar-processos.service';
 
 /**

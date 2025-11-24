@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { upsertRepresentantePorIdPessoa } from '@/backend/representantes/services/representantes-persistence.service';
 import type { UpsertRepresentantePorIdPessoaParams } from '@/backend/types/representantes/representantes-types';
 

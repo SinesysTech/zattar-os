@@ -2,7 +2,7 @@
 // POST: Limpar cache (todo ou padrão específico)
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { getRedisClient, isRedisAvailable } from '@/backend/utils/redis/client';
 import { deletePattern } from '@/backend/utils/redis/cache-utils';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
