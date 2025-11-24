@@ -43,7 +43,6 @@ export type {
   UpsertParteContrariaPorIdPessoaParams,
   OrdenarPorParteContraria,
   OrdemParteContraria,
-  ParteContrariaFormData,
 } from './partes-contrarias-types';
 
 export type {
@@ -66,7 +65,6 @@ export type {
   BuscarTerceirosPorProcessoParams,
   OrdenarPorTerceiro,
   OrdemTerceiro,
-  TerceiroFormData,
 } from './terceiros-types';
 
 export * from './enderecos-types';

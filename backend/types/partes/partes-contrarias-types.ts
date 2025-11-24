@@ -1,7 +1,7 @@
 // Tipos e interfaces para o serviço de partes contrárias
-// ESTRUTURA IDÊNTICA A CLIENTES
 
 import type { GrauAcervo } from '@/backend/types/acervo/types';
+import type { Endereco } from './enderecos-types';
 
 /**
  * Tipo de pessoa (PF ou PJ)
