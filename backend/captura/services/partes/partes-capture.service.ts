@@ -147,7 +147,7 @@ export async function capturarPartesProcesso(
         const tipoParte = identificarTipoParte(parte, advogado);
 
         // 2b. Faz upsert da entidade apropriada
-        const entidadeId = await processarParte(parte, tipoParte);
+        const entidadeId = await processarParte(parte, tipoParte, processo);
 
         if (entidadeId) {
           // Incrementa contador do tipo apropriado
@@ -229,7 +229,8 @@ export async function capturarPartesProcesso(
  */
 async function processarParte(
   parte: PartePJE,
-  tipoParte: TipoParteClassificacao
+  tipoParte: TipoParteClassificacao,
+  processo: ProcessoParaCaptura
 ): Promise<number | null> {
   const isPessoaFisica = parte.tipoDocumento === 'CPF';
 
@@ -285,7 +286,7 @@ async function processarParte(
         return result.sucesso && result.parteContraria ? result.parteContraria.id : null;
       }
     } else {
-      // Upsert em tabela terceiros  
+      // Upsert em tabela terceiros
       const params = {
         ...dadosComuns,
         tipo_pessoa: isPessoaFisica ? ('pf' as const) : ('pj' as const),
@@ -293,13 +294,12 @@ async function processarParte(
         cnpj: !isPessoaFisica ? parte.numeroDocumento : undefined,
         tipo_parte: parte.tipoParte,
         polo: parte.polo,
-        // id_pje removido
-        processo_id: 0,
-        trt: '',
-        grau: '',
-        numero_processo: '',
+        processo_id: processo.id,
+        trt: processo.trt,
+        grau: processo.grau,
+        numero_processo: processo.numero_processo,
       } as unknown as UpsertTerceiroPorIdPessoaParams;
-      
+
       const result = await upsertTerceiroPorIdPessoa(params);
       return result.sucesso && result.terceiro ? result.terceiro.id : null;
     }

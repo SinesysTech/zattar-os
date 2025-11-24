@@ -13,6 +13,7 @@ import { autenticarPJE } from "@/backend/captura/services/trt/trt-auth.service";
 import { buscarAdvogado } from "@/backend/advogados/services/persistence/advogado-persistence.service";
 import { createServiceClient } from "@/backend/utils/supabase/service-client";
 import { registrarCapturaRawLog } from "@/backend/captura/services/persistence/captura-raw-log.service";
+import { criarCapturaLog, atualizarCapturaLog } from "@/backend/captura/services/persistence/captura-log-persistence.service";
 import type { CodigoTRT, GrauTRT } from "@/backend/types/captura/trt-types";
 import type { GrauAcervo } from "@/backend/types/acervo/types";
 
@@ -352,11 +353,14 @@ export async function POST(request: NextRequest) {
     }));
 
     // 6. Iniciar log de captura
-    // const capturaLogId = await iniciarCapturaLog({
-    //   tipo_captura: 'partes',
-    //   usuario_id: authResult.userId,
-    //   credencial_id: credenciais[0].credencial_id,
-    // });
+    const capturaLog = await criarCapturaLog({
+      tipo_captura: 'partes',
+      advogado_id: advogado.id,
+      credencial_ids: credencial_ids,
+      status: 'in_progress',
+    });
+
+    console.log(`[API-PARTES] Log de captura criado: ID ${capturaLog.id}`);
 
     // 7. Resultado agregado de todos os processos
     const resultadoTotal = {
@@ -373,6 +377,7 @@ export async function POST(request: NextRequest) {
         erro: string;
       }>,
       duracao_ms: 0,
+      mongodb_ids: [] as string[], // Array para armazenar todos os MongoDB IDs dos logs brutos
     };
 
     const inicio = Date.now();
@@ -453,10 +458,11 @@ export async function POST(request: NextRequest) {
             });
 
             // Salvar log bruto no MongoDB para auditoria
-            await registrarCapturaRawLog({
+            const mongodbId = await registrarCapturaRawLog({
               tipo_captura: 'partes',
               advogado_id: advogado.id,
               credencial_id: credencial.credencial_id,
+              captura_log_id: capturaLog.id,
               trt: processo.trt,
               grau: processo.grau,
               status: resultado.erros.length === 0 ? 'success' : 'partial_success',
@@ -477,6 +483,11 @@ export async function POST(request: NextRequest) {
               logs: resultado.erros.map(e => e.erro),
               erro: resultado.erros.length > 0 ? resultado.erros[0].erro : undefined,
             });
+
+            // Adicionar MongoDB ID ao array de IDs
+            if (mongodbId) {
+              resultadoTotal.mongodb_ids.push(mongodbId);
+            }
 
             // Agregar resultados
             resultadoTotal.total_partes += resultado.totalPartes;
@@ -509,10 +520,11 @@ export async function POST(request: NextRequest) {
             const erroMensagem = error instanceof Error ? error.message : String(error);
 
             // Salvar log de erro no MongoDB
-            await registrarCapturaRawLog({
+            const mongodbId = await registrarCapturaRawLog({
               tipo_captura: 'partes',
               advogado_id: advogado.id,
               credencial_id: credencial.credencial_id,
+              captura_log_id: capturaLog.id,
               trt: processo.trt,
               grau: processo.grau,
               status: 'error',
@@ -526,6 +538,11 @@ export async function POST(request: NextRequest) {
               logs: [erroMensagem],
               erro: erroMensagem,
             });
+
+            // Adicionar MongoDB ID ao array de IDs (mesmo em caso de erro)
+            if (mongodbId) {
+              resultadoTotal.mongodb_ids.push(mongodbId);
+            }
 
             resultadoTotal.erros.push({
               processo_id: processo.id,
@@ -558,10 +575,29 @@ export async function POST(request: NextRequest) {
 
     resultadoTotal.duracao_ms = Date.now() - inicio;
 
-    // 9. Finalizar log de captura
-    // if (capturaLogId) {
-    //   await finalizarCapturaLogSucesso(capturaLogId, resultadoTotal);
-    // }
+    // 9. Finalizar log de captura no PostgreSQL
+    const status = resultadoTotal.erros.length === 0 ? 'completed' :
+                   resultadoTotal.erros.length === resultadoTotal.total_processos ? 'failed' : 'completed';
+
+    await atualizarCapturaLog(capturaLog.id, {
+      status,
+      resultado: {
+        total_processos: resultadoTotal.total_processos,
+        total_partes: resultadoTotal.total_partes,
+        clientes: resultadoTotal.clientes,
+        partes_contrarias: resultadoTotal.partes_contrarias,
+        terceiros: resultadoTotal.terceiros,
+        representantes: resultadoTotal.representantes,
+        vinculos: resultadoTotal.vinculos,
+        erros_count: resultadoTotal.erros.length,
+        duracao_ms: resultadoTotal.duracao_ms,
+        mongodb_ids: resultadoTotal.mongodb_ids, // Array de IDs do MongoDB
+      },
+      erro: resultadoTotal.erros.length > 0 ?
+        `${resultadoTotal.erros.length} erro(s) durante a captura` : undefined,
+    });
+
+    console.log(`[API-PARTES] Log de captura atualizado: ID ${capturaLog.id}, Status: ${status}`);
 
     // 10. Retornar resultado
     return NextResponse.json({
@@ -573,9 +609,18 @@ export async function POST(request: NextRequest) {
     console.error("[API-PARTES] Erro na captura:", error);
 
     // Finalizar log com erro se foi iniciado
-    // if (capturaLogId) {
-    //   await finalizarCapturaLogErro(capturaLogId, error instanceof Error ? error.message : String(error));
-    // }
+    try {
+      // Verifica se capturaLog foi criado (pode não ter sido se o erro ocorreu antes)
+      if (typeof capturaLog !== 'undefined') {
+        await atualizarCapturaLog(capturaLog.id, {
+          status: 'failed',
+          erro: error instanceof Error ? error.message : String(error),
+        });
+        console.log(`[API-PARTES] Log de captura marcado como failed: ID ${capturaLog.id}`);
+      }
+    } catch (logError) {
+      console.error("[API-PARTES] Erro ao atualizar log de captura:", logError);
+    }
 
     return NextResponse.json(
       {

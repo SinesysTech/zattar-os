@@ -7,10 +7,11 @@ export interface RegistrarCapturaRawLogParams extends Omit<CapturaRawLogCreate, 
 
 /**
  * Persiste o JSON bruto e metadados da captura no MongoDB
+ * @returns MongoDB _id (string) do documento inserido, ou null em caso de erro
  */
 export async function registrarCapturaRawLog(
   params: RegistrarCapturaRawLogParams
-): Promise<void> {
+): Promise<string | null> {
   try {
     const collection = await getCapturaRawLogsCollection();
 
@@ -32,9 +33,11 @@ export async function registrarCapturaRawLog(
       atualizado_em: new Date(),
     };
 
-    await collection.insertOne(documento);
+    const result = await collection.insertOne(documento);
+    return result.insertedId.toString();
   } catch (error) {
     console.error('❌ [CapturaRawLog] Erro ao persistir log bruto da captura:', error);
+    return null;
   }
 }
 
