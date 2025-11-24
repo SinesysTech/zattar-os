@@ -181,13 +181,13 @@ function ProcessoColumnHeader({
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <div className="flex items-center justify-start">
+    <div className="flex items-center justify-center">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="h-8 data-[state=open]:bg-accent"
           >
             <span className="text-sm font-medium">Processo</span>
             <svg
@@ -296,13 +296,13 @@ function PartesColumnHeader({
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <div className="flex items-center justify-start">
+    <div className="flex items-center justify-center">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="h-8 data-[state=open]:bg-accent"
           >
             <span className="text-sm font-medium">Partes</span>
             <svg
@@ -388,15 +388,15 @@ function TipoLocalColumnHeader({
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <div className="flex items-center justify-start">
+    <div className="flex items-center justify-center">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 justify-start data-[state=open]:bg-accent"
+            className="h-8 data-[state=open]:bg-accent"
           >
-            <span className="text-sm font-medium text-left">tipo e local</span>
+            <span className="text-sm font-medium text-center">Tipo e Local</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -490,7 +490,7 @@ function ResponsavelColumnHeader({
       <Button
         variant="ghost"
         size="sm"
-        className="-ml-3 h-8 hover:bg-accent"
+        className="h-8 hover:bg-accent"
         onClick={handleClick}
       >
         <span className="text-sm font-medium">Responsável</span>
@@ -771,6 +771,7 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 140,
+      meta: { align: 'left' },
       // Sorting customizado que ordena apenas por data (ignora hora)
       sortingFn: (rowA, rowB) => {
         const dataA = normalizarDataParaComparacao(rowA.original.data_inicio);
@@ -791,7 +792,7 @@ function criarColunas(
       id: 'processo',
       header: () => <ProcessoColumnHeader onSort={onProcessoSort} />,
       enableSorting: false,
-      size: 250,
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
@@ -800,7 +801,7 @@ function criarColunas(
         const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[220px]">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -824,6 +825,7 @@ function criarColunas(
       header: () => <PartesColumnHeader onSort={onPartesSort} />,
       enableSorting: false,
       size: 250,
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const parteAutora = row.original.polo_ativo_nome || '-';
         const parteRe = row.original.polo_passivo_nome || '-';
@@ -844,14 +846,14 @@ function criarColunas(
       id: 'tipo_local',
       header: () => <TipoLocalColumnHeader onSort={onTipoLocalSort} />,
       enableSorting: false,
-      size: 280,
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const tipo = row.original.tipo_descricao || '-';
         const isVirtual = row.original.tipo_is_virtual;
         const sala = row.original.sala_audiencia_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1 max-w-[280px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1 max-w-[240px]">
             <div className="flex items-start gap-2">
               <span className="text-sm text-left">{tipo}</span>
               {isVirtual && (
@@ -870,12 +872,13 @@ function criarColunas(
     {
       accessorKey: 'url_audiencia_virtual', // Mantém o accessorKey para compatibilidade
       header: () => (
-        <div className="flex items-center justify-start">
+        <div className="flex items-center justify-center">
           <div className="text-sm font-medium">Endereço</div>
         </div>
       ),
       enableSorting: false,
-      size: 120,
+      size: 180,
+      meta: { align: 'left' },
       cell: ({ row }) => (
         <div className="h-full w-full">
           <EnderecoCell audiencia={row.original} onSuccess={onSuccess} />
@@ -885,12 +888,13 @@ function criarColunas(
     {
       accessorKey: 'observacoes',
       header: () => (
-        <div className="flex items-center justify-start">
+        <div className="flex items-center justify-center">
           <div className="text-sm font-medium">Observações</div>
         </div>
       ),
       enableSorting: false,
       size: 250,
+      meta: { align: 'left' },
       cell: ({ row }) => (
         <div className="h-full w-full">
           <ObservacoesCell audiencia={row.original} onSuccess={onSuccess} />
@@ -901,7 +905,7 @@ function criarColunas(
       accessorKey: 'responsavel_id',
       header: () => <ResponsavelColumnHeader onSort={onResponsavelSort} />,
       enableSorting: false,
-      size: 160,
+      meta: { align: 'left' },
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center">
           <ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} />

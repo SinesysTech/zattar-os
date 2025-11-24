@@ -80,7 +80,6 @@ function converterParaCliente(data: Record<string, unknown>): Cliente {
     numero_residencial: (data.numero_residencial as string | null) ?? null,
     ddd_comercial: (data.ddd_comercial as string | null) ?? null,
     numero_comercial: (data.numero_comercial as string | null) ?? null,
-    fax: (data.fax as string | null) ?? null,
     situacao: (data.situacao as 'A' | 'I' | 'E' | 'H' | null) ?? null,
     observacoes: (data.observacoes as string | null) ?? null,
     dados_anteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
@@ -243,7 +242,6 @@ export async function criarCliente(
       numero_residencial: params.numero_residencial?.trim() || null,
       ddd_comercial: params.ddd_comercial?.trim() || null,
       numero_comercial: params.numero_comercial?.trim() || null,
-      fax: params.fax?.trim() || null,
       situacao: params.situacao ?? null,
       observacoes: params.observacoes?.trim() || null,
       dados_anteriores: params.dados_anteriores ?? null,
@@ -355,7 +353,6 @@ export async function atualizarCliente(
       dadosAtualizacao.ddd_comercial = params.ddd_comercial?.trim() || null;
     if (params.numero_comercial !== undefined)
       dadosAtualizacao.numero_comercial = params.numero_comercial?.trim() || null;
-    if (params.fax !== undefined) dadosAtualizacao.fax = params.fax?.trim() || null;
     if (params.situacao !== undefined) dadosAtualizacao.situacao = params.situacao;
     if (params.observacoes !== undefined)
       dadosAtualizacao.observacoes = params.observacoes?.trim() || null;

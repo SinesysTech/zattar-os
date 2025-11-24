@@ -82,9 +82,9 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
         cell: ({ row }) => (
           <div className="flex flex-col gap-1">
             <span className="font-medium">{formatarNome(row.original.nome)}</span>
-            {row.original.nome_social && (
+            {row.original.nome_fantasia && (
               <span className="text-xs text-muted-foreground">
-                {row.original.nome_social}
+                {row.original.nome_fantasia}
               </span>
             )}
           </div>

@@ -127,12 +127,12 @@ export default function ParteContrariaPage() {
                 </div>
                 <div className="text-base">{formatarNome(parte.nome)}</div>
               </div>
-              {parte.nome_social && (
+              {parte.nome_fantasia && (
                 <div>
                   <div className="text-sm font-medium text-muted-foreground mb-1">
                     {isPessoaFisica ? 'Nome Social' : 'Nome Fantasia'}
                   </div>
-                  <div className="text-base">{parte.nome_social}</div>
+                  <div className="text-base">{parte.nome_fantasia}</div>
                 </div>
               )}
               {!isPessoaFisica && parte.nome_fantasia && (
