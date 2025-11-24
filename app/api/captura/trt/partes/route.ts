@@ -12,6 +12,7 @@ import {
 import { autenticarPJE } from "@/backend/captura/services/trt/trt-auth.service";
 import { buscarAdvogado } from "@/backend/advogados/services/persistence/advogado-persistence.service";
 import { createServiceClient } from "@/backend/utils/supabase/service-client";
+import { registrarCapturaRawLog } from "@/backend/captura/services/persistence/captura-raw-log.service";
 import type { CodigoTRT, GrauTRT } from "@/backend/types/captura/trt-types";
 import type { GrauAcervo } from "@/backend/types/acervo/types";
 
@@ -451,6 +452,32 @@ export async function POST(request: NextRequest) {
               cpf: advogado.cpf,
             });
 
+            // Salvar log bruto no MongoDB para auditoria
+            await registrarCapturaRawLog({
+              tipo_captura: 'partes',
+              advogado_id: advogado.id,
+              credencial_id: credencial.credencial_id,
+              trt: processo.trt,
+              grau: processo.grau,
+              status: resultado.erros.length === 0 ? 'success' : 'partial_success',
+              requisicao: {
+                numero_processo: processo.numero_processo,
+                id_pje: processo.id_pje,
+                processo_id: processo.id,
+              },
+              payload_bruto: resultado.payloadBruto,
+              resultado_processado: {
+                total_partes: resultado.totalPartes,
+                clientes: resultado.clientes,
+                partes_contrarias: resultado.partesContrarias,
+                terceiros: resultado.terceiros,
+                representantes: resultado.representantes,
+                vinculos: resultado.vinculos,
+              },
+              logs: resultado.erros.map(e => e.erro),
+              erro: resultado.erros.length > 0 ? resultado.erros[0].erro : undefined,
+            });
+
             // Agregar resultados
             resultadoTotal.total_partes += resultado.totalPartes;
             resultadoTotal.clientes += resultado.clientes;
@@ -479,10 +506,31 @@ export async function POST(request: NextRequest) {
               error
             );
 
+            const erroMensagem = error instanceof Error ? error.message : String(error);
+
+            // Salvar log de erro no MongoDB
+            await registrarCapturaRawLog({
+              tipo_captura: 'partes',
+              advogado_id: advogado.id,
+              credencial_id: credencial.credencial_id,
+              trt: processo.trt,
+              grau: processo.grau,
+              status: 'error',
+              requisicao: {
+                numero_processo: processo.numero_processo,
+                id_pje: processo.id_pje,
+                processo_id: processo.id,
+              },
+              payload_bruto: null,
+              resultado_processado: null,
+              logs: [erroMensagem],
+              erro: erroMensagem,
+            });
+
             resultadoTotal.erros.push({
               processo_id: processo.id,
               numero_processo: processo.numero_processo,
-              erro: error instanceof Error ? error.message : String(error),
+              erro: erroMensagem,
             });
           }
         }

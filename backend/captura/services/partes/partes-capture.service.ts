@@ -111,6 +111,7 @@ export async function capturarPartesProcesso(
     vinculos: 0,
     erros: [],
     duracaoMs: 0,
+    payloadBruto: null,
   };
 
   try {
@@ -119,8 +120,9 @@ export async function capturarPartesProcesso(
     );
 
     // 1. Busca partes via API PJE
-    const partes = await obterPartesProcesso(page, processo.id_pje);
+    const { partes, payloadBruto } = await obterPartesProcesso(page, processo.id_pje);
     resultado.totalPartes = partes.length;
+    resultado.payloadBruto = payloadBruto;
 
     console.log(
       `[CAPTURA-PARTES] Encontradas ${partes.length} partes no processo ${processo.numero_processo}`

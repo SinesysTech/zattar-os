@@ -152,4 +152,7 @@ export interface CapturaPartesResult {
 
   /** Tempo total de execução em milissegundos - útil para monitoramento de performance */
   duracaoMs: number;
+
+  /** JSON bruto completo retornado pela API PJE - para auditoria no MongoDB */
+  payloadBruto: Record<string, unknown> | null;
 }

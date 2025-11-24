@@ -62,6 +62,14 @@ import { fetchPJEAPI } from '../shared/fetch';
 import type { PartePJE } from './types';
 
 /**
+ * Resultado da obtenção de partes do PJE
+ */
+export interface ObterPartesProcessoResult {
+  partes: PartePJE[];
+  payloadBruto: Record<string, unknown> | null;
+}
+
+/**
  * Função: obterPartesProcesso
  *
  * FLUXO DE EXECUÇÃO:
@@ -69,10 +77,10 @@ import type { PartePJE } from './types';
  * 2. Normaliza resposta (pode vir como array ou objeto com polos ATIVO/PASSIVO/OUTROS)
  * 3. Para cada parte, extrai representantes do campo 'representantes' do JSON
  * 4. Mapeia resposta do PJE para tipo PartePJE padronizado
- * 5. Retorna array de PartePJE com representantes incluídos
+ * 5. Retorna array de PartePJE com representantes incluídos E o JSON bruto completo
  *
  * TRATAMENTO DE ERROS:
- * - Se processo não encontrado: retorna []
+ * - Se processo não encontrado: retorna { partes: [], payloadBruto: null }
  * - Se erro de rede: propaga exceção
  * - Se resposta inválida: propaga exceção
  * - Se erro ao buscar representantes: loga warning e continua (representantes = [])
@@ -84,7 +92,7 @@ import type { PartePJE } from './types';
 export async function obterPartesProcesso(
   page: Page,
   idProcesso: number
-): Promise<PartePJE[]> {
+): Promise<ObterPartesProcessoResult> {
   try {
     console.log(`[PJE-PARTES-API] Buscando partes do processo ${idProcesso}`);
 
@@ -97,7 +105,7 @@ export async function obterPartesProcesso(
     // Se resposta for vazia, retorna array vazio
     if (!response) {
       console.log(`[PJE-PARTES-API] Processo ${idProcesso} não possui partes cadastradas`);
-      return [];
+      return { partes: [], payloadBruto: null };
     }
 
     // Normalizar resposta: pode vir como array OU objeto com polos { ATIVO: [], PASSIVO: [], OUTROS: [] }
@@ -118,7 +126,7 @@ export async function obterPartesProcesso(
 
     if (partesArray.length === 0) {
       console.log(`[PJE-PARTES-API] Processo ${idProcesso} não possui partes cadastradas`);
-      return [];
+      return { partes: [], payloadBruto: response };
     }
 
     console.log(`[PJE-PARTES-API] Encontradas ${partesArray.length} partes no processo ${idProcesso}`);
@@ -194,14 +202,17 @@ export async function obterPartesProcesso(
       })
     );
 
-    return partesComRepresentantes;
+    return {
+      partes: partesComRepresentantes,
+      payloadBruto: response
+    };
   } catch (error) {
     console.error(`[PJE-PARTES-API] Erro ao obter partes do processo ${idProcesso}:`, error);
 
     // Se for erro 404 (processo não encontrado), retorna array vazio
     if (error instanceof Error && error.message.includes('HTTP 404')) {
       console.log(`[PJE-PARTES-API] Processo ${idProcesso} não encontrado`);
-      return [];
+      return { partes: [], payloadBruto: null };
     }
 
     // Para outros erros, propaga exceção
