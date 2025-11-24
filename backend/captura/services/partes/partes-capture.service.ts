@@ -140,7 +140,8 @@ export async function capturarPartesProcesso(
             const repsCount = await processarRepresentantes(
               parte.representantes,
               tipoParte,
-              entidadeId
+              entidadeId,
+              processo
             );
             resultado.representantes += repsCount;
           }
@@ -299,7 +300,8 @@ async function processarParte(
 async function processarRepresentantes(
   representantes: any[],
   tipoParte: TipoParteClassificacao,
-  parteId: number
+  parteId: number,
+  processo: ProcessoParaCaptura
 ): Promise<number> {
   let count = 0;
 
@@ -311,6 +313,9 @@ async function processarRepresentantes(
         id_pessoa_pje: rep.idPessoa,
         parte_tipo: tipoParte,
         parte_id: parteId,
+        trt: processo.trt,
+        grau: processo.grau,
+        numero_processo: processo.numero_processo,
         tipo_pessoa,
         nome: rep.nome,
         cpf: tipo_pessoa === 'pf' ? rep.numeroDocumento : undefined,
