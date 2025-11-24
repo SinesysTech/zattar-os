@@ -150,8 +150,7 @@ export type ClienteComEndereco = ClientePessoaFisicaComEndereco | ClientePessoaJ
  * Dados para criar cliente PF
  */
 export interface CriarClientePFParams {
-  // id_pje removido
-  id_pje?: number | null; // Mantido opcional para compatibilidade
+
   id_pessoa_pje?: number | null;
   tipo_pessoa: 'pf';
   nome: string;
@@ -192,8 +191,7 @@ export interface CriarClientePFParams {
  * Dados para criar cliente PJ
  */
 export interface CriarClientePJParams {
-  // id_pje removido
-  id_pje?: number | null; // Mantido opcional
+
   id_pessoa_pje?: number | null;
   tipo_pessoa: 'pj';
   nome: string;
@@ -235,8 +233,7 @@ export type CriarClienteParams = CriarClientePFParams | CriarClientePJParams;
  */
 export interface AtualizarClientePFParams {
   id: number;
-  // id_pje removido
-  id_pje?: number; // Mantido opcional
+
   id_pessoa_pje?: number;
   tipo_pessoa?: 'pf';
   nome?: string;
@@ -278,8 +275,7 @@ export interface AtualizarClientePFParams {
  */
 export interface AtualizarClientePJParams {
   id: number;
-  // id_pje removido
-  id_pje?: number; // Mantido opcional
+
   id_pessoa_pje?: number;
   tipo_pessoa?: 'pj';
   nome?: string;

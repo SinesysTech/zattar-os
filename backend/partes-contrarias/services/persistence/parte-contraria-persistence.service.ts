@@ -591,8 +591,7 @@ export async function upsertParteContrariaPorIdPessoa(
       return await atualizarParteContraria({
         ...params,
         id: existente.id,
-        id_pje: params.id_pje ?? undefined,
-      } as any);
+      } as unknown as AtualizarParteContrariaParams);
     } else {
       return await criarParteContraria(params);
     }

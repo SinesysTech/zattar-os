@@ -145,7 +145,6 @@ export type ParteContrariaComEndereco =
  */
 export interface CriarParteContrariaPFParams {
   // id_pje removido
-  id_pje?: number | null; // Mantido opcional
   id_pessoa_pje?: number | null;
   tipo_pessoa: 'pf';
   nome: string;
@@ -185,7 +184,6 @@ export interface CriarParteContrariaPFParams {
  */
 export interface CriarParteContrariaPJParams {
   // id_pje removido
-  id_pje?: number | null; // Mantido opcional
   id_pessoa_pje?: number | null;
   tipo_pessoa: 'pj';
   nome: string;
@@ -228,7 +226,6 @@ export type CriarParteContrariaParams =
 export interface AtualizarParteContrariaPFParams {
   id: number;
   // id_pje removido
-  id_pje?: number; // Mantido opcional
   id_pessoa_pje?: number;
   tipo_pessoa?: 'pf';
   nome?: string;
@@ -269,7 +266,6 @@ export interface AtualizarParteContrariaPFParams {
 export interface AtualizarParteContrariaPJParams {
   id: number;
   // id_pje removido
-  id_pje?: number; // Mantido opcional
   id_pessoa_pje?: number;
   tipo_pessoa?: 'pj';
   nome?: string;

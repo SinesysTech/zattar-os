@@ -166,8 +166,7 @@ export type TerceiroComEndereco =
  * Dados para criar terceiro PF
  */
 export interface CriarTerceiroPFParams {
-  // id_pje removido
-  id_pje?: number; // Mantido opcional
+
   id_pessoa_pje: number;
   processo_id: number;
   trt: string;
@@ -214,8 +213,7 @@ export interface CriarTerceiroPFParams {
  * Dados para criar terceiro PJ
  */
 export interface CriarTerceiroPJParams {
-  // id_pje removido
-  id_pje?: number; // Mantido opcional
+
   id_pessoa_pje: number;
   processo_id: number;
   trt: string;
@@ -262,8 +260,7 @@ export type CriarTerceiroParams = CriarTerceiroPFParams | CriarTerceiroPJParams;
  */
 export interface AtualizarTerceiroPFParams {
   id: number;
-  // id_pje removido
-  id_pje?: number; // Mantido opcional
+
   id_pessoa_pje?: number;
   tipo_parte?: TipoParteTerceiro;
   polo?: PoloTerceiro;
@@ -307,8 +304,7 @@ export interface AtualizarTerceiroPFParams {
  */
 export interface AtualizarTerceiroPJParams {
   id: number;
-  // id_pje removido
-  id_pje?: number; // Mantido opcional
+
   id_pessoa_pje?: number;
   tipo_parte?: TipoParteTerceiro;
   polo?: PoloTerceiro;
