@@ -91,12 +91,12 @@ export default function ParteContrariaPage() {
               <h1 className="text-3xl font-bold tracking-tight">
                 {formatarNome(parte.nome)}
               </h1>
-              {parte.situacao && (
+              {parte.situacao_pje && (
                 <Badge
-                  tone={parte.situacao === 'A' ? 'success' : 'neutral'}
-                  variant={parte.situacao === 'A' ? 'soft' : 'outline'}
+                  tone={parte.situacao_pje === 'A' ? 'success' : 'neutral'}
+                  variant={parte.situacao_pje === 'A' ? 'soft' : 'outline'}
                 >
-                  {parte.situacao === 'A' ? 'Ativo' : 'Inativo'}
+                  {parte.situacao_pje === 'A' ? 'Ativo' : 'Inativo'}
                 </Badge>
               )}
               <Badge variant="outline" tone="neutral">
@@ -127,20 +127,12 @@ export default function ParteContrariaPage() {
                 </div>
                 <div className="text-base">{formatarNome(parte.nome)}</div>
               </div>
-              {parte.nome_fantasia && (
+              {parte.nome_social_fantasia && (
                 <div>
                   <div className="text-sm font-medium text-muted-foreground mb-1">
                     {isPessoaFisica ? 'Nome Social' : 'Nome Fantasia'}
                   </div>
-                  <div className="text-base">{parte.nome_fantasia}</div>
-                </div>
-              )}
-              {!isPessoaFisica && parte.nome_fantasia && (
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
-                    Nome Fantasia
-                  </div>
-                  <div className="text-base">{parte.nome_fantasia}</div>
+                  <div className="text-base">{parte.nome_social_fantasia}</div>
                 </div>
               )}
               {isPessoaFisica ? (
@@ -153,12 +145,12 @@ export default function ParteContrariaPage() {
                       <div className="text-base">{formatarCpf(parte.cpf)}</div>
                     </div>
                   )}
-                  {parte.numero_rg && (
+                  {parte.rg && (
                     <div>
                       <div className="text-sm font-medium text-muted-foreground mb-1">
                         RG
                       </div>
-                      <div className="text-base">{parte.numero_rg}</div>
+                      <div className="text-base">{parte.rg}</div>
                     </div>
                   )}
                   {parte.data_nascimento && (

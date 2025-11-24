@@ -91,12 +91,12 @@ export default function ClientePage() {
               <h1 className="text-3xl font-bold tracking-tight">
                 {formatarNome(cliente.nome)}
               </h1>
-              {cliente.situacao && (
+              {cliente.situacao_pje && (
                 <Badge
-                  tone={cliente.situacao === 'A' ? 'success' : 'neutral'}
-                  variant={cliente.situacao === 'A' ? 'soft' : 'outline'}
+                  tone={cliente.situacao_pje === 'A' ? 'success' : 'neutral'}
+                  variant={cliente.situacao_pje === 'A' ? 'soft' : 'outline'}
                 >
-                  {cliente.situacao === 'A' ? 'Ativo' : 'Inativo'}
+                  {cliente.situacao_pje === 'A' ? 'Ativo' : 'Inativo'}
                 </Badge>
               )}
               <Badge variant="outline" tone="neutral">
@@ -127,20 +127,12 @@ export default function ClientePage() {
                 </div>
                 <div className="text-base">{formatarNome(cliente.nome)}</div>
               </div>
-              {cliente.nome_social && (
+              {cliente.nome_social_fantasia && (
                 <div>
                   <div className="text-sm font-medium text-muted-foreground mb-1">
                     {isPessoaFisica ? 'Nome Social' : 'Nome Fantasia'}
                   </div>
-                  <div className="text-base">{cliente.nome_social}</div>
-                </div>
-              )}
-              {!isPessoaFisica && cliente.nome_fantasia && (
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
-                    Nome Fantasia
-                  </div>
-                  <div className="text-base">{cliente.nome_fantasia}</div>
+                  <div className="text-base">{cliente.nome_social_fantasia}</div>
                 </div>
               )}
               {isPessoaFisica ? (
@@ -153,12 +145,12 @@ export default function ClientePage() {
                       <div className="text-base">{formatarCpf(cliente.cpf)}</div>
                     </div>
                   )}
-                  {cliente.numero_rg && (
+                  {cliente.rg && (
                     <div>
                       <div className="text-sm font-medium text-muted-foreground mb-1">
                         RG
                       </div>
-                      <div className="text-base">{cliente.numero_rg}</div>
+                      <div className="text-base">{cliente.rg}</div>
                     </div>
                   )}
                   {cliente.data_nascimento && (

@@ -136,7 +136,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       },
     },
     {
-      accessorKey: 'situacao',
+      accessorKey: 'situacao_pje',
       header: ({ column }) => (
         <div className="flex items-center justify-center">
           <DataTableColumnHeader column={column} title="Status" />
@@ -145,7 +145,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       enableSorting: true,
       size: 100,
       cell: ({ row }) => {
-        const situacao = row.getValue('situacao') as string | null;
+        const situacao = row.getValue('situacao_pje') as string | null;
         const ativo = situacao === 'A';
         return (
           <div className="min-h-10 flex items-center justify-center">

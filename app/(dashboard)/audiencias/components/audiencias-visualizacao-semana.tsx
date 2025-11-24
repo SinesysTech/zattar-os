@@ -9,7 +9,6 @@ import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Input } from '@/components/ui/input';
 import { Copy, Pencil } from 'lucide-react';
 import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';
@@ -105,129 +104,10 @@ const getLogoPlataforma = (plataforma: PlataformaVideo): string | null => {
 };
 
 /**
- * Componente para editar endereço da audiência (URL virtual ou endereço físico)
+ * Componente para exibir e editar endereço da audiência (URL virtual ou endereço físico)
  */
 function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [tipoEndereco, setTipoEndereco] = React.useState<'virtual' | 'presencial'>(
-    audiencia.url_audiencia_virtual ? 'virtual' :
-      audiencia.endereco_presencial ? 'presencial' : 'virtual'
-  );
-  const [url, setUrl] = React.useState(audiencia.url_audiencia_virtual || '');
-  const [endereco, setEndereco] = React.useState({
-    logradouro: audiencia.endereco_presencial?.logradouro || '',
-    numero: audiencia.endereco_presencial?.numero || '',
-    complemento: audiencia.endereco_presencial?.complemento || '',
-    bairro: audiencia.endereco_presencial?.bairro || '',
-    cidade: audiencia.endereco_presencial?.cidade || '',
-    estado: audiencia.endereco_presencial?.estado || '',
-    pais: audiencia.endereco_presencial?.pais || '',
-    cep: audiencia.endereco_presencial?.cep || '',
-  });
-  const [error, setError] = React.useState<string | null>(null);
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-
-  React.useEffect(() => {
-    setUrl(audiencia.url_audiencia_virtual || '');
-    setEndereco({
-      logradouro: audiencia.endereco_presencial?.logradouro || '',
-      numero: audiencia.endereco_presencial?.numero || '',
-      complemento: audiencia.endereco_presencial?.complemento || '',
-      bairro: audiencia.endereco_presencial?.bairro || '',
-      cidade: audiencia.endereco_presencial?.cidade || '',
-      estado: audiencia.endereco_presencial?.estado || '',
-      pais: audiencia.endereco_presencial?.pais || '',
-      cep: audiencia.endereco_presencial?.cep || '',
-    });
-    setError(null);
-  }, [audiencia.url_audiencia_virtual, audiencia.endereco_presencial]);
-
-  React.useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
-      inputRef.current.select();
-    }
-  }, [isOpen]);
-
-  const handleSave = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      let bodyData;
-
-      if (tipoEndereco === 'virtual') {
-        const urlToSave = url.trim() || null;
-
-        // Validar URL se fornecida
-        if (urlToSave) {
-          try {
-            new URL(urlToSave);
-          } catch {
-            setError('URL inválida. Use o formato: https://exemplo.com');
-            setIsLoading(false);
-            return;
-          }
-        }
-
-        bodyData = {
-          tipo: 'virtual',
-          urlAudienciaVirtual: urlToSave
-        };
-      } else {
-        // Validar se pelo menos logradouro ou cidade estão preenchidos
-        if (!endereco.logradouro.trim() && !endereco.cidade.trim()) {
-          setError('Informe pelo menos o logradouro ou a cidade');
-          setIsLoading(false);
-          return;
-        }
-
-        bodyData = {
-          tipo: 'presencial',
-          enderecoPresencial: endereco
-        };
-      }
-
-      const response = await fetch(`/api/audiencias/${audiencia.id}/endereco`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bodyData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || 'Erro ao atualizar endereço');
-      }
-
-      setIsOpen(false);
-      onSuccess();
-    } catch (error) {
-      console.error('Erro ao atualizar endereço:', error);
-      setError(error instanceof Error ? error.message : 'Erro ao salvar endereço');
-      // Não chamar onSuccess() em caso de erro para evitar falsa impressão de sucesso
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCancel = () => {
-    setUrl(audiencia.url_audiencia_virtual || '');
-    setEndereco({
-      logradouro: audiencia.endereco_presencial?.logradouro || '',
-      numero: audiencia.endereco_presencial?.numero || '',
-      complemento: audiencia.endereco_presencial?.complemento || '',
-      bairro: audiencia.endereco_presencial?.bairro || '',
-      cidade: audiencia.endereco_presencial?.cidade || '',
-      estado: audiencia.endereco_presencial?.estado || '',
-      pais: audiencia.endereco_presencial?.pais || '',
-      cep: audiencia.endereco_presencial?.cep || '',
-    });
-    setError(null);
-    setIsOpen(false);
-  };
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   const handleCopyUrl = async () => {
     if (!audiencia.url_audiencia_virtual) return;
@@ -298,360 +178,72 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
   };
 
   return (
-    <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
-      {renderEnderecoAtual()}
-      <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-        {audiencia.url_audiencia_virtual && (
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={handleCopyUrl}
-            className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
-            title="Copiar URL"
-          >
-            <Copy className="h-3 w-3" />
-          </Button>
-        )}
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-          <PopoverTrigger asChild>
+    <>
+      <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
+        {renderEnderecoAtual()}
+        <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          {audiencia.url_audiencia_virtual && (
             <Button
               size="sm"
               variant="ghost"
+              onClick={handleCopyUrl}
               className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
-              title="Editar Endereço"
-              disabled={isLoading}
+              title="Copiar URL"
             >
-              <Pencil className="h-3 w-3" />
+              <Copy className="h-3 w-3" />
             </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[450px]" align="start">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <h4 className="font-medium">Editar Endereço</h4>
-                <p className="text-sm text-muted-foreground">
-                  Escolha entre URL de videoconferência ou endereço físico
-                </p>
-              </div>
-
-              <div className="flex gap-2">
-                <Button
-                  variant={tipoEndereco === 'virtual' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setTipoEndereco('virtual')}
-                  className="flex-1"
-                >
-                  URL Virtual
-                </Button>
-                <Button
-                  variant={tipoEndereco === 'presencial' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setTipoEndereco('presencial')}
-                  className="flex-1"
-                >
-                  Endereço Físico
-                </Button>
-              </div>
-
-              {tipoEndereco === 'virtual' ? (
-                <div className="space-y-1">
-                  <label htmlFor="url-input" className="text-sm font-medium">
-                    URL da Audiência Virtual
-                  </label>
-                  <Input
-                    ref={inputRef}
-                    id="url-input"
-                    value={url}
-                    onChange={(e) => {
-                      setUrl(e.target.value);
-                      setError(null);
-                    }}
-                    placeholder="https://meet.google.com/..."
-                    disabled={isLoading}
-                    className="h-9 text-sm"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleSave();
-                      if (e.key === 'Escape') handleCancel();
-                    }}
-                  />
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="space-y-1">
-                      <label htmlFor="logradouro" className="text-sm font-medium">
-                        Logradouro
-                      </label>
-                      <Input
-                        id="logradouro"
-                        value={endereco.logradouro}
-                        onChange={(e) => {
-                          setEndereco(prev => ({ ...prev, logradouro: e.target.value }));
-                          setError(null);
-                        }}
-                        placeholder="Rua, Avenida, etc."
-                        disabled={isLoading}
-                        className="h-9 text-sm"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label htmlFor="numero" className="text-sm font-medium">
-                        Número
-                      </label>
-                      <Input
-                        id="numero"
-                        value={endereco.numero}
-                        onChange={(e) => {
-                          setEndereco(prev => ({ ...prev, numero: e.target.value }));
-                          setError(null);
-                        }}
-                        placeholder="Nº"
-                        disabled={isLoading}
-                        className="h-9 text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label htmlFor="complemento" className="text-sm font-medium">
-                      Complemento
-                    </label>
-                    <Input
-                      id="complemento"
-                      value={endereco.complemento}
-                      onChange={(e) => {
-                        setEndereco(prev => ({ ...prev, complemento: e.target.value }));
-                        setError(null);
-                      }}
-                      placeholder="Apartamento, sala, etc."
-                      disabled={isLoading}
-                      className="h-9 text-sm"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="space-y-1">
-                      <label htmlFor="bairro" className="text-sm font-medium">
-                        Bairro
-                      </label>
-                      <Input
-                        id="bairro"
-                        value={endereco.bairro}
-                        onChange={(e) => {
-                          setEndereco(prev => ({ ...prev, bairro: e.target.value }));
-                          setError(null);
-                        }}
-                        placeholder="Bairro"
-                        disabled={isLoading}
-                        className="h-9 text-sm"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label htmlFor="cidade" className="text-sm font-medium">
-                        Cidade
-                      </label>
-                      <Input
-                        id="cidade"
-                        value={endereco.cidade}
-                        onChange={(e) => {
-                          setEndereco(prev => ({ ...prev, cidade: e.target.value }));
-                          setError(null);
-                        }}
-                        placeholder="Cidade"
-                        disabled={isLoading}
-                        className="h-9 text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="space-y-1">
-                      <label htmlFor="estado" className="text-sm font-medium">
-                        Estado
-                      </label>
-                      <Input
-                        id="estado"
-                        value={endereco.estado}
-                        onChange={(e) => {
-                          setEndereco(prev => ({ ...prev, estado: e.target.value }));
-                          setError(null);
-                        }}
-                        placeholder="UF"
-                        disabled={isLoading}
-                        className="h-9 text-sm"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label htmlFor="pais" className="text-sm font-medium">
-                        País
-                      </label>
-                      <Input
-                        id="pais"
-                        value={endereco.pais}
-                        onChange={(e) => {
-                          setEndereco(prev => ({ ...prev, pais: e.target.value }));
-                          setError(null);
-                        }}
-                        placeholder="País"
-                        disabled={isLoading}
-                        className="h-9 text-sm"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label htmlFor="cep" className="text-sm font-medium">
-                        CEP
-                      </label>
-                      <Input
-                        id="cep"
-                        value={endereco.cep}
-                        onChange={(e) => {
-                          setEndereco(prev => ({ ...prev, cep: e.target.value }));
-                          setError(null);
-                        }}
-                        placeholder="00000-000"
-                        disabled={isLoading}
-                        className="h-9 text-sm"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {error && (
-                <p className="text-xs text-red-600">{error}</p>
-              )}
-
-              <div className="flex gap-2 justify-end">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={handleCancel}
-                  disabled={isLoading}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={handleSave}
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Salvando...' : 'Salvar'}
-                </Button>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
-    </div>
-  );
-}
-
-/**
- * Componente para editar observações da audiência
- */
-function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
-  const [isEditing, setIsEditing] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [observacoes, setObservacoes] = React.useState(audiencia.observacoes || '');
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-
-  React.useEffect(() => {
-    setObservacoes(audiencia.observacoes || '');
-  }, [audiencia.observacoes]);
-
-  React.useEffect(() => {
-    if (isEditing && textareaRef.current) {
-      textareaRef.current.focus();
-    }
-  }, [isEditing]);
-
-  const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      const observacoesToSave = observacoes.trim() || null;
-
-      const response = await fetch(`/api/audiencias/${audiencia.id}/observacoes`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ observacoes: observacoesToSave }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || 'Erro ao atualizar observações');
-      }
-
-      setIsEditing(false);
-      onSuccess();
-    } catch (error) {
-      console.error('Erro ao atualizar observações:', error);
-      // Não chamar onSuccess() em caso de erro para evitar falsa impressão de sucesso
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCancel = () => {
-    setObservacoes(audiencia.observacoes || '');
-    setIsEditing(false);
-  };
-
-  if (isEditing) {
-    return (
-      <div className="relative h-full w-full min-h-[60px] p-2">
-        <textarea
-          ref={textareaRef}
-          value={observacoes}
-          onChange={(e) => setObservacoes(e.target.value)}
-          placeholder="Digite as observações..."
-          disabled={isLoading}
-          className="w-full h-full min-h-[60px] resize-none border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') handleCancel();
-          }}
-        />
-        <div className="absolute bottom-2 right-2 flex gap-1">
+          )}
           <Button
             size="sm"
             variant="ghost"
-            onClick={handleSave}
-            disabled={isLoading}
-            className="h-5 w-5 p-0 bg-green-100 hover:bg-green-200 shadow-sm"
-            title="Salvar"
+            onClick={() => setIsDialogOpen(true)}
+            className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
+            title="Editar Endereço"
           >
-            <span className="text-green-700 text-xs font-bold">✓</span>
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={handleCancel}
-            disabled={isLoading}
-            className="h-5 w-5 p-0 bg-red-100 hover:bg-red-200 shadow-sm"
-            title="Cancelar"
-          >
-            <span className="text-red-700 text-xs font-bold">✕</span>
+            <Pencil className="h-3 w-3" />
           </Button>
         </div>
       </div>
-    );
-  }
+      <EditarEnderecoDialog
+        audiencia={audiencia}
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onSuccess={onSuccess}
+      />
+    </>
+  );
+}
+
+
+/**
+ * Componente para exibir e editar observações da audiência
+ */
+function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
   return (
-    <div className="relative group h-full w-full min-h-[60px] flex items-start justify-start p-2">
-      <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
-        {audiencia.observacoes || '-'}
-      </span>
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={() => setIsEditing(true)}
-        className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
-        title="Editar observações"
-      >
-        <Pencil className="h-3 w-3" />
-      </Button>
-    </div>
+    <>
+      <div className="relative group h-full w-full min-h-[60px] flex items-start justify-start p-2">
+        <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+          {audiencia.observacoes || '-'}
+        </span>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setIsDialogOpen(true)}
+          className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1 bg-gray-100 hover:bg-gray-200 shadow-sm"
+          title="Editar observações"
+        >
+          <Pencil className="h-3 w-3" />
+        </Button>
+      </div>
+      <EditarObservacoesDialog
+        audiencia={audiencia}
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onSuccess={onSuccess}
+      />
+    </>
   );
 }
 

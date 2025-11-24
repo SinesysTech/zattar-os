@@ -393,6 +393,8 @@ export async function atualizarParteContraria(
     // if (params.id_pje !== undefined) dadosAtualizacao.id_pje = params.id_pje; // Removido
     if (params.id_pessoa_pje !== undefined) dadosAtualizacao.id_pessoa_pje = params.id_pessoa_pje;
     if (params.nome !== undefined) dadosAtualizacao.nome = params.nome.trim();
+    if (params.nome_social_fantasia !== undefined)
+      dadosAtualizacao.nome_social_fantasia = params.nome_social_fantasia?.trim() || null;
     if (params.emails !== undefined) dadosAtualizacao.emails = params.emails;
     if (params.ddd_celular !== undefined)
       dadosAtualizacao.ddd_celular = params.ddd_celular?.trim() || null;
@@ -406,65 +408,101 @@ export async function atualizarParteContraria(
       dadosAtualizacao.ddd_comercial = params.ddd_comercial?.trim() || null;
     if (params.numero_comercial !== undefined)
       dadosAtualizacao.numero_comercial = params.numero_comercial?.trim() || null;
-    if (params.situacao !== undefined) dadosAtualizacao.situacao = params.situacao;
+    if (params.tipo_documento !== undefined)
+      dadosAtualizacao.tipo_documento = params.tipo_documento?.trim() || null;
+    if (params.status_pje !== undefined)
+      dadosAtualizacao.status_pje = params.status_pje?.trim() || null;
+    if (params.situacao_pje !== undefined)
+      dadosAtualizacao.situacao_pje = params.situacao_pje?.trim() || null;
+    if (params.login_pje !== undefined)
+      dadosAtualizacao.login_pje = params.login_pje?.trim() || null;
+    if (params.autoridade !== undefined) dadosAtualizacao.autoridade = params.autoridade;
     if (params.observacoes !== undefined)
       dadosAtualizacao.observacoes = params.observacoes?.trim() || null;
     if (params.dados_anteriores !== undefined)
       dadosAtualizacao.dados_anteriores = params.dados_anteriores;
+    if (params.endereco_id !== undefined) dadosAtualizacao.endereco_id = params.endereco_id;
 
     // Campos específicos por tipo de pessoa
     if (tipoPessoaAtual === 'pf' && params.tipo_pessoa === 'pf') {
       if (params.cpf !== undefined) dadosAtualizacao.cpf = normalizarCpf(params.cpf);
-      if (params.tipo_documento !== undefined)
-        dadosAtualizacao.tipo_documento = params.tipo_documento?.trim() || null;
-      if (params.numero_rg !== undefined)
-        dadosAtualizacao.numero_rg = params.numero_rg?.trim() || null;
-      if (params.orgao_emissor_rg !== undefined)
-        dadosAtualizacao.orgao_emissor_rg = params.orgao_emissor_rg?.trim() || null;
-      if (params.uf_rg !== undefined) dadosAtualizacao.uf_rg = params.uf_rg?.trim() || null;
-      if (params.uf_rg !== undefined) dadosAtualizacao.uf_rg = params.uf_rg?.trim() || null;
-      // if (params.data_expedicao_rg !== undefined)
-      //   dadosAtualizacao.data_expedicao_rg = params.data_expedicao_rg; // Removido
+      if (params.rg !== undefined) dadosAtualizacao.rg = params.rg?.trim() || null;
+      if (params.data_nascimento !== undefined)
+        dadosAtualizacao.data_nascimento = params.data_nascimento;
+      if (params.genero !== undefined) dadosAtualizacao.genero = params.genero?.trim() || null;
+      if (params.estado_civil !== undefined)
+        dadosAtualizacao.estado_civil = params.estado_civil?.trim() || null;
+      if (params.nacionalidade !== undefined)
+        dadosAtualizacao.nacionalidade = params.nacionalidade?.trim() || null;
       if (params.sexo !== undefined) dadosAtualizacao.sexo = params.sexo?.trim() || null;
       if (params.nome_genitora !== undefined)
         dadosAtualizacao.nome_genitora = params.nome_genitora?.trim() || null;
-      if (params.data_nascimento !== undefined)
-        dadosAtualizacao.data_nascimento = params.data_nascimento;
-      if (params.nacionalidade !== undefined)
-        dadosAtualizacao.nacionalidade = params.nacionalidade?.trim() || null;
-      if (params.naturalidade !== undefined)
-        dadosAtualizacao.naturalidade = params.naturalidade?.trim() || null;
-      if (params.municipio_nascimento !== undefined)
-        dadosAtualizacao.municipio_nascimento = params.municipio_nascimento?.trim() || null;
-      if (params.uf_nascimento !== undefined)
-        dadosAtualizacao.uf_nascimento = params.uf_nascimento?.trim() || null;
-      if (params.pais_nacionalidade !== undefined)
-        dadosAtualizacao.pais_nacionalidade = params.pais_nacionalidade?.trim() || null;
-      if (params.profissao !== undefined)
-        dadosAtualizacao.profissao = params.profissao?.trim() || null;
-      if (params.estado_civil !== undefined)
-        dadosAtualizacao.estado_civil = params.estado_civil?.trim() || null;
+      // Naturalidade (estrutura completa do PJE)
+      if (params.naturalidade_id_pje !== undefined)
+        dadosAtualizacao.naturalidade_id_pje = params.naturalidade_id_pje;
+      if (params.naturalidade_municipio !== undefined)
+        dadosAtualizacao.naturalidade_municipio = params.naturalidade_municipio?.trim() || null;
+      if (params.naturalidade_estado_id_pje !== undefined)
+        dadosAtualizacao.naturalidade_estado_id_pje = params.naturalidade_estado_id_pje;
+      if (params.naturalidade_estado_sigla !== undefined)
+        dadosAtualizacao.naturalidade_estado_sigla = params.naturalidade_estado_sigla?.trim() || null;
+      // UF Nascimento (estrutura completa do PJE)
+      if (params.uf_nascimento_id_pje !== undefined)
+        dadosAtualizacao.uf_nascimento_id_pje = params.uf_nascimento_id_pje;
+      if (params.uf_nascimento_sigla !== undefined)
+        dadosAtualizacao.uf_nascimento_sigla = params.uf_nascimento_sigla?.trim() || null;
+      if (params.uf_nascimento_descricao !== undefined)
+        dadosAtualizacao.uf_nascimento_descricao = params.uf_nascimento_descricao?.trim() || null;
+      // País Nascimento (estrutura completa do PJE)
+      if (params.pais_nascimento_id_pje !== undefined)
+        dadosAtualizacao.pais_nascimento_id_pje = params.pais_nascimento_id_pje;
+      if (params.pais_nascimento_codigo !== undefined)
+        dadosAtualizacao.pais_nascimento_codigo = params.pais_nascimento_codigo?.trim() || null;
+      if (params.pais_nascimento_descricao !== undefined)
+        dadosAtualizacao.pais_nascimento_descricao = params.pais_nascimento_descricao?.trim() || null;
+      // Escolaridade
+      if (params.escolaridade_codigo !== undefined)
+        dadosAtualizacao.escolaridade_codigo = params.escolaridade_codigo;
+      // Situação CPF Receita
+      if (params.situacao_cpf_receita_id !== undefined)
+        dadosAtualizacao.situacao_cpf_receita_id = params.situacao_cpf_receita_id;
+      if (params.situacao_cpf_receita_descricao !== undefined)
+        dadosAtualizacao.situacao_cpf_receita_descricao = params.situacao_cpf_receita_descricao?.trim() || null;
+      if (params.pode_usar_celular_mensagem !== undefined)
+        dadosAtualizacao.pode_usar_celular_mensagem = params.pode_usar_celular_mensagem;
     } else if (tipoPessoaAtual === 'pj' && params.tipo_pessoa === 'pj') {
       if (params.cnpj !== undefined) dadosAtualizacao.cnpj = normalizarCnpj(params.cnpj);
       if (params.inscricao_estadual !== undefined)
         dadosAtualizacao.inscricao_estadual = params.inscricao_estadual?.trim() || null;
       if (params.data_abertura !== undefined) dadosAtualizacao.data_abertura = params.data_abertura;
+      if (params.data_fim_atividade !== undefined)
+        dadosAtualizacao.data_fim_atividade = params.data_fim_atividade;
       if (params.orgao_publico !== undefined) dadosAtualizacao.orgao_publico = params.orgao_publico;
+      if (params.tipo_pessoa_codigo_pje !== undefined)
+        dadosAtualizacao.tipo_pessoa_codigo_pje = params.tipo_pessoa_codigo_pje?.trim() || null;
+      if (params.tipo_pessoa_label_pje !== undefined)
+        dadosAtualizacao.tipo_pessoa_label_pje = params.tipo_pessoa_label_pje?.trim() || null;
+      if (params.tipo_pessoa_validacao_receita !== undefined)
+        dadosAtualizacao.tipo_pessoa_validacao_receita = params.tipo_pessoa_validacao_receita?.trim() || null;
       if (params.ds_tipo_pessoa !== undefined)
         dadosAtualizacao.ds_tipo_pessoa = params.ds_tipo_pessoa?.trim() || null;
+      if (params.situacao_cnpj_receita_id !== undefined)
+        dadosAtualizacao.situacao_cnpj_receita_id = params.situacao_cnpj_receita_id;
+      if (params.situacao_cnpj_receita_descricao !== undefined)
+        dadosAtualizacao.situacao_cnpj_receita_descricao = params.situacao_cnpj_receita_descricao?.trim() || null;
       if (params.ramo_atividade !== undefined)
         dadosAtualizacao.ramo_atividade = params.ramo_atividade?.trim() || null;
+      if (params.cpf_responsavel !== undefined)
+        dadosAtualizacao.cpf_responsavel = params.cpf_responsavel?.trim() || null;
+      if (params.oficial !== undefined) dadosAtualizacao.oficial = params.oficial;
+      if (params.ds_prazo_expediente_automatico !== undefined)
+        dadosAtualizacao.ds_prazo_expediente_automatico = params.ds_prazo_expediente_automatico?.trim() || null;
       if (params.porte_codigo !== undefined)
-        dadosAtualizacao.porte_codigo = params.porte_codigo?.trim() || null;
+        dadosAtualizacao.porte_codigo = params.porte_codigo; // É number, não string
       if (params.porte_descricao !== undefined)
         dadosAtualizacao.porte_descricao = params.porte_descricao?.trim() || null;
-      if (params.qualificacao_responsavel !== undefined)
-        dadosAtualizacao.qualificacao_responsavel =
-          params.qualificacao_responsavel?.trim() || null;
-      if (params.nome_social_fantasia !== undefined)
-        dadosAtualizacao.nome_social_fantasia = params.nome_social_fantasia?.trim() || null;
-      if (params.status_pje !== undefined)
-        dadosAtualizacao.status_pje = params.status_pje?.trim() || null;
+      if (params.ultima_atualizacao_pje !== undefined)
+        dadosAtualizacao.ultima_atualizacao_pje = params.ultima_atualizacao_pje?.trim() || null;
     }
 
     const { data, error } = await supabase

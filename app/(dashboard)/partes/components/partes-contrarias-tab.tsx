@@ -82,9 +82,9 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
         cell: ({ row }) => (
           <div className="flex flex-col gap-1">
             <span className="font-medium">{formatarNome(row.original.nome)}</span>
-            {row.original.nome_fantasia && (
+            {row.original.nome_social_fantasia && (
               <span className="text-xs text-muted-foreground">
-                {row.original.nome_fantasia}
+                {row.original.nome_social_fantasia}
               </span>
             )}
           </div>
@@ -139,11 +139,11 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
         },
       },
       {
-        accessorKey: 'situacao',
+        accessorKey: 'situacao_pje',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
         enableSorting: true,
         cell: ({ row }) => {
-          const situacao = row.original.situacao;
+          const situacao = row.original.situacao_pje;
           if (!situacao) return '-';
           return (
             <Badge
