@@ -36,29 +36,28 @@ export type SituacaoPJE = 'A' | 'I' | 'E' | 'H'; // A=Ativo, I=Inativo, E=Exclu�
 
 /**
  * Campos base comuns a PF e PJ
+ * NOTA: Terceiros é uma tabela global - conexão com processo via processo_partes
  */
 interface TerceiroBase {
   id: number;
   id_pje: number;
   id_pessoa_pje: number;
-  processo_id: number;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
-  trt: string;
-  grau: GrauTerceiro;
-  numero_processo: string;
   tipo_pessoa: TipoPessoa;
   nome: string;
   nome_social: string | null;
   emails: string[] | null; // JSONB array
   ddd_celular: string | null;
   numero_celular: string | null;
-  ddd_telefone: string | null;
-  numero_telefone: string | null;
+  ddd_residencial: string | null;
+  numero_residencial: string | null;
+  ddd_comercial: string | null;
+  numero_comercial: string | null;
   fax: string | null;
   situacao: SituacaoPJE | null;
   observacoes: string | null;
-  dados_pje_completo: Record<string, unknown> | null; // JSONB
+  dados_anteriores: Record<string, unknown> | null; // JSONB
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }
@@ -84,13 +83,6 @@ export interface TerceiroPessoaFisica extends TerceiroBase {
   uf_nascimento: string | null;
   pais_nacionalidade: string | null;
   profissao: string | null;
-  cartao_nacional_saude: string | null;
-  certificado_militar: string | null;
-  numero_titulo_eleitor: string | null;
-  zona_titulo_eleitor: string | null;
-  secao_titulo_eleitor: string | null;
-  tipo_sanguineo: string | null;
-  raca_cor: string | null;
   estado_civil: string | null;
   grau_instrucao: string | null;
   necessidade_especial: string | null;
@@ -104,7 +96,6 @@ export interface TerceiroPessoaFisica extends TerceiroBase {
   porte_codigo: null;
   porte_descricao: null;
   qualificacao_responsavel: null;
-  capital_social: null;
   nome_fantasia: null;
   status_pje: null;
 }
@@ -143,13 +134,6 @@ export interface TerceiroPessoaJuridica extends TerceiroBase {
   uf_nascimento: null;
   pais_nacionalidade: null;
   profissao: null;
-  cartao_nacional_saude: null;
-  certificado_militar: null;
-  numero_titulo_eleitor: null;
-  zona_titulo_eleitor: null;
-  secao_titulo_eleitor: null;
-  tipo_sanguineo: null;
-  raca_cor: null;
   estado_civil: null;
   grau_instrucao: null;
   necessidade_especial: null;
@@ -166,12 +150,8 @@ export type Terceiro = TerceiroPessoaFisica | TerceiroPessoaJuridica;
 export interface CriarTerceiroPFParams {
   id_pje: number;
   id_pessoa_pje: number;
-  processo_id: number;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
-  trt: string;
-  grau: GrauTerceiro;
-  numero_processo: string;
   tipo_pessoa: 'pf';
   nome: string;
   cpf: string;
@@ -179,8 +159,10 @@ export interface CriarTerceiroPFParams {
   emails?: string[];
   ddd_celular?: string;
   numero_celular?: string;
-  ddd_telefone?: string;
-  numero_telefone?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
   fax?: string;
   tipo_documento?: string;
   numero_rg?: string;
@@ -196,19 +178,12 @@ export interface CriarTerceiroPFParams {
   uf_nascimento?: string;
   pais_nacionalidade?: string;
   profissao?: string;
-  cartao_nacional_saude?: string;
-  certificado_militar?: string;
-  numero_titulo_eleitor?: string;
-  zona_titulo_eleitor?: string;
-  secao_titulo_eleitor?: string;
-  tipo_sanguineo?: string;
-  raca_cor?: string;
   estado_civil?: string;
   grau_instrucao?: string;
   necessidade_especial?: string;
   situacao?: SituacaoPJE;
   observacoes?: string;
-  dados_pje_completo?: Record<string, unknown>;
+  dados_anteriores?: Record<string, unknown>;
 }
 
 /**
@@ -217,12 +192,8 @@ export interface CriarTerceiroPFParams {
 export interface CriarTerceiroPJParams {
   id_pje: number;
   id_pessoa_pje: number;
-  processo_id: number;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
-  trt: string;
-  grau: GrauTerceiro;
-  numero_processo: string;
   tipo_pessoa: 'pj';
   nome: string;
   cnpj: string;
@@ -231,8 +202,10 @@ export interface CriarTerceiroPJParams {
   emails?: string[];
   ddd_celular?: string;
   numero_celular?: string;
-  ddd_telefone?: string;
-  numero_telefone?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
   fax?: string;
   inscricao_estadual?: string;
   inscricao_municipal?: string;
@@ -243,11 +216,10 @@ export interface CriarTerceiroPJParams {
   porte_codigo?: string;
   porte_descricao?: string;
   qualificacao_responsavel?: string;
-  capital_social?: number;
   status_pje?: string;
   situacao?: SituacaoPJE;
   observacoes?: string;
-  dados_pje_completo?: Record<string, unknown>;
+  dados_anteriores?: Record<string, unknown>;
 }
 
 /**
@@ -262,12 +234,8 @@ export interface AtualizarTerceiroPFParams {
   id: number;
   id_pje?: number;
   id_pessoa_pje?: number;
-  processo_id?: number;
   tipo_parte?: TipoParteTerceiro;
   polo?: PoloTerceiro;
-  trt?: string;
-  grau?: GrauTerceiro;
-  numero_processo?: string;
   tipo_pessoa?: 'pf';
   nome?: string;
   cpf?: string;
@@ -275,8 +243,10 @@ export interface AtualizarTerceiroPFParams {
   emails?: string[];
   ddd_celular?: string;
   numero_celular?: string;
-  ddd_telefone?: string;
-  numero_telefone?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
   fax?: string;
   tipo_documento?: string;
   numero_rg?: string;
@@ -292,19 +262,12 @@ export interface AtualizarTerceiroPFParams {
   uf_nascimento?: string;
   pais_nacionalidade?: string;
   profissao?: string;
-  cartao_nacional_saude?: string;
-  certificado_militar?: string;
-  numero_titulo_eleitor?: string;
-  zona_titulo_eleitor?: string;
-  secao_titulo_eleitor?: string;
-  tipo_sanguineo?: string;
-  raca_cor?: string;
   estado_civil?: string;
   grau_instrucao?: string;
   necessidade_especial?: string;
   situacao?: SituacaoPJE;
   observacoes?: string;
-  dados_pje_completo?: Record<string, unknown>;
+  dados_anteriores?: Record<string, unknown>;
 }
 
 /**
@@ -314,12 +277,8 @@ export interface AtualizarTerceiroPJParams {
   id: number;
   id_pje?: number;
   id_pessoa_pje?: number;
-  processo_id?: number;
   tipo_parte?: TipoParteTerceiro;
   polo?: PoloTerceiro;
-  trt?: string;
-  grau?: GrauTerceiro;
-  numero_processo?: string;
   tipo_pessoa?: 'pj';
   nome?: string;
   cnpj?: string;
@@ -328,8 +287,10 @@ export interface AtualizarTerceiroPJParams {
   emails?: string[];
   ddd_celular?: string;
   numero_celular?: string;
-  ddd_telefone?: string;
-  numero_telefone?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
   fax?: string;
   inscricao_estadual?: string;
   inscricao_municipal?: string;
@@ -340,11 +301,10 @@ export interface AtualizarTerceiroPJParams {
   porte_codigo?: string;
   porte_descricao?: string;
   qualificacao_responsavel?: string;
-  capital_social?: number;
   status_pje?: string;
   situacao?: SituacaoPJE;
   observacoes?: string;
-  dados_pje_completo?: Record<string, unknown>;
+  dados_anteriores?: Record<string, unknown>;
 }
 
 /**
@@ -382,9 +342,6 @@ export interface ListarTerceirosParams {
   tipo_pessoa?: TipoPessoa;
   tipo_parte?: TipoParteTerceiro;
   polo?: PoloTerceiro;
-  processo_id?: number;
-  trt?: string;
-  grau?: GrauTerceiro;
 
   // Busca textual
   busca?: string; // Busca em nome, cpf, cnpj, nome_social, emails
@@ -394,7 +351,6 @@ export interface ListarTerceirosParams {
   cpf?: string;
   cnpj?: string;
   id_pessoa_pje?: number;
-  numero_processo?: string;
 
   // Ordenação
   ordenar_por?: OrdenarPorTerceiro;
@@ -417,12 +373,4 @@ export interface ListarTerceirosResult {
  */
 export interface UpsertTerceiroPorIdPessoaParams extends CriarTerceiroParams {
   id_pessoa_pje: number; // Required para upsert
-}
-
-/**
- * Parâmetros para buscar terceiros de um processo
- */
-export interface BuscarTerceirosPorProcessoParams {
-  processo_id: number;
-  tipo_parte?: TipoParteTerceiro;
 }

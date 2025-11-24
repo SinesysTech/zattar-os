@@ -42,18 +42,18 @@ export type OrdenarPorRepresentante =
 // Base Interface (Common Fields)
 // ============================================================================
 
+/**
+ * NOTA: Representantes é uma tabela global - conexão com processo via processo_partes
+ */
 interface RepresentanteBase {
   // Identification
   id: number;
   id_pje: number | null;
   id_pessoa_pje: number;
-  trt: string;
-  grau: Grau;
 
-  // Context
+  // Context (link to parte)
   parte_tipo: ParteTipo;
   parte_id: number;
-  numero_processo: string;
   polo: Polo | null;
 
   // Common
@@ -74,12 +74,14 @@ interface RepresentanteBase {
   emails: string[];
   ddd_celular: string | null;
   numero_celular: string | null;
-  ddd_telefone: string | null;
-  numero_telefone: string | null;
+  ddd_residencial: string | null;
+  numero_residencial: string | null;
+  ddd_comercial: string | null;
+  numero_comercial: string | null;
   email: string | null;
 
   // Metadata
-  dados_pje_completo: Record<string, unknown> | null;
+  dados_anteriores: Record<string, unknown> | null;
   ordem: number | null;
   data_habilitacao: Date | null;
   created_at: Date;
@@ -151,11 +153,8 @@ export type Representante = RepresentantePessoaFisica | RepresentantePessoaJurid
 export interface CriarRepresentanteParams {
   // Required fields
   id_pessoa_pje: number;
-  trt: string;
-  grau: Grau;
   parte_tipo: ParteTipo;
   parte_id: number;
-  numero_processo: string;
   tipo_pessoa: TipoPessoa;
   nome: string;
 
@@ -177,8 +176,10 @@ export interface CriarRepresentanteParams {
   emails?: string[];
   ddd_celular?: string | null;
   numero_celular?: string | null;
-  ddd_telefone?: string | null;
-  numero_telefone?: string | null;
+  ddd_residencial?: string | null;
+  numero_residencial?: string | null;
+  ddd_comercial?: string | null;
+  numero_comercial?: string | null;
   email?: string | null;
 
   // PF optional fields
@@ -199,7 +200,7 @@ export interface CriarRepresentanteParams {
   tipo_empresa?: string | null;
 
   // Metadata optional
-  dados_pje_completo?: Record<string, unknown> | null;
+  dados_anteriores?: Record<string, unknown> | null;
   ordem?: number | null;
   data_habilitacao?: Date | null;
 }
@@ -225,8 +226,10 @@ export interface AtualizarRepresentanteParams {
   emails?: string[];
   ddd_celular?: string | null;
   numero_celular?: string | null;
-  ddd_telefone?: string | null;
-  numero_telefone?: string | null;
+  ddd_residencial?: string | null;
+  numero_residencial?: string | null;
+  ddd_comercial?: string | null;
+  numero_comercial?: string | null;
   email?: string | null;
 
   // PF fields (only if tipo_pessoa='pf')
@@ -263,9 +266,6 @@ export interface ListarRepresentantesParams {
   // Filters
   parte_tipo?: ParteTipo;
   parte_id?: number;
-  trt?: string;
-  grau?: Grau;
-  numero_processo?: string;
   numero_oab?: string;
   situacao_oab?: SituacaoOAB;
   tipo_pessoa?: TipoPessoa;
@@ -286,8 +286,6 @@ export interface ListarRepresentantesParams {
 export interface BuscarRepresentantesPorParteParams {
   parte_tipo: ParteTipo;
   parte_id: number;
-  trt?: string;
-  grau?: Grau;
 }
 
 /**
@@ -295,17 +293,6 @@ export interface BuscarRepresentantesPorParteParams {
  */
 export interface BuscarRepresentantesPorOABParams {
   numero_oab: string;
-  trt?: string;
-  grau?: Grau;
-}
-
-/**
- * Buscar representantes por processo
- */
-export interface BuscarRepresentantesPorProcessoParams {
-  numero_processo: string;
-  trt: string;
-  grau: Grau;
 }
 
 /**
@@ -314,7 +301,7 @@ export interface BuscarRepresentantesPorProcessoParams {
  */
 export interface UpsertRepresentantePorIdPessoaParams extends CriarRepresentanteParams {
   // Inherits all fields from CriarRepresentanteParams
-  // Upsert logic based on composite key: (id_pessoa_pje, trt, grau, parte_id, parte_tipo, numero_processo)
+  // Upsert logic based on composite key: (id_pessoa_pje, parte_id, parte_tipo)
 }
 
 // ============================================================================

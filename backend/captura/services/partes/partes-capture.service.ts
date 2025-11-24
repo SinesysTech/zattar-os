@@ -134,10 +134,7 @@ export async function capturarPartesProcesso(
             const repsCount = await processarRepresentantes(
               parte.representantes,
               tipoParte,
-              entidadeId,
-              processo.trt,
-              processo.grau,
-              processo.numero_processo
+              entidadeId
             );
             resultado.representantes += repsCount;
           }
@@ -207,20 +204,17 @@ async function processarParte(
 ): Promise<number | null> {
   const isPessoaFisica = parte.tipoDocumento === 'CPF';
 
-  // Mapeia dados comuns
+  // Mapeia dados comuns (SEM trt/grau/numero_processo - vão para processo_partes)
   const dadosComuns = {
     id_pje: parte.idParte,
     id_pessoa_pje: parte.idPessoa,
-    trt: processo.trt,
-    grau: processo.grau,
-    numero_processo: processo.numero_processo,
     nome: parte.nome,
     emails: parte.emails.length > 0 ? parte.emails : undefined,
     ddd_celular: parte.telefones[0]?.ddd || undefined,
     numero_celular: parte.telefones[0]?.numero || undefined,
-    ddd_telefone: parte.telefones[1]?.ddd || undefined,
-    numero_telefone: parte.telefones[1]?.numero || undefined,
-    dados_pje_completo: parte.dadosCompletos,
+    ddd_residencial: parte.telefones[1]?.ddd || undefined,
+    numero_residencial: parte.telefones[1]?.numero || undefined,
+    dados_anteriores: parte.dadosCompletos,
   };
 
   try {
@@ -299,10 +293,7 @@ async function processarParte(
 async function processarRepresentantes(
   representantes: any[],
   tipoParte: TipoParteClassificacao,
-  parteId: number,
-  trt: string,
-  grau: GrauAcervo,
-  numeroProcesso: string
+  parteId: number
 ): Promise<number> {
   let count = 0;
 
@@ -312,11 +303,8 @@ async function processarRepresentantes(
 
       const result = await upsertRepresentantePorIdPessoa({
         id_pessoa_pje: rep.idPessoa,
-        trt,
-        grau: grau as any,
         parte_tipo: tipoParte,
         parte_id: parteId,
-        numero_processo: numeroProcesso,
         tipo_pessoa,
         nome: rep.nome,
         cpf: tipo_pessoa === 'pf' ? rep.numeroDocumento : undefined,
@@ -327,7 +315,7 @@ async function processarRepresentantes(
         emails: rep.email ? [rep.email] : undefined,
         ddd_celular: rep.telefones[0]?.ddd || undefined,
         numero_celular: rep.telefones[0]?.numero || undefined,
-        dados_pje_completo: rep.dadosCompletos,
+        dados_anteriores: rep.dadosCompletos,
       });
 
       if (result.sucesso) count++;

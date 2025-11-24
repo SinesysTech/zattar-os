@@ -133,7 +133,7 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
 
   // Parse JSON fields
   const emails = Array.isArray(data.emails) ? data.emails as string[] : [];
-  const dados_pje_completo = data.dados_pje_completo as Record<string, unknown> | null;
+  const dados_anteriores = data.dados_anteriores as Record<string, unknown> | null;
 
   // Convert date strings
   const parseDate = (val: unknown): Date | null => {
@@ -167,7 +167,7 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
     ddd_telefone: data.ddd_telefone as string | null,
     numero_telefone: data.numero_telefone as string | null,
     email: data.email as string | null,
-    dados_pje_completo,
+    dados_anteriores,
     ordem: data.ordem as number | null,
     data_habilitacao: parseDate(data.data_habilitacao),
     created_at: new Date(data.created_at as string),
