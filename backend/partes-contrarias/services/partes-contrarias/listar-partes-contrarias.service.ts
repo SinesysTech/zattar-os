@@ -3,21 +3,36 @@
 
 import {
   listarPartesContrarias as listarPartesContrariasDb,
+  listarPartesContrariasComEndereco as listarPartesContrariasComEnderecoDb,
   type ListarPartesContrariasParams,
   type ListarPartesContrariasResult,
 } from '../persistence/parte-contraria-persistence.service';
 
 /**
+ * Parâmetros estendidos para incluir endereços
+ */
+export interface ObterPartesContrariasParams extends ListarPartesContrariasParams {
+  incluir_endereco?: boolean;
+}
+
+/**
  * Lista partes contrárias com filtros e paginação
- * 
+ *
  * Fluxo:
  * 1. Aplica filtros de busca, tipo de pessoa, status, etc.
  * 2. Aplica paginação
  * 3. Retorna lista paginada de partes contrárias
+ * 4. Se incluir_endereco=true, popula dados de endereço via JOIN
  */
 export async function obterPartesContrarias(
-  params: ListarPartesContrariasParams = {}
+  params: ObterPartesContrariasParams = {}
 ): Promise<ListarPartesContrariasResult> {
-  return listarPartesContrariasDb(params);
+  const { incluir_endereco, ...listParams } = params;
+
+  if (incluir_endereco) {
+    return listarPartesContrariasComEnderecoDb(listParams);
+  }
+
+  return listarPartesContrariasDb(listParams);
 }
 

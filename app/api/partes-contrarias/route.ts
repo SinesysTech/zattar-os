@@ -3,11 +3,10 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
-import { obterPartesContrarias } from '@/backend/partes-contrarias/services/partes-contrarias/listar-partes-contrarias.service';
+import { obterPartesContrarias, type ObterPartesContrariasParams } from '@/backend/partes-contrarias/services/partes-contrarias/listar-partes-contrarias.service';
 import { cadastrarParteContraria } from '@/backend/partes-contrarias/services/partes-contrarias/criar-parte-contraria.service';
 import type {
   CriarParteContrariaParams,
-  ListarPartesContrariasParams,
 } from '@/backend/types/partes';
 
 /**
@@ -51,6 +50,12 @@ import type {
  *         schema:
  *           type: boolean
  *         description: Filtrar por status ativo/inativo
+ *       - in: query
+ *         name: incluir_endereco
+ *         schema:
+ *           type: boolean
+ *           default: false
+ *         description: Se true, inclui dados de endereço via JOIN
  *     responses:
  *       200:
  *         description: Lista de partes contrárias retornada com sucesso
@@ -137,6 +142,9 @@ import type {
  *                     type: string
  *               observacoes:
  *                 type: string
+ *               endereco_id:
+ *                 type: integer
+ *                 description: ID do endereço na tabela enderecos (FK)
  *               createdBy:
  *                 type: integer
  *                 description: ID do usuário que está criando o registro
@@ -161,13 +169,14 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const params: ListarPartesContrariasParams = {
+    const params: ObterPartesContrariasParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,
       tipo_pessoa: (searchParams.get('tipo_pessoa') as 'pf' | 'pj' | null) || undefined,
       trt: searchParams.get('trt') || undefined,
       grau: (searchParams.get('grau') as 'primeiro_grau' | 'segundo_grau' | null) || undefined,
+      incluir_endereco: searchParams.get('incluir_endereco') === 'true',
     };
 
     const resultado = await obterPartesContrarias(params);
