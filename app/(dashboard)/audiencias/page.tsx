@@ -394,9 +394,9 @@ function TipoLocalColumnHeader({
           <Button
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="-ml-3 h-8 justify-start data-[state=open]:bg-accent"
           >
-            <span className="text-sm font-medium">Tipo e Local</span>
+            <span className="text-sm font-medium text-left">tipo e local</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"

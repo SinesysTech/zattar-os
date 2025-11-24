@@ -824,8 +824,8 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
     {
       id: 'tipo_local',
       header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-center">Tipo/Local</div>
+        <div className="relative flex items-center justify-start w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-left">tipo e local</div>
         </div>
       ),
       size: 280,
@@ -836,15 +836,15 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
 
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1 max-w-[280px]">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">{tipo}</span>
+            <div className="flex items-start gap-2">
+              <span className="text-sm text-left">{tipo}</span>
               {isVirtual && (
                 <Badge variant="outline" className="text-xs">
                   Virtual
                 </Badge>
               )}
             </div>
-            <div className="text-xs text-muted-foreground truncate max-w-full">
+            <div className="text-xs text-muted-foreground truncate max-w-full text-left">
               {sala}
             </div>
           </div>

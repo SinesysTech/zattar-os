@@ -89,7 +89,6 @@ export interface TerceiroPessoaFisica extends TerceiroBase {
   necessidade_especial: string | null;
   // Campos que são null em PF (específicos de PJ)
   inscricao_estadual: null;
-  inscricao_municipal: null;
   data_abertura: null;
   orgao_publico: null;
   ds_tipo_pessoa: null;
@@ -109,7 +108,6 @@ export interface TerceiroPessoaJuridica extends TerceiroBase {
   cnpj: string; // Required para PJ
   cpf: null;
   inscricao_estadual: string | null;
-  inscricao_municipal: string | null;
   data_abertura: string | null; // ISO date
   orgao_publico: boolean | null;
   ds_tipo_pessoa: string | null;
@@ -235,7 +233,6 @@ export interface CriarTerceiroPJParams {
   numero_comercial?: string;
   fax?: string;
   inscricao_estadual?: string;
-  inscricao_municipal?: string;
   data_abertura?: string;
   orgao_publico?: boolean;
   ds_tipo_pessoa?: string;
@@ -322,7 +319,6 @@ export interface AtualizarTerceiroPJParams {
   numero_comercial?: string;
   fax?: string;
   inscricao_estadual?: string;
-  inscricao_municipal?: string;
   data_abertura?: string;
   orgao_publico?: boolean;
   ds_tipo_pessoa?: string;
