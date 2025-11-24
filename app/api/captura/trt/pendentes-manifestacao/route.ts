@@ -78,21 +78,21 @@ function normalizarFiltrosPrazo(
  *                 items:
  *                   type: integer
  *                 description: Array de IDs das credenciais a serem utilizadas na captura
-             *               filtroPrazo:
-             *                 type: string
-             *                 enum: [no_prazo, sem_prazo]
-             *                 default: sem_prazo
-             *                 description: Filtro de prazo para processos pendentes
-             *               filtrosPrazo:
-             *                 type: array
-             *                 items:
-             *                   type: string
-             *                   enum: [no_prazo, sem_prazo]
-             *                 description: Lista de filtros de prazo para executar sequencialmente (ordem fixa: sem_prazo -> no_prazo)
-             *           example:
-             *             advogado_id: 1
-             *             credencial_ids: [1, 2, 3]
-             *             filtrosPrazo: ["sem_prazo", "no_prazo"]
+ *               filtroPrazo:
+ *                 type: string
+ *                 enum: [no_prazo, sem_prazo]
+ *                 default: sem_prazo
+ *                 description: Filtro de prazo para processos pendentes
+ *               filtrosPrazo:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   enum: [no_prazo, sem_prazo]
+ *                 description: Lista de filtros de prazo para executar sequencialmente (ordem fixa sem_prazo -> no_prazo)
+ *           example:
+ *             advogado_id: 1
+ *             credencial_ids: [1, 2, 3]
+ *             filtrosPrazo: ["sem_prazo", "no_prazo"]
  *     responses:
  *       200:
  *         description: Captura iniciada com sucesso (resposta assíncrona)
@@ -464,11 +464,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-
-
-
-
-
-
-
