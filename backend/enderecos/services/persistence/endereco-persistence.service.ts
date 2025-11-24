@@ -10,6 +10,7 @@ import type {
   ListarEnderecosResult,
   BuscarEnderecosPorEntidadeParams,
   DefinirEnderecoPrincipalParams,
+  ClassificacaoEndereco,
 } from '@/backend/types/partes/enderecos-types';
 
 /**
@@ -40,7 +41,7 @@ function normalizarCep(cep: string): string {
  * Converte dados do banco para formato de retorno
  */
 function converterParaEndereco(data: Record<string, unknown>): Endereco {
-  return {
+  const endereco: Endereco = {
     id: data.id as number,
     id_pje: (data.id_pje as number | null) ?? null,
     entidade_tipo: data.entidade_tipo as 'cliente' | 'parte_contraria' | 'terceiro',
@@ -64,7 +65,8 @@ function converterParaEndereco(data: Record<string, unknown>): Endereco {
     pais_descricao: (data.pais_descricao as string | null) ?? null,
     pais: (data.pais as string | null) ?? null,
     cep: (data.cep as string | null) ?? null,
-    classificacoes_endereco: (data.classificacoes_endereco as any[] | null) ?? null,
+    classificacoes_endereco:
+      (data.classificacoes_endereco as ClassificacaoEndereco[] | null) ?? null,
     correspondencia: (data.correspondencia as boolean | null) ?? null,
     situacao: (data.situacao as 'A' | 'I' | 'P' | 'H' | null) ?? null,
     dados_pje_completo: (data.dados_pje_completo as Record<string, unknown> | null) ?? null,
@@ -74,6 +76,8 @@ function converterParaEndereco(data: Record<string, unknown>): Endereco {
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };
+
+  return endereco;
 }
 
 /**
@@ -110,14 +114,25 @@ export async function criarEndereco(
       numero: params.numero?.trim() || null,
       complemento: params.complemento?.trim() || null,
       bairro: params.bairro?.trim() || null,
+      id_municipio_pje: params.id_municipio_pje ?? null,
       municipio: params.municipio?.trim() || null,
+      municipio_ibge: params.municipio_ibge?.trim() || null,
+      estado_id_pje: params.estado_id_pje ?? null,
+      estado_sigla: params.estado_sigla?.trim() || null,
+      estado_descricao: params.estado_descricao?.trim() || null,
       estado: params.estado?.trim() || null,
+      pais_id_pje: params.pais_id_pje ?? null,
+      pais_codigo: params.pais_codigo?.trim() || null,
+      pais_descricao: params.pais_descricao?.trim() || null,
       pais: params.pais?.trim() || null,
       cep: params.cep ? normalizarCep(params.cep) : null,
       classificacoes_endereco: params.classificacoes_endereco ?? null,
       correspondencia: params.correspondencia ?? false,
       situacao: params.situacao ?? null,
       dados_pje_completo: params.dados_pje_completo ?? null,
+      id_usuario_cadastrador_pje: params.id_usuario_cadastrador_pje ?? null,
+      data_alteracao_pje: params.data_alteracao_pje ?? null,
+      ativo: params.ativo ?? true,
     };
 
     const { data, error } = await supabase.from('enderecos').insert(dadosNovos).select().single();
@@ -178,9 +193,22 @@ export async function atualizarEndereco(
     if (params.complemento !== undefined)
       dadosAtualizacao.complemento = params.complemento?.trim() || null;
     if (params.bairro !== undefined) dadosAtualizacao.bairro = params.bairro?.trim() || null;
+    if (params.id_municipio_pje !== undefined) dadosAtualizacao.id_municipio_pje = params.id_municipio_pje;
     if (params.municipio !== undefined)
       dadosAtualizacao.municipio = params.municipio?.trim() || null;
+    if (params.municipio_ibge !== undefined)
+      dadosAtualizacao.municipio_ibge = params.municipio_ibge?.trim() || null;
+    if (params.estado_id_pje !== undefined) dadosAtualizacao.estado_id_pje = params.estado_id_pje;
+    if (params.estado_sigla !== undefined)
+      dadosAtualizacao.estado_sigla = params.estado_sigla?.trim() || null;
+    if (params.estado_descricao !== undefined)
+      dadosAtualizacao.estado_descricao = params.estado_descricao?.trim() || null;
     if (params.estado !== undefined) dadosAtualizacao.estado = params.estado?.trim() || null;
+    if (params.pais_id_pje !== undefined) dadosAtualizacao.pais_id_pje = params.pais_id_pje;
+    if (params.pais_codigo !== undefined)
+      dadosAtualizacao.pais_codigo = params.pais_codigo?.trim() || null;
+    if (params.pais_descricao !== undefined)
+      dadosAtualizacao.pais_descricao = params.pais_descricao?.trim() || null;
     if (params.pais !== undefined) dadosAtualizacao.pais = params.pais?.trim() || null;
     if (params.cep !== undefined)
       dadosAtualizacao.cep = params.cep ? normalizarCep(params.cep) : null;
@@ -191,6 +219,11 @@ export async function atualizarEndereco(
     if (params.situacao !== undefined) dadosAtualizacao.situacao = params.situacao;
     if (params.dados_pje_completo !== undefined)
       dadosAtualizacao.dados_pje_completo = params.dados_pje_completo;
+    if (params.id_usuario_cadastrador_pje !== undefined)
+      dadosAtualizacao.id_usuario_cadastrador_pje = params.id_usuario_cadastrador_pje;
+    if (params.data_alteracao_pje !== undefined)
+      dadosAtualizacao.data_alteracao_pje = params.data_alteracao_pje;
+    if (params.ativo !== undefined) dadosAtualizacao.ativo = params.ativo;
 
     const { data, error } = await supabase
       .from('enderecos')

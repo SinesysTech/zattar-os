@@ -55,6 +55,9 @@ interface RepresentanteBase {
   parte_tipo: ParteTipo;
   parte_id: number;
   polo: Polo | null;
+  trt: string;
+  grau: string;
+  numero_processo: string;
 
   // Common
   tipo_pessoa: TipoPessoa;
@@ -173,6 +176,9 @@ export interface CriarRepresentanteParams {
   id_pessoa_pje: number;
   parte_tipo: ParteTipo;
   parte_id: number;
+  trt: string;
+  grau: string;
+  numero_processo: string;
   tipo_pessoa: TipoPessoa;
   nome: string;
 
@@ -286,6 +292,11 @@ export interface ListarRepresentantesParams {
   // Filters
   parte_tipo?: ParteTipo;
   parte_id?: number;
+  trt?: string;
+  grau?: string;
+  numero_processo?: string;
+  nome?: string;
+  id_pessoa_pje?: number;
   numero_oab?: string;
   situacao_oab?: SituacaoOAB;
   tipo_pessoa?: TipoPessoa;
@@ -306,6 +317,9 @@ export interface ListarRepresentantesParams {
 export interface BuscarRepresentantesPorParteParams {
   parte_tipo: ParteTipo;
   parte_id: number;
+  trt?: string;
+  grau?: string;
+  numero_processo?: string;
 }
 
 /**
@@ -313,6 +327,9 @@ export interface BuscarRepresentantesPorParteParams {
  */
 export interface BuscarRepresentantesPorOABParams {
   numero_oab: string;
+  trt?: string;
+  grau?: string;
+  numero_processo?: string;
 }
 
 /**

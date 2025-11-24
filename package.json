@@ -125,6 +125,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/ioredis": "^4.28.10",
+    "@types/lodash": "^4.17.21",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

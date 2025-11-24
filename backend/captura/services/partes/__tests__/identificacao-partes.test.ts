@@ -85,7 +85,11 @@ const mockAdvogado: AdvogadoIdentificacao = {
   nome: 'Dr. João Silva',
 };
 
-const createParteMock = (overrides: Partial<PartePJE> = {}): PartePJE => {
+type ParteOverrides = Partial<Omit<PartePJE, 'representantes'>> & {
+  representantes?: Array<Partial<RepresentantePJE>>;
+};
+
+const createParteMock = (overrides: ParteOverrides = {}): PartePJE => {
   const { representantes, ...rest } = overrides;
 
   return {

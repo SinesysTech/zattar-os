@@ -145,7 +145,7 @@ export function TableToolbar({
             // Renderização hierarquizada com grupos
             <div className="flex overflow-hidden">
               {/* Lista de grupos (lado esquerdo) */}
-              <div className="border-r shrink-0" style={{ width: 'max-content' }}>
+              <div className="border-r shrink-0 w-max">
                 <div className="p-2 border-b">
                   <div className="text-sm font-semibold px-2 py-1.5 whitespace-nowrap">Filtros</div>
                 </div>
@@ -182,7 +182,7 @@ export function TableToolbar({
 
               {/* Submenu com opções (lado direito) */}
               {activeGroup && (
-                <div className="border-l overflow-hidden" style={{ width: 'max-content', maxWidth: '400px' }}>
+                <div className="border-l overflow-hidden w-max max-w-[400px]">
                   <div className="p-2 border-b">
                     <div className="text-sm font-semibold px-2 py-1.5 whitespace-nowrap">{activeGroup}</div>
                   </div>
