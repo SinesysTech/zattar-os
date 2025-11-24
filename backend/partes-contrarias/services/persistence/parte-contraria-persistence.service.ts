@@ -4,12 +4,14 @@
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type {
   ParteContraria,
+  ParteContrariaComEndereco,
   CriarParteContrariaParams,
   AtualizarParteContrariaParams,
   ListarPartesContrariasParams,
   ListarPartesContrariasResult,
   UpsertParteContrariaPorIdPessoaParams,
 } from '@/backend/types/partes/partes-contrarias-types';
+import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
 
 /**
  * Resultado de operação
@@ -81,6 +83,7 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
     situacao: (data.situacao as 'A' | 'I' | 'E' | 'H' | null) ?? null,
     observacoes: (data.observacoes as string | null) ?? null,
     dados_anteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
+    endereco_id: (data.endereco_id as number | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };
@@ -575,4 +578,126 @@ export async function deletarParteContraria(
     console.error('Erro inesperado ao deletar:', error);
     return { sucesso: false, erro: `Erro inesperado: ${erroMsg}` };
   }
+}
+
+// ============================================================================
+// Funções com JOIN para endereços
+// ============================================================================
+
+/**
+ * Busca uma parte contrária por ID com endereço populado via LEFT JOIN
+ */
+export async function buscarParteContrariaComEndereco(
+  id: number
+): Promise<ParteContrariaComEndereco | null> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('partes_contrarias')
+    .select(`
+      *,
+      endereco:enderecos(*)
+    `)
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return null;
+    }
+    throw new Error(`Erro ao buscar parte contrária com endereço: ${error.message}`);
+  }
+
+  if (!data) return null;
+
+  const parteContraria = converterParaParteContraria(data);
+  const endereco = data.endereco ? converterParaEndereco(data.endereco) : null;
+
+  return {
+    ...parteContraria,
+    endereco,
+  } as ParteContrariaComEndereco;
+}
+
+/**
+ * Lista partes contrárias com endereços populados via LEFT JOIN
+ */
+export async function listarPartesContrariasComEndereco(
+  params: ListarPartesContrariasParams = {}
+): Promise<ListarPartesContrariasResult & { partesContrarias: ParteContrariaComEndereco[] }> {
+  const supabase = createServiceClient();
+
+  const pagina = params.pagina ?? 1;
+  const limite = params.limite ?? 50;
+  const offset = (pagina - 1) * limite;
+
+  let query = supabase.from('partes_contrarias').select(
+    `
+      *,
+      endereco:enderecos(*)
+    `,
+    { count: 'exact' }
+  );
+
+  // Aplicar filtros
+  if (params.busca) {
+    const busca = params.busca.trim();
+    query = query.or(
+      `nome.ilike.%${busca}%,nome_social.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+    );
+  }
+
+  if (params.tipo_pessoa) {
+    query = query.eq('tipo_pessoa', params.tipo_pessoa);
+  }
+
+  if (params.nome) {
+    query = query.ilike('nome', `%${params.nome}%`);
+  }
+
+  if (params.cpf) {
+    query = query.eq('cpf', normalizarCpf(params.cpf));
+  }
+
+  if (params.cnpj) {
+    query = query.eq('cnpj', normalizarCnpj(params.cnpj));
+  }
+
+  if (params.id_pessoa_pje) {
+    query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
+  }
+
+  // Ordenação
+  const ordenarPor = params.ordenar_por ?? 'created_at';
+  const ordem = params.ordem ?? 'desc';
+  query = query.order(ordenarPor, { ascending: ordem === 'asc' });
+
+  // Aplicar paginação
+  query = query.range(offset, offset + limite - 1);
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    throw new Error(`Erro ao listar partes contrárias com endereço: ${error.message}`);
+  }
+
+  const partesContrarias = (data || []).map((row) => {
+    const parteContraria = converterParaParteContraria(row);
+    const endereco = row.endereco ? converterParaEndereco(row.endereco) : null;
+    return {
+      ...parteContraria,
+      endereco,
+    } as ParteContrariaComEndereco;
+  });
+
+  const total = count ?? 0;
+  const totalPaginas = Math.ceil(total / limite);
+
+  return {
+    partesContrarias,
+    total,
+    pagina,
+    limite,
+    totalPaginas,
+  };
 }

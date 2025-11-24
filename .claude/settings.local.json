@@ -28,7 +28,8 @@
       "mcp__supabase__list_tables",
       "mcp__supabase__execute_sql",
       "Bash(npx playwright:*)",
-      "*"
+      "*",
+      "Bash(openspec list:*)"
     ],
     "deny": [],
     "ask": []
