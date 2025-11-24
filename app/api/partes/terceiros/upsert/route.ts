@@ -101,8 +101,7 @@ export async function POST(request: NextRequest) {
     const params: UpsertTerceiroPorIdPessoaParams = body;
 
     // Validate required fields
-    if (!params.id_pessoa_pje || !params.processo_id || !params.trt ||
-        !params.grau || !params.numero_processo || !params.tipo_pessoa ||
+    if (!params.id_pessoa_pje || !params.tipo_pessoa ||
         !params.nome || !params.tipo_parte) {
       return NextResponse.json(
         { success: false, error: 'Campos obrigatórios não informados' },

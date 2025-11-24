@@ -5,8 +5,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
-import { buscarTerceirosPorProcesso } from '@/backend/partes/services/terceiros-persistence.service';
-import type { BuscarTerceirosPorProcessoParams } from '@/backend/types/partes/terceiros-types';
+// TODO: Refactor to query via processo_partes JOIN
+// import { buscarTerceirosPorProcesso } from '@/backend/partes/services/terceiros-persistence.service';
+// import type { BuscarTerceirosPorProcessoParams } from '@/backend/types/partes/terceiros-types';
 
 /**
  * @swagger

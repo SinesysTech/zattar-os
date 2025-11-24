@@ -5,8 +5,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/utils/auth/api-auth';
-import { buscarRepresentantesPorProcesso } from '@/backend/representantes/services/representantes-persistence.service';
-import type { BuscarRepresentantesPorProcessoParams, Grau } from '@/backend/types/representantes/representantes-types';
+// TODO: Refactor to query via processo_partes JOIN
+// import { buscarRepresentantesPorProcesso } from '@/backend/representantes/services/representantes-persistence.service';
+// import type { BuscarRepresentantesPorProcessoParams, Grau } from '@/backend/types/representantes/representantes-types';
 
 /**
  * @swagger
@@ -69,36 +70,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Parse query params (all required)
-    const searchParams = request.nextUrl.searchParams;
-    const numero_processo = searchParams.get('numero_processo');
-    const trt = searchParams.get('trt');
-    const grau = searchParams.get('grau');
-
-    if (!numero_processo || !trt || !grau) {
-      return NextResponse.json(
-        { success: false, error: 'Parâmetros obrigatórios: numero_processo, trt, grau' },
-        { status: 400 }
-      );
-    }
-
-    if (!['1', '2'].includes(grau)) {
-      return NextResponse.json(
-        { success: false, error: 'Grau inválido (deve ser "1" ou "2")' },
-        { status: 400 }
-      );
-    }
-
-    const params: BuscarRepresentantesPorProcessoParams = {
-      numero_processo,
-      trt,
-      grau: grau as Grau,
-    };
-
-    // Find representantes
-    const representantes = await buscarRepresentantesPorProcesso(params);
-
-    return NextResponse.json({ success: true, data: representantes }, { status: 200 });
+    // TODO: Refactor to query representantes via JOIN with processo_partes
+    // Since representantes no longer has trt/grau/numero_processo columns,
+    // need to query: processo_partes -> get parte_id/parte_tipo -> representantes
+    return NextResponse.json(
+      { success: false, error: 'Endpoint temporariamente desabilitado - necessita refatoração' },
+      { status: 501 }
+    );
   } catch (error) {
     console.error('Erro ao buscar representantes por processo:', error);
     return NextResponse.json(
