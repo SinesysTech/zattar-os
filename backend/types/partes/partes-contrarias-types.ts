@@ -343,8 +343,79 @@ export interface ListarPartesContrariasResult {
 }
 
 /**
- * Método upsert por id_pessoa_pje
+ * Método upsert por id_pessoa_pje para parte contrária PF
  */
-export interface UpsertParteContrariaPorIdPessoaParams extends CriarParteContrariaParams {
+export interface UpsertParteContrariaPorIdPessoaPFParams {
   id_pessoa_pje: number; // Required para upsert
+  id_pje?: number;
+  tipo_pessoa: 'pf';
+  nome: string;
+  cpf: string;
+  nome_social?: string;
+  emails?: string[];
+  ddd_celular?: string;
+  numero_celular?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
+  tipo_documento?: string;
+  numero_rg?: string;
+  orgao_emissor_rg?: string;
+  uf_rg?: string;
+  data_expedicao_rg?: string;
+  sexo?: string;
+  nome_genitora?: string;
+  data_nascimento?: string;
+  nacionalidade?: string;
+  naturalidade?: string;
+  municipio_nascimento?: string;
+  uf_nascimento?: string;
+  pais_nacionalidade?: string;
+  profissao?: string;
+  estado_civil?: string;
+  grau_instrucao?: string;
+  necessidade_especial?: string;
+  situacao?: SituacaoPJE;
+  observacoes?: string;
+  dados_anteriores?: Record<string, unknown>;
 }
+
+/**
+ * Método upsert por id_pessoa_pje para parte contrária PJ
+ */
+export interface UpsertParteContrariaPorIdPessoaPJParams {
+  id_pessoa_pje: number; // Required para upsert
+  id_pje?: number;
+  tipo_pessoa: 'pj';
+  nome: string;
+  cnpj: string;
+  nome_social?: string;
+  nome_fantasia?: string;
+  emails?: string[];
+  ddd_celular?: string;
+  numero_celular?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
+  inscricao_estadual?: string;
+  inscricao_municipal?: string;
+  data_abertura?: string;
+  orgao_publico?: boolean;
+  ds_tipo_pessoa?: string;
+  ramo_atividade?: string;
+  porte_codigo?: string;
+  porte_descricao?: string;
+  qualificacao_responsavel?: string;
+  capital_social?: number;
+  status_pje?: string;
+  situacao?: SituacaoPJE;
+  observacoes?: string;
+  dados_anteriores?: Record<string, unknown>;
+}
+
+/**
+ * Método upsert por id_pessoa_pje (união)
+ */
+export type UpsertParteContrariaPorIdPessoaParams = UpsertParteContrariaPorIdPessoaPFParams | UpsertParteContrariaPorIdPessoaPJParams;

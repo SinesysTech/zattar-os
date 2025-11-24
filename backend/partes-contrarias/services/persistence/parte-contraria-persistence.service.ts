@@ -68,9 +68,6 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
     id: data.id as number,
     id_pje: (data.id_pje as number | null) ?? null,
     id_pessoa_pje: (data.id_pessoa_pje as number | null) ?? null,
-    trt: data.trt as string,
-    grau: data.grau as 'primeiro_grau' | 'segundo_grau',
-    numero_processo: data.numero_processo as string,
     tipo_pessoa,
     nome: data.nome as string,
     nome_social: (data.nome_social as string | null) ?? null,
@@ -109,7 +106,6 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       pais_nacionalidade: (data.pais_nacionalidade as string | null) ?? null,
       profissao: (data.profissao as string | null) ?? null,
       estado_civil: (data.estado_civil as string | null) ?? null,
-      necessidade_especial: (data.necessidade_especial as string | null) ?? null,
       inscricao_estadual: null,
       inscricao_municipal: null,
       data_abertura: null,
@@ -154,7 +150,6 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       pais_nacionalidade: null,
       profissao: null,
       estado_civil: null,
-      necessidade_especial: null,
     };
   }
 }
@@ -192,15 +187,12 @@ export async function criarParteContraria(
         .from('partes_contrarias')
         .select('id, cpf')
         .eq('cpf', cpfNormalizado)
-        .eq('trt', params.trt)
-        .eq('grau', params.grau)
-        .eq('numero_processo', params.numero_processo)
         .maybeSingle();
 
       if (existente) {
         return {
           sucesso: false,
-          erro: 'Parte contrária com este CPF já existe para este processo',
+          erro: 'Parte contrária com este CPF já existe',
         };
       }
     } else if (params.tipo_pessoa === 'pj') {
@@ -217,15 +209,12 @@ export async function criarParteContraria(
         .from('partes_contrarias')
         .select('id, cnpj')
         .eq('cnpj', cnpjNormalizado)
-        .eq('trt', params.trt)
-        .eq('grau', params.grau)
-        .eq('numero_processo', params.numero_processo)
         .maybeSingle();
 
       if (existente) {
         return {
           sucesso: false,
-          erro: 'Parte contrária com este CNPJ já existe para este processo',
+          erro: 'Parte contrária com este CNPJ já existe',
         };
       }
     }
@@ -243,9 +232,6 @@ export async function criarParteContraria(
     const dadosNovos: Record<string, unknown> = {
       id_pje: params.id_pje ?? null,
       id_pessoa_pje: params.id_pessoa_pje ?? null,
-      trt: params.trt,
-      grau: params.grau,
-      numero_processo: params.numero_processo,
       tipo_pessoa: params.tipo_pessoa,
       nome: params.nome.trim(),
       nome_social: params.nome_social?.trim() || null,
@@ -333,10 +319,6 @@ export async function atualizarParteContraria(
 
     if (params.id_pje !== undefined) dadosAtualizacao.id_pje = params.id_pje;
     if (params.id_pessoa_pje !== undefined) dadosAtualizacao.id_pessoa_pje = params.id_pessoa_pje;
-    if (params.trt !== undefined) dadosAtualizacao.trt = params.trt;
-    if (params.grau !== undefined) dadosAtualizacao.grau = params.grau;
-    if (params.numero_processo !== undefined)
-      dadosAtualizacao.numero_processo = params.numero_processo;
     if (params.nome !== undefined) dadosAtualizacao.nome = params.nome.trim();
     if (params.nome_social !== undefined)
       dadosAtualizacao.nome_social = params.nome_social?.trim() || null;
@@ -390,8 +372,6 @@ export async function atualizarParteContraria(
         dadosAtualizacao.profissao = params.profissao?.trim() || null;
       if (params.estado_civil !== undefined)
         dadosAtualizacao.estado_civil = params.estado_civil?.trim() || null;
-      if (params.necessidade_especial !== undefined)
-        dadosAtualizacao.necessidade_especial = params.necessidade_especial?.trim() || null;
     } else if (tipoPessoaAtual === 'pj' && params.tipo_pessoa === 'pj') {
       if (params.cnpj !== undefined) dadosAtualizacao.cnpj = normalizarCnpj(params.cnpj);
       if (params.inscricao_estadual !== undefined)
@@ -508,14 +488,6 @@ export async function listarPartesContrarias(
     query = query.eq('tipo_pessoa', params.tipo_pessoa);
   }
 
-  if (params.trt) {
-    query = query.eq('trt', params.trt);
-  }
-
-  if (params.grau) {
-    query = query.eq('grau', params.grau);
-  }
-
   if (params.nome) {
     query = query.ilike('nome', `%${params.nome}%`);
   }
@@ -530,10 +502,6 @@ export async function listarPartesContrarias(
 
   if (params.id_pessoa_pje) {
     query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
-  }
-
-  if (params.numero_processo) {
-    query = query.eq('numero_processo', params.numero_processo);
   }
 
   const ordenarPor = params.ordenar_por ?? 'created_at';

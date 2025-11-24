@@ -1,5 +1,5 @@
 // Serviço de persistência de terceiros
-// Gerencia operações de CRUD na tabela terceiros (78 campos: 60 base + tipo_parte, polo, processo_id)
+// Gerencia operações de CRUD na tabela terceiros (tabela global, sem vinculação direta a processos)
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type {
@@ -69,7 +69,6 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
     id: data.id as number,
     id_pje: data.id_pje as number,
     id_pessoa_pje: data.id_pessoa_pje as number,
-    processo_id: data.processo_id as number,
     tipo_parte: data.tipo_parte as
       | 'PERITO'
       | 'MINISTERIO_PUBLICO'
@@ -79,21 +78,20 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       | 'AMICUS_CURIAE'
       | 'OUTRO',
     polo: data.polo as 'ATIVO' | 'PASSIVO' | 'NEUTRO' | 'TERCEIRO',
-    trt: data.trt as string,
-    grau: data.grau as 'primeiro_grau' | 'segundo_grau',
-    numero_processo: data.numero_processo as string,
     tipo_pessoa,
     nome: data.nome as string,
     nome_social: (data.nome_social as string | null) ?? null,
     emails: (data.emails as string[] | null) ?? null,
     ddd_celular: (data.ddd_celular as string | null) ?? null,
     numero_celular: (data.numero_celular as string | null) ?? null,
-    ddd_telefone: (data.ddd_telefone as string | null) ?? null,
-    numero_telefone: (data.numero_telefone as string | null) ?? null,
+    ddd_residencial: (data.ddd_residencial as string | null) ?? null,
+    numero_residencial: (data.numero_residencial as string | null) ?? null,
+    ddd_comercial: (data.ddd_comercial as string | null) ?? null,
+    numero_comercial: (data.numero_comercial as string | null) ?? null,
     fax: (data.fax as string | null) ?? null,
     situacao: (data.situacao as 'A' | 'I' | 'E' | 'H' | null) ?? null,
     observacoes: (data.observacoes as string | null) ?? null,
-    dados_pje_completo: (data.dados_pje_completo as Record<string, unknown> | null) ?? null,
+    dados_anteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };
@@ -118,13 +116,6 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       uf_nascimento: (data.uf_nascimento as string | null) ?? null,
       pais_nacionalidade: (data.pais_nacionalidade as string | null) ?? null,
       profissao: (data.profissao as string | null) ?? null,
-      cartao_nacional_saude: (data.cartao_nacional_saude as string | null) ?? null,
-      certificado_militar: (data.certificado_militar as string | null) ?? null,
-      numero_titulo_eleitor: (data.numero_titulo_eleitor as string | null) ?? null,
-      zona_titulo_eleitor: (data.zona_titulo_eleitor as string | null) ?? null,
-      secao_titulo_eleitor: (data.secao_titulo_eleitor as string | null) ?? null,
-      tipo_sanguineo: (data.tipo_sanguineo as string | null) ?? null,
-      raca_cor: (data.raca_cor as string | null) ?? null,
       estado_civil: (data.estado_civil as string | null) ?? null,
       grau_instrucao: (data.grau_instrucao as string | null) ?? null,
       necessidade_especial: (data.necessidade_especial as string | null) ?? null,
@@ -137,7 +128,6 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       porte_codigo: null,
       porte_descricao: null,
       qualificacao_responsavel: null,
-      capital_social: null,
       nome_fantasia: null,
       status_pje: null,
     };
@@ -173,13 +163,6 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       uf_nascimento: null,
       pais_nacionalidade: null,
       profissao: null,
-      cartao_nacional_saude: null,
-      certificado_militar: null,
-      numero_titulo_eleitor: null,
-      zona_titulo_eleitor: null,
-      secao_titulo_eleitor: null,
-      tipo_sanguineo: null,
-      raca_cor: null,
       estado_civil: null,
       grau_instrucao: null,
       necessidade_especial: null,
@@ -245,24 +228,22 @@ export async function criarTerceiro(
     const dadosNovos: Record<string, unknown> = {
       id_pje: params.id_pje,
       id_pessoa_pje: params.id_pessoa_pje,
-      processo_id: params.processo_id,
       tipo_parte: params.tipo_parte,
       polo: params.polo,
-      trt: params.trt,
-      grau: params.grau,
-      numero_processo: params.numero_processo,
       tipo_pessoa: params.tipo_pessoa,
       nome: params.nome.trim(),
       nome_social: params.nome_social?.trim() || null,
       emails: params.emails ?? null,
       ddd_celular: params.ddd_celular?.trim() || null,
       numero_celular: params.numero_celular?.trim() || null,
-      ddd_telefone: params.ddd_telefone?.trim() || null,
-      numero_telefone: params.numero_telefone?.trim() || null,
+      ddd_residencial: params.ddd_residencial?.trim() || null,
+      numero_residencial: params.numero_residencial?.trim() || null,
+      ddd_comercial: params.ddd_comercial?.trim() || null,
+      numero_comercial: params.numero_comercial?.trim() || null,
       fax: params.fax?.trim() || null,
       situacao: params.situacao ?? null,
       observacoes: params.observacoes?.trim() || null,
-      dados_pje_completo: params.dados_pje_completo ?? null,
+      dados_anteriores: params.dados_anteriores ?? null,
     };
 
     if (params.tipo_pessoa === 'pf') {
@@ -281,13 +262,6 @@ export async function criarTerceiro(
       dadosNovos.uf_nascimento = params.uf_nascimento?.trim() || null;
       dadosNovos.pais_nacionalidade = params.pais_nacionalidade?.trim() || null;
       dadosNovos.profissao = params.profissao?.trim() || null;
-      dadosNovos.cartao_nacional_saude = params.cartao_nacional_saude?.trim() || null;
-      dadosNovos.certificado_militar = params.certificado_militar?.trim() || null;
-      dadosNovos.numero_titulo_eleitor = params.numero_titulo_eleitor?.trim() || null;
-      dadosNovos.zona_titulo_eleitor = params.zona_titulo_eleitor?.trim() || null;
-      dadosNovos.secao_titulo_eleitor = params.secao_titulo_eleitor?.trim() || null;
-      dadosNovos.tipo_sanguineo = params.tipo_sanguineo?.trim() || null;
-      dadosNovos.raca_cor = params.raca_cor?.trim() || null;
       dadosNovos.estado_civil = params.estado_civil?.trim() || null;
       dadosNovos.grau_instrucao = params.grau_instrucao?.trim() || null;
       dadosNovos.necessidade_especial = params.necessidade_especial?.trim() || null;
@@ -302,7 +276,6 @@ export async function criarTerceiro(
       dadosNovos.porte_codigo = params.porte_codigo?.trim() || null;
       dadosNovos.porte_descricao = params.porte_descricao?.trim() || null;
       dadosNovos.qualificacao_responsavel = params.qualificacao_responsavel?.trim() || null;
-      dadosNovos.capital_social = params.capital_social ?? null;
       dadosNovos.nome_fantasia = params.nome_fantasia?.trim() || null;
       dadosNovos.status_pje = params.status_pje?.trim() || null;
     }
@@ -355,13 +328,8 @@ export async function atualizarTerceiro(
 
     if (params.id_pje !== undefined) dadosAtualizacao.id_pje = params.id_pje;
     if (params.id_pessoa_pje !== undefined) dadosAtualizacao.id_pessoa_pje = params.id_pessoa_pje;
-    if (params.processo_id !== undefined) dadosAtualizacao.processo_id = params.processo_id;
     if (params.tipo_parte !== undefined) dadosAtualizacao.tipo_parte = params.tipo_parte;
     if (params.polo !== undefined) dadosAtualizacao.polo = params.polo;
-    if (params.trt !== undefined) dadosAtualizacao.trt = params.trt;
-    if (params.grau !== undefined) dadosAtualizacao.grau = params.grau;
-    if (params.numero_processo !== undefined)
-      dadosAtualizacao.numero_processo = params.numero_processo;
     if (params.nome !== undefined) dadosAtualizacao.nome = params.nome.trim();
     if (params.nome_social !== undefined)
       dadosAtualizacao.nome_social = params.nome_social?.trim() || null;
@@ -370,16 +338,20 @@ export async function atualizarTerceiro(
       dadosAtualizacao.ddd_celular = params.ddd_celular?.trim() || null;
     if (params.numero_celular !== undefined)
       dadosAtualizacao.numero_celular = params.numero_celular?.trim() || null;
-    if (params.ddd_telefone !== undefined)
-      dadosAtualizacao.ddd_telefone = params.ddd_telefone?.trim() || null;
-    if (params.numero_telefone !== undefined)
-      dadosAtualizacao.numero_telefone = params.numero_telefone?.trim() || null;
+    if (params.ddd_residencial !== undefined)
+      dadosAtualizacao.ddd_residencial = params.ddd_residencial?.trim() || null;
+    if (params.numero_residencial !== undefined)
+      dadosAtualizacao.numero_residencial = params.numero_residencial?.trim() || null;
+    if (params.ddd_comercial !== undefined)
+      dadosAtualizacao.ddd_comercial = params.ddd_comercial?.trim() || null;
+    if (params.numero_comercial !== undefined)
+      dadosAtualizacao.numero_comercial = params.numero_comercial?.trim() || null;
     if (params.fax !== undefined) dadosAtualizacao.fax = params.fax?.trim() || null;
     if (params.situacao !== undefined) dadosAtualizacao.situacao = params.situacao;
     if (params.observacoes !== undefined)
       dadosAtualizacao.observacoes = params.observacoes?.trim() || null;
-    if (params.dados_pje_completo !== undefined)
-      dadosAtualizacao.dados_pje_completo = params.dados_pje_completo;
+    if (params.dados_anteriores !== undefined)
+      dadosAtualizacao.dados_anteriores = params.dados_anteriores;
 
     // Campos específicos por tipo de pessoa (mesma lógica de clientes/partes_contrarias)
     if (tipoPessoaAtual === 'pf' && params.tipo_pessoa === 'pf') {
@@ -410,20 +382,6 @@ export async function atualizarTerceiro(
         dadosAtualizacao.pais_nacionalidade = params.pais_nacionalidade?.trim() || null;
       if (params.profissao !== undefined)
         dadosAtualizacao.profissao = params.profissao?.trim() || null;
-      if (params.cartao_nacional_saude !== undefined)
-        dadosAtualizacao.cartao_nacional_saude = params.cartao_nacional_saude?.trim() || null;
-      if (params.certificado_militar !== undefined)
-        dadosAtualizacao.certificado_militar = params.certificado_militar?.trim() || null;
-      if (params.numero_titulo_eleitor !== undefined)
-        dadosAtualizacao.numero_titulo_eleitor = params.numero_titulo_eleitor?.trim() || null;
-      if (params.zona_titulo_eleitor !== undefined)
-        dadosAtualizacao.zona_titulo_eleitor = params.zona_titulo_eleitor?.trim() || null;
-      if (params.secao_titulo_eleitor !== undefined)
-        dadosAtualizacao.secao_titulo_eleitor = params.secao_titulo_eleitor?.trim() || null;
-      if (params.tipo_sanguineo !== undefined)
-        dadosAtualizacao.tipo_sanguineo = params.tipo_sanguineo?.trim() || null;
-      if (params.raca_cor !== undefined)
-        dadosAtualizacao.raca_cor = params.raca_cor?.trim() || null;
       if (params.estado_civil !== undefined)
         dadosAtualizacao.estado_civil = params.estado_civil?.trim() || null;
       if (params.grau_instrucao !== undefined)
@@ -449,8 +407,6 @@ export async function atualizarTerceiro(
       if (params.qualificacao_responsavel !== undefined)
         dadosAtualizacao.qualificacao_responsavel =
           params.qualificacao_responsavel?.trim() || null;
-      if (params.capital_social !== undefined)
-        dadosAtualizacao.capital_social = params.capital_social;
       if (params.nome_fantasia !== undefined)
         dadosAtualizacao.nome_fantasia = params.nome_fantasia?.trim() || null;
       if (params.status_pje !== undefined)
@@ -573,18 +529,6 @@ export async function listarTerceiros(
     query = query.eq('polo', params.polo);
   }
 
-  if (params.processo_id) {
-    query = query.eq('processo_id', params.processo_id);
-  }
-
-  if (params.trt) {
-    query = query.eq('trt', params.trt);
-  }
-
-  if (params.grau) {
-    query = query.eq('grau', params.grau);
-  }
-
   if (params.nome) {
     query = query.ilike('nome', `%${params.nome}%`);
   }
@@ -599,10 +543,6 @@ export async function listarTerceiros(
 
   if (params.id_pessoa_pje) {
     query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
-  }
-
-  if (params.numero_processo) {
-    query = query.eq('numero_processo', params.numero_processo);
   }
 
   const ordenarPor = params.ordenar_por ?? 'created_at';

@@ -100,6 +100,16 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
+
+    // Convert grau from "1"/"2" to "primeiro_grau"/"segundo_grau"
+    const grauParam = searchParams.get('grau');
+    let grau: 'primeiro_grau' | 'segundo_grau' | undefined;
+    if (grauParam === '1') {
+      grau = 'primeiro_grau';
+    } else if (grauParam === '2') {
+      grau = 'segundo_grau';
+    }
+
     const params: ListarProcessoPartesParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
@@ -109,7 +119,7 @@ export async function GET(request: NextRequest) {
       polo: searchParams.get('polo') as any || undefined,
       tipo_parte: searchParams.get('tipo_parte') as any || undefined,
       trt: searchParams.get('trt') || undefined,
-      grau: (searchParams.get('grau') as '1' | '2' | null) || undefined,
+      grau,
     };
 
     const resultado = await listarProcessoPartes(params);

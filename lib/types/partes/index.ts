@@ -102,7 +102,6 @@ export type {
   ListarTerceirosParams,
   ListarTerceirosResult,
   UpsertTerceiroPorIdPessoaParams,
-  BuscarTerceirosPorProcessoParams,
   OrdenarPorTerceiro,
   OrdemTerceiro,
   TerceiroFormData,
