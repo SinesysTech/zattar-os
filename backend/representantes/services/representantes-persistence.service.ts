@@ -354,7 +354,8 @@ export async function atualizarRepresentante(
 
     const supabase = await createClient();
 
-    const { id, ...updates } = params;
+    // Remover campos que não existem na tabela (trt, grau, numero_processo)
+    const { id, trt, grau, numero_processo, ...updates } = params as any;
 
     const { data, error } = await supabase
       .from('representantes')
