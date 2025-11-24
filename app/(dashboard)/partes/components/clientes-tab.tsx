@@ -38,58 +38,38 @@ import {
 function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
   return [
     {
-      accessorKey: 'nome',
+      id: 'identificacao',
       header: ({ column }) => (
         <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="Nome/Razão Social" />
+          <DataTableColumnHeader column={column} title="Identificação" />
         </div>
       ),
       enableSorting: true,
-      size: 250,
+      accessorKey: 'nome',
+      size: 300,
       meta: { align: 'left' },
-      cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-start text-sm">
-          {formatarNome(row.getValue('nome'))}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'tipo_pessoa',
-      header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Tipo" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 120,
-      cell: ({ row }) => {
-        const tipoPessoa = row.getValue('tipo_pessoa') as 'pf' | 'pj';
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            <Badge variant="outline" tone="neutral">
-              {formatarTipoPessoa(tipoPessoa)}
-            </Badge>
-          </div>
-        );
-      },
-    },
-    {
-      id: 'documento',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">CPF/CNPJ</div>
-        </div>
-      ),
-      enableSorting: false,
-      size: 150,
       cell: ({ row }) => {
         const cliente = row.original;
-        const documento = cliente.tipo_pessoa === 'pf'
-          ? formatarCpf(cliente.cpf)
-          : formatarCnpj(cliente.cnpj);
+        const isPF = cliente.tipo_pessoa === 'pf';
+        const documento = isPF ? formatarCpf(cliente.cpf) : formatarCnpj(cliente.cnpj);
+
         return (
-          <div className="min-h-10 flex items-center justify-center text-sm">
-            {documento}
+          <div className="min-h-10 flex items-start justify-start py-2">
+            <div className="flex flex-col gap-1">
+              <Badge
+                variant="soft"
+                tone={isPF ? 'info' : 'warning'}
+                className="w-fit"
+              >
+                {isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}
+              </Badge>
+              <span className="text-sm font-medium">
+                {formatarNome(cliente.nome)}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {documento}
+              </span>
+            </div>
           </div>
         );
       },

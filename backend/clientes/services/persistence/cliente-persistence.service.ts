@@ -412,7 +412,7 @@ export async function atualizarCliente(
       dadosAtualizacao.ddd_comercial = params.ddd_comercial?.trim() || null;
     if (params.numero_comercial !== undefined)
       dadosAtualizacao.numero_comercial = params.numero_comercial?.trim() || null;
-    if (params.situacao !== undefined) dadosAtualizacao.situacao = params.situacao;
+    if (params.situacao_pje !== undefined) dadosAtualizacao.situacao_pje = params.situacao_pje;
     if (params.observacoes !== undefined)
       dadosAtualizacao.observacoes = params.observacoes?.trim() || null;
     if (params.dados_anteriores !== undefined)
