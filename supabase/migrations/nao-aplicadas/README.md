@@ -13,6 +13,7 @@ Não há migrations pendentes no momento.
 ### ✅ 2025-11-25
 - `20251125000000_create_locks_table.sql` - Tabela de distributed locks
 - `20251125000003_add_ata_audiencia_fields.sql` - Campos de ata de audiência
+- `20251125000004_fix_processo_partes_constraint.sql` - Correção da constraint unique em processo_partes
 
 Aplicadas via MCP tool do Supabase.
 
