@@ -132,11 +132,13 @@ export class DistributedLock {
    */
   async withLock<T>(fn: () => Promise<T>): Promise<T> {
     const acquired = await this.acquire();
-    
+
     if (!acquired) {
-      throw new Error(`Failed to acquire lock for key: ${this.key}`);
+      // Importa LockError dinamicamente para evitar dependência circular
+      const { LockError } = await import('@/backend/captura/services/partes/errors');
+      throw new LockError(`Captura já em andamento`, this.key);
     }
-    
+
     try {
       return await fn();
     } finally {

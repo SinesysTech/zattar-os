@@ -21,7 +21,6 @@ import type { SituacaoOAB, TipoRepresentante, Polo } from '@/backend/types/repre
 import { PartePJESchema, validarPartePJE, validarPartesArray } from './schemas';
 import getLogger, { withCorrelationId } from '@/backend/utils/logger';
 import { withRetry } from '@/backend/utils/retry';
-import { withDistributedLock } from '@/backend/utils/locks/distributed-lock';
 import { CAPTURA_CONFIG } from './config';
 import { ValidationError, PersistenceError, extractErrorInfo } from './errors';
 
@@ -352,16 +351,7 @@ export async function capturarPartesProcesso(
 ): Promise<CapturaPartesResult> {
   return withCorrelationId(async () => {
     const logger = getLogger({ service: 'captura-partes', processoId: processo.id });
-
-    if (CAPTURA_CONFIG.ENABLE_DISTRIBUTED_LOCK) {
-      return withDistributedLock(
-        `captura:processo:${processo.id}`,
-        async () => capturarPartesProcessoInternal(page, processo, advogado, logger),
-        { ttl: CAPTURA_CONFIG.LOCK_TTL_SECONDS }
-      );
-    } else {
-      return capturarPartesProcessoInternal(page, processo, advogado, logger);
-    }
+    return capturarPartesProcessoInternal(page, processo, advogado, logger);
   });
 }
 
