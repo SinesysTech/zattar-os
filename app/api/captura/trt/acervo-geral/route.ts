@@ -235,7 +235,7 @@ export async function POST(request: NextRequest) {
           });
 
           await registrarCapturaRawLog({
-            captura_log_id: logId ?? undefined,
+            captura_log_id: (logId ?? -1) as number,
             tipo_captura: 'acervo_geral',
             advogado_id,
             credencial_id: credCompleta.credentialId,
@@ -269,7 +269,7 @@ export async function POST(request: NextRequest) {
           });
 
           await registrarCapturaRawLog({
-            captura_log_id: logId ?? undefined,
+            captura_log_id: (logId ?? -1) as number,
             tipo_captura: 'acervo_geral',
             advogado_id,
             credencial_id: credCompleta.credentialId,
@@ -295,7 +295,7 @@ export async function POST(request: NextRequest) {
           });
 
           await registrarCapturaRawLog({
-            captura_log_id: logId ?? undefined,
+            captura_log_id: (logId ?? -1) as number,
             tipo_captura: 'acervo_geral',
             advogado_id,
             credencial_id: credCompleta.credentialId,

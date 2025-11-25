@@ -35,9 +35,12 @@ export async function getCapturaRawLogsCollection(): Promise<Collection<CapturaR
 
 /**
  * Cria índices nas coleções
- * Deve ser executado na inicialização ou via script de setup
+ * Deve ser executado na inicialização do app ou via script de setup para otimizar queries.
+ * Índices compostos incluem 'criado_em' pois queries temporais são comuns (ex: "últimos 7 dias").
+ * Índice de texto em 'erro' aumenta o tamanho da collection (~10-20%), mas melhora buscas eficientes por termos de erro.
  */
 export async function createMongoIndexes(): Promise<void> {
+  const startTime = performance.now();
   console.log('📊 [MongoDB] Criando índices...');
 
   const timelineCollection = await getTimelineCollection();
@@ -46,9 +49,9 @@ export async function createMongoIndexes(): Promise<void> {
   // Índice único por processoId + trtCodigo + grau
   await timelineCollection.createIndex(
     { processoId: 1, trtCodigo: 1, grau: 1 },
-    { 
+    {
       unique: true,
-      name: 'idx_processo_trt_grau' 
+      name: 'idx_processo_trt_grau'
     }
   );
 
@@ -80,5 +83,37 @@ export async function createMongoIndexes(): Promise<void> {
     { name: 'idx_criado_em_desc' }
   );
 
-  console.log('✅ [MongoDB] Índices criados com sucesso');
+  // Novos índices para otimizar queries comuns em captura_logs_brutos
+  console.log('[MongoDB] Criando índice idx_status_criado_em...');
+  await capturaLogsCollection.createIndex(
+    { status: 1, criado_em: -1 },
+    { name: 'idx_status_criado_em' }
+  );
+
+  console.log('[MongoDB] Criando índice idx_advogado_id_criado_em...');
+  await capturaLogsCollection.createIndex(
+    { advogado_id: 1, criado_em: -1 },
+    { name: 'idx_advogado_id_criado_em' }
+  );
+
+  console.log('[MongoDB] Criando índice idx_credencial_id_criado_em...');
+  await capturaLogsCollection.createIndex(
+    { credencial_id: 1, criado_em: -1 },
+    { name: 'idx_credencial_id_criado_em' }
+  );
+
+  console.log('[MongoDB] Criando índice idx_trt_grau_status_criado_em...');
+  await capturaLogsCollection.createIndex(
+    { trt: 1, grau: 1, status: 1, criado_em: -1 },
+    { name: 'idx_trt_grau_status_criado_em' }
+  );
+
+  console.log('[MongoDB] Criando índice idx_erro_text...');
+  await capturaLogsCollection.createIndex(
+    { erro: 'text' },
+    { name: 'idx_erro_text' }
+  );
+
+  const totalTime = Math.round(performance.now() - startTime);
+  console.log(`✅ [MongoDB] Índices criados com sucesso em ${totalTime}ms`);
 }

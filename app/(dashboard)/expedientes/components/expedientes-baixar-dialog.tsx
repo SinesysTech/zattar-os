@@ -57,6 +57,7 @@ export function ExpedientesBaixarDialog({
     }
 
     // Validação: protocoloId OU justificativa deve estar preenchido
+    // (protocolo aceita letras e números)
     if (modo === 'protocolo' && !protocoloId.trim()) {
       setError('É necessário informar o ID do protocolo');
       return;
@@ -168,15 +169,15 @@ export function ExpedientesBaixarDialog({
               <Label htmlFor="protocolo_id">ID do Protocolo *</Label>
               <Input
                 id="protocolo_id"
-                type="number"
-                placeholder="Ex: 12345"
+                type="text"
+                placeholder="Ex: ABC12345"
                 value={protocoloId}
                 onChange={(e) => setProtocoloId(e.target.value)}
                 disabled={isSubmitting}
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Informe o ID do protocolo da peça protocolada em resposta ao expediente.
+                Informe o ID do protocolo da peça protocolada em resposta ao expediente (pode conter números e letras).
               </p>
             </div>
           )}

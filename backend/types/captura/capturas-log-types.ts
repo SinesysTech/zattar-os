@@ -13,6 +13,27 @@ export type TipoCaptura = 'acervo_geral' | 'arquivados' | 'audiencias' | 'penden
 export type StatusCaptura = 'pending' | 'in_progress' | 'completed' | 'failed';
 
 /**
+ * Resultado específico para captura de partes
+ */
+export interface ResultadoCapturaPartes {
+  total_processos: number; // Quantidade de processos processados
+  total_partes: number; // Total de partes encontradas
+  clientes: number; // Clientes identificados
+  partes_contrarias: number; // Partes contrárias
+  terceiros: number; // Terceiros (peritos, MP, etc.)
+  representantes: number; // Representantes salvos
+  vinculos: number; // Vínculos processo-parte criados
+  erros_count: number; // Quantidade de erros
+  duracao_ms: number; // Tempo de execução
+  /**
+   * Array de IDs dos documentos MongoDB (um por processo)
+   * Contém IDs de documentos na collection `captura_logs_brutos` (MongoDB), um por processo capturado.
+   */
+  mongodb_ids: string[];
+  mongodb_falhas?: number; // (Opcional) Contador de falhas ao salvar no MongoDB
+}
+
+/**
  * Registro de histórico de captura
  */
 export interface CapturaLog {
@@ -21,7 +42,7 @@ export interface CapturaLog {
   advogado_id: number | null;
   credencial_ids: number[];
   status: StatusCaptura;
-  resultado: Record<string, unknown> | null;
+  resultado: ResultadoCapturaPartes | Record<string, unknown> | null;
   erro: string | null;
   iniciado_em: string; // ISO timestamp
   concluido_em: string | null; // ISO timestamp
