@@ -111,6 +111,8 @@ export async function PATCH(
         const updateData: {
             url_audiencia_virtual?: string | null;
             endereco_presencial?: Record<string, string> | null;
+            virtual_status?: boolean;
+            virtual_updated_by?: string;
             updated_at: string;
         } = {
             updated_at: new Date().toISOString(),
@@ -133,6 +135,8 @@ export async function PATCH(
             }
             // Limpar endereço presencial quando for virtual
             updateData.endereco_presencial = null;
+            updateData.virtual_status = true;
+            updateData.virtual_updated_by = 'system';
         } else {
             // tipo === 'presencial'
             if (enderecoPresencial && Object.keys(enderecoPresencial).length > 0) {
@@ -153,6 +157,8 @@ export async function PATCH(
             }
             // Limpar URL virtual quando for presencial
             updateData.url_audiencia_virtual = null;
+            updateData.virtual_status = false;
+            updateData.virtual_updated_by = 'system';
         }
 
         // 5. Atualizar endereço da audiência
