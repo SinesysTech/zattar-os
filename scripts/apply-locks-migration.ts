@@ -69,25 +69,60 @@ async function applyMigration() {
     }
 
     // Se erro, verificar se é por tabela não existir
-    if (error.code === 'PGRST200' || error.message.includes('relation') || error.message.includes('does not exist')) {
-      console.log('📝 Tabela não existe. Precisamos aplicá-la via SQL Editor...');
-      console.log('');
-      console.log('⚠️  A migration precisa ser aplicada através do Supabase Dashboard:');
-      console.log('');
-      console.log('1. Acesse: https://supabase.com/dashboard/project/cxxdivtgeslrujpfpivs/sql/new');
-      console.log('2. Cole o conteúdo do arquivo abaixo:');
+    if (error.code === 'PGRST205' || error.code === 'PGRST200' || error.message.includes('relation') || error.message.includes('does not exist') || error.message.includes('schema cache')) {
+      console.log('📝 Tabela não existe. Aplicando migration...');
       console.log('');
 
       const migrationPath = join(process.cwd(), 'supabase', 'migrations', '20251125000000_create_locks_table.sql');
       const migrationSQL = readFileSync(migrationPath, 'utf8');
 
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log(migrationSQL);
-      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      console.log('');
-      console.log('3. Execute a query');
-      console.log('');
-      console.log('✅ Após executar, rode este script novamente para validar!');
+      // Tentar executar via RPC (SQL direto)
+      console.log('🚀 Executando SQL via Supabase...');
+
+      // Usar a função rpc para executar SQL direto (se disponível)
+      // Como não temos acesso direto ao SQL via Supabase JS client, vamos usar fetch
+      try {
+        const response = await fetch(`${supabaseUrl}/rest/v1/rpc/exec_sql`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': supabaseServiceKey,
+            'Authorization': `Bearer ${supabaseServiceKey}`,
+          },
+          body: JSON.stringify({ query: migrationSQL }),
+        });
+
+        if (response.ok) {
+          console.log('✅ Migration aplicada com sucesso via RPC!');
+
+          // Validar criação
+          const { data: validateData, error: validateError } = await supabase
+            .from('locks')
+            .select('key')
+            .limit(1);
+
+          if (!validateError) {
+            console.log('✅ Tabela locks criada e validada!');
+          } else {
+            throw new Error('Erro ao validar tabela: ' + validateError.message);
+          }
+        } else {
+          throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+        }
+      } catch (rpcError: any) {
+        console.log('⚠️ Não foi possível executar via RPC:', rpcError.message);
+        console.log('');
+        console.log('📋 Por favor, aplique manualmente via Supabase Dashboard:');
+        console.log('');
+        console.log('1. Acesse: https://supabase.com/dashboard/project/cxxdivtgeslrujpfpivs/sql/new');
+        console.log('2. Cole o conteúdo abaixo e execute:');
+        console.log('');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log(migrationSQL);
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('');
+        console.log('✅ Após executar, rode este script novamente para validar!');
+      }
     } else {
       console.error('❌ Erro ao verificar tabela:', error);
     }
