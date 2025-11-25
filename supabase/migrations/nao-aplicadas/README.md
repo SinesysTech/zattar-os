@@ -2,38 +2,33 @@
 
 Esta pasta contém migrations que **AINDA NÃO FORAM APLICADAS** no banco de dados Supabase de produção.
 
-## ⚠️ ATENÇÃO
+## ✅ Status Atual
 
-Estas migrations precisam ser revisadas e aplicadas manualmente:
+**Todas as migrations foram aplicadas com sucesso!**
 
-### 1. `20251125000000_create_locks_table.sql`
-**Descrição**: Cria tabela `locks` para distributed locking
+Não há migrations pendentes no momento.
 
-**Como aplicar**:
-1. Acesse: https://supabase.com/dashboard/project/cxxdivtgeslrujpfpivs/sql/new
-2. Cole o conteúdo do arquivo SQL
-3. Execute a query
-4. Valide com: `npx tsx scripts/apply-locks-migration.ts`
+## Histórico de Aplicações Recentes
 
-### 2. `20251125000003_add_ata_audiencia_fields.sql`
-**Descrição**: Adiciona campos `ata_assinada`, `ata_file_id`, etc. na tabela `audiencias`
+### ✅ 2025-11-25
+- `20251125000000_create_locks_table.sql` - Tabela de distributed locks
+- `20251125000003_add_ata_audiencia_fields.sql` - Campos de ata de audiência
 
-**Como aplicar**:
-1. Acesse: https://supabase.com/dashboard/project/cxxdivtgeslrujpfpivs/sql/new
-2. Cole o conteúdo do arquivo SQL
-3. Execute a query
-4. Valide verificando se a coluna `ata_assinada` existe em `audiencias`
+Aplicadas via MCP tool do Supabase.
 
-## Após Aplicar
+## Processo para Novas Migrations
 
-Depois de aplicar uma migration:
-1. Mova o arquivo para a pasta `aplicadas/`
-2. Atualize este README removendo o item da lista
-3. Execute `npx tsx scripts/check-applied-migrations.ts` para validar
+Quando uma nova migration for criada e ainda não aplicada:
+
+1. Coloque o arquivo `.sql` nesta pasta
+2. Atualize este README com a descrição da migration
+3. Aplique via Supabase Dashboard ou MCP tool
+4. Mova para a pasta `aplicadas/`
+5. Atualize os READMEs
 
 ## Total de Migrations Pendentes
 
-**2 migrations não aplicadas**
+**0 migrations não aplicadas** ✅
 
 ---
 
