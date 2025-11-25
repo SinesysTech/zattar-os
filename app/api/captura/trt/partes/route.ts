@@ -448,8 +448,8 @@ export async function POST(request: NextRequest) {
         // Buscar configuração do tribunal
         const config = await getTribunalConfig(credencial.tribunal, credencial.grau);
 
-        let browser = null;
-        let page = null;
+        let browser: any = null;
+        let page: any = null;
 
         try {
           // ✅ AUTENTICAR UMA VEZ POR GRUPO
