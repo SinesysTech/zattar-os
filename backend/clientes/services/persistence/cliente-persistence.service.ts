@@ -21,6 +21,8 @@ export interface OperacaoClienteResult {
   sucesso: boolean;
   cliente?: Cliente;
   erro?: string;
+  /** Indica se a entidade foi criada (true) ou atualizada (false) - apenas para upsert */
+  criado?: boolean;
 }
 
 /**

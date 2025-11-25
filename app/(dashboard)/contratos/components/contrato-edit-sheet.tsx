@@ -4,12 +4,12 @@
 
 import * as React from 'react';
 import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -117,14 +117,14 @@ export function ContratoEditSheet({
   if (!contrato) return null;
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="max-w-[min(92vw,25rem)] sm:max-w-[min(92vw,33.75rem)] overflow-y-auto p-6">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] max-w-[min(92vw,25rem)] sm:max-w-[min(92vw,33.75rem)] overflow-y-auto p-6">
         <form onSubmit={handleSubmit}>
-          <SheetHeader className="pb-5">
-            <SheetTitle className="text-xl font-semibold">
+          <DialogHeader className="pb-5">
+            <DialogTitle className="text-xl font-semibold">
               Editar Contrato #{contrato.id}
-            </SheetTitle>
-          </SheetHeader>
+            </DialogTitle>
+          </DialogHeader>
 
           <div className="space-y-6">
             {error && (
@@ -289,7 +289,7 @@ export function ContratoEditSheet({
             </div>
           </div>
 
-          <SheetFooter className="mt-6">
+          <DialogFooter className="mt-6">
             <Button
               type="button"
               variant="outline"
@@ -302,9 +302,9 @@ export function ContratoEditSheet({
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Salvar Alterações
             </Button>
-          </SheetFooter>
+          </DialogFooter>
         </form>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }
