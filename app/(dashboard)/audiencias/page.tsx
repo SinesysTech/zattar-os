@@ -207,7 +207,7 @@ function ProcessoColumnHeader({
             </svg>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[220px] p-2" align="start">
+        <PopoverContent className="w-[min(92vw,13.75rem)] p-2" align="start">
           <div className="space-y-1">
             <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
               Ordenar por Tribunal
@@ -322,7 +322,7 @@ function PartesColumnHeader({
             </svg>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-2" align="start">
+        <PopoverContent className="w-[min(92vw,12.5rem)] p-2" align="start">
           <div className="space-y-1">
             <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
               Ordenar por Parte Autora
@@ -414,7 +414,7 @@ function TipoLocalColumnHeader({
             </svg>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[180px] p-2" align="start">
+        <PopoverContent className="w-[min(92vw,11.25rem)] p-2" align="start">
           <div className="space-y-1">
             <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
               Ordenar por Tipo
@@ -722,7 +722,7 @@ function ResponsavelCell({
             <Pencil className="h-3 w-3" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[250px] p-2">
+        <PopoverContent className="w-[min(92vw,15.625rem)] p-2">
           <div className="space-y-1">
             <Button
               variant="ghost"
@@ -802,7 +802,7 @@ function criarColunas(
         const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,15.625rem)]">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -854,7 +854,7 @@ function criarColunas(
         const sala = row.original.sala_audiencia_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1 max-w-[240px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1 max-w-[min(92vw,15rem)]">
             <div className="flex items-start gap-2">
               <span className="text-sm text-left">{tipo}</span>
               {isVirtual && (
