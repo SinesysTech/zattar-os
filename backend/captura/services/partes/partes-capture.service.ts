@@ -482,7 +482,7 @@ async function processarParteComRetry(
   advogado: AdvogadoIdentificacao,
   logger: ReturnType<typeof getLogger>
 ): Promise<{ tipoParte: TipoParteClassificacao; repsCount: number; vinculoCriado: boolean }> {
-  return withRetry(async () => {
+  const processarFn = async () => {
     logger.info({ parteIndex: index, parteName: parte.nome }, 'Processando parte');
 
     // Valida parte
@@ -495,7 +495,14 @@ async function processarParteComRetry(
     const { repsCount, vinculoCriado } = await processarParteComTransacao(parte, tipoParte, processo, index, logger);
 
     return { tipoParte, repsCount, vinculoCriado };
-  }, {
+  };
+
+  // Se retry não estiver habilitado, executa diretamente
+  if (!CAPTURA_CONFIG.ENABLE_RETRY) {
+    return await processarFn();
+  }
+
+  return withRetry(processarFn, {
     maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
     baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
     maxDelay: CAPTURA_CONFIG.RETRY_MAX_DELAY_MS
