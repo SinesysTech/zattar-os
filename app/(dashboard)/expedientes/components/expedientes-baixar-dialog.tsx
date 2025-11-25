@@ -8,13 +8,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 // Textarea será criado como componente simples
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Loader2 } from 'lucide-react';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 
@@ -108,14 +108,14 @@ export function ExpedientesBaixarDialog({
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle>Baixar Expediente</SheetTitle>
-          <SheetDescription>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Baixar Expediente</DialogTitle>
+          <DialogDescription>
             Marque este expediente como respondido. Informe o ID do protocolo ou a justificativa da baixa.
-          </SheetDescription>
-        </SheetHeader>
+          </DialogDescription>
+        </DialogHeader>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
           {/* Informações do expediente */}
@@ -209,7 +209,7 @@ export function ExpedientesBaixarDialog({
             </div>
           )}
 
-          <SheetFooter>
+          <DialogFooter>
             <Button
               type="button"
               variant="outline"
@@ -222,10 +222,10 @@ export function ExpedientesBaixarDialog({
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Baixar Expediente
             </Button>
-          </SheetFooter>
+          </DialogFooter>
         </form>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }
 
