@@ -46,24 +46,26 @@ export function ImportToolbarButton(props: DropdownMenuProps) {
   const { openFilePicker: openMdFilePicker } = useFilePicker({
     accept: ['.md', '.mdx'],
     multiple: false,
-    onFilesSelected: async ({ plainFiles }) => {
-      const text = await plainFiles[0].text();
-
-      const nodes = getFileNodes(text, 'markdown');
-
-      editor.tf.insertNodes(nodes);
+    readFilesContent: false,
+    onFilesSelected: async (data: any) => {
+      if ('plainFiles' in data && data.plainFiles.length) {
+        const text = await data.plainFiles[0].text();
+        const nodes = getFileNodes(text, 'markdown');
+        editor.tf.insertNodes(nodes);
+      }
     },
   });
 
   const { openFilePicker: openHtmlFilePicker } = useFilePicker({
     accept: ['text/html'],
     multiple: false,
-    onFilesSelected: async ({ plainFiles }) => {
-      const text = await plainFiles[0].text();
-
-      const nodes = getFileNodes(text, 'html');
-
-      editor.tf.insertNodes(nodes);
+    readFilesContent: false,
+    onFilesSelected: async (data: any) => {
+      if ('plainFiles' in data && data.plainFiles.length) {
+        const text = await data.plainFiles[0].text();
+        const nodes = getFileNodes(text, 'html');
+        editor.tf.insertNodes(nodes);
+      }
     },
   });
 
