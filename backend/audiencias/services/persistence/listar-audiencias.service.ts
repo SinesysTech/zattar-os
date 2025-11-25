@@ -192,7 +192,8 @@ export async function listarAudiencias(
     // Extrair tipo_descricao e tipo_is_virtual do campo dados_anteriores JSONB
     const dadosAnteriores = row.dados_anteriores as Record<string, unknown> | null;
     const tipoDescricao = dadosAnteriores?.tipo_descricao as string | null;
-    const tipoIsVirtual = dadosAnteriores?.tipo_is_virtual as boolean | undefined;
+    const tipoIsVirtualAnterior = dadosAnteriores?.tipo_is_virtual as boolean | undefined;
+    const virtualStatusRow = (row.virtual_status as boolean | undefined) ?? undefined;
 
     // Adicionar campos do JOIN e dados extraídos ao objeto
     const rowWithJoins = {
@@ -200,7 +201,7 @@ export async function listarAudiencias(
       orgao_julgador_descricao: orgaoJulgador?.descricao ?? null,
       classe_judicial: classeJudicial?.descricao ?? null,
       tipo_descricao: tipoDescricao ?? null,
-      tipo_is_virtual: tipoIsVirtual ?? false,
+      tipo_is_virtual: (virtualStatusRow !== undefined ? virtualStatusRow : ((tipoIsVirtualAnterior ?? false) || ((tipoDescricao ?? '').toLowerCase().includes('videoconferência')) || ((row.url_audiencia_virtual as string | null) !== null))) ? true : false,
       // sala_audiencia_nome já vem diretamente da tabela audiencias
     };
 

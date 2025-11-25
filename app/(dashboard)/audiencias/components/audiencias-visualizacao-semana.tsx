@@ -9,8 +9,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Copy, Pencil } from 'lucide-react';
-import { FileText } from 'lucide-react';
+import { Copy, Pencil, FileText } from 'lucide-react';
 import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';
@@ -373,9 +372,11 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
         const trt = row.original.trt;
         const grau = row.original.grau;
         const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
+        const parteAutora = row.original.polo_ativo_nome || '-';
+        const parteRe = row.original.polo_passivo_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[220px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px]">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -387,6 +388,14 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
+            <div className="flex flex-col gap-1 max-w-full">
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+                {parteAutora}
+              </Badge>
+              <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+                {parteRe}
+              </Badge>
+            </div>
             <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}
             </div>
@@ -395,109 +404,72 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
       },
     },
     {
-      id: 'partes',
+      id: 'detalhes',
       header: () => (
         <div className="relative flex items-center justify-center w-full text-center after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-center">Partes</div>
+          <div className="text-sm font-medium text-center">Detalhes</div>
         </div>
       ),
-      size: 250,
-      meta: { align: 'left' },
-      cell: ({ row }) => {
-        const parteAutora = row.original.polo_ativo_nome || '-';
-        const parteRe = row.original.polo_passivo_nome || '-';
-
-        return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
-            <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
-              {parteAutora}
-            </Badge>
-            <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
-              {parteRe}
-            </Badge>
-          </div>
-        );
-      },
-    },
-    {
-      id: 'tipo_local',
-      header: () => (
-        <div className="relative flex items-center justify-center w-full text-center after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-center">Tipo e Local</div>
-        </div>
-      ),
-      meta: { align: 'left' },
-      cell: ({ row }) => {
-        const tipo = row.original.tipo_descricao || '-';
-        const isVirtual = row.original.tipo_is_virtual;
-        const sala = row.original.sala_audiencia_nome || '-';
-
-        return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1 max-w-[240px]">
-            <div className="flex items-start gap-2">
-              <span className="text-sm text-left">{tipo}</span>
-              {isVirtual && (
-                <Badge variant="outline" className="text-xs">
-                  Virtual
-                </Badge>
-              )}
-            </div>
-            <div className="text-xs text-muted-foreground truncate max-w-full text-left">
-              {sala}
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      id: 'ata_audiencia',
-      header: () => (
-        <div className="relative flex items-center justify-center w-full text-center after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-center">Ata</div>
-        </div>
-      ),
-      size: 80,
       meta: { align: 'left' },
       cell: ({ row }) => {
         const audiencia = row.original;
-        const [open, setOpen] = React.useState(false);
+        const tipo = audiencia.tipo_descricao || '-';
+        const sala = audiencia.sala_audiencia_nome || '-';
+        const [openAta, setOpenAta] = React.useState(false);
+        const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+        const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
+        const logoPath = getLogoPlataforma(plataforma);
         const deriveKeyFromUrl = (u: string | null) => {
           if (!u) return null;
           const idx = u.indexOf('/processos/');
           return idx >= 0 ? u.slice(idx) : null;
         };
         const fileKey = deriveKeyFromUrl(audiencia.url);
-        const canOpen = audiencia.status === 'F' && (fileKey !== null);
+        const canOpenAta = audiencia.status === 'F' && fileKey !== null;
+
         return (
-          <div className="min-h-10 flex items-center justify-center">
-            <button
-              className="h-6 w-6 flex items-center justify-center rounded hover:bg-gray-100"
-              onClick={(e) => { e.stopPropagation(); setOpen(true); }}
-              disabled={!canOpen}
-              title={canOpen ? 'Ver Ata de Audiência' : 'Ata indisponível'}
-            >
-              <FileText className={`h-4 w-4 ${canOpen ? 'text-primary' : 'text-muted-foreground'}`} />
-            </button>
-            <PdfViewerDialog open={open} onOpenChange={setOpen} fileKey={fileKey} documentTitle={`Ata da audiência ${audiencia.numero_processo}`} />
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px]">
+            <div className="text-sm text-left">{tipo}</div>
+            <div className="text-xs text-muted-foreground truncate max-w-full text-left">{sala}</div>
+            <div className="relative group h-full w-full min-h-[60px] flex items-center justify-between p-2">
+              <div className="flex-1 flex items-center justify-start">
+                {audiencia.url_audiencia_virtual ? (
+                  logoPath ? (
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label={`Acessar audiência virtual`} className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                      <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
+                    </a>
+                  ) : (
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-[100px]">
+                      {audiencia.url_audiencia_virtual}
+                    </a>
+                  )
+                ) : audiencia.endereco_presencial ? (
+                  <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+                    {[audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'}
+                  </span>
+                ) : (
+                  <span className="text-sm text-muted-foreground">-</span>
+                )}
+              </div>
+              <div className="flex items-center gap-1">
+                {audiencia.url_audiencia_virtual && (
+                  <Button size="sm" variant="ghost" onClick={async () => { if (!audiencia.url_audiencia_virtual) return; try { await navigator.clipboard.writeText(audiencia.url_audiencia_virtual); } catch {} }} className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm" title="Copiar URL">
+                    <Copy className="h-3 w-3" />
+                  </Button>
+                )}
+                <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm" title="Editar Endereço">
+                  <Pencil className="h-3 w-3" />
+                </Button>
+                <button className="h-6 w-6 flex items-center justify-center rounded hover:bg-gray-100" onClick={(e) => { e.stopPropagation(); setOpenAta(true); }} disabled={!canOpenAta} title={canOpenAta ? 'Ver Ata de Audiência' : 'Ata indisponível'}>
+                  <FileText className={`h-4 w-4 ${canOpenAta ? 'text-primary' : 'text-muted-foreground'}`} />
+                </button>
+                <PdfViewerDialog open={openAta} onOpenChange={setOpenAta} fileKey={fileKey} documentTitle={`Ata da audiência ${audiencia.numero_processo}`} />
+              </div>
+              <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />
+            </div>
           </div>
         );
       },
-    },
-    {
-      accessorKey: 'url_audiencia_virtual',
-      header: () => (
-        <div className="relative flex items-center justify-center w-full text-center after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium text-center">Endereço</div>
-        </div>
-      ),
-      enableSorting: false,
-      size: 180,
-      meta: { align: 'left' },
-      cell: ({ row }) => (
-        <div className="h-full w-full">
-          <EnderecoCell audiencia={row.original} onSuccess={onSuccess} />
-        </div>
-      ),
     },
     {
       accessorKey: 'observacoes',

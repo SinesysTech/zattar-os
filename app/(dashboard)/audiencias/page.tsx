@@ -13,7 +13,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Button } from '@/components/ui/button';
 import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar, CalendarDays, CalendarRange, ChevronLeft, ChevronRight, Copy, List, Pencil, RotateCcw } from 'lucide-react';
+import { Calendar, CalendarDays, CalendarRange, ChevronLeft, ChevronRight, Copy, List, Pencil, RotateCcw, FileText } from 'lucide-react';
+import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import { AudienciasVisualizacaoSemana } from './components/audiencias-visualizacao-semana';
 import { AudienciasVisualizacaoMes } from './components/audiencias-visualizacao-mes';
 import { AudienciasVisualizacaoAno } from './components/audiencias-visualizacao-ano';
@@ -288,186 +289,6 @@ function ProcessoColumnHeader({
 /**
  * Componente de header com popover para ordenação da coluna Partes
  */
-function PartesColumnHeader({
-  onSort,
-}: {
-  onSort: (field: 'polo_ativo_nome' | 'polo_passivo_nome', direction: 'asc' | 'desc') => void;
-}) {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  return (
-    <div className="flex items-center justify-center">
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 data-[state=open]:bg-accent"
-          >
-            <span className="text-sm font-medium">Partes</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="ml-1 h-4 w-4"
-            >
-              <path d="m7 15 5 5 5-5" />
-              <path d="m7 9 5-5 5 5" />
-            </svg>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[min(92vw,12.5rem)] p-2" align="start">
-          <div className="space-y-1">
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
-              Ordenar por Parte Autora
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('polo_ativo_nome', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('polo_ativo_nome', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
-            </Button>
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
-              Ordenar por Parte Ré
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('polo_passivo_nome', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('polo_passivo_nome', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
-            </Button>
-          </div>
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-}
-
-/**
- * Componente de header com popover para ordenação da coluna Tipo e Local
- */
-function TipoLocalColumnHeader({
-  onSort,
-}: {
-  onSort: (field: 'tipo_descricao' | 'sala_audiencia_nome', direction: 'asc' | 'desc') => void;
-}) {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  return (
-    <div className="flex items-center justify-center">
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 data-[state=open]:bg-accent"
-          >
-            <span className="text-sm font-medium text-center">Tipo e Local</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="ml-1 h-4 w-4"
-            >
-              <path d="m7 15 5 5 5-5" />
-              <path d="m7 9 5-5 5 5" />
-            </svg>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[min(92vw,11.25rem)] p-2" align="start">
-          <div className="space-y-1">
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
-              Ordenar por Tipo
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('tipo_descricao', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('tipo_descricao', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
-            </Button>
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
-              Ordenar por Local
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('sala_audiencia_nome', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('sala_audiencia_nome', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
-            </Button>
-          </div>
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-}
 
 /**
  * Componente de header com ordenação simples para coluna Responsável
@@ -757,8 +578,6 @@ function criarColunas(
   onSuccess: () => void,
   usuarios: Array<{ id: number; nomeExibicao: string }>,
   onProcessoSort: (field: 'trt' | 'grau' | 'orgao_julgador_descricao', direction: 'asc' | 'desc') => void,
-  onPartesSort: (field: 'polo_ativo_nome' | 'polo_passivo_nome', direction: 'asc' | 'desc') => void,
-  onTipoLocalSort: (field: 'tipo_descricao' | 'sala_audiencia_nome', direction: 'asc' | 'desc') => void,
   onResponsavelSort: (direction: 'asc' | 'desc') => void
 ): ColumnDef<Audiencia>[] {
   return [
@@ -792,7 +611,7 @@ function criarColunas(
       id: 'processo',
       header: () => <ProcessoColumnHeader onSort={onProcessoSort} />,
       enableSorting: false,
-      size: 250,
+      size: 300,
       meta: { align: 'left' },
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
@@ -800,9 +619,11 @@ function criarColunas(
         const trt = row.original.trt;
         const grau = row.original.grau;
         const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
+        const parteAutora = row.original.polo_ativo_nome || '-';
+        const parteRe = row.original.polo_passivo_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,15.625rem)]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,18.75rem)]">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -814,6 +635,14 @@ function criarColunas(
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
+            <div className="flex flex-col gap-1 max-w-full">
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+                {parteAutora}
+              </Badge>
+              <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+                {parteRe}
+              </Badge>
+            </div>
             <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}
             </div>
@@ -822,69 +651,74 @@ function criarColunas(
       },
     },
     {
-      id: 'partes',
-      header: () => <PartesColumnHeader onSort={onPartesSort} />,
+      id: 'detalhes',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Detalhes</div>
+        </div>
+      ),
       enableSorting: false,
-      size: 250,
-      meta: { align: 'left' },
-      cell: ({ row }) => {
-        const parteAutora = row.original.polo_ativo_nome || '-';
-        const parteRe = row.original.polo_passivo_nome || '-';
-
-        return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
-            <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
-              {parteAutora}
-            </Badge>
-            <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
-              {parteRe}
-            </Badge>
-          </div>
-        );
-      },
-    },
-    {
-      id: 'tipo_local',
-      header: () => <TipoLocalColumnHeader onSort={onTipoLocalSort} />,
-      enableSorting: false,
+      size: 260,
       meta: { align: 'left' },
       cell: ({ row }) => {
         const tipo = row.original.tipo_descricao || '-';
-        const isVirtual = row.original.tipo_is_virtual;
         const sala = row.original.sala_audiencia_nome || '-';
+        const audiencia = row.original;
+        const [openAta, setOpenAta] = React.useState(false);
+        const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+        const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
+        const logoPath = getLogoPlataforma(plataforma);
+        const deriveKeyFromUrl = (u: string | null) => {
+          if (!u) return null;
+          const idx = u.indexOf('/processos/');
+          return idx >= 0 ? u.slice(idx) : null;
+        };
+        const fileKey = deriveKeyFromUrl(audiencia.url);
+        const canOpenAta = audiencia.status === 'F' && fileKey !== null;
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1 max-w-[min(92vw,15rem)]">
-            <div className="flex items-start gap-2">
-              <span className="text-sm text-left">{tipo}</span>
-              {isVirtual && (
-                <Badge variant="outline" className="text-xs">
-                  Virtual
-                </Badge>
-              )}
-            </div>
-            <div className="text-xs text-muted-foreground truncate max-w-full text-left">
-              {sala}
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5">
+            <div className="text-sm text-left">{tipo}</div>
+            <div className="text-xs text-muted-foreground truncate max-w-full text-left">{sala}</div>
+            <div className="relative group h-full w-full min-h-[60px] flex items-center justify-between p-2">
+              <div className="flex-1 flex items-center justify-start">
+                {audiencia.url_audiencia_virtual ? (
+                  logoPath ? (
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label={`Acessar audiência virtual`} className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                      <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
+                    </a>
+                  ) : (
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-[100px]">
+                      {audiencia.url_audiencia_virtual}
+                    </a>
+                  )
+                ) : audiencia.endereco_presencial ? (
+                  <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+                    {[audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'}
+                  </span>
+                ) : (
+                  <span className="text-sm text-muted-foreground">-</span>
+                )}
+              </div>
+              <div className="flex items-center gap-1">
+                {audiencia.url_audiencia_virtual && (
+                  <Button size="sm" variant="ghost" onClick={async () => { if (!audiencia.url_audiencia_virtual) return; try { await navigator.clipboard.writeText(audiencia.url_audiencia_virtual); } catch {} }} className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm" title="Copiar URL">
+                    <Copy className="h-3 w-3" />
+                  </Button>
+                )}
+                <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm" title="Editar Endereço">
+                  <Pencil className="h-3 w-3" />
+                </Button>
+                <button className="h-6 w-6 flex items-center justify-center rounded hover:bg-gray-100" onClick={(e) => { e.stopPropagation(); setOpenAta(true); }} disabled={!canOpenAta} title={canOpenAta ? 'Ver Ata de Audiência' : 'Ata indisponível'}>
+                  <FileText className={`h-4 w-4 ${canOpenAta ? 'text-primary' : 'text-muted-foreground'}`} />
+                </button>
+                <PdfViewerDialog open={openAta} onOpenChange={setOpenAta} fileKey={fileKey} documentTitle={`Ata da audiência ${audiencia.numero_processo}`} />
+              </div>
+              <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />
             </div>
           </div>
         );
       },
-    },
-    {
-      accessorKey: 'url_audiencia_virtual', // Mantém o accessorKey para compatibilidade
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Endereço</div>
-        </div>
-      ),
-      enableSorting: false,
-      size: 180,
-      meta: { align: 'left' },
-      cell: ({ row }) => (
-        <div className="h-full w-full">
-          <EnderecoCell audiencia={row.original} onSuccess={onSuccess} />
-        </div>
-      ),
     },
     {
       accessorKey: 'observacoes',
@@ -1016,19 +850,7 @@ export default function AudienciasPage() {
     [handleSortingChange]
   );
 
-  const handlePartesSort = React.useCallback(
-    (field: 'polo_ativo_nome' | 'polo_passivo_nome', direction: 'asc' | 'desc') => {
-      handleSortingChange(field, direction);
-    },
-    [handleSortingChange]
-  );
-
-  const handleTipoLocalSort = React.useCallback(
-    (field: 'tipo_descricao' | 'sala_audiencia_nome', direction: 'asc' | 'desc') => {
-      handleSortingChange(field, direction);
-    },
-    [handleSortingChange]
-  );
+  
 
   const handleResponsavelSort = React.useCallback(
     (direction: 'asc' | 'desc') => {
@@ -1044,11 +866,9 @@ export default function AudienciasPage() {
         handleSuccess,
         usuarios,
         handleProcessoSort,
-        handlePartesSort,
-        handleTipoLocalSort,
         handleResponsavelSort
       ),
-    [handleSuccess, usuarios, handleProcessoSort, handlePartesSort, handleTipoLocalSort, handleResponsavelSort]
+    [handleSuccess, usuarios, handleProcessoSort, handleResponsavelSort]
   );
 
   // Gerar opções de filtro

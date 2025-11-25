@@ -56,6 +56,7 @@ interface TableToolbarProps {
   onNewClick?: () => void
   newButtonTooltip?: string
   className?: string
+  showFilterButton?: boolean
 }
 
 export function TableToolbar({
@@ -71,6 +72,7 @@ export function TableToolbar({
   onNewClick,
   newButtonTooltip = "Novo",
   className,
+  showFilterButton = true,
 }: TableToolbarProps) {
   const [filterOpen, setFilterOpen] = React.useState(false)
   const [filterSearch, setFilterSearch] = React.useState("")
@@ -125,6 +127,7 @@ export function TableToolbar({
         )}
       </InputGroup>
       <ButtonGroupSeparator />
+      {showFilterButton && (
       <Popover open={filterOpen} onOpenChange={setFilterOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" size="icon" aria-label="Filtros" className="relative bg-black hover:bg-black/90 text-white border-black">
@@ -279,6 +282,7 @@ export function TableToolbar({
           )}
         </PopoverContent>
       </Popover>
+      )}
       {extraButtons && (
         <>
           <ButtonGroupSeparator />
