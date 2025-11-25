@@ -37,7 +37,7 @@ export function UsuarioViewSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto p-6">
+      <SheetContent className="w-[min(92vw,25rem)] sm:w-[min(92vw,33.75rem)] overflow-y-auto p-6">
         <SheetHeader className="pb-5">
           <SheetTitle className="text-xl font-semibold flex items-center gap-2">
             {formatarNomeExibicao(usuario.nomeExibicao)}

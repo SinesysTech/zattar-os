@@ -30,7 +30,7 @@ export interface ResultadoCapturaPartes {
    * Contém IDs de documentos na collection `captura_logs_brutos` (MongoDB), um por processo capturado.
    */
   mongodb_ids: string[];
-  mongodb_falhas?: number; // (Opcional) Contador de falhas ao salvar no MongoDB
+  mongodb_falhas: number; // Contador de falhas ao salvar no MongoDB
 }
 
 /**
