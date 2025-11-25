@@ -89,6 +89,9 @@ import type { UsuarioDados } from '@/backend/usuarios/services/persistence/usuar
  *                 type: object
  *               ativo:
  *                 type: boolean
+ *               isSuperAdmin:
+ *                 type: boolean
+ *                 description: Indica se o usuário é super admin (apenas super admins podem alterar)
  *     responses:
  *       200:
  *         description: Usuário atualizado com sucesso
@@ -173,7 +176,30 @@ export async function PATCH(
     const body = await request.json();
     const dadosAtualizacao = body as Partial<UsuarioDados>;
 
-    // 4. Detectar desativação: ativo mudando de true para false
+    // 4. Validações de segurança para Super Admin
+    if ('isSuperAdmin' in dadosAtualizacao) {
+      // 4.1. Buscar usuário logado para verificar se é super admin
+      const usuarioLogado = await obterUsuarioPorId(authOrError.usuarioId!);
+
+      if (!usuarioLogado?.isSuperAdmin) {
+        return NextResponse.json(
+          { error: 'Apenas Super Admins podem alterar o status de Super Admin' },
+          { status: 403 }
+        );
+      }
+
+      // 4.2. Impedir que usuário remova seu próprio status de super admin
+      if (usuarioId === authOrError.usuarioId && dadosAtualizacao.isSuperAdmin === false) {
+        return NextResponse.json(
+          { error: 'Você não pode remover seu próprio status de Super Admin' },
+          { status: 403 }
+        );
+      }
+
+      console.log(`[API] Super Admin ${usuarioLogado.nomeExibicao} alterando status de super admin do usuário ${usuarioId}`);
+    }
+
+    // 5. Detectar desativação: ativo mudando de true para false
     if (dadosAtualizacao.ativo === false) {
       const usuarioAtual = await obterUsuarioPorId(usuarioId);
 
@@ -212,7 +238,7 @@ export async function PATCH(
       }
     }
 
-    // 5. Fluxo normal para outras atualizações (incluindo reativação)
+    // 6. Fluxo normal para outras atualizações (incluindo reativação)
     const resultado = await atualizarUsuario(usuarioId, dadosAtualizacao);
 
     if (!resultado.sucesso) {

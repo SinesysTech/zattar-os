@@ -321,11 +321,29 @@ export async function listarEnderecos(
     if (params.entidade_id) {
       query = query.eq('entidade_id', params.entidade_id);
     }
+    if (params.trt) {
+      query = query.eq('trt', params.trt);
+    }
+    if (params.grau) {
+      query = query.eq('grau', params.grau);
+    }
+    if (params.numero_processo) {
+      query = query.eq('numero_processo', params.numero_processo);
+    }
     if (params.municipio) {
       query = query.ilike('municipio', `%${params.municipio}%`);
     }
     if (params.estado_sigla) {
       query = query.eq('estado_sigla', params.estado_sigla);
+    }
+    if (params.estado) {
+      query = query.ilike('estado', `%${params.estado}%`);
+    }
+    if (params.pais_codigo) {
+      query = query.eq('pais_codigo', params.pais_codigo);
+    }
+    if (params.pais) {
+      query = query.ilike('pais', `%${params.pais}%`);
     }
     if (params.cep) {
       query = query.eq('cep', params.cep);

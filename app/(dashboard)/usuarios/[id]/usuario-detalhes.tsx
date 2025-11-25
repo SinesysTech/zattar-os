@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 // import { useToast } from '@/hooks/use-toast'; // TODO: Implementar hook de toast
 
@@ -140,9 +141,13 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(null);
+  const [isSuperAdminLocal, setIsSuperAdminLocal] = useState(false);
+  const [isSavingSuperAdmin, setIsSavingSuperAdmin] = useState(false);
 
   useEffect(() => {
     fetchUsuario();
+    fetchUsuarioLogado();
   }, [id]);
 
   const fetchUsuario = async () => {
@@ -159,6 +164,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
       }
 
       setUsuario(usuarioResult.data);
+      setIsSuperAdminLocal(usuarioResult.data.isSuperAdmin);
 
       // Buscar permissões
       const permissoesResponse = await fetch(`/api/permissoes/usuarios/${id}`);
@@ -183,6 +189,61 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchUsuarioLogado = async () => {
+    try {
+      // Buscar dados do usuário logado através do endpoint /api/perfil
+      const response = await fetch('/api/perfil');
+      if (response.ok) {
+        const result = await response.json();
+        setUsuarioLogado(result.data);
+      }
+    } catch (err) {
+      console.error('Erro ao buscar usuário logado:', err);
+    }
+  };
+
+  const salvarSuperAdmin = async (novoValor: boolean) => {
+    if (!usuario || !usuarioLogado) return;
+
+    // Validação: usuário não pode remover seu próprio status
+    if (usuario.id === usuarioLogado.id && !novoValor) {
+      alert('Você não pode remover seu próprio status de Super Admin');
+      return;
+    }
+
+    try {
+      setIsSavingSuperAdmin(true);
+
+      const response = await fetch(`/api/usuarios/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isSuperAdmin: novoValor }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erro ao alterar status de Super Admin');
+      }
+
+      // Atualizar estado local
+      setIsSuperAdminLocal(novoValor);
+      setUsuario({ ...usuario, isSuperAdmin: novoValor });
+
+      // Recarregar permissões se o status mudou
+      await fetchUsuario();
+
+      console.log(`Status de Super Admin alterado para: ${novoValor}`);
+    } catch (err) {
+      console.error('Erro ao salvar Super Admin:', err);
+      alert(err instanceof Error ? err.message : 'Erro ao salvar');
+      // Reverter mudança local
+      setIsSuperAdminLocal(usuario.isSuperAdmin);
+    } finally {
+      setIsSavingSuperAdmin(false);
     }
   };
 
@@ -448,6 +509,42 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Configurações de Segurança - Visível apenas para Super Admins */}
+      {usuarioLogado?.isSuperAdmin && (
+        <>
+          <Separator />
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Shield className="h-4 w-4" />
+                Configurações de Segurança
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="space-y-0.5">
+                  <div className="text-sm font-medium">Super Administrador</div>
+                  <div className="text-sm text-muted-foreground">
+                    Super Admins possuem acesso total ao sistema e bypassam todas as permissões.
+                  </div>
+                  {usuario.id === usuarioLogado.id && (
+                    <div className="text-xs text-amber-600 dark:text-amber-500 mt-2">
+                      ⚠️ Você não pode remover seu próprio status de Super Admin
+                    </div>
+                  )}
+                </div>
+                <Switch
+                  checked={isSuperAdminLocal}
+                  onCheckedChange={salvarSuperAdmin}
+                  disabled={isSavingSuperAdmin || usuario.id === usuarioLogado.id}
+                  aria-label="Marcar como Super Administrador"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </>
+      )}
 
       <Separator />
 

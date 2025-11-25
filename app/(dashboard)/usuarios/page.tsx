@@ -150,6 +150,27 @@ function criarColunas(
       },
     },
     {
+      accessorKey: 'isSuperAdmin',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Tipo</div>
+        </div>
+      ),
+      enableSorting: true,
+      size: 120,
+      cell: ({ row }) => {
+        const isSuperAdmin = row.getValue('isSuperAdmin') as boolean;
+        if (!isSuperAdmin) return null;
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            <Badge tone="danger" variant="soft">
+              Super Admin
+            </Badge>
+          </div>
+        );
+      },
+    },
+    {
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-center">
