@@ -467,7 +467,7 @@ function ResponsavelCell({
             {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Pencil className="h-3 w-3" />}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[250px] p-2">
+        <PopoverContent className="w-[min(92vw,15.625rem)] p-2">
           <div className="space-y-1">
             <Button
               variant="ghost"
@@ -627,7 +627,7 @@ function criarColunas(
         };
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,23.75rem)]">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -690,7 +690,7 @@ function criarColunas(
         const parteAutora = row.original.nome_parte_autora || '-';
         const parteRe = row.original.nome_parte_re || '-';
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,15.625rem)]">
             <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
               {parteAutora}
             </Badge>
