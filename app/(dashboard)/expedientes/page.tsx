@@ -21,6 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import {
   Popover,
   PopoverContent,
@@ -71,6 +74,9 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
+import { DatePicker } from '@/components/ui/date-picker';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
 
 /**
  * Formata data ISO para formato brasileiro (DD/MM/YYYY)
@@ -313,14 +319,14 @@ function TipoDescricaoCell({
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Descrição / Arquivos</label>
-              <Textarea
-                value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
-                placeholder="Digite a descrição ou referência aos arquivos..."
-                disabled={isLoading}
-                rows={5}
-                className="resize-none"
-              />
+  <Textarea
+    value={descricao}
+    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescricao(e.target.value)}
+    placeholder="Digite a descrição ou referência aos arquivos..."
+    disabled={isLoading}
+    rows={5}
+    className="resize-none"
+  />
             </div>
           </div>
           <DialogFooter>
@@ -1156,6 +1162,8 @@ export default function ExpedientesPage() {
   const [isSearching, setIsSearching] = React.useState(false);
   const [currentUserId, setCurrentUserId] = React.useState<number | null>(null);
   const [isSuperAdmin, setIsSuperAdmin] = React.useState(false);
+  const [countVencidos, setCountVencidos] = React.useState<number>(0);
+  const [countSemResponsavel, setCountSemResponsavel] = React.useState<number>(0);
 
   // Obter informações do usuário atual para filtro contextual
   React.useEffect(() => {
@@ -1208,6 +1216,44 @@ export default function ExpedientesPage() {
   );
 
   const { expedientes, paginacao, isLoading, error, refetch } = usePendentes(params);
+
+  React.useEffect(() => {
+    const sp = new URLSearchParams();
+    Object.entries(params).forEach(([k, v]) => {
+      if (v === undefined || v === null) return;
+      if (k === 'pagina' || k === 'limite' || k === 'ordenar_por' || k === 'ordem') return;
+      sp.set(k, String(v));
+    });
+    sp.set('agrupar_por', 'prazo_vencido');
+    sp.set('incluir_contagem', 'true');
+    fetch(`/api/pendentes-manifestacao?${sp.toString()}`)
+      .then(r => r.ok ? r.json() : Promise.reject(r))
+      .then((data) => {
+        const grupos = data?.data?.agrupamentos || [];
+        const found = grupos.find((g: any) => g.grupo === 'vencido' || g.grupo === true || g.grupo === 'true' || g.grupo === 1);
+        setCountVencidos(found?.quantidade || 0);
+      })
+      .catch(() => setCountVencidos(0));
+  }, [params]);
+
+  React.useEffect(() => {
+    const sp = new URLSearchParams();
+    Object.entries(params).forEach(([k, v]) => {
+      if (v === undefined || v === null) return;
+      if (k === 'pagina' || k === 'limite' || k === 'ordenar_por' || k === 'ordem') return;
+      sp.set(k, String(v));
+    });
+    sp.set('agrupar_por', 'responsavel_id');
+    sp.set('incluir_contagem', 'true');
+    fetch(`/api/pendentes-manifestacao?${sp.toString()}`)
+      .then(r => r.ok ? r.json() : Promise.reject(r))
+      .then((data) => {
+        const grupos = data?.data?.agrupamentos || [];
+        const found = grupos.find((g: any) => g.grupo === null || g.grupo === 'null' || g.grupo === 'NULL' || g.grupo === '');
+        setCountSemResponsavel(found?.quantidade || 0);
+      })
+      .catch(() => setCountSemResponsavel(0));
+  }, [params]);
 
   // Buscar usuários uma única vez para compartilhar entre todas as células
   const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 100 });
@@ -1422,24 +1468,25 @@ export default function ExpedientesPage() {
   }, [buscaDebounced]);
 
   return (
-    <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
+    <Tabs value={visualizacao} onValueChange={(value: string) => setVisualizacao(value as typeof visualizacao)}>
       <div className="space-y-4">
         {/* Barra de busca, filtros, tabs e controles de navegação - tudo na mesma linha */}
         <div className="flex items-center gap-4 pb-6">
           <TableToolbar
             searchValue={busca}
-            onSearchChange={(value) => {
+            onSearchChange={(value: string) => {
               setBusca(value);
               setPagina(0);
             }}
             isSearching={isSearching}
             searchPlaceholder="Buscar expedientes..."
-            filterOptions={filterOptions}
-            filterGroups={filterGroups}
-            selectedFilters={selectedFilterIds}
-            onFiltersChange={handleFilterIdsChange}
+            filterOptions={[]}
+            filterGroups={[]}
+            selectedFilters={[]}
+            onFiltersChange={() => {}}
             onNewClick={() => setNovoExpedienteOpen(true)}
             newButtonTooltip="Novo expediente manual"
+            showFilterButton={false}
           />
 
           {/* Tabs de visualização */}
@@ -1523,6 +1570,314 @@ export default function ExpedientesPage() {
           )}
         </div>
 
+        {/* Linha inferior de filtros visíveis */}
+        <div className="flex flex-wrap items-center gap-2 pb-4">
+          <ButtonGroup>
+            <Button
+              variant={statusPrazo === 'vencido' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => {
+                setStatusPrazo('vencido');
+                setPagina(0);
+              }}
+            >
+              Prazo Vencido
+              {<Badge className="ml-2" variant="secondary">{countVencidos}</Badge>}
+            </Button>
+            <Button
+              variant={filtros.sem_responsavel ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => {
+                const nf = { ...filtros } as ExpedientesFilters;
+                nf.sem_responsavel = true;
+                delete (nf as any).responsavel_id;
+                setFiltros(nf);
+                setPagina(0);
+              }}
+            >
+              Sem Responsável
+              {<Badge className="ml-2" variant="secondary">{countSemResponsavel}</Badge>}
+            </Button>
+          </ButtonGroup>
+
+          <Select value={filtros.trt || 'all'} onValueChange={(v: string) => {
+            const nf = { ...filtros } as ExpedientesFilters;
+            nf.trt = v === 'all' ? undefined : v;
+            setFiltros(nf);
+            setPagina(0);
+          }}>
+            <SelectTrigger className="w-[140px]"><SelectValue placeholder="TRT" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="TRT1">TRT1</SelectItem>
+              <SelectItem value="TRT2">TRT2</SelectItem>
+              <SelectItem value="TRT3">TRT3</SelectItem>
+              <SelectItem value="TRT4">TRT4</SelectItem>
+              <SelectItem value="TRT5">TRT5</SelectItem>
+              <SelectItem value="TRT6">TRT6</SelectItem>
+              <SelectItem value="TRT7">TRT7</SelectItem>
+              <SelectItem value="TRT8">TRT8</SelectItem>
+              <SelectItem value="TRT9">TRT9</SelectItem>
+              <SelectItem value="TRT10">TRT10</SelectItem>
+              <SelectItem value="TRT11">TRT11</SelectItem>
+              <SelectItem value="TRT12">TRT12</SelectItem>
+              <SelectItem value="TRT13">TRT13</SelectItem>
+              <SelectItem value="TRT14">TRT14</SelectItem>
+              <SelectItem value="TRT15">TRT15</SelectItem>
+              <SelectItem value="TRT16">TRT16</SelectItem>
+              <SelectItem value="TRT17">TRT17</SelectItem>
+              <SelectItem value="TRT18">TRT18</SelectItem>
+              <SelectItem value="TRT19">TRT19</SelectItem>
+              <SelectItem value="TRT20">TRT20</SelectItem>
+              <SelectItem value="TRT21">TRT21</SelectItem>
+              <SelectItem value="TRT22">TRT22</SelectItem>
+              <SelectItem value="TRT23">TRT23</SelectItem>
+              <SelectItem value="TRT24">TRT24</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={filtros.grau || 'all'} onValueChange={(v: string) => {
+            const nf = { ...filtros } as ExpedientesFilters;
+            nf.grau = v === 'all' ? undefined : (v as any);
+            setFiltros(nf);
+            setPagina(0);
+          }}>
+            <SelectTrigger className="w-[160px]"><SelectValue placeholder="Grau" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="primeiro_grau">Primeiro Grau</SelectItem>
+              <SelectItem value="segundo_grau">Segundo Grau</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={statusBaixa === 'baixado' ? 'true' : statusBaixa === 'pendente' ? 'false' : 'all'} onValueChange={(v: string) => {
+            if (v === 'all') setStatusBaixa('todos');
+            else setStatusBaixa(v === 'true' ? 'baixado' : 'pendente');
+            setPagina(0);
+          }}>
+            <SelectTrigger className="w-[180px]"><SelectValue placeholder="Status Baixa" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="false">Pendentes</SelectItem>
+              <SelectItem value="true">Baixados</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={statusPrazo === 'vencido' ? 'true' : statusPrazo === 'no_prazo' ? 'false' : 'all'} onValueChange={(v: string) => {
+            if (v === 'all') setStatusPrazo('todos');
+            else setStatusPrazo(v === 'true' ? 'vencido' : 'no_prazo');
+            setPagina(0);
+          }}>
+            <SelectTrigger className="w-[180px]"><SelectValue placeholder="Status Prazo" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="false">No Prazo</SelectItem>
+              <SelectItem value="true">Vencidos</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={
+            filtros.responsavel_id === 'null' ? 'null' : filtros.responsavel_id ? String(filtros.responsavel_id) : 'all'
+          } onValueChange={(v: string) => {
+            const nf = { ...filtros } as ExpedientesFilters;
+            if (v === 'all') nf.responsavel_id = undefined;
+            else if (v === 'null') {
+              nf.responsavel_id = 'null';
+              nf.sem_responsavel = undefined;
+            } else {
+              const num = parseInt(v, 10);
+              if (!isNaN(num)) {
+                nf.responsavel_id = num;
+                nf.sem_responsavel = undefined;
+              }
+            }
+            setFiltros(nf);
+            setPagina(0);
+          }}>
+            <SelectTrigger className="w-[220px]"><SelectValue placeholder="Responsável" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="null">Sem responsável</SelectItem>
+              {usuariosLista.map((u: Usuario) => (
+                <SelectItem key={u.id} value={String(u.id)}>{u.nomeExibicao}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={filtros.tipo_expediente_id ? String(filtros.tipo_expediente_id) : 'all'} onValueChange={(v: string) => {
+            const nf = { ...filtros } as ExpedientesFilters;
+            if (v === 'all') nf.tipo_expediente_id = undefined;
+            else {
+              const num = parseInt(v, 10);
+              if (!isNaN(num)) nf.tipo_expediente_id = num;
+            }
+            setFiltros(nf);
+            setPagina(0);
+          }}>
+            <SelectTrigger className="w-[220px]"><SelectValue placeholder="Tipo de Expediente" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos</SelectItem>
+              {tiposExpedientes.map((t: TipoExpediente) => (
+                <SelectItem key={t.id} value={String(t.id)}>{t.tipo_expediente}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <div className="flex items-center gap-2">
+            <Checkbox id="sem_tipo" checked={!!filtros.sem_tipo} onCheckedChange={(c: boolean | 'indeterminate') => {
+              const nf = { ...filtros } as ExpedientesFilters;
+              nf.sem_tipo = c === true ? true : undefined;
+              setFiltros(nf);
+              setPagina(0);
+            }} />
+            <Label htmlFor="sem_tipo">Sem Tipo</Label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Checkbox id="segredo_justica" checked={!!filtros.segredo_justica} onCheckedChange={(c: boolean | 'indeterminate') => {
+              const nf = { ...filtros } as ExpedientesFilters;
+              nf.segredo_justica = c === true ? true : undefined;
+              setFiltros(nf);
+              setPagina(0);
+            }} />
+            <Label htmlFor="segredo_justica">Segredo de Justiça</Label>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Checkbox id="juizo_digital" checked={!!filtros.juizo_digital} onCheckedChange={(c: boolean | 'indeterminate') => {
+              const nf = { ...filtros } as ExpedientesFilters;
+              nf.juizo_digital = c === true ? true : undefined;
+              setFiltros(nf);
+              setPagina(0);
+            }} />
+            <Label htmlFor="juizo_digital">Juízo Digital</Label>
+          </div>
+
+          <Input
+            placeholder="Classe Judicial"
+            value={filtros.classe_judicial || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const nf = { ...filtros } as ExpedientesFilters;
+              nf.classe_judicial = e.target.value || undefined;
+              setFiltros(nf);
+              setPagina(0);
+            }}
+            className="w-[200px]"
+          />
+
+          <Input
+            placeholder="Status do Processo"
+            value={filtros.codigo_status_processo || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const nf = { ...filtros } as ExpedientesFilters;
+              nf.codigo_status_processo = e.target.value || undefined;
+              setFiltros(nf);
+              setPagina(0);
+            }}
+            className="w-[220px]"
+          />
+
+          <DateRangePicker
+            value={
+              filtros.data_prazo_legal_inicio || filtros.data_prazo_legal_fim
+                ? {
+                    from: filtros.data_prazo_legal_inicio ? new Date(filtros.data_prazo_legal_inicio) : undefined,
+                    to: filtros.data_prazo_legal_fim ? new Date(filtros.data_prazo_legal_fim) : undefined,
+                  }
+                : undefined
+            }
+            onChange={(range: { from?: Date; to?: Date } | undefined) => {
+              const nf = { ...filtros } as ExpedientesFilters;
+              nf.data_prazo_legal_inicio = range?.from ? range.from.toISOString().slice(0, 10) : undefined;
+              nf.data_prazo_legal_fim = range?.to ? range.to.toISOString().slice(0, 10) : undefined;
+              setFiltros(nf);
+              setPagina(0);
+            }}
+            placeholder="Prazo Legal"
+            allowSingle
+          />
+
+          <DateRangePicker
+            value={
+              filtros.data_ciencia_inicio || filtros.data_ciencia_fim
+                ? {
+                    from: filtros.data_ciencia_inicio ? new Date(filtros.data_ciencia_inicio) : undefined,
+                    to: filtros.data_ciencia_fim ? new Date(filtros.data_ciencia_fim) : undefined,
+                  }
+                : undefined
+            }
+            onChange={(range: { from?: Date; to?: Date } | undefined) => {
+              const nf = { ...filtros } as ExpedientesFilters;
+              nf.data_ciencia_inicio = range?.from ? range.from.toISOString().slice(0, 10) : undefined;
+              nf.data_ciencia_fim = range?.to ? range.to.toISOString().slice(0, 10) : undefined;
+              setFiltros(nf);
+              setPagina(0);
+            }}
+            placeholder="Data Ciência"
+            allowSingle
+          />
+
+          <DateRangePicker
+            value={
+              filtros.data_criacao_expediente_inicio || filtros.data_criacao_expediente_fim
+                ? {
+                    from: filtros.data_criacao_expediente_inicio ? new Date(filtros.data_criacao_expediente_inicio) : undefined,
+                    to: filtros.data_criacao_expediente_fim ? new Date(filtros.data_criacao_expediente_fim) : undefined,
+                  }
+                : undefined
+            }
+            onChange={(range: { from?: Date; to?: Date } | undefined) => {
+              const nf = { ...filtros } as ExpedientesFilters;
+              nf.data_criacao_expediente_inicio = range?.from ? range.from.toISOString().slice(0, 10) : undefined;
+              nf.data_criacao_expediente_fim = range?.to ? range.to.toISOString().slice(0, 10) : undefined;
+              setFiltros(nf);
+              setPagina(0);
+            }}
+            placeholder="Criação Expediente"
+            allowSingle
+          />
+
+          <DateRangePicker
+            value={
+              filtros.data_autuacao_inicio || filtros.data_autuacao_fim
+                ? {
+                    from: filtros.data_autuacao_inicio ? new Date(filtros.data_autuacao_inicio) : undefined,
+                    to: filtros.data_autuacao_fim ? new Date(filtros.data_autuacao_fim) : undefined,
+                  }
+                : undefined
+            }
+            onChange={(range: { from?: Date; to?: Date } | undefined) => {
+              const nf = { ...filtros } as ExpedientesFilters;
+              nf.data_autuacao_inicio = range?.from ? range.from.toISOString().slice(0, 10) : undefined;
+              nf.data_autuacao_fim = range?.to ? range.to.toISOString().slice(0, 10) : undefined;
+              setFiltros(nf);
+              setPagina(0);
+            }}
+            placeholder="Data Autuação"
+            allowSingle
+          />
+
+          <DateRangePicker
+            value={
+              filtros.data_arquivamento_inicio || filtros.data_arquivamento_fim
+                ? {
+                    from: filtros.data_arquivamento_inicio ? new Date(filtros.data_arquivamento_inicio) : undefined,
+                    to: filtros.data_arquivamento_fim ? new Date(filtros.data_arquivamento_fim) : undefined,
+                  }
+                : undefined
+            }
+            onChange={(range: { from?: Date; to?: Date } | undefined) => {
+              const nf = { ...filtros } as ExpedientesFilters;
+              nf.data_arquivamento_inicio = range?.from ? range.from.toISOString().slice(0, 10) : undefined;
+              nf.data_arquivamento_fim = range?.to ? range.to.toISOString().slice(0, 10) : undefined;
+              setFiltros(nf);
+              setPagina(0);
+            }}
+            placeholder="Data Arquivamento"
+            allowSingle
+          />
+        </div>
+
         <TabsContent value="tabela" className="mt-0">
           {/* Tabela */}
           <DataTable
@@ -1591,8 +1946,6 @@ export default function ExpedientesPage() {
         onOpenChange={setNovoExpedienteOpen}
         onSuccess={handleSuccess}
       />
-    </Tabs>
+  </Tabs>
   );
 }
-
-
