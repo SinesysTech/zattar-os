@@ -151,36 +151,36 @@ function extrairCamposPJE(parte: PartePJE) {
   if (parte.tipoDocumento === 'CPF') {
     camposExtraidos.sexo = dados?.sexo as string | undefined;
     camposExtraidos.nome_genitora = dados?.nomeGenitora as string | undefined;
-    camposExtraidos.naturalidade_id_pje = (dados?.naturalidade as any)?.id !== undefined ? Number((dados.naturalidade as any).id) : undefined;
+    camposExtraidos.naturalidade_id_pje = (dados?.naturalidade as any)?.id !== undefined ? Number((dados?.naturalidade as any).id) : undefined;
     camposExtraidos.naturalidade_municipio = (dados?.naturalidade as any)?.municipio as string | undefined;
-    camposExtraidos.naturalidade_estado_id_pje = (dados?.naturalidade as any)?.estado?.id !== undefined ? Number((dados.naturalidade as any).estado.id) : undefined;
+    camposExtraidos.naturalidade_estado_id_pje = (dados?.naturalidade as any)?.estado?.id !== undefined ? Number((dados?.naturalidade as any)?.estado.id) : undefined;
     camposExtraidos.naturalidade_estado_sigla = (dados?.naturalidade as any)?.estado?.sigla as string | undefined;
     camposExtraidos.naturalidade_estado_descricao = (dados?.naturalidade as any)?.estado?.descricao as string | undefined;
-    camposExtraidos.uf_nascimento_id_pje = (dados?.ufNascimento as any)?.id !== undefined ? Number((dados.ufNascimento as any).id) : undefined;
+    camposExtraidos.uf_nascimento_id_pje = (dados?.ufNascimento as any)?.id !== undefined ? Number((dados?.ufNascimento as any).id) : undefined;
     camposExtraidos.uf_nascimento_sigla = (dados?.ufNascimento as any)?.sigla as string | undefined;
     camposExtraidos.uf_nascimento_descricao = (dados?.ufNascimento as any)?.descricao as string | undefined;
-    camposExtraidos.pais_nascimento_id_pje = (dados?.paisNascimento as any)?.id !== undefined ? Number((dados.paisNascimento as any).id) : undefined;
+    camposExtraidos.pais_nascimento_id_pje = (dados?.paisNascimento as any)?.id !== undefined ? Number((dados?.paisNascimento as any).id) : undefined;
     camposExtraidos.pais_nascimento_codigo = (dados?.paisNascimento as any)?.codigo as string | undefined;
     camposExtraidos.pais_nascimento_descricao = (dados?.paisNascimento as any)?.descricao as string | undefined;
-    camposExtraidos.escolaridade_codigo = dados?.escolaridade !== undefined ? Number(dados.escolaridade) : undefined;
-    camposExtraidos.situacao_cpf_receita_id = (dados?.situacaoCpfReceita as any)?.id !== undefined ? Number((dados.situacaoCpfReceita as any).id) : undefined;
+    camposExtraidos.escolaridade_codigo = dados?.escolaridade !== undefined ? Number(dados?.escolaridade) : undefined;
+    camposExtraidos.situacao_cpf_receita_id = (dados?.situacaoCpfReceita as any)?.id !== undefined ? Number((dados?.situacaoCpfReceita as any).id) : undefined;
     camposExtraidos.situacao_cpf_receita_descricao = (dados?.situacaoCpfReceita as any)?.descricao as string | undefined;
-    camposExtraidos.pode_usar_celular_mensagem = dados?.podeUsarCelularMensagem !== undefined ? Boolean(dados.podeUsarCelularMensagem) : undefined;
+    camposExtraidos.pode_usar_celular_mensagem = dados?.podeUsarCelularMensagem !== undefined ? Boolean(dados?.podeUsarCelularMensagem) : undefined;
   }
 
   // Campos específicos de PJ
   if (parte.tipoDocumento === 'CNPJ') {
     camposExtraidos.inscricao_estadual = dados?.inscricaoEstadual as string | undefined;
     camposExtraidos.data_abertura = dados?.dataAbertura as string | undefined;
-    camposExtraidos.orgao_publico = dados?.orgaoPublico !== undefined ? Boolean(dados.orgaoPublico) : undefined;
+    camposExtraidos.orgao_publico = dados?.orgaoPublico !== undefined ? Boolean(dados?.orgaoPublico) : undefined;
     camposExtraidos.tipo_pessoa_codigo_pje = (dados?.tipoPessoa as any)?.codigo as string | undefined;
     camposExtraidos.tipo_pessoa_label_pje = (dados?.tipoPessoa as any)?.label as string | undefined;
-    camposExtraidos.situacao_cnpj_receita_id = (dados?.situacaoCnpjReceita as any)?.id !== undefined ? Number((dados.situacaoCnpjReceita as any).id) : undefined;
+    camposExtraidos.situacao_cnpj_receita_id = (dados?.situacaoCnpjReceita as any)?.id !== undefined ? Number((dados?.situacaoCnpjReceita as any).id) : undefined;
     camposExtraidos.situacao_cnpj_receita_descricao = (dados?.situacaoCnpjReceita as any)?.descricao as string | undefined;
     camposExtraidos.ramo_atividade = dados?.ramoAtividade as string | undefined;
     camposExtraidos.cpf_responsavel = dados?.cpfResponsavel as string | undefined;
-    camposExtraidos.oficial = dados?.oficial !== undefined ? Boolean(dados.oficial) : undefined;
-    camposExtraidos.porte_codigo = (dados?.porte as any)?.codigo !== undefined ? Number((dados.porte as any).codigo) : undefined;
+    camposExtraidos.oficial = dados?.oficial !== undefined ? Boolean(dados?.oficial) : undefined;
+    camposExtraidos.porte_codigo = (dados?.porte as any)?.codigo !== undefined ? Number((dados?.porte as any).codigo) : undefined;
     camposExtraidos.porte_descricao = (dados?.porte as any)?.descricao as string | undefined;
     camposExtraidos.ultima_atualizacao_pje = dados?.ultimaAtualizacao as string | undefined;
   }
@@ -716,8 +716,8 @@ async function processarRepresentantes(
       numero_processo: processo.numero_processo,
       tipo_pessoa,
       nome: rep.nome,
-      cpf: tipo_pessoa === 'pf' ? rep.numeroDocumento : undefined,
-      cnpj: tipo_pessoa === 'pj' ? rep.numeroDocumento : undefined,
+      cpf: tipo_pessoa === 'pf' ? (rep.numeroDocumento ?? undefined) : undefined,
+      cnpj: tipo_pessoa === 'pj' ? (rep.numeroDocumento ?? undefined) : undefined,
       numero_oab: rep.numeroOAB || undefined,
       situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
       tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,

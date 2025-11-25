@@ -88,7 +88,7 @@ export async function executarAgendamento(
           erro: `Configuração do tribunal não encontrada: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
         });
         await registrarCapturaRawLog({
-          captura_log_id: logId ?? undefined,
+          captura_log_id: logId ?? -1,
           tipo_captura: agendamento.tipo_captura,
           advogado_id: agendamento.advogado_id,
           credencial_id: credCompleta.credentialId,
@@ -115,7 +115,7 @@ export async function executarAgendamento(
               config: tribunalConfig,
             });
             await registrarCapturaRawLog({
-              captura_log_id: logId ?? undefined,
+              captura_log_id: logId ?? -1,
               tipo_captura: agendamento.tipo_captura,
               advogado_id: agendamento.advogado_id,
               credencial_id: credCompleta.credentialId,
@@ -137,7 +137,7 @@ export async function executarAgendamento(
               config: tribunalConfig,
             });
             await registrarCapturaRawLog({
-              captura_log_id: logId ?? undefined,
+              captura_log_id: logId ?? -1,
               tipo_captura: agendamento.tipo_captura,
               advogado_id: agendamento.advogado_id,
               credencial_id: credCompleta.credentialId,
@@ -162,7 +162,7 @@ export async function executarAgendamento(
               dataFim: paramsAudiencias?.dataFim,
             });
             await registrarCapturaRawLog({
-              captura_log_id: logId ?? undefined,
+              captura_log_id: logId ?? -1,
               tipo_captura: agendamento.tipo_captura,
               advogado_id: agendamento.advogado_id,
               credencial_id: credCompleta.credentialId,
@@ -203,7 +203,7 @@ export async function executarAgendamento(
                 resultadosPendentes.push({ filtroPrazo: filtro, resultado: captura });
 
                 await registrarCapturaRawLog({
-                  captura_log_id: logId ?? undefined,
+                  captura_log_id: logId ?? -1,
                   tipo_captura: agendamento.tipo_captura,
                   advogado_id: agendamento.advogado_id,
                   credencial_id: credCompleta.credentialId,
@@ -232,7 +232,7 @@ export async function executarAgendamento(
                 });
 
                 await registrarCapturaRawLog({
-                  captura_log_id: logId ?? undefined,
+                  captura_log_id: logId ?? -1,
                   tipo_captura: agendamento.tipo_captura,
                   advogado_id: agendamento.advogado_id,
                   credencial_id: credCompleta.credentialId,
@@ -276,7 +276,7 @@ export async function executarAgendamento(
         });
 
         await registrarCapturaRawLog({
-          captura_log_id: logId ?? undefined,
+          captura_log_id: logId ?? -1,
           tipo_captura: agendamento.tipo_captura,
           advogado_id: agendamento.advogado_id,
           credencial_id: credCompleta.credentialId,

@@ -370,8 +370,7 @@ export async function atualizarRepresentante(
       .eq('id', params.id)
       .single();
 
-    const updates = { ...params };
-    delete updates.id;
+    const { id, ...updates } = params;
 
     // dados_anteriores armazena o estado anterior do registro, não os dados do PJE
     if (current) {

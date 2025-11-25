@@ -506,7 +506,7 @@ export async function POST(request: NextRequest) {
                         tipo_captura: 'partes',
                         advogado_id: advogado.id,
                         credencial_id: credencial.credentialId,
-                        captura_log_id: capturaLog.id,
+                        captura_log_id: capturaLog!.id,
                         trt: processo.trt as CodigoTRT,
                         grau: processo.grau as GrauTRT,
                         status: resultado.erros.length === 0 ? 'success' : 'error',
@@ -759,7 +759,7 @@ export async function POST(request: NextRequest) {
 
       await atualizarCapturaLog(capturaLog.id, {
         status,
-        resultado: resultadoTotal as ResultadoCapturaPartes,
+        resultado: resultadoTotal as unknown as Record<string, unknown>,
         erro: resultadoTotal.erros.length > 0 ?
           `${resultadoTotal.erros.length} erro(s) durante a captura${erroAppend ? '; ' + erroAppend : ''}` : erroAppend || undefined,
       });

@@ -25,9 +25,9 @@
  */
 export interface TelefoneContato {
   /** DDD (código de área) - ex: "31", "11", "21" */
-  ddd: string;
+  ddd?: string;
   /** Número do telefone sem DDD - ex: "987654321", "32101234" */
-  numero: string;
+  numero?: string;
 }
 
 /**
@@ -60,10 +60,10 @@ export interface RepresentantePJE {
   nome: string;
 
   /** Tipo de documento de identificação */
-  tipoDocumento: 'CPF' | 'CNPJ';
+  tipoDocumento: 'CPF' | 'CNPJ' | 'OUTRO';
 
-  /** Número do documento sem máscara - ex: "12345678900" ou "12345678000195" */
-  numeroDocumento: string;
+  /** Número do documento sem máscara - ex: "12345678900" ou "12345678000195" - pode ser null */
+  numeroDocumento: string | null;
 
   /** Número de inscrição na OAB - ex: "123456" - pode ser null para defensores/procuradores */
   numeroOAB: string | null;
@@ -74,17 +74,17 @@ export interface RepresentantePJE {
   /** Situação da inscrição na OAB - ex: "ATIVO", "SUSPENSO" - pode ser null */
   situacaoOAB: string | null;
 
-  /** Tipo de representante - ex: ADVOGADO, DEFENSOR_PUBLICO, PROCURADOR_FEDERAL, PROCURADOR_MUNICIPAL */
-  tipo: string;
+  /** Tipo de representante - ex: ADVOGADO, DEFENSOR_PUBLICO, PROCURADOR_FEDERAL, PROCURADOR_MUNICIPAL - pode ser null */
+  tipo: string | null;
 
   /** E-mail de contato - pode ser null */
   email: string | null;
 
-  /** Array de telefones de contato - pode ser vazio [] */
-  telefones: TelefoneContato[];
+  /** Array de telefones de contato - pode ser vazio [] ou undefined */
+  telefones?: TelefoneContato[];
 
   /** JSON completo original retornado pela API do PJE - útil para debug e auditoria */
-  dadosCompletos: Record<string, unknown>;
+  dadosCompletos?: Record<string, unknown>;
 }
 
 /**
@@ -171,5 +171,5 @@ export interface PartePJE {
   representantes?: RepresentantePJE[];
 
   /** JSON completo original retornado pela API do PJE - útil para debug e auditoria */
-  dadosCompletos: Record<string, unknown>;
+  dadosCompletos?: Record<string, unknown>;
 }
