@@ -20,6 +20,8 @@ export interface OperacaoParteContrariaResult {
   sucesso: boolean;
   parteContraria?: ParteContraria;
   erro?: string;
+  /** Indica se a entidade foi criada (true) ou atualizada (false) - apenas para upsert */
+  criado?: boolean;
 }
 
 /**
@@ -683,12 +685,14 @@ export async function upsertParteContrariaPorIdPessoa(
     const existente = await buscarParteContrariaPorIdPessoaPje(params.id_pessoa_pje);
 
     if (existente) {
-      return await atualizarParteContraria({
+      const result = await atualizarParteContraria({
         ...params,
         id: existente.id,
       } as unknown as AtualizarParteContrariaParams);
+      return { ...result, criado: false };
     } else {
-      return await criarParteContraria(params);
+      const result = await criarParteContraria(params);
+      return { ...result, criado: true };
     }
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);

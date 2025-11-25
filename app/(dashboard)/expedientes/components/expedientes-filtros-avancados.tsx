@@ -15,13 +15,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Filter, X } from 'lucide-react';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';

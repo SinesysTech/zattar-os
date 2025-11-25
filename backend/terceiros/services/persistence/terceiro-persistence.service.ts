@@ -20,6 +20,8 @@ export interface OperacaoTerceiroResult {
   sucesso: boolean;
   terceiro?: Terceiro;
   erro?: string;
+  /** Indica se a entidade foi criada (true) ou atualizada (false) - apenas para upsert */
+  criado?: boolean;
 }
 
 /**
@@ -567,12 +569,14 @@ export async function upsertTerceiroPorIdPessoa(
     const existente = await buscarTerceiroPorIdPessoaPje(params.id_pessoa_pje);
 
     if (existente) {
-      return await atualizarTerceiro({
+      const result = await atualizarTerceiro({
         ...params,
         id: existente.id,
       } as any);
+      return { ...result, criado: false };
     } else {
-      return await criarTerceiro(params);
+      const result = await criarTerceiro(params);
+      return { ...result, criado: true };
     }
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);

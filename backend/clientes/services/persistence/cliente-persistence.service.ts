@@ -768,13 +768,15 @@ export async function upsertClientePorIdPessoa(
 
     if (clienteExistente) {
       // Atualizar cliente existente
-      return await atualizarCliente({
+      const result = await atualizarCliente({
         id: clienteExistente.id,
         ...params,
       });
+      return { ...result, criado: false };
     } else {
       // Criar novo cliente
-      return await criarCliente(params);
+      const result = await criarCliente(params);
+      return { ...result, criado: true };
     }
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);

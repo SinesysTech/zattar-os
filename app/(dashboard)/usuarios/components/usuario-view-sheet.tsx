@@ -4,11 +4,11 @@
 
 import * as React from 'react';
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -36,16 +36,16 @@ export function UsuarioViewSheet({
   if (!usuario) return null;
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-[min(92vw,25rem)] sm:w-[min(92vw,33.75rem)] overflow-y-auto p-6">
-        <SheetHeader className="pb-5">
-          <SheetTitle className="text-xl font-semibold flex items-center gap-2">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] w-[min(92vw,25rem)] sm:w-[min(92vw,33.75rem)] overflow-y-auto p-6">
+        <DialogHeader className="pb-5">
+          <DialogTitle className="text-xl font-semibold flex items-center gap-2">
             {formatarNomeExibicao(usuario.nomeExibicao)}
             <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'soft' : 'outline'}>
               {usuario.ativo ? 'Ativo' : 'Inativo'}
             </Badge>
-          </SheetTitle>
-        </SheetHeader>
+          </DialogTitle>
+        </DialogHeader>
 
         <div className="space-y-6">
           {/* Informações Básicas */}
@@ -200,8 +200,8 @@ export function UsuarioViewSheet({
             </div>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }
 

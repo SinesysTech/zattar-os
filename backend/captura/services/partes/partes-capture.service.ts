@@ -591,13 +591,14 @@ async function deletarEntidade(tipoParte: TipoParteClassificacao, entidadeId: nu
 
 /**
  * Processa uma parte individual: faz upsert da entidade apropriada
- * Retorna ID da entidade criada/atualizada ou null se falhou
+ * Retorna objeto com ID da entidade e indicador se foi criada (true) ou atualizada (false)
+ * Retorna null se falhou
  */
 async function processarParte(
   parte: PartePJE,
   tipoParte: TipoParteClassificacao,
   processo: ProcessoParaCaptura
-): Promise<number | null> {
+): Promise<{ id: number; criado: boolean } | null> {
   const isPessoaFisica = parte.tipoDocumento === 'CPF';
 
   // Mapeia dados comuns (SEM trt/grau/numero_processo/id_pje - vão para processo_partes)
@@ -631,7 +632,7 @@ async function processarParte(
           maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
           baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
         });
-        return result.sucesso && result.cliente ? result.cliente.id : null;
+        return result.sucesso && result.cliente ? { id: result.cliente.id, criado: result.criado || false } : null;
       } else {
         const params: CriarClientePJParams & { id_pessoa_pje: number } = {
           ...dadosCompletos,
@@ -642,7 +643,7 @@ async function processarParte(
           maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
           baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
         });
-        return result.sucesso && result.cliente ? result.cliente.id : null;
+        return result.sucesso && result.cliente ? { id: result.cliente.id, criado: result.criado || false } : null;
       }
     } else if (tipoParte === 'parte_contraria') {
       // Upsert em tabela partes_contrarias
@@ -656,7 +657,7 @@ async function processarParte(
           maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
           baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
         });
-        return result.sucesso && result.parteContraria ? result.parteContraria.id : null;
+        return result.sucesso && result.parteContraria ? { id: result.parteContraria.id, criado: result.criado || false } : null;
       } else {
         const params: CriarParteContrariaPJParams & { id_pessoa_pje: number } = {
           ...dadosComuns,
@@ -667,7 +668,7 @@ async function processarParte(
           maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
           baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
         });
-        return result.sucesso && result.parteContraria ? result.parteContraria.id : null;
+        return result.sucesso && result.parteContraria ? { id: result.parteContraria.id, criado: result.criado || false } : null;
       }
     } else {
       // Upsert em tabela terceiros
@@ -688,7 +689,7 @@ async function processarParte(
         maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
         baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
       });
-      return result.sucesso && result.terceiro ? result.terceiro.id : null;
+      return result.sucesso && result.terceiro ? { id: result.terceiro.id, criado: result.criado || false } : null;
     }
   } catch (error) {
     throw new PersistenceError(`Erro ao processar parte ${parte.nome}`, 'upsert', tipoParte, { parte: parte.nome, error: error instanceof Error ? error.message : String(error) });
