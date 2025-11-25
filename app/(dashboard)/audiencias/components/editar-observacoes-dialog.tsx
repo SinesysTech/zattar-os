@@ -91,7 +91,7 @@ export function EditarObservacoesDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="max-w-[min(92vw,25rem)] sm:max-w-[min(92vw,37.5rem)]">
         <DialogHeader>
           <DialogTitle>Editar Observações</DialogTitle>
           <DialogDescription>

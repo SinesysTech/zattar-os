@@ -118,7 +118,7 @@ export function ContratoEditSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto p-6">
+      <SheetContent className="max-w-[min(92vw,25rem)] sm:max-w-[min(92vw,33.75rem)] overflow-y-auto p-6">
         <form onSubmit={handleSubmit}>
           <SheetHeader className="pb-5">
             <SheetTitle className="text-xl font-semibold">

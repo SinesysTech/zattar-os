@@ -18,6 +18,12 @@ import type { GrauAcervo } from '@/backend/types/acervo/types';
 import type { EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } from '@/backend/types/partes/enderecos-types';
 import { CAMPOS_MINIMOS_ENDERECO } from '@/backend/types/partes/enderecos-types';
 import type { SituacaoOAB, TipoRepresentante, Polo } from '@/backend/types/representantes/representantes-types';
+import { PartePJESchema, validarPartePJE, validarPartesArray } from './schemas';
+import getLogger, { withCorrelationId } from '@/backend/utils/logger';
+import { withRetry } from '@/backend/utils/retry';
+import { withDistributedLock } from '@/backend/utils/locks/distributed-lock';
+import { CAPTURA_CONFIG } from './config';
+import { ValidationError, PersistenceError, extractErrorInfo } from './errors';
 
 /**
  * Normaliza o valor de polo do PJE para o formato interno
@@ -40,7 +46,6 @@ function normalizarPolo(poloStr: unknown): Polo | null {
     case 'terceiro':
       return 'outros';
     default:
-      console.warn(`[CAPTURA-PARTES] Valor de polo desconhecido '${poloStr}', retornando 'outros'`);
       return 'outros';
   }
 }
@@ -75,6 +80,22 @@ function validarEnderecoPJE(endereco: EnderecoPJE): { valido: boolean; avisos: s
     avisos.push('ID do endereço inválido ou ausente');
   }
 
+  if (!endereco.logradouro?.trim()) {
+    avisos.push('Logradouro obrigatório');
+  }
+
+  if (!endereco.municipio?.trim()) {
+    avisos.push('Município obrigatório');
+  }
+
+  if (!endereco.estado?.sigla?.trim()) {
+    avisos.push('Estado obrigatório');
+  }
+
+  if (!endereco.nroCep?.trim()) {
+    avisos.push('CEP obrigatório');
+  }
+
   // Mapeia os campos do PJE para os campos esperados
   const camposPJE: Record<string, unknown> = {
     logradouro: endereco.logradouro,
@@ -95,6 +116,46 @@ function validarEnderecoPJE(endereco: EnderecoPJE): { valido: boolean; avisos: s
   // Endereço é válido se tiver ID válido E pelo menos um campo mínimo
   const valido = !!(endereco.id && endereco.id > 0 && camposPresentes.length > 0);
   return { valido, avisos };
+}
+
+/**
+ * Valida parte PJE verificando campos obrigatórios
+ */
+function validarPartePJE(parte: PartePJE): void {
+  if (!parte.idParte || parte.idParte <= 0) {
+    throw new ValidationError('ID da parte deve ser positivo', { parte: parte.nome });
+  }
+
+  if (!parte.idPessoa || parte.idPessoa <= 0) {
+    throw new ValidationError('ID pessoa deve ser positivo', { parte: parte.nome });
+  }
+
+  if (!parte.nome?.trim()) {
+    throw new ValidationError('Nome da parte é obrigatório', { parte: parte.nome });
+  }
+
+  if (!['CPF', 'CNPJ', 'OUTRO'].includes(parte.tipoDocumento)) {
+    throw new ValidationError('Tipo documento inválido', { parte: parte.nome, tipoDocumento: parte.tipoDocumento });
+  }
+
+  if (!['ATIVO', 'PASSIVO', 'OUTROS'].includes(parte.polo)) {
+    throw new ValidationError('Polo inválido', { parte: parte.nome, polo: parte.polo });
+  }
+
+  // Validação adicional para CPF/CNPJ
+  if (parte.tipoDocumento === 'CPF' && parte.numeroDocumento) {
+    const cpfLimpo = parte.numeroDocumento.replace(/\D/g, '');
+    if (cpfLimpo.length !== 11) {
+      throw new ValidationError('CPF deve ter 11 dígitos', { parte: parte.nome, numeroDocumento: parte.numeroDocumento });
+    }
+  }
+
+  if (parte.tipoDocumento === 'CNPJ' && parte.numeroDocumento) {
+    const cnpjLimpo = parte.numeroDocumento.replace(/\D/g, '');
+    if (cnpjLimpo.length !== 14) {
+      throw new ValidationError('CNPJ deve ter 14 dígitos', { parte: parte.nome, numeroDocumento: parte.numeroDocumento });
+    }
+  }
 }
 
 /**
@@ -280,8 +341,8 @@ function extrairCamposRepresentantePJE(rep: RepresentantePJE) {
  * - Logging detalhado em cada etapa
  *
  * PERFORMANCE:
- * - Partes são processadas sequencialmente (evita sobrecarga no banco)
- * - Representantes de cada parte são salvos em lote
+ * - Partes são processadas em paralelo com controle de concorrência
+ * - Representantes são salvos em lote
  * - Tempo típico: 2-5s por processo (depende de quantidade de partes)
  */
 export async function capturarPartesProcesso(
@@ -289,7 +350,31 @@ export async function capturarPartesProcesso(
   processo: ProcessoParaCaptura,
   advogado: AdvogadoIdentificacao
 ): Promise<CapturaPartesResult> {
-  const inicio = Date.now();
+  return withCorrelationId(async () => {
+    const logger = getLogger({ service: 'captura-partes', processoId: processo.id });
+
+    if (CAPTURA_CONFIG.ENABLE_DISTRIBUTED_LOCK) {
+      return withDistributedLock(
+        `captura:processo:${processo.id}`,
+        async () => capturarPartesProcessoInternal(page, processo, advogado, logger),
+        { ttl: CAPTURA_CONFIG.LOCK_TTL_SECONDS }
+      );
+    } else {
+      return capturarPartesProcessoInternal(page, processo, advogado, logger);
+    }
+  });
+}
+
+/**
+ * Função interna com a lógica de captura
+ */
+async function capturarPartesProcessoInternal(
+  page: Page,
+  processo: ProcessoParaCaptura,
+  advogado: AdvogadoIdentificacao,
+  logger: ReturnType<typeof getLogger>
+): Promise<CapturaPartesResult> {
+  const inicio = performance.now();
   const resultado: CapturaPartesResult = {
     processoId: processo.id,
     numeroProcesso: processo.numero_processo,
@@ -304,120 +389,214 @@ export async function capturarPartesProcesso(
     payloadBruto: null,
   };
 
+  const metricas = {
+    buscarPartesPJE: 0,
+    processarPartes: 0,
+    processarRepresentantes: 0,
+    processarEnderecos: 0,
+    criarVinculos: 0,
+  };
+
   try {
-    console.log(
-      `[CAPTURA-PARTES] Iniciando captura de partes do processo ${processo.numero_processo} (ID: ${processo.id})`
-    );
+    logger.info({ numeroProcesso: processo.numero_processo }, 'Iniciando captura de partes');
 
     // 1. Valida documento do advogado UMA ÚNICA VEZ (antes de processar qualquer parte)
     // Se inválido, lança erro e interrompe toda a captura (evita erros repetidos por parte)
     validarDocumentoAdvogado(advogado);
 
     // 2. Busca partes via API PJE
+    const inicioBuscar = performance.now();
     const { partes, payloadBruto } = await obterPartesProcesso(page, processo.id_pje);
+    metricas.buscarPartesPJE = performance.now() - inicioBuscar;
     resultado.totalPartes = partes.length;
     resultado.payloadBruto = payloadBruto;
 
-    console.log(
-      `[CAPTURA-PARTES] Encontradas ${partes.length} partes no processo ${processo.numero_processo}`
-    );
+    logger.info({ totalPartes: partes.length, duracaoMs: metricas.buscarPartesPJE }, 'Partes encontradas no PJE');
 
     // Se não há partes, retorna resultado vazio
     if (partes.length === 0) {
-      resultado.duracaoMs = Date.now() - inicio;
+      resultado.duracaoMs = performance.now() - inicio;
       return resultado;
     }
 
-    // 3. Processa cada parte sequencialmente
-    for (let i = 0; i < partes.length; i++) {
-      const parte = partes[i];
+    // 3. Valida schema PJE antes do processamento
+    const partesValidadas = validarPartesArray(partes);
 
-      try {
-        console.log(
-          `[CAPTURA-PARTES] Processando parte ${i + 1}/${partes.length}: ${parte.nome}`
-        );
+    // 4. Processa partes em paralelo com controle de concorrência
+    const inicioProcessar = performance.now();
+    const resultadosProcessamento = await processarPartesEmLote(partesValidadas, processo, advogado, logger);
+    metricas.processarPartes = performance.now() - inicioProcessar;
 
-        // 2a. Identifica tipo da parte
-        const tipoParte = identificarTipoParte(parte, advogado);
-
-        // 2b. Faz upsert da entidade apropriada
-        const entidadeId = await processarParte(parte, tipoParte, processo);
-
-        if (entidadeId) {
-          // Incrementa contador do tipo apropriado
-          if (tipoParte === 'cliente') resultado.clientes++;
-          else if (tipoParte === 'parte_contraria') resultado.partesContrarias++;
-          else if (tipoParte === 'terceiro') resultado.terceiros++;
-
-          // 2c. Processa e salva endereço (se houver) e vincula à entidade
-          const enderecoId = await processarEndereco(parte, tipoParte, entidadeId);
-          if (enderecoId) {
-            await vincularEnderecoNaEntidade(tipoParte, entidadeId, enderecoId);
-          }
-
-          // 2d. Salva representantes da parte
-          if (parte.representantes && parte.representantes.length > 0) {
-            const repsCount = await processarRepresentantes(
-              parte.representantes,
-              tipoParte,
-              entidadeId,
-              processo
-            );
-            resultado.representantes += repsCount;
-          }
-
-          // 2e. Cria vínculo processo-parte
-          const vinculoCriado = await criarVinculoProcessoParte(
-            processo,
-            tipoParte,
-            entidadeId,
-            parte,
-            i
-          );
-
-          if (vinculoCriado) resultado.vinculos++;
-        }
-      } catch (error) {
-        // Loga erro e adiciona ao array de erros, mas continua processando
-        const erro: CapturaPartesErro = {
-          parteIndex: i,
-          parteDados: {
-            idParte: parte.idParte,
-            nome: parte.nome,
-            tipoParte: parte.tipoParte,
-          },
-          erro: error instanceof Error ? error.message : String(error),
-        };
-
-        resultado.erros.push(erro);
-
-        console.error(
-          `[CAPTURA-PARTES] Erro ao processar parte ${i + 1}/${partes.length} (${parte.nome}):`,
-          error
-        );
+    // 5. Agrega resultados
+    for (const res of resultadosProcessamento) {
+      if (res.status === 'fulfilled') {
+        const { tipoParte, repsCount, vinculoCriado } = res.value;
+        if (tipoParte === 'cliente') resultado.clientes++;
+        else if (tipoParte === 'parte_contraria') resultado.partesContrarias++;
+        else if (tipoParte === 'terceiro') resultado.terceiros++;
+        resultado.representantes += repsCount;
+        if (vinculoCriado) resultado.vinculos++;
+      } else {
+        const error = res.reason;
+        const errorInfo = extractErrorInfo(error);
+        logger.error({ error: errorInfo }, 'Erro ao processar parte');
+        // Adiciona erro ao resultado (assumindo que o erro contém info da parte)
+        resultado.erros.push({
+          parteIndex: -1, // Não temos índice exato em paralelo
+          parteDados: { idParte: 0, nome: 'Desconhecido', tipoParte: 'DESCONHECIDO' },
+          erro: errorInfo.message,
+        });
       }
     }
 
-    resultado.duracaoMs = Date.now() - inicio;
+    resultado.duracaoMs = performance.now() - inicio;
 
-    console.log(
-      `[CAPTURA-PARTES] Captura concluída para processo ${processo.numero_processo}:`,
-      `Clientes: ${resultado.clientes}, Partes Contrárias: ${resultado.partesContrarias}, Terceiros: ${resultado.terceiros},`,
-      `Representantes: ${resultado.representantes}, Vínculos: ${resultado.vinculos}, Erros: ${resultado.erros.length},`,
-      `Tempo: ${resultado.duracaoMs}ms`
-    );
+    logger.info({
+      ...resultado,
+      metricas,
+    }, 'Captura concluída');
+
+    // Alerta se performance abaixo do esperado
+    if (resultado.duracaoMs > CAPTURA_CONFIG.PERFORMANCE_THRESHOLD_MS) {
+      logger.warn({
+        ...resultado,
+        metricas,
+        threshold: CAPTURA_CONFIG.PERFORMANCE_THRESHOLD_MS
+      }, 'Performance abaixo do esperado');
+    }
 
     return resultado;
   } catch (error) {
-    console.error(
-      `[CAPTURA-PARTES] Erro fatal ao capturar partes do processo ${processo.numero_processo}:`,
-      error
-    );
+    const errorInfo = extractErrorInfo(error);
+    logger.error(errorInfo, 'Erro fatal ao capturar partes');
 
-    // Atualiza duração e propaga exceção
-    resultado.duracaoMs = Date.now() - inicio;
+    // Atualiza duração e propaga erro
+    resultado.duracaoMs = performance.now() - inicio;
     throw error;
   }
+}
+
+/**
+ * Processa partes em lote com controle de concorrência
+ */
+async function processarPartesEmLote(
+  partes: PartePJE[],
+  processo: ProcessoParaCaptura,
+  advogado: AdvogadoIdentificacao,
+  logger: ReturnType<typeof getLogger>
+): Promise<PromiseSettledResult<{ tipoParte: TipoParteClassificacao; repsCount: number; vinculoCriado: boolean }>[]> {
+  // Divide em lotes para controlar concorrência
+  const lotes: PartePJE[][] = [];
+  for (let i = 0; i < partes.length; i += CAPTURA_CONFIG.MAX_CONCURRENT_PARTES) {
+    lotes.push(partes.slice(i, i + CAPTURA_CONFIG.MAX_CONCURRENT_PARTES));
+  }
+
+  const todosResultados: PromiseSettledResult<any>[] = [];
+
+  for (const lote of lotes) {
+    const promises = lote.map((parte, indexInLote) =>
+      processarParteComRetry(parte, indexInLote, processo, advogado, logger)
+    );
+    const resultadosLote = await Promise.allSettled(promises);
+    todosResultados.push(...resultadosLote);
+  }
+
+  return todosResultados;
+}
+
+/**
+ * Processa uma parte com retry e transação
+ */
+async function processarParteComRetry(
+  parte: PartePJE,
+  index: number,
+  processo: ProcessoParaCaptura,
+  advogado: AdvogadoIdentificacao,
+  logger: ReturnType<typeof getLogger>
+): Promise<{ tipoParte: TipoParteClassificacao; repsCount: number; vinculoCriado: boolean }> {
+  return withRetry(async () => {
+    logger.info({ parteIndex: index, parteName: parte.nome }, 'Processando parte');
+
+    // Valida parte
+    validarPartePJE(parte);
+
+    // Identifica tipo da parte
+    const tipoParte = identificarTipoParte(parte, advogado);
+
+    // Processa com transação
+    const { repsCount, vinculoCriado } = await processarParteComTransacao(parte, tipoParte, processo, index, logger);
+
+    return { tipoParte, repsCount, vinculoCriado };
+  }, {
+    maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+    baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+    maxDelay: CAPTURA_CONFIG.RETRY_MAX_DELAY_MS
+  });
+}
+
+/**
+ * Processa uma parte com transação (upsert entidade + vínculo + endereço)
+ */
+async function processarParteComTransacao(
+  parte: PartePJE,
+  tipoParte: TipoParteClassificacao,
+  processo: ProcessoParaCaptura,
+  ordem: number,
+  logger: ReturnType<typeof getLogger>
+): Promise<{ repsCount: number; vinculoCriado: boolean }> {
+  let entidadeId: number | null = null;
+  let vinculoCriado = false;
+
+  try {
+    // 1. Upsert da entidade
+    entidadeId = await processarParte(parte, tipoParte, processo);
+    if (!entidadeId) {
+      throw new PersistenceError('Falha ao criar entidade', 'insert', tipoParte, { parte: parte.nome });
+    }
+
+    // 2. Processa endereço e vincula
+    const enderecoId = await processarEndereco(parte, tipoParte, entidadeId);
+    if (enderecoId) {
+      await vincularEnderecoNaEntidade(tipoParte, entidadeId, enderecoId);
+    }
+
+    // 3. Cria vínculo processo-parte
+    vinculoCriado = await criarVinculoProcessoParte(processo, tipoParte, entidadeId, parte, ordem);
+    if (!vinculoCriado) {
+      throw new PersistenceError('Falha ao criar vínculo', 'insert', 'vinculo', { parte: parte.nome });
+    }
+
+    // 4. Processa representantes
+    const repsCount = parte.representantes ? await processarRepresentantes(parte.representantes, tipoParte, entidadeId, processo, logger) : 0;
+
+    return { repsCount, vinculoCriado };
+  } catch (error) {
+    // Rollback manual (deletar entidade e vínculo se criados)
+    if (entidadeId && !vinculoCriado) {
+      try {
+        await deletarEntidade(tipoParte, entidadeId);
+        logger.warn({ entidadeId, tipoParte }, 'Rollback: entidade deletada devido a erro');
+      } catch (rollbackError) {
+        logger.error({ rollbackError, entidadeId }, 'Erro no rollback da entidade');
+      }
+    }
+    throw error;
+  }
+}
+
+/**
+ * Deleta entidade (para rollback)
+ */
+async function deletarEntidade(tipoParte: TipoParteClassificacao, entidadeId: number): Promise<void> {
+  const { createClient } = await import('@/backend/utils/supabase/server-client');
+  const supabase = await createClient();
+
+  let tableName: string;
+  if (tipoParte === 'cliente') tableName = 'clientes';
+  else if (tipoParte === 'parte_contraria') tableName = 'partes_contrarias';
+  else tableName = 'terceiros';
+
+  await supabase.from(tableName).delete().eq('id', entidadeId);
 }
 
 /**
@@ -458,7 +637,10 @@ async function processarParte(
           tipo_pessoa: 'pf',
           cpf: parte.numeroDocumento,
         };
-        const result = await upsertClientePorIdPessoa(params);
+        const result = await withRetry(() => upsertClientePorIdPessoa(params), {
+          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+        });
         return result.sucesso && result.cliente ? result.cliente.id : null;
       } else {
         const params: CriarClientePJParams & { id_pessoa_pje: number } = {
@@ -466,7 +648,10 @@ async function processarParte(
           tipo_pessoa: 'pj',
           cnpj: parte.numeroDocumento,
         };
-        const result = await upsertClientePorIdPessoa(params);
+        const result = await withRetry(() => upsertClientePorIdPessoa(params), {
+          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+        });
         return result.sucesso && result.cliente ? result.cliente.id : null;
       }
     } else if (tipoParte === 'parte_contraria') {
@@ -477,7 +662,10 @@ async function processarParte(
           tipo_pessoa: 'pf',
           cpf: parte.numeroDocumento,
         };
-        const result = await upsertParteContrariaPorIdPessoa(params);
+        const result = await withRetry(() => upsertParteContrariaPorIdPessoa(params), {
+          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+        });
         return result.sucesso && result.parteContraria ? result.parteContraria.id : null;
       } else {
         const params: CriarParteContrariaPJParams & { id_pessoa_pje: number } = {
@@ -485,7 +673,10 @@ async function processarParte(
           tipo_pessoa: 'pj',
           cnpj: parte.numeroDocumento,
         };
-        const result = await upsertParteContrariaPorIdPessoa(params);
+        const result = await withRetry(() => upsertParteContrariaPorIdPessoa(params), {
+          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+        });
         return result.sucesso && result.parteContraria ? result.parteContraria.id : null;
       }
     } else {
@@ -503,80 +694,84 @@ async function processarParte(
         numero_processo: processo.numero_processo,
       } as unknown as UpsertTerceiroPorIdPessoaParams;
 
-      const result = await upsertTerceiroPorIdPessoa(params);
+      const result = await withRetry(() => upsertTerceiroPorIdPessoa(params), {
+        maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+        baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+      });
       return result.sucesso && result.terceiro ? result.terceiro.id : null;
     }
   } catch (error) {
-    console.error(`[CAPTURA-PARTES] Erro ao processar parte ${parte.nome}:`, error);
-    throw error;
+    throw new PersistenceError(`Erro ao processar parte ${parte.nome}`, 'upsert', tipoParte, { parte: parte.nome, error: error instanceof Error ? error.message : String(error) });
   }
 }
 
 /**
- * Processa e salva representantes de uma parte
+ * Processa e salva representantes de uma parte em lote
  * Retorna quantidade de representantes salvos com sucesso
  */
 async function processarRepresentantes(
   representantes: RepresentantePJE[],
   tipoParte: TipoParteClassificacao,
   parteId: number,
-  processo: ProcessoParaCaptura
+  processo: ProcessoParaCaptura,
+  logger: ReturnType<typeof getLogger>
 ): Promise<number> {
   let count = 0;
 
-  console.log(
-    `[CAPTURA-PARTES] Processando ${representantes.length} representante(s) da ${tipoParte} (ID: ${parteId})`
+  logger.info({ count: representantes.length, parteId }, 'Processando representantes');
+
+  // Coleta todos os parâmetros primeiro
+  const representantesParams = representantes.map((rep, index) => {
+    const tipo_pessoa: 'pf' | 'pj' = rep.tipoDocumento === 'CPF' ? 'pf' : 'pj';
+
+    // Extrai campos extras do PJE
+    const camposExtras = extrairCamposRepresentantePJE(rep);
+
+    return {
+      id_pessoa_pje: rep.idPessoa,
+      parte_tipo: tipoParte,
+      parte_id: parteId,
+      trt: processo.trt,
+      grau: processo.grau,
+      numero_processo: processo.numero_processo,
+      tipo_pessoa,
+      nome: rep.nome,
+      cpf: tipo_pessoa === 'pf' ? rep.numeroDocumento : undefined,
+      cnpj: tipo_pessoa === 'pj' ? rep.numeroDocumento : undefined,
+      numero_oab: rep.numeroOAB || undefined,
+      situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
+      tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,
+      emails: rep.email ? [rep.email] : undefined,
+      ddd_celular: rep.telefones?.[0]?.ddd || undefined,
+      numero_celular: rep.telefones?.[0]?.numero || undefined,
+      ordem: index,
+      ...camposExtras,
+    };
+  });
+
+  // Upsert em lote com Promise.allSettled
+  const promises = representantesParams.map(params =>
+    withRetry(() => upsertRepresentantePorIdPessoa(params), {
+      maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+      baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+    })
   );
 
-  for (let index = 0; index < representantes.length; index++) {
-    const rep = representantes[index];
+  const resultados = await Promise.allSettled(promises);
 
-    try {
-      const tipo_pessoa: 'pf' | 'pj' = rep.tipoDocumento === 'CPF' ? 'pf' : 'pj';
+  for (let i = 0; i < resultados.length; i++) {
+    const res = resultados[i];
+    const rep = representantes[i];
 
-      // Extrai campos extras do PJE
-      const camposExtras = extrairCamposRepresentantePJE(rep);
-
-      // Primeiro cria/atualiza o representante SEM endereco_id
-      const result = await upsertRepresentantePorIdPessoa({
-        id_pessoa_pje: rep.idPessoa,
-        parte_tipo: tipoParte,
-        parte_id: parteId,
-        trt: processo.trt,
-        grau: processo.grau,
-        numero_processo: processo.numero_processo,
-        tipo_pessoa,
-        nome: rep.nome,
-        cpf: tipo_pessoa === 'pf' ? rep.numeroDocumento : undefined,
-        cnpj: tipo_pessoa === 'pj' ? rep.numeroDocumento : undefined,
-        numero_oab: rep.numeroOAB || undefined,
-        situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
-        tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,
-        emails: rep.email ? [rep.email] : undefined,
-        ddd_celular: rep.telefones?.[0]?.ddd || undefined,
-        numero_celular: rep.telefones?.[0]?.numero || undefined,
-        // dados_anteriores será populado automaticamente pelo persistence service com o estado anterior do registro
-        dados_anteriores: null,
-        ordem: index,
-        ...camposExtras,
-      });
-
+    if (res.status === 'fulfilled') {
+      const result = res.value;
       if (result.sucesso && result.representante) {
         count++;
-        console.log(
-          `[CAPTURA-PARTES] ✓ Representante salvo: ${rep.nome} (${tipo_pessoa === 'pf' ? 'CPF' : 'CNPJ'}: ${rep.numeroDocumento}) - OAB: ${rep.numeroOAB || 'N/A'}`
-        );
+        logger.debug({ nome: rep.nome, numeroDocumento: rep.numeroDocumento }, 'Representante salvo');
 
-        // Agora processa o endereço usando o ID do representante
+        // Processa endereço do representante se houver
         if (rep.dadosCompletos?.endereco) {
-          const enderecoId = await processarEnderecoRepresentante(
-            rep,
-            tipoParte,
-            parteId,
-            processo
-          );
-
-          // Se conseguiu salvar o endereço, atualiza o representante com o endereco_id
+          const enderecoId = await processarEnderecoRepresentante(rep, tipoParte, parteId, processo);
           if (enderecoId) {
             await atualizarRepresentante({
               id: result.representante.id,
@@ -585,27 +780,14 @@ async function processarRepresentantes(
           }
         }
       } else {
-        console.warn(
-          `[CAPTURA-PARTES] ✗ Falha ao salvar representante: ${rep.nome} - ${result.erro}`
-        );
+        logger.warn({ nome: rep.nome, erro: result.erro }, 'Falha ao salvar representante');
       }
-    } catch (error) {
-      // Capturar erro de constraint violation (CPF/CNPJ duplicado, constraint UNIQUE)
-      if (error instanceof Error && error.message.includes('Representante já cadastrado')) {
-        console.error(
-          `[CAPTURA-PARTES] Constraint UNIQUE violation para representante ${rep.nome} (CPF/CNPJ: ${rep.numeroDocumento}, parte_id: ${parteId}, processo: ${processo.numero_processo}): ${error.message}`
-        );
-      } else {
-        console.error(`[CAPTURA-PARTES] Erro ao salvar representante ${rep.nome}:`, error);
-      }
-      // Continua com próximo representante
+    } else {
+      logger.error({ nome: rep.nome, error: res.reason }, 'Erro ao salvar representante');
     }
   }
 
-  console.log(
-    `[CAPTURA-PARTES] Representantes salvos: ${count}/${representantes.length} para ${tipoParte} (ID: ${parteId})`
-  );
-
+  logger.info({ salvos: count, total: representantes.length }, 'Representantes processados');
   return count;
 }
 
@@ -619,10 +801,8 @@ function mapearPoloParaSistema(poloPJE: 'ATIVO' | 'PASSIVO' | 'OUTROS'): PoloPro
     case 'PASSIVO':
       return 'PASSIVO';
     case 'OUTROS':
-      console.warn(`[CAPTURA-PARTES] Mapeando polo 'OUTROS' para 'TERCEIRO'`);
       return 'TERCEIRO';
     default:
-      console.warn(`[CAPTURA-PARTES] Polo desconhecido '${poloPJE}', mapeando para 'TERCEIRO'`);
       return 'TERCEIRO';
   }
 }
@@ -636,7 +816,6 @@ function validarTipoParteProcesso(tipoParte: string): TipoParteProcesso {
   if (tipoParte in TIPOS_PARTE_PROCESSO_VALIDOS) {
     return tipoParte as TipoParteProcesso;
   } else {
-    console.warn(`[CAPTURA-PARTES] Tipo de parte desconhecido '${tipoParte}', usando 'OUTRO' como fallback`);
     return 'OUTRO';
   }
 }
@@ -654,16 +833,14 @@ async function criarVinculoProcessoParte(
 ): Promise<boolean> {
   // Validação prévia
   if (entidadeId <= 0) {
-    console.error('[CAPTURA-PARTES] Falha ao criar vínculo: entidadeId inválido', { entidadeId, parte_nome: parte.nome });
-    return false;
+    throw new ValidationError('entidadeId inválido', { entidadeId, parte: parte.nome });
   }
   if (!parte.idParte) {
-    console.error('[CAPTURA-PARTES] Falha ao criar vínculo: idParte ausente', { parte_nome: parte.nome });
-    return false;
+    throw new ValidationError('idParte ausente', { parte: parte.nome });
   }
 
   try {
-    const result = await vincularParteProcesso({
+    const result = await withRetry(() => vincularParteProcesso({
       processo_id: processo.id,
       tipo_entidade: tipoParte,
       entidade_id: entidadeId,
@@ -677,21 +854,18 @@ async function criarVinculoProcessoParte(
       principal: parte.principal,
       ordem,
       dados_pje_completo: parte.dadosCompletos,
+    }), {
+      maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+      baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
     });
 
     if (!result.success) {
-      console.error('[CAPTURA-PARTES] Falha ao criar vínculo:', { processo_id: processo.id, tipo_entidade: tipoParte, entidade_id: entidadeId, parte_nome: parte.nome, erro: result.error });
-      return false;
+      throw new PersistenceError('Falha ao criar vínculo', 'insert', 'vinculo', { processo_id: processo.id, tipo_entidade: tipoParte, entidade_id: entidadeId, erro: result.error });
     }
 
-    console.log('[CAPTURA-PARTES] ✓ Vínculo criado:', { processo: processo.numero_processo, parte: parte.nome, tipo: tipoParte, polo: parte.polo });
     return true;
   } catch (error) {
-    console.error(
-      `[CAPTURA-PARTES] Erro ao criar vínculo processo-parte para ${parte.nome}:`,
-      error
-    );
-    return false;
+    throw error;
   }
 }
 
@@ -713,12 +887,11 @@ async function processarEndereco(
 
   const { valido, avisos } = validarEnderecoPJE(enderecoPJE);
   if (!valido) {
-    console.warn(`[CAPTURA-PARTES] Endereço inválido para ${parte.nome}: ${avisos.join(', ')}`);
     return null;
   }
 
   try {
-    const result = await upsertEnderecoPorIdPje({
+    const result = await withRetry(() => upsertEnderecoPorIdPje({
       id_pje: Number(enderecoPJE?.id || 0),
       entidade_tipo: tipoParte as EntidadeTipoEndereco,
       entidade_id: entidadeId,
@@ -744,19 +917,18 @@ async function processarEndereco(
       id_usuario_cadastrador_pje: enderecoPJE?.idUsuarioCadastrador ? Number(enderecoPJE.idUsuarioCadastrador) : undefined,
       data_alteracao_pje: enderecoPJE?.dtAlteracao ? String(enderecoPJE.dtAlteracao) : undefined,
       dados_pje_completo: enderecoPJE as unknown as Record<string, unknown>, // Store complete PJE address JSON for audit
+    }), {
+      maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+      baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
     });
 
     if (result.sucesso && result.endereco) {
-      console.log(
-        `[CAPTURA-PARTES] Endereço salvo para ${parte.nome}: ${result.endereco.logradouro}, ${result.endereco.municipio}-${result.endereco.estado_sigla}`
-      );
       return result.endereco.id;
     }
 
     return null;
   } catch (error) {
-    console.error(`[CAPTURA-PARTES] Erro ao processar endereço de ${parte.nome} (ID: ${enderecoPJE?.id}, Tipo: ${tipoParte}):`, error);
-    return null;
+    throw new PersistenceError(`Erro ao processar endereço de ${parte.nome}`, 'upsert', 'endereco', { parte: parte.nome, error: error instanceof Error ? error.message : String(error) });
   }
 }
 
@@ -779,12 +951,11 @@ async function processarEnderecoRepresentante(
 
   const { valido, avisos } = validarEnderecoPJE(enderecoPJE);
   if (!valido) {
-    console.warn(`[CAPTURA-PARTES] Endereço inválido para representante ${rep.nome}: ${avisos.join(', ')}`);
     return null;
   }
 
   try {
-    const result = await upsertEnderecoPorIdPje({
+    const result = await withRetry(() => upsertEnderecoPorIdPje({
       id_pje: Number(enderecoPJE?.id || 0),
       entidade_tipo: tipoParte as EntidadeTipoEndereco,
       entidade_id: parteId,
@@ -813,19 +984,18 @@ async function processarEnderecoRepresentante(
       id_usuario_cadastrador_pje: enderecoPJE?.idUsuarioCadastrador ? Number(enderecoPJE.idUsuarioCadastrador) : undefined,
       data_alteracao_pje: enderecoPJE?.dtAlteracao ? String(enderecoPJE.dtAlteracao) : undefined,
       dados_pje_completo: enderecoPJE as unknown as Record<string, unknown>, // Store complete PJE address JSON for audit
+    }), {
+      maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+      baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
     });
 
     if (result.sucesso && result.endereco) {
-      console.log(
-        `[CAPTURA-PARTES] Endereço salvo para representante ${rep.nome}: ${result.endereco.logradouro}, ${result.endereco.municipio}-${result.endereco.estado_sigla}`
-      );
       return result.endereco.id;
     }
 
     return null;
   } catch (error) {
-    console.error(`[CAPTURA-PARTES] Erro ao processar endereço de representante ${rep.nome} (ID: ${enderecoPJE?.id}, Tipo: ${tipoParte}):`, error);
-    return null;
+    throw new PersistenceError(`Erro ao processar endereço de representante ${rep.nome}`, 'upsert', 'endereco', { representante: rep.nome, error: error instanceof Error ? error.message : String(error) });
   }
 }
 
@@ -857,19 +1027,9 @@ async function vincularEnderecoNaEntidade(
       .eq('id', entidadeId);
 
     if (error) {
-      console.error(
-        `[CAPTURA-PARTES] Erro ao vincular endereço ${enderecoId} à ${tipoParte} ${entidadeId}:`,
-        error
-      );
-    } else {
-      console.log(
-        `[CAPTURA-PARTES] ✓ Endereço ${enderecoId} vinculado à ${tipoParte} ${entidadeId}`
-      );
+      throw new PersistenceError(`Erro ao vincular endereço ${enderecoId} à ${tipoParte} ${entidadeId}`, 'update', tipoParte, { enderecoId, entidadeId, error: error.message });
     }
   } catch (error) {
-    console.error(
-      `[CAPTURA-PARTES] Erro ao vincular endereço à ${tipoParte}:`,
-      error
-    );
+    throw error;
   }
 }
