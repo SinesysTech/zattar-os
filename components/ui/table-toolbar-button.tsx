@@ -53,7 +53,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="flex w-[180px] min-w-0 flex-col"
+        className="flex w-[min(92vw,11.25rem)] min-w-0 flex-col"
         align="start"
       >
         <DropdownMenuGroup>
@@ -77,7 +77,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuItem
-                className="min-w-[180px]"
+                className="min-w-[min(92vw,11.25rem)]"
                 disabled={!mergeState.canMerge}
                 onSelect={() => {
                   tf.table.merge();
@@ -88,7 +88,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
                 Merge cells
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="min-w-[180px]"
+                className="min-w-[min(92vw,11.25rem)]"
                 disabled={!mergeState.canSplit}
                 onSelect={() => {
                   tf.table.split();
@@ -111,7 +111,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuItem
-                className="min-w-[180px]"
+                className="min-w-[min(92vw,11.25rem)]"
                 disabled={!tableSelected}
                 onSelect={() => {
                   tf.insert.tableRow({ before: true });
@@ -122,7 +122,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
                 Insert row before
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="min-w-[180px]"
+                className="min-w-[min(92vw,11.25rem)]"
                 disabled={!tableSelected}
                 onSelect={() => {
                   tf.insert.tableRow();
@@ -133,7 +133,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
                 Insert row after
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="min-w-[180px]"
+                className="min-w-[min(92vw,11.25rem)]"
                 disabled={!tableSelected}
                 onSelect={() => {
                   tf.remove.tableRow();
@@ -192,7 +192,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
           </DropdownMenuSub>
 
           <DropdownMenuItem
-            className="min-w-[180px]"
+            className="min-w-[min(92vw,11.25rem)]"
             disabled={!tableSelected}
             onSelect={() => {
               tf.remove.table();

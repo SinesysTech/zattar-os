@@ -91,7 +91,7 @@ export function DataTableColumnHeaderWithFilter<TData, TValue>({
             {isFiltered && <Filter className="ml-2 h-4 w-4" />}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-[min(92vw,12.5rem)] p-0" align="start">
           <div className="p-2">
             {hasSortOptions && (
               <>

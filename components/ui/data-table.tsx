@@ -252,7 +252,7 @@ export function DataTable<TData>({
               value={pagination.pageSize.toString()}
               onValueChange={handlePageSizeChange}
             >
-              <SelectTrigger className="h-8 w-[70px]">
+              <SelectTrigger className="h-8 w-[min(22vw,4.375rem)]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent side="top">

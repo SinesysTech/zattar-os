@@ -81,22 +81,22 @@ export function ExpedientesFiltrosAvancados({
   );
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Filter className="mr-2 h-4 w-4" />
-          Filtros Avançados
-          {hasActiveFilters && (
-            <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
-              {Object.values(filters).filter((v) => v !== undefined && v !== null && v !== '').length}
-            </span>
-          )}
-        </Button>
-      </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto p-6">
-        <SheetHeader className="pb-5">
-          <SheetTitle className="text-xl font-semibold">Filtros Avançados</SheetTitle>
-        </SheetHeader>
+    <>
+      <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+        <Filter className="mr-2 h-4 w-4" />
+        Filtros Avançados
+        {hasActiveFilters && (
+          <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+            {Object.values(filters).filter((v) => v !== undefined && v !== null && v !== '').length}
+          </span>
+        )}
+      </Button>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-h-[90vh] w-[400px] sm:w-[540px] overflow-y-auto p-6">
+          <DialogHeader className="pb-5">
+            <DialogTitle className="text-xl font-semibold">Filtros Avançados</DialogTitle>
+          </DialogHeader>
 
         <div className="space-y-6">
           {/* TRT */}
@@ -434,15 +434,16 @@ export function ExpedientesFiltrosAvancados({
           </div>
         </div>
 
-        <SheetFooter className="pt-6">
-          <Button variant="outline" onClick={handleReset}>
-            <X className="mr-2 h-4 w-4" />
-            Limpar
-          </Button>
-          <Button onClick={handleApply}>Aplicar Filtros</Button>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+          <DialogFooter className="pt-6">
+            <Button variant="outline" onClick={handleReset}>
+              <X className="mr-2 h-4 w-4" />
+              Limpar
+            </Button>
+            <Button onClick={handleApply}>Aplicar Filtros</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

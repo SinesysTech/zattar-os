@@ -109,7 +109,7 @@ export function TableToolbar({
 
   return (
     <ButtonGroup className={cn("", className)}>
-      <InputGroup className="w-full min-w-[600px]">
+      <InputGroup className="w-full min-w-[min(92vw,37.5rem)]">
         <InputGroupAddon>
           <Search className="h-4 w-4" />
         </InputGroupAddon>
@@ -137,7 +137,7 @@ export function TableToolbar({
           </Button>
         </PopoverTrigger>
         <PopoverContent 
-          className="p-0 w-auto max-w-[600px]" 
+          className="p-0 w-auto max-w-[min(92vw,37.5rem)]" 
           align="start" 
           sideOffset={4}
         >
@@ -182,7 +182,7 @@ export function TableToolbar({
 
               {/* Submenu com opções (lado direito) */}
               {activeGroup && (
-                <div className="border-l overflow-hidden w-max max-w-[400px]">
+                <div className="border-l overflow-hidden w-max max-w-[min(92vw,25rem)]">
                   <div className="p-2 border-b">
                     <div className="text-sm font-semibold px-2 py-1.5 whitespace-nowrap">{activeGroup}</div>
                   </div>

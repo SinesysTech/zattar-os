@@ -118,46 +118,6 @@ function validarEnderecoPJE(endereco: EnderecoPJE): { valido: boolean; avisos: s
 }
 
 /**
- * Valida parte PJE verificando campos obrigatórios
- */
-function validarPartePJE(parte: PartePJE): void {
-  if (!parte.idParte || parte.idParte <= 0) {
-    throw new ValidationError('ID da parte deve ser positivo', { parte: parte.nome });
-  }
-
-  if (!parte.idPessoa || parte.idPessoa <= 0) {
-    throw new ValidationError('ID pessoa deve ser positivo', { parte: parte.nome });
-  }
-
-  if (!parte.nome?.trim()) {
-    throw new ValidationError('Nome da parte é obrigatório', { parte: parte.nome });
-  }
-
-  if (!['CPF', 'CNPJ', 'OUTRO'].includes(parte.tipoDocumento)) {
-    throw new ValidationError('Tipo documento inválido', { parte: parte.nome, tipoDocumento: parte.tipoDocumento });
-  }
-
-  if (!['ATIVO', 'PASSIVO', 'OUTROS'].includes(parte.polo)) {
-    throw new ValidationError('Polo inválido', { parte: parte.nome, polo: parte.polo });
-  }
-
-  // Validação adicional para CPF/CNPJ
-  if (parte.tipoDocumento === 'CPF' && parte.numeroDocumento) {
-    const cpfLimpo = parte.numeroDocumento.replace(/\D/g, '');
-    if (cpfLimpo.length !== 11) {
-      throw new ValidationError('CPF deve ter 11 dígitos', { parte: parte.nome, numeroDocumento: parte.numeroDocumento });
-    }
-  }
-
-  if (parte.tipoDocumento === 'CNPJ' && parte.numeroDocumento) {
-    const cnpjLimpo = parte.numeroDocumento.replace(/\D/g, '');
-    if (cnpjLimpo.length !== 14) {
-      throw new ValidationError('CNPJ deve ter 14 dígitos', { parte: parte.nome, numeroDocumento: parte.numeroDocumento });
-    }
-  }
-}
-
-/**
  * Interface para dados básicos do processo necessários para captura
  */
 export interface ProcessoParaCaptura {
@@ -468,6 +428,7 @@ async function capturarPartesProcessoInternal(
 
 /**
  * Processa partes em lote com controle de concorrência
+ * Mantém índice global de ordem para garantir ordenação consistente em processo_partes
  */
 async function processarPartesEmLote(
   partes: PartePJE[],
@@ -475,17 +436,34 @@ async function processarPartesEmLote(
   advogado: AdvogadoIdentificacao,
   logger: ReturnType<typeof getLogger>
 ): Promise<PromiseSettledResult<{ tipoParte: TipoParteClassificacao; repsCount: number; vinculoCriado: boolean }>[]> {
+  // Cria pares de (parte, índice global) para manter ordenação
+  const partesComIndice = partes.map((parte, indexGlobal) => ({ parte, indexGlobal }));
+
+  // Se paralelização não estiver habilitada, processa sequencialmente
+  if (!CAPTURA_CONFIG.ENABLE_PARALLEL_PROCESSING) {
+    const resultados: PromiseSettledResult<any>[] = [];
+    for (const { parte, indexGlobal } of partesComIndice) {
+      try {
+        const resultado = await processarParteComRetry(parte, indexGlobal, processo, advogado, logger);
+        resultados.push({ status: 'fulfilled' as const, value: resultado });
+      } catch (error) {
+        resultados.push({ status: 'rejected' as const, reason: error });
+      }
+    }
+    return resultados;
+  }
+
   // Divide em lotes para controlar concorrência
-  const lotes: PartePJE[][] = [];
-  for (let i = 0; i < partes.length; i += CAPTURA_CONFIG.MAX_CONCURRENT_PARTES) {
-    lotes.push(partes.slice(i, i + CAPTURA_CONFIG.MAX_CONCURRENT_PARTES));
+  const lotes: Array<Array<{ parte: PartePJE; indexGlobal: number }>> = [];
+  for (let i = 0; i < partesComIndice.length; i += CAPTURA_CONFIG.MAX_CONCURRENT_PARTES) {
+    lotes.push(partesComIndice.slice(i, i + CAPTURA_CONFIG.MAX_CONCURRENT_PARTES));
   }
 
   const todosResultados: PromiseSettledResult<any>[] = [];
 
   for (const lote of lotes) {
-    const promises = lote.map((parte, indexInLote) =>
-      processarParteComRetry(parte, indexInLote, processo, advogado, logger)
+    const promises = lote.map(({ parte, indexGlobal }) =>
+      processarParteComRetry(parte, indexGlobal, processo, advogado, logger)
     );
     const resultadosLote = await Promise.allSettled(promises);
     todosResultados.push(...resultadosLote);
@@ -535,14 +513,17 @@ async function processarParteComTransacao(
   logger: ReturnType<typeof getLogger>
 ): Promise<{ repsCount: number; vinculoCriado: boolean }> {
   let entidadeId: number | null = null;
+  let entidadeCriada = false;
   let vinculoCriado = false;
 
   try {
     // 1. Upsert da entidade
-    entidadeId = await processarParte(parte, tipoParte, processo);
-    if (!entidadeId) {
+    const resultado = await processarParte(parte, tipoParte, processo);
+    if (!resultado) {
       throw new PersistenceError('Falha ao criar entidade', 'insert', tipoParte, { parte: parte.nome });
     }
+    entidadeId = resultado.id;
+    entidadeCriada = resultado.criado;
 
     // 2. Processa endereço e vincula
     const enderecoId = await processarEndereco(parte, tipoParte, entidadeId);
@@ -561,11 +542,12 @@ async function processarParteComTransacao(
 
     return { repsCount, vinculoCriado };
   } catch (error) {
-    // Rollback manual (deletar entidade e vínculo se criados)
-    if (entidadeId && !vinculoCriado) {
+    // Rollback manual: só deleta entidade se ela foi criada NESTA operação
+    // Se foi apenas atualizada, mantém a entidade existente
+    if (entidadeId && entidadeCriada && !vinculoCriado) {
       try {
         await deletarEntidade(tipoParte, entidadeId);
-        logger.warn({ entidadeId, tipoParte }, 'Rollback: entidade deletada devido a erro');
+        logger.warn({ entidadeId, tipoParte }, 'Rollback: entidade criada deletada devido a erro');
       } catch (rollbackError) {
         logger.error({ rollbackError, entidadeId }, 'Erro no rollback da entidade');
       }
