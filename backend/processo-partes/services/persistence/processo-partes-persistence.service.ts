@@ -162,6 +162,10 @@ export async function criarProcessoParte(
     };
   }
 
+  if (!params.id_pessoa_pje) {
+    console.warn('[PROCESSO-PARTES] id_pessoa_pje não fornecido - auditoria PJE incompleta');
+  }
+
   if (!params.trt) {
     return {
       success: false,
@@ -197,21 +201,8 @@ export async function criarProcessoParte(
     };
   }
 
-  // Verifica se já existe vínculo para evitar duplicação
-  const { data: existente } = await supabase
-    .from('processo_partes')
-    .select('id')
-    .eq('processo_id', params.processo_id)
-    .eq('tipo_entidade', params.tipo_entidade)
-    .eq('entidade_id', params.entidade_id)
-    .eq('grau', params.grau)
-    .maybeSingle();
-
-  if (existente) {
-    return {
-      success: false,
-      error: 'Vínculo já existe para esta entidade neste processo/grau',
-    };
+  if (params.ordem !== undefined && params.ordem < 0) {
+    return { success: false, error: 'ordem deve ser >= 0' };
   }
 
   // Prepara dados para inserção
@@ -220,6 +211,7 @@ export async function criarProcessoParte(
     tipo_entidade: params.tipo_entidade,
     entidade_id: params.entidade_id,
     id_pje: params.id_pje,
+    id_pessoa_pje: params.id_pessoa_pje ?? null,
     trt: params.trt,
     grau: params.grau,
     numero_processo: params.numero_processo,
@@ -232,17 +224,27 @@ export async function criarProcessoParte(
 
   const { data, error } = await supabase
     .from('processo_partes')
-    .insert(dadosInsercao)
+    .upsert(dadosInsercao, { onConflict: 'processo_id,tipo_entidade,entidade_id,grau' })
     .select()
     .single();
 
   if (error) {
-    console.error('Erro ao criar processo_parte:', error);
+    let errorMessage = `Erro ao criar vínculo: ${error.message}`;
+    if (error.code === '23503') {
+      errorMessage = 'Processo ou entidade não encontrada (FK inválida)';
+    } else if (error.code === '23505') {
+      errorMessage = 'Vínculo duplicado para esta entidade neste processo/grau';
+    } else if (error.code === '23514') {
+      errorMessage = 'Valor inválido em campo com constraint CHECK';
+    }
+    console.error('[PROCESSO-PARTES] Erro ao criar vínculo:', { processo_id: params.processo_id, tipo_entidade: params.tipo_entidade, entidade_id: params.entidade_id, grau: params.grau, error: errorMessage });
     return {
       success: false,
-      error: `Erro ao criar vínculo: ${error.message}`,
+      error: errorMessage,
     };
   }
+
+  console.log('[PROCESSO-PARTES] Vínculo criado/atualizado:', { processo_id: params.processo_id, tipo_entidade: params.tipo_entidade, entidade_id: params.entidade_id, grau: params.grau, tipo_parte: params.tipo_parte, polo: params.polo });
 
   return {
     success: true,
@@ -308,6 +310,18 @@ export async function atualizarProcessoParte(
     };
   }
 
+  if (params.ordem !== undefined && params.ordem < 0) {
+    return { success: false, error: 'ordem deve ser >= 0' };
+  }
+
+  // Não permitir alterar campos da UNIQUE constraint
+  if (params.processo_id !== undefined || params.tipo_entidade !== undefined || params.entidade_id !== undefined || params.grau !== undefined) {
+    return {
+      success: false,
+      error: 'Não é permitido alterar campos da constraint UNIQUE (processo_id, tipo_entidade, entidade_id, grau)',
+    };
+  }
+
   // Prepara dados para atualização (apenas campos fornecidos)
   const dadosAtualizacao: Record<string, unknown> = {};
 
@@ -339,10 +353,18 @@ export async function atualizarProcessoParte(
     .single();
 
   if (error) {
-    console.error('Erro ao atualizar processo_parte:', error);
+    let errorMessage = `Erro ao atualizar vínculo: ${error.message}`;
+    if (error.code === '23503') {
+      errorMessage = 'Processo ou entidade não encontrada (FK inválida)';
+    } else if (error.code === '23505') {
+      errorMessage = 'Vínculo duplicado para esta entidade neste processo/grau';
+    } else if (error.code === '23514') {
+      errorMessage = 'Valor inválido em campo com constraint CHECK';
+    }
+    console.error('[PROCESSO-PARTES] Erro ao atualizar vínculo:', { id: params.id, error: errorMessage });
     return {
       success: false,
-      error: `Erro ao atualizar vínculo: ${error.message}`,
+      error: errorMessage,
     };
   }
 

@@ -1,18 +1,3 @@
-/**
- * Arquivo: captura/services/partes/partes-capture.service.ts
- *
- * PROPÓSITO:
- * Serviço principal para captura end-to-end de partes de processos do PJE-TRT.
- * Orquestra todo o fluxo: busca via API, identificação de cliente, upsert de entidades,
- * salvamento de representantes e criação de vínculos processo-partes.
- *
- * EXPORTAÇÕES:
- * - capturarPartesProcesso(): Função principal de captura
- *
- * QUEM USA ESTE ARQUIVO:
- * - app/api/captura/trt/partes/route.ts (endpoint REST)
- */
-
 import type { Page } from 'playwright';
 import type { CapturaPartesResult, CapturaPartesErro, TipoParteClassificacao } from './types';
 import type { PartePJE, RepresentantePJE } from '@/backend/api/pje-trt/partes/types';
@@ -31,6 +16,7 @@ import type { TipoParteProcesso, PoloProcessoParte } from '@/backend/types/parte
 import { TIPOS_PARTE_PROCESSO_VALIDOS } from '@/backend/types/partes/processo-partes-types';
 import type { GrauAcervo } from '@/backend/types/acervo/types';
 import type { EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } from '@/backend/types/partes/enderecos-types';
+import { CAMPOS_MINIMOS_ENDERECO } from '@/backend/types/partes/enderecos-types';
 import type { SituacaoOAB, TipoRepresentante, Polo } from '@/backend/types/representantes/representantes-types';
 
 /**
@@ -80,6 +66,7 @@ interface EnderecoPJE {
 
 /**
  * Função auxiliar para validar endereço do PJE
+ * Utiliza CAMPOS_MINIMOS_ENDERECO para verificar campos obrigatórios
  */
 function validarEnderecoPJE(endereco: EnderecoPJE): { valido: boolean; avisos: string[] } {
   const avisos: string[] = [];
@@ -88,15 +75,25 @@ function validarEnderecoPJE(endereco: EnderecoPJE): { valido: boolean; avisos: s
     avisos.push('ID do endereço inválido ou ausente');
   }
 
-  const hasLogradouro = !!endereco.logradouro;
-  const hasMunicipio = !!endereco.municipio;
-  const hasCep = !!endereco.cep;
+  // Mapeia os campos do PJE para os campos esperados
+  const camposPJE: Record<string, unknown> = {
+    logradouro: endereco.logradouro,
+    municipio: endereco.municipio,
+    cep: endereco.nroCep, // Nota: no PJE o campo é nroCep
+  };
 
-  if (!hasLogradouro) avisos.push('Endereço sem logradouro');
-  if (!hasMunicipio) avisos.push('Endereço sem município');
-  if (!hasCep) avisos.push('Endereço sem CEP');
+  // Verifica quais campos mínimos estão presentes
+  const camposPresentes = CAMPOS_MINIMOS_ENDERECO.filter(campo => !!camposPJE[campo]);
 
-  const valido = (endereco.id && endereco.id > 0) && (hasLogradouro || hasMunicipio || hasCep);
+  // Adiciona avisos para campos ausentes
+  CAMPOS_MINIMOS_ENDERECO.forEach(campo => {
+    if (!camposPJE[campo]) {
+      avisos.push(`Endereço sem ${campo}`);
+    }
+  });
+
+  // Endereço é válido se tiver ID válido E pelo menos um campo mínimo
+  const valido = !!(endereco.id && endereco.id > 0 && camposPresentes.length > 0);
   return { valido, avisos };
 }
 
@@ -134,19 +131,20 @@ function extrairCamposPJE(parte: PartePJE) {
   if (parte.tipoDocumento === 'CPF') {
     camposExtraidos.sexo = dados?.sexo as string | undefined;
     camposExtraidos.nome_genitora = dados?.nomeGenitora as string | undefined;
-    camposExtraidos.naturalidade_id_pje = dados?.naturalidade?.id !== undefined ? Number(dados.naturalidade.id) : undefined;
-    camposExtraidos.naturalidade_municipio = dados?.naturalidade?.municipio as string | undefined;
-    camposExtraidos.naturalidade_estado_id_pje = dados?.naturalidade?.estado?.id !== undefined ? Number(dados.naturalidade.estado.id) : undefined;
-    camposExtraidos.naturalidade_estado_sigla = dados?.naturalidade?.estado?.sigla as string | undefined;
-    camposExtraidos.uf_nascimento_id_pje = dados?.ufNascimento?.id !== undefined ? Number(dados.ufNascimento.id) : undefined;
-    camposExtraidos.uf_nascimento_sigla = dados?.ufNascimento?.sigla as string | undefined;
-    camposExtraidos.uf_nascimento_descricao = dados?.ufNascimento?.descricao as string | undefined;
-    camposExtraidos.pais_nascimento_id_pje = dados?.paisNascimento?.id !== undefined ? Number(dados.paisNascimento.id) : undefined;
-    camposExtraidos.pais_nascimento_codigo = dados?.paisNascimento?.codigo as string | undefined;
-    camposExtraidos.pais_nascimento_descricao = dados?.paisNascimento?.descricao as string | undefined;
+    camposExtraidos.naturalidade_id_pje = (dados?.naturalidade as any)?.id !== undefined ? Number((dados.naturalidade as any).id) : undefined;
+    camposExtraidos.naturalidade_municipio = (dados?.naturalidade as any)?.municipio as string | undefined;
+    camposExtraidos.naturalidade_estado_id_pje = (dados?.naturalidade as any)?.estado?.id !== undefined ? Number((dados.naturalidade as any).estado.id) : undefined;
+    camposExtraidos.naturalidade_estado_sigla = (dados?.naturalidade as any)?.estado?.sigla as string | undefined;
+    camposExtraidos.naturalidade_estado_descricao = (dados?.naturalidade as any)?.estado?.descricao as string | undefined;
+    camposExtraidos.uf_nascimento_id_pje = (dados?.ufNascimento as any)?.id !== undefined ? Number((dados.ufNascimento as any).id) : undefined;
+    camposExtraidos.uf_nascimento_sigla = (dados?.ufNascimento as any)?.sigla as string | undefined;
+    camposExtraidos.uf_nascimento_descricao = (dados?.ufNascimento as any)?.descricao as string | undefined;
+    camposExtraidos.pais_nascimento_id_pje = (dados?.paisNascimento as any)?.id !== undefined ? Number((dados.paisNascimento as any).id) : undefined;
+    camposExtraidos.pais_nascimento_codigo = (dados?.paisNascimento as any)?.codigo as string | undefined;
+    camposExtraidos.pais_nascimento_descricao = (dados?.paisNascimento as any)?.descricao as string | undefined;
     camposExtraidos.escolaridade_codigo = dados?.escolaridade !== undefined ? Number(dados.escolaridade) : undefined;
-    camposExtraidos.situacao_cpf_receita_id = dados?.situacaoCpfReceita?.id !== undefined ? Number(dados.situacaoCpfReceita.id) : undefined;
-    camposExtraidos.situacao_cpf_receita_descricao = dados?.situacaoCpfReceita?.descricao as string | undefined;
+    camposExtraidos.situacao_cpf_receita_id = (dados?.situacaoCpfReceita as any)?.id !== undefined ? Number((dados.situacaoCpfReceita as any).id) : undefined;
+    camposExtraidos.situacao_cpf_receita_descricao = (dados?.situacaoCpfReceita as any)?.descricao as string | undefined;
     camposExtraidos.pode_usar_celular_mensagem = dados?.podeUsarCelularMensagem !== undefined ? Boolean(dados.podeUsarCelularMensagem) : undefined;
   }
 
@@ -155,15 +153,15 @@ function extrairCamposPJE(parte: PartePJE) {
     camposExtraidos.inscricao_estadual = dados?.inscricaoEstadual as string | undefined;
     camposExtraidos.data_abertura = dados?.dataAbertura as string | undefined;
     camposExtraidos.orgao_publico = dados?.orgaoPublico !== undefined ? Boolean(dados.orgaoPublico) : undefined;
-    camposExtraidos.tipo_pessoa_codigo_pje = dados?.tipoPessoa?.codigo as string | undefined;
-    camposExtraidos.tipo_pessoa_label_pje = dados?.tipoPessoa?.label as string | undefined;
-    camposExtraidos.situacao_cnpj_receita_id = dados?.situacaoCnpjReceita?.id !== undefined ? Number(dados.situacaoCnpjReceita.id) : undefined;
-    camposExtraidos.situacao_cnpj_receita_descricao = dados?.situacaoCnpjReceita?.descricao as string | undefined;
+    camposExtraidos.tipo_pessoa_codigo_pje = (dados?.tipoPessoa as any)?.codigo as string | undefined;
+    camposExtraidos.tipo_pessoa_label_pje = (dados?.tipoPessoa as any)?.label as string | undefined;
+    camposExtraidos.situacao_cnpj_receita_id = (dados?.situacaoCnpjReceita as any)?.id !== undefined ? Number((dados.situacaoCnpjReceita as any).id) : undefined;
+    camposExtraidos.situacao_cnpj_receita_descricao = (dados?.situacaoCnpjReceita as any)?.descricao as string | undefined;
     camposExtraidos.ramo_atividade = dados?.ramoAtividade as string | undefined;
     camposExtraidos.cpf_responsavel = dados?.cpfResponsavel as string | undefined;
     camposExtraidos.oficial = dados?.oficial !== undefined ? Boolean(dados.oficial) : undefined;
-    camposExtraidos.porte_codigo = dados?.porte?.codigo !== undefined ? Number(dados.porte.codigo) : undefined;
-    camposExtraidos.porte_descricao = dados?.porte?.descricao as string | undefined;
+    camposExtraidos.porte_codigo = (dados?.porte as any)?.codigo !== undefined ? Number((dados.porte as any).codigo) : undefined;
+    camposExtraidos.porte_descricao = (dados?.porte as any)?.descricao as string | undefined;
     camposExtraidos.ultima_atualizacao_pje = dados?.ultimaAtualizacao as string | undefined;
   }
 
@@ -475,7 +473,7 @@ async function processarParte(
       // Upsert em tabela partes_contrarias
       if (isPessoaFisica) {
         const params: CriarParteContrariaPFParams & { id_pessoa_pje: number } = {
-          ...dadosCompletos,
+          ...dadosComuns,
           tipo_pessoa: 'pf',
           cpf: parte.numeroDocumento,
         };
@@ -483,7 +481,7 @@ async function processarParte(
         return result.sucesso && result.parteContraria ? result.parteContraria.id : null;
       } else {
         const params: CriarParteContrariaPJParams & { id_pessoa_pje: number } = {
-          ...dadosCompletos,
+          ...dadosComuns,
           tipo_pessoa: 'pj',
           cnpj: parte.numeroDocumento,
         };
@@ -493,7 +491,7 @@ async function processarParte(
     } else {
       // Upsert em tabela terceiros
       const params = {
-        ...dadosCompletos,
+        ...dadosComuns,
         tipo_pessoa: isPessoaFisica ? ('pf' as const) : ('pj' as const),
         cpf: isPessoaFisica ? parte.numeroDocumento : undefined,
         cnpj: !isPessoaFisica ? parte.numeroDocumento : undefined,
@@ -654,6 +652,16 @@ async function criarVinculoProcessoParte(
   parte: PartePJE,
   ordem: number
 ): Promise<boolean> {
+  // Validação prévia
+  if (entidadeId <= 0) {
+    console.error('[CAPTURA-PARTES] Falha ao criar vínculo: entidadeId inválido', { entidadeId, parte_nome: parte.nome });
+    return false;
+  }
+  if (!parte.idParte) {
+    console.error('[CAPTURA-PARTES] Falha ao criar vínculo: idParte ausente', { parte_nome: parte.nome });
+    return false;
+  }
+
   try {
     const result = await vincularParteProcesso({
       processo_id: processo.id,
@@ -671,7 +679,13 @@ async function criarVinculoProcessoParte(
       dados_pje_completo: parte.dadosCompletos,
     });
 
-    return result.success;
+    if (!result.success) {
+      console.error('[CAPTURA-PARTES] Falha ao criar vínculo:', { processo_id: processo.id, tipo_entidade: tipoParte, entidade_id: entidadeId, parte_nome: parte.nome, erro: result.error });
+      return false;
+    }
+
+    console.log('[CAPTURA-PARTES] ✓ Vínculo criado:', { processo: processo.numero_processo, parte: parte.nome, tipo: tipoParte, polo: parte.polo });
+    return true;
   } catch (error) {
     console.error(
       `[CAPTURA-PARTES] Erro ao criar vínculo processo-parte para ${parte.nome}:`,
@@ -718,18 +732,18 @@ async function processarEndereco(
       estado_id_pje: enderecoPJE?.estado?.id ? Number(enderecoPJE.estado.id) : undefined,
       estado_sigla: enderecoPJE?.estado?.sigla ? String(enderecoPJE.estado.sigla) : undefined,
       estado_descricao: enderecoPJE?.estado?.descricao ? String(enderecoPJE.estado.descricao) : undefined,
-      estado: enderecoPJE?.estado?.sigla || enderecoPJE?.estado || undefined, // Fallback to top-level
+      estado: enderecoPJE?.estado?.sigla ? String(enderecoPJE.estado.sigla) : undefined,
       pais_id_pje: enderecoPJE?.pais?.id ? Number(enderecoPJE.pais.id) : undefined,
       pais_codigo: enderecoPJE?.pais?.codigo ? String(enderecoPJE.pais.codigo) : undefined,
       pais_descricao: enderecoPJE?.pais?.descricao ? String(enderecoPJE.pais.descricao) : undefined,
-      pais: enderecoPJE?.pais?.descricao || enderecoPJE?.pais || undefined,
+      pais: enderecoPJE?.pais?.descricao ? String(enderecoPJE.pais.descricao) : undefined,
       cep: enderecoPJE?.nroCep ? String(enderecoPJE.nroCep) : undefined,
       classificacoes_endereco: enderecoPJE?.classificacoesEndereco || undefined,
       correspondencia: enderecoPJE?.correspondencia !== undefined ? Boolean(enderecoPJE.correspondencia) : undefined,
       situacao: (enderecoPJE?.situacao as unknown as SituacaoEndereco) || undefined,
       id_usuario_cadastrador_pje: enderecoPJE?.idUsuarioCadastrador ? Number(enderecoPJE.idUsuarioCadastrador) : undefined,
       data_alteracao_pje: enderecoPJE?.dtAlteracao ? String(enderecoPJE.dtAlteracao) : undefined,
-      dados_pje_completo: enderecoPJE, // Store complete PJE address JSON for audit
+      dados_pje_completo: enderecoPJE as unknown as Record<string, unknown>, // Store complete PJE address JSON for audit
     });
 
     if (result.sucesso && result.endereco) {
@@ -787,18 +801,18 @@ async function processarEnderecoRepresentante(
       estado_id_pje: enderecoPJE?.estado?.id ? Number(enderecoPJE.estado.id) : undefined,
       estado_sigla: enderecoPJE?.estado?.sigla ? String(enderecoPJE.estado.sigla) : undefined,
       estado_descricao: enderecoPJE?.estado?.descricao ? String(enderecoPJE.estado.descricao) : undefined,
-      estado: enderecoPJE?.estado?.sigla || enderecoPJE?.estado || undefined, // Fallback to top-level
+      estado: enderecoPJE?.estado?.sigla ? String(enderecoPJE.estado.sigla) : undefined,
       pais_id_pje: enderecoPJE?.pais?.id ? Number(enderecoPJE.pais.id) : undefined,
       pais_codigo: enderecoPJE?.pais?.codigo ? String(enderecoPJE.pais.codigo) : undefined,
       pais_descricao: enderecoPJE?.pais?.descricao ? String(enderecoPJE.pais.descricao) : undefined,
-      pais: enderecoPJE?.pais?.descricao || enderecoPJE?.pais || undefined,
+      pais: enderecoPJE?.pais?.descricao ? String(enderecoPJE.pais.descricao) : undefined,
       cep: enderecoPJE?.nroCep ? String(enderecoPJE.nroCep) : undefined,
       classificacoes_endereco: enderecoPJE?.classificacoesEndereco || undefined,
       correspondencia: enderecoPJE?.correspondencia !== undefined ? Boolean(enderecoPJE.correspondencia) : undefined,
       situacao: (enderecoPJE?.situacao as unknown as SituacaoEndereco) || undefined,
       id_usuario_cadastrador_pje: enderecoPJE?.idUsuarioCadastrador ? Number(enderecoPJE.idUsuarioCadastrador) : undefined,
       data_alteracao_pje: enderecoPJE?.dtAlteracao ? String(enderecoPJE.dtAlteracao) : undefined,
-      dados_pje_completo: enderecoPJE, // Store complete PJE address JSON for audit
+      dados_pje_completo: enderecoPJE as unknown as Record<string, unknown>, // Store complete PJE address JSON for audit
     });
 
     if (result.sucesso && result.endereco) {

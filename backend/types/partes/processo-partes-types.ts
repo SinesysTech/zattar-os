@@ -69,25 +69,41 @@ export const TIPOS_PARTE_PROCESSO_VALIDOS: Record<TipoParteProcesso, true> = {
 };
 
 /**
- * Registro de participação no processo
+ * Registro de participação de uma entidade (cliente/parte_contraria/terceiro) em um processo.
+ * 
+ * Esta é a tabela de junção N:N entre processos (acervo) e entidades.
+ * Cada registro representa uma participação única identificada por:
+ * - processo_id + tipo_entidade + entidade_id + grau (UNIQUE constraint)
+ * 
+ * @example
+ * // Cliente como RECLAMANTE (polo ATIVO) em processo de 1º grau
+ * {
+ *   processo_id: 123,
+ *   tipo_entidade: 'cliente',
+ *   entidade_id: 456,
+ *   tipo_parte: 'RECLAMANTE',
+ *   polo: 'ATIVO',
+ *   grau: 'primeiro_grau',
+ *   ...
+ * }
  */
 export interface ProcessoParte {
   id: number;
   processo_id: number;
-  tipo_entidade: EntidadeTipoProcessoParte;
-  entidade_id: number;
-  id_pje: number;
-  id_pessoa_pje: number | null;
+  tipo_entidade: EntidadeTipoProcessoParte; // Tipo de entidade participante - determina qual tabela buscar (clientes/partes_contrarias/terceiros)
+  entidade_id: number; // ID da entidade na tabela correspondente (FK polimórfica)
+  id_pje: number; // ID da parte no PJE (idParte) - obrigatório
+  id_pessoa_pje: number | null; // ID da pessoa no PJE (idPessoa) - recomendado para auditoria
   id_tipo_parte: number | null;
-  tipo_parte: TipoParteProcesso;
-  polo: PoloProcessoParte;
-  principal: boolean | null; // Indica se é a parte principal no polo
-  ordem: number | null; // Ordem de exibição dentro do polo
+  tipo_parte: TipoParteProcesso; // Tipo de participante no processo (ex: RECLAMANTE, RECLAMADO) - vem do PJE
+  polo: PoloProcessoParte; // Polo processual - ATIVO (autor), PASSIVO (réu), NEUTRO (perito), TERCEIRO (interveniente)
+  principal: boolean | null; // Indica se é a parte principal no polo - null se não definida
+  ordem: number | null; // Ordem de exibição dentro do polo (0-based) - null se não definida
   status_pje: string | null;
   situacao_pje: string | null;
   autoridade: boolean | null;
   endereco_desconhecido: boolean | null;
-  dados_pje_completo: Record<string, unknown> | null; // JSONB
+  dados_pje_completo: Record<string, unknown> | null; // JSON completo retornado pelo PJE para auditoria e histórico
   trt: string;
   numero_processo: string;
   grau: GrauProcessoParte;
@@ -96,8 +112,32 @@ export interface ProcessoParte {
   updated_at: string; // ISO timestamp
 }
 
+// NOTA: Constraint UNIQUE (processo_id, tipo_entidade, entidade_id, grau)
+// garante que uma entidade aparece apenas 1x por processo/grau.
+// Mesma entidade pode aparecer em graus diferentes (1º e 2º grau).
+
 /**
- * Dados para criar participação no processo
+ * Parâmetros para criar vínculo processo-parte.
+ * 
+ * Campos obrigatórios: processo_id, tipo_entidade, entidade_id, id_pje,
+ * trt, grau, numero_processo, tipo_parte, polo.
+ * 
+ * @example
+ * await criarProcessoParte({
+ *   processo_id: 123,
+ *   tipo_entidade: 'cliente',
+ *   entidade_id: 456,
+ *   id_pje: 789,
+ *   id_pessoa_pje: 101112,
+ *   tipo_parte: 'RECLAMANTE',
+ *   polo: 'ATIVO',
+ *   trt: '02',
+ *   grau: 'primeiro_grau',
+ *   numero_processo: '0000123-45.2024.5.02.0001',
+ *   principal: true,
+ *   ordem: 0,
+ *   dados_pje_completo: { ...dadosDoPJE }
+ * });
  */
 export interface CriarProcessoParteParams {
   processo_id: number;

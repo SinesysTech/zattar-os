@@ -30,12 +30,21 @@ export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: Usuar
   return (
     <Card className="relative flex flex-col h-full hover:shadow-md transition-shadow">
       <CardHeader className="p-2.5 pb-1.5">
-        <CardTitle className="text-sm leading-tight truncate">
-          {formatarNomeExibicao(usuario.nomeExibicao)}
-        </CardTitle>
-        <p className="text-xs text-muted-foreground mt-0.5 truncate">
-          {usuario.emailCorporativo}
-        </p>
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <CardTitle className="text-sm leading-tight truncate">
+              {formatarNomeExibicao(usuario.nomeExibicao)}
+            </CardTitle>
+            <p className="text-xs text-muted-foreground mt-0.5 truncate">
+              {usuario.emailCorporativo}
+            </p>
+          </div>
+          {usuario.isSuperAdmin && (
+            <Badge tone="danger" variant="soft" className="text-xs h-5 px-1.5 shrink-0">
+              Super Admin
+            </Badge>
+          )}
+        </div>
       </CardHeader>
 
       <CardContent className="flex-1 space-y-0.5 text-xs p-2.5 pt-0 pb-7">
