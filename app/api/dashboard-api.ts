@@ -1,25 +1,59 @@
-import { supabase } from '@/lib/supabase';
+import { createClient } from '../_lib/supabase/client';
 import { 
-  Tarefa, Nota, LayoutPainel, LinkPersonalizado,
+  Tarefa, Nota, LayoutPainel, LinkPersonalizado, DashboardWidget,
   CreateTarefaData, UpdateTarefaData, CreateNotaData, UpdateNotaData,
   CreateLinkData, UpdateLinkData
-} from './dashboard-types';
+} from '../_lib/dashboard-types';
+
+export type { 
+  Tarefa, Nota, LayoutPainel, LinkPersonalizado, DashboardWidget,
+  CreateTarefaData, UpdateTarefaData, CreateNotaData, UpdateNotaData,
+  CreateLinkData, UpdateLinkData
+};
+
+// Helper function to get current user
+async function getCurrentUser() {
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error || !user) throw new Error('User not authenticated');
+  return user;
+}
+
+// Helper function to get usuario_id from auth user
+async function getUsuarioId() {
+  const user = await getCurrentUser();
+  const { data, error } = await supabase
+    .from('usuarios')
+    .select('id')
+    .eq('auth_user_id', user.id)
+    .single();
+  
+  if (error || !data) throw new Error('User profile not found');
+  return data.id;
+}
 
 // Tarefas API
 export async function getTarefas(): Promise<Tarefa[]> {
-  const { data, error } = await supabase
-    .from('tarefas')
-    .select('*')
-    .order('created_at', { ascending: false });
+  try {
+    const usuarioId = await getUsuarioId();
+    const { data, error } = await supabase
+      .from('tarefas')
+      .select('*')
+      .eq('usuario_id', usuarioId)
+      .order('created_at', { ascending: false });
 
-  if (error) throw error;
-  return data || [];
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching tarefas:', error);
+    return [];
+  }
 }
 
 export async function createTarefa(tarefa: CreateTarefaData): Promise<Tarefa> {
+  const usuarioId = await getUsuarioId();
   const { data, error } = await supabase
     .from('tarefas')
-    .insert(tarefa)
+    .insert({ ...tarefa, usuario_id: usuarioId })
     .select()
     .single();
 
@@ -50,19 +84,27 @@ export async function deleteTarefa(id: number): Promise<void> {
 
 // Notas API
 export async function getNotas(): Promise<Nota[]> {
-  const { data, error } = await supabase
-    .from('notas')
-    .select('*')
-    .order('created_at', { ascending: false });
+  try {
+    const usuarioId = await getUsuarioId();
+    const { data, error } = await supabase
+      .from('notas')
+      .select('*')
+      .eq('usuario_id', usuarioId)
+      .order('created_at', { ascending: false });
 
-  if (error) throw error;
-  return data || [];
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching notas:', error);
+    return [];
+  }
 }
 
 export async function createNota(nota: CreateNotaData): Promise<Nota> {
+  const usuarioId = await getUsuarioId();
   const { data, error } = await supabase
     .from('notas')
-    .insert(nota)
+    .insert({ ...nota, usuario_id: usuarioId })
     .select()
     .single();
 
@@ -93,19 +135,27 @@ export async function deleteNota(id: number): Promise<void> {
 
 // Layouts Painel API
 export async function getLayoutPainel(): Promise<LayoutPainel | null> {
-  const { data, error } = await supabase
-    .from('layouts_painel')
-    .select('*')
-    .single();
+  try {
+    const usuarioId = await getUsuarioId();
+    const { data, error } = await supabase
+      .from('layouts_painel')
+      .select('*')
+      .eq('usuario_id', usuarioId)
+      .single();
 
-  if (error && error.code !== 'PGRST116') throw error;
-  return data;
+    if (error && error.code !== 'PGRST116') throw error;
+    return data;
+  } catch (error) {
+    console.error('Error fetching layout:', error);
+    return null;
+  }
 }
 
 export async function createLayoutPainel(configuracao_layout: Record<string, any>): Promise<LayoutPainel> {
+  const usuarioId = await getUsuarioId();
   const { data, error } = await supabase
     .from('layouts_painel')
-    .insert({ configuracao_layout })
+    .insert({ configuracao_layout, usuario_id: usuarioId })
     .select()
     .single();
 
@@ -127,19 +177,27 @@ export async function updateLayoutPainel(id: number, configuracao_layout: Record
 
 // Links Personalizados API
 export async function getLinksPersonalizados(): Promise<LinkPersonalizado[]> {
-  const { data, error } = await supabase
-    .from('links_personalizados')
-    .select('*')
-    .order('ordem', { ascending: true });
+  try {
+    const usuarioId = await getUsuarioId();
+    const { data, error } = await supabase
+      .from('links_personalizados')
+      .select('*')
+      .eq('usuario_id', usuarioId)
+      .order('ordem', { ascending: true });
 
-  if (error) throw error;
-  return data || [];
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching links:', error);
+    return [];
+  }
 }
 
 export async function createLinkPersonalizado(link: CreateLinkData): Promise<LinkPersonalizado> {
+  const usuarioId = await getUsuarioId();
   const { data, error } = await supabase
     .from('links_personalizados')
-    .insert(link)
+    .insert({ ...link, usuario_id: usuarioId })
     .select()
     .single();
 
@@ -167,3 +225,4 @@ export async function deleteLinkPersonalizado(id: number): Promise<void> {
 
   if (error) throw error;
 }
+const supabase = createClient();

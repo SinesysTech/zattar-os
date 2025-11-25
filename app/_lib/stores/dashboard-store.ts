@@ -5,7 +5,7 @@ import {
   getNotas, createNota, updateNota, deleteNota,
   getLayoutPainel, createLayoutPainel, updateLayoutPainel,
   getLinksPersonalizados, createLinkPersonalizado, updateLinkPersonalizado, deleteLinkPersonalizado
-} from '@/lib/dashboard-api';
+} from '../../api/dashboard-api';
 
 interface DashboardState {
   tarefas: Tarefa[];

@@ -1,12 +1,15 @@
+import { EnhancedDashboardGrid } from './components/enhanced-dashboard-grid';
+
 export default function DashboardPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <p className="mt-2 text-muted-foreground">
-          Conteúdo da dashboard será adicionado em breve.
+    <div className="container mx-auto p-6">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-muted-foreground">
+          Gerencie suas tarefas, notas e links favoritos em um só lugar
         </p>
       </div>
+      <EnhancedDashboardGrid />
     </div>
   );
 }

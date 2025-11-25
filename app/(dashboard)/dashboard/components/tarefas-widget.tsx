@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { Plus, CheckCircle, Clock, AlertCircle, Edit, Trash2 } from 'lucide-react';
-import { useDashboardStore } from '@/stores/dashboard-store';
-import { Tarefa } from '@/lib/dashboard-types';
+import { useDashboardStore } from '@/_lib/stores/dashboard-store';
+import { Tarefa } from '@/_lib/dashboard-types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -16,14 +16,22 @@ interface TarefasWidgetProps {
   className?: string;
 }
 
+interface FormData {
+  titulo: string;
+  descricao: string;
+  status: 'pendente' | 'em_andamento' | 'concluida';
+  prioridade: number;
+  data_prevista: string;
+}
+
 export function TarefasWidget({ className }: TarefasWidgetProps) {
   const { tarefas, createTarefa, updateTarefa, deleteTarefa } = useDashboardStore();
   const [isCreating, setIsCreating] = useState(false);
   const [editingTarefa, setEditingTarefa] = useState<Tarefa | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     titulo: '',
     descricao: '',
-    status: 'pendente' as const,
+    status: 'pendente',
     prioridade: 3,
     data_prevista: ''
   });
@@ -92,9 +100,9 @@ export function TarefasWidget({ className }: TarefasWidgetProps) {
     }
   };
 
-  const getPriorityColor = (prioridade: number) => {
+  const getPriorityColor = (prioridade: number): "default" | "destructive" | "secondary" => {
     if (prioridade >= 4) return 'destructive';
-    if (prioridade >= 3) return 'warning';
+    if (prioridade >= 3) return 'secondary';
     return 'secondary';
   };
 
