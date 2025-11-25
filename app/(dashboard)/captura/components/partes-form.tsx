@@ -140,9 +140,9 @@ export function PartesForm() {
         onCredenciaisChange={setCredenciaisSelecionadas}
         onCredenciaisDisponiveisChange={setCredenciaisDisponiveis}
       >
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {credSelecionadasDetalhes.length > 0 && (
-            <div className="space-y-2">
+            <div className="space-y-2 md:col-span-2">
               <Label>Escopo da captura</Label>
               <div className="rounded-md border border-dashed border-border/60 p-3 text-xs text-muted-foreground space-y-1">
                 <p>
@@ -176,7 +176,7 @@ export function PartesForm() {
             <Textarea
               id="numerosLista"
               placeholder="Cole um número por linha ou separados por vírgula"
-              rows={4}
+              rows={6}
               value={numerosProcessoTexto}
               onChange={(event) => setNumerosProcessoTexto(event.target.value)}
             />

@@ -253,7 +253,7 @@ export async function POST(request: NextRequest) {
       console.error('Erro ao criar registro de histórico:', error);
     }
 
-    // 6. Processar cada credencial SEQUENCIALMENTE
+    // 6. Processar credenciais com limite de concorrência
     (async () => {
       const resultados: Array<{
         credencial_id: number;
@@ -262,8 +262,9 @@ export async function POST(request: NextRequest) {
         resultado?: unknown;
         erro?: string;
       }> = [];
-
-      for (const credCompleta of credenciaisOrdenadas) {
+      const limit = 4;
+      let index = 0;
+      const processarCredencial = async (credCompleta: NonNullable<typeof credenciaisOrdenadas[number]>) => {
         console.log(`[Audiências] Iniciando captura: ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);
 
         let tribunalConfig;
@@ -294,7 +295,7 @@ export async function POST(request: NextRequest) {
             },
             erro: error instanceof Error ? error.message : 'Erro desconhecido',
           });
-          continue;
+          return;
         }
 
         try {
@@ -361,7 +362,14 @@ export async function POST(request: NextRequest) {
             erro: error instanceof Error ? error.message : 'Erro desconhecido',
           });
         }
-      }
+      };
+      const workers = Array.from({ length: Math.min(limit, credenciaisOrdenadas.length) }, async () => {
+        while (index < credenciaisOrdenadas.length) {
+          const current = credenciaisOrdenadas[index++];
+          await processarCredencial(current);
+        }
+      });
+      await Promise.all(workers);
 
       // Atualizar histórico após conclusão
       if (logId) {

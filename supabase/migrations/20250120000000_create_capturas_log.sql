@@ -15,7 +15,7 @@ create table public.capturas_log (
 );
 
 comment on table public.capturas_log is 'Histórico de todas as capturas realizadas no sistema';
-comment on column public.capturas_log.tipo_captura is 'Tipo de captura: acervo_geral, arquivados, audiencias, pendentes';
+comment on column public.capturas_log.tipo_captura is 'Tipo de captura: acervo_geral, arquivados, audiencias, pendentes, partes';
 comment on column public.capturas_log.advogado_id is 'ID do advogado que realizou a captura';
 comment on column public.capturas_log.credencial_ids is 'Array de IDs das credenciais utilizadas na captura';
 comment on column public.capturas_log.status is 'Status da captura: pending, in_progress, completed, failed';

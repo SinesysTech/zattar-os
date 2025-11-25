@@ -54,7 +54,7 @@ export function CapturaDialog({ open, onOpenChange }: CapturaDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-5xl lg:max-w-6xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Nova Captura</DialogTitle>
           <DialogDescription>

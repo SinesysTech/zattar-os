@@ -93,8 +93,8 @@ export function AudienciasForm() {
         onAdvogadoChange={setAdvogadoId}
         onCredenciaisChange={setCredenciaisSelecionadas}
       >
-        {/* Status */}
-        <div className="space-y-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2 md:col-span-2">
           <Label htmlFor="status">Status da Audiência</Label>
           <Select value={status} onValueChange={(value) => setStatus(value as 'M' | 'C' | 'F')}>
             <SelectTrigger id="status">
@@ -112,8 +112,6 @@ export function AudienciasForm() {
             Selecione o status das audiências que deseja capturar
           </p>
         </div>
-
-        {/* Data Início */}
         <div className="space-y-2">
           <Label htmlFor="dataInicio">Data Início (opcional)</Label>
           <Input
@@ -127,7 +125,6 @@ export function AudienciasForm() {
           </p>
         </div>
 
-        {/* Data Fim */}
         <div className="space-y-2">
           <Label htmlFor="dataFim">Data Fim (opcional)</Label>
           <Input
@@ -139,6 +136,7 @@ export function AudienciasForm() {
           <p className="text-sm text-muted-foreground">
             Se não informada, será usada hoje + 365 dias
           </p>
+        </div>
         </div>
       </CapturaFormBase>
 

@@ -838,7 +838,7 @@ async function criarVinculoProcessoParte(
       trt: processo.trt,
       grau: processo.grau,
       numero_processo: processo.numero_processo,
-      principal: parte.principal,
+      principal: parte.principal ?? false, // Default false se PJE não retornar
       ordem,
       dados_pje_completo: parte.dadosCompletos,
     }), {

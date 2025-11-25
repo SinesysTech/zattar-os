@@ -67,6 +67,8 @@ export interface Audiencia {
   polo_ativo_nome: string | null;
   polo_passivo_nome: string | null;
   url_audiencia_virtual: string | null;
+  ata_audiencia_id: number | null;
+  url: string | null;
   endereco_presencial: {
     logradouro?: string;
     numero?: string;
@@ -156,4 +158,3 @@ export interface CriarAudienciaParams {
   observacoes?: string;
   responsavel_id?: number;
 }
-

@@ -11,6 +11,9 @@
  * - Buscar processos de uma entidade com dados do processo
  * - Validar campos obrigatórios: tipo_parte, polo, ordem, principal
  * - Garantir unicidade: processo_id + tipo_entidade + entidade_id + grau
+ *
+ * IMPORTANTE: Os campos `ordem` e `principal` são OBRIGATÓRIOS. Se não fornecidos,
+ * a operação falhará com erro de validação.
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
@@ -59,8 +62,8 @@ function converterParaProcessoParte(data: Record<string, unknown>): ProcessoPart
     id_tipo_parte: (data.id_tipo_parte as number | null) ?? null,
     tipo_parte: data.tipo_parte as TipoParteProcesso,
     polo: data.polo as PoloProcessoParte,
-    principal: (data.principal as boolean | null) ?? null,
-    ordem: (data.ordem as number | null) ?? null,
+    principal: data.principal as boolean,
+    ordem: data.ordem as number,
     status_pje: (data.status_pje as string | null) ?? null,
     situacao_pje: (data.situacao_pje as string | null) ?? null,
     autoridade: (data.autoridade as boolean | null) ?? null,
@@ -201,7 +204,21 @@ export async function criarProcessoParte(
     };
   }
 
-  if (params.ordem !== undefined && params.ordem < 0) {
+  if (params.principal === undefined || params.principal === null) {
+    return {
+      success: false,
+      error: 'principal é obrigatório (deve ser true ou false)',
+    };
+  }
+
+  if (params.ordem === undefined || params.ordem === null) {
+    return {
+      success: false,
+      error: 'ordem é obrigatória (deve ser >= 0)',
+    };
+  }
+
+  if (params.ordem < 0) {
     return { success: false, error: 'ordem deve ser >= 0' };
   }
 
@@ -217,8 +234,8 @@ export async function criarProcessoParte(
     numero_processo: params.numero_processo,
     tipo_parte: params.tipo_parte,
     polo: params.polo,
-    ordem: params.ordem ?? null,
-    principal: params.principal ?? null,
+    ordem: params.ordem,
+    principal: params.principal,
     dados_pje_completo: params.dados_pje_completo ?? null,
   };
 
@@ -457,8 +474,8 @@ export async function buscarPartesPorProcesso(
         entidade_id: entidadeId,
         tipo_parte: participacao.tipo_parte as TipoParteProcesso,
         polo: participacao.polo as PoloProcessoParte,
-        ordem: (participacao.ordem as number) ?? null,
-        principal: (participacao.principal as boolean) ?? null,
+        ordem: participacao.ordem as number,
+        principal: participacao.principal as boolean,
         // Dados da entidade
         nome: entidade.nome as string,
         tipo_pessoa: entidade.tipo_pessoa as 'pf' | 'pj',
@@ -528,8 +545,8 @@ export async function buscarProcessosPorEntidade(
         grau: participacao.grau as GrauProcessoParte,
         tipo_parte: participacao.tipo_parte as TipoParteProcesso,
         polo: participacao.polo as PoloProcessoParte,
-        ordem: (participacao.ordem as number) ?? null,
-        principal: (participacao.principal as boolean) ?? null,
+        ordem: participacao.ordem as number,
+        principal: participacao.principal as boolean,
         // Dados do processo
         classe_judicial: (processo.classe_judicial as string) ?? null,
         codigo_status_processo: (processo.codigo_status_processo as string) ?? null,

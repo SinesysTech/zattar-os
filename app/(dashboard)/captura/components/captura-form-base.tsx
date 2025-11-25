@@ -63,61 +63,63 @@ export function CapturaFormBase({
 
   return (
     <div className="space-y-6">
-      {/* Passo 1: Selecionar Advogado */}
-      <div className="space-y-3">
-        <Label>Advogado *</Label>
-        <AdvogadoCombobox
-          advogados={advogados}
-          selectedId={advogadoId}
-          onSelectionChange={onAdvogadoChange}
-          disabled={isLoadingAdvogados}
-          isLoading={isLoadingAdvogados}
-          placeholder="Selecione um advogado"
-        />
-        {advogados.length === 0 && !isLoadingAdvogados && (
-          <Empty className="border-0 py-4">
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <AlertCircle className="h-6 w-6" />
-              </EmptyMedia>
-              <EmptyTitle className="text-base">Nenhum advogado encontrado</EmptyTitle>
-              <EmptyDescription className="text-sm">
-                Nenhum advogado com credenciais cadastradas encontrado. Cadastre credenciais antes de iniciar capturas.
-              </EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        )}
-      </div>
-
-      {/* Passo 2: Selecionar Credenciais do Advogado */}
-      {advogadoId && (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Passo 1: Selecionar Advogado */}
         <div className="space-y-3">
-          <Label>Credenciais *</Label>
-          {isLoadingCredenciais ? (
-            <div className="text-sm text-muted-foreground">Carregando credenciais...</div>
-          ) : credenciais.length === 0 ? (
+          <Label>Advogado *</Label>
+          <AdvogadoCombobox
+            advogados={advogados}
+            selectedId={advogadoId}
+            onSelectionChange={onAdvogadoChange}
+            disabled={isLoadingAdvogados}
+            isLoading={isLoadingAdvogados}
+            placeholder="Selecione um advogado"
+          />
+          {advogados.length === 0 && !isLoadingAdvogados && (
             <Empty className="border-0 py-4">
               <EmptyHeader>
                 <EmptyMedia variant="icon">
                   <AlertCircle className="h-6 w-6" />
                 </EmptyMedia>
-                <EmptyTitle className="text-base">Nenhuma credencial ativa encontrada</EmptyTitle>
+                <EmptyTitle className="text-base">Nenhum advogado encontrado</EmptyTitle>
                 <EmptyDescription className="text-sm">
-                  Não há credenciais ativas para este advogado.
+                  Nenhum advogado com credenciais cadastradas encontrado. Cadastre credenciais antes de iniciar capturas.
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
-          ) : (
-            <CredenciaisCombobox
-              credenciais={credenciais}
-              selectedIds={credenciaisSelecionadas}
-              onSelectionChange={onCredenciaisChange}
-              disabled={isLoadingCredenciais}
-              placeholder="Selecione credenciais..."
-            />
           )}
         </div>
-      )}
+
+        {/* Passo 2: Selecionar Credenciais do Advogado */}
+        {advogadoId && (
+          <div className="space-y-3">
+            <Label>Credenciais *</Label>
+            {isLoadingCredenciais ? (
+              <div className="text-sm text-muted-foreground">Carregando credenciais...</div>
+            ) : credenciais.length === 0 ? (
+              <Empty className="border-0 py-4">
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <AlertCircle className="h-6 w-6" />
+                  </EmptyMedia>
+                  <EmptyTitle className="text-base">Nenhuma credencial ativa encontrada</EmptyTitle>
+                  <EmptyDescription className="text-sm">
+                    Não há credenciais ativas para este advogado.
+                  </EmptyDescription>
+                </EmptyHeader>
+              </Empty>
+            ) : (
+              <CredenciaisCombobox
+                credenciais={credenciais}
+                selectedIds={credenciaisSelecionadas}
+                onSelectionChange={onCredenciaisChange}
+                disabled={isLoadingCredenciais}
+                placeholder="Selecione credenciais..."
+              />
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Campos específicos do formulário filho */}
       {children}

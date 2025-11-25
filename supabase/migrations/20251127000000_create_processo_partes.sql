@@ -38,11 +38,11 @@ CREATE TABLE public.processo_partes (
   -- Process number (from process data)
   numero_processo text NOT NULL,
   
-  -- Indicates if it's the main party in the pole (optional, from PJE)
-  principal boolean NULL,
-  
-  -- Display order within the pole (0-based, optional, must be >= 0 if provided)
-  ordem integer NULL CHECK (ordem IS NULL OR ordem >= 0),
+  -- Indicates if it's the main party in the pole (mandatory, from PJE)
+  principal boolean NOT NULL,
+
+  -- Display order within the pole (0-based, mandatory, must be >= 0)
+  ordem integer NOT NULL CHECK (ordem >= 0),
   
   -- Status in PJE (optional, from PJE)
   status_pje text NULL,
@@ -83,8 +83,8 @@ COMMENT ON COLUMN public.processo_partes.polo IS 'Procedural pole: ATIVO (plaint
 COMMENT ON COLUMN public.processo_partes.trt IS 'TRT code (from process data)';
 COMMENT ON COLUMN public.processo_partes.grau IS 'Degree of the process: primeiro_grau or segundo_grau (from process data)';
 COMMENT ON COLUMN public.processo_partes.numero_processo IS 'Process number (from process data)';
-COMMENT ON COLUMN public.processo_partes.principal IS 'Indicates if it is the main party in the pole (optional, from PJE)';
-COMMENT ON COLUMN public.processo_partes.ordem IS 'Display order within the pole (0-based, optional, must be >= 0 if provided)';
+COMMENT ON COLUMN public.processo_partes.principal IS 'Indicates if it is the main party in the pole (mandatory, from PJE)';
+COMMENT ON COLUMN public.processo_partes.ordem IS 'Display order within the pole (0-based, mandatory, must be >= 0)';
 COMMENT ON COLUMN public.processo_partes.status_pje IS 'Status in PJE (optional, from PJE)';
 COMMENT ON COLUMN public.processo_partes.situacao_pje IS 'Situation in PJE (optional, from PJE)';
 COMMENT ON COLUMN public.processo_partes.autoridade IS 'Indicates if it is an authority (optional, from PJE)';

@@ -23,7 +23,7 @@ create table public.agendamentos (
 );
 
 comment on table public.agendamentos is 'Agendamentos de execução automática de capturas';
-comment on column public.agendamentos.tipo_captura is 'Tipo de captura (acervo_geral, arquivados, audiencias, pendentes)';
+comment on column public.agendamentos.tipo_captura is 'Tipo de captura (acervo_geral, arquivados, audiencias, pendentes, partes)';
 comment on column public.agendamentos.advogado_id is 'ID do advogado que possui o agendamento';
 comment on column public.agendamentos.credencial_ids is 'Array de IDs das credenciais a serem utilizadas na captura';
 comment on column public.agendamentos.periodicidade is 'Tipo de periodicidade: diario ou a_cada_N_dias';

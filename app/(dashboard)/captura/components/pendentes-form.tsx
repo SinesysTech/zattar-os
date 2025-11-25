@@ -93,8 +93,8 @@ export function PendentesForm() {
         onAdvogadoChange={setAdvogadoId}
         onCredenciaisChange={setCredenciaisSelecionadas}
       >
-        {/* Filtro de Prazo */}
-        <div className="space-y-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2 md:col-span-2">
           <Label htmlFor="filtroPrazo">Filtros de Prazo</Label>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {FILTROS_PRAZO.map((opcao) => (
@@ -115,6 +115,7 @@ export function PendentesForm() {
             Os filtros selecionados são executados sequencialmente: primeiro Sem Prazo e,
             em seguida, No Prazo.
           </p>
+        </div>
         </div>
       </CapturaFormBase>
 

@@ -179,9 +179,8 @@ export function TimelineForm() {
         onAdvogadoChange={setAdvogadoId}
         onCredenciaisChange={setCredenciaisSelecionadas}
       >
-        {/* Informação da credencial selecionada */}
         {credencialSelecionada && (
-          <Alert>
+          <Alert className="md:col-span-2">
             <Info className="h-4 w-4" />
             <AlertDescription>
               Timeline será capturada usando:{' '}
@@ -192,8 +191,7 @@ export function TimelineForm() {
             </AlertDescription>
           </Alert>
         )}
-
-        {/* Campos específicos da timeline */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
         <div className="space-y-3">
           <Label htmlFor="processo-id">Número do Processo *</Label>
           <Input
@@ -207,7 +205,6 @@ export function TimelineForm() {
             Apenas números (ID do processo no PJE)
           </p>
         </div>
-
         <div className="flex items-center space-x-2">
           <Checkbox
             id="baixar-documentos"
@@ -222,10 +219,8 @@ export function TimelineForm() {
             Baixar documentos (PDFs)
           </Label>
         </div>
-
-        {/* Filtros Avançados (apenas se baixar documentos) */}
         {baixarDocumentos && (
-          <Collapsible open={filtrosAbertos} onOpenChange={setFiltrosAbertos}>
+          <Collapsible open={filtrosAbertos} onOpenChange={setFiltrosAbertos} className="md:col-span-2">
             <CollapsibleTrigger className="flex items-center gap-2 text-sm font-medium hover:underline">
               <ChevronDown
                 className={`h-4 w-4 transition-transform ${
@@ -308,6 +303,7 @@ export function TimelineForm() {
             </CollapsibleContent>
           </Collapsible>
         )}
+        </div>
       </CapturaFormBase>
 
       <CapturaButton isLoading={isLoading} onClick={handleCaptura}>

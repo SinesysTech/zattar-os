@@ -117,3 +117,13 @@ create type public.status_audiencia as enum (
 );
 comment on type public.status_audiencia is 'Status da audiência: C=Cancelada, M=Designada, F=Realizada';
 
+-- Enum para tipo de captura
+create type public.tipo_captura as enum (
+  'acervo_geral',
+  'arquivados',
+  'audiencias',
+  'pendentes',
+  'partes'
+);
+comment on type public.tipo_captura is 'Tipo de captura: acervo_geral, arquivados, audiencias, pendentes, partes';
+

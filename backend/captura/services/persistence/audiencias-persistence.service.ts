@@ -27,6 +27,7 @@ export interface SalvarAudienciasParams {
   advogadoId: number;
   trt: CodigoTRT;
   grau: GrauTRT;
+  atas?: Record<number, { documentoId: number; url: string }>; 
 }
 
 /**
@@ -89,7 +90,7 @@ export async function salvarAudiencias(
   params: SalvarAudienciasParams
 ): Promise<SalvarAudienciasResult> {
   const supabase = createServiceClient();
-  const { audiencias, advogadoId, trt, grau } = params;
+  const { audiencias, advogadoId, trt, grau, atas } = params;
 
   if (audiencias.length === 0) {
     return {
@@ -110,19 +111,25 @@ export async function salvarAudiencias(
   let tiposAudienciaCriados = 0;
   let salasAudienciaCriadas = 0;
 
+  const cacheOrgaos = new Map<number, { id: number }>();
+  const cacheClasses = new Map<number, { id: number }>();
+  const cacheTipos = new Map<number, { id: number }>();
+  const cacheSalas = new Map<string, { id: number }>();
+
   // Primeiro, garantir que todos os órgãos julgadores estão salvos
   for (const audiencia of audiencias) {
     if (audiencia.processo?.orgaoJulgador) {
       const orgaoJulgador = audiencia.processo.orgaoJulgador;
       
       // Verificar se já existe
-      const existe = await buscarOrgaoJulgador(orgaoJulgador.id, trt, grau);
+      const cached = cacheOrgaos.get(orgaoJulgador.id) || null;
+      const existe = cached || await buscarOrgaoJulgador(orgaoJulgador.id, trt, grau);
       
       if (!existe) {
         // Salvar órgão julgador
         const descricao = orgaoJulgador.descricao || '';
         
-        await salvarOrgaoJulgador({
+        const salvo = await salvarOrgaoJulgador({
           orgaoJulgador: {
             id: orgaoJulgador.id,
             descricao,
@@ -135,6 +142,7 @@ export async function salvarAudiencias(
           trt,
           grau,
         });
+        cacheOrgaos.set(orgaoJulgador.id, { id: salvo.id });
         orgaosJulgadoresCriados++;
       }
     }
@@ -142,7 +150,8 @@ export async function salvarAudiencias(
     // Salvar classe judicial (se existir)
     if (audiencia.processo?.classeJudicial) {
       const classeJudicial = audiencia.processo.classeJudicial;
-      const resultado = await salvarClasseJudicial({
+      const cached = cacheClasses.get(classeJudicial.id) || null;
+      const resultado = cached || await salvarClasseJudicial({
         classeJudicial,
         trt,
         grau,
@@ -150,6 +159,7 @@ export async function salvarAudiencias(
       if (resultado.inserido) {
         classesJudiciaisCriadas++;
       }
+      cacheClasses.set(classeJudicial.id, { id: resultado.id });
     }
 
     // Salvar tipo de audiência (se existir)
@@ -162,6 +172,7 @@ export async function salvarAudiencias(
       if (resultado.inserido) {
         tiposAudienciaCriados++;
       }
+      cacheTipos.set(audiencia.tipo.id, { id: resultado.id });
     }
   }
 
@@ -176,7 +187,8 @@ export async function salvarAudiencias(
 
       // Buscar ID do órgão julgador
       if (audiencia.processo?.orgaoJulgador) {
-        const orgao = await buscarOrgaoJulgador(
+        const cached = cacheOrgaos.get(audiencia.processo.orgaoJulgador.id) || null;
+        const orgao = cached || await buscarOrgaoJulgador(
           audiencia.processo.orgaoJulgador.id,
           trt,
           grau
@@ -197,7 +209,8 @@ export async function salvarAudiencias(
 
       // Buscar ID da classe judicial
       if (audiencia.processo?.classeJudicial) {
-        const classe = await buscarClasseJudicial(
+        const cached = cacheClasses.get(audiencia.processo.classeJudicial.id) || null;
+        const classe = cached || await buscarClasseJudicial(
           audiencia.processo.classeJudicial.id,
           trt,
           grau
@@ -207,7 +220,8 @@ export async function salvarAudiencias(
 
       // Buscar ID do tipo de audiência
       if (audiencia.tipo) {
-        const tipo = await buscarTipoAudiencia(
+        const cached = cacheTipos.get(audiencia.tipo.id) || null;
+        const tipo = cached || await buscarTipoAudiencia(
           audiencia.tipo.id,
           trt,
           grau
@@ -217,7 +231,9 @@ export async function salvarAudiencias(
 
       // Salvar e buscar ID da sala de audiência
       if (audiencia.salaAudiencia?.nome && orgaoJulgadorId) {
-        const resultado = await salvarSalaAudiencia({
+        const salaKey = `${orgaoJulgadorId}:${audiencia.salaAudiencia.nome}`;
+        const cached = cacheSalas.get(salaKey) || null;
+        const resultado = cached || await salvarSalaAudiencia({
           salaAudiencia: audiencia.salaAudiencia,
           trt,
           grau,
@@ -227,6 +243,7 @@ export async function salvarAudiencias(
         if (resultado.inserido) {
           salasAudienciaCriadas++;
         }
+        cacheSalas.set(salaKey, { id: resultado.id });
       }
 
       return {
@@ -288,6 +305,8 @@ export async function salvarAudiencias(
         segredo_justica: audiencia.processo?.segredoDeJustica ?? false,
         juizo_digital: audiencia.processo?.juizoDigital ?? false,
         pauta_audiencia_horario_id: audiencia.pautaAudienciaHorario?.id ?? null,
+        ata_audiencia_id: atas?.[audiencia.id]?.documentoId ?? null,
+        url: atas?.[audiencia.id]?.url ?? null,
       };
 
       // Buscar registro existente
@@ -387,4 +406,3 @@ export async function salvarAudiencias(
     salasAudienciaCriadas,
   };
 }
-

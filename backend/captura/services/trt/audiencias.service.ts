@@ -6,6 +6,11 @@ import type { CapturaAudienciasParams } from './trt-capture.service';
 import { obterTodasAudiencias } from '@/backend/api/pje-trt';
 import type { Audiencia, PagedResponse } from '@/backend/types/pje-trt/types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
+import { obterTimeline } from '@/backend/api/pje-trt/timeline/obter-timeline';
+import { obterDocumento } from '@/backend/api/pje-trt/timeline/obter-documento';
+import { baixarDocumento } from '@/backend/api/pje-trt/timeline/baixar-documento';
+import { uploadToBackblaze } from '@/backend/storage/backblaze-b2.service';
+import { gerarNomeDocumentoAudiencia, gerarCaminhoDocumento } from '@/backend/storage/file-naming.utils';
 import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 
@@ -145,12 +150,33 @@ export async function audienciasCapture(
         authResult.advogadoInfo.cpf,
         authResult.advogadoInfo.nome
       );
+      const atasMap: Record<number, { documentoId: number; url: string }> = {};
+      if ((params.codigoSituacao || 'M') === 'F') {
+        for (const a of audiencias) {
+          try {
+            const timeline = await obterTimeline(page, String(a.idProcesso), { somenteDocumentosAssinados: true, buscarDocumentos: true, buscarMovimentos: false });
+            const candidato = timeline.find(d => d.documento && ((d.tipo || '').toLowerCase().includes('ata') || (d.titulo || '').toLowerCase().includes('ata')));
+            if (candidato && candidato.id) {
+              const documentoId = candidato.id;
+              const docDetalhes = await obterDocumento(page, String(a.idProcesso), String(documentoId), { incluirAssinatura: true, grau: 1 });
+              const pdf = await baixarDocumento(page, String(a.idProcesso), String(documentoId), { incluirCapa: false, incluirAssinatura: true, grau: 1 });
+              const nomeArquivo = gerarNomeDocumentoAudiencia(a.id);
+              const key = gerarCaminhoDocumento(a.nrProcesso || a.processo?.numero || '', 'audiencias', nomeArquivo);
+              const upload = await uploadToBackblaze({ buffer: pdf, key, contentType: 'application/pdf' });
+              atasMap[a.id] = { documentoId: docDetalhes.id, url: upload.url };
+            }
+          } catch (e) {
+            captureLogService.logErro('audiencias_atas', e instanceof Error ? e.message : String(e), { id_pje: a.id, numero_processo: a.nrProcesso || a.processo?.numero, trt: params.config.codigo, grau: params.config.grau });
+          }
+        }
+      }
 
       persistencia = await salvarAudiencias({
         audiencias,
         advogadoId: advogadoDb.id,
         trt: params.config.codigo,
         grau: params.config.grau,
+        atas: atasMap,
       });
 
       console.log('✅ Audiências salvas no banco:', {

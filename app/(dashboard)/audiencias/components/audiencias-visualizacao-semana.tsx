@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Copy, Pencil } from 'lucide-react';
+import { FileText } from 'lucide-react';
+import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -443,6 +445,40 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
             <div className="text-xs text-muted-foreground truncate max-w-full text-left">
               {sala}
             </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'ata_audiencia',
+      header: () => (
+        <div className="relative flex items-center justify-center w-full text-center after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium text-center">Ata</div>
+        </div>
+      ),
+      size: 80,
+      meta: { align: 'left' },
+      cell: ({ row }) => {
+        const audiencia = row.original;
+        const [open, setOpen] = React.useState(false);
+        const deriveKeyFromUrl = (u: string | null) => {
+          if (!u) return null;
+          const idx = u.indexOf('/processos/');
+          return idx >= 0 ? u.slice(idx) : null;
+        };
+        const fileKey = deriveKeyFromUrl(audiencia.url);
+        const canOpen = audiencia.status === 'F' && (fileKey !== null);
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            <button
+              className="h-6 w-6 flex items-center justify-center rounded hover:bg-gray-100"
+              onClick={(e) => { e.stopPropagation(); setOpen(true); }}
+              disabled={!canOpen}
+              title={canOpen ? 'Ver Ata de Audiência' : 'Ata indisponível'}
+            >
+              <FileText className={`h-4 w-4 ${canOpen ? 'text-primary' : 'text-muted-foreground'}`} />
+            </button>
+            <PdfViewerDialog open={open} onOpenChange={setOpen} fileKey={fileKey} documentTitle={`Ata da audiência ${audiencia.numero_processo}`} />
           </div>
         );
       },

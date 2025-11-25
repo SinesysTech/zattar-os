@@ -97,8 +97,8 @@ export interface ProcessoParte {
   id_tipo_parte: number | null;
   tipo_parte: TipoParteProcesso; // Tipo de participante no processo (ex: RECLAMANTE, RECLAMADO) - vem do PJE
   polo: PoloProcessoParte; // Polo processual - ATIVO (autor), PASSIVO (réu), NEUTRO (perito), TERCEIRO (interveniente)
-  principal: boolean | null; // Indica se é a parte principal no polo - null se não definida
-  ordem: number | null; // Ordem de exibição dentro do polo (0-based) - null se não definida
+  principal: boolean; // Indica se é a parte principal no polo
+  ordem: number; // Ordem de exibição dentro do polo (0-based, deve ser >= 0)
   status_pje: string | null;
   situacao_pje: string | null;
   autoridade: boolean | null;
@@ -118,10 +118,10 @@ export interface ProcessoParte {
 
 /**
  * Parâmetros para criar vínculo processo-parte.
- * 
+ *
  * Campos obrigatórios: processo_id, tipo_entidade, entidade_id, id_pje,
- * trt, grau, numero_processo, tipo_parte, polo.
- * 
+ * trt, grau, numero_processo, tipo_parte, polo, principal, ordem.
+ *
  * @example
  * await criarProcessoParte({
  *   processo_id: 123,
@@ -151,8 +151,8 @@ export interface CriarProcessoParteParams {
   trt: string;
   grau: GrauProcessoParte;
   numero_processo: string;
-  principal?: boolean;
-  ordem?: number;
+  principal: boolean;
+  ordem: number;
   status_pje?: string;
   situacao_pje?: string;
   autoridade?: boolean;
@@ -260,8 +260,8 @@ export interface ParteComDadosCompletos {
   entidade_id: number;
   tipo_parte: TipoParteProcesso;
   polo: PoloProcessoParte;
-  ordem: number | null;
-  principal: boolean | null;
+  ordem: number;
+  principal: boolean;
   // Dados da entidade
   nome: string;
   tipo_pessoa: 'pf' | 'pj';
@@ -293,8 +293,8 @@ export interface ProcessoComParticipacao {
   grau: GrauProcessoParte;
   tipo_parte: TipoParteProcesso;
   polo: PoloProcessoParte;
-  ordem: number | null;
-  principal: boolean | null;
+  ordem: number;
+  principal: boolean;
   // Dados do processo
   classe_judicial: string | null;
   codigo_status_processo: string | null;
@@ -318,8 +318,8 @@ export interface VincularParteProcessoParams {
   trt: string;
   grau: GrauProcessoParte;
   numero_processo: string;
-  principal?: boolean;
-  ordem?: number;
+  principal: boolean;
+  ordem: number;
   status_pje?: string;
   situacao_pje?: string;
   autoridade?: boolean;
