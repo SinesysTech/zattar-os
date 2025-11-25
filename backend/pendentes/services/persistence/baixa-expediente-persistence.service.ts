@@ -55,8 +55,8 @@ export async function baixarExpediente(
     .from('pendentes_manifestacao')
     .update({
       baixado_em: new Date().toISOString(),
-      protocolo_id: params.protocoloId,
-      justificativa_baixa: params.justificativa,
+      protocolo_id: (params.protocoloId ?? undefined)?.trim() || null,
+      justificativa_baixa: (params.justificativa ?? undefined)?.trim() || null,
       updated_at: new Date().toISOString(),
     })
     .eq('id', params.expedienteId)
@@ -80,4 +80,3 @@ export async function baixarExpediente(
     },
   };
 }
-

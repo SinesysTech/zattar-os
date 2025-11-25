@@ -34,8 +34,11 @@ export interface BaixarExpedienteResult {
 export async function baixarExpediente(
   params: BaixarExpedienteParams
 ): Promise<BaixarExpedienteResult> {
-  // Validação: protocoloId OU justificativa deve estar preenchido
-  if (!params.protocoloId && (!params.justificativa || params.justificativa.trim() === '')) {
+  const protocoloIdNormalized = params.protocoloId?.trim() || null;
+  const justificativaNormalized = params.justificativa?.trim() || null;
+
+  // Validação: protocoloId OU justificativa deve estar preenchido (considerando normalização)
+  if (!protocoloIdNormalized && !justificativaNormalized) {
     return {
       success: false,
       error: 'É necessário informar o ID do protocolo ou a justificativa da baixa',
@@ -46,8 +49,8 @@ export async function baixarExpediente(
     // Baixar expediente no banco
     const resultado = await baixarExpedienteDb({
       expedienteId: params.expedienteId,
-      protocoloId: params.protocoloId ?? null,
-      justificativa: params.justificativa?.trim() || null,
+      protocoloId: protocoloIdNormalized,
+      justificativa: justificativaNormalized,
     });
 
     if (!resultado.success) {
@@ -58,8 +61,8 @@ export async function baixarExpediente(
     await registrar_baixa_expediente({
       expedienteId: params.expedienteId,
       usuarioId: params.usuarioId,
-      protocoloId: params.protocoloId ?? null,
-      justificativa: params.justificativa?.trim() || null,
+      protocoloId: protocoloIdNormalized,
+      justificativa: justificativaNormalized,
     });
 
     // Invalidar cache de pendentes após baixa bem-sucedida
