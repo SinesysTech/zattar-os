@@ -14,7 +14,7 @@ Manter um histórico organizado de todas as mudanças de schema que já foram ap
 
 ## Total de Migrations
 
-**48 migrations aplicadas**
+**49 migrations aplicadas**
 
 ---
 
