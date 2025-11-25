@@ -309,7 +309,7 @@ function TableBordersDropdownMenuContent(
 
   return (
     <DropdownMenuContent
-      className="min-w-[220px]"
+      className="min-w-[min(92vw,13.75rem)]"
       onCloseAutoFocus={(e) => {
         e.preventDefault();
         editor.tf.focus();

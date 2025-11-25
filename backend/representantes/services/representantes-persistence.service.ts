@@ -687,6 +687,61 @@ export async function deletarRepresentante(id: number): Promise<OperacaoRepresen
   }
 }
 
+/**
+ * Upsert múltiplos representantes em batch (operação atômica no banco)
+ * Retorna array com resultados individuais por registro
+ */
+export async function upsertRepresentantesEmLote(
+  listaParams: UpsertRepresentantePorIdPessoaParams[]
+): Promise<OperacaoRepresentanteResult[]> {
+  try {
+    if (listaParams.length === 0) {
+      return [];
+    }
+
+    const supabase = await createClient();
+
+    // Usa upsert do Supabase com onConflict na chave única composta
+    // Unique index: (id_pessoa_pje, parte_id, parte_tipo, trt, grau, numero_processo)
+    const { data, error } = await supabase
+      .from('representantes')
+      .upsert(listaParams, {
+        onConflict: 'id_pessoa_pje,parte_id,parte_tipo,trt,grau,numero_processo',
+        ignoreDuplicates: false, // Atualiza se já existe
+      })
+      .select();
+
+    if (error) {
+      console.error('Erro no upsert em lote de representantes:', error);
+      // Se falhou o batch todo, retorna erro para todos
+      return listaParams.map(() => ({
+        sucesso: false,
+        erro: mapSupabaseError(error),
+      }));
+    }
+
+    // Mapeia resultados individuais
+    if (!data || data.length === 0) {
+      return listaParams.map(() => ({
+        sucesso: false,
+        erro: 'Nenhum representante foi inserido/atualizado',
+      }));
+    }
+
+    // Supabase retorna os registros upserted
+    return data.map(row => ({
+      sucesso: true,
+      representante: converterParaRepresentante(row),
+    }));
+  } catch (error) {
+    console.error('Erro inesperado no upsert em lote:', error);
+    return listaParams.map(() => ({
+      sucesso: false,
+      erro: 'Erro inesperado no upsert em lote',
+    }));
+  }
+}
+
 // ============================================================================
 // Funções com JOIN para endereços
 // ============================================================================

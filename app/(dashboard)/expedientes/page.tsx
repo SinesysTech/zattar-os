@@ -273,7 +273,7 @@ function TipoDescricaoCell({
 
       {/* Dialog de edição */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="max-w-[min(92vw,31.25rem)]">
           <DialogHeader>
             <DialogTitle>Editar Tipo e Descrição</DialogTitle>
             <DialogDescription>
@@ -390,7 +390,7 @@ function PrazoColumnHeader({
             </svg>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-2" align="center">
+        <PopoverContent className="w-[min(92vw,12.5rem)] p-2" align="center">
           <div className="space-y-1">
             <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
               Ordenar por Data de Início
@@ -482,7 +482,7 @@ function ProcessoColumnHeader({
             </svg>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[220px] p-2" align="center">
+        <PopoverContent className="w-[min(92vw,13.75rem)] p-2" align="center">
           <div className="space-y-1">
             <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
               Ordenar por Tribunal
@@ -869,7 +869,7 @@ function ResponsavelCell({
             <Pencil className="h-3 w-3" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[250px] p-2">
+        <PopoverContent className="w-[min(92vw,15.625rem)] p-2">
           <div className="space-y-1">
             <Button
               variant="ghost"
