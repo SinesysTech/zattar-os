@@ -166,7 +166,7 @@ export async function audienciasCapture(
               atasMap[a.id] = { documentoId: docDetalhes.id, url: upload.url };
             }
           } catch (e) {
-            captureLogService.logErro('audiencias_atas', e instanceof Error ? e.message : String(e), { id_pje: a.id, numero_processo: a.nrProcesso || a.processo?.numero, trt: params.config.codigo, grau: params.config.grau });
+            captureLogService.logErro('audiencias', e instanceof Error ? e.message : String(e), { id_pje: a.id, numero_processo: a.nrProcesso || a.processo?.numero, trt: params.config.codigo, grau: params.config.grau, tipo: 'ata' });
           }
         }
       }
