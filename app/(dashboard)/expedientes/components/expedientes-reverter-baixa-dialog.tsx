@@ -5,13 +5,13 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 
@@ -91,14 +91,14 @@ export function ExpedientesReverterBaixaDialog({
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle>Reverter Baixa de Expediente</SheetTitle>
-          <SheetDescription>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Reverter Baixa de Expediente</DialogTitle>
+          <DialogDescription>
             Reverter a baixa deste expediente, marcando-o como pendente novamente.
-          </SheetDescription>
-        </SheetHeader>
+          </DialogDescription>
+        </DialogHeader>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
           {/* Informações do expediente */}
@@ -154,7 +154,7 @@ export function ExpedientesReverterBaixaDialog({
             </div>
           )}
 
-          <SheetFooter>
+          <DialogFooter>
             <Button
               type="button"
               variant="outline"
@@ -167,10 +167,10 @@ export function ExpedientesReverterBaixaDialog({
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Reverter Baixa
             </Button>
-          </SheetFooter>
+          </DialogFooter>
         </form>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }
 
