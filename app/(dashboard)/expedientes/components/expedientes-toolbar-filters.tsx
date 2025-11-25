@@ -11,6 +11,7 @@ export interface ExpedientesFilters {
   baixado?: boolean;
   prazo_vencido?: boolean;
   tipo_expediente_id?: number;
+  sem_tipo?: boolean;
   segredo_justica?: boolean;
   juizo_digital?: boolean;
   sem_responsavel?: boolean;
@@ -28,13 +29,14 @@ export const EXPEDIENTES_FILTER_CONFIGS: FilterConfig[] = [
     id: 'trt',
     label: 'TRT',
     type: 'select',
-    options: TRTS.map(trt => ({ value: trt, label: trt })),
+    options: [{ value: 'all', label: 'Todos' }, ...TRTS.map(trt => ({ value: trt, label: trt }))],
   },
   {
     id: 'grau',
     label: 'Grau',
     type: 'select',
     options: [
+      { value: 'all', label: 'Todos' },
       { value: 'primeiro_grau', label: 'Primeiro Grau' },
       { value: 'segundo_grau', label: 'Segundo Grau' },
     ],
@@ -52,10 +54,16 @@ export const EXPEDIENTES_FILTER_CONFIGS: FilterConfig[] = [
     options: [], // Populated in buildExpedientesFilterOptions
   },
   {
+    id: 'sem_tipo',
+    label: 'Sem Tipo',
+    type: 'boolean',
+  },
+  {
     id: 'baixado',
     label: 'Status de Baixa',
     type: 'select',
     options: [
+      { value: 'all', label: 'Todos' },
       { value: 'false', label: 'Pendentes' },
       { value: 'true', label: 'Baixados' },
     ],
@@ -65,6 +73,7 @@ export const EXPEDIENTES_FILTER_CONFIGS: FilterConfig[] = [
     label: 'Status de Prazo',
     type: 'select',
     options: [
+      { value: 'all', label: 'Todos' },
       { value: 'false', label: 'No Prazo' },
       { value: 'true', label: 'Prazo Vencido' },
     ],
@@ -97,6 +106,7 @@ export function buildExpedientesFilterOptions(
       if (config.id === 'responsavel_id' && usuarios) {
         // Build options for Responsável
         const responsavelOptions: ComboboxOption[] = [
+          { value: 'all', label: 'Todos os responsáveis' },
           { value: 'null', label: 'Sem responsável' },
           ...usuarios.map(u => ({ value: u.id.toString(), label: u.nomeExibicao })),
         ];
@@ -218,7 +228,7 @@ export function buildExpedientesFilterGroups(
     {
       label: 'Tipo',
       options: buildOptionsWithoutPrefix(
-        [configMap.get('tipo_expediente_id')!],
+        [configMap.get('tipo_expediente_id')!, configMap.get('sem_tipo')!],
         undefined,
         tiposExpedientes
       ),
@@ -244,11 +254,17 @@ export function parseExpedientesFilters(selectedFilters: string[]): ExpedientesF
       const config = configMap.get(id);
       if (config && config.type === 'select') {
         if (id === 'trt') {
-          filters.trt = value;
+          if (value !== 'all') {
+            filters.trt = value;
+          }
         } else if (id === 'grau') {
-          filters.grau = value as 'primeiro_grau' | 'segundo_grau';
+          if (value !== 'all') {
+            filters.grau = value as 'primeiro_grau' | 'segundo_grau';
+          }
         } else if (id === 'responsavel_id') {
-          if (value === 'null') {
+          if (value === 'all') {
+            // ignore
+          } else if (value === 'null') {
             filters.responsavel_id = 'null';
           } else {
             const num = parseInt(value, 10);
@@ -256,15 +272,23 @@ export function parseExpedientesFilters(selectedFilters: string[]): ExpedientesF
               filters.responsavel_id = num;
             }
           }
-        } else if (id === 'tipo') {
+        } else if (id === 'tipo_expediente_id') {
           const num = parseInt(value, 10);
           if (!isNaN(num)) {
             filters.tipo_expediente_id = num;
           }
         } else if (id === 'baixado') {
-          filters.baixado = value === 'true';
-        } else if (id === 'prazo') {
-          filters.prazo_vencido = value === 'true';
+          if (value === 'all') {
+            // ignore
+          } else {
+            filters.baixado = value === 'true';
+          }
+        } else if (id === 'prazo_vencido') {
+          if (value === 'all') {
+            // ignore
+          } else {
+            filters.prazo_vencido = value === 'true';
+          }
         }
       }
     } else {
@@ -276,6 +300,8 @@ export function parseExpedientesFilters(selectedFilters: string[]): ExpedientesF
           filters.juizo_digital = true;
         } else if (selected === 'sem_responsavel') {
           filters.sem_responsavel = true;
+        } else if (selected === 'sem_tipo') {
+          filters.sem_tipo = true;
         }
       }
     }

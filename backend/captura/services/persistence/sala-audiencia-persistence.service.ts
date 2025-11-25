@@ -132,10 +132,9 @@ export async function salvarSalaAudiencia(
   );
 
   if (!registroExistente) {
-    // Inserir
     const { data, error } = await supabase
       .from('sala_audiencia')
-      .insert(dadosNovos)
+      .upsert(dadosNovos, { onConflict: 'nome,trt,grau,orgao_julgador_id' })
       .select('id')
       .single();
 

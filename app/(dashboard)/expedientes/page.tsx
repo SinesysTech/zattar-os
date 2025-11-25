@@ -1234,6 +1234,9 @@ export default function ExpedientesPage() {
       if (columnId && direction) {
         setOrdenarPor(columnId as typeof ordenarPor);
         setOrdem(direction);
+      } else if (columnId && direction === null) {
+        setOrdenarPor(columnId as typeof ordenarPor);
+        setOrdem(columnId === 'data_prazo_legal_parte' ? 'asc' : 'desc');
       } else {
         setOrdenarPor(null);
         setOrdem('asc');
@@ -1353,6 +1356,7 @@ export default function ExpedientesPage() {
       if (parsed.grau) newFiltros.grau = parsed.grau;
       if (parsed.responsavel_id) newFiltros.responsavel_id = parsed.responsavel_id;
       if (parsed.tipo_expediente_id) newFiltros.tipo_expediente_id = parsed.tipo_expediente_id;
+      if (parsed.sem_tipo) newFiltros.sem_tipo = parsed.sem_tipo;
       if (parsed.segredo_justica) newFiltros.segredo_justica = parsed.segredo_justica;
       if (parsed.juizo_digital) newFiltros.juizo_digital = parsed.juizo_digital;
       if (parsed.sem_responsavel) newFiltros.sem_responsavel = parsed.sem_responsavel;
