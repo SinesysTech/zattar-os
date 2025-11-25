@@ -150,16 +150,18 @@ export async function salvarAudiencias(
     // Salvar classe judicial (se existir)
     if (audiencia.processo?.classeJudicial) {
       const classeJudicial = audiencia.processo.classeJudicial;
-      const cached = cacheClasses.get(classeJudicial.id) || null;
-      const resultado = cached || await salvarClasseJudicial({
-        classeJudicial,
-        trt,
-        grau,
-      });
-      if (resultado.inserido) {
-        classesJudiciaisCriadas++;
+      const cached = cacheClasses.get(classeJudicial.id);
+      if (!cached) {
+        const resultado = await salvarClasseJudicial({
+          classeJudicial,
+          trt,
+          grau,
+        });
+        if (resultado.inserido) {
+          classesJudiciaisCriadas++;
+        }
+        cacheClasses.set(classeJudicial.id, { id: resultado.id });
       }
-      cacheClasses.set(classeJudicial.id, { id: resultado.id });
     }
 
     // Salvar tipo de audiência (se existir)
@@ -232,18 +234,22 @@ export async function salvarAudiencias(
       // Salvar e buscar ID da sala de audiência
       if (audiencia.salaAudiencia?.nome && orgaoJulgadorId) {
         const salaKey = `${orgaoJulgadorId}:${audiencia.salaAudiencia.nome}`;
-        const cached = cacheSalas.get(salaKey) || null;
-        const resultado = cached || await salvarSalaAudiencia({
-          salaAudiencia: audiencia.salaAudiencia,
-          trt,
-          grau,
-          orgaoJulgadorId,
-        });
-        salaAudienciaId = resultado.id;
-        if (resultado.inserido) {
-          salasAudienciaCriadas++;
+        const cached = cacheSalas.get(salaKey);
+        if (cached) {
+          salaAudienciaId = cached.id;
+        } else {
+          const resultado = await salvarSalaAudiencia({
+            salaAudiencia: audiencia.salaAudiencia,
+            trt,
+            grau,
+            orgaoJulgadorId,
+          });
+          salaAudienciaId = resultado.id;
+          if (resultado.inserido) {
+            salasAudienciaCriadas++;
+          }
+          cacheSalas.set(salaKey, { id: resultado.id });
         }
-        cacheSalas.set(salaKey, { id: resultado.id });
       }
 
       return {
