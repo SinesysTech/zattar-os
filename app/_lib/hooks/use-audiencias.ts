@@ -75,7 +75,11 @@ export const useAudiencias = (params: BuscarAudienciasParams = {}): UseAudiencia
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
+        const apiMsg =
+          errorData && typeof errorData.error === 'object' && errorData.error !== null
+            ? errorData.error.message
+            : errorData.error;
+        throw new Error(apiMsg || `Erro ${response.status}: ${response.statusText}`);
       }
 
       const data: AudienciasApiResponse = await response.json();

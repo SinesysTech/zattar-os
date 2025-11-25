@@ -59,7 +59,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // 1. Autenticação
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: { code: 'UNAUTHORIZED', message: 'Unauthorized' } }, { status: 401 });
     }
 
     // 2. Obter ID do registro
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const capturaId = parseInt(id, 10);
 
     if (isNaN(capturaId)) {
-      return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+      return NextResponse.json({ error: { code: 'BAD_REQUEST', message: 'ID inválido' } }, { status: 400 });
     }
 
     // 3. Buscar registro
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     if (!captura) {
       return NextResponse.json(
-        { error: 'Registro de captura não encontrado' },
+        { error: { code: 'NOT_FOUND', message: 'Registro de captura não encontrado' } },
         { status: 404 }
       );
     }
@@ -87,7 +87,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   } catch (error) {
     console.error('Erro ao buscar registro de captura:', error);
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
-    return NextResponse.json({ error: erroMsg }, { status: 500 });
+    return NextResponse.json({ error: { code: 'INTERNAL', message: erroMsg } }, { status: 500 });
   }
 }
 
@@ -136,7 +136,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     // 1. Autenticação
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: { code: 'UNAUTHORIZED', message: 'Unauthorized' } }, { status: 401 });
     }
 
     // 2. Obter ID do registro
@@ -144,7 +144,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     const capturaId = parseInt(id, 10);
 
     if (isNaN(capturaId)) {
-      return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+      return NextResponse.json({ error: { code: 'BAD_REQUEST', message: 'ID inválido' } }, { status: 400 });
     }
 
     // 3. Deletar registro
@@ -159,12 +159,12 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     if (error instanceof Error && error.message.includes('não encontrado')) {
       return NextResponse.json(
-        { error: 'Registro de captura não encontrado' },
+        { error: { code: 'NOT_FOUND', message: 'Registro de captura não encontrado' } },
         { status: 404 }
       );
     }
 
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
-    return NextResponse.json({ error: erroMsg }, { status: 500 });
+    return NextResponse.json({ error: { code: 'INTERNAL', message: erroMsg } }, { status: 500 });
   }
 }

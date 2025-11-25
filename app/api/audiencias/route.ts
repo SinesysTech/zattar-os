@@ -221,7 +221,7 @@ export async function GET(request: NextRequest) {
     // 1. Autenticação
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: { code: 'UNAUTHORIZED', message: 'Unauthorized' } }, { status: 401 });
     }
 
     // 2. Extrair e parsear parâmetros da query string
@@ -270,14 +270,14 @@ export async function GET(request: NextRequest) {
     // 3. Validações básicas
     if (params.pagina !== undefined && params.pagina < 1) {
       return NextResponse.json(
-        { error: "Parâmetro 'pagina' deve ser maior ou igual a 1" },
+        { error: { code: 'BAD_REQUEST', message: "Parâmetro 'pagina' deve ser maior ou igual a 1" } },
         { status: 400 }
       );
     }
 
     if (params.limite !== undefined && (params.limite < 1 || params.limite > 100)) {
       return NextResponse.json(
-        { error: "Parâmetro 'limite' deve estar entre 1 e 100" },
+        { error: { code: 'BAD_REQUEST', message: "Parâmetro 'limite' deve estar entre 1 e 100" } },
         { status: 400 }
       );
     }
@@ -301,7 +301,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Erro ao listar audiências:', error);
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
-    return NextResponse.json({ error: erroMsg }, { status: 500 });
+    return NextResponse.json({ error: { code: 'INTERNAL', message: erroMsg } }, { status: 500 });
   }
 }
 
@@ -404,7 +404,7 @@ export async function POST(request: NextRequest) {
     // 1. Autenticação
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: { code: 'UNAUTHORIZED', message: 'Unauthorized' } }, { status: 401 });
     }
 
     // 2. Parsear body
@@ -413,28 +413,28 @@ export async function POST(request: NextRequest) {
     // 3. Validar campos obrigatórios
     if (!body.processo_id || typeof body.processo_id !== 'number') {
       return NextResponse.json(
-        { error: 'Campo processo_id é obrigatório e deve ser um número' },
+        { error: { code: 'BAD_REQUEST', message: 'Campo processo_id é obrigatório e deve ser um número' } },
         { status: 400 }
       );
     }
 
     if (!body.advogado_id || typeof body.advogado_id !== 'number') {
       return NextResponse.json(
-        { error: 'Campo advogado_id é obrigatório e deve ser um número' },
+        { error: { code: 'BAD_REQUEST', message: 'Campo advogado_id é obrigatório e deve ser um número' } },
         { status: 400 }
       );
     }
 
     if (!body.data_inicio || typeof body.data_inicio !== 'string') {
       return NextResponse.json(
-        { error: 'Campo data_inicio é obrigatório e deve ser uma string ISO 8601' },
+        { error: { code: 'BAD_REQUEST', message: 'Campo data_inicio é obrigatório e deve ser uma string ISO 8601' } },
         { status: 400 }
       );
     }
 
     if (!body.data_fim || typeof body.data_fim !== 'string') {
       return NextResponse.json(
-        { error: 'Campo data_fim é obrigatório e deve ser uma string ISO 8601' },
+        { error: { code: 'BAD_REQUEST', message: 'Campo data_fim é obrigatório e deve ser uma string ISO 8601' } },
         { status: 400 }
       );
     }
@@ -445,14 +445,14 @@ export async function POST(request: NextRequest) {
 
     if (isNaN(dataInicio.getTime()) || isNaN(dataFim.getTime())) {
       return NextResponse.json(
-        { error: 'Datas inválidas. Use formato ISO 8601' },
+        { error: { code: 'BAD_REQUEST', message: 'Datas inválidas. Use formato ISO 8601' } },
         { status: 400 }
       );
     }
 
     if (dataFim <= dataInicio) {
       return NextResponse.json(
-        { error: 'data_fim deve ser posterior a data_inicio' },
+        { error: { code: 'BAD_REQUEST', message: 'data_fim deve ser posterior a data_inicio' } },
         { status: 400 }
       );
     }
@@ -485,7 +485,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Erro ao criar audiência:', error);
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
-    return NextResponse.json({ error: erroMsg }, { status: 500 });
+    return NextResponse.json({ error: { code: 'INTERNAL', message: erroMsg } }, { status: 500 });
   }
 }
 

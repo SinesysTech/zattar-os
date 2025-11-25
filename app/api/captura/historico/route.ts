@@ -123,7 +123,7 @@ export async function GET(request: NextRequest) {
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: { code: 'UNAUTHORIZED', message: 'Unauthorized' } },
         { status: 401 }
       );
     }
@@ -151,7 +151,7 @@ export async function GET(request: NextRequest) {
     console.error('Erro ao listar histórico de capturas:', error);
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
     return NextResponse.json(
-      { error: erroMsg },
+      { error: { code: 'INTERNAL', message: erroMsg } },
       { status: 500 }
     );
   }

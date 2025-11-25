@@ -14,6 +14,8 @@ export interface CapturaApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
+  status?: 'pending' | 'in_progress' | 'completed' | 'failed';
+  capture_id?: number;
 }
 
 /**
@@ -83,6 +85,11 @@ export interface AudienciasResult {
     erros: number;
     orgaosJulgadoresCriados?: number;
   };
+}
+
+export interface StartCaptureData {
+  credenciais_processadas: number;
+  message: string;
 }
 
 /**
@@ -224,6 +231,13 @@ export async function listarCredenciais(): Promise<CredenciaisApiResponse> {
 /**
  * Cliente API para captura de acervo geral
  */
+function getApiErrorMessage(data: any, response: Response): string {
+  if (data && typeof data.error === 'object' && data.error !== null) {
+    return data.error.message ?? `Erro ${response.status}: ${response.statusText}`;
+  }
+  return (data && typeof data.error === 'string') ? data.error : `Erro ${response.status}: ${response.statusText}`;
+}
+
 export async function capturarAcervoGeral(
   params: BaseCapturaParams
 ): Promise<CapturaApiResponse<AcervoGeralResult>> {
@@ -241,7 +255,7 @@ export async function capturarAcervoGeral(
     if (!response.ok) {
       return {
         success: false,
-        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+        error: getApiErrorMessage(data, response),
       };
     }
 
@@ -274,7 +288,7 @@ export async function capturarArquivados(
     if (!response.ok) {
       return {
         success: false,
-        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+        error: getApiErrorMessage(data, response),
       };
     }
 
@@ -292,7 +306,7 @@ export async function capturarArquivados(
  */
 export async function capturarAudiencias(
   params: AudienciasParams
-): Promise<CapturaApiResponse<AudienciasResult>> {
+): Promise<CapturaApiResponse<StartCaptureData>> {
   try {
     const response = await fetch('/api/captura/trt/audiencias', {
       method: 'POST',
@@ -307,7 +321,7 @@ export async function capturarAudiencias(
     if (!response.ok) {
       return {
         success: false,
-        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+        error: getApiErrorMessage(data, response),
       };
     }
 
@@ -340,7 +354,7 @@ export async function capturarPendentes(
     if (!response.ok) {
       return {
         success: false,
-        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+        error: getApiErrorMessage(data, response),
       };
     }
 
@@ -373,7 +387,7 @@ export async function capturarPartes(
     if (!response.ok) {
       return {
         success: false,
-        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+        error: getApiErrorMessage(data, response),
       };
     }
 
@@ -406,7 +420,7 @@ export async function capturarTimeline(
     if (!response.ok) {
       return {
         success: false,
-        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+        error: getApiErrorMessage(data, response),
       };
     }
 
@@ -461,7 +475,7 @@ export async function buscarCapturaLog(id: number): Promise<CapturaApiResponse> 
     if (!response.ok) {
       return {
         success: false,
-        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+        error: getApiErrorMessage(data, response),
       };
     }
 
@@ -491,7 +505,7 @@ export async function deletarCapturaLog(id: number): Promise<CapturaApiResponse>
     if (!response.ok) {
       return {
         success: false,
-        error: data.error || `Erro ${response.status}: ${response.statusText}`,
+        error: getApiErrorMessage(data, response),
       };
     }
 

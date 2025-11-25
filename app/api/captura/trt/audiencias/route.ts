@@ -171,7 +171,7 @@ export async function POST(request: NextRequest) {
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: { code: 'UNAUTHORIZED', message: 'Unauthorized' } },
         { status: 401 }
       );
     }
@@ -183,7 +183,7 @@ export async function POST(request: NextRequest) {
     // Validações básicas
     if (!advogado_id || !credencial_ids || !Array.isArray(credencial_ids) || credencial_ids.length === 0) {
       return NextResponse.json(
-        { error: 'Missing required parameters: advogado_id, credencial_ids (array não vazio)' },
+        { error: { code: 'BAD_REQUEST', message: 'Missing required parameters: advogado_id, credencial_ids (array não vazio)' } },
         { status: 400 }
       );
     }
@@ -201,10 +201,13 @@ export async function POST(request: NextRequest) {
     if (credenciaisNaoEncontradas.length > 0) {
       return NextResponse.json(
         {
-          error: 'One or more credentials not found',
-          details: {
-            credencial_ids_nao_encontradas: credenciaisNaoEncontradas,
-            message: 'Verifique se todas as credenciais existem e estão ativas',
+          error: {
+            code: 'NOT_FOUND',
+            message: 'One or more credentials not found',
+            details: {
+              credencial_ids_nao_encontradas: credenciaisNaoEncontradas,
+              message: 'Verifique se todas as credenciais existem e estão ativas',
+            },
           },
         },
         { status: 404 }
@@ -219,10 +222,13 @@ export async function POST(request: NextRequest) {
     if (credenciaisInvalidas.length > 0) {
       return NextResponse.json(
         {
-          error: 'One or more credentials do not belong to the specified advogado',
-          details: {
-            credencial_ids_invalidas: credenciaisInvalidas,
-            advogado_id,
+          error: {
+            code: 'BAD_REQUEST',
+            message: 'One or more credentials do not belong to the specified advogado',
+            details: {
+              credencial_ids_invalidas: credenciaisInvalidas,
+              advogado_id,
+            },
           },
         },
         { status: 400 }
@@ -405,13 +411,13 @@ export async function POST(request: NextRequest) {
     // Retornar erro específico se for erro de validação
     if (error instanceof Error && (error.message.includes('Formato de data') || error.message.includes('não pode ser posterior'))) {
       return NextResponse.json(
-        { error: error.message },
+        { error: { code: 'BAD_REQUEST', message: error.message } },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: { code: 'INTERNAL', message: 'Internal server error' } },
       { status: 500 }
     );
   }

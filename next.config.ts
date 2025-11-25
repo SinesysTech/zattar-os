@@ -4,11 +4,8 @@ const nextConfig: NextConfig = {
   // Habilitar output standalone para Docker
   output: 'standalone',
 
-  // Configuração experimental para Next.js 16
-  experimental: {
-    // Externalizar pacotes que causam problemas com Turbopack
-    serverComponentsExternalPackages: ['pino', 'pino-pretty', 'thread-stream'],
-  },
+  // Externalizar pacotes que causam problemas com Server Components
+  serverExternalPackages: ['pino', 'pino-pretty', 'thread-stream'],
 
   // Configuração vazia do Turbopack para permitir usar webpack
   // (necessário no Next.js 16 que usa Turbopack por padrão)
