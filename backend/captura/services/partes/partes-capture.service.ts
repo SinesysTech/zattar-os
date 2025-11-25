@@ -7,7 +7,7 @@ import { upsertClientePorIdPessoa } from '@/backend/clientes/services/persistenc
 import { upsertParteContrariaPorIdPessoa } from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
 import { upsertTerceiroPorIdPessoa } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
 import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
-import { upsertRepresentantePorIdPessoa, atualizarRepresentante } from '@/backend/representantes/services/representantes-persistence.service';
+import { upsertRepresentantePorIdPessoa, upsertRepresentantesEmLote, atualizarRepresentante } from '@/backend/representantes/services/representantes-persistence.service';
 import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
 import type { CriarClientePFParams, CriarClientePJParams } from '@/backend/types/partes/clientes-types';
 import type { CriarParteContrariaPFParams, CriarParteContrariaPJParams } from '@/backend/types/partes/partes-contrarias-types';
@@ -729,28 +729,22 @@ async function processarRepresentantes(
     };
   });
 
-  // Upsert em lote com controle de concorrência
-  // Divide em lotes menores baseado em MAX_CONCURRENT_REPRESENTANTES
-  const lotes: typeof representantesParams[] = [];
-  for (let i = 0; i < representantesParams.length; i += CAPTURA_CONFIG.MAX_CONCURRENT_REPRESENTANTES) {
-    lotes.push(representantesParams.slice(i, i + CAPTURA_CONFIG.MAX_CONCURRENT_REPRESENTANTES));
-  }
+  // Upsert em batch real usando função dedicada
+  const upsertFn = () => upsertRepresentantesEmLote(representantesParams);
 
-  const resultados: PromiseSettledResult<any>[] = [];
+  const resultadosArray = CAPTURA_CONFIG.ENABLE_RETRY
+    ? await withRetry(upsertFn, {
+        maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+        baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+      })
+    : await upsertFn();
 
-  for (const lote of lotes) {
-    const upsertFn = (params: typeof representantesParams[0]) =>
-      CAPTURA_CONFIG.ENABLE_RETRY
-        ? withRetry(() => upsertRepresentantePorIdPessoa(params), {
-            maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-            baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
-          })
-        : upsertRepresentantePorIdPessoa(params);
-
-    const promises = lote.map(params => upsertFn(params));
-    const resultadosLote = await Promise.allSettled(promises);
-    resultados.push(...resultadosLote);
-  }
+  // Converte para formato PromiseSettledResult para manter compatibilidade
+  const resultados: PromiseSettledResult<any>[] = resultadosArray.map(res =>
+    res.sucesso
+      ? ({ status: 'fulfilled' as const, value: res })
+      : ({ status: 'rejected' as const, reason: new Error(res.erro || 'Erro desconhecido') })
+  );
 
   for (let i = 0; i < resultados.length; i++) {
     const res = resultados[i];

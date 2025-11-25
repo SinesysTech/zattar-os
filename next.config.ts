@@ -6,7 +6,13 @@ const nextConfig: NextConfig = {
   
   // Configuração vazia do Turbopack para permitir usar webpack
   // (necessário no Next.js 16 que usa Turbopack por padrão)
-  turbopack: {},
+  turbopack: {
+    // Excluir arquivos de teste de node_modules do bundle
+    resolveAlias: {
+      './test': false,
+      'thread-stream/test': false,
+    },
+  },
   
   // Configurações para exibir warnings durante o build
   webpack: (config) => {
