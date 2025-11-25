@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   // Habilitar output standalone para Docker
@@ -7,12 +8,15 @@ const nextConfig: NextConfig = {
   // Externalizar pacotes que causam problemas com Server Components
   serverExternalPackages: ['pino', 'pino-pretty', 'thread-stream'],
 
-  // Configuração vazia do Turbopack para permitir usar webpack
-  // (necessário no Next.js 16 que usa Turbopack por padrão)
-  turbopack: {},
+  
   
   // Configurações para exibir warnings durante o build
   webpack: (config) => {
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      "@": path.resolve(__dirname),
+    };
     // Garantir que warnings sejam exibidos
     config.infrastructureLogging = {
       level: 'verbose',
