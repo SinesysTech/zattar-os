@@ -13,7 +13,9 @@ export type {
   AtualizarTerceiroParams,
   ListarTerceirosParams,
   ListarTerceirosResult,
-  UpsertTerceiroPorIdPessoaParams,
+  UpsertTerceiroPorCPFParams,
+  UpsertTerceiroPorCNPJParams,
+  UpsertTerceiroPorDocumentoParams,
   OrdenarPorTerceiro,
   OrdemTerceiro,
 } from '@/backend/types/partes/terceiros-types';

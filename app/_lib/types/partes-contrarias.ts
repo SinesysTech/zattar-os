@@ -15,7 +15,9 @@ export type {
   AtualizarParteContrariaParams,
   ListarPartesContrariasParams,
   ListarPartesContrariasResult,
-  UpsertParteContrariaPorIdPessoaParams,
+  UpsertParteContrariaPorCPFParams,
+  UpsertParteContrariaPorCNPJParams,
+  UpsertParteContrariaPorDocumentoParams,
   OrdenarPorParteContraria,
   OrdemParteContraria,
 } from '@/backend/types/partes/partes-contrarias-types';

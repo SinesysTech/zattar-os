@@ -199,10 +199,16 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Representante>[] {
       meta: { align: 'left' },
       cell: ({ row }) => {
         const representante = row.original;
+        // Email pode ser string simples ou JSONB array
+        const email = representante.email;
         const emails = representante.emails;
+        // Prioriza email simples, depois tenta extrair do JSONB
+        const displayEmail = email 
+          || (Array.isArray(emails) && emails.length > 0 ? String(emails[0]) : null)
+          || '-';
         return (
           <div className="min-h-10 flex items-center justify-start text-sm">
-            {emails && emails.length > 0 ? emails[0] : '-'}
+            {displayEmail}
           </div>
         );
       },

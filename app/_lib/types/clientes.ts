@@ -17,7 +17,9 @@ export type {
   AtualizarClienteParams,
   ListarClientesParams,
   ListarClientesResult,
-  UpsertClientePorIdPessoaParams,
+  UpsertClientePorCPFParams,
+  UpsertClientePorCNPJParams,
+  UpsertClientePorDocumentoParams,
   OrdenarPorCliente,
   OrdemCliente,
 } from '@/backend/types/partes/clientes-types';

@@ -3,6 +3,10 @@
 /**
  * Página de visualização de representante individual
  * Exibe todos os campos do registro organizados em seções
+ * 
+ * NOTA: Na nova estrutura, representantes são únicos por CPF.
+ * O vínculo com processos/partes é feito via processo_partes.
+ * id_pessoa_pje foi movido para cadastros_pje.
  */
 
 import * as React from 'react';
@@ -17,7 +21,7 @@ import {
   formatarNome,
 } from '@/app/_lib/utils/format-clientes';
 import { formatarCep } from '@/app/_lib/types';
-import type { Representante, RepresentanteComEndereco } from '@/backend/types/representantes/representantes-types';
+import type { RepresentanteComEndereco } from '@/backend/types/representantes/representantes-types';
 
 // Componente auxiliar para exibir campo
 function Campo({ label, value }: { label: string; value: React.ReactNode }) {
@@ -28,31 +32,6 @@ function Campo({ label, value }: { label: string; value: React.ReactNode }) {
       <div className="text-base">{value}</div>
     </div>
   );
-}
-
-// Componente auxiliar para exibir campo booleano
-function CampoBooleano({ label, value }: { label: string; value: boolean | null | undefined }) {
-  if (value === null || value === undefined) return null;
-  return (
-    <div>
-      <div className="text-sm font-medium text-muted-foreground mb-1">{label}</div>
-      <div className="text-base">{value ? 'Sim' : 'Não'}</div>
-    </div>
-  );
-}
-
-// Helper para formatar tipo de parte
-function formatarTipoParte(parteTipo: string): string {
-  switch (parteTipo) {
-    case 'cliente':
-      return 'Cliente';
-    case 'parte_contraria':
-      return 'Parte Contrária';
-    case 'terceiro':
-      return 'Terceiro';
-    default:
-      return parteTipo;
-  }
 }
 
 // Helper para formatar situação OAB
@@ -71,21 +50,6 @@ function formatarSituacaoOAB(situacao: string | null): string | null {
       return 'Falecido';
     default:
       return situacao;
-  }
-}
-
-// Helper para formatar polo
-function formatarPolo(polo: string | null): string | null {
-  if (!polo) return null;
-  switch (polo) {
-    case 'ativo':
-      return 'Ativo';
-    case 'passivo':
-      return 'Passivo';
-    case 'outros':
-      return 'Outros';
-    default:
-      return polo;
   }
 }
 
@@ -161,9 +125,9 @@ export default function RepresentantePage() {
               <h1 className="text-3xl font-bold tracking-tight">
                 {formatarNome(representante.nome)}
               </h1>
-              {representante.numero_oab && (
+              {representante.numero_oab && representante.uf_oab && (
                 <Badge variant="outline" tone="info">
-                  OAB {representante.numero_oab}
+                  OAB {representante.uf_oab} {representante.numero_oab}
                 </Badge>
               )}
               {situacaoOAB && (
@@ -189,20 +153,6 @@ export default function RepresentantePage() {
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="space-y-6 max-w-4xl">
-          {/* Contexto Processual */}
-          <div className="rounded-lg border p-6 space-y-4">
-            <h2 className="text-xl font-semibold">Contexto Processual</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Campo label="Número do Processo" value={representante.numero_processo} />
-              <Campo label="TRT" value={representante.trt} />
-              <Campo label="Grau" value={representante.grau === '1' ? '1º Grau' : '2º Grau'} />
-              <Campo label="Tipo de Parte Representada" value={formatarTipoParte(representante.parte_tipo)} />
-              <Campo label="Polo" value={formatarPolo(representante.polo)} />
-              <CampoBooleano label="Principal" value={representante.principal} />
-              <Campo label="Ordem" value={representante.ordem} />
-            </div>
-          </div>
-
           {/* Informações do Advogado */}
           <div className="rounded-lg border p-6 space-y-4">
             <h2 className="text-xl font-semibold">Informações do Advogado</h2>
@@ -211,15 +161,13 @@ export default function RepresentantePage() {
               <Campo label="CPF" value={representante.cpf ? formatarCpf(representante.cpf) : null} />
               <Campo label="Sexo" value={representante.sexo?.replace('_', ' ')} />
               <Campo label="Tipo" value={representante.tipo} />
-              <Campo label="Número OAB" value={representante.numero_oab} />
-              <Campo label="Situação OAB" value={formatarSituacaoOAB(representante.situacao_oab)} />
-              <Campo label="Situação" value={representante.situacao} />
-              <Campo label="Status" value={representante.status} />
-              <Campo
-                label="Data de Habilitação"
-                value={representante.data_habilitacao ? formatarData(representante.data_habilitacao.toString()) : null}
+              <Campo 
+                label="OAB" 
+                value={representante.numero_oab && representante.uf_oab 
+                  ? `${representante.uf_oab} ${representante.numero_oab}` 
+                  : representante.numero_oab} 
               />
-              <CampoBooleano label="Endereço Desconhecido" value={representante.endereco_desconhecido} />
+              <Campo label="Situação OAB" value={formatarSituacaoOAB(representante.situacao_oab)} />
             </div>
           </div>
 
@@ -227,14 +175,14 @@ export default function RepresentantePage() {
           <div className="rounded-lg border p-6 space-y-4">
             <h2 className="text-xl font-semibold">Contato</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {representante.emails && representante.emails.length > 0 && (
-                <Campo
-                  label={`E-mail${representante.emails.length > 1 ? 's' : ''}`}
-                  value={representante.emails.join(', ')}
-                />
-              )}
               {representante.email && (
-                <Campo label="E-mail Principal" value={representante.email} />
+                <Campo label="E-mail" value={representante.email} />
+              )}
+              {representante.emails && Array.isArray(representante.emails) && representante.emails.length > 0 && (
+                <Campo
+                  label="E-mails Adicionais"
+                  value={(representante.emails as string[]).join(', ')}
+                />
               )}
               {representante.ddd_residencial && representante.numero_residencial && (
                 <Campo
@@ -284,18 +232,14 @@ export default function RepresentantePage() {
             </div>
           )}
 
-          {/* Identificadores e Metadados */}
+          {/* Metadados do Sistema */}
           <div className="rounded-lg border p-6 space-y-4">
-            <h2 className="text-xl font-semibold">Identificadores e Metadados</h2>
+            <h2 className="text-xl font-semibold">Metadados do Sistema</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <Campo label="ID" value={representante.id} />
-              <Campo label="ID PJE" value={representante.id_pje} />
-              <Campo label="ID Pessoa PJE" value={representante.id_pessoa_pje} />
-              <Campo label="ID Tipo Parte PJE" value={representante.id_tipo_parte} />
-              <Campo label="Parte ID (FK)" value={representante.parte_id} />
               <Campo label="Endereço ID" value={representante.endereco_id} />
-              <Campo label="Data de Criação" value={formatarData(representante.created_at.toString())} />
-              <Campo label="Última Atualização" value={formatarData(representante.updated_at.toString())} />
+              <Campo label="Data de Criação" value={representante.created_at ? formatarData(representante.created_at.toString()) : null} />
+              <Campo label="Última Atualização" value={representante.updated_at ? formatarData(representante.updated_at.toString()) : null} />
             </div>
           </div>
         </div>

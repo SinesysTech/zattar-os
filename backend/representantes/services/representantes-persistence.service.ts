@@ -130,11 +130,11 @@ export function validarEmail(email: string): boolean {
  * Representantes são sempre pessoas físicas (advogados)
  */
 export function converterParaRepresentante(data: Record<string, unknown>): Representante {
-  // Parse JSON fields
-  const emails = Array.isArray(data.emails) ? data.emails as string[] : [];
+  // Parse JSON fields - emails é JSONB no banco
+  const emails = data.emails as Record<string, unknown> | null;
   const dados_anteriores = data.dados_anteriores as Record<string, unknown> | null;
 
-  // Convert date strings
+  // Convert date strings to Date or null
   const parseDate = (val: unknown): Date | null => {
     if (!val) return null;
     if (val instanceof Date) return val;
@@ -143,31 +143,25 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
 
   return {
     id: data.id as number,
-    nome: data.nome as string,
     cpf: data.cpf as string,
+    nome: data.nome as string,
     sexo: data.sexo as string | null,
-    situacao: data.situacao as string | null,
-    status: data.status as string | null,
-    principal: data.principal as boolean | null,
-    endereco_desconhecido: data.endereco_desconhecido as boolean | null,
     tipo: data.tipo as string | null,
-    id_tipo_parte: data.id_tipo_parte as number | null,
     numero_oab: data.numero_oab as string | null,
+    uf_oab: data.uf_oab as string | null,
     situacao_oab: data.situacao_oab as string | null,
     emails,
+    email: data.email as string | null,
     ddd_celular: data.ddd_celular as string | null,
     numero_celular: data.numero_celular as string | null,
     ddd_residencial: data.ddd_residencial as string | null,
     numero_residencial: data.numero_residencial as string | null,
     ddd_comercial: data.ddd_comercial as string | null,
     numero_comercial: data.numero_comercial as string | null,
-    email: data.email as string | null,
-    dados_anteriores,
-    ordem: data.ordem as number | null,
-    data_habilitacao: parseDate(data.data_habilitacao),
     endereco_id: data.endereco_id as number | null,
-    created_at: new Date(data.created_at as string),
-    updated_at: new Date(data.updated_at as string),
+    dados_anteriores,
+    created_at: parseDate(data.created_at),
+    updated_at: parseDate(data.updated_at),
   };
 }
 
