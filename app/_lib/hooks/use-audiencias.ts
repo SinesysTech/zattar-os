@@ -19,16 +19,30 @@ interface UseAudienciasResult {
   refetch: () => Promise<void>;
 }
 
+interface UseAudienciasOptions {
+  /** Se false, não faz a busca (útil para aguardar inicialização de parâmetros) */
+  enabled?: boolean;
+}
+
 /**
  * Hook para buscar audiências
  */
-export const useAudiencias = (params: BuscarAudienciasParams = {}): UseAudienciasResult => {
+export const useAudiencias = (
+  params: BuscarAudienciasParams = {},
+  options: UseAudienciasOptions = {}
+): UseAudienciasResult => {
+  const { enabled = true } = options;
   const [audiencias, setAudiencias] = useState<Audiencia[]>([]);
   const [paginacao, setPaginacao] = useState<UseAudienciasResult['paginacao']>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const buscarAudiencias = useCallback(async () => {
+    if (!enabled) {
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -98,7 +112,7 @@ export const useAudiencias = (params: BuscarAudienciasParams = {}): UseAudiencia
     } finally {
       setIsLoading(false);
     }
-  }, [params]);
+  }, [params, enabled]);
 
   useEffect(() => {
     buscarAudiencias();

@@ -23,19 +23,13 @@ async function getCurrentUser() {
 async function getUsuarioId() {
   const { user, supabase } = await getCurrentUser();
 
-  console.log('[DEBUG] Auth user ID:', user.id);
-  console.log('[DEBUG] Auth user email:', user.email);
-
   const { data, error } = await supabase
     .from('usuarios')
-    .select('id, auth_user_id, email_corporativo')
+    .select('id')
     .eq('auth_user_id', user.id)
     .single();
 
-  console.log('[DEBUG] Query result - data:', data, 'error:', error);
-
   if (error || !data) {
-    console.error('[DEBUG] User profile not found for auth_user_id:', user.id);
     throw new Error('User profile not found');
   }
   return { usuarioId: data.id, supabase };

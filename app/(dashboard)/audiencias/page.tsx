@@ -814,6 +814,9 @@ export default function AudienciasPage() {
   const buscaDebounced = useDebounce(busca, 500);
   const isSearching = busca !== buscaDebounced;
 
+  // Verifica se as datas foram inicializadas (evita busca antes do useEffect)
+  const datasInicializadas = semanaAtual !== null && mesAtual !== null && anoAtual !== null;
+
   // Calcular filtros de data baseados na visualização selecionada
   const filtrosData = React.useMemo(() => {
     // Na visualização de lista, não aplicamos filtros de data automáticos
@@ -830,7 +833,7 @@ export default function AudienciasPage() {
       const inicio = new Date(date);
       inicio.setDate(date.getDate() + diff);
       const fim = new Date(inicio);
-      fim.setDate(fim.getDate() + 4);
+      fim.setDate(fim.getDate() + 6); // Até domingo (0 + 6 = 6 dias após segunda)
       fim.setHours(23, 59, 59, 999);
 
       return {
@@ -880,7 +883,10 @@ export default function AudienciasPage() {
     [pagina, limite, buscaDebounced, ordenarPor, ordem, filtros, filtrosData, visualizacao]
   );
 
-  const { audiencias: audienciasRaw, paginacao, isLoading, error, refetch } = useAudiencias(params);
+  // Só busca quando as datas estão inicializadas (para visualizações de calendário)
+  // ou quando é visualização de lista (que não depende das datas)
+  const podesBuscar = visualizacao === 'tabela' || datasInicializadas;
+  const { audiencias: audienciasRaw, paginacao, isLoading, error, refetch } = useAudiencias(params, { enabled: podesBuscar });
 
   // Buscar usuários uma única vez para compartilhar entre todas as células
   const { usuarios } = useUsuarios({ ativo: true, limite: 100 });
@@ -1044,40 +1050,19 @@ export default function AudienciasPage() {
     }).replace(' De ', ' de ');
   };
 
+  // Contagem de audiências não canceladas nos dados retornados
   const audienciasSemCanceladas = React.useMemo(() => {
     return (audiencias || []).filter((a) => a.status !== 'C');
   }, [audiencias]);
 
-  const semanaCount = React.useMemo(() => {
-    const inicio = new Date(inicioSemana);
-    inicio.setHours(0, 0, 0, 0);
-    const fim = new Date(fimSemana);
-    fim.setHours(23, 59, 59, 999);
-    return audienciasSemCanceladas.filter((a) => {
-      const d = new Date(a.data_inicio);
-      return d >= inicio && d <= fim;
-    }).length;
-  }, [audienciasSemCanceladas, inicioSemana, fimSemana]);
-
-  const mesCount = React.useMemo(() => {
-    if (!mesAtual) return 0;
-    const m = mesAtual.getMonth();
-    const y = mesAtual.getFullYear();
-    return audienciasSemCanceladas.filter((a) => {
-      const d = new Date(a.data_inicio);
-      return d.getMonth() === m && d.getFullYear() === y;
-    }).length;
-  }, [audienciasSemCanceladas, mesAtual]);
-
-  const anoCount = React.useMemo(() => {
-    if (anoAtual === null) return 0;
-    return audienciasSemCanceladas.filter((a) => {
-      const d = new Date(a.data_inicio);
-      return d.getFullYear() === anoAtual;
-    }).length;
-  }, [audienciasSemCanceladas, anoAtual]);
-
-  const listaCount = React.useMemo(() => audienciasSemCanceladas.length, [audienciasSemCanceladas]);
+  // Contador da visualização ativa (usa total da paginação ou contagem local)
+  // Cada visualização mostra apenas seu próprio contador quando ativa
+  const contadorAtivo = React.useMemo(() => {
+    // Se não temos paginação ainda, conta localmente
+    if (!paginacao) return audienciasSemCanceladas.length;
+    // Usa o total da API (já filtrado pelo período da visualização)
+    return paginacao.total;
+  }, [paginacao, audienciasSemCanceladas.length]);
 
   return (
     <ClientOnlyTabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
@@ -1105,22 +1090,22 @@ export default function AudienciasPage() {
             <TabsTrigger value="semana" aria-label="Visualização Semanal">
               <CalendarRange className="h-4 w-4" />
               <span>Semana</span>
-              <Badge variant="secondary" className="ml-2">{semanaCount}</Badge>
+              {visualizacao === 'semana' && <Badge variant="secondary" className="ml-2">{contadorAtivo}</Badge>}
             </TabsTrigger>
             <TabsTrigger value="mes" aria-label="Visualização Mensal">
               <Calendar className="h-4 w-4" />
               <span>Mês</span>
-              <Badge variant="secondary" className="ml-2">{mesCount}</Badge>
+              {visualizacao === 'mes' && <Badge variant="secondary" className="ml-2">{contadorAtivo}</Badge>}
             </TabsTrigger>
             <TabsTrigger value="ano" aria-label="Visualização Anual">
               <CalendarDays className="h-4 w-4" />
               <span>Ano</span>
-              <Badge variant="secondary" className="ml-2">{anoCount}</Badge>
+              {visualizacao === 'ano' && <Badge variant="secondary" className="ml-2">{contadorAtivo}</Badge>}
             </TabsTrigger>
             <TabsTrigger value="tabela" aria-label="Visualização em Lista">
               <List className="h-4 w-4" />
               <span>Lista</span>
-              <Badge variant="secondary" className="ml-2">{listaCount}</Badge>
+              {visualizacao === 'tabela' && <Badge variant="secondary" className="ml-2">{contadorAtivo}</Badge>}
             </TabsTrigger>
           </TabsList>
 
