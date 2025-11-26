@@ -70,11 +70,9 @@ interface PortePJE {
 
 /** Tipo para resultado de processamento de parte */
 interface ProcessamentoParteResult {
-  parte: PartePJE;
-  sucesso: boolean;
-  entidadeId?: number;
-  representantesProcessados?: number;
-  erros?: string[];
+  tipoParte: TipoParteClassificacao;
+  repsCount: number;
+  vinculoCriado: boolean;
 }
 
 /**
@@ -660,8 +658,6 @@ async function processarParte(
 
   try {
     let entidadeId: number | null = null;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Reservado para futura estatística de criação/atualização
-    let __criado = false;
 
     if (tipoParte === 'cliente') {
       // Buscar entidade existente por CPF/CNPJ
@@ -672,8 +668,7 @@ async function processarParte(
       if (entidadeExistente) {
         // UPDATE: entidade já existe
         entidadeId = entidadeExistente.id;
-        _criado = false;
-        // Aqui poderíamos atualizar dados se necessário, mas por simplicidade, assumimos que dados estão ok
+        // Entidade já existe - dados mantidos como estão
       } else {
         // INSERT: nova entidade
         if (isPessoaFisica) {
@@ -688,7 +683,6 @@ async function processarParte(
           });
           if (result.sucesso && result.cliente) {
             entidadeId = result.cliente.id;
-            _criado = result.criado || false;
           }
         } else {
           const params: CriarClientePJParams = {
@@ -702,7 +696,6 @@ async function processarParte(
           });
           if (result.sucesso && result.cliente) {
             entidadeId = result.cliente.id;
-            _criado = result.criado || false;
           }
         }
       }
@@ -715,7 +708,6 @@ async function processarParte(
       if (entidadeExistente) {
         // UPDATE: entidade já existe
         entidadeId = entidadeExistente.id;
-        _criado = false;
       } else {
         // INSERT: nova entidade
         if (isPessoaFisica) {
@@ -730,7 +722,6 @@ async function processarParte(
           });
           if (result.sucesso && result.parteContraria) {
             entidadeId = result.parteContraria.id;
-            _criado = result.criado || false;
           }
         } else {
           const params: CriarParteContrariaPJParams = {
@@ -744,7 +735,6 @@ async function processarParte(
           });
           if (result.sucesso && result.parteContraria) {
             entidadeId = result.parteContraria.id;
-            _criado = result.criado || false;
           }
         }
       }
@@ -757,7 +747,6 @@ async function processarParte(
       if (entidadeExistente) {
         // UPDATE: entidade já existe
         entidadeId = entidadeExistente.id;
-        _criado = false;
       } else {
         // INSERT: nova entidade
         const params: CriarTerceiroPFParams | CriarTerceiroPJParams = {
@@ -786,7 +775,6 @@ async function processarParte(
             );
         if (result.sucesso && result.terceiro) {
           entidadeId = result.terceiro.id;
-          _criado = result.criado || false;
         }
       }
     }
@@ -851,12 +839,10 @@ async function processarRepresentantes(
       const representanteExistente = await buscarRepresentantePorCPF(cpfNormalizado);
 
       let representanteId: number | null = null;
-      let _criado = false;
 
       if (representanteExistente) {
         // UPDATE: representante já existe
         representanteId = representanteExistente.id;
-        _criado = false;
       } else {
         // INSERT: novo representante
         const camposExtras = extrairCamposRepresentantePJE(rep);
@@ -876,7 +862,6 @@ async function processarRepresentantes(
         const result = await upsertRepresentantePorCPF(params);
         if (result.sucesso && result.representante) {
           representanteId = result.representante.id;
-          _criado = result.criado || false;
         }
       }
 
@@ -1021,7 +1006,7 @@ async function processarEndereco(
 
   const enderecoPJE = parte.dadosCompletos.endereco as unknown as EnderecoPJE;
 
-  const { valido, avisos } = validarEnderecoPJE(enderecoPJE);
+  const { valido } = validarEnderecoPJE(enderecoPJE);
   if (!valido) {
     return null;
   }
@@ -1085,7 +1070,7 @@ async function processarEnderecoRepresentante(
 
   const enderecoPJE = rep.dadosCompletos.endereco as unknown as EnderecoPJE;
 
-  const { valido, avisos } = validarEnderecoPJE(enderecoPJE);
+  const { valido } = validarEnderecoPJE(enderecoPJE);
   if (!valido) {
     return null;
   }
