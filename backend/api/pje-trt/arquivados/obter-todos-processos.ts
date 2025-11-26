@@ -60,23 +60,20 @@ export async function obterTodosProcessosArquivados(
     throw new Error(`Resposta inválida da API: ${JSON.stringify(primeiraPagina)}`);
   }
 
-  // Se não há resultados, retornar array vazio imediatamente
-  if (primeiraPagina.totalRegistros === 0 || primeiraPagina.qtdPaginas === 0) {
-    return [];
-  }
+  // Determinar quantidade real de registros no array resultado
+  const registrosNaPagina = primeiraPagina.resultado?.length || 0;
 
-  // Validar que resultado é um array
-  if (!Array.isArray(primeiraPagina.resultado)) {
-    throw new Error(
-      `Campo 'resultado' não é um array na resposta da API. Estrutura recebida: ${JSON.stringify(primeiraPagina, null, 2)}`
-    );
+  // IMPORTANTE: A API do PJE retorna qtdPaginas=0 quando há apenas 1 página de resultados!
+  // Por isso, verificamos o array resultado diretamente, não o campo qtdPaginas.
+  if (!Array.isArray(primeiraPagina.resultado) || registrosNaPagina === 0) {
+    return [];
   }
 
   // Adiciona processos da primeira página ao array final
   todosProcessos.push(...primeiraPagina.resultado);
 
-  // Buscar páginas restantes
-  const qtdPaginas = primeiraPagina.qtdPaginas || 1;
+  // Calcular total de páginas (qtdPaginas=0 significa 1 página quando há resultados)
+  const qtdPaginas = primeiraPagina.qtdPaginas > 0 ? primeiraPagina.qtdPaginas : 1;
   for (let p = 2; p <= qtdPaginas; p++) {
     // Delay para rate limiting (evita sobrecarregar o servidor)
     await new Promise((resolve) => setTimeout(resolve, delayEntrePaginas));

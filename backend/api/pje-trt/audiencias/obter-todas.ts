@@ -71,52 +71,33 @@ export async function obterTodasAudiencias(
     'asc' // ordenacao (sempre usa 'asc' como padrão)
   );
 
-  console.log('📊 [obterTodasAudiencias] Primeira página recebida:', {
-    totalRegistros: primeiraPagina.totalRegistros,
-    qtdPaginas: primeiraPagina.qtdPaginas,
-    resultadoLength: primeiraPagina.resultado?.length || 0,
-    temResultado: 'resultado' in primeiraPagina,
-  });
-
   paginasBrutas.push(primeiraPagina);
 
   // Validar estrutura da resposta
   if (!primeiraPagina || typeof primeiraPagina !== 'object') {
-    console.error('❌ [obterTodasAudiencias] Resposta inválida:', primeiraPagina);
+    console.error('❌ [obterTodasAudiencias] Resposta inválida da API');
     throw new Error(`Resposta inválida da API: ${JSON.stringify(primeiraPagina)}`);
   }
 
-  // Caso especial: quando não há resultados (totalRegistros=0), a API pode não retornar o campo 'resultado'
-  // Neste caso, retornar array vazio sem erro
-  if (primeiraPagina.totalRegistros === 0 || primeiraPagina.qtdPaginas === 0) {
-    console.log('ℹ️ [obterTodasAudiencias] Nenhum resultado encontrado (totalRegistros=0 ou qtdPaginas=0)');
+  // Determinar quantidade real de registros no array resultado
+  const registrosNaPagina = primeiraPagina.resultado?.length || 0;
+
+  // IMPORTANTE: A API do PJE retorna qtdPaginas=0 quando há apenas 1 página de resultados!
+  // Por isso, verificamos o array resultado diretamente, não o campo qtdPaginas.
+  // Se não há campo resultado ou está vazio, não há audiências
+  if (!('resultado' in primeiraPagina) || !Array.isArray(primeiraPagina.resultado) || registrosNaPagina === 0) {
+    console.log(`ℹ️ [obterTodasAudiencias] Nenhuma audiência encontrada no período ${dataInicio} a ${dataFim}`);
     return {
       audiencias: [],
       paginas: paginasBrutas,
     };
   }
 
-  // Validar que resultado existe e é um array (apenas se houver resultados esperados)
-  if (!('resultado' in primeiraPagina) || !Array.isArray(primeiraPagina.resultado)) {
-    console.error('❌ [obterTodasAudiencias] Campo resultado não existe ou não é array:', primeiraPagina);
-    throw new Error(
-      `Campo 'resultado' não existe ou não é um array na resposta da API. Estrutura recebida: ${JSON.stringify(primeiraPagina, null, 2)}`
-    );
-  }
+  // Calcular total de páginas (qtdPaginas=0 significa 1 página quando há resultados)
+  const qtdPaginas = primeiraPagina.qtdPaginas > 0 ? primeiraPagina.qtdPaginas : 1;
 
-  // Se o array está vazio mas totalRegistros > 0, pode ser um problema
-  // Mas ainda assim retornamos array vazio para não quebrar o fluxo
-  if (primeiraPagina.resultado.length === 0) {
-    console.log('ℹ️ [obterTodasAudiencias] Array resultado está vazio (mas totalRegistros > 0)');
-    return { audiencias: [], paginas: [primeiraPagina] };
-  }
-
-  console.log(`✅ [obterTodasAudiencias] Adicionando ${primeiraPagina.resultado.length} audiências da primeira página`);
+  console.log(`📊 [obterTodasAudiencias] Página 1/${qtdPaginas}: ${registrosNaPagina} audiências (total: ${primeiraPagina.totalRegistros})`);
   todasAudiencias.push(...primeiraPagina.resultado);
-
-  // Buscar páginas restantes
-  const qtdPaginas = primeiraPagina.qtdPaginas || 1;
-  console.log(`📄 [obterTodasAudiencias] Total de páginas: ${qtdPaginas}`);
 
   if (qtdPaginas > 1) {
     for (let p = 2; p <= qtdPaginas; p++) {

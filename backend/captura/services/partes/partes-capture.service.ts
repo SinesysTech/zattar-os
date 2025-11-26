@@ -784,7 +784,7 @@ async function processarRepresentantes(
         numero_oab: rep.numeroOAB || undefined,
         situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
         tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,
-        emails: rep.email ? [rep.email] : undefined,
+        email: rep.email || undefined,
         ddd_celular: rep.telefones?.[0]?.ddd || undefined,
         numero_celular: rep.telefones?.[0]?.numero || undefined,
         ...camposExtras,

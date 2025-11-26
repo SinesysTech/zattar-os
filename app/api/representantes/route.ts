@@ -151,12 +151,13 @@ export async function GET(request: NextRequest) {
     const params: ListarRepresentantesParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!) : undefined,
-      parte_tipo: searchParams.get('parte_tipo') as any,
-      parte_id: searchParams.get('parte_id') ? parseInt(searchParams.get('parte_id')!) : undefined,
+      nome: searchParams.get('nome') || undefined,
+      cpf: searchParams.get('cpf') || undefined,
       numero_oab: searchParams.get('numero_oab') || undefined,
+      uf_oab: searchParams.get('uf_oab') || undefined,
       situacao_oab: searchParams.get('situacao_oab') || undefined,
       busca: searchParams.get('busca') || undefined,
-      ordenar_por: searchParams.get('ordenar_por') as any,
+      ordenar_por: searchParams.get('ordenar_por') as ListarRepresentantesParams['ordenar_por'],
       ordem: searchParams.get('ordem') as 'asc' | 'desc' | undefined,
     };
 
@@ -265,10 +266,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const params: CriarRepresentanteParams = body;
 
-    // Validate required fields
-    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id || !params.nome) {
+    // Validate required fields (nova estrutura: CPF é chave única)
+    if (!params.cpf || !params.nome) {
       return NextResponse.json(
-        { success: false, error: 'Campos obrigatórios não informados' },
+        { success: false, error: 'Campos obrigatórios não informados (cpf, nome)' },
         { status: 400 }
       );
     }
