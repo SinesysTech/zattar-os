@@ -16,7 +16,7 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config({ path: resolve(process.cwd(), '.env') });
 
-import { sincronizarUsuariosAuth } from '../backend/usuarios/services/persistence/sincronizar-usuarios-auth.service';
+import { sincronizarUsuariosAuth } from '../../backend/usuarios/services/persistence/sincronizar-usuarios-auth.service';
 
 async function main() {
   console.log('🚀 Iniciando sincronização de usuários...\n');

@@ -8,7 +8,7 @@ import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
@@ -1080,7 +1080,7 @@ export default function AudienciasPage() {
   const listaCount = React.useMemo(() => audienciasSemCanceladas.length, [audienciasSemCanceladas]);
 
   return (
-    <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
+    <ClientOnlyTabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
       <div className="space-y-4">
         {/* Barra de busca, filtros e tabs de visualização */}
         <div className="flex items-center gap-4 pb-6">
@@ -1254,6 +1254,6 @@ export default function AudienciasPage() {
         onOpenChange={setNovaAudienciaOpen}
         onSuccess={handleSuccess}
       />
-    </Tabs>
+    </ClientOnlyTabs>
   );
 }

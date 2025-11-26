@@ -1,11 +1,11 @@
 import { createClient } from '../_lib/supabase/client';
-import { 
+import {
   Tarefa, Nota, LayoutPainel, LinkPersonalizado, DashboardWidget,
   CreateTarefaData, UpdateTarefaData, CreateNotaData, UpdateNotaData,
   CreateLinkData, UpdateLinkData
 } from '../_lib/dashboard-types';
 
-export type { 
+export type {
   Tarefa, Nota, LayoutPainel, LinkPersonalizado, DashboardWidget,
   CreateTarefaData, UpdateTarefaData, CreateNotaData, UpdateNotaData,
   CreateLinkData, UpdateLinkData
@@ -13,28 +13,38 @@ export type {
 
 // Helper function to get current user
 async function getCurrentUser() {
+  const supabase = createClient();
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error || !user) throw new Error('User not authenticated');
-  return user;
+  return { user, supabase };
 }
 
 // Helper function to get usuario_id from auth user
 async function getUsuarioId() {
-  const user = await getCurrentUser();
+  const { user, supabase } = await getCurrentUser();
+
+  console.log('[DEBUG] Auth user ID:', user.id);
+  console.log('[DEBUG] Auth user email:', user.email);
+
   const { data, error } = await supabase
     .from('usuarios')
-    .select('id')
+    .select('id, auth_user_id, email_corporativo')
     .eq('auth_user_id', user.id)
     .single();
-  
-  if (error || !data) throw new Error('User profile not found');
-  return data.id;
+
+  console.log('[DEBUG] Query result - data:', data, 'error:', error);
+
+  if (error || !data) {
+    console.error('[DEBUG] User profile not found for auth_user_id:', user.id);
+    throw new Error('User profile not found');
+  }
+  return { usuarioId: data.id, supabase };
 }
 
 // Tarefas API
 export async function getTarefas(): Promise<Tarefa[]> {
   try {
-    const usuarioId = await getUsuarioId();
+    const { usuarioId, supabase } = await getUsuarioId();
     const { data, error } = await supabase
       .from('tarefas')
       .select('*')
@@ -50,7 +60,7 @@ export async function getTarefas(): Promise<Tarefa[]> {
 }
 
 export async function createTarefa(tarefa: CreateTarefaData): Promise<Tarefa> {
-  const usuarioId = await getUsuarioId();
+  const { usuarioId, supabase } = await getUsuarioId();
   const { data, error } = await supabase
     .from('tarefas')
     .insert({ ...tarefa, usuario_id: usuarioId })
@@ -62,6 +72,7 @@ export async function createTarefa(tarefa: CreateTarefaData): Promise<Tarefa> {
 }
 
 export async function updateTarefa(id: number, tarefa: UpdateTarefaData): Promise<Tarefa> {
+  const { supabase } = await getUsuarioId();
   const { data, error } = await supabase
     .from('tarefas')
     .update(tarefa)
@@ -74,6 +85,7 @@ export async function updateTarefa(id: number, tarefa: UpdateTarefaData): Promis
 }
 
 export async function deleteTarefa(id: number): Promise<void> {
+  const { supabase } = await getUsuarioId();
   const { error } = await supabase
     .from('tarefas')
     .delete()
@@ -85,7 +97,7 @@ export async function deleteTarefa(id: number): Promise<void> {
 // Notas API
 export async function getNotas(): Promise<Nota[]> {
   try {
-    const usuarioId = await getUsuarioId();
+    const { usuarioId, supabase } = await getUsuarioId();
     const { data, error } = await supabase
       .from('notas')
       .select('*')
@@ -101,7 +113,7 @@ export async function getNotas(): Promise<Nota[]> {
 }
 
 export async function createNota(nota: CreateNotaData): Promise<Nota> {
-  const usuarioId = await getUsuarioId();
+  const { usuarioId, supabase } = await getUsuarioId();
   const { data, error } = await supabase
     .from('notas')
     .insert({ ...nota, usuario_id: usuarioId })
@@ -113,6 +125,7 @@ export async function createNota(nota: CreateNotaData): Promise<Nota> {
 }
 
 export async function updateNota(id: number, nota: UpdateNotaData): Promise<Nota> {
+  const { supabase } = await getUsuarioId();
   const { data, error } = await supabase
     .from('notas')
     .update(nota)
@@ -125,6 +138,7 @@ export async function updateNota(id: number, nota: UpdateNotaData): Promise<Nota
 }
 
 export async function deleteNota(id: number): Promise<void> {
+  const { supabase } = await getUsuarioId();
   const { error } = await supabase
     .from('notas')
     .delete()
@@ -136,7 +150,7 @@ export async function deleteNota(id: number): Promise<void> {
 // Layouts Painel API
 export async function getLayoutPainel(): Promise<LayoutPainel | null> {
   try {
-    const usuarioId = await getUsuarioId();
+    const { usuarioId, supabase } = await getUsuarioId();
     const { data, error } = await supabase
       .from('layouts_painel')
       .select('*')
@@ -152,7 +166,7 @@ export async function getLayoutPainel(): Promise<LayoutPainel | null> {
 }
 
 export async function createLayoutPainel(configuracao_layout: Record<string, any>): Promise<LayoutPainel> {
-  const usuarioId = await getUsuarioId();
+  const { usuarioId, supabase } = await getUsuarioId();
   const { data, error } = await supabase
     .from('layouts_painel')
     .insert({ configuracao_layout, usuario_id: usuarioId })
@@ -164,6 +178,7 @@ export async function createLayoutPainel(configuracao_layout: Record<string, any
 }
 
 export async function updateLayoutPainel(id: number, configuracao_layout: Record<string, any>): Promise<LayoutPainel> {
+  const { supabase } = await getUsuarioId();
   const { data, error } = await supabase
     .from('layouts_painel')
     .update({ configuracao_layout })
@@ -178,7 +193,7 @@ export async function updateLayoutPainel(id: number, configuracao_layout: Record
 // Links Personalizados API
 export async function getLinksPersonalizados(): Promise<LinkPersonalizado[]> {
   try {
-    const usuarioId = await getUsuarioId();
+    const { usuarioId, supabase } = await getUsuarioId();
     const { data, error } = await supabase
       .from('links_personalizados')
       .select('*')
@@ -194,7 +209,7 @@ export async function getLinksPersonalizados(): Promise<LinkPersonalizado[]> {
 }
 
 export async function createLinkPersonalizado(link: CreateLinkData): Promise<LinkPersonalizado> {
-  const usuarioId = await getUsuarioId();
+  const { usuarioId, supabase } = await getUsuarioId();
   const { data, error } = await supabase
     .from('links_personalizados')
     .insert({ ...link, usuario_id: usuarioId })
@@ -206,6 +221,7 @@ export async function createLinkPersonalizado(link: CreateLinkData): Promise<Lin
 }
 
 export async function updateLinkPersonalizado(id: number, link: UpdateLinkData): Promise<LinkPersonalizado> {
+  const { supabase } = await getUsuarioId();
   const { data, error } = await supabase
     .from('links_personalizados')
     .update(link)
@@ -218,6 +234,7 @@ export async function updateLinkPersonalizado(id: number, link: UpdateLinkData):
 }
 
 export async function deleteLinkPersonalizado(id: number): Promise<void> {
+  const { supabase } = await getUsuarioId();
   const { error } = await supabase
     .from('links_personalizados')
     .delete()
@@ -225,4 +242,3 @@ export async function deleteLinkPersonalizado(id: number): Promise<void> {
 
   if (error) throw error;
 }
-const supabase = createClient();
