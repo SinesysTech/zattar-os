@@ -107,26 +107,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const params: UpsertRepresentantePorIdPessoaParams = body;
 
-    // Validate required fields (same as create)
-    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id ||
-        !params.tipo_pessoa || !params.nome) {
+    // Validate required fields
+    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id || !params.nome) {
       return NextResponse.json(
         { success: false, error: 'Campos obrigatórios não informados' },
-        { status: 400 }
-      );
-    }
-
-    // Validate conditional required fields
-    if (params.tipo_pessoa === 'pf' && !params.cpf) {
-      return NextResponse.json(
-        { success: false, error: 'CPF é obrigatório para pessoa física' },
-        { status: 400 }
-      );
-    }
-
-    if (params.tipo_pessoa === 'pj' && !params.cnpj) {
-      return NextResponse.json(
-        { success: false, error: 'CNPJ é obrigatório para pessoa jurídica' },
         { status: 400 }
       );
     }

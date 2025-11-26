@@ -219,12 +219,13 @@ function extrairCamposPJE(parte: PartePJE) {
 
 /**
  * Função auxiliar para extrair campos específicos do PJE de dadosCompletos para representantes
+ * NOTA: Representantes (advogados) têm dados limitados na API do PJE - apenas campos básicos
  */
 function extrairCamposRepresentantePJE(rep: RepresentantePJE) {
   const dados = rep.dadosCompletos;
   const camposExtraidos: Record<string, unknown> = {};
 
-  // Campos comuns
+  // Campos disponíveis para representantes na API do PJE
   camposExtraidos.situacao = dados?.situacao as string | undefined;
   camposExtraidos.status = dados?.status as string | undefined;
   camposExtraidos.principal = dados?.principal !== undefined ? Boolean(dados.principal) : undefined;
@@ -232,50 +233,9 @@ function extrairCamposRepresentantePJE(rep: RepresentantePJE) {
   camposExtraidos.id_tipo_parte = dados?.idTipoParte !== undefined ? Number(dados.idTipoParte) : undefined;
   camposExtraidos.polo = normalizarPolo(dados?.polo);
 
-  // Campos específicos de PF
+  // Sexo está disponível para representantes PF
   if (rep.tipoDocumento === 'CPF') {
     camposExtraidos.sexo = dados?.sexo as string | undefined;
-    camposExtraidos.data_nascimento = dados?.dataNascimento as string | undefined;
-    camposExtraidos.nome_mae = dados?.nomeMae as string | undefined;
-    camposExtraidos.nome_pai = dados?.nomePai as string | undefined;
-    camposExtraidos.nacionalidade = dados?.nacionalidade as string | undefined;
-    camposExtraidos.estado_civil = dados?.estadoCivil as string | undefined;
-    camposExtraidos.uf_nascimento = dados?.ufNascimento as string | undefined;
-    camposExtraidos.municipio_nascimento = dados?.municipioNascimento as string | undefined;
-    camposExtraidos.pais_nascimento = dados?.paisNascimento as string | undefined;
-  }
-
-  // Campos específicos de PJ
-  if (rep.tipoDocumento === 'CNPJ') {
-    camposExtraidos.razao_social = dados?.razaoSocial as string | undefined;
-    camposExtraidos.nome_fantasia = dados?.nomeFantasia as string | undefined;
-    camposExtraidos.inscricao_estadual = dados?.inscricaoEstadual as string | undefined;
-    camposExtraidos.tipo_empresa = dados?.tipoEmpresa as string | undefined;
-  }
-
-  // Logs para campos não encontrados (debug)
-  const camposComunsEsperados = ['situacao', 'status', 'principal', 'enderecoDesconhecido', 'idTipoParte', 'polo'];
-  const camposPFEsperados = ['sexo', 'dataNascimento', 'nomeMae', 'nomePai', 'nacionalidade', 'estadoCivil', 'ufNascimento', 'municipioNascimento', 'paisNascimento'];
-  const camposPJEsperados = ['razaoSocial', 'nomeFantasia', 'inscricaoEstadual', 'tipoEmpresa'];
-
-  const camposNaoEncontrados: string[] = [];
-
-  camposComunsEsperados.forEach(campo => {
-    if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
-  });
-
-  if (rep.tipoDocumento === 'CPF') {
-    camposPFEsperados.forEach(campo => {
-      if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
-    });
-  } else if (rep.tipoDocumento === 'CNPJ') {
-    camposPJEsperados.forEach(campo => {
-      if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
-    });
-  }
-
-  if (camposNaoEncontrados.length > 0) {
-    console.debug(`[DEBUG-CAMPOS-PJE] Campos não encontrados em dadosCompletos para representante ${rep.nome}: ${camposNaoEncontrados.join(', ')}`);
   }
 
   return camposExtraidos;
