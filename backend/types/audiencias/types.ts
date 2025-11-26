@@ -78,6 +78,7 @@ export interface Audiencia {
   polo_ativo_nome: string | null;
   polo_passivo_nome: string | null;
   url_audiencia_virtual: string | null;
+  url_ata_audiencia: string | null; // URL da ata de audiência persistida no storage (Backblaze)
   ata_audiencia_id: number | null;
   endereco_presencial: {
     logradouro?: string;

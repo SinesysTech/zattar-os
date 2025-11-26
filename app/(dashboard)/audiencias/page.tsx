@@ -604,12 +604,8 @@ function criarColunas(
         const dataInicio = row.getValue('data_inicio') as string | null;
         const audiencia = row.original as Audiencia;
         const [openAta, setOpenAta] = React.useState(false);
-        const deriveKeyFromUrl = (u: string | null) => {
-          if (!u) return null;
-          const idx = u.indexOf('/processos/');
-          return idx >= 0 ? u.slice(idx) : null;
-        };
-        const fileKey = deriveKeyFromUrl(null); // TODO: Implementar quando tabela de documentos/atas estiver disponível
+        // url_ata_audiencia contém a URL completa do Backblaze onde a ata foi persistida
+        const fileKey = audiencia.url_ata_audiencia;
         return (
           <div className="min-h-10 flex flex-col items-center justify-center text-sm gap-1">
             <div className="font-medium">{formatarData(dataInicio)}</div>
@@ -695,12 +691,8 @@ function criarColunas(
         const [isDialogOpen, setIsDialogOpen] = React.useState(false);
         const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
         const logoPath = getLogoPlataforma(plataforma);
-        const deriveKeyFromUrl = (u: string | null) => {
-          if (!u) return null;
-          const idx = u.indexOf('/processos/');
-          return idx >= 0 ? u.slice(idx) : null;
-        };
-        const fileKey = deriveKeyFromUrl(null); // TODO: Implementar quando tabela de documentos/atas estiver disponível
+        // url_ata_audiencia contém a URL completa do Backblaze onde a ata foi persistida
+        const fileKey = audiencia.url_ata_audiencia;
         const canOpenAta = audiencia.status === 'F' && fileKey !== null;
 
         return (

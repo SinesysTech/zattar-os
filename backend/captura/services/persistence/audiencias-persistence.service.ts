@@ -313,6 +313,7 @@ export async function salvarAudiencias(
         juizo_digital: audiencia.processo?.juizoDigital ?? false,
         // modalidade é populada automaticamente pelo trigger baseado em url_audiencia_virtual, tipo_audiencia e endereco_presencial
         ata_audiencia_id: atas?.[audiencia.id]?.documentoId ?? null,
+        url_ata_audiencia: atas?.[audiencia.id]?.url ?? null,
       };
 
       // Buscar registro existente
