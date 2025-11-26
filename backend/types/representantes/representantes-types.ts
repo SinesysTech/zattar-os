@@ -73,7 +73,7 @@ export interface Representante {
   situacao_oab: string | null;
 
   // Contact
-  emails: Record<string, unknown> | null; // JSONB array
+  emails: string[] | null;
   email: string | null;
   ddd_celular: string | null;
   numero_celular: string | null;
@@ -117,7 +117,7 @@ export interface CriarRepresentanteParams {
   numero_oab?: string | null;
   uf_oab?: string | null;
   situacao_oab?: string | null;
-  emails?: Record<string, unknown> | null;
+  emails?: string[] | null;
   email?: string | null;
   ddd_celular?: string | null;
   numero_celular?: string | null;
@@ -143,7 +143,7 @@ export interface AtualizarRepresentanteParams {
   numero_oab?: string | null;
   uf_oab?: string | null;
   situacao_oab?: string | null;
-  emails?: Record<string, unknown> | null;
+  emails?: string[] | null;
   email?: string | null;
   ddd_celular?: string | null;
   numero_celular?: string | null;

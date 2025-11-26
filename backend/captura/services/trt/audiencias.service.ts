@@ -1,5 +1,47 @@
-// Serviço específico para captura de audiências do TRT
-// Usa API REST do PJE (não faz scraping HTML)
+/**
+ * Serviço de captura de audiências do TRT
+ * 
+ * FLUXO OTIMIZADO (aproveita sessão autenticada):
+ * 
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │  🔐 FASE 1: AUTENTICAÇÃO                                        │
+ * │  └── Login SSO PDPJ → OTP → JWT + Cookies                       │
+ * └─────────────────────────────────────────────────────────────────┘
+ *                               │
+ *                               ▼
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │  📡 FASE 2: BUSCAR AUDIÊNCIAS                                   │
+ * │  └── GET /pauta-usuarios-externos                               │
+ * │  └── Retorno: audiências (cada uma com idProcesso)              │
+ * └─────────────────────────────────────────────────────────────────┘
+ *                               │
+ *                               ▼
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │  📋 FASE 3: EXTRAIR PROCESSOS ÚNICOS                            │
+ * │  └── Set(idProcesso) → processos únicos                         │
+ * └─────────────────────────────────────────────────────────────────┘
+ *                               │
+ *                               ▼
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │  🔄 FASE 4: DADOS COMPLEMENTARES (para cada processo)           │
+ * │  ├── 📜 Timeline: GET /processos/id/{id}/timeline               │
+ * │  └── 👥 Partes: GET /processos/id/{id}/partes                   │
+ * │      └── (com delay de 300ms entre cada requisição)             │
+ * └─────────────────────────────────────────────────────────────────┘
+ *                               │
+ *                               ▼
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │  💾 FASE 5: PERSISTÊNCIA                                        │
+ * │  ├── 📜 Timeline: upsert (MongoDB)                              │
+ * │  ├── 👥 Partes: upsert entidades + vínculos (Supabase)          │
+ * │  └── 🎤 Audiências: upsert (Supabase)                           │
+ * └─────────────────────────────────────────────────────────────────┘
+ *                               │
+ *                               ▼
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │  🚪 FASE 6: FECHAR BROWSER                                      │
+ * └─────────────────────────────────────────────────────────────────┘
+ */
 
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaAudienciasParams } from './trt-capture.service';
@@ -13,6 +55,14 @@ import { uploadToBackblaze } from '@/backend/storage/backblaze-b2.service';
 import { gerarNomeDocumentoAudiencia, gerarCaminhoDocumento } from '@/backend/storage/file-naming.utils';
 import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
+import {
+  buscarDadosComplementaresProcessos,
+  extrairProcessosUnicos,
+  type DadosComplementaresResult,
+} from './dados-complementares.service';
+import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
+import { capturarPartesProcesso } from '../partes/partes-capture.service';
+import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
 
 /**
  * Resultado da captura de audiências
@@ -25,6 +75,13 @@ export interface AudienciasResult {
   persistencia?: SalvarAudienciasResult;
   paginasBrutas?: PagedResponse<Audiencia>[];
   logs?: LogEntry[];
+  /** Novos campos para dados complementares */
+  dadosComplementares?: {
+    processosUnicos: number;
+    timelinesCapturadas: number;
+    partesCapturadas: number;
+    erros: number;
+  };
 }
 
 /**
@@ -58,20 +115,13 @@ function validarFormatoData(data: string): boolean {
 }
 
 /**
- * Serviço de captura de audiências
+ * Serviço de captura de audiências (fluxo otimizado)
  * 
- * Fluxo:
- * 1. Recebe parâmetros (TRT, grau, credenciais, datas opcionais)
- * 2. Chama autenticação (autenticarPJE)
- * 3. Calcula período de busca (usa datas fornecidas ou padrão: hoje até +365 dias)
- * 4. Chama API REST para obter pauta de audiências
- * 5. Retorna todas as audiências (com paginação automática)
- * 6. Limpa recursos
- * 
- * Comportamento:
- * - Se dataInicio não fornecida: usa hoje
- * - Se dataFim não fornecida: usa hoje + 365 dias
- * - Se ambas fornecidas: usa as datas fornecidas
+ * Agora aproveita a sessão autenticada para:
+ * 1. Buscar audiências
+ * 2. Buscar timeline de cada processo
+ * 3. Buscar partes de cada processo
+ * 4. Persistir tudo
  */
 export async function audienciasCapture(
   params: CapturaAudienciasParams
@@ -79,7 +129,10 @@ export async function audienciasCapture(
   let authResult: AuthResult | null = null;
 
   try {
-    // 1. Autenticar no PJE
+    // ═══════════════════════════════════════════════════════════════
+    // FASE 1: AUTENTICAÇÃO
+    // ═══════════════════════════════════════════════════════════════
+    console.log('🔐 [Audiências] Fase 1: Autenticando no PJE...');
     authResult = await autenticarPJE({
       credential: params.credential,
       config: params.config,
@@ -87,10 +140,15 @@ export async function audienciasCapture(
       headless: true,
     });
 
-    const { page } = authResult;
+    const { page, advogadoInfo } = authResult;
+    console.log(`✅ [Audiências] Autenticado como: ${advogadoInfo.nome}`);
 
-    // 2. Calcular período de busca
-    // Se não fornecido, usa padrão: hoje até +365 dias
+    // ═══════════════════════════════════════════════════════════════
+    // FASE 2: BUSCAR AUDIÊNCIAS
+    // ═══════════════════════════════════════════════════════════════
+    console.log('📡 [Audiências] Fase 2: Buscando audiências...');
+
+    // Calcular período de busca
     let dataInicio: string;
     let dataFim: string;
 
@@ -112,65 +170,193 @@ export async function audienciasCapture(
       dataFim = getDataUmAnoDepois();
     }
 
-    // Validar que dataInicio <= dataFim
     if (new Date(dataInicio) > new Date(dataFim)) {
       throw new Error(`dataInicio (${dataInicio}) não pode ser posterior a dataFim (${dataFim}).`);
     }
 
-    // 3. Chamar API REST para obter pauta de audiências
-    // codigoSituacao: 'M' = Designada, 'C' = Cancelada, 'F' = Realizada
     const codigoSituacao = params.codigoSituacao || 'M';
-    console.log('📡 Chamando API de audiências...', {
-      dataInicio,
-      dataFim,
-      codigoSituacao,
-    });
+    console.log(`📅 [Audiências] Período: ${dataInicio} a ${dataFim} | Situação: ${codigoSituacao}`);
 
     const { audiencias, paginas } = await obterTodasAudiencias(
       page,
       dataInicio,
       dataFim,
-      params.codigoSituacao || 'M' // Padrão: Marcadas/Designadas
+      codigoSituacao
     );
 
-    console.log('✅ API de audiências retornou:', {
-      total: audiencias.length,
-      primeiras3: audiencias.slice(0, 3).map((a) => ({
-        processo: a.processo?.numero,
-        dataInicio: a.dataInicio,
-        status: a.status,
-      })),
-    });
+    console.log(`✅ [Audiências] ${audiencias.length} audiências encontradas`);
 
-    // 4. Salvar audiências no banco de dados
-    let persistencia: SalvarAudienciasResult | undefined;
-    let logsPersistencia: LogEntry[] | undefined;
-    try {
-      const advogadoDb = await buscarOuCriarAdvogadoPorCpf(
-        authResult.advogadoInfo.cpf,
-        authResult.advogadoInfo.nome
-      );
-      const atasMap: Record<number, { documentoId: number; url: string }> = {};
-      if ((params.codigoSituacao || 'M') === 'F') {
-        for (const a of audiencias) {
-          try {
-            const timeline = await obterTimeline(page, String(a.idProcesso), { somenteDocumentosAssinados: true, buscarDocumentos: true, buscarMovimentos: false });
-            const candidato = timeline.find(d => d.documento && ((d.tipo || '').toLowerCase().includes('ata') || (d.titulo || '').toLowerCase().includes('ata')));
-            if (candidato && candidato.id) {
-              const documentoId = candidato.id;
-              const docDetalhes = await obterDocumento(page, String(a.idProcesso), String(documentoId), { incluirAssinatura: true, grau: 1 });
-              const pdf = await baixarDocumento(page, String(a.idProcesso), String(documentoId), { incluirCapa: false, incluirAssinatura: true, grau: 1 });
-              const nomeArquivo = gerarNomeDocumentoAudiencia(a.id);
-              const key = gerarCaminhoDocumento(a.nrProcesso || a.processo?.numero || '', 'audiencias', nomeArquivo);
-              const upload = await uploadToBackblaze({ buffer: pdf, key, contentType: 'application/pdf' });
-              atasMap[a.id] = { documentoId: docDetalhes.id, url: upload.url };
-            }
-          } catch (e) {
-            captureLogService.logErro('audiencias', e instanceof Error ? e.message : String(e), { id_pje: a.id, numero_processo: a.nrProcesso || a.processo?.numero, trt: params.config.codigo, grau: params.config.grau, tipo: 'ata' });
+    // Se não há audiências, retornar imediatamente
+    if (audiencias.length === 0) {
+      return {
+        audiencias: [],
+        total: 0,
+        dataInicio,
+        dataFim,
+        paginasBrutas: paginas,
+      };
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // FASE 3: EXTRAIR PROCESSOS ÚNICOS
+    // ═══════════════════════════════════════════════════════════════
+    console.log('📋 [Audiências] Fase 3: Extraindo processos únicos...');
+    const processosIds = extrairProcessosUnicos(audiencias);
+    console.log(`✅ [Audiências] ${processosIds.length} processos únicos identificados`);
+
+    // ═══════════════════════════════════════════════════════════════
+    // FASE 4: BUSCAR DADOS COMPLEMENTARES
+    // ═══════════════════════════════════════════════════════════════
+    console.log('🔄 [Audiências] Fase 4: Buscando dados complementares dos processos...');
+    
+    const dadosComplementares = await buscarDadosComplementaresProcessos(
+      page,
+      processosIds,
+      {
+        buscarTimeline: true,
+        buscarPartes: true,
+        trt: params.config.codigo,
+        grau: params.config.grau,
+        delayEntreRequisicoes: 300,
+        onProgress: (atual, total, processoId) => {
+          if (atual % 5 === 0 || atual === total) {
+            console.log(`   📊 Progresso: ${atual}/${total} (processo ${processoId})`);
           }
+        },
+      }
+    );
+
+    console.log(`✅ [Audiências] Dados complementares obtidos:`, dadosComplementares.resumo);
+
+    // ═══════════════════════════════════════════════════════════════
+    // FASE 5: PERSISTÊNCIA
+    // ═══════════════════════════════════════════════════════════════
+    console.log('💾 [Audiências] Fase 5: Persistindo dados...');
+
+    // 5.1 Buscar/criar advogado
+    const advogadoDb = await buscarOuCriarAdvogadoPorCpf(
+      advogadoInfo.cpf,
+      advogadoInfo.nome
+    );
+
+    // 5.2 Persistir timelines no MongoDB
+    console.log('   📜 Persistindo timelines...');
+    let timelinesPersistidas = 0;
+    for (const [processoId, dados] of dadosComplementares.porProcesso) {
+      if (dados.timeline && Array.isArray(dados.timeline) && dados.timeline.length > 0) {
+        try {
+          await salvarTimelineNoMongoDB({
+            processoId: String(processoId),
+            trtCodigo: params.config.codigo,
+            grau: params.config.grau,
+            timeline: dados.timeline as TimelineItemEnriquecido[],
+            advogadoId: advogadoDb.id,
+          });
+          timelinesPersistidas++;
+        } catch (e) {
+          console.warn(`   ⚠️ Erro ao persistir timeline do processo ${processoId}:`, e);
+          captureLogService.logErro('timeline', e instanceof Error ? e.message : String(e), {
+            processoId,
+            trt: params.config.codigo,
+            grau: params.config.grau,
+          });
         }
       }
+    }
+    console.log(`   ✅ ${timelinesPersistidas} timelines persistidas`);
 
+    // 5.3 Persistir partes
+    console.log('   👥 Persistindo partes...');
+    let partesPersistidas = 0;
+    for (const [processoId, dados] of dadosComplementares.porProcesso) {
+      if (dados.partes && dados.partes.length > 0) {
+        try {
+          // Encontrar a audiência correspondente para obter número do processo
+          const audienciaDoProcesso = audiencias.find(a => a.idProcesso === processoId);
+          const numeroProcesso = audienciaDoProcesso?.nrProcesso || audienciaDoProcesso?.processo?.numero || '';
+          
+          if (numeroProcesso) {
+            await capturarPartesProcesso(
+              page,
+              {
+                idPje: processoId,
+                numeroProcesso,
+                trt: params.config.codigo,
+                grau: params.config.grau === 'primeiro_grau' ? 'primeiro_grau' : 'segundo_grau',
+              },
+              {
+                id: parseInt(advogadoInfo.idAdvogado, 10),
+                documento: advogadoInfo.cpf,
+                nome: advogadoInfo.nome,
+              }
+            );
+            partesPersistidas++;
+          }
+        } catch (e) {
+          console.warn(`   ⚠️ Erro ao persistir partes do processo ${processoId}:`, e);
+          captureLogService.logErro('partes', e instanceof Error ? e.message : String(e), {
+            processoId,
+            trt: params.config.codigo,
+            grau: params.config.grau,
+          });
+        }
+      }
+    }
+    console.log(`   ✅ ${partesPersistidas} processos com partes persistidas`);
+
+    // 5.4 Processar atas para audiências realizadas
+    const atasMap: Record<number, { documentoId: number; url: string }> = {};
+    if (codigoSituacao === 'F') {
+      console.log('   📄 Buscando atas de audiências realizadas...');
+      for (const a of audiencias) {
+        try {
+          // Usar timeline já capturada se disponível
+          const dadosProcesso = dadosComplementares.porProcesso.get(a.idProcesso);
+          const timeline = dadosProcesso?.timeline || await obterTimeline(page, String(a.idProcesso), {
+            somenteDocumentosAssinados: true,
+            buscarDocumentos: true,
+            buscarMovimentos: false,
+          });
+          
+          const candidato = timeline.find(d => 
+            d.documento && 
+            ((d.tipo || '').toLowerCase().includes('ata') || (d.titulo || '').toLowerCase().includes('ata'))
+          );
+          
+          if (candidato && candidato.id) {
+            const documentoId = candidato.id;
+            const docDetalhes = await obterDocumento(page, String(a.idProcesso), String(documentoId), {
+              incluirAssinatura: true,
+              grau: 1,
+            });
+            const pdf = await baixarDocumento(page, String(a.idProcesso), String(documentoId), {
+              incluirCapa: false,
+              incluirAssinatura: true,
+              grau: 1,
+            });
+            const nomeArquivo = gerarNomeDocumentoAudiencia(a.id);
+            const key = gerarCaminhoDocumento(a.nrProcesso || a.processo?.numero || '', 'audiencias', nomeArquivo);
+            const upload = await uploadToBackblaze({ buffer: pdf, key, contentType: 'application/pdf' });
+            atasMap[a.id] = { documentoId: docDetalhes.id, url: upload.url };
+          }
+        } catch (e) {
+          captureLogService.logErro('audiencias', e instanceof Error ? e.message : String(e), {
+            id_pje: a.id,
+            numero_processo: a.nrProcesso || a.processo?.numero,
+            trt: params.config.codigo,
+            grau: params.config.grau,
+            tipo: 'ata',
+          });
+        }
+      }
+    }
+
+    // 5.5 Persistir audiências
+    console.log('   🎤 Persistindo audiências...');
+    let persistencia: SalvarAudienciasResult | undefined;
+    let logsPersistencia: LogEntry[] | undefined;
+
+    try {
       persistencia = await salvarAudiencias({
         audiencias,
         advogadoId: advogadoDb.id,
@@ -179,22 +365,29 @@ export async function audienciasCapture(
         atas: atasMap,
       });
 
-      console.log('✅ Audiências salvas no banco:', {
-        total: persistencia.total,
+      console.log(`   ✅ Audiências persistidas:`, {
         inseridos: persistencia.inseridos,
         atualizados: persistencia.atualizados,
         naoAtualizados: persistencia.naoAtualizados,
         erros: persistencia.erros,
-        orgaosJulgadoresCriados: persistencia.orgaosJulgadoresCriados,
       });
-
     } catch (error) {
-      console.error('❌ Erro ao salvar audiências no banco:', error);
-      // Não falha a captura se a persistência falhar - apenas loga o erro
+      console.error('❌ [Audiências] Erro ao salvar audiências:', error);
     } finally {
       captureLogService.imprimirResumo();
       logsPersistencia = captureLogService.consumirLogs();
     }
+
+    // ═══════════════════════════════════════════════════════════════
+    // RESULTADO FINAL
+    // ═══════════════════════════════════════════════════════════════
+    console.log('🏁 [Audiências] Captura concluída!');
+    console.log(`   📊 Resumo:`);
+    console.log(`      - Audiências: ${audiencias.length}`);
+    console.log(`      - Processos únicos: ${processosIds.length}`);
+    console.log(`      - Timelines: ${dadosComplementares.resumo.timelinesObtidas}`);
+    console.log(`      - Partes: ${dadosComplementares.resumo.partesObtidas}`);
+    console.log(`      - Erros: ${dadosComplementares.resumo.erros}`);
 
     return {
       audiencias,
@@ -204,10 +397,19 @@ export async function audienciasCapture(
       persistencia,
       paginasBrutas: paginas,
       logs: logsPersistencia,
+      dadosComplementares: {
+        processosUnicos: processosIds.length,
+        timelinesCapturadas: dadosComplementares.resumo.timelinesObtidas,
+        partesCapturadas: dadosComplementares.resumo.partesObtidas,
+        erros: dadosComplementares.resumo.erros,
+      },
     };
   } finally {
-    // 4. Limpar recursos (fechar navegador)
+    // ═══════════════════════════════════════════════════════════════
+    // FASE 6: FECHAR BROWSER
+    // ═══════════════════════════════════════════════════════════════
     if (authResult?.browser) {
+      console.log('🚪 [Audiências] Fechando browser...');
       await authResult.browser.close();
     }
   }
