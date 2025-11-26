@@ -508,8 +508,8 @@ export async function upsertTerceiroPorIdPessoa(
       });
       return { ...result, criado: false };
     } else {
-      // Create new
-      const result = await criarTerceiro(params);
+      // Create new - cast para CriarTerceiroParams pois a união discriminada por tipo_pessoa
+      const result = await criarTerceiro(params as CriarTerceiroParams);
       return { ...result, criado: true };
     }
   } catch (error) {
