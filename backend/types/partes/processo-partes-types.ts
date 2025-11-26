@@ -97,19 +97,19 @@ export interface ProcessoParte {
   id_tipo_parte: number | null;
   tipo_parte: TipoParteProcesso; // Tipo de participante no processo (ex: RECLAMANTE, RECLAMADO) - vem do PJE
   polo: PoloProcessoParte; // Polo processual - ATIVO (autor), PASSIVO (réu), NEUTRO (perito), TERCEIRO (interveniente)
-  principal: boolean; // Indica se é a parte principal no polo
-  ordem: number; // Ordem de exibição dentro do polo (0-based, deve ser >= 0)
+  principal: boolean | null; // Indica se é a parte principal no polo (nullable no banco, default false)
+  ordem: number | null; // Ordem de exibição dentro do polo (nullable no banco)
   status_pje: string | null;
   situacao_pje: string | null;
   autoridade: boolean | null;
   endereco_desconhecido: boolean | null;
   dados_pje_completo: Record<string, unknown> | null; // JSON completo retornado pelo PJE para auditoria e histórico
   trt: string;
-  numero_processo: string;
+  numero_processo: string | null; // Nullable no banco
   grau: GrauProcessoParte;
   ultima_atualizacao_pje: string | null; // ISO timestamp
-  created_at: string; // ISO timestamp
-  updated_at: string; // ISO timestamp
+  created_at: string | null; // ISO timestamp (nullable no banco)
+  updated_at: string | null; // ISO timestamp (nullable no banco)
 }
 
 // NOTA: Constraint UNIQUE (processo_id, tipo_entidade, entidade_id, grau)
