@@ -14,7 +14,7 @@ import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-vi
 import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Audiencia } from '@/backend/types/audiencias/types';
+import type { Audiencia, ModalidadeAudiencia } from '@/backend/types/audiencias/types';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 /**
@@ -76,6 +76,30 @@ const getParteAutoraColorClass = (): string => {
  */
 const getParteReColorClass = (): string => {
   return 'bg-red-100 text-red-800 border-red-200';
+};
+
+/**
+ * Formata modalidade para exibição
+ */
+const formatarModalidade = (modalidade: ModalidadeAudiencia | null): string => {
+  const modalidadeMap: Record<string, string> = {
+    virtual: 'Virtual',
+    presencial: 'Presencial',
+    hibrida: 'Híbrida',
+  };
+  return modalidade ? modalidadeMap[modalidade] || modalidade : '-';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge de modalidade
+ */
+const getModalidadeColorClass = (modalidade: ModalidadeAudiencia | null): string => {
+  const modalidadeColors: Record<string, string> = {
+    virtual: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
+    presencial: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
+    hibrida: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+  };
+  return modalidade ? modalidadeColors[modalidade] || 'bg-gray-100 text-gray-800 border-gray-200' : 'bg-gray-100 text-gray-800 border-gray-200';
 };
 
 /**
@@ -455,7 +479,12 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
 
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px]">
-            <div className="text-sm text-left">{tipo}</div>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <div className="text-sm text-left">{tipo}</div>
+              <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs`}>
+                {formatarModalidade(audiencia.modalidade)}
+              </Badge>
+            </div>
             <div className="text-xs text-muted-foreground truncate max-w-full text-left">{sala}</div>
             <div className="relative group h-full w-full min-h-[60px] flex items-center justify-between p-2">
               <div className="flex-1 flex items-center justify-start">

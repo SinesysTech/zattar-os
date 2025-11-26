@@ -43,8 +43,18 @@ export const AUDIENCIAS_FILTER_CONFIGS: FilterConfig[] = [
     ],
   },
   {
+    id: 'modalidade',
+    label: 'Modalidade',
+    type: 'select',
+    options: [
+      { value: 'virtual', label: 'Virtual' },
+      { value: 'presencial', label: 'Presencial' },
+      { value: 'hibrida', label: 'Híbrida' },
+    ],
+  },
+  {
     id: 'tipo_is_virtual',
-    label: 'Apenas Audiências Virtuais',
+    label: 'Apenas Audiências Virtuais (legado)',
     type: 'boolean',
   },
   {
@@ -162,6 +172,12 @@ export function buildAudienciasFilterGroups(usuarios?: Usuario[]): FilterGroup[]
       ], usuarios),
     },
     {
+      label: 'Modalidade',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('modalidade')!,
+      ]),
+    },
+    {
       label: 'Características',
       options: buildOptionsWithoutPrefix([
         configMap.get('tipo_is_virtual')!,
@@ -195,6 +211,8 @@ export function parseAudienciasFilters(selectedFilters: string[]): AudienciasFil
           }
         } else if (id === 'status') {
           filters.status = value;
+        } else if (id === 'modalidade') {
+          filters.modalidade = value as 'virtual' | 'presencial' | 'hibrida';
         }
       }
     } else {
