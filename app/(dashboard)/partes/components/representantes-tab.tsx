@@ -84,10 +84,8 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Representante>[] {
       size: 150,
       cell: ({ row }) => {
         const representante = row.original;
-        const documento =
-          representante.tipo_pessoa === 'pf'
-            ? formatarCpf(representante.cpf)
-            : formatarCnpj(representante.cnpj);
+        // Representantes são sempre advogados (PF) com CPF
+        const documento = representante.cpf ? formatarCpf(representante.cpf) : '-';
         return (
           <div className="min-h-10 flex items-center justify-center text-sm">
             {documento}

@@ -7,8 +7,6 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type {
   Representante,
   RepresentanteComEndereco,
-  RepresentantePessoaFisica,
-  RepresentantePessoaJuridica,
   CriarRepresentanteParams,
   AtualizarRepresentanteParams,
   ListarRepresentantesParams,
@@ -18,7 +16,6 @@ import type {
   BuscarRepresentantesPorProcessoParams,
   UpsertRepresentantePorIdPessoaParams,
   OperacaoRepresentanteResult,
-  TipoPessoa,
 } from '@/backend/types/representantes/representantes-types';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
 
@@ -125,15 +122,10 @@ export function validarEmail(email: string): boolean {
 // ============================================================================
 
 /**
- * Converte row do banco para tipo Representante com discriminated union
+ * Converte row do banco para tipo Representante
+ * Representantes são sempre pessoas físicas (advogados)
  */
 export function converterParaRepresentante(data: Record<string, unknown>): Representante {
-  const tipo_pessoa = data.tipo_pessoa as string;
-
-  if (tipo_pessoa !== 'pf' && tipo_pessoa !== 'pj') {
-    throw new Error(`tipo_pessoa inválido: ${tipo_pessoa}`);
-  }
-
   // Parse JSON fields
   const emails = Array.isArray(data.emails) ? data.emails as string[] : [];
   const dados_anteriores = data.dados_anteriores as Record<string, unknown> | null;
@@ -145,7 +137,7 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
     return new Date(val as string);
   };
 
-  const base = {
+  return {
     id: data.id as number,
     id_pje: data.id_pje as number | null,
     id_pessoa_pje: data.id_pessoa_pje as number,
@@ -155,8 +147,9 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
     trt: data.trt as string,
     grau: data.grau as '1' | '2',
     numero_processo: data.numero_processo as string,
-    tipo_pessoa: data.tipo_pessoa as TipoPessoa,
     nome: data.nome as string,
+    cpf: data.cpf as string | null,
+    sexo: data.sexo as string | null,
     situacao: data.situacao as string | null,
     status: data.status as string | null,
     principal: data.principal as boolean | null,
@@ -180,48 +173,6 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
     created_at: new Date(data.created_at as string),
     updated_at: new Date(data.updated_at as string),
   };
-
-  if (tipo_pessoa === 'pf') {
-    return {
-      ...base,
-      tipo_pessoa: 'pf',
-      cpf: data.cpf as string,
-      sexo: data.sexo as string | null,
-      data_nascimento: parseDate(data.data_nascimento),
-      nome_mae: data.nome_mae as string | null,
-      nome_pai: data.nome_pai as string | null,
-      nacionalidade: data.nacionalidade as string | null,
-      estado_civil: data.estado_civil as string | null,
-      uf_nascimento: data.uf_nascimento as string | null,
-      municipio_nascimento: data.municipio_nascimento as string | null,
-      pais_nascimento: data.pais_nascimento as string | null,
-      cnpj: null,
-      razao_social: null,
-      nome_fantasia: null,
-      inscricao_estadual: null,
-      tipo_empresa: null,
-    } as RepresentantePessoaFisica;
-  } else {
-    return {
-      ...base,
-      tipo_pessoa: 'pj',
-      cnpj: data.cnpj as string,
-      razao_social: data.razao_social as string | null,
-      nome_fantasia: data.nome_fantasia as string | null,
-      inscricao_estadual: data.inscricao_estadual as string | null,
-      tipo_empresa: data.tipo_empresa as string | null,
-      cpf: null,
-      sexo: null,
-      data_nascimento: null,
-      nome_mae: null,
-      nome_pai: null,
-      nacionalidade: null,
-      estado_civil: null,
-      uf_nascimento: null,
-      municipio_nascimento: null,
-      pais_nascimento: null,
-    } as RepresentantePessoaJuridica;
-  }
 }
 
 // ============================================================================
@@ -260,8 +211,7 @@ export async function criarRepresentante(
 ): Promise<OperacaoRepresentanteResult> {
   try {
     // Validate required fields
-    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id ||
-      !params.tipo_pessoa || !params.nome) {
+    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id || !params.nome) {
       return {
         sucesso: false,
         erro: 'Campos obrigatórios não informados',
@@ -274,23 +224,6 @@ export async function criarRepresentante(
         sucesso: false,
         erro: 'Campos trt, grau e numero_processo são obrigatórios',
       };
-    }
-
-    // Validate CPF/CNPJ based on tipo_pessoa
-    if (params.tipo_pessoa === 'pf') {
-      if (!params.cpf) {
-        return { sucesso: false, erro: 'CPF é obrigatório para pessoa física' };
-      }
-      if (!validarCPF(params.cpf)) {
-        return { sucesso: false, erro: 'CPF inválido' };
-      }
-    } else if (params.tipo_pessoa === 'pj') {
-      if (!params.cnpj) {
-        return { sucesso: false, erro: 'CNPJ é obrigatório para pessoa jurídica' };
-      }
-      if (!validarCNPJ(params.cnpj)) {
-        return { sucesso: false, erro: 'CNPJ inválido' };
-      }
     }
 
     // Validate OAB if provided
@@ -343,10 +276,10 @@ export async function atualizarRepresentante(
     }
 
     // Check for immutable fields
-    if ('tipo_pessoa' in params || 'parte_tipo' in params || 'parte_id' in params) {
+    if ('parte_tipo' in params || 'parte_id' in params) {
       return {
         sucesso: false,
-        erro: 'Campos tipo_pessoa, parte_tipo e parte_id não podem ser alterados',
+        erro: 'Campos parte_tipo e parte_id não podem ser alterados',
       };
     }
 
@@ -360,9 +293,6 @@ export async function atualizarRepresentante(
       return { sucesso: false, erro: 'Número OAB inválido' };
     }
 
-    // Note: CPF/CNPJ validation removed because tipo_pessoa is immutable.
-    // Document numbers cannot be changed after creation.
-    // If cpf/cnpj are provided in params, they will be ignored by the type system.
 
     const supabase = createServiceClient();
 
@@ -567,11 +497,8 @@ export async function listarRepresentantes(
     if (params.situacao_oab) {
       query = query.eq('situacao_oab', params.situacao_oab);
     }
-    if (params.tipo_pessoa) {
-      query = query.eq('tipo_pessoa', params.tipo_pessoa);
-    }
     if (params.busca) {
-      query = query.or(`nome.ilike.%${params.busca}%,cpf.ilike.%${params.busca}%,cnpj.ilike.%${params.busca}%,email.ilike.%${params.busca}%`);
+      query = query.or(`nome.ilike.%${params.busca}%,cpf.ilike.%${params.busca}%,email.ilike.%${params.busca}%`);
     }
 
     // Apply ordering
@@ -816,10 +743,6 @@ export async function listarRepresentantesComEndereco(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(`nome.ilike.%${busca}%,numero_oab.ilike.%${busca}%,cpf.ilike.%${busca}%`);
-  }
-
-  if (params.tipo_pessoa) {
-    query = query.eq('tipo_pessoa', params.tipo_pessoa);
   }
 
   if (params.parte_tipo) {

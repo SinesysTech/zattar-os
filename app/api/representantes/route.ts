@@ -154,8 +154,7 @@ export async function GET(request: NextRequest) {
       parte_tipo: searchParams.get('parte_tipo') as any,
       parte_id: searchParams.get('parte_id') ? parseInt(searchParams.get('parte_id')!) : undefined,
       numero_oab: searchParams.get('numero_oab') || undefined,
-      situacao_oab: searchParams.get('situacao_oab') as any,
-      tipo_pessoa: searchParams.get('tipo_pessoa') as any,
+      situacao_oab: searchParams.get('situacao_oab') || undefined,
       busca: searchParams.get('busca') || undefined,
       ordenar_por: searchParams.get('ordenar_por') as any,
       ordem: searchParams.get('ordem') as 'asc' | 'desc' | undefined,
@@ -267,25 +266,9 @@ export async function POST(request: NextRequest) {
     const params: CriarRepresentanteParams = body;
 
     // Validate required fields
-    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id ||
-        !params.tipo_pessoa || !params.nome) {
+    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id || !params.nome) {
       return NextResponse.json(
         { success: false, error: 'Campos obrigatórios não informados' },
-        { status: 400 }
-      );
-    }
-
-    // Validate conditional required fields
-    if (params.tipo_pessoa === 'pf' && !params.cpf) {
-      return NextResponse.json(
-        { success: false, error: 'CPF é obrigatório para pessoa física' },
-        { status: 400 }
-      );
-    }
-
-    if (params.tipo_pessoa === 'pj' && !params.cnpj) {
-      return NextResponse.json(
-        { success: false, error: 'CNPJ é obrigatório para pessoa jurídica' },
         { status: 400 }
       );
     }
