@@ -108,6 +108,7 @@ export type {
   UpsertTerceiroPorCPFParams,
   UpsertTerceiroPorCNPJParams,
   UpsertTerceiroPorDocumentoParams,
+  UpsertTerceiroPorIdPessoaParams,
   OrdenarPorTerceiro,
   OrdemTerceiro,
   TerceiroFormData,

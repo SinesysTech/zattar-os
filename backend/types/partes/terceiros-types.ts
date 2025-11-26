@@ -397,6 +397,32 @@ export interface UpsertTerceiroPorCNPJParams extends CriarTerceiroPJParams {
 export type UpsertTerceiroPorDocumentoParams = UpsertTerceiroPorCPFParams | UpsertTerceiroPorCNPJParams;
 
 /**
+ * Upsert terceiro por id_pje (tabela global)
+ * Usado para captura de terceiros do PJE onde id_pje é o identificador único
+ */
+export interface UpsertTerceiroPorIdPessoaParams {
+  id_pje: number;
+  tipo_parte: TipoParteTerceiro;
+  polo: PoloTerceiro;
+  tipo_pessoa: 'pf' | 'pj';
+  nome: string;
+  cpf?: string;
+  cnpj?: string;
+  // Campos opcionais comuns
+  nome_social?: string;
+  nome_fantasia?: string;
+  emails?: string[];
+  ddd_celular?: string;
+  numero_celular?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
+  observacoes?: string;
+  dados_pje_completo?: Record<string, unknown>;
+}
+
+/**
  * Parâmetros para buscar terceiros de um processo
  */
 export interface BuscarTerceirosPorProcessoParams {
