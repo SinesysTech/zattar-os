@@ -4,6 +4,11 @@
  *
  * NOTA: Representantes são sempre pessoas físicas (advogados) na API do PJE.
  * Os campos disponíveis são limitados comparados às partes.
+ *
+ * MUDANÇA DE PARADIGMA: Representantes agora são únicos por CPF, e o vínculo com processos é feito via processo_partes.
+ * A tabela representantes tem UM registro por pessoa (CPF único), ao invés de um registro por (representante, processo).
+ * Campos de contexto de processo (trt, grau, numero_processo, etc.) foram removidos.
+ * O id_pessoa_pje foi movido para a tabela cadastros_pje, pois não é globalmente único.
  */
 
 // ============================================================================
@@ -46,24 +51,16 @@ export type OrdenarPorRepresentante =
 /**
  * Representante (Advogado) - campos disponíveis na API do PJE
  * Representantes são sempre pessoas físicas
+ *
+ * Constraint UNIQUE em CPF garante que existe apenas um registro por pessoa.
  */
 export interface Representante {
   // Identification
   id: number;
-  id_pje: number | null;
-  id_pessoa_pje: number;
-
-  // Context (link to parte and processo)
-  parte_tipo: ParteTipo;
-  parte_id: number;
-  polo: string | null;
-  trt: string;
-  grau: Grau;
-  numero_processo: string;
 
   // Basic info
   nome: string;
-  cpf: string | null;
+  cpf: string;
   sexo: string | null;
   situacao: string | null;
   status: string | null;
@@ -110,21 +107,14 @@ export interface RepresentanteComEndereco extends Representante {
 
 /**
  * Parâmetros para criar novo representante
+ * Agora simplificado para apenas dados da pessoa, sem contexto de processo.
  */
 export interface CriarRepresentanteParams {
   // Required fields
-  id_pessoa_pje: number;
-  parte_tipo: ParteTipo;
-  parte_id: number;
-  trt: string;
-  grau: Grau;
-  numero_processo: string;
+  cpf: string;
   nome: string;
 
   // Optional fields
-  id_pje?: number | null;
-  cpf?: string | null;
-  polo?: string | null;
   sexo?: string | null;
   situacao?: string | null;
   status?: string | null;
@@ -156,13 +146,12 @@ export interface AtualizarRepresentanteParams {
 
   // Updatable fields (all optional)
   nome?: string;
-  cpf?: string | null;
+  cpf?: string;
   sexo?: string | null;
   situacao?: string | null;
   status?: string | null;
   principal?: boolean | null;
   endereco_desconhecido?: boolean | null;
-  polo?: string | null;
   tipo?: string | null;
   numero_oab?: string | null;
   situacao_oab?: string | null;
@@ -189,13 +178,8 @@ export interface ListarRepresentantesParams {
   limite?: number;
 
   // Filters
-  parte_tipo?: ParteTipo;
-  parte_id?: number;
-  trt?: string;
-  grau?: Grau;
-  numero_processo?: string;
   nome?: string;
-  id_pessoa_pje?: number;
+  cpf?: string;
   numero_oab?: string;
   situacao_oab?: string;
   busca?: string;
@@ -209,31 +193,23 @@ export interface ListarRepresentantesParams {
 // Helper Query Types
 // ============================================================================
 
-export interface BuscarRepresentantesPorParteParams {
-  parte_tipo: ParteTipo;
-  parte_id: number;
-  trt?: string;
-  grau?: Grau;
-  numero_processo?: string;
-}
-
 export interface BuscarRepresentantesPorOABParams {
   numero_oab: string;
-  trt?: string;
-  grau?: Grau;
-  numero_processo?: string;
-}
-
-export interface BuscarRepresentantesPorProcessoParams {
-  trt: string;
-  grau: Grau;
-  numero_processo: string;
 }
 
 /**
- * Upsert representante por id_pessoa_pje + context
+ * Upsert representante por CPF
  */
-export interface UpsertRepresentantePorIdPessoaParams extends CriarRepresentanteParams {}
+export interface UpsertRepresentantePorCPFParams extends CriarRepresentanteParams {
+  cpf: string;
+}
+
+/**
+ * Buscar representante por CPF
+ */
+export interface BuscarRepresentantePorCPFParams {
+  cpf: string;
+}
 
 // ============================================================================
 // Result Types

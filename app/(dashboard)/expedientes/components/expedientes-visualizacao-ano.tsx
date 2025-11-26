@@ -33,6 +33,20 @@ export function ExpedientesVisualizacaoAno({
   const [expedientesDia, setExpedientesDia] = React.useState<PendenteManifestacao[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
+  // Itens especiais: sem prazo e vencidos (pendentes)
+  const semPrazoPendentes = React.useMemo(
+    () => expedientes.filter((e) => !e.baixado_em && !e.data_prazo_legal_parte),
+    [expedientes]
+  );
+  const vencidosPendentes = React.useMemo(
+    () => expedientes.filter((e) => !e.baixado_em && e.prazo_vencido === true),
+    [expedientes]
+  );
+  const pinnedIds = React.useMemo(
+    () => new Set<number>([...semPrazoPendentes.map((e) => e.id), ...vencidosPendentes.map((e) => e.id)]),
+    [semPrazoPendentes, vencidosPendentes]
+  );
+
   // Agrupar expedientes por dia (usando data de prazo legal)
   const expedientesPorDia = React.useMemo(() => {
     const mapa = new Set<string>();
@@ -62,6 +76,8 @@ export function ExpedientesVisualizacaoAno({
 
   const temExpediente = (ano: number, mes: number, dia: number) => {
     const chave = `${ano}-${mes}-${dia}`;
+    // Se há itens pinned (sem prazo ou vencidos pendentes), considerar que há expedientes em todos os dias
+    if (semPrazoPendentes.length > 0 || vencidosPendentes.length > 0) return true;
     return expedientesPorDia.has(chave);
   };
 
@@ -81,11 +97,14 @@ export function ExpedientesVisualizacaoAno({
     });
 
     // Ordenar por data de vencimento (mais antigas primeiro)
-    return expedientesDoDia.sort((a, b) => {
+    const restantes = expedientesDoDia.filter((e) => !pinnedIds.has(e.id));
+    restantes.sort((a, b) => {
       const dataA = a.data_prazo_legal_parte ? new Date(a.data_prazo_legal_parte).getTime() : 0;
       const dataB = b.data_prazo_legal_parte ? new Date(b.data_prazo_legal_parte).getTime() : 0;
       return dataA - dataB; // Crescente: mais antigas primeiro
     });
+    // Prefixar pinned
+    return [...semPrazoPendentes, ...vencidosPendentes, ...restantes];
   };
 
   const handleDiaClick = (ano: number, mes: number, dia: number) => {

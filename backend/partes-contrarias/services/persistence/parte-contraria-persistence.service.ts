@@ -9,7 +9,6 @@ import type {
   AtualizarParteContrariaParams,
   ListarPartesContrariasParams,
   ListarPartesContrariasResult,
-  UpsertParteContrariaPorIdPessoaParams,
 } from '@/backend/types/partes/partes-contrarias-types';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
 
@@ -70,8 +69,6 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
 
   const base = {
     id: data.id as number,
-    // id_pje removido
-    id_pessoa_pje: (data.id_pessoa_pje as number | null) ?? null,
     tipo_pessoa,
     nome: data.nome as string,
     nome_social_fantasia: (data.nome_social_fantasia as string | null) ?? null,
@@ -244,8 +241,6 @@ export async function criarParteContraria(
 
     // Preparar dados para inserção
     const dadosNovos: Record<string, unknown> = {
-      // id_pje removido
-      id_pessoa_pje: params.id_pessoa_pje ?? null,
       tipo_pessoa: params.tipo_pessoa,
       nome: params.nome.trim(),
       nome_social_fantasia: params.nome_social_fantasia?.trim() || null,
@@ -329,8 +324,6 @@ export async function criarParteContraria(
           return { sucesso: false, erro: 'Parte contrária com este CPF já cadastrada' };
         } else if (error.message.includes('cnpj')) {
           return { sucesso: false, erro: 'Parte contrária com este CNPJ já cadastrada' };
-        } else if (error.message.includes('id_pessoa_pje')) {
-          return { sucesso: false, erro: 'Pessoa PJE já cadastrada como parte contrária' };
         }
       }
 
@@ -379,8 +372,6 @@ export async function atualizarParteContraria(
       dados_anteriores: converterParaParteContraria(existente),
     };
 
-    // if (params.id_pje !== undefined) dadosAtualizacao.id_pje = params.id_pje; // Removido
-    if (params.id_pessoa_pje !== undefined) dadosAtualizacao.id_pessoa_pje = params.id_pessoa_pje;
     if (params.nome !== undefined) dadosAtualizacao.nome = params.nome.trim();
     if (params.nome_social_fantasia !== undefined)
       dadosAtualizacao.nome_social_fantasia = params.nome_social_fantasia?.trim() || null;
@@ -506,8 +497,6 @@ export async function atualizarParteContraria(
           return { sucesso: false, erro: 'Parte contrária com este CPF já cadastrada' };
         } else if (error.message.includes('cnpj')) {
           return { sucesso: false, erro: 'Parte contrária com este CNPJ já cadastrada' };
-        } else if (error.message.includes('id_pessoa_pje')) {
-          return { sucesso: false, erro: 'Pessoa PJE já cadastrada como parte contrária' };
         }
       }
 
@@ -549,30 +538,9 @@ export async function buscarParteContrariaPorId(id: number): Promise<ParteContra
 }
 
 /**
- * Busca uma parte contrária por id_pessoa_pje
- */
-export async function buscarParteContrariaPorIdPessoaPje(
-  id_pessoa_pje: number
-): Promise<ParteContraria | null> {
-  const supabase = createServiceClient();
-
-  const { data, error } = await supabase
-    .from('partes_contrarias')
-    .select('*')
-    .eq('id_pessoa_pje', id_pessoa_pje)
-    .maybeSingle();
-
-  if (error) {
-    throw new Error(`Erro ao buscar por id_pessoa_pje: ${error.message}`);
-  }
-
-  return data ? converterParaParteContraria(data) : null;
-}
-
-/**
  * Busca uma parte contrária por CPF
  */
-export async function buscarParteContrariaPorCpf(cpf: string): Promise<ParteContraria | null> {
+export async function buscarParteContrariaPorCPF(cpf: string): Promise<ParteContraria | null> {
   const cpfNormalizado = normalizarCpf(cpf);
   const supabase = createServiceClient();
 
@@ -592,7 +560,7 @@ export async function buscarParteContrariaPorCpf(cpf: string): Promise<ParteCont
 /**
  * Busca uma parte contrária por CNPJ
  */
-export async function buscarParteContrariaPorCnpj(cnpj: string): Promise<ParteContraria | null> {
+export async function buscarParteContrariaPorCNPJ(cnpj: string): Promise<ParteContraria | null> {
   const cnpjNormalizado = normalizarCnpj(cnpj);
   const supabase = createServiceClient();
 
@@ -607,6 +575,17 @@ export async function buscarParteContrariaPorCnpj(cnpj: string): Promise<ParteCo
   }
 
   return data ? converterParaParteContraria(data) : null;
+}
+
+/**
+ * Busca uma parte contrária por documento (CPF ou CNPJ)
+ */
+export async function buscarParteContrariaPorDocumento(documento: string, tipo: 'cpf' | 'cnpj'): Promise<ParteContraria | null> {
+  if (tipo === 'cpf') {
+    return buscarParteContrariaPorCPF(documento);
+  } else {
+    return buscarParteContrariaPorCNPJ(documento);
+  }
 }
 
 /**
@@ -646,10 +625,6 @@ export async function listarPartesContrarias(
     query = query.eq('cnpj', normalizarCnpj(params.cnpj));
   }
 
-  if (params.id_pessoa_pje) {
-    query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
-  }
-
   const ordenarPor = params.ordenar_por ?? 'created_at';
   const ordem = params.ordem ?? 'desc';
   query = query.order(ordenarPor, { ascending: ordem === 'asc' });
@@ -676,28 +651,79 @@ export async function listarPartesContrarias(
 }
 
 /**
- * Upsert por id_pessoa_pje (cria se não existir, atualiza se existir)
+ * Upsert parte contrária PF usando CPF como chave única
  */
-export async function upsertParteContrariaPorIdPessoa(
-  params: UpsertParteContrariaPorIdPessoaParams
-): Promise<OperacaoParteContrariaResult> {
-  try {
-    const existente = await buscarParteContrariaPorIdPessoaPje(params.id_pessoa_pje);
+export async function upsertParteContrariaPorCPF(params: CriarParteContrariaPFParams): Promise<OperacaoParteContrariaResult> {
+  const supabase = createServiceClient();
 
-    if (existente) {
-      const result = await atualizarParteContraria({
-        ...params,
-        id: existente.id,
-      } as unknown as AtualizarParteContrariaParams);
-      return { ...result, criado: false };
-    } else {
-      const result = await criarParteContraria(params);
-      return { ...result, criado: true };
+  try {
+    const { data, error } = await supabase
+      .from('partes_contrarias')
+      .upsert(params, { onConflict: 'cpf' })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Erro ao fazer upsert por CPF:', error);
+      return { sucesso: false, erro: `Erro ao upsert: ${error.message}` };
     }
+
+    // Verificar se foi criado ou atualizado
+    const criado = !data.dados_anteriores; // Se dados_anteriores é null, foi criado
+
+    return {
+      sucesso: true,
+      parteContraria: converterParaParteContraria(data),
+      criado,
+    };
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);
-    console.error('Erro inesperado ao fazer upsert:', error);
+    console.error('Erro inesperado ao upsert por CPF:', error);
     return { sucesso: false, erro: `Erro inesperado: ${erroMsg}` };
+  }
+}
+
+/**
+ * Upsert parte contrária PJ usando CNPJ como chave única
+ */
+export async function upsertParteContrariaPorCNPJ(params: CriarParteContrariaPJParams): Promise<OperacaoParteContrariaResult> {
+  const supabase = createServiceClient();
+
+  try {
+    const { data, error } = await supabase
+      .from('partes_contrarias')
+      .upsert(params, { onConflict: 'cnpj' })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Erro ao fazer upsert por CNPJ:', error);
+      return { sucesso: false, erro: `Erro ao upsert: ${error.message}` };
+    }
+
+    // Verificar se foi criado ou atualizado
+    const criado = !data.dados_anteriores; // Se dados_anteriores é null, foi criado
+
+    return {
+      sucesso: true,
+      parteContraria: converterParaParteContraria(data),
+      criado,
+    };
+  } catch (error) {
+    const erroMsg = error instanceof Error ? error.message : String(error);
+    console.error('Erro inesperado ao upsert por CNPJ:', error);
+    return { sucesso: false, erro: `Erro inesperado: ${erroMsg}` };
+  }
+}
+
+/**
+ * Upsert parte contrária por documento (CPF ou CNPJ)
+ */
+export async function upsertParteContrariaPorDocumento(params: CriarParteContrariaParams): Promise<OperacaoParteContrariaResult> {
+  if (params.tipo_pessoa === 'pf') {
+    return upsertParteContrariaPorCPF(params as CriarParteContrariaPFParams);
+  } else {
+    return upsertParteContrariaPorCNPJ(params as CriarParteContrariaPJParams);
   }
 }
 
@@ -806,10 +832,6 @@ export async function listarPartesContrariasComEndereco(
 
   if (params.cnpj) {
     query = query.eq('cnpj', normalizarCnpj(params.cnpj));
-  }
-
-  if (params.id_pessoa_pje) {
-    query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
   }
 
   // Ordenação

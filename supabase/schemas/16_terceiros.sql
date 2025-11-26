@@ -5,15 +5,7 @@
 
 create table if not exists public.terceiros (
   id bigint generated always as identity primary key,
-  id_pje bigint not null,
-  id_pessoa_pje bigint unique,
   id_tipo_parte bigint,
-
-  -- Contexto do processo
-  trt text,
-  grau text check (grau in ('primeiro_grau', 'segundo_grau')),
-  numero_processo text,
-  processo_id bigint,
 
   -- Tipo e polo
   tipo_parte text not null,
@@ -98,16 +90,18 @@ create table if not exists public.terceiros (
   updated_at timestamp with time zone default now()
 );
 
-comment on table public.terceiros is 'Terceiros em processos - Peritos, Ministério Público, Assistentes, etc';
-comment on column public.terceiros.id_pje is 'ID da parte no sistema PJE';
-comment on column public.terceiros.id_pessoa_pje is 'ID da pessoa no sistema PJE';
+-- id_pessoa_pje foi movido para a tabela cadastros_pje para permitir múltiplos IDs por pessoa
+-- Vínculo com processo é feito via processo_partes
+comment on table public.terceiros is 'Terceiros globais - Peritos, Ministério Público, Assistentes, etc';
 comment on column public.terceiros.tipo_parte is 'Tipo da parte: PERITO, MINISTERIO_PUBLICO, ASSISTENTE, etc';
 comment on column public.terceiros.polo is 'Polo processual: ativo, passivo, outros';
 
 -- Índices
-create index if not exists idx_terceiros_processo on public.terceiros(numero_processo, trt, grau);
-create index if not exists idx_terceiros_id_pessoa_pje on public.terceiros(id_pessoa_pje);
 create index if not exists idx_terceiros_tipo_parte on public.terceiros(tipo_parte);
+
+-- Constraints de unicidade por CPF/CNPJ
+alter table public.terceiros add constraint terceiros_cpf_unique unique (cpf) where (cpf is not null);
+alter table public.terceiros add constraint terceiros_cnpj_unique unique (cnpj) where (cnpj is not null);
 
 -- RLS
 alter table public.terceiros enable row level security;

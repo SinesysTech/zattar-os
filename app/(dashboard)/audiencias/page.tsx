@@ -159,6 +159,18 @@ const detectarPlataforma = (url: string | null): PlataformaVideo => {
   return null;
 };
 
+const extractKeyFromBackblazeUrl = (u: string | null): string | null => {
+  if (!u) return null;
+  try {
+    const urlObj = new URL(u);
+    const parts = urlObj.pathname.split('/').filter(Boolean);
+    if (parts.length < 2) return null;
+    return parts.slice(1).join('/');
+  } catch {
+    return null;
+  }
+};
+
 /**
  * Retorna o caminho da logo para a plataforma
  */
@@ -604,13 +616,13 @@ function criarColunas(
         const dataInicio = row.getValue('data_inicio') as string | null;
         const audiencia = row.original as Audiencia;
         const [openAta, setOpenAta] = React.useState(false);
-        // url_ata_audiencia contém a URL completa do Backblaze onde a ata foi persistida
-        const fileKey = audiencia.url_ata_audiencia;
+        const fileKey = extractKeyFromBackblazeUrl(audiencia.url_ata_audiencia);
+        const canOpenAta = audiencia.status === 'F' && fileKey !== null;
         return (
           <div className="min-h-10 flex flex-col items-center justify-center text-sm gap-1">
             <div className="font-medium">{formatarData(dataInicio)}</div>
             <div className="text-sm font-medium">{formatarHora(dataInicio)}h</div>
-            {fileKey && (
+            {canOpenAta && (
               <button
                 className="h-6 w-6 flex items-center justify-center rounded"
                 onClick={(e) => {
@@ -691,8 +703,7 @@ function criarColunas(
         const [isDialogOpen, setIsDialogOpen] = React.useState(false);
         const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
         const logoPath = getLogoPlataforma(plataforma);
-        // url_ata_audiencia contém a URL completa do Backblaze onde a ata foi persistida
-        const fileKey = audiencia.url_ata_audiencia;
+        const fileKey = extractKeyFromBackblazeUrl(audiencia.url_ata_audiencia);
         const canOpenAta = audiencia.status === 'F' && fileKey !== null;
 
         return (

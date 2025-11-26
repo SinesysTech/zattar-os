@@ -382,16 +382,23 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
       cell: ({ row }) => {
         const audiencia = row.original as Audiencia;
         const [openAta, setOpenAta] = React.useState(false);
-        const deriveKeyFromUrl = (u: string | null) => {
+        const extractKeyFromBackblazeUrl = (u: string | null): string | null => {
           if (!u) return null;
-          const idx = u.indexOf('/processos/');
-          return idx >= 0 ? u.slice(idx) : null;
+          try {
+            const urlObj = new URL(u);
+            const parts = urlObj.pathname.split('/').filter(Boolean);
+            if (parts.length < 2) return null;
+            return parts.slice(1).join('/');
+          } catch {
+            return null;
+          }
         };
-        const fileKey = deriveKeyFromUrl(null); // TODO: Implementar quando tabela de documentos/atas estiver disponível
+        const fileKey = extractKeyFromBackblazeUrl(audiencia.url_ata_audiencia);
+        const canOpenAta = audiencia.status === 'F' && fileKey !== null;
         return (
           <div className="min-h-10 flex flex-col items-center justify-center text-sm font-medium gap-1">
             {formatarHora(row.getValue('data_inicio'))}
-            {fileKey && (
+            {canOpenAta && (
               <button
                 className="h-6 w-6 flex items-center justify-center rounded"
                 onClick={(e) => {
@@ -469,12 +476,18 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
         const [isDialogOpen, setIsDialogOpen] = React.useState(false);
         const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
         const logoPath = getLogoPlataforma(plataforma);
-        const deriveKeyFromUrl = (u: string | null) => {
+        const extractKeyFromBackblazeUrl = (u: string | null): string | null => {
           if (!u) return null;
-          const idx = u.indexOf('/processos/');
-          return idx >= 0 ? u.slice(idx) : null;
+          try {
+            const urlObj = new URL(u);
+            const parts = urlObj.pathname.split('/').filter(Boolean);
+            if (parts.length < 2) return null;
+            return parts.slice(1).join('/');
+          } catch {
+            return null;
+          }
         };
-        const fileKey = deriveKeyFromUrl(null); // TODO: Implementar quando tabela de documentos/atas estiver disponível
+        const fileKey = extractKeyFromBackblazeUrl(audiencia.url_ata_audiencia);
         const canOpenAta = audiencia.status === 'F' && fileKey !== null;
 
         return (

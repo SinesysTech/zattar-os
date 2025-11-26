@@ -88,6 +88,7 @@ export interface PendenteManifestacao {
   arquivo_url: string | null; // URL pública do arquivo no Backblaze B2
   arquivo_key: string | null; // Chave (path) do arquivo no bucket
   arquivo_bucket: string | null; // Nome do bucket no Backblaze B2
+  observacoes: string | null;
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }
@@ -175,4 +176,3 @@ export interface ListarPendentesAgrupadoResult {
   agrupamentos: AgrupamentoPendente[];
   total: number;
 }
-

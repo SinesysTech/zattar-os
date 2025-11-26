@@ -29,12 +29,12 @@ export type SituacaoPJE = 'A' | 'I' | 'E' | 'H'; // A=Ativo, I=Inativo, E=Exclu�
 
 /**
  * Campos base comuns a PF e PJ
- * NOTA: Terceiros é uma tabela global - conexão com processo via processo_partes
+ * NOTA: Terceiros é uma tabela global - conexão com processo via processo_partes.
+ * O campo id_pessoa_pje foi movido para a tabela cadastros_pje, pois não é globalmente único.
  */
 interface TerceiroBase {
   id: number;
   // id_pje removido
-  id_pessoa_pje: number;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
   tipo_pessoa: TipoPessoa;
@@ -156,10 +156,9 @@ export type TerceiroComEndereco =
 /**
  * Dados para criar terceiro PF
  * NOTA: Terceiros é uma tabela GLOBAL - campos de processo (trt, grau, numero_processo)
- * vão para processo_partes, não para esta tabela
+ * vão para processo_partes, não para esta tabela. Deduplicação agora por CPF/CNPJ.
  */
 export interface CriarTerceiroPFParams {
-  id_pessoa_pje: number;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
   tipo_pessoa: 'pf';
@@ -200,10 +199,9 @@ export interface CriarTerceiroPFParams {
 /**
  * Dados para criar terceiro PJ
  * NOTA: Terceiros é uma tabela GLOBAL - campos de processo (trt, grau, numero_processo)
- * vão para processo_partes, não para esta tabela
+ * vão para processo_partes, não para esta tabela. Deduplicação agora por CPF/CNPJ.
  */
 export interface CriarTerceiroPJParams {
-  id_pessoa_pje: number;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
   tipo_pessoa: 'pj';
@@ -245,7 +243,6 @@ export type CriarTerceiroParams = CriarTerceiroPFParams | CriarTerceiroPJParams;
 export interface AtualizarTerceiroPFParams {
   id: number;
 
-  id_pessoa_pje?: number;
   tipo_parte?: TipoParteTerceiro;
   polo?: PoloTerceiro;
   tipo_pessoa?: 'pf';
@@ -289,7 +286,6 @@ export interface AtualizarTerceiroPFParams {
 export interface AtualizarTerceiroPJParams {
   id: number;
 
-  id_pessoa_pje?: number;
   tipo_parte?: TipoParteTerceiro;
   polo?: PoloTerceiro;
   tipo_pessoa?: 'pj';
@@ -364,7 +360,6 @@ export interface ListarTerceirosParams {
   nome?: string;
   cpf?: string;
   cnpj?: string;
-  id_pessoa_pje?: number;
 
   // Ordenação
   ordenar_por?: OrdenarPorTerceiro;
@@ -383,23 +378,23 @@ export interface ListarTerceirosResult {
 }
 
 /**
- * Método upsert por id_pessoa_pje para terceiro PF
+ * Upsert terceiro PF por CPF (deduplicação por CPF)
  */
-export interface UpsertTerceiroPorIdPessoaPFParams extends CriarTerceiroPFParams {
-  id_pessoa_pje: number; // Required para upsert
+export interface UpsertTerceiroPorCPFParams extends CriarTerceiroPFParams {
+  cpf: string; // Required para upsert
 }
 
 /**
- * Método upsert por id_pessoa_pje para terceiro PJ
+ * Upsert terceiro PJ por CNPJ (deduplicação por CNPJ)
  */
-export interface UpsertTerceiroPorIdPessoaPJParams extends CriarTerceiroPJParams {
-  id_pessoa_pje: number; // Required para upsert
+export interface UpsertTerceiroPorCNPJParams extends CriarTerceiroPJParams {
+  cnpj: string; // Required para upsert
 }
 
 /**
- * Método upsert por id_pessoa_pje (união)
+ * Upsert terceiro por documento (união)
  */
-export type UpsertTerceiroPorIdPessoaParams = UpsertTerceiroPorIdPessoaPFParams | UpsertTerceiroPorIdPessoaPJParams;
+export type UpsertTerceiroPorDocumentoParams = UpsertTerceiroPorCPFParams | UpsertTerceiroPorCNPJParams;
 
 /**
  * Parâmetros para buscar terceiros de um processo

@@ -5,6 +5,8 @@
 import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { AudienciaDetalhesDialog } from './audiencia-detalhes-dialog';
+import { FileText } from 'lucide-react';
+import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 
 /**
@@ -28,6 +30,21 @@ export function AudienciasVisualizacaoMes({ audiencias, isLoading, mesAtual }: A
   const [audienciaSelecionada, setAudienciaSelecionada] = React.useState<Audiencia | null>(null);
   const [audienciasDia, setAudienciasDia] = React.useState<Audiencia[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [pdfOpen, setPdfOpen] = React.useState(false);
+  const [pdfKey, setPdfKey] = React.useState<string | null>(null);
+  const [pdfTitle, setPdfTitle] = React.useState<string>('Ata da audiência');
+
+  const extractKeyFromBackblazeUrl = (u: string | null): string | null => {
+    if (!u) return null;
+    try {
+      const urlObj = new URL(u);
+      const parts = urlObj.pathname.split('/').filter(Boolean);
+      if (parts.length < 2) return null;
+      return parts.slice(1).join('/');
+    } catch {
+      return null;
+    }
+  };
 
   // Gerar dias do mês
   const diasMes = React.useMemo(() => {
@@ -148,18 +165,40 @@ export function AudienciasVisualizacaoMes({ audiencias, isLoading, mesAtual }: A
                     </div>
                     {temAudiencias && (
                       <div className="space-y-1">
-                        {audienciasDia.slice(0, 3).map((audiencia) => (
-                          <div
-                            key={audiencia.id}
-                            className="text-xs bg-primary/10 hover:bg-primary/20 rounded px-1 py-0.5 truncate cursor-pointer transition-colors"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAudienciaClick(audiencia);
-                            }}
-                          >
-                            {formatarHora(audiencia.data_inicio)} - {audiencia.classe_judicial ? audiencia.classe_judicial + ' ' : ''}{audiencia.numero_processo}
-                          </div>
-                        ))}
+                        {audienciasDia.slice(0, 3).map((audiencia) => {
+                          const key = extractKeyFromBackblazeUrl(audiencia.url_ata_audiencia);
+                          const canOpenAta = audiencia.status === 'F' && key !== null;
+                          return (
+                            <div
+                              key={audiencia.id}
+                              className="text-xs bg-primary/10 hover:bg-primary/20 rounded px-1 py-0.5 cursor-pointer transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAudienciaClick(audiencia);
+                              }}
+                            >
+                              <div className="truncate">
+                                {formatarHora(audiencia.data_inicio)} - {audiencia.classe_judicial ? audiencia.classe_judicial + ' ' : ''}{audiencia.numero_processo}
+                              </div>
+                              {canOpenAta && (
+                                <div className="flex items-center justify-center mt-1">
+                                  <button
+                                    className="h-5 w-5 flex items-center justify-center rounded"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setPdfKey(key);
+                                      setPdfTitle(`Ata da audiência ${audiencia.numero_processo}`);
+                                      setPdfOpen(true);
+                                    }}
+                                    title="Ver Ata de Audiência"
+                                  >
+                                    <FileText className="h-4 w-4 text-primary" />
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                         {audienciasDia.length > 3 && (
                           <Badge
                             variant="secondary"
@@ -188,6 +227,12 @@ export function AudienciasVisualizacaoMes({ audiencias, isLoading, mesAtual }: A
         audiencias={audienciasDia.length > 0 ? audienciasDia : undefined}
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+      />
+      <PdfViewerDialog
+        open={pdfOpen}
+        onOpenChange={setPdfOpen}
+        fileKey={pdfKey}
+        documentTitle={pdfTitle}
       />
     </div>
   );

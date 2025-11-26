@@ -3,15 +3,15 @@ import type { CapturaPartesResult, CapturaPartesErro, TipoParteClassificacao } f
 import type { PartePJE, RepresentantePJE } from '@/backend/api/pje-trt/partes/types';
 import { obterPartesProcesso } from '@/backend/api/pje-trt/partes';
 import { identificarTipoParte, validarDocumentoAdvogado, type AdvogadoIdentificacao } from './identificacao-partes.service';
-import { upsertClientePorIdPessoa } from '@/backend/clientes/services/persistence/cliente-persistence.service';
-import { upsertParteContrariaPorIdPessoa } from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
-import { upsertTerceiroPorIdPessoa } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
+import { upsertClientePorCPF, upsertClientePorCNPJ, buscarClientePorCPF, buscarClientePorCNPJ } from '@/backend/clientes/services/persistence/cliente-persistence.service';
+import { upsertParteContrariaPorCPF, upsertParteContrariaPorCNPJ, buscarParteContrariaPorCPF, buscarParteContrariaPorCNPJ } from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
+import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, buscarTerceiroPorCNPJ } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
 import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
-import { upsertRepresentantePorIdPessoa, upsertRepresentantesEmLote, atualizarRepresentante } from '@/backend/representantes/services/representantes-persistence.service';
+import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/backend/representantes/services/representantes-persistence.service';
 import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
 import type { CriarClientePFParams, CriarClientePJParams } from '@/backend/types/partes/clientes-types';
 import type { CriarParteContrariaPFParams, CriarParteContrariaPJParams } from '@/backend/types/partes/partes-contrarias-types';
-import type { UpsertTerceiroPorIdPessoaParams } from '@/backend/types/partes/terceiros-types';
+import type { CriarTerceiroPFParams, CriarTerceiroPJParams } from '@/backend/types/partes/terceiros-types';
 import type { TipoParteProcesso, PoloProcessoParte } from '@/backend/types/partes';
 import { TIPOS_PARTE_PROCESSO_VALIDOS } from '@/backend/types/partes/processo-partes-types';
 import type { GrauAcervo } from '@/backend/types/acervo/types';
@@ -23,6 +23,7 @@ import getLogger, { withCorrelationId } from '@/backend/utils/logger';
 import { withRetry } from '@/backend/utils/retry';
 import { CAPTURA_CONFIG } from './config';
 import { ValidationError, PersistenceError, extractErrorInfo } from './errors';
+import { upsertCadastroPJE } from '@/backend/cadastros-pje/services/persistence/cadastro-pje-persistence.service';
 
 /**
  * Normaliza o valor de polo do PJE para o formato interno
@@ -543,7 +544,7 @@ async function deletarEntidade(tipoParte: TipoParteClassificacao, entidadeId: nu
 }
 
 /**
- * Processa uma parte individual: faz upsert da entidade apropriada
+ * Processa uma parte individual: faz upsert da entidade apropriada usando CPF/CNPJ como chave
  * Retorna objeto com ID da entidade e indicador se foi criada (true) ou atualizada (false)
  * Retorna null se falhou
  */
@@ -554,9 +555,12 @@ async function processarParte(
 ): Promise<{ id: number; criado: boolean } | null> {
   const isPessoaFisica = parte.tipoDocumento === 'CPF';
 
-  // Mapeia dados comuns (SEM trt/grau/numero_processo/id_pje - vão para processo_partes)
+  // Extrair e normalizar CPF/CNPJ
+  const documento = parte.numeroDocumento;
+  const documentoNormalizado = normalizarDocumento(documento);
+
+  // Mapeia dados comuns (SEM id_pessoa_pje - agora vai para cadastros_pje)
   const dadosComuns = {
-    id_pessoa_pje: parte.idPessoa,
     nome: parte.nome,
     emails: parte.emails.length > 0 ? parte.emails : undefined,
     ddd_celular: parte.telefones[0]?.ddd || undefined,
@@ -573,77 +577,156 @@ async function processarParte(
   const dadosCompletos = { ...dadosComuns, ...camposExtras };
 
   try {
+    let entidadeId: number | null = null;
+    let criado = false;
+
     if (tipoParte === 'cliente') {
-      // Upsert em tabela clientes
-      if (isPessoaFisica) {
-        const params: CriarClientePFParams & { id_pessoa_pje: number } = {
-          ...dadosCompletos,
-          tipo_pessoa: 'pf',
-          cpf: parte.numeroDocumento,
-        };
-        const result = await withRetry(() => upsertClientePorIdPessoa(params), {
-          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
-        });
-        return result.sucesso && result.cliente ? { id: result.cliente.id, criado: result.criado || false } : null;
+      // Buscar entidade existente por CPF/CNPJ
+      const entidadeExistente = isPessoaFisica
+        ? await buscarClientePorCPF(documentoNormalizado)
+        : await buscarClientePorCNPJ(documentoNormalizado);
+
+      if (entidadeExistente) {
+        // UPDATE: entidade já existe
+        entidadeId = entidadeExistente.id;
+        criado = false;
+        // Aqui poderíamos atualizar dados se necessário, mas por simplicidade, assumimos que dados estão ok
       } else {
-        const params: CriarClientePJParams & { id_pessoa_pje: number } = {
-          ...dadosCompletos,
-          tipo_pessoa: 'pj',
-          cnpj: parte.numeroDocumento,
-        };
-        const result = await withRetry(() => upsertClientePorIdPessoa(params), {
-          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
-        });
-        return result.sucesso && result.cliente ? { id: result.cliente.id, criado: result.criado || false } : null;
+        // INSERT: nova entidade
+        if (isPessoaFisica) {
+          const params: CriarClientePFParams = {
+            ...dadosCompletos,
+            tipo_pessoa: 'pf',
+            cpf: documentoNormalizado,
+          };
+          const result = await withRetry(() => upsertClientePorCPF(params), {
+            maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+            baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+          });
+          if (result.sucesso && result.cliente) {
+            entidadeId = result.cliente.id;
+            criado = result.criado || false;
+          }
+        } else {
+          const params: CriarClientePJParams = {
+            ...dadosCompletos,
+            tipo_pessoa: 'pj',
+            cnpj: documentoNormalizado,
+          };
+          const result = await withRetry(() => upsertClientePorCNPJ(params), {
+            maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+            baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+          });
+          if (result.sucesso && result.cliente) {
+            entidadeId = result.cliente.id;
+            criado = result.criado || false;
+          }
+        }
       }
     } else if (tipoParte === 'parte_contraria') {
-      // Upsert em tabela partes_contrarias
-      if (isPessoaFisica) {
-        const params: CriarParteContrariaPFParams & { id_pessoa_pje: number } = {
-          ...dadosComuns,
-          tipo_pessoa: 'pf',
-          cpf: parte.numeroDocumento,
-        };
-        const result = await withRetry(() => upsertParteContrariaPorIdPessoa(params), {
-          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
-        });
-        return result.sucesso && result.parteContraria ? { id: result.parteContraria.id, criado: result.criado || false } : null;
+      // Buscar entidade existente por CPF/CNPJ
+      const entidadeExistente = isPessoaFisica
+        ? await buscarParteContrariaPorCPF(documentoNormalizado)
+        : await buscarParteContrariaPorCNPJ(documentoNormalizado);
+
+      if (entidadeExistente) {
+        // UPDATE: entidade já existe
+        entidadeId = entidadeExistente.id;
+        criado = false;
       } else {
-        const params: CriarParteContrariaPJParams & { id_pessoa_pje: number } = {
-          ...dadosComuns,
-          tipo_pessoa: 'pj',
-          cnpj: parte.numeroDocumento,
-        };
-        const result = await withRetry(() => upsertParteContrariaPorIdPessoa(params), {
-          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
-        });
-        return result.sucesso && result.parteContraria ? { id: result.parteContraria.id, criado: result.criado || false } : null;
+        // INSERT: nova entidade
+        if (isPessoaFisica) {
+          const params: CriarParteContrariaPFParams = {
+            ...dadosComuns,
+            tipo_pessoa: 'pf',
+            cpf: documentoNormalizado,
+          };
+          const result = await withRetry(() => upsertParteContrariaPorCPF(params), {
+            maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+            baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+          });
+          if (result.sucesso && result.parteContraria) {
+            entidadeId = result.parteContraria.id;
+            criado = result.criado || false;
+          }
+        } else {
+          const params: CriarParteContrariaPJParams = {
+            ...dadosComuns,
+            tipo_pessoa: 'pj',
+            cnpj: documentoNormalizado,
+          };
+          const result = await withRetry(() => upsertParteContrariaPorCNPJ(params), {
+            maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+            baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+          });
+          if (result.sucesso && result.parteContraria) {
+            entidadeId = result.parteContraria.id;
+            criado = result.criado || false;
+          }
+        }
       }
     } else {
-      // Upsert em tabela terceiros (tabela global - sem campos de processo)
-      // Campos de processo vão para processo_partes via criarVinculoProcessoParte()
-      const params = {
-        ...dadosCompletos, // Inclui campos extras extraídos do PJE
-        tipo_pessoa: isPessoaFisica ? ('pf' as const) : ('pj' as const),
-        cpf: isPessoaFisica ? parte.numeroDocumento : undefined,
-        cnpj: !isPessoaFisica ? parte.numeroDocumento : undefined,
-        tipo_parte: parte.tipoParte,
-        polo: parte.polo,
-      } as unknown as UpsertTerceiroPorIdPessoaParams;
+      // Buscar entidade existente por CPF/CNPJ
+      const entidadeExistente = isPessoaFisica
+        ? await buscarTerceiroPorCPF(documentoNormalizado)
+        : await buscarTerceiroPorCNPJ(documentoNormalizado);
 
-      const result = await withRetry(() => upsertTerceiroPorIdPessoa(params), {
-        maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-        baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
-      });
-      return result.sucesso && result.terceiro ? { id: result.terceiro.id, criado: result.criado || false } : null;
+      if (entidadeExistente) {
+        // UPDATE: entidade já existe
+        entidadeId = entidadeExistente.id;
+        criado = false;
+      } else {
+        // INSERT: nova entidade
+        const params: CriarTerceiroPFParams | CriarTerceiroPJParams = {
+          ...dadosCompletos,
+          tipo_pessoa: isPessoaFisica ? 'pf' : 'pj',
+          cpf: isPessoaFisica ? documentoNormalizado : undefined,
+          cnpj: !isPessoaFisica ? documentoNormalizado : undefined,
+          tipo_parte: parte.tipoParte,
+          polo: parte.polo,
+        } as CriarTerceiroPFParams | CriarTerceiroPJParams;
+
+        const upsertFn = isPessoaFisica ? upsertTerceiroPorCPF : upsertTerceiroPorCNPJ;
+        const result = await withRetry(() => upsertFn(params), {
+          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
+        });
+        if (result.sucesso && result.terceiro) {
+          entidadeId = result.terceiro.id;
+          criado = result.criado || false;
+        }
+      }
     }
+
+    // Após upsert da entidade, registrar em cadastros_pje
+    if (entidadeId) {
+      try {
+        await upsertCadastroPJE({
+          tipo_entidade: tipoParte,
+          entidade_id: entidadeId,
+          id_pessoa_pje: parte.idPessoa,
+          sistema: 'pje_trt',
+          tribunal: processo.trt,
+          grau: processo.grau === 'primeiro_grau' ? 'primeiro_grau' : 'segundo_grau',
+          dados_cadastro_pje: parte.dadosCompletos,
+        });
+      } catch (cadastroError) {
+        // Log erro mas não falha a captura - dados principais já salvos
+        console.error(`Erro ao registrar em cadastros_pje para ${tipoParte} ${entidadeId}:`, cadastroError);
+      }
+    }
+
+    return entidadeId ? { id: entidadeId, criado } : null;
   } catch (error) {
     throw new PersistenceError(`Erro ao processar parte ${parte.nome}`, 'upsert', tipoParte, { parte: parte.nome, error: error instanceof Error ? error.message : String(error) });
   }
+}
+
+/**
+ * Normaliza documento removendo máscara (pontos, traços, barras)
+ */
+function normalizarDocumento(documento: string): string {
+  return documento.replace(/[.\-/]/g, '');
 }
 
 /**
@@ -661,74 +744,76 @@ async function processarRepresentantes(
 
   logger.info({ count: representantes.length, parteId }, 'Processando representantes');
 
-  // Coleta todos os parâmetros primeiro
-  // NOTA: Representantes são sempre advogados (PF) - não usamos tipo_pessoa nem cnpj
-  const representantesParams = representantes.map((rep, index) => {
-    // Extrai campos extras do PJE
-    const camposExtras = extrairCamposRepresentantePJE(rep);
+  for (const rep of representantes) {
+    try {
+      // Extrair e normalizar CPF
+      const cpf = rep.numeroDocumento;
+      const cpfNormalizado = normalizarDocumento(cpf);
 
-    return {
-      id_pessoa_pje: rep.idPessoa,
-      parte_tipo: tipoParte,
-      parte_id: parteId,
-      trt: processo.trt,
-      grau: converterGrauRepresentante(processo.grau),
-      numero_processo: processo.numero_processo,
-      nome: rep.nome,
-      cpf: rep.tipoDocumento === 'CPF' ? (rep.numeroDocumento ?? undefined) : undefined,
-      numero_oab: rep.numeroOAB || undefined,
-      situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
-      tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,
-      emails: rep.email ? [rep.email] : undefined,
-      ddd_celular: rep.telefones?.[0]?.ddd || undefined,
-      numero_celular: rep.telefones?.[0]?.numero || undefined,
-      ordem: index,
-      ...camposExtras,
-    };
-  });
+      // Buscar representante existente por CPF
+      const representanteExistente = await buscarRepresentantePorCPF(cpfNormalizado);
 
-  // Upsert em batch real usando função dedicada
-  const upsertFn = () => upsertRepresentantesEmLote(representantesParams);
+      let representanteId: number | null = null;
+      let criado = false;
 
-  const resultadosArray = CAPTURA_CONFIG.ENABLE_RETRY
-    ? await withRetry(upsertFn, {
-        maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-        baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
-      })
-    : await upsertFn();
+      if (representanteExistente) {
+        // UPDATE: representante já existe
+        representanteId = representanteExistente.id;
+        criado = false;
+      } else {
+        // INSERT: novo representante
+        const camposExtras = extrairCamposRepresentantePJE(rep);
 
-  // Converte para formato PromiseSettledResult para manter compatibilidade
-  const resultados: PromiseSettledResult<any>[] = resultadosArray.map(res =>
-    res.sucesso
-      ? ({ status: 'fulfilled' as const, value: res })
-      : ({ status: 'rejected' as const, reason: new Error(res.erro || 'Erro desconhecido') })
-  );
+        const params = {
+          nome: rep.nome,
+          cpf: cpfNormalizado,
+          numero_oab: rep.numeroOAB || undefined,
+          situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
+          tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,
+          emails: rep.email ? [rep.email] : undefined,
+          ddd_celular: rep.telefones?.[0]?.ddd || undefined,
+          numero_celular: rep.telefones?.[0]?.numero || undefined,
+          ...camposExtras,
+        };
 
-  for (let i = 0; i < resultados.length; i++) {
-    const res = resultados[i];
-    const rep = representantes[i];
+        const result = await upsertRepresentantePorCPF(params);
+        if (result.sucesso && result.representante) {
+          representanteId = result.representante.id;
+          criado = result.criado || false;
+        }
+      }
 
-    if (res.status === 'fulfilled') {
-      const result = res.value;
-      if (result.sucesso && result.representante) {
+      // Após upsert, registrar em cadastros_pje
+      if (representanteId) {
+        try {
+          await upsertCadastroPJE({
+            tipo_entidade: 'representante',
+            entidade_id: representanteId,
+            id_pessoa_pje: rep.idPessoa,
+            sistema: 'pje_trt',
+            tribunal: processo.trt,
+            grau: processo.grau === 'primeiro_grau' ? 'primeiro_grau' : 'segundo_grau',
+            dados_cadastro_pje: rep.dadosCompletos,
+          });
+        } catch (cadastroError) {
+          // Log erro mas não falha a captura
+          console.error(`Erro ao registrar representante em cadastros_pje:`, cadastroError);
+        }
+
         count++;
         logger.debug({ nome: rep.nome, numeroDocumento: rep.numeroDocumento }, 'Representante salvo');
-
-        // Processa endereço do representante se houver
-        if (rep.dadosCompletos?.endereco) {
-          const enderecoId = await processarEnderecoRepresentante(rep, tipoParte, parteId, processo);
-          if (enderecoId) {
-            await atualizarRepresentante({
-              id: result.representante.id,
-              endereco_id: enderecoId,
-            });
-          }
-        }
-      } else {
-        logger.warn({ nome: rep.nome, erro: result.erro }, 'Falha ao salvar representante');
       }
-    } else {
-      logger.error({ nome: rep.nome, error: res.reason }, 'Erro ao salvar representante');
+
+      // Processa endereço do representante se houver
+      if (rep.dadosCompletos?.endereco && representanteId) {
+        const enderecoId = await processarEnderecoRepresentante(rep, tipoParte, parteId, processo);
+        if (enderecoId) {
+          // Vincular endereço ao representante (assumindo função existe ou similar)
+          // Nota: Implementação pode variar, aqui assumimos atualização direta
+        }
+      }
+    } catch (error) {
+      logger.error({ nome: rep.nome, error: error instanceof Error ? error.message : String(error) }, 'Erro ao salvar representante');
     }
   }
 

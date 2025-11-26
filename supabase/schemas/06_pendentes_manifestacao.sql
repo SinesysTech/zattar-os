@@ -31,6 +31,7 @@ create table public.pendentes_manifestacao (
   baixado_em timestamptz,
   protocolo_id text,
   justificativa_baixa text,
+  observacoes text,
   dados_anteriores jsonb,
   responsavel_id bigint references public.usuarios(id) on delete set null,
   created_at timestamptz default now() not null,
@@ -76,6 +77,7 @@ comment on column public.pendentes_manifestacao.sigla_orgao_julgador is 'Sigla d
 comment on column public.pendentes_manifestacao.baixado_em is 'Data e hora em que o expediente foi baixado (marcado como respondido). Null indica que o expediente ainda está pendente';
 comment on column public.pendentes_manifestacao.protocolo_id is 'ID do protocolo da peça protocolada em resposta ao expediente. Deve estar preenchido quando houve protocolo de peça';
 comment on column public.pendentes_manifestacao.justificativa_baixa is 'Justificativa para baixa do expediente sem protocolo de peça. Deve estar preenchido quando não houve protocolo';
+comment on column public.pendentes_manifestacao.observacoes is 'Anotações/observações internas do expediente pendente de manifestação';
 comment on column public.pendentes_manifestacao.dados_anteriores is 'Armazena o estado anterior do registro antes da última atualização. Null quando o registro foi inserido ou quando não houve mudanças na última captura.';
 comment on column public.pendentes_manifestacao.responsavel_id is 'Usuário responsável pelo processo pendente de manifestação. Pode ser atribuído, transferido ou desatribuído. Todas as alterações são registradas em logs_alteracao';
 

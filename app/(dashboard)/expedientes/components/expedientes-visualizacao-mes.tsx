@@ -42,6 +42,20 @@ export function ExpedientesVisualizacaoMes({
   const [expedientesDia, setExpedientesDia] = React.useState<PendenteManifestacao[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
+  // Itens especiais: sem prazo e vencidos (pendentes)
+  const semPrazoPendentes = React.useMemo(
+    () => expedientes.filter((e) => !e.baixado_em && !e.data_prazo_legal_parte),
+    [expedientes]
+  );
+  const vencidosPendentes = React.useMemo(
+    () => expedientes.filter((e) => !e.baixado_em && e.prazo_vencido === true),
+    [expedientes]
+  );
+  const pinnedIds = React.useMemo(
+    () => new Set<number>([...semPrazoPendentes.map((e) => e.id), ...vencidosPendentes.map((e) => e.id)]),
+    [semPrazoPendentes, vencidosPendentes]
+  );
+
   // Gerar dias do mês
   const diasMes = React.useMemo(() => {
     const ano = mesSelecionado.getFullYear();
@@ -122,7 +136,9 @@ export function ExpedientesVisualizacaoMes({
   const getExpedientesDia = (dia: Date | null) => {
     if (!dia) return [];
     const chave = `${dia.getFullYear()}-${dia.getMonth()}-${dia.getDate()}`;
-    return expedientesPorDia.get(chave) || [];
+    const lista = expedientesPorDia.get(chave) || [];
+    const restantes = lista.filter((e) => !pinnedIds.has(e.id));
+    return [...semPrazoPendentes, ...vencidosPendentes, ...restantes];
   };
 
   const handleExpedienteClick = (expediente: PendenteManifestacao) => {
