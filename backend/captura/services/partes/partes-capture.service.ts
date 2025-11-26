@@ -564,75 +564,40 @@ async function processarParteComTransacao(
   ordem: number,
   logger: ReturnType<typeof getLogger>
 ): Promise<{ repsCount: number; vinculoCriado: boolean }> {
-  let entidadeId: number | null = null;
-  let entidadeCriada = false;
-  let vinculoCriado = false;
-
-  try {
-    // 1. Upsert da entidade
-    const resultado = await processarParte(parte, tipoParte, processo);
-    if (!resultado) {
-      throw new PersistenceError('Falha ao criar entidade', 'insert', tipoParte, { parte: parte.nome });
-    }
-    entidadeId = resultado.id;
-    entidadeCriada = resultado.criado;
-
-    // 2. Processa endereço e vincula
-    const enderecoId = await processarEndereco(parte, tipoParte, entidadeId);
-    if (enderecoId) {
-      await vincularEnderecoNaEntidade(tipoParte, entidadeId, enderecoId);
-    }
-
-    // 3. Cria vínculo processo-parte
-    vinculoCriado = await criarVinculoProcessoParte(processo, tipoParte, entidadeId, parte, ordem);
-    if (!vinculoCriado) {
-      throw new PersistenceError('Falha ao criar vínculo', 'insert', 'vinculo', { parte: parte.nome });
-    }
-
-    // 4. Processa representantes
-    const repsCount = parte.representantes ? await processarRepresentantes(parte.representantes, tipoParte, entidadeId, processo, logger) : 0;
-
-    return { repsCount, vinculoCriado };
-  } catch (error) {
-    // Rollback manual: só deleta entidade se ela foi criada NESTA operação
-    // Se foi apenas atualizada, mantém a entidade existente
-    if (entidadeId && entidadeCriada && !vinculoCriado) {
-      try {
-        await deletarEntidade(tipoParte, entidadeId);
-        logger.warn({ entidadeId, tipoParte }, 'Rollback: entidade criada deletada devido a erro');
-      } catch (rollbackError) {
-        logger.error({ rollbackError, entidadeId }, 'Erro no rollback da entidade');
-      }
-    }
-    throw error;
+  // 1. Upsert da entidade
+  const resultado = await processarParte(parte, tipoParte, processo);
+  if (!resultado) {
+    throw new PersistenceError('Falha ao criar entidade', 'insert', tipoParte, { parte: parte.nome });
   }
-}
+  const entidadeId = resultado.id;
 
-/**
- * Deleta entidade (para rollback)
- */
-async function deletarEntidade(tipoParte: TipoParteClassificacao, entidadeId: number): Promise<void> {
-  const { createServiceClient } = await import('@/backend/utils/supabase/service-client');
-  const supabase = createServiceClient();
+  // 2. Processa endereço e vincula
+  const enderecoId = await processarEndereco(parte, tipoParte, entidadeId);
+  if (enderecoId) {
+    await vincularEnderecoNaEntidade(tipoParte, entidadeId, enderecoId);
+  }
 
-  let tableName: string;
-  if (tipoParte === 'cliente') tableName = 'clientes';
-  else if (tipoParte === 'parte_contraria') tableName = 'partes_contrarias';
-  else tableName = 'terceiros';
+  // 3. Cria vínculo processo-parte
+  const vinculoCriado = await criarVinculoProcessoParte(processo, tipoParte, entidadeId, parte, ordem);
+  if (!vinculoCriado) {
+    throw new PersistenceError('Falha ao criar vínculo', 'insert', 'vinculo', { parte: parte.nome });
+  }
 
-  await supabase.from(tableName).delete().eq('id', entidadeId);
+  // 4. Processa representantes
+  const repsCount = parte.representantes ? await processarRepresentantes(parte.representantes, tipoParte, entidadeId, processo, logger) : 0;
+
+  return { repsCount, vinculoCriado };
 }
 
 /**
  * Processa uma parte individual: faz upsert da entidade apropriada usando CPF/CNPJ como chave
- * Retorna objeto com ID da entidade e indicador se foi criada (true) ou atualizada (false)
- * Retorna null se falhou
+ * Retorna objeto com ID da entidade ou null se falhou
  */
 async function processarParte(
   parte: PartePJE,
   tipoParte: TipoParteClassificacao,
   processo: ProcessoParaCaptura
-): Promise<{ id: number; criado: boolean } | null> {
+): Promise<{ id: number } | null> {
   const isPessoaFisica = parte.tipoDocumento === 'CPF';
 
   // Extrair e normalizar CPF/CNPJ
@@ -797,7 +762,7 @@ async function processarParte(
       }
     }
 
-    return entidadeId ? { id: entidadeId, criado } : null;
+    return entidadeId ? { id: entidadeId } : null;
   } catch (error) {
     throw new PersistenceError(`Erro ao processar parte ${parte.nome}`, 'upsert', tipoParte, { parte: parte.nome, error: error instanceof Error ? error.message : String(error) });
   }
