@@ -912,7 +912,7 @@ async function criarVinculoProcessoParte(
       polo: mapearPoloParaSistema(parte.polo),
       trt: processo.trt,
       grau: processo.grau,
-      numero_processo: processo.numero_processo,
+      numero_processo: processo.numero_processo ?? '', // Fallback para string vazia
       principal: parte.principal ?? false, // Default false se PJE não retornar
       ordem,
       dados_pje_completo: parte.dadosCompletos,

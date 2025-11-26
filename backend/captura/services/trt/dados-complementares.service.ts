@@ -186,16 +186,16 @@ export function extrairProcessosUnicos(audiencias: Array<{ idProcesso: number }>
 }
 
 /**
- * Filtra documentos assinados da timeline
+ * Filtra documentos da timeline (exclui movimentos)
  */
-export function filtrarDocumentosAssinados(timeline: TimelineResponse): TimelineItem[] {
+export function filtrarDocumentos(timeline: TimelineResponse): TimelineItem[] {
   if (!Array.isArray(timeline)) {
     return [];
   }
   
   return timeline.filter(item => {
-    // Verifica se é documento e está assinado
-    return item.documento && item.assinado;
+    // Verifica se é documento (não movimento)
+    return item.documento === true;
   });
 }
 

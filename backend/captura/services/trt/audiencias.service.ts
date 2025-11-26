@@ -49,7 +49,6 @@ import type { CapturaAudienciasParams } from './trt-capture.service';
 import { obterTodasAudiencias } from '@/backend/api/pje-trt';
 import type { Audiencia, PagedResponse } from '@/backend/types/pje-trt/types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
-import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { obterTimeline } from '@/backend/api/pje-trt/timeline/obter-timeline';
 import { obterDocumento } from '@/backend/api/pje-trt/timeline/obter-documento';
 import { baixarDocumento } from '@/backend/api/pje-trt/timeline/baixar-documento';
@@ -241,28 +240,31 @@ export async function audienciasCapture(
       advogadoInfo.nome
     );
 
-    // 5.2 Persistir PROCESSOS no acervo PRIMEIRO (gera IDs para vínculos)
-    console.log('   📦 Persistindo processos no acervo...');
-    const processosParaSalvar = audiencias
-      .map(a => a.processo)
-      .filter((p): p is NonNullable<typeof p> => p !== null && p !== undefined);
+    // 5.2 Buscar IDs dos processos no acervo (para vínculos de partes)
+    // NOTA: Os dados de audiência (ProcessoAudiencia) são parciais e não incluem todos os campos
+    // necessários para salvar no acervo. Os processos devem ser capturados via acervo geral.
+    // Aqui apenas buscamos os IDs existentes para criar os vínculos.
+    console.log('   📦 Buscando processos no acervo...');
+    const mapeamentoIds = new Map<number, number>();
     
-    let resultadoAcervo: SalvarAcervoResult | undefined;
-    if (processosParaSalvar.length > 0) {
-      resultadoAcervo = await salvarAcervo({
-        processos: processosParaSalvar,
-        advogadoId: advogadoDb.id,
-        origem: 'acervo_geral',
-        trt: params.config.codigo,
-        grau: params.config.grau,
-      });
-      console.log(`   ✅ Processos: ${resultadoAcervo.inseridos} inseridos, ${resultadoAcervo.atualizados} atualizados, ${resultadoAcervo.naoAtualizados} sem alteração`);
-    } else {
-      console.log('   ℹ️ Nenhum processo para persistir (audiências sem dados de processo)');
+    // Reutiliza lista de IDs já extraída na fase 3
+    const supabase = (await import('@/backend/utils/supabase/service-client')).createServiceClient();
+    
+    for (const idPje of processosIds) {
+      const { data } = await supabase
+        .from('acervo')
+        .select('id')
+        .eq('id_pje', idPje)
+        .eq('trt', params.config.codigo)
+        .eq('grau', params.config.grau)
+        .maybeSingle();
+      
+      if (data?.id) {
+        mapeamentoIds.set(idPje, data.id);
+      }
     }
-
-    // Mapeamento id_pje → id do acervo (para vincular partes)
-    const mapeamentoIds = resultadoAcervo?.mapeamentoIds ?? new Map<number, number>();
+    
+    console.log(`   ✅ ${mapeamentoIds.size}/${processosIds.length} processos encontrados no acervo`);
 
     // 5.3 Persistir timelines no MongoDB
     console.log('   📜 Persistindo timelines...');
