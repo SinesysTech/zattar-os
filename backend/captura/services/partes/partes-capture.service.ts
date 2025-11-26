@@ -120,18 +120,27 @@ function validarEnderecoPJE(endereco: EnderecoPJE): { valido: boolean; avisos: s
 
 /**
  * Interface para dados básicos do processo necessários para captura
+ * 
+ * CAMPOS OBRIGATÓRIOS:
+ * - id_pje: Usado para buscar partes na API do PJE
+ * - trt: Usado para registrar em cadastros_pje
+ * - grau: Usado para registrar em cadastros_pje
+ * 
+ * CAMPOS OPCIONAIS:
+ * - id: ID na tabela acervo. Se fornecido, cria vínculo processo_partes
+ * - numero_processo: Número CNJ. Usado em logs e vínculo (opcional)
  */
 export interface ProcessoParaCaptura {
-  /** ID do processo na tabela acervo */
-  id: number;
-  /** Número CNJ do processo */
-  numero_processo: string;
-  /** ID interno do processo no PJE */
+  /** ID interno do processo no PJE (OBRIGATÓRIO) */
   id_pje: number;
-  /** TRT do processo (ex: "03", "05") */
+  /** TRT do processo (ex: "TRT3", "TRT5") (OBRIGATÓRIO) */
   trt: string;
-  /** Grau do processo */
+  /** Grau do processo (OBRIGATÓRIO) */
   grau: GrauAcervo;
+  /** ID do processo na tabela acervo (OPCIONAL - se não fornecido, não cria vínculo) */
+  id?: number;
+  /** Número CNJ do processo (OPCIONAL - usado em logs e vínculo) */
+  numero_processo?: string;
 }
 
 function converterGrauRepresentante(g: GrauAcervo): '1' | '2' {
@@ -275,7 +284,7 @@ export async function capturarPartesProcesso(
   advogado: AdvogadoIdentificacao
 ): Promise<CapturaPartesResult> {
   return withCorrelationId(async () => {
-    const logger = getLogger({ service: 'captura-partes', processoId: processo.id });
+    const logger = getLogger({ service: 'captura-partes', processoId: processo.id ?? processo.id_pje });
     return capturarPartesProcessoInternal(page, processo, advogado, logger);
   });
 }
@@ -291,8 +300,8 @@ async function capturarPartesProcessoInternal(
 ): Promise<CapturaPartesResult> {
   const inicio = performance.now();
   const resultado: CapturaPartesResult = {
-    processoId: processo.id,
-    numeroProcesso: processo.numero_processo,
+    processoId: processo.id ?? processo.id_pje, // Usa id_pje se id do acervo não disponível
+    numeroProcesso: processo.numero_processo ?? `PJE:${processo.id_pje}`,
     totalPartes: 0,
     clientes: 0,
     partesContrarias: 0,
@@ -313,7 +322,7 @@ async function capturarPartesProcessoInternal(
   };
 
   try {
-    logger.info({ numeroProcesso: processo.numero_processo }, 'Iniciando captura de partes');
+    logger.info({ idPje: processo.id_pje, numeroProcesso: processo.numero_processo }, 'Iniciando captura de partes');
 
     // 1. Valida documento do advogado UMA ÚNICA VEZ (antes de processar qualquer parte)
     // Se inválido, lança erro e interrompe toda a captura (evita erros repetidos por parte)
@@ -867,6 +876,9 @@ function validarTipoParteProcesso(tipoParte: string): TipoParteProcesso {
 /**
  * Cria vínculo entre processo e parte na tabela processo_partes
  * Retorna true se criado com sucesso, false caso contrário
+ * 
+ * NOTA: Se processo.id (ID no acervo) não estiver disponível, 
+ * retorna false sem criar vínculo (partes são salvas, mas sem vínculo)
  */
 async function criarVinculoProcessoParte(
   processo: ProcessoParaCaptura,
@@ -875,6 +887,12 @@ async function criarVinculoProcessoParte(
   parte: PartePJE,
   ordem: number
 ): Promise<boolean> {
+  // Se não temos ID do processo no acervo, não podemos criar vínculo
+  // Isso permite capturar partes mesmo sem o processo estar no acervo ainda
+  if (!processo.id) {
+    return false; // Pula criação de vínculo silenciosamente
+  }
+
   // Validação prévia
   if (entidadeId <= 0) {
     throw new ValidationError('entidadeId inválido', { entidadeId, parte: parte.nome });
@@ -885,7 +903,7 @@ async function criarVinculoProcessoParte(
 
   try {
     const result = await withRetry(() => vincularParteProcesso({
-      processo_id: processo.id,
+      processo_id: processo.id!,
       tipo_entidade: tipoParte,
       entidade_id: entidadeId,
       id_pje: parte.idParte,

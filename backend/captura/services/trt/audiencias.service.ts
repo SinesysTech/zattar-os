@@ -31,9 +31,10 @@
  *                               │
  *                               ▼
  * ┌─────────────────────────────────────────────────────────────────┐
- * │  💾 FASE 5: PERSISTÊNCIA                                        │
+ * │  💾 FASE 5: PERSISTÊNCIA (ordem garante integridade referencial)│
+ * │  ├── 📦 Processos: upsert acervo (Supabase) → retorna IDs       │
  * │  ├── 📜 Timeline: upsert (MongoDB)                              │
- * │  ├── 👥 Partes: upsert entidades + vínculos (Supabase)          │
+ * │  ├── 👥 Partes: upsert entidades + vínculos (com ID do acervo!) │
  * │  └── 🎤 Audiências: upsert (Supabase)                           │
  * └─────────────────────────────────────────────────────────────────┘
  *                               │
@@ -48,6 +49,7 @@ import type { CapturaAudienciasParams } from './trt-capture.service';
 import { obterTodasAudiencias } from '@/backend/api/pje-trt';
 import type { Audiencia, PagedResponse } from '@/backend/types/pje-trt/types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
+import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { obterTimeline } from '@/backend/api/pje-trt/timeline/obter-timeline';
 import { obterDocumento } from '@/backend/api/pje-trt/timeline/obter-documento';
 import { baixarDocumento } from '@/backend/api/pje-trt/timeline/baixar-documento';
@@ -239,7 +241,30 @@ export async function audienciasCapture(
       advogadoInfo.nome
     );
 
-    // 5.2 Persistir timelines no MongoDB
+    // 5.2 Persistir PROCESSOS no acervo PRIMEIRO (gera IDs para vínculos)
+    console.log('   📦 Persistindo processos no acervo...');
+    const processosParaSalvar = audiencias
+      .map(a => a.processo)
+      .filter((p): p is NonNullable<typeof p> => p !== null && p !== undefined);
+    
+    let resultadoAcervo: SalvarAcervoResult | undefined;
+    if (processosParaSalvar.length > 0) {
+      resultadoAcervo = await salvarAcervo({
+        processos: processosParaSalvar,
+        advogadoId: advogadoDb.id,
+        origem: 'acervo_geral',
+        trt: params.config.codigo,
+        grau: params.config.grau,
+      });
+      console.log(`   ✅ Processos: ${resultadoAcervo.inseridos} inseridos, ${resultadoAcervo.atualizados} atualizados, ${resultadoAcervo.naoAtualizados} sem alteração`);
+    } else {
+      console.log('   ℹ️ Nenhum processo para persistir (audiências sem dados de processo)');
+    }
+
+    // Mapeamento id_pje → id do acervo (para vincular partes)
+    const mapeamentoIds = resultadoAcervo?.mapeamentoIds ?? new Map<number, number>();
+
+    // 5.3 Persistir timelines no MongoDB
     console.log('   📜 Persistindo timelines...');
     let timelinesPersistidas = 0;
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
@@ -265,33 +290,37 @@ export async function audienciasCapture(
     }
     console.log(`   ✅ ${timelinesPersistidas} timelines persistidas`);
 
-    // 5.3 Persistir partes
+    // 5.4 Persistir partes (agora com ID do acervo disponível!)
     console.log('   👥 Persistindo partes...');
     let partesPersistidas = 0;
+    let partesComVinculo = 0;
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
       if (dados.partes && dados.partes.length > 0) {
         try {
-          // Encontrar a audiência correspondente para obter número do processo
-          const audienciaDoProcesso = audiencias.find(a => a.idProcesso === processoId);
-          const numeroProcesso = audienciaDoProcesso?.nrProcesso || audienciaDoProcesso?.processo?.numero || '';
+          // Buscar ID do processo no acervo (persistido no passo 5.2)
+          const idAcervo = mapeamentoIds.get(processoId);
           
-          if (numeroProcesso) {
-            await capturarPartesProcesso(
-              page,
-              {
-                idPje: processoId,
-                numeroProcesso,
-                trt: params.config.codigo,
-                grau: params.config.grau === 'primeiro_grau' ? 'primeiro_grau' : 'segundo_grau',
-              },
-              {
-                id: parseInt(advogadoInfo.idAdvogado, 10),
-                documento: advogadoInfo.cpf,
-                nome: advogadoInfo.nome,
-              }
-            );
-            partesPersistidas++;
-          }
+          // Buscar número do processo da audiência
+          const audienciaDoProcesso = audiencias.find(a => a.idProcesso === processoId);
+          const numeroProcesso = audienciaDoProcesso?.nrProcesso || audienciaDoProcesso?.processo?.numero;
+          
+          await capturarPartesProcesso(
+            page,
+            {
+              id_pje: processoId,
+              trt: params.config.codigo,
+              grau: params.config.grau === 'primeiro_grau' ? 'primeiro_grau' : 'segundo_grau',
+              id: idAcervo, // ID do acervo para criar vínculo!
+              numero_processo: numeroProcesso,
+            },
+            {
+              id: parseInt(advogadoInfo.idAdvogado, 10),
+              documento: advogadoInfo.cpf,
+              nome: advogadoInfo.nome,
+            }
+          );
+          partesPersistidas++;
+          if (idAcervo) partesComVinculo++;
         } catch (e) {
           console.warn(`   ⚠️ Erro ao persistir partes do processo ${processoId}:`, e);
           captureLogService.logErro('partes', e instanceof Error ? e.message : String(e), {
@@ -302,9 +331,9 @@ export async function audienciasCapture(
         }
       }
     }
-    console.log(`   ✅ ${partesPersistidas} processos com partes persistidas`);
+    console.log(`   ✅ ${partesPersistidas} processos com partes persistidas (${partesComVinculo} com vínculo)`);
 
-    // 5.4 Processar atas para audiências realizadas
+    // 5.5 Processar atas para audiências realizadas
     const atasMap: Record<number, { documentoId: number; url: string }> = {};
     if (codigoSituacao === 'F') {
       console.log('   📄 Buscando atas de audiências realizadas...');
@@ -351,7 +380,7 @@ export async function audienciasCapture(
       }
     }
 
-    // 5.5 Persistir audiências
+    // 5.6 Persistir audiências
     console.log('   🎤 Persistindo audiências...');
     let persistencia: SalvarAudienciasResult | undefined;
     let logsPersistencia: LogEntry[] | undefined;

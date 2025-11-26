@@ -33,6 +33,8 @@ export interface SalvarAcervoResult {
   naoAtualizados: number;
   erros: number;
   total: number;
+  /** Mapeamento id_pje → id do acervo (para vincular partes depois) */
+  mapeamentoIds: Map<number, number>;
 }
 
 /**
@@ -88,6 +90,8 @@ export async function salvarAcervo(
   const supabase = createServiceClient();
   const { processos, advogadoId, origem, trt, grau } = params;
 
+  const mapeamentoIds = new Map<number, number>();
+
   if (processos.length === 0) {
     return {
       inseridos: 0,
@@ -95,6 +99,7 @@ export async function salvarAcervo(
       naoAtualizados: 0,
       erros: 0,
       total: 0,
+      mapeamentoIds,
     };
   }
 
@@ -149,11 +154,20 @@ export async function salvarAcervo(
       );
 
       if (!registroExistente) {
-        // Registro não existe - inserir
-        const { error } = await supabase.from('acervo').insert(dadosNovos);
+        // Registro não existe - inserir e retornar o ID gerado
+        const { data: inserted, error } = await supabase
+          .from('acervo')
+          .insert(dadosNovos)
+          .select('id')
+          .single();
 
         if (error) {
           throw error;
+        }
+
+        // Mapear id_pje → id do acervo
+        if (inserted?.id) {
+          mapeamentoIds.set(processo.id, inserted.id);
         }
 
         inseridos++;
@@ -165,7 +179,11 @@ export async function salvarAcervo(
           numeroProcesso
         );
       } else {
-        // Registro existe - comparar antes de atualizar
+        // Registro existe - mapear o ID existente
+        const idExistente = registroExistente.id as number;
+        mapeamentoIds.set(processo.id, idExistente);
+
+        // Comparar antes de atualizar
         const comparacao = compararObjetos(
           dadosNovos,
           registroExistente as Record<string, unknown>
@@ -236,6 +254,7 @@ export async function salvarAcervo(
     naoAtualizados,
     erros,
     total: processos.length,
+    mapeamentoIds,
   };
 }
 

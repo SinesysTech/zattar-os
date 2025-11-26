@@ -437,8 +437,8 @@ export async function POST(request: NextRequest) {
           );
           for (const proc of processosDoGrupo) {
             resultadoTotal.erros.push({
-              processo_id: proc.id,
-              numero_processo: proc.numero_processo,
+              processo_id: proc.id ?? 0,
+              numero_processo: proc.numero_processo ?? '',
               erro: `Nenhuma credencial disponível para ${chaveGrupo}`,
             });
           }
@@ -494,8 +494,8 @@ export async function POST(request: NextRequest) {
                       if (resultado.erros.length > 0) {
                         for (const erro of resultado.erros) {
                           resultadoTotal.erros.push({
-                            processo_id: processo.id,
-                            numero_processo: processo.numero_processo,
+                            processo_id: processo.id ?? 0,
+                            numero_processo: processo.numero_processo ?? '',
                             erro: erro.erro,
                           });
                         }
@@ -511,9 +511,9 @@ export async function POST(request: NextRequest) {
                         grau: processo.grau as GrauTRT,
                         status: resultado.erros.length === 0 ? 'success' : 'error',
                         requisicao: {
-                          numero_processo: processo.numero_processo,
+                          numero_processo: processo.numero_processo ?? '',
                           id_pje: processo.id_pje,
-                          processo_id: processo.id,
+                          processo_id: processo.id ?? 0,
                         },
                         payload_bruto: resultado.payloadBruto,
                         resultado_processado: {
@@ -528,7 +528,7 @@ export async function POST(request: NextRequest) {
                           tipo: 'erro' as const,
                           entidade: 'acervo' as const,
                           erro: e.erro,
-                          contexto: { processo_id: processo.id }
+                          contexto: { processo_id: processo.id ?? 0 }
                         })),
                         erro: resultado.erros.length > 0 ? resultado.erros[0].erro : undefined,
                       });
@@ -554,8 +554,8 @@ export async function POST(request: NextRequest) {
                   if (error instanceof LockError) {
                     logger.warn({ processoId: processo.id }, 'Captura já em andamento para este processo');
                     resultadoTotal.erros.push({
-                      processo_id: processo.id,
-                      numero_processo: processo.numero_processo,
+                      processo_id: processo.id ?? 0,
+                      numero_processo: processo.numero_processo ?? '',
                       erro: 'Captura já em andamento',
                     });
                     continue;
@@ -580,8 +580,8 @@ export async function POST(request: NextRequest) {
                 if (resultado.erros.length > 0) {
                   for (const erro of resultado.erros) {
                     resultadoTotal.erros.push({
-                      processo_id: processo.id,
-                      numero_processo: processo.numero_processo,
+                      processo_id: processo.id ?? 0,
+                      numero_processo: processo.numero_processo ?? '',
                       erro: erro.erro,
                     });
                   }
@@ -597,9 +597,9 @@ export async function POST(request: NextRequest) {
                   grau: processo.grau as GrauTRT,
                   status: resultado.erros.length === 0 ? 'success' : 'error',
                   requisicao: {
-                    numero_processo: processo.numero_processo,
+                    numero_processo: processo.numero_processo ?? '',
                     id_pje: processo.id_pje,
-                    processo_id: processo.id,
+                    processo_id: processo.id ?? 0,
                   },
                   payload_bruto: resultado.payloadBruto,
                   resultado_processado: {
@@ -614,7 +614,7 @@ export async function POST(request: NextRequest) {
                     tipo: 'erro' as const,
                     entidade: 'acervo' as const,
                     erro: e.erro,
-                    contexto: { processo_id: processo.id }
+                    contexto: { processo_id: processo.id ?? 0 }
                   })),
                   erro: resultado.erros.length > 0 ? resultado.erros[0].erro : undefined,
                 });
@@ -652,9 +652,9 @@ export async function POST(request: NextRequest) {
                 grau: processo.grau as GrauTRT,
                 status: 'error',
                 requisicao: {
-                  numero_processo: processo.numero_processo,
+                  numero_processo: processo.numero_processo ?? '',
                   id_pje: processo.id_pje,
-                  processo_id: processo.id,
+                  processo_id: processo.id ?? 0,
                 },
                 payload_bruto: null,
                 resultado_processado: null,
@@ -662,7 +662,7 @@ export async function POST(request: NextRequest) {
                   tipo: 'erro' as const,
                   entidade: 'acervo' as const,
                   erro: erroMensagem,
-                  contexto: { processo_id: processo.id }
+                  contexto: { processo_id: processo.id ?? 0 }
                 }],
                 erro: erroMensagem,
               });
@@ -678,8 +678,8 @@ export async function POST(request: NextRequest) {
               }
 
               resultadoTotal.erros.push({
-                processo_id: processo.id,
-                numero_processo: processo.numero_processo,
+                processo_id: processo.id ?? 0,
+                numero_processo: processo.numero_processo ?? '',
                 erro: erroMensagem,
               });
             }
@@ -702,9 +702,9 @@ export async function POST(request: NextRequest) {
               grau: proc.grau as GrauTRT,
               status: 'error',
               requisicao: {
-                numero_processo: proc.numero_processo,
+                numero_processo: proc.numero_processo ?? '',
                 id_pje: proc.id_pje,
-                processo_id: proc.id,
+                processo_id: proc.id ?? 0,
               },
               payload_bruto: null,
               resultado_processado: null,
@@ -728,8 +728,8 @@ export async function POST(request: NextRequest) {
             }
 
             resultadoTotal.erros.push({
-              processo_id: proc.id,
-              numero_processo: proc.numero_processo,
+              processo_id: proc.id ?? 0,
+              numero_processo: proc.numero_processo ?? '',
               erro: `Falha na autenticação: ${erroMensagem}`,
             });
           }
