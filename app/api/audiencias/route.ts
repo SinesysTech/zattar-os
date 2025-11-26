@@ -57,8 +57,8 @@ function parseNumber(value: string | null): number | undefined {
  *         schema:
  *           type: integer
  *           default: 50
- *           maximum: 100
- *         description: Quantidade de itens por página (máximo 100)
+ *           maximum: 1000
+ *         description: Quantidade de itens por página (máximo 1000, usar valores altos apenas para visualizações de calendário)
  *       - in: query
  *         name: trt
  *         schema:
@@ -275,9 +275,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (params.limite !== undefined && (params.limite < 1 || params.limite > 100)) {
+    if (params.limite !== undefined && (params.limite < 1 || params.limite > 1000)) {
       return NextResponse.json(
-        { error: { code: 'BAD_REQUEST', message: "Parâmetro 'limite' deve estar entre 1 e 100" } },
+        { error: { code: 'BAD_REQUEST', message: "Parâmetro 'limite' deve estar entre 1 e 1000" } },
         { status: 400 }
       );
     }
