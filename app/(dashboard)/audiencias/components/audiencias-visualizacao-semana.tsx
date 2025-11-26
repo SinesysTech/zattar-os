@@ -110,12 +110,12 @@ const getLogoPlataforma = (plataforma: PlataformaVideo): string | null => {
 function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
-  const handleCopyUrl = async () => {
-    if (!audiencia.url_audiencia_virtual) return;
+  const handleCopyText = async (text: string) => {
+    if (!text) return;
     try {
-      await navigator.clipboard.writeText(audiencia.url_audiencia_virtual);
+      await navigator.clipboard.writeText(text);
     } catch (error) {
-      console.error('Erro ao copiar URL:', error);
+      console.error('Erro ao copiar:', error);
     }
   };
 
@@ -126,7 +126,16 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
   const renderEnderecoAtual = () => {
     if (audiencia.url_audiencia_virtual) {
       return (
-        <>
+        <div className="flex items-center gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleCopyText(audiencia.url_audiencia_virtual!)}
+            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            title="Copiar Endereço"
+          >
+            <Copy className="h-3 w-3" />
+          </Button>
           {logoPath ? (
             <a
               href={audiencia.url_audiencia_virtual}
@@ -135,13 +144,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
               aria-label={`Acessar audiência virtual via ${plataforma}`}
               className="hover:opacity-70 transition-opacity flex items-center justify-center"
             >
-              <Image
-                src={logoPath}
-                alt={plataforma || 'Plataforma de vídeo'}
-                width={80}
-                height={30}
-                className="object-contain"
-              />
+              <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
             </a>
           ) : (
             <a
@@ -154,7 +157,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
               {audiencia.url_audiencia_virtual}
             </a>
           )}
-        </>
+        </div>
       );
     } else if (audiencia.endereco_presencial) {
       const enderecoStr = [
@@ -169,9 +172,20 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
       ].filter(Boolean).join(', ');
 
       return (
-        <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
-          {enderecoStr || '-'}
-        </span>
+        <div className="flex items-center gap-1 w-full">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleCopyText(enderecoStr)}
+            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            title="Copiar Endereço"
+          >
+            <Copy className="h-3 w-3" />
+          </Button>
+          <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+            {enderecoStr || '-'}
+          </span>
+        </div>
       );
     } else {
       return <span className="text-sm text-muted-foreground">-</span>;
@@ -182,23 +196,12 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
     <>
       <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
         {renderEnderecoAtual()}
-        <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-          {audiencia.url_audiencia_virtual && (
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={handleCopyUrl}
-              className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
-              title="Copiar URL"
-            >
-              <Copy className="h-3 w-3" />
-            </Button>
-          )}
+        <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <Button
             size="sm"
             variant="ghost"
             onClick={() => setIsDialogOpen(true)}
-            className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
+            className="h-5 w-5 p-0"
             title="Editar Endereço"
           >
             <Pencil className="h-3 w-3" />
@@ -232,7 +235,7 @@ function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
           size="sm"
           variant="ghost"
           onClick={() => setIsDialogOpen(true)}
-          className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1 bg-gray-100 hover:bg-gray-200 shadow-sm"
+          className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
           title="Editar observações"
         >
           <Pencil className="h-3 w-3" />
@@ -352,11 +355,34 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
       ),
       size: 80,
       meta: { align: 'left' },
-      cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-center text-sm font-medium">
-          {formatarHora(row.getValue('data_inicio'))}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const audiencia = row.original as Audiencia;
+        const [openAta, setOpenAta] = React.useState(false);
+        const deriveKeyFromUrl = (u: string | null) => {
+          if (!u) return null;
+          const idx = u.indexOf('/processos/');
+          return idx >= 0 ? u.slice(idx) : null;
+        };
+        const fileKey = deriveKeyFromUrl(audiencia.url);
+        return (
+          <div className="min-h-10 flex flex-col items-center justify-center text-sm font-medium gap-1">
+            {formatarHora(row.getValue('data_inicio'))}
+            {fileKey && (
+              <button
+                className="h-6 w-6 flex items-center justify-center rounded"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenAta(true);
+                }}
+                title="Ver Ata de Audiência"
+              >
+                <FileText className="h-4 w-4 text-primary" />
+              </button>
+            )}
+            <PdfViewerDialog open={openAta} onOpenChange={setOpenAta} fileKey={fileKey} documentTitle={`Ata da audiência ${audiencia.numero_processo}`} />
+          </div>
+        );
+      },
     },
     {
       id: 'processo',
@@ -376,7 +402,7 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
         const parteRe = row.original.polo_passivo_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 w-fit">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -389,10 +415,10 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
             <div className="flex flex-col gap-1 max-w-full">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit text-left`}>
                 {parteAutora}
               </Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+              <Badge variant="outline" className={`${getParteReColorClass()} w-fit text-left`}>
                 {parteRe}
               </Badge>
             </div>
@@ -451,19 +477,16 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
                   <span className="text-sm text-muted-foreground">-</span>
                 )}
               </div>
-              <div className="flex items-center gap-1">
+              <div className="absolute bottom-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 {audiencia.url_audiencia_virtual && (
-                  <Button size="sm" variant="ghost" onClick={async () => { if (!audiencia.url_audiencia_virtual) return; try { await navigator.clipboard.writeText(audiencia.url_audiencia_virtual); } catch {} }} className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm" title="Copiar URL">
+                  <Button size="sm" variant="ghost" onClick={async () => { if (!audiencia.url_audiencia_virtual) return; try { await navigator.clipboard.writeText(audiencia.url_audiencia_virtual); } catch {} }} className="h-5 w-5 p-0" title="Copiar URL">
                     <Copy className="h-3 w-3" />
                   </Button>
                 )}
-                <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm" title="Editar Endereço">
+                <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-5 w-5 p-0" title="Editar Endereço">
                   <Pencil className="h-3 w-3" />
                 </Button>
-                <button className="h-6 w-6 flex items-center justify-center rounded hover:bg-gray-100" onClick={(e) => { e.stopPropagation(); setOpenAta(true); }} disabled={!canOpenAta} title={canOpenAta ? 'Ver Ata de Audiência' : 'Ata indisponível'}>
-                  <FileText className={`h-4 w-4 ${canOpenAta ? 'text-primary' : 'text-muted-foreground'}`} />
-                </button>
-                <PdfViewerDialog open={openAta} onOpenChange={setOpenAta} fileKey={fileKey} documentTitle={`Ata da audiência ${audiencia.numero_processo}`} />
+                
               </div>
               <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />
             </div>
@@ -623,30 +646,35 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading, semanaAtua
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Segunda - {formatarDataTab(datasDiasSemana.segunda)}</span>
+          <Badge variant="secondary" className="ml-2">{audienciasPorDia.segunda.filter(a => a.status !== 'C').length}</Badge>
         </TabsTrigger>
         <TabsTrigger
           value="terca"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Terça - {formatarDataTab(datasDiasSemana.terca)}</span>
+          <Badge variant="secondary" className="ml-2">{audienciasPorDia.terca.filter(a => a.status !== 'C').length}</Badge>
         </TabsTrigger>
         <TabsTrigger
           value="quarta"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Quarta - {formatarDataTab(datasDiasSemana.quarta)}</span>
+          <Badge variant="secondary" className="ml-2">{audienciasPorDia.quarta.filter(a => a.status !== 'C').length}</Badge>
         </TabsTrigger>
         <TabsTrigger
           value="quinta"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Quinta - {formatarDataTab(datasDiasSemana.quinta)}</span>
+          <Badge variant="secondary" className="ml-2">{audienciasPorDia.quinta.filter(a => a.status !== 'C').length}</Badge>
         </TabsTrigger>
         <TabsTrigger
           value="sexta"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Sexta - {formatarDataTab(datasDiasSemana.sexta)}</span>
+          <Badge variant="secondary" className="ml-2">{audienciasPorDia.sexta.filter(a => a.status !== 'C').length}</Badge>
         </TabsTrigger>
       </TabsList>
 

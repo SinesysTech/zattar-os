@@ -157,7 +157,7 @@ export function AudienciasVisualizacaoMes({ audiencias, isLoading, mesAtual }: A
                               handleAudienciaClick(audiencia);
                             }}
                           >
-                            {formatarHora(audiencia.data_inicio)} - {audiencia.numero_processo}
+                            {formatarHora(audiencia.data_inicio)} - {audiencia.classe_judicial ? audiencia.classe_judicial + ' ' : ''}{audiencia.numero_processo}
                           </div>
                         ))}
                         {audienciasDia.length > 3 && (

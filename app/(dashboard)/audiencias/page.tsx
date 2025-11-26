@@ -341,15 +341,15 @@ function ResponsavelColumnHeader({
 /**
  * Componente para exibir e editar endereço da audiência (URL virtual ou endereço físico)
  */
-function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
+  function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
 
-  const handleCopyUrl = async () => {
-    if (!audiencia.url_audiencia_virtual) return;
+  const handleCopyText = async (text: string) => {
+    if (!text) return;
     try {
-      await navigator.clipboard.writeText(audiencia.url_audiencia_virtual);
+      await navigator.clipboard.writeText(text);
     } catch (error) {
-      console.error('Erro ao copiar URL:', error);
+      console.error('Erro ao copiar:', error);
     }
   };
 
@@ -360,7 +360,16 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
   const renderEnderecoAtual = () => {
     if (audiencia.url_audiencia_virtual) {
       return (
-        <>
+        <div className="flex items-center gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleCopyText(audiencia.url_audiencia_virtual!)}
+            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            title="Copiar Endereço"
+          >
+            <Copy className="h-3 w-3" />
+          </Button>
           {logoPath ? (
             <a
               href={audiencia.url_audiencia_virtual}
@@ -369,13 +378,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
               aria-label={`Acessar audiência virtual via ${plataforma}`}
               className="hover:opacity-70 transition-opacity flex items-center justify-center"
             >
-              <Image
-                src={logoPath}
-                alt={plataforma || 'Plataforma de vídeo'}
-                width={80}
-                height={30}
-                className="object-contain"
-              />
+              <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
             </a>
           ) : (
             <a
@@ -388,7 +391,7 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
               {audiencia.url_audiencia_virtual}
             </a>
           )}
-        </>
+        </div>
       );
     } else if (audiencia.endereco_presencial) {
       const enderecoStr = [
@@ -403,9 +406,20 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
       ].filter(Boolean).join(', ');
 
       return (
-        <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
-          {enderecoStr || '-'}
-        </span>
+        <div className="flex items-center gap-1 w-full">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleCopyText(enderecoStr)}
+            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            title="Copiar Endereço"
+          >
+            <Copy className="h-3 w-3" />
+          </Button>
+          <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+            {enderecoStr || '-'}
+          </span>
+        </div>
       );
     } else {
       return <span className="text-sm text-muted-foreground">-</span>;
@@ -416,23 +430,12 @@ function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
     <>
       <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
         {renderEnderecoAtual()}
-        <div className="absolute bottom-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-          {audiencia.url_audiencia_virtual && (
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={handleCopyUrl}
-              className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
-              title="Copiar URL"
-            >
-              <Copy className="h-3 w-3" />
-            </Button>
-          )}
+        <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <Button
             size="sm"
             variant="ghost"
             onClick={() => setIsDialogOpen(true)}
-            className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm"
+            className="h-5 w-5 p-0"
             title="Editar Endereço"
           >
             <Pencil className="h-3 w-3" />
@@ -465,7 +468,7 @@ function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
           size="sm"
           variant="ghost"
           onClick={() => setIsDialogOpen(true)}
-          className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1 bg-gray-100 hover:bg-gray-200 shadow-sm"
+          className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1"
           title="Editar observações"
         >
           <Pencil className="h-3 w-3" />
@@ -599,10 +602,36 @@ function criarColunas(
       },
       cell: ({ row }) => {
         const dataInicio = row.getValue('data_inicio') as string | null;
+        const audiencia = row.original as Audiencia;
+        const [openAta, setOpenAta] = React.useState(false);
+        const deriveKeyFromUrl = (u: string | null) => {
+          if (!u) return null;
+          const idx = u.indexOf('/processos/');
+          return idx >= 0 ? u.slice(idx) : null;
+        };
+        const fileKey = deriveKeyFromUrl(audiencia.url);
         return (
           <div className="min-h-10 flex flex-col items-center justify-center text-sm gap-1">
             <div className="font-medium">{formatarData(dataInicio)}</div>
             <div className="text-sm font-medium">{formatarHora(dataInicio)}h</div>
+            {fileKey && (
+              <button
+                className="h-6 w-6 flex items-center justify-center rounded"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenAta(true);
+                }}
+                title="Ver Ata de Audiência"
+              >
+                <FileText className="h-4 w-4 text-primary" />
+              </button>
+            )}
+            <PdfViewerDialog
+              open={openAta}
+              onOpenChange={setOpenAta}
+              fileKey={fileKey}
+              documentTitle={`Ata da audiência ${audiencia.numero_processo}`}
+            />
           </div>
         );
       },
@@ -611,7 +640,6 @@ function criarColunas(
       id: 'processo',
       header: () => <ProcessoColumnHeader onSort={onProcessoSort} />,
       enableSorting: false,
-      size: 300,
       meta: { align: 'left' },
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
@@ -623,7 +651,7 @@ function criarColunas(
         const parteRe = row.original.polo_passivo_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,18.75rem)]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 w-fit">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -636,10 +664,10 @@ function criarColunas(
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
             <div className="flex flex-col gap-1 max-w-full">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit text-left`}>
                 {parteAutora}
               </Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+              <Badge variant="outline" className={`${getParteReColorClass()} w-fit text-left`}>
                 {parteRe}
               </Badge>
             </div>
@@ -664,7 +692,6 @@ function criarColunas(
         const tipo = row.original.tipo_descricao || '-';
         const sala = row.original.sala_audiencia_nome || '-';
         const audiencia = row.original;
-        const [openAta, setOpenAta] = React.useState(false);
         const [isDialogOpen, setIsDialogOpen] = React.useState(false);
         const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
         const logoPath = getLogoPlataforma(plataforma);
@@ -700,19 +727,15 @@ function criarColunas(
                   <span className="text-sm text-muted-foreground">-</span>
                 )}
               </div>
-              <div className="flex items-center gap-1">
+              <div className="absolute bottom-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 {audiencia.url_audiencia_virtual && (
-                  <Button size="sm" variant="ghost" onClick={async () => { if (!audiencia.url_audiencia_virtual) return; try { await navigator.clipboard.writeText(audiencia.url_audiencia_virtual); } catch {} }} className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm" title="Copiar URL">
+                  <Button size="sm" variant="ghost" onClick={async () => { if (!audiencia.url_audiencia_virtual) return; try { await navigator.clipboard.writeText(audiencia.url_audiencia_virtual); } catch {} }} className="h-5 w-5 p-0" title="Copiar URL">
                     <Copy className="h-3 w-3" />
                   </Button>
                 )}
-                <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-5 w-5 p-0 bg-gray-100 hover:bg-gray-200 shadow-sm" title="Editar Endereço">
+                <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-5 w-5 p-0" title="Editar Endereço">
                   <Pencil className="h-3 w-3" />
                 </Button>
-                <button className="h-6 w-6 flex items-center justify-center rounded hover:bg-gray-100" onClick={(e) => { e.stopPropagation(); setOpenAta(true); }} disabled={!canOpenAta} title={canOpenAta ? 'Ver Ata de Audiência' : 'Ata indisponível'}>
-                  <FileText className={`h-4 w-4 ${canOpenAta ? 'text-primary' : 'text-muted-foreground'}`} />
-                </button>
-                <PdfViewerDialog open={openAta} onOpenChange={setOpenAta} fileKey={fileKey} documentTitle={`Ata da audiência ${audiencia.numero_processo}`} />
               </div>
               <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />
             </div>
@@ -968,6 +991,41 @@ export default function AudienciasPage() {
     }).replace(' De ', ' de ');
   };
 
+  const audienciasSemCanceladas = React.useMemo(() => {
+    return (audiencias || []).filter((a) => a.status !== 'C');
+  }, [audiencias]);
+
+  const semanaCount = React.useMemo(() => {
+    const inicio = new Date(inicioSemana);
+    inicio.setHours(0, 0, 0, 0);
+    const fim = new Date(fimSemana);
+    fim.setHours(23, 59, 59, 999);
+    return audienciasSemCanceladas.filter((a) => {
+      const d = new Date(a.data_inicio);
+      return d >= inicio && d <= fim;
+    }).length;
+  }, [audienciasSemCanceladas, inicioSemana, fimSemana]);
+
+  const mesCount = React.useMemo(() => {
+    if (!mesAtual) return 0;
+    const m = mesAtual.getMonth();
+    const y = mesAtual.getFullYear();
+    return audienciasSemCanceladas.filter((a) => {
+      const d = new Date(a.data_inicio);
+      return d.getMonth() === m && d.getFullYear() === y;
+    }).length;
+  }, [audienciasSemCanceladas, mesAtual]);
+
+  const anoCount = React.useMemo(() => {
+    if (anoAtual === null) return 0;
+    return audienciasSemCanceladas.filter((a) => {
+      const d = new Date(a.data_inicio);
+      return d.getFullYear() === anoAtual;
+    }).length;
+  }, [audienciasSemCanceladas, anoAtual]);
+
+  const listaCount = React.useMemo(() => audienciasSemCanceladas.length, [audienciasSemCanceladas]);
+
   return (
     <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as typeof visualizacao)}>
       <div className="space-y-4">
@@ -994,18 +1052,22 @@ export default function AudienciasPage() {
             <TabsTrigger value="semana" aria-label="Visualização Semanal">
               <CalendarRange className="h-4 w-4" />
               <span>Semana</span>
+              <Badge variant="secondary" className="ml-2">{semanaCount}</Badge>
             </TabsTrigger>
             <TabsTrigger value="mes" aria-label="Visualização Mensal">
               <Calendar className="h-4 w-4" />
               <span>Mês</span>
+              <Badge variant="secondary" className="ml-2">{mesCount}</Badge>
             </TabsTrigger>
             <TabsTrigger value="ano" aria-label="Visualização Anual">
               <CalendarDays className="h-4 w-4" />
               <span>Ano</span>
+              <Badge variant="secondary" className="ml-2">{anoCount}</Badge>
             </TabsTrigger>
             <TabsTrigger value="tabela" aria-label="Visualização em Lista">
               <List className="h-4 w-4" />
               <span>Lista</span>
+              <Badge variant="secondary" className="ml-2">{listaCount}</Badge>
             </TabsTrigger>
           </TabsList>
 

@@ -3,7 +3,7 @@
  */
 
 import { jest } from '@jest/globals';
-import { createClient } from '@/backend/utils/supabase/server-client';
+import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
 import {
   validarCPF,
@@ -24,7 +24,7 @@ import {
 } from '../representantes-persistence.service';
 
 // Mock do Supabase
-jest.mock('@/backend/utils/supabase/server-client');
+jest.mock('@/backend/utils/supabase/service-client');
 jest.mock('@/backend/enderecos/services/enderecos-persistence.service');
 
 // Mock do cliente Supabase
@@ -44,7 +44,7 @@ const mockSupabase = {
   count: jest.fn(),
 };
 
-(createClient as jest.Mock).mockResolvedValue(mockSupabase);
+(createServiceClient as jest.Mock).mockReturnValue(mockSupabase);
 
 // Mock do conversor de endereço
 (converterParaEndereco as jest.Mock).mockImplementation((data) => ({
