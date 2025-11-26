@@ -83,22 +83,15 @@ export async function PATCH(
 
     // 3. Obter ID do usuário que está executando a ação
     let usuarioId: number;
-    if (authResult.userId === 'system') {
+    if (authResult.source === 'service') {
       usuarioId = 10; // Sistema usa ID padrão do Super Administrador
-    } else if (!authResult.userId) {
+    } else if (!authResult.usuarioId) {
       return NextResponse.json(
-        { error: 'ID de usuário não fornecido' },
+        { error: 'Usuário não encontrado na base de dados' },
         { status: 401 }
       );
     } else {
-      const userIdNum = parseInt(authResult.userId, 10);
-      if (isNaN(userIdNum)) {
-        return NextResponse.json(
-          { error: 'ID de usuário inválido' },
-          { status: 401 }
-        );
-      }
-      usuarioId = userIdNum;
+      usuarioId = authResult.usuarioId;
     }
 
     // 4. Reverter baixa

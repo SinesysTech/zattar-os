@@ -240,9 +240,11 @@ function RepresentanteActions({
 }) {
   return (
     <ButtonGroup>
-      <Button variant="ghost" size="icon" className="h-8 w-8" disabled>
-        <Eye className="h-4 w-4" />
-        <span className="sr-only">Visualizar representante</span>
+      <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+        <Link href={`/partes/representantes/${representante.id}`}>
+          <Eye className="h-4 w-4" />
+          <span className="sr-only">Visualizar representante</span>
+        </Link>
       </Button>
       <Button variant="ghost" size="icon" className="h-8 w-8" disabled>
         <Pencil className="h-4 w-4" />
