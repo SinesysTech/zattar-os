@@ -11,7 +11,7 @@ import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/backend/
 import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
 import type { CriarClientePFParams, CriarClientePJParams } from '@/backend/types/partes/clientes-types';
 import type { CriarParteContrariaPFParams, CriarParteContrariaPJParams } from '@/backend/types/partes/partes-contrarias-types';
-import type { CriarTerceiroPFParams, CriarTerceiroPJParams } from '@/backend/types/partes/terceiros-types';
+import type { CriarTerceiroPFParams, CriarTerceiroPJParams, UpsertTerceiroPorCPFParams, UpsertTerceiroPorCNPJParams } from '@/backend/types/partes/terceiros-types';
 import type { TipoParteProcesso, PoloProcessoParte } from '@/backend/types/partes';
 import { TIPOS_PARTE_PROCESSO_VALIDOS } from '@/backend/types/partes/processo-partes-types';
 import type { GrauAcervo } from '@/backend/types/acervo/types';
@@ -686,11 +686,21 @@ async function processarParte(
           polo: parte.polo,
         } as CriarTerceiroPFParams | CriarTerceiroPJParams;
 
-        const upsertFn = isPessoaFisica ? upsertTerceiroPorCPF : upsertTerceiroPorCNPJ;
-        const result = await withRetry(() => upsertFn(params), {
-          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
-        });
+        const result = isPessoaFisica
+          ? await withRetry<import('@/backend/terceiros/services/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
+              () => upsertTerceiroPorCPF(params as UpsertTerceiroPorCPFParams),
+              {
+                maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+                baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+              }
+            )
+          : await withRetry<import('@/backend/terceiros/services/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
+              () => upsertTerceiroPorCNPJ(params as UpsertTerceiroPorCNPJParams),
+              {
+                maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+                baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+              }
+            );
         if (result.sucesso && result.terceiro) {
           entidadeId = result.terceiro.id;
           criado = result.criado || false;
@@ -746,8 +756,12 @@ async function processarRepresentantes(
 
   for (const rep of representantes) {
     try {
-      // Extrair e normalizar CPF
-      const cpf = rep.numeroDocumento;
+      // Extrair e normalizar CPF com validação de null/empty
+      if (!rep.numeroDocumento || String(rep.numeroDocumento).trim() === '') {
+        logger.warn({ nome: rep.nome }, 'Representante sem CPF; ignorando');
+        continue;
+      }
+      const cpf = String(rep.numeroDocumento);
       const cpfNormalizado = normalizarDocumento(cpf);
 
       // Buscar representante existente por CPF
@@ -764,17 +778,17 @@ async function processarRepresentantes(
         // INSERT: novo representante
         const camposExtras = extrairCamposRepresentantePJE(rep);
 
-        const params = {
-          nome: rep.nome,
-          cpf: cpfNormalizado,
-          numero_oab: rep.numeroOAB || undefined,
-          situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
-          tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,
-          emails: rep.email ? [rep.email] : undefined,
-          ddd_celular: rep.telefones?.[0]?.ddd || undefined,
-          numero_celular: rep.telefones?.[0]?.numero || undefined,
-          ...camposExtras,
-        };
+      const params = {
+        nome: rep.nome,
+        cpf: cpfNormalizado,
+        numero_oab: rep.numeroOAB || undefined,
+        situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
+        tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,
+        emails: rep.email ? [rep.email] : undefined,
+        ddd_celular: rep.telefones?.[0]?.ddd || undefined,
+        numero_celular: rep.telefones?.[0]?.numero || undefined,
+        ...camposExtras,
+      };
 
         const result = await upsertRepresentantePorCPF(params);
         if (result.sucesso && result.representante) {

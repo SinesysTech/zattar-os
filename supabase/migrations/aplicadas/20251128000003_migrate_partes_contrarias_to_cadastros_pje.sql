@@ -8,6 +8,9 @@
 DO $$
 DECLARE
     column_exists BOOLEAN;
+    total_partes_contrarias_com_id BIGINT;
+    total_migrados BIGINT;
+    total_cadastros_pje BIGINT;
 BEGIN
     SELECT EXISTS (
         SELECT 1 
@@ -57,37 +60,28 @@ BEGIN
     ON CONFLICT (tipo_entidade, id_pessoa_pje, sistema, tribunal, grau) DO NOTHING;
     
     -- Validação pós-migração
-    -- Contar registros migrados
     RAISE NOTICE 'Migração concluída. Verificando integridade...';
+
+    SELECT COUNT(*) INTO total_partes_contrarias_com_id
+    FROM partes_contrarias 
+    WHERE id_pessoa_pje IS NOT NULL;
     
-    -- Contar total de partes_contrarias com id_pessoa_pje
-    DECLARE
-        total_partes_contrarias_com_id BIGINT;
-        total_migrados BIGINT;
-        total_cadastros_pje BIGINT;
-    BEGIN
-        SELECT COUNT(*) INTO total_partes_contrarias_com_id
-        FROM partes_contrarias 
-        WHERE id_pessoa_pje IS NOT NULL;
-        
-        SELECT COUNT(*) INTO total_migrados
-        FROM cadastros_pje 
-        WHERE tipo_entidade = 'parte_contraria';
-        
-        SELECT COUNT(*) INTO total_cadastros_pje
-        FROM cadastros_pje;
-        
-        RAISE NOTICE 'Total de partes_contrarias com id_pessoa_pje: %', total_partes_contrarias_com_id;
-        RAISE NOTICE 'Total de registros migrados para cadastros_pje (parte_contraria): %', total_migrados;
-        RAISE NOTICE 'Total de registros em cadastros_pje: %', total_cadastros_pje;
-        
-        -- Verificar se todos os registros foram migrados (pode haver menos devido a duplicatas ou processos sem tribunal)
-        IF total_migrados > 0 THEN
-            RAISE NOTICE 'Migração bem-sucedida. Registros migrados: %', total_migrados;
-        ELSE
-            RAISE WARNING 'Nenhum registro foi migrado. Verificar se há dados em partes_contrarias.';
-        END IF;
-    END;
+    SELECT COUNT(*) INTO total_migrados
+    FROM cadastros_pje 
+    WHERE tipo_entidade = 'parte_contraria';
+    
+    SELECT COUNT(*) INTO total_cadastros_pje
+    FROM cadastros_pje;
+    
+    RAISE NOTICE 'Total de partes_contrarias com id_pessoa_pje: %', total_partes_contrarias_com_id;
+    RAISE NOTICE 'Total de registros migrados para cadastros_pje (parte_contraria): %', total_migrados;
+    RAISE NOTICE 'Total de registros em cadastros_pje: %', total_cadastros_pje;
+    
+    IF total_migrados > 0 THEN
+        RAISE NOTICE 'Migração bem-sucedida. Registros migrados: %', total_migrados;
+    ELSE
+        RAISE WARNING 'Nenhum registro foi migrado. Verificar se há dados em partes_contrarias.';
+    END IF;
     
     RAISE NOTICE 'Migration 20251128000003_migrate_partes_contrarias_to_cadastros_pje.sql concluída com sucesso.';
 END $$;

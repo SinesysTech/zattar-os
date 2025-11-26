@@ -986,6 +986,29 @@ function criarColunas(
         const dataInicio = row.original.data_ciencia_parte;
         const dataFim = row.original.data_prazo_legal_parte;
         const diasUteis = calcularDiasUteis(dataInicio, dataFim);
+        const [openPrazo, setOpenPrazo] = React.useState(false);
+        const [isSavingPrazo, setIsSavingPrazo] = React.useState(false);
+        const [dataPrazoStr, setDataPrazoStr] = React.useState<string>('');
+        const handleSalvarPrazo = async () => {
+          setIsSavingPrazo(true);
+          try {
+            const iso = dataPrazoStr ? new Date(dataPrazoStr).toISOString() : '';
+            const response = await fetch(`/api/pendentes-manifestacao/${row.original.id}/prazo-legal`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ dataPrazoLegal: iso }),
+            });
+            if (!response.ok) {
+              const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+              throw new Error(ed.error || 'Erro ao atualizar prazo legal');
+            }
+            setOpenPrazo(false);
+            setDataPrazoStr('');
+            onSuccess();
+          } finally {
+            setIsSavingPrazo(false);
+          }
+        };
 
         return (
           <div className="min-h-10 flex flex-col items-center justify-center gap-2 py-2">
@@ -1000,6 +1023,26 @@ function criarColunas(
                 {diasUteis} {diasUteis === 1 ? 'dia' : 'dias'}
               </Badge>
             )}
+            {!row.original.baixado_em && !dataFim && (
+              <Button size="sm" variant="outline" onClick={() => setOpenPrazo(true)}>
+                Definir Data
+              </Button>
+            )}
+            <Dialog open={openPrazo} onOpenChange={setOpenPrazo}>
+              <DialogContent className="max-w-sm">
+                <DialogHeader>
+                  <DialogTitle>Definir Prazo Legal</DialogTitle>
+                  <DialogDescription>Escolha a data de fim do prazo</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-3">
+                  <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} />
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setOpenPrazo(false)} disabled={isSavingPrazo}>Cancelar</Button>
+                  <Button onClick={handleSalvarPrazo} disabled={isSavingPrazo || !dataPrazoStr}>{isSavingPrazo ? 'Salvando...' : 'Salvar'}</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         );
       },
@@ -1280,10 +1323,10 @@ export default function ExpedientesPage() {
       // Excluir responsavel_id dos filtros para evitar sobrescrever a restrição de segurança
       const { responsavel_id: _, ...filtrosSemResponsavel } = filtros;
       
-      // Determinar responsavel_id: usuários não-admin veem apenas seus expedientes
-      const responsavelIdFinal = !isSuperAdmin && currentUserId 
-        ? currentUserId 
-        : filtros.responsavel_id;
+      // Determinar responsavel_id: na visualização de lista não há restrição contextual
+      const responsavelIdFinal = visualizacao === 'tabela'
+        ? filtros.responsavel_id
+        : (!isSuperAdmin && currentUserId ? currentUserId : filtros.responsavel_id);
 
       return {
         pagina: pagina + 1, // API usa 1-indexed
@@ -1292,14 +1335,14 @@ export default function ExpedientesPage() {
         ordenar_por: ordenarPor || undefined,
         ordem,
         baixado: statusBaixa === 'baixado' ? true : statusBaixa === 'pendente' ? false : undefined,
-        prazo_vencido: statusPrazo === 'vencido' ? true : statusPrazo === 'no_prazo' ? false : undefined,
+        prazo_vencido: visualizacao === 'tabela' ? undefined : (statusPrazo === 'vencido' ? true : statusPrazo === 'no_prazo' ? false : undefined),
         // Filtro contextual: usuários não-admin veem apenas seus expedientes
         // Super admins podem usar filtros.responsavel_id se fornecido
         responsavel_id: responsavelIdFinal,
         ...filtrosSemResponsavel, // Spread dos filtros avançados (sem responsavel_id)
       };
     },
-    [pagina, limite, buscaDebounced, ordenarPor, ordem, statusBaixa, statusPrazo, filtros, isSuperAdmin, currentUserId]
+    [pagina, limite, buscaDebounced, ordenarPor, ordem, statusBaixa, statusPrazo, filtros, isSuperAdmin, currentUserId, visualizacao]
   );
 
   const { expedientes, paginacao, isLoading, error, refetch } = usePendentes(params);

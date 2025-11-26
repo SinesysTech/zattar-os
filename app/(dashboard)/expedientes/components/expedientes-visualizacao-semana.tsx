@@ -4,6 +4,7 @@
 
 import * as React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -1060,6 +1061,29 @@ function criarColunasSemanais(
         const dataInicio = row.original.data_ciencia_parte;
         const dataFim = row.original.data_prazo_legal_parte;
         const diasUteis = calcularDiasUteis(dataInicio, dataFim);
+        const [openPrazo, setOpenPrazo] = React.useState(false);
+        const [isSavingPrazo, setIsSavingPrazo] = React.useState(false);
+        const [dataPrazoStr, setDataPrazoStr] = React.useState<string>('');
+        const handleSalvarPrazo = async () => {
+          setIsSavingPrazo(true);
+          try {
+            const iso = dataPrazoStr ? new Date(dataPrazoStr).toISOString() : '';
+            const response = await fetch(`/api/pendentes-manifestacao/${row.original.id}/prazo-legal`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ dataPrazoLegal: iso }),
+            });
+            if (!response.ok) {
+              const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+              throw new Error(ed.error || 'Erro ao atualizar prazo legal');
+            }
+            setOpenPrazo(false);
+            setDataPrazoStr('');
+            return;
+          } finally {
+            setIsSavingPrazo(false);
+          }
+        };
 
         return (
           <div className="min-h-10 flex flex-col items-center justify-center gap-2 py-2">
@@ -1074,6 +1098,26 @@ function criarColunasSemanais(
                 {diasUteis} {diasUteis === 1 ? 'dia' : 'dias'}
               </Badge>
             )}
+            {!row.original.baixado_em && !dataFim && (
+              <Button size="sm" variant="outline" onClick={() => setOpenPrazo(true)}>
+                Definir Data
+              </Button>
+            )}
+            <Dialog open={openPrazo} onOpenChange={setOpenPrazo}>
+              <DialogContent className="max-w-sm">
+                <DialogHeader>
+                  <DialogTitle>Definir Prazo Legal</DialogTitle>
+                  <DialogDescription>Escolha a data de fim do prazo</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-3">
+                  <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} />
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setOpenPrazo(false)} disabled={isSavingPrazo}>Cancelar</Button>
+                  <Button onClick={handleSalvarPrazo} disabled={isSavingPrazo || !dataPrazoStr}>{isSavingPrazo ? 'Salvando...' : 'Salvar'}</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         );
       },

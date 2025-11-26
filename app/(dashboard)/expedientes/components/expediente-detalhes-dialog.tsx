@@ -13,6 +13,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
+import { Button } from '@/components/ui/button';
 
 /**
  * Formata data ISO para formato brasileiro
@@ -56,9 +57,50 @@ export function ExpedienteDetalhesDialog({
   onOpenChange,
   titulo,
 }: ExpedienteDetalhesDialogProps) {
-  // Se temos múltiplos expedientes, mostra lista
-  const exibirLista = expedientes && expedientes.length > 0;
-  const expedienteUnico = !exibirLista && expediente;
+  const [listaLocal, setListaLocal] = React.useState<PendenteManifestacao[]>(expedientes || []);
+  React.useEffect(() => { setListaLocal(expedientes || []); }, [expedientes]);
+  const [expLocal, setExpLocal] = React.useState<PendenteManifestacao | null>(expediente);
+  React.useEffect(() => { setExpLocal(expediente || null); }, [expediente]);
+  const exibirLista = listaLocal && listaLocal.length > 0;
+  const expedienteUnico = !exibirLista && expLocal;
+
+  const PrazoEditor: React.FC<{ exp: PendenteManifestacao; onUpdated: (u: PendenteManifestacao) => void }> = ({ exp, onUpdated }) => {
+    const [openEdit, setOpenEdit] = React.useState(false);
+    const [dt, setDt] = React.useState('');
+    const [saving, setSaving] = React.useState(false);
+    const salvar = async () => {
+      setSaving(true);
+      try {
+        const iso = dt ? new Date(dt).toISOString() : '';
+        const r = await fetch(`/api/pendentes-manifestacao/${exp.id}/prazo-legal`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ dataPrazoLegal: iso }) });
+        if (!r.ok) {
+          const ed = await r.json().catch(() => ({ error: 'Erro' }));
+          throw new Error(ed.error || 'Erro');
+        }
+        const agora = new Date();
+        const fim = new Date(iso);
+        const atualizado: PendenteManifestacao = { ...exp, data_prazo_legal_parte: iso, prazo_vencido: !exp.baixado_em && fim.getTime() < agora.getTime() };
+        onUpdated(atualizado);
+        setOpenEdit(false);
+        setDt('');
+      } finally {
+        setSaving(false);
+      }
+    };
+    if (exp.baixado_em || exp.data_prazo_legal_parte) return null;
+    return (
+      <div className="flex items-center gap-2">
+        <Button size="sm" variant="outline" onClick={() => setOpenEdit(true)}>Definir Prazo</Button>
+        {openEdit && (
+          <div className="flex items-center gap-2">
+            <input type="date" className="border rounded p-1 text-sm" value={dt} onChange={(e) => setDt(e.target.value)} />
+            <Button size="sm" onClick={salvar} disabled={saving || !dt}>{saving ? 'Salvando...' : 'Salvar'}</Button>
+            <Button size="sm" variant="ghost" onClick={() => setOpenEdit(false)} disabled={saving}>Cancelar</Button>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -76,7 +118,7 @@ export function ExpedienteDetalhesDialog({
         <ScrollArea className="max-h-[60vh] pr-4">
           {exibirLista ? (
             <div className="space-y-4">
-              {expedientes.map((exp) => (
+              {listaLocal.map((exp) => (
                 <div key={exp.id} className="border rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="font-semibold text-lg">
@@ -118,6 +160,7 @@ export function ExpedienteDetalhesDialog({
                       <div className="truncate">{exp.nome_parte_re || '-'}</div>
                     </div>
                   </div>
+                  <PrazoEditor exp={exp} onUpdated={(u) => setListaLocal((prev) => prev.map((p) => (p.id === u.id ? u : p)))} />
                 </div>
               ))}
             </div>
@@ -179,6 +222,7 @@ export function ExpedienteDetalhesDialog({
                     <div>{formatarData(expedienteUnico.baixado_em)}</div>
                   </div>
                 )}
+                <PrazoEditor exp={expedienteUnico} onUpdated={(u) => setExpLocal(u)} />
               </div>
             </div>
           ) : null}
