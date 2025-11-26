@@ -1,14 +1,15 @@
 /**
  * Tipos TypeScript para Representantes (Advogados)
  * Representantes legais que atuam em nome de partes em processos judiciais
- * Utiliza discriminated unions para type safety entre PF e PJ
+ *
+ * NOTA: Representantes são sempre pessoas físicas (advogados) na API do PJE.
+ * Os campos disponíveis são limitados comparados às partes.
  */
 
 // ============================================================================
 // Base Types
 // ============================================================================
 
-export type TipoPessoa = 'pf' | 'pj';
 export type ParteTipo = 'cliente' | 'parte_contraria' | 'terceiro';
 export type Grau = '1' | '2';
 export type Polo = 'ativo' | 'passivo' | 'outros';
@@ -39,134 +40,69 @@ export type OrdenarPorRepresentante =
   | 'data_habilitacao';
 
 // ============================================================================
-// Base Interface (Common Fields)
+// Main Interface
 // ============================================================================
 
 /**
- * NOTA: Representantes é uma tabela global - conexão com processo via processo_partes
+ * Representante (Advogado) - campos disponíveis na API do PJE
+ * Representantes são sempre pessoas físicas
  */
-interface RepresentanteBase {
+export interface Representante {
   // Identification
   id: number;
   id_pje: number | null;
   id_pessoa_pje: number;
 
-  // Context (link to parte)
+  // Context (link to parte and processo)
   parte_tipo: ParteTipo;
   parte_id: number;
-  polo: Polo | null;
+  polo: string | null;
   trt: string;
   grau: Grau;
   numero_processo: string;
 
-  // Common
-  tipo_pessoa: TipoPessoa;
+  // Basic info
   nome: string;
+  cpf: string | null;
+  sexo: string | null;
   situacao: string | null;
   status: string | null;
   principal: boolean | null;
   endereco_desconhecido: boolean | null;
 
   // Lawyer-specific
-  tipo: TipoRepresentante | null;
+  tipo: string | null;
   id_tipo_parte: number | null;
   numero_oab: string | null;
-  situacao_oab: SituacaoOAB | null;
+  situacao_oab: string | null;
 
   // Contact
   emails: string[];
-  /** Telefone celular do representante */
   ddd_celular: string | null;
   numero_celular: string | null;
-  /** Telefone residencial do representante */
   ddd_residencial: string | null;
   numero_residencial: string | null;
-  /** Telefone comercial do representante */
   ddd_comercial: string | null;
   numero_comercial: string | null;
   email: string | null;
 
   // Metadata
-  /** Estado anterior do registro para auditoria (não confundir com dados do PJE) */
   dados_anteriores: Record<string, unknown> | null;
   ordem: number | null;
   data_habilitacao: Date | null;
-  endereco_id: number | null; // FK para tabela enderecos
+  endereco_id: number | null;
   created_at: Date;
   updated_at: Date;
 }
-
-// ============================================================================
-// Discriminated Union Types (PF vs PJ)
-// ============================================================================
-
-export interface RepresentantePessoaFisica extends RepresentanteBase {
-  tipo_pessoa: 'pf';
-
-  // PF fields (populated)
-  cpf: string;
-  sexo: string | null;
-  data_nascimento: Date | null;
-  nome_mae: string | null;
-  nome_pai: string | null;
-  nacionalidade: string | null;
-  estado_civil: string | null;
-  uf_nascimento: string | null;
-  municipio_nascimento: string | null;
-  pais_nascimento: string | null;
-
-  // PJ fields (always null for PF)
-  cnpj: null;
-  razao_social: null;
-  nome_fantasia: null;
-  inscricao_estadual: null;
-  tipo_empresa: null;
-}
-
-export interface RepresentantePessoaJuridica extends RepresentanteBase {
-  tipo_pessoa: 'pj';
-
-  // PJ fields (populated)
-  cnpj: string;
-  razao_social: string | null;
-  nome_fantasia: string | null;
-  inscricao_estadual: string | null;
-  tipo_empresa: string | null;
-
-  // PF fields (always null for PJ)
-  cpf: null;
-  sexo: null;
-  data_nascimento: null;
-  nome_mae: null;
-  nome_pai: null;
-  nacionalidade: null;
-  estado_civil: null;
-  uf_nascimento: null;
-  municipio_nascimento: null;
-  pais_nascimento: null;
-}
-
-/**
- * Representante union type - automatically discriminates between PF and PJ
- */
-export type Representante = RepresentantePessoaFisica | RepresentantePessoaJuridica;
 
 /**
  * Tipos com endereço populado (para queries com JOIN)
  */
 import type { Endereco } from '@/backend/types/partes/enderecos-types';
 
-export interface RepresentantePessoaFisicaComEndereco extends RepresentantePessoaFisica {
+export interface RepresentanteComEndereco extends Representante {
   endereco?: Endereco | null;
 }
-
-export interface RepresentantePessoaJuridicaComEndereco extends RepresentantePessoaJuridica {
-  endereco?: Endereco | null;
-}
-
-export type RepresentanteComEndereco =
-  | RepresentantePessoaFisicaComEndereco
-  | RepresentantePessoaJuridicaComEndereco;
 
 // ============================================================================
 // CRUD Parameter Types
@@ -183,24 +119,21 @@ export interface CriarRepresentanteParams {
   trt: string;
   grau: Grau;
   numero_processo: string;
-  tipo_pessoa: TipoPessoa;
   nome: string;
-
-  // Conditional required (based on tipo_pessoa)
-  cpf?: string; // required if tipo_pessoa='pf'
-  cnpj?: string; // required if tipo_pessoa='pj'
 
   // Optional fields
   id_pje?: number | null;
-  polo?: Polo | null;
+  cpf?: string | null;
+  polo?: string | null;
+  sexo?: string | null;
   situacao?: string | null;
   status?: string | null;
   principal?: boolean | null;
   endereco_desconhecido?: boolean | null;
-  tipo?: TipoRepresentante | null;
+  tipo?: string | null;
   id_tipo_parte?: number | null;
   numero_oab?: string | null;
-  situacao_oab?: SituacaoOAB | null;
+  situacao_oab?: string | null;
   emails?: string[];
   ddd_celular?: string | null;
   numero_celular?: string | null;
@@ -209,49 +142,30 @@ export interface CriarRepresentanteParams {
   ddd_comercial?: string | null;
   numero_comercial?: string | null;
   email?: string | null;
-
-  // PF optional fields
-  sexo?: string | null;
-  data_nascimento?: Date | null;
-  nome_mae?: string | null;
-  nome_pai?: string | null;
-  nacionalidade?: string | null;
-  estado_civil?: string | null;
-  uf_nascimento?: string | null;
-  municipio_nascimento?: string | null;
-  pais_nascimento?: string | null;
-
-  // PJ optional fields
-  razao_social?: string | null;
-  nome_fantasia?: string | null;
-  inscricao_estadual?: string | null;
-  tipo_empresa?: string | null;
-
-  // Metadata optional
   dados_anteriores?: Record<string, unknown> | null;
   ordem?: number | null;
-  data_habilitacao?: Date | null;
+  data_habilitacao?: Date | string | null;
   endereco_id?: number | null;
 }
 
 /**
  * Parâmetros para atualizar representante existente
- * Todos os campos são opcionais exceto id
- * Campos imutáveis (tipo_pessoa, parte_tipo, parte_id) não devem ser incluídos
  */
 export interface AtualizarRepresentanteParams {
-  id: number; // Required - representante to update
+  id: number;
 
   // Updatable fields (all optional)
   nome?: string;
+  cpf?: string | null;
+  sexo?: string | null;
   situacao?: string | null;
   status?: string | null;
   principal?: boolean | null;
   endereco_desconhecido?: boolean | null;
-  polo?: Polo | null;
-  tipo?: TipoRepresentante | null;
+  polo?: string | null;
+  tipo?: string | null;
   numero_oab?: string | null;
-  situacao_oab?: SituacaoOAB | null;
+  situacao_oab?: string | null;
   emails?: string[];
   ddd_celular?: string | null;
   numero_celular?: string | null;
@@ -260,28 +174,9 @@ export interface AtualizarRepresentanteParams {
   ddd_comercial?: string | null;
   numero_comercial?: string | null;
   email?: string | null;
-
-  // PF fields (only if tipo_pessoa='pf')
-  sexo?: string | null;
-  data_nascimento?: Date | null;
-  nome_mae?: string | null;
-  nome_pai?: string | null;
-  nacionalidade?: string | null;
-  estado_civil?: string | null;
-  uf_nascimento?: string | null;
-  municipio_nascimento?: string | null;
-  pais_nascimento?: string | null;
-
-  // PJ fields (only if tipo_pessoa='pj')
-  razao_social?: string | null;
-  nome_fantasia?: string | null;
-  inscricao_estadual?: string | null;
-  tipo_empresa?: string | null;
-
-  // Metadata
   dados_anteriores?: Record<string, unknown> | null;
   ordem?: number | null;
-  data_habilitacao?: Date | null;
+  data_habilitacao?: Date | string | null;
   endereco_id?: number | null;
 }
 
@@ -290,8 +185,8 @@ export interface AtualizarRepresentanteParams {
  */
 export interface ListarRepresentantesParams {
   // Pagination
-  pagina?: number; // default 1
-  limite?: number; // default 50
+  pagina?: number;
+  limite?: number;
 
   // Filters
   parte_tipo?: ParteTipo;
@@ -302,9 +197,8 @@ export interface ListarRepresentantesParams {
   nome?: string;
   id_pessoa_pje?: number;
   numero_oab?: string;
-  situacao_oab?: SituacaoOAB;
-  tipo_pessoa?: TipoPessoa;
-  busca?: string; // search in nome, cpf, cnpj, email
+  situacao_oab?: string;
+  busca?: string;
 
   // Sorting
   ordenar_por?: OrdenarPorRepresentante;
@@ -315,9 +209,6 @@ export interface ListarRepresentantesParams {
 // Helper Query Types
 // ============================================================================
 
-/**
- * Buscar representantes por parte específica
- */
 export interface BuscarRepresentantesPorParteParams {
   parte_tipo: ParteTipo;
   parte_id: number;
@@ -326,9 +217,6 @@ export interface BuscarRepresentantesPorParteParams {
   numero_processo?: string;
 }
 
-/**
- * Buscar representantes por número OAB
- */
 export interface BuscarRepresentantesPorOABParams {
   numero_oab: string;
   trt?: string;
@@ -336,9 +224,6 @@ export interface BuscarRepresentantesPorOABParams {
   numero_processo?: string;
 }
 
-/**
- * Buscar representantes por processo
- */
 export interface BuscarRepresentantesPorProcessoParams {
   trt: string;
   grau: Grau;
@@ -347,20 +232,13 @@ export interface BuscarRepresentantesPorProcessoParams {
 
 /**
  * Upsert representante por id_pessoa_pje + context
- * Create if not exists, update if exists
  */
-export interface UpsertRepresentantePorIdPessoaParams extends CriarRepresentanteParams {
-  // Inherits all fields from CriarRepresentanteParams
-  // Upsert logic based on composite key: (id_pessoa_pje, parte_id, parte_tipo)
-}
+export interface UpsertRepresentantePorIdPessoaParams extends CriarRepresentanteParams {}
 
 // ============================================================================
 // Result Types
 // ============================================================================
 
-/**
- * Resultado de listagem com paginação
- */
 export interface ListarRepresentantesResult {
   representantes: Representante[];
   total: number;
@@ -369,33 +247,8 @@ export interface ListarRepresentantesResult {
   totalPaginas: number;
 }
 
-/**
- * Resultado de operação CRUD
- */
 export interface OperacaoRepresentanteResult {
   sucesso: boolean;
   representante?: Representante;
   erro?: string;
-}
-
-// ============================================================================
-// Type Guards
-// ============================================================================
-
-/**
- * Type guard para verificar se representante é Pessoa Física
- */
-export function isRepresentantePessoaFisica(
-  representante: Representante
-): representante is RepresentantePessoaFisica {
-  return representante.tipo_pessoa === 'pf';
-}
-
-/**
- * Type guard para verificar se representante é Pessoa Jurídica
- */
-export function isRepresentantePessoaJuridica(
-  representante: Representante
-): representante is RepresentantePessoaJuridica {
-  return representante.tipo_pessoa === 'pj';
 }
