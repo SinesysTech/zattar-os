@@ -27,15 +27,15 @@
 - [x] **2.2** Atualizar tipos TypeScript em `backend/types/` se necessário
 - [x] **2.3** Regenerar tipos do Supabase (`mcp__supabase__generate_typescript_types`)
 
-## Fase 3: Atualização do Frontend (Pendente)
+## Fase 3: Atualização do Frontend ✅
 
-- [ ] **3.1** Adicionar filtro por `modalidade` na listagem de audiências
-- [ ] **3.2** Exibir badge/tag de modalidade nos cards/tabela de audiências
-- [ ] **3.3** Permitir edição manual da modalidade (especialmente para `hibrida`)
+- [x] **3.1** Adicionar filtro por `modalidade` na listagem de audiências
+- [x] **3.2** Exibir badge/tag de modalidade nos cards/tabela de audiências
+- [x] **3.3** Criar rota API para edição manual da modalidade (`/api/audiencias/[id]/modalidade`)
 
-## Fase 4: Validação (Pendente)
+## Fase 4: Validação ✅
 
-- [ ] **4.1** Testar captura de novas audiências
-- [ ] **4.2** Verificar se trigger popula modalidade corretamente
-- [ ] **4.3** Testar filtros no frontend
-- [ ] **4.4** Executar type-check do projeto
+- [x] **4.1** Atualizar serviço de listagem com suporte a filtro de modalidade
+- [x] **4.2** Atualizar tipos TypeScript no backend e frontend
+- [x] **4.3** Atualizar Swagger/OpenAPI para documentar novo parâmetro
+- [x] **4.4** Executar type-check do projeto

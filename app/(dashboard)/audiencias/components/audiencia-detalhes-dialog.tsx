@@ -16,7 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Copy, Pencil, Plus } from 'lucide-react';
-import type { Audiencia } from '@/backend/types/audiencias/types';
+import type { Audiencia, ModalidadeAudiencia } from '@/backend/types/audiencias/types';
 
 /**
  * Formata data e hora ISO para formato brasileiro
@@ -71,6 +71,30 @@ const getStatusBadgeStyle = (
   if (status === 'M') return { tone: 'info', variant: 'soft' }; // Marcada
   if (status === 'R') return { tone: 'success', variant: 'soft' }; // Realizada
   if (status === 'C') return { tone: 'danger', variant: 'solid' }; // Cancelada
+  return { tone: 'neutral', variant: 'outline' };
+};
+
+/**
+ * Formata modalidade para exibição
+ */
+const formatarModalidade = (modalidade: ModalidadeAudiencia | null): string => {
+  const modalidadeMap: Record<string, string> = {
+    virtual: 'Virtual',
+    presencial: 'Presencial',
+    hibrida: 'Híbrida',
+  };
+  return modalidade ? modalidadeMap[modalidade] || modalidade : '-';
+};
+
+/**
+ * Retorna variante do badge de modalidade
+ */
+const getModalidadeBadgeStyle = (
+  modalidade: ModalidadeAudiencia | null,
+): { tone: 'info' | 'success' | 'warning' | 'neutral'; variant: 'soft' | 'solid' | 'outline' } => {
+  if (modalidade === 'virtual') return { tone: 'info', variant: 'soft' };
+  if (modalidade === 'presencial') return { tone: 'success', variant: 'soft' };
+  if (modalidade === 'hibrida') return { tone: 'warning', variant: 'soft' };
   return { tone: 'neutral', variant: 'outline' };
 };
 
@@ -350,9 +374,15 @@ export function AudienciaDetalhesDialog({
                       <div className="text-muted-foreground">Tipo</div>
                       <div className="flex items-center gap-1">
                         {aud.tipo_descricao || '-'}
-                        {aud.tipo_is_virtual && (
-                          <Badge variant="outline" className="text-xs">Virtual</Badge>
-                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="text-muted-foreground">Modalidade</div>
+                      <div className="flex items-center gap-1">
+                        <Badge {...getModalidadeBadgeStyle(aud.modalidade)} className="text-xs">
+                          {formatarModalidade(aud.modalidade)}
+                        </Badge>
                       </div>
                     </div>
 
@@ -362,7 +392,7 @@ export function AudienciaDetalhesDialog({
                     </div>
                   </div>
 
-                  {aud.tipo_is_virtual && (
+                  {(aud.modalidade === 'virtual' || aud.modalidade === 'hibrida') && (
                     <div className="pt-3 border-t">
                       <UrlVirtualDialogSection audiencia={aud} onSuccess={onRefresh} />
                     </div>
@@ -426,18 +456,24 @@ export function AudienciaDetalhesDialog({
                     <div className="text-sm text-muted-foreground">Tipo de Audiência</div>
                     <div className="flex items-center gap-2 mt-1">
                       {audienciaUnica.tipo_descricao || '-'}
-                      {audienciaUnica.tipo_is_virtual && (
-                        <Badge variant="outline" className="text-xs">Virtual</Badge>
-                      )}
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">Sala de Audiência</div>
-                    <div className="mt-1">{audienciaUnica.sala_audiencia_nome || '-'}</div>
+                    <div className="text-sm text-muted-foreground">Modalidade</div>
+                    <div className="mt-1">
+                      <Badge {...getModalidadeBadgeStyle(audienciaUnica.modalidade)}>
+                        {formatarModalidade(audienciaUnica.modalidade)}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
 
-                {audienciaUnica.tipo_is_virtual && (
+                <div>
+                  <div className="text-sm text-muted-foreground">Sala de Audiência</div>
+                  <div className="mt-1">{audienciaUnica.sala_audiencia_nome || '-'}</div>
+                </div>
+
+                {(audienciaUnica.modalidade === 'virtual' || audienciaUnica.modalidade === 'hibrida') && (
                   <UrlVirtualDialogSection audiencia={audienciaUnica} onSuccess={onRefresh} />
                 )}
 
