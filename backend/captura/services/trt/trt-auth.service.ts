@@ -236,15 +236,51 @@ async function esperarSaidaSSO(
   timeout: number = 120000
 ): Promise<void> {
   const targetHostname = new URL(`https://${targetHost}`).hostname;
-  
-  await page.waitForFunction(
-    (host: string) => {
-      const currentHost = window.location.hostname;
-      return currentHost.includes(host) && !currentHost.includes('sso.');
-    },
-    targetHostname,
-    { timeout }
-  );
+  const startTime = Date.now();
+  const checkInterval = 2000; // Verificar a cada 2 segundos
+
+  while (Date.now() - startTime < timeout) {
+    try {
+      // Verificar se já saiu do SSO
+      const currentUrl = page.url();
+      const currentHostname = new URL(currentUrl).hostname;
+
+      if (currentHostname.includes(targetHostname) && !currentHostname.includes('sso.')) {
+        log('success', `✅ Redirecionado para ${currentHostname}`);
+        return;
+      }
+
+      // Verificar se há erro na página (conexão recusada, etc)
+      const hasNetworkError = await page.evaluate(() => {
+        const body = document.body?.innerText?.toLowerCase() || '';
+        return body.includes('connection') ||
+               body.includes('refused') ||
+               body.includes('error') ||
+               body.includes('unavailable');
+      }).catch(() => false);
+
+      if (hasNetworkError) {
+        log('warn', '⚠️ Possível erro de rede detectado na página');
+      }
+
+      // Aguardar antes de verificar novamente
+      await delay(checkInterval);
+
+    } catch (error) {
+      // Se der erro ao verificar URL, página pode ter sido fechada ou crashou
+      log('warn', `⚠️ Erro ao verificar URL: ${error instanceof Error ? error.message : 'desconhecido'}`);
+      await delay(checkInterval);
+    }
+  }
+
+  // Se chegou aqui, deu timeout
+  let finalUrl = 'URL não disponível';
+  try {
+    finalUrl = page.url();
+  } catch {
+    // Ignorar erro se página foi fechada
+  }
+  throw new Error(`Timeout ao aguardar saída do SSO. URL atual: ${finalUrl}. Esperado domínio: ${targetHostname}`);
 }
 
 // ============================================================================
@@ -268,11 +304,44 @@ async function realizarLogin(
   log('success', '✅ Botão SSO encontrado');
 
   log('info', '🖱️ Clicando em SSO PDPJ...');
-  await Promise.all([
-    page.waitForURL((url) => url.hostname.includes('sso.') || url.hostname.includes('gov.br'), { timeout: 60000 }),
-    page.click('#btnSsoPdpj'),
-  ]);
-  log('success', '✅ Redirecionado para página de login PDPJ');
+
+  // Tentar clique com retry em caso de erro de rede
+  const maxRetries = 3;
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      await Promise.all([
+        page.waitForURL((url) => url.hostname.includes('sso.') || url.hostname.includes('gov.br'), { timeout: 60000 }),
+        page.click('#btnSsoPdpj'),
+      ]);
+      log('success', '✅ Redirecionado para página de login PDPJ');
+      lastError = null;
+      break;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      const isNetworkError = lastError.message.includes('NS_ERROR_NET_EMPTY_RESPONSE') ||
+                             lastError.message.includes('net::ERR') ||
+                             lastError.message.includes('Navigation failed');
+
+      if (isNetworkError && attempt < maxRetries) {
+        log('warn', `⚠️ Erro de rede ao clicar SSO (tentativa ${attempt}/${maxRetries}): ${lastError.message}`);
+        log('info', '🔄 Aguardando antes de tentar novamente...');
+        await delay(5000); // Aguardar 5 segundos antes de retry
+
+        // Recarregar página de login
+        await page.goto(loginUrl, { waitUntil: 'networkidle', timeout: 60000 });
+        await delay(2000);
+        await page.waitForSelector('#btnSsoPdpj', { state: 'visible', timeout: 60000 });
+      } else {
+        throw lastError;
+      }
+    }
+  }
+
+  if (lastError) {
+    throw lastError;
+  }
 
   log('info', '📝 Preenchendo credenciais...');
   await page.waitForSelector('#username', { state: 'visible', timeout: 60000 });

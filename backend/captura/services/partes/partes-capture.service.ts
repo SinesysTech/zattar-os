@@ -18,7 +18,7 @@ import type { GrauAcervo } from '@/backend/types/acervo/types';
 import type { EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } from '@/backend/types/partes/enderecos-types';
 import { CAMPOS_MINIMOS_ENDERECO } from '@/backend/types/partes/enderecos-types';
 import type { SituacaoOAB, TipoRepresentante, Polo } from '@/backend/types/representantes/representantes-types';
-import { PartePJESchema, validarPartePJE, validarPartesArray } from './schemas';
+import {  validarPartePJE, validarPartesArray } from './schemas';
 import getLogger, { withCorrelationId } from '@/backend/utils/logger';
 import { withRetry } from '@/backend/utils/retry';
 import { CAPTURA_CONFIG } from './config';
@@ -665,9 +665,8 @@ async function processarRepresentantes(
   logger.info({ count: representantes.length, parteId }, 'Processando representantes');
 
   // Coleta todos os parâmetros primeiro
+  // NOTA: Representantes são sempre advogados (PF) - não usamos tipo_pessoa nem cnpj
   const representantesParams = representantes.map((rep, index) => {
-    const tipo_pessoa: 'pf' | 'pj' = rep.tipoDocumento === 'CPF' ? 'pf' : 'pj';
-
     // Extrai campos extras do PJE
     const camposExtras = extrairCamposRepresentantePJE(rep);
 
@@ -678,10 +677,8 @@ async function processarRepresentantes(
       trt: processo.trt,
       grau: converterGrauRepresentante(processo.grau),
       numero_processo: processo.numero_processo,
-      tipo_pessoa,
       nome: rep.nome,
-      cpf: tipo_pessoa === 'pf' ? (rep.numeroDocumento ?? undefined) : undefined,
-      cnpj: tipo_pessoa === 'pj' ? (rep.numeroDocumento ?? undefined) : undefined,
+      cpf: rep.tipoDocumento === 'CPF' ? (rep.numeroDocumento ?? undefined) : undefined,
       numero_oab: rep.numeroOAB || undefined,
       situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
       tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,

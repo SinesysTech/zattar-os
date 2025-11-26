@@ -1,42 +1,60 @@
--- Enums para o sistema de captura de dados jurídicos
+-- ============================================================================
+-- Enums do Sistema Sinesys
+-- Gerado automaticamente do banco de dados em produção
+-- ============================================================================
 
--- Enum para grau do processo no TRT
-create type public.grau_tribunal as enum (
-  'primeiro_grau',
-  'segundo_grau'
-);
-comment on type public.grau_tribunal is 'Grau do processo no tribunal (primeiro ou segundo grau)';
+-- ----------------------------------------------------------------------------
+-- Enums de Tribunal
+-- ----------------------------------------------------------------------------
 
--- Enum para código do tribunal TRT
+-- Código do Tribunal Regional do Trabalho (TRT1 a TRT24)
 create type public.codigo_tribunal as enum (
-  'TRT1',
-  'TRT2',
-  'TRT3',
-  'TRT4',
-  'TRT5',
-  'TRT6',
-  'TRT7',
-  'TRT8',
-  'TRT9',
-  'TRT10',
-  'TRT11',
-  'TRT12',
-  'TRT13',
-  'TRT14',
-  'TRT15',
-  'TRT16',
-  'TRT17',
-  'TRT18',
-  'TRT19',
-  'TRT20',
-  'TRT21',
-  'TRT22',
-  'TRT23',
-  'TRT24'
+  'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8',
+  'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16',
+  'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24'
 );
 comment on type public.codigo_tribunal is 'Código do Tribunal Regional do Trabalho (TRT1 a TRT24)';
 
--- Enum para gênero do usuário
+-- Grau do processo no tribunal
+create type public.grau_tribunal as enum (
+  'primeiro_grau',
+  'segundo_grau',
+  'tribunal_superior'
+);
+comment on type public.grau_tribunal is 'Grau do processo no tribunal (primeiro grau, segundo grau ou tribunal superior)';
+
+-- Tipo de acesso ao tribunal
+create type public.tipo_acesso_tribunal as enum (
+  'primeiro_grau',
+  'segundo_grau',
+  'unificado',
+  'unico'
+);
+comment on type public.tipo_acesso_tribunal is 'Tipo de acesso ao sistema: primeiro_grau, segundo_grau, unificado ou unico';
+
+-- Tipo de tribunal
+create type public."TipoTribunal" as enum (
+  'TRT', 'TJ', 'TRF', 'TST', 'STF', 'STJ'
+);
+comment on type public."TipoTribunal" is 'Tipo de tribunal (TRT, TJ, TRF, TST, STF, STJ)';
+
+-- Instância do processo
+create type public."Instancia" as enum (
+  'PRIMEIRO_GRAU',
+  'SEGUNDO_GRAU',
+  'TST'
+);
+comment on type public."Instancia" is 'Instância do processo (primeiro grau, segundo grau, TST)';
+
+-- ----------------------------------------------------------------------------
+-- Enums de Pessoa
+-- ----------------------------------------------------------------------------
+
+-- Tipo de pessoa (física ou jurídica)
+create type public.tipo_pessoa as enum ('pf', 'pj');
+comment on type public.tipo_pessoa is 'Tipo de pessoa: física (pf) ou jurídica (pj)';
+
+-- Gênero do usuário
 create type public.genero_usuario as enum (
   'masculino',
   'feminino',
@@ -45,14 +63,7 @@ create type public.genero_usuario as enum (
 );
 comment on type public.genero_usuario is 'Gênero do usuário do sistema';
 
--- Enum para tipo de pessoa (física ou jurídica)
-create type public.tipo_pessoa as enum (
-  'pf',
-  'pj'
-);
-comment on type public.tipo_pessoa is 'Tipo de pessoa: física (pf) ou jurídica (pj)';
-
--- Enum para estado civil
+-- Estado civil
 create type public.estado_civil as enum (
   'solteiro',
   'casado',
@@ -63,7 +74,11 @@ create type public.estado_civil as enum (
 );
 comment on type public.estado_civil is 'Estado civil da pessoa física';
 
--- Enum para área de direito
+-- ----------------------------------------------------------------------------
+-- Enums de Contrato
+-- ----------------------------------------------------------------------------
+
+-- Área de direito
 create type public.area_direito as enum (
   'trabalhista',
   'civil',
@@ -74,7 +89,7 @@ create type public.area_direito as enum (
 );
 comment on type public.area_direito is 'Área de direito do contrato';
 
--- Enum para tipo de contrato
+-- Tipo de contrato
 create type public.tipo_contrato as enum (
   'ajuizamento',
   'defesa',
@@ -86,14 +101,14 @@ create type public.tipo_contrato as enum (
 );
 comment on type public.tipo_contrato is 'Tipo de contrato jurídico';
 
--- Enum para tipo de cobrança
+-- Tipo de cobrança
 create type public.tipo_cobranca as enum (
   'pro_exito',
   'pro_labore'
 );
 comment on type public.tipo_cobranca is 'Tipo de cobrança do contrato';
 
--- Enum para status do contrato
+-- Status do contrato
 create type public.status_contrato as enum (
   'em_contratacao',
   'contratado',
@@ -102,14 +117,15 @@ create type public.status_contrato as enum (
 );
 comment on type public.status_contrato is 'Status do contrato no sistema';
 
--- Enum para polo processual
-create type public.polo_processual as enum (
-  'autor',
-  're'
-);
+-- Polo processual
+create type public.polo_processual as enum ('autor', 're');
 comment on type public.polo_processual is 'Polo processual (autor ou ré)';
 
--- Enum para status de audiência
+-- ----------------------------------------------------------------------------
+-- Enums de Audiência
+-- ----------------------------------------------------------------------------
+
+-- Status de audiência
 create type public.status_audiencia as enum (
   'C',  -- Cancelada
   'M',  -- Designada (Marcada)
@@ -117,7 +133,11 @@ create type public.status_audiencia as enum (
 );
 comment on type public.status_audiencia is 'Status da audiência: C=Cancelada, M=Designada, F=Realizada';
 
--- Enum para tipo de captura
+-- ----------------------------------------------------------------------------
+-- Enums de Captura
+-- ----------------------------------------------------------------------------
+
+-- Tipo de captura
 create type public.tipo_captura as enum (
   'acervo_geral',
   'arquivados',
@@ -127,3 +147,128 @@ create type public.tipo_captura as enum (
 );
 comment on type public.tipo_captura is 'Tipo de captura: acervo_geral, arquivados, audiencias, pendentes, partes';
 
+-- Status de captura
+create type public.status_captura as enum (
+  'pending',
+  'in_progress',
+  'completed',
+  'failed'
+);
+comment on type public.status_captura is 'Status da captura: pending, in_progress, completed, failed';
+
+-- ----------------------------------------------------------------------------
+-- Enums de Expediente
+-- ----------------------------------------------------------------------------
+
+-- Status de expediente
+create type public."StatusExpediente" as enum (
+  'PENDENTE',
+  'EM_ANDAMENTO',
+  'CONCLUIDO',
+  'CANCELADO'
+);
+comment on type public."StatusExpediente" is 'Status do expediente';
+
+-- Tipo de expediente (enum legado)
+create type public."TipoExpedienteEnum" as enum (
+  'IMPUGNACAO_A_CONTESTACAO',
+  'RAZOES_FINAIS',
+  'RECURSO_ORDINARIO',
+  'MANIFESTACAO',
+  'RECURSO_DE_REVISTA',
+  'AGRAVO_DE_INSTRUMENTO_EM_RECURSO_ORDINARIO',
+  'CONTRARRAZOES_AOS_EMBARGOS_DE_DECLARACAO',
+  'CONTRARRAZOES_AO_RECURSO_ORDINARIO',
+  'EMENDA_A_INICIAL',
+  'AGRAVO_DE_INSTRUMENTO_EM_RECURSO_DE_REVISTA',
+  'CONTRARRAZOES_AO_RECURSO_DE_REVISTA',
+  'AGRAVO_INTERNO',
+  'ADITAMENTO_A_INICIAL',
+  'IMPUGNACAO_AO_CUMPRIMENTO_DE_SENTENCA',
+  'IMPUGNACAO_AO_LAUDO_PERICIAL',
+  'IMPUGNACAO_AO_CALCULO_PERICIAL',
+  'APRESENTACAO_DE_CALCULOS',
+  'IMPUGNACAO_AOS_EMBARGOS_DE_EXECUCAO',
+  'APRESENTACAO_DE_QUESITOS',
+  'AUDIENCIA',
+  'CONTRARRAZOES_AO_RECURSO_ORDINARIO_ADESIVO',
+  'CONTRAMINUTA_AO_AGRAVO_DE_PETICAO',
+  'CONTRAMINUTA_AO_AGRAVO_INTERNO',
+  'PERICIA',
+  'CONTRAMINUTA_AO_AGRAVO_DE_INSTRUMENTO_EM_RECURSO_DE_REVISTA',
+  'CONTRAMINUTA_AO_AGRAVO_DE_INSTRUMENTO_EM_RECURSO_ORDINARIO',
+  'SESSAO_DE_JULGAMENTO',
+  'CEJUSC',
+  'VERIFICAR'
+);
+comment on type public."TipoExpedienteEnum" is 'Tipos de expediente predefinidos';
+
+-- Tipo de ação no histórico
+create type public."TipoAcaoHistorico" as enum (
+  'ATRIBUIDO',
+  'TRANSFERIDO',
+  'BAIXADO',
+  'REVERSAO_BAIXA',
+  'PROTOCOLO_ADICIONADO',
+  'OBSERVACAO_ADICIONADA'
+);
+comment on type public."TipoAcaoHistorico" is 'Tipo de ação registrada no histórico';
+
+-- ----------------------------------------------------------------------------
+-- Enums de Sincronização
+-- ----------------------------------------------------------------------------
+
+-- Status de sincronização
+create type public."SyncStatus" as enum (
+  'PENDING',
+  'SYNCING',
+  'SYNCED',
+  'PARTIAL',
+  'FAILED',
+  'DELETED'
+);
+comment on type public."SyncStatus" is 'Status de sincronização';
+
+-- Status de arquivamento
+create type public."StatusArquivamento" as enum (
+  'ATIVO',
+  'ARQUIVADO',
+  'BAIXADO'
+);
+comment on type public."StatusArquivamento" is 'Status de arquivamento do processo';
+
+-- ----------------------------------------------------------------------------
+-- Enums de Notificação
+-- ----------------------------------------------------------------------------
+
+-- Tipo de notificação
+create type public."NotificationType" as enum (
+  'SYNC_FAILED',
+  'SYNC_EXHAUSTED',
+  'SCRAPE_EXECUTION_FAILED',
+  'TRIBUNAL_SCRAPE_FAILED',
+  'STORAGE_FULL',
+  'CLEANUP_ERROR',
+  'EXTERNAL_STORAGE_DOWN'
+);
+comment on type public."NotificationType" is 'Tipo de notificação do sistema';
+
+-- Severidade de notificação
+create type public."NotificationSeverity" as enum (
+  'LOW',
+  'MEDIUM',
+  'HIGH'
+);
+comment on type public."NotificationSeverity" is 'Severidade da notificação';
+
+-- ----------------------------------------------------------------------------
+-- Enums de Tarefas
+-- ----------------------------------------------------------------------------
+
+-- Status de tarefa
+create type public.status_tarefa as enum (
+  'pendente',
+  'em_andamento',
+  'concluida'
+);
+comment on type public.status_tarefa is 'Status da tarefa';

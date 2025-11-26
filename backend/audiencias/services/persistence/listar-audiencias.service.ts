@@ -82,7 +82,7 @@ export async function listarAudiencias(
   const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
-  const limite = Math.min(params.limite ?? 50, 100); // Máximo 100
+  const limite = Math.min(params.limite ?? 50, 1000); // Máximo 1000 (para visualizações de calendário)
   const offset = (pagina - 1) * limite;
 
   // Selecionar todos os campos da tabela audiencias e fazer JOIN com tabelas relacionadas
