@@ -1,16 +1,9 @@
 // Tipos e interfaces para o serviço de terceiros (peritos, MP, assistentes, etc.)
 
-import type { GrauAcervo } from '@/backend/types/acervo/types';
-
 /**
  * Tipo de pessoa (PF ou PJ)
  */
 export type TipoPessoa = 'pf' | 'pj';
-
-/**
- * Grau do processo (primeiro ou segundo grau)
- */
-export type GrauTerceiro = GrauAcervo;
 
 /**
  * Tipo de parte terceira no processo
@@ -162,14 +155,11 @@ export type TerceiroComEndereco =
 
 /**
  * Dados para criar terceiro PF
+ * NOTA: Terceiros é uma tabela GLOBAL - campos de processo (trt, grau, numero_processo)
+ * vão para processo_partes, não para esta tabela
  */
 export interface CriarTerceiroPFParams {
-
   id_pessoa_pje: number;
-  processo_id: number;
-  trt: string;
-  grau: GrauTerceiro;
-  numero_processo: string;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
   tipo_pessoa: 'pf';
@@ -209,14 +199,11 @@ export interface CriarTerceiroPFParams {
 
 /**
  * Dados para criar terceiro PJ
+ * NOTA: Terceiros é uma tabela GLOBAL - campos de processo (trt, grau, numero_processo)
+ * vão para processo_partes, não para esta tabela
  */
 export interface CriarTerceiroPJParams {
-
   id_pessoa_pje: number;
-  processo_id: number;
-  trt: string;
-  grau: GrauTerceiro;
-  numero_processo: string;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
   tipo_pessoa: 'pj';
@@ -358,6 +345,7 @@ export type OrdemTerceiro = 'asc' | 'desc';
 
 /**
  * Parâmetros para listar terceiros
+ * NOTA: Terceiros é tabela global. Para filtrar por processo, use processo_partes.
  */
 export interface ListarTerceirosParams {
   // Paginação
@@ -377,10 +365,6 @@ export interface ListarTerceirosParams {
   cpf?: string;
   cnpj?: string;
   id_pessoa_pje?: number;
-  processo_id?: number;
-  trt?: string;
-  grau?: GrauTerceiro;
-  numero_processo?: string;
 
   // Ordenação
   ordenar_por?: OrdenarPorTerceiro;

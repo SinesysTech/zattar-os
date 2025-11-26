@@ -233,15 +233,17 @@ function mapSupabaseError(error: { code?: string; message: string }): string {
 
 /**
  * Criar novo terceiro
+ * NOTA: Terceiros é tabela GLOBAL - campos de processo (trt, grau, numero_processo)
+ * vão para processo_partes, não para esta tabela
  */
 export async function criarTerceiro(
   params: CriarTerceiroParams
 ): Promise<{ sucesso: boolean; terceiro?: Terceiro; erro?: string }> {
   try {
-    // Validate required fields
-    if (!params.id_pessoa_pje || !params.processo_id ||
-        !params.tipo_parte || !params.polo || !params.trt ||
-        !params.grau || !params.numero_processo || !params.tipo_pessoa || !params.nome) {
+    // Validate required fields (campos de processo foram removidos - vão para processo_partes)
+    if (!params.id_pessoa_pje ||
+        !params.tipo_parte || !params.polo ||
+        !params.tipo_pessoa || !params.nome) {
       return {
         sucesso: false,
         erro: 'Campos obrigatórios não informados',
@@ -305,10 +307,10 @@ export async function atualizarTerceiro(
     }
 
     // Check for immutable fields
-    if ('tipo_pessoa' in params || 'processo_id' in params) {
+    if ('tipo_pessoa' in params) {
       return {
         sucesso: false,
-        erro: 'Campos tipo_pessoa e processo_id não podem ser alterados',
+        erro: 'Campo tipo_pessoa não pode ser alterado',
       };
     }
 
@@ -424,15 +426,8 @@ export async function listarTerceiros(
     if (params.polo) {
       query = query.eq('polo', params.polo);
     }
-    if (params.processo_id) {
-      query = query.eq('processo_id', params.processo_id);
-    }
-    if (params.trt) {
-      query = query.eq('trt', params.trt);
-    }
-    if (params.grau) {
-      query = query.eq('grau', params.grau);
-    }
+    // Campos de processo (processo_id, trt, grau, numero_processo) foram removidos
+    // Terceiros agora é tabela global - filtrar por processo via processo_partes
     if (params.nome) {
       query = query.ilike('nome', `%${params.nome}%`);
     }
@@ -444,9 +439,6 @@ export async function listarTerceiros(
     }
     if (params.id_pessoa_pje) {
       query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
-    }
-    if (params.numero_processo) {
-      query = query.eq('numero_processo', params.numero_processo);
     }
     if (params.busca) {
       query = query.or(`nome.ilike.%${params.busca}%,cpf.ilike.%${params.busca}%,cnpj.ilike.%${params.busca}%,nome_social.ilike.%${params.busca}%`);
@@ -496,34 +488,33 @@ export async function listarTerceiros(
 }
 
 /**
- * Upsert terceiro por id_pessoa_pje + context (idempotente)
+ * Upsert terceiro por id_pessoa_pje (tabela global)
+ * NOTA: Terceiros é tabela global - busca apenas por id_pessoa_pje
  */
 export async function upsertTerceiroPorIdPessoa(
   params: UpsertTerceiroPorIdPessoaParams
-): Promise<{ sucesso: boolean; terceiro?: Terceiro; erro?: string }> {
+): Promise<{ sucesso: boolean; terceiro?: Terceiro; erro?: string; criado?: boolean }> {
   try {
     const supabase = await createClient();
 
-    // Search for existing record by composite key
+    // Search for existing record by id_pessoa_pje only (tabela global)
     const { data: existing } = await supabase
       .from('terceiros')
       .select('id')
       .eq('id_pessoa_pje', params.id_pessoa_pje)
-      .eq('processo_id', params.processo_id)
-      .eq('trt', params.trt)
-      .eq('grau', params.grau)
-      .eq('numero_processo', params.numero_processo)
-      .single();
+      .maybeSingle();
 
     if (existing) {
       // Update existing
-      return await atualizarTerceiro({
+      const result = await atualizarTerceiro({
         id: existing.id,
         ...params,
       });
+      return { ...result, criado: false };
     } else {
       // Create new
-      return await criarTerceiro(params);
+      const result = await criarTerceiro(params);
+      return { ...result, criado: true };
     }
   } catch (error) {
     console.error('Erro ao fazer upsert de terceiro:', error);

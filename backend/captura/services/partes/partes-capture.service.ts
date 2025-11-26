@@ -624,18 +624,15 @@ async function processarParte(
         return result.sucesso && result.parteContraria ? { id: result.parteContraria.id, criado: result.criado || false } : null;
       }
     } else {
-      // Upsert em tabela terceiros
+      // Upsert em tabela terceiros (tabela global - sem campos de processo)
+      // Campos de processo vão para processo_partes via criarVinculoProcessoParte()
       const params = {
-        ...dadosComuns,
+        ...dadosCompletos, // Inclui campos extras extraídos do PJE
         tipo_pessoa: isPessoaFisica ? ('pf' as const) : ('pj' as const),
         cpf: isPessoaFisica ? parte.numeroDocumento : undefined,
         cnpj: !isPessoaFisica ? parte.numeroDocumento : undefined,
         tipo_parte: parte.tipoParte,
         polo: parte.polo,
-        processo_id: processo.id,
-        trt: processo.trt,
-        grau: processo.grau,
-        numero_processo: processo.numero_processo,
       } as unknown as UpsertTerceiroPorIdPessoaParams;
 
       const result = await withRetry(() => upsertTerceiroPorIdPessoa(params), {
