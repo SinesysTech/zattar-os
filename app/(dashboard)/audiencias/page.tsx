@@ -814,17 +814,70 @@ export default function AudienciasPage() {
   const buscaDebounced = useDebounce(busca, 500);
   const isSearching = busca !== buscaDebounced;
 
+  // Calcular filtros de data baseados na visualização selecionada
+  const filtrosData = React.useMemo(() => {
+    // Na visualização de lista, não aplicamos filtros de data automáticos
+    if (visualizacao === 'tabela') {
+      return {};
+    }
+
+    // Na visualização de semana, filtrar pela semana selecionada
+    if (visualizacao === 'semana' && semanaAtual) {
+      const date = new Date(semanaAtual);
+      date.setHours(0, 0, 0, 0);
+      const day = date.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      const inicio = new Date(date);
+      inicio.setDate(date.getDate() + diff);
+      const fim = new Date(inicio);
+      fim.setDate(fim.getDate() + 4);
+      fim.setHours(23, 59, 59, 999);
+
+      return {
+        data_inicio_inicio: inicio.toISOString(),
+        data_inicio_fim: fim.toISOString(),
+      };
+    }
+
+    // Na visualização de mês, filtrar pelo mês selecionado
+    if (visualizacao === 'mes' && mesAtual) {
+      const ano = mesAtual.getFullYear();
+      const mes = mesAtual.getMonth();
+      const inicio = new Date(ano, mes, 1);
+      const fim = new Date(ano, mes + 1, 0, 23, 59, 59, 999);
+
+      return {
+        data_inicio_inicio: inicio.toISOString(),
+        data_inicio_fim: fim.toISOString(),
+      };
+    }
+
+    // Na visualização de ano, filtrar pelo ano selecionado
+    if (visualizacao === 'ano' && anoAtual !== null) {
+      const inicio = new Date(anoAtual, 0, 1);
+      const fim = new Date(anoAtual, 11, 31, 23, 59, 59, 999);
+
+      return {
+        data_inicio_inicio: inicio.toISOString(),
+        data_inicio_fim: fim.toISOString(),
+      };
+    }
+
+    return {};
+  }, [visualizacao, semanaAtual, mesAtual, anoAtual]);
+
   // Parâmetros para buscar audiências
   const params = React.useMemo(
     () => ({
       pagina: pagina + 1, // API usa 1-indexed
-      limite,
+      limite: visualizacao === 'tabela' ? limite : 1000, // Limite maior para visualizações de calendário
       busca: buscaDebounced || undefined,
       ordenar_por: ordenarPor || undefined,
       ordem,
       ...filtros, // Spread dos filtros avançados (inclui status agora)
+      ...filtrosData, // Filtros de data baseados na visualização
     }),
-    [pagina, limite, buscaDebounced, ordenarPor, ordem, filtros]
+    [pagina, limite, buscaDebounced, ordenarPor, ordem, filtros, filtrosData, visualizacao]
   );
 
   const { audiencias: audienciasRaw, paginacao, isLoading, error, refetch } = useAudiencias(params);
