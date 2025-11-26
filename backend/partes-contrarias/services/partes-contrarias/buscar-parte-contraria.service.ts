@@ -3,8 +3,8 @@
 
 import {
   buscarParteContrariaPorId,
-  buscarParteContrariaPorCpf,
-  buscarParteContrariaPorCnpj,
+  buscarParteContrariaPorCPF,
+  buscarParteContrariaPorCNPJ,
 } from '../persistence/parte-contraria-persistence.service';
 import type { ParteContraria } from '@/backend/types/partes/partes-contrarias-types';
 
@@ -19,13 +19,13 @@ export async function obterParteContrariaPorId(id: number): Promise<ParteContrar
  * Busca uma parte contrária por CPF
  */
 export async function obterParteContrariaPorCpf(cpf: string): Promise<ParteContraria | null> {
-  return buscarParteContrariaPorCpf(cpf);
+  return buscarParteContrariaPorCPF(cpf);
 }
 
 /**
  * Busca uma parte contrária por CNPJ
  */
 export async function obterParteContrariaPorCnpj(cnpj: string): Promise<ParteContraria | null> {
-  return buscarParteContrariaPorCnpj(cnpj);
+  return buscarParteContrariaPorCNPJ(cnpj);
 }
 

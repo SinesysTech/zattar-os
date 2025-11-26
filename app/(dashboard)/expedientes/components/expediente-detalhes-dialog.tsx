@@ -109,7 +109,7 @@ export function ExpedienteDetalhesDialog({
           <DialogTitle>{titulo || (exibirLista ? 'Expedientes do Dia' : 'Detalhes do Expediente')}</DialogTitle>
           <DialogDescription>
             {exibirLista
-              ? `${expedientes.length} expediente${expedientes.length > 1 ? 's' : ''} para este dia`
+              ? `${expedientes?.length ?? 0} expediente${(expedientes?.length ?? 0) > 1 ? 's' : ''} para este dia`
               : 'Informações completas do expediente'
             }
           </DialogDescription>

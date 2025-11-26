@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
-  buscarRepresentantePorId,
+  buscarRepresentante,
   atualizarRepresentante,
   deletarRepresentante,
 } from '@/backend/representantes/services/representantes-persistence.service';
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     }
 
     // Find representante
-    const representante = await buscarRepresentantePorId(representanteId);
+    const representante = await buscarRepresentante(representanteId);
 
     if (!representante) {
       return NextResponse.json(

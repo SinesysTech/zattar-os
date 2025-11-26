@@ -28,7 +28,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dialog';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
@@ -1079,7 +1078,7 @@ function criarColunasSemanais(
             }
             setOpenPrazo(false);
             setDataPrazoStr('');
-            return;
+            if (onSuccess) onSuccess();
           } finally {
             setIsSavingPrazo(false);
           }

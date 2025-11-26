@@ -3,8 +3,8 @@
 
 import {
   buscarClientePorId,
-  buscarClientePorCpf,
-  buscarClientePorCnpj,
+  buscarClientePorCPF,
+  buscarClientePorCNPJ,
 } from '../persistence/cliente-persistence.service';
 import type { Cliente } from '@/backend/types/partes/clientes-types';
 
@@ -19,13 +19,13 @@ export async function obterClientePorId(id: number): Promise<Cliente | null> {
  * Busca um cliente por CPF
  */
 export async function obterClientePorCpf(cpf: string): Promise<Cliente | null> {
-  return buscarClientePorCpf(cpf);
+  return buscarClientePorCPF(cpf);
 }
 
 /**
  * Busca um cliente por CNPJ
  */
 export async function obterClientePorCnpj(cnpj: string): Promise<Cliente | null> {
-  return buscarClientePorCnpj(cnpj);
+  return buscarClientePorCNPJ(cnpj);
 }
 

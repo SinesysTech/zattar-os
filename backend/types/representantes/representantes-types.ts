@@ -39,57 +39,54 @@ export type SituacaoOAB =
 
 export type OrdenarPorRepresentante =
   | 'nome'
+  | 'cpf'
   | 'numero_oab'
+  | 'uf_oab'
   | 'situacao_oab'
-  | 'created_at'
-  | 'data_habilitacao';
+  | 'created_at';
 
 // ============================================================================
 // Main Interface
 // ============================================================================
 
 /**
- * Representante (Advogado) - campos disponíveis na API do PJE
+ * Representante (Advogado) - estrutura deduplicada por CPF
  * Representantes são sempre pessoas físicas
  *
  * Constraint UNIQUE em CPF garante que existe apenas um registro por pessoa.
+ * Campos de contexto de processo foram removidos após deduplicação.
+ * id_pessoa_pje foi movido para cadastros_pje.
  */
 export interface Representante {
   // Identification
   id: number;
 
   // Basic info
-  nome: string;
   cpf: string;
+  nome: string;
   sexo: string | null;
-  situacao: string | null;
-  status: string | null;
-  principal: boolean | null;
-  endereco_desconhecido: boolean | null;
 
   // Lawyer-specific
   tipo: string | null;
-  id_tipo_parte: number | null;
   numero_oab: string | null;
+  uf_oab: string | null;
   situacao_oab: string | null;
 
   // Contact
-  emails: string[];
+  emails: Record<string, unknown> | null; // JSONB array
+  email: string | null;
   ddd_celular: string | null;
   numero_celular: string | null;
   ddd_residencial: string | null;
   numero_residencial: string | null;
   ddd_comercial: string | null;
   numero_comercial: string | null;
-  email: string | null;
 
-  // Metadata
-  dados_anteriores: Record<string, unknown> | null;
-  ordem: number | null;
-  data_habilitacao: Date | null;
+  // Address & Metadata
   endereco_id: number | null;
-  created_at: Date;
-  updated_at: Date;
+  dados_anteriores: Record<string, unknown> | null;
+  created_at: Date | null;
+  updated_at: Date | null;
 }
 
 /**
@@ -107,7 +104,7 @@ export interface RepresentanteComEndereco extends Representante {
 
 /**
  * Parâmetros para criar novo representante
- * Agora simplificado para apenas dados da pessoa, sem contexto de processo.
+ * Simplificado para apenas dados da pessoa, sem contexto de processo.
  */
 export interface CriarRepresentanteParams {
   // Required fields
@@ -116,26 +113,20 @@ export interface CriarRepresentanteParams {
 
   // Optional fields
   sexo?: string | null;
-  situacao?: string | null;
-  status?: string | null;
-  principal?: boolean | null;
-  endereco_desconhecido?: boolean | null;
   tipo?: string | null;
-  id_tipo_parte?: number | null;
   numero_oab?: string | null;
+  uf_oab?: string | null;
   situacao_oab?: string | null;
-  emails?: string[];
+  emails?: Record<string, unknown> | null;
+  email?: string | null;
   ddd_celular?: string | null;
   numero_celular?: string | null;
   ddd_residencial?: string | null;
   numero_residencial?: string | null;
   ddd_comercial?: string | null;
   numero_comercial?: string | null;
-  email?: string | null;
-  dados_anteriores?: Record<string, unknown> | null;
-  ordem?: number | null;
-  data_habilitacao?: Date | string | null;
   endereco_id?: number | null;
+  dados_anteriores?: Record<string, unknown> | null;
 }
 
 /**
@@ -145,28 +136,23 @@ export interface AtualizarRepresentanteParams {
   id: number;
 
   // Updatable fields (all optional)
-  nome?: string;
   cpf?: string;
+  nome?: string;
   sexo?: string | null;
-  situacao?: string | null;
-  status?: string | null;
-  principal?: boolean | null;
-  endereco_desconhecido?: boolean | null;
   tipo?: string | null;
   numero_oab?: string | null;
+  uf_oab?: string | null;
   situacao_oab?: string | null;
-  emails?: string[];
+  emails?: Record<string, unknown> | null;
+  email?: string | null;
   ddd_celular?: string | null;
   numero_celular?: string | null;
   ddd_residencial?: string | null;
   numero_residencial?: string | null;
   ddd_comercial?: string | null;
   numero_comercial?: string | null;
-  email?: string | null;
-  dados_anteriores?: Record<string, unknown> | null;
-  ordem?: number | null;
-  data_habilitacao?: Date | string | null;
   endereco_id?: number | null;
+  dados_anteriores?: Record<string, unknown> | null;
 }
 
 /**
@@ -181,6 +167,7 @@ export interface ListarRepresentantesParams {
   nome?: string;
   cpf?: string;
   numero_oab?: string;
+  uf_oab?: string;
   situacao_oab?: string;
   busca?: string;
 

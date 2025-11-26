@@ -5,15 +5,15 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { upsertRepresentantePorIdPessoa } from '@/backend/representantes/services/representantes-persistence.service';
-import type { UpsertRepresentantePorIdPessoaParams } from '@/backend/types/representantes/representantes-types';
+import { upsertRepresentantePorCPF } from '@/backend/representantes/services/representantes-persistence.service';
+import type { UpsertRepresentantePorCPFParams } from '@/backend/types/representantes/representantes-types';
 
 /**
  * @swagger
  * /api/representantes/upsert:
  *   post:
  *     summary: Cria ou atualiza representante de forma idempotente
- *     description: Baseado na chave composta (id_pessoa_pje, trt, grau, parte_id, parte_tipo, numero_processo), cria novo registro ou atualiza existente. Múltiplas chamadas com mesmos dados não duplicam.
+ *     description: Baseado no CPF (chave única), cria novo registro ou atualiza existente. Múltiplas chamadas com mesmos dados não duplicam.
  *     tags: [Representantes]
  *     security:
  *       - bearerAuth: []
@@ -24,54 +24,27 @@ import type { UpsertRepresentantePorIdPessoaParams } from '@/backend/types/repre
  *           schema:
  *             type: object
  *             required:
- *               - id_pessoa_pje
- *               - trt
- *               - grau
- *               - parte_tipo
- *               - parte_id
- *               - numero_processo
- *               - tipo_pessoa
+ *               - cpf
  *               - nome
  *             properties:
- *               id_pessoa_pje:
- *                 type: integer
- *                 description: ID da pessoa no PJE
- *               trt:
+ *               cpf:
  *                 type: string
- *                 description: Tribunal Regional do Trabalho
- *               grau:
- *                 type: string
- *                 enum: ["1", "2"]
- *                 description: Grau do processo
- *               parte_tipo:
- *                 type: string
- *                 enum: [cliente, parte_contraria, terceiro]
- *                 description: Tipo de parte representada
- *               parte_id:
- *                 type: integer
- *                 description: ID da parte representada
- *               numero_processo:
- *                 type: string
- *                 description: Número do processo
- *               tipo_pessoa:
- *                 type: string
- *                 enum: [pf, pj]
- *                 description: Tipo de pessoa (física ou jurídica)
+ *                 description: CPF do representante (chave única)
  *               nome:
  *                 type: string
  *                 description: Nome completo do representante
- *               cpf:
- *                 type: string
- *                 description: CPF (obrigatório para pessoa física)
- *               cnpj:
- *                 type: string
- *                 description: CNPJ (obrigatório para pessoa jurídica)
  *               numero_oab:
  *                 type: string
  *                 description: Número da OAB
  *               uf_oab:
  *                 type: string
  *                 description: UF da OAB
+ *               situacao_oab:
+ *                 type: string
+ *                 description: Situação na OAB
+ *               email:
+ *                 type: string
+ *                 description: Email do representante
  *     responses:
  *       200:
  *         description: Representante criado ou atualizado com sucesso
@@ -85,6 +58,9 @@ import type { UpsertRepresentantePorIdPessoaParams } from '@/backend/types/repre
  *                   example: true
  *                 data:
  *                   $ref: '#/components/schemas/Representante'
+ *                 criado:
+ *                   type: boolean
+ *                   description: Indica se o registro foi criado (true) ou atualizado (false)
  *       400:
  *         description: Dados inválidos
  *       401:
@@ -105,18 +81,18 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json();
-    const params: UpsertRepresentantePorIdPessoaParams = body;
+    const params: UpsertRepresentantePorCPFParams = body;
 
     // Validate required fields
-    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id || !params.nome) {
+    if (!params.cpf || !params.nome) {
       return NextResponse.json(
-        { success: false, error: 'Campos obrigatórios não informados' },
+        { success: false, error: 'Campos obrigatórios não informados (cpf, nome)' },
         { status: 400 }
       );
     }
 
     // Upsert representante
-    const result = await upsertRepresentantePorIdPessoa(params);
+    const result = await upsertRepresentantePorCPF(params);
 
     if (!result.sucesso) {
       return NextResponse.json(
@@ -126,7 +102,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { success: true, data: result.representante },
+      { success: true, data: result.representante, criado: result.criado },
       { status: 200 }
     );
   } catch (error) {
