@@ -53,6 +53,7 @@ function converterParaPendente(data: Record<string, unknown>): PendenteManifesta
     arquivo_url: (data.arquivo_url as string | null) ?? null,
     arquivo_key: (data.arquivo_key as string | null) ?? null,
     arquivo_bucket: (data.arquivo_bucket as string | null) ?? null,
+    observacoes: (data.observacoes as string | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };

@@ -130,8 +130,17 @@ export function validarEmail(email: string): boolean {
  * Representantes são sempre pessoas físicas (advogados)
  */
 export function converterParaRepresentante(data: Record<string, unknown>): Representante {
-  // Parse JSON fields - emails é JSONB no banco
-  const emails = data.emails as Record<string, unknown> | null;
+  // Parse JSON fields - emails é JSONB no banco, mas precisa ser convertido para string[]
+  const rawEmails = data.emails;
+  let emails: string[] | null = null;
+  if (Array.isArray(rawEmails)) {
+    emails = rawEmails as string[];
+  } else if (rawEmails && typeof rawEmails === 'object') {
+    // Se for objeto, tentar extrair valores como strings
+    emails = Object.values(rawEmails).filter(v => typeof v === 'string') as string[];
+    if (emails.length === 0) emails = null;
+  }
+  
   const dados_anteriores = data.dados_anteriores as Record<string, unknown> | null;
 
   // Convert date strings to Date or null
