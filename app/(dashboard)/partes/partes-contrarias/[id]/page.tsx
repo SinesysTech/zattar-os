@@ -2,13 +2,13 @@
 
 /**
  * Página de visualização de parte contrária individual
+ * Exibe todos os campos do registro organizados em seções
  */
 
 import * as React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Pencil, Loader2 } from 'lucide-react';
 import {
   formatarCpf,
@@ -22,17 +22,86 @@ import { formatarCep } from '@/app/_lib/types';
 import type { ParteContraria } from '@/app/_lib/types';
 import type { Endereco } from '@/backend/types/partes/enderecos-types';
 
-// Extend ParteContraria to include optional endereco
-type ParteContrariaComEndereco = ParteContraria & {
+// Extend ParteContraria to include all optional fields from database
+type ParteContrariaCompleta = ParteContraria & {
   endereco?: Endereco | null;
+  // Campos PF adicionais
+  nome_genitora?: string | null;
+  uf_nascimento_id_pje?: number | null;
+  uf_nascimento_sigla?: string | null;
+  uf_nascimento_descricao?: string | null;
+  naturalidade_id_pje?: number | null;
+  naturalidade_municipio?: string | null;
+  naturalidade_estado_id_pje?: number | null;
+  naturalidade_estado_sigla?: string | null;
+  pais_nascimento_id_pje?: number | null;
+  pais_nascimento_codigo?: string | null;
+  pais_nascimento_descricao?: string | null;
+  escolaridade_codigo?: number | null;
+  situacao_cpf_receita_id?: number | null;
+  situacao_cpf_receita_descricao?: string | null;
+  pode_usar_celular_mensagem?: boolean | null;
+  // Campos PJ adicionais
+  data_abertura?: string | null;
+  data_fim_atividade?: string | null;
+  orgao_publico?: boolean | null;
+  tipo_pessoa_codigo_pje?: string | null;
+  tipo_pessoa_label_pje?: string | null;
+  tipo_pessoa_validacao_receita?: string | null;
+  ds_tipo_pessoa?: string | null;
+  situacao_cnpj_receita_id?: number | null;
+  situacao_cnpj_receita_descricao?: string | null;
+  ramo_atividade?: string | null;
+  cpf_responsavel?: string | null;
+  oficial?: boolean | null;
+  ds_prazo_expediente_automatico?: string | null;
+  porte_codigo?: number | null;
+  porte_descricao?: string | null;
+  // Campos de contato adicionais
+  ddd_comercial?: string | null;
+  numero_comercial?: string | null;
+  // Campos de sistema/IDs
+  id_pessoa_pje?: number | null;
+  login_pje?: string | null;
+  autoridade?: boolean | null;
+  ultima_atualizacao_pje?: string | null;
+  endereco_id?: number | null;
+  status_pje?: string | null;
+  situacao_pje?: string | null;
+  tipo_documento?: string | null;
+  genero?: string | null;
+  ativo?: boolean | null;
+  dados_anteriores?: any | null;
 };
+
+// Componente auxiliar para exibir campo
+function Campo({ label, value }: { label: string; value: React.ReactNode }) {
+  if (value === null || value === undefined || value === '') return null;
+  return (
+    <div>
+      <div className="text-sm font-medium text-muted-foreground mb-1">{label}</div>
+      <div className="text-base">{value}</div>
+    </div>
+  );
+}
+
+// Componente auxiliar para exibir campo booleano
+function CampoBooleano({ label, value }: { label: string; value: boolean | null | undefined }) {
+  if (value === null || value === undefined) return null;
+  return (
+    <div>
+      <div className="text-sm font-medium text-muted-foreground mb-1">{label}</div>
+      <div className="text-base">{value ? 'Sim' : 'Não'}</div>
+    </div>
+  );
+}
 
 export default function ParteContrariaPage() {
   const params = useParams();
   const router = useRouter();
   const parteId = params.id as string;
 
-  const [parte, setParte] = React.useState<ParteContrariaComEndereco | null>(null);
+  const [parte, setParte] = React.useState<ParteContrariaCompleta | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -98,14 +167,6 @@ export default function ParteContrariaPage() {
               <h1 className="text-3xl font-bold tracking-tight">
                 {formatarNome(parte.nome)}
               </h1>
-              {parte.situacao_pje && (
-                <Badge
-                  tone={parte.situacao_pje === 'A' ? 'success' : 'neutral'}
-                  variant={parte.situacao_pje === 'A' ? 'soft' : 'outline'}
-                >
-                  {parte.situacao_pje === 'A' ? 'Ativo' : 'Inativo'}
-                </Badge>
-              )}
               <Badge variant="outline" tone="neutral">
                 {formatarTipoPessoa(parte.tipo_pessoa)}
               </Badge>
@@ -115,7 +176,7 @@ export default function ParteContrariaPage() {
             </p>
           </div>
         </div>
-        <Button disabled>
+        <Button>
           <Pencil className="mr-2 h-4 w-4" />
           Editar Parte Contrária
         </Button>
@@ -128,99 +189,54 @@ export default function ParteContrariaPage() {
           <div className="rounded-lg border p-6 space-y-4">
             <h2 className="text-xl font-semibold">Informações Básicas</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
-                  {isPessoaFisica ? 'Nome Completo' : 'Razão Social'}
-                </div>
-                <div className="text-base">{formatarNome(parte.nome)}</div>
-              </div>
-              {parte.nome_social_fantasia && (
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
-                    {isPessoaFisica ? 'Nome Social' : 'Nome Fantasia'}
-                  </div>
-                  <div className="text-base">{parte.nome_social_fantasia}</div>
-                </div>
-              )}
+              <Campo
+                label={isPessoaFisica ? 'Nome Completo' : 'Razão Social'}
+                value={formatarNome(parte.nome)}
+              />
+              <Campo
+                label={isPessoaFisica ? 'Nome Social' : 'Nome Fantasia'}
+                value={parte.nome_social_fantasia}
+              />
               {isPessoaFisica ? (
                 <>
-                  {parte.cpf && (
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground mb-1">
-                        CPF
-                      </div>
-                      <div className="text-base">{formatarCpf(parte.cpf)}</div>
-                    </div>
-                  )}
-                  {parte.rg && (
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground mb-1">
-                        RG
-                      </div>
-                      <div className="text-base">{parte.rg}</div>
-                    </div>
-                  )}
-                  {parte.data_nascimento && (
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground mb-1">
-                        Data de Nascimento
-                      </div>
-                      <div className="text-base">
-                        {formatarData(parte.data_nascimento)}
-                      </div>
-                    </div>
-                  )}
-                  {parte.sexo && (
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground mb-1">
-                        Sexo
-                      </div>
-                      <div className="text-base capitalize">
-                        {parte.sexo.replace('_', ' ')}
-                      </div>
-                    </div>
-                  )}
-                  {parte.estado_civil && (
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground mb-1">
-                        Estado Civil
-                      </div>
-                      <div className="text-base capitalize">
-                        {parte.estado_civil.replace('_', ' ')}
-                      </div>
-                    </div>
-                  )}
-                  {parte.nacionalidade && (
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground mb-1">
-                        Nacionalidade
-                      </div>
-                      <div className="text-base">{parte.nacionalidade}</div>
-                    </div>
-                  )}
+                  <Campo label="CPF" value={parte.cpf ? formatarCpf(parte.cpf) : null} />
+                  <Campo label="RG" value={parte.rg} />
+                  <Campo label="Data de Nascimento" value={parte.data_nascimento ? formatarData(parte.data_nascimento) : null} />
+                  <Campo label="Sexo" value={parte.sexo?.replace('_', ' ')} />
+                  <Campo label="Gênero" value={parte.genero?.replace('_', ' ')} />
+                  <Campo label="Estado Civil" value={parte.estado_civil?.replace('_', ' ')} />
+                  <Campo label="Nacionalidade" value={parte.nacionalidade} />
+                  <Campo label="Nome da Genitora" value={parte.nome_genitora} />
+                  <Campo
+                    label="Naturalidade"
+                    value={parte.naturalidade_municipio ?
+                      `${parte.naturalidade_municipio}${parte.naturalidade_estado_sigla ? ` - ${parte.naturalidade_estado_sigla}` : ''}`
+                      : null
+                    }
+                  />
+                  <Campo
+                    label="UF de Nascimento"
+                    value={parte.uf_nascimento_descricao || parte.uf_nascimento_sigla}
+                  />
+                  <Campo label="País de Nascimento" value={parte.pais_nascimento_descricao} />
+                  <Campo label="Escolaridade" value={parte.escolaridade_codigo?.toString()} />
+                  <Campo label="Situação CPF na Receita" value={parte.situacao_cpf_receita_descricao} />
+                  <CampoBooleano label="Pode usar celular para mensagens" value={parte.pode_usar_celular_mensagem} />
                 </>
               ) : (
                 <>
-                  {parte.cnpj && (
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground mb-1">
-                        CNPJ
-                      </div>
-                      <div className="text-base">
-                        {formatarCnpj(parte.cnpj)}
-                      </div>
-                    </div>
-                  )}
-                  {parte.inscricao_estadual && (
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground mb-1">
-                        Inscrição Estadual
-                      </div>
-                      <div className="text-base">
-                        {parte.inscricao_estadual}
-                      </div>
-                    </div>
-                  )}
+                  <Campo label="CNPJ" value={parte.cnpj ? formatarCnpj(parte.cnpj) : null} />
+                  <Campo label="Inscrição Estadual" value={parte.inscricao_estadual} />
+                  <Campo label="Data de Abertura" value={parte.data_abertura ? formatarData(parte.data_abertura) : null} />
+                  <Campo label="Data Fim Atividade" value={parte.data_fim_atividade ? formatarData(parte.data_fim_atividade) : null} />
+                  <Campo label="Ramo de Atividade" value={parte.ramo_atividade} />
+                  <Campo label="Porte" value={parte.porte_descricao} />
+                  <Campo label="CPF do Responsável" value={parte.cpf_responsavel ? formatarCpf(parte.cpf_responsavel) : null} />
+                  <Campo label="Tipo de Pessoa (PJE)" value={parte.tipo_pessoa_label_pje || parte.ds_tipo_pessoa} />
+                  <Campo label="Situação CNPJ na Receita" value={parte.situacao_cnpj_receita_descricao} />
+                  <CampoBooleano label="Órgão Público" value={parte.orgao_publico} />
+                  <CampoBooleano label="Oficial" value={parte.oficial} />
+                  <Campo label="Prazo Expediente Automático" value={parte.ds_prazo_expediente_automatico} />
                 </>
               )}
             </div>
@@ -231,34 +247,28 @@ export default function ParteContrariaPage() {
             <h2 className="text-xl font-semibold">Contato</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {parte.emails && parte.emails.length > 0 && (
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
-                    E-mail{parte.emails.length > 1 ? 's' : ''}
-                  </div>
-                  <div className="text-base">
-                    {parte.emails.join(', ')}
-                  </div>
-                </div>
+                <Campo
+                  label={`E-mail${parte.emails.length > 1 ? 's' : ''}`}
+                  value={parte.emails.join(', ')}
+                />
               )}
               {parte.ddd_residencial && parte.numero_residencial && (
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
-                    Telefone
-                  </div>
-                  <div className="text-base">
-                    {formatarTelefone(`${parte.ddd_residencial}${parte.numero_residencial}`)}
-                  </div>
-                </div>
+                <Campo
+                  label="Telefone Residencial"
+                  value={formatarTelefone(`${parte.ddd_residencial}${parte.numero_residencial}`)}
+                />
               )}
               {parte.ddd_celular && parte.numero_celular && (
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
-                    Celular
-                  </div>
-                  <div className="text-base">
-                    {formatarTelefone(`${parte.ddd_celular}${parte.numero_celular}`)}
-                  </div>
-                </div>
+                <Campo
+                  label="Celular"
+                  value={formatarTelefone(`${parte.ddd_celular}${parte.numero_celular}`)}
+                />
+              )}
+              {parte.ddd_comercial && parte.numero_comercial && (
+                <Campo
+                  label="Telefone Comercial"
+                  value={formatarTelefone(`${parte.ddd_comercial}${parte.numero_comercial}`)}
+                />
               )}
             </div>
           </div>
@@ -268,52 +278,24 @@ export default function ParteContrariaPage() {
             <div className="rounded-lg border p-6 space-y-4">
               <h2 className="text-xl font-semibold">Endereço</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {parte.endereco.logradouro && (
-                  <div>
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
-                      Logradouro
-                    </div>
-                    <div className="text-base">
-                      {parte.endereco.logradouro}
-                      {parte.endereco.numero && `, ${parte.endereco.numero}`}
-                    </div>
-                  </div>
-                )}
-                {parte.endereco.complemento && (
-                  <div>
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
-                      Complemento
-                    </div>
-                    <div className="text-base">{parte.endereco.complemento}</div>
-                  </div>
-                )}
-                {parte.endereco.bairro && (
-                  <div>
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
-                      Bairro
-                    </div>
-                    <div className="text-base">{parte.endereco.bairro}</div>
-                  </div>
-                )}
-                {parte.endereco.municipio && (
-                  <div>
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
-                      Município
-                    </div>
-                    <div className="text-base">
-                      {parte.endereco.municipio}
-                      {parte.endereco.estado_sigla && ` - ${parte.endereco.estado_sigla}`}
-                    </div>
-                  </div>
-                )}
-                {parte.endereco.cep && (
-                  <div>
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
-                      CEP
-                    </div>
-                    <div className="text-base">{formatarCep(parte.endereco.cep)}</div>
-                  </div>
-                )}
+                <Campo
+                  label="Logradouro"
+                  value={parte.endereco.logradouro ?
+                    `${parte.endereco.logradouro}${parte.endereco.numero ? `, ${parte.endereco.numero}` : ''}`
+                    : null
+                  }
+                />
+                <Campo label="Complemento" value={parte.endereco.complemento} />
+                <Campo label="Bairro" value={parte.endereco.bairro} />
+                <Campo
+                  label="Município"
+                  value={parte.endereco.municipio ?
+                    `${parte.endereco.municipio}${parte.endereco.estado_sigla ? ` - ${parte.endereco.estado_sigla}` : ''}`
+                    : null
+                  }
+                />
+                <Campo label="CEP" value={parte.endereco.cep ? formatarCep(parte.endereco.cep) : null} />
+                <Campo label="País" value={parte.endereco.pais} />
               </div>
             </div>
           )}
@@ -328,26 +310,21 @@ export default function ParteContrariaPage() {
             </div>
           )}
 
-          {/* Informações do Sistema */}
+          {/* Identificadores e Metadados */}
           <div className="rounded-lg border p-6 space-y-4">
-            <h2 className="text-xl font-semibold">Informações do Sistema</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
-                  Data de Criação
-                </div>
-                <div className="text-base">
-                  {formatarData(parte.created_at)}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
-                  Última Atualização
-                </div>
-                <div className="text-base">
-                  {formatarData(parte.updated_at)}
-                </div>
-              </div>
+            <h2 className="text-xl font-semibold">Identificadores e Metadados</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Campo label="ID" value={parte.id} />
+              <Campo label="ID Pessoa PJE" value={parte.id_pessoa_pje} />
+              <Campo label="Login PJE" value={parte.login_pje} />
+              <CampoBooleano label="Autoridade" value={parte.autoridade} />
+              <CampoBooleano label="Ativo" value={parte.ativo} />
+              <Campo label="Tipo Documento" value={parte.tipo_documento} />
+              <Campo label="Endereço ID" value={parte.endereco_id} />
+              <Campo label="Criado por (ID)" value={parte.created_by} />
+              <Campo label="Data de Criação" value={formatarData(parte.created_at)} />
+              <Campo label="Última Atualização" value={formatarData(parte.updated_at)} />
+              <Campo label="Última Atualização PJE" value={parte.ultima_atualizacao_pje ? formatarData(parte.ultima_atualizacao_pje) : null} />
             </div>
           </div>
         </div>
