@@ -295,6 +295,9 @@ export async function salvarAudiencias(
         numero_processo: numeroProcesso,
         data_inicio: parseDate(audiencia.dataInicio),
         data_fim: parseDate(audiencia.dataFim),
+        // Horários extraídos de pautaAudienciaHorario (formato HH:MM:SS)
+        hora_inicio: audiencia.pautaAudienciaHorario?.horaInicial ?? null,
+        hora_fim: audiencia.pautaAudienciaHorario?.horaFinal ?? null,
         sala_audiencia_nome: audiencia.salaAudiencia?.nome?.trim() ?? null,
         status: audiencia.status,
         status_descricao: audiencia.statusDescricao?.trim() ?? null,
@@ -302,17 +305,14 @@ export async function salvarAudiencias(
         em_andamento: audiencia.emAndamento ?? false,
         documento_ativo: audiencia.documentoAtivo ?? false,
         polo_ativo_nome: audiencia.poloAtivo?.nome?.trim() ?? null,
-        polo_ativo_cpf: audiencia.poloAtivo?.cpf?.trim() ?? null,
         polo_ativo_representa_varios: audiencia.poloAtivo?.representaVarios ?? false,
         polo_passivo_nome: audiencia.poloPassivo?.nome?.trim() ?? null,
-        polo_passivo_cnpj: audiencia.poloPassivo?.cnpj?.trim() ?? null,
         polo_passivo_representa_varios: audiencia.poloPassivo?.representaVarios ?? false,
         url_audiencia_virtual: audiencia.urlAudienciaVirtual?.trim() ?? null,
         segredo_justica: audiencia.processo?.segredoDeJustica ?? false,
         juizo_digital: audiencia.processo?.juizoDigital ?? false,
-        pauta_audiencia_horario_id: audiencia.pautaAudienciaHorario?.id ?? null,
+        // modalidade é populada automaticamente pelo trigger baseado em url_audiencia_virtual, tipo_audiencia e endereco_presencial
         ata_audiencia_id: atas?.[audiencia.id]?.documentoId ?? null,
-        url: atas?.[audiencia.id]?.url ?? null,
       };
 
       // Buscar registro existente

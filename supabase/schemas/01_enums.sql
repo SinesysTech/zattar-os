@@ -133,6 +133,14 @@ create type public.status_audiencia as enum (
 );
 comment on type public.status_audiencia is 'Status da audiência: C=Cancelada, M=Designada, F=Realizada';
 
+-- Modalidade de audiência
+create type public.modalidade_audiencia as enum (
+  'virtual',      -- Audiência por videoconferência
+  'presencial',   -- Audiência física
+  'hibrida'       -- Audiência híbrida (parte presencial, parte virtual)
+);
+comment on type public.modalidade_audiencia is 'Modalidade de participação na audiência: virtual (videoconferência), presencial (física) ou híbrida (mista)';
+
 -- ----------------------------------------------------------------------------
 -- Enums de Captura
 -- ----------------------------------------------------------------------------

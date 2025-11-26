@@ -8,6 +8,7 @@ import type {
   Audiencia,
   ListarAudienciasParams,
   ListarAudienciasResult,
+  ModalidadeAudiencia,
 } from '@/backend/types/audiencias/types';
 
 /**
@@ -28,6 +29,9 @@ function converterParaAudiencia(data: Record<string, unknown>): Audiencia {
     classe_judicial_id: (data.classe_judicial_id as number | null) ?? null,
     data_inicio: data.data_inicio as string,
     data_fim: data.data_fim as string,
+    hora_inicio: (data.hora_inicio as string | null) ?? null,
+    hora_fim: (data.hora_fim as string | null) ?? null,
+    modalidade: (data.modalidade as ModalidadeAudiencia | null) ?? null,
     sala_audiencia_nome: (data.sala_audiencia_nome as string | null) ?? null,
     sala_audiencia_id: (data.sala_audiencia_id as number | null) ?? null,
     status: data.status as string,
@@ -43,7 +47,6 @@ function converterParaAudiencia(data: Record<string, unknown>): Audiencia {
     polo_passivo_nome: (data.polo_passivo_nome as string | null) ?? null,
     url_audiencia_virtual: (data.url_audiencia_virtual as string | null) ?? null,
     ata_audiencia_id: (data.ata_audiencia_id as number | null) ?? null,
-    url: (data.url as string | null) ?? null,
     endereco_presencial: (data.endereco_presencial as {
       logradouro?: string;
       numero?: string;
@@ -150,6 +153,11 @@ export async function listarAudiencias(
 
   if (params.tipo_is_virtual !== undefined) {
     query = query.eq('tipo_is_virtual', params.tipo_is_virtual);
+  }
+
+  // Filtro de modalidade (virtual, presencial, híbrida)
+  if (params.modalidade) {
+    query = query.eq('modalidade', params.modalidade);
   }
 
   // Filtros de data

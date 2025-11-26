@@ -127,7 +127,13 @@ function parseNumber(value: string | null): number | undefined {
  *         name: tipo_is_virtual
  *         schema:
  *           type: boolean
- *         description: Filtrar por audiências virtuais (true) ou presenciais (false)
+ *         description: Filtrar por audiências virtuais (true) ou presenciais (false) - DEPRECATED, use 'modalidade' em vez disso
+ *       - in: query
+ *         name: modalidade
+ *         schema:
+ *           type: string
+ *           enum: [virtual, presencial, hibrida]
+ *         description: Filtrar por modalidade da audiência (virtual, presencial ou híbrida)
  *       - in: query
  *         name: data_inicio_inicio
  *         schema:
@@ -156,7 +162,7 @@ function parseNumber(value: string | null): number | undefined {
  *         name: ordenar_por
  *         schema:
  *           type: string
- *           enum: [data_inicio, data_fim, numero_processo, polo_ativo_nome, polo_passivo_nome, status, tipo_descricao, created_at, updated_at]
+ *           enum: [data_inicio, data_fim, hora_inicio, hora_fim, numero_processo, polo_ativo_nome, polo_passivo_nome, status, modalidade, tipo_descricao, created_at, updated_at]
  *           default: data_inicio
  *         description: Campo para ordenação
  *       - in: query
@@ -252,6 +258,7 @@ export async function GET(request: NextRequest) {
       polo_ativo_nome: searchParams.get('polo_ativo_nome') || undefined,
       polo_passivo_nome: searchParams.get('polo_passivo_nome') || undefined,
       status: searchParams.get('status') || undefined,
+      modalidade: searchParams.get('modalidade') as ListarAudienciasParams['modalidade'] | undefined,
       tipo_descricao: searchParams.get('tipo_descricao') || undefined,
       tipo_codigo: searchParams.get('tipo_codigo') || undefined,
       tipo_is_virtual: parseBoolean(searchParams.get('tipo_is_virtual')),

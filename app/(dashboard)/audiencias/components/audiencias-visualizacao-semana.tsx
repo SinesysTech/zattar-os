@@ -363,7 +363,7 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
           const idx = u.indexOf('/processos/');
           return idx >= 0 ? u.slice(idx) : null;
         };
-        const fileKey = deriveKeyFromUrl(audiencia.url);
+        const fileKey = deriveKeyFromUrl(null); // TODO: Implementar quando tabela de documentos/atas estiver disponível
         return (
           <div className="min-h-10 flex flex-col items-center justify-center text-sm font-medium gap-1">
             {formatarHora(row.getValue('data_inicio'))}
@@ -450,7 +450,7 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
           const idx = u.indexOf('/processos/');
           return idx >= 0 ? u.slice(idx) : null;
         };
-        const fileKey = deriveKeyFromUrl(audiencia.url);
+        const fileKey = deriveKeyFromUrl(null); // TODO: Implementar quando tabela de documentos/atas estiver disponível
         const canOpenAta = audiencia.status === 'F' && fileKey !== null;
 
         return (

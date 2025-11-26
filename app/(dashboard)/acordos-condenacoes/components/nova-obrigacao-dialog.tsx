@@ -60,6 +60,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
   const [valorTotal, setValorTotal] = React.useState('');
   const [numeroParcelas, setNumeroParcelas] = React.useState('1');
   const [dataVencimentoPrimeiraParcela, setDataVencimentoPrimeiraParcela] = React.useState('');
+  const [formaPagamentoPadrao, setFormaPagamentoPadrao] = React.useState<string>('');
   const [formaDistribuicao, setFormaDistribuicao] = React.useState('');
   const [observacoes, setObservacoes] = React.useState('');
 
@@ -133,6 +134,11 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
       return;
     }
 
+    if (!formaPagamentoPadrao) {
+      setError('Forma de pagamento é obrigatória');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -148,6 +154,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
           valorTotal: parseFloat(valorTotal),
           numeroParcelas: parseInt(numeroParcelas),
           dataVencimentoPrimeiraParcela,
+          formaPagamentoPadrao,
           formaDistribuicao: formaDistribuicao || undefined,
           observacoes: observacoes || undefined,
         }),
@@ -180,6 +187,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
     setValorTotal('');
     setNumeroParcelas('1');
     setDataVencimentoPrimeiraParcela('');
+    setFormaPagamentoPadrao('');
     setFormaDistribuicao('');
     setObservacoes('');
     setError(null);
@@ -333,16 +341,31 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
             </div>
           </div>
 
-          {/* Data de Vencimento da Primeira Parcela */}
-          <div className="space-y-2">
-            <Label htmlFor="dataVencimento">Data de Vencimento da Primeira Parcela *</Label>
-            <Input
-              id="dataVencimento"
-              type="date"
-              value={dataVencimentoPrimeiraParcela}
-              onChange={(e) => setDataVencimentoPrimeiraParcela(e.target.value)}
-              required
-            />
+          {/* Data de Vencimento e Forma de Pagamento */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="dataVencimento">Data Venc. 1ª Parcela *</Label>
+              <Input
+                id="dataVencimento"
+                type="date"
+                value={dataVencimentoPrimeiraParcela}
+                onChange={(e) => setDataVencimentoPrimeiraParcela(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="formaPagamento">Forma de Pagamento *</Label>
+              <Select value={formaPagamentoPadrao} onValueChange={setFormaPagamentoPadrao}>
+                <SelectTrigger id="formaPagamento">
+                  <SelectValue placeholder="Selecione a forma" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="transferencia_direta">Transferência Direta</SelectItem>
+                  <SelectItem value="deposito_judicial">Depósito Judicial</SelectItem>
+                  <SelectItem value="deposito_recursal">Depósito Recursal</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Forma de Distribuição */}

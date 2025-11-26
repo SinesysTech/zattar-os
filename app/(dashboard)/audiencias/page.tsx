@@ -609,7 +609,7 @@ function criarColunas(
           const idx = u.indexOf('/processos/');
           return idx >= 0 ? u.slice(idx) : null;
         };
-        const fileKey = deriveKeyFromUrl(audiencia.url);
+        const fileKey = deriveKeyFromUrl(null); // TODO: Implementar quando tabela de documentos/atas estiver disponível
         return (
           <div className="min-h-10 flex flex-col items-center justify-center text-sm gap-1">
             <div className="font-medium">{formatarData(dataInicio)}</div>
@@ -700,7 +700,7 @@ function criarColunas(
           const idx = u.indexOf('/processos/');
           return idx >= 0 ? u.slice(idx) : null;
         };
-        const fileKey = deriveKeyFromUrl(audiencia.url);
+        const fileKey = deriveKeyFromUrl(null); // TODO: Implementar quando tabela de documentos/atas estiver disponível
         const canOpenAta = audiencia.status === 'F' && fileKey !== null;
 
         return (

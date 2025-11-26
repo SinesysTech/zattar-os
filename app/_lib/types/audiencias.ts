@@ -30,6 +30,11 @@ export interface BuscarAudienciasParams extends Partial<ListarAudienciasParams> 
 }
 
 /**
+ * Modalidade da audiência (re-exportado do backend)
+ */
+export type { ModalidadeAudiencia } from '@/backend/types/audiencias/types';
+
+/**
  * Estado de filtros da página de audiências
  */
 export interface AudienciasFilters {
@@ -42,6 +47,7 @@ export interface AudienciasFilters {
   polo_ativo_nome?: string;
   polo_passivo_nome?: string;
   status?: string;
+  modalidade?: 'virtual' | 'presencial' | 'hibrida';
   tipo_descricao?: string;
   tipo_codigo?: string;
   tipo_is_virtual?: boolean;

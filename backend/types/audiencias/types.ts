@@ -13,10 +13,13 @@ export type GrauAudiencia = GrauAcervo;
 export type OrdenarPorAudiencia =
   | 'data_inicio'
   | 'data_fim'
+  | 'hora_inicio'
+  | 'hora_fim'
   | 'numero_processo'
   | 'polo_ativo_nome'
   | 'polo_passivo_nome'
   | 'status'
+  | 'modalidade'
   | 'tipo_descricao'
   | 'trt'
   | 'grau'
@@ -37,6 +40,11 @@ export type OrdemAudiencia = 'asc' | 'desc';
 export type StatusAudiencia = 'M' | 'F' | 'C'; // M=Designada, F=Realizada, C=Cancelada
 
 /**
+ * Modalidade da audiência
+ */
+export type ModalidadeAudiencia = 'virtual' | 'presencial' | 'hibrida';
+
+/**
  * Registro de audiência completo baseado no schema do banco
  */
 export interface Audiencia {
@@ -53,6 +61,9 @@ export interface Audiencia {
   classe_judicial_id: number | null; // FK para classe_judicial
   data_inicio: string; // ISO timestamp
   data_fim: string; // ISO timestamp
+  hora_inicio: string | null; // Formato HH:MM:SS (extraído de pautaAudienciaHorario)
+  hora_fim: string | null; // Formato HH:MM:SS (extraído de pautaAudienciaHorario)
+  modalidade: ModalidadeAudiencia | null; // virtual, presencial ou híbrida
   sala_audiencia_nome: string | null; // Cache desnormalizado (histórico)
   sala_audiencia_id: number | null; // FK para sala_audiencia
   status: string;
@@ -68,7 +79,6 @@ export interface Audiencia {
   polo_passivo_nome: string | null;
   url_audiencia_virtual: string | null;
   ata_audiencia_id: number | null;
-  url: string | null;
   endereco_presencial: {
     logradouro?: string;
     numero?: string;
@@ -108,6 +118,7 @@ export interface ListarAudienciasParams {
   polo_ativo_nome?: string;
   polo_passivo_nome?: string;
   status?: StatusAudiencia | string; // Aceita string para flexibilidade
+  modalidade?: ModalidadeAudiencia; // virtual, presencial ou híbrida
   tipo_descricao?: string;
   tipo_codigo?: string;
   tipo_is_virtual?: boolean;
