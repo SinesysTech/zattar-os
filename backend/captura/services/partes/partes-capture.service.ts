@@ -531,8 +531,8 @@ async function processarParteComTransacao(
  * Deleta entidade (para rollback)
  */
 async function deletarEntidade(tipoParte: TipoParteClassificacao, entidadeId: number): Promise<void> {
-  const { createClient } = await import('@/backend/utils/supabase/server-client');
-  const supabase = await createClient();
+  const { createServiceClient } = await import('@/backend/utils/supabase/service-client');
+  const supabase = createServiceClient();
 
   let tableName: string;
   if (tipoParte === 'cliente') tableName = 'clientes';
@@ -957,8 +957,8 @@ async function vincularEnderecoNaEntidade(
   enderecoId: number
 ): Promise<void> {
   try {
-    const { createClient } = await import('@/backend/utils/supabase/server-client');
-    const supabase = await createClient();
+    const { createServiceClient } = await import('@/backend/utils/supabase/service-client');
+    const supabase = createServiceClient();
 
     let tableName: string;
     if (tipoParte === 'cliente') {

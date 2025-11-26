@@ -227,7 +227,8 @@ export function TerceirosTab({}: TerceirosTabProps) {
         size: 100,
         cell: ({ row }) => {
           const situacao = row.getValue('situacao') as string | null;
-          const ativo = situacao === 'A';
+          // PJE pode retornar 'A', 'Ativo', ou null
+          const ativo = situacao === 'A' || situacao?.toLowerCase() === 'ativo';
           return (
             <div className="min-h-10 flex items-center justify-center">
               <Badge tone={ativo ? 'success' : 'neutral'} variant={ativo ? 'soft' : 'outline'}>
