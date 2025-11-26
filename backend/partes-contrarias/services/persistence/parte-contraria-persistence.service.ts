@@ -6,6 +6,8 @@ import type {
   ParteContraria,
   ParteContrariaComEndereco,
   CriarParteContrariaParams,
+  CriarParteContrariaPFParams,
+  CriarParteContrariaPJParams,
   AtualizarParteContrariaParams,
   ListarPartesContrariasParams,
   ListarPartesContrariasResult,

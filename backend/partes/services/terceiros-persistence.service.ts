@@ -241,8 +241,7 @@ export async function criarTerceiro(
 ): Promise<{ sucesso: boolean; terceiro?: Terceiro; erro?: string }> {
   try {
     // Validate required fields (campos de processo foram removidos - vão para processo_partes)
-    if (!params.id_pessoa_pje ||
-        !params.tipo_parte || !params.polo ||
+    if (!params.tipo_parte || !params.polo ||
         !params.tipo_pessoa || !params.nome) {
       return {
         sucesso: false,
@@ -436,9 +435,6 @@ export async function listarTerceiros(
     }
     if (params.cnpj) {
       query = query.eq('cnpj', params.cnpj.replace(/\D/g, ''));
-    }
-    if (params.id_pessoa_pje) {
-      query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
     }
     if (params.busca) {
       query = query.or(`nome.ilike.%${params.busca}%,cpf.ilike.%${params.busca}%,cnpj.ilike.%${params.busca}%,nome_social.ilike.%${params.busca}%`);

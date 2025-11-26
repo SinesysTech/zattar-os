@@ -14,7 +14,7 @@ import type {
   ListarCadastrosPJEResult,
 } from '@/backend/types/partes/cadastros-pje-types';
 
-const logger = getLogger('cadastro-pje-persistence');
+const logger = getLogger({ module: 'cadastro-pje-persistence' });
 
 /**
  * Resultado de busca de entidade por ID PJE
@@ -247,14 +247,14 @@ export async function listarCadastrosPJEPorEntidade(
 
     const cadastros = (data || []) as CadastroPJE[];
     const total = count ?? 0;
-    const totalPaginas = Math.ceil(total / limite);
+    const total_paginas = Math.ceil(total / limite);
 
     return {
       cadastros,
       pagina,
       limite,
       total,
-      totalPaginas,
+      total_paginas,
     };
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);
@@ -298,14 +298,14 @@ export async function listarCadastrosPJEPorTribunal(
 
     const cadastros = (data || []) as CadastroPJE[];
     const total = count ?? 0;
-    const totalPaginas = Math.ceil(total / limite);
+    const total_paginas = Math.ceil(total / limite);
 
     return {
       cadastros,
       pagina,
       limite,
       total,
-      totalPaginas,
+      total_paginas,
     };
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);
