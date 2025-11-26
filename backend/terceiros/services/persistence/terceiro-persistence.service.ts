@@ -9,7 +9,9 @@ import type {
   AtualizarTerceiroParams,
   ListarTerceirosParams,
   ListarTerceirosResult,
-  UpsertTerceiroPorIdPessoaParams,
+  UpsertTerceiroPorCPFParams,
+  UpsertTerceiroPorCNPJParams,
+  UpsertTerceiroPorDocumentoParams,
 } from '@/backend/types/partes/terceiros-types';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
 
@@ -70,8 +72,6 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
 
   const base = {
     id: data.id as number,
-    // id_pje removido
-    id_pessoa_pje: data.id_pessoa_pje as number,
     tipo_parte: data.tipo_parte as
       | 'PERITO'
       | 'MINISTERIO_PUBLICO'
@@ -92,7 +92,7 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
     ddd_comercial: (data.ddd_comercial as string | null) ?? null,
     numero_comercial: (data.numero_comercial as string | null) ?? null,
     fax: (data.fax as string | null) ?? null,
-    situacao: (data.situacao as 'A' | 'I' | 'E' | 'H' | null) ?? null,
+    situacao: (data.situacao_pje as 'A' | 'I' | 'E' | 'H' | null) ?? null,
     observacoes: (data.observacoes as string | null) ?? null,
     dados_anteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
     endereco_id: (data.endereco_id as number | null) ?? null,
@@ -228,8 +228,6 @@ export async function criarTerceiro(
 
     // Preparar dados para inserção
     const dadosNovos: Record<string, unknown> = {
-      // id_pje removido
-      id_pessoa_pje: params.id_pessoa_pje,
       tipo_parte: params.tipo_parte,
       polo: params.polo,
       tipo_pessoa: params.tipo_pessoa,
@@ -327,8 +325,6 @@ export async function atualizarTerceiro(
     // Preparar dados para atualização
     const dadosAtualizacao: Record<string, unknown> = {};
 
-    // if (params.id_pje !== undefined) dadosAtualizacao.id_pje = params.id_pje; // Removido
-    if (params.id_pessoa_pje !== undefined) dadosAtualizacao.id_pessoa_pje = params.id_pessoa_pje;
     if (params.tipo_parte !== undefined) dadosAtualizacao.tipo_parte = params.tipo_parte;
     if (params.polo !== undefined) dadosAtualizacao.polo = params.polo;
     if (params.nome !== undefined) dadosAtualizacao.nome = params.nome.trim();
@@ -454,19 +450,40 @@ export async function buscarTerceiroPorId(id: number): Promise<Terceiro | null> 
 }
 
 /**
- * Busca um terceiro por id_pessoa_pje
+ * Busca um terceiro por CPF
  */
-export async function buscarTerceiroPorIdPessoaPje(id_pessoa_pje: number): Promise<Terceiro | null> {
+export async function buscarTerceiroPorCPF(cpf: string): Promise<Terceiro | null> {
   const supabase = createServiceClient();
+  const cpfNormalizado = normalizarCpf(cpf);
 
   const { data, error } = await supabase
     .from('terceiros')
     .select('*')
-    .eq('id_pessoa_pje', id_pessoa_pje)
+    .eq('cpf', cpfNormalizado)
     .maybeSingle();
 
   if (error) {
-    throw new Error(`Erro ao buscar por id_pessoa_pje: ${error.message}`);
+    throw new Error(`Erro ao buscar terceiro por CPF: ${error.message}`);
+  }
+
+  return data ? converterParaTerceiro(data) : null;
+}
+
+/**
+ * Busca um terceiro por CNPJ
+ */
+export async function buscarTerceiroPorCNPJ(cnpj: string): Promise<Terceiro | null> {
+  const supabase = createServiceClient();
+  const cnpjNormalizado = normalizarCnpj(cnpj);
+
+  const { data, error } = await supabase
+    .from('terceiros')
+    .select('*')
+    .eq('cnpj', cnpjNormalizado)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Erro ao buscar terceiro por CNPJ: ${error.message}`);
   }
 
   return data ? converterParaTerceiro(data) : null;
@@ -530,9 +547,7 @@ export async function listarTerceiros(
     query = query.eq('cnpj', normalizarCnpj(params.cnpj));
   }
 
-  if (params.id_pessoa_pje) {
-    query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
-  }
+  // id_pessoa_pje foi movido para cadastros_pje
 
   const ordenarPor = params.ordenar_por ?? 'created_at';
   const ordem = params.ordem ?? 'desc';
@@ -560,29 +575,94 @@ export async function listarTerceiros(
 }
 
 /**
- * Upsert por id_pessoa_pje (cria se não existir, atualiza se existir)
+ * Upsert terceiro por CPF
  */
-export async function upsertTerceiroPorIdPessoa(
-  params: UpsertTerceiroPorIdPessoaParams
-): Promise<OperacaoTerceiroResult> {
+export async function upsertTerceiroPorCPF(
+  params: UpsertTerceiroPorCPFParams
+): Promise<OperacaoTerceiroResult & { criado: boolean }> {
   try {
-    const existente = await buscarTerceiroPorIdPessoaPje(params.id_pessoa_pje);
+    const supabase = createServiceClient();
+    const cpfNormalizado = normalizarCpf(params.cpf);
 
-    if (existente) {
-      const result = await atualizarTerceiro({
-        ...params,
-        id: existente.id,
-      } as any);
-      return { ...result, criado: false };
-    } else {
-      const result = await criarTerceiro(params);
-      return { ...result, criado: true };
+    const { data: existente } = await supabase
+      .from('terceiros')
+      .select('id')
+      .eq('cpf', cpfNormalizado)
+      .maybeSingle();
+
+    const criado = !existente;
+
+    const row: Record<string, unknown> = {
+      ...params,
+      tipo_pessoa: 'pf',
+      cpf: cpfNormalizado,
+    };
+
+    const { data, error } = await supabase
+      .from('terceiros')
+      .upsert(row, { onConflict: 'cpf' })
+      .select()
+      .single();
+
+    if (error) {
+      return { sucesso: false, erro: error.message, criado: false };
     }
+
+    return { sucesso: true, terceiro: converterParaTerceiro(data), criado };
   } catch (error) {
     const erroMsg = error instanceof Error ? error.message : String(error);
-    console.error('Erro inesperado ao fazer upsert:', error);
-    return { sucesso: false, erro: `Erro inesperado: ${erroMsg}` };
+    return { sucesso: false, erro: `Erro inesperado: ${erroMsg}`, criado: false };
   }
+}
+
+/**
+ * Upsert terceiro por CNPJ
+ */
+export async function upsertTerceiroPorCNPJ(
+  params: UpsertTerceiroPorCNPJParams
+): Promise<OperacaoTerceiroResult & { criado: boolean }> {
+  try {
+    const supabase = createServiceClient();
+    const cnpjNormalizado = normalizarCnpj(params.cnpj);
+
+    const { data: existente } = await supabase
+      .from('terceiros')
+      .select('id')
+      .eq('cnpj', cnpjNormalizado)
+      .maybeSingle();
+
+    const criado = !existente;
+
+    const row: Record<string, unknown> = {
+      ...params,
+      tipo_pessoa: 'pj',
+      cnpj: cnpjNormalizado,
+    };
+
+    const { data, error } = await supabase
+      .from('terceiros')
+      .upsert(row, { onConflict: 'cnpj' })
+      .select()
+      .single();
+
+    if (error) {
+      return { sucesso: false, erro: error.message, criado: false };
+    }
+
+    return { sucesso: true, terceiro: converterParaTerceiro(data), criado };
+  } catch (error) {
+    const erroMsg = error instanceof Error ? error.message : String(error);
+    return { sucesso: false, erro: `Erro inesperado: ${erroMsg}`, criado: false };
+  }
+}
+
+/**
+ * Upsert terceiro por documento (CPF ou CNPJ)
+ */
+export async function upsertTerceiroPorDocumento(
+  params: UpsertTerceiroPorDocumentoParams
+): Promise<OperacaoTerceiroResult & { criado: boolean }> {
+  return 'cpf' in params ? upsertTerceiroPorCPF(params) : upsertTerceiroPorCNPJ(params);
 }
 
 /**
@@ -696,9 +776,7 @@ export async function listarTerceirosComEndereco(
     query = query.eq('cnpj', normalizarCnpj(params.cnpj));
   }
 
-  if (params.id_pessoa_pje) {
-    query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
-  }
+  // id_pessoa_pje foi movido para cadastros_pje
 
   // Ordenação
   const ordenarPor = params.ordenar_por ?? 'created_at';
