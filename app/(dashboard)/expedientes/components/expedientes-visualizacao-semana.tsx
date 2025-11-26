@@ -1230,6 +1230,30 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     });
   };
 
+  const temExpedientesNaSemana = React.useMemo(() => {
+    return (
+      expedientesPorDia.segunda.length +
+      expedientesPorDia.terca.length +
+      expedientesPorDia.quarta.length +
+      expedientesPorDia.quinta.length +
+      expedientesPorDia.sexta.length
+    ) > 0;
+  }, [expedientesPorDia]);
+
+  if (!isLoading && !temExpedientesNaSemana) {
+    return (
+      <div className="mt-0">
+        <DataTable
+          data={expedientes}
+          columns={colunas}
+          isLoading={isLoading}
+          error={null}
+          emptyMessage="Nenhum expediente encontrado."
+        />
+      </div>
+    );
+  }
+
   return (
     <Tabs value={diaAtivo} onValueChange={setDiaAtivo} className="gap-0">
       <TabsList className="bg-background justify-start rounded-t-lg rounded-b-none border-b p-0 w-full">

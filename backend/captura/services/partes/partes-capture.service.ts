@@ -133,6 +133,10 @@ export interface ProcessoParaCaptura {
   grau: GrauAcervo;
 }
 
+function converterGrauRepresentante(g: GrauAcervo): '1' | '2' {
+  return g === 'primeiro_grau' ? '1' : '2';
+}
+
 /**
  * Função auxiliar para extrair campos específicos do PJE de dadosCompletos
  */
@@ -712,7 +716,7 @@ async function processarRepresentantes(
       parte_tipo: tipoParte,
       parte_id: parteId,
       trt: processo.trt,
-      grau: processo.grau,
+      grau: converterGrauRepresentante(processo.grau),
       numero_processo: processo.numero_processo,
       tipo_pessoa,
       nome: rep.nome,

@@ -3,7 +3,7 @@
  * Implementa todas as operações CRUD com validação e type safety
  */
 
-import { createClient } from '@/backend/utils/supabase/server-client';
+import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type {
   Representante,
   RepresentanteComEndereco,
@@ -152,6 +152,9 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
     parte_tipo: data.parte_tipo as 'cliente' | 'parte_contraria' | 'terceiro',
     parte_id: data.parte_id as number,
     polo: data.polo as string | null,
+    trt: data.trt as string,
+    grau: data.grau as '1' | '2',
+    numero_processo: data.numero_processo as string,
     tipo_pessoa: data.tipo_pessoa as TipoPessoa,
     nome: data.nome as string,
     situacao: data.situacao as string | null,
@@ -300,7 +303,7 @@ export async function criarRepresentante(
       return { sucesso: false, erro: 'Email inválido' };
     }
 
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     const { data, error } = await supabase
       .from('representantes')
@@ -361,7 +364,7 @@ export async function atualizarRepresentante(
     // Document numbers cannot be changed after creation.
     // If cpf/cnpj are provided in params, they will be ignored by the type system.
 
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     // Buscar registro atual para dados_anteriores
     const { data: current } = await supabase
@@ -414,7 +417,7 @@ export async function atualizarRepresentante(
  */
 export async function buscarRepresentantePorId(id: number): Promise<Representante | null> {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     const { data, error } = await supabase
       .from('representantes')
@@ -438,7 +441,7 @@ export async function buscarRepresentantesPorParte(
   params: BuscarRepresentantesPorParteParams
 ): Promise<Representante[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     let query = supabase
       .from('representantes')
@@ -474,7 +477,7 @@ export async function buscarRepresentantesPorOAB(
   params: BuscarRepresentantesPorOABParams
 ): Promise<Representante[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     let query = supabase
       .from('representantes')
@@ -507,7 +510,7 @@ export async function buscarRepresentantesPorProcesso(
   params: BuscarRepresentantesPorProcessoParams
 ): Promise<Representante[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     const { data, error } = await supabase
       .from('representantes')
@@ -534,7 +537,7 @@ export async function listarRepresentantes(
   params: ListarRepresentantesParams
 ): Promise<ListarRepresentantesResult> {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     const pagina = params.pagina || 1;
     const limite = Math.min(params.limite || 50, 100);
@@ -621,7 +624,7 @@ export async function upsertRepresentantePorIdPessoa(
   params: UpsertRepresentantePorIdPessoaParams
 ): Promise<OperacaoRepresentanteResult> {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     // Busca pela chave composta completa (id_pessoa_pje + parte_id + parte_tipo + trt + grau + numero_processo) para respeitar constraint UNIQUE
     const { data: existing } = await supabase
@@ -659,7 +662,7 @@ export async function upsertRepresentantePorIdPessoa(
  */
 export async function deletarRepresentante(id: number): Promise<OperacaoRepresentanteResult> {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     const { error } = await supabase
       .from('representantes')
@@ -698,21 +701,30 @@ export async function upsertRepresentantesEmLote(
       return [];
     }
 
-    const supabase = await createClient();
+    const supabase = createServiceClient();
 
     // Usa upsert do Supabase com onConflict na chave única composta
     // Unique index: (id_pessoa_pje, parte_id, parte_tipo, trt, grau, numero_processo)
-    const { data, error } = await supabase
-      .from('representantes')
-      .upsert(listaParams, {
-        onConflict: 'id_pessoa_pje,parte_id,parte_tipo,trt,grau,numero_processo',
-        ignoreDuplicates: false, // Atualiza se já existe
-      })
-      .select();
+    const execUpsert = async () =>
+      await supabase
+        .from('representantes')
+        .upsert(listaParams, {
+          onConflict: 'id_pessoa_pje,parte_id,parte_tipo,trt,grau,numero_processo',
+          ignoreDuplicates: false,
+        })
+        .select();
+
+    let { data, error } = await execUpsert();
+
+    if (error && error.code === 'PGRST204') {
+      await supabase.rpc('pgrst_reload_schema');
+      const retry = await execUpsert();
+      data = retry.data as any;
+      error = retry.error as any;
+    }
 
     if (error) {
       console.error('Erro no upsert em lote de representantes:', error);
-      // Se falhou o batch todo, retorna erro para todos
       return listaParams.map(() => ({
         sucesso: false,
         erro: mapSupabaseError(error),
@@ -751,7 +763,7 @@ export async function upsertRepresentantesEmLote(
 export async function buscarRepresentanteComEndereco(
   id: number
 ): Promise<RepresentanteComEndereco | null> {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const { data, error } = await supabase
     .from('representantes')
@@ -786,7 +798,7 @@ export async function buscarRepresentanteComEndereco(
 export async function listarRepresentantesComEndereco(
   params: ListarRepresentantesParams = {}
 ): Promise<ListarRepresentantesResult & { representantes: RepresentanteComEndereco[] }> {
-  const supabase = await createClient();
+  const supabase = createServiceClient();
 
   const pagina = params.pagina ?? 1;
   const limite = params.limite ?? 50;
