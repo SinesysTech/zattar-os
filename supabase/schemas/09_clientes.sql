@@ -39,7 +39,7 @@ create table public.clientes (
   updated_at timestamptz default now() not null
 );
 
-comment on table public.clientes is 'Cadastro de clientes do escritório de advocacia (pessoas físicas e jurídicas)';
+comment on table public.clientes is 'Cadastro de clientes do escritório de advocacia (pessoas físicas e jurídicas). CPF/CNPJ são as chaves únicas para deduplicação. id_pessoa_pje foi movido para cadastros_pje.';
 
 -- Comentários dos campos
 comment on column public.clientes.tipo_pessoa is 'Tipo de pessoa: física (pf) ou jurídica (pj)';
@@ -82,4 +82,3 @@ execute function public.update_updated_at_column();
 
 -- Habilitar RLS
 alter table public.clientes enable row level security;
-

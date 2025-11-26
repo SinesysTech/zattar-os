@@ -1,6 +1,11 @@
 /**
  * Serviço de Persistência para Representantes
  * Implementa todas as operações CRUD com validação e type safety
+ *
+ * MUDANÇA DE PARADIGMA: Representantes agora são únicos por CPF, e o vínculo com processos é feito via processo_partes.
+ * A tabela representantes tem UM registro por pessoa (CPF único), ao invés de um registro por (representante, processo).
+ * Campos de contexto de processo (trt, grau, numero_processo, etc.) foram removidos.
+ * O id_pessoa_pje foi movido para a tabela cadastros_pje, pois não é globalmente único.
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
@@ -11,10 +16,9 @@ import type {
   AtualizarRepresentanteParams,
   ListarRepresentantesParams,
   ListarRepresentantesResult,
-  BuscarRepresentantesPorParteParams,
   BuscarRepresentantesPorOABParams,
-  BuscarRepresentantesPorProcessoParams,
-  UpsertRepresentantePorIdPessoaParams,
+  UpsertRepresentantePorCPFParams,
+  BuscarRepresentantePorCPFParams,
   OperacaoRepresentanteResult,
 } from '@/backend/types/representantes/representantes-types';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
@@ -139,16 +143,8 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
 
   return {
     id: data.id as number,
-    id_pje: data.id_pje as number | null,
-    id_pessoa_pje: data.id_pessoa_pje as number,
-    parte_tipo: data.parte_tipo as 'cliente' | 'parte_contraria' | 'terceiro',
-    parte_id: data.parte_id as number,
-    polo: data.polo as string | null,
-    trt: data.trt as string,
-    grau: data.grau as '1' | '2',
-    numero_processo: data.numero_processo as string,
     nome: data.nome as string,
-    cpf: data.cpf as string | null,
+    cpf: data.cpf as string,
     sexo: data.sexo as string | null,
     situacao: data.situacao as string | null,
     status: data.status as string | null,
@@ -182,11 +178,11 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
 function mapSupabaseError(error: { code?: string; message: string }): string {
   if (error.code === '23505') {
     // Unique constraint violation
-    return 'Representante já cadastrado para esta parte neste processo';
+    return 'Representante já cadastrado com este CPF';
   }
   if (error.code === '23503') {
     // Foreign key violation
-    return 'Parte não encontrada';
+    return 'Endereço não encontrado';
   }
   if (error.code === '23502') {
     // Not null violation
@@ -211,19 +207,16 @@ export async function criarRepresentante(
 ): Promise<OperacaoRepresentanteResult> {
   try {
     // Validate required fields
-    if (!params.id_pessoa_pje || !params.parte_tipo || !params.parte_id || !params.nome) {
+    if (!params.cpf || !params.nome) {
       return {
         sucesso: false,
         erro: 'Campos obrigatórios não informados',
       };
     }
 
-    // Validate trt, grau, numero_processo as required
-    if (!params.trt || !params.grau || !params.numero_processo) {
-      return {
-        sucesso: false,
-        erro: 'Campos trt, grau e numero_processo são obrigatórios',
-      };
+    // Validate CPF
+    if (!validarCPF(params.cpf)) {
+      return { sucesso: false, erro: 'CPF inválido' };
     }
 
     // Validate OAB if provided
@@ -275,12 +268,9 @@ export async function atualizarRepresentante(
       return { sucesso: false, erro: 'ID é obrigatório' };
     }
 
-    // Check for immutable fields
-    if ('parte_tipo' in params || 'parte_id' in params) {
-      return {
-        sucesso: false,
-        erro: 'Campos parte_tipo e parte_id não podem ser alterados',
-      };
+    // Validate CPF if provided
+    if (params.cpf && !validarCPF(params.cpf)) {
+      return { sucesso: false, erro: 'CPF inválido' };
     }
 
     // Validate email if provided
@@ -292,7 +282,6 @@ export async function atualizarRepresentante(
     if (params.numero_oab && !validarOAB(params.numero_oab)) {
       return { sucesso: false, erro: 'Número OAB inválido' };
     }
-
 
     const supabase = createServiceClient();
 
@@ -345,7 +334,7 @@ export async function atualizarRepresentante(
 /**
  * Buscar representante por ID
  */
-export async function buscarRepresentantePorId(id: number): Promise<Representante | null> {
+export async function buscarRepresentante(id: number): Promise<Representante | null> {
   try {
     const supabase = createServiceClient();
 
@@ -365,38 +354,24 @@ export async function buscarRepresentantePorId(id: number): Promise<Representant
 }
 
 /**
- * Buscar representantes por parte
+ * Buscar representante por CPF
  */
-export async function buscarRepresentantesPorParte(
-  params: BuscarRepresentantesPorParteParams
-): Promise<Representante[]> {
+export async function buscarRepresentantePorCPF(cpf: string): Promise<Representante | null> {
   try {
     const supabase = createServiceClient();
 
-    let query = supabase
+    const { data, error } = await supabase
       .from('representantes')
       .select('*')
-      .eq('parte_tipo', params.parte_tipo)
-      .eq('parte_id', params.parte_id);
+      .eq('cpf', cpf)
+      .single();
 
-    if (params.trt) {
-      query = query.eq('trt', params.trt);
-    }
+    if (error || !data) return null;
 
-    if (params.grau) {
-      query = query.eq('grau', params.grau);
-    }
-
-    query = query.order('ordem', { ascending: true }).order('nome', { ascending: true });
-
-    const { data, error } = await query;
-
-    if (error || !data) return [];
-
-    return data.map(converterParaRepresentante);
+    return converterParaRepresentante(data);
   } catch (error) {
-    console.error('Erro ao buscar representantes por parte:', error);
-    return [];
+    console.error('Erro ao buscar representante por CPF:', error);
+    return null;
   }
 }
 
@@ -409,53 +384,16 @@ export async function buscarRepresentantesPorOAB(
   try {
     const supabase = createServiceClient();
 
-    let query = supabase
+    const { data, error } = await supabase
       .from('representantes')
       .select('*')
       .eq('numero_oab', params.numero_oab);
-
-    if (params.trt) {
-      query = query.eq('trt', params.trt);
-    }
-
-    if (params.grau) {
-      query = query.eq('grau', params.grau);
-    }
-
-    const { data, error } = await query;
 
     if (error || !data) return [];
 
     return data.map(converterParaRepresentante);
   } catch (error) {
     console.error('Erro ao buscar representantes por OAB:', error);
-    return [];
-  }
-}
-
-/**
- * Buscar representantes por processo
- */
-export async function buscarRepresentantesPorProcesso(
-  params: BuscarRepresentantesPorProcessoParams
-): Promise<Representante[]> {
-  try {
-    const supabase = createServiceClient();
-
-    const { data, error } = await supabase
-      .from('representantes')
-      .select('*')
-      .eq('numero_processo', params.numero_processo)
-      .eq('trt', params.trt)
-      .eq('grau', params.grau)
-      .order('parte_tipo', { ascending: true })
-      .order('ordem', { ascending: true });
-
-    if (error || !data) return [];
-
-    return data.map(converterParaRepresentante);
-  } catch (error) {
-    console.error('Erro ao buscar representantes por processo:', error);
     return [];
   }
 }
@@ -476,20 +414,8 @@ export async function listarRepresentantes(
     // Build query with filters
     let query = supabase.from('representantes').select('*', { count: 'exact' });
 
-    if (params.parte_tipo) {
-      query = query.eq('parte_tipo', params.parte_tipo);
-    }
-    if (params.parte_id) {
-      query = query.eq('parte_id', params.parte_id);
-    }
-    if (params.trt) {
-      query = query.eq('trt', params.trt);
-    }
-    if (params.grau) {
-      query = query.eq('grau', params.grau);
-    }
-    if (params.numero_processo) {
-      query = query.eq('numero_processo', params.numero_processo);
+    if (params.cpf) {
+      query = query.eq('cpf', params.cpf);
     }
     if (params.numero_oab) {
       query = query.eq('numero_oab', params.numero_oab);
@@ -545,41 +471,53 @@ export async function listarRepresentantes(
 }
 
 /**
- * Upsert representante por id_pessoa_pje + context (idempotente)
+ * Upsert representante por CPF (idempotente)
  */
-export async function upsertRepresentantePorIdPessoa(
-  params: UpsertRepresentantePorIdPessoaParams
-): Promise<OperacaoRepresentanteResult> {
+export async function upsertRepresentantePorCPF(
+  params: UpsertRepresentantePorCPFParams
+): Promise<OperacaoRepresentanteResult & { criado: boolean }> {
   try {
     const supabase = createServiceClient();
 
-    // Busca pela chave composta completa (id_pessoa_pje + parte_id + parte_tipo + trt + grau + numero_processo) para respeitar constraint UNIQUE
+    // Validate CPF
+    if (!validarCPF(params.cpf)) {
+      return { sucesso: false, erro: 'CPF inválido', criado: false };
+    }
+
+    // Check if exists
     const { data: existing } = await supabase
       .from('representantes')
       .select('id')
-      .eq('id_pessoa_pje', params.id_pessoa_pje)
-      .eq('parte_id', params.parte_id)
-      .eq('parte_tipo', params.parte_tipo)
-      .eq('trt', params.trt)
-      .eq('grau', params.grau)
-      .eq('numero_processo', params.numero_processo)
+      .eq('cpf', params.cpf)
       .maybeSingle();
 
-    if (existing) {
-      // Update existing
-      return await atualizarRepresentante({
-        id: existing.id,
-        ...params,
-      });
-    } else {
-      // Create new
-      return await criarRepresentante(params);
+    const criado = !existing;
+
+    const { data, error } = await supabase
+      .from('representantes')
+      .upsert(params, { onConflict: 'cpf' })
+      .select()
+      .single();
+
+    if (error) {
+      return {
+        sucesso: false,
+        erro: mapSupabaseError(error),
+        criado: false,
+      };
     }
+
+    return {
+      sucesso: true,
+      representante: converterParaRepresentante(data),
+      criado,
+    };
   } catch (error) {
     console.error('Erro ao fazer upsert de representante:', error);
     return {
       sucesso: false,
       erro: 'Erro ao fazer upsert de representante',
+      criado: false,
     };
   }
 }
@@ -613,70 +551,6 @@ export async function deletarRepresentante(id: number): Promise<OperacaoRepresen
       sucesso: false,
       erro: 'Erro ao deletar representante',
     };
-  }
-}
-
-/**
- * Upsert múltiplos representantes em batch (operação atômica no banco)
- * Retorna array com resultados individuais por registro
- */
-export async function upsertRepresentantesEmLote(
-  listaParams: UpsertRepresentantePorIdPessoaParams[]
-): Promise<OperacaoRepresentanteResult[]> {
-  try {
-    if (listaParams.length === 0) {
-      return [];
-    }
-
-    const supabase = createServiceClient();
-
-    // Usa upsert do Supabase com onConflict na chave única composta
-    // Unique index: (id_pessoa_pje, parte_id, parte_tipo, trt, grau, numero_processo)
-    const execUpsert = async () =>
-      await supabase
-        .from('representantes')
-        .upsert(listaParams, {
-          onConflict: 'id_pessoa_pje,parte_id,parte_tipo,trt,grau,numero_processo',
-          ignoreDuplicates: false,
-        })
-        .select();
-
-    let { data, error } = await execUpsert();
-
-    if (error && error.code === 'PGRST204') {
-      await supabase.rpc('pgrst_reload_schema');
-      const retry = await execUpsert();
-      data = retry.data as any;
-      error = retry.error as any;
-    }
-
-    if (error) {
-      console.error('Erro no upsert em lote de representantes:', error);
-      return listaParams.map(() => ({
-        sucesso: false,
-        erro: mapSupabaseError(error),
-      }));
-    }
-
-    // Mapeia resultados individuais
-    if (!data || data.length === 0) {
-      return listaParams.map(() => ({
-        sucesso: false,
-        erro: 'Nenhum representante foi inserido/atualizado',
-      }));
-    }
-
-    // Supabase retorna os registros upserted
-    return data.map((row: Record<string, unknown>) => ({
-      sucesso: true,
-      representante: converterParaRepresentante(row),
-    }));
-  } catch (error) {
-    console.error('Erro inesperado no upsert em lote:', error);
-    return listaParams.map(() => ({
-      sucesso: false,
-      erro: 'Erro inesperado no upsert em lote',
-    }));
   }
 }
 
@@ -745,20 +619,8 @@ export async function listarRepresentantesComEndereco(
     query = query.or(`nome.ilike.%${busca}%,numero_oab.ilike.%${busca}%,cpf.ilike.%${busca}%`);
   }
 
-  if (params.parte_tipo) {
-    query = query.eq('parte_tipo', params.parte_tipo);
-  }
-
-  if (params.parte_id) {
-    query = query.eq('parte_id', params.parte_id);
-  }
-
-  if (params.numero_processo) {
-    query = query.eq('numero_processo', params.numero_processo);
-  }
-
-  if (params.nome) {
-    query = query.ilike('nome', `%${params.nome}%`);
+  if (params.cpf) {
+    query = query.eq('cpf', params.cpf);
   }
 
   if (params.numero_oab) {
@@ -767,10 +629,6 @@ export async function listarRepresentantesComEndereco(
 
   if (params.situacao_oab) {
     query = query.eq('situacao_oab', params.situacao_oab);
-  }
-
-  if (params.id_pessoa_pje) {
-    query = query.eq('id_pessoa_pje', params.id_pessoa_pje);
   }
 
   // Ordenação

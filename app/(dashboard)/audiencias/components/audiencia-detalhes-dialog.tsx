@@ -15,7 +15,8 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Copy, Pencil, Plus } from 'lucide-react';
+import { Copy, Pencil, Plus, FileText } from 'lucide-react';
+import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import type { Audiencia, ModalidadeAudiencia } from '@/backend/types/audiencias/types';
 
 /**
@@ -290,6 +291,48 @@ function UrlVirtualDialogSection({ audiencia, onSuccess }: { audiencia: Audienci
   );
 }
 
+function AtaAudienciaDialogSection({ audiencia }: { audiencia: Audiencia }) {
+  const [openAta, setOpenAta] = React.useState(false);
+
+  const extractKeyFromBackblazeUrl = (u: string | null): string | null => {
+    if (!u) return null;
+    try {
+      const urlObj = new URL(u);
+      const parts = urlObj.pathname.split('/').filter(Boolean);
+      if (parts.length < 2) return null;
+      return parts.slice(1).join('/');
+    } catch {
+      return null;
+    }
+  };
+
+  const fileKey = extractKeyFromBackblazeUrl(audiencia.url_ata_audiencia);
+  const canOpenAta = audiencia.status === 'F' && fileKey !== null;
+
+  if (!canOpenAta) return null;
+
+  return (
+    <div className="pt-3 border-t">
+      <div className="text-sm text-muted-foreground mb-2">Ata de Audiência</div>
+      <div className="flex items-center gap-2">
+        <button
+          className="h-8 w-8 flex items-center justify-center rounded"
+          onClick={() => setOpenAta(true)}
+          title="Ver Ata de Audiência"
+        >
+          <FileText className="h-5 w-5 text-primary" />
+        </button>
+      </div>
+      <PdfViewerDialog
+        open={openAta}
+        onOpenChange={setOpenAta}
+        fileKey={fileKey}
+        documentTitle={`Ata da audiência ${audiencia.numero_processo}`}
+      />
+    </div>
+  );
+}
+
 interface AudienciaDetalhesDialogProps {
   audiencia: Audiencia | null;
   audiencias?: Audiencia[];
@@ -397,6 +440,7 @@ export function AudienciaDetalhesDialog({
                       <UrlVirtualDialogSection audiencia={aud} onSuccess={onRefresh} />
                     </div>
                   )}
+                  <AtaAudienciaDialogSection audiencia={aud} />
                 </div>
               ))}
             </div>
@@ -476,6 +520,7 @@ export function AudienciaDetalhesDialog({
                 {(audienciaUnica.modalidade === 'virtual' || audienciaUnica.modalidade === 'hibrida') && (
                   <UrlVirtualDialogSection audiencia={audienciaUnica} onSuccess={onRefresh} />
                 )}
+                <AtaAudienciaDialogSection audiencia={audienciaUnica} />
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>

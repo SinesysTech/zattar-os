@@ -220,7 +220,13 @@ export async function listarPendentes(
   // Ordenação
   const ordenarPor = params.ordenar_por ?? 'data_prazo_legal_parte';
   const ordem = params.ordem ?? (ordenarPor === 'data_prazo_legal_parte' ? 'asc' : 'desc');
-  query = query.order(ordenarPor, { ascending: ordem === 'asc' });
+  if (ordenarPor === 'data_prazo_legal_parte') {
+    // Vencidos primeiro, depois data de prazo legal (nulos primeiro)
+    query = query.order('prazo_vencido', { ascending: false });
+    query = query.order('data_prazo_legal_parte', { ascending: true, nullsFirst: true });
+  } else {
+    query = query.order(ordenarPor, { ascending: ordem === 'asc' });
+  }
 
   // Aplicar paginação
   query = query.range(offset, offset + limite - 1);

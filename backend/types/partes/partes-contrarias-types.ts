@@ -21,10 +21,10 @@ export type SituacaoPJE = 'A' | 'I' | 'E' | 'H'; // A=Ativo, I=Inativo, E=Exclu�
 /**
  * Campos base comuns a PF e PJ
  * NOTA: Partes Contrárias é uma tabela global - conexão com processo via processo_partes
+ * A deduplicação agora é feita por CPF/CNPJ, não por id_pessoa_pje.
  */
 interface ParteContrariaBase {
   id: number;
-  id_pessoa_pje: number | null; // ID da pessoa no sistema PJE. Usado para deduplicação em capturas. UNIQUE constraint garante que não há duplicatas. Null para partes contrárias criadas manualmente.
   tipo_pessoa: TipoPessoa;
   nome: string;
   nome_social_fantasia: string | null; // Serve para PF (nome social) e PJ (nome fantasia)
@@ -174,7 +174,6 @@ export type ParteContrariaComEndereco =
  * Dados para criar parte contrária PF
  */
 export interface CriarParteContrariaPFParams {
-  id_pessoa_pje?: number | null;
   tipo_pessoa: 'pf';
   nome: string;
   cpf: string;
@@ -223,7 +222,6 @@ export interface CriarParteContrariaPFParams {
  * Dados para criar parte contrária PJ
  */
 export interface CriarParteContrariaPJParams {
-  id_pessoa_pje?: number | null;
   tipo_pessoa: 'pj';
   nome: string;
   cnpj: string;
@@ -276,7 +274,6 @@ export type CriarParteContrariaParams =
  */
 export interface AtualizarParteContrariaPFParams {
   id: number;
-  id_pessoa_pje?: number;
   tipo_pessoa?: 'pf';
   nome?: string;
   cpf?: string;
@@ -325,7 +322,6 @@ export interface AtualizarParteContrariaPFParams {
  */
 export interface AtualizarParteContrariaPJParams {
   id: number;
-  id_pessoa_pje?: number;
   tipo_pessoa?: 'pj';
   nome?: string;
   cnpj?: string;
@@ -408,7 +404,6 @@ export interface ListarPartesContrariasParams {
   nome?: string;
   cpf?: string;
   cnpj?: string;
-  id_pessoa_pje?: number;
   numero_processo?: string;
 
   // Ordenação
@@ -428,20 +423,20 @@ export interface ListarPartesContrariasResult {
 }
 
 /**
- * Método upsert por id_pessoa_pje para parte contrária PF
+ * Método upsert por CPF para parte contrária PF
  */
-export interface UpsertParteContrariaPorIdPessoaPFParams extends CriarParteContrariaPFParams {
-  id_pessoa_pje: number; // Required para upsert
+export interface UpsertParteContrariaPorCPFParams extends CriarParteContrariaPFParams {
+  cpf: string; // Required para upsert
 }
 
 /**
- * Método upsert por id_pessoa_pje para parte contrária PJ
+ * Método upsert por CNPJ para parte contrária PJ
  */
-export interface UpsertParteContrariaPorIdPessoaPJParams extends CriarParteContrariaPJParams {
-  id_pessoa_pje: number; // Required para upsert
+export interface UpsertParteContrariaPorCNPJParams extends CriarParteContrariaPJParams {
+  cnpj: string; // Required para upsert
 }
 
 /**
- * Método upsert por id_pessoa_pje (união)
+ * Método upsert por documento (união)
  */
-export type UpsertParteContrariaPorIdPessoaParams = UpsertParteContrariaPorIdPessoaPFParams | UpsertParteContrariaPorIdPessoaPJParams;
+export type UpsertParteContrariaPorDocumentoParams = UpsertParteContrariaPorCPFParams | UpsertParteContrariaPorCNPJParams;

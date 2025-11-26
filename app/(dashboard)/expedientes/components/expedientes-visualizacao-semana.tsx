@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dialog';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
@@ -843,6 +844,47 @@ function ProcessoColumnHeaderSemanal({
             >
               ↓ Decrescente
             </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Ordenar por Partes</div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                (onSort as any)('nome_parte_autora', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              Parte Autora ↑
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                (onSort as any)('nome_parte_autora', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              Parte Autora ↓
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                (onSort as any)('nome_parte_re', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              Parte Ré ↑
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                (onSort as any)('nome_parte_re', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              Parte Ré ↓
+            </Button>
           </div>
         </PopoverContent>
       </Popover>
@@ -1037,30 +1079,34 @@ function criarColunasSemanais(
       },
     },
     {
-      id: 'processo',
+      id: 'processo_partes',
       header: () => <ProcessoColumnHeaderSemanal onSort={onProcessoSort} />,
       enableSorting: false,
-      size: 380,
+      size: 520,
       cell: ({ row }) => {
-        const classeJudicial = row.original.classe_judicial || '';
-        const numeroProcesso = row.original.numero_processo;
-        const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
         const trt = row.original.trt;
         const grau = row.original.grau;
+        const classeJudicial = row.original.classe_judicial || '';
+        const numeroProcesso = row.original.numero_processo;
+        const parteAutora = row.original.nome_parte_autora || '-';
+        const parteRe = row.original.nome_parte_re || '-';
+        const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[520px]">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>{trt}</Badge>
+              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>{formatarGrau(grau)}</Badge>
+            </div>
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
-                {trt}
-              </Badge>
-              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>
-                {formatarGrau(grau)}
-              </Badge>
-            </div>
+            <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+              {parteAutora}
+            </Badge>
+            <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+              {parteRe}
+            </Badge>
             <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}
             </div>
@@ -1069,22 +1115,61 @@ function criarColunasSemanais(
       },
     },
     {
-      id: 'partes',
-      header: () => <PartesColumnHeader onSort={onPartesSort} />,
+      id: 'observacoes',
+      header: () => (
+        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
+          <div className="text-sm font-medium">Observações</div>
+        </div>
+      ),
       enableSorting: false,
-      size: 250,
+      size: 300,
       cell: ({ row }) => {
-        const parteAutora = row.original.nome_parte_autora || '-';
-        const parteRe = row.original.nome_parte_re || '-';
-
+        const expediente = row.original;
+        const [open, setOpen] = React.useState(false);
+        const [isLoading, setIsLoading] = React.useState(false);
+        const [valor, setValor] = React.useState<string>(expediente.observacoes || '');
+        React.useEffect(() => { setValor(expediente.observacoes || ''); }, [expediente.observacoes]);
+        const handleSave = async () => {
+          setIsLoading(true);
+          try {
+            const observacoes = valor.trim() || null;
+            const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/observacoes`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ observacoes }) });
+            if (!response.ok) {
+              const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+              throw new Error(ed.error || 'Erro ao atualizar observações');
+            }
+            setOpen(false);
+            onSuccess();
+          } finally { setIsLoading(false); }
+        };
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
-            <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
-              {parteAutora}
-            </Badge>
-            <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
-              {parteRe}
-            </Badge>
+          <div className="relative w-full group">
+            <button type="button" className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer w-full pr-6">
+              <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed text-justify">
+                {expediente.observacoes || '-'}
+              </div>
+            </button>
+            <button type="button" onClick={() => setOpen(true)} className="absolute bottom-1 right-1 p-1 hover:bg-accent rounded-md transition-colors z-10 opacity-0 group-hover:opacity-100" title="Editar observações">
+              <Pencil className="h-3.5 w-3.5 text-primary" />
+            </button>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogContent className="max-w-[min(92vw,31.25rem)]">
+                <DialogHeader>
+                  <DialogTitle>Editar Observações</DialogTitle>
+                  <DialogDescription>Adicionar observações do expediente</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Observações</label>
+                    <Textarea value={valor} onChange={(e) => setValor(e.target.value)} disabled={isLoading} rows={3} />
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" size="sm" onClick={() => setOpen(false)} disabled={isLoading}>Cancelar</Button>
+                    <Button size="sm" onClick={handleSave} disabled={isLoading}>{isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}Salvar</Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         );
       },
@@ -1168,6 +1253,18 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
       sexta: [] as PendenteManifestacao[],
     };
 
+    // Itens especiais: sem prazo e vencidos (pendentes)
+    const semPrazoPendentes = expedientes.filter(
+      (e) => !e.baixado_em && !e.data_prazo_legal_parte
+    );
+    const vencidosPendentes = expedientes.filter(
+      (e) => !e.baixado_em && e.prazo_vencido === true
+    );
+    const pinnedIds = new Set<number>([
+      ...semPrazoPendentes.map((e) => e.id),
+      ...vencidosPendentes.map((e) => e.id),
+    ]);
+
     expedientes.forEach((expediente) => {
       if (!expediente.data_prazo_legal_parte) return;
 
@@ -1189,13 +1286,19 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
       }
     });
 
-    // Ordenar cada dia por data de vencimento (mais antigas primeiro)
+    // Para cada dia: colocar sem prazo e vencidos pendentes no topo
     Object.keys(dias).forEach((dia) => {
-      (dias as any)[dia].sort((a: PendenteManifestacao, b: PendenteManifestacao) => {
+      const listaDia: PendenteManifestacao[] = (dias as any)[dia];
+      // Remover duplicados com pinned
+      const restantes = listaDia.filter((e) => !pinnedIds.has(e.id));
+      // Ordenar restantes por data de vencimento (crescentemente)
+      restantes.sort((a: PendenteManifestacao, b: PendenteManifestacao) => {
         const dataA = a.data_prazo_legal_parte ? new Date(a.data_prazo_legal_parte).getTime() : 0;
         const dataB = b.data_prazo_legal_parte ? new Date(b.data_prazo_legal_parte).getTime() : 0;
-        return dataA - dataB; // Crescente: mais antigas primeiro
+        return dataA - dataB;
       });
+      // Reconstituir lista do dia com pinned no topo
+      (dias as any)[dia] = [...semPrazoPendentes, ...vencidosPendentes, ...restantes];
     });
 
     return dias;

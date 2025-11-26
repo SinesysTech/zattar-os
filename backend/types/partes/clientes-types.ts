@@ -21,13 +21,10 @@ export type SituacaoPJE = 'A' | 'I' | 'E' | 'H'; // A=Ativo, I=Inativo, E=Exclu�
 /**
  * Campos base comuns a PF e PJ
  * NOTA: Clientes é uma tabela global - conexão com processo via processo_partes
+ * Clientes são identificados unicamente por CPF/CNPJ. Deduplicação é feita por documento, não por id_pessoa_pje.
  */
 export interface ClienteBase {
   id: number;
-  /**
-   * ID da pessoa no sistema PJE. Usado para deduplicação em capturas. UNIQUE constraint garante que não há duplicatas. Null para clientes criados manualmente.
-   */
-  id_pessoa_pje: number | null;
   tipo_pessoa: TipoPessoa;
   nome: string;
   nome_social_fantasia: string | null; // Serve para PF (nome social) e PJ (nome fantasia)
@@ -184,7 +181,6 @@ export type ClienteComEndereco = ClientePessoaFisicaComEndereco | ClientePessoaJ
  * Dados para criar cliente PF
  */
 export interface CriarClientePFParams {
-  id_pessoa_pje?: number | null;
   tipo_pessoa: 'pf';
   nome: string;
   cpf: string;
@@ -236,7 +232,6 @@ export interface CriarClientePFParams {
  * Dados para criar cliente PJ
  */
 export interface CriarClientePJParams {
-  id_pessoa_pje?: number | null;
   tipo_pessoa: 'pj';
   nome: string;
   cnpj: string;
@@ -290,7 +285,6 @@ export type CriarClienteParams = CriarClientePFParams | CriarClientePJParams;
  */
 export interface AtualizarClientePFParams {
   id: number;
-  id_pessoa_pje?: number;
   tipo_pessoa?: 'pf';
   nome?: string;
   cpf?: string;
@@ -339,7 +333,6 @@ export interface AtualizarClientePFParams {
  */
 export interface AtualizarClientePJParams {
   id: number;
-  id_pessoa_pje?: number;
   tipo_pessoa?: 'pj';
   nome?: string;
   cnpj?: string;
@@ -420,7 +413,6 @@ export interface ListarClientesParams {
   nome?: string;
   cpf?: string;
   cnpj?: string;
-  id_pessoa_pje?: number;
   numero_processo?: string;
 
   // Ordenação
@@ -440,22 +432,22 @@ export interface ListarClientesResult {
 }
 
 /**
- * Método upsert por id_pessoa_pje para cliente PF
+ * Método upsert por CPF para cliente PF
  */
-export interface UpsertClientePorIdPessoaPFParams extends CriarClientePFParams {
-  id_pessoa_pje: number; // Required para upsert
+export interface UpsertClientePorCPFParams extends CriarClientePFParams {
+  cpf: string; // Required para upsert
 }
 
 /**
- * Método upsert por id_pessoa_pje para cliente PJ
+ * Método upsert por CNPJ para cliente PJ
  */
-export interface UpsertClientePorIdPessoaPJParams extends CriarClientePJParams {
-  id_pessoa_pje: number; // Required para upsert
+export interface UpsertClientePorCNPJParams extends CriarClientePJParams {
+  cnpj: string; // Required para upsert
 }
 
 /**
- * Método upsert por id_pessoa_pje (união)
+ * Método upsert por documento (união)
  */
-export type UpsertClientePorIdPessoaParams =
-  | UpsertClientePorIdPessoaPFParams
-  | UpsertClientePorIdPessoaPJParams;
+export type UpsertClientePorDocumentoParams =
+  | UpsertClientePorCPFParams
+  | UpsertClientePorCNPJParams;

@@ -582,6 +582,47 @@ function ProcessoColumnHeader({
             >
               ↓ Decrescente
             </Button>
+            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Ordenar por Partes</div>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                (onSort as any)('nome_parte_autora', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              Parte Autora ↑
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                (onSort as any)('nome_parte_autora', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              Parte Autora ↓
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                (onSort as any)('nome_parte_re', 'asc');
+                setIsOpen(false);
+              }}
+            >
+              Parte Ré ↑
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-sm"
+              onClick={() => {
+                (onSort as any)('nome_parte_re', 'desc');
+                setIsOpen(false);
+              }}
+            >
+              Parte Ré ↓
+            </Button>
           </div>
         </PopoverContent>
       </Popover>
@@ -964,30 +1005,34 @@ function criarColunas(
       },
     },
     {
-      id: 'processo',
+      id: 'processo_partes',
       header: () => <ProcessoColumnHeader onSort={onProcessoSort} />,
       enableSorting: false,
-      size: 380,
+      size: 520,
       cell: ({ row }) => {
-        const classeJudicial = row.original.classe_judicial || '';
-        const numeroProcesso = row.original.numero_processo;
-        const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
         const trt = row.original.trt;
         const grau = row.original.grau;
+        const classeJudicial = row.original.classe_judicial || '';
+        const numeroProcesso = row.original.numero_processo;
+        const parteAutora = row.original.nome_parte_autora || '-';
+        const parteRe = row.original.nome_parte_re || '-';
+        const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[380px]">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[520px]">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>{trt}</Badge>
+              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>{formatarGrau(grau)}</Badge>
+            </div>
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
-                {trt}
-              </Badge>
-              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>
-                {formatarGrau(grau)}
-              </Badge>
-            </div>
+            <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+              {parteAutora}
+            </Badge>
+            <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+              {parteRe}
+            </Badge>
             <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}
             </div>
@@ -996,22 +1041,64 @@ function criarColunas(
       },
     },
     {
-      id: 'partes',
-      header: () => <PartesColumnHeader onSort={onPartesSort} />,
+      id: 'observacoes',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Observações</div>
+        </div>
+      ),
       enableSorting: false,
-      size: 250,
+      size: 300,
       cell: ({ row }) => {
-        const parteAutora = row.original.nome_parte_autora || '-';
-        const parteRe = row.original.nome_parte_re || '-';
-
+        const expediente = row.original;
+        const [open, setOpen] = React.useState(false);
+        const [isLoading, setIsLoading] = React.useState(false);
+        const [valor, setValor] = React.useState<string>(expediente.observacoes || '');
+        React.useEffect(() => { setValor(expediente.observacoes || ''); }, [expediente.observacoes]);
+        const handleSave = async () => {
+          setIsLoading(true);
+          try {
+            const observacoes = valor.trim() || null;
+            const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/observacoes`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ observacoes }) });
+            if (!response.ok) {
+              const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+              throw new Error(ed.error || 'Erro ao atualizar observações');
+            }
+            setOpen(false);
+            onSuccess();
+          } finally { setIsLoading(false); }
+        };
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[250px]">
-            <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
-              {parteAutora}
-            </Badge>
-            <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
-              {parteRe}
-            </Badge>
+          <div className="relative min-h-10 max-w-[300px] group">
+            <div className="w-full min-h-10 flex items-start gap-2 pr-8 py-2">
+              <div className="flex flex-col items-start justify-start gap-1.5 flex-1">
+                <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed indent-0 text-justify">
+                  {expediente.observacoes || '-'}
+                </div>
+              </div>
+            </div>
+            <Button size="sm" variant="ghost" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1" title="Editar observações" onClick={() => setOpen(true)}>
+              <Pencil className="h-3 w-3" />
+            </Button>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogContent className="max-w-[min(92vw,25rem)] sm:max-w-[min(92vw,37.5rem)]">
+                <DialogHeader>
+                  <DialogTitle>Editar Observações</DialogTitle>
+                  <DialogDescription>Adicionar observações do expediente</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="observacoes-exp">Observações</Label>
+                    <Textarea id="observacoes-exp" value={valor} onChange={(e) => setValor(e.target.value)} disabled={isLoading} className="min-h-[250px] resize-y" />
+                    <p className="text-xs text-muted-foreground">{valor.length} caracteres</p>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isLoading}>Cancelar</Button>
+                  <Button type="button" onClick={handleSave} disabled={isLoading}>{isLoading ? 'Salvando...' : 'Salvar'}</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         );
       },
