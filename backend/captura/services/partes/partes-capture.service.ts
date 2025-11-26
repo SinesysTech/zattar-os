@@ -1,5 +1,5 @@
 import type { Page } from 'playwright';
-import type { CapturaPartesResult, CapturaPartesErro, TipoParteClassificacao } from './types';
+import type { CapturaPartesResult, TipoParteClassificacao } from './types';
 import type { PartePJE, RepresentantePJE } from '@/backend/api/pje-trt/partes/types';
 import { obterPartesProcesso } from '@/backend/api/pje-trt/partes';
 import { identificarTipoParte, validarDocumentoAdvogado, type AdvogadoIdentificacao } from './identificacao-partes.service';
@@ -24,6 +24,58 @@ import { withRetry } from '@/backend/utils/retry';
 import { CAPTURA_CONFIG } from './config';
 import { ValidationError, PersistenceError, extractErrorInfo } from './errors';
 import { upsertCadastroPJE } from '@/backend/cadastros-pje/services/persistence/cadastro-pje-persistence.service';
+
+// ============================================================================
+// Tipos para estruturas do PJE (dadosCompletos)
+// ============================================================================
+
+/** Estrutura de estado retornada pelo PJE */
+interface EstadoPJE {
+  id?: number;
+  sigla?: string;
+  descricao?: string;
+}
+
+/** Estrutura de naturalidade retornada pelo PJE */
+interface NaturalidadePJE {
+  id?: number;
+  municipio?: string;
+  estado?: EstadoPJE;
+}
+
+/** Estrutura de país retornada pelo PJE */
+interface PaisPJE {
+  id?: number;
+  codigo?: string;
+  descricao?: string;
+}
+
+/** Estrutura de situação na Receita (CPF/CNPJ) retornada pelo PJE */
+interface SituacaoReceitaPJE {
+  id?: number;
+  descricao?: string;
+}
+
+/** Estrutura de tipo de pessoa retornada pelo PJE */
+interface TipoPessoaPJE {
+  codigo?: string;
+  label?: string;
+}
+
+/** Estrutura de porte de empresa retornada pelo PJE */
+interface PortePJE {
+  codigo?: number;
+  descricao?: string;
+}
+
+/** Tipo para resultado de processamento de parte */
+interface ProcessamentoParteResult {
+  parte: PartePJE;
+  sucesso: boolean;
+  entidadeId?: number;
+  representantesProcessados?: number;
+  erros?: string[];
+}
 
 /**
  * Normaliza o valor de polo do PJE para o formato interno
@@ -143,10 +195,6 @@ export interface ProcessoParaCaptura {
   numero_processo?: string;
 }
 
-function converterGrauRepresentante(g: GrauAcervo): '1' | '2' {
-  return g === 'primeiro_grau' ? '1' : '2';
-}
-
 /**
  * Função auxiliar para extrair campos específicos do PJE de dadosCompletos
  */
@@ -165,20 +213,34 @@ function extrairCamposPJE(parte: PartePJE) {
   if (parte.tipoDocumento === 'CPF') {
     camposExtraidos.sexo = dados?.sexo as string | undefined;
     camposExtraidos.nome_genitora = dados?.nomeGenitora as string | undefined;
-    camposExtraidos.naturalidade_id_pje = (dados?.naturalidade as any)?.id !== undefined ? Number((dados?.naturalidade as any).id) : undefined;
-    camposExtraidos.naturalidade_municipio = (dados?.naturalidade as any)?.municipio as string | undefined;
-    camposExtraidos.naturalidade_estado_id_pje = (dados?.naturalidade as any)?.estado?.id !== undefined ? Number((dados?.naturalidade as any)?.estado.id) : undefined;
-    camposExtraidos.naturalidade_estado_sigla = (dados?.naturalidade as any)?.estado?.sigla as string | undefined;
-    camposExtraidos.naturalidade_estado_descricao = (dados?.naturalidade as any)?.estado?.descricao as string | undefined;
-    camposExtraidos.uf_nascimento_id_pje = (dados?.ufNascimento as any)?.id !== undefined ? Number((dados?.ufNascimento as any).id) : undefined;
-    camposExtraidos.uf_nascimento_sigla = (dados?.ufNascimento as any)?.sigla as string | undefined;
-    camposExtraidos.uf_nascimento_descricao = (dados?.ufNascimento as any)?.descricao as string | undefined;
-    camposExtraidos.pais_nascimento_id_pje = (dados?.paisNascimento as any)?.id !== undefined ? Number((dados?.paisNascimento as any).id) : undefined;
-    camposExtraidos.pais_nascimento_codigo = (dados?.paisNascimento as any)?.codigo as string | undefined;
-    camposExtraidos.pais_nascimento_descricao = (dados?.paisNascimento as any)?.descricao as string | undefined;
+    
+    // Naturalidade (cast para tipo específico)
+    const naturalidade = dados?.naturalidade as NaturalidadePJE | undefined;
+    camposExtraidos.naturalidade_id_pje = naturalidade?.id !== undefined ? Number(naturalidade.id) : undefined;
+    camposExtraidos.naturalidade_municipio = naturalidade?.municipio;
+    camposExtraidos.naturalidade_estado_id_pje = naturalidade?.estado?.id !== undefined ? Number(naturalidade.estado.id) : undefined;
+    camposExtraidos.naturalidade_estado_sigla = naturalidade?.estado?.sigla;
+    camposExtraidos.naturalidade_estado_descricao = naturalidade?.estado?.descricao;
+    
+    // UF Nascimento (cast para tipo específico)
+    const ufNascimento = dados?.ufNascimento as EstadoPJE | undefined;
+    camposExtraidos.uf_nascimento_id_pje = ufNascimento?.id !== undefined ? Number(ufNascimento.id) : undefined;
+    camposExtraidos.uf_nascimento_sigla = ufNascimento?.sigla;
+    camposExtraidos.uf_nascimento_descricao = ufNascimento?.descricao;
+    
+    // País Nascimento (cast para tipo específico)
+    const paisNascimento = dados?.paisNascimento as PaisPJE | undefined;
+    camposExtraidos.pais_nascimento_id_pje = paisNascimento?.id !== undefined ? Number(paisNascimento.id) : undefined;
+    camposExtraidos.pais_nascimento_codigo = paisNascimento?.codigo;
+    camposExtraidos.pais_nascimento_descricao = paisNascimento?.descricao;
+    
     camposExtraidos.escolaridade_codigo = dados?.escolaridade !== undefined ? Number(dados?.escolaridade) : undefined;
-    camposExtraidos.situacao_cpf_receita_id = (dados?.situacaoCpfReceita as any)?.id !== undefined ? Number((dados?.situacaoCpfReceita as any).id) : undefined;
-    camposExtraidos.situacao_cpf_receita_descricao = (dados?.situacaoCpfReceita as any)?.descricao as string | undefined;
+    
+    // Situação CPF Receita (cast para tipo específico)
+    const situacaoCpfReceita = dados?.situacaoCpfReceita as SituacaoReceitaPJE | undefined;
+    camposExtraidos.situacao_cpf_receita_id = situacaoCpfReceita?.id !== undefined ? Number(situacaoCpfReceita.id) : undefined;
+    camposExtraidos.situacao_cpf_receita_descricao = situacaoCpfReceita?.descricao;
+    
     camposExtraidos.pode_usar_celular_mensagem = dados?.podeUsarCelularMensagem !== undefined ? Boolean(dados?.podeUsarCelularMensagem) : undefined;
   }
 
@@ -187,15 +249,26 @@ function extrairCamposPJE(parte: PartePJE) {
     camposExtraidos.inscricao_estadual = dados?.inscricaoEstadual as string | undefined;
     camposExtraidos.data_abertura = dados?.dataAbertura as string | undefined;
     camposExtraidos.orgao_publico = dados?.orgaoPublico !== undefined ? Boolean(dados?.orgaoPublico) : undefined;
-    camposExtraidos.tipo_pessoa_codigo_pje = (dados?.tipoPessoa as any)?.codigo as string | undefined;
-    camposExtraidos.tipo_pessoa_label_pje = (dados?.tipoPessoa as any)?.label as string | undefined;
-    camposExtraidos.situacao_cnpj_receita_id = (dados?.situacaoCnpjReceita as any)?.id !== undefined ? Number((dados?.situacaoCnpjReceita as any).id) : undefined;
-    camposExtraidos.situacao_cnpj_receita_descricao = (dados?.situacaoCnpjReceita as any)?.descricao as string | undefined;
+    
+    // Tipo Pessoa (cast para tipo específico)
+    const tipoPessoa = dados?.tipoPessoa as TipoPessoaPJE | undefined;
+    camposExtraidos.tipo_pessoa_codigo_pje = tipoPessoa?.codigo;
+    camposExtraidos.tipo_pessoa_label_pje = tipoPessoa?.label;
+    
+    // Situação CNPJ Receita (cast para tipo específico)
+    const situacaoCnpjReceita = dados?.situacaoCnpjReceita as SituacaoReceitaPJE | undefined;
+    camposExtraidos.situacao_cnpj_receita_id = situacaoCnpjReceita?.id !== undefined ? Number(situacaoCnpjReceita.id) : undefined;
+    camposExtraidos.situacao_cnpj_receita_descricao = situacaoCnpjReceita?.descricao;
+    
     camposExtraidos.ramo_atividade = dados?.ramoAtividade as string | undefined;
     camposExtraidos.cpf_responsavel = dados?.cpfResponsavel as string | undefined;
     camposExtraidos.oficial = dados?.oficial !== undefined ? Boolean(dados?.oficial) : undefined;
-    camposExtraidos.porte_codigo = (dados?.porte as any)?.codigo !== undefined ? Number((dados?.porte as any).codigo) : undefined;
-    camposExtraidos.porte_descricao = (dados?.porte as any)?.descricao as string | undefined;
+    
+    // Porte (cast para tipo específico)
+    const porte = dados?.porte as PortePJE | undefined;
+    camposExtraidos.porte_codigo = porte?.codigo !== undefined ? Number(porte.codigo) : undefined;
+    camposExtraidos.porte_descricao = porte?.descricao;
+    
     camposExtraidos.ultima_atualizacao_pje = dados?.ultimaAtualizacao as string | undefined;
   }
 
@@ -415,7 +488,7 @@ async function processarPartesEmLote(
 
   // Se paralelização não estiver habilitada, processa sequencialmente
   if (!CAPTURA_CONFIG.ENABLE_PARALLEL_PROCESSING) {
-    const resultados: PromiseSettledResult<any>[] = [];
+    const resultados: PromiseSettledResult<ProcessamentoParteResult>[] = [];
     for (const { parte, indexGlobal } of partesComIndice) {
       try {
         const resultado = await processarParteComRetry(parte, indexGlobal, processo, advogado, logger);
@@ -433,7 +506,7 @@ async function processarPartesEmLote(
     lotes.push(partesComIndice.slice(i, i + CAPTURA_CONFIG.MAX_CONCURRENT_PARTES));
   }
 
-  const todosResultados: PromiseSettledResult<any>[] = [];
+  const todosResultados: PromiseSettledResult<ProcessamentoParteResult>[] = [];
 
   for (const lote of lotes) {
     const promises = lote.map(({ parte, indexGlobal }) =>
