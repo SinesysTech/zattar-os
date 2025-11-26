@@ -9,11 +9,11 @@
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle, RefreshCw } from 'lucide-react';
 import { useProcessoTimeline } from '@/app/_lib/hooks/use-processo-timeline';
-import { ProcessoHeader } from '@/components/processos/processo-header';
-import { TimelineContainer } from '@/components/processos/timeline-container';
-import { TimelineLoading } from '@/components/processos/timeline-loading';
-import { TimelineError } from '@/components/processos/timeline-error';
-import { TimelineEmpty } from '@/components/processos/timeline-empty';
+import { ProcessoHeader } from '@/app/(dashboard)/processos/components/processo-header';
+import { TimelineContainer } from '@/app/(dashboard)/processos/components/timeline-container';
+import { TimelineLoading } from '@/app/(dashboard)/processos/components/timeline-loading';
+import { TimelineError } from '@/app/(dashboard)/processos/components/timeline-error';
+import { TimelineEmpty } from '@/app/(dashboard)/processos/components/timeline-empty';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 

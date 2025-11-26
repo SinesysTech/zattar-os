@@ -740,7 +740,7 @@ export async function upsertRepresentantesEmLote(
     }
 
     // Supabase retorna os registros upserted
-    return data.map(row => ({
+    return data.map((row: Record<string, unknown>) => ({
       sucesso: true,
       representante: converterParaRepresentante(row),
     }));
@@ -864,7 +864,7 @@ export async function listarRepresentantesComEndereco(
     throw new Error(`Erro ao listar representantes com endereço: ${error.message}`);
   }
 
-  const representantes = (data || []).map((row) => {
+  const representantes = (data || []).map((row: Record<string, unknown> & { endereco?: Record<string, unknown> | null }) => {
     const representante = converterParaRepresentante(row);
     const endereco = row.endereco ? converterParaEndereco(row.endereco) : null;
     return {
