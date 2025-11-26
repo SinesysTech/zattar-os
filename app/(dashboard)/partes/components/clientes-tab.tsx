@@ -137,28 +137,6 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       },
     },
     {
-      accessorKey: 'situacao_pje',
-      header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Status" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 100,
-      cell: ({ row }) => {
-        const situacao = row.getValue('situacao_pje') as string | null;
-        // PJE pode retornar 'A', 'Ativo', ou null
-        const ativo = situacao === 'A' || situacao?.toLowerCase() === 'ativo';
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            <Badge tone={ativo ? 'success' : 'neutral'} variant={ativo ? 'soft' : 'outline'}>
-              {ativo ? 'Ativo' : 'Inativo'}
-            </Badge>
-          </div>
-        );
-      },
-    },
-    {
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-center">
