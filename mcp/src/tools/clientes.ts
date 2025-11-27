@@ -52,6 +52,44 @@ const clientesTools: ToolDefinition[] = [
     },
   },
   {
+    name: 'sinesys_buscar_cliente_por_cpf',
+    description: 'Busca um cliente pelo CPF. Aceita CPF com ou sem formatação (ex: "123.456.789-00" ou "12345678900"). Retorna os dados completos do cliente ou erro 404 se não encontrado. Útil para atendimento ao cliente quando ele informa o CPF para identificação.',
+    inputSchema: z.object({
+      cpf: z.string().min(11).max(14),
+    }),
+    handler: async (args, client): Promise<ToolResponse> => {
+      try {
+        const response = await client.get<Cliente>(`/api/clientes/buscar/por-cpf/${args.cpf}`);
+        if (response.success && response.data) {
+          return formatToolResponse(response.data);
+        } else {
+          return handleToolError(response.error || 'Cliente não encontrado');
+        }
+      } catch (error) {
+        return handleToolError(error);
+      }
+    },
+  },
+  {
+    name: 'sinesys_buscar_cliente_por_cnpj',
+    description: 'Busca um cliente pelo CNPJ. Aceita CNPJ com ou sem formatação (ex: "12.345.678/0001-90" ou "12345678000190"). Retorna os dados completos do cliente ou erro 404 se não encontrado. Útil para atendimento ao cliente pessoa jurídica.',
+    inputSchema: z.object({
+      cnpj: z.string().min(14).max(18),
+    }),
+    handler: async (args, client): Promise<ToolResponse> => {
+      try {
+        const response = await client.get<Cliente>(`/api/clientes/buscar/por-cnpj/${args.cnpj}`);
+        if (response.success && response.data) {
+          return formatToolResponse(response.data);
+        } else {
+          return handleToolError(response.error || 'Cliente não encontrado');
+        }
+      } catch (error) {
+        return handleToolError(error);
+      }
+    },
+  },
+  {
     name: 'sinesys_criar_cliente',
     description: 'Cria um novo cliente no sistema (pessoa física ou jurídica). TipoPessoa é obrigatório (pf ou pj). Para PF: nome e cpf obrigatórios; para PJ: nome e cnpj obrigatórios. Campos básicos incluem dados de contato (emails, telefones), observações e endereço. Nota: Este tool também aceita campos adicionais relacionados à integração com o PJE (Processo Judicial Eletrônico), como statusPje, situacaoPje, loginPje, naturalidade, nacionalidade, etc. Estes campos são opcionais e destinados a uso avançado/interno.',
     inputSchema: z.discriminatedUnion('tipoPessoa', [
