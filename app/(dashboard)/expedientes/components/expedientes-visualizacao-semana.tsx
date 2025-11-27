@@ -15,6 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import Link from 'next/link';
 import {
   Popover,
   PopoverContent,
@@ -1131,6 +1132,7 @@ function criarColunasSemanais(
         const grau = row.original.grau;
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
+        const processoId = row.original.processo_id;
         const parteAutora = row.original.nome_parte_autora || '-';
         const parteRe = row.original.nome_parte_re || '-';
         const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
@@ -1140,9 +1142,27 @@ function criarColunasSemanais(
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>{trt}</Badge>
               <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>{formatarGrau(grau)}</Badge>
-            </div>
-            <div className="text-sm font-medium whitespace-nowrap">
-              {classeJudicial && `${classeJudicial} `}{numeroProcesso}
+              <span className="text-sm font-medium whitespace-nowrap flex items-center gap-1">
+                {classeJudicial && `${classeJudicial} `}
+                {processoId ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        href={`/processos/${processoId}`}
+                        className="inline-flex items-center gap-1 hover:text-primary transition-colors"
+                      >
+                        <Eye className="h-3.5 w-3.5" />
+                        {numeroProcesso}
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Ver timeline do processo</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ) : (
+                  <span>{numeroProcesso}</span>
+                )}
+              </span>
             </div>
             <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
               {parteAutora}

@@ -127,6 +127,15 @@ export class SinesysApiClient {
     return this.request<T>(endpoint, { method: 'GET', params });
   }
 
+  /**
+   * Sends a POST request to the specified endpoint with the provided body.
+   * POST is typically used for creating new resources or executing actions
+   * (e.g., baixa in expedientes-manuais), as opposed to PATCH for partial updates.
+   *
+   * @param endpoint - The API endpoint to send the request to
+   * @param body - The request body data
+   * @returns Promise resolving to ApiResponse<T>
+   */
   public async post<T>(endpoint: string, body: unknown): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'POST', body });
   }

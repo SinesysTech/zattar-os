@@ -11,3 +11,4 @@ export { WidgetAudienciasProximas } from './widget-audiencias-proximas';
 export { WidgetExpedientesUrgentes } from './widget-expedientes-urgentes';
 export { WidgetProdutividade } from './widget-produtividade';
 export { UserStatusCards, AdminStatusCards, AdminInfoCards } from './status-cards';
+export { PerformanceCard, WidgetProdutividadePerformance } from './widget-performance';

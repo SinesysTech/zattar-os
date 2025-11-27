@@ -26,6 +26,7 @@ import { WidgetCargaUsuarios } from './components/widget-carga-usuarios';
 import { WidgetMetricasEscritorio } from './components/widget-metricas-escritorio';
 import { WidgetStatusCapturas } from './components/widget-status-capturas';
 import { WidgetPerformanceAdvogados } from './components/widget-performance-advogados';
+import { AdvogadoPerformanceCard, ProdutividadeCard } from './components/performance-card';
 
 // Mock data
 import {
@@ -215,6 +216,32 @@ export default function SandboxDashboardPage() {
               </div>
             </section>
 
+            {/* Nova seção: Performance Card (Novo Design) */}
+            <section className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Typography.H4 className="text-muted-foreground">Produtividade</Typography.H4>
+                <Badge variant="soft" tone="info" className="text-[10px]">Novo Design</Badge>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <ProdutividadeCard
+                  nomeUsuario={usuario.nome_exibicao}
+                  baixasHoje={produtividade.ultimoMes[produtividade.ultimoMes.length - 1]?.pendentesResolvidos || 0}
+                  baixasSemana={produtividade.ultimoMes.slice(-7).reduce((acc, d) => acc + d.pendentesResolvidos, 0)}
+                  baixasMes={produtividade.totalPendentes}
+                  mediaDiaria={produtividade.mediaProcessosDia}
+                  comparativoSemanaAnterior={12}
+                  metaMensal={50}
+                  atividadesRecentes={[
+                    { id: '1', text: 'Baixou expediente TRT4-0001234', date: 'Hoje', status: 'success' },
+                    { id: '2', text: 'Concluiu 3 manifestações', date: 'Ontem', status: 'success' },
+                    { id: '3', text: 'Prazo próximo: TRT9-0005678', date: '2 dias', status: 'warning' },
+                  ]}
+                  onVerDetalhes={() => console.log('Ver detalhes')}
+                />
+              </div>
+            </section>
+
             {/* Área para Widgets Pessoais */}
             <section className="space-y-4">
               <Typography.H4 className="text-muted-foreground">Meu Espaço</Typography.H4>
@@ -299,6 +326,37 @@ export default function SandboxDashboardPage() {
                   data={performanceAdvogados}
                   loading={loading}
                 />
+              </div>
+            </section>
+
+            {/* Nova seção: Performance Cards (Novo Design) */}
+            <section className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Typography.H4 className="text-muted-foreground">Performance Individual</Typography.H4>
+                <Badge variant="soft" tone="info" className="text-[10px]">Novo Design</Badge>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {performanceAdvogados.slice(0, 3).map((advogado) => (
+                  <AdvogadoPerformanceCard
+                    key={advogado.usuario.id}
+                    nome={advogado.usuario.nome_exibicao}
+                    cargo={advogado.usuario.cargo}
+                    baixasSemana={advogado.pendentesResolvidos}
+                    baixasMes={advogado.audienciasRealizadas * 3}
+                    taxaCumprimentoPrazo={Math.round((1 - advogado.tempoMedioResolucao / 10) * 100)}
+                    expedientesVencidos={Math.max(0, advogado.tempoMedioResolucao - 3)}
+                    trendSemana={advogado.score > 80 ? 15 : -5}
+                    trendMes={advogado.score > 70 ? 8 : -3}
+                    atividadesRecentes={[
+                      { id: '1', text: `Resolveu ${advogado.pendentesResolvidos} expedientes`, date: 'Semana', status: 'success' as const },
+                      { id: '2', text: `${advogado.audienciasRealizadas} audiências realizadas`, date: 'Mês', status: 'success' as const },
+                      { id: '3', text: advogado.tempoMedioResolucao > 3 ? 'Atenção: prazos acumulados' : 'Performance excelente', date: 'Status', status: advogado.tempoMedioResolucao > 3 ? 'warning' as const : 'success' as const },
+                    ]}
+                    onVerRelatorio={() => console.log('Ver relatório', advogado.usuario.id)}
+                    onAgendar={() => console.log('Agendar', advogado.usuario.id)}
+                  />
+                ))}
               </div>
             </section>
 

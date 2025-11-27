@@ -140,19 +140,28 @@ export async function obterPartesProcesso(
           const representantesRaw = Array.isArray(parteData.representantes) ? parteData.representantes : [];
           
           // Mapear representantes para o formato esperado pela interface
-          const representantes = representantesRaw.map((rep: Record<string, unknown>) => ({
-            idPessoa: Number(rep.idPessoa || rep.id_pessoa || 0),
-            nome: String(rep.nome || ''),
-            tipoDocumento: (rep.tipoDocumento || rep.tipo_documento || 'CPF') as 'CPF' | 'CNPJ',
-            numeroDocumento: String(rep.documento || rep.numeroDocumento || rep.numero_documento || rep.cpf || ''),
-            numeroOAB: rep.numeroOab || rep.numero_oab ? String(rep.numeroOab || rep.numero_oab) : null,
-            ufOAB: rep.ufOab || rep.uf_oab ? String(rep.ufOab || rep.uf_oab) : null,
-            situacaoOAB: rep.situacaoOab || rep.situacao_oab ? String(rep.situacaoOab || rep.situacao_oab) : null,
-            tipo: String(rep.tipo || 'ADVOGADO'),
-            email: rep.email ? String(rep.email) : null,
-            telefones: extrairTelefones(rep),
-            dadosCompletos: rep,
-          }));
+          const representantes = representantesRaw.map((rep: Record<string, unknown>) => {
+            // Extrair número da OAB e UF (pode vir junto como "BA79812" ou separado)
+            const numeroOabRaw = String(rep.numeroOab || rep.numero_oab || '');
+            const { numeroOAB, ufOAB } = extrairOabEUf(
+              numeroOabRaw,
+              rep.ufOab as string | undefined || rep.uf_oab as string | undefined
+            );
+
+            return {
+              idPessoa: Number(rep.idPessoa || rep.id_pessoa || 0),
+              nome: String(rep.nome || ''),
+              tipoDocumento: (rep.tipoDocumento || rep.tipo_documento || 'CPF') as 'CPF' | 'CNPJ',
+              numeroDocumento: String(rep.documento || rep.numeroDocumento || rep.numero_documento || rep.cpf || ''),
+              numeroOAB,
+              ufOAB,
+              situacaoOAB: rep.situacaoOab || rep.situacao_oab ? String(rep.situacaoOab || rep.situacao_oab) : null,
+              tipo: String(rep.tipo || 'ADVOGADO'),
+              email: rep.email ? String(rep.email) : null,
+              telefones: extrairTelefones(rep),
+              dadosCompletos: rep,
+            };
+          });
 
           // Mapeia dados da API PJE para tipo PartePJE
           const parte: PartePJE = {
@@ -265,6 +274,62 @@ function extrairEmails(parteData: Record<string, unknown>): string[] {
 
   // Remove duplicatas
   return [...new Set(emails)];
+}
+
+/**
+ * Lista de UFs válidas do Brasil
+ */
+const UFS_BRASIL = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
+  'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
+  'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+];
+
+/**
+ * Extrai número da OAB e UF
+ * O PJE pode retornar o número junto com UF como prefixo (ex: "BA79812") ou separados
+ * 
+ * Formatos possíveis:
+ * - "BA79812" → UF: BA, Número: 79812
+ * - "MG128404" → UF: MG, Número: 128404
+ * - "79812" (com ufOab separado) → usa ufOab fornecido
+ */
+function extrairOabEUf(
+  numeroOabRaw: string,
+  ufOabSeparado?: string
+): { numeroOAB: string | null; ufOAB: string | null } {
+  if (!numeroOabRaw || numeroOabRaw.trim() === '') {
+    return { numeroOAB: null, ufOAB: ufOabSeparado ? String(ufOabSeparado).toUpperCase() : null };
+  }
+
+  const numeroLimpo = numeroOabRaw.trim().toUpperCase();
+
+  // Se UF foi fornecida separadamente, usar ela
+  if (ufOabSeparado && ufOabSeparado.trim() !== '') {
+    return {
+      numeroOAB: numeroLimpo,
+      ufOAB: String(ufOabSeparado).toUpperCase()
+    };
+  }
+
+  // Tentar extrair UF do prefixo do número (ex: "BA79812")
+  // Verificar se os primeiros 2 caracteres são uma UF válida
+  if (numeroLimpo.length >= 3) {
+    const possibleUf = numeroLimpo.substring(0, 2);
+    if (UFS_BRASIL.includes(possibleUf)) {
+      const numeroSemUf = numeroLimpo.substring(2);
+      // Verificar se o resto é numérico
+      if (/^\d+$/.test(numeroSemUf)) {
+        return {
+          numeroOAB: numeroSemUf,
+          ufOAB: possibleUf
+        };
+      }
+    }
+  }
+
+  // Se não conseguir extrair, retornar como está
+  return { numeroOAB: numeroLimpo, ufOAB: null };
 }
 
 /**

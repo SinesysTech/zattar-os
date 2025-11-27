@@ -104,6 +104,139 @@ export function handleToolError(error: unknown): { content: [{ type: 'text'; tex
   };
 }
 
+/**
+ * Status finais de uma captura assíncrona.
+ */
+export type CapturaStatusFinal = 'completed' | 'failed';
+
+/**
+ * Status possíveis de uma captura assíncrona.
+ */
+export type CapturaStatus = 'pending' | 'in_progress' | CapturaStatusFinal;
+
+/**
+ * Resultado do polling de captura.
+ */
+export interface PollingResult {
+  success: boolean;
+  status: CapturaStatus;
+  data?: unknown;
+  error?: string;
+  timedOut?: boolean;
+  totalPolls?: number;
+  elapsedMs?: number;
+}
+
+/**
+ * Opções de configuração para o polling de captura.
+ */
+export interface PollingOptions {
+  /** Intervalo entre polling em milissegundos (padrão: 5000ms = 5s) */
+  intervalMs?: number;
+  /** Timeout máximo em milissegundos (padrão: 300000ms = 5min) */
+  timeoutMs?: number;
+}
+
+/**
+ * Interface mínima do cliente API para polling (evita import circular).
+ */
+interface MinimalApiClient {
+  get: <T = unknown>(endpoint: string, params?: Record<string, unknown>) => Promise<{
+    success: boolean;
+    data?: T;
+    error?: string;
+  }>;
+}
+
+/**
+ * Helper de polling reutilizável para capturas assíncronas.
+ * Consulta o status de uma captura em intervalos regulares até detectar
+ * status final (completed/failed) ou timeout.
+ * 
+ * @param client Cliente API para fazer requisições
+ * @param captureId ID da captura a monitorar
+ * @param options Configurações de polling (intervalo e timeout)
+ * @returns Resultado do polling com status final e dados
+ * 
+ * @example
+ * const result = await pollCapturaStatus(client, 123, { intervalMs: 3000, timeoutMs: 60000 });
+ * if (result.success && result.status === 'completed') {
+ *   console.log('Captura concluída:', result.data);
+ * }
+ */
+export async function pollCapturaStatus(
+  client: MinimalApiClient,
+  captureId: number,
+  options: PollingOptions = {}
+): Promise<PollingResult> {
+  const { intervalMs = 5000, timeoutMs = 300000 } = options;
+  const startTime = Date.now();
+  let pollCount = 0;
+
+  const isFinalStatus = (status: string): status is CapturaStatusFinal => {
+    return status === 'completed' || status === 'failed';
+  };
+
+  while (true) {
+    pollCount++;
+    const elapsedMs = Date.now() - startTime;
+
+    // Verificar timeout
+    if (elapsedMs >= timeoutMs) {
+      return {
+        success: false,
+        status: 'in_progress',
+        error: `Timeout após ${timeoutMs}ms aguardando conclusão da captura`,
+        timedOut: true,
+        totalPolls: pollCount,
+        elapsedMs,
+      };
+    }
+
+    try {
+      const response = await client.get<{
+        status: CapturaStatus;
+        [key: string]: unknown;
+      }>(`/api/captura/historico/${captureId}`);
+
+      if (!response.success) {
+        return {
+          success: false,
+          status: 'failed',
+          error: response.error || 'Erro ao consultar status da captura',
+          totalPolls: pollCount,
+          elapsedMs: Date.now() - startTime,
+        };
+      }
+
+      const capturaData = response.data;
+      const status = capturaData?.status || 'pending';
+
+      // Se status final, retornar resultado
+      if (isFinalStatus(status)) {
+        return {
+          success: status === 'completed',
+          status,
+          data: capturaData,
+          totalPolls: pollCount,
+          elapsedMs: Date.now() - startTime,
+        };
+      }
+
+      // Aguardar intervalo antes do próximo poll
+      await new Promise(resolve => setTimeout(resolve, intervalMs));
+    } catch (error) {
+      return {
+        success: false,
+        status: 'failed',
+        error: error instanceof Error ? error.message : 'Erro desconhecido no polling',
+        totalPolls: pollCount,
+        elapsedMs: Date.now() - startTime,
+      };
+    }
+  }
+}
+
 // Inline commented unit tests
 // These are example tests; in a real setup, use a testing framework like Jest.
 

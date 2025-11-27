@@ -70,6 +70,7 @@ import { ExpedientesReverterBaixaDialog } from './components/expedientes-reverte
 import { ExpedienteVisualizarDialog } from './components/expediente-visualizar-dialog';
 import { PdfViewerDialog } from './components/pdf-viewer-dialog';
 import { CheckCircle2, Undo2, Eye } from 'lucide-react';
+import Link from 'next/link';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
@@ -1058,29 +1059,50 @@ function criarColunas(
         const grau = row.original.grau;
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
+        const processoId = row.original.processo_id;
         const parteAutora = row.original.nome_parte_autora || '-';
         const parteRe = row.original.nome_parte_re || '-';
         const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[520px]">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>{trt}</Badge>
-              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>{formatarGrau(grau)}</Badge>
+          <TooltipProvider>
+            <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[520px]">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>{trt}</Badge>
+                <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>{formatarGrau(grau)}</Badge>
+                <span className="text-sm font-medium whitespace-nowrap flex items-center gap-1">
+                  {classeJudicial && `${classeJudicial} `}
+                  {processoId ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          href={`/processos/${processoId}`}
+                          className="inline-flex items-center gap-1 hover:text-primary transition-colors"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          {numeroProcesso}
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Ver timeline do processo</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <span>{numeroProcesso}</span>
+                  )}
+                </span>
+              </div>
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+                {parteAutora}
+              </Badge>
+              <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+                {parteRe}
+              </Badge>
+              <div className="text-xs text-muted-foreground max-w-full truncate">
+                {orgaoJulgador}
+              </div>
             </div>
-            <div className="text-sm font-medium whitespace-nowrap">
-              {classeJudicial && `${classeJudicial} `}{numeroProcesso}
-            </div>
-            <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
-              {parteAutora}
-            </Badge>
-            <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
-              {parteRe}
-            </Badge>
-            <div className="text-xs text-muted-foreground max-w-full truncate">
-              {orgaoJulgador}
-            </div>
-          </div>
+          </TooltipProvider>
         );
       },
     },

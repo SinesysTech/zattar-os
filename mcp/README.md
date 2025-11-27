@@ -109,6 +109,8 @@ O campo `apiKey` corresponde à Service API Key (variável `SERVICE_API_KEY` do 
 
 **Prioridade de autenticação:** Service API Key > Bearer Token.
 
+O Service API Key tem prioridade e é mais adequado para agentes e automação.
+
 ## Autenticação
 
 O cliente suporta dois métodos de autenticação:
@@ -157,6 +159,8 @@ Erros nas ferramentas MCP são retornados no formato padrão do protocolo:
 - **Tratamento**: Verifique sempre o campo `isError` nas respostas para identificar falhas. Em caso de erro, a resposta não contém dados válidos.
 
 ## Available Tools
+
+O servidor MCP oferece atualmente 53 ferramentas para interação com o sistema Sinesys, organizadas por entidades principais.
 
 ### 1. Clientes Tools
 
@@ -359,6 +363,623 @@ Atribui/transfere/desatribui responsável de um processo.
   ```
 - **Resposta esperada**: JSON com `{ success: boolean, data: { id: number, responsavel_id: number | null }, error?: string }`
 
+### 4. Audiências Tools
+
+#### `sinesys_listar_audiencias`
+Lista audiências com filtros avançados (TRT, grau, responsável, busca, status, modalidade, datas, ordenação). Limite máximo 1000 para visualizações de calendário.
+- **Descrição**: Lista audiências com paginação, filtros complexos incluindo modalidade (virtual/presencial/híbrida), status (M=Marcada, R=Realizada, C=Cancelada), tipos de audiência, ranges de datas ISO, e ordenação por múltiplos campos. Limite máximo 1000 (ideal para calendários).
+- **Parâmetros de entrada**:
+  - `pagina` (number, opcional): Número da página
+  - `limite` (number, opcional): Itens por página (máx 1000)
+  - `trt` (string, opcional): Tribunal Regional do Trabalho
+  - `grau` ('primeiro_grau' | 'segundo_grau', opcional): Grau do processo
+  - `responsavel_id` (number | 'null', opcional): ID do responsável ou "null" para sem responsável
+  - `sem_responsavel` (boolean, opcional): Filtrar sem responsável
+  - `busca` (string, opcional): Busca textual
+  - `numero_processo` (string, opcional): Número do processo
+  - `polo_ativo_nome` (string, opcional): Nome do polo ativo
+  - `polo_passivo_nome` (string, opcional): Nome do polo passivo
+  - `status` ('M' | 'R' | 'C', opcional): Status da audiência
+  - `modalidade` ('virtual' | 'presencial' | 'hibrida', opcional): Modalidade
+  - `tipo_descricao` (string, opcional): Descrição do tipo
+  - `tipo_codigo` (string, opcional): Código do tipo
+  - `tipo_is_virtual` (boolean, opcional): Se é virtual
+  - `data_inicio_inicio` (string, opcional): Data início mínimo (ISO)
+  - `data_inicio_fim` (string, opcional): Data início máximo (ISO)
+  - `data_fim_inicio` (string, opcional): Data fim mínimo (ISO)
+  - `data_fim_fim` (string, opcional): Data fim máximo (ISO)
+  - `ordenar_por` (enum, opcional): Campo de ordenação
+  - `ordem` ('asc' | 'desc', opcional): Ordem
+- **Exemplo de uso**:
+  ```json
+  {
+    "pagina": 1,
+    "limite": 50,
+    "modalidade": "virtual",
+    "data_inicio_inicio": "2023-01-01T00:00:00Z",
+    "ordenar_por": "data_inicio",
+    "ordem": "asc"
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: { audiencias: Audiencia[], paginacao: ... }, error?: string }`
+
+#### `sinesys_criar_audiencia`
+Cria audiência manual (id_pje=0). Requer processo_id, advogado_id, data_inicio, data_fim.
+- **Descrição**: Cria audiência manual com id_pje=0. Campos obrigatórios: processo_id, advogado_id, data_inicio, data_fim (ISO 8601).
+- **Parâmetros de entrada**:
+  - `processo_id` (number, obrigatório): ID do processo
+  - `advogado_id` (number, obrigatório): ID do advogado
+  - `data_inicio` (string, obrigatório): Data início (ISO)
+  - `data_fim` (string, obrigatório): Data fim (ISO)
+  - `tipo_audiencia_id` (number, opcional): ID do tipo
+  - `sala_audiencia_id` (number, opcional): ID da sala
+  - `url_audiencia_virtual` (string, opcional): URL virtual
+  - `endereco_presencial` (string, opcional): Endereço presencial
+  - `observacoes` (string, opcional): Observações
+  - `responsavel_id` (number, opcional): ID do responsável
+- **Exemplo de uso**:
+  ```json
+  {
+    "processo_id": 123,
+    "advogado_id": 456,
+    "data_inicio": "2023-06-01T10:00:00Z",
+    "data_fim": "2023-06-01T12:00:00Z",
+    "modalidade": "virtual"
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Audiencia, error?: string }`
+
+#### `sinesys_atribuir_responsavel_audiencia`
+Atribui/transfere/desatribui responsável de audiência.
+- **Descrição**: Atribui responsável (número positivo) ou desatribui (null). Registra em logs.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID da audiência
+  - `responsavelId` (number | null, obrigatório): ID do responsável ou null
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 789,
+    "responsavelId": 101
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: { id: number, responsavel_id: number | null }, error?: string }`
+
+#### `sinesys_atualizar_modalidade_audiencia`
+Atualiza modalidade (virtual/presencial/híbrida). Híbrida só pode ser definida manualmente.
+- **Descrição**: Atualiza modalidade. Híbrida manual; virtual/presencial por triggers.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID da audiência
+  - `modalidade` ('virtual' | 'presencial' | 'hibrida', obrigatório): Modalidade
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 789,
+    "modalidade": "hibrida"
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Audiencia, error?: string }`
+
+#### `sinesys_atualizar_observacoes_audiencia`
+Atualiza observações da audiência.
+- **Descrição**: Atualiza observações (string ou null para remover).
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID da audiência
+  - `observacoes` (string | null, obrigatório): Observações
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 789,
+    "observacoes": "Audiência remarcada"
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Audiencia, error?: string }`
+
+### 5. Pendentes de Manifestação Tools
+
+#### `sinesys_listar_pendentes_manifestacao`
+Lista pendentes com filtros específicos (prazo_vencido, datas de ciência/expediente) e suporte a agrupamento (agrupar_por). Retorna estrutura diferente quando agrupado.
+- **Descrição**: Lista pendentes com filtros avançados, agrupamento (retorna agrupamentos com contagens ou pendentes completos), limite máx 100. Quando agrupar_por presente, estrutura muda para agrupamentos.
+- **Parâmetros de entrada**:
+  - `pagina` (number, opcional): Página
+  - `limite` (number, opcional): Limite (máx 100)
+  - `trt` (string, opcional): TRT
+  - `grau` ('primeiro_grau' | 'segundo_grau', opcional): Grau
+  - `responsavel_id` (number | 'null', opcional): Responsável
+  - `sem_responsavel` (boolean, opcional): Sem responsável
+  - `busca` (string, opcional): Busca textual
+  - `numero_processo` (string, opcional): Número processo
+  - `nome_parte_autora` (string, opcional): Nome autora
+  - `nome_parte_re` (string, opcional): Nome ré
+  - `descricao_orgao_julgador` (string, opcional): Descrição órgão
+  - `sigla_orgao_julgador` (string, opcional): Sigla órgão
+  - `classe_judicial` (string, opcional): Classe judicial
+  - `codigo_status_processo` (string, opcional): Código status
+  - `segredo_justica` (boolean, opcional): Segredo justiça
+  - `juizo_digital` (boolean, opcional): Juízo digital
+  - `processo_id` (number, opcional): ID processo
+  - `prazo_vencido` (boolean, opcional): Prazo vencido
+  - `tipo_expediente_id` (number | 'null', opcional): Tipo expediente
+  - `sem_tipo` (boolean, opcional): Sem tipo
+  - `baixado` (boolean, opcional): Baixado
+  - `data_prazo_legal_inicio` (string, opcional): Prazo legal min (ISO)
+  - `data_prazo_legal_fim` (string, opcional): Prazo legal max (ISO)
+  - `data_ciencia_inicio` (string, opcional): Ciência min (ISO)
+  - `data_ciencia_fim` (string, opcional): Ciência max (ISO)
+  - `data_criacao_expediente_inicio` (string, opcional): Criação expediente min (ISO)
+  - `data_criacao_expediente_fim` (string, opcional): Criação expediente max (ISO)
+  - `data_autuacao_inicio` (string, opcional): Autuação min (ISO)
+  - `data_autuacao_fim` (string, opcional): Autuação max (ISO)
+  - `data_arquivamento_inicio` (string, opcional): Arquivamento min (ISO)
+  - `data_arquivamento_fim` (string, opcional): Arquivamento max (ISO)
+  - `ordenar_por` (enum, opcional): Ordenação
+  - `ordem` ('asc' | 'desc', opcional): Ordem
+  - `agrupar_por` (enum, opcional): Agrupamento (ex: 'trt', 'responsavel_id')
+  - `incluir_contagem` (boolean, opcional): Incluir contagem
+- **Exemplo de uso**:
+  ```json
+  {
+    "pagina": 1,
+    "limite": 50,
+    "prazo_vencido": true,
+    "agrupar_por": "responsavel_id",
+    "incluir_contagem": true
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: { pendentes: Pendente[], paginacao: ... } | { agrupamentos: ..., total: number }, error?: string }`
+
+#### `sinesys_atribuir_responsavel_pendente`
+Atribui/transfere/desatribui responsável de pendente.
+- **Descrição**: Atribui responsável (número ou null). Registra em logs.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID do pendente
+  - `responsavelId` (number | null, obrigatório): ID responsável ou null
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 101,
+    "responsavelId": 202
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: { id: number, responsavel_id: number | null }, error?: string }`
+
+#### `sinesys_baixar_pendente`
+Marca pendente como respondido. Requer protocolo_id OU justificativa.
+- **Descrição**: Marca como respondido. Obrigatório protocolo_id ou justificativa. Registra em logs.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID do pendente
+  - `protocolo_id` (string, opcional): Protocolo
+  - `justificativa` (string, opcional): Justificativa
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 101,
+    "protocolo_id": "PROTO-123"
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Pendente, error?: string }`
+
+#### `sinesys_reverter_baixa_pendente`
+Reverte baixa de pendente, limpando campos relacionados.
+- **Descrição**: Reverte baixa, limpa baixado_em, protocolo_id, justificativa_baixa. Registra em logs.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID do pendente
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 101
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Pendente, error?: string }`
+
+### 6. Expedientes Manuais Tools
+
+#### `sinesys_listar_expedientes_manuais`
+Lista expedientes manuais com filtros (processo, TRT, grau, tipo, responsável, prazo_vencido, baixado, criado_por).
+- **Descrição**: Lista expedientes manuais com paginação, filtros, limite máx 100.
+- **Parâmetros de entrada**:
+  - `pagina` (number, opcional): Página
+  - `limite` (number, opcional): Limite (máx 100)
+  - `busca` (string, opcional): Busca textual
+  - `processo_id` (number, opcional): ID processo
+  - `trt` (string, opcional): TRT
+  - `grau` ('primeiro_grau' | 'segundo_grau', opcional): Grau
+  - `tipo_expediente_id` (number, opcional): Tipo expediente
+  - `responsavel_id` (number | 'null', opcional): Responsável
+  - `prazo_vencido` (boolean, opcional): Prazo vencido
+  - `baixado` (boolean, opcional): Baixado
+  - `criado_por` (number, opcional): Criado por
+  - `data_prazo_legal_inicio` (string, opcional): Prazo legal min (ISO)
+  - `data_prazo_legal_fim` (string, opcional): Prazo legal max (ISO)
+  - `ordenar_por` (string, opcional): Ordenação
+  - `ordem` ('asc' | 'desc', opcional): Ordem
+- **Exemplo de uso**:
+  ```json
+  {
+    "pagina": 1,
+    "limite": 20,
+    "baixado": false,
+    "ordenar_por": "data_prazo_legal",
+    "ordem": "asc"
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: { expedientes: ExpedienteManual[], paginacao: ... }, error?: string }`
+
+#### `sinesys_criar_expediente_manual`
+Cria expediente manual. Requer processo_id e descricao.
+- **Descrição**: Cria expediente manual. Obrigatório processo_id e descricao.
+- **Parâmetros de entrada**:
+  - `processo_id` (number, obrigatório): ID processo
+  - `descricao` (string, obrigatório): Descrição
+  - `tipo_expediente_id` (number, opcional): Tipo
+  - `data_prazo_legal` (string, opcional): Prazo legal (ISO)
+  - `responsavel_id` (number, opcional): Responsável
+  - `observacoes` (string, opcional): Observações
+- **Exemplo de uso**:
+  ```json
+  {
+    "processo_id": 123,
+    "descricao": "Expediente de contestação"
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: ExpedienteManual, error?: string }`
+
+#### `sinesys_buscar_expediente_manual`
+Busca expediente manual por ID.
+- **Descrição**: Retorna dados completos ou erro 404.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID expediente
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 456
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: ExpedienteManual, error?: string }`
+
+#### `sinesys_atualizar_expediente_manual`
+Atualiza campos de expediente manual (atualização parcial).
+- **Descrição**: Atualiza parcialmente campos fornecidos em dados.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID expediente
+  - `dados` (object, obrigatório): Campos parciais (descricao, tipo_expediente_id, data_prazo_legal, responsavel_id, observacoes)
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 456,
+    "dados": {
+      "observacoes": "Atualizado"
+    }
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: ExpedienteManual, error?: string }`
+
+#### `sinesys_deletar_expediente_manual`
+Deleta expediente manual permanentemente.
+- **Descrição**: Deleta permanentemente.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID expediente
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 456
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: { message: string }, error?: string }`
+
+#### `sinesys_atribuir_responsavel_expediente_manual`
+Atribui/remove responsável de expediente manual.
+- **Descrição**: Atribui (número) ou remove (null).
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID expediente
+  - `responsavel_id` (number | null, obrigatório): Responsável
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 456,
+    "responsavel_id": 789
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: ExpedienteManual, error?: string }`
+
+#### `sinesys_baixar_expediente_manual`
+Marca expediente como concluído. Requer protocolo_id OU justificativa_baixa. Usa POST (diferente de pendentes que usa PATCH).
+- **Descrição**: Marca como concluído. Obrigatório protocolo_id ou justificativa_baixa. Usa POST.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID expediente
+  - `protocolo_id` (string, opcional): Protocolo
+  - `justificativa_baixa` (string, opcional): Justificativa
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 456,
+    "justificativa_baixa": "Respondido via e-mail"
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: ExpedienteManual, error?: string }`
+
+#### `sinesys_reverter_baixa_expediente_manual`
+Reverte baixa de expediente manual. Usa POST (diferente de pendentes que usa PATCH).
+- **Descrição**: Reverte baixa. Usa POST.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID expediente
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 456
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: ExpedienteManual, error?: string }`
+
+### 7. Captura (8 tools)
+
+#### `sinesys_iniciar_captura_acervo_geral`
+Inicia captura de acervo geral.
+- **Descrição**: Inicia captura de processos do acervo geral (todos os processos ativos).
+
+#### `sinesys_iniciar_captura_audiencias`
+Inicia captura de audiências.
+- **Descrição**: Inicia captura de audiências marcadas no período especificado (padrão: hoje até +365 dias).
+
+#### `sinesys_iniciar_captura_pendentes`
+Inicia captura de pendentes de manifestação.
+- **Descrição**: Inicia captura de processos pendentes de manifestação, com filtros de prazo.
+
+#### `sinesys_iniciar_captura_timeline`
+Captura timeline de processo específico.
+- **Descrição**: Captura timeline completa de um processo específico (movimentos + documentos).
+
+#### `sinesys_iniciar_captura_partes`
+Captura partes de processos.
+- **Descrição**: Captura partes (pessoas envolvidas) de processos, identificando clientes/partes contrárias/terceiros.
+
+#### `sinesys_consultar_status_captura`
+Consulta status de captura assíncrona.
+- **Descrição**: Consulta status de uma captura assíncrona (pending/in_progress/completed/failed) com resultado detalhado.
+
+#### `sinesys_listar_historico_capturas`
+Lista histórico de capturas.
+- **Descrição**: Lista histórico de capturas realizadas com filtros avançados.
+
+#### `sinesys_aguardar_captura_concluir`
+Aguarda captura concluir com polling automático.
+- **Descrição**: Aguarda uma captura assíncrona ser concluída (completed/failed) com polling automático. Útil quando você precisa do resultado final sem monitorar manualmente. Intervalo padrão: 5s, timeout padrão: 5min.
+- **Parâmetros de entrada**:
+  - `capture_id` (number, obrigatório): ID da captura a aguardar
+  - `interval_ms` (number, opcional): Intervalo entre consultas em ms (padrão: 5000)
+  - `timeout_ms` (number, opcional): Timeout máximo em ms (padrão: 300000 = 5min)
+- **Exemplo de uso**:
+  ```json
+  {
+    "capture_id": 123,
+    "interval_ms": 3000,
+    "timeout_ms": 120000
+  }
+  ```
+- **Resposta esperada**: JSON com `{ status, data, polling_info: { total_polls, elapsed_ms } }`
+
+### 8. Advogados (7 tools)
+
+#### `sinesys_listar_advogados`
+Lista advogados.
+- **Descrição**: Lista advogados do escritório com filtros opcionais (busca em nome completo, CPF ou OAB).
+
+#### `sinesys_criar_advogado`
+Cria advogado.
+- **Descrição**: Cadastra novo advogado no sistema.
+
+#### `sinesys_listar_credenciais_advogado`
+Lista credenciais PJE.
+- **Descrição**: Lista credenciais de acesso ao PJE de um advogado (filtro por ativas/inativas).
+
+#### `sinesys_criar_credencial_advogado`
+Cria credencial PJE.
+- **Descrição**: Cadastra nova credencial de acesso ao tribunal para o advogado (senha é criptografada no backend).
+
+#### `sinesys_atualizar_credencial_advogado`
+Atualiza credencial.
+- **Descrição**: Atualiza credencial existente (atualização parcial, apenas campos fornecidos são alterados).
+
+#### `sinesys_ativar_credencial_advogado`
+Ativa credencial.
+- **Descrição**: Ativa credencial desativada (atalho para atualizar active=true).
+
+#### `sinesys_desativar_credencial_advogado`
+Desativa credencial.
+- **Descrição**: Desativa credencial ativa (atalho para atualizar active=false, não deleta do banco).
+
+### 9. Usuários (6 tools)
+
+#### `sinesys_listar_usuarios`
+Lista usuários.
+- **Descrição**: Lista usuários do sistema com filtros (busca em nome completo, nome de exibição, CPF ou e-mail corporativo).
+- **Parâmetros de entrada** (todos camelCase):
+  - `pagina` (number, opcional): Número da página
+  - `limite` (number, opcional): Itens por página
+  - `busca` (string, opcional): Busca textual
+  - `ativo` (boolean, opcional): Filtrar por status ativo/inativo
+  - `oab` (string, opcional): Filtrar por número OAB
+  - `ufOab` (string, opcional): Filtrar por UF da OAB
+- **Exemplo de uso**:
+  ```json
+  {
+    "pagina": 1,
+    "limite": 10,
+    "busca": "João",
+    "ufOab": "MG"
+  }
+  ```
+
+#### `sinesys_buscar_usuario_por_id`
+Busca por ID.
+- **Descrição**: Busca usuário específico por ID com dados completos.
+
+#### `sinesys_buscar_usuario_por_email`
+Busca por email.
+- **Descrição**: Busca usuário por e-mail corporativo (útil para verificar existência antes de criar).
+
+#### `sinesys_buscar_usuario_por_cpf`
+Busca por CPF.
+- **Descrição**: Busca usuário por CPF (aceita com ou sem formatação).
+
+#### `sinesys_criar_usuario`
+Cria usuário.
+- **Descrição**: Cria novo usuário no sistema (cria conta em auth.users + registro em public.usuarios).
+- **Parâmetros de entrada** (todos camelCase):
+  - `nomeCompleto` (string, obrigatório): Nome completo
+  - `nomeExibicao` (string, obrigatório): Nome de exibição
+  - `cpf` (string, obrigatório): CPF
+  - `emailCorporativo` (string, obrigatório): E-mail corporativo
+  - `senha` (string, obrigatório): Senha (mín. 6 caracteres)
+  - `rg` (string, opcional): RG
+  - `dataNascimento` (string, opcional): Data de nascimento
+  - `genero` (enum, opcional): masculino, feminino, outro, prefiro_nao_informar
+  - `oab` (string, opcional): Número OAB
+  - `ufOab` (string, opcional): UF da OAB
+  - `emailPessoal` (string, opcional): E-mail pessoal
+  - `telefone` (string, opcional): Telefone
+  - `ramal` (string, opcional): Ramal
+  - `endereco` (object, opcional): Objeto com campos de endereço
+  - `ativo` (boolean, opcional): Status ativo
+- **Exemplo de uso**:
+  ```json
+  {
+    "nomeCompleto": "João Silva",
+    "nomeExibicao": "João",
+    "cpf": "12345678900",
+    "emailCorporativo": "joao@empresa.com",
+    "senha": "senha123",
+    "ufOab": "MG"
+  }
+  ```
+
+#### `sinesys_atualizar_usuario`
+Atualiza usuário.
+- **Descrição**: Atualiza usuário existente (atualização parcial). Campo `isSuperAdmin` só pode ser alterado por outro super admin. Ao desativar (ativo=false), todos os itens atribuídos ao usuário serão automaticamente desatribuídos.
+- **Parâmetros de entrada** (todos camelCase):
+  - `usuarioId` (number, obrigatório): ID do usuário
+  - `nomeCompleto` (string, opcional): Nome completo
+  - `nomeExibicao` (string, opcional): Nome de exibição
+  - `cpf` (string, opcional): CPF
+  - `rg` (string, opcional): RG
+  - `dataNascimento` (string, opcional): Data de nascimento
+  - `genero` (enum, opcional): masculino, feminino, outro, prefiro_nao_informar
+  - `oab` (string, opcional): Número OAB
+  - `ufOab` (string, opcional): UF da OAB
+  - `emailPessoal` (string, opcional): E-mail pessoal
+  - `emailCorporativo` (string, opcional): E-mail corporativo
+  - `telefone` (string, opcional): Telefone
+  - `ramal` (string, opcional): Ramal
+  - `endereco` (object, opcional): Objeto com campos de endereço
+  - `ativo` (boolean, opcional): Status ativo
+  - `isSuperAdmin` (boolean, opcional): Status de super admin
+- **Exemplo de uso**:
+  ```json
+  {
+    "usuarioId": 123,
+    "nomeCompleto": "João Silva Atualizado",
+    "ativo": true
+  }
+  ```
+
+### 10. Admin (3 tools)
+
+#### `sinesys_obter_estatisticas_cache`
+Estatísticas do Redis.
+- **Descrição**: Retorna estatísticas do Redis (memória usada, hits, misses, uptime, disponibilidade). Requer autenticação.
+
+#### `sinesys_limpar_cache`
+Limpa cache (requer admin).
+- **Descrição**: Limpa cache Redis manualmente. Se `pattern` fornecido (ex: 'pendentes:*'), remove apenas chaves correspondentes; caso contrário, limpa todo o cache. **Requer permissão de administrador** (ou Service API Key).
+
+#### `sinesys_verificar_saude_sistema`
+Health check.
+- **Descrição**: Verifica status da aplicação (health check endpoint). Retorna timestamp ISO 8601 e status 'ok'. Não requer autenticação.
+
+## Usage Examples
+
+#### Captura Assíncrona com Polling Manual
+
+As operações de captura retornam imediatamente com um `capture_id` e processam em background:
+
+```json
+// 1. Iniciar captura
+{
+  "tool": "sinesys_iniciar_captura_audiencias",
+  "arguments": {
+    "advogado_id": 1,
+    "credencial_ids": [5, 6],
+    "data_inicio": "2024-01-01",
+    "data_fim": "2024-12-31"
+  }
+}
+// Response: { "success": true, "capture_id": 123, "status": "in_progress" }
+
+// 2. Consultar status periodicamente
+{
+  "tool": "sinesys_consultar_status_captura",
+  "arguments": { "capture_id": 123 }
+}
+// Response: { "status": "completed", "resultado": {...} }
+```
+
+#### Captura Assíncrona com Polling Automático (Recomendado)
+
+Para aguardar automaticamente a conclusão de uma captura:
+
+```json
+// 1. Iniciar captura
+{
+  "tool": "sinesys_iniciar_captura_audiencias",
+  "arguments": {
+    "advogado_id": 1,
+    "credencial_ids": [5, 6],
+    "data_inicio": "2024-01-01",
+    "data_fim": "2024-12-31"
+  }
+}
+// Response: { "success": true, "capture_id": 123, "status": "in_progress" }
+
+// 2. Aguardar conclusão com polling automático
+{
+  "tool": "sinesys_aguardar_captura_concluir",
+  "arguments": {
+    "capture_id": 123,
+    "interval_ms": 5000,
+    "timeout_ms": 300000
+  }
+}
+// Response: { "status": "completed", "data": {...}, "polling_info": { "total_polls": 5, "elapsed_ms": 25000 } }
+```
+
+#### Gerenciar Credenciais PJE
+
+```json
+// Criar credencial para TRT3 primeiro grau
+{
+  "tool": "sinesys_criar_credencial_advogado",
+  "arguments": {
+    "advogado_id": 1,
+    "tribunal": "TRT3",
+    "grau": "primeiro_grau",
+    "senha": "senha_segura"
+  }
+}
+```
+
+## Important Notes
+
+- **Capturas são assíncronas**: Tools de captura retornam imediatamente. Use `sinesys_consultar_status_captura` para polling manual ou `sinesys_aguardar_captura_concluir` para polling automático.
+- **Credenciais são criptografadas**: Senhas de credenciais PJE são armazenadas com criptografia no banco.
+- **Permissões de admin**: `sinesys_limpar_cache` requer permissão de administrador ou Service API Key.
+- **Campos camelCase**: Os tools de usuários (`sinesys_criar_usuario`, `sinesys_atualizar_usuario`, `sinesys_listar_usuarios`) usam campos em camelCase (ex: `nomeCompleto`, `emailCorporativo`, `ufOab`) para compatibilidade com a API.
+
 ---
 
-Nota: Documentação completa será adicionada nas próximas fases.
+Diferenças importantes entre entidades:
+- **Audiências**: Limite máximo 1000 para calendários; modalidade híbrida só manual.
+- **Pendentes**: Suporte a agrupamento (estrutura diferente); baixa/reverter usa PATCH.
+- **Expedientes Manuais**: CRUD completo; baixa/reverter usa POST (não PATCH como pendentes).
+- **Capturas**: Operações assíncronas que retornam `capture_id` imediatamente; use polling manual com `sinesys_consultar_status_captura` ou automático com `sinesys_aguardar_captura_concluir`.
+- **Credenciais PJE**: Senhas armazenadas criptografadas; gerenciamento via advogados.
+- **Usuários**: Permissões gerenciadas via `isSuperAdmin`; desativação automática de atribuições; todos os campos em camelCase (`nomeCompleto`, `emailCorporativo`, `ufOab`, etc.).
+- **Admin**: Ferramentas sensíveis que requerem permissões especiais.

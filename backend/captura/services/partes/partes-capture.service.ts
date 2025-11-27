@@ -195,104 +195,109 @@ export interface ProcessoParaCaptura {
 
 /**
  * Função auxiliar para extrair campos específicos do PJE de dadosCompletos
+ * 
+ * ESTRUTURA DO JSON DO PJE:
+ * - Campos comuns ficam na raiz de dadosCompletos (status, situacao, autoridade)
+ * - Campos de pessoa física ficam em dadosCompletos.pessoaFisica
+ * - Campos de pessoa jurídica ficam em dadosCompletos.pessoaJuridica
+ * 
+ * NOTA: O login pode vir na raiz OU dentro de pessoaFisica/pessoaJuridica
  */
 function extrairCamposPJE(parte: PartePJE) {
   const dados = parte.dadosCompletos;
   const camposExtraidos: Record<string, unknown> = {};
 
-  // Campos comuns
+  // Extrair objetos específicos de PF e PJ
+  const pessoaFisica = dados?.pessoaFisica as Record<string, unknown> | undefined;
+  const pessoaJuridica = dados?.pessoaJuridica as Record<string, unknown> | undefined;
+
+  // Campos comuns (podem estar na raiz ou dentro de pessoaFisica/pessoaJuridica)
   camposExtraidos.tipo_documento = parte.tipoDocumento;
   camposExtraidos.status_pje = dados?.status as string | undefined;
   camposExtraidos.situacao_pje = dados?.situacao as string | undefined;
-  camposExtraidos.login_pje = dados?.login as string | undefined;
   camposExtraidos.autoridade = dados?.autoridade !== undefined ? Boolean(dados.autoridade) : undefined;
+  
+  // Login pode estar na raiz OU dentro de pessoaFisica/pessoaJuridica
+  camposExtraidos.login_pje = (dados?.login ?? pessoaFisica?.login ?? pessoaJuridica?.login) as string | undefined;
 
-  // Campos específicos de PF
-  if (parte.tipoDocumento === 'CPF') {
-    camposExtraidos.sexo = dados?.sexo as string | undefined;
-    camposExtraidos.nome_genitora = dados?.nomeGenitora as string | undefined;
+  // Campos específicos de PF (vêm de dadosCompletos.pessoaFisica)
+  if (parte.tipoDocumento === 'CPF' && pessoaFisica) {
+    // Sexo pode vir como "sexo" (texto) ou "codigoSexo" (código)
+    camposExtraidos.sexo = (pessoaFisica.sexo ?? dados?.sexo) as string | undefined;
+    camposExtraidos.nome_genitora = pessoaFisica.nomeGenitora as string | undefined;
     
     // Naturalidade (cast para tipo específico)
-    const naturalidade = dados?.naturalidade as NaturalidadePJE | undefined;
-    camposExtraidos.naturalidade_id_pje = naturalidade?.id !== undefined ? Number(naturalidade.id) : undefined;
-    camposExtraidos.naturalidade_municipio = naturalidade?.municipio;
-    camposExtraidos.naturalidade_estado_id_pje = naturalidade?.estado?.id !== undefined ? Number(naturalidade.estado.id) : undefined;
-    camposExtraidos.naturalidade_estado_sigla = naturalidade?.estado?.sigla;
-    camposExtraidos.naturalidade_estado_descricao = naturalidade?.estado?.descricao;
+    const naturalidade = pessoaFisica.naturalidade as NaturalidadePJE | undefined;
+    if (naturalidade) {
+      camposExtraidos.naturalidade_id_pje = naturalidade.id !== undefined ? Number(naturalidade.id) : undefined;
+      // Nome do município pode vir como "nome" ou "municipio" dependendo do TRT
+      camposExtraidos.naturalidade_municipio = (naturalidade as Record<string, unknown>).nome as string | undefined ?? naturalidade.municipio;
+      camposExtraidos.naturalidade_estado_id_pje = naturalidade.estado?.id !== undefined ? Number(naturalidade.estado.id) : undefined;
+      camposExtraidos.naturalidade_estado_sigla = naturalidade.estado?.sigla;
+      camposExtraidos.naturalidade_estado_descricao = naturalidade.estado?.descricao;
+    }
     
     // UF Nascimento (cast para tipo específico)
-    const ufNascimento = dados?.ufNascimento as EstadoPJE | undefined;
-    camposExtraidos.uf_nascimento_id_pje = ufNascimento?.id !== undefined ? Number(ufNascimento.id) : undefined;
-    camposExtraidos.uf_nascimento_sigla = ufNascimento?.sigla;
-    camposExtraidos.uf_nascimento_descricao = ufNascimento?.descricao;
+    const ufNascimento = pessoaFisica.ufNascimento as EstadoPJE | undefined;
+    if (ufNascimento) {
+      camposExtraidos.uf_nascimento_id_pje = ufNascimento.id !== undefined ? Number(ufNascimento.id) : undefined;
+      camposExtraidos.uf_nascimento_sigla = ufNascimento.sigla;
+      camposExtraidos.uf_nascimento_descricao = ufNascimento.descricao;
+    }
     
     // País Nascimento (cast para tipo específico)
-    const paisNascimento = dados?.paisNascimento as PaisPJE | undefined;
-    camposExtraidos.pais_nascimento_id_pje = paisNascimento?.id !== undefined ? Number(paisNascimento.id) : undefined;
-    camposExtraidos.pais_nascimento_codigo = paisNascimento?.codigo;
-    camposExtraidos.pais_nascimento_descricao = paisNascimento?.descricao;
+    const paisNascimento = pessoaFisica.paisNascimento as PaisPJE | undefined;
+    if (paisNascimento) {
+      camposExtraidos.pais_nascimento_id_pje = paisNascimento.id !== undefined ? Number(paisNascimento.id) : undefined;
+      camposExtraidos.pais_nascimento_codigo = paisNascimento.codigo;
+      camposExtraidos.pais_nascimento_descricao = paisNascimento.descricao;
+    }
     
-    camposExtraidos.escolaridade_codigo = dados?.escolaridade !== undefined ? Number(dados?.escolaridade) : undefined;
+    camposExtraidos.escolaridade_codigo = pessoaFisica.escolaridade !== undefined ? Number(pessoaFisica.escolaridade) : undefined;
     
-    // Situação CPF Receita (cast para tipo específico)
-    const situacaoCpfReceita = dados?.situacaoCpfReceita as SituacaoReceitaPJE | undefined;
-    camposExtraidos.situacao_cpf_receita_id = situacaoCpfReceita?.id !== undefined ? Number(situacaoCpfReceita.id) : undefined;
-    camposExtraidos.situacao_cpf_receita_descricao = situacaoCpfReceita?.descricao;
+    // Situação CPF Receita - o campo no PJE é "situacaoCpfReceitaFederal" (não "situacaoCpfReceita")
+    const situacaoCpfReceita = pessoaFisica.situacaoCpfReceitaFederal as SituacaoReceitaPJE | undefined;
+    if (situacaoCpfReceita) {
+      camposExtraidos.situacao_cpf_receita_id = situacaoCpfReceita.id !== undefined ? Number(situacaoCpfReceita.id) : undefined;
+      camposExtraidos.situacao_cpf_receita_descricao = situacaoCpfReceita.descricao;
+    }
     
-    camposExtraidos.pode_usar_celular_mensagem = dados?.podeUsarCelularMensagem !== undefined ? Boolean(dados?.podeUsarCelularMensagem) : undefined;
+    // Campo é "podeUsarCelularParaMensagem" (não "podeUsarCelularMensagem")
+    camposExtraidos.pode_usar_celular_mensagem = pessoaFisica.podeUsarCelularParaMensagem !== undefined 
+      ? Boolean(pessoaFisica.podeUsarCelularParaMensagem) 
+      : undefined;
   }
 
-  // Campos específicos de PJ
-  if (parte.tipoDocumento === 'CNPJ') {
-    camposExtraidos.inscricao_estadual = dados?.inscricaoEstadual as string | undefined;
-    camposExtraidos.data_abertura = dados?.dataAbertura as string | undefined;
-    camposExtraidos.orgao_publico = dados?.orgaoPublico !== undefined ? Boolean(dados?.orgaoPublico) : undefined;
+  // Campos específicos de PJ (vêm de dadosCompletos.pessoaJuridica)
+  if (parte.tipoDocumento === 'CNPJ' && pessoaJuridica) {
+    camposExtraidos.inscricao_estadual = pessoaJuridica.inscricaoEstadual as string | undefined;
+    camposExtraidos.data_abertura = pessoaJuridica.dataAbertura as string | undefined;
+    camposExtraidos.orgao_publico = pessoaJuridica.orgaoPublico !== undefined ? Boolean(pessoaJuridica.orgaoPublico) : undefined;
     
-    // Tipo Pessoa (cast para tipo específico)
-    const tipoPessoa = dados?.tipoPessoa as TipoPessoaPJE | undefined;
-    camposExtraidos.tipo_pessoa_codigo_pje = tipoPessoa?.codigo;
-    camposExtraidos.tipo_pessoa_label_pje = tipoPessoa?.label;
+    // Tipo Pessoa - pode vir como objeto {codigo, label} ou strings separadas
+    const tipoPessoaCodigo = pessoaJuridica.tipoPessoaCodigo as string | undefined;
+    const tipoPessoaLabel = pessoaJuridica.tipoPessoaLabel as string | undefined;
+    camposExtraidos.tipo_pessoa_codigo_pje = tipoPessoaCodigo;
+    camposExtraidos.tipo_pessoa_label_pje = tipoPessoaLabel ?? pessoaJuridica.dsTipoPessoa as string | undefined;
     
-    // Situação CNPJ Receita (cast para tipo específico)
-    const situacaoCnpjReceita = dados?.situacaoCnpjReceita as SituacaoReceitaPJE | undefined;
-    camposExtraidos.situacao_cnpj_receita_id = situacaoCnpjReceita?.id !== undefined ? Number(situacaoCnpjReceita.id) : undefined;
-    camposExtraidos.situacao_cnpj_receita_descricao = situacaoCnpjReceita?.descricao;
+    // Situação CNPJ Receita - o campo no PJE é "situacaoCnpjReceitaFederal"
+    const situacaoCnpjReceita = pessoaJuridica.situacaoCnpjReceitaFederal as SituacaoReceitaPJE | undefined;
+    if (situacaoCnpjReceita) {
+      camposExtraidos.situacao_cnpj_receita_id = situacaoCnpjReceita.id !== undefined ? Number(situacaoCnpjReceita.id) : undefined;
+      camposExtraidos.situacao_cnpj_receita_descricao = situacaoCnpjReceita.descricao;
+    }
     
-    camposExtraidos.ramo_atividade = dados?.ramoAtividade as string | undefined;
-    camposExtraidos.cpf_responsavel = dados?.cpfResponsavel as string | undefined;
-    camposExtraidos.oficial = dados?.oficial !== undefined ? Boolean(dados?.oficial) : undefined;
+    camposExtraidos.ramo_atividade = pessoaJuridica.dsRamoAtividade as string | undefined;
+    camposExtraidos.cpf_responsavel = pessoaJuridica.numeroCpfResponsavel as string | undefined;
+    camposExtraidos.oficial = pessoaJuridica.oficial !== undefined ? Boolean(pessoaJuridica.oficial) : undefined;
     
-    // Porte (cast para tipo específico)
-    const porte = dados?.porte as PortePJE | undefined;
-    camposExtraidos.porte_codigo = porte?.codigo !== undefined ? Number(porte.codigo) : undefined;
-    camposExtraidos.porte_descricao = porte?.descricao;
+    // Porte - pode vir como objeto ou campos separados (porteCodigo, porteLabel)
+    const porteCodigo = pessoaJuridica.porteCodigo as number | undefined;
+    const porteLabel = pessoaJuridica.porteLabel as string | undefined;
+    camposExtraidos.porte_codigo = porteCodigo !== undefined ? Number(porteCodigo) : undefined;
+    camposExtraidos.porte_descricao = porteLabel;
     
-    camposExtraidos.ultima_atualizacao_pje = dados?.ultimaAtualizacao as string | undefined;
-  }
-
-  // Logs para campos não encontrados (debug)
-  const camposComunsEsperados = ['status', 'situacao', 'login', 'autoridade'];
-  const camposPFEsperados = ['sexo', 'nomeGenitora', 'naturalidade', 'ufNascimento', 'paisNascimento', 'escolaridade', 'situacaoCpfReceita', 'podeUsarCelularMensagem'];
-  const camposPJEsperados = ['inscricaoEstadual', 'dataAbertura', 'orgaoPublico', 'tipoPessoa', 'situacaoCnpjReceita', 'ramoAtividade', 'cpfResponsavel', 'oficial', 'porte', 'ultimaAtualizacao'];
-
-  const camposNaoEncontrados: string[] = [];
-
-  camposComunsEsperados.forEach(campo => {
-    if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
-  });
-
-  if (parte.tipoDocumento === 'CPF') {
-    camposPFEsperados.forEach(campo => {
-      if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
-    });
-  } else if (parte.tipoDocumento === 'CNPJ') {
-    camposPJEsperados.forEach(campo => {
-      if (dados?.[campo] === undefined) camposNaoEncontrados.push(campo);
-    });
-  }
-
-  if (camposNaoEncontrados.length > 0) {
-    console.debug(`[DEBUG-CAMPOS-PJE] Campos não encontrados em dadosCompletos para parte ${parte.nome}: ${camposNaoEncontrados.join(', ')}`);
+    camposExtraidos.ultima_atualizacao_pje = pessoaJuridica.ultimaAtualizacao as string | undefined;
   }
 
   return camposExtraidos;

@@ -101,14 +101,21 @@ export async function obterRepresentantesPartePorID(
 
     // Mapeia cada representante para tipo padronizado
     const representantes: RepresentantePJE[] = response.map((repData: any) => {
+      // Extrair número da OAB e UF (pode vir junto como "BA79812" ou separado)
+      const numeroOabRaw = String(repData.numeroOAB || repData.numeroOab || repData.numero_oab || '');
+      const { numeroOAB, ufOAB } = extrairOabEUf(
+        numeroOabRaw,
+        repData.ufOAB || repData.ufOab || repData.uf_oab
+      );
+
       return {
         idPessoa: repData.idPessoa || repData.id_pessoa,
         nome: repData.nome || repData.nomeCompleto || '',
         tipoDocumento: mapearTipoDocumento(repData.tipoDocumento || repData.tipo_documento),
         numeroDocumento: repData.numeroDocumento || repData.numero_documento || repData.cpf || repData.cnpj || '',
-        numeroOAB: repData.numeroOAB || repData.numero_oab || null,
-        ufOAB: repData.ufOAB || repData.uf_oab || null,
-        situacaoOAB: repData.situacaoOAB || repData.situacao_oab || null,
+        numeroOAB,
+        ufOAB,
+        situacaoOAB: repData.situacaoOAB || repData.situacaoOab || repData.situacao_oab || null,
         tipo: repData.tipo || repData.tipoRepresentante || 'ADVOGADO',
         email: repData.email || null,
         telefones: extrairTelefones(repData),
@@ -141,6 +148,62 @@ function mapearTipoDocumento(tipo: string | undefined): 'CPF' | 'CNPJ' {
   if (tipoUpper === 'CNPJ') return 'CNPJ';
 
   return 'CPF';
+}
+
+/**
+ * Lista de UFs válidas do Brasil
+ */
+const UFS_BRASIL = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
+  'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
+  'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+];
+
+/**
+ * Extrai número da OAB e UF
+ * O PJE pode retornar o número junto com UF como prefixo (ex: "BA79812") ou separados
+ * 
+ * Formatos possíveis:
+ * - "BA79812" → UF: BA, Número: 79812
+ * - "MG128404" → UF: MG, Número: 128404
+ * - "79812" (com ufOab separado) → usa ufOab fornecido
+ */
+function extrairOabEUf(
+  numeroOabRaw: string,
+  ufOabSeparado?: string
+): { numeroOAB: string | null; ufOAB: string | null } {
+  if (!numeroOabRaw || numeroOabRaw.trim() === '') {
+    return { numeroOAB: null, ufOAB: ufOabSeparado ? String(ufOabSeparado).toUpperCase() : null };
+  }
+
+  const numeroLimpo = numeroOabRaw.trim().toUpperCase();
+
+  // Se UF foi fornecida separadamente, usar ela
+  if (ufOabSeparado && ufOabSeparado.trim() !== '') {
+    return {
+      numeroOAB: numeroLimpo,
+      ufOAB: String(ufOabSeparado).toUpperCase()
+    };
+  }
+
+  // Tentar extrair UF do prefixo do número (ex: "BA79812")
+  // Verificar se os primeiros 2 caracteres são uma UF válida
+  if (numeroLimpo.length >= 3) {
+    const possibleUf = numeroLimpo.substring(0, 2);
+    if (UFS_BRASIL.includes(possibleUf)) {
+      const numeroSemUf = numeroLimpo.substring(2);
+      // Verificar se o resto é numérico
+      if (/^\d+$/.test(numeroSemUf)) {
+        return {
+          numeroOAB: numeroSemUf,
+          ufOAB: possibleUf
+        };
+      }
+    }
+  }
+
+  // Se não conseguir extrair, retornar como está
+  return { numeroOAB: numeroLimpo, ufOAB: null };
 }
 
 /**

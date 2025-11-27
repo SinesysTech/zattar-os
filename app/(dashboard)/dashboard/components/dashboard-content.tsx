@@ -5,6 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Typography } from '@/components/ui/typography';
 import { useDashboard, isDashboardAdmin, isDashboardUsuario } from '@/app/_lib/hooks/use-dashboard';
+import type {
+  DashboardUsuarioData,
+  DashboardAdminData,
+} from '@/backend/types/dashboard/types';
 
 import {
   UserStatusCards,
@@ -13,8 +17,22 @@ import {
   WidgetProcessosResumo,
   WidgetAudienciasProximas,
   WidgetExpedientesUrgentes,
-  WidgetProdutividade,
+  WidgetProdutividadePerformance,
 } from './widgets';
+
+// ============================================================================
+// Interfaces de Props
+// ============================================================================
+
+interface UserDashboardProps {
+  data: DashboardUsuarioData;
+  onRefetch: () => void;
+}
+
+interface AdminDashboardProps {
+  data: DashboardAdminData;
+  onRefetch: () => void;
+}
 
 function DashboardSkeleton() {
   return (
@@ -61,21 +79,7 @@ function DashboardError({ error, onRetry }: { error: string; onRetry: () => void
   );
 }
 
-function UserDashboard() {
-  const { data, isLoading, error, refetch } = useDashboard();
-
-  if (isLoading) {
-    return <DashboardSkeleton />;
-  }
-
-  if (error) {
-    return <DashboardError error={error} onRetry={refetch} />;
-  }
-
-  if (!isDashboardUsuario(data)) {
-    return null;
-  }
-
+function UserDashboard({ data, onRefetch }: UserDashboardProps) {
   return (
     <div className="space-y-6">
       {/* Saudação */}
@@ -86,7 +90,7 @@ function UserDashboard() {
             Acompanhe seus processos, audiências e expedientes
           </Typography.Muted>
         </div>
-        <Button variant="outline" size="sm" onClick={() => refetch()}>
+        <Button variant="outline" size="sm" onClick={onRefetch}>
           <RefreshCw className="h-4 w-4 mr-2" />
           Atualizar
         </Button>
@@ -121,7 +125,7 @@ function UserDashboard() {
               expedientes={data.expedientesUrgentes}
               resumo={data.expedientes}
             />
-            <WidgetProdutividade data={data.produtividade} />
+            <WidgetProdutividadePerformance data={data.produtividade} />
           </div>
         </div>
       </section>
@@ -140,21 +144,7 @@ function UserDashboard() {
   );
 }
 
-function AdminDashboard() {
-  const { data, isLoading, error, refetch } = useDashboard();
-
-  if (isLoading) {
-    return <DashboardSkeleton />;
-  }
-
-  if (error) {
-    return <DashboardError error={error} onRetry={refetch} />;
-  }
-
-  if (!isDashboardAdmin(data)) {
-    return null;
-  }
-
+function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
   const expedientesVencidos = data.expedientesUrgentes.filter(
     (e) => e.dias_restantes < 0
   ).length;
@@ -169,7 +159,7 @@ function AdminDashboard() {
             Métricas consolidadas e status das operações
           </Typography.Muted>
         </div>
-        <Button variant="outline" size="sm" onClick={() => refetch()}>
+        <Button variant="outline" size="sm" onClick={onRefetch}>
           <RefreshCw className="h-4 w-4 mr-2" />
           Atualizar
         </Button>
@@ -213,7 +203,7 @@ function AdminDashboard() {
 }
 
 export function DashboardContent() {
-  const { isAdmin, isLoading, error, refetch } = useDashboard();
+  const { data, isAdmin, isLoading, error, refetch } = useDashboard();
 
   if (isLoading) {
     return <DashboardSkeleton />;
@@ -223,5 +213,24 @@ export function DashboardContent() {
     return <DashboardError error={error} onRetry={refetch} />;
   }
 
-  return isAdmin ? <AdminDashboard /> : <UserDashboard />;
+  if (!data) {
+    return <DashboardError error="Dados não disponíveis" onRetry={refetch} />;
+  }
+
+  // Passa os dados tipados para o componente apropriado
+  if (isAdmin) {
+    return (
+      <AdminDashboard
+        data={data as DashboardAdminData}
+        onRefetch={refetch}
+      />
+    );
+  }
+
+  return (
+    <UserDashboard
+      data={data as DashboardUsuarioData}
+      onRefetch={refetch}
+    />
+  );
 }
