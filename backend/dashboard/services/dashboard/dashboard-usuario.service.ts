@@ -74,7 +74,7 @@ async function getProdutividadeUsuario(
   hoje.setHours(0, 0, 0, 0);
 
   const inicioSemana = new Date(hoje);
-  inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+  inicioSemana.setDate(inicioSemana.getDate() - inicioSemana.getDay());
 
   const inicioSemanaAnterior = new Date(inicioSemana);
   inicioSemanaAnterior.setDate(inicioSemanaAnterior.getDate() - 7);

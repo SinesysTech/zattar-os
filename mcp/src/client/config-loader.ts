@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
-import { ApiClientConfig } from '../types/index';
+import { ApiClientConfig } from '../types/index.js';
 
 // Flag para habilitar logs de debug via variável de ambiente
 const MCP_DEBUG = process.env.MCP_DEBUG === 'true' || process.env.MCP_DEBUG === '1';
