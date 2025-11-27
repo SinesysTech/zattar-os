@@ -2,15 +2,19 @@
   "name": "sinesys",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "mcp"
+  ],
   "scripts": {
     "dev": "next dev",
     "dev:no-deprecation": "set NODE_OPTIONS=--no-deprecation && next dev",
     "dev:trace": "node --trace-deprecation node_modules/next/dist/bin/next dev",
     "build": "next build --turbopack",
     "start": "next start",
-    "mcp:build": "cd mcp && tsc",
-    "mcp:dev": "cd mcp && tsx src/index.ts",
-    "mcp:start": "node mcp/build/index.js",
+    "mcp:build": "npm run build --workspace=sinesys-mcp-server",
+    "mcp:watch": "npm run watch --workspace=sinesys-mcp-server",
+    "mcp:dev": "npm run dev --workspace=sinesys-mcp-server",
+    "mcp:start": "npm run start --workspace=sinesys-mcp-server",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
     "type-check:skip-lib": "tsc --noEmit --skipLibCheck",

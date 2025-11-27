@@ -1072,13 +1072,15 @@ async function processarEndereco(
 ): Promise<number | null> {
   // Verifica se a parte tem endereço
   if (!parte.dadosCompletos?.endereco) {
+    console.log(`   📭 [Endereço] Parte ${parte.nome} sem dadosCompletos.endereco`);
     return null;
   }
 
   const enderecoPJE = parte.dadosCompletos.endereco as unknown as EnderecoPJE;
 
-  const { valido } = validarEnderecoPJE(enderecoPJE);
+  const { valido, avisos } = validarEnderecoPJE(enderecoPJE);
   if (!valido) {
+    console.log(`   ⚠️ [Endereço] Parte ${parte.nome} endereço inválido:`, avisos.join(', '));
     return null;
   }
 
@@ -1115,11 +1117,14 @@ async function processarEndereco(
     });
 
     if (result.sucesso && result.endereco) {
+      console.log(`   ✅ [Endereço] Parte ${parte.nome} endereço salvo ID=${result.endereco.id}`);
       return result.endereco.id;
     }
 
+    console.log(`   ❌ [Endereço] Parte ${parte.nome} falha ao salvar endereço:`, result);
     return null;
   } catch (error) {
+    console.log(`   ❌ [Endereço] Parte ${parte.nome} erro ao persistir:`, error instanceof Error ? error.message : String(error));
     throw new PersistenceError(`Erro ao processar endereço de ${parte.nome}`, 'upsert', 'endereco', { parte: parte.nome, error: error instanceof Error ? error.message : String(error) });
   }
 }
