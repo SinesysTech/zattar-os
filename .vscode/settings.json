@@ -1,9 +1,7 @@
 {
-    "claudeCode.allowDangerouslySkipPermissions": true,
-    "claudeCode.respectGitIgnore": false,
-    "css.validate": false,
-    "css.customData": [".vscode/css-custom-data.json"],
-    "files.associations": {
-        "*.css": "tailwindcss"
-    }
+  "webhint.enableHints": {
+    "no-inline-styles": "off"
+  },
+  "vscode-edge-devtools.webhint": false,
+  "vscode-edge-devtools.mirrorEdits": false
 }
