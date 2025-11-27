@@ -43,17 +43,35 @@ Este arquivo indica ao CapRover para usar o Dockerfile existente para construir 
    - **Has Persistent Data**: Deixe desmarcado (não é necessário para esta aplicação)
 5. Clique em **Create New App**
 
-### 2. Configurar Variáveis de Ambiente
+### 2. Configurar Variáveis de Build (IMPORTANTE!)
 
-Após criar a aplicação, vá na aba **App Configs** e adicione as variáveis de ambiente:
+⚠️ **ATENÇÃO**: Variáveis `NEXT_PUBLIC_*` são **inlined durante o build** do Next.js. Elas precisam ser passadas como **Build Arguments**, não apenas como Environment Variables!
 
-#### Variáveis Obrigatórias
+#### Passo 2.1: Configurar Build Arguments
+
+1. Na aplicação, vá na aba **Deployment**
+2. Role até a seção **Docker Build Args** (ou "Build Configuration")
+3. Adicione os seguintes Build Arguments:
+
+| Build Arg | Descrição | Exemplo |
+|-----------|-----------|---------|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase | `https://xxxxx.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` | Chave pública/anônima do Supabase | `eyJxxxxx` |
+
+**Formato**: `NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co`
+
+#### Passo 2.2: Configurar Environment Variables (Runtime)
+
+Após configurar os Build Args, vá na aba **App Configs** e adicione as variáveis de ambiente para runtime:
+
+#### Variáveis de Runtime Obrigatórias
 
 | Variável | Descrição | Exemplo |
 |----------|-----------|---------|
-| `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase | `https://xxxxx.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` | Chave pública/anônima do Supabase | `eyJxxxxx` |
 | `SUPABASE_SECRET_KEY` | Chave service_role (secreta) | `eyJxxxxx` |
+| `SERVICE_API_KEY` | Chave para autenticação de APIs internas | `sua-api-key-gerada` |
+
+> **Nota**: As variáveis `NEXT_PUBLIC_*` também podem ser adicionadas aqui para consistência, mas o valor usado será o do build.
 
 #### Variáveis Opcionais
 

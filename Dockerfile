@@ -44,10 +44,14 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Variáveis de ambiente para build (podem ser vazias no build)
-ENV NEXT_PUBLIC_SUPABASE_URL=""
-ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=""
-ENV SUPABASE_SECRET_KEY=""
+# Build arguments para variáveis NEXT_PUBLIC_* (obrigatórias no build)
+# Essas variáveis são inlined durante o build do Next.js
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
+
+# Converter ARGs para ENVs para o build
+ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
 
 # Build da aplicação
 RUN npm run build
