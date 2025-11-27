@@ -6,7 +6,7 @@ import { useDashboardStore } from '@/_lib/stores/dashboard-store';
 import { LinkPersonalizado } from '@/_lib/dashboard-types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -72,6 +72,9 @@ export function LinksWidget({ className }: LinksWidgetProps) {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Novo Link</DialogTitle>
+              <DialogDescription>
+                Adicione um link útil para acesso rápido.
+              </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div>

@@ -24,30 +24,30 @@
 
 ## Fase 2: Backend - Serviços de Agregação
 
-- [ ] **2.1** Criar tipos para dashboard em `backend/types/dashboard/`
+- [x] **2.1** Criar tipos para dashboard em `backend/types/dashboard/`
   - DashboardUsuarioData
   - DashboardAdminData
   - ProcessosResumo, AudienciasResumo, PendentesResumo
   - MetricasEscritorio, CargaUsuario, StatusCaptura
 
-- [ ] **2.2** Criar serviços de persistência em `backend/dashboard/services/persistence/`
+- [x] **2.2** Criar serviços de persistência em `backend/dashboard/services/persistence/`
   - `dashboard-processos.persistence.ts` - Queries de processos por responsável
   - `dashboard-audiencias.persistence.ts` - Queries de audiências
   - `dashboard-expedientes.persistence.ts` - Queries de pendentes + expedientes manuais
   - `dashboard-metricas.persistence.ts` - Queries de métricas globais
 
-- [ ] **2.3** Criar serviços de negócio em `backend/dashboard/services/dashboard/`
+- [x] **2.3** Criar serviços de negócio em `backend/dashboard/services/dashboard/`
   - `dashboard-usuario.service.ts` - Agregação para usuário comum
   - `dashboard-admin.service.ts` - Agregação para superadmin
 
-- [ ] **2.4** Implementar cache Redis para dados de dashboard
+- [x] **2.4** Implementar cache Redis para dados de dashboard
   - TTL de 5 minutos para dados de usuário
   - TTL de 10 minutos para métricas globais
   - Invalidação em alterações relevantes
 
 ## Fase 3: API Routes
 
-- [ ] **3.1** Criar endpoint `GET /api/dashboard`
+- [x] **3.1** Criar endpoint `GET /api/dashboard`
   - Retornar dados baseado no role do usuário autenticado
   - Suportar query params para filtros (período, tribunal)
 

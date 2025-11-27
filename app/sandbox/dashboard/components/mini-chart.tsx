@@ -71,8 +71,8 @@ export function MiniLineChart({
   className,
 }: MiniLineChartProps) {
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className={cn('w-full min-w-0', className)} style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
         <LineChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
           {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />}
           {showXAxis && (
@@ -138,8 +138,8 @@ export function MiniAreaChart({
   const gradientId = `gradient-${dataKey}-${Math.random().toString(36).substr(2, 9)}`;
 
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className={cn('w-full min-w-0', className)} style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
         <AreaChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
@@ -214,8 +214,8 @@ export function MiniBarChart({
   const layout = horizontal ? 'vertical' : 'horizontal';
 
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className={cn('w-full min-w-0', className)} style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
         <ChartComponent
           data={data}
           layout={layout}
@@ -296,8 +296,8 @@ export function MiniPieChart({
   className,
 }: MiniPieChartProps) {
   return (
-    <div className={cn('w-full', className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className={cn('w-full min-w-0', className)} style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
         <PieChart>
           {showTooltip && (
             <Tooltip
@@ -354,8 +354,8 @@ export function MiniDonutChart({
   className,
 }: MiniDonutChartProps) {
   return (
-    <div className={cn('w-full relative', className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className={cn('w-full min-w-0 relative', className)} style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
         <PieChart>
           {showTooltip && (
             <Tooltip
@@ -413,8 +413,8 @@ export function Sparkline({
   const chartData = data.map((value, index) => ({ name: index.toString(), value }));
 
   return (
-    <div className={cn('inline-block', className)} style={{ width, height }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div className={cn('inline-block min-w-0', className)} style={{ width, height }}>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
         <LineChart data={chartData} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
           <Line
             type="monotone"

@@ -7,7 +7,7 @@ import { Nota } from '@/_lib/dashboard-types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -78,6 +78,9 @@ export function NotasWidget({ className }: NotasWidgetProps) {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Nova Nota</DialogTitle>
+              <DialogDescription>
+                Crie uma nota rápida para anotações importantes.
+              </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <Input

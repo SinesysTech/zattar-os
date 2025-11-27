@@ -7,7 +7,7 @@ import { Tarefa } from '@/_lib/dashboard-types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -119,6 +119,9 @@ export function TarefasWidget({ className }: TarefasWidgetProps) {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Nova Tarefa</DialogTitle>
+              <DialogDescription>
+                Adicione uma nova tarefa à sua lista de afazeres.
+              </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <Input
