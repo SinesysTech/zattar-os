@@ -15,6 +15,7 @@ import type { TimelineResponse, TimelineItem } from '@/backend/types/pje-trt/tim
 import type { PartePJE } from '@/backend/api/pje-trt/partes/types';
 import { obterTimeline } from '@/backend/api/pje-trt/timeline/obter-timeline';
 import { obterPartesProcesso } from '@/backend/api/pje-trt/partes';
+import { createServiceClient } from '@/backend/utils/supabase/service-client';
 
 /**
  * Configurações para busca de dados complementares
@@ -32,6 +33,10 @@ export interface DadosComplementaresOptions {
   delayEntreRequisicoes?: number;
   /** Callback para progresso */
   onProgress?: (atual: number, total: number, processoId: number) => void;
+  /** Verificar se processo precisa recaptura (baseado em updated_at do acervo) */
+  verificarRecaptura?: boolean;
+  /** Horas mínimas desde última atualização para recapturar (default: 6) */
+  horasParaRecaptura?: number;
 }
 
 /**
@@ -54,12 +59,68 @@ export interface DadosComplementaresResult {
   /** Resumo da operação */
   resumo: {
     totalProcessos: number;
+    processosPulados: number;
     timelinesObtidas: number;
     partesObtidas: number;
     erros: number;
   };
   /** Lista de erros detalhados */
   errosDetalhados: Array<{ processoId: number; tipo: string; erro: string }>;
+}
+
+/**
+ * Opções para verificação de recaptura
+ */
+interface RecapturaOptions {
+  /** Horas mínimas desde última atualização para recapturar (default: 6) */
+  horasParaRecaptura?: number;
+  /** TRT do processo */
+  trt: string;
+  /** Grau do processo */
+  grau: string;
+}
+
+/**
+ * Verifica quais processos precisam ser recapturados baseado no updated_at do acervo
+ * 
+ * @param processosIds - Lista de IDs de processos do PJE
+ * @param options - Opções de verificação
+ * @returns Lista de IDs que precisam ser recapturados (não atualizados recentemente)
+ */
+async function verificarProcessosParaRecaptura(
+  processosIds: number[],
+  options: RecapturaOptions
+): Promise<{ paraRecapturar: number[]; pulados: number[] }> {
+  const horasMinimas = options.horasParaRecaptura ?? 6;
+  const dataLimite = new Date(Date.now() - horasMinimas * 60 * 60 * 1000);
+  
+  const supabase = createServiceClient();
+  
+  // Buscar processos atualizados recentemente no acervo
+  const { data, error } = await supabase
+    .from('acervo')
+    .select('id_pje, updated_at')
+    .in('id_pje', processosIds)
+    .eq('trt', options.trt)
+    .eq('grau', options.grau);
+  
+  if (error) {
+    console.warn(`⚠️ [Recaptura] Erro ao verificar processos: ${error.message}. Capturando todos.`);
+    return { paraRecapturar: processosIds, pulados: [] };
+  }
+  
+  // Criar Set de processos atualizados recentemente
+  const processosRecentes = new Set(
+    (data ?? [])
+      .filter(p => new Date(p.updated_at) > dataLimite)
+      .map(p => p.id_pje as number)
+  );
+  
+  // Separar processos que precisam recaptura dos que podem ser pulados
+  const paraRecapturar = processosIds.filter(id => !processosRecentes.has(id));
+  const pulados = processosIds.filter(id => processosRecentes.has(id));
+  
+  return { paraRecapturar, pulados };
 }
 
 /**
@@ -86,6 +147,8 @@ export async function buscarDadosComplementaresProcessos(
     buscarPartes = true,
     delayEntreRequisicoes = 300,
     onProgress,
+    verificarRecaptura = false,
+    horasParaRecaptura = 6,
   } = options;
 
   const porProcesso = new Map<number, DadosComplementaresProcesso>();
@@ -93,24 +156,47 @@ export async function buscarDadosComplementaresProcessos(
 
   let timelinesObtidas = 0;
   let partesObtidas = 0;
+  let processosPulados = 0;
 
-  console.log(`🔄 [DadosComplementares] Iniciando busca para ${processosIds.length} processos...`, {
+  // Verificar quais processos precisam ser recapturados
+  let processosParaBuscar = processosIds;
+  
+  if (verificarRecaptura) {
+    console.log(`🔍 [DadosComplementares] Verificando processos atualizados nas últimas ${horasParaRecaptura}h...`);
+    
+    const resultado = await verificarProcessosParaRecaptura(processosIds, {
+      horasParaRecaptura,
+      trt: options.trt,
+      grau: options.grau,
+    });
+    
+    processosParaBuscar = resultado.paraRecapturar;
+    processosPulados = resultado.pulados.length;
+    
+    if (processosPulados > 0) {
+      console.log(`⏭️ [DadosComplementares] ${processosPulados} processos pulados (atualizados recentemente)`);
+    }
+  }
+
+  console.log(`🔄 [DadosComplementares] Iniciando busca para ${processosParaBuscar.length} processos...`, {
     buscarTimeline,
     buscarPartes,
     delayEntreRequisicoes,
+    totalOriginal: processosIds.length,
+    processosPulados,
   });
 
-  for (let i = 0; i < processosIds.length; i++) {
-    const processoId = processosIds[i];
+  for (let i = 0; i < processosParaBuscar.length; i++) {
+    const processoId = processosParaBuscar[i];
     
     // Callback de progresso
     if (onProgress) {
-      onProgress(i + 1, processosIds.length, processoId);
+      onProgress(i + 1, processosParaBuscar.length, processoId);
     }
 
     // Log de progresso a cada 10 processos ou no primeiro/último
-    if (i === 0 || i === processosIds.length - 1 || (i + 1) % 10 === 0) {
-      console.log(`📊 [DadosComplementares] Progresso: ${i + 1}/${processosIds.length} processos`);
+    if (i === 0 || i === processosParaBuscar.length - 1 || (i + 1) % 10 === 0) {
+      console.log(`📊 [DadosComplementares] Progresso: ${i + 1}/${processosParaBuscar.length} processos`);
     }
 
     const dadosProcesso: DadosComplementaresProcesso = {
@@ -162,6 +248,7 @@ export async function buscarDadosComplementaresProcessos(
 
   const resumo = {
     totalProcessos: processosIds.length,
+    processosPulados,
     timelinesObtidas,
     partesObtidas,
     erros: errosDetalhados.length,
