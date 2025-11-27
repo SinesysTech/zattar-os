@@ -62,11 +62,10 @@ const advogadosTools: ToolDefinition[] = [
         const { advogado_id, ...params } = typedArgs;
         const queryParams = toSnakeCase(params as Record<string, unknown>);
         const response = await client.get(`/api/advogados/${advogado_id}/credenciais`, queryParams);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
-          return handleToolError(response.error || 'Erro desconhecido ao listar credenciais');
+        if (response.success) {
+          return formatToolResponse(response.data ?? null);
         }
+        return handleToolError(response.error || 'Erro desconhecido ao listar credenciais');
       } catch (error) {
         return handleToolError(error);
       }
@@ -88,11 +87,10 @@ const advogadosTools: ToolDefinition[] = [
         const { advogado_id, ...body } = typedArgs;
         const snakeBody = toSnakeCase(body as Record<string, unknown>);
         const response = await client.post(`/api/advogados/${advogado_id}/credenciais`, snakeBody);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
-          return handleToolError(response.error || 'Erro ao criar credencial');
+        if (response.success) {
+          return formatToolResponse(response.data ?? null);
         }
+        return handleToolError(response.error || 'Erro ao criar credencial');
       } catch (error) {
         return handleToolError(error);
       }
