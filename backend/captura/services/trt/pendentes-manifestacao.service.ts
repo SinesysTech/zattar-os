@@ -275,7 +275,7 @@ export async function pendentesManifestacaoCapture(
     }
     console.log(`   ✅ ${mapeamentoIds.size}/${processosIds.length} processos encontrados no acervo`);
 
-    // 5.4 Persistir partes (apenas para processos não pulados e que existem no acervo)
+    // 5.4 Persistir partes (usa dados já buscados, sem refetch da API)
     console.log('   👥 Persistindo partes...');
     let partesPersistidas = 0;
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
@@ -291,8 +291,10 @@ export async function pendentesManifestacaoCapture(
           const pendente = (processos as ProcessoPendente[]).find(p => p.id === processoId);
           const numeroProcesso = pendente?.numeroProcesso;
           
-          await capturarPartesProcesso(
-            page,
+          // Usa persistirPartesProcesso em vez de capturarPartesProcesso
+          // para evitar refetch da API (partes já foram buscadas em dados-complementares)
+          await persistirPartesProcesso(
+            dados.partes,
             {
               id_pje: processoId,
               trt: params.config.codigo,

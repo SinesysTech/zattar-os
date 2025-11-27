@@ -295,7 +295,7 @@ export async function audienciasCapture(
     }
     console.log(`   ✅ ${timelinesPersistidas} timelines persistidas`);
 
-    // 5.4 Persistir partes (agora com ID do acervo disponível!)
+    // 5.4 Persistir partes (usa dados já buscados, sem refetch da API)
     console.log('   👥 Persistindo partes...');
     let partesPersistidas = 0;
     let partesComVinculo = 0;
@@ -309,8 +309,10 @@ export async function audienciasCapture(
           const audienciaDoProcesso = audiencias.find(a => a.idProcesso === processoId);
           const numeroProcesso = audienciaDoProcesso?.nrProcesso || audienciaDoProcesso?.processo?.numero;
           
-          await capturarPartesProcesso(
-            page,
+          // Usa persistirPartesProcesso em vez de capturarPartesProcesso
+          // para evitar refetch da API (partes já foram buscadas em dados-complementares)
+          await persistirPartesProcesso(
+            dados.partes,
             {
               id_pje: processoId,
               trt: params.config.codigo,
