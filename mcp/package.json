@@ -1,0 +1,16 @@
+{
+  "name": "sinesys-mcp-server",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "sinesys-mcp": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "dev": "tsx src/index.ts",
+    "start": "node build/index.js",
+    "prepare": "npm run build"
+  }
+}

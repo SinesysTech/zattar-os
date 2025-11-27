@@ -56,7 +56,7 @@ import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-he
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import { buscarDadosComplementaresProcessos } from './dados-complementares.service';
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
-import { capturarPartesProcesso } from '../partes/partes-capture.service';
+import { persistirPartesProcesso } from '../partes/partes-capture.service';
 import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
 
 /**
@@ -240,7 +240,7 @@ export async function acervoGeralCapture(
     }
     console.log(`   ✅ ${timelinesPersistidas} timelines persistidas`);
 
-    // 5.4 Persistir partes (apenas para processos não pulados e que existem no acervo)
+    // 5.4 Persistir partes (usa dados já buscados, sem refetch da API)
     console.log('   👥 Persistindo partes...');
     let partesPersistidas = 0;
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
@@ -256,8 +256,10 @@ export async function acervoGeralCapture(
           const processo = processos.find(p => p.id === processoId);
           const numeroProcesso = processo?.numeroProcesso;
           
-          await capturarPartesProcesso(
-            page,
+          // Usa persistirPartesProcesso em vez de capturarPartesProcesso
+          // para evitar refetch da API (partes já foram buscadas em dados-complementares)
+          await persistirPartesProcesso(
+            dados.partes,
             {
               id_pje: processoId,
               trt: params.config.codigo,
