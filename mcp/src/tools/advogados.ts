@@ -18,11 +18,10 @@ const advogadosTools: ToolDefinition[] = [
       try {
         const params = toSnakeCase(args as Record<string, unknown>);
         const response = await client.get('/api/advogados', params);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
-          return handleToolError(response.error || 'Erro desconhecido ao listar advogados');
+        if (response.success) {
+          return formatToolResponse(response.data ?? null);
         }
+        return handleToolError(response.error || 'Erro desconhecido ao listar advogados');
       } catch (error) {
         return handleToolError(error);
       }
@@ -41,11 +40,10 @@ const advogadosTools: ToolDefinition[] = [
       try {
         const body = toSnakeCase(args as Record<string, unknown>);
         const response = await client.post('/api/advogados', body);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
-          return handleToolError(response.error || 'Erro ao criar advogado');
+        if (response.success) {
+          return formatToolResponse(response.data ?? null);
         }
+        return handleToolError(response.error || 'Erro ao criar advogado');
       } catch (error) {
         return handleToolError(error);
       }
