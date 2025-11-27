@@ -325,7 +325,6 @@ const DragHandle = React.memo(function DragHandle({
             resetPreview();
           }}
           data-plate-prevent-deselect
-          role="button"
         >
           <GripVertical className="text-muted-foreground" />
         </div>

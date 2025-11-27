@@ -115,8 +115,9 @@ export async function obterPartesProcesso(
       // Formato array direto (usado por alguns TRTs)
       partesArray = response;
     } else if (typeof response === 'object') {
-      // Formato objeto com polos { ATIVO: [...], PASSIVO: [...], OUTROS: [...] }
-      const polos = ['ATIVO', 'PASSIVO', 'OUTROS', 'ativo', 'passivo', 'outros'];
+      // Formato objeto com polos { ATIVO: [...], PASSIVO: [...], TERCEIROS: [...] }
+      // NOTA: API retorna "TERCEIROS" (não "OUTROS") para partes do polo outros
+      const polos = ['ATIVO', 'PASSIVO', 'TERCEIROS', 'OUTROS', 'ativo', 'passivo', 'terceiros', 'outros'];
       for (const polo of polos) {
         if (Array.isArray(response[polo])) {
           partesArray.push(...response[polo]);
