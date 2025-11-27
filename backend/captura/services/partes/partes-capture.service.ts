@@ -361,7 +361,114 @@ export async function capturarPartesProcesso(
 }
 
 /**
- * Função interna com a lógica de captura
+ * Função: persistirPartesProcesso
+ *
+ * PROPÓSITO:
+ * Persiste partes já buscadas de um processo. Diferente de capturarPartesProcesso,
+ * esta função NÃO faz busca na API do PJE - ela apenas persiste as partes fornecidas.
+ * Útil quando as partes já foram buscadas em uma etapa anterior (ex: dados-complementares.service).
+ *
+ * FLUXO DE EXECUÇÃO:
+ * 1. Recebe partes já buscadas como parâmetro
+ * 2. Para cada parte:
+ *    a. Identifica tipo (cliente/parte_contraria/terceiro)
+ *    b. Faz upsert da entidade apropriada
+ *    c. Processa e salva endereço (se houver)
+ *    d. Salva representantes da parte
+ *    e. Cria vínculo em processo_partes (se processo.id estiver disponível)
+ * 3. Retorna resultado com contadores e erros
+ */
+export async function persistirPartesProcesso(
+  partes: PartePJE[],
+  processo: ProcessoParaCaptura,
+  advogado: AdvogadoIdentificacao
+): Promise<CapturaPartesResult> {
+  return withCorrelationId(async () => {
+    const logger = getLogger({ service: 'persistir-partes', processoId: processo.id ?? processo.id_pje });
+    return persistirPartesProcessoInternal(partes, processo, advogado, logger);
+  });
+}
+
+/**
+ * Função interna para persistir partes já buscadas
+ */
+async function persistirPartesProcessoInternal(
+  partes: PartePJE[],
+  processo: ProcessoParaCaptura,
+  advogado: AdvogadoIdentificacao,
+  logger: ReturnType<typeof getLogger>
+): Promise<CapturaPartesResult> {
+  const inicio = performance.now();
+  const resultado: CapturaPartesResult = {
+    processoId: processo.id ?? processo.id_pje,
+    numeroProcesso: processo.numero_processo ?? `PJE:${processo.id_pje}`,
+    totalPartes: partes.length,
+    clientes: 0,
+    partesContrarias: 0,
+    terceiros: 0,
+    representantes: 0,
+    vinculos: 0,
+    erros: [],
+    duracaoMs: 0,
+    payloadBruto: null,
+  };
+
+  try {
+    logger.info({ idPje: processo.id_pje, totalPartes: partes.length }, 'Persistindo partes já buscadas');
+
+    // 1. Valida documento do advogado
+    validarDocumentoAdvogado(advogado);
+
+    // 2. Se não há partes, retorna resultado vazio
+    if (partes.length === 0) {
+      resultado.duracaoMs = performance.now() - inicio;
+      return resultado;
+    }
+
+    // 3. Valida schema PJE antes do processamento
+    const partesValidadas = validarPartesArray(partes);
+
+    // 4. Processa partes em paralelo com controle de concorrência
+    const resultadosProcessamento = await processarPartesEmLote(partesValidadas, processo, advogado, logger);
+
+    // 5. Agrega resultados
+    for (const res of resultadosProcessamento) {
+      if (res.status === 'fulfilled') {
+        const { tipoParte, repsCount, vinculoCriado } = res.value;
+        if (tipoParte === 'cliente') resultado.clientes++;
+        else if (tipoParte === 'parte_contraria') resultado.partesContrarias++;
+        else if (tipoParte === 'terceiro') resultado.terceiros++;
+        resultado.representantes += repsCount;
+        if (vinculoCriado) resultado.vinculos++;
+      } else {
+        const error = res.reason;
+        const errorInfo = extractErrorInfo(error);
+        logger.error({ error: errorInfo }, 'Erro ao processar parte');
+        resultado.erros.push({
+          parteIndex: -1,
+          parteDados: { idParte: 0, nome: 'Desconhecido', tipoParte: 'DESCONHECIDO' },
+          erro: errorInfo.message,
+        });
+      }
+    }
+
+    resultado.duracaoMs = performance.now() - inicio;
+
+    logger.info({
+      ...resultado,
+    }, 'Persistência concluída');
+
+    return resultado;
+  } catch (error) {
+    const errorInfo = extractErrorInfo(error);
+    logger.error(errorInfo, 'Erro fatal ao persistir partes');
+    resultado.duracaoMs = performance.now() - inicio;
+    throw error;
+  }
+}
+
+/**
+ * Função interna com a lógica de captura (busca + persistência)
  */
 async function capturarPartesProcessoInternal(
   page: Page,

@@ -62,7 +62,7 @@ import {
   type DadosComplementaresResult,
 } from './dados-complementares.service';
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
-import { capturarPartesProcesso } from '../partes/partes-capture.service';
+import { persistirPartesProcesso } from '../partes/partes-capture.service';
 import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
 
 /**
