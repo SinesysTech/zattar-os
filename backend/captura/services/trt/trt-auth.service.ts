@@ -578,9 +578,12 @@ export async function autenticarPJE(options: TRTAuthOptions): Promise<AuthResult
   // Realizar login
   await realizarLogin(page, config.loginUrl, config.baseUrl, credential.cpf, credential.senha, twofauthConfig);
 
-  // Obter ID do advogado e tokens (sempre do JWT)
+  // Obter ID do advogado e tokens do JWT
   const advogadoInfo = await obterIdAdvogado(page);
   const tokens = await obterTokens(page);
+
+  // CPF vem da credencial (é o que usamos para logar)
+  advogadoInfo.cpf = credential.cpf;
 
   log('success', '✅ Autenticação concluída com sucesso!', {
     idAdvogado: advogadoInfo.idAdvogado,
