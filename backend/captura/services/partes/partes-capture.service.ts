@@ -612,7 +612,6 @@ async function processarParte(
     numero_celular: parte.telefones[0]?.numero || undefined,
     ddd_residencial: parte.telefones[1]?.ddd || undefined,
     numero_residencial: parte.telefones[1]?.numero || undefined,
-    dados_pje_completo: parte.dadosCompletos,
   };
 
   // Extrai campos adicionais do PJE

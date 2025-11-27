@@ -419,7 +419,6 @@ export interface UpsertTerceiroPorIdPessoaParams {
   ddd_comercial?: string;
   numero_comercial?: string;
   observacoes?: string;
-  dados_pje_completo?: Record<string, unknown>;
 }
 
 /**
