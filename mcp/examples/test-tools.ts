@@ -40,7 +40,7 @@ async function testTool(toolName: string, args: any): Promise<void> {
     console.log(`Argumentos validados: ${JSON.stringify(validatedArgs, null, 2)}`);
     
     // Executa o handler da tool
-    const result = await tool.handler(apiClient, validatedArgs);
+    const result = await tool.handler(validatedArgs, apiClient);
     
     // Imprime o resultado formatado
     console.log(`Resultado:\n${JSON.stringify(result, null, 2)}`);
