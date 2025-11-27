@@ -1,4 +1,9 @@
-// Tipos para integração com API de representantes no frontend
+/**
+ * Tipos para integração com API de representantes no frontend
+ * 
+ * NOTA: Após a refatoração do modelo, representantes são sempre advogados
+ * (pessoas físicas) com CPF único.
+ */
 
 import type {
   Representante,
@@ -26,9 +31,6 @@ export interface BuscarRepresentantesParams extends Partial<ListarRepresentantes
   pagina?: number;
   limite?: number;
   busca?: string;
-  parte_tipo?: 'cliente' | 'parte_contraria' | 'terceiro';
-  parte_id?: number;
-  tipo_pessoa?: 'pf' | 'pj';
   numero_oab?: string;
   situacao_oab?: 'REGULAR' | 'SUSPENSO' | 'CANCELADO' | 'LICENCIADO' | 'FALECIDO';
   incluirEndereco?: boolean;
@@ -38,7 +40,5 @@ export interface BuscarRepresentantesParams extends Partial<ListarRepresentantes
  * Estado de filtros da página de representantes
  */
 export interface RepresentantesFilters {
-  parte_tipo?: 'cliente' | 'parte_contraria' | 'terceiro';
-  tipo_pessoa?: 'pf' | 'pj';
   situacao_oab?: 'REGULAR' | 'SUSPENSO' | 'CANCELADO' | 'LICENCIADO' | 'FALECIDO';
 }

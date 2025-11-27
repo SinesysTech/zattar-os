@@ -1,6 +1,11 @@
 'use client';
 
-// Hook para buscar representantes
+/**
+ * Hook para buscar representantes
+ * 
+ * NOTA: Após a refatoração do modelo, representantes são sempre advogados
+ * (pessoas físicas) com CPF único.
+ */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type {
@@ -37,9 +42,6 @@ export const useRepresentantes = (
   const pagina = params.pagina ?? 1;
   const limite = params.limite ?? 50;
   const busca = params.busca || '';
-  const parteTipo = params.parte_tipo || '';
-  const parteId = params.parte_id;
-  const tipoPessoa = params.tipo_pessoa || '';
   const numeroOab = params.numero_oab || '';
   const situacaoOab = params.situacao_oab || '';
   const incluirEndereco = params.incluirEndereco ?? false;
@@ -50,14 +52,11 @@ export const useRepresentantes = (
       pagina,
       limite,
       busca,
-      parteTipo,
-      parteId,
-      tipoPessoa,
       numeroOab,
       situacaoOab,
       incluirEndereco,
     });
-  }, [pagina, limite, busca, parteTipo, parteId, tipoPessoa, numeroOab, situacaoOab, incluirEndereco]);
+  }, [pagina, limite, busca, numeroOab, situacaoOab, incluirEndereco]);
 
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
@@ -75,15 +74,6 @@ export const useRepresentantes = (
 
       if (busca) {
         searchParams.set('busca', busca);
-      }
-      if (parteTipo) {
-        searchParams.set('parte_tipo', parteTipo);
-      }
-      if (parteId) {
-        searchParams.set('parte_id', parteId.toString());
-      }
-      if (tipoPessoa) {
-        searchParams.set('tipo_pessoa', tipoPessoa);
       }
       if (numeroOab) {
         searchParams.set('numero_oab', numeroOab);
@@ -124,7 +114,7 @@ export const useRepresentantes = (
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, parteTipo, parteId, tipoPessoa, numeroOab, situacaoOab, incluirEndereco]);
+  }, [pagina, limite, busca, numeroOab, situacaoOab, incluirEndereco]);
 
   useEffect(() => {
     // Só executar se os parâmetros realmente mudaram

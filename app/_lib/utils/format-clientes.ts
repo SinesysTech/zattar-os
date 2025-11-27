@@ -22,10 +22,31 @@ export const formatarCnpj = (cnpj: string | null | undefined): string => {
 
 /**
  * Formata telefone para exibição
+ * Aceita telefone completo ou DDD + número separados
  */
-export const formatarTelefone = (telefone: string | null | undefined): string => {
-  if (!telefone) return '-';
-  const telefoneLimpo = telefone.replace(/\D/g, '');
+export function formatarTelefone(telefone: string | null | undefined): string;
+export function formatarTelefone(ddd: string | null | undefined, numero: string | null | undefined): string;
+export function formatarTelefone(dddOrTelefone: string | null | undefined, numero?: string | null | undefined): string {
+  // Se passado DDD e número separados
+  if (numero !== undefined) {
+    if (!dddOrTelefone || !numero) return '-';
+    const dddLimpo = dddOrTelefone.replace(/\D/g, '');
+    const numeroLimpo = numero.replace(/\D/g, '');
+    
+    if (numeroLimpo.length === 9) {
+      // Celular: (XX) XXXXX-XXXX
+      return `(${dddLimpo}) ${numeroLimpo.replace(/(\d{5})(\d{4})/, '$1-$2')}`;
+    } else if (numeroLimpo.length === 8) {
+      // Fixo: (XX) XXXX-XXXX
+      return `(${dddLimpo}) ${numeroLimpo.replace(/(\d{4})(\d{4})/, '$1-$2')}`;
+    }
+    
+    return `(${dddLimpo}) ${numeroLimpo}`;
+  }
+  
+  // Se passado telefone completo
+  if (!dddOrTelefone) return '-';
+  const telefoneLimpo = dddOrTelefone.replace(/\D/g, '');
   
   if (telefoneLimpo.length === 10) {
     // Telefone fixo: (XX) XXXX-XXXX
@@ -35,8 +56,8 @@ export const formatarTelefone = (telefone: string | null | undefined): string =>
     return telefoneLimpo.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
   }
   
-  return telefone;
-};
+  return dddOrTelefone;
+}
 
 /**
  * Formata CEP para exibição (XXXXX-XXX)

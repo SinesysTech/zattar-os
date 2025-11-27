@@ -79,6 +79,7 @@ export interface AudienciasResult {
   /** Novos campos para dados complementares */
   dadosComplementares?: {
     processosUnicos: number;
+    processosPulados: number;
     timelinesCapturadas: number;
     partesCapturadas: number;
     erros: number;
@@ -219,6 +220,8 @@ export async function audienciasCapture(
         trt: params.config.codigo,
         grau: params.config.grau,
         delayEntreRequisicoes: 300,
+        verificarRecaptura: true,  // Pula processos atualizados recentemente
+        horasParaRecaptura: 6,     // Recaptura se > 6h desde última atualização
         onProgress: (atual, total, processoId) => {
           if (atual % 5 === 0 || atual === total) {
             console.log(`   📊 Progresso: ${atual}/${total} (processo ${processoId})`);
@@ -416,6 +419,7 @@ export async function audienciasCapture(
     console.log(`   📊 Resumo:`);
     console.log(`      - Audiências: ${audiencias.length}`);
     console.log(`      - Processos únicos: ${processosIds.length}`);
+    console.log(`      - Processos pulados: ${dadosComplementares.resumo.processosPulados}`);
     console.log(`      - Timelines: ${dadosComplementares.resumo.timelinesObtidas}`);
     console.log(`      - Partes: ${dadosComplementares.resumo.partesObtidas}`);
     console.log(`      - Erros: ${dadosComplementares.resumo.erros}`);
@@ -430,6 +434,7 @@ export async function audienciasCapture(
       logs: logsPersistencia,
       dadosComplementares: {
         processosUnicos: processosIds.length,
+        processosPulados: dadosComplementares.resumo.processosPulados,
         timelinesCapturadas: dadosComplementares.resumo.timelinesObtidas,
         partesCapturadas: dadosComplementares.resumo.partesObtidas,
         erros: dadosComplementares.resumo.erros,

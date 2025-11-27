@@ -2,7 +2,10 @@
 
 /**
  * Tab de Representantes
- * Lista e gerencia representantes legais (advogados, procuradores, etc.)
+ * Lista e gerencia representantes legais (advogados)
+ * 
+ * NOTA: Representantes são sempre advogados (pessoas físicas) com CPF.
+ * O modelo foi deduplicado - um registro por CPF, vínculos via processo_partes.
  */
 
 import * as React from 'react';
@@ -14,16 +17,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, Pencil, Phone, Mail } from 'lucide-react';
 import { useRepresentantes } from '@/app/_lib/hooks/use-representantes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Representante } from '@/backend/types/representantes/representantes-types';
 import {
   formatarCpf,
-  formatarCnpj,
-  formatarTelefone,
   formatarNome,
-  formatarTipoPessoa,
+  formatarTelefone,
 } from '@/app/_lib/utils/format-clientes';
 import {
   buildRepresentantesFilterOptions,
@@ -33,131 +34,91 @@ import {
 } from './representantes-toolbar-filters';
 
 /**
+ * Extrai o melhor telefone disponível do representante
+ */
+function obterTelefone(representante: Representante): string | null {
+  // Prioridade: celular > comercial > residencial
+  if (representante.ddd_celular && representante.numero_celular) {
+    return formatarTelefone(representante.ddd_celular, representante.numero_celular);
+  }
+  if (representante.ddd_comercial && representante.numero_comercial) {
+    return formatarTelefone(representante.ddd_comercial, representante.numero_comercial);
+  }
+  if (representante.ddd_residencial && representante.numero_residencial) {
+    return formatarTelefone(representante.ddd_residencial, representante.numero_residencial);
+  }
+  return null;
+}
+
+/**
+ * Extrai o melhor e-mail disponível do representante
+ */
+function obterEmail(representante: Representante): string | null {
+  // Prioriza email simples, depois tenta extrair do JSONB
+  if (representante.email) return representante.email;
+  if (Array.isArray(representante.emails) && representante.emails.length > 0) {
+    return String(representante.emails[0]);
+  }
+  return null;
+}
+
+/**
  * Define as colunas da tabela de representantes
  */
 function criarColunas(onEditSuccess: () => void): ColumnDef<Representante>[] {
   return [
+    // Coluna composta: Representante (OAB + Nome + CPF)
     {
+      id: 'representante',
       accessorKey: 'nome',
       header: ({ column }) => (
         <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="Nome" />
+          <DataTableColumnHeader column={column} title="Representante" />
         </div>
       ),
       enableSorting: true,
-      size: 200,
+      size: 320,
       meta: { align: 'left' },
-      cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-start text-sm">
-          {formatarNome(row.getValue('nome'))}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'tipo_pessoa',
-      header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Tipo" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 120,
-      cell: ({ row }) => {
-        const tipoPessoa = row.getValue('tipo_pessoa') as 'pf' | 'pj';
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            <Badge variant="outline" tone="neutral">
-              {formatarTipoPessoa(tipoPessoa)}
-            </Badge>
-          </div>
-        );
-      },
-    },
-    {
-      id: 'documento',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">CPF/CNPJ</div>
-        </div>
-      ),
-      enableSorting: false,
-      size: 150,
       cell: ({ row }) => {
         const representante = row.original;
-        // Representantes são sempre advogados (PF) com CPF
-        const documento = representante.cpf ? formatarCpf(representante.cpf) : '-';
+        const nome = formatarNome(representante.nome);
+        const cpf = representante.cpf ? formatarCpf(representante.cpf) : null;
+        const oab = representante.numero_oab;
+        const ufOab = representante.uf_oab;
+        
         return (
-          <div className="min-h-10 flex items-center justify-center text-sm">
-            {documento}
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: 'numero_oab',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">OAB</div>
-        </div>
-      ),
-      enableSorting: false,
-      size: 130,
-      cell: ({ row }) => {
-        const numeroOab = row.getValue('numero_oab') as string | null;
-        return (
-          <div className="min-h-10 flex items-center justify-center text-sm">
-            {numeroOab ? (
-              <Badge variant="outline" tone="info">
-                {numeroOab}
-              </Badge>
-            ) : (
-              '-'
+          <div className="min-h-12 flex flex-col justify-center py-1.5">
+            {/* Linha 1: Badge OAB + Nome */}
+            <div className="flex items-center gap-2">
+              {oab && (
+                <Badge variant="soft" tone="info" className="text-xs shrink-0">
+                  OAB {ufOab ? `${ufOab}/` : ''}{oab}
+                </Badge>
+              )}
+              <span className="font-medium text-sm truncate" title={nome}>
+                {nome}
+              </span>
+            </div>
+            {/* Linha 2: CPF */}
+            {cpf && (
+              <span className="text-xs text-muted-foreground mt-0.5">
+                CPF: {cpf}
+              </span>
             )}
           </div>
         );
       },
     },
-    {
-      accessorKey: 'parte_tipo',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Tipo de Parte</div>
-        </div>
-      ),
-      enableSorting: false,
-      size: 150,
-      cell: ({ row }) => {
-        const parteTipo = row.getValue('parte_tipo') as string;
-        const tipoLabel =
-          parteTipo === 'cliente'
-            ? 'Cliente'
-            : parteTipo === 'parte_contraria'
-              ? 'Parte Contrária'
-              : 'Terceiro';
-        const tone =
-          parteTipo === 'cliente'
-            ? 'success'
-            : parteTipo === 'parte_contraria'
-              ? 'danger'
-              : 'neutral';
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            <Badge variant="soft" tone={tone}>
-              {tipoLabel}
-            </Badge>
-          </div>
-        );
-      },
-    },
+    // Situação OAB
     {
       id: 'situacao_oab',
       header: () => (
         <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Situação OAB</div>
+          <div className="text-sm font-medium">Situação</div>
         </div>
       ),
       enableSorting: false,
-      size: 120,
+      size: 110,
       cell: ({ row }) => {
         const representante = row.original;
         const situacao = representante.situacao_oab;
@@ -187,6 +148,34 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Representante>[] {
         );
       },
     },
+    // Telefone
+    {
+      id: 'telefone',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Telefone</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 140,
+      meta: { align: 'left' },
+      cell: ({ row }) => {
+        const representante = row.original;
+        const telefone = obterTelefone(representante);
+        
+        if (!telefone) {
+          return <div className="min-h-10 flex items-center justify-start text-muted-foreground">-</div>;
+        }
+        
+        return (
+          <div className="min-h-10 flex items-center justify-start gap-1.5">
+            <Phone className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+            <span className="text-sm">{telefone}</span>
+          </div>
+        );
+      },
+    },
+    // E-mail
     {
       id: 'email',
       header: () => (
@@ -195,24 +184,25 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Representante>[] {
         </div>
       ),
       enableSorting: false,
-      size: 200,
+      size: 240,
       meta: { align: 'left' },
       cell: ({ row }) => {
         const representante = row.original;
-        // Email pode ser string simples ou JSONB array
-        const email = representante.email;
-        const emails = representante.emails;
-        // Prioriza email simples, depois tenta extrair do JSONB
-        const displayEmail = email 
-          || (Array.isArray(emails) && emails.length > 0 ? String(emails[0]) : null)
-          || '-';
+        const email = obterEmail(representante);
+        
+        if (!email) {
+          return <div className="min-h-10 flex items-center justify-start text-muted-foreground">-</div>;
+        }
+        
         return (
-          <div className="min-h-10 flex items-center justify-start text-sm">
-            {displayEmail}
+          <div className="min-h-10 flex items-center justify-start gap-1.5 max-w-[220px]">
+            <Mail className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+            <span className="text-sm truncate" title={email}>{email}</span>
           </div>
         );
       },
     },
+    // Ações
     {
       id: 'acoes',
       header: () => (
@@ -221,7 +211,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Representante>[] {
         </div>
       ),
       enableSorting: false,
-      size: 120,
+      size: 90,
       cell: ({ row }) => {
         const representante = row.original;
         return (
@@ -312,7 +302,7 @@ export function RepresentantesTab() {
           setPagina(0);
         }}
         isSearching={isSearching}
-        searchPlaceholder="Buscar por nome, CPF, CNPJ, OAB ou e-mail..."
+        searchPlaceholder="Buscar por nome, CPF ou OAB..."
         filterOptions={filterOptions}
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
