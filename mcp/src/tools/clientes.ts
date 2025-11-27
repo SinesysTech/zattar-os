@@ -1,29 +1,13 @@
 import { z } from 'zod';
 import type { Cliente, CriarClienteParams, AtualizarClienteParams, ListarClientesResult } from '@/backend/types/partes';
 import { SinesysApiClient } from '../client';
-import type { ToolDefinition } from '../types';
-
-/**
- * Converte recursivamente chaves de objeto de camelCase para snake_case.
- * Trata arrays recursivamente e preserva valores null/undefined.
- */
-function toSnakeCase(obj: Record<string, any>): Record<string, any> {
-  if (obj === null || typeof obj !== 'object') return obj;
-  if (Array.isArray(obj)) {
-    return obj.map(toSnakeCase);
-  }
-  const result: Record<string, any> = {};
-  for (const [key, value] of Object.entries(obj)) {
-    const snakeKey = key.replace(/([A-Z])/g, '_$1').toLowerCase();
-    result[snakeKey] = toSnakeCase(value);
-  }
-  return result;
-}
+import type { ToolDefinition, ToolResponse } from '../types';
+import { toSnakeCase, formatToolResponse, handleToolError } from './utils';
 
 const clientesTools: ToolDefinition[] = [
   {
     name: 'sinesys_listar_clientes',
-    description: 'Lista clientes do sistema com paginação e filtros opcionais. Filtros disponíveis: busca (em nome, nome fantasia, CPF, CNPJ ou e-mail), tipoPessoa (pf para pessoa física ou pj para jurídica), trt (Tribunal Regional do Trabalho), grau (primeiro_grau ou segundo_grau), incluirEndereco (boolean para incluir dados de endereço via JOIN). Campos obrigatórios: nenhum (todos opcionais).',
+    description: 'Lista clientes do sistema com paginação e filtros opcionais. Filtros disponíveis: busca (em nome, nome fantasia, CPF, CNPJ ou e-mail), tipoPessoa (pf para pessoa física ou pj para jurídica), trt (Tribunal Regional do Trabalho), grau (primeiro_grau ou segundo_grau), incluirEndereco (boolean para incluir dados de endereço via JOIN), ativo (boolean para filtrar por status ativo/inativo). Campos obrigatórios: nenhum (todos opcionais).',
     inputSchema: z.object({
       pagina: z.number().int().positive().optional(),
       limite: z.number().int().positive().optional(),
@@ -32,13 +16,20 @@ const clientesTools: ToolDefinition[] = [
       trt: z.string().optional(),
       grau: z.enum(['primeiro_grau', 'segundo_grau']).optional(),
       incluirEndereco: z.boolean().optional(),
+      ativo: z.boolean().optional(),
     }),
-    handler: async (args, client) => {
-      const params = toSnakeCase(args);
-      const response = await client.get<ListarClientesResult>('/api/clientes', params);
-      return {
-        content: [{ type: 'text', text: JSON.stringify(response, null, 2) }],
-      };
+    handler: async (args, client): Promise<ToolResponse> => {
+      try {
+        const params = toSnakeCase(args);
+        const response = await client.get<ListarClientesResult>('/api/clientes', params);
+        if (response.success && response.data) {
+          return formatToolResponse(response.data);
+        } else {
+          return handleToolError(response.error || 'Erro desconhecido ao listar clientes');
+        }
+      } catch (error) {
+        return handleToolError(error);
+      }
     },
   },
   {
@@ -47,16 +38,22 @@ const clientesTools: ToolDefinition[] = [
     inputSchema: z.object({
       id: z.number().int().positive(),
     }),
-    handler: async (args, client) => {
-      const response = await client.get<Cliente>(`/api/clientes/${args.id}`);
-      return {
-        content: [{ type: 'text', text: JSON.stringify(response, null, 2) }],
-      };
+    handler: async (args, client): Promise<ToolResponse> => {
+      try {
+        const response = await client.get<Cliente>(`/api/clientes/${args.id}`);
+        if (response.success && response.data) {
+          return formatToolResponse(response.data);
+        } else {
+          return handleToolError(response.error || 'Cliente não encontrado');
+        }
+      } catch (error) {
+        return handleToolError(error);
+      }
     },
   },
   {
     name: 'sinesys_criar_cliente',
-    description: 'Cria um novo cliente no sistema (pessoa física ou jurídica). TipoPessoa é obrigatório (pf ou pj). Para PF: nome e cpf obrigatórios; para PJ: nome e cnpj obrigatórios. Outros campos são opcionais e incluem dados pessoais, contato, endereço, etc.',
+    description: 'Cria um novo cliente no sistema (pessoa física ou jurídica). TipoPessoa é obrigatório (pf ou pj). Para PF: nome e cpf obrigatórios; para PJ: nome e cnpj obrigatórios. Campos básicos incluem dados de contato (emails, telefones), observações e endereço. Nota: Este tool também aceita campos adicionais relacionados à integração com o PJE (Processo Judicial Eletrônico), como statusPje, situacaoPje, loginPje, naturalidade, nacionalidade, etc. Estes campos são opcionais e destinados a uso avançado/interno.',
     inputSchema: z.discriminatedUnion('tipoPessoa', [
       z.object({
         tipoPessoa: z.literal('pf'),
@@ -141,17 +138,23 @@ const clientesTools: ToolDefinition[] = [
         createdBy: z.number().optional(),
       }),
     ]),
-    handler: async (args, client) => {
-      const body = toSnakeCase(args);
-      const response = await client.post<Cliente>('/api/clientes', body);
-      return {
-        content: [{ type: 'text', text: JSON.stringify(response, null, 2) }],
-      };
+    handler: async (args, client): Promise<ToolResponse> => {
+      try {
+        const body = toSnakeCase(args);
+        const response = await client.post<Cliente>('/api/clientes', body);
+        if (response.success && response.data) {
+          return formatToolResponse(response.data);
+        } else {
+          return handleToolError(response.error || 'Erro ao criar cliente');
+        }
+      } catch (error) {
+        return handleToolError(error);
+      }
     },
   },
   {
     name: 'sinesys_atualizar_cliente',
-    description: 'Atualiza um cliente existente. ID é obrigatório (número inteiro positivo). Dados é um objeto com campos parciais a atualizar (todos opcionais), incluindo nome, cpf, cnpj, nomeSocialFantasia, emails, observacoes, ativo, etc.',
+    description: 'Atualiza um cliente existente. ID é obrigatório (número inteiro positivo). Dados é um objeto com campos parciais a atualizar (todos opcionais), incluindo nome, cpf, cnpj, nomeSocialFantasia, emails, observacoes, ativo, etc. Nota: Também aceita campos PJE estendidos para uso avançado/interno.',
     inputSchema: z.object({
       id: z.number().int().positive(),
       dados: z.object({
@@ -214,13 +217,19 @@ const clientesTools: ToolDefinition[] = [
         ativo: z.boolean().optional(),
       }),
     }),
-    handler: async (args, client) => {
-      const { id, dados } = args;
-      const body = toSnakeCase(dados);
-      const response = await client.patch<Cliente>(`/api/clientes/${id}`, body);
-      return {
-        content: [{ type: 'text', text: JSON.stringify(response, null, 2) }],
-      };
+    handler: async (args, client): Promise<ToolResponse> => {
+      try {
+        const { id, dados } = args;
+        const body = toSnakeCase(dados);
+        const response = await client.patch<Cliente>(`/api/clientes/${id}`, body);
+        if (response.success && response.data) {
+          return formatToolResponse(response.data);
+        } else {
+          return handleToolError(response.error || 'Erro ao atualizar cliente');
+        }
+      } catch (error) {
+        return handleToolError(error);
+      }
     },
   },
 ];

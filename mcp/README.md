@@ -162,7 +162,7 @@ Erros nas ferramentas MCP são retornados no formato padrão do protocolo:
 
 #### `sinesys_listar_clientes`
 Lista clientes do sistema com paginação e filtros opcionais.
-- **Descrição**: Retorna uma lista paginada de clientes, com suporte a filtros por busca textual, tipo de pessoa, TRT, grau e inclusão de endereço.
+- **Descrição**: Retorna uma lista paginada de clientes, com suporte a filtros por busca textual, tipo de pessoa, TRT, grau, status ativo e inclusão de endereço.
 - **Parâmetros de entrada**:
   - `pagina` (number, opcional): Número da página (padrão: 1)
   - `limite` (number, opcional): Itens por página (padrão: 10)
@@ -171,6 +171,7 @@ Lista clientes do sistema com paginação e filtros opcionais.
   - `trt` (string, opcional): Tribunal Regional do Trabalho
   - `grau` ('primeiro_grau' | 'segundo_grau', opcional): Grau do processo
   - `incluirEndereco` (boolean, opcional): Incluir dados de endereço via JOIN
+  - `ativo` (boolean, opcional): Filtrar por status ativo/inativo
 - **Exemplo de uso**:
   ```json
   {

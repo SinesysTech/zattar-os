@@ -113,10 +113,6 @@ Retorna JSON com 'processos' + 'paginacao' (modo padrão) ou 'agrupamentos' + 't
     handler: async (args: z.infer<typeof listarAcervoSchema>, client: SinesysApiClient): Promise<ToolResponse> => {
       try {
         const params = toSnakeCase(args);
-        // Special handling for responsavelId
-        if (args.responsavelId !== undefined) {
-          params.responsavel_id = args.responsavelId;
-        }
         const response = await client.get<ListarAcervoResult | ListarAcervoAgrupadoResult>('/api/acervo', params);
         if (!response.success) {
           return handleToolError(response.error || 'Unknown error');
