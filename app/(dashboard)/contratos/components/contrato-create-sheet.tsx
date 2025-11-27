@@ -6,6 +6,7 @@ import * as React from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -110,6 +111,9 @@ export function ContratoCreateSheet({
             <DialogTitle className="text-xl font-semibold">
               Novo Contrato
             </DialogTitle>
+            <DialogDescription>
+              Preencha os dados para cadastrar um novo contrato.
+            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-6">

@@ -445,11 +445,11 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
-            <div className="flex flex-col gap-1 max-w-full">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit text-left`}>
+            <div className="flex flex-col gap-1">
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit text-left whitespace-nowrap`}>
                 {parteAutora}
               </Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} w-fit text-left`}>
+              <Badge variant="outline" className={`${getParteReColorClass()} w-fit text-left whitespace-nowrap`}>
                 {parteRe}
               </Badge>
             </div>

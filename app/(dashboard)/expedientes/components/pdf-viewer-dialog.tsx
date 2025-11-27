@@ -4,6 +4,7 @@ import * as React from 'react';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
@@ -77,6 +78,9 @@ export function PdfViewerDialog({
                 <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
                     <DialogHeader>
                         <DialogTitle>{documentTitle}</DialogTitle>
+                        <DialogDescription>
+                            Visualização do documento anexado ao expediente.
+                        </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-col items-center justify-center flex-1 gap-4">
                         <FileText className="h-16 w-16 text-muted-foreground" />
@@ -92,6 +96,9 @@ export function PdfViewerDialog({
             <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0">
                 <DialogHeader className="px-6 pt-6 pb-4 shrink-0">
                     <DialogTitle>{documentTitle}</DialogTitle>
+                    <DialogDescription>
+                        Visualização do documento anexado ao expediente.
+                    </DialogDescription>
                 </DialogHeader>
 
                 <div className="relative flex-1 w-full min-h-0 px-6 pb-6">

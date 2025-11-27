@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -187,6 +188,9 @@ export function CargosManagementDialog({
               <Briefcase className="h-5 w-5" />
               Gerenciar Cargos
             </DialogTitle>
+            <DialogDescription>
+              Crie, edite ou exclua cargos do sistema.
+            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">

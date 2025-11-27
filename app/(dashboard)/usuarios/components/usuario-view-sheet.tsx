@@ -6,6 +6,7 @@ import * as React from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -45,6 +46,9 @@ export function UsuarioViewSheet({
               {usuario.ativo ? 'Ativo' : 'Inativo'}
             </Badge>
           </DialogTitle>
+          <DialogDescription>
+            Visualização detalhada das informações do usuário.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">

@@ -5,13 +5,29 @@ export interface RetryOptions {
   isRetryable?: (error: unknown) => boolean;
 }
 
+// Valores alinhados com backend/utils/retry/index.ts para consistência
 const DEFAULT_OPTIONS: Partial<RetryOptions> = {
   maxAttempts: 3,
-  baseDelay: 1000,
-  maxDelay: 10000,
+  baseDelay: 100,
+  maxDelay: 5000,
   isRetryable: isRetryableError,
 };
 
+/**
+ * Determina se um erro é retryable.
+ * 
+ * Esta função espera que erros relacionados a HTTP carreguem uma propriedade numérica
+ * `status` no objeto Error. Isso permite identificar erros retryable por código HTTP:
+ * - 5xx (Server Errors): sempre retryable
+ * - 429 (Too Many Requests): retryable (rate limiting)
+ * - 408 (Request Timeout): retryable (timeout do servidor)
+ * - Outros 4xx (Client Errors): NÃO são retryable (ex: 401, 403, 404)
+ * 
+ * Erros de rede (timeout, ECONNREFUSED, ENOTFOUND, network) também são retryable.
+ * 
+ * @param error - O erro a ser verificado
+ * @returns true se o erro é retryable, false caso contrário
+ */
 export function isRetryableError(error: unknown): boolean {
   if (!(error instanceof Error)) return false;
 
@@ -25,13 +41,14 @@ export function isRetryableError(error: unknown): boolean {
     return true;
   }
 
-  // Erros HTTP
+  // Erros HTTP - espera que o objeto Error tenha propriedade `status` numérica
   if ('status' in error && typeof (error as any).status === 'number') {
     const status = (error as any).status;
-    // 5xx, 429, 408 são retryable
+    // 5xx (Server Errors) são sempre retryable
     if (status >= 500 && status < 600) return true;
+    // 429 (Too Many Requests) e 408 (Request Timeout) são retryable
     if (status === 429 || status === 408) return true;
-    // Outros 4xx, 401, 403 não são retryable
+    // Outros 4xx (401, 403, 404, etc.) NÃO são retryable
     return false;
   }
 

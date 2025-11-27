@@ -141,6 +141,223 @@ Isso permite:
 - Evitar duplicação de `node_modules`
 - Executar scripts do MCP via `npm run --workspace=sinesys-mcp-server`
 
+## Tool Naming Convention
+
+As ferramentas MCP seguem o padrão de nomenclatura `sinesys_[entidade]_[acao]`, onde:
+- `[entidade]`: Representa a entidade principal do sistema (ex: `clientes`, `contratos`, `acervo`)
+- `[acao]`: Descreve a operação realizada (ex: `listar`, `buscar`, `criar`, `atualizar`, `atribuir`)
+
+Este padrão garante consistência e facilita a descoberta de ferramentas relacionadas.
+
+## Error Handling
+
+Erros nas ferramentas MCP são retornados no formato padrão do protocolo:
+- **Estrutura**: `{ content: [{ type: 'text', text: string }], isError: true }`
+- **Conteúdo**: O campo `text` contém uma string JSON com a mensagem de erro ou detalhes da falha (ex: erro de validação, 404, etc.)
+- **Tratamento**: Verifique sempre o campo `isError` nas respostas para identificar falhas. Em caso de erro, a resposta não contém dados válidos.
+
+## Available Tools
+
+### 1. Clientes Tools
+
+#### `sinesys_listar_clientes`
+Lista clientes do sistema com paginação e filtros opcionais.
+- **Descrição**: Retorna uma lista paginada de clientes, com suporte a filtros por busca textual, tipo de pessoa, TRT, grau e inclusão de endereço.
+- **Parâmetros de entrada**:
+  - `pagina` (number, opcional): Número da página (padrão: 1)
+  - `limite` (number, opcional): Itens por página (padrão: 10)
+  - `busca` (string, opcional): Busca textual em nome, fantasia, CPF, CNPJ ou e-mail
+  - `tipoPessoa` ('pf' | 'pj', opcional): Tipo de pessoa (física ou jurídica)
+  - `trt` (string, opcional): Tribunal Regional do Trabalho
+  - `grau` ('primeiro_grau' | 'segundo_grau', opcional): Grau do processo
+  - `incluirEndereco` (boolean, opcional): Incluir dados de endereço via JOIN
+- **Exemplo de uso**:
+  ```json
+  {
+    "pagina": 1,
+    "limite": 10,
+    "busca": "João Silva",
+    "tipoPessoa": "pf",
+    "incluirEndereco": true
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: { clientes: Cliente[], paginacao: { pagina, limite, total, totalPaginas } }, error?: string }`
+
+#### `sinesys_buscar_cliente`
+Busca um cliente específico pelo ID.
+- **Descrição**: Retorna os dados completos de um cliente ou erro 404 se não encontrado.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID do cliente (inteiro positivo)
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 123
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Cliente, error?: string }`
+
+#### `sinesys_criar_cliente`
+Cria um novo cliente (pessoa física ou jurídica).
+- **Descrição**: Cria um cliente PF ou PJ com validação de campos obrigatórios (nome e CPF para PF; nome e CNPJ para PJ). Outros campos são opcionais.
+- **Parâmetros de entrada**: Objeto discriminado por `tipoPessoa`:
+  - Para PF: `{ tipoPessoa: 'pf', nome: string, cpf: string, nomeSocialFantasia?: string, emails?: string[], ... }` (campos adicionais como endereços, contatos, etc.)
+  - Para PJ: `{ tipoPessoa: 'pj', nome: string, cnpj: string, nomeSocialFantasia?: string, inscricaoEstadual?: string, ... }` (campos adicionais como dados empresariais)
+- **Exemplo de uso**:
+  ```json
+  {
+    "tipoPessoa": "pf",
+    "nome": "João Silva",
+    "cpf": "12345678900",
+    "emails": ["joao@email.com"]
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Cliente, error?: string }`
+
+#### `sinesys_atualizar_cliente`
+Atualiza um cliente existente.
+- **Descrição**: Atualiza parcialmente um cliente com os campos fornecidos em `dados`.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID do cliente (inteiro positivo)
+  - `dados` (object, obrigatório): Campos parciais a atualizar (ex: nome, cpf, emails, observacoes, ativo)
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 123,
+    "dados": {
+      "nome": "João Silva Atualizado",
+      "ativo": true
+    }
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Cliente, error?: string }`
+
+### 2. Contratos Tools
+
+#### `sinesys_listar_contratos`
+Lista contratos com paginação e filtros.
+- **Descrição**: Retorna uma lista paginada de contratos, com filtros por área de direito, tipo de contrato, status, etc.
+- **Parâmetros de entrada**:
+  - `pagina` (number, opcional): Número da página
+  - `limite` (number, opcional): Itens por página
+  - `busca` (string, opcional): Busca textual em observações
+  - `areaDireito` ('trabalhista' | 'civil' | ..., opcional): Área de direito
+  - `tipoContrato` ('ajuizamento' | 'defesa' | ..., opcional): Tipo de contrato
+  - `tipoCobranca` ('pro_exito' | 'pro_labore', opcional): Tipo de cobrança
+  - `status` ('em_contratacao' | 'contratado' | ..., opcional): Status do contrato
+  - `clienteId` (number, opcional): ID do cliente
+  - `parteContrariaId` (number, opcional): ID da parte contrária
+  - `responsavelId` (number, opcional): ID do responsável
+- **Exemplo de uso**:
+  ```json
+  {
+    "pagina": 1,
+    "limite": 10,
+    "areaDireito": "trabalhista",
+    "status": "contratado"
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: { contratos: Contrato[], paginacao: { pagina, limite, total, totalPaginas } }, error?: string }`
+
+#### `sinesys_buscar_contrato`
+Busca um contrato por ID.
+- **Descrição**: Retorna dados completos de um contrato, incluindo partes JSONB.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID do contrato (inteiro positivo)
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 456
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Contrato, error?: string }`
+
+#### `sinesys_criar_contrato`
+Cria um novo contrato.
+- **Descrição**: Cria um contrato com campos obrigatórios (areaDireito, tipoContrato, tipoCobranca, clienteId, poloCliente).
+- **Parâmetros de entrada**:
+  - `areaDireito` (enum, obrigatório): Área de direito
+  - `tipoContrato` (enum, obrigatório): Tipo de contrato
+  - `tipoCobranca` (enum, obrigatório): Tipo de cobrança
+  - `clienteId` (number, obrigatório): ID do cliente
+  - `poloCliente` ('autor' | 're', obrigatório): Polo do cliente
+  - Outros campos opcionais: parteContrariaId, parteAutora, parteRe, datas, responsavelId, observacoes
+- **Exemplo de uso**:
+  ```json
+  {
+    "areaDireito": "trabalhista",
+    "tipoContrato": "ajuizamento",
+    "tipoCobranca": "pro_exito",
+    "clienteId": 123,
+    "poloCliente": "autor",
+    "observacoes": "Contrato de ajuizamento trabalhista"
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Contrato, error?: string }`
+
+#### `sinesys_atualizar_contrato`
+Atualiza um contrato existente.
+- **Descrição**: Atualiza parcialmente um contrato com os campos em `dados`.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID do contrato
+  - `dados` (object, obrigatório): Campos parciais a atualizar (ex: status, responsavelId, observacoes)
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 456,
+    "dados": {
+      "status": "distribuido",
+      "responsavelId": 789
+    }
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Contrato, error?: string }`
+
+### 3. Acervo Tools
+
+#### `sinesys_listar_acervo`
+Lista processos do acervo com filtros avançados.
+- **Descrição**: Lista processos com paginação, filtros, ordenação e agrupamento. Suporte a modo unificado e agrupado.
+- **Parâmetros de entrada**: Múltiplos filtros (todos opcionais), incluindo pagina, limite, unified, origem, trt, grau, responsavelId, busca, numeroProcesso, datas, ordenarPor, ordem, agruparPor, incluirContagem
+- **Exemplo de uso**:
+  ```json
+  {
+    "pagina": 1,
+    "limite": 20,
+    "busca": "João",
+    "ordenarPor": "data_autuacao",
+    "ordem": "desc"
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: { processos: Acervo[], paginacao: ... } | { agrupamentos: ..., total: number }, error?: string }`
+
+#### `sinesys_buscar_acervo`
+Busca um processo por ID.
+- **Descrição**: Retorna dados completos de um processo do acervo.
+- **Parâmetros de entrada**:
+  - `id` (number, obrigatório): ID do processo
+- **Exemplo de uso**:
+  ```json
+  {
+    "id": 789
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: Acervo, error?: string }`
+
+#### `sinesys_atribuir_responsavel_acervo`
+Atribui/transfere/desatribui responsável de um processo.
+- **Descrição**: Gerencia atribuição de responsável (null para desatribuir).
+- **Parâmetros de entrada**:
+  - `processoId` (number, obrigatório): ID do processo
+  - `responsavelId` (number | null, obrigatório): ID do responsável ou null
+- **Exemplo de uso**:
+  ```json
+  {
+    "processoId": 789,
+    "responsavelId": 101
+  }
+  ```
+- **Resposta esperada**: JSON com `{ success: boolean, data: { id: number, responsavel_id: number | null }, error?: string }`
+
 ---
 
 Nota: Documentação completa será adicionada nas próximas fases.

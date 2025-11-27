@@ -3,30 +3,57 @@ import * as os from 'os';
 import * as path from 'path';
 import { ApiClientConfig } from '../types/index';
 
+// Flag para habilitar logs de debug via variável de ambiente
+const MCP_DEBUG = process.env.MCP_DEBUG === 'true' || process.env.MCP_DEBUG === '1';
+
+/**
+ * Log condicional - só exibe se MCP_DEBUG estiver habilitado
+ */
+function debugLog(message: string): void {
+    if (MCP_DEBUG) {
+        console.debug(`[MCP Config] ${message}`);
+    }
+}
+
 export function loadConfig(): ApiClientConfig {
     // Attempt 1: Load from user config file
     const configPath = path.join(os.homedir(), '.sinesys', 'config.json');
     try {
         const fileContent = fs.readFileSync(configPath, 'utf-8');
-        const config: ApiClientConfig = JSON.parse(fileContent);
+        
+        let config: ApiClientConfig;
+        try {
+            config = JSON.parse(fileContent);
+        } catch (parseError) {
+            // JSON inválido - loga warning com detalhes
+            console.warn(`[MCP Config] Invalid JSON in config file: ${configPath}. Error: ${parseError instanceof Error ? parseError.message : String(parseError)}`);
+            throw parseError; // Re-throw para cair no fallback
+        }
         
         // Basic validation
         if (!config.baseUrl || typeof config.baseUrl !== 'string') {
+            console.warn(`[MCP Config] Invalid or missing baseUrl in config file: ${configPath}`);
             throw new Error('Invalid baseUrl in config file');
         }
         
         // Remove trailing slash from baseUrl
         config.baseUrl = config.baseUrl.replace(/\/$/, '');
         
-        // Check for authentication
+        // Check for authentication - warning apenas se não houver autenticação
         if (!config.apiKey && !config.sessionToken) {
-            console.warn('Warning: No authentication method configured in config file. Using for development only.');
+            console.warn('[MCP Config] No authentication method configured. Using for development only.');
         }
         
-        console.log('Configuration loaded from ~/.sinesys/config.json');
+        debugLog(`Configuration loaded from ${configPath}`);
         return config;
     } catch (error) {
-        console.log('Config file not found or invalid, falling back to environment variables.');
+        // Diferencia entre arquivo não encontrado e outros erros
+        if (error && typeof error === 'object' && 'code' in error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
+            // Arquivo não existe - log conciso de debug, não é um erro
+            debugLog(`Config file not found at ${configPath}, falling back to environment variables`);
+        }
+        // Outros erros (JSON parse, validação) já foram logados acima
+        // Continua para fallback com variáveis de ambiente
     }
     
     // Attempt 2: Load from environment variables
@@ -40,11 +67,11 @@ export function loadConfig(): ApiClientConfig {
         sessionToken
     };
     
-    // Check for authentication
+    // Check for authentication - warning apenas se não houver autenticação
     if (!config.apiKey && !config.sessionToken) {
-        console.warn('Warning: No authentication method configured via environment variables. Using for development only.');
+        console.warn('[MCP Config] No authentication method configured via environment variables. Using for development only.');
     }
     
-    console.log('Configuration loaded from environment variables.');
+    debugLog('Configuration loaded from environment variables');
     return config;
 }

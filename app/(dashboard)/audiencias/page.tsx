@@ -648,7 +648,6 @@ function criarColunas(
       id: 'processo',
       header: () => <ProcessoColumnHeader onSort={onProcessoSort} />,
       enableSorting: false,
-      size: 320,
       meta: { align: 'left' },
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
@@ -660,7 +659,7 @@ function criarColunas(
         const parteRe = row.original.polo_passivo_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[300px] overflow-hidden">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 w-fit">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -672,15 +671,15 @@ function criarColunas(
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
-            <div className="flex flex-col gap-1 w-full max-w-full">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} max-w-full text-left truncate`}>
+            <div className="flex flex-col gap-1">
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit text-left whitespace-nowrap`}>
                 {parteAutora}
               </Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} max-w-full text-left truncate`}>
+              <Badge variant="outline" className={`${getParteReColorClass()} w-fit text-left whitespace-nowrap`}>
                 {parteRe}
               </Badge>
             </div>
-            <div className="text-xs text-muted-foreground w-full truncate">
+            <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}
             </div>
           </div>

@@ -1,6 +1,21 @@
 import type { ApiClientConfig, ApiResponse, RequestOptions } from '../types/index';
 import { withRetry, isRetryableError } from './retry-logic';
 
+/**
+ * Cria um objeto Error com propriedade `status` para erros HTTP.
+ * Centraliza a criação de erros HTTP para garantir que `isRetryableError`
+ * possa identificar corretamente erros retryable (429, 408, 5xx).
+ * 
+ * @param message - Mensagem de erro
+ * @param status - Código de status HTTP
+ * @returns Error com propriedade `status`
+ */
+function createHttpError(message: string, status: number): Error {
+  const error = new Error(message);
+  (error as Error & { status: number }).status = status;
+  return error;
+}
+
 export class SinesysApiClient {
   private baseUrl: string;
   private headers: Record<string, string>;
@@ -45,7 +60,7 @@ export class SinesysApiClient {
       fetchConfig.body = JSON.stringify(options.body);
     }
 
-    // Execute fetch with retry
+    // Execute fetch with retry - usando defaults de retry-logic.ts para consistência
     const response = await withRetry(
       async () => {
         const res = await fetch(url, fetchConfig);
@@ -58,28 +73,54 @@ export class SinesysApiClient {
             const errorText = await res.text();
             errorMessage = errorText || `HTTP ${res.status}: ${res.statusText}`;
           }
-          const error = new Error(errorMessage);
-          (error as any).status = res.status;
-          throw error;
+          // Usa helper para garantir que status está presente no erro
+          throw createHttpError(errorMessage, res.status);
         }
         return res;
       },
       {
         maxAttempts: 3,
-        baseDelay: 1000,
-        maxDelay: 10000,
         isRetryable: isRetryableError,
       }
     );
 
-    // Parse successful response
-    try {
-      const data = await response.json();
-      return data as ApiResponse<T>;
-    } catch (parseError) {
-      // If JSON parsing fails, treat as error
-      throw new Error('Invalid JSON response from server');
+    // Respostas 204 (No Content) e 205 (Reset Content) não têm body
+    if (response.status === 204 || response.status === 205) {
+      return { success: true } as ApiResponse<T>;
     }
+
+    // Lê o body como texto primeiro para tratamento robusto
+    const responseText = await response.text();
+
+    // Body vazio também retorna sucesso
+    if (!responseText || responseText.trim() === '') {
+      return { success: true } as ApiResponse<T>;
+    }
+
+    // Tenta fazer parse do JSON
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(responseText);
+    } catch (parseError) {
+      // Erro de parse JSON - inclui body e status para debug
+      throw createHttpError(
+        `Invalid JSON response from server. Status: ${response.status}, Body: ${responseText.substring(0, 200)}`,
+        response.status
+      );
+    }
+
+    // Verifica se já está no formato ApiResponse<T> (tem propriedade success booleana)
+    if (
+      typeof parsed === 'object' &&
+      parsed !== null &&
+      'success' in parsed &&
+      typeof (parsed as { success: unknown }).success === 'boolean'
+    ) {
+      return parsed as ApiResponse<T>;
+    }
+
+    // Caso contrário, wrapa no formato ApiResponse<T>
+    return { success: true, data: parsed } as ApiResponse<T>;
   }
 
   public async get<T>(endpoint: string, params?: Record<string, string | number | boolean>): Promise<ApiResponse<T>> {

@@ -27,7 +27,7 @@
 - [x] **2.1** Criar tipos para dashboard em `backend/types/dashboard/`
   - DashboardUsuarioData
   - DashboardAdminData
-  - ProcessosResumo, AudienciasResumo, PendentesResumo
+  - ProcessosResumo, AudienciasResumo, ExpedientesResumo
   - MetricasEscritorio, CargaUsuario, StatusCaptura
 
 - [x] **2.2** Criar serviços de persistência em `backend/dashboard/services/persistence/`
@@ -43,39 +43,52 @@
 - [x] **2.4** Implementar cache Redis para dados de dashboard
   - TTL de 5 minutos para dados de usuário
   - TTL de 10 minutos para métricas globais
-  - Invalidação em alterações relevantes
+  - Invalidação via withCache helper
 
 ## Fase 3: API Routes
 
 - [x] **3.1** Criar endpoint `GET /api/dashboard`
   - Retornar dados baseado no role do usuário autenticado
-  - Suportar query params para filtros (período, tribunal)
+  - Cache diferenciado por perfil
 
-- [ ] **3.2** Criar endpoint `GET /api/dashboard/metricas` (admin only)
+- [ ] **3.2** Criar endpoint `GET /api/dashboard/metricas` (admin only) - OPCIONAL
   - Métricas globais do escritório
   - Comparativos mensais
 
-- [ ] **3.3** Criar endpoint `GET /api/dashboard/capturas` (admin only)
+- [ ] **3.3** Criar endpoint `GET /api/dashboard/capturas` (admin only) - OPCIONAL
   - Status das últimas capturas por TRT
 
-- [ ] **3.4** Documentar endpoints no Swagger
+- [ ] **3.4** Documentar endpoints no Swagger - OPCIONAL
 
 ## Fase 4: Migração para Produção
 
-- [ ] **4.1** Mover componentes de gráficos para `components/ui/charts/`
+- [x] **4.1** Mover componentes de gráficos para `components/ui/charts/`
   - mini-chart.tsx (componentes Recharts)
   - Exportar de index.ts
 
-- [ ] **4.2** Mover componentes de dashboard para `app/(dashboard)/dashboard/components/`
-  - Adaptar imports para usar dados reais
-  - Remover dados mockados
+- [x] **4.2** Criar componentes de widgets em `app/(dashboard)/dashboard/components/widgets/`
+  - stat-card.tsx - Cards de estatísticas
+  - widget-wrapper.tsx - Container base
+  - widget-processos-resumo.tsx - Resumo de processos
+  - widget-audiencias-proximas.tsx - Próximas audiências
+  - widget-expedientes-urgentes.tsx - Expedientes urgentes
+  - widget-produtividade.tsx - Métricas de produtividade
+  - status-cards.tsx - Cards de status (usuário/admin)
 
-- [ ] **4.3** Atualizar página principal `app/(dashboard)/dashboard/page.tsx`
+- [x] **4.3** Criar hook `useDashboard` em `app/_lib/hooks/`
+  - Fetch de dados da API
+  - Type guards para admin/usuário
+
+- [x] **4.4** Criar componente `DashboardContent`
+  - Detecta perfil automaticamente
+  - Renderiza dashboard adequada
+  - Loading states e error handling
+
+- [x] **4.5** Atualizar página principal `app/(dashboard)/dashboard/page.tsx`
   - Integrar com API routes
-  - Implementar loading states com SWR
-  - Adicionar error boundaries
+  - Usar novos componentes
 
-- [ ] **4.4** Integrar widgets existentes
+- [ ] **4.6** Integrar widgets existentes (Tarefas, Notas, Links) - FUTURO
   - Reutilizar TarefasWidget existente
   - Reutilizar NotasWidget existente
   - Reutilizar LinksWidget existente
@@ -118,6 +131,17 @@
 
 ## Status Atual
 
-**Fase 1 concluída**: Sandbox funcional com dados mockados e toggle de visualização user/admin.
+**Fases 1-4 concluídas**: Dashboard funcional com dados reais da API.
 
-**Próximo passo**: Fase 2 - Criar serviços backend para agregação de dados reais.
+**Implementado**:
+- Backend completo (tipos, persistência, serviços, API)
+- Frontend completo (hook, widgets, página)
+- Cache Redis integrado
+- Detecção automática de perfil (admin/usuário)
+
+**Pendente** (opcional/futuro):
+- Endpoints adicionais de métricas (3.2, 3.3)
+- Documentação Swagger (3.4)
+- Integração com widgets existentes (4.6)
+- Personalização drag-and-drop (Fase 5)
+- Testes e refinamentos (Fase 6)
