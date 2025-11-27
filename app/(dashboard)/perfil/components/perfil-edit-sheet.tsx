@@ -6,6 +6,7 @@ import * as React from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -122,6 +123,9 @@ export function PerfilEditSheet({
         <form onSubmit={handleSubmit}>
           <DialogHeader className="pb-5">
             <DialogTitle className="text-xl font-semibold">Editar Perfil</DialogTitle>
+            <DialogDescription>
+              Atualize suas informações pessoais e de contato.
+            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-6">

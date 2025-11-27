@@ -225,6 +225,9 @@ export function UsuarioEditDialog({
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Editar Usuário</DialogTitle>
+            <DialogDescription>
+              Atualize as informações do usuário no sistema.
+            </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">

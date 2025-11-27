@@ -17,6 +17,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -96,6 +97,9 @@ export function ExpedientesFiltrosAvancados({
         <DialogContent className="max-h-[90vh] w-[400px] sm:w-[540px] overflow-y-auto p-6">
           <DialogHeader className="pb-5">
             <DialogTitle className="text-xl font-semibold">Filtros Avançados</DialogTitle>
+            <DialogDescription>
+              Configure filtros para refinar a listagem de expedientes.
+            </DialogDescription>
           </DialogHeader>
 
         <div className="space-y-6">

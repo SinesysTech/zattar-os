@@ -6,6 +6,7 @@ import * as React from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -124,6 +125,9 @@ export function ContratoEditSheet({
             <DialogTitle className="text-xl font-semibold">
               Editar Contrato #{contrato.id}
             </DialogTitle>
+            <DialogDescription>
+              Atualize as informações do contrato.
+            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-6">
