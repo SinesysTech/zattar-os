@@ -1,4 +1,57 @@
-// Rota para marcar parcela como recebida/paga
+/**
+ * @swagger
+ * /api/acordos-condenacoes/{id}/parcelas/{parcelaId}/receber:
+ *   post:
+ *     summary: Marca parcela como recebida ou paga
+ *     description: Atualiza o status de uma parcela para recebida ou paga
+ *     tags:
+ *       - Acordos e Condenações
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do acordo/condenação
+ *       - in: path
+ *         name: parcelaId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID da parcela
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tipo
+ *             properties:
+ *               tipo:
+ *                 type: string
+ *                 enum: [recebida, paga]
+ *                 description: Tipo de marcação (recebida para créditos, paga para débitos)
+ *     responses:
+ *       200:
+ *         description: Parcela marcada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: Erro ao marcar parcela
+ *       401:
+ *         description: Não autenticado
+ */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';

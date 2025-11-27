@@ -51,13 +51,14 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 
 // Handler para CallToolRequestSchema
 // Este handler responde a requisições tools/call do cliente MCP
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+server.setRequestHandler(CallToolRequestSchema, async (request, _extra): Promise<any> => {
   const { name: toolName, arguments: args } = request.params;
 
   const tool = allTools.find((t: ToolDefinition) => t.name === toolName);
   if (!tool) {
     return {
-      content: [{ type: 'text', text: `Tool não encontrada: ${toolName}` }],
+      content: [{ type: 'text' as const, text: `Tool não encontrada: ${toolName}` }],
       isError: true,
     };
   }
@@ -71,7 +72,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       return {
         content: [
           {
-            type: 'text',
+            type: 'text' as const,
             text: `Erro de validação: ${error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ')}`,
           },
         ],
@@ -89,7 +90,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       });
 
       return {
-        content: [{ type: 'text', text: err.message }],
+        content: [{ type: 'text' as const, text: err.message }],
         isError: true,
       };
     }

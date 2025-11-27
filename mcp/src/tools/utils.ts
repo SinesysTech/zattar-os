@@ -7,23 +7,23 @@
  * Converts object keys from camelCase to snake_case recursively.
  * Handles nested objects and arrays.
  * Preserves null/undefined values.
- * @param obj The object to convert.
+ * @param obj The object to convert (can be unknown for flexibility with MCP handlers).
  * @returns The converted object.
  */
-export function toSnakeCase(obj: Record<string, any>): Record<string, any> {
+export function toSnakeCase(obj: unknown): Record<string, unknown> {
   if (obj === null || obj === undefined) {
-    return obj;
+    return obj as unknown as Record<string, unknown>;
   }
   if (Array.isArray(obj)) {
-    return obj.map(item => toSnakeCase(item as Record<string, any>));
+    return obj.map(item => toSnakeCase(item)) as unknown as Record<string, unknown>;
   }
   if (typeof obj !== 'object') {
-    return obj;
+    return obj as unknown as Record<string, unknown>;
   }
-  const result: Record<string, any> = {};
-  for (const [key, value] of Object.entries(obj)) {
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
     const snakeKey = key.replace(/([A-Z])/g, '_$1').toLowerCase();
-    result[snakeKey] = toSnakeCase(value as Record<string, any>);
+    result[snakeKey] = toSnakeCase(value);
   }
   return result;
 }
@@ -32,23 +32,23 @@ export function toSnakeCase(obj: Record<string, any>): Record<string, any> {
  * Converts object keys from snake_case to camelCase recursively.
  * Handles nested objects and arrays.
  * Preserves null/undefined values.
- * @param obj The object to convert.
+ * @param obj The object to convert (can be unknown for flexibility with MCP handlers).
  * @returns The converted object.
  */
-export function toCamelCase(obj: Record<string, any>): Record<string, any> {
+export function toCamelCase(obj: unknown): Record<string, unknown> {
   if (obj === null || obj === undefined) {
-    return obj;
+    return obj as unknown as Record<string, unknown>;
   }
   if (Array.isArray(obj)) {
-    return obj.map(item => toCamelCase(item as Record<string, any>));
+    return obj.map(item => toCamelCase(item)) as unknown as Record<string, unknown>;
   }
   if (typeof obj !== 'object') {
-    return obj;
+    return obj as unknown as Record<string, unknown>;
   }
-  const result: Record<string, any> = {};
-  for (const [key, value] of Object.entries(obj)) {
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
     const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
-    result[camelKey] = toCamelCase(value as Record<string, any>);
+    result[camelKey] = toCamelCase(value);
   }
   return result;
 }

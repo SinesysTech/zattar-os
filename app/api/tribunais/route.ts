@@ -1,6 +1,50 @@
 /**
- * API route para listar tribunais cadastrados (base table)
- * GET: Lista todos os tribunais (TRT1-TRT24, TJs, TRFs, Tribunais Superiores)
+ * @swagger
+ * /api/tribunais:
+ *   get:
+ *     summary: Lista todos os tribunais cadastrados
+ *     description: Retorna a lista de tribunais disponíveis (TRT1-TRT24, TJs, TRFs, Tribunais Superiores)
+ *     tags:
+ *       - Tribunais
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de tribunais retornada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     tribunais:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                           codigo:
+ *                             type: string
+ *                             example: "TRT3"
+ *                           nome:
+ *                             type: string
+ *                             example: "Tribunal Regional do Trabalho da 3ª Região"
+ *                           tipo:
+ *                             type: string
+ *                             example: "TRT"
+ *       401:
+ *         description: Não autenticado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 
 import { NextRequest, NextResponse } from 'next/server';

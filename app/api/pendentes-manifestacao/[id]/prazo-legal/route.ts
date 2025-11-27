@@ -1,3 +1,53 @@
+/**
+ * @swagger
+ * /api/pendentes-manifestacao/{id}/prazo-legal:
+ *   patch:
+ *     summary: Atualiza prazo legal de expediente pendente
+ *     description: Atualiza a data do prazo legal de um expediente pendente de manifestação
+ *     tags:
+ *       - Pendentes Manifestação
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do expediente pendente
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               dataPrazoLegal:
+ *                 type: string
+ *                 format: date-time
+ *                 nullable: true
+ *                 description: Nova data do prazo legal (ISO 8601) ou null para remover
+ *     responses:
+ *       200:
+ *         description: Prazo legal atualizado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: Dados inválidos
+ *       401:
+ *         description: Não autenticado
+ *       404:
+ *         description: Expediente não encontrado
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
 import { authenticateRequest } from '@/backend/auth/api-auth'
 import { createServiceClient } from '@/backend/utils/supabase/service-client'

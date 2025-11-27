@@ -1,7 +1,141 @@
 /**
- * API de expedientes manuais
- * GET: Listar expedientes manuais com filtros
- * POST: Criar novo expediente manual
+ * @swagger
+ * /api/expedientes-manuais:
+ *   get:
+ *     summary: Lista expedientes manuais
+ *     description: Retorna lista de expedientes manuais com filtros e paginação
+ *     tags:
+ *       - Expedientes Manuais
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: pagina
+ *         schema:
+ *           type: integer
+ *           default: 0
+ *         description: Número da página (0-indexed)
+ *       - in: query
+ *         name: limite
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Quantidade de itens por página
+ *       - in: query
+ *         name: busca
+ *         schema:
+ *           type: string
+ *         description: Termo de busca
+ *       - in: query
+ *         name: processo_id
+ *         schema:
+ *           type: integer
+ *         description: Filtrar por ID do processo
+ *       - in: query
+ *         name: trt
+ *         schema:
+ *           type: string
+ *         description: Filtrar por TRT
+ *       - in: query
+ *         name: grau
+ *         schema:
+ *           type: string
+ *           enum: [primeiro_grau, segundo_grau]
+ *         description: Filtrar por grau
+ *       - in: query
+ *         name: tipo_expediente_id
+ *         schema:
+ *           type: integer
+ *         description: Filtrar por tipo de expediente
+ *       - in: query
+ *         name: responsavel_id
+ *         schema:
+ *           type: string
+ *         description: Filtrar por responsável (use "null" para sem responsável)
+ *       - in: query
+ *         name: prazo_vencido
+ *         schema:
+ *           type: boolean
+ *         description: Filtrar por prazo vencido
+ *       - in: query
+ *         name: baixado
+ *         schema:
+ *           type: boolean
+ *         description: Filtrar por status de baixa
+ *     responses:
+ *       200:
+ *         description: Lista de expedientes manuais
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     expedientes:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                     total:
+ *                       type: integer
+ *                     pagina:
+ *                       type: integer
+ *                     limite:
+ *                       type: integer
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *   post:
+ *     summary: Cria um expediente manual
+ *     description: Cria um novo expediente manual vinculado a um processo
+ *     tags:
+ *       - Expedientes Manuais
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - processo_id
+ *               - descricao
+ *             properties:
+ *               processo_id:
+ *                 type: integer
+ *                 description: ID do processo
+ *               descricao:
+ *                 type: string
+ *                 description: Descrição do expediente
+ *               tipo_expediente_id:
+ *                 type: integer
+ *                 description: ID do tipo de expediente
+ *               responsavel_id:
+ *                 type: integer
+ *                 description: ID do responsável
+ *               data_prazo_legal:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Data do prazo legal
+ *               observacoes:
+ *                 type: string
+ *                 description: Observações adicionais
+ *     responses:
+ *       201:
+ *         description: Expediente criado com sucesso
+ *       400:
+ *         description: Dados inválidos
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
  */
 
 import { NextRequest, NextResponse } from 'next/server';

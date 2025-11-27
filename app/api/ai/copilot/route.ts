@@ -1,3 +1,48 @@
+/**
+ * @swagger
+ * /api/ai/copilot:
+ *   post:
+ *     summary: Endpoint de copiloto AI
+ *     description: Gera texto usando modelo de linguagem AI para assistência
+ *     tags:
+ *       - AI
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - prompt
+ *             properties:
+ *               apiKey:
+ *                 type: string
+ *                 description: API key do gateway AI (opcional se configurada no servidor)
+ *               model:
+ *                 type: string
+ *                 default: gpt-4o-mini
+ *                 description: Modelo de linguagem a ser usado
+ *               prompt:
+ *                 type: string
+ *                 description: Prompt para geração de texto
+ *               system:
+ *                 type: string
+ *                 description: Prompt de sistema
+ *     responses:
+ *       200:
+ *         description: Texto gerado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       401:
+ *         description: API key ausente
+ *       408:
+ *         description: Requisição cancelada (timeout)
+ *       500:
+ *         description: Erro ao processar requisição AI
+ */
+
 import type { NextRequest } from 'next/server';
 
 import { generateText } from 'ai';

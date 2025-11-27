@@ -1,6 +1,49 @@
 /**
- * API Route: /api/permissoes/recursos
- * GET - Listar todos os recursos e operações disponíveis (matriz completa)
+ * @swagger
+ * /api/permissoes/recursos:
+ *   get:
+ *     summary: Lista a matriz de permissões disponíveis
+ *     description: Retorna todos os recursos e operações disponíveis no sistema de permissões
+ *     tags:
+ *       - Permissões
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     responses:
+ *       200:
+ *         description: Matriz de permissões retornada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     matriz:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           recurso:
+ *                             type: string
+ *                           operacoes:
+ *                             type: array
+ *                             items:
+ *                               type: string
+ *                     totalRecursos:
+ *                       type: integer
+ *                     totalPermissoes:
+ *                       type: integer
+ *       401:
+ *         description: Não autenticado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 
 import { NextRequest, NextResponse } from 'next/server';

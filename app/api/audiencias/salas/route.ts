@@ -3,15 +3,59 @@ import { createClient } from '@/backend/utils/supabase/server-client';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 
 /**
- * GET /api/audiencias/salas
- * Lista salas de audiência disponíveis
- *
- * Query params:
- * - trt: Código do TRT (obrigatório)
- * - grau: Grau do tribunal (obrigatório)
- * - orgao_julgador_id: ID do órgão julgador (obrigatório)
- *
- * @returns Lista de salas de audiência com id e nome
+ * @swagger
+ * /api/audiencias/salas:
+ *   get:
+ *     summary: Lista salas de audiência
+ *     description: Retorna lista de salas de audiência disponíveis para um TRT, grau e órgão julgador específicos
+ *     tags:
+ *       - Audiências
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: trt
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Código do TRT (ex. TRT3)
+ *       - in: query
+ *         name: grau
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [primeiro_grau, segundo_grau]
+ *         description: Grau do tribunal
+ *       - in: query
+ *         name: orgao_julgador_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do órgão julgador
+ *     responses:
+ *       200:
+ *         description: Lista de salas de audiência
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       nome:
+ *                         type: string
+ *       400:
+ *         description: Parâmetros obrigatórios ausentes
+ *       401:
+ *         description: Não autenticado
  */
 export async function GET(request: NextRequest) {
   try {

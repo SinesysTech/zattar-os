@@ -46,10 +46,14 @@ async function testTool(toolName: string, args: any): Promise<void> {
     console.log(`Resultado:\n${JSON.stringify(result, null, 2)}`);
     
   } catch (error) {
-    if (error.name === 'ZodError') {
-      console.error(`Erro de validação: ${error.message}`);
+    if (error instanceof Error) {
+      if (error.name === 'ZodError') {
+        console.error(`Erro de validação: ${error.message}`);
+      } else {
+        console.error(`Erro de execução: ${error.message}`);
+      }
     } else {
-      console.error(`Erro de execução: ${error.message}`);
+      console.error(`Erro de execução: ${String(error)}`);
     }
     throw error; // Re-throw para tratamento no main
   }
@@ -122,7 +126,8 @@ async function main(): Promise<void> {
     apiClient = new SinesysApiClient(config);
     console.log('Cliente API inicializado com sucesso.');
   } catch (error) {
-    console.error(`Erro ao carregar configuração: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`Erro ao carregar configuração: ${errorMessage}`);
     console.error('Verifique se ~/.sinesys/config.json existe ou se as variáveis de ambiente estão configuradas.');
     process.exit(1);
   }
@@ -166,7 +171,8 @@ async function main(): Promise<void> {
           process.exit(1);
       }
     } catch (error) {
-      console.error(`Erro no teste '${testName}': ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(`Erro no teste '${testName}': ${errorMessage}`);
       process.exit(1);
     }
   } else {
@@ -185,7 +191,8 @@ async function main(): Promise<void> {
       try {
         await test.fn();
       } catch (error) {
-        console.error(`Erro no teste '${test.name}': ${error.message}`);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error(`Erro no teste '${test.name}': ${errorMessage}`);
         // Continua para o próximo teste
       }
     }
@@ -195,7 +202,8 @@ async function main(): Promise<void> {
 }
 
 // Executa a função principal
-main().catch(error => {
-  console.error(`Erro inesperado: ${error.message}`);
+main().catch((error: unknown) => {
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  console.error(`Erro inesperado: ${errorMessage}`);
   process.exit(1);
 });

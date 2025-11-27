@@ -1,3 +1,4 @@
+
 # Exemplos de Uso do Sinesys MCP Server
 
 Este diretório contém scripts de exemplo para testar e demonstrar o uso do Sinesys MCP Server. Esses exemplos mostram como interagir com as tools do MCP programaticamente, sem precisar de um cliente MCP completo (como Claude Desktop).

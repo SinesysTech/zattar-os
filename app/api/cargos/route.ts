@@ -1,7 +1,118 @@
 /**
- * API Routes: /api/cargos
- * GET - Listar cargos
- * POST - Criar cargo
+ * @swagger
+ * /api/cargos:
+ *   get:
+ *     summary: Lista todos os cargos
+ *     description: Retorna lista de cargos com filtros e paginação
+ *     tags:
+ *       - Cargos
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: pagina
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Número da página
+ *       - in: query
+ *         name: limite
+ *         schema:
+ *           type: integer
+ *           default: 50
+ *         description: Quantidade de itens por página
+ *       - in: query
+ *         name: busca
+ *         schema:
+ *           type: string
+ *         description: Termo de busca
+ *       - in: query
+ *         name: ativo
+ *         schema:
+ *           type: boolean
+ *         description: Filtrar por status ativo
+ *       - in: query
+ *         name: ordenarPor
+ *         schema:
+ *           type: string
+ *           default: nome
+ *         description: Campo para ordenação
+ *       - in: query
+ *         name: ordem
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: asc
+ *         description: Direção da ordenação
+ *     responses:
+ *       200:
+ *         description: Lista de cargos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     cargos:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                           nome:
+ *                             type: string
+ *                           descricao:
+ *                             type: string
+ *                           ativo:
+ *                             type: boolean
+ *                     total:
+ *                       type: integer
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *   post:
+ *     summary: Cria um novo cargo
+ *     description: Cria um cargo no sistema
+ *     tags:
+ *       - Cargos
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nome
+ *             properties:
+ *               nome:
+ *                 type: string
+ *                 description: Nome do cargo
+ *               descricao:
+ *                 type: string
+ *                 description: Descrição do cargo
+ *               ativo:
+ *                 type: boolean
+ *                 default: true
+ *                 description: Status ativo do cargo
+ *     responses:
+ *       201:
+ *         description: Cargo criado com sucesso
+ *       400:
+ *         description: Dados inválidos ou cargo já existe
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
  */
 
 import { NextRequest, NextResponse } from 'next/server';

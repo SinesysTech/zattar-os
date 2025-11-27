@@ -123,8 +123,21 @@ export class SinesysApiClient {
     return { success: true, data: parsed } as ApiResponse<T>;
   }
 
-  public async get<T>(endpoint: string, params?: Record<string, string | number | boolean>): Promise<ApiResponse<T>> {
-    return this.request<T>(endpoint, { method: 'GET', params });
+  public async get<T>(endpoint: string, params?: Record<string, unknown>): Promise<ApiResponse<T>> {
+    // Filtra e converte params para Record<string, string | number | boolean>
+    const filteredParams: Record<string, string | number | boolean> | undefined = params
+      ? Object.entries(params).reduce((acc, [key, value]) => {
+          if (value !== undefined && value !== null) {
+            if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+              acc[key] = value;
+            } else {
+              acc[key] = String(value);
+            }
+          }
+          return acc;
+        }, {} as Record<string, string | number | boolean>)
+      : undefined;
+    return this.request<T>(endpoint, { method: 'GET', params: filteredParams });
   }
 
   /**

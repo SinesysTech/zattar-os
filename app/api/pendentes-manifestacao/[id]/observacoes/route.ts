@@ -1,3 +1,56 @@
+/**
+ * @swagger
+ * /api/pendentes-manifestacao/{id}/observacoes:
+ *   patch:
+ *     summary: Atualiza observações de expediente pendente
+ *     description: Atualiza as observações de um expediente pendente de manifestação
+ *     tags:
+ *       - Pendentes Manifestação
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do expediente pendente
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               observacoes:
+ *                 type: string
+ *                 nullable: true
+ *                 description: Novas observações ou null para remover
+ *     responses:
+ *       200:
+ *         description: Observações atualizadas com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: Dados inválidos
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *       404:
+ *         description: Expediente não encontrado
+ */
+
 import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/backend/auth/require-permission';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
