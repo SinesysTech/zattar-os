@@ -1003,6 +1003,120 @@ Todas as respostas seguem o formato:
 - `GET /api/cache/stats` - Estatísticas do Redis
 - `POST /api/cache/clear` - Limpar cache
 
+## 🤖 MCP Server (Model Context Protocol)
+
+O Sinesys inclui um **MCP Server** completo que expõe todas as APIs do sistema para agentes de IA via [Model Context Protocol](https://modelcontextprotocol.io/). Isso permite que assistentes como Claude Desktop interajam programaticamente com o Sinesys.
+
+### Visão Geral
+
+- **52 Tools Disponíveis** organizadas em 10 categorias
+- **Autenticação Segura** via Service API Key ou Bearer Token
+- **Operações Assíncronas** com polling automático para capturas
+- **Validação Robusta** com Zod schemas
+- **Retry Logic** para resiliência em operações HTTP
+
+### Categorias de Tools
+
+- **Clientes** (4 tools): CRUD completo de clientes PF/PJ
+- **Contratos** (3 tools): Gestão de contratos e vínculos
+- **Acervo** (3 tools): Listagem e gestão de processos
+- **Audiências** (6 tools): Gestão completa de audiências
+- **Pendentes de Manifestação** (4 tools): Controle de prazos e baixas
+- **Expedientes Manuais** (8 tools): CRUD de expedientes
+- **Captura** (7 tools): Captura assíncrona de dados do PJE/TRT
+- **Advogados** (7 tools): Gestão de advogados e credenciais PJE
+- **Usuários** (6 tools): Gestão de usuários e permissões
+- **Admin** (3 tools): Cache, health check e administração
+
+### Instalação e Configuração
+
+#### 1. Build do MCP Server
+
+```bash
+cd mcp/
+npm install
+npm run build
+```
+
+#### 2. Configuração
+
+Crie o arquivo `~/.sinesys/config.json`:
+
+```json
+{
+  "baseUrl": "https://seu-sinesys.com",
+  "apiKey": "sua_service_api_key"
+}
+```
+
+Ou use variáveis de ambiente:
+
+```bash
+export SINESYS_BASE_URL="https://seu-sinesys.com"
+export SINESYS_API_KEY="sua_service_api_key"
+```
+
+#### 3. Integração com Claude Desktop
+
+Edite `~/.config/Claude/claude_desktop_config.json` (Linux/Mac) ou `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+
+```json
+{
+  "mcpServers": {
+    "sinesys": {
+      "command": "node",
+      "args": ["/caminho/completo/para/sinesys/mcp/build/index.js"],
+      "env": {
+        "SINESYS_BASE_URL": "https://seu-sinesys.com",
+        "SINESYS_API_KEY": "sua_service_api_key"
+      }
+    }
+  }
+}
+```
+
+Reinicie o Claude Desktop para aplicar as mudanças.
+
+### Exemplos de Uso
+
+Veja exemplos práticos em `mcp/examples/`:
+
+- **test-tools.ts**: Testes individuais de tools
+- **workflow-captura.ts**: Workflow completo de captura assíncrona
+
+```bash
+cd mcp/
+tsx examples/test-tools.ts listar_clientes
+tsx examples/workflow-captura.ts 1 5 6
+```
+
+### Documentação Completa
+
+Para documentação detalhada, incluindo:
+- Lista completa de todas as 52 tools com schemas
+- Exemplos de uso avançados
+- Troubleshooting e FAQ
+- Guias de integração
+
+Consulte: **[mcp/README.md](./mcp/README.md)**
+
+### Desenvolvimento
+
+```bash
+cd mcp/
+
+# Modo desenvolvimento com hot reload
+npm run dev
+
+# Build para produção
+npm run build
+
+# Executar servidor
+npm start
+```
+
+---
+
 ## 🛠 Scripts Úteis
 
 ### Scripts de Desenvolvimento

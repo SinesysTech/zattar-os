@@ -1,5 +1,7 @@
 # Sinesys MCP Server
 
+[![MCP SDK](https://img.shields.io/badge/MCP%20SDK-0.5.0-blue)](https://modelcontextprotocol.io/) [![Node.js](https://img.shields.io/badge/Node.js-20+-green)](https://nodejs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org/)
+
 Servidor MCP (Model Context Protocol) que expõe as APIs do Sinesys para agentes AI.
 
 ## Estrutura
@@ -86,18 +88,74 @@ Isso irá gerar os arquivos JavaScript no diretório `mcp/build/`.
 
 ## Configuração
 
-### Opção 1 - Arquivo de configuração
+### Arquivo de Configuração (~/.sinesys/config.json)
 
-Crie o arquivo `~/.sinesys/config.json` com a seguinte estrutura:
+O MCP Server carrega a configuração prioritariamente do arquivo `~/.sinesys/config.json`. Este arquivo contém as credenciais e URLs necessárias para conectar às APIs do Sinesys.
+
+> **⚠️ Importante:** O arquivo de configuração deve ser JSON válido. **Não use comentários** (`//` ou `/* */`) dentro do arquivo, pois JSON não suporta comentários e isso causará erros de parsing. Use o exemplo em `mcp/.sinesys.config.example.json` como referência.
+
+#### Formato JSON Completo
 
 ```json
 {
-  "baseUrl": "https://sinesys.app",
-  "apiKey": "sua_service_api_key_aqui"
+  "baseUrl": "https://api.sinesys.com",
+  "apiKey": "sk_your_service_api_key_here",
+  "sessionToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 ```
 
-O campo `apiKey` corresponde à Service API Key (variável `SERVICE_API_KEY` do `.env`).
+#### Explicação dos Campos
+
+- **`baseUrl`** (string, obrigatório): URL base da API do Sinesys. Deve incluir o protocolo (http/https) e não terminar com `/`. Exemplo: `"https://sinesys.app"` ou `"http://localhost:3000"`.
+- **`apiKey`** (string, opcional): Service API Key para autenticação de sistema. Header `x-service-api-key`. Tem prioridade sobre `sessionToken`. Recomendado para automação e MCP.
+- **`sessionToken`** (string, opcional): Bearer token JWT de usuário autenticado. Header `Authorization: Bearer <token>`. Usado quando `apiKey` não é fornecido.
+
+**Nota:** Pelo menos um método de autenticação deve ser configurado (`apiKey` ou `sessionToken`).
+
+#### Exemplos para Diferentes Ambientes
+
+##### Desenvolvimento Local (localhost:3000)
+```json
+{
+  "baseUrl": "http://localhost:3000",
+  "apiKey": "sk_dev_api_key_12345"
+}
+```
+
+##### Produção (HTTPS)
+```json
+{
+  "baseUrl": "https://api.sinesys.com",
+  "apiKey": "sk_prod_api_key_67890"
+}
+```
+
+##### Staging
+```json
+{
+  "baseUrl": "https://staging.sinesys.com",
+  "apiKey": "sk_staging_api_key_abcde"
+}
+```
+
+##### Múltiplos Ambientes (usando variáveis de ambiente para alternar)
+```json
+{
+  "baseUrl": "https://api.sinesys.com",
+  "apiKey": "sk_prod_api_key_67890"
+}
+```
+Para desenvolvimento, sobrescreva com variáveis de ambiente:
+```bash
+export SINESYS_BASE_URL="http://localhost:3000"
+export SINESYS_API_KEY="sk_dev_api_key_12345"
+```
+
+#### Precedência de Configuração
+
+1. **Arquivo `~/.sinesys/config.json`** (prioridade máxima)
+2. **Variáveis de ambiente**: `SINESYS_BASE_URL`, `SINESYS_API_KEY`, `SINESYS_SESSION_TOKEN`
+3. **Defaults**: `baseUrl: "http://localhost:3000"`, outros campos vazios
 
 ### Opção 2 - Variáveis de ambiente
 
@@ -135,33 +193,67 @@ Em produção o servidor é iniciado automaticamente pelo cliente MCP (ex: Claud
 
 Claude Desktop pode usar o servidor MCP para acessar as APIs do Sinesys.
 
-#### Configuração do `claude_desktop_config.json`:
+### Localização do Arquivo de Configuração
 
 - **Linux/Mac**: `~/.config/Claude/claude_desktop_config.json`
 - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
-#### Exemplo de configuração JSON:
+### Exemplo Completo de Configuração JSON
 
 ```json
 {
   "mcpServers": {
     "sinesys": {
       "command": "node",
-      "args": ["/caminho/absoluto/para/sinesys/mcp/build/index.js"],
+      "args": ["/home/user/projects/sinesys/mcp/build/index.js"],
       "env": {
-        "SINESYS_BASE_URL": "https://seu-sinesys.com",
-        "SINESYS_API_KEY": "sua_service_api_key_aqui"
+        "SINESYS_BASE_URL": "https://api.sinesys.com",
+        "SINESYS_API_KEY": "sk_your_service_api_key_here"
       }
     }
   }
 }
 ```
 
-Substitua `/caminho/absoluto/para/sinesys` pelo caminho real do projeto.
+**Nota:** Substitua `/home/user/projects/sinesys` pelo caminho absoluto real do projeto no seu sistema.
 
-Após configurar, reiniciar Claude Desktop para carregar o servidor.
+### Instruções Passo-a-Passo
 
-Dica: Verifique logs do Claude Desktop em caso de problemas de conexão.
+1. **Compilar o MCP Server:**
+   ```bash
+   cd /path/to/sinesys
+   npm run mcp:build
+   ```
+
+2. **Localizar ou criar o arquivo de configuração do Claude:**
+   - Abra o arquivo `~/.config/Claude/claude_desktop_config.json` (Linux/Mac) ou `%APPDATA%\Claude\claude_desktop_config.json` (Windows)
+   - Se o arquivo não existir, crie-o como um JSON vazio: `{}`
+   - Se já existir, adicione a seção `mcpServers` se não houver
+
+3. **Adicionar a configuração do Sinesys:**
+   - Adicione o objeto `sinesys` dentro de `mcpServers`
+   - Use o caminho absoluto para `index.js` em `args`
+   - Configure as variáveis de ambiente necessárias em `env`
+
+4. **Reiniciar o Claude Desktop:**
+   - Feche completamente o Claude Desktop (não apenas minimize)
+   - Reabra a aplicação
+   - O servidor MCP será iniciado automaticamente como subprocesso
+
+5. **Verificar a conexão:**
+   - No Claude Desktop, digite uma mensagem como: "Liste os clientes do Sinesys"
+   - O Claude deve reconhecer e usar as tools do MCP
+   - Verifique se não há erros nos logs do Claude
+
+### Dicas de Uso
+
+- **Invocando Tools:** Use prompts naturais como "Crie um cliente PF chamado João Silva com CPF 123.456.789-00" ou "Liste os contratos em andamento"
+- **Exemplos de Prompts Eficazes:**
+  - "Busque informações sobre o cliente com ID 123 no Sinesys"
+  - "Inicie uma captura de audiências para o advogado 1 usando as credenciais 5 e 6"
+  - "Liste os processos pendentes de manifestação que estão vencidos"
+- **Workflows Complexos:** Combine múltiplas tools em sequência, como iniciar captura → aguardar conclusão → processar resultados
+- **Debugging:** Se tools não funcionarem, verifique os logs do Claude Desktop e do servidor MCP (stderr)
 
 ## Autenticação
 
@@ -210,13 +302,692 @@ Erros nas ferramentas MCP são retornados no formato padrão do protocolo:
 - **Conteúdo**: O campo `text` contém uma string JSON com a mensagem de erro ou detalhes da falha (ex: erro de validação, 404, etc.)
 - **Tratamento**: Verifique sempre o campo `isError` nas respostas para identificar falhas. Em caso de erro, a resposta não contém dados válidos.
 
+## Exemplos de Uso Expandida
+
+### Gestão de Clientes
+
+#### Criar Cliente PF
+**Contexto:** Cadastrar um novo cliente pessoa física com dados básicos.
+
+**JSON de Entrada:**
+```json
+{
+  "tipoPessoa": "pf",
+  "nome": "João Silva",
+  "cpf": "12345678900",
+  "emails": ["joao@email.com"],
+  "dddCelular": "11",
+  "numeroCelular": "999999999"
+}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 123,
+    "tipoPessoa": "pf",
+    "nome": "João Silva",
+    "cpf": "12345678900",
+    "emails": ["joao@email.com"],
+    "dddCelular": "11",
+    "numeroCelular": "999999999",
+    "ativo": true,
+    "createdAt": "2024-01-01T10:00:00Z"
+  }
+}
+```
+
+**Possíveis Erros:**
+- `Erro de validação: cpf: String must be exactly 11 characters` - CPF deve ter exatamente 11 dígitos
+- `Erro: Cliente já existe com este CPF` - CPF duplicado
+
+#### Buscar Cliente por Filtros
+**Contexto:** Encontrar clientes usando busca textual e filtros.
+
+**JSON de Entrada:**
+```json
+{
+  "busca": "João Silva",
+  "tipoPessoa": "pf",
+  "ativo": true,
+  "incluirEndereco": true
+}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "clientes": [
+      {
+        "id": 123,
+        "nome": "João Silva",
+        "cpf": "12345678900",
+        "emails": ["joao@email.com"],
+        "endereco": {
+          "logradouro": "Rua das Flores, 123",
+          "cidade": "São Paulo",
+          "estado": "SP"
+        }
+      }
+    ],
+    "paginacao": {
+      "pagina": 1,
+      "limite": 10,
+      "total": 1,
+      "totalPaginas": 1
+    }
+  }
+}
+```
+
+**Possíveis Erros:**
+- Nenhum (filtros são opcionais)
+
+#### Atualizar Dados do Cliente
+**Contexto:** Atualizar informações de contato de um cliente existente.
+
+**JSON de Entrada:**
+```json
+{
+  "id": 123,
+  "dados": {
+    "emails": ["joao.novo@email.com", "joao.pessoal@email.com"],
+    "dddCelular": "21",
+    "numeroCelular": "888888888",
+    "observacoes": "Cliente preferencial"
+  }
+}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 123,
+    "nome": "João Silva",
+    "emails": ["joao.novo@email.com", "joao.pessoal@email.com"],
+    "dddCelular": "21",
+    "numeroCelular": "888888888",
+    "observacoes": "Cliente preferencial"
+  }
+}
+```
+
+**Possíveis Erros:**
+- `Erro: Cliente não encontrado` - ID inexistente
+
+### Gestão de Contratos
+
+#### Criar Contrato Vinculado a Cliente
+**Contexto:** Criar um novo contrato de ajuizamento trabalhista para um cliente existente.
+
+**JSON de Entrada:**
+```json
+{
+  "areaDireito": "trabalhista",
+  "tipoContrato": "ajuizamento",
+  "tipoCobranca": "pro_exito",
+  "clienteId": 123,
+  "poloCliente": "autor",
+  "observacoes": "Contrato para ajuizamento de reclamação trabalhista"
+}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 456,
+    "areaDireito": "trabalhista",
+    "tipoContrato": "ajuizamento",
+    "tipoCobranca": "pro_exito",
+    "clienteId": 123,
+    "poloCliente": "autor",
+    "status": "em_contratacao",
+    "observacoes": "Contrato para ajuizamento de reclamação trabalhista",
+    "createdAt": "2024-01-01T10:00:00Z"
+  }
+}
+```
+
+**Possíveis Erros:**
+- `Erro de validação: clienteId: Required` - Cliente ID obrigatório
+- `Erro: Cliente não encontrado` - Cliente inexistente
+
+#### Listar Contratos com Filtros
+**Contexto:** Listar contratos trabalhistas em andamento.
+
+**JSON de Entrada:**
+```json
+{
+  "areaDireito": "trabalhista",
+  "status": "contratado",
+  "pagina": 1,
+  "limite": 20
+}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "contratos": [
+      {
+        "id": 456,
+        "areaDireito": "trabalhista",
+        "tipoContrato": "ajuizamento",
+        "status": "contratado",
+        "cliente": {
+          "nome": "João Silva"
+        }
+      }
+    ],
+    "paginacao": {
+      "pagina": 1,
+      "limite": 20,
+      "total": 1,
+      "totalPaginas": 1
+    }
+  }
+}
+```
+
+**Possíveis Erros:**
+- Nenhum (filtros são opcionais)
+
+### Gestão Processual
+
+#### Listar Processos
+**Contexto:** Listar processos do acervo com filtros de TRT e grau.
+
+**JSON de Entrada:**
+```json
+{
+  "trt": "TRT3",
+  "grau": "primeiro_grau",
+  "busca": "João Silva",
+  "pagina": 1,
+  "limite": 10
+}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "processos": [
+      {
+        "id": 789,
+        "numeroProcesso": "0010702-80.2025.5.03.0111",
+        "trt": "TRT3",
+        "grau": "primeiro_grau",
+        "poloAtivoNome": "João Silva",
+        "status": "ativo"
+      }
+    ],
+    "paginacao": {
+      "pagina": 1,
+      "limite": 10,
+      "total": 1,
+      "totalPaginas": 1
+    }
+  }
+}
+```
+
+**Possíveis Erros:**
+- Nenhum (filtros são opcionais)
+
+#### Atribuir Responsável
+**Contexto:** Atribuir um advogado responsável por um processo.
+
+**JSON de Entrada:**
+```json
+{
+  "processoId": 789,
+  "responsavelId": 101
+}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 789,
+    "responsavel_id": 101
+  }
+}
+```
+
+**Possíveis Erros:**
+- `Erro: Processo não encontrado` - ID inexistente
+- `Erro: Usuário não encontrado` - Responsável inexistente
+
+#### Consultar Audiências
+**Contexto:** Listar audiências virtuais da próxima semana.
+
+**JSON de Entrada:**
+```json
+{
+  "modalidade": "virtual",
+  "data_inicio_inicio": "2024-01-01T00:00:00Z",
+  "data_inicio_fim": "2024-01-07T23:59:59Z",
+  "status": "M",
+  "pagina": 1,
+  "limite": 50
+}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "audiencias": [
+      {
+        "id": 111,
+        "numeroProcesso": "0010702-80.2025.5.03.0111",
+        "dataInicio": "2024-01-03T10:00:00Z",
+        "modalidade": "virtual",
+        "status": "M",
+        "tipoAudiencia": "Instrução"
+      }
+    ],
+    "paginacao": {
+      "pagina": 1,
+      "limite": 50,
+      "total": 1,
+      "totalPaginas": 1
+    }
+  }
+}
+```
+
+**Possíveis Erros:**
+- Nenhum (filtros são opcionais)
+
+### Workflows de Captura
+
+#### Captura com Polling Manual
+**Contexto:** Capturar audiências e monitorar progresso manualmente.
+
+**Passo 1 - Iniciar Captura:**
+```json
+{
+  "advogado_id": 1,
+  "credencial_ids": [5, 6],
+  "data_inicio": "2024-01-01",
+  "data_fim": "2024-12-31"
+}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "capture_id": 123,
+    "status": "in_progress",
+    "message": "Captura iniciada com sucesso"
+  }
+}
+```
+
+**Passo 2 - Consultar Status (repetir até completar):**
+```json
+{
+  "capture_id": 123
+}
+```
+
+**Resposta Esperada (quando concluída):**
+```json
+{
+  "success": true,
+  "data": {
+    "status": "completed",
+    "resultado": {
+      "audiencias_capturadas": 150,
+      "novas_audiencias": 15,
+      "atualizadas": 135
+    }
+  }
+}
+```
+
+**Possíveis Erros:**
+- `Erro: Credenciais PJE inválidas` - Verificar credenciais do advogado
+- `Erro: Timeout na captura` - Operação demorou muito
+
+#### Captura com Polling Automático
+**Contexto:** Capturar audiências e aguardar conclusão automaticamente.
+
+**Passo 1 - Iniciar Captura (igual ao manual)**
+
+**Passo 2 - Aguardar Conclusão:**
+```json
+{
+  "capture_id": 123,
+  "interval_ms": 5000,
+  "timeout_ms": 300000
+}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "status": "completed",
+    "data": {
+      "audiencias_capturadas": 150,
+      "novas_audiencias": 15,
+      "atualizadas": 135
+    },
+    "polling_info": {
+      "total_polls": 12,
+      "elapsed_ms": 60000
+    }
+  }
+}
+```
+
+**Possíveis Erros:**
+- `Erro: Timeout aguardando conclusão` - Captura demorou mais que timeout_ms
+- `Erro: Captura falhou` - Verificar logs do servidor
+
+### Administração
+
+#### Verificar Cache
+**Contexto:** Obter estatísticas do cache Redis.
+
+**JSON de Entrada:**
+```json
+{}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "redis_connected": true,
+    "memory_used": "45MB",
+    "total_keys": 1250,
+    "hits": 15420,
+    "misses": 2340,
+    "uptime_days": 7
+  }
+}
+```
+
+**Possíveis Erros:**
+- `Erro: Acesso negado` - Requer permissões de admin
+
+#### Limpar Cache
+**Contexto:** Limpar todo o cache Redis.
+
+**JSON de Entrada:**
+```json
+{}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "message": "Cache limpo com sucesso",
+    "keys_removed": 1250
+  }
+}
+```
+
+**Possíveis Erros:**
+- `Erro: Acesso negado` - Requer permissões de admin
+
+#### Health Check
+**Contexto:** Verificar se o sistema está saudável.
+
+**JSON de Entrada:**
+```json
+{}
+```
+
+**Resposta Esperada:**
+```json
+{
+  "success": true,
+  "data": {
+    "status": "ok",
+    "timestamp": "2024-01-01T12:00:00.000Z",
+    "version": "1.0.0"
+  }
+}
+```
+
+**Possíveis Erros:**
+- `Erro: Serviço indisponível` - Servidor fora do ar
+
 ## Troubleshooting
 
-- **Servidor não inicia**: Verifique se `npm run mcp:build` foi executado e se `build/index.js` existe
-- **Erro de autenticação**: Confirme que `SINESYS_API_KEY` ou `SINESYS_SESSION_TOKEN` estão configurados corretamente
-- **Tool não encontrada**: Execute `npm run mcp:build` para recompilar após adicionar novas tools
-- **Erro de validação Zod**: Verifique se os argumentos passados correspondem ao schema da tool (use `tools/list` para ver schemas)
-- **Debug**: Habilite logs detalhados com `MCP_DEBUG=true npm run mcp:start`
+### Erros de Autenticação
+
+#### 401 Unauthorized
+**Sintoma:** Todas as tools retornam erro 401 Unauthorized.
+
+**Causas possíveis:**
+- API Key inválida ou expirada
+- Bearer Token inválido ou expirado
+- Nenhum método de autenticação configurado
+
+**Soluções:**
+1. Verificar se `~/.sinesys/config.json` existe e contém `apiKey` ou `sessionToken` válidos
+2. Testar autenticação manualmente:
+   ```bash
+   curl -H "x-service-api-key: SUA_API_KEY" https://seu-sinesys.com/api/health
+   ```
+3. Verificar se a API Key tem permissões adequadas no Sinesys (admin ou service)
+4. Para Bearer Token, verificar se não expirou (geralmente 1 hora)
+
+### Erros de Conexão
+
+#### ECONNREFUSED
+**Sintoma:** Erro "connect ECONNREFUSED" ao chamar qualquer tool.
+
+**Causas possíveis:**
+- Servidor Sinesys não está rodando
+- `baseUrl` incorreta na configuração
+- Firewall bloqueando conexão
+- Porta incorreta (padrão 80/443)
+
+**Soluções:**
+1. Verificar se o servidor Sinesys está rodando: `curl https://seu-sinesys.com/api/health`
+2. Confirmar `baseUrl` no `~/.sinesys/config.json` (sem trailing slash)
+3. Testar conectividade básica: `ping seu-sinesys.com`
+4. Verificar firewall/proxy corporativo
+5. Em desenvolvimento, garantir que `npm run dev` está executando na porta correta
+
+### Erros de Validação
+
+#### Erro de validação Zod
+**Sintoma:** "Erro de validação: campo X: mensagem de erro"
+
+**Causas possíveis:**
+- Tipo de dado incorreto (string em vez de number)
+- Campo obrigatório faltando
+- Formato inválido (datas, enums)
+- Valor fora do range permitido
+
+**Soluções:**
+1. Verificar o schema da tool na documentação (tipos exatos requeridos)
+2. Para números: sempre enviar como `number`, não `string`
+3. Para datas: usar formato ISO 8601: `"2024-01-01"` ou `"2024-01-01T10:00:00Z"`
+4. Para enums: usar valores exatos da lista permitida
+5. Verificar campos obrigatórios marcados no schema
+
+### Erros de Build
+
+#### Cannot find module
+**Sintoma:** Erro "Cannot find module '@/...'" ou similar durante build.
+
+**Causas possíveis:**
+- Dependências não instaladas
+- Build desatualizado
+- tsconfig.json incorreto
+- Imports com path errado
+
+**Soluções:**
+1. Instalar dependências na raiz: `npm install`
+2. Limpar e rebuild: `cd mcp && rm -rf build/ node_modules && npm run build`
+3. Verificar tsconfig.json: paths devem estar corretos (`"@/*": ["src/*"]`)
+4. Garantir uso de imports ESM (`.js` no final dos paths)
+
+### Erros de Timeout em Capturas
+
+#### Captura fica travada ou timeout
+**Sintoma:** Capturas demoram muito ou falham com timeout.
+
+**Causas possíveis:**
+- Servidor sobrecarregado
+- Operação de captura muito grande
+- Credenciais PJE inválidas
+- Rede lenta
+- Timeout configurado muito baixo
+
+**Soluções:**
+1. Aumentar `timeout_ms` em `sinesys_aguardar_captura_concluir` (padrão 5min)
+2. Verificar credenciais PJE: usar `sinesys_listar_credenciais_advogado`
+3. Testar login manual no PJE com as credenciais
+4. Verificar logs do servidor Sinesys para erros específicos
+5. Para capturas grandes, dividir em períodos menores
+
+### Claude Desktop não reconhece MCP
+
+#### MCP não aparece na lista
+**Sintoma:** Claude Desktop não reconhece o servidor MCP configurado.
+
+**Causas possíveis:**
+- Configuração JSON inválida em `claude_desktop_config.json`
+- Path absoluto incorreto para `index.js`
+- Arquivo `build/index.js` não existe
+- Permissões de execução insuficientes
+- Claude não reiniciado
+
+**Soluções:**
+1. Validar JSON: `cat ~/.config/Claude/claude_desktop_config.json | jq .`
+2. Usar path absoluto completo: `/home/user/sinesys/mcp/build/index.js`
+3. Verificar se arquivo existe: `ls -la /path/to/index.js`
+4. Dar permissão de execução: `chmod +x /path/to/index.js`
+5. Fechar Claude completamente (não minimizar) e reabrir
+6. Verificar logs do Claude Desktop (procure por erros MCP)
+
+### Debug e Logs
+
+#### Habilitar logs detalhados
+```bash
+# Adicionar variável de ambiente
+export MCP_DEBUG=true
+
+# Ou no claude_desktop_config.json
+{
+  "mcpServers": {
+    "sinesys": {
+      "command": "node",
+      "args": ["/path/to/index.js"],
+      "env": {
+        "MCP_DEBUG": "true",
+        "SINESYS_BASE_URL": "...",
+        "SINESYS_API_KEY": "..."
+      }
+    }
+  }
+}
+```
+
+#### Testar tools manualmente via stdio
+```bash
+# Listar todas as tools
+echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | node mcp/build/index.js
+
+# Chamar uma tool específica
+echo '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"sinesys_listar_clientes","arguments":{"pagina":1,"limite":5}}}' | node mcp/build/index.js
+```
+
+#### Verificar status do servidor
+```bash
+# Verificar se processo está rodando
+ps aux | grep "node.*index.js"
+
+# Verificar porta (se aplicável)
+netstat -tlnp | grep :3000
+
+# Testar conectividade
+curl https://seu-sinesys.com/api/health
+```
+
+## FAQ (Perguntas Frequentes)
+
+### Q: Qual a diferença entre API Key e Bearer Token?
+**A:** API Key (`x-service-api-key`) é para serviços e automação, com acesso total ao sistema. Bearer Token (`Authorization: Bearer <token>`) é para usuários autenticados, com permissões baseadas no perfil. API Key tem prioridade e é recomendada para MCP.
+
+### Q: Posso usar o MCP Server sem Claude Desktop?
+**A:** Sim, qualquer cliente compatível com MCP pode usar o servidor via stdio JSON-RPC. Exemplos incluem outros LLMs ou ferramentas customizadas.
+
+### Q: Como testar tools localmente sem LLM?
+**A:** Use os scripts em `mcp/examples/` ou teste manual via stdio. Por exemplo: `tsx examples/test-tools.ts listar_clientes` ou pipes JSON para `node build/index.js`.
+
+### Q: Capturas são síncronas ou assíncronas?
+**A:** Assíncronas. Tools de captura retornam imediatamente com `capture_id`. Use `sinesys_consultar_status_captura` para polling manual ou `sinesys_aguardar_captura_concluir` para automático.
+
+### Q: Posso rodar múltiplas instâncias do MCP Server?
+**A:** Sim, cada instância é independente e stateless. Útil para diferentes ambientes ou clientes simultâneos.
+
+### Q: Como atualizar o MCP Server após mudanças?
+**A:** Execute `npm run mcp:build` no diretório raiz, reinicie o Claude Desktop. O servidor será recarregado automaticamente.
+
+### Q: Há limite de requisições?
+**A:** Depende da configuração do servidor Sinesys. Geralmente há rate limiting por IP/API Key. Em caso de erro 429, aguarde e tente novamente.
+
+## Próximos Passos
+
+- **Recursos Avançados:** Explore sampling, prompts customizados e resources do MCP
+- **Integração Programática:** Use o SDK MCP para criar clientes customizados
+- **Monitoramento:** Configure alertas para falhas de captura e uso excessivo
+- **Performance:** Otimize queries com índices apropriados no banco
+- **Segurança:** Implemente rotação automática de API Keys e auditoria de logs
+
+## Contribuindo
+
+### Adicionando Novas Tools
+
+1. **Criar arquivo na estrutura correta:** Adicione em `src/tools/[entidade].ts`
+2. **Seguir convenções:**
+   - Nome: `sinesys_[entidade]_[acao]`
+   - Input schema com Zod
+   - Handler assíncrono com tipagem
+   - Tratamento de erros consistente
+3. **Documentação:** Atualize este README com descrição, parâmetros e exemplos
+4. **Testes:** Adicione casos em `examples/test-tools.ts`
+5. **Build e teste:** `npm run mcp:build && npm run mcp:start`
+
+### Guidelines Gerais
+
+- Use TypeScript estrito
+- Mantenha compatibilidade com Node.js 20+
+- Siga padrões de nomenclatura existentes
+- Documente todos os campos obrigatórios/opcionais
+- Inclua exemplos práticos de uso
+- Trate erros gracefully com mensagens claras
 
 ## Available Tools
 

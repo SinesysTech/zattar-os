@@ -108,8 +108,10 @@ function AudienciaItem({ audiencia }: { audiencia: AudienciaProxima }) {
               target="_blank"
               rel="noopener noreferrer"
               className="ml-auto text-primary hover:text-primary/80"
+              aria-label="Acessar audiência virtual"
+              title="Acessar audiência virtual"
             >
-              <ExternalLink className="h-3.5 w-3.5" />
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             </a>
           )}
         </div>
