@@ -62,6 +62,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV PLAYWRIGHT_BROWSERS_PATH=/home/nextjs/.cache/ms-playwright
 
 # Criar usuário não-root para segurança
 RUN groupadd --system --gid 1001 nodejs && \
@@ -102,13 +103,15 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
 # Instalar browsers do Playwright (necessário para runtime)
-# O standalone já inclui os node_modules, então apenas instalamos os browsers
-# Executar como root antes de mudar para usuário não-root
-RUN if [ -f "node_modules/playwright/package.json" ]; then \
-      npx playwright install firefox --with-deps || true; \
-    fi
+# IMPORTANTE: Instalar incondicionalmente porque o standalone não inclui o package.json do playwright
+# O --with-deps garante que todas as dependências do sistema sejam instaladas
+RUN npx playwright install firefox --with-deps
 
-# Ajustar permissões
+# Criar diretório de cache do Playwright e ajustar permissões
+RUN mkdir -p /home/nextjs/.cache/ms-playwright && \
+    chown -R nextjs:nodejs /home/nextjs/.cache
+
+# Ajustar permissões do app
 RUN chown -R nextjs:nodejs /app
 
 USER nextjs
