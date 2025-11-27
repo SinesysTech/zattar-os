@@ -6,19 +6,24 @@
 /**
  * Converts object keys from camelCase to snake_case recursively.
  * Handles nested objects and arrays.
- * Preserves null/undefined values.
+ * Preserves null/undefined values and primitives as-is.
  * @param obj The object to convert (can be unknown for flexibility with MCP handlers).
- * @returns The converted object.
+ * @returns The converted value with same structure but snake_case keys for objects.
  */
-export function toSnakeCase(obj: unknown): Record<string, unknown> {
+export function toSnakeCase(obj: null): null;
+export function toSnakeCase(obj: undefined): undefined;
+export function toSnakeCase<T extends unknown[]>(obj: T): T;
+export function toSnakeCase<T extends Record<string, unknown>>(obj: T): Record<string, unknown>;
+export function toSnakeCase<T>(obj: T): T;
+export function toSnakeCase(obj: unknown): unknown {
   if (obj === null || obj === undefined) {
-    return obj as unknown as Record<string, unknown>;
+    return obj;
   }
   if (Array.isArray(obj)) {
-    return obj.map(item => toSnakeCase(item)) as unknown as Record<string, unknown>;
+    return obj.map(item => toSnakeCase(item));
   }
   if (typeof obj !== 'object') {
-    return obj as unknown as Record<string, unknown>;
+    return obj;
   }
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
@@ -31,19 +36,24 @@ export function toSnakeCase(obj: unknown): Record<string, unknown> {
 /**
  * Converts object keys from snake_case to camelCase recursively.
  * Handles nested objects and arrays.
- * Preserves null/undefined values.
+ * Preserves null/undefined values and primitives as-is.
  * @param obj The object to convert (can be unknown for flexibility with MCP handlers).
- * @returns The converted object.
+ * @returns The converted value with same structure but camelCase keys for objects.
  */
-export function toCamelCase(obj: unknown): Record<string, unknown> {
+export function toCamelCase(obj: null): null;
+export function toCamelCase(obj: undefined): undefined;
+export function toCamelCase<T extends unknown[]>(obj: T): T;
+export function toCamelCase<T extends Record<string, unknown>>(obj: T): Record<string, unknown>;
+export function toCamelCase<T>(obj: T): T;
+export function toCamelCase(obj: unknown): unknown {
   if (obj === null || obj === undefined) {
-    return obj as unknown as Record<string, unknown>;
+    return obj;
   }
   if (Array.isArray(obj)) {
-    return obj.map(item => toCamelCase(item)) as unknown as Record<string, unknown>;
+    return obj.map(item => toCamelCase(item));
   }
   if (typeof obj !== 'object') {
-    return obj as unknown as Record<string, unknown>;
+    return obj;
   }
   const result: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
@@ -93,7 +103,7 @@ export function handleToolError(error: unknown): { content: [{ type: 'text'; tex
     message = error;
   } else if (error && typeof error === 'object' && 'error' in error) {
     // Assuming ApiResponse has error field
-    message = (error as any).error || message;
+    message = (error as { error: string }).error || message;
   }
 
   const text = stack ? `${message}\n${stack}` : message;

@@ -74,6 +74,34 @@ async function testBuscarCliente(id: number): Promise<void> {
 }
 
 /**
+ * Testa busca de cliente por CPF.
+ */
+async function testBuscarClientePorCpf(cpf: string): Promise<void> {
+  await testTool('sinesys_buscar_cliente_por_cpf', { cpf });
+}
+
+/**
+ * Testa busca de cliente por CNPJ.
+ */
+async function testBuscarClientePorCnpj(cnpj: string): Promise<void> {
+  await testTool('sinesys_buscar_cliente_por_cnpj', { cnpj });
+}
+
+/**
+ * Testa busca de processos de um cliente.
+ */
+async function testBuscarProcessosDoCliente(clienteId: number): Promise<void> {
+  await testTool('sinesys_buscar_processos_do_cliente', { clienteId });
+}
+
+/**
+ * Testa busca de timeline de um processo.
+ */
+async function testBuscarTimelineProcesso(processoId: number): Promise<void> {
+  await testTool('sinesys_buscar_timeline_processo', { processoId });
+}
+
+/**
  * Testa criação de cliente PF com dados de exemplo.
  */
 async function testCriarCliente(): Promise<void> {
@@ -149,6 +177,26 @@ async function main(): Promise<void> {
           if (isNaN(id)) throw new Error('ID deve ser um número');
           await testBuscarCliente(id);
           break;
+        case 'buscar_cliente_por_cpf':
+          const cpf = testArgs[0];
+          if (!cpf) throw new Error('CPF é obrigatório');
+          await testBuscarClientePorCpf(cpf);
+          break;
+        case 'buscar_cliente_por_cnpj':
+          const cnpj = testArgs[0];
+          if (!cnpj) throw new Error('CNPJ é obrigatório');
+          await testBuscarClientePorCnpj(cnpj);
+          break;
+        case 'buscar_processos_cliente':
+          const clienteId = parseInt(testArgs[0]);
+          if (isNaN(clienteId)) throw new Error('Cliente ID deve ser um número');
+          await testBuscarProcessosDoCliente(clienteId);
+          break;
+        case 'buscar_timeline':
+          const processoId = parseInt(testArgs[0]);
+          if (isNaN(processoId)) throw new Error('Processo ID deve ser um número');
+          await testBuscarTimelineProcesso(processoId);
+          break;
         case 'criar_cliente':
           await testCriarCliente();
           break;
@@ -167,7 +215,7 @@ async function main(): Promise<void> {
           await testHealthCheck();
           break;
         default:
-          console.error(`Teste '${testName}' não reconhecido. Testes disponíveis: listar_clientes, buscar_cliente, criar_cliente, listar_contratos, iniciar_captura_audiencias, consultar_status_captura, health_check`);
+          console.error(`Teste '${testName}' não reconhecido. Testes disponíveis: listar_clientes, buscar_cliente, buscar_cliente_por_cpf, buscar_cliente_por_cnpj, buscar_processos_cliente, buscar_timeline, criar_cliente, listar_contratos, iniciar_captura_audiencias, consultar_status_captura, health_check`);
           process.exit(1);
       }
     } catch (error) {

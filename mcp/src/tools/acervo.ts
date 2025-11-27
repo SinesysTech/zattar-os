@@ -143,6 +143,75 @@ Retorna dados atualizados do processo ou erro 404/400.
       }
     },
   },
+  {
+    name: 'sinesys_buscar_processos_do_cliente',
+    description: `
+Busca todos os processos em que um cliente participa (como autor ou réu).
+
+**Parâmetros:**
+- **clienteId** (obrigatório): ID do cliente para buscar os processos.
+
+**Retorno:**
+Array de processos com informações de participação:
+- numero_processo, trt, grau, tipo_parte (autor/ré), polo (ativo/passivo)
+- classe_judicial, codigo_status_processo, data_autuacao
+- nome_parte_autora, nome_parte_re
+
+**Uso típico no atendimento:**
+1. Primeiro busque o cliente por CPF: sinesys_buscar_cliente_por_cpf
+2. Com o ID do cliente, busque seus processos: sinesys_buscar_processos_do_cliente
+    `,
+    inputSchema: z.object({
+      clienteId: z.number().int().positive(),
+    }),
+    handler: async (args, client): Promise<ToolResponse> => {
+      try {
+        const typedArgs = args as { clienteId: number };
+        const response = await client.get(`/api/partes/processo-partes/entidade/cliente/${typedArgs.clienteId}`);
+        if (!response.success) {
+          return handleToolError(response.error || 'Erro ao buscar processos do cliente');
+        }
+        return formatToolResponse(response.data);
+      } catch (error) {
+        return handleToolError(error);
+      }
+    },
+  },
+  {
+    name: 'sinesys_buscar_timeline_processo',
+    description: `
+Busca a timeline completa de um processo, incluindo movimentações, documentos e links para Google Drive.
+
+**Parâmetros:**
+- **processoId** (obrigatório): ID do processo no acervo (não confundir com numero_processo).
+
+**Retorno:**
+Objeto com duas seções:
+- **acervo**: Dados básicos do processo (PostgreSQL)
+- **timeline**: Timeline completa com movimentos e documentos (MongoDB)
+  - Movimentos processuais ordenados por data
+  - Documentos anexados com links para Google Drive
+  - Metadados da última captura
+
+**Uso típico no atendimento:**
+Para informar o cliente sobre o andamento do processo, mostrando as últimas movimentações.
+    `,
+    inputSchema: z.object({
+      processoId: z.number().int().positive(),
+    }),
+    handler: async (args, client): Promise<ToolResponse> => {
+      try {
+        const typedArgs = args as { processoId: number };
+        const response = await client.get(`/api/acervo/${typedArgs.processoId}/timeline`);
+        if (!response.success) {
+          return handleToolError(response.error || 'Timeline não encontrada');
+        }
+        return formatToolResponse(response.data);
+      } catch (error) {
+        return handleToolError(error);
+      }
+    },
+  },
 ];
 
 export { acervoTools };

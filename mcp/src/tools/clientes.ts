@@ -1,8 +1,6 @@
 import { z } from 'zod';
-import type { Cliente, CriarClienteParams, AtualizarClienteParams, ListarClientesResult } from '@/backend/types/partes';
-import { SinesysApiClient } from '../client';
-import type { ToolDefinition, ToolResponse } from '../types';
-import { toSnakeCase, formatToolResponse, handleToolError } from './utils';
+import type { ToolDefinition, ToolResponse } from '../types/index.js';
+import { toSnakeCase, formatToolResponse, handleToolError } from './utils.js';
 
 const clientesTools: ToolDefinition[] = [
   {
@@ -20,13 +18,12 @@ const clientesTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const params = toSnakeCase(args);
-        const response = await client.get<ListarClientesResult>('/api/clientes', params);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const params = toSnakeCase(args as Record<string, unknown>);
+        const response = await client.get('/api/clientes', params);
+        if (!response.success) {
           return handleToolError(response.error || 'Erro desconhecido ao listar clientes');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -40,12 +37,12 @@ const clientesTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.get<Cliente>(`/api/clientes/${args.id}`);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const typedArgs = args as { id: number };
+        const response = await client.get(`/api/clientes/${typedArgs.id}`);
+        if (!response.success) {
           return handleToolError(response.error || 'Cliente não encontrado');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -59,12 +56,12 @@ const clientesTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.get<Cliente>(`/api/clientes/buscar/por-cpf/${args.cpf}`);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const typedArgs = args as { cpf: string };
+        const response = await client.get(`/api/clientes/buscar/por-cpf/${typedArgs.cpf}`);
+        if (!response.success) {
           return handleToolError(response.error || 'Cliente não encontrado');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -78,12 +75,12 @@ const clientesTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.get<Cliente>(`/api/clientes/buscar/por-cnpj/${args.cnpj}`);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const typedArgs = args as { cnpj: string };
+        const response = await client.get(`/api/clientes/buscar/por-cnpj/${typedArgs.cnpj}`);
+        if (!response.success) {
           return handleToolError(response.error || 'Cliente não encontrado');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -178,13 +175,12 @@ const clientesTools: ToolDefinition[] = [
     ]),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const body = toSnakeCase(args);
-        const response = await client.post<Cliente>('/api/clientes', body);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const body = toSnakeCase(args as Record<string, unknown>);
+        const response = await client.post('/api/clientes', body);
+        if (!response.success) {
           return handleToolError(response.error || 'Erro ao criar cliente');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -257,14 +253,13 @@ const clientesTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const { id, dados } = args;
-        const body = toSnakeCase(dados);
-        const response = await client.patch<Cliente>(`/api/clientes/${id}`, body);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const typedArgs = args as { id: number; dados: Record<string, unknown> };
+        const body = toSnakeCase(typedArgs.dados);
+        const response = await client.patch(`/api/clientes/${typedArgs.id}`, body);
+        if (!response.success) {
           return handleToolError(response.error || 'Erro ao atualizar cliente');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }

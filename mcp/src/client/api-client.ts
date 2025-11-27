@@ -67,7 +67,7 @@ export class SinesysApiClient {
         if (!res.ok) {
           let errorMessage: string;
           try {
-            const errorData = await res.json();
+            const errorData = await res.json() as { error?: string };
             errorMessage = errorData.error || `HTTP ${res.status}: ${res.statusText}`;
           } catch {
             const errorText = await res.text();

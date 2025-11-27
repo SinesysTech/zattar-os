@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { SinesysApiClient } from '../client';
-import type { ToolDefinition, ToolResponse } from '../types';
-import { toSnakeCase, formatToolResponse, handleToolError } from './utils';
+import { SinesysApiClient } from '../client/index.js';
+import type { ToolDefinition, ToolResponse } from '../types/index.js';
+import { toSnakeCase, formatToolResponse, handleToolError } from './utils.js';
 
 // Cache stats/clear são úteis para troubleshooting de performance e limpeza de dados obsoletos.
 // Exemplos de patterns comuns: 'pendentes:*', 'audiencias:*', 'acervo:*'

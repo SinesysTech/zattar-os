@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { SinesysApiClient } from '../client';
-import type { ToolDefinition, ToolResponse } from '../types';
-import { formatToolResponse, handleToolError } from './utils';
+import { SinesysApiClient } from '../client/index.js';
+import type { ToolDefinition, ToolResponse } from '../types/index.js';
+import { formatToolResponse, handleToolError } from './utils.js';
 
 // Permissões são gerenciadas via campo `isSuperAdmin` (não há endpoint separado de permissões)
 
@@ -20,12 +20,11 @@ const usuariosTools: ToolDefinition[] = [
     handler: async (args, client): Promise<ToolResponse> => {
       try {
         // API espera campos camelCase, enviar diretamente sem conversão
-        const response = await client.get('/api/usuarios', args);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const response = await client.get('/api/usuarios', args as Record<string, unknown>);
+        if (!response.success) {
           return handleToolError(response.error || 'Erro desconhecido ao listar usuários');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -39,12 +38,12 @@ const usuariosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.get(`/api/usuarios/${args.usuario_id}`);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const typedArgs = args as { usuario_id: number };
+        const response = await client.get(`/api/usuarios/${typedArgs.usuario_id}`);
+        if (!response.success) {
           return handleToolError(response.error || 'Usuário não encontrado');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -58,12 +57,12 @@ const usuariosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.get(`/api/usuarios/buscar/por-email/${encodeURIComponent(args.email)}`);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const typedArgs = args as { email: string };
+        const response = await client.get(`/api/usuarios/buscar/por-email/${encodeURIComponent(typedArgs.email)}`);
+        if (!response.success) {
           return handleToolError(response.error || 'Usuário não encontrado');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -77,12 +76,12 @@ const usuariosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.get(`/api/usuarios/buscar/por-cpf/${args.cpf}`);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const typedArgs = args as { cpf: string };
+        const response = await client.get(`/api/usuarios/buscar/por-cpf/${typedArgs.cpf}`);
+        if (!response.success) {
           return handleToolError(response.error || 'Usuário não encontrado');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -120,12 +119,11 @@ const usuariosTools: ToolDefinition[] = [
     handler: async (args, client): Promise<ToolResponse> => {
       try {
         // API espera campos camelCase, enviar diretamente sem conversão
-        const response = await client.post('/api/usuarios', args);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const response = await client.post('/api/usuarios', args as Record<string, unknown>);
+        if (!response.success) {
           return handleToolError(response.error || 'Erro ao criar usuário');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -154,14 +152,14 @@ const usuariosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const { usuarioId, ...dados } = args;
+        const typedArgs = args as { usuarioId: number; [key: string]: unknown };
+        const { usuarioId, ...dados } = typedArgs;
         // API espera campos camelCase, enviar diretamente sem conversão
         const response = await client.patch(`/api/usuarios/${usuarioId}`, dados);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        if (!response.success) {
           return handleToolError(response.error || 'Erro ao atualizar usuário');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }

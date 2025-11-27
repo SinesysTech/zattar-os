@@ -1,19 +1,6 @@
 import { z } from 'zod';
-import { SinesysApiClient } from '../client';
-import { ToolDefinition, ToolResponse } from '../types';
-import { toSnakeCase, formatToolResponse, handleToolError } from './utils';
-import {
-  Contrato,
-  ContratoDados,
-  ListarContratosResult,
-  ListarContratosParams,
-  AreaDireito,
-  TipoContrato,
-  TipoCobranca,
-  StatusContrato,
-  PoloProcessual,
-  ParteContrato,
-} from '@/backend/contratos/services/persistence/contrato-persistence.service';
+import type { ToolDefinition, ToolResponse } from '../types/index.js';
+import { toSnakeCase, formatToolResponse, handleToolError } from './utils.js';
 
 // Enums for Zod schemas
 const areaDireitoEnum = z.enum(['trabalhista', 'civil', 'previdenciario', 'criminal', 'empresarial', 'administrativo']);
@@ -48,13 +35,12 @@ export const contratosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const params = toSnakeCase(args);
-        const response = await client.get<ListarContratosResult>('/api/contratos', params);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const params = toSnakeCase(args as Record<string, unknown>);
+        const response = await client.get('/api/contratos', params);
+        if (!response.success) {
           return handleToolError(response.error || 'Erro desconhecido ao listar contratos');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -68,12 +54,12 @@ export const contratosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.get<Contrato>(`/api/contratos/${args.id}`);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const typedArgs = args as { id: number };
+        const response = await client.get(`/api/contratos/${typedArgs.id}`);
+        if (!response.success) {
           return handleToolError(response.error || 'Contrato não encontrado');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -104,13 +90,12 @@ export const contratosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const body = toSnakeCase(args);
-        const response = await client.post<Contrato>('/api/contratos', body);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const body = toSnakeCase(args as Record<string, unknown>);
+        const response = await client.post('/api/contratos', body);
+        if (!response.success) {
           return handleToolError(response.error || 'Erro ao criar contrato');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -144,13 +129,13 @@ export const contratosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const body = toSnakeCase(args.dados);
-        const response = await client.patch<Contrato>(`/api/contratos/${args.id}`, body);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const typedArgs = args as { id: number; dados: Record<string, unknown> };
+        const body = toSnakeCase(typedArgs.dados);
+        const response = await client.patch(`/api/contratos/${typedArgs.id}`, body);
+        if (!response.success) {
           return handleToolError(response.error || 'Erro ao atualizar contrato');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
