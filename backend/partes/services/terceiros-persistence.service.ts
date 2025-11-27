@@ -16,7 +16,6 @@ import type {
   UpsertTerceiroPorIdPessoaParams,
   TipoParteTerceiro,
   PoloTerceiro,
-  SituacaoPJE,
 } from '@/backend/types/partes/terceiros-types';
 
 // ============================================================================
@@ -92,7 +91,7 @@ export function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
   }
 
   // Parse JSON fields
-  const emails = Array.isArray(data.emails) ? data.emails : [];
+  const emails = Array.isArray(data.emails) ? data.emails as string[] : null;
   const dados_anteriores = data.dados_anteriores as Record<string, unknown> | null;
 
   // Convert date strings
@@ -104,14 +103,14 @@ export function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
     return null;
   };
 
+  // Base fields comum a PF e PJ
   const base = {
     id: data.id as number,
-    id_pje: data.id_pje as number,
-    id_pessoa_pje: data.id_pessoa_pje as number,
+    id_tipo_parte: data.id_tipo_parte as number | null,
     tipo_parte: data.tipo_parte as TipoParteTerceiro,
     polo: data.polo as PoloTerceiro,
     nome: data.nome as string,
-    nome_social: data.nome_social as string | null,
+    nome_fantasia: data.nome_fantasia as string | null,
     emails,
     ddd_celular: data.ddd_celular as string | null,
     numero_celular: data.numero_celular as string | null,
@@ -119,11 +118,21 @@ export function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
     numero_residencial: data.numero_residencial as string | null,
     ddd_comercial: data.ddd_comercial as string | null,
     numero_comercial: data.numero_comercial as string | null,
-    fax: data.fax as string | null,
-    situacao: data.situacao as SituacaoPJE | null,
+    // Flags
+    principal: data.principal as boolean | null,
+    autoridade: data.autoridade as boolean | null,
+    endereco_desconhecido: data.endereco_desconhecido as boolean | null,
+    // Status PJE
+    status_pje: data.status_pje as string | null,
+    situacao_pje: data.situacao_pje as string | null,
+    login_pje: data.login_pje as string | null,
+    ordem: data.ordem as number | null,
+    // Controle
     observacoes: data.observacoes as string | null,
-    dados_anteriores: dados_anteriores,
+    dados_anteriores,
+    ativo: data.ativo as boolean | null,
     endereco_id: data.endereco_id as number | null,
+    ultima_atualizacao_pje: data.ultima_atualizacao_pje as string | null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };
@@ -135,33 +144,48 @@ export function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       cpf: data.cpf as string,
       cnpj: null,
       tipo_documento: data.tipo_documento as string | null,
-      numero_rg: data.numero_rg as string | null,
-      orgao_emissor_rg: data.orgao_emissor_rg as string | null,
-      uf_rg: data.uf_rg as string | null,
-      data_expedicao_rg: parseDate(data.data_expedicao_rg),
+      rg: data.rg as string | null,
       sexo: data.sexo as string | null,
       nome_genitora: data.nome_genitora as string | null,
       data_nascimento: parseDate(data.data_nascimento),
-      nacionalidade: data.nacionalidade as string | null,
-      naturalidade: data.naturalidade as string | null,
-      municipio_nascimento: data.municipio_nascimento as string | null,
-      uf_nascimento: data.uf_nascimento as string | null,
-      pais_nacionalidade: data.pais_nacionalidade as string | null,
-      profissao: data.profissao as string | null,
+      genero: data.genero as string | null,
       estado_civil: data.estado_civil as string | null,
-      grau_instrucao: data.grau_instrucao as string | null,
-      necessidade_especial: data.necessidade_especial as string | null,
+      nacionalidade: data.nacionalidade as string | null,
+      // Campos detalhados do PJE - UF Nascimento
+      uf_nascimento_id_pje: data.uf_nascimento_id_pje as number | null,
+      uf_nascimento_sigla: data.uf_nascimento_sigla as string | null,
+      uf_nascimento_descricao: data.uf_nascimento_descricao as string | null,
+      // Campos detalhados do PJE - Naturalidade
+      naturalidade_id_pje: data.naturalidade_id_pje as number | null,
+      naturalidade_municipio: data.naturalidade_municipio as string | null,
+      naturalidade_estado_id_pje: data.naturalidade_estado_id_pje as number | null,
+      naturalidade_estado_sigla: data.naturalidade_estado_sigla as string | null,
+      // Campos detalhados do PJE - País Nascimento
+      pais_nascimento_id_pje: data.pais_nascimento_id_pje as number | null,
+      pais_nascimento_codigo: data.pais_nascimento_codigo as string | null,
+      pais_nascimento_descricao: data.pais_nascimento_descricao as string | null,
+      // Outros campos do PJE
+      escolaridade_codigo: data.escolaridade_codigo as number | null,
+      situacao_cpf_receita_id: data.situacao_cpf_receita_id as number | null,
+      situacao_cpf_receita_descricao: data.situacao_cpf_receita_descricao as string | null,
+      pode_usar_celular_mensagem: data.pode_usar_celular_mensagem as boolean | null,
+      // Campos null em PF (específicos de PJ)
       inscricao_estadual: null,
       data_abertura: null,
+      data_fim_atividade: null,
       orgao_publico: null,
+      tipo_pessoa_codigo_pje: null,
+      tipo_pessoa_label_pje: null,
+      tipo_pessoa_validacao_receita: null,
       ds_tipo_pessoa: null,
+      situacao_cnpj_receita_id: null,
+      situacao_cnpj_receita_descricao: null,
       ramo_atividade: null,
+      cpf_responsavel: null,
+      oficial: null,
+      ds_prazo_expediente_automatico: null,
       porte_codigo: null,
       porte_descricao: null,
-      qualificacao_responsavel: null,
-      capital_social: null,
-      nome_fantasia: null,
-      status_pje: null,
     } as TerceiroPessoaFisica;
   } else {
     return {
@@ -171,39 +195,43 @@ export function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       cpf: null,
       inscricao_estadual: data.inscricao_estadual as string | null,
       data_abertura: parseDate(data.data_abertura),
+      data_fim_atividade: parseDate(data.data_fim_atividade),
       orgao_publico: data.orgao_publico as boolean | null,
+      tipo_pessoa_codigo_pje: data.tipo_pessoa_codigo_pje as string | null,
+      tipo_pessoa_label_pje: data.tipo_pessoa_label_pje as string | null,
+      tipo_pessoa_validacao_receita: data.tipo_pessoa_validacao_receita as string | null,
       ds_tipo_pessoa: data.ds_tipo_pessoa as string | null,
+      situacao_cnpj_receita_id: data.situacao_cnpj_receita_id as number | null,
+      situacao_cnpj_receita_descricao: data.situacao_cnpj_receita_descricao as string | null,
       ramo_atividade: data.ramo_atividade as string | null,
-      porte_codigo: data.porte_codigo as string | null,
+      cpf_responsavel: data.cpf_responsavel as string | null,
+      oficial: data.oficial as boolean | null,
+      ds_prazo_expediente_automatico: data.ds_prazo_expediente_automatico as string | null,
+      porte_codigo: data.porte_codigo as number | null,
       porte_descricao: data.porte_descricao as string | null,
-      qualificacao_responsavel: data.qualificacao_responsavel as string | null,
-      capital_social: data.capital_social as number | null,
-      nome_fantasia: data.nome_fantasia as string | null,
-      status_pje: data.status_pje as string | null,
+      // Campos null em PJ (específicos de PF)
       tipo_documento: null,
-      numero_rg: null,
-      orgao_emissor_rg: null,
-      uf_rg: null,
-      data_expedicao_rg: null,
+      rg: null,
       sexo: null,
       nome_genitora: null,
       data_nascimento: null,
-      nacionalidade: null,
-      naturalidade: null,
-      municipio_nascimento: null,
-      uf_nascimento: null,
-      pais_nacionalidade: null,
-      profissao: null,
-      cartao_nacional_saude: null,
-      certificado_militar: null,
-      numero_titulo_eleitor: null,
-      zona_titulo_eleitor: null,
-      secao_titulo_eleitor: null,
-      tipo_sanguineo: null,
-      raca_cor: null,
+      genero: null,
       estado_civil: null,
-      grau_instrucao: null,
-      necessidade_especial: null,
+      nacionalidade: null,
+      uf_nascimento_id_pje: null,
+      uf_nascimento_sigla: null,
+      uf_nascimento_descricao: null,
+      naturalidade_id_pje: null,
+      naturalidade_municipio: null,
+      naturalidade_estado_id_pje: null,
+      naturalidade_estado_sigla: null,
+      pais_nascimento_id_pje: null,
+      pais_nascimento_codigo: null,
+      pais_nascimento_descricao: null,
+      escolaridade_codigo: null,
+      situacao_cpf_receita_id: null,
+      situacao_cpf_receita_descricao: null,
+      pode_usar_celular_mensagem: null,
     } as TerceiroPessoaJuridica;
   }
 }
