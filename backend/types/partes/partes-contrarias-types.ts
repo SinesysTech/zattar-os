@@ -212,7 +212,6 @@ export interface CriarParteContrariaPFParams {
   situacao_cpf_receita_descricao?: string | null;
   pode_usar_celular_mensagem?: boolean | null;
   observacoes?: string | null;
-  dados_pje_completo?: Record<string, unknown> | null;
   endereco_id?: number | null;
   ativo?: boolean;
   created_by?: number | null;
@@ -256,7 +255,6 @@ export interface CriarParteContrariaPJParams {
   porte_descricao?: string | null;
   ultima_atualizacao_pje?: string | null;
   observacoes?: string | null;
-  dados_pje_completo?: Record<string, unknown> | null;
   endereco_id?: number | null;
   ativo?: boolean;
   created_by?: number | null;
