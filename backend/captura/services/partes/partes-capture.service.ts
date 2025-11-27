@@ -1077,15 +1077,13 @@ async function processarEndereco(
 ): Promise<number | null> {
   // Verifica se a parte tem endereço
   if (!parte.dadosCompletos?.endereco) {
-    console.log(`   📭 [Endereço] Parte ${parte.nome} sem dadosCompletos.endereco`);
     return null;
   }
 
   const enderecoPJE = parte.dadosCompletos.endereco as unknown as EnderecoPJE;
 
-  const { valido, avisos } = validarEnderecoPJE(enderecoPJE);
+  const { valido } = validarEnderecoPJE(enderecoPJE);
   if (!valido) {
-    console.log(`   ⚠️ [Endereço] Parte ${parte.nome} endereço inválido:`, avisos.join(', '));
     return null;
   }
 

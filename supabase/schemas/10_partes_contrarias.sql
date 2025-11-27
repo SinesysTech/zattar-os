@@ -1,35 +1,82 @@
--- Tabela de partes contrárias do sistema
--- Partes contrárias podem ser pessoas físicas (PF) ou pessoas jurídicas (PJ)
+-- ============================================================================
+-- Tabela: partes_contrarias
+-- Partes contrárias em processos - Tabela global, relação com processo via processo_partes
+-- CPF/CNPJ são as chaves únicas para deduplicação.
+-- id_pessoa_pje foi movido para cadastros_pje.
+-- ============================================================================
 
 create table public.partes_contrarias (
   id bigint generated always as identity primary key,
   
   -- Tipo e identificação
   tipo_pessoa public.tipo_pessoa not null,
-  nome text not null, -- Nome completo (PF) ou Razão Social (PJ)
-  nome_fantasia text, -- Nome social (PF) ou Nome fantasia (PJ)
-  cpf text unique, -- Obrigatório se tipo_pessoa = 'pf'
-  cnpj text unique, -- Obrigatório se tipo_pessoa = 'pj'
+  nome text not null,
+  nome_social_fantasia text, -- Nome social (PF) ou Nome fantasia (PJ)
+  cpf text unique,
+  cnpj text unique,
   
-  -- Dados específicos de Pessoa Física
+  -- Documentação e dados básicos
   rg text,
   data_nascimento date,
   genero public.genero_usuario,
   estado_civil public.estado_civil,
   nacionalidade text,
-  
-  -- Dados específicos de Pessoa Jurídica
   inscricao_estadual text,
   
-  -- Dados de contato (comuns)
-  email text,
-  telefone_primario text,
-  telefone_secundario text,
+  -- Dados do PJE
+  tipo_documento text check (tipo_documento in ('CPF', 'CNPJ')),
+  emails jsonb, -- Array de emails do PJE
+  status_pje text,
+  situacao_pje text,
+  login_pje text,
+  autoridade boolean default false,
   
-  -- Endereço (JSONB)
-  endereco jsonb,
+  -- Telefones
+  ddd_celular text,
+  numero_celular text,
+  ddd_residencial text,
+  numero_residencial text,
+  ddd_comercial text,
+  numero_comercial text,
   
-  -- Controle
+  -- Dados PF - PJE detalhados
+  sexo text,
+  nome_genitora text,
+  naturalidade_id_pje integer,
+  naturalidade_municipio text,
+  naturalidade_estado_id_pje integer,
+  naturalidade_estado_sigla text,
+  uf_nascimento_id_pje integer,
+  uf_nascimento_sigla text,
+  uf_nascimento_descricao text,
+  pais_nascimento_id_pje integer,
+  pais_nascimento_codigo text,
+  pais_nascimento_descricao text,
+  escolaridade_codigo integer,
+  situacao_cpf_receita_id integer,
+  situacao_cpf_receita_descricao text,
+  pode_usar_celular_mensagem boolean default false,
+  
+  -- Dados PJ - PJE detalhados
+  data_abertura date,
+  data_fim_atividade date,
+  orgao_publico boolean default false,
+  tipo_pessoa_codigo_pje text,
+  tipo_pessoa_label_pje text,
+  tipo_pessoa_validacao_receita text,
+  ds_tipo_pessoa text,
+  situacao_cnpj_receita_id integer,
+  situacao_cnpj_receita_descricao text,
+  ramo_atividade text,
+  cpf_responsavel text,
+  oficial boolean default false,
+  ds_prazo_expediente_automatico text,
+  porte_codigo integer,
+  porte_descricao text,
+  ultima_atualizacao_pje timestamptz,
+  
+  -- Endereço e controle
+  endereco_id bigint references public.enderecos(id),
   observacoes text,
   created_by bigint references public.usuarios(id) on delete set null,
   dados_anteriores jsonb,
@@ -38,28 +85,27 @@ create table public.partes_contrarias (
   updated_at timestamptz default now() not null
 );
 
-comment on table public.partes_contrarias is 'Cadastro de partes contrárias nos contratos do escritório de advocacia (pessoas físicas e jurídicas). CPF/CNPJ são as chaves únicas para deduplicação. id_pessoa_pje foi movido para cadastros_pje.';
+comment on table public.partes_contrarias is 'Partes contrárias em processos - Tabela global, relação com processo via processo_partes';
 
--- Comentários dos campos
+-- Comentários dos campos principais
 comment on column public.partes_contrarias.tipo_pessoa is 'Tipo de pessoa: física (pf) ou jurídica (pj)';
 comment on column public.partes_contrarias.nome is 'Nome completo (PF) ou Razão Social (PJ)';
-comment on column public.partes_contrarias.nome_fantasia is 'Nome social (PF) ou Nome fantasia (PJ)';
+comment on column public.partes_contrarias.nome_social_fantasia is 'Nome social (para PF) ou nome fantasia (para PJ). Coluna única que serve para ambos os tipos de pessoa.';
 comment on column public.partes_contrarias.cpf is 'CPF da parte contrária (obrigatório para PF, único)';
 comment on column public.partes_contrarias.cnpj is 'CNPJ da parte contrária (obrigatório para PJ, único)';
-comment on column public.partes_contrarias.rg is 'RG da parte contrária (apenas para PF)';
-comment on column public.partes_contrarias.data_nascimento is 'Data de nascimento (PF) ou data de fundação/constituição (PJ)';
-comment on column public.partes_contrarias.genero is 'Gênero da parte contrária (apenas para PF)';
-comment on column public.partes_contrarias.estado_civil is 'Estado civil da parte contrária (apenas para PF)';
-comment on column public.partes_contrarias.nacionalidade is 'Nacionalidade da parte contrária (apenas para PF)';
-comment on column public.partes_contrarias.inscricao_estadual is 'Inscrição estadual (pode ser usado tanto para PF quanto para PJ)';
-comment on column public.partes_contrarias.email is 'E-mail da parte contrária';
-comment on column public.partes_contrarias.telefone_primario is 'Telefone primário da parte contrária';
-comment on column public.partes_contrarias.telefone_secundario is 'Telefone secundário da parte contrária';
-comment on column public.partes_contrarias.endereco is 'Endereço completo da parte contrária em formato JSONB com campos: logradouro, numero, complemento, bairro, cidade, estado, pais, cep';
-comment on column public.partes_contrarias.observacoes is 'Observações gerais sobre a parte contrária';
-comment on column public.partes_contrarias.created_by is 'ID do usuário que criou o registro';
+comment on column public.partes_contrarias.tipo_documento is 'Tipo do documento principal: CPF ou CNPJ';
+comment on column public.partes_contrarias.emails is 'Array de emails do PJE em formato JSONB: ["email1@...", "email2@..."]';
+comment on column public.partes_contrarias.status_pje is 'Status da pessoa no PJE (ex: A=Ativo)';
+comment on column public.partes_contrarias.situacao_pje is 'Situação da pessoa no PJE (ex: Ativo, Inativo)';
+comment on column public.partes_contrarias.login_pje is 'Login/usuário da pessoa no sistema PJE';
+comment on column public.partes_contrarias.sexo is 'Sexo da pessoa física no PJE: MASCULINO, FEMININO (campo texto, diferente do enum genero)';
+comment on column public.partes_contrarias.situacao_cpf_receita_descricao is 'Situação do CPF na Receita Federal (REGULAR, IRREGULAR, etc)';
+comment on column public.partes_contrarias.ds_tipo_pessoa is 'Descrição do tipo de pessoa jurídica (ex: Sociedade Anônima Aberta, LTDA)';
+comment on column public.partes_contrarias.situacao_cnpj_receita_descricao is 'Situação do CNPJ na Receita Federal (ATIVA, BAIXADA, etc)';
+comment on column public.partes_contrarias.ramo_atividade is 'Ramo de atividade da pessoa jurídica';
+comment on column public.partes_contrarias.porte_descricao is 'Descrição do porte da empresa (Micro, Pequeno, Médio, Grande)';
+comment on column public.partes_contrarias.endereco_id is 'FK para endereços.id - Endereço principal da parte contrária';
 comment on column public.partes_contrarias.dados_anteriores is 'Armazena o estado anterior do registro antes da última atualização. Null quando o registro foi inserido ou quando não houve mudanças.';
-comment on column public.partes_contrarias.ativo is 'Indica se a parte contrária está ativa no sistema';
 
 -- Índices para melhor performance
 create index idx_partes_contrarias_tipo_pessoa on public.partes_contrarias using btree (tipo_pessoa);
@@ -68,9 +114,7 @@ create index idx_partes_contrarias_cnpj on public.partes_contrarias using btree 
 create index idx_partes_contrarias_nome on public.partes_contrarias using btree (nome);
 create index idx_partes_contrarias_ativo on public.partes_contrarias using btree (ativo);
 create index idx_partes_contrarias_created_by on public.partes_contrarias using btree (created_by);
-
--- Índice GIN para busca em endereço JSONB
-create index idx_partes_contrarias_endereco on public.partes_contrarias using gin (endereco);
+create index idx_partes_contrarias_endereco_id on public.partes_contrarias using btree (endereco_id);
 
 -- Trigger para atualizar updated_at automaticamente
 create trigger update_partes_contrarias_updated_at
@@ -80,3 +124,15 @@ execute function public.update_updated_at_column();
 
 -- Habilitar RLS
 alter table public.partes_contrarias enable row level security;
+
+-- Políticas RLS
+create policy "Service role tem acesso total às partes contrárias"
+on public.partes_contrarias for all
+to service_role
+using (true)
+with check (true);
+
+create policy "Usuários autenticados podem ler partes contrárias"
+on public.partes_contrarias for select
+to authenticated
+using (true);

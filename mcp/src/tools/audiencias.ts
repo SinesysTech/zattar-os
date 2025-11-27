@@ -56,13 +56,6 @@ const atualizarObservacoesSchema = z.object({
   observacoes: z.union([z.string(), z.null()]),
 });
 
-// Tipos inferidos dos schemas
-type ListarAudienciasInput = z.infer<typeof listarAudienciasSchema>;
-type CriarAudienciaInput = z.infer<typeof criarAudienciaSchema>;
-type AtribuirResponsavelInput = z.infer<typeof atribuirResponsavelSchema>;
-type AtualizarModalidadeInput = z.infer<typeof atualizarModalidadeSchema>;
-type AtualizarObservacoesInput = z.infer<typeof atualizarObservacoesSchema>;
-
 const audienciasTools: ToolDefinition[] = [
   {
     name: 'sinesys_listar_audiencias',
@@ -104,7 +97,7 @@ const audienciasTools: ToolDefinition[] = [
     name: 'sinesys_atribuir_responsavel_audiencia',
     description: 'Atribui, transfere ou desatribui um responsável de uma audiência. Campo id é obrigatório (número positivo da audiência). Campo responsavelId pode ser número positivo (atribuição/transferência) ou null (desatribuição). Todas as alterações são automaticamente registradas em logs_alteracao.',
     inputSchema: atribuirResponsavelSchema,
-    handler: async (args: AtribuirResponsavelInput, client: SinesysApiClient): Promise<ToolResponse> => {
+    handler: async (args: z.infer<typeof atribuirResponsavelSchema>, client: SinesysApiClient): Promise<ToolResponse> => {
       try {
         const response = await client.patch(`/api/audiencias/${args.id}/responsavel`, { responsavel_id: args.responsavelId });
         if (response.success && response.data) {
@@ -121,7 +114,7 @@ const audienciasTools: ToolDefinition[] = [
     name: 'sinesys_atualizar_modalidade_audiencia',
     description: 'Atualiza a modalidade de uma audiência. Campo id é obrigatório (número da audiência). Campo modalidade é obrigatório (enum: virtual, presencial, hibrida). Nota: Modalidade híbrida só pode ser definida manualmente; virtual e presencial são definidos automaticamente por triggers (ex: presença de URL virtual ou endereço presencial).',
     inputSchema: atualizarModalidadeSchema,
-    handler: async (args: AtualizarModalidadeInput, client: SinesysApiClient): Promise<ToolResponse> => {
+    handler: async (args: z.infer<typeof atualizarModalidadeSchema>, client: SinesysApiClient): Promise<ToolResponse> => {
       try {
         const response = await client.patch(`/api/audiencias/${args.id}/modalidade`, { modalidade: args.modalidade });
         if (response.success && response.data) {
@@ -138,7 +131,7 @@ const audienciasTools: ToolDefinition[] = [
     name: 'sinesys_atualizar_observacoes_audiencia',
     description: 'Atualiza as observações de uma audiência. Campo id é obrigatório (número da audiência). Campo observacoes pode ser string ou null (para remover observações).',
     inputSchema: atualizarObservacoesSchema,
-    handler: async (args: AtualizarObservacoesInput, client: SinesysApiClient): Promise<ToolResponse> => {
+    handler: async (args: z.infer<typeof atualizarObservacoesSchema>, client: SinesysApiClient): Promise<ToolResponse> => {
       try {
         const response = await client.patch(`/api/audiencias/${args.id}/observacoes`, { observacoes: args.observacoes });
         if (response.success && response.data) {
