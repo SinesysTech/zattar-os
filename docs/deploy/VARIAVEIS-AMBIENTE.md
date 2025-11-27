@@ -117,7 +117,7 @@ Antes de fazer o deploy, certifique-se de ter:
 
 - [ ] `NEXT_PUBLIC_SUPABASE_URL` = URL do Supabase (formato: `https://xxxxx.supabase.co`)
 - [ ] `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` = Chave pública do Supabase
-- [ ] `SUPABASE_SERVICE_ROLE_KEY` = Chave service_role do Supabase
+- [ ] `SUPABASE_SECRET_KEY` = Chave service_role do Supabase
 - [ ] `DOMAIN` = Domínio da sua aplicação (ex: `zattaradvogados.sinesys.app`)
 
 ---

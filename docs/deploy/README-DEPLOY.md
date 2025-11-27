@@ -75,7 +75,7 @@ docker build -t sinesys:latest .
 
 - `NEXT_PUBLIC_SUPABASE_URL`: URL do projeto Supabase
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`: Chave pública/anônima
-- `SUPABASE_SERVICE_ROLE_KEY`: Chave secreta (service_role)
+- `SUPABASE_SECRET_KEY`: Chave secreta (service_role)
 - `DOMAIN`: Domínio onde a aplicação estará disponível
 
 ## 🔧 Requisitos
@@ -93,7 +93,7 @@ Consulte o arquivo `DEPLOY.md` para documentação detalhada, troubleshooting e 
 ## 🔒 Segurança
 
 ⚠️ **Importante:**
-- Nunca exponha `SUPABASE_SERVICE_ROLE_KEY` no frontend
+- Nunca exponha `SUPABASE_SECRET_KEY` no frontend
 - Use apenas `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` no frontend
 - Mantenha as variáveis de ambiente seguras
 - Use HTTPS sempre (configurado via Traefik)

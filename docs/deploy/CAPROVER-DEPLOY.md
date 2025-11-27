@@ -53,7 +53,7 @@ Após criar a aplicação, vá na aba **App Configs** e adicione as variáveis d
 |----------|-----------|---------|
 | `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase | `https://xxxxx.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` | Chave pública/anônima do Supabase | `eyJxxxxx` |
-| `SUPABASE_SERVICE_ROLE_KEY` | Chave service_role (secreta) | `eyJxxxxx` |
+| `SUPABASE_SECRET_KEY` | Chave service_role (secreta) | `eyJxxxxx` |
 
 #### Variáveis Opcionais
 
