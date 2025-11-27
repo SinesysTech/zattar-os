@@ -1,6 +1,39 @@
 /**
- * API para reverter baixa de expediente manual
- * POST: Reverter a baixa (remover marcação de concluído)
+ * @swagger
+ * /api/expedientes-manuais/{id}/reverter-baixa:
+ *   post:
+ *     summary: Reverte a baixa de um expediente manual
+ *     description: Remove a marcação de concluído de um expediente manual
+ *     tags:
+ *       - Expedientes Manuais
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do expediente manual
+ *     responses:
+ *       200:
+ *         description: Baixa revertida com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *       404:
+ *         description: Expediente não encontrado
  */
 
 import { NextRequest, NextResponse } from 'next/server';

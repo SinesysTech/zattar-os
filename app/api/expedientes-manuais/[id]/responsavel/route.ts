@@ -1,6 +1,52 @@
 /**
- * API para atribuir responsável a expediente manual
- * PATCH: Atribuir ou remover responsável
+ * @swagger
+ * /api/expedientes-manuais/{id}/responsavel:
+ *   patch:
+ *     summary: Atribui responsável a expediente manual
+ *     description: Atribui ou remove o responsável de um expediente manual
+ *     tags:
+ *       - Expedientes Manuais
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do expediente manual
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               responsavel_id:
+ *                 type: integer
+ *                 nullable: true
+ *                 description: ID do novo responsável (null para remover)
+ *     responses:
+ *       200:
+ *         description: Responsável atribuído/removido com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: Dados inválidos
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *       404:
+ *         description: Expediente não encontrado
  */
 
 import { NextRequest, NextResponse } from 'next/server';

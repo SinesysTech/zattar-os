@@ -1,8 +1,143 @@
 /**
- * API Routes: /api/permissoes/usuarios/[id]
- * GET - Listar permissões de um usuário
- * POST - Atribuir múltiplas permissões (batch)
- * PUT - Substituir todas as permissões
+ * @swagger
+ * /api/permissoes/usuarios/{id}:
+ *   get:
+ *     summary: Lista permissões de um usuário
+ *     description: Retorna todas as permissões atribuídas a um usuário específico
+ *     tags:
+ *       - Permissões
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do usuário
+ *     responses:
+ *       200:
+ *         description: Permissões retornadas com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     usuario_id:
+ *                       type: integer
+ *                     is_super_admin:
+ *                       type: boolean
+ *                     permissoes:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           recurso:
+ *                             type: string
+ *                           operacao:
+ *                             type: string
+ *                           permitido:
+ *                             type: boolean
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *       404:
+ *         description: Usuário não encontrado
+ *   post:
+ *     summary: Atribui permissões em lote
+ *     description: Adiciona múltiplas permissões a um usuário de uma só vez
+ *     tags:
+ *       - Permissões
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do usuário
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - permissoes
+ *             properties:
+ *               permissoes:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     recurso:
+ *                       type: string
+ *                     operacao:
+ *                       type: string
+ *                     permitido:
+ *                       type: boolean
+ *     responses:
+ *       201:
+ *         description: Permissões atribuídas com sucesso
+ *       400:
+ *         description: Dados inválidos
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *   put:
+ *     summary: Substitui todas as permissões
+ *     description: Remove todas as permissões existentes e atribui as novas permissões especificadas
+ *     tags:
+ *       - Permissões
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do usuário
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - permissoes
+ *             properties:
+ *               permissoes:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     recurso:
+ *                       type: string
+ *                     operacao:
+ *                       type: string
+ *                     permitido:
+ *                       type: boolean
+ *     responses:
+ *       200:
+ *         description: Permissões substituídas com sucesso
+ *       400:
+ *         description: Dados inválidos
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
  */
 
 import { NextRequest, NextResponse } from 'next/server';

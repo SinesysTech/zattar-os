@@ -1,8 +1,37 @@
 /**
- * GET /api/debug/schema-check
- *
- * Verifica se a tabela acervo tem a coluna classe_judicial
- * e testa operações de INSERT/SELECT
+ * @swagger
+ * /api/debug/schema-check:
+ *   get:
+ *     summary: Verifica schema do banco de dados
+ *     description: Endpoint de debug para verificar se colunas existem no schema (apenas para desenvolvimento)
+ *     tags:
+ *       - Debug
+ *     responses:
+ *       200:
+ *         description: Resultado da verificação de schema
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 results:
+ *                   type: object
+ *                   properties:
+ *                     select:
+ *                       type: object
+ *                       properties:
+ *                         success:
+ *                           type: boolean
+ *                         error:
+ *                           type: string
+ *                         data:
+ *                           type: array
+ *                 message:
+ *                   type: string
+ *       500:
+ *         description: Erro interno
  */
 
 import { NextResponse } from 'next/server';

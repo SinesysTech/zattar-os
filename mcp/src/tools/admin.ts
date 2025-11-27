@@ -6,12 +6,22 @@ import { toSnakeCase, formatToolResponse, handleToolError } from './utils';
 // Cache stats/clear são úteis para troubleshooting de performance e limpeza de dados obsoletos.
 // Exemplos de patterns comuns: 'pendentes:*', 'audiencias:*', 'acervo:*'
 
+// Schemas de validação
+const cacheStatsSchema = z.object({});
+const limparCacheSchema = z.object({
+  pattern: z.string().optional(),
+});
+const healthCheckSchema = z.object({});
+
+// Tipos inferidos dos schemas
+type LimparCacheInput = z.infer<typeof limparCacheSchema>;
+
 const adminTools: ToolDefinition[] = [
   {
     name: 'sinesys_obter_estatisticas_cache',
     description: 'Retorna estatísticas do Redis (memória usada, hits, misses, uptime, disponibilidade). Requer autenticação.',
-    inputSchema: z.object({}),
-    handler: async (args, client): Promise<ToolResponse> => {
+    inputSchema: cacheStatsSchema,
+    handler: async (_args: unknown, client: SinesysApiClient): Promise<ToolResponse> => {
       try {
         const response = await client.get('/api/cache/stats');
         if (response.success && response.data) {
@@ -27,11 +37,10 @@ const adminTools: ToolDefinition[] = [
   {
     name: 'sinesys_limpar_cache',
     description: 'Limpa cache Redis manualmente. Se `pattern` fornecido (ex: \'pendentes:*\'), remove apenas chaves correspondentes; caso contrário, limpa todo o cache. **Requer permissão de administrador** (ou Service API Key). Operação sensível: requer permissão de administrador. Use com cautela em produção.',
-    inputSchema: z.object({
-      pattern: z.string().optional(),
-    }),
-    handler: async (args, client): Promise<ToolResponse> => {
+    inputSchema: limparCacheSchema,
+    handler: async (rawArgs: unknown, client: SinesysApiClient): Promise<ToolResponse> => {
       try {
+        const args = rawArgs as LimparCacheInput;
         const body = args.pattern ? { pattern: toSnakeCase({ pattern: args.pattern }).pattern } : {};
         const response = await client.post('/api/cache/clear', body);
         if (response.success && response.data) {
@@ -47,8 +56,8 @@ const adminTools: ToolDefinition[] = [
   {
     name: 'sinesys_verificar_saude_sistema',
     description: 'Verifica status da aplicação (health check endpoint). Retorna timestamp ISO 8601 e status \'ok\'. Não requer autenticação.',
-    inputSchema: z.object({}),
-    handler: async (args, client): Promise<ToolResponse> => {
+    inputSchema: healthCheckSchema,
+    handler: async (_args: unknown, client: SinesysApiClient): Promise<ToolResponse> => {
       try {
         const response = await client.get('/api/health');
         if (response.success && response.data) {

@@ -70,8 +70,17 @@ function normalizarCnpj(cnpj: string): string {
 function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
   const tipo_pessoa = data.tipo_pessoa as 'pf' | 'pj';
 
+  // Parse date strings
+  const parseDate = (val: unknown): string | null => {
+    if (!val) return null;
+    if (typeof val === 'string') return val;
+    return new Date(val as any).toISOString().split('T')[0];
+  };
+
+  // Campos base comuns a PF e PJ (conforme TerceiroBase)
   const base = {
     id: data.id as number,
+    id_tipo_parte: (data.id_tipo_parte as number | null) ?? null,
     tipo_parte: data.tipo_parte as
       | 'PERITO'
       | 'MINISTERIO_PUBLICO'
@@ -83,7 +92,7 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
     polo: data.polo as 'ATIVO' | 'PASSIVO' | 'NEUTRO' | 'TERCEIRO',
     tipo_pessoa,
     nome: data.nome as string,
-    nome_social: (data.nome_social as string | null) ?? null,
+    nome_fantasia: (data.nome_fantasia as string | null) ?? null,
     emails: (data.emails as string[] | null) ?? null,
     ddd_celular: (data.ddd_celular as string | null) ?? null,
     numero_celular: (data.numero_celular as string | null) ?? null,
@@ -91,11 +100,21 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
     numero_residencial: (data.numero_residencial as string | null) ?? null,
     ddd_comercial: (data.ddd_comercial as string | null) ?? null,
     numero_comercial: (data.numero_comercial as string | null) ?? null,
-    fax: (data.fax as string | null) ?? null,
-    situacao: (data.situacao_pje as 'A' | 'I' | 'E' | 'H' | null) ?? null,
+    // Flags
+    principal: (data.principal as boolean | null) ?? null,
+    autoridade: (data.autoridade as boolean | null) ?? null,
+    endereco_desconhecido: (data.endereco_desconhecido as boolean | null) ?? null,
+    // Status PJE
+    status_pje: (data.status_pje as string | null) ?? null,
+    situacao_pje: (data.situacao_pje as string | null) ?? null,
+    login_pje: (data.login_pje as string | null) ?? null,
+    ordem: (data.ordem as number | null) ?? null,
+    // Controle
     observacoes: (data.observacoes as string | null) ?? null,
     dados_anteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
+    ativo: (data.ativo as boolean | null) ?? null,
     endereco_id: (data.endereco_id as number | null) ?? null,
+    ultima_atualizacao_pje: (data.ultima_atualizacao_pje as string | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
   };
@@ -107,32 +126,48 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       cpf: data.cpf as string,
       cnpj: null,
       tipo_documento: (data.tipo_documento as string | null) ?? null,
-      numero_rg: (data.numero_rg as string | null) ?? null,
-      orgao_emissor_rg: (data.orgao_emissor_rg as string | null) ?? null,
-      uf_rg: (data.uf_rg as string | null) ?? null,
-      // data_expedicao_rg removido
+      rg: (data.rg as string | null) ?? null,
       sexo: (data.sexo as string | null) ?? null,
       nome_genitora: (data.nome_genitora as string | null) ?? null,
-      data_nascimento: (data.data_nascimento as string | null) ?? null,
-      nacionalidade: (data.nacionalidade as string | null) ?? null,
-      naturalidade: (data.naturalidade as string | null) ?? null,
-      municipio_nascimento: (data.municipio_nascimento as string | null) ?? null,
-      uf_nascimento: (data.uf_nascimento as string | null) ?? null,
-      pais_nacionalidade: (data.pais_nacionalidade as string | null) ?? null,
-      profissao: (data.profissao as string | null) ?? null,
+      data_nascimento: parseDate(data.data_nascimento),
+      genero: (data.genero as string | null) ?? null,
       estado_civil: (data.estado_civil as string | null) ?? null,
-      grau_instrucao: (data.grau_instrucao as string | null) ?? null,
-      necessidade_especial: (data.necessidade_especial as string | null) ?? null,
+      nacionalidade: (data.nacionalidade as string | null) ?? null,
+      // Campos detalhados do PJE - UF Nascimento
+      uf_nascimento_id_pje: (data.uf_nascimento_id_pje as number | null) ?? null,
+      uf_nascimento_sigla: (data.uf_nascimento_sigla as string | null) ?? null,
+      uf_nascimento_descricao: (data.uf_nascimento_descricao as string | null) ?? null,
+      // Campos detalhados do PJE - Naturalidade
+      naturalidade_id_pje: (data.naturalidade_id_pje as number | null) ?? null,
+      naturalidade_municipio: (data.naturalidade_municipio as string | null) ?? null,
+      naturalidade_estado_id_pje: (data.naturalidade_estado_id_pje as number | null) ?? null,
+      naturalidade_estado_sigla: (data.naturalidade_estado_sigla as string | null) ?? null,
+      // Campos detalhados do PJE - País Nascimento
+      pais_nascimento_id_pje: (data.pais_nascimento_id_pje as number | null) ?? null,
+      pais_nascimento_codigo: (data.pais_nascimento_codigo as string | null) ?? null,
+      pais_nascimento_descricao: (data.pais_nascimento_descricao as string | null) ?? null,
+      // Outros campos do PJE
+      escolaridade_codigo: (data.escolaridade_codigo as number | null) ?? null,
+      situacao_cpf_receita_id: (data.situacao_cpf_receita_id as number | null) ?? null,
+      situacao_cpf_receita_descricao: (data.situacao_cpf_receita_descricao as string | null) ?? null,
+      pode_usar_celular_mensagem: (data.pode_usar_celular_mensagem as boolean | null) ?? null,
+      // Campos que são null em PF (específicos de PJ)
       inscricao_estadual: null,
       data_abertura: null,
+      data_fim_atividade: null,
       orgao_publico: null,
+      tipo_pessoa_codigo_pje: null,
+      tipo_pessoa_label_pje: null,
+      tipo_pessoa_validacao_receita: null,
       ds_tipo_pessoa: null,
+      situacao_cnpj_receita_id: null,
+      situacao_cnpj_receita_descricao: null,
       ramo_atividade: null,
+      cpf_responsavel: null,
+      oficial: null,
+      ds_prazo_expediente_automatico: null,
       porte_codigo: null,
       porte_descricao: null,
-      qualificacao_responsavel: null,
-      nome_fantasia: null,
-      status_pje: null,
     };
   } else {
     return {
@@ -141,33 +176,44 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       cnpj: data.cnpj as string,
       cpf: null,
       inscricao_estadual: (data.inscricao_estadual as string | null) ?? null,
-      data_abertura: (data.data_abertura as string | null) ?? null,
+      data_abertura: parseDate(data.data_abertura),
+      data_fim_atividade: parseDate(data.data_fim_atividade),
       orgao_publico: (data.orgao_publico as boolean | null) ?? null,
+      tipo_pessoa_codigo_pje: (data.tipo_pessoa_codigo_pje as string | null) ?? null,
+      tipo_pessoa_label_pje: (data.tipo_pessoa_label_pje as string | null) ?? null,
+      tipo_pessoa_validacao_receita: (data.tipo_pessoa_validacao_receita as string | null) ?? null,
       ds_tipo_pessoa: (data.ds_tipo_pessoa as string | null) ?? null,
+      situacao_cnpj_receita_id: (data.situacao_cnpj_receita_id as number | null) ?? null,
+      situacao_cnpj_receita_descricao: (data.situacao_cnpj_receita_descricao as string | null) ?? null,
       ramo_atividade: (data.ramo_atividade as string | null) ?? null,
-      porte_codigo: (data.porte_codigo as string | null) ?? null,
+      cpf_responsavel: (data.cpf_responsavel as string | null) ?? null,
+      oficial: (data.oficial as boolean | null) ?? null,
+      ds_prazo_expediente_automatico: (data.ds_prazo_expediente_automatico as string | null) ?? null,
+      porte_codigo: (data.porte_codigo as number | null) ?? null,
       porte_descricao: (data.porte_descricao as string | null) ?? null,
-      qualificacao_responsavel: (data.qualificacao_responsavel as string | null) ?? null,
-      capital_social: (data.capital_social as number | null) ?? null,
-      nome_fantasia: (data.nome_fantasia as string | null) ?? null,
-      status_pje: (data.status_pje as string | null) ?? null,
+      // Campos que são null em PJ (específicos de PF)
       tipo_documento: null,
-      numero_rg: null,
-      orgao_emissor_rg: null,
-      uf_rg: null,
-      // data_expedicao_rg removido
+      rg: null,
       sexo: null,
       nome_genitora: null,
       data_nascimento: null,
-      nacionalidade: null,
-      naturalidade: null,
-      municipio_nascimento: null,
-      uf_nascimento: null,
-      pais_nacionalidade: null,
-      profissao: null,
+      genero: null,
       estado_civil: null,
-      grau_instrucao: null,
-      necessidade_especial: null,
+      nacionalidade: null,
+      uf_nascimento_id_pje: null,
+      uf_nascimento_sigla: null,
+      uf_nascimento_descricao: null,
+      naturalidade_id_pje: null,
+      naturalidade_municipio: null,
+      naturalidade_estado_id_pje: null,
+      naturalidade_estado_sigla: null,
+      pais_nascimento_id_pje: null,
+      pais_nascimento_codigo: null,
+      pais_nascimento_descricao: null,
+      escolaridade_codigo: null,
+      situacao_cpf_receita_id: null,
+      situacao_cpf_receita_descricao: null,
+      pode_usar_celular_mensagem: null,
     };
   }
 }
@@ -226,13 +272,13 @@ export async function criarTerceiro(
       }
     }
 
-    // Preparar dados para inserção
+    // Preparar dados para inserção (campos comuns conforme tipos)
     const dadosNovos: Record<string, unknown> = {
       tipo_parte: params.tipo_parte,
       polo: params.polo,
       tipo_pessoa: params.tipo_pessoa,
       nome: params.nome.trim(),
-      nome_social: params.nome_social?.trim() || null,
+      nome_fantasia: params.nome_fantasia?.trim() || null,
       emails: params.emails ?? null,
       ddd_celular: params.ddd_celular?.trim() || null,
       numero_celular: params.numero_celular?.trim() || null,
@@ -240,43 +286,68 @@ export async function criarTerceiro(
       numero_residencial: params.numero_residencial?.trim() || null,
       ddd_comercial: params.ddd_comercial?.trim() || null,
       numero_comercial: params.numero_comercial?.trim() || null,
-      fax: params.fax?.trim() || null,
-      situacao: params.situacao ?? null,
+      // Flags
+      principal: params.principal ?? null,
+      autoridade: params.autoridade ?? null,
+      endereco_desconhecido: params.endereco_desconhecido ?? null,
+      // Status PJE
+      status_pje: params.status_pje?.trim() || null,
+      situacao_pje: params.situacao_pje?.trim() || null,
+      login_pje: params.login_pje?.trim() || null,
+      ordem: params.ordem ?? null,
+      // Controle
       observacoes: params.observacoes?.trim() || null,
       dados_anteriores: params.dados_anteriores ?? null,
+      ativo: params.ativo ?? true,
+      endereco_id: params.endereco_id ?? null,
     };
 
     if (params.tipo_pessoa === 'pf') {
       dadosNovos.cpf = normalizarCpf(params.cpf);
       dadosNovos.tipo_documento = params.tipo_documento?.trim() || null;
-      dadosNovos.numero_rg = params.numero_rg?.trim() || null;
-      dadosNovos.orgao_emissor_rg = params.orgao_emissor_rg?.trim() || null;
-      dadosNovos.uf_rg = params.uf_rg?.trim() || null;
-      // dadosNovos.data_expedicao_rg = params.data_expedicao_rg || null; // Removido
+      dadosNovos.rg = params.rg?.trim() || null;
       dadosNovos.sexo = params.sexo?.trim() || null;
       dadosNovos.nome_genitora = params.nome_genitora?.trim() || null;
       dadosNovos.data_nascimento = params.data_nascimento || null;
-      dadosNovos.nacionalidade = params.nacionalidade?.trim() || null;
-      dadosNovos.naturalidade = params.naturalidade?.trim() || null;
-      dadosNovos.municipio_nascimento = params.municipio_nascimento?.trim() || null;
-      dadosNovos.uf_nascimento = params.uf_nascimento?.trim() || null;
-      dadosNovos.pais_nacionalidade = params.pais_nacionalidade?.trim() || null;
-      dadosNovos.profissao = params.profissao?.trim() || null;
+      dadosNovos.genero = params.genero?.trim() || null;
       dadosNovos.estado_civil = params.estado_civil?.trim() || null;
-      dadosNovos.grau_instrucao = params.grau_instrucao?.trim() || null;
-      dadosNovos.necessidade_especial = params.necessidade_especial?.trim() || null;
+      dadosNovos.nacionalidade = params.nacionalidade?.trim() || null;
+      // Campos detalhados do PJE - UF Nascimento
+      dadosNovos.uf_nascimento_id_pje = params.uf_nascimento_id_pje ?? null;
+      dadosNovos.uf_nascimento_sigla = params.uf_nascimento_sigla?.trim() || null;
+      dadosNovos.uf_nascimento_descricao = params.uf_nascimento_descricao?.trim() || null;
+      // Campos detalhados do PJE - Naturalidade
+      dadosNovos.naturalidade_id_pje = params.naturalidade_id_pje ?? null;
+      dadosNovos.naturalidade_municipio = params.naturalidade_municipio?.trim() || null;
+      dadosNovos.naturalidade_estado_id_pje = params.naturalidade_estado_id_pje ?? null;
+      dadosNovos.naturalidade_estado_sigla = params.naturalidade_estado_sigla?.trim() || null;
+      // Campos detalhados do PJE - País Nascimento
+      dadosNovos.pais_nascimento_id_pje = params.pais_nascimento_id_pje ?? null;
+      dadosNovos.pais_nascimento_codigo = params.pais_nascimento_codigo?.trim() || null;
+      dadosNovos.pais_nascimento_descricao = params.pais_nascimento_descricao?.trim() || null;
+      // Outros campos do PJE
+      dadosNovos.escolaridade_codigo = params.escolaridade_codigo ?? null;
+      dadosNovos.situacao_cpf_receita_id = params.situacao_cpf_receita_id ?? null;
+      dadosNovos.situacao_cpf_receita_descricao = params.situacao_cpf_receita_descricao?.trim() || null;
+      dadosNovos.pode_usar_celular_mensagem = params.pode_usar_celular_mensagem ?? null;
     } else {
       dadosNovos.cnpj = normalizarCnpj(params.cnpj);
       dadosNovos.inscricao_estadual = params.inscricao_estadual?.trim() || null;
       dadosNovos.data_abertura = params.data_abertura || null;
+      dadosNovos.data_fim_atividade = params.data_fim_atividade || null;
       dadosNovos.orgao_publico = params.orgao_publico ?? null;
+      dadosNovos.tipo_pessoa_codigo_pje = params.tipo_pessoa_codigo_pje?.trim() || null;
+      dadosNovos.tipo_pessoa_label_pje = params.tipo_pessoa_label_pje?.trim() || null;
+      dadosNovos.tipo_pessoa_validacao_receita = params.tipo_pessoa_validacao_receita?.trim() || null;
       dadosNovos.ds_tipo_pessoa = params.ds_tipo_pessoa?.trim() || null;
+      dadosNovos.situacao_cnpj_receita_id = params.situacao_cnpj_receita_id ?? null;
+      dadosNovos.situacao_cnpj_receita_descricao = params.situacao_cnpj_receita_descricao?.trim() || null;
       dadosNovos.ramo_atividade = params.ramo_atividade?.trim() || null;
-      dadosNovos.porte_codigo = params.porte_codigo?.trim() || null;
+      dadosNovos.cpf_responsavel = params.cpf_responsavel?.trim() || null;
+      dadosNovos.oficial = params.oficial ?? null;
+      dadosNovos.ds_prazo_expediente_automatico = params.ds_prazo_expediente_automatico?.trim() || null;
+      dadosNovos.porte_codigo = params.porte_codigo ?? null;
       dadosNovos.porte_descricao = params.porte_descricao?.trim() || null;
-      dadosNovos.qualificacao_responsavel = params.qualificacao_responsavel?.trim() || null;
-      dadosNovos.nome_fantasia = params.nome_fantasia?.trim() || null;
-      dadosNovos.status_pje = params.status_pje?.trim() || null;
     }
 
     const { data, error } = await supabase.from('terceiros').insert(dadosNovos).select().single();
@@ -322,14 +393,14 @@ export async function atualizarTerceiro(
       return { sucesso: false, erro: 'Não é permitido alterar o tipo de pessoa' };
     }
 
-    // Preparar dados para atualização
+    // Preparar dados para atualização (campos comuns conforme tipos)
     const dadosAtualizacao: Record<string, unknown> = {};
 
     if (params.tipo_parte !== undefined) dadosAtualizacao.tipo_parte = params.tipo_parte;
     if (params.polo !== undefined) dadosAtualizacao.polo = params.polo;
     if (params.nome !== undefined) dadosAtualizacao.nome = params.nome.trim();
-    if (params.nome_social !== undefined)
-      dadosAtualizacao.nome_social = params.nome_social?.trim() || null;
+    if (params.nome_fantasia !== undefined)
+      dadosAtualizacao.nome_fantasia = params.nome_fantasia?.trim() || null;
     if (params.emails !== undefined) dadosAtualizacao.emails = params.emails;
     if (params.ddd_celular !== undefined)
       dadosAtualizacao.ddd_celular = params.ddd_celular?.trim() || null;
@@ -343,69 +414,105 @@ export async function atualizarTerceiro(
       dadosAtualizacao.ddd_comercial = params.ddd_comercial?.trim() || null;
     if (params.numero_comercial !== undefined)
       dadosAtualizacao.numero_comercial = params.numero_comercial?.trim() || null;
-    if (params.fax !== undefined) dadosAtualizacao.fax = params.fax?.trim() || null;
-    if (params.situacao !== undefined) dadosAtualizacao.situacao = params.situacao;
+    // Flags
+    if (params.principal !== undefined) dadosAtualizacao.principal = params.principal;
+    if (params.autoridade !== undefined) dadosAtualizacao.autoridade = params.autoridade;
+    if (params.endereco_desconhecido !== undefined)
+      dadosAtualizacao.endereco_desconhecido = params.endereco_desconhecido;
+    // Status PJE
+    if (params.status_pje !== undefined)
+      dadosAtualizacao.status_pje = params.status_pje?.trim() || null;
+    if (params.situacao_pje !== undefined)
+      dadosAtualizacao.situacao_pje = params.situacao_pje?.trim() || null;
+    if (params.login_pje !== undefined)
+      dadosAtualizacao.login_pje = params.login_pje?.trim() || null;
+    if (params.ordem !== undefined) dadosAtualizacao.ordem = params.ordem;
+    // Controle
     if (params.observacoes !== undefined)
       dadosAtualizacao.observacoes = params.observacoes?.trim() || null;
     if (params.dados_anteriores !== undefined)
       dadosAtualizacao.dados_anteriores = params.dados_anteriores;
+    if (params.ativo !== undefined) dadosAtualizacao.ativo = params.ativo;
+    if (params.endereco_id !== undefined) dadosAtualizacao.endereco_id = params.endereco_id;
 
-    // Campos específicos por tipo de pessoa (mesma lógica de clientes/partes_contrarias)
+    // Campos específicos por tipo de pessoa (conforme tipos definidos)
     if (tipoPessoaAtual === 'pf' && params.tipo_pessoa === 'pf') {
       if (params.cpf !== undefined) dadosAtualizacao.cpf = normalizarCpf(params.cpf);
       if (params.tipo_documento !== undefined)
         dadosAtualizacao.tipo_documento = params.tipo_documento?.trim() || null;
-      if (params.numero_rg !== undefined)
-        dadosAtualizacao.numero_rg = params.numero_rg?.trim() || null;
-      if (params.orgao_emissor_rg !== undefined)
-        dadosAtualizacao.orgao_emissor_rg = params.orgao_emissor_rg?.trim() || null;
-      if (params.uf_rg !== undefined) dadosAtualizacao.uf_rg = params.uf_rg?.trim() || null;
-      // if (params.data_expedicao_rg !== undefined)
-      //   dadosAtualizacao.data_expedicao_rg = params.data_expedicao_rg; // Removido
+      if (params.rg !== undefined) dadosAtualizacao.rg = params.rg?.trim() || null;
       if (params.sexo !== undefined) dadosAtualizacao.sexo = params.sexo?.trim() || null;
       if (params.nome_genitora !== undefined)
         dadosAtualizacao.nome_genitora = params.nome_genitora?.trim() || null;
       if (params.data_nascimento !== undefined)
         dadosAtualizacao.data_nascimento = params.data_nascimento;
-      if (params.nacionalidade !== undefined)
-        dadosAtualizacao.nacionalidade = params.nacionalidade?.trim() || null;
-      if (params.naturalidade !== undefined)
-        dadosAtualizacao.naturalidade = params.naturalidade?.trim() || null;
-      if (params.municipio_nascimento !== undefined)
-        dadosAtualizacao.municipio_nascimento = params.municipio_nascimento?.trim() || null;
-      if (params.uf_nascimento !== undefined)
-        dadosAtualizacao.uf_nascimento = params.uf_nascimento?.trim() || null;
-      if (params.pais_nacionalidade !== undefined)
-        dadosAtualizacao.pais_nacionalidade = params.pais_nacionalidade?.trim() || null;
-      if (params.profissao !== undefined)
-        dadosAtualizacao.profissao = params.profissao?.trim() || null;
+      if (params.genero !== undefined) dadosAtualizacao.genero = params.genero?.trim() || null;
       if (params.estado_civil !== undefined)
         dadosAtualizacao.estado_civil = params.estado_civil?.trim() || null;
-      if (params.grau_instrucao !== undefined)
-        dadosAtualizacao.grau_instrucao = params.grau_instrucao?.trim() || null;
-      if (params.necessidade_especial !== undefined)
-        dadosAtualizacao.necessidade_especial = params.necessidade_especial?.trim() || null;
+      if (params.nacionalidade !== undefined)
+        dadosAtualizacao.nacionalidade = params.nacionalidade?.trim() || null;
+      // Campos detalhados do PJE - UF Nascimento
+      if (params.uf_nascimento_id_pje !== undefined)
+        dadosAtualizacao.uf_nascimento_id_pje = params.uf_nascimento_id_pje;
+      if (params.uf_nascimento_sigla !== undefined)
+        dadosAtualizacao.uf_nascimento_sigla = params.uf_nascimento_sigla?.trim() || null;
+      if (params.uf_nascimento_descricao !== undefined)
+        dadosAtualizacao.uf_nascimento_descricao = params.uf_nascimento_descricao?.trim() || null;
+      // Campos detalhados do PJE - Naturalidade
+      if (params.naturalidade_id_pje !== undefined)
+        dadosAtualizacao.naturalidade_id_pje = params.naturalidade_id_pje;
+      if (params.naturalidade_municipio !== undefined)
+        dadosAtualizacao.naturalidade_municipio = params.naturalidade_municipio?.trim() || null;
+      if (params.naturalidade_estado_id_pje !== undefined)
+        dadosAtualizacao.naturalidade_estado_id_pje = params.naturalidade_estado_id_pje;
+      if (params.naturalidade_estado_sigla !== undefined)
+        dadosAtualizacao.naturalidade_estado_sigla = params.naturalidade_estado_sigla?.trim() || null;
+      // Campos detalhados do PJE - País Nascimento
+      if (params.pais_nascimento_id_pje !== undefined)
+        dadosAtualizacao.pais_nascimento_id_pje = params.pais_nascimento_id_pje;
+      if (params.pais_nascimento_codigo !== undefined)
+        dadosAtualizacao.pais_nascimento_codigo = params.pais_nascimento_codigo?.trim() || null;
+      if (params.pais_nascimento_descricao !== undefined)
+        dadosAtualizacao.pais_nascimento_descricao = params.pais_nascimento_descricao?.trim() || null;
+      // Outros campos do PJE
+      if (params.escolaridade_codigo !== undefined)
+        dadosAtualizacao.escolaridade_codigo = params.escolaridade_codigo;
+      if (params.situacao_cpf_receita_id !== undefined)
+        dadosAtualizacao.situacao_cpf_receita_id = params.situacao_cpf_receita_id;
+      if (params.situacao_cpf_receita_descricao !== undefined)
+        dadosAtualizacao.situacao_cpf_receita_descricao = params.situacao_cpf_receita_descricao?.trim() || null;
+      if (params.pode_usar_celular_mensagem !== undefined)
+        dadosAtualizacao.pode_usar_celular_mensagem = params.pode_usar_celular_mensagem;
     } else if (tipoPessoaAtual === 'pj' && params.tipo_pessoa === 'pj') {
       if (params.cnpj !== undefined) dadosAtualizacao.cnpj = normalizarCnpj(params.cnpj);
       if (params.inscricao_estadual !== undefined)
         dadosAtualizacao.inscricao_estadual = params.inscricao_estadual?.trim() || null;
       if (params.data_abertura !== undefined) dadosAtualizacao.data_abertura = params.data_abertura;
+      if (params.data_fim_atividade !== undefined)
+        dadosAtualizacao.data_fim_atividade = params.data_fim_atividade;
       if (params.orgao_publico !== undefined) dadosAtualizacao.orgao_publico = params.orgao_publico;
+      if (params.tipo_pessoa_codigo_pje !== undefined)
+        dadosAtualizacao.tipo_pessoa_codigo_pje = params.tipo_pessoa_codigo_pje?.trim() || null;
+      if (params.tipo_pessoa_label_pje !== undefined)
+        dadosAtualizacao.tipo_pessoa_label_pje = params.tipo_pessoa_label_pje?.trim() || null;
+      if (params.tipo_pessoa_validacao_receita !== undefined)
+        dadosAtualizacao.tipo_pessoa_validacao_receita = params.tipo_pessoa_validacao_receita?.trim() || null;
       if (params.ds_tipo_pessoa !== undefined)
         dadosAtualizacao.ds_tipo_pessoa = params.ds_tipo_pessoa?.trim() || null;
+      if (params.situacao_cnpj_receita_id !== undefined)
+        dadosAtualizacao.situacao_cnpj_receita_id = params.situacao_cnpj_receita_id;
+      if (params.situacao_cnpj_receita_descricao !== undefined)
+        dadosAtualizacao.situacao_cnpj_receita_descricao = params.situacao_cnpj_receita_descricao?.trim() || null;
       if (params.ramo_atividade !== undefined)
         dadosAtualizacao.ramo_atividade = params.ramo_atividade?.trim() || null;
-      if (params.porte_codigo !== undefined)
-        dadosAtualizacao.porte_codigo = params.porte_codigo?.trim() || null;
+      if (params.cpf_responsavel !== undefined)
+        dadosAtualizacao.cpf_responsavel = params.cpf_responsavel?.trim() || null;
+      if (params.oficial !== undefined) dadosAtualizacao.oficial = params.oficial;
+      if (params.ds_prazo_expediente_automatico !== undefined)
+        dadosAtualizacao.ds_prazo_expediente_automatico = params.ds_prazo_expediente_automatico?.trim() || null;
+      if (params.porte_codigo !== undefined) dadosAtualizacao.porte_codigo = params.porte_codigo;
       if (params.porte_descricao !== undefined)
         dadosAtualizacao.porte_descricao = params.porte_descricao?.trim() || null;
-      if (params.qualificacao_responsavel !== undefined)
-        dadosAtualizacao.qualificacao_responsavel =
-          params.qualificacao_responsavel?.trim() || null;
-      if (params.nome_fantasia !== undefined)
-        dadosAtualizacao.nome_fantasia = params.nome_fantasia?.trim() || null;
-      if (params.status_pje !== undefined)
-        dadosAtualizacao.status_pje = params.status_pje?.trim() || null;
     }
 
     const { data, error } = await supabase

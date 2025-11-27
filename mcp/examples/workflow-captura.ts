@@ -17,6 +17,16 @@
 import { SinesysApiClient, loadConfig } from '../src/client/index.js';
 import { pollCapturaStatus } from '../src/tools/utils.js';
 
+// Tipos para respostas de captura
+interface CapturaResponse {
+  capture_id: number;
+}
+
+interface StatusResponse {
+  status: string;
+  error?: string;
+}
+
 // Classe para gerenciar workflow de captura
 class CapturaWorkflow {
   private client: SinesysApiClient;
@@ -37,7 +47,7 @@ class CapturaWorkflow {
       });
 
       if (response.success && response.data) {
-        const captureId = response.data.capture_id;
+        const captureId = (response.data as { capture_id: number }).capture_id;
         console.log(`[${new Date().toISOString()}] Captura iniciada com sucesso. Capture ID: ${captureId}`);
         return captureId;
       } else {
@@ -75,15 +85,16 @@ class CapturaWorkflow {
             throw new Error(response.error || 'Erro ao consultar status');
           }
 
-          const status = response.data?.status;
+          const data = response.data as StatusResponse | undefined;
+          const status = data?.status;
           console.log(`[${new Date().toISOString()}] Poll ${polls}: Status = ${status}, Tempo decorrido: ${elapsed}ms`);
 
           if (status === 'completed') {
             console.log(`[${new Date().toISOString()}] Captura concluída com sucesso!`);
-            resolve(response.data);
+            resolve(data);
           } else if (status === 'failed') {
             console.log(`[${new Date().toISOString()}] Captura falhou.`);
-            reject(new Error(`Captura falhou: ${response.data?.error || 'Erro desconhecido'}`));
+            reject(new Error(`Captura falhou: ${data?.error || 'Erro desconhecido'}`));
           } else {
             // Continua polling
             setTimeout(checkStatus, intervalMs);
@@ -123,7 +134,8 @@ class CapturaWorkflow {
 
       // Etapa 2: Aguardar conclusão usando polling automático (via pollCapturaStatus)
       console.log(`[${new Date().toISOString()}] Aguardando conclusão com polling automático...`);
-      const result = await pollCapturaStatus(this.client, captureId, {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = await pollCapturaStatus(this.client as any, captureId, {
         intervalMs: 3000, // 3 segundos para demonstração
         timeoutMs: 120000, // 2 minutos
       });

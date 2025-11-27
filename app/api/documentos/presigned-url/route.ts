@@ -1,8 +1,43 @@
 /**
- * API Route: POST /api/documentos/presigned-url
- * 
- * Gera uma URL assinada (presigned URL) para download de documento do Backblaze B2.
- * Permite acesso temporário a documentos em bucket privado sem expor credenciais.
+ * @swagger
+ * /api/documentos/presigned-url:
+ *   post:
+ *     summary: Gera URL assinada para documento
+ *     description: Gera uma URL assinada (presigned URL) para download de documento do storage privado
+ *     tags:
+ *       - Documentos
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - key
+ *             properties:
+ *               key:
+ *                 type: string
+ *                 description: Chave (caminho) do documento no storage
+ *                 example: "processos/123/documento.pdf"
+ *     responses:
+ *       200:
+ *         description: URL assinada gerada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 url:
+ *                   type: string
+ *                   description: URL assinada para download
+ *                 expiresIn:
+ *                   type: integer
+ *                   description: Tempo de expiração em segundos
+ *                   example: 3600
+ *       400:
+ *         description: Parâmetro key ausente ou inválido
+ *       500:
+ *         description: Erro ao gerar URL assinada
  */
 
 import { NextRequest, NextResponse } from 'next/server';

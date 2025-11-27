@@ -1,8 +1,113 @@
 /**
- * API Routes: /api/cargos/[id]
- * GET - Buscar cargo
- * PUT - Atualizar cargo
- * DELETE - Deletar cargo
+ * @swagger
+ * /api/cargos/{id}:
+ *   get:
+ *     summary: Busca um cargo por ID
+ *     description: Retorna os detalhes de um cargo específico
+ *     tags:
+ *       - Cargos
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do cargo
+ *     responses:
+ *       200:
+ *         description: Cargo encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     nome:
+ *                       type: string
+ *                     descricao:
+ *                       type: string
+ *                     ativo:
+ *                       type: boolean
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *       404:
+ *         description: Cargo não encontrado
+ *   put:
+ *     summary: Atualiza um cargo
+ *     description: Atualiza os dados de um cargo existente
+ *     tags:
+ *       - Cargos
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do cargo
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               descricao:
+ *                 type: string
+ *               ativo:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Cargo atualizado com sucesso
+ *       400:
+ *         description: Dados inválidos
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *       404:
+ *         description: Cargo não encontrado
+ *   delete:
+ *     summary: Deleta um cargo
+ *     description: Remove um cargo do sistema (falha se houver usuários associados)
+ *     tags:
+ *       - Cargos
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do cargo
+ *     responses:
+ *       200:
+ *         description: Cargo deletado com sucesso
+ *       400:
+ *         description: Não é possível deletar (usuários associados)
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *       404:
+ *         description: Cargo não encontrado
  */
 
 import { NextRequest, NextResponse } from 'next/server';

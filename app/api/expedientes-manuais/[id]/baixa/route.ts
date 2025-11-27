@@ -1,6 +1,54 @@
 /**
- * API para baixar expediente manual (marcar como concluído)
- * POST: Baixar expediente (protocolo OU justificativa obrigatória)
+ * @swagger
+ * /api/expedientes-manuais/{id}/baixa:
+ *   post:
+ *     summary: Baixa um expediente manual
+ *     description: Marca um expediente manual como concluído (requer protocolo OU justificativa)
+ *     tags:
+ *       - Expedientes Manuais
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do expediente manual
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               protocolo_id:
+ *                 type: string
+ *                 description: ID do protocolo (obrigatório se não tiver justificativa)
+ *               justificativa_baixa:
+ *                 type: string
+ *                 description: Justificativa para baixa sem protocolo (obrigatório se não tiver protocolo)
+ *     responses:
+ *       200:
+ *         description: Expediente baixado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *       400:
+ *         description: Dados inválidos ou protocolo/justificativa ausentes
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *       404:
+ *         description: Expediente não encontrado
  */
 
 import { NextRequest, NextResponse } from 'next/server';

@@ -1,4 +1,54 @@
-// Rota de API para recalcular distribuição de valores entre parcelas
+/**
+ * @swagger
+ * /api/acordos-condenacoes/{id}/recalcular:
+ *   post:
+ *     summary: Recalcula distribuição de valores
+ *     description: Recalcula a distribuição de valores entre as parcelas de um acordo/condenação
+ *     tags:
+ *       - Acordos e Condenações
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do acordo/condenação
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tipoValor
+ *             properties:
+ *               tipoValor:
+ *                 type: string
+ *                 enum: [credito_principal, honorarios_sucumbenciais]
+ *                 description: Tipo de valor a ser recalculado
+ *     responses:
+ *       200:
+ *         description: Recálculo realizado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     parcelasAtualizadas:
+ *                       type: integer
+ *       400:
+ *         description: Dados inválidos ou erro no recálculo
+ *       401:
+ *         description: Não autenticado
+ */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';

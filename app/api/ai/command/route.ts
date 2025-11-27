@@ -1,3 +1,56 @@
+/**
+ * @swagger
+ * /api/ai/command:
+ *   post:
+ *     summary: Processa comandos AI no editor
+ *     description: Endpoint para processar comandos de AI no editor de texto (gerar, editar, comentar)
+ *     tags:
+ *       - AI
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - ctx
+ *             properties:
+ *               apiKey:
+ *                 type: string
+ *                 description: API key do gateway AI (opcional se configurada no servidor)
+ *               ctx:
+ *                 type: object
+ *                 description: Contexto do editor
+ *                 properties:
+ *                   children:
+ *                     type: array
+ *                     description: Conteúdo do editor
+ *                   selection:
+ *                     type: object
+ *                     description: Seleção atual
+ *                   toolName:
+ *                     type: string
+ *                     enum: [generate, edit, comment]
+ *                     description: Ferramenta a ser usada
+ *               messages:
+ *                 type: array
+ *                 description: Histórico de mensagens do chat
+ *               model:
+ *                 type: string
+ *                 description: Modelo de linguagem a ser usado
+ *     responses:
+ *       200:
+ *         description: Stream de resposta AI
+ *         content:
+ *           text/event-stream:
+ *             schema:
+ *               type: string
+ *       401:
+ *         description: API key ausente
+ *       500:
+ *         description: Erro ao processar requisição AI
+ */
+
 import type {
   ChatMessage,
   ToolName,

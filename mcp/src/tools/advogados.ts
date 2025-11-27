@@ -3,18 +3,61 @@ import { SinesysApiClient } from '../client';
 import type { ToolDefinition, ToolResponse } from '../types';
 import { toSnakeCase, formatToolResponse, handleToolError } from './utils';
 
+// Schemas de validação
+const listarAdvogadosSchema = z.object({
+  pagina: z.number().int().positive().optional(),
+  limite: z.number().int().positive().max(1000).optional(),
+  busca: z.string().optional(),
+  oab: z.string().optional(),
+  uf_oab: z.string().optional(),
+  com_credenciais: z.boolean().optional(),
+});
+
+const criarAdvogadoSchema = z.object({
+  nome_completo: z.string(),
+  cpf: z.string(),
+  oab: z.string(),
+  uf_oab: z.string(),
+});
+
+const listarCredenciaisSchema = z.object({
+  advogado_id: z.number().int().positive(),
+  active: z.boolean().optional(),
+});
+
+const criarCredencialSchema = z.object({
+  advogado_id: z.number().int().positive(),
+  tribunal: z.string(),
+  grau: z.enum(['primeiro_grau', 'segundo_grau']),
+  senha: z.string(),
+  active: z.boolean().optional(),
+});
+
+const atualizarCredencialSchema = z.object({
+  advogado_id: z.number().int().positive(),
+  credencial_id: z.number().int().positive(),
+  tribunal: z.string().optional(),
+  grau: z.enum(['primeiro_grau', 'segundo_grau']).optional(),
+  senha: z.string().optional(),
+  active: z.boolean().optional(),
+});
+
+const deletarCredencialSchema = z.object({
+  advogado_id: z.number().int().positive(),
+  credencial_id: z.number().int().positive(),
+});
+
+// Tipos inferidos
+type ListarCredenciaisInput = z.infer<typeof listarCredenciaisSchema>;
+type CriarCredencialInput = z.infer<typeof criarCredencialSchema>;
+type AtualizarCredencialInput = z.infer<typeof atualizarCredencialSchema>;
+type DeletarCredencialInput = z.infer<typeof deletarCredencialSchema>;
+
 const advogadosTools: ToolDefinition[] = [
   {
     name: 'sinesys_listar_advogados',
     description: 'Lista advogados do escritório com filtros opcionais (busca em nome completo, CPF ou OAB). Campos obrigatórios: nenhum (todos opcionais).',
-    inputSchema: z.object({
-      pagina: z.number().int().positive().optional(),
-      limite: z.number().int().positive().max(1000).optional(),
-      busca: z.string().optional(),
-      oab: z.string().optional(),
-      uf_oab: z.string().optional(),
-      com_credenciais: z.boolean().optional(),
-    }),
+    inputSchema: listarAdvogadosSchema,
     handler: async (args, client): Promise<ToolResponse> => {
       try {
         const params = toSnakeCase(args);
@@ -32,12 +75,7 @@ const advogadosTools: ToolDefinition[] = [
   {
     name: 'sinesys_criar_advogado',
     description: 'Cadastra novo advogado no sistema. Campos obrigatórios: nome_completo, cpf, oab, uf_oab.',
-    inputSchema: z.object({
-      nome_completo: z.string(),
-      cpf: z.string(),
-      oab: z.string(),
-      uf_oab: z.string(),
-    }),
+    inputSchema: criarAdvogadoSchema,
     handler: async (args, client): Promise<ToolResponse> => {
       try {
         const body = toSnakeCase(args);
@@ -55,12 +93,10 @@ const advogadosTools: ToolDefinition[] = [
   {
     name: 'sinesys_listar_credenciais_advogado',
     description: 'Lista credenciais de acesso ao PJE de um advogado (filtro por ativas/inativas). Credenciais são armazenadas criptografadas no banco de dados. Campo obrigatório: advogado_id.',
-    inputSchema: z.object({
-      advogado_id: z.number().int().positive(),
-      active: z.boolean().optional(),
-    }),
-    handler: async (args, client): Promise<ToolResponse> => {
+    inputSchema: listarCredenciaisSchema,
+    handler: async (rawArgs, client): Promise<ToolResponse> => {
       try {
+        const args = rawArgs as ListarCredenciaisInput;
         const { advogado_id, ...params } = args;
         const queryParams = toSnakeCase(params);
         const response = await client.get(`/api/advogados/${advogado_id}/credenciais`, queryParams);
@@ -77,15 +113,10 @@ const advogadosTools: ToolDefinition[] = [
   {
     name: 'sinesys_criar_credencial_advogado',
     description: 'Cadastra nova credencial de acesso ao tribunal para o advogado (senha é criptografada no backend). Exemplos de tribunais válidos: TRT1-TRT24, TST, etc. Campos obrigatórios: advogado_id, tribunal, grau, senha.',
-    inputSchema: z.object({
-      advogado_id: z.number().int().positive(),
-      tribunal: z.string(),
-      grau: z.enum(['primeiro_grau', 'segundo_grau']),
-      senha: z.string(),
-      active: z.boolean().optional(),
-    }),
-    handler: async (args, client): Promise<ToolResponse> => {
+    inputSchema: criarCredencialSchema,
+    handler: async (rawArgs, client): Promise<ToolResponse> => {
       try {
+        const args = rawArgs as CriarCredencialInput;
         const { advogado_id, ...body } = args;
         const snakeBody = toSnakeCase(body);
         const response = await client.post(`/api/advogados/${advogado_id}/credenciais`, snakeBody);
@@ -102,16 +133,10 @@ const advogadosTools: ToolDefinition[] = [
   {
     name: 'sinesys_atualizar_credencial_advogado',
     description: 'Atualiza credencial existente (atualização parcial, apenas campos fornecidos são alterados). Credenciais são armazenadas criptografadas no banco de dados. Campos obrigatórios: advogado_id, credencial_id.',
-    inputSchema: z.object({
-      advogado_id: z.number().int().positive(),
-      credencial_id: z.number().int().positive(),
-      tribunal: z.string().optional(),
-      grau: z.enum(['primeiro_grau', 'segundo_grau']).optional(),
-      senha: z.string().optional(),
-      active: z.boolean().optional(),
-    }),
-    handler: async (args, client): Promise<ToolResponse> => {
+    inputSchema: atualizarCredencialSchema,
+    handler: async (rawArgs, client): Promise<ToolResponse> => {
       try {
+        const args = rawArgs as AtualizarCredencialInput;
         const { advogado_id, credencial_id, ...body } = args;
         const snakeBody = toSnakeCase(body);
         const response = await client.patch(`/api/advogados/${advogado_id}/credenciais/${credencial_id}`, snakeBody);
@@ -128,12 +153,10 @@ const advogadosTools: ToolDefinition[] = [
   {
     name: 'sinesys_ativar_credencial_advogado',
     description: 'Ativa credencial desativada (atalho para atualizar active=true). Credenciais são armazenadas criptografadas no banco de dados. Campos obrigatórios: advogado_id, credencial_id.',
-    inputSchema: z.object({
-      advogado_id: z.number().int().positive(),
-      credencial_id: z.number().int().positive(),
-    }),
-    handler: async (args, client): Promise<ToolResponse> => {
+    inputSchema: deletarCredencialSchema,
+    handler: async (rawArgs, client): Promise<ToolResponse> => {
       try {
+        const args = rawArgs as DeletarCredencialInput;
         const { advogado_id, credencial_id } = args;
         const response = await client.patch(`/api/advogados/${advogado_id}/credenciais/${credencial_id}`, { active: true });
         if (response.success && response.data) {
@@ -149,12 +172,10 @@ const advogadosTools: ToolDefinition[] = [
   {
     name: 'sinesys_desativar_credencial_advogado',
     description: 'Desativa credencial ativa (atalho para atualizar active=false, não deleta do banco). Credenciais são armazenadas criptografadas no banco de dados. Campos obrigatórios: advogado_id, credencial_id.',
-    inputSchema: z.object({
-      advogado_id: z.number().int().positive(),
-      credencial_id: z.number().int().positive(),
-    }),
-    handler: async (args, client): Promise<ToolResponse> => {
+    inputSchema: deletarCredencialSchema,
+    handler: async (rawArgs, client): Promise<ToolResponse> => {
       try {
+        const args = rawArgs as DeletarCredencialInput;
         const { advogado_id, credencial_id } = args;
         const response = await client.patch(`/api/advogados/${advogado_id}/credenciais/${credencial_id}`, { active: false });
         if (response.success && response.data) {

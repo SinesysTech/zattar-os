@@ -1,8 +1,107 @@
 /**
- * API de expediente manual específico
- * GET: Buscar expediente por ID
- * PATCH: Atualizar expediente
- * DELETE: Deletar expediente
+ * @swagger
+ * /api/expedientes-manuais/{id}:
+ *   get:
+ *     summary: Busca expediente manual por ID
+ *     description: Retorna os detalhes de um expediente manual específico
+ *     tags:
+ *       - Expedientes Manuais
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do expediente manual
+ *     responses:
+ *       200:
+ *         description: Expediente encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *       404:
+ *         description: Expediente não encontrado
+ *   patch:
+ *     summary: Atualiza um expediente manual
+ *     description: Atualiza os dados de um expediente manual existente
+ *     tags:
+ *       - Expedientes Manuais
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do expediente manual
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               descricao:
+ *                 type: string
+ *               tipo_expediente_id:
+ *                 type: integer
+ *               responsavel_id:
+ *                 type: integer
+ *               data_prazo_legal:
+ *                 type: string
+ *                 format: date-time
+ *               observacoes:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Expediente atualizado com sucesso
+ *       400:
+ *         description: Dados inválidos
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *       404:
+ *         description: Expediente não encontrado
+ *   delete:
+ *     summary: Deleta um expediente manual
+ *     description: Remove um expediente manual do sistema
+ *     tags:
+ *       - Expedientes Manuais
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do expediente manual
+ *     responses:
+ *       200:
+ *         description: Expediente deletado com sucesso
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Sem permissão
+ *       404:
+ *         description: Expediente não encontrado
  */
 
 import { NextRequest, NextResponse } from 'next/server';
