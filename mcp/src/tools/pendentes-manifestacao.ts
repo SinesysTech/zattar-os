@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { ToolDefinition, ToolResponse } from '../types';
-import { toSnakeCase, formatToolResponse, handleToolError } from './utils';
+import type { ToolDefinition, ToolResponse } from '../types/index.js';
+import { toSnakeCase, formatToolResponse, handleToolError } from './utils.js';
 
 const pendentesManifestacaoTools: ToolDefinition[] = [
   {
@@ -11,8 +11,8 @@ const pendentesManifestacaoTools: ToolDefinition[] = [
       limite: z.number().int().positive().max(100).optional(),
       trt: z.string().optional(),
       grau: z.enum(['primeiro_grau', 'segundo_grau']).optional(),
-      responsavel_id: z.union([z.number(), z.literal('null')]).optional(),
-      sem_responsavel: z.boolean().optional(),
+      responsavelId: z.union([z.number(), z.literal('null')]).optional(),
+      semResponsavel: z.boolean().optional(),
       busca: z.string().optional(),
       numero_processo: z.string().optional(),
       nome_parte_autora: z.string().optional(),

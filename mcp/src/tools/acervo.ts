@@ -1,89 +1,8 @@
 import { z } from 'zod';
+import type { ToolDefinition, ToolResponse } from '../types/index.js';
+import { toSnakeCase, formatToolResponse, handleToolError } from './utils.js';
 
-import type {
-  Acervo,
-  ListarAcervoParams,
-  ListarAcervoResult,
-  ListarAcervoAgrupadoResult,
-  OrigemAcervo,
-  GrauAcervo,
-  OrdenarPorAcervo,
-  AgruparPorAcervo,
-  OrdemAcervo,
-} from '@/backend/types/acervo/types';
-
-import { SinesysApiClient } from '../client';
-
-import { ToolDefinition, ToolResponse, ToolError } from '../types';
-
-import { toSnakeCase, formatToolResponse, handleToolError } from './utils';
-
-// Schema for sinesys_listar_acervo
-const listarAcervoSchema = z.object({
-  pagina: z.number().int().positive().optional(),
-  limite: z.number().int().positive().optional(),
-  unified: z.boolean().optional(),
-  origem: z.enum(['acervo_geral', 'arquivado']).optional(),
-  trt: z.string().optional(),
-  grau: z.enum(['primeiro_grau', 'segundo_grau']).optional(),
-  responsavelId: z.union([z.number().int().positive(), z.literal('null')]).optional(),
-  semResponsavel: z.boolean().optional(),
-  busca: z.string().optional(),
-  numeroProcesso: z.string().optional(),
-  nomeParteAutora: z.string().optional(),
-  nomeParteRe: z.string().optional(),
-  descricaoOrgaoJulgador: z.string().optional(),
-  classeJudicial: z.string().optional(),
-  codigoStatusProcesso: z.string().optional(),
-  segredoJustica: z.boolean().optional(),
-  juizoDigital: z.boolean().optional(),
-  temAssociacao: z.boolean().optional(),
-  dataAutuacaoInicio: z.string().optional(),
-  dataAutuacaoFim: z.string().optional(),
-  dataArquivamentoInicio: z.string().optional(),
-  dataArquivamentoFim: z.string().optional(),
-  dataProximaAudienciaInicio: z.string().optional(),
-  dataProximaAudienciaFim: z.string().optional(),
-  temProximaAudiencia: z.boolean().optional(),
-  ordenarPor: z.enum([
-    'data_autuacao',
-    'numero_processo',
-    'nome_parte_autora',
-    'nome_parte_re',
-    'data_arquivamento',
-    'data_proxima_audiencia',
-    'prioridade_processual',
-    'created_at',
-    'updated_at',
-  ]).optional(),
-  ordem: z.enum(['asc', 'desc']).optional(),
-  agruparPor: z.enum([
-    'trt',
-    'grau',
-    'origem',
-    'responsavel_id',
-    'classe_judicial',
-    'codigo_status_processo',
-    'orgao_julgador',
-    'mes_autuacao',
-    'ano_autuacao',
-  ]).optional(),
-  incluirContagem: z.boolean().optional(),
-});
-
-// Schema for sinesys_buscar_acervo
-const buscarAcervoSchema = z.object({
-  id: z.number().int().positive(),
-});
-
-// Schema for sinesys_atribuir_responsavel_acervo
-const atribuirResponsavelAcervoSchema = z.object({
-  processoId: z.number().int().positive(),
-  responsavelId: z.number().int().positive().nullable(),
-});
-
-// Tool definitions
-export const acervoTools: ToolDefinition[] = [
+const acervoTools: ToolDefinition[] = [
   {
     name: 'sinesys_listar_acervo',
     description: `
@@ -109,11 +28,61 @@ Lista processos do acervo com filtros avançados, paginação, ordenação e agr
 
 Retorna JSON com 'processos' + 'paginacao' (modo padrão) ou 'agrupamentos' + 'total' (modo agrupado).
     `,
-    inputSchema: listarAcervoSchema,
-    handler: async (args: z.infer<typeof listarAcervoSchema>, client: SinesysApiClient): Promise<ToolResponse> => {
+    inputSchema: z.object({
+      pagina: z.number().int().positive().optional(),
+      limite: z.number().int().positive().optional(),
+      unified: z.boolean().optional(),
+      origem: z.enum(['acervo_geral', 'arquivado']).optional(),
+      trt: z.string().optional(),
+      grau: z.enum(['primeiro_grau', 'segundo_grau']).optional(),
+      responsavelId: z.union([z.number().int().positive(), z.literal('null')]).optional(),
+      semResponsavel: z.boolean().optional(),
+      busca: z.string().optional(),
+      numeroProcesso: z.string().optional(),
+      nomeParteAutora: z.string().optional(),
+      nomeParteRe: z.string().optional(),
+      descricaoOrgaoJulgador: z.string().optional(),
+      classeJudicial: z.string().optional(),
+      codigoStatusProcesso: z.string().optional(),
+      segredoJustica: z.boolean().optional(),
+      juizoDigital: z.boolean().optional(),
+      temAssociacao: z.boolean().optional(),
+      dataAutuacaoInicio: z.string().optional(),
+      dataAutuacaoFim: z.string().optional(),
+      dataArquivamentoInicio: z.string().optional(),
+      dataArquivamentoFim: z.string().optional(),
+      dataProximaAudienciaInicio: z.string().optional(),
+      dataProximaAudienciaFim: z.string().optional(),
+      temProximaAudiencia: z.boolean().optional(),
+      ordenarPor: z.enum([
+        'data_autuacao',
+        'numero_processo',
+        'nome_parte_autora',
+        'nome_parte_re',
+        'data_arquivamento',
+        'data_proxima_audiencia',
+        'prioridade_processual',
+        'created_at',
+        'updated_at',
+      ]).optional(),
+      ordem: z.enum(['asc', 'desc']).optional(),
+      agruparPor: z.enum([
+        'trt',
+        'grau',
+        'origem',
+        'responsavel_id',
+        'classe_judicial',
+        'codigo_status_processo',
+        'orgao_julgador',
+        'mes_autuacao',
+        'ano_autuacao',
+      ]).optional(),
+      incluirContagem: z.boolean().optional(),
+    }),
+    handler: async (args, client): Promise<ToolResponse> => {
       try {
         const params = toSnakeCase(args);
-        const response = await client.get<ListarAcervoResult | ListarAcervoAgrupadoResult>('/api/acervo', params);
+        const response = await client.get('/api/acervo', params);
         if (!response.success) {
           return handleToolError(response.error || 'Unknown error');
         }
@@ -126,10 +95,12 @@ Retorna JSON com 'processos' + 'paginacao' (modo padrão) ou 'agrupamentos' + 't
   {
     name: 'sinesys_buscar_acervo',
     description: 'Busca um processo específico do acervo por ID. Retorna dados completos do processo ou erro 404 se não encontrado.',
-    inputSchema: buscarAcervoSchema,
-    handler: async (args: z.infer<typeof buscarAcervoSchema>, client: SinesysApiClient): Promise<ToolResponse> => {
+    inputSchema: z.object({
+      id: z.number().int().positive(),
+    }),
+    handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.get<Acervo>(`/api/acervo/${args.id}`);
+        const response = await client.get(`/api/acervo/${args.id}`);
         if (!response.success) {
           return handleToolError(response.error || 'Processo não encontrado');
         }
@@ -151,12 +122,15 @@ Atribui, transfere ou desatribui um responsável de um processo do acervo.
 
 Retorna dados atualizados do processo ou erro 404/400.
     `,
-    inputSchema: atribuirResponsavelAcervoSchema,
-    handler: async (args: z.infer<typeof atribuirResponsavelAcervoSchema>, client: SinesysApiClient): Promise<ToolResponse> => {
+    inputSchema: z.object({
+      processoId: z.number().int().positive(),
+      responsavelId: z.number().int().positive().nullable(),
+    }),
+    handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.patch<{ id: number; responsavel_id: number | null }>(
+        const response = await client.patch(
           `/api/acervo/${args.processoId}/responsavel`,
-          { responsavelId: args.responsavelId }
+          { responsavel_id: args.responsavelId }
         );
         if (!response.success) {
           return handleToolError(response.error || 'Erro ao atribuir responsável');
@@ -168,3 +142,5 @@ Retorna dados atualizados do processo ou erro 404/400.
     },
   },
 ];
+
+export { acervoTools };

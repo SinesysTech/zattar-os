@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { ToolDefinition, ToolResponse } from '../types';
-import { toSnakeCase, formatToolResponse, handleToolError } from './utils';
+import type { ToolDefinition, ToolResponse } from '../types/index.js';
+import { toSnakeCase, formatToolResponse, handleToolError } from './utils.js';
 
 const expedientesManuaisTools: ToolDefinition[] = [
   {

@@ -34,12 +34,12 @@ export type SituacaoPJE = 'A' | 'I' | 'E' | 'H'; // A=Ativo, I=Inativo, E=Exclu�
  */
 interface TerceiroBase {
   id: number;
-  // id_pje removido
+  id_tipo_parte: number | null;
   tipo_parte: TipoParteTerceiro;
   polo: PoloTerceiro;
   tipo_pessoa: TipoPessoa;
   nome: string;
-  nome_social: string | null;
+  nome_fantasia: string | null;
   emails: string[] | null; // JSONB array
   ddd_celular: string | null;
   numero_celular: string | null;
@@ -47,54 +47,81 @@ interface TerceiroBase {
   numero_residencial: string | null;
   ddd_comercial: string | null;
   numero_comercial: string | null;
-  fax: string | null;
-  situacao: SituacaoPJE | null;
+  // Flags
+  principal: boolean | null;
+  autoridade: boolean | null;
+  endereco_desconhecido: boolean | null;
+  // Status PJE
+  status_pje: string | null;
+  situacao_pje: string | null;
+  login_pje: string | null;
+  ordem: number | null;
+  // Controle
   observacoes: string | null;
   dados_anteriores: Record<string, unknown> | null; // JSONB
+  ativo: boolean | null;
   endereco_id: number | null; // FK para tabela enderecos
+  ultima_atualizacao_pje: string | null; // ISO timestamp
   created_at: string; // ISO timestamp
   updated_at: string; // ISO timestamp
 }
 
 /**
  * Campos específicos de Pessoa Física
+ * Inclui campos detalhados do PJE (naturalidade, UF nascimento, país nascimento, etc.)
  */
 export interface TerceiroPessoaFisica extends TerceiroBase {
   tipo_pessoa: 'pf';
   cpf: string; // Required para PF
   cnpj: null;
   tipo_documento: string | null;
-  numero_rg: string | null;
-  orgao_emissor_rg: string | null;
-  uf_rg: string | null;
-  // data_expedicao_rg removido
+  rg: string | null;
   sexo: string | null;
   nome_genitora: string | null;
   data_nascimento: string | null; // ISO date
-  nacionalidade: string | null;
-  naturalidade: string | null;
-  municipio_nascimento: string | null;
-  uf_nascimento: string | null;
-  pais_nacionalidade: string | null;
-  profissao: string | null;
+  genero: string | null;
   estado_civil: string | null;
-  grau_instrucao: string | null;
-  necessidade_especial: string | null;
+  nacionalidade: string | null;
+  // Campos detalhados do PJE - UF Nascimento
+  uf_nascimento_id_pje: number | null;
+  uf_nascimento_sigla: string | null;
+  uf_nascimento_descricao: string | null;
+  // Campos detalhados do PJE - Naturalidade
+  naturalidade_id_pje: number | null;
+  naturalidade_municipio: string | null;
+  naturalidade_estado_id_pje: number | null;
+  naturalidade_estado_sigla: string | null;
+  // Campos detalhados do PJE - País Nascimento
+  pais_nascimento_id_pje: number | null;
+  pais_nascimento_codigo: string | null;
+  pais_nascimento_descricao: string | null;
+  // Outros campos do PJE
+  escolaridade_codigo: number | null;
+  situacao_cpf_receita_id: number | null;
+  situacao_cpf_receita_descricao: string | null;
+  pode_usar_celular_mensagem: boolean | null;
   // Campos que são null em PF (específicos de PJ)
   inscricao_estadual: null;
   data_abertura: null;
+  data_fim_atividade: null;
   orgao_publico: null;
+  tipo_pessoa_codigo_pje: null;
+  tipo_pessoa_label_pje: null;
+  tipo_pessoa_validacao_receita: null;
   ds_tipo_pessoa: null;
+  situacao_cnpj_receita_id: null;
+  situacao_cnpj_receita_descricao: null;
   ramo_atividade: null;
+  cpf_responsavel: null;
+  oficial: null;
+  ds_prazo_expediente_automatico: null;
   porte_codigo: null;
   porte_descricao: null;
-  qualificacao_responsavel: null;
-  nome_fantasia: null;
-  status_pje: null;
 }
 
 /**
  * Campos específicos de Pessoa Jurídica
+ * Inclui campos detalhados do PJE (tipo pessoa, situação CNPJ, etc.)
  */
 export interface TerceiroPessoaJuridica extends TerceiroBase {
   tipo_pessoa: 'pj';
@@ -102,33 +129,43 @@ export interface TerceiroPessoaJuridica extends TerceiroBase {
   cpf: null;
   inscricao_estadual: string | null;
   data_abertura: string | null; // ISO date
+  data_fim_atividade: string | null;
   orgao_publico: boolean | null;
+  tipo_pessoa_codigo_pje: string | null;
+  tipo_pessoa_label_pje: string | null;
+  tipo_pessoa_validacao_receita: string | null;
   ds_tipo_pessoa: string | null;
+  situacao_cnpj_receita_id: number | null;
+  situacao_cnpj_receita_descricao: string | null;
   ramo_atividade: string | null;
-  porte_codigo: string | null;
+  cpf_responsavel: string | null;
+  oficial: boolean | null;
+  ds_prazo_expediente_automatico: string | null;
+  porte_codigo: number | null;
   porte_descricao: string | null;
-  qualificacao_responsavel: string | null;
-  capital_social: number | null;
-  nome_fantasia: string | null;
-  status_pje: string | null;
   // Campos que são null em PJ (específicos de PF)
   tipo_documento: null;
-  numero_rg: null;
-  orgao_emissor_rg: null;
-  uf_rg: null;
-  // data_expedicao_rg removido
+  rg: null;
   sexo: null;
   nome_genitora: null;
   data_nascimento: null;
-  nacionalidade: null;
-  naturalidade: null;
-  municipio_nascimento: null;
-  uf_nascimento: null;
-  pais_nacionalidade: null;
-  profissao: null;
+  genero: null;
   estado_civil: null;
-  grau_instrucao: null;
-  necessidade_especial: null;
+  nacionalidade: null;
+  uf_nascimento_id_pje: null;
+  uf_nascimento_sigla: null;
+  uf_nascimento_descricao: null;
+  naturalidade_id_pje: null;
+  naturalidade_municipio: null;
+  naturalidade_estado_id_pje: null;
+  naturalidade_estado_sigla: null;
+  pais_nascimento_id_pje: null;
+  pais_nascimento_codigo: null;
+  pais_nascimento_descricao: null;
+  escolaridade_codigo: null;
+  situacao_cpf_receita_id: null;
+  situacao_cpf_receita_descricao: null;
+  pode_usar_celular_mensagem: null;
 }
 
 /**
@@ -159,12 +196,12 @@ export type TerceiroComEndereco =
  * vão para processo_partes, não para esta tabela. Deduplicação agora por CPF/CNPJ.
  */
 export interface CriarTerceiroPFParams {
-  tipo_parte: TipoParteTerceiro;
-  polo: PoloTerceiro;
+  tipo_parte: TipoParteTerceiro | string;
+  polo: PoloTerceiro | string;
   tipo_pessoa: 'pf';
   nome: string;
   cpf: string;
-  nome_social?: string;
+  nome_fantasia?: string;
   emails?: string[];
   ddd_celular?: string;
   numero_celular?: string;
@@ -172,27 +209,44 @@ export interface CriarTerceiroPFParams {
   numero_residencial?: string;
   ddd_comercial?: string;
   numero_comercial?: string;
-  fax?: string;
   tipo_documento?: string;
-  numero_rg?: string;
-  orgao_emissor_rg?: string;
-  uf_rg?: string;
-  // data_expedicao_rg removido
+  rg?: string;
   sexo?: string;
   nome_genitora?: string;
   data_nascimento?: string;
-  nacionalidade?: string;
-  naturalidade?: string;
-  municipio_nascimento?: string;
-  uf_nascimento?: string;
-  pais_nacionalidade?: string;
-  profissao?: string;
+  genero?: string;
   estado_civil?: string;
-  grau_instrucao?: string;
-  necessidade_especial?: string;
-  situacao?: SituacaoPJE;
+  nacionalidade?: string;
+  // Campos detalhados do PJE - UF Nascimento
+  uf_nascimento_id_pje?: number;
+  uf_nascimento_sigla?: string;
+  uf_nascimento_descricao?: string;
+  // Campos detalhados do PJE - Naturalidade
+  naturalidade_id_pje?: number;
+  naturalidade_municipio?: string;
+  naturalidade_estado_id_pje?: number;
+  naturalidade_estado_sigla?: string;
+  // Campos detalhados do PJE - País Nascimento
+  pais_nascimento_id_pje?: number;
+  pais_nascimento_codigo?: string;
+  pais_nascimento_descricao?: string;
+  // Outros campos do PJE
+  escolaridade_codigo?: number;
+  situacao_cpf_receita_id?: number;
+  situacao_cpf_receita_descricao?: string;
+  pode_usar_celular_mensagem?: boolean;
+  // Flags e status
+  principal?: boolean;
+  autoridade?: boolean;
+  endereco_desconhecido?: boolean;
+  status_pje?: string;
+  situacao_pje?: string;
+  login_pje?: string;
+  ordem?: number;
+  // Controle
   observacoes?: string;
   dados_anteriores?: Record<string, unknown>;
+  ativo?: boolean;
   endereco_id?: number;
 }
 
@@ -202,12 +256,11 @@ export interface CriarTerceiroPFParams {
  * vão para processo_partes, não para esta tabela. Deduplicação agora por CPF/CNPJ.
  */
 export interface CriarTerceiroPJParams {
-  tipo_parte: TipoParteTerceiro;
-  polo: PoloTerceiro;
+  tipo_parte: TipoParteTerceiro | string;
+  polo: PoloTerceiro | string;
   tipo_pessoa: 'pj';
   nome: string;
   cnpj: string;
-  nome_social?: string;
   nome_fantasia?: string;
   emails?: string[];
   ddd_celular?: string;
@@ -216,19 +269,34 @@ export interface CriarTerceiroPJParams {
   numero_residencial?: string;
   ddd_comercial?: string;
   numero_comercial?: string;
-  fax?: string;
   inscricao_estadual?: string;
   data_abertura?: string;
+  data_fim_atividade?: string;
   orgao_publico?: boolean;
+  tipo_pessoa_codigo_pje?: string;
+  tipo_pessoa_label_pje?: string;
+  tipo_pessoa_validacao_receita?: string;
   ds_tipo_pessoa?: string;
+  situacao_cnpj_receita_id?: number;
+  situacao_cnpj_receita_descricao?: string;
   ramo_atividade?: string;
-  porte_codigo?: string;
+  cpf_responsavel?: string;
+  oficial?: boolean;
+  ds_prazo_expediente_automatico?: string;
+  porte_codigo?: number;
   porte_descricao?: string;
-  qualificacao_responsavel?: string;
+  // Flags e status
+  principal?: boolean;
+  autoridade?: boolean;
+  endereco_desconhecido?: boolean;
   status_pje?: string;
-  situacao?: SituacaoPJE;
+  situacao_pje?: string;
+  login_pje?: string;
+  ordem?: number;
+  // Controle
   observacoes?: string;
   dados_anteriores?: Record<string, unknown>;
+  ativo?: boolean;
   endereco_id?: number;
 }
 
@@ -242,56 +310,11 @@ export type CriarTerceiroParams = CriarTerceiroPFParams | CriarTerceiroPJParams;
  */
 export interface AtualizarTerceiroPFParams {
   id: number;
-
-  tipo_parte?: TipoParteTerceiro;
-  polo?: PoloTerceiro;
+  tipo_parte?: TipoParteTerceiro | string;
+  polo?: PoloTerceiro | string;
   tipo_pessoa?: 'pf';
   nome?: string;
   cpf?: string;
-  nome_social?: string;
-  emails?: string[];
-  ddd_celular?: string;
-  numero_celular?: string;
-  ddd_residencial?: string;
-  numero_residencial?: string;
-  ddd_comercial?: string;
-  numero_comercial?: string;
-  fax?: string;
-  tipo_documento?: string;
-  numero_rg?: string;
-  orgao_emissor_rg?: string;
-  uf_rg?: string;
-  // data_expedicao_rg removido
-  sexo?: string;
-  nome_genitora?: string;
-  data_nascimento?: string;
-  nacionalidade?: string;
-  naturalidade?: string;
-  municipio_nascimento?: string;
-  uf_nascimento?: string;
-  pais_nacionalidade?: string;
-  profissao?: string;
-  estado_civil?: string;
-  grau_instrucao?: string;
-  necessidade_especial?: string;
-  situacao?: SituacaoPJE;
-  observacoes?: string;
-  dados_anteriores?: Record<string, unknown>;
-  endereco_id?: number;
-}
-
-/**
- * Dados para atualizar terceiro PJ
- */
-export interface AtualizarTerceiroPJParams {
-  id: number;
-
-  tipo_parte?: TipoParteTerceiro;
-  polo?: PoloTerceiro;
-  tipo_pessoa?: 'pj';
-  nome?: string;
-  cnpj?: string;
-  nome_social?: string;
   nome_fantasia?: string;
   emails?: string[];
   ddd_celular?: string;
@@ -300,19 +323,93 @@ export interface AtualizarTerceiroPJParams {
   numero_residencial?: string;
   ddd_comercial?: string;
   numero_comercial?: string;
-  fax?: string;
-  inscricao_estadual?: string;
-  data_abertura?: string;
-  orgao_publico?: boolean;
-  ds_tipo_pessoa?: string;
-  ramo_atividade?: string;
-  porte_codigo?: string;
-  porte_descricao?: string;
-  qualificacao_responsavel?: string;
+  tipo_documento?: string;
+  rg?: string;
+  sexo?: string;
+  nome_genitora?: string;
+  data_nascimento?: string;
+  genero?: string;
+  estado_civil?: string;
+  nacionalidade?: string;
+  // Campos detalhados do PJE - UF Nascimento
+  uf_nascimento_id_pje?: number;
+  uf_nascimento_sigla?: string;
+  uf_nascimento_descricao?: string;
+  // Campos detalhados do PJE - Naturalidade
+  naturalidade_id_pje?: number;
+  naturalidade_municipio?: string;
+  naturalidade_estado_id_pje?: number;
+  naturalidade_estado_sigla?: string;
+  // Campos detalhados do PJE - País Nascimento
+  pais_nascimento_id_pje?: number;
+  pais_nascimento_codigo?: string;
+  pais_nascimento_descricao?: string;
+  // Outros campos do PJE
+  escolaridade_codigo?: number;
+  situacao_cpf_receita_id?: number;
+  situacao_cpf_receita_descricao?: string;
+  pode_usar_celular_mensagem?: boolean;
+  // Flags e status
+  principal?: boolean;
+  autoridade?: boolean;
+  endereco_desconhecido?: boolean;
   status_pje?: string;
-  situacao?: SituacaoPJE;
+  situacao_pje?: string;
+  login_pje?: string;
+  ordem?: number;
+  // Controle
   observacoes?: string;
   dados_anteriores?: Record<string, unknown>;
+  ativo?: boolean;
+  endereco_id?: number;
+}
+
+/**
+ * Dados para atualizar terceiro PJ
+ */
+export interface AtualizarTerceiroPJParams {
+  id: number;
+  tipo_parte?: TipoParteTerceiro | string;
+  polo?: PoloTerceiro | string;
+  tipo_pessoa?: 'pj';
+  nome?: string;
+  cnpj?: string;
+  nome_fantasia?: string;
+  emails?: string[];
+  ddd_celular?: string;
+  numero_celular?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
+  inscricao_estadual?: string;
+  data_abertura?: string;
+  data_fim_atividade?: string;
+  orgao_publico?: boolean;
+  tipo_pessoa_codigo_pje?: string;
+  tipo_pessoa_label_pje?: string;
+  tipo_pessoa_validacao_receita?: string;
+  ds_tipo_pessoa?: string;
+  situacao_cnpj_receita_id?: number;
+  situacao_cnpj_receita_descricao?: string;
+  ramo_atividade?: string;
+  cpf_responsavel?: string;
+  oficial?: boolean;
+  ds_prazo_expediente_automatico?: string;
+  porte_codigo?: number;
+  porte_descricao?: string;
+  // Flags e status
+  principal?: boolean;
+  autoridade?: boolean;
+  endereco_desconhecido?: boolean;
+  status_pje?: string;
+  situacao_pje?: string;
+  login_pje?: string;
+  ordem?: number;
+  // Controle
+  observacoes?: string;
+  dados_anteriores?: Record<string, unknown>;
+  ativo?: boolean;
   endereco_id?: number;
 }
 
@@ -354,7 +451,7 @@ export interface ListarTerceirosParams {
   polo?: PoloTerceiro;
 
   // Busca textual
-  busca?: string; // Busca em nome, cpf, cnpj, nome_social, emails
+  busca?: string; // Busca em nome, cpf, cnpj, nome_fantasia, emails
 
   // Filtros específicos
   nome?: string;
@@ -409,7 +506,6 @@ export interface UpsertTerceiroPorIdPessoaParams {
   cpf?: string;
   cnpj?: string;
   // Campos opcionais comuns
-  nome_social?: string;
   nome_fantasia?: string;
   emails?: string[];
   ddd_celular?: string;

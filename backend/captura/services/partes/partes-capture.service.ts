@@ -1120,14 +1120,11 @@ async function processarEndereco(
     });
 
     if (result.sucesso && result.endereco) {
-      console.log(`   ✅ [Endereço] Parte ${parte.nome} endereço salvo ID=${result.endereco.id}`);
       return result.endereco.id;
     }
 
-    console.log(`   ❌ [Endereço] Parte ${parte.nome} falha ao salvar endereço:`, result);
     return null;
   } catch (error) {
-    console.log(`   ❌ [Endereço] Parte ${parte.nome} erro ao persistir:`, error instanceof Error ? error.message : String(error));
     throw new PersistenceError(`Erro ao processar endereço de ${parte.nome}`, 'upsert', 'endereco', { parte: parte.nome, error: error instanceof Error ? error.message : String(error) });
   }
 }

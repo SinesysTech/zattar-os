@@ -266,7 +266,7 @@ export async function getPerformanceAdvogados(): Promise<PerformanceAdvogado[]> 
 
   const hoje = new Date();
   const inicioSemana = new Date(hoje);
-  inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+  inicioSemana.setDate(inicioSemana.getDate() - inicioSemana.getDay());
   inicioSemana.setHours(0, 0, 0, 0);
 
   const inicioMes = new Date();

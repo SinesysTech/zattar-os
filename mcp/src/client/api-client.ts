@@ -1,5 +1,5 @@
-import type { ApiClientConfig, ApiResponse, RequestOptions } from '../types/index';
-import { withRetry, isRetryableError } from './retry-logic';
+import type { ApiClientConfig, ApiResponse, RequestOptions } from '../types/index.js';
+import { withRetry, isRetryableError } from './retry-logic.js';
 
 /**
  * Cria um objeto Error com propriedade `status` para erros HTTP.
