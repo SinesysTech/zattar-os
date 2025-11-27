@@ -5,6 +5,7 @@ import { Shield, User, Settings, LayoutGrid, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Typography } from '@/components/ui/typography';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +17,8 @@ import {
 import { cn } from '@/app/_lib/utils/utils';
 
 // Widgets
-import { WidgetProcessosResumo } from './components/widget-processos-resumo';
+import { UserStatusCards, AdminStatusCards } from './components/status-cards';
+import { WidgetProcessosCompact } from './components/widget-processos-compact';
 import { WidgetAudienciasProximas } from './components/widget-audiencias-proximas';
 import { WidgetPendentesUrgentes } from './components/widget-pendentes-urgentes';
 import { WidgetProdutividade } from './components/widget-produtividade';
@@ -80,50 +82,51 @@ export default function SandboxDashboardPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold tracking-tight">Dashboard Sandbox</h1>
+                <Typography.H2 as="h1">Dashboard</Typography.H2>
                 <Badge variant="soft" tone="warning" className="text-xs">
-                  Preview
+                  Sandbox
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                Visualização com dados mockados para validação do layout
-              </p>
+              <Typography.Muted className="mt-1">
+                {role === 'user'
+                  ? 'Acompanhe seus processos, audiências e expedientes'
+                  : 'Visão geral do escritório e métricas de performance'}
+              </Typography.Muted>
             </div>
 
             <div className="flex items-center gap-3">
               {/* Toggle de Role */}
-              <div className="flex items-center gap-2 p-1 bg-muted rounded-lg">
+              <div className="flex items-center gap-1 p-1 bg-muted rounded-lg">
                 <Button
                   variant={role === 'user' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => role !== 'user' && handleToggleRole()}
-                  className="gap-2"
+                  className="gap-2 h-8"
                 >
                   <User className="h-4 w-4" />
-                  Usuário
+                  <span className="hidden sm:inline">Usuário</span>
                 </Button>
                 <Button
                   variant={role === 'superadmin' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => role !== 'superadmin' && handleToggleRole()}
-                  className="gap-2"
+                  className="gap-2 h-8"
                 >
                   <Shield className="h-4 w-4" />
-                  Admin
+                  <span className="hidden sm:inline">Admin</span>
                 </Button>
               </div>
 
               {/* Menu de configurações */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2">
+                  <Button variant="outline" size="icon" className="h-8 w-8">
                     <Settings className="h-4 w-4" />
-                    Configurar
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
@@ -150,15 +153,15 @@ export default function SandboxDashboardPage() {
                 role === 'superadmin' ? 'bg-amber-500' : 'bg-emerald-500'
               )}
             />
-            <span className="text-sm text-muted-foreground">
+            <Typography.Small className="text-muted-foreground">
               Visualizando como:{' '}
               <span className="font-medium text-foreground">
-                {usuario.nome_completo}
+                {usuario.nome_exibicao}
               </span>
               {usuario.cargo && (
-                <span className="text-muted-foreground"> ({usuario.cargo})</span>
+                <span className="text-muted-foreground"> • {usuario.cargo}</span>
               )}
-            </span>
+            </Typography.Small>
           </div>
         </div>
       </header>
@@ -166,99 +169,156 @@ export default function SandboxDashboardPage() {
       {/* Content */}
       <main className="container mx-auto px-6 py-6">
         {role === 'user' ? (
+          // ================================================================
           // Dashboard do Usuário
+          // ================================================================
           <div className="space-y-6">
-            {/* Linha 1: Stats principais */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <WidgetProcessosResumo
-                data={processosResumo}
-                loading={loading}
+            {/* Cards de Status - Resumo Rápido */}
+            <section>
+              <UserStatusCards
+                processos={processosResumo}
+                audiencias={audienciasResumo}
+                pendentes={pendentesResumo}
               />
-              <WidgetAudienciasProximas
-                audiencias={audienciasUsuario}
-                resumo={audienciasResumo}
-                loading={loading}
-              />
-              <WidgetPendentesUrgentes
-                pendentes={pendentesUsuario}
-                resumo={pendentesResumo}
-                loading={loading}
-              />
-            </div>
+            </section>
 
-            {/* Linha 2: Produtividade */}
-            <div className="grid gap-6 lg:grid-cols-2">
-              <WidgetProdutividade
-                data={produtividade}
-                loading={loading}
-              />
-              {/* Placeholder para widgets pessoais */}
-              <Card className="border-dashed">
-                <CardHeader>
-                  <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
-                    Adicionar Widget
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col items-center justify-center py-8 text-center">
-                    <p className="text-sm text-muted-foreground">
-                      Clique para adicionar tarefas, notas ou links
-                    </p>
-                    <div className="flex gap-2 mt-4">
-                      <Button variant="outline" size="sm">Tarefas</Button>
-                      <Button variant="outline" size="sm">Notas</Button>
-                      <Button variant="outline" size="sm">Links</Button>
+            {/* Widgets de Detalhe */}
+            <section className="space-y-4">
+              <Typography.H4 className="text-muted-foreground">Detalhamento</Typography.H4>
+
+              <div className="grid gap-6 lg:grid-cols-2">
+                {/* Coluna 1: Processos + Audiências */}
+                <div className="space-y-6">
+                  <WidgetProcessosCompact
+                    data={processosResumo}
+                    loading={loading}
+                  />
+                  <WidgetAudienciasProximas
+                    audiencias={audienciasUsuario}
+                    resumo={audienciasResumo}
+                    loading={loading}
+                  />
+                </div>
+
+                {/* Coluna 2: Pendentes + Produtividade */}
+                <div className="space-y-6">
+                  <WidgetPendentesUrgentes
+                    pendentes={pendentesUsuario}
+                    resumo={pendentesResumo}
+                    loading={loading}
+                  />
+                  <WidgetProdutividade
+                    data={produtividade}
+                    loading={loading}
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Área para Widgets Pessoais */}
+            <section className="space-y-4">
+              <Typography.H4 className="text-muted-foreground">Meu Espaço</Typography.H4>
+
+              <div className="grid gap-4 md:grid-cols-3">
+                <Card className="border-dashed hover:border-primary/50 transition-colors cursor-pointer">
+                  <CardContent className="flex flex-col items-center justify-center py-8 text-center">
+                    <div className="rounded-full bg-muted p-3 mb-3">
+                      <Plus className="h-5 w-5 text-muted-foreground" />
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                    <Typography.Small className="font-medium">Adicionar Tarefas</Typography.Small>
+                    <Typography.Muted className="text-xs mt-1">Lista de afazeres pessoal</Typography.Muted>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-dashed hover:border-primary/50 transition-colors cursor-pointer">
+                  <CardContent className="flex flex-col items-center justify-center py-8 text-center">
+                    <div className="rounded-full bg-muted p-3 mb-3">
+                      <Plus className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <Typography.Small className="font-medium">Adicionar Notas</Typography.Small>
+                    <Typography.Muted className="text-xs mt-1">Anotações rápidas</Typography.Muted>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-dashed hover:border-primary/50 transition-colors cursor-pointer">
+                  <CardContent className="flex flex-col items-center justify-center py-8 text-center">
+                    <div className="rounded-full bg-muted p-3 mb-3">
+                      <Plus className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <Typography.Small className="font-medium">Adicionar Links</Typography.Small>
+                    <Typography.Muted className="text-xs mt-1">Atalhos úteis</Typography.Muted>
+                  </CardContent>
+                </Card>
+              </div>
+            </section>
           </div>
         ) : (
+          // ================================================================
           // Dashboard do Superadmin
+          // ================================================================
           <div className="space-y-6">
-            {/* Linha 1: Métricas gerais */}
-            <div className="grid gap-6 lg:grid-cols-2">
-              <WidgetMetricasEscritorio
-                data={metricasEscritorio}
-                loading={loading}
+            {/* Cards de Status - Resumo Rápido */}
+            <section>
+              <AdminStatusCards
+                totalProcessos={metricasEscritorio.totalProcessos}
+                totalAudiencias={metricasEscritorio.totalAudiencias}
+                totalPendentes={metricasEscritorio.totalPendentes}
+                totalUsuarios={metricasEscritorio.totalUsuarios}
+                processosAtivos={metricasEscritorio.processosAtivos}
+                pendentesVencidos={pendentesResumo.vencidos}
+                comparativo={metricasEscritorio.comparativoMesAnterior}
               />
-              <WidgetCargaUsuarios
-                data={cargaUsuarios}
-                loading={loading}
-              />
-            </div>
+            </section>
 
-            {/* Linha 2: Capturas e Performance */}
-            <div className="grid gap-6 lg:grid-cols-2">
-              <WidgetStatusCapturas
-                data={statusCapturas}
-                loading={loading}
-              />
-              <WidgetPerformanceAdvogados
-                data={performanceAdvogados}
-                loading={loading}
-              />
-            </div>
+            {/* Widgets de Gestão */}
+            <section className="space-y-4">
+              <Typography.H4 className="text-muted-foreground">Visão Geral do Escritório</Typography.H4>
 
-            {/* Linha 3: Visão consolidada (pendentes e audiências de todos) */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <WidgetProcessosResumo
-                data={processosResumo}
-                loading={loading}
-              />
-              <WidgetAudienciasProximas
-                audiencias={audienciasUsuario}
-                resumo={audienciasResumo}
-                loading={loading}
-              />
-              <WidgetPendentesUrgentes
-                pendentes={pendentesUsuario}
-                resumo={pendentesResumo}
-                loading={loading}
-              />
-            </div>
+              <div className="grid gap-6 lg:grid-cols-2">
+                <WidgetMetricasEscritorio
+                  data={metricasEscritorio}
+                  loading={loading}
+                />
+                <WidgetCargaUsuarios
+                  data={cargaUsuarios}
+                  loading={loading}
+                />
+              </div>
+            </section>
+
+            {/* Widgets Operacionais */}
+            <section className="space-y-4">
+              <Typography.H4 className="text-muted-foreground">Operações</Typography.H4>
+
+              <div className="grid gap-6 lg:grid-cols-2">
+                <WidgetStatusCapturas
+                  data={statusCapturas}
+                  loading={loading}
+                />
+                <WidgetPerformanceAdvogados
+                  data={performanceAdvogados}
+                  loading={loading}
+                />
+              </div>
+            </section>
+
+            {/* Visão Consolidada */}
+            <section className="space-y-4">
+              <Typography.H4 className="text-muted-foreground">Expedientes e Audiências (Todos)</Typography.H4>
+
+              <div className="grid gap-6 lg:grid-cols-2">
+                <WidgetAudienciasProximas
+                  audiencias={audienciasUsuario}
+                  resumo={audienciasResumo}
+                  loading={loading}
+                />
+                <WidgetPendentesUrgentes
+                  pendentes={pendentesUsuario}
+                  resumo={pendentesResumo}
+                  loading={loading}
+                />
+              </div>
+            </section>
           </div>
         )}
       </main>
@@ -266,10 +326,12 @@ export default function SandboxDashboardPage() {
       {/* Footer info */}
       <footer className="border-t mt-8">
         <div className="container mx-auto px-6 py-4">
-          <p className="text-xs text-muted-foreground text-center">
-            Dashboard Sandbox - Dados mockados para validação de layout.
-            Esta página não está conectada ao banco de dados real.
-          </p>
+          <Typography.Muted className="text-center text-xs">
+            Dashboard Sandbox • Dados mockados para validação de layout •{' '}
+            <span className="text-foreground font-medium">
+              {role === 'user' ? 'Visão de Usuário' : 'Visão de Administrador'}
+            </span>
+          </Typography.Muted>
         </div>
       </footer>
     </div>

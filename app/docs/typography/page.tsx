@@ -252,7 +252,7 @@ export default function TypographyDocsPage() {
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
                 <Typography.Blockquote>
-                  "After all," he said, "everyone enjoys a good joke, so it's only fair that they should pay for the privilege."
+                  &quot;After all,&quot; he said, &quot;everyone enjoys a good joke, so it&apos;s only fair that they should pay for the privilege.&quot;
                 </Typography.Blockquote>
               </div>
               <div className="bg-muted p-4 rounded-md">
@@ -279,11 +279,11 @@ export default function TypographyDocsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border rounded-lg p-6 bg-muted/20">
-                <Typography.List>
+                <ul className="typography-list" role="list">
                   <li>1st level of puns: 5 gold coins</li>
                   <li>2nd level of jokes: 10 gold coins</li>
                   <li>3rd level of one-liners : 20 gold coins</li>
-                </Typography.List>
+                </ul>
               </div>
               <div className="bg-muted p-4 rounded-md">
                 <pre className="text-sm overflow-x-auto">
@@ -343,8 +343,8 @@ export default function TypographyDocsPage() {
                 <Typography.Table>
                   <thead>
                     <tr>
-                      <th>King's Treasury</th>
-                      <th>People's happiness</th>
+                      <th>King&apos;s Treasury</th>
+                      <th>People&apos;s happiness</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -401,13 +401,13 @@ export default function TypographyDocsPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Typography.H3>Estrutura Recomendada</Typography.H3>
-                <Typography.List>
+                <ul className="typography-list" role="list">
                   <li><strong>H1:</strong> Título principal da página (apenas um por página)</li>
                   <li><strong>H2:</strong> Seções principais</li>
                   <li><strong>H3:</strong> Subseções</li>
                   <li><strong>H4:</strong> Títulos menores ou em componentes</li>
                   <li><strong>P:</strong> Texto de corpo padrão</li>
-                </Typography.List>
+                </ul>
               </div>
             </CardContent>
           </Card>
@@ -451,13 +451,13 @@ export default function TypographyDocsPage() {
               <CardTitle>Acessibilidade</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Typography.List>
+              <ul className="typography-list" role="list">
                 <li>Sempre use tags HTML semânticas corretas (h1, h2, p, etc.)</li>
                 <li>Mantenha hierarquia lógica de headings (não pule níveis)</li>
                 <li>Contraste mínimo de 4.5:1 para texto normal, 3:1 para texto grande</li>
                 <li>Line-height mínimo de 1.5 para legibilidade</li>
                 <li>Tamanho mínimo de fonte: 14px para corpo de texto</li>
-              </Typography.List>
+              </ul>
             </CardContent>
           </Card>
 

@@ -648,6 +648,7 @@ function criarColunas(
       id: 'processo',
       header: () => <ProcessoColumnHeader onSort={onProcessoSort} />,
       enableSorting: false,
+      size: 320,
       meta: { align: 'left' },
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
@@ -659,7 +660,7 @@ function criarColunas(
         const parteRe = row.original.polo_passivo_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 w-fit">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[300px] overflow-hidden">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
@@ -671,15 +672,15 @@ function criarColunas(
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
-            <div className="flex flex-col gap-1 max-w-full">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit text-left`}>
+            <div className="flex flex-col gap-1 w-full max-w-full">
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} max-w-full text-left truncate`}>
                 {parteAutora}
               </Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} w-fit text-left`}>
+              <Badge variant="outline" className={`${getParteReColorClass()} max-w-full text-left truncate`}>
                 {parteRe}
               </Badge>
             </div>
-            <div className="text-xs text-muted-foreground max-w-full truncate">
+            <div className="text-xs text-muted-foreground w-full truncate">
               {orgaoJulgador}
             </div>
           </div>
@@ -707,23 +708,23 @@ function criarColunas(
         const canOpenAta = audiencia.status === 'F' && fileKey !== null;
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5">
-            <div className="text-sm text-left">{tipo}</div>
-            <div className="text-xs text-muted-foreground truncate max-w-full text-left">{sala}</div>
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px] overflow-hidden">
+            <div className="text-sm text-left truncate w-full">{tipo}</div>
+            <div className="text-xs text-muted-foreground truncate w-full text-left">{sala}</div>
             <div className="relative group h-full w-full min-h-[60px] flex items-center justify-between p-2">
-              <div className="flex-1 flex items-center justify-start">
+              <div className="flex-1 flex items-center justify-start overflow-hidden">
                 {audiencia.url_audiencia_virtual ? (
                   logoPath ? (
                     <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label={`Acessar audiência virtual`} className="hover:opacity-70 transition-opacity flex items-center justify-center">
                       <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
                     </a>
                   ) : (
-                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-[100px]">
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-full">
                       {audiencia.url_audiencia_virtual}
                     </a>
                   )
                 ) : audiencia.endereco_presencial ? (
-                  <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+                  <span className="text-sm line-clamp-3 w-full break-words">
                     {[audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'}
                   </span>
                 ) : (

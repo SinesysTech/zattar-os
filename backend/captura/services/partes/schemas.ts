@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
 // Schema para representante PJE
+// NOTA: Não validamos formato de email porque a API do PJE aceita emails mal formatados
+// Muitos advogados cadastram emails inválidos (sem @, domínio incompleto, etc.)
 export const RepresentantePJESchema = z.object({
   idPessoa: z.number().positive('ID pessoa deve ser positivo'),
   nome: z.string().min(1, 'Nome é obrigatório'),
@@ -10,7 +12,7 @@ export const RepresentantePJESchema = z.object({
   ufOAB: z.string().length(2).nullable(),
   situacaoOAB: z.string().nullable(),
   tipo: z.string().nullable(),
-  email: z.string().email().nullable().or(z.literal('')),
+  email: z.string().nullable(), // Aceita qualquer string - PJE não valida emails
   telefones: z.array(z.object({
     ddd: z.string().optional(),
     numero: z.string().optional(),
@@ -19,6 +21,7 @@ export const RepresentantePJESchema = z.object({
 });
 
 // Schema para parte PJE
+// NOTA: Não validamos formato de emails porque a API do PJE aceita emails mal formatados
 export const PartePJESchema = z.object({
   idParte: z.number().positive('ID parte deve ser positivo'),
   idPessoa: z.number().positive('ID pessoa deve ser positivo'),
@@ -29,7 +32,7 @@ export const PartePJESchema = z.object({
   }),
   numeroDocumento: z.string().min(1, 'Número do documento é obrigatório'),
   tipoDocumento: z.enum(['CPF', 'CNPJ', 'OUTRO']),
-  emails: z.array(z.string().email()).default([]),
+  emails: z.array(z.string()).default([]), // Aceita qualquer string - PJE não valida emails
   telefones: z.array(z.object({
     ddd: z.string().optional(),
     numero: z.string().optional(),

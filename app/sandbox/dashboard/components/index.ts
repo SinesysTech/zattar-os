@@ -13,8 +13,12 @@ export {
   CHART_PALETTE,
 } from './mini-chart';
 
+// Status Cards
+export { StatusCard, UserStatusCards, AdminStatusCards } from './status-cards';
+
 // Widgets de Usuário
 export { WidgetProcessosResumo } from './widget-processos-resumo';
+export { WidgetProcessosCompact } from './widget-processos-compact';
 export { WidgetAudienciasProximas } from './widget-audiencias-proximas';
 export { WidgetPendentesUrgentes } from './widget-pendentes-urgentes';
 export { WidgetProdutividade } from './widget-produtividade';

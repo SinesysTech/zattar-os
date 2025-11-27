@@ -174,7 +174,7 @@ export async function acervoGeralCapture(
         trt: params.config.codigo,
         grau: params.config.grau,
         verificarRecaptura: true,  // Pula processos atualizados recentemente
-        horasParaRecaptura: 6,     // Recaptura se > 6h desde última atualização
+        horasParaRecaptura: 24,    // Recaptura se > 24h desde última atualização
         onProgress: (atual, total, processoId) => {
           if (atual % 10 === 0 || atual === 1 || atual === total) {
             console.log(`   📊 Progresso: ${atual}/${total} (processo ${processoId})`);
@@ -197,7 +197,6 @@ export async function acervoGeralCapture(
     // 5.2 Persistir processos no acervo (PRIMEIRO para obter IDs)
     console.log('   📦 Persistindo processos no acervo...');
     let persistencia: SalvarAcervoResult | undefined;
-    let logsPersistencia: LogEntry[] | undefined;
     let mapeamentoIds = new Map<number, number>();
 
     try {
@@ -287,7 +286,7 @@ export async function acervoGeralCapture(
 
     // Finalizar logs
     captureLogService.imprimirResumo();
-    logsPersistencia = captureLogService.consumirLogs();
+    const logsPersistencia = captureLogService.consumirLogs();
 
     // ═══════════════════════════════════════════════════════════════
     // RESULTADO FINAL

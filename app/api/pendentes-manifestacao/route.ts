@@ -368,6 +368,14 @@ export async function GET(request: NextRequest) {
       return isNaN(num) ? undefined : num;
     };
 
+    // Função auxiliar para converter tipo_expediente_id para number ou 'null'
+    const parseTipoExpedienteId = (value: string | null): number | 'null' | undefined => {
+      if (value === null) return undefined;
+      if (value === 'null') return 'null';
+      const num = parseInt(value, 10);
+      return isNaN(num) ? undefined : num;
+    };
+
     const params: ListarPendentesParams = {
       // Paginação
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
@@ -397,6 +405,8 @@ export async function GET(request: NextRequest) {
       // Filtros específicos de pendentes
       baixado: parseBoolean(searchParams.get('baixado')),
       prazo_vencido: parseBoolean(searchParams.get('prazo_vencido')),
+      tipo_expediente_id: parseTipoExpedienteId(searchParams.get('tipo_expediente_id')),
+      sem_tipo: parseBoolean(searchParams.get('sem_tipo')),
       data_prazo_legal_inicio: searchParams.get('data_prazo_legal_inicio') || undefined,
       data_prazo_legal_fim: searchParams.get('data_prazo_legal_fim') || undefined,
       data_ciencia_inicio: searchParams.get('data_ciencia_inicio') || undefined,

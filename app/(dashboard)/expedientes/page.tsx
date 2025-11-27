@@ -52,7 +52,7 @@ import {
   FileText,
   Pencil,
 } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import {
   Tooltip,
   TooltipContent,
@@ -77,6 +77,7 @@ import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-pe
 import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
 import { DatePicker } from '@/components/ui/date-picker';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
+import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 
 /**
  * Formata data ISO para formato brasileiro (DD/MM/YYYY)
@@ -1598,7 +1599,7 @@ export default function ExpedientesPage() {
   }, [buscaDebounced]);
 
   return (
-    <Tabs value={visualizacao} onValueChange={(value: string) => setVisualizacao(value as typeof visualizacao)}>
+    <ClientOnlyTabs value={visualizacao} onValueChange={(value: string) => setVisualizacao(value as typeof visualizacao)}>
       <div className="space-y-4">
         {/* Barra de busca, filtros, tabs e controles de navegação - tudo na mesma linha */}
         <div className="flex items-center gap-4 pb-6">
@@ -1834,24 +1835,32 @@ export default function ExpedientesPage() {
             </SelectContent>
           </Select>
 
-          <Select value={filtros.tipo_expediente_id ? String(filtros.tipo_expediente_id) : 'all'} onValueChange={(v: string) => {
-            const nf = { ...filtros } as ExpedientesFilters;
-            if (v === 'all') nf.tipo_expediente_id = undefined;
-            else {
-              const num = parseInt(v, 10);
-              if (!isNaN(num)) nf.tipo_expediente_id = num;
-            }
-            setFiltros(nf);
-            setPagina(0);
-          }}>
-            <SelectTrigger className="w-[220px]"><SelectValue placeholder="Tipo de Expediente" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              {tiposExpedientes.map((t: TipoExpediente) => (
-                <SelectItem key={t.id} value={String(t.id)}>{t.tipo_expediente}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Combobox
+            options={[
+              { value: 'all', label: 'Todos' },
+              ...tiposExpedientes.map((t: TipoExpediente) => ({
+                value: String(t.id),
+                label: t.tipo_expediente,
+                searchText: t.tipo_expediente,
+              })),
+            ]}
+            value={filtros.tipo_expediente_id ? [String(filtros.tipo_expediente_id)] : ['all']}
+            onValueChange={(values: string[]) => {
+              const nf = { ...filtros } as ExpedientesFilters;
+              const v = values[0] || 'all';
+              if (v === 'all') nf.tipo_expediente_id = undefined;
+              else {
+                const num = parseInt(v, 10);
+                if (!isNaN(num)) nf.tipo_expediente_id = num;
+              }
+              setFiltros(nf);
+              setPagina(0);
+            }}
+            placeholder="Tipo de Expediente"
+            searchPlaceholder="Buscar tipo..."
+            emptyText="Nenhum tipo encontrado"
+            className="w-[260px]"
+          />
 
           <div className="flex items-center gap-2">
             <Checkbox id="sem_tipo" checked={!!filtros.sem_tipo} onCheckedChange={(c: boolean | 'indeterminate') => {
@@ -2076,6 +2085,6 @@ export default function ExpedientesPage() {
         onOpenChange={setNovoExpedienteOpen}
         onSuccess={handleSuccess}
       />
-  </Tabs>
+  </ClientOnlyTabs>
   );
 }

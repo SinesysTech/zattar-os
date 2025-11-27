@@ -209,7 +209,7 @@ export async function pendentesManifestacaoCapture(
         trt: params.config.codigo,
         grau: params.config.grau,
         verificarRecaptura: true, // Pula processos atualizados recentemente
-        horasParaRecaptura: 6,    // Recaptura se > 6h desde última atualização
+        horasParaRecaptura: 24,   // Recaptura se > 24h desde última atualização
         onProgress: (atual, total, processoId) => {
           if (atual % 10 === 0 || atual === 1 || atual === total) {
             console.log(`   📊 Progresso: ${atual}/${total} (processo ${processoId})`);

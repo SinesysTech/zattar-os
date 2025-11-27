@@ -3,7 +3,7 @@
 // Componente de visualização de expedientes por semana com tabs de dias
 
 import * as React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
@@ -1401,7 +1401,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
   }
 
   return (
-    <Tabs value={diaAtivo} onValueChange={setDiaAtivo} className="gap-0">
+    <ClientOnlyTabs value={diaAtivo} onValueChange={setDiaAtivo} className="gap-0">
       <TabsList className="bg-background justify-start rounded-t-lg rounded-b-none border-b p-0 w-full">
         <TabsTrigger
           value="segunda"
@@ -1460,6 +1460,6 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
           </TabsContent>
         );
       })}
-    </Tabs>
+    </ClientOnlyTabs>
   );
 }

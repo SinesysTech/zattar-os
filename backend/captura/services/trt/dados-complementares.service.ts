@@ -35,7 +35,7 @@ export interface DadosComplementaresOptions {
   onProgress?: (atual: number, total: number, processoId: number) => void;
   /** Verificar se processo precisa recaptura (baseado em updated_at do acervo) */
   verificarRecaptura?: boolean;
-  /** Horas mínimas desde última atualização para recapturar (default: 6) */
+  /** Horas mínimas desde última atualização para recapturar (default: 24) */
   horasParaRecaptura?: number;
 }
 
@@ -72,7 +72,7 @@ export interface DadosComplementaresResult {
  * Opções para verificação de recaptura
  */
 interface RecapturaOptions {
-  /** Horas mínimas desde última atualização para recapturar (default: 6) */
+  /** Horas mínimas desde última atualização para recapturar (default: 24) */
   horasParaRecaptura?: number;
   /** TRT do processo */
   trt: string;
@@ -91,7 +91,7 @@ async function verificarProcessosParaRecaptura(
   processosIds: number[],
   options: RecapturaOptions
 ): Promise<{ paraRecapturar: number[]; pulados: number[] }> {
-  const horasMinimas = options.horasParaRecaptura ?? 6;
+  const horasMinimas = options.horasParaRecaptura ?? 24;
   const dataLimite = new Date(Date.now() - horasMinimas * 60 * 60 * 1000);
   
   const supabase = createServiceClient();
@@ -148,7 +148,7 @@ export async function buscarDadosComplementaresProcessos(
     delayEntreRequisicoes = 300,
     onProgress,
     verificarRecaptura = false,
-    horasParaRecaptura = 6,
+    horasParaRecaptura = 24,
   } = options;
 
   const porProcesso = new Map<number, DadosComplementaresProcesso>();

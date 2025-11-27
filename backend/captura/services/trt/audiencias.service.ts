@@ -221,7 +221,7 @@ export async function audienciasCapture(
         grau: params.config.grau,
         delayEntreRequisicoes: 300,
         verificarRecaptura: true,  // Pula processos atualizados recentemente
-        horasParaRecaptura: 6,     // Recaptura se > 6h desde última atualização
+        horasParaRecaptura: 24,    // Recaptura se > 24h desde última atualização
         onProgress: (atual, total, processoId) => {
           if (atual % 5 === 0 || atual === total) {
             console.log(`   📊 Progresso: ${atual}/${total} (processo ${processoId})`);
