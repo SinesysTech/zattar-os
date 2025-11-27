@@ -113,11 +113,10 @@ const advogadosTools: ToolDefinition[] = [
         const { advogado_id, credencial_id, ...body } = typedArgs;
         const snakeBody = toSnakeCase(body as Record<string, unknown>);
         const response = await client.patch(`/api/advogados/${advogado_id}/credenciais/${credencial_id}`, snakeBody);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
-          return handleToolError(response.error || 'Erro ao atualizar credencial');
+        if (response.success) {
+          return formatToolResponse(response.data ?? null);
         }
+        return handleToolError(response.error || 'Erro ao atualizar credencial');
       } catch (error) {
         return handleToolError(error);
       }
@@ -134,11 +133,10 @@ const advogadosTools: ToolDefinition[] = [
       try {
         const typedArgs = args as { advogado_id: number; credencial_id: number };
         const response = await client.patch(`/api/advogados/${typedArgs.advogado_id}/credenciais/${typedArgs.credencial_id}`, { active: true });
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
-          return handleToolError(response.error || 'Erro ao ativar credencial');
+        if (response.success) {
+          return formatToolResponse(response.data ?? null);
         }
+        return handleToolError(response.error || 'Erro ao ativar credencial');
       } catch (error) {
         return handleToolError(error);
       }
@@ -155,11 +153,10 @@ const advogadosTools: ToolDefinition[] = [
       try {
         const typedArgs = args as { advogado_id: number; credencial_id: number };
         const response = await client.patch(`/api/advogados/${typedArgs.advogado_id}/credenciais/${typedArgs.credencial_id}`, { active: false });
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
-          return handleToolError(response.error || 'Erro ao desativar credencial');
+        if (response.success) {
+          return formatToolResponse(response.data ?? null);
         }
+        return handleToolError(response.error || 'Erro ao desativar credencial');
       } catch (error) {
         return handleToolError(error);
       }
