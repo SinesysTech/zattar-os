@@ -1,7 +1,6 @@
 import { z } from 'zod';
-import { SinesysApiClient } from '../client';
-import type { ToolDefinition, ToolResponse } from '../types';
-import { toSnakeCase, formatToolResponse, handleToolError } from './utils';
+import type { ToolDefinition, ToolResponse } from '../types/index.js';
+import { toSnakeCase, formatToolResponse, handleToolError } from './utils.js';
 
 const advogadosTools: ToolDefinition[] = [
   {
@@ -17,13 +16,12 @@ const advogadosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const params = toSnakeCase(args);
+        const params = toSnakeCase(args as Record<string, unknown>);
         const response = await client.get('/api/advogados', params);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        if (!response.success) {
           return handleToolError(response.error || 'Erro desconhecido ao listar advogados');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -40,13 +38,12 @@ const advogadosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const body = toSnakeCase(args);
+        const body = toSnakeCase(args as Record<string, unknown>);
         const response = await client.post('/api/advogados', body);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        if (!response.success) {
           return handleToolError(response.error || 'Erro ao criar advogado');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -61,14 +58,14 @@ const advogadosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const { advogado_id, ...params } = args;
-        const queryParams = toSnakeCase(params);
+        const typedArgs = args as { advogado_id: number; active?: boolean };
+        const { advogado_id, ...params } = typedArgs;
+        const queryParams = toSnakeCase(params as Record<string, unknown>);
         const response = await client.get(`/api/advogados/${advogado_id}/credenciais`, queryParams);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        if (!response.success) {
           return handleToolError(response.error || 'Erro desconhecido ao listar credenciais');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -86,14 +83,14 @@ const advogadosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const { advogado_id, ...body } = args;
-        const snakeBody = toSnakeCase(body);
+        const typedArgs = args as { advogado_id: number; tribunal: string; grau: string; senha: string; active?: boolean };
+        const { advogado_id, ...body } = typedArgs;
+        const snakeBody = toSnakeCase(body as Record<string, unknown>);
         const response = await client.post(`/api/advogados/${advogado_id}/credenciais`, snakeBody);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        if (!response.success) {
           return handleToolError(response.error || 'Erro ao criar credencial');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -112,14 +109,14 @@ const advogadosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const { advogado_id, credencial_id, ...body } = args;
-        const snakeBody = toSnakeCase(body);
+        const typedArgs = args as { advogado_id: number; credencial_id: number; tribunal?: string; grau?: string; senha?: string; active?: boolean };
+        const { advogado_id, credencial_id, ...body } = typedArgs;
+        const snakeBody = toSnakeCase(body as Record<string, unknown>);
         const response = await client.patch(`/api/advogados/${advogado_id}/credenciais/${credencial_id}`, snakeBody);
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        if (!response.success) {
           return handleToolError(response.error || 'Erro ao atualizar credencial');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -134,13 +131,12 @@ const advogadosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const { advogado_id, credencial_id } = args;
-        const response = await client.patch(`/api/advogados/${advogado_id}/credenciais/${credencial_id}`, { active: true });
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const typedArgs = args as { advogado_id: number; credencial_id: number };
+        const response = await client.patch(`/api/advogados/${typedArgs.advogado_id}/credenciais/${typedArgs.credencial_id}`, { active: true });
+        if (!response.success) {
           return handleToolError(response.error || 'Erro ao ativar credencial');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }
@@ -155,13 +151,12 @@ const advogadosTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const { advogado_id, credencial_id } = args;
-        const response = await client.patch(`/api/advogados/${advogado_id}/credenciais/${credencial_id}`, { active: false });
-        if (response.success && response.data) {
-          return formatToolResponse(response.data);
-        } else {
+        const typedArgs = args as { advogado_id: number; credencial_id: number };
+        const response = await client.patch(`/api/advogados/${typedArgs.advogado_id}/credenciais/${typedArgs.credencial_id}`, { active: false });
+        if (!response.success) {
           return handleToolError(response.error || 'Erro ao desativar credencial');
         }
+        return formatToolResponse(response.data);
       } catch (error) {
         return handleToolError(error);
       }

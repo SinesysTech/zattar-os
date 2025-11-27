@@ -14,7 +14,6 @@ import type {
   ListarTerceirosResult,
   BuscarTerceirosPorProcessoParams,
   UpsertTerceiroPorIdPessoaParams,
-  TipoPessoa,
   TipoParteTerceiro,
   PoloTerceiro,
   SituacaoPJE,
@@ -100,7 +99,9 @@ export function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
   const parseDate = (val: unknown): string | null => {
     if (!val) return null;
     if (typeof val === 'string') return val;
-    return new Date(val as any).toISOString().split('T')[0];
+    if (val instanceof Date) return val.toISOString().split('T')[0];
+    if (typeof val === 'number') return new Date(val).toISOString().split('T')[0];
+    return null;
   };
 
   const base = {
