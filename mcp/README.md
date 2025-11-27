@@ -111,6 +111,58 @@ O campo `apiKey` corresponde à Service API Key (variável `SERVICE_API_KEY` do 
 
 O Service API Key tem prioridade e é mais adequado para agentes e automação.
 
+## Executando o Servidor
+
+O servidor MCP roda via stdio (stdin/stdout) para comunicação JSON-RPC.
+
+### Três formas de execução:
+
+1. **Desenvolvimento** (com hot-reload): `npm run mcp:dev` (usa `tsx src/index.ts`)
+2. **Build + Execução**: `npm run mcp:build && npm run mcp:start` (compila TypeScript e executa `node build/index.js`)
+3. **Executável direto** (após build): `node mcp/build/index.js` ou `./mcp/build/index.js` (se tiver permissão de execução)
+
+Logs do servidor aparecem no stderr e não interferem com o protocolo JSON-RPC no stdout.
+
+#### Exemplo de teste manual via stdio:
+
+```bash
+echo '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}' | npm run mcp:start
+```
+
+Em produção o servidor é iniciado automaticamente pelo cliente MCP (ex: Claude Desktop) como subprocesso.
+
+## Integração com Claude Desktop
+
+Claude Desktop pode usar o servidor MCP para acessar as APIs do Sinesys.
+
+#### Configuração do `claude_desktop_config.json`:
+
+- **Linux/Mac**: `~/.config/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+#### Exemplo de configuração JSON:
+
+```json
+{
+  "mcpServers": {
+    "sinesys": {
+      "command": "node",
+      "args": ["/caminho/absoluto/para/sinesys/mcp/build/index.js"],
+      "env": {
+        "SINESYS_BASE_URL": "https://seu-sinesys.com",
+        "SINESYS_API_KEY": "sua_service_api_key_aqui"
+      }
+    }
+  }
+}
+```
+
+Substitua `/caminho/absoluto/para/sinesys` pelo caminho real do projeto.
+
+Após configurar, reiniciar Claude Desktop para carregar o servidor.
+
+Dica: Verifique logs do Claude Desktop em caso de problemas de conexão.
+
 ## Autenticação
 
 O cliente suporta dois métodos de autenticação:
@@ -157,6 +209,14 @@ Erros nas ferramentas MCP são retornados no formato padrão do protocolo:
 - **Estrutura**: `{ content: [{ type: 'text', text: string }], isError: true }`
 - **Conteúdo**: O campo `text` contém uma string JSON com a mensagem de erro ou detalhes da falha (ex: erro de validação, 404, etc.)
 - **Tratamento**: Verifique sempre o campo `isError` nas respostas para identificar falhas. Em caso de erro, a resposta não contém dados válidos.
+
+## Troubleshooting
+
+- **Servidor não inicia**: Verifique se `npm run mcp:build` foi executado e se `build/index.js` existe
+- **Erro de autenticação**: Confirme que `SINESYS_API_KEY` ou `SINESYS_SESSION_TOKEN` estão configurados corretamente
+- **Tool não encontrada**: Execute `npm run mcp:build` para recompilar após adicionar novas tools
+- **Erro de validação Zod**: Verifique se os argumentos passados correspondem ao schema da tool (use `tools/list` para ver schemas)
+- **Debug**: Habilite logs detalhados com `MCP_DEBUG=true npm run mcp:start`
 
 ## Available Tools
 

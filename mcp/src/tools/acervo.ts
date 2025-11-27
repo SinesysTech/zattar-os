@@ -81,7 +81,7 @@ Retorna JSON com 'processos' + 'paginacao' (modo padrão) ou 'agrupamentos' + 't
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const params = toSnakeCase(args);
+        const params = toSnakeCase(args as Record<string, unknown>);
         const response = await client.get('/api/acervo', params);
         if (!response.success) {
           return handleToolError(response.error || 'Unknown error');
@@ -100,7 +100,8 @@ Retorna JSON com 'processos' + 'paginacao' (modo padrão) ou 'agrupamentos' + 't
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.get(`/api/acervo/${args.id}`);
+        const typedArgs = args as { id: number };
+        const response = await client.get(`/api/acervo/${typedArgs.id}`);
         if (!response.success) {
           return handleToolError(response.error || 'Processo não encontrado');
         }
@@ -128,9 +129,10 @@ Retorna dados atualizados do processo ou erro 404/400.
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
+        const typedArgs = args as { processoId: number; responsavelId: number | null };
         const response = await client.patch(
-          `/api/acervo/${args.processoId}/responsavel`,
-          { responsavel_id: args.responsavelId }
+          `/api/acervo/${typedArgs.processoId}/responsavel`,
+          { responsavel_id: typedArgs.responsavelId }
         );
         if (!response.success) {
           return handleToolError(response.error || 'Erro ao atribuir responsável');

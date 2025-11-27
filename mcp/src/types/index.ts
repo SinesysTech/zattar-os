@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SinesysApiClient } from '../client';
+import { SinesysApiClient } from '../client/index.js';
 
 export interface ApiClientConfig {
   baseUrl: string;

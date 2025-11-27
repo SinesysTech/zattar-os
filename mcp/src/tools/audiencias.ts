@@ -31,7 +31,7 @@ const audienciasTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const params = toSnakeCase(args);
+        const params = toSnakeCase(args as Record<string, unknown>);
         const response = await client.get('/api/audiencias', params);
         if (response.success && response.data) {
           return formatToolResponse(response.data);
@@ -60,7 +60,7 @@ const audienciasTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const body = toSnakeCase(args);
+        const body = toSnakeCase(args as Record<string, unknown>);
         const response = await client.post('/api/audiencias', body);
         if (response.success && response.data) {
           return formatToolResponse(response.data);
@@ -81,7 +81,8 @@ const audienciasTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.patch(`/api/audiencias/${args.id}/responsavel`, { responsavel_id: args.responsavelId });
+        const typedArgs = args as { id: number; responsavelId: number | null };
+        const response = await client.patch(`/api/audiencias/${typedArgs.id}/responsavel`, { responsavel_id: typedArgs.responsavelId });
         if (response.success && response.data) {
           return formatToolResponse(response.data);
         } else {
@@ -101,7 +102,8 @@ const audienciasTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.patch(`/api/audiencias/${args.id}/modalidade`, { modalidade: args.modalidade });
+        const typedArgs = args as { id: number; modalidade: string };
+        const response = await client.patch(`/api/audiencias/${typedArgs.id}/modalidade`, { modalidade: typedArgs.modalidade });
         if (response.success && response.data) {
           return formatToolResponse(response.data);
         } else {
@@ -121,7 +123,8 @@ const audienciasTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.patch(`/api/audiencias/${args.id}/observacoes`, { observacoes: args.observacoes });
+        const typedArgs = args as { id: number; observacoes: string | null };
+        const response = await client.patch(`/api/audiencias/${typedArgs.id}/observacoes`, { observacoes: typedArgs.observacoes });
         if (response.success && response.data) {
           return formatToolResponse(response.data);
         } else {

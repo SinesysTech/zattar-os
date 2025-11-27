@@ -45,7 +45,7 @@ const pendentesManifestacaoTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const params = toSnakeCase(args);
+        const params = toSnakeCase(args as Record<string, unknown>);
         const response = await client.get('/api/pendentes-manifestacao', params);
         if (response.success && response.data) {
           return formatToolResponse(response.data);
@@ -66,7 +66,8 @@ const pendentesManifestacaoTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.patch(`/api/pendentes-manifestacao/${args.id}/responsavel`, { responsavel_id: args.responsavelId });
+        const typedArgs = args as { id: number; responsavelId: number | null };
+        const response = await client.patch(`/api/pendentes-manifestacao/${typedArgs.id}/responsavel`, { responsavel_id: typedArgs.responsavelId });
         if (response.success && response.data) {
           return formatToolResponse(response.data);
         } else {
@@ -89,8 +90,9 @@ const pendentesManifestacaoTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const body = toSnakeCase({ protocoloId: args.protocolo_id, justificativa: args.justificativa });
-        const response = await client.patch(`/api/pendentes-manifestacao/${args.id}/baixa`, body);
+        const typedArgs = args as { id: number; protocolo_id?: string; justificativa?: string };
+        const body = toSnakeCase({ protocoloId: typedArgs.protocolo_id, justificativa: typedArgs.justificativa });
+        const response = await client.patch(`/api/pendentes-manifestacao/${typedArgs.id}/baixa`, body);
         if (response.success && response.data) {
           return formatToolResponse(response.data);
         } else {
@@ -109,7 +111,8 @@ const pendentesManifestacaoTools: ToolDefinition[] = [
     }),
     handler: async (args, client): Promise<ToolResponse> => {
       try {
-        const response = await client.patch(`/api/pendentes-manifestacao/${args.id}/reverter-baixa`, {});
+        const typedArgs = args as { id: number };
+        const response = await client.patch(`/api/pendentes-manifestacao/${typedArgs.id}/reverter-baixa`, {});
         if (response.success && response.data) {
           return formatToolResponse(response.data);
         } else {
