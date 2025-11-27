@@ -47,7 +47,7 @@ COPY . .
 # Variáveis de ambiente para build (podem ser vazias no build)
 ENV NEXT_PUBLIC_SUPABASE_URL=""
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=""
-ENV SUPABASE_SERVICE_ROLE_KEY=""
+ENV SUPABASE_SECRET_KEY=""
 
 # Build da aplicação
 RUN npm run build

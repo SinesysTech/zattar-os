@@ -27,7 +27,7 @@ Antes de fazer o deploy, você precisa configurar as seguintes variáveis de amb
   - Chave pública que pode ser exposta no frontend
   - Encontrada no dashboard do Supabase em **Settings** > **API**
   
-- `SUPABASE_SERVICE_ROLE_KEY`: Chave secreta do Supabase (service_role)
+- `SUPABASE_SECRET_KEY`: Chave secreta do Supabase (service_role)
   - Chave secreta para operações administrativas no backend
   - ⚠️ **NUNCA** exponha esta chave no frontend!
   - Encontrada no dashboard do Supabase em **Settings** > **API**
@@ -150,7 +150,7 @@ No Portainer, você pode configurar as variáveis de ambiente de duas formas:
 2. Clique em **Add variable** para cada variável obrigatória:
    - `NEXT_PUBLIC_SUPABASE_URL` = `https://xxxxx.supabase.co`
    - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` = `sb_publishable_xxxxx` ou `eyJxxxxx`
-   - `SUPABASE_SERVICE_ROLE_KEY` = `eyJxxxxx` (chave service_role)
+   - `SUPABASE_SECRET_KEY` = `eyJxxxxx` (chave service_role)
    - `DOMAIN` = `sinesys.exemplo.com.br` (seu domínio)
 
 3. **Não esqueça** de configurar todas as 4 variáveis obrigatórias antes de fazer o deploy!
@@ -165,7 +165,7 @@ No Portainer, você pode configurar as variáveis de ambiente de duas formas:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=sb_publishable_xxxxx
-SUPABASE_SERVICE_ROLE_KEY=eyJxxxxx
+SUPABASE_SECRET_KEY=eyJxxxxx
 DOMAIN=sinesys.exemplo.com.br
 ```
 
@@ -277,7 +277,7 @@ Para atualizar a aplicação:
 
 ⚠️ **Importante:**
 
-- Nunca exponha `SUPABASE_SERVICE_ROLE_KEY` no frontend
+- Nunca exponha `SUPABASE_SECRET_KEY` no frontend
 - Use apenas `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY` no frontend
 - Mantenha as variáveis de ambiente seguras
 - Use HTTPS sempre (configurado via Traefik)
