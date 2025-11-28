@@ -90,6 +90,12 @@ const navMain = [
     title: "Obrigações",
     url: "/acordos-condenacoes",
     icon: Handshake,
+    items: [
+      { title: "Lista", url: "/acordos-condenacoes/lista" },
+      { title: "Semana", url: "/acordos-condenacoes/semana" },
+      { title: "Mês", url: "/acordos-condenacoes/mes" },
+      { title: "Ano", url: "/acordos-condenacoes/ano" },
+    ],
   },
   {
     title: "Captura",
