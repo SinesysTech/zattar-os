@@ -8,6 +8,15 @@ yarn-error.log*
 # Testing
 coverage
 .nyc_output
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+__tests__
+__mocks__
+jest.config.*
+playwright.config.*
+playwright-report
 
 # Next.js
 .next
@@ -21,6 +30,7 @@ dist
 # Misc
 .DS_Store
 *.pem
+Thumbs.db
 
 # Debug
 npm-debug.log*
@@ -44,6 +54,7 @@ next-env.d.ts
 *.swp
 *.swo
 *~
+.editorconfig
 
 # Git
 .git
@@ -54,14 +65,21 @@ next-env.d.ts
 docs
 *.md
 !README.md
+CHANGELOG*
+LICENSE*
 
-# Dev data
+# Dev data e scripts de desenvolvimento
 dev_data
 openspec
+scripts/results
+
+# MCP workspace (não necessário para produção)
+mcp
 
 # Supabase local
 supabase/.branches
 supabase/.temp
+supabase/seed.sql
 
 # Cursor
 .cursor
@@ -71,4 +89,15 @@ supabase/.temp
 
 # CapRover
 captain-definition
+
+# Docker files (não precisam estar no contexto)
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Outros
+*.local
+*.bak
+*.tmp
+.turbo
 
