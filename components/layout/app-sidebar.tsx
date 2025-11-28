@@ -91,6 +91,17 @@ const navMain = [
     url: "/acordos-condenacoes",
     icon: Handshake,
   },
+  {
+    title: "Captura",
+    url: "/captura",
+    icon: Database,
+    items: [
+      { title: "Histórico", url: "/captura/historico" },
+      { title: "Agendamentos", url: "/captura/agendamentos" },
+      { title: "Credenciais", url: "/captura/credenciais" },
+      { title: "Tribunais", url: "/captura/tribunais" },
+    ],
+  },
 ]
 
 const navAdmin = [
@@ -98,11 +109,6 @@ const navAdmin = [
     name: "Usuários",
     url: "/usuarios",
     icon: UserCog,
-  },
-  {
-    name: "Captura",
-    url: "/captura",
-    icon: Database,
   },
 ]
 

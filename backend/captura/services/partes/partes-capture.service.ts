@@ -5,7 +5,7 @@ import { obterPartesProcesso } from '@/backend/api/pje-trt/partes';
 import { identificarTipoParte, validarDocumentoAdvogado, type AdvogadoIdentificacao } from './identificacao-partes.service';
 import { upsertClientePorCPF, upsertClientePorCNPJ, buscarClientePorCPF, buscarClientePorCNPJ } from '@/backend/clientes/services/persistence/cliente-persistence.service';
 import { upsertParteContrariaPorCPF, upsertParteContrariaPorCNPJ, buscarParteContrariaPorCPF, buscarParteContrariaPorCNPJ } from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
-import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, buscarTerceiroPorCNPJ } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
+import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, buscarTerceiroPorCNPJ, criarTerceiro } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
 import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
 import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/backend/representantes/services/representantes-persistence.service';
 import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
@@ -23,7 +23,7 @@ import getLogger, { withCorrelationId } from '@/backend/utils/logger';
 import { withRetry } from '@/backend/utils/retry';
 import { CAPTURA_CONFIG } from './config';
 import { ValidationError, PersistenceError, extractErrorInfo } from './errors';
-import { upsertCadastroPJE } from '@/backend/cadastros-pje/services/persistence/cadastro-pje-persistence.service';
+import { upsertCadastroPJE, buscarEntidadePorIdPessoaPJE } from '@/backend/cadastros-pje/services/persistence/cadastro-pje-persistence.service';
 
 // ============================================================================
 // Tipos para estruturas do PJE (dadosCompletos)
@@ -815,42 +815,95 @@ async function processarParte(
         }
       }
     } else {
-      // Buscar entidade existente por CPF/CNPJ
-      const entidadeExistente = isPessoaFisica
-        ? await buscarTerceiroPorCPF(documentoNormalizado)
-        : await buscarTerceiroPorCNPJ(documentoNormalizado);
+      // TERCEIROS: Tratamento especial para partes sem documento válido (ex: Ministério Público)
+      const temDocumentoValido = documentoNormalizado && 
+        ((isPessoaFisica && documentoNormalizado.length === 11) || 
+         (!isPessoaFisica && documentoNormalizado.length === 14));
 
-      if (entidadeExistente) {
-        // UPDATE: entidade já existe
-        entidadeId = entidadeExistente.id;
+      if (temDocumentoValido) {
+        // Buscar entidade existente por CPF/CNPJ
+        const entidadeExistente = isPessoaFisica
+          ? await buscarTerceiroPorCPF(documentoNormalizado)
+          : await buscarTerceiroPorCNPJ(documentoNormalizado);
+
+        if (entidadeExistente) {
+          // UPDATE: entidade já existe
+          entidadeId = entidadeExistente.id;
+        } else {
+          // INSERT: nova entidade com documento
+          const params: CriarTerceiroPFParams | CriarTerceiroPJParams = {
+            ...dadosCompletos,
+            tipo_pessoa: isPessoaFisica ? 'pf' : 'pj',
+            cpf: isPessoaFisica ? documentoNormalizado : undefined,
+            cnpj: !isPessoaFisica ? documentoNormalizado : undefined,
+            tipo_parte: parte.tipoParte,
+            polo: parte.polo,
+          } as CriarTerceiroPFParams | CriarTerceiroPJParams;
+
+          const result = isPessoaFisica
+            ? await withRetry<import('@/backend/terceiros/services/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
+                () => upsertTerceiroPorCPF(params as UpsertTerceiroPorCPFParams),
+                {
+                  maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+                  baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+                }
+              )
+            : await withRetry<import('@/backend/terceiros/services/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
+                () => upsertTerceiroPorCNPJ(params as UpsertTerceiroPorCNPJParams),
+                {
+                  maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+                  baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+                }
+              );
+          if (result.sucesso && result.terceiro) {
+            entidadeId = result.terceiro.id;
+          }
+        }
       } else {
-        // INSERT: nova entidade
-        const params: CriarTerceiroPFParams | CriarTerceiroPJParams = {
-          ...dadosCompletos,
-          tipo_pessoa: isPessoaFisica ? 'pf' : 'pj',
-          cpf: isPessoaFisica ? documentoNormalizado : undefined,
-          cnpj: !isPessoaFisica ? documentoNormalizado : undefined,
-          tipo_parte: parte.tipoParte,
-          polo: parte.polo,
-        } as CriarTerceiroPFParams | CriarTerceiroPJParams;
+        // SEM DOCUMENTO VÁLIDO: Buscar via cadastros_pje (id_pessoa_pje) ou criar novo
+        // Isso é comum para entidades como Ministério Público, Peritos sem CPF cadastrado, etc.
+        console.log(`[PARTES] Terceiro "${parte.nome}" sem documento válido - usando busca por id_pessoa_pje`);
+        
+        // 1. Tentar encontrar entidade existente via cadastros_pje
+        const cadastroExistente = await buscarEntidadePorIdPessoaPJE({
+          id_pessoa_pje: parte.idPessoa,
+          sistema: 'pje_trt',
+          tribunal: processo.trt,
+          grau: processo.grau === 'primeiro_grau' ? 'primeiro_grau' : 'segundo_grau',
+        });
 
-        const result = isPessoaFisica
-          ? await withRetry<import('@/backend/terceiros/services/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
-              () => upsertTerceiroPorCPF(params as UpsertTerceiroPorCPFParams),
-              {
-                maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-                baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-              }
-            )
-          : await withRetry<import('@/backend/terceiros/services/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
-              () => upsertTerceiroPorCNPJ(params as UpsertTerceiroPorCNPJParams),
-              {
-                maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-                baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-              }
-            );
-        if (result.sucesso && result.terceiro) {
-          entidadeId = result.terceiro.id;
+        if (cadastroExistente && cadastroExistente.tipo_entidade === 'terceiro') {
+          // Entidade já existe - retornar ID existente
+          entidadeId = cadastroExistente.entidade_id;
+          console.log(`[PARTES] Terceiro "${parte.nome}" encontrado via cadastros_pje: ID ${entidadeId}`);
+        } else {
+          // 2. Criar nova entidade sem documento
+          // Determina tipo_pessoa baseado no nome (heurística: nomes com "MINISTÉRIO", "UNIÃO", etc são PJ)
+          const pareceSerPJ = /^(MINISTÉRIO|MINISTERIO|UNIÃO|UNIAO|ESTADO|MUNICÍPIO|MUNICIPIO|INSTITUTO|INSS|IBAMA|ANVISA|RECEITA|FAZENDA|FUNDAÇÃO|FUNDACAO|AUTARQUIA|EMPRESA|ÓRGÃO|ORGAO)/i.test(parte.nome.trim());
+          const tipoPessoaInferido = pareceSerPJ ? 'pj' : 'pf';
+          
+          const params = {
+            ...dadosCompletos,
+            tipo_pessoa: tipoPessoaInferido,
+            tipo_parte: parte.tipoParte,
+            polo: parte.polo,
+            // Sem CPF/CNPJ - será criado com documento nulo
+          };
+
+          const result = await withRetry(
+            () => criarTerceiro(params as CriarTerceiroPFParams | CriarTerceiroPJParams),
+            {
+              maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+              baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+            }
+          );
+          
+          if (result.sucesso && result.terceiro) {
+            entidadeId = result.terceiro.id;
+            console.log(`[PARTES] Terceiro "${parte.nome}" criado sem documento: ID ${entidadeId}`);
+          } else {
+            console.error(`[PARTES] Erro ao criar terceiro "${parte.nome}" sem documento:`, result.erro);
+          }
         }
       }
     }

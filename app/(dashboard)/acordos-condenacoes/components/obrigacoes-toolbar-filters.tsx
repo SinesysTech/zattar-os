@@ -121,7 +121,10 @@ export function parseObrigacoesFilters(selectedFilters: string[]): ObrigacoesFil
 
   for (const selected of selectedFilters) {
     if (selected.includes('_')) {
-      const [id, value] = selected.split('_', 2);
+      // Usar lastIndexOf para suportar IDs com underscore
+      const lastUnderscoreIndex = selected.lastIndexOf('_');
+      const id = selected.substring(0, lastUnderscoreIndex);
+      const value = selected.substring(lastUnderscoreIndex + 1);
       const config = configMap.get(id);
       if (config && config.type === 'select') {
         if (id === 'tipo') {
