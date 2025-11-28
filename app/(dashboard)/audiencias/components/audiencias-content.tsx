@@ -624,26 +624,23 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
   return (
     <div className="space-y-4">
       {/* Linha 1: Busca e Filtros */}
-      <div className="flex items-center gap-4">
-        <TableToolbar
-          searchValue={busca}
-          onSearchChange={(value) => { setBusca(value); setPagina(0); }}
-          isSearching={isSearching}
-          searchPlaceholder="Buscar audiências..."
-          filterOptions={filterOptions}
-          filterGroups={filterGroups}
-          selectedFilters={selectedFilterIds}
-          onFiltersChange={handleFilterIdsChange}
-          filterButtonsMode="buttons"
-          onNewClick={() => setNovaAudienciaOpen(true)}
-          newButtonTooltip="Nova audiência"
-        />
-        <Badge variant="secondary" className="shrink-0">{contadorAtivo} audiências</Badge>
-      </div>
+      <TableToolbar
+        searchValue={busca}
+        onSearchChange={(value) => { setBusca(value); setPagina(0); }}
+        isSearching={isSearching}
+        searchPlaceholder="Buscar audiências..."
+        filterOptions={filterOptions}
+        filterGroups={filterGroups}
+        selectedFilters={selectedFilterIds}
+        onFiltersChange={handleFilterIdsChange}
+        filterButtonsMode="buttons"
+        onNewClick={() => setNovaAudienciaOpen(true)}
+        newButtonTooltip="Nova audiência"
+      />
 
-      {/* Linha 2: Controles de navegação (apenas para visualizações de calendário) */}
-      {visualizacao !== 'lista' && (
-        <div className="flex items-center">
+      {/* Linha 2: Controles de navegação + contador */}
+      <div className="flex items-center gap-4">
+        {visualizacao !== 'lista' && (
           <ButtonGroup>
             <Button
               variant="outline"
@@ -698,8 +695,9 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
               </TooltipContent>
             </Tooltip>
           </ButtonGroup>
-        </div>
-      )}
+        )}
+        <Badge variant="secondary" className="shrink-0">{contadorAtivo} audiências</Badge>
+      </div>
 
       {/* Conteúdo da visualização */}
       {visualizacao === 'lista' && (
