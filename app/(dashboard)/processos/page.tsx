@@ -949,6 +949,7 @@ export default function ProcessosPage() {
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
+        filterButtonsMode="buttons"
         // Processos não tem botão de novo
       />
 

@@ -352,6 +352,7 @@ export default function UsuariosPage() {
           filterGroups={filterGroups}
           selectedFilters={selectedFilterIds}
           onFiltersChange={handleFilterIdsChange}
+          filterButtonsMode="buttons"
           extraButtons={
             <Tooltip>
               <TooltipTrigger asChild>

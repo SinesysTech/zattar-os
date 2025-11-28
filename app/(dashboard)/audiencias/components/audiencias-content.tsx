@@ -477,7 +477,7 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
       const inicio = new Date(date);
       inicio.setDate(date.getDate() + diff);
       const fim = new Date(inicio);
-      fim.setDate(fim.getDate() + 6);
+      fim.setDate(fim.getDate() + 4); // Segunda a Sexta (5 dias úteis)
       fim.setHours(23, 59, 59, 999);
       return { data_inicio_inicio: inicio.toISOString(), data_inicio_fim: fim.toISOString() };
     }

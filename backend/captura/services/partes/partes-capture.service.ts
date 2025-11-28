@@ -5,7 +5,7 @@ import { obterPartesProcesso } from '@/backend/api/pje-trt/partes';
 import { identificarTipoParte, validarDocumentoAdvogado, type AdvogadoIdentificacao } from './identificacao-partes.service';
 import { upsertClientePorCPF, upsertClientePorCNPJ, buscarClientePorCPF, buscarClientePorCNPJ } from '@/backend/clientes/services/persistence/cliente-persistence.service';
 import { upsertParteContrariaPorCPF, upsertParteContrariaPorCNPJ, buscarParteContrariaPorCPF, buscarParteContrariaPorCNPJ } from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
-import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, buscarTerceiroPorCNPJ, criarTerceiro } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
+import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, buscarTerceiroPorCNPJ, criarTerceiroSemDocumento } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
 import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
 import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/backend/representantes/services/representantes-persistence.service';
 import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
@@ -880,18 +880,22 @@ async function processarParte(
           // 2. Criar nova entidade sem documento
           // Determina tipo_pessoa baseado no nome (heurística: nomes com "MINISTÉRIO", "UNIÃO", etc são PJ)
           const pareceSerPJ = /^(MINISTÉRIO|MINISTERIO|UNIÃO|UNIAO|ESTADO|MUNICÍPIO|MUNICIPIO|INSTITUTO|INSS|IBAMA|ANVISA|RECEITA|FAZENDA|FUNDAÇÃO|FUNDACAO|AUTARQUIA|EMPRESA|ÓRGÃO|ORGAO)/i.test(parte.nome.trim());
-          const tipoPessoaInferido = pareceSerPJ ? 'pj' : 'pf';
+          const tipoPessoaInferido: 'pf' | 'pj' = pareceSerPJ ? 'pj' : 'pf';
           
           const params = {
-            ...dadosCompletos,
+            nome: parte.nome,
             tipo_pessoa: tipoPessoaInferido,
             tipo_parte: parte.tipoParte,
             polo: parte.polo,
-            // Sem CPF/CNPJ - será criado com documento nulo
+            emails: parte.emails.length > 0 ? parte.emails : undefined,
+            ddd_celular: parte.telefones[0]?.ddd || undefined,
+            numero_celular: parte.telefones[0]?.numero || undefined,
+            ddd_residencial: parte.telefones[1]?.ddd || undefined,
+            numero_residencial: parte.telefones[1]?.numero || undefined,
           };
 
           const result = await withRetry(
-            () => criarTerceiro(params as CriarTerceiroPFParams | CriarTerceiroPJParams),
+            () => criarTerceiroSemDocumento(params),
             {
               maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
               baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,

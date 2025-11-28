@@ -773,6 +773,118 @@ export async function upsertTerceiroPorDocumento(
 }
 
 /**
+ * Parâmetros para criar terceiro sem documento
+ */
+export interface CriarTerceiroSemDocumentoParams {
+  nome: string;
+  tipo_pessoa: 'pf' | 'pj';
+  tipo_parte: string;
+  polo: string;
+  nome_fantasia?: string;
+  emails?: string[];
+  ddd_celular?: string;
+  numero_celular?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
+  principal?: boolean;
+  autoridade?: boolean;
+  endereco_desconhecido?: boolean;
+  status_pje?: string;
+  situacao_pje?: string;
+  login_pje?: string;
+  ordem?: number;
+  observacoes?: string;
+  dados_anteriores?: Record<string, unknown>;
+  ativo?: boolean;
+  endereco_id?: number;
+}
+
+/**
+ * Cria um terceiro SEM documento (CPF/CNPJ)
+ * 
+ * PROPÓSITO:
+ * Permite criar entidades especiais que não possuem CPF/CNPJ cadastrado no PJE,
+ * como Ministério Público, órgãos governamentais, peritos sem documento, etc.
+ * 
+ * ATENÇÃO:
+ * Esta função NÃO faz deduplicação por documento. Múltiplas chamadas criarão
+ * registros distintos. A deduplicação deve ser feita pelo chamador usando
+ * cadastros_pje (id_pessoa_pje) como identificador único.
+ */
+export async function criarTerceiroSemDocumento(
+  params: CriarTerceiroSemDocumentoParams
+): Promise<OperacaoTerceiroResult> {
+  const supabase = createServiceClient();
+
+  try {
+    // Validações obrigatórias (sem CPF/CNPJ)
+    if (!params.tipo_pessoa) {
+      return { sucesso: false, erro: 'Tipo de pessoa é obrigatório' };
+    }
+
+    if (!params.nome?.trim()) {
+      return { sucesso: false, erro: 'Nome é obrigatório' };
+    }
+
+    if (!params.tipo_parte) {
+      return { sucesso: false, erro: 'Tipo de parte é obrigatório' };
+    }
+
+    if (!params.polo) {
+      return { sucesso: false, erro: 'Polo é obrigatório' };
+    }
+
+    // Preparar dados para inserção (sem CPF/CNPJ)
+    const dadosNovos: Record<string, unknown> = {
+      tipo_parte: params.tipo_parte,
+      polo: params.polo,
+      tipo_pessoa: params.tipo_pessoa,
+      nome: params.nome.trim(),
+      nome_fantasia: params.nome_fantasia?.trim() || null,
+      emails: params.emails ?? null,
+      ddd_celular: params.ddd_celular?.trim() || null,
+      numero_celular: params.numero_celular?.trim() || null,
+      ddd_residencial: params.ddd_residencial?.trim() || null,
+      numero_residencial: params.numero_residencial?.trim() || null,
+      ddd_comercial: params.ddd_comercial?.trim() || null,
+      numero_comercial: params.numero_comercial?.trim() || null,
+      principal: params.principal ?? null,
+      autoridade: params.autoridade ?? null,
+      endereco_desconhecido: params.endereco_desconhecido ?? null,
+      status_pje: params.status_pje?.trim() || null,
+      situacao_pje: params.situacao_pje?.trim() || null,
+      login_pje: params.login_pje?.trim() || null,
+      ordem: params.ordem ?? null,
+      observacoes: params.observacoes?.trim() || null,
+      dados_anteriores: params.dados_anteriores ?? null,
+      ativo: params.ativo ?? true,
+      endereco_id: params.endereco_id ?? null,
+      // CPF e CNPJ ficam nulos
+      cpf: null,
+      cnpj: null,
+    };
+
+    const { data, error } = await supabase.from('terceiros').insert(dadosNovos).select().single();
+
+    if (error) {
+      console.error('Erro ao criar terceiro sem documento:', error);
+      return { sucesso: false, erro: `Erro ao criar terceiro: ${error.message}` };
+    }
+
+    return {
+      sucesso: true,
+      terceiro: converterParaTerceiro(data),
+    };
+  } catch (error) {
+    const erroMsg = error instanceof Error ? error.message : String(error);
+    console.error('Erro inesperado ao criar terceiro sem documento:', error);
+    return { sucesso: false, erro: `Erro inesperado: ${erroMsg}` };
+  }
+}
+
+/**
  * Deleta um terceiro por ID
  */
 export async function deletarTerceiro(id: number): Promise<OperacaoTerceiroResult> {
