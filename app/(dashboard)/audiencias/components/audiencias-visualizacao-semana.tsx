@@ -433,12 +433,12 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
         const parteRe = row.original.polo_passivo_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 w-fit">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <Badge variant="outline" className={`${getTRTColorClass(trt)} shrink-0 text-xs`}>
+              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
                 {trt}
               </Badge>
-              <Badge variant="outline" className={`${getGrauColorClass(grau)} shrink-0 text-xs`}>
+              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>
                 {formatarGrau(grau)}
               </Badge>
             </div>
@@ -446,14 +446,14 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
             <div className="flex flex-col gap-1">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left`}>
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit text-left whitespace-nowrap`}>
                 {parteAutora}
               </Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} text-left`}>
+              <Badge variant="outline" className={`${getParteReColorClass()} w-fit text-left whitespace-nowrap`}>
                 {parteRe}
               </Badge>
             </div>
-            <div className="text-xs text-muted-foreground">
+            <div className="text-xs text-muted-foreground max-w-full truncate">
               {orgaoJulgador}
             </div>
           </div>

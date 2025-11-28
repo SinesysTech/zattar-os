@@ -44,18 +44,27 @@ export interface FilterGroup {
 }
 
 /**
+ * Converte label para slug estável (usado como ID)
+ */
+const toSlug = (label: string) => label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')
+
+/**
  * Botão de filtro individual para um grupo de opções
+ * Usa ID estável baseado no label para evitar hydration mismatch
  */
 function FilterButton({
   group,
   selectedFilters,
   onFilterSelect,
+  index,
 }: {
   group: FilterGroup
   selectedFilters: string[]
   onFilterSelect: (value: string) => void
+  index: number
 }) {
   const [open, setOpen] = React.useState(false)
+  const stableId = `filter-${toSlug(group.label)}-${index}`
   
   // Conta quantas opções deste grupo estão selecionadas
   const selectedCount = group.options.filter(opt => 
@@ -64,7 +73,7 @@ function FilterButton({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild aria-controls={stableId}>
         <Button 
           variant="outline" 
           size="sm" 
@@ -86,6 +95,7 @@ function FilterButton({
         </Button>
       </PopoverTrigger>
       <PopoverContent 
+        id={stableId}
         className="p-1 w-auto min-w-[140px]" 
         align="start" 
         sideOffset={4}
@@ -220,12 +230,13 @@ export function TableToolbar({
       <ButtonGroupSeparator />
       
       {/* Modo: Botões individuais de filtro */}
-      {useFilterButtons && filterGroups!.map((group) => (
+      {useFilterButtons && filterGroups!.map((group, index) => (
         <FilterButton
           key={group.label}
           group={group}
           selectedFilters={selectedFilters}
           onFilterSelect={handleFilterSelect}
+          index={index}
         />
       ))}
 

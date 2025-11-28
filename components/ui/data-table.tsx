@@ -210,7 +210,7 @@ export function DataTable<TData>({
                         return (
                           <TableCell
                             key={cell.id}
-                            className={cn(alignClass, maxWidth && 'overflow-hidden', index < row.getVisibleCells().length - 1 && 'border-r border-border')}
+                            className={`${alignClass} overflow-hidden ${index < row.getVisibleCells().length - 1 ? 'border-r border-border' : ''}`}
                             style={maxWidth ? { maxWidth, width: maxWidth } : undefined}
                           >
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
