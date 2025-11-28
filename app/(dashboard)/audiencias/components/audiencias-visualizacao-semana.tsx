@@ -129,116 +129,100 @@ const getLogoPlataforma = (plataforma: PlataformaVideo): string | null => {
 };
 
 /**
- * Componente para exibir e editar endereço da audiência (URL virtual ou endereço físico)
+ * Extrai a chave do arquivo de uma URL do Backblaze
  */
-function EnderecoCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
+const extractKeyFromBackblazeUrl = (u: string | null): string | null => {
+  if (!u) return null;
+  try {
+    const urlObj = new URL(u);
+    const parts = urlObj.pathname.split('/').filter(Boolean);
+    if (parts.length < 2) return null;
+    return parts.slice(1).join('/');
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Componente para célula de hora com botão de ata
+ */
+function HoraCell({ audiencia }: { audiencia: Audiencia }) {
+  const [openAta, setOpenAta] = React.useState(false);
+  const fileKey = extractKeyFromBackblazeUrl(audiencia.url_ata_audiencia);
+  const canOpenAta = audiencia.status === 'F' && fileKey !== null;
+
+  return (
+    <div className="min-h-10 flex flex-col items-center justify-center text-sm font-medium gap-1">
+      {formatarHora(audiencia.data_inicio)}
+      {canOpenAta && (
+        <button
+          className="h-6 w-6 flex items-center justify-center rounded"
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenAta(true);
+          }}
+          title="Ver Ata de Audiência"
+        >
+          <FileText className="h-4 w-4 text-primary" />
+        </button>
+      )}
+      <PdfViewerDialog open={openAta} onOpenChange={setOpenAta} fileKey={fileKey} documentTitle={`Ata da audiência ${audiencia.numero_processo}`} />
+    </div>
+  );
+}
+
+/**
+ * Componente para célula de detalhes com dialogs de edição
+ */
+function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-
-  const handleCopyText = async (text: string) => {
-    if (!text) return;
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch (error) {
-      console.error('Erro ao copiar:', error);
-    }
-  };
-
+  const tipo = audiencia.tipo_descricao || '-';
+  const sala = audiencia.sala_audiencia_nome || '-';
   const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
   const logoPath = getLogoPlataforma(plataforma);
 
-  // Exibir endereço atual
-  const renderEnderecoAtual = () => {
-    if (audiencia.url_audiencia_virtual) {
-      return (
-        <div className="flex items-center gap-1">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => handleCopyText(audiencia.url_audiencia_virtual!)}
-            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-            title="Copiar Endereço"
-          >
-            <Copy className="h-3 w-3" />
-          </Button>
-          {logoPath ? (
-            <a
-              href={audiencia.url_audiencia_virtual}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Acessar audiência virtual via ${plataforma}`}
-              className="hover:opacity-70 transition-opacity flex items-center justify-center"
-            >
-              <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
-            </a>
+  return (
+    <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px]">
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="text-sm text-left">{tipo}</div>
+        <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs`}>
+          {formatarModalidade(audiencia.modalidade)}
+        </Badge>
+      </div>
+      <div className="text-xs text-muted-foreground truncate max-w-full text-left">{sala}</div>
+      <div className="relative group h-full w-full min-h-[60px] flex items-center justify-between p-2">
+        <div className="flex-1 flex items-center justify-start">
+          {audiencia.url_audiencia_virtual ? (
+            logoPath ? (
+              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
+              </a>
+            ) : (
+              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-[100px]">
+                {audiencia.url_audiencia_virtual}
+              </a>
+            )
+          ) : audiencia.endereco_presencial ? (
+            <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+              {[audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'}
+            </span>
           ) : (
-            <a
-              href={audiencia.url_audiencia_virtual}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Acessar audiência virtual"
-              className="text-xs text-blue-600 hover:underline truncate max-w-[100px]"
-            >
-              {audiencia.url_audiencia_virtual}
-            </a>
+            <span className="text-sm text-muted-foreground">-</span>
           )}
         </div>
-      );
-    } else if (audiencia.endereco_presencial) {
-      const enderecoStr = [
-        audiencia.endereco_presencial.logradouro,
-        audiencia.endereco_presencial.numero,
-        audiencia.endereco_presencial.complemento,
-        audiencia.endereco_presencial.bairro,
-        audiencia.endereco_presencial.cidade,
-        audiencia.endereco_presencial.estado,
-        audiencia.endereco_presencial.pais,
-        audiencia.endereco_presencial.cep
-      ].filter(Boolean).join(', ');
-
-      return (
-        <div className="flex items-center gap-1 w-full">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => handleCopyText(enderecoStr)}
-            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-            title="Copiar Endereço"
-          >
-            <Copy className="h-3 w-3" />
-          </Button>
-          <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
-            {enderecoStr || '-'}
-          </span>
-        </div>
-      );
-    } else {
-      return <span className="text-sm text-muted-foreground">-</span>;
-    }
-  };
-
-  return (
-    <>
-      <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
-        {renderEnderecoAtual()}
-        <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => setIsDialogOpen(true)}
-            className="h-5 w-5 p-0"
-            title="Editar Endereço"
-          >
+        <div className="absolute bottom-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          {audiencia.url_audiencia_virtual && (
+            <Button size="sm" variant="ghost" onClick={async () => { if (!audiencia.url_audiencia_virtual) return; try { await navigator.clipboard.writeText(audiencia.url_audiencia_virtual); } catch { /* ignore */ } }} className="h-5 w-5 p-0" title="Copiar URL">
+              <Copy className="h-3 w-3" />
+            </Button>
+          )}
+          <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-5 w-5 p-0" title="Editar Endereço">
             <Pencil className="h-3 w-3" />
           </Button>
         </div>
+        <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />
       </div>
-      <EditarEnderecoDialog
-        audiencia={audiencia}
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        onSuccess={onSuccess}
-      />
-    </>
+    </div>
   );
 }
 
@@ -379,41 +363,7 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
       ),
       size: 80,
       meta: { align: 'left' },
-      cell: ({ row }) => {
-        const audiencia = row.original as Audiencia;
-        const [openAta, setOpenAta] = React.useState(false);
-        const extractKeyFromBackblazeUrl = (u: string | null): string | null => {
-          if (!u) return null;
-          try {
-            const urlObj = new URL(u);
-            const parts = urlObj.pathname.split('/').filter(Boolean);
-            if (parts.length < 2) return null;
-            return parts.slice(1).join('/');
-          } catch {
-            return null;
-          }
-        };
-        const fileKey = extractKeyFromBackblazeUrl(audiencia.url_ata_audiencia);
-        const canOpenAta = audiencia.status === 'F' && fileKey !== null;
-        return (
-          <div className="min-h-10 flex flex-col items-center justify-center text-sm font-medium gap-1">
-            {formatarHora(row.getValue('data_inicio'))}
-            {canOpenAta && (
-              <button
-                className="h-6 w-6 flex items-center justify-center rounded"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setOpenAta(true);
-                }}
-                title="Ver Ata de Audiência"
-              >
-                <FileText className="h-4 w-4 text-primary" />
-              </button>
-            )}
-            <PdfViewerDialog open={openAta} onOpenChange={setOpenAta} fileKey={fileKey} documentTitle={`Ata da audiência ${audiencia.numero_processo}`} />
-          </div>
-        );
-      },
+      cell: ({ row }) => <HoraCell audiencia={row.original as Audiencia} />,
     },
     {
       id: 'processo',
@@ -468,73 +418,7 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
         </div>
       ),
       meta: { align: 'left' },
-      cell: ({ row }) => {
-        const audiencia = row.original;
-        const tipo = audiencia.tipo_descricao || '-';
-        const sala = audiencia.sala_audiencia_nome || '-';
-        const [openAta, setOpenAta] = React.useState(false);
-        const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-        const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
-        const logoPath = getLogoPlataforma(plataforma);
-        const extractKeyFromBackblazeUrl = (u: string | null): string | null => {
-          if (!u) return null;
-          try {
-            const urlObj = new URL(u);
-            const parts = urlObj.pathname.split('/').filter(Boolean);
-            if (parts.length < 2) return null;
-            return parts.slice(1).join('/');
-          } catch {
-            return null;
-          }
-        };
-        const fileKey = extractKeyFromBackblazeUrl(audiencia.url_ata_audiencia);
-        const canOpenAta = audiencia.status === 'F' && fileKey !== null;
-
-        return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px]">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <div className="text-sm text-left">{tipo}</div>
-              <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs`}>
-                {formatarModalidade(audiencia.modalidade)}
-              </Badge>
-            </div>
-            <div className="text-xs text-muted-foreground truncate max-w-full text-left">{sala}</div>
-            <div className="relative group h-full w-full min-h-[60px] flex items-center justify-between p-2">
-              <div className="flex-1 flex items-center justify-start">
-                {audiencia.url_audiencia_virtual ? (
-                  logoPath ? (
-                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label={`Acessar audiência virtual`} className="hover:opacity-70 transition-opacity flex items-center justify-center">
-                      <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
-                    </a>
-                  ) : (
-                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-[100px]">
-                      {audiencia.url_audiencia_virtual}
-                    </a>
-                  )
-                ) : audiencia.endereco_presencial ? (
-                  <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
-                    {[audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'}
-                  </span>
-                ) : (
-                  <span className="text-sm text-muted-foreground">-</span>
-                )}
-              </div>
-              <div className="absolute bottom-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                {audiencia.url_audiencia_virtual && (
-                  <Button size="sm" variant="ghost" onClick={async () => { if (!audiencia.url_audiencia_virtual) return; try { await navigator.clipboard.writeText(audiencia.url_audiencia_virtual); } catch {} }} className="h-5 w-5 p-0" title="Copiar URL">
-                    <Copy className="h-3 w-3" />
-                  </Button>
-                )}
-                <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-5 w-5 p-0" title="Editar Endereço">
-                  <Pencil className="h-3 w-3" />
-                </Button>
-                
-              </div>
-              <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />
-            </div>
-          </div>
-        );
-      },
+      cell: ({ row }) => <DetalhesCell audiencia={row.original} onSuccess={onSuccess} />,
     },
     {
       accessorKey: 'observacoes',

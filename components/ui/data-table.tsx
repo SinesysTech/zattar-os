@@ -207,10 +207,15 @@ export function DataTable<TData>({
                         const maxWidth = columnSize ? `${columnSize}px` : undefined;
                         const align = (cell.column.columnDef.meta as { align?: 'left' | 'center' | 'right' })?.align || 'center';
                         const alignClass = align === 'left' ? 'text-left' : align === 'right' ? 'text-right' : 'text-center';
+                        const hasBorder = index < row.getVisibleCells().length - 1;
                         return (
                           <TableCell
                             key={cell.id}
-                            className={`${alignClass} overflow-hidden ${index < row.getVisibleCells().length - 1 ? 'border-r border-border' : ''}`}
+                            className={cn(
+                              alignClass,
+                              maxWidth && 'overflow-hidden',
+                              hasBorder && 'border-r border-border'
+                            )}
                             style={maxWidth ? { maxWidth, width: maxWidth } : undefined}
                           >
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
