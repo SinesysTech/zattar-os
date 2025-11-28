@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Search, Filter, Plus, Check, Loader2, ChevronRight } from "lucide-react"
+import { Search, Filter, Plus, Check, Loader2, ChevronRight, ChevronDown } from "lucide-react"
 import { cn } from "@/app/_lib/utils/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -43,6 +43,83 @@ export interface FilterGroup {
   options: ComboboxOption[]
 }
 
+/**
+ * Botão de filtro individual para um grupo de opções
+ */
+function FilterButton({
+  group,
+  selectedFilters,
+  onFilterSelect,
+}: {
+  group: FilterGroup
+  selectedFilters: string[]
+  onFilterSelect: (value: string) => void
+}) {
+  const [open, setOpen] = React.useState(false)
+  
+  // Conta quantas opções deste grupo estão selecionadas
+  const selectedCount = group.options.filter(opt => 
+    selectedFilters.includes(opt.value)
+  ).length
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className={cn(
+            "h-9 gap-1.5 px-3 font-normal",
+            selectedCount > 0 && "bg-accent"
+          )}
+        >
+          <span>{group.label}</span>
+          {selectedCount > 0 && (
+            <Badge 
+              variant="secondary" 
+              className="h-5 min-w-5 px-1 text-xs flex items-center justify-center rounded-full"
+            >
+              {selectedCount}
+            </Badge>
+          )}
+          <ChevronDown className="h-3.5 w-3.5 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent 
+        className="p-1 w-auto min-w-[140px]" 
+        align="start" 
+        sideOffset={4}
+      >
+        <div className="max-h-[300px] overflow-auto">
+          {group.options.map((option) => {
+            const isSelected = selectedFilters.includes(option.value)
+            return (
+              <div
+                key={option.value}
+                className={cn(
+                  "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground transition-colors",
+                  isSelected && "bg-accent"
+                )}
+                onClick={() => onFilterSelect(option.value)}
+              >
+                <div
+                  className={cn(
+                    "flex h-4 w-4 items-center justify-center rounded-sm border mr-2 shrink-0 transition-colors",
+                    isSelected && "bg-primary border-primary"
+                  )}
+                >
+                  {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
+                </div>
+                <span className="whitespace-nowrap">{option.label}</span>
+              </div>
+            )
+          })}
+        </div>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
 interface TableToolbarProps {
   searchValue: string
   onSearchChange: (value: string) => void
@@ -56,7 +133,14 @@ interface TableToolbarProps {
   onNewClick?: () => void
   newButtonTooltip?: string
   className?: string
+  /** @deprecated Use filterButtonsMode="single" instead */
   showFilterButton?: boolean
+  /** 
+   * Modo de exibição dos filtros:
+   * - "single": Um único botão de filtro com dropdown (comportamento antigo)
+   * - "buttons": Botões individuais para cada grupo de filtros (novo comportamento)
+   */
+  filterButtonsMode?: "single" | "buttons"
 }
 
 export function TableToolbar({

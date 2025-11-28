@@ -10,6 +10,8 @@ import {
   Scale,
   Users,
   UserCog,
+  UserX,
+  UserCheck,
   Database,
 } from "lucide-react"
 
@@ -47,6 +49,12 @@ const navMain = [
     title: "Partes",
     url: "/partes",
     icon: Users,
+    items: [
+      { title: "Clientes", url: "/partes/clientes" },
+      { title: "Partes Contrárias", url: "/partes/partes-contrarias" },
+      { title: "Terceiros", url: "/partes/terceiros" },
+      { title: "Representantes", url: "/partes/representantes" },
+    ],
   },
   {
     title: "Contratos",
