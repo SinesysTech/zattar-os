@@ -12,6 +12,9 @@ WORKDIR /app
 # Copiar arquivos de dependências
 COPY package.json package-lock.json* ./
 
+# Atualizar npm para versão mais recente
+RUN npm install -g npm@latest
+
 # Instalar dependências (sem scripts para evitar problemas com binários nativos)
 RUN npm ci --ignore-scripts
 
