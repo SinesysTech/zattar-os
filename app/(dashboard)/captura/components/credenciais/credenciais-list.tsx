@@ -14,6 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Typography } from '@/components/ui/typography';
 import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
 import { criarColunasCredenciais } from './credenciais-columns';
 import { AdvogadoViewDialog } from './advogado-view-dialog';

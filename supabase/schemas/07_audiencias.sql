@@ -19,16 +19,21 @@ create table public.audiencias (
   sala_audiencia_id bigint,
   status text not null,
   status_descricao text,
-  tipo_id bigint,
-  tipo_descricao text,
-  tipo_codigo text,
-  tipo_is_virtual boolean default false,
+  tipo_audiencia_id bigint references public.tipo_audiencia(id) on delete set null,
+  classe_judicial_id bigint references public.classe_judicial(id) on delete set null,
   designada boolean not null default false,
   em_andamento boolean not null default false,
   documento_ativo boolean not null default false,
   polo_ativo_nome text,
+  polo_ativo_representa_varios boolean not null default false,
   polo_passivo_nome text,
+  polo_passivo_representa_varios boolean not null default false,
   url_audiencia_virtual text,
+  endereco_presencial jsonb,
+  ata_audiencia_id bigint,
+  url_ata_audiencia text,
+  segredo_justica boolean not null default false,
+  juizo_digital boolean not null default false,
   responsavel_id bigint references public.usuarios(id) on delete set null,
   observacoes text,
   dados_anteriores jsonb,
@@ -55,16 +60,21 @@ comment on column public.audiencias.sala_audiencia_nome is 'Nome da sala de audi
 comment on column public.audiencias.sala_audiencia_id is 'ID da sala de audiência no PJE';
 comment on column public.audiencias.status is 'Status da audiência (M=Marcada, R=Realizada, C=Cancelada)';
 comment on column public.audiencias.status_descricao is 'Descrição do status da audiência';
-comment on column public.audiencias.tipo_id is 'ID do tipo de audiência no PJE';
-comment on column public.audiencias.tipo_descricao is 'Descrição do tipo de audiência (ex: Una, Instrução)';
-comment on column public.audiencias.tipo_codigo is 'Código do tipo de audiência';
-comment on column public.audiencias.tipo_is_virtual is 'Indica se a audiência é virtual';
+comment on column public.audiencias.tipo_audiencia_id is 'FK para tipo_audiencia com descricao, codigo e is_virtual';
+comment on column public.audiencias.classe_judicial_id is 'FK para classe_judicial com descricao e sigla';
 comment on column public.audiencias.designada is 'Indica se a audiência está designada';
 comment on column public.audiencias.em_andamento is 'Indica se a audiência está em andamento';
 comment on column public.audiencias.documento_ativo is 'Indica se há documento ativo relacionado';
 comment on column public.audiencias.polo_ativo_nome is 'Nome da parte autora';
+comment on column public.audiencias.polo_ativo_representa_varios is 'Indica se o polo ativo representa múltiplas partes';
 comment on column public.audiencias.polo_passivo_nome is 'Nome da parte ré';
-comment on column public.audiencias.url_audiencia_virtual is 'URL para audiências virtuais (Zoom, Google Meet, etc)';
+comment on column public.audiencias.polo_passivo_representa_varios is 'Indica se o polo passivo representa múltiplas partes';
+comment on column public.audiencias.url_audiencia_virtual is 'URL para audiências virtuais (Zoom, Google Meet, etc). Quando preenchida, modalidade = virtual';
+comment on column public.audiencias.endereco_presencial is 'Endereço da audiência presencial em JSON (logradouro, numero, cidade, etc). Quando preenchido, modalidade = presencial';
+comment on column public.audiencias.ata_audiencia_id is 'ID do documento de ata da audiência no PJE';
+comment on column public.audiencias.url_ata_audiencia is 'URL para download da ata da audiência';
+comment on column public.audiencias.segredo_justica is 'Indica se o processo está em segredo de justiça';
+comment on column public.audiencias.juizo_digital is 'Indica se o processo está em juízo digital';
 comment on column public.audiencias.responsavel_id is 'Usuário responsável pela audiência. Pode ser atribuído, transferido ou desatribuído. Todas as alterações são registradas em logs_alteracao';
 comment on column public.audiencias.observacoes is 'Observações sobre a audiência';
 comment on column public.audiencias.dados_anteriores is 'Armazena o estado anterior do registro antes da última atualização. Null quando o registro foi inserido ou quando não houve mudanças na última captura.';

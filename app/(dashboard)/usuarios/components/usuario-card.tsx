@@ -6,6 +6,7 @@ import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Typography } from '@/components/ui/typography';
 import { Eye, Pencil, KeyRound } from 'lucide-react';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import {
@@ -35,9 +36,9 @@ export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: Usuar
             <CardTitle className="text-sm leading-tight truncate">
               {formatarNomeExibicao(usuario.nomeExibicao)}
             </CardTitle>
-            <p className="text-xs text-muted-foreground mt-0.5 truncate">
+            <Typography.Muted className="text-xs mt-0.5 truncate">
               {usuario.emailCorporativo}
-            </p>
+            </Typography.Muted>
           </div>
           {usuario.isSuperAdmin && (
             <Badge tone="danger" variant="soft" className="text-xs h-5 px-1.5 shrink-0">
@@ -49,21 +50,21 @@ export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: Usuar
 
       <CardContent className="flex-1 space-y-0.5 text-xs p-2.5 pt-0 pb-7">
         <div className="flex items-center gap-1.5">
-          <span className="text-muted-foreground">CPF:</span>
+          <Typography.Muted as="span">CPF:</Typography.Muted>
           <span className="font-medium">
             {formatarCpf(usuario.cpf)}
           </span>
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className="text-muted-foreground">Telefone:</span>
+          <Typography.Muted as="span">Telefone:</Typography.Muted>
           <span className="font-medium">
             {formatarTelefone(usuario.telefone)}
           </span>
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className="text-muted-foreground">Cargo:</span>
+          <Typography.Muted as="span">Cargo:</Typography.Muted>
           <span className="font-medium truncate" title={usuario.cargo?.nome || '-'}>
             {usuario.cargo?.nome || '-'}
           </span>
@@ -71,7 +72,7 @@ export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: Usuar
 
         {deveExibirOab && (
           <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground">OAB:</span>
+            <Typography.Muted as="span">OAB:</Typography.Muted>
             <span className="font-medium">
               {formatarOab(usuario.oab, usuario.ufOab)}
             </span>

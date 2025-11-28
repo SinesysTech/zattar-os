@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { Typography } from '@/components/ui/typography';
 
 interface UsuariosPaginationProps {
   pageIndex: number;
@@ -37,10 +38,10 @@ export function UsuariosPagination({
   return (
     <div className="flex items-center justify-between px-2 py-4">
       <div className="flex items-center gap-2">
-        <p className="text-sm text-muted-foreground">
+        <Typography.Muted>
           Mostrando {pageIndex * pageSize + 1} a{' '}
           {Math.min((pageIndex + 1) * pageSize, total)} de {total} resultados
-        </p>
+        </Typography.Muted>
         <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
           <SelectTrigger className="h-8 w-[70px]">
             <SelectValue />
@@ -72,9 +73,9 @@ export function UsuariosPagination({
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <div className="text-sm text-muted-foreground">
+        <Typography.Muted>
           Página {pageIndex + 1} de {totalPages || 1}
-        </div>
+        </Typography.Muted>
         <Button
           variant="outline"
           size="sm"

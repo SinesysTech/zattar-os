@@ -90,13 +90,15 @@ export async function listarAudiencias(
   const offset = (pagina - 1) * limite;
 
   // Selecionar todos os campos da tabela audiencias e fazer JOIN com tabelas relacionadas
-  // NOTA: tipo_descricao vem de dados_anteriores JSONB, sala_audiencia_nome já está desnormalizado
+  // tipo_descricao e tipo_is_virtual vêm do JOIN com tipo_audiencia
+  // modalidade já é calculada automaticamente pelo trigger no banco
   let query = supabase
     .from('audiencias')
     .select(`
       *,
       orgao_julgador!orgao_julgador_id(descricao),
-      classe_judicial!classe_judicial_id(descricao, sigla)
+      classe_judicial!classe_judicial_id(descricao, sigla),
+      tipo_audiencia!tipo_audiencia_id(descricao, is_virtual, codigo)
     `, { count: 'exact' });
 
   // Filtros básicos (campos da tabela audiencias não precisam de prefixo)
@@ -144,16 +146,17 @@ export async function listarAudiencias(
     query = query.eq('status', params.status);
   }
 
+  // Filtros de tipo_audiencia (via tabela relacionada)
   if (params.tipo_descricao) {
-    query = query.ilike('tipo_descricao', `%${params.tipo_descricao}%`);
+    query = query.ilike('tipo_audiencia.descricao', `%${params.tipo_descricao}%`);
   }
 
   if (params.tipo_codigo) {
-    query = query.eq('tipo_codigo', params.tipo_codigo);
+    query = query.eq('tipo_audiencia.codigo', params.tipo_codigo);
   }
 
   if (params.tipo_is_virtual !== undefined) {
-    query = query.eq('tipo_is_virtual', params.tipo_is_virtual);
+    query = query.eq('tipo_audiencia.is_virtual', params.tipo_is_virtual);
   }
 
   // Filtro de modalidade (virtual, presencial, híbrida)
@@ -194,24 +197,26 @@ export async function listarAudiencias(
 
   // Converter dados para formato de retorno
   const audiencias = (data || []).map((row: Record<string, unknown>) => {
-    // Extrair dados do JOIN
+    // Extrair dados dos JOINs
     const orgaoJulgador = row.orgao_julgador as Record<string, unknown> | null;
     const classeJudicial = row.classe_judicial as Record<string, unknown> | null;
+    const tipoAudiencia = row.tipo_audiencia as Record<string, unknown> | null;
 
-    // Extrair tipo_descricao e tipo_is_virtual do campo dados_anteriores JSONB
-    const dadosAnteriores = row.dados_anteriores as Record<string, unknown> | null;
-    const tipoDescricao = dadosAnteriores?.tipo_descricao as string | null;
-    const tipoIsVirtualAnterior = dadosAnteriores?.tipo_is_virtual as boolean | undefined;
-    const virtualStatusRow = (row.virtual_status as boolean | undefined) ?? undefined;
+    // tipo_descricao, tipo_is_virtual e tipo_codigo vêm do JOIN com tipo_audiencia
+    const tipoDescricao = tipoAudiencia?.descricao as string | null;
+    const tipoIsVirtual = tipoAudiencia?.is_virtual as boolean | null;
+    const tipoCodigo = tipoAudiencia?.codigo as string | null;
 
-    // Adicionar campos do JOIN e dados extraídos ao objeto
+    // Adicionar campos do JOIN ao objeto
+    // modalidade já vem calculado automaticamente pelo trigger no banco
     const rowWithJoins = {
       ...row,
       orgao_julgador_descricao: orgaoJulgador?.descricao ?? null,
       classe_judicial: classeJudicial?.descricao ?? null,
-      tipo_descricao: tipoDescricao ?? null,
-      tipo_is_virtual: (virtualStatusRow !== undefined ? virtualStatusRow : ((tipoIsVirtualAnterior ?? false) || ((tipoDescricao ?? '').toLowerCase().includes('videoconferência')) || ((row.url_audiencia_virtual as string | null) !== null))) ? true : false,
-      // sala_audiencia_nome já vem diretamente da tabela audiencias
+      tipo_descricao: tipoDescricao,
+      tipo_is_virtual: tipoIsVirtual ?? false,
+      tipo_codigo: tipoCodigo,
+      // sala_audiencia_nome e modalidade já vêm diretamente da tabela audiencias
     };
 
     return converterParaAudiencia(rowWithJoins);

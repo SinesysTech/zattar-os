@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Copy, Pencil, Plus, FileText } from 'lucide-react';
 import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
+import { Typography } from '@/components/ui/typography';
 import type { Audiencia, ModalidadeAudiencia } from '@/backend/types/audiencias/types';
 
 /**
@@ -182,7 +183,7 @@ function UrlVirtualDialogSection({ audiencia, onSuccess }: { audiencia: Audienci
   if (isEditing) {
     return (
       <div>
-        <div className="text-sm text-muted-foreground mb-2">URL da Audiência Virtual</div>
+        <Typography.Muted className="mb-2">URL da Audiência Virtual</Typography.Muted>
         <div className="flex items-center gap-2">
           <Input
             value={url}
@@ -221,7 +222,7 @@ function UrlVirtualDialogSection({ audiencia, onSuccess }: { audiencia: Audienci
   if (!audiencia.url_audiencia_virtual) {
     return (
       <div>
-        <div className="text-sm text-muted-foreground mb-2">URL da Audiência Virtual</div>
+        <Typography.Muted className="mb-2">URL da Audiência Virtual</Typography.Muted>
         <Button
           size="sm"
           variant="outline"
@@ -237,7 +238,7 @@ function UrlVirtualDialogSection({ audiencia, onSuccess }: { audiencia: Audienci
 
   return (
     <div>
-      <div className="text-sm text-muted-foreground mb-2">URL da Audiência Virtual</div>
+      <Typography.Muted className="mb-2">URL da Audiência Virtual</Typography.Muted>
       <div className="flex items-center gap-2">
         {logoPath ? (
           <a
@@ -313,7 +314,7 @@ function AtaAudienciaDialogSection({ audiencia }: { audiencia: Audiencia }) {
 
   return (
     <div className="pt-3 border-t">
-      <div className="text-sm text-muted-foreground mb-2">Ata de Audiência</div>
+      <Typography.Muted className="mb-2">Ata de Audiência</Typography.Muted>
       <div className="flex items-center gap-2">
         <button
           className="h-8 w-8 flex items-center justify-center rounded"
@@ -448,20 +449,20 @@ export function AudienciaDetalhesDialog({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-sm text-muted-foreground">Status</div>
+                  <Typography.Muted>Status</Typography.Muted>
                   <Badge {...getStatusBadgeStyle(audienciaUnica.status)} className="mt-1">
                     {formatarStatus(audienciaUnica.status)}
                   </Badge>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm text-muted-foreground">Horário</div>
+                  <Typography.Muted>Horário</Typography.Muted>
                   <div className="font-semibold text-lg">{formatarHora(audienciaUnica.data_inicio)}</div>
                 </div>
               </div>
 
               <div className="border-t pt-4 space-y-3">
                 <div>
-                  <div className="text-sm text-muted-foreground">Número do Processo</div>
+                  <Typography.Muted>Número do Processo</Typography.Muted>
                   <div className="font-medium">
                     {audienciaUnica.classe_judicial && `${audienciaUnica.classe_judicial} `}
                     {audienciaUnica.numero_processo}
@@ -470,40 +471,40 @@ export function AudienciaDetalhesDialog({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-sm text-muted-foreground">Tribunal</div>
+                    <Typography.Muted>Tribunal</Typography.Muted>
                     <Badge variant="outline" className="mt-1">{audienciaUnica.trt}</Badge>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">Grau</div>
+                    <Typography.Muted>Grau</Typography.Muted>
                     <Badge variant="outline" className="mt-1">{formatarGrau(audienciaUnica.grau)}</Badge>
                   </div>
                 </div>
 
                 <div>
-                  <div className="text-sm text-muted-foreground">Órgão Julgador</div>
+                  <Typography.Muted>Órgão Julgador</Typography.Muted>
                   <div>{audienciaUnica.orgao_julgador_descricao || '-'}</div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-sm text-muted-foreground">Parte Autora</div>
+                    <Typography.Muted>Parte Autora</Typography.Muted>
                     <div className="font-medium">{audienciaUnica.polo_ativo_nome || '-'}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">Parte Ré</div>
+                    <Typography.Muted>Parte Ré</Typography.Muted>
                     <div className="font-medium">{audienciaUnica.polo_passivo_nome || '-'}</div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-sm text-muted-foreground">Tipo de Audiência</div>
+                    <Typography.Muted>Tipo de Audiência</Typography.Muted>
                     <div className="flex items-center gap-2 mt-1">
                       {audienciaUnica.tipo_descricao || '-'}
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">Modalidade</div>
+                    <Typography.Muted>Modalidade</Typography.Muted>
                     <div className="mt-1">
                       <Badge {...getModalidadeBadgeStyle(audienciaUnica.modalidade)}>
                         {formatarModalidade(audienciaUnica.modalidade)}
@@ -513,7 +514,7 @@ export function AudienciaDetalhesDialog({
                 </div>
 
                 <div>
-                  <div className="text-sm text-muted-foreground">Sala de Audiência</div>
+                  <Typography.Muted>Sala de Audiência</Typography.Muted>
                   <div className="mt-1">{audienciaUnica.sala_audiencia_nome || '-'}</div>
                 </div>
 
@@ -524,11 +525,11 @@ export function AudienciaDetalhesDialog({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-sm text-muted-foreground">Data/Hora Início</div>
+                    <Typography.Muted>Data/Hora Início</Typography.Muted>
                     <div>{formatarDataHora(audienciaUnica.data_inicio)}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">Data/Hora Fim</div>
+                    <Typography.Muted>Data/Hora Fim</Typography.Muted>
                     <div>{formatarDataHora(audienciaUnica.data_fim)}</div>
                   </div>
                 </div>

@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Typography } from '@/components/ui/typography';
 import { Loader2 } from 'lucide-react';
 import type {
   Usuario,
@@ -137,7 +138,7 @@ export function PerfilEditSheet({
 
             {/* Informações Básicas */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Informações Básicas</h3>
+              <Typography.H4>Informações Básicas</Typography.H4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="nomeCompleto">Nome Completo *</Label>
@@ -225,9 +226,9 @@ export function PerfilEditSheet({
 
             {/* Informações Profissionais */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">
+              <Typography.H4>
                 Informações Profissionais
-              </h3>
+              </Typography.H4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="oab">Número da OAB</Label>
@@ -260,7 +261,7 @@ export function PerfilEditSheet({
 
             {/* Contato */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Contato</h3>
+              <Typography.H4>Contato</Typography.H4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="emailCorporativo">E-mail Corporativo *</Label>
@@ -317,7 +318,7 @@ export function PerfilEditSheet({
 
             {/* Endereço */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Endereço</h3>
+              <Typography.H4>Endereço</Typography.H4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <Label htmlFor="logradouro">Logradouro</Label>

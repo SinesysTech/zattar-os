@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Typography } from '@/components/ui/typography';
 import {
   formatarAreaDireito,
   formatarTipoContrato,
@@ -55,34 +56,34 @@ export function ContratoViewSheet({
         <div className="mt-6 space-y-6">
           {/* Informações Básicas */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Informações Básicas</h3>
+            <Typography.H4>Informações Básicas</Typography.H4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Área de Direito
-                </div>
+                </Typography.Muted>
                 <Badge variant="outline">
                   {formatarAreaDireito(contrato.areaDireito)}
                 </Badge>
               </div>
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Tipo de Contrato
-                </div>
+                </Typography.Muted>
                   <Badge {...getTipoContratoBadgeStyle(contrato.tipoContrato)}>
                     {formatarTipoContrato(contrato.tipoContrato)}
                   </Badge>
               </div>
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Tipo de Cobrança
-                </div>
+                </Typography.Muted>
                 <div className="text-base">{formatarTipoCobranca(contrato.tipoCobranca)}</div>
               </div>
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Status
-                </div>
+                </Typography.Muted>
                   <Badge {...getStatusBadgeStyle(contrato.status)}>
                     {formatarStatusContrato(contrato.status)}
                   </Badge>
@@ -94,27 +95,27 @@ export function ContratoViewSheet({
 
           {/* Partes */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Partes</h3>
+            <Typography.H4>Partes</Typography.H4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Cliente (ID)
-                </div>
+                </Typography.Muted>
                 <div className="text-base">{contrato.clienteId}</div>
               </div>
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Polo do Cliente
-                </div>
+                </Typography.Muted>
                 <Badge variant="outline">
                   {formatarPoloProcessual(contrato.poloCliente)}
                 </Badge>
               </div>
               {contrato.parteContrariaId && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     Parte Contrária (ID)
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{contrato.parteContrariaId}</div>
                 </div>
               )}
@@ -122,9 +123,9 @@ export function ContratoViewSheet({
 
             {contrato.parteAutora && contrato.parteAutora.length > 0 && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-2">
+                <Typography.Muted className="font-medium mb-2">
                   Parte Autora ({contrato.qtdeParteAutora})
-                </div>
+                </Typography.Muted>
                 <div className="space-y-2">
                   {contrato.parteAutora.map((parte, index) => (
                     <div key={index} className="text-sm border rounded p-2">
@@ -140,9 +141,9 @@ export function ContratoViewSheet({
 
             {contrato.parteRe && contrato.parteRe.length > 0 && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-2">
+                <Typography.Muted className="font-medium mb-2">
                   Parte Ré ({contrato.qtdeParteRe})
-                </div>
+                </Typography.Muted>
                 <div className="space-y-2">
                   {contrato.parteRe.map((parte, index) => (
                     <div key={index} className="text-sm border rounded p-2">
@@ -161,35 +162,35 @@ export function ContratoViewSheet({
 
           {/* Datas */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Datas</h3>
+            <Typography.H4>Datas</Typography.H4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Data de Contratação
-                </div>
+                </Typography.Muted>
                 <div className="text-base">{formatarData(contrato.dataContratacao)}</div>
               </div>
               {contrato.dataAssinatura && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     Data de Assinatura
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{formatarData(contrato.dataAssinatura)}</div>
                 </div>
               )}
               {contrato.dataDistribuicao && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     Data de Distribuição
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{formatarData(contrato.dataDistribuicao)}</div>
                 </div>
               )}
               {contrato.dataDesistencia && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     Data de Desistência
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{formatarData(contrato.dataDesistencia)}</div>
                 </div>
               )}
@@ -200,21 +201,21 @@ export function ContratoViewSheet({
 
           {/* Informações Adicionais */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Informações Adicionais</h3>
+            <Typography.H4>Informações Adicionais</Typography.H4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {contrato.responsavelId && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     Responsável (ID)
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{contrato.responsavelId}</div>
                 </div>
               )}
               {contrato.createdBy && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     Criado por (ID)
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{contrato.createdBy}</div>
                 </div>
               )}
@@ -222,9 +223,9 @@ export function ContratoViewSheet({
 
             {contrato.observacoes && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Observações
-                </div>
+                </Typography.Muted>
                 <div className="text-base whitespace-pre-wrap border rounded p-3 bg-muted/50">
                   {contrato.observacoes}
                 </div>
@@ -236,18 +237,18 @@ export function ContratoViewSheet({
 
           {/* Metadados */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Metadados</h3>
+            <Typography.H4>Metadados</Typography.H4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Criado em
-                </div>
+                </Typography.Muted>
                 <div className="text-base">{formatarData(contrato.createdAt)}</div>
               </div>
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Atualizado em
-                </div>
+                </Typography.Muted>
                 <div className="text-base">{formatarData(contrato.updatedAt)}</div>
               </div>
             </div>

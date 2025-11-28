@@ -341,9 +341,19 @@ export async function salvarAudiencias(
           numeroProcesso
         );
       } else {
-        // Comparar antes de atualizar
+        // Preservar campos que não devem ser sobrescritos se a captura vier vazia
+        // Se o registro existente tem URL/endereço preenchido e a captura não traz, manter o existente
+        const dadosParaAtualizar = { ...dadosNovos };
+
+        // Preservar url_audiencia_virtual se existente tem valor e captura não
+        const urlExistente = registroExistente.url_audiencia_virtual as string | null;
+        if (urlExistente && !dadosNovos.url_audiencia_virtual) {
+          dadosParaAtualizar.url_audiencia_virtual = urlExistente;
+        }
+
+        // Comparar antes de atualizar (usando dados já com preservação)
         const comparacao = compararObjetos(
-          dadosNovos,
+          dadosParaAtualizar,
           registroExistente as Record<string, unknown>
         );
 
@@ -364,7 +374,7 @@ export async function salvarAudiencias(
           const { error } = await supabase
             .from('audiencias')
             .update({
-              ...dadosNovos,
+              ...dadosParaAtualizar,
               dados_anteriores: dadosAnteriores,
             })
             .eq('id_pje', audiencia.id)

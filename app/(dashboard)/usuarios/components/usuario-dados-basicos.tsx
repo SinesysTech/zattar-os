@@ -5,6 +5,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Typography } from '@/components/ui/typography';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import {
   formatarCpf,
@@ -43,22 +44,22 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
       <CardContent className="space-y-6">
         {/* SEÇÃO 1: IDENTIFICAÇÃO */}
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          <Typography.Small className="text-muted-foreground uppercase tracking-wide">
             Identificação
-          </h3>
+          </Typography.Small>
 
           {/* Linha 1: Nome Completo | Nome de Exibição */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <div className="text-sm font-medium text-muted-foreground mb-1">
+              <Typography.Muted className="font-medium mb-1">
                 Nome Completo
-              </div>
+              </Typography.Muted>
               <div className="text-base">{usuario.nomeCompleto}</div>
             </div>
             <div>
-              <div className="text-sm font-medium text-muted-foreground mb-1">
+              <Typography.Muted className="font-medium mb-1">
                 Nome de Exibição
-              </div>
+              </Typography.Muted>
               <div className="text-base">
                 {formatarNomeExibicao(usuario.nomeExibicao)}
               </div>
@@ -69,10 +70,10 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {usuario.dataNascimento && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+                <Typography.Muted className="font-medium mb-1 flex items-center gap-1.5">
                   <Calendar className="h-4 w-4" />
                   Nascimento
-                </div>
+                </Typography.Muted>
                 <div className="text-base">
                   {new Date(usuario.dataNascimento).toLocaleDateString('pt-BR')}
                 </div>
@@ -81,10 +82,10 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
 
             {usuario.genero && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+                <Typography.Muted className="font-medium mb-1 flex items-center gap-1.5">
                   <UserCircle className="h-4 w-4" />
                   Gênero
-                </div>
+                </Typography.Muted>
                 <div className="text-base capitalize">
                   {usuario.genero.replace('_', ' ')}
                 </div>
@@ -92,19 +93,19 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
             )}
 
             <div>
-              <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+              <Typography.Muted className="font-medium mb-1 flex items-center gap-1.5">
                 <FileText className="h-4 w-4" />
                 CPF
-              </div>
+              </Typography.Muted>
               <div className="text-base">{formatarCpf(usuario.cpf)}</div>
             </div>
 
             {usuario.rg && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+                <Typography.Muted className="font-medium mb-1 flex items-center gap-1.5">
                   <FileText className="h-4 w-4" />
                   RG
-                </div>
+                </Typography.Muted>
                 <div className="text-base">{usuario.rg}</div>
               </div>
             )}
@@ -115,29 +116,29 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
 
         {/* SEÇÃO 2: CONTATO */}
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          <Typography.Small className="text-muted-foreground uppercase tracking-wide">
             Contato
-          </h3>
+          </Typography.Small>
 
           {/* Linha 1: Telefone | Ramal */}
           {(usuario.telefone || usuario.ramal) && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {usuario.telefone && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+                  <Typography.Muted className="font-medium mb-1 flex items-center gap-1.5">
                     <Phone className="h-4 w-4" />
                     Telefone
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{formatarTelefone(usuario.telefone)}</div>
                 </div>
               )}
 
               {usuario.ramal && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+                  <Typography.Muted className="font-medium mb-1 flex items-center gap-1.5">
                     <Phone className="h-4 w-4" />
                     Ramal
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{usuario.ramal}</div>
                 </div>
               )}
@@ -147,19 +148,19 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
           {/* Linha 2: Email Corporativo | Email Pessoal */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+              <Typography.Muted className="font-medium mb-1 flex items-center gap-1.5">
                 <Mail className="h-4 w-4" />
                 E-mail Corporativo
-              </div>
+              </Typography.Muted>
               <div className="text-base">{usuario.emailCorporativo}</div>
             </div>
 
             {usuario.emailPessoal && (
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+                <Typography.Muted className="font-medium mb-1 flex items-center gap-1.5">
                   <Mail className="h-4 w-4" />
                   E-mail Pessoal
-                </div>
+                </Typography.Muted>
                 <div className="text-base">{usuario.emailPessoal}</div>
               </div>
             )}
@@ -170,33 +171,33 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
 
         {/* SEÇÃO 3: INFORMAÇÕES PROFISSIONAIS */}
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          <Typography.Small className="text-muted-foreground uppercase tracking-wide">
             Informações Profissionais
-          </h3>
+          </Typography.Small>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {usuario.oab && (
               <>
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     OAB
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{usuario.oab}</div>
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     UF OAB
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{usuario.ufOab}</div>
                 </div>
               </>
             )}
 
             <div className={usuario.oab ? '' : 'md:col-span-3'}>
-              <div className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1.5">
+              <Typography.Muted className="font-medium mb-1 flex items-center gap-1.5">
                 <Briefcase className="h-4 w-4" />
                 Cargo
-              </div>
+              </Typography.Muted>
               {usuario.cargo ? (
                 <div>
                   <div className="text-base font-medium">{usuario.cargo.nome}</div>
@@ -220,71 +221,71 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
           <>
             <Separator />
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
+              <Typography.Small className="text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
                 <MapPin className="h-4 w-4" />
                 Endereço
-              </h3>
+              </Typography.Small>
 
               <div className="grid grid-cols-2 md:grid-cols-7 gap-3">
                 {usuario.endereco.cep && (
                   <div>
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                    <Typography.Muted className="font-medium mb-1">
                       CEP
-                    </div>
+                    </Typography.Muted>
                     <div className="text-base">{usuario.endereco.cep}</div>
                   </div>
                 )}
 
                 {usuario.endereco.logradouro && (
                   <div className="md:col-span-2">
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                    <Typography.Muted className="font-medium mb-1">
                       Logradouro
-                    </div>
+                    </Typography.Muted>
                     <div className="text-base">{usuario.endereco.logradouro}</div>
                   </div>
                 )}
 
                 {usuario.endereco.numero && (
                   <div>
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                    <Typography.Muted className="font-medium mb-1">
                       Número
-                    </div>
+                    </Typography.Muted>
                     <div className="text-base">{usuario.endereco.numero}</div>
                   </div>
                 )}
 
                 {usuario.endereco.complemento && (
                   <div className="md:col-span-2">
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                    <Typography.Muted className="font-medium mb-1">
                       Complemento
-                    </div>
+                    </Typography.Muted>
                     <div className="text-base">{usuario.endereco.complemento}</div>
                   </div>
                 )}
 
                 {usuario.endereco.bairro && (
                   <div>
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                    <Typography.Muted className="font-medium mb-1">
                       Bairro
-                    </div>
+                    </Typography.Muted>
                     <div className="text-base">{usuario.endereco.bairro}</div>
                   </div>
                 )}
 
                 {usuario.endereco.cidade && (
                   <div className="md:col-span-2">
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                    <Typography.Muted className="font-medium mb-1">
                       Cidade
-                    </div>
+                    </Typography.Muted>
                     <div className="text-base">{usuario.endereco.cidade}</div>
                   </div>
                 )}
 
                 {usuario.endereco.estado && (
                   <div>
-                    <div className="text-sm font-medium text-muted-foreground mb-1">
+                    <Typography.Muted className="font-medium mb-1">
                       UF
-                    </div>
+                    </Typography.Muted>
                     <div className="text-base">{usuario.endereco.estado}</div>
                   </div>
                 )}

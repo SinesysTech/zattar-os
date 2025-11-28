@@ -27,6 +27,7 @@ import { toast } from 'sonner';
 import type { Usuario, Endereco } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import { useCargosAtivos } from '@/app/_lib/hooks/use-cargos';
 import { buscarEnderecoPorCep, limparCep, formatarCep } from '@/app/_lib/utils/viacep';
+import { Typography } from '@/components/ui/typography';
 
 interface UsuarioEditDialogProps {
   open: boolean;
@@ -436,7 +437,7 @@ export function UsuarioEditDialog({
 
             {/* Endereço */}
             <div className="border-t pt-4 mt-2">
-              <h3 className="font-medium mb-3">Endereço</h3>
+              <Typography.Small className="font-medium mb-3 block">Endereço</Typography.Small>
 
               <div className="grid gap-4">
                 {/* CEP */}
@@ -576,7 +577,7 @@ export function UsuarioEditDialog({
 
             {/* Status do Usuário */}
             <div className="border-t pt-4 mt-2">
-              <h3 className="font-medium mb-3">Status do Usuário</h3>
+              <Typography.Small className="font-medium mb-3 block">Status do Usuário</Typography.Small>
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <Checkbox

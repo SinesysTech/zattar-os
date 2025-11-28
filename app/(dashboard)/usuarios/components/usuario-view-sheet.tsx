@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Typography } from '@/components/ui/typography';
 import {
   formatarCpf,
   formatarTelefone,
@@ -54,41 +55,41 @@ export function UsuarioViewSheet({
         <div className="space-y-6">
           {/* Informações Básicas */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Informações Básicas</h3>
+            <Typography.H4>Informações Básicas</Typography.H4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Nome Completo
-                </div>
+                </Typography.Muted>
                 <div className="text-base">{usuario.nomeCompleto}</div>
               </div>
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Nome de Exibição
-                </div>
+                </Typography.Muted>
                 <div className="text-base">{usuario.nomeExibicao}</div>
               </div>
               {usuario.cpf && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     CPF
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{formatarCpf(usuario.cpf)}</div>
                 </div>
               )}
               {usuario.rg && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     RG
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{usuario.rg}</div>
                 </div>
               )}
               {usuario.dataNascimento && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     Data de Nascimento
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">
                     {formatarData(usuario.dataNascimento)}
                   </div>
@@ -96,9 +97,9 @@ export function UsuarioViewSheet({
               )}
               {usuario.genero && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     Gênero
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">
                     {formatarGenero(usuario.genero)}
                   </div>
@@ -113,13 +114,13 @@ export function UsuarioViewSheet({
           {(usuario.oab || usuario.ufOab) && (
             <>
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Informações Profissionais</h3>
+                <Typography.H4>Informações Profissionais</Typography.H4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {usuario.oab && (
                     <div>
-                      <div className="text-sm font-medium text-muted-foreground mb-1">
+                      <Typography.Muted className="font-medium mb-1">
                         OAB
-                      </div>
+                      </Typography.Muted>
                       <div className="text-base">
                         {formatarOab(usuario.oab, usuario.ufOab)}
                       </div>
@@ -133,29 +134,29 @@ export function UsuarioViewSheet({
 
           {/* Contato */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Contato</h3>
+            <Typography.H4>Contato</Typography.H4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {usuario.emailCorporativo && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     E-mail Corporativo
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{usuario.emailCorporativo}</div>
                 </div>
               )}
               {usuario.emailPessoal && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     E-mail Pessoal
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">{usuario.emailPessoal}</div>
                 </div>
               )}
               {usuario.telefone && (
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground mb-1">
+                  <Typography.Muted className="font-medium mb-1">
                     Telefone
-                  </div>
+                  </Typography.Muted>
                   <div className="text-base">
                     {formatarTelefone(usuario.telefone)}
                     {usuario.ramal && ` (Ramal: ${usuario.ramal})`}
@@ -170,7 +171,7 @@ export function UsuarioViewSheet({
             <>
               <Separator />
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Endereço</h3>
+                <Typography.H4>Endereço</Typography.H4>
                 <div>
                   <div className="text-base">
                     {formatarEnderecoCompleto(usuario.endereco)}
@@ -183,20 +184,20 @@ export function UsuarioViewSheet({
           {/* Informações do Sistema */}
           <Separator />
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Informações do Sistema</h3>
+            <Typography.H4>Informações do Sistema</Typography.H4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Data de Criação
-                </div>
+                </Typography.Muted>
                 <div className="text-base">
                   {formatarData(usuario.createdAt)}
                 </div>
               </div>
               <div>
-                <div className="text-sm font-medium text-muted-foreground mb-1">
+                <Typography.Muted className="font-medium mb-1">
                   Última Atualização
-                </div>
+                </Typography.Muted>
                 <div className="text-base">
                   {formatarData(usuario.updatedAt)}
                 </div>
