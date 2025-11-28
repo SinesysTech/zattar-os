@@ -265,6 +265,7 @@ export default function HistoricoCapturasPage() {
           filterGroups={filterGroups}
           selectedFilters={selectedFilterIds}
           onFiltersChange={handleFilterIdsChange}
+          filterButtonsMode="buttons"
         />
       </div>
 
