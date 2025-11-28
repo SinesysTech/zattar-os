@@ -68,11 +68,23 @@ const navMain = [
     title: "Audiências",
     url: "/audiencias",
     icon: Calendar,
+    items: [
+      { title: "Semana", url: "/audiencias/semana" },
+      { title: "Mês", url: "/audiencias/mes" },
+      { title: "Ano", url: "/audiencias/ano" },
+      { title: "Lista", url: "/audiencias/lista" },
+    ],
   },
   {
     title: "Expedientes",
     url: "/expedientes",
     icon: FolderOpen,
+    items: [
+      { title: "Semana", url: "/expedientes/semana" },
+      { title: "Mês", url: "/expedientes/mes" },
+      { title: "Ano", url: "/expedientes/ano" },
+      { title: "Lista", url: "/expedientes/lista" },
+    ],
   },
   {
     title: "Obrigações",
