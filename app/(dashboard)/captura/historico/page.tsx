@@ -226,7 +226,7 @@ export default function HistoricoCapturasPage() {
   );
 
   // Buscar histórico de capturas
-  const { capturas, paginacao, isLoading, error, refetch } = useCapturasLog(params);
+  const { capturas, paginacao, isLoading, error } = useCapturasLog(params);
 
   const colunas = React.useMemo(() => criarColunas(), []);
 
@@ -244,13 +244,6 @@ export default function HistoricoCapturasPage() {
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold">Histórico de Capturas</h1>
-        <p className="text-sm text-muted-foreground">
-          Visualize todas as capturas realizadas no sistema
-        </p>
-      </div>
-
       {/* Barra de busca e filtros */}
       <div className="flex items-center gap-4">
         <TableToolbar

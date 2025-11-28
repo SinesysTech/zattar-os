@@ -9,6 +9,9 @@
 FROM node:20-slim AS deps
 WORKDIR /app
 
+# Impedir download de browsers do Playwright (browser está em container separado)
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+
 # Copiar arquivos de dependências
 COPY package.json package-lock.json* ./
 
