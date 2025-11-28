@@ -1,115 +1,109 @@
-version: "3.7"
+# Docker Compose para Desenvolvimento Local e Referência
+# 
+# Para CapRover: Use os arquivos captain-definition de cada serviço
+# Para Docker Swarm com Traefik: Use docker-compose.swarm.yml
+#
+# Uso: docker-compose up -d
 
-# Definição dos Serviços
+version: "3.8"
+
 services:
-  # Definição do Serviço do Sinesys
-  zattar_advogados:
-    # imagem do docker (deve ser buildada antes ou estar em um registry)
-    image: zattar_advogados:latest
-    # Define o hostname do container
-    hostname: "{{.Service.Name}}.{{.Task.Slot}}"
-    # configura a rede do serviço
-    networks:
-      - network_swarm_public
-    # configura as variáveis de ambiente
+  # ==========================================================================
+  # SERVIÇO 1: Sinesys App (Next.js)
+  # ==========================================================================
+  sinesys_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+        - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
+    image: sinesys_app:latest
+    container_name: sinesys_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
     environment:
-      # Variáveis do Supabase (obrigatórias)
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      
+      # Supabase
       - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
       - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
       - SUPABASE_SECRET_KEY=${SUPABASE_SECRET_KEY}
       
-      # Configurações do Next.js
-      - NODE_ENV=production
-      - NEXT_TELEMETRY_DISABLED=1
+      # Browser Service (conexão interna)
+      - BROWSER_WS_ENDPOINT=ws://sinesys_browser:3000
+      - BROWSER_SERVICE_URL=http://sinesys_browser:3000
       
-      # Porta da aplicação
-      - PORT=3000
-      - HOSTNAME=0.0.0.0
-
-    # Health check do serviço
+      # Redis (opcional)
+      - ENABLE_REDIS_CACHE=${ENABLE_REDIS_CACHE:-false}
+      - REDIS_URL=${REDIS_URL:-}
+      
+      # MongoDB (opcional)
+      - MONGODB_URL=${MONGODB_URL:-}
+      - MONGODB_DATABASE=${MONGODB_DATABASE:-}
+    depends_on:
+      - sinesys_browser
+    networks:
+      - sinesys_network
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
 
-    # Configura o Modo de Deploy da Aplicação
-    deploy:
-      # O serviço será executado no modo de replicação
-      mode: replicated
-      # Vamos ter apenas uma instância do serviço
-      replicas: 1
-      # Configura o local de execução
-      placement:
-        constraints:
-          # Você pode rodar no Manager mesmo ou especificar um worker
-          - node.role == manager
-          # - node.hostname == worker1
-          # - node.labels.app == http # nome do label: app, valor do label: http
-      
-      # Limitação de Recursos
-      resources:
-        # Definição dos Limites de Recursos deste Serviço
-        limits:
-          # Define a quantidade de CPU para evitar travamento do Host
-          cpus: "2"
-          # Define a quantidade de RAM para evitar travamento do Host
-          memory: 2048M
-        # Reserva mínima de recursos
-        reservations:
-          # Reserva mínima de CPU
-          cpus: "0.5"
-          # Reserva mínima de RAM
-          memory: 512M
-      
-      # Define a política de reinício do serviço
-      restart_policy:
-        condition: on-failure
-        delay: 45s
-        max_attempts: 3
-        window: 120s
+  # ==========================================================================
+  # SERVIÇO 2: MCP Server (Integração com Agentes IA)
+  # ==========================================================================
+  sinesys_mcp:
+    build:
+      context: ./mcp
+      dockerfile: Dockerfile
+    image: sinesys_mcp:latest
+    container_name: sinesys_mcp
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - SINESYS_API_URL=http://sinesys_app:3000
+      - SINESYS_API_KEY=${SERVICE_API_KEY}
+    depends_on:
+      - sinesys_app
+    networks:
+      - sinesys_network
 
-      # Define os Labels do Serviço
-      labels:
-        # Configura o Roteamento do Traefik
-        - traefik.enable=true
-        
-        # Router principal HTTPS
-        - traefik.http.routers.zattar_advogados.rule=Host(`${DOMAIN}`)
-        - traefik.http.routers.zattar_advogados.entrypoints=websecure
-        - traefik.http.routers.zattar_advogados.tls.certresolver=letsencryptresolver
-        - traefik.http.routers.zattar_advogados.tls=true
-        - traefik.http.routers.zattar_advogados.service=zattar_advogados
-        
-        # Redirecionamento HTTP para HTTPS
-        - traefik.http.routers.zattar_advogados-http.rule=Host(`${DOMAIN}`)
-        - traefik.http.routers.zattar_advogados-http.entrypoints=web
-        - traefik.http.routers.zattar_advogados-http.middlewares=redirect-to-https
-        
-        # Middleware de redirecionamento
-        - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
-        - traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true
-        
-        # Service
-        - traefik.http.services.zattar_advogados.loadbalancer.server.port=3000
-        - traefik.http.services.zattar_advogados.loadbalancer.passHostHeader=true
-        
-        # Configurações adicionais
-        - traefik.docker.network=network_swarm_public
-      
-      # Configura o modo de atualização do serviço
-      update_config:
-        # Configura o paralelismo de atualização
-        parallelism: 1
-        # Configura o tempo de espera entre as atualizações
-        delay: 30s
-        # Configura a ação em caso de falha
-        order: start-first
-        # Configura a ação em caso de falha
-        failure_action: rollback
+  # ==========================================================================
+  # SERVIÇO 3: Browser Service (Playwright + Firefox)
+  # ==========================================================================
+  # Usa Firefox porque o PJE-TRT funciona melhor com ele
+  sinesys_browser:
+    build:
+      context: .
+      dockerfile: Dockerfile.browser
+    image: sinesys_browser:latest
+    container_name: sinesys_browser
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      - PORT=3000
+      - BROWSER_TOKEN=${BROWSER_SERVICE_TOKEN:-}
+    networks:
+      - sinesys_network
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    # Necessário para rodar browser em container
+    shm_size: '2gb'
 
 networks:
-  network_swarm_public:
-    name: network_swarm_public
-    external: true
+  sinesys_network:
+    driver: bridge
+

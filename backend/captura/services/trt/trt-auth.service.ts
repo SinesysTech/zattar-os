@@ -2,9 +2,10 @@
 // Baseado no código validado de trt-auth-common.ts
 // Adaptado para integração com o serviço de captura TRT
 
-import { Browser, BrowserContext, Page, firefox } from 'playwright';
+import { Browser, BrowserContext, Page } from 'playwright';
 import { getOTP, type TwoFAuthConfig } from '@/backend/api/twofauth.service';
 import type { CredenciaisTRT, ConfigTRT } from '@/backend/types/captura/trt-types';
+import { getFirefoxConnection, closeBrowser } from '@/backend/captura/services/browser/browser-connection.service';
 
 // ============================================================================
 // TIPOS E INTERFACES
@@ -556,21 +557,20 @@ export async function autenticarPJE(options: TRTAuthOptions): Promise<AuthResult
     headless = true,
   } = options;
 
-  log('info', '🚀 Iniciando autenticação PJE com Firefox...', {
+  log('info', '🚀 Iniciando autenticação PJE...', {
     loginUrl: config.loginUrl,
     headless,
   });
 
-  // Lançar browser Firefox (sempre Firefox para TRT)
-  const browser = await firefox.launch({ headless });
-  log('success', '✅ Browser Firefox lançado');
-  
-  const browserContext = await browser.newContext({
+  // Obter conexão com browser (remoto ou local)
+  // Em produção: conecta ao Browserless (Chromium)
+  // Em desenvolvimento: lança Firefox local
+  const { browser, browserContext, page, isRemote } = await getFirefoxConnection({
+    headless,
     viewport: { width: 1920, height: 1080 },
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0',
   });
   
-  const page = await browserContext.newPage();
+  log('success', `✅ Firefox ${isRemote ? 'remoto' : 'local'} conectado`);
 
   // Aplicar configurações anti-detecção
   await aplicarConfiguracoesAntiDeteccao(page);
