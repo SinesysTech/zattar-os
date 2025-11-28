@@ -3,6 +3,8 @@ import Redis from 'ioredis';
 let redisClient: Redis | null = null;
 
 const ENABLE_REDIS_CACHE = process.env.ENABLE_REDIS_CACHE === 'true';
+// IMPORTANTE: Não inclua a senha na URL. Use REDIS_PASSWORD separadamente.
+// O ioredis dá precedência à opção 'password' sobre senha embutida na URL.
 const REDIS_URL = process.env.REDIS_URL;
 const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
 const REDIS_CACHE_TTL = parseInt(process.env.REDIS_CACHE_TTL || '600', 10);
