@@ -138,7 +138,6 @@
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@playwright/test": "^1.57.0",
-    "baseline-browser-mapping": "^1.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/ioredis": "^4.28.10",
     "@types/jest": "^29.5.8",
@@ -147,6 +146,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/swagger-jsdoc": "^6.0.4",
+    "baseline-browser-mapping": "^2.8.32",
     "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
