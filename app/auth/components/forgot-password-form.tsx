@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { useState } from 'react'
+import { Typography } from '@/components/ui/typography'
 
 export function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
@@ -50,10 +51,10 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
             <CardDescription>Instruções de redefinição de senha enviadas</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
+            <Typography.Muted>
               Se você se cadastrou usando seu email e senha, receberá um email de redefinição de
               senha.
-            </p>
+            </Typography.Muted>
           </CardContent>
         </Card>
       ) : (
@@ -78,7 +79,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
+                {error && <Typography.Small className="text-red-500">{error}</Typography.Small>}
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? 'Enviando...' : 'Enviar email de redefinição'}
                 </Button>

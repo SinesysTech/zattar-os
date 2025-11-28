@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Upload, FileText, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { Typography } from '@/components/ui/typography';
 
 interface UploadDeclaracaoDialogProps {
   open: boolean;
@@ -129,10 +130,10 @@ export function UploadDeclaracaoDialog({
             <div className="flex items-center gap-2 p-3 rounded-md bg-muted">
               <FileText className="h-5 w-5 text-muted-foreground" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{file.name}</p>
-                <p className="text-xs text-muted-foreground">
+                <Typography.Small className="font-medium truncate">{file.name}</Typography.Small>
+                <Typography.Muted className="text-xs">
                   {(file.size / 1024).toFixed(2)} KB
-                </p>
+                </Typography.Muted>
               </div>
             </div>
           )}

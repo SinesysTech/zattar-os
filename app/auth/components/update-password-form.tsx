@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { Typography } from '@/components/ui/typography'
 
 export function UpdatePasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [password, setPassword] = useState('')
@@ -60,7 +61,7 @@ export function UpdatePasswordForm({ className, ...props }: React.ComponentProps
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
+              {error && <Typography.Small className="text-red-500">{error}</Typography.Small>}
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? 'Salvando...' : 'Salvar nova senha'}
               </Button>

@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { Typography } from '@/components/ui/typography'
 
 export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
@@ -98,7 +99,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                   onChange={(e) => setRepeatPassword(e.target.value)}
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
+              {error && <Typography.Small className="text-red-500">{error}</Typography.Small>}
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? 'Criando conta...' : 'Cadastrar'}
               </Button>

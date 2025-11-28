@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { Loader2 } from 'lucide-react';
+import { Typography } from '@/components/ui/typography';
 
 interface NovaAudienciaDialogProps {
   open: boolean;
@@ -418,12 +419,12 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             <Label htmlFor="processo">Processo *</Label>
             {!trt || !grau ? (
               <div className="flex items-center gap-2 p-2 border rounded-md bg-muted">
-                <span className="text-sm text-muted-foreground">Selecione o TRT e Grau primeiro</span>
+                <Typography.Muted as="span">Selecione o TRT e Grau primeiro</Typography.Muted>
               </div>
             ) : loadingProcessos ? (
               <div className="flex items-center gap-2 p-2 border rounded-md">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm text-muted-foreground">Carregando processos...</span>
+                <Typography.Muted as="span">Carregando processos...</Typography.Muted>
               </div>
             ) : (
               <Combobox
@@ -492,7 +493,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             {loadingTipos ? (
               <div className="flex items-center gap-2 p-2 border rounded-md">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm text-muted-foreground">Carregando tipos...</span>
+                <Typography.Muted as="span">Carregando tipos...</Typography.Muted>
               </div>
             ) : !trt || !grau ? (
               <Select disabled>
@@ -522,7 +523,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             {loadingSalas ? (
               <div className="flex items-center gap-2 p-2 border rounded-md">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm text-muted-foreground">Carregando salas...</span>
+                <Typography.Muted as="span">Carregando salas...</Typography.Muted>
               </div>
             ) : !processoSelecionado ? (
               <Select disabled>
@@ -650,7 +651,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             {loadingUsuarios ? (
               <div className="flex items-center gap-2 p-2 border rounded-md">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm text-muted-foreground">Carregando usuários...</span>
+                <Typography.Muted as="span">Carregando usuários...</Typography.Muted>
               </div>
             ) : (
               <Select value={responsavelId} onValueChange={setResponsavelId}>
