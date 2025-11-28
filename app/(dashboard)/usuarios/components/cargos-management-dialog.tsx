@@ -29,6 +29,7 @@ import { toast } from 'sonner';
 import { useCargos } from '@/app/_lib/hooks/use-cargos';
 import type { Cargo } from '@/backend/types/cargos/types';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { Typography } from '@/components/ui/typography';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -198,9 +199,9 @@ export function CargosManagementDialog({
             {(isCreating || editingId) && (
               <div className="border rounded-lg p-4 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-medium">
+                  <Typography.Small className="font-medium">
                     {editingId ? 'Editar Cargo' : 'Novo Cargo'}
-                  </h3>
+                  </Typography.Small>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -300,7 +301,7 @@ export function CargosManagementDialog({
 
             {/* Lista de Cargos */}
             <div>
-              <h3 className="font-medium mb-3 text-center">Cargos Cadastrados</h3>
+              <Typography.Small className="font-medium mb-3 text-center block">Cargos Cadastrados</Typography.Small>
 
               {isLoading ? (
                 <div className="flex items-center justify-center py-8">
@@ -330,9 +331,9 @@ export function CargosManagementDialog({
                           </Badge>
                         )}
                         {cargo.descricao && (
-                          <span className="text-sm text-muted-foreground truncate">
+                          <Typography.Muted as="span" className="truncate">
                             - {cargo.descricao}
-                          </span>
+                          </Typography.Muted>
                         )}
                       </div>
 

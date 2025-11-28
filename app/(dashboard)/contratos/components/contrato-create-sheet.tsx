@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Typography } from '@/components/ui/typography';
 import { Loader2 } from 'lucide-react';
 import type { ContratoDados } from '@/backend/contratos/services/persistence/contrato-persistence.service';
 
@@ -125,7 +126,7 @@ export function ContratoCreateSheet({
 
             {/* Informações Básicas */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Informações Básicas</h3>
+              <Typography.H4>Informações Básicas</Typography.H4>
 
               <div className="space-y-2">
                 <Label htmlFor="areaDireito">
@@ -222,7 +223,7 @@ export function ContratoCreateSheet({
 
             {/* Cliente */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Cliente</h3>
+              <Typography.H4>Cliente</Typography.H4>
 
               <div className="space-y-2">
                 <Label htmlFor="clienteId">
@@ -283,7 +284,7 @@ export function ContratoCreateSheet({
 
             {/* Datas */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Datas</h3>
+              <Typography.H4>Datas</Typography.H4>
 
               <div className="space-y-2">
                 <Label htmlFor="dataContratacao">Data de Contratação</Label>

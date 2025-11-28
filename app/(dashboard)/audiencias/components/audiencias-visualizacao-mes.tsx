@@ -4,6 +4,7 @@
 
 import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Typography } from '@/components/ui/typography';
 import { AudienciaDetalhesDialog } from './audiencia-detalhes-dialog';
 import { FileText } from 'lucide-react';
 import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';

@@ -20,19 +20,17 @@ export async function criarAudiencia(params: CriarAudienciaParams): Promise<numb
     throw new Error('Processo não encontrado');
   }
 
-  // 2. Buscar dados do tipo de audiência (se fornecido)
-  let tipoData = null;
+  // 2. Validar tipo de audiência se fornecido
   if (params.tipo_audiencia_id) {
-    const { data: tipo, error: tipoError } = await supabase
+    const { error: tipoError } = await supabase
       .from('tipo_audiencia')
-      .select('id_pje, codigo, descricao, is_virtual')
+      .select('id')
       .eq('id', params.tipo_audiencia_id)
       .single();
 
-    if (tipoError || !tipo) {
+    if (tipoError) {
       throw new Error('Tipo de audiência não encontrado');
     }
-    tipoData = tipo;
   }
 
   // 3. Buscar dados da sala de audiência (se fornecido)
@@ -74,12 +72,9 @@ export async function criarAudiencia(params: CriarAudienciaParams): Promise<numb
     em_andamento: false,
     documento_ativo: false,
 
-    // Dados do tipo de audiência (normalizados e desnormalizados)
+    // Tipo de audiência (normalizado - dados vêm via JOIN)
     tipo_audiencia_id: params.tipo_audiencia_id || null,
-    tipo_id: tipoData?.id_pje || null,
-    tipo_codigo: tipoData?.codigo || null,
-    tipo_descricao: tipoData?.descricao || 'Audiência Manual',
-    tipo_is_virtual: tipoData?.is_virtual ?? false,
+    // modalidade é calculada automaticamente pelo trigger baseado em url_audiencia_virtual, tipo_audiencia e endereco_presencial
 
     // Dados da sala de audiência (normalizados e desnormalizados)
     sala_audiencia_id: params.sala_audiencia_id || null,

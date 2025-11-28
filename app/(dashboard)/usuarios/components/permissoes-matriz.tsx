@@ -23,6 +23,7 @@ import type { PermissaoMatriz } from '@/app/_lib/types/usuarios';
 import { formatarNomeRecurso, formatarNomeOperacao, contarPermissoesAtivas } from '@/app/_lib/utils/permissoes-utils';
 import { MATRIZ_PERMISSOES, obterTotalPermissoes } from '@/backend/types/permissoes/types';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { Typography } from '@/components/ui/typography';
 
 interface PermissoesMatrizProps {
   matriz: PermissaoMatriz[];
@@ -153,9 +154,9 @@ export function PermissoesMatriz({
                 >
                   <div className="font-medium text-base mb-3 flex items-center gap-2">
                     {formatarNomeRecurso(item.recurso)}
-                    <span className="text-xs text-muted-foreground">
+                    <Typography.Muted as="span" className="text-xs">
                       ({Object.values(item.operacoes).filter(Boolean).length} de {Object.keys(item.operacoes).length})
-                    </span>
+                    </Typography.Muted>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
                     {Object.entries(item.operacoes).map(([operacao, permitido]) => (
@@ -208,9 +209,9 @@ export function PermissoesMatriz({
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
-            <p className="text-sm text-muted-foreground">
+            <Typography.Muted>
               <strong>Total de permissões ativas:</strong> {totalPermissoesAtivas} de {totalPermissoes}
-            </p>
+            </Typography.Muted>
           </div>
           <DialogFooter>
             <Button

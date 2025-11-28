@@ -5,6 +5,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Typography } from '@/components/ui/typography';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';

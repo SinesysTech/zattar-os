@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Upload, FileCheck, Loader2, AlertCircle, FileX } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/app/_lib/utils/utils';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { Typography } from '@/components/ui/typography';
 
 interface RepassePendente {
   parcelaId: number;
@@ -117,7 +118,7 @@ export function RepassesPendentesList({
       {/* Pendentes de Declaração */}
       {repassesPorStatus.pendente_declaracao.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Aguardando Declaração de Prestação de Contas</h3>
+          <Typography.H4>Aguardando Declaração de Prestação de Contas</Typography.H4>
           <div className="rounded-md border">
             <Table>
               <TableHeader>
@@ -161,7 +162,7 @@ export function RepassesPendentesList({
       {/* Pendentes de Transferência */}
       {repassesPorStatus.pendente_transferencia.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Prontos para Transferência</h3>
+          <Typography.H4>Prontos para Transferência</Typography.H4>
           <div className="rounded-md border">
             <Table>
               <TableHeader>

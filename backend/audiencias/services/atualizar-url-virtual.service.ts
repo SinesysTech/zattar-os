@@ -40,8 +40,6 @@ export async function atualizarUrlVirtualAudiencia(
     .from('audiencias')
     .update({
       url_audiencia_virtual: urlAudienciaVirtual || null,
-      virtual_status: (urlAudienciaVirtual ? true : false),
-      virtual_updated_by: 'system',
       updated_at: new Date().toISOString()
     })
     .eq('id', audienciaId)

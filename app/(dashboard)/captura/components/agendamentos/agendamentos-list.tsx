@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Typography } from '@/components/ui/typography';
 import { atualizarAgendamento } from '@/app/api/captura/agendamentos/agendamentos';
 
 /**

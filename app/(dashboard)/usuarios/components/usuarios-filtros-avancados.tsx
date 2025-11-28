@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Typography } from '@/components/ui/typography';
 import type { UsuariosFilters } from '@/app/_lib/types/usuarios';
 
 interface UsuariosFiltrosAvancadosProps {
@@ -61,7 +62,7 @@ export function UsuariosFiltrosAvancados({
       <PopoverContent className="w-80 p-4" align="start">
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label className="text-sm font-semibold">Status</Label>
+            <Typography.Small className="font-semibold">Status</Typography.Small>
             <div className="space-y-2">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -71,7 +72,7 @@ export function UsuariosFiltrosAvancados({
                   onChange={() => handleAtivoChange(true)}
                   className="h-4 w-4"
                 />
-                <span className="text-sm">Ativo</span>
+                <Typography.Muted as="span">Ativo</Typography.Muted>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -81,7 +82,7 @@ export function UsuariosFiltrosAvancados({
                   onChange={() => handleAtivoChange(false)}
                   className="h-4 w-4"
                 />
-                <span className="text-sm">Inativo</span>
+                <Typography.Muted as="span">Inativo</Typography.Muted>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -91,15 +92,15 @@ export function UsuariosFiltrosAvancados({
                   onChange={() => handleAtivoChange(null)}
                   className="h-4 w-4"
                 />
-                <span className="text-sm">Todos</span>
+                <Typography.Muted as="span">Todos</Typography.Muted>
               </label>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="oab" className="text-sm font-semibold">
+            <Typography.Small as="label" htmlFor="oab" className="font-semibold">
               Número da OAB
-            </Label>
+            </Typography.Small>
             <Input
               id="oab"
               placeholder="Ex: 123456"
@@ -109,9 +110,9 @@ export function UsuariosFiltrosAvancados({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="ufOab" className="text-sm font-semibold">
+            <Typography.Small as="label" htmlFor="ufOab" className="font-semibold">
               UF da OAB
-            </Label>
+            </Typography.Small>
             <Input
               id="ufOab"
               placeholder="Ex: SP"
