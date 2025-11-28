@@ -12,9 +12,6 @@ WORKDIR /app
 # Copiar arquivos de dependências
 COPY package.json package-lock.json* ./
 
-# Remover workspace mcp do package.json (deploy separado)
-RUN sed -i '/"workspaces"/,/]/d' package.json || true
-
 # Instalar dependências (sem scripts para evitar problemas com binários nativos)
 RUN npm ci --ignore-scripts
 
@@ -28,9 +25,6 @@ ENV NODE_OPTIONS="--max-old-space-size=4096"
 # Copiar dependências do stage anterior
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Remover workspace mcp do package.json
-RUN sed -i '/"workspaces"/,/]/d' package.json || true
 
 # Build arguments para variáveis NEXT_PUBLIC_* (obrigatórias no build)
 ARG NEXT_PUBLIC_SUPABASE_URL

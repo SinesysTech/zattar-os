@@ -251,6 +251,7 @@ export function ClientesTab() {
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
+        filterButtonsMode="buttons"
         onNewClick={() => setCreateOpen(true)}
         newButtonTooltip="Novo Cliente"
       />

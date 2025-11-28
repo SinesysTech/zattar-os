@@ -73,8 +73,8 @@ dev_data
 openspec
 scripts/results
 
-# MCP workspace (não necessário para produção)
-mcp
+# Browser service (repositório separado)
+browser
 
 # Supabase local
 supabase/.branches

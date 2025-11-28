@@ -1,7 +1,7 @@
-# Docker Compose para Desenvolvimento Local e Referência
+# Docker Compose para Desenvolvimento Local
 # 
-# Para CapRover: Use os arquivos captain-definition de cada serviço
-# Para Docker Swarm com Traefik: Use docker-compose.swarm.yml
+# Para CapRover: Use o arquivo captain-definition
+# Para produção completa: Os serviços MCP e Browser estão em repositórios separados
 #
 # Uso: docker-compose up -d
 
@@ -9,7 +9,7 @@ version: "3.8"
 
 services:
   # ==========================================================================
-  # SERVIÇO 1: Sinesys App (Next.js)
+  # SERVIÇO: Sinesys App (Next.js)
   # ==========================================================================
   sinesys_app:
     build:
@@ -34,9 +34,10 @@ services:
       - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
       - SUPABASE_SECRET_KEY=${SUPABASE_SECRET_KEY}
       
-      # Browser Service (conexão interna)
-      - BROWSER_WS_ENDPOINT=ws://sinesys_browser:3000
-      - BROWSER_SERVICE_URL=http://sinesys_browser:3000
+      # Browser Service (conexão externa - configure conforme seu ambiente)
+      # Para desenvolvimento local sem browser remoto, deixe vazio (usa Firefox local)
+      - BROWSER_WS_ENDPOINT=${BROWSER_WS_ENDPOINT:-}
+      - BROWSER_SERVICE_URL=${BROWSER_SERVICE_URL:-}
       
       # Redis (opcional)
       - ENABLE_REDIS_CACHE=${ENABLE_REDIS_CACHE:-false}
@@ -45,8 +46,6 @@ services:
       # MongoDB (opcional)
       - MONGODB_URL=${MONGODB_URL:-}
       - MONGODB_DATABASE=${MONGODB_DATABASE:-}
-    depends_on:
-      - sinesys_browser
     networks:
       - sinesys_network
     healthcheck:
@@ -56,54 +55,24 @@ services:
       retries: 3
       start_period: 40s
 
-  # ==========================================================================
-  # SERVIÇO 2: MCP Server (Integração com Agentes IA)
-  # ==========================================================================
-  sinesys_mcp:
-    build:
-      context: ./mcp
-      dockerfile: Dockerfile
-    image: sinesys_mcp:latest
-    container_name: sinesys_mcp
-    restart: unless-stopped
-    ports:
-      - "3001:3001"
-    environment:
-      - NODE_ENV=production
-      - PORT=3001
-      - SINESYS_API_URL=http://sinesys_app:3000
-      - SINESYS_API_KEY=${SERVICE_API_KEY}
-    depends_on:
-      - sinesys_app
-    networks:
-      - sinesys_network
-
-  # ==========================================================================
-  # SERVIÇO 3: Browser Service (Playwright + Firefox)
-  # ==========================================================================
-  # Usa Firefox porque o PJE-TRT funciona melhor com ele
-  sinesys_browser:
-    build:
-      context: .
-      dockerfile: Dockerfile.browser
-    image: sinesys_browser:latest
-    container_name: sinesys_browser
-    restart: unless-stopped
-    ports:
-      - "3002:3000"
-    environment:
-      - PORT=3000
-      - BROWSER_TOKEN=${BROWSER_SERVICE_TOKEN:-}
-    networks:
-      - sinesys_network
-    deploy:
-      resources:
-        limits:
-          memory: 2048M
-    # Necessário para rodar browser em container
-    shm_size: '2gb'
+# ==========================================================================
+# SERVIÇOS EXTERNOS (repositórios separados)
+# ==========================================================================
+# 
+# Os seguintes serviços agora estão em repositórios separados:
+#
+# 1. sinesys-mcp-server (MCP Server para agentes IA)
+#    - Repositório: sinesys-mcp-server
+#    - Deploy separado no CapRover: sinesys-mcp
+#
+# 2. sinesys-browser-server (Firefox para scraping)
+#    - Repositório: sinesys-browser-server
+#    - Deploy separado no CapRover: sinesys-browser
+#    - WebSocket habilitado!
+#
+# Para desenvolvimento com todos os serviços, use docker-compose.full.yml
+# ==========================================================================
 
 networks:
   sinesys_network:
     driver: bridge
-

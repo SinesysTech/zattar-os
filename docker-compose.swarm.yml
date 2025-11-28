@@ -1,15 +1,19 @@
 version: "3.7"
 
 # ============================================================================
-# SINESYS - Stack de Serviços
+# SINESYS - Stack de Serviços (Docker Swarm + Traefik)
 # ============================================================================
 # 
-# Arquitetura de 3 serviços:
-# 1. sinesys_app      - Frontend Next.js (API + UI)
-# 2. sinesys_mcp      - MCP Server (integração com agentes IA)
-# 3. sinesys_browser  - Browser Service (Browserless para scraping)
+# Arquitetura de 3 serviços (cada um em repositório separado):
+# 
+# 1. sinesys_app      - Frontend Next.js (API + UI) - ESTE REPOSITÓRIO
+# 2. sinesys_mcp      - MCP Server (repositório: sinesys-mcp-server)
+# 3. sinesys_browser  - Browser Service (repositório: sinesys-browser-server)
 #
-# Comunicação interna via rede Docker (network_swarm_public)
+# IMPORTANTE:
+# - As imagens sinesys_mcp e sinesys_browser devem ser buildadas em seus
+#   respectivos repositórios antes de usar este docker-compose.
+# - Comunicação interna via rede Docker (network_swarm_public)
 # ============================================================================
 
 services:
@@ -105,6 +109,9 @@ services:
   # ==========================================================================
   # SERVIÇO 2: MCP Server (Integração com Agentes IA)
   # ==========================================================================
+  # REPOSITÓRIO SEPARADO: sinesys-mcp-server
+  # Faça build da imagem no repositório do MCP antes de usar aqui
+  # ==========================================================================
   sinesys_mcp:
     image: sinesys_mcp:latest
     hostname: "{{.Service.Name}}.{{.Task.Slot}}"
@@ -165,11 +172,10 @@ services:
   # ==========================================================================
   # SERVIÇO 3: Browser Service (Playwright + Firefox)
   # ==========================================================================
+  # REPOSITÓRIO SEPARADO: sinesys-browser-server
+  # Faça build da imagem no repositório do Browser antes de usar aqui
   # 
-  # Usando Firefox via Playwright Browser Server
   # O PJE-TRT funciona melhor com Firefox (menos detecção/bloqueio)
-  # 
-  # Build: docker build -f Dockerfile.browser -t sinesys_browser:latest .
   # ==========================================================================
   sinesys_browser:
     image: sinesys_browser:latest
@@ -181,7 +187,7 @@ services:
       - BROWSER_TOKEN=${BROWSER_SERVICE_TOKEN:-}
 
     healthcheck:
-      test: ["CMD", "node", "/app/healthcheck.js"]
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -10,8 +10,6 @@ import {
   Scale,
   Users,
   UserCog,
-  UserX,
-  UserCheck,
   Database,
 } from "lucide-react"
 

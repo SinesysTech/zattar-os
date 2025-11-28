@@ -349,6 +349,7 @@ export function RepresentantesTab() {
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
+        filterButtonsMode="buttons"
         onNewClick={() => setCreateOpen(true)}
         newButtonTooltip="Novo Representante"
       />

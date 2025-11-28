@@ -100,7 +100,10 @@ function FilterButton({
                   "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground transition-colors",
                   isSelected && "bg-accent"
                 )}
-                onClick={() => onFilterSelect(option.value)}
+                onClick={() => {
+                  onFilterSelect(option.value)
+                  setOpen(false)
+                }}
               >
                 <div
                   className={cn(
@@ -157,6 +160,7 @@ export function TableToolbar({
   newButtonTooltip = "Novo",
   className,
   showFilterButton = true,
+  filterButtonsMode = "single",
 }: TableToolbarProps) {
   const [filterOpen, setFilterOpen] = React.useState(false)
   const [filterSearch, setFilterSearch] = React.useState("")
@@ -193,6 +197,9 @@ export function TableToolbar({
   // Usar grupos se disponível, senão fallback para lista plana
   const useGroupedFilters = filterGroups && filterGroups.length > 0
 
+  // Determina se deve mostrar botões individuais ou o botão único de filtro
+  const useFilterButtons = filterButtonsMode === "buttons" && filterGroups && filterGroups.length > 0
+
   return (
     <ButtonGroup className={cn("", className)}>
       <InputGroup className="w-full min-w-[min(92vw,37.5rem)]">
@@ -211,7 +218,19 @@ export function TableToolbar({
         )}
       </InputGroup>
       <ButtonGroupSeparator />
-      {showFilterButton && (
+      
+      {/* Modo: Botões individuais de filtro */}
+      {useFilterButtons && filterGroups!.map((group) => (
+        <FilterButton
+          key={group.label}
+          group={group}
+          selectedFilters={selectedFilters}
+          onFilterSelect={handleFilterSelect}
+        />
+      ))}
+
+      {/* Modo: Botão único de filtro (comportamento antigo) */}
+      {!useFilterButtons && showFilterButton && (
       <Popover open={filterOpen} onOpenChange={setFilterOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" size="icon" aria-label="Filtros" className="relative bg-black hover:bg-black/90 text-white border-black">

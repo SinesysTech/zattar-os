@@ -271,6 +271,7 @@ export function TerceirosTab({}: TerceirosTabProps) {
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
+        filterButtonsMode="buttons"
         onNewClick={() => {
           // TODO: Implementar dialog de criação
           console.log('Novo terceiro');

@@ -230,6 +230,7 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
+        filterButtonsMode="buttons"
         onNewClick={() => {
           // TODO: Implementar dialog de criação
           console.log('Nova parte contrária');

@@ -4,13 +4,13 @@ Este documento descreve como fazer o deploy da stack Sinesys em diferentes ambie
 
 ## Arquitetura de Serviços
 
-O Sinesys é composto por **3 serviços independentes**:
+O Sinesys é composto por **3 serviços independentes**, cada um em seu próprio repositório:
 
-| Serviço | Descrição | Porta | Recursos |
-|---------|-----------|-------|----------|
-| **sinesys_app** | Frontend Next.js + API | 3000 | 512MB-1GB RAM |
-| **sinesys_mcp** | MCP Server para agentes IA | 3001 | 128-256MB RAM |
-| **sinesys_browser** | Firefox (scraping PJE) | 3002 | 1-2GB RAM |
+| Serviço | Repositório | Descrição | Porta | WebSocket |
+|---------|-------------|-----------|-------|-----------|
+| **sinesys_app** | Este repo | Frontend Next.js + API | 3000 | ❌ |
+| **sinesys_mcp** | sinesys-mcp-server | MCP Server para agentes IA | 3001 | ❌ |
+| **sinesys_browser** | sinesys-browser-server | Firefox (scraping PJE) | 3000 | ✅ |
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -19,13 +19,14 @@ O Sinesys é composto por **3 serviços independentes**:
 │   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐   │
 │   │  sinesys_app │   │ sinesys_mcp  │   │sinesys_browser│   │
 │   │  (Next.js)   │   │  (Node.js)   │   │   (Firefox)   │   │
-│   │  :3000       │   │  :3001       │   │  :3002        │   │
+│   │  :3000       │   │  :3001       │   │  :3000 (WS)   │   │
 │   └──────┬───────┘   └──────┬───────┘   └───────┬───────┘   │
 │          │                  │                    │           │
 │          └──────────────────┼────────────────────┘           │
 │                             │                                │
 │                     ┌───────▼───────┐                       │
 │                     │   Supabase    │                       │
+│                     │ Redis MongoDB │                       │
 │                     └───────────────┘                       │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -39,182 +40,157 @@ O Sinesys é composto por **3 serviços independentes**:
 - CapRover instalado e configurado
 - CLI do CapRover (`npm install -g caprover`)
 - Acesso ao dashboard do CapRover
+- Os 3 repositórios clonados localmente
 
 ### Passo 1: Criar os Apps no CapRover
 
 Acesse o dashboard do CapRover e crie **3 apps**:
 
-1. **sinesys** (ou nome de sua preferência)
-2. **sinesys-mcp**
-3. **sinesys-browser**
+| Nome do App | Repositório | HTTP Port | WebSocket |
+|-------------|-------------|-----------|-----------|
+| `sinesys` | Este repo | 3000 | ❌ |
+| `sinesys-mcp` | sinesys-mcp-server | 3001 | ❌ |
+| `sinesys-browser` | sinesys-browser-server | 3000 | ✅ |
+
+> ⚠️ **Importante**: Habilite WebSocket Support apenas para `sinesys-browser`!
 
 ### Passo 2: Deploy do Browser Service (Firefox)
 
-O Browser Service usa Firefox via Playwright (o PJE-TRT funciona melhor com Firefox).
+**No repositório sinesys-browser-server:**
 
-**Opção A: Build local e deploy**
+```bash
+# Clone o repositório
+git clone https://github.com/seu-org/sinesys-browser-server.git
+cd sinesys-browser-server
 
-1. Faça build da imagem localmente:
-   ```bash
-   docker build -f Dockerfile.browser -t sinesys_browser:latest .
-   ```
+# Login no CapRover
+caprover login
 
-2. Envie para seu registry ou faça deploy via tarball:
-   ```bash
-   # Via CLI do CapRover
-   caprover deploy -a sinesys-browser -t ./Dockerfile.browser
-   ```
+# Deploy
+caprover deploy -a sinesys-browser
+```
 
-**Opção B: Deploy via captain-definition**
+**Variáveis de ambiente:**
+```env
+PORT=3000
+BROWSER_TOKEN=seu_token_opcional
+```
 
-1. Renomeie o arquivo:
-   ```bash
-   cp captain-definition.browser captain-definition
-   ```
-
-2. Deploy:
-   ```bash
-   caprover deploy -a sinesys-browser
-   ```
-
-3. Restaure o captain-definition original:
-   ```bash
-   git checkout captain-definition
-   ```
-
-4. Configure as variáveis de ambiente no dashboard:
-   ```
-   PORT=3000
-   BROWSER_TOKEN=seu_token_opcional
-   ```
-
-5. Em **App Configs** > **Container HTTP Port**: `3000`
-
-6. Configure os recursos mínimos (se disponível):
-   - Memory: 2048MB
-   - CPU: 1-2 cores
+**Configurações importantes:**
+- Container HTTP Port: `3000`
+- WebSocket Support: ✅ **Habilitar**
+- Memory: 2048MB (mínimo)
 
 ### Passo 3: Deploy do MCP Server
 
-1. No terminal, navegue até a pasta `mcp/`:
-   ```bash
-   cd mcp
-   ```
+**No repositório sinesys-mcp-server:**
 
-2. Faça login no CapRover:
-   ```bash
-   caprover login
-   ```
+```bash
+cd sinesys-mcp-server
 
-3. Deploy do MCP:
-   ```bash
-   caprover deploy -a sinesys-mcp
-   ```
+# Login no CapRover (se ainda não fez)
+caprover login
 
-4. Configure as variáveis de ambiente no dashboard:
-   ```
-   NODE_ENV=production
-   PORT=3001
-   SINESYS_API_URL=http://srv-captain--sinesys:3000
-   SINESYS_API_KEY=sua_api_key
-   ```
+# Deploy
+caprover deploy -a sinesys-mcp
+```
 
-   > **Nota**: No CapRover, a comunicação entre apps usa o formato `srv-captain--NOME_DO_APP`
+**Variáveis de ambiente:**
+```env
+NODE_ENV=production
+PORT=3001
+SINESYS_API_URL=http://srv-captain--sinesys:3000
+SINESYS_API_KEY=sua_api_key
+```
 
 ### Passo 4: Deploy do App Principal
 
-1. Volte para a raiz do projeto:
-   ```bash
-   cd ..
-   ```
+**Neste repositório (Sinesys):**
 
-2. Deploy do app:
-   ```bash
-   caprover deploy -a sinesys
-   ```
+```bash
+# Login no CapRover
+caprover login
 
-   > **Importante**: O CapRover pedirá os build args. Informe:
-   > - `NEXT_PUBLIC_SUPABASE_URL`
-   > - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
+# Deploy
+caprover deploy -a sinesys
+```
 
-3. Configure as variáveis de ambiente no dashboard:
-   ```
-   NODE_ENV=production
-   NEXT_TELEMETRY_DISABLED=1
-   PORT=3000
-   HOSTNAME=0.0.0.0
-   
-   # Supabase
-   NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=sua_anon_key
-   SUPABASE_SECRET_KEY=sua_secret_key
-   
-   # Browser Service (comunicação interna CapRover)
-   BROWSER_WS_ENDPOINT=ws://srv-captain--sinesys-browser:3000
-   BROWSER_SERVICE_URL=http://srv-captain--sinesys-browser:3000
-   
-   # Redis (opcional)
-   ENABLE_REDIS_CACHE=true
-   REDIS_URL=redis://host:port
-   
-   # MongoDB (opcional)
-   MONGODB_URL=mongodb://...
-   MONGODB_DATABASE=sinesys
-   ```
+> **Importante**: O CapRover pedirá os build args. Informe:
+> - `NEXT_PUBLIC_SUPABASE_URL`
+> - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
 
-### Passo 5: Configurar Domínios
+**Variáveis de ambiente:**
+```env
+NODE_ENV=production
+NEXT_TELEMETRY_DISABLED=1
+PORT=3000
+HOSTNAME=0.0.0.0
 
-No dashboard do CapRover, configure os domínios para cada app:
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=sua_anon_key
+SUPABASE_SECRET_KEY=sua_secret_key
 
-| App | Domínio Sugerido |
-|-----|------------------|
-| sinesys | app.seudominio.com.br |
-| sinesys-mcp | mcp.seudominio.com.br (ou interno) |
-| sinesys-browser | (não expor externamente) |
+# Browser Service (comunicação interna CapRover)
+BROWSER_WS_ENDPOINT=ws://srv-captain--sinesys-browser:3000
+BROWSER_SERVICE_URL=http://srv-captain--sinesys-browser:3000
 
-### Passo 6: Habilitar HTTPS
+# Redis (opcional)
+ENABLE_REDIS_CACHE=true
+REDIS_URL=redis://host:port
 
-Para cada app exposto externamente:
-1. Vá em **HTTP Settings**
-2. Clique em **Enable HTTPS**
-3. Marque **Force HTTPS**
+# MongoDB (opcional)
+MONGODB_URL=mongodb://...
+MONGODB_DATABASE=sinesys
+```
+
+### Passo 5: Configurar Domínios e HTTPS
+
+No dashboard do CapRover:
+
+| App | Domínio | HTTPS |
+|-----|---------|-------|
+| sinesys | app.seudominio.com.br | ✅ |
+| sinesys-mcp | mcp.seudominio.com.br (opcional) | ✅ |
+| sinesys-browser | (não expor) | — |
 
 ---
 
-## Deploy com Docker Compose (Local/VPS)
+## Deploy com Docker Compose (Local)
 
-### Desenvolvimento Local
+Para desenvolvimento local, você pode usar o `docker-compose.yml` simplificado:
 
 ```bash
-# Criar arquivo .env com suas variáveis
-cp .env.example .env
-
-# Subir todos os serviços
+# Subir apenas o app (sem mcp e browser)
 docker-compose up -d
 
 # Ver logs
 docker-compose logs -f
 
-# Parar serviços
+# Parar
 docker-compose down
 ```
 
-### Docker Swarm com Traefik
+> **Nota**: Para desenvolvimento completo com os 3 serviços, clone os outros repositórios e suba-os separadamente.
 
-Use o arquivo `docker-compose.swarm.yml`:
+---
 
-```bash
-# Criar rede (se não existir)
-docker network create --driver overlay network_swarm_public
+## Comunicação entre Serviços
 
-# Deploy da stack
-docker stack deploy -c docker-compose.swarm.yml sinesys
+### No CapRover
+Use o formato: `srv-captain--NOME_DO_APP`
 
-# Ver status
-docker service ls
+```
+http://srv-captain--sinesys:3000
+http://srv-captain--sinesys-mcp:3001
+ws://srv-captain--sinesys-browser:3000
+```
 
-# Ver logs
-docker service logs sinesys_sinesys_app -f
+### No Docker Compose Local
+Use o nome do serviço:
+
+```
+http://sinesys_app:3000
 ```
 
 ---
@@ -234,28 +210,6 @@ Usadas quando o container está rodando:
 - `BROWSER_WS_ENDPOINT`
 - `REDIS_URL`
 - etc.
-
----
-
-## Comunicação entre Serviços
-
-### No CapRover
-Use o formato: `srv-captain--NOME_DO_APP`
-
-```
-http://srv-captain--sinesys:3000
-http://srv-captain--sinesys-mcp:3001
-ws://srv-captain--sinesys-browser:3000
-```
-
-### No Docker Compose
-Use o nome do serviço diretamente:
-
-```
-http://sinesys_app:3000
-http://sinesys_mcp:3001
-ws://sinesys_browser:3000
-```
 
 ---
 
@@ -287,19 +241,12 @@ O Next.js pode consumir muita memória durante o build. Soluções:
 
 ### Container reinicia constantemente
 
-Verifique os logs:
-```bash
-# CapRover
-# Dashboard > App > App Logs
-
-# Docker
-docker logs sinesys_app -f
-```
+Verifique os logs no dashboard do CapRover: App > App Logs
 
 ### Browser Service não conecta
 
-1. Verifique se o serviço está rodando
-2. Confirme a URL de conexão (interno vs externo)
+1. Verifique se o app `sinesys-browser` está rodando
+2. Confirme que **WebSocket está habilitado** no app
 3. Teste a conexão:
    ```bash
    curl http://srv-captain--sinesys-browser:3000/health
@@ -321,54 +268,48 @@ docker logs sinesys_app -f
 
 ## Variáveis de Ambiente Completas
 
+### App Principal (sinesys)
+
 ```env
-# ==========================================
-# SUPABASE (obrigatório)
-# ==========================================
+# Supabase (obrigatório)
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=eyJ...
 SUPABASE_SECRET_KEY=eyJ...
 
-# ==========================================
-# API KEY (para comunicação entre serviços)
-# ==========================================
+# API Key (para comunicação entre serviços)
 SERVICE_API_KEY=sua_api_key_segura
 
-# ==========================================
-# BROWSER SERVICE
-# ==========================================
-# Para CapRover:
+# Browser Service
 BROWSER_WS_ENDPOINT=ws://srv-captain--sinesys-browser:3000
 BROWSER_SERVICE_URL=http://srv-captain--sinesys-browser:3000
-
-# Para Docker Compose:
-# BROWSER_WS_ENDPOINT=ws://sinesys_browser:3000
-# BROWSER_SERVICE_URL=http://sinesys_browser:3000
-
 BROWSER_SERVICE_TOKEN=opcional_token_seguranca
 
-# ==========================================
-# REDIS (opcional)
-# ==========================================
+# Redis (opcional)
 ENABLE_REDIS_CACHE=true
 REDIS_URL=redis://user:password@host:6379
 
-# ==========================================
-# MONGODB (opcional)
-# ==========================================
+# MongoDB (opcional)
 MONGODB_URL=mongodb://user:password@host:27017
 MONGODB_DATABASE=sinesys
 
-# ==========================================
-# 2FAUTH (para OTP do PJE)
-# ==========================================
+# 2FAuth (para OTP do PJE)
 TWOFAUTH_API_URL=https://seu-2fauth.com
 TWOFAUTH_API_TOKEN=seu_token
 TWOFAUTH_ACCOUNT_ID=id_da_conta
-
-# ==========================================
-# DOMÍNIO (para docker-compose.swarm.yml)
-# ==========================================
-DOMAIN=app.seudominio.com.br
 ```
 
+### MCP Server (sinesys-mcp)
+
+```env
+NODE_ENV=production
+PORT=3001
+SINESYS_API_URL=http://srv-captain--sinesys:3000
+SINESYS_API_KEY=sua_api_key_segura
+```
+
+### Browser Server (sinesys-browser)
+
+```env
+PORT=3000
+BROWSER_TOKEN=opcional_token_seguranca
+```

@@ -6,7 +6,7 @@
  * 
  * 1. **Firefox Remoto**: Quando BROWSER_WS_ENDPOINT está configurado
  *    - Conecta via WebSocket ao Firefox Browser Server (Playwright)
- *    - Recomendado para produção (ver Dockerfile.browser)
+ *    - Recomendado para produção (ver repositório: sinesys-browser-server)
  * 
  * 2. **Firefox Local**: Fallback quando não há endpoint remoto
  *    - Lança Firefox localmente via Playwright
