@@ -111,10 +111,18 @@ export function parseCredenciaisFilters(selectedFilters: string[]): CredenciaisF
 
   for (const selected of selectedFilters) {
     if (selected.includes('_')) {
-      // Usar lastIndexOf para suportar IDs com underscore
-      const lastUnderscoreIndex = selected.lastIndexOf('_');
-      const id = selected.substring(0, lastUnderscoreIndex);
-      const value = selected.substring(lastUnderscoreIndex + 1);
+      // Encontrar o config ID correto verificando quais IDs conhecidos são prefixo do filtro
+      // Isso suporta valores com underscore (primeiro_grau, segundo_grau)
+      let id: string | null = null;
+      let value: string | null = null;
+      for (const configId of configMap.keys()) {
+        if (selected.startsWith(configId + '_')) {
+          id = configId;
+          value = selected.substring(configId.length + 1);
+          break;
+        }
+      }
+      if (!id || !value) continue;
       const config = configMap.get(id);
       if (config && config.type === 'select') {
         if (id === 'active') {
