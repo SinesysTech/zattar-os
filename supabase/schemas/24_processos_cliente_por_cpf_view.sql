@@ -19,6 +19,8 @@ select
 
   -- Processo (campos relevantes)
   a.id as processo_id,
+  a.id_pje,              -- ID do processo no PJE (necessário para captura de timeline)
+  a.advogado_id,         -- ID do advogado que capturou (necessário para credenciais)
   a.numero_processo,
   a.trt,
   a.grau,

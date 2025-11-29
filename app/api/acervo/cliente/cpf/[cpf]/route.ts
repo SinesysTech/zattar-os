@@ -14,6 +14,12 @@
  *       - Formatos amigáveis para humanos (datas, nomes de tribunais, etc.)
  *       - Processos agrupados por número (primeiro e segundo grau juntos)
  *
+ *       **Sincronização Lazy de Timeline:**
+ *       Se um processo não possui timeline, o endpoint dispara automaticamente
+ *       a captura em background e retorna `timeline_status: "sincronizando"`.
+ *       Nesse caso, o campo `timeline_mensagem` instrui o agente a aguardar
+ *       1-2 minutos e consultar novamente.
+ *
  *     tags:
  *       - Acervo
  *     security:
@@ -135,6 +141,20 @@
  *                                 tem_documento:
  *                                   type: boolean
  *                                   example: false
+ *                           timeline_status:
+ *                             type: string
+ *                             enum: [disponivel, sincronizando, indisponivel]
+ *                             description: |
+ *                               Status da timeline:
+ *                               - `disponivel`: Timeline carregada com sucesso
+ *                               - `sincronizando`: Captura em andamento, aguarde 1-2 min
+ *                               - `indisponivel`: Não foi possível capturar
+ *                             example: "disponivel"
+ *                           timeline_mensagem:
+ *                             type: string
+ *                             nullable: true
+ *                             description: Mensagem para o agente quando timeline não disponível
+ *                             example: "A timeline deste processo está sendo sincronizada. Por favor, aguarde 1-2 minutos e consulte novamente."
  *                           ultima_movimentacao:
  *                             type: object
  *                             nullable: true
