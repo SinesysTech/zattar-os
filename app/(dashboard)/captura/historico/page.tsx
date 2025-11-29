@@ -344,6 +344,8 @@ export default function HistoricoCapturasPage() {
           selectedFilters={selectedFilterIds}
           onFiltersChange={handleFilterIdsChange}
           filterButtonsMode="buttons"
+          onNewClick={() => router.push('/captura')}
+          newButtonTooltip="Nova Captura"
         />
       </div>
 

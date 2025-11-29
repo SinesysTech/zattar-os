@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { extrairTodosElementos } from '@/backend/captura/services/recovery/recovery-analysis.service';
 import { buscarLogPorMongoId } from '@/backend/captura/services/recovery/captura-recovery.service';
 
