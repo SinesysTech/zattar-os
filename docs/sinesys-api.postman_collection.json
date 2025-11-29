@@ -161,6 +161,28 @@
               ]
             }
           }
+        },
+        {
+          "name": "Buscar processos por CPF (Agente IA)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-service-api-key",
+                "value": "{{service_api_key}}",
+                "description": "API Key de serviço para autenticação"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/acervo/cliente/cpf/:cpf",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acervo", "cliente", "cpf", ":cpf"],
+              "variable": [
+                { "key": "cpf", "value": "12345678901", "description": "CPF do cliente (com ou sem formatação)" }
+              ]
+            },
+            "description": "Busca todos os processos de um cliente pelo CPF.\n\nOtimizado para consumo pelo Agente IA WhatsApp.\n\nCaracterísticas:\n- Busca apenas em clientes cadastrados\n- Inclui timeline completa\n- Dados sanitizados (sem IDs internos)\n- Formatos amigáveis (datas, nomes de tribunais)\n- Processos agrupados por número (1º e 2º grau juntos)"
+          }
         }
       ]
     },

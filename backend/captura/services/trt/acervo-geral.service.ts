@@ -76,6 +76,12 @@ export interface AcervoGeralResult {
     partesCapturadas: number;
     erros: number;
   };
+  /** Payloads brutos de partes por processo (para salvar no MongoDB) */
+  payloadsBrutosPartes?: Array<{
+    processoId: number;
+    numeroProcesso?: string;
+    payloadBruto: Record<string, unknown> | null;
+  }>;
 }
 
 /**
@@ -301,6 +307,26 @@ export async function acervoGeralCapture(
     console.log(`      - Partes: ${dadosComplementares.resumo.partesObtidas}`);
     console.log(`      - Erros: ${dadosComplementares.resumo.erros}`);
 
+    // Coletar payloads brutos de partes para salvar no MongoDB
+    const payloadsBrutosPartes: Array<{
+      processoId: number;
+      numeroProcesso?: string;
+      payloadBruto: Record<string, unknown> | null;
+    }> = [];
+    for (const [processoId, dados] of dadosComplementares.porProcesso) {
+      if (dados.payloadBrutoPartes !== undefined) {
+        // Buscar número do processo
+        const processoCorrespondente = processos.find(p => p.id === processoId);
+        const numeroProcesso = processoCorrespondente?.numeroProcesso || (processoCorrespondente?.numero ? String(processoCorrespondente.numero) : undefined);
+        payloadsBrutosPartes.push({
+          processoId,
+          numeroProcesso,
+          payloadBruto: dados.payloadBrutoPartes,
+        });
+      }
+    }
+    console.log(`   📦 Payloads de partes coletados: ${payloadsBrutosPartes.length}`);
+
     return {
       processos,
       total: processos.length,
@@ -314,6 +340,7 @@ export async function acervoGeralCapture(
         partesCapturadas: partesPersistidas,
         erros: dadosComplementares.resumo.erros,
       },
+      payloadsBrutosPartes,
     };
   } finally {
     // ═══════════════════════════════════════════════════════════════

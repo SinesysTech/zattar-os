@@ -86,6 +86,9 @@ export async function PATCH(
     }
 
     const baixadoEm = registro.baixado_em as string | null
+    const dataCienciaAtual = registro.data_ciencia_parte as string | null
+    const createdAt = registro.created_at as string | null
+    
     let novoPrazoVencido = registro.prazo_vencido as boolean
     if (dataPrazoLegal) {
       const agora = new Date()
@@ -95,9 +98,21 @@ export async function PATCH(
       novoPrazoVencido = false
     }
 
+    // Preparar dados para atualização
+    const updateData: Record<string, any> = {
+      data_prazo_legal_parte: dataPrazoLegal,
+      prazo_vencido: novoPrazoVencido
+    }
+
+    // Se não tem data de início (ciência) e estamos definindo uma data de fim,
+    // usa a data de criação do expediente como data de início
+    if (!dataCienciaAtual && dataPrazoLegal && createdAt) {
+      updateData.data_ciencia_parte = createdAt
+    }
+
     const { data: updated, error: updError } = await supabase
       .from('pendentes_manifestacao')
-      .update({ data_prazo_legal_parte: dataPrazoLegal, prazo_vencido: novoPrazoVencido })
+      .update(updateData)
       .eq('id', expedienteId)
       .select('*')
       .single()

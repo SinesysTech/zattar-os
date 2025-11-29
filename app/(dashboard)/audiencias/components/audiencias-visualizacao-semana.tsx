@@ -305,9 +305,9 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
       </div>
 
       {/* Quinta linha: Botões de ação */}
-      <div className="flex items-center gap-2 w-full pt-2 border-t">
+      <div className="flex items-center gap-2 w-full pt-2 border-t flex-wrap">
         <TooltipProvider>
-          {isDesignada && (
+          {isDesignada ? (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -329,7 +329,12 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
                 <p>Marcar audiência como realizada</p>
               </TooltipContent>
             </Tooltip>
-          )}
+          ) : audiencia.status === 'F' ? (
+            <Badge variant="outline" className="h-7 px-2 text-xs gap-1 bg-green-100 text-green-800 border-green-300">
+              <CheckCircle2 className="h-3 w-3" />
+              Realizada
+            </Badge>
+          ) : null}
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

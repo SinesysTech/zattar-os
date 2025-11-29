@@ -84,6 +84,12 @@ export interface AudienciasResult {
     partesCapturadas: number;
     erros: number;
   };
+  /** Payloads brutos de partes por processo (para salvar no MongoDB) */
+  payloadsBrutosPartes?: Array<{
+    processoId: number;
+    numeroProcesso?: string;
+    payloadBruto: Record<string, unknown> | null;
+  }>;
 }
 
 /**
@@ -426,6 +432,26 @@ export async function audienciasCapture(
     console.log(`      - Partes: ${dadosComplementares.resumo.partesObtidas}`);
     console.log(`      - Erros: ${dadosComplementares.resumo.erros}`);
 
+    // Coletar payloads brutos de partes para salvar no MongoDB
+    const payloadsBrutosPartes: Array<{
+      processoId: number;
+      numeroProcesso?: string;
+      payloadBruto: Record<string, unknown> | null;
+    }> = [];
+    for (const [processoId, dados] of dadosComplementares.porProcesso) {
+      if (dados.payloadBrutoPartes !== undefined) {
+        // Buscar número do processo da audiência correspondente
+        const audienciaDoProcesso = audiencias.find(a => a.idProcesso === processoId);
+        const numeroProcesso = audienciaDoProcesso?.nrProcesso || audienciaDoProcesso?.processo?.numero;
+        payloadsBrutosPartes.push({
+          processoId,
+          numeroProcesso,
+          payloadBruto: dados.payloadBrutoPartes,
+        });
+      }
+    }
+    console.log(`   📦 Payloads de partes coletados: ${payloadsBrutosPartes.length}`);
+
     return {
       audiencias,
       total: audiencias.length,
@@ -441,6 +467,7 @@ export async function audienciasCapture(
         partesCapturadas: dadosComplementares.resumo.partesObtidas,
         erros: dadosComplementares.resumo.erros,
       },
+      payloadsBrutosPartes,
     };
   } finally {
     // ═══════════════════════════════════════════════════════════════

@@ -285,12 +285,28 @@ function TipoDescricaoCell({
               type="button"
               className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer w-full pr-6"
             >
-              <Badge
-                variant="outline"
-                className={`text-xs w-fit ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
-              >
-                {tipoNome}
-              </Badge>
+              {/* Badge de tipo com ícone de documento na frente */}
+              <div className="flex items-center gap-1.5">
+                {temDocumento && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsPdfViewerOpen(true);
+                    }}
+                    className="p-1 hover:bg-accent rounded-md transition-colors"
+                    title="Visualizar documento"
+                  >
+                    <FileText className="h-3.5 w-3.5 text-primary" />
+                  </button>
+                )}
+                <Badge
+                  variant="outline"
+                  className={`text-xs w-fit ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
+                >
+                  {tipoNome}
+                </Badge>
+              </div>
               <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed text-justify">
                 {descricaoExibicao}
               </div>
@@ -359,21 +375,6 @@ function TipoDescricaoCell({
             </div>
           </PopoverContent>
         </Popover>
-
-        {/* Botão de visualização do documento - posicionado no canto inferior direito */}
-        {temDocumento && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsPdfViewerOpen(true);
-            }}
-            className="absolute bottom-1 right-1 p-1 hover:bg-accent rounded-md transition-colors z-10 opacity-0 group-hover:opacity-100"
-            title="Visualizar documento"
-          >
-            <FileText className="h-3.5 w-3.5 text-primary" />
-          </button>
-        )}
       </div>
 
       {/* Modal de visualização do PDF */}
@@ -1107,10 +1108,23 @@ function criarColunasSemanais(
               <DialogContent className="max-w-sm">
                 <DialogHeader>
                   <DialogTitle>Definir Prazo Legal</DialogTitle>
-                  <DialogDescription>Escolha a data de fim do prazo</DialogDescription>
+                  <DialogDescription>Defina a data de fim do prazo. A data de início será preenchida automaticamente.</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-3">
-                  <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} />
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium">Data de Início (automática)</label>
+                    <input
+                      type="text"
+                      value={row.original.created_at ? formatarData(row.original.created_at) : '-'}
+                      disabled
+                      className="border rounded p-2 w-full bg-muted text-muted-foreground"
+                    />
+                    <p className="text-xs text-muted-foreground">Data de criação do expediente</p>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium">Data de Fim *</label>
+                    <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} />
+                  </div>
                 </div>
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setOpenPrazo(false)} disabled={isSavingPrazo}>Cancelar</Button>
@@ -1139,28 +1153,30 @@ function criarColunasSemanais(
 
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[520px]">
+            {/* Primeira linha: TRT e Grau */}
             <div className="flex items-center gap-1.5 flex-wrap">
               <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>{trt}</Badge>
               <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>{formatarGrau(grau)}</Badge>
+            </div>
+            {/* Segunda linha: Classe judicial + Número do processo + Olho */}
+            <div className="flex items-center gap-1.5">
               <span className="text-sm font-medium whitespace-nowrap flex items-center gap-1">
                 {classeJudicial && `${classeJudicial} `}
-                {processoId ? (
+                {numeroProcesso}
+                {processoId && (
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Link
                         href={`/processos/${processoId}`}
-                        className="inline-flex items-center gap-1 hover:text-primary transition-colors"
+                        className="inline-flex items-center hover:text-primary transition-colors ml-1"
                       >
                         <Eye className="h-3.5 w-3.5" />
-                        {numeroProcesso}
                       </Link>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Ver timeline do processo</p>
                     </TooltipContent>
                   </Tooltip>
-                ) : (
-                  <span>{numeroProcesso}</span>
                 )}
               </span>
             </div>

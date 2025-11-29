@@ -52,6 +52,15 @@ curl -X PATCH "http://localhost:3000/api/acervo/123/responsavel" \
 # Obter timeline do processo
 curl -X GET "http://localhost:3000/api/acervo/123/timeline" \
   -H "Authorization: Bearer <token>"
+
+# Buscar processos por CPF do cliente (para Agente IA WhatsApp)
+# Retorna todos os processos do cliente com timeline consolidada
+curl -X GET "http://localhost:3000/api/acervo/cliente/cpf/12345678901" \
+  -H "x-service-api-key: <api-key>"
+
+# Com CPF formatado (aceita ambos os formatos)
+curl -X GET "http://localhost:3000/api/acervo/cliente/cpf/123.456.789-01" \
+  -H "x-service-api-key: <api-key>"
 ```
 
 ---

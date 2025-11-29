@@ -774,12 +774,14 @@ export async function upsertTerceiroPorDocumento(
 
 /**
  * Parâmetros para criar terceiro sem documento
+ * NOTA: tipo_pessoa, tipo_parte e polo são opcionais - terão valores padrão se não fornecidos
+ * Isso permite criar terceiros com dados incompletos do PJE (ex: TESTEMUNHA)
  */
 export interface CriarTerceiroSemDocumentoParams {
   nome: string;
-  tipo_pessoa: 'pf' | 'pj';
-  tipo_parte: string;
-  polo: string;
+  tipo_pessoa?: 'pf' | 'pj';
+  tipo_parte?: string;
+  polo?: string;
   nome_fantasia?: string;
   emails?: string[];
   ddd_celular?: string;
@@ -819,28 +821,22 @@ export async function criarTerceiroSemDocumento(
   const supabase = createServiceClient();
 
   try {
-    // Validações obrigatórias (sem CPF/CNPJ)
-    if (!params.tipo_pessoa) {
-      return { sucesso: false, erro: 'Tipo de pessoa é obrigatório' };
-    }
-
+    // Validações obrigatórias (apenas nome - o resto tem defaults)
+    // NOTA: Dados do PJE podem vir incompletos (ex: TESTEMUNHA sem tipo_parte/polo)
     if (!params.nome?.trim()) {
       return { sucesso: false, erro: 'Nome é obrigatório' };
     }
 
-    if (!params.tipo_parte) {
-      return { sucesso: false, erro: 'Tipo de parte é obrigatório' };
-    }
-
-    if (!params.polo) {
-      return { sucesso: false, erro: 'Polo é obrigatório' };
-    }
+    // Usa valores padrão se não fornecidos (comum em terceiros do PJE)
+    const tipoPessoa = params.tipo_pessoa || 'pf';
+    const tipoParte = params.tipo_parte?.trim() || 'OUTRO';
+    const polo = params.polo?.trim() || 'OUTROS';
 
     // Preparar dados para inserção (sem CPF/CNPJ)
     const dadosNovos: Record<string, unknown> = {
-      tipo_parte: params.tipo_parte,
-      polo: params.polo,
-      tipo_pessoa: params.tipo_pessoa,
+      tipo_parte: tipoParte,
+      polo: polo,
+      tipo_pessoa: tipoPessoa,
       nome: params.nome.trim(),
       nome_fantasia: params.nome_fantasia?.trim() || null,
       emails: params.emails ?? null,
