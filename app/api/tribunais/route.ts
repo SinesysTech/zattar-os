@@ -29,16 +29,19 @@
  *                         type: object
  *                         properties:
  *                           id:
- *                             type: integer
+ *                             type: string
  *                           codigo:
  *                             type: string
  *                             example: "TRT3"
  *                           nome:
  *                             type: string
  *                             example: "Tribunal Regional do Trabalho da 3ª Região"
- *                           tipo:
+ *                           regiao:
  *                             type: string
- *                             example: "TRT"
+ *                             example: "Sudeste"
+ *                           uf:
+ *                             type: string
+ *                             example: "MG"
  *       401:
  *         description: Não autenticado
  *         content:
@@ -67,7 +70,7 @@ export async function GET(request: NextRequest) {
 
     const { data: tribunais, error } = await supabase
       .from('tribunais')
-      .select('id, codigo, nome, tipo')
+      .select('id, codigo, nome, regiao, uf')
       .order('codigo');
 
     if (error) {

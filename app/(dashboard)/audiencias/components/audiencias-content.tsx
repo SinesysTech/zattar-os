@@ -386,11 +386,11 @@ function criarColunas(
             </div>
             <div className="text-sm font-medium whitespace-nowrap">{classeJudicial && `${classeJudicial} `}{numeroProcesso}</div>
             <div className="flex flex-col gap-1 w-full">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteAutora}</span>
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
+                <span className="truncate">{parteAutora}</span>
               </Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteRe}</span>
+              <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
+                <span className="truncate">{parteRe}</span>
               </Badge>
             </div>
             <div className="text-xs text-muted-foreground">{orgaoJulgador}</div>
