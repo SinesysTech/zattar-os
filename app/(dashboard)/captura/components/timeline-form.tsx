@@ -22,10 +22,14 @@ import { ChevronDown, Info } from 'lucide-react';
  *
  * @example
  * ```tsx
- * <TimelineForm />
+ * <TimelineForm onSuccess={() => console.log('Captura concluída')} />
  * ```
  */
-export function TimelineForm() {
+interface TimelineFormProps {
+  onSuccess?: () => void;
+}
+
+export function TimelineForm({ onSuccess }: TimelineFormProps) {
   // Estados do formulário base
   const [advogadoId, setAdvogadoId] = useState<number | null>(null);
   const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
@@ -163,6 +167,7 @@ export function TimelineForm() {
           success: true,
           data: response.data,
         });
+        onSuccess?.();
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';

@@ -6,7 +6,11 @@ import { CapturaResult } from './captura-result';
 import { capturarAcervoGeral } from '@/app/api/captura/captura';
 import { useState } from 'react';
 
-export function AcervoGeralForm() {
+interface AcervoGeralFormProps {
+  onSuccess?: () => void;
+}
+
+export function AcervoGeralForm({ onSuccess }: AcervoGeralFormProps) {
   const [advogadoId, setAdvogadoId] = useState<number | null>(null);
   const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +55,7 @@ export function AcervoGeralForm() {
           data: response.data,
           capture_id: (response as any).capture_id,
         });
+        onSuccess?.();
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';

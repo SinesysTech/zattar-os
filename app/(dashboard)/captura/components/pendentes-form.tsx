@@ -11,7 +11,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 const ORDEM_FILTROS: FiltroPrazoPendentes[] = ['sem_prazo', 'no_prazo'];
 
-export function PendentesForm() {
+interface PendentesFormProps {
+  onSuccess?: () => void;
+}
+
+export function PendentesForm({ onSuccess }: PendentesFormProps) {
   const [advogadoId, setAdvogadoId] = useState<number | null>(null);
   const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
   const [filtrosPrazo, setFiltrosPrazo] = useState<FiltroPrazoPendentes[]>(ORDEM_FILTROS);
@@ -76,6 +80,7 @@ export function PendentesForm() {
           data: response.data,
           capture_id: (response as any).capture_id,
         });
+        onSuccess?.();
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';

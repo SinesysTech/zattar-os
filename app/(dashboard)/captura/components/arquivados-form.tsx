@@ -6,7 +6,11 @@ import { CapturaResult } from './captura-result';
 import { capturarArquivados } from '@/app/api/captura/captura';
 import { useState } from 'react';
 
-export function ArquivadosForm() {
+interface ArquivadosFormProps {
+  onSuccess?: () => void;
+}
+
+export function ArquivadosForm({ onSuccess }: ArquivadosFormProps) {
   const [advogadoId, setAdvogadoId] = useState<number | null>(null);
   const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +55,7 @@ export function ArquivadosForm() {
           data: response.data,
           capture_id: (response as any).capture_id,
         });
+        onSuccess?.();
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
