@@ -1,0 +1,35 @@
+[dotenv@17.2.3] injecting env (29) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+════════════════════════════════════════════════════════════════════════════════
+SINCRONIZAÇÃO DE PARTES E PROCESSOS
+════════════════════════════════════════════════════════════════════════════════
+
+📋 Configuração:
+   • Modo: EXECUÇÃO REAL
+   • Limite: sem limite
+   • TRT: todos
+   • Verbose: não
+📋 Buscando processos sem vínculos...
+   📊 464 processos já têm vínculos
+   ✅ 536 processos encontrados sem vínculos
+
+🔄 Processando 536 processos...
+   📊 Progresso: 100/536 processos (8 vínculos criados)
+   📊 Progresso: 200/536 processos (17 vínculos criados)
+   📊 Progresso: 300/536 processos (33 vínculos criados)
+   📊 Progresso: 400/536 processos (39 vínculos criados)
+   📊 Progresso: 500/536 processos (45 vínculos criados)
+
+════════════════════════════════════════════════════════════════════════════════
+RESULTADO DA SINCRONIZAÇÃO
+════════════════════════════════════════════════════════════════════════════════
+
+📊 Estatísticas:
+   • Processos analisados: 536
+   • Vínculos criados: 48
+     - Clientes: 18
+     - Partes contrárias: 30
+   • Erros: 0
+   • Duração: 128.37s
+
+✅ Sincronização concluída!

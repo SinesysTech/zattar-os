@@ -247,11 +247,27 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
       return elementos;
     }
 
+    // Filtrar apenas elementos faltantes
+    const partesFiltradas = elementos.partes.filter((e) => e.statusPersistencia === 'faltando');
+    const enderecosFiltrados = elementos.enderecos.filter((e) => e.statusPersistencia === 'faltando');
+    const representantesFiltrados = elementos.representantes.filter((e) => e.statusPersistencia === 'faltando');
+
+    // Recalcular totais para refletir apenas os elementos filtrados
     return {
-      partes: elementos.partes.filter((e) => e.statusPersistencia === 'faltando'),
-      enderecos: elementos.enderecos.filter((e) => e.statusPersistencia === 'faltando'),
-      representantes: elementos.representantes.filter((e) => e.statusPersistencia === 'faltando'),
-      totais: elementos.totais,
+      partes: partesFiltradas,
+      enderecos: enderecosFiltrados,
+      representantes: representantesFiltrados,
+      totais: {
+        partes: partesFiltradas.length,
+        partesExistentes: 0, // Não há existentes quando filtrando apenas faltantes
+        partesFaltantes: partesFiltradas.length,
+        enderecos: enderecosFiltrados.length,
+        enderecosExistentes: 0,
+        enderecosFaltantes: enderecosFiltrados.length,
+        representantes: representantesFiltrados.length,
+        representantesExistentes: 0,
+        representantesFaltantes: representantesFiltrados.length,
+      },
     };
   }, [elementos, mostrarApenasFaltantes]);
 
