@@ -20,9 +20,10 @@ import { PartesForm } from './partes-form';
 interface CapturaDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccess?: () => void;
 }
 
-export function CapturaDialog({ open, onOpenChange }: CapturaDialogProps) {
+export function CapturaDialog({ open, onOpenChange, onSuccess }: CapturaDialogProps) {
   const [tipoCaptura, setTipoCaptura] = useState<TipoCaptura>('acervo-geral');
 
   // Resetar para tipo padrão quando o dialog é aberto
@@ -36,17 +37,17 @@ export function CapturaDialog({ open, onOpenChange }: CapturaDialogProps) {
   const renderForm = () => {
     switch (tipoCaptura) {
       case 'acervo-geral':
-        return <AcervoGeralForm />;
+        return <AcervoGeralForm onSuccess={onSuccess} />;
       case 'arquivados':
-        return <ArquivadosForm />;
+        return <ArquivadosForm onSuccess={onSuccess} />;
       case 'audiencias':
-        return <AudienciasForm />;
+        return <AudienciasForm onSuccess={onSuccess} />;
       case 'pendentes':
-        return <PendentesForm />;
+        return <PendentesForm onSuccess={onSuccess} />;
       case 'timeline':
-        return <TimelineForm />;
+        return <TimelineForm onSuccess={onSuccess} />;
       case 'partes':
-        return <PartesForm />;
+        return <PartesForm onSuccess={onSuccess} />;
       default:
         return null;
     }

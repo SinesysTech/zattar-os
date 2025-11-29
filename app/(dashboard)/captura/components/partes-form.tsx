@@ -21,7 +21,11 @@ const parseListaProcessos = (value: string): string[] => {
 
 const normalizeNumeroProcesso = (value: string): string => value.trim().replace(/\s+/g, '');
 
-export function PartesForm() {
+interface PartesFormProps {
+  onSuccess?: () => void;
+}
+
+export function PartesForm({ onSuccess }: PartesFormProps) {
   const [advogadoId, setAdvogadoId] = useState<number | null>(null);
   const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
   const [credenciaisDisponiveis, setCredenciaisDisponiveis] = useState<Credencial[]>([]);
@@ -122,6 +126,7 @@ export function PartesForm() {
           data: response.data,
           capture_id: (response as any).capture_id,
         });
+        onSuccess?.();
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';

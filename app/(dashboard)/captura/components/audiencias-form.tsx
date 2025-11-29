@@ -16,7 +16,11 @@ import {
 } from '@/components/ui/select';
 import { STATUS_AUDIENCIA_OPTIONS } from '@/app/api/audiencias/audiencias';
 
-export function AudienciasForm() {
+interface AudienciasFormProps {
+  onSuccess?: () => void;
+}
+
+export function AudienciasForm({ onSuccess }: AudienciasFormProps) {
   const [advogadoId, setAdvogadoId] = useState<number | null>(null);
   const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
   const [dataInicio, setDataInicio] = useState('');
@@ -76,6 +80,7 @@ export function AudienciasForm() {
           data: response.data,
           capture_id: (response as any).capture_id,
         });
+        onSuccess?.();
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';

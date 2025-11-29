@@ -377,6 +377,10 @@ export default function HistoricoCapturasPage() {
       <CapturaDialog
         open={capturaDialogOpen}
         onOpenChange={setCapturaDialogOpen}
+        onSuccess={() => {
+          refetch();
+          setCapturaDialogOpen(false);
+        }}
       />
     </div>
   );
