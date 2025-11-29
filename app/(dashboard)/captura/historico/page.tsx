@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { CapturaDialog } from '../components/captura-dialog';
 import { buildCapturasFilterOptions, buildCapturasFilterGroups, parseCapturasFilters } from './components/capturas-toolbar-filters';
 import { useCapturasLog } from '@/app/_lib/hooks/use-capturas-log';
 import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
@@ -273,6 +274,7 @@ export default function HistoricoCapturasPage() {
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<CapturasFilters>({});
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+  const [capturaDialogOpen, setCapturaDialogOpen] = React.useState(false);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -344,7 +346,7 @@ export default function HistoricoCapturasPage() {
           selectedFilters={selectedFilterIds}
           onFiltersChange={handleFilterIdsChange}
           filterButtonsMode="buttons"
-          onNewClick={() => router.push('/captura')}
+          onNewClick={() => setCapturaDialogOpen(true)}
           newButtonTooltip="Nova Captura"
         />
       </div>
@@ -369,6 +371,12 @@ export default function HistoricoCapturasPage() {
         isLoading={isLoading}
         error={error}
         emptyMessage="Nenhuma captura encontrada no histórico."
+      />
+
+      {/* Dialog de nova captura */}
+      <CapturaDialog
+        open={capturaDialogOpen}
+        onOpenChange={setCapturaDialogOpen}
       />
     </div>
   );
