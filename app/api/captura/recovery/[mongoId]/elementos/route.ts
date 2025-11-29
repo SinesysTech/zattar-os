@@ -27,15 +27,148 @@ interface RouteParams {
 }
 
 /**
- * GET /api/captura/recovery/[mongoId]/elementos
+ * @swagger
+ * /api/captura/recovery/{mongoId}/elementos:
+ *   get:
+ *     summary: Lista elementos capturados de um log de recovery
+ *     description: |
+ *       Retorna TODOS os elementos capturados no payload MongoDB,
+ *       com status de persistência de cada um no PostgreSQL.
  *
- * Retorna todos os elementos capturados do payload com status de persistência.
- *
- * Query params:
- * - filtro: 'todos' | 'faltantes' | 'existentes' (default: 'todos')
- * - modo: 'partes' | 'generico' (default: 'generico')
- *   - partes: retorna estrutura legada {partes, enderecos, representantes}
- *   - generico: retorna estrutura unificada {elementos} baseada no tipo de captura
+ *       A estrutura de elementos varia conforme o tipo de captura:
+ *       - **partes**: partes, endereços, representantes (suporta re-persistência)
+ *       - **pendentes**: processos pendentes (apenas visualização)
+ *       - **audiencias**: audiências (apenas visualização)
+ *     tags:
+ *       - Captura Recovery
+ *     security:
+ *       - bearerAuth: []
+ *       - sessionAuth: []
+ *       - serviceApiKey: []
+ *     parameters:
+ *       - in: path
+ *         name: mongoId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do documento MongoDB (ObjectId)
+ *         example: "64abc123def456789012345"
+ *       - in: query
+ *         name: filtro
+ *         schema:
+ *           type: string
+ *           enum: [todos, faltantes, existentes]
+ *           default: todos
+ *         description: |
+ *           Filtro de elementos por status de persistência:
+ *           - **todos**: retorna todos os elementos
+ *           - **faltantes**: apenas elementos não persistidos no PostgreSQL
+ *           - **existentes**: apenas elementos já persistidos
+ *       - in: query
+ *         name: modo
+ *         schema:
+ *           type: string
+ *           enum: [generico, partes]
+ *           default: generico
+ *         description: |
+ *           Modo de retorno dos elementos:
+ *           - **generico**: estrutura unificada {elementos} baseada no tipo de captura
+ *           - **partes**: estrutura legada {partes, enderecos, representantes}
+ *     responses:
+ *       200:
+ *         description: Elementos retornados com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     log:
+ *                       type: object
+ *                       properties:
+ *                         mongoId:
+ *                           type: string
+ *                         capturaLogId:
+ *                           type: integer
+ *                         tipoCaptura:
+ *                           type: string
+ *                           enum: [partes, pendentes, audiencias, acervo-geral, arquivados]
+ *                         status:
+ *                           type: string
+ *                         trt:
+ *                           type: integer
+ *                         grau:
+ *                           type: integer
+ *                         advogadoId:
+ *                           type: integer
+ *                         criadoEm:
+ *                           type: string
+ *                           format: date-time
+ *                         erro:
+ *                           type: string
+ *                           nullable: true
+ *                     payloadDisponivel:
+ *                       type: boolean
+ *                     suportaRepersistencia:
+ *                       type: boolean
+ *                       description: Indica se os elementos podem ser re-persistidos
+ *                     filtroAplicado:
+ *                       type: string
+ *                       enum: [todos, faltantes, existentes]
+ *                     elementos:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           tipo:
+ *                             type: string
+ *                           identificador:
+ *                             type: string
+ *                           statusPersistencia:
+ *                             type: string
+ *                             enum: [existente, faltando]
+ *                           dados:
+ *                             type: object
+ *                     totais:
+ *                       type: object
+ *                       properties:
+ *                         total:
+ *                           type: integer
+ *                         existentes:
+ *                           type: integer
+ *                         faltantes:
+ *                           type: integer
+ *                         filtrados:
+ *                           type: integer
+ *       400:
+ *         description: Parâmetros inválidos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: Não autenticado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       404:
+ *         description: Log não encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {

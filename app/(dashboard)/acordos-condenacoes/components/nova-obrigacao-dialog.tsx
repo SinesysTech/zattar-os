@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -23,13 +24,24 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Scale } from 'lucide-react';
 import { useAcervo } from '@/app/_lib/hooks/use-acervo';
+
+interface DadosIniciais {
+  processo_id: number;
+  trt: string;
+  grau: string;
+  numero_processo: string;
+  polo_ativo_nome?: string;
+  polo_passivo_nome?: string;
+}
 
 interface NovaObrigacaoDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
+  /** Dados iniciais pré-preenchidos (ex: ao criar obrigação a partir de audiência) */
+  dadosIniciais?: DadosIniciais;
 }
 
 // Opções de TRT (TRT1 a TRT24)
@@ -47,7 +59,11 @@ const GRAUS = [
   { value: 'segundo_grau', label: '2º Grau' },
 ];
 
-export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrigacaoDialogProps) {
+const formatarGrau = (grau: string): string => {
+  return grau === 'primeiro_grau' ? '1º Grau' : '2º Grau';
+};
+
+export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosIniciais }: NovaObrigacaoDialogProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -64,8 +80,11 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
   const [formaDistribuicao, setFormaDistribuicao] = React.useState('');
   const [observacoes, setObservacoes] = React.useState('');
 
-  // Buscar processos com hook quando TRT e Grau forem selecionados
-  const shouldFetchProcessos = open && !!trt && !!grau;
+  // Determinar se está no modo com dados iniciais (processo já definido)
+  const modoProcessoDefinido = !!dadosIniciais;
+
+  // Buscar processos com hook quando TRT e Grau forem selecionados (apenas no modo manual)
+  const shouldFetchProcessos = open && !modoProcessoDefinido && !!trt && !!grau;
 
   // Hook com params fixos para evitar re-renders
   const acervoParams = React.useMemo(() => {
@@ -94,17 +113,28 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
     }
   }, [processoError, error]);
 
-  // Resetar processo quando TRT ou Grau mudarem
+  // Resetar processo quando TRT ou Grau mudarem (apenas no modo manual)
   React.useEffect(() => {
-    setProcessoId([]);
-  }, [trt, grau]);
+    if (!modoProcessoDefinido) {
+      setProcessoId([]);
+    }
+  }, [trt, grau, modoProcessoDefinido]);
+
+  // Resetar form quando fechar
+  React.useEffect(() => {
+    if (!open) {
+      resetForm();
+    }
+  }, [open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
     // Validações
-    if (processoId.length === 0) {
+    const processoIdFinal = modoProcessoDefinido ? dadosIniciais?.processo_id : (processoId.length > 0 ? parseInt(processoId[0]) : null);
+
+    if (!processoIdFinal) {
       setError('Selecione um processo');
       return;
     }
@@ -148,7 +178,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          processoId: parseInt(processoId[0]),
+          processoId: processoIdFinal,
           tipo,
           direcao,
           valorTotal: parseFloat(valorTotal),
@@ -207,6 +237,178 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess }: NovaObrig
     }));
   }, [processos]);
 
+  // Layout quando há dados iniciais (processo já definido)
+  if (modoProcessoDefinido && dadosIniciais) {
+    return (
+      <Dialog open={open} onOpenChange={handleClose}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Scale className="h-5 w-5" />
+              Nova Obrigação
+            </DialogTitle>
+            <DialogDescription>
+              Adicionar acordo, condenação ou custas ao processo
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit}>
+            {error && (
+              <div className="bg-red-50 text-red-800 p-3 rounded-md text-sm mb-4">
+                {error}
+              </div>
+            )}
+
+            {/* Header com informações do processo */}
+            <div className="bg-muted/50 rounded-lg p-4 mb-6">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+                      {dadosIniciais.trt}
+                    </Badge>
+                    <Badge variant="outline" className="bg-emerald-100 text-emerald-800 border-emerald-200">
+                      {formatarGrau(dadosIniciais.grau)}
+                    </Badge>
+                  </div>
+                  <div className="text-lg font-semibold">{dadosIniciais.numero_processo}</div>
+                </div>
+                <div className="text-right text-sm">
+                  <div className="text-muted-foreground">Parte Autora</div>
+                  <div className="font-medium">{dadosIniciais.polo_ativo_nome || '-'}</div>
+                  <div className="text-muted-foreground mt-2">Parte Ré</div>
+                  <div className="font-medium">{dadosIniciais.polo_passivo_nome || '-'}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Campos em duas colunas */}
+            <div className="grid grid-cols-2 gap-6">
+              {/* Coluna esquerda */}
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="tipo">Tipo *</Label>
+                    <Select value={tipo} onValueChange={setTipo}>
+                      <SelectTrigger id="tipo">
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="acordo">Acordo</SelectItem>
+                        <SelectItem value="condenacao">Condenação</SelectItem>
+                        <SelectItem value="custas_processuais">Custas</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="direcao">Direção *</Label>
+                    <Select value={direcao} onValueChange={setDirecao}>
+                      <SelectTrigger id="direcao">
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="recebimento">Recebimento</SelectItem>
+                        <SelectItem value="pagamento">Pagamento</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="valorTotal">Valor Total (R$) *</Label>
+                    <Input
+                      id="valorTotal"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      placeholder="0.00"
+                      value={valorTotal}
+                      onChange={(e) => setValorTotal(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="numeroParcelas">Parcelas *</Label>
+                    <Input
+                      id="numeroParcelas"
+                      type="number"
+                      min="1"
+                      placeholder="1"
+                      value={numeroParcelas}
+                      onChange={(e) => setNumeroParcelas(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="dataVencimento">1ª Parcela *</Label>
+                    <Input
+                      id="dataVencimento"
+                      type="date"
+                      value={dataVencimentoPrimeiraParcela}
+                      onChange={(e) => setDataVencimentoPrimeiraParcela(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="formaPagamento">Pagamento *</Label>
+                    <Select value={formaPagamentoPadrao} onValueChange={setFormaPagamentoPadrao}>
+                      <SelectTrigger id="formaPagamento">
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="transferencia_direta">Transferência</SelectItem>
+                        <SelectItem value="deposito_judicial">Dep. Judicial</SelectItem>
+                        <SelectItem value="deposito_recursal">Dep. Recursal</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="formaDistribuicao">Forma de Distribuição</Label>
+                  <Input
+                    id="formaDistribuicao"
+                    type="text"
+                    placeholder="Ex: 60% cliente, 40% honorários"
+                    value={formaDistribuicao}
+                    onChange={(e) => setFormaDistribuicao(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Coluna direita */}
+              <div className="space-y-2">
+                <Label htmlFor="observacoes">Observações</Label>
+                <Textarea
+                  id="observacoes"
+                  placeholder="Anotações adicionais sobre a obrigação..."
+                  value={observacoes}
+                  onChange={(e) => setObservacoes(e.target.value)}
+                  className="h-[240px] resize-none"
+                />
+              </div>
+            </div>
+
+            <DialogFooter className="mt-6">
+              <Button type="button" variant="outline" onClick={handleClose} disabled={isLoading}>
+                Cancelar
+              </Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Salvar
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Layout padrão quando não há dados iniciais (seleção manual de processo)
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">

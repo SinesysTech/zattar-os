@@ -399,8 +399,24 @@ curl -X GET "http://localhost:3000/api/captura/recovery?pagina=1&limite=50" \
 curl -X GET "http://localhost:3000/api/captura/recovery/64abc123def456" \
   -H "Authorization: Bearer <token>"
 
-# Obter elementos de recovery
+# Obter elementos de recovery (modo genérico - todos os elementos)
 curl -X GET "http://localhost:3000/api/captura/recovery/64abc123def456/elementos" \
+  -H "Authorization: Bearer <token>"
+
+# Obter elementos de recovery (modo genérico - apenas faltantes)
+curl -X GET "http://localhost:3000/api/captura/recovery/64abc123def456/elementos?filtro=faltantes" \
+  -H "Authorization: Bearer <token>"
+
+# Obter elementos de recovery (modo genérico - apenas existentes)
+curl -X GET "http://localhost:3000/api/captura/recovery/64abc123def456/elementos?filtro=existentes" \
+  -H "Authorization: Bearer <token>"
+
+# Obter elementos de recovery (modo partes - estrutura legada)
+curl -X GET "http://localhost:3000/api/captura/recovery/64abc123def456/elementos?modo=partes" \
+  -H "Authorization: Bearer <token>"
+
+# Obter elementos de recovery (modo partes - apenas faltantes)
+curl -X GET "http://localhost:3000/api/captura/recovery/64abc123def456/elementos?modo=partes&filtro=faltantes" \
   -H "Authorization: Bearer <token>"
 
 # Reprocessar recovery

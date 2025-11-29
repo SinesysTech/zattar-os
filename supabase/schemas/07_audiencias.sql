@@ -30,6 +30,7 @@ create table public.audiencias (
   polo_passivo_representa_varios boolean not null default false,
   url_audiencia_virtual text,
   endereco_presencial jsonb,
+  presenca_hibrida text check (presenca_hibrida is null or presenca_hibrida in ('advogado', 'cliente')),
   ata_audiencia_id bigint,
   url_ata_audiencia text,
   segredo_justica boolean not null default false,
@@ -71,6 +72,7 @@ comment on column public.audiencias.polo_passivo_nome is 'Nome da parte ré';
 comment on column public.audiencias.polo_passivo_representa_varios is 'Indica se o polo passivo representa múltiplas partes';
 comment on column public.audiencias.url_audiencia_virtual is 'URL para audiências virtuais (Zoom, Google Meet, etc). Quando preenchida, modalidade = virtual';
 comment on column public.audiencias.endereco_presencial is 'Endereço da audiência presencial em JSON (logradouro, numero, cidade, etc). Quando preenchido, modalidade = presencial';
+comment on column public.audiencias.presenca_hibrida is 'Para audiências híbridas: indica quem comparece presencialmente (advogado ou cliente). Null para modalidades não-híbridas.';
 comment on column public.audiencias.ata_audiencia_id is 'ID do documento de ata da audiência no PJE';
 comment on column public.audiencias.url_ata_audiencia is 'URL para download da ata da audiência';
 comment on column public.audiencias.segredo_justica is 'Indica se o processo está em segredo de justiça';

@@ -9,11 +9,12 @@ import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Copy, Pencil, FileText, CheckCircle2, PlusCircle, Loader2 } from 'lucide-react';
+import { Copy, Pencil, FileText, CheckCircle2, PlusCircle, Loader2, Scale } from 'lucide-react';
 import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';
 import { NovoExpedienteDialog } from '@/app/(dashboard)/expedientes/components/novo-expediente-dialog';
+import { NovaObrigacaoDialog } from '@/app/(dashboard)/acordos-condenacoes/components/nova-obrigacao-dialog';
 import {
   Tooltip,
   TooltipContent,
@@ -183,6 +184,9 @@ function HoraCell({ audiencia }: { audiencia: Audiencia }) {
  */
 function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [isExpedienteDialogOpen, setIsExpedienteDialogOpen] = React.useState(false);
+  const [isObrigacaoDialogOpen, setIsObrigacaoDialogOpen] = React.useState(false);
+  const [isMarkingRealizada, setIsMarkingRealizada] = React.useState(false);
   const tipo = audiencia.tipo_descricao || '-';
   const sala = audiencia.sala_audiencia_nome || '-';
   const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
@@ -192,6 +196,42 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
     ? [audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'
     : null;
   const isHibrida = audiencia.modalidade === 'hibrida';
+  const isDesignada = audiencia.status === 'M';
+
+  // Marcar audiência como realizada
+  const handleMarcarRealizada = async () => {
+    setIsMarkingRealizada(true);
+    try {
+      const response = await fetch(`/api/audiencias/${audiencia.id}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: 'F' }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao marcar como realizada');
+      }
+
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao marcar audiência como realizada:', error);
+    } finally {
+      setIsMarkingRealizada(false);
+    }
+  };
+
+  // Dados iniciais para o dialog de expediente
+  const dadosIniciaisExpediente = {
+    processo_id: audiencia.processo_id,
+    trt: audiencia.trt,
+    grau: audiencia.grau,
+    numero_processo: audiencia.numero_processo,
+    polo_ativo_nome: audiencia.polo_ativo_nome || undefined,
+    polo_passivo_nome: audiencia.polo_passivo_nome || undefined,
+  };
 
   return (
     <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px]">
@@ -263,6 +303,89 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
         </div>
         <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />
       </div>
+
+      {/* Quinta linha: Botões de ação */}
+      <div className="flex items-center gap-2 w-full pt-2 border-t">
+        <TooltipProvider>
+          {isDesignada && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleMarcarRealizada}
+                  disabled={isMarkingRealizada}
+                  className="h-7 px-2 text-xs gap-1 text-green-700 border-green-200 hover:bg-green-50 hover:text-green-800"
+                >
+                  {isMarkingRealizada ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="h-3 w-3" />
+                  )}
+                  Realizada
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Marcar audiência como realizada</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setIsExpedienteDialogOpen(true)}
+                className="h-7 px-2 text-xs gap-1"
+              >
+                <PlusCircle className="h-3 w-3" />
+                Expediente
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Criar expediente a partir desta audiência</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setIsObrigacaoDialogOpen(true)}
+                className="h-7 px-2 text-xs gap-1 text-amber-700 border-amber-200 hover:bg-amber-50 hover:text-amber-800"
+              >
+                <Scale className="h-3 w-3" />
+                Obrigação
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Criar acordo/condenação a partir desta audiência</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+
+      {/* Dialog de criar expediente */}
+      <NovoExpedienteDialog
+        open={isExpedienteDialogOpen}
+        onOpenChange={setIsExpedienteDialogOpen}
+        onSuccess={() => {
+          setIsExpedienteDialogOpen(false);
+          onSuccess();
+        }}
+        dadosIniciais={dadosIniciaisExpediente}
+      />
+
+      {/* Dialog de criar obrigação */}
+      <NovaObrigacaoDialog
+        open={isObrigacaoDialogOpen}
+        onOpenChange={setIsObrigacaoDialogOpen}
+        onSuccess={() => {
+          setIsObrigacaoDialogOpen(false);
+          onSuccess();
+        }}
+        dadosIniciais={dadosIniciaisExpediente}
+      />
     </div>
   );
 }

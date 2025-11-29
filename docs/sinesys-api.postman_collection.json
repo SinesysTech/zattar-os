@@ -1,0 +1,2653 @@
+{
+  "info": {
+    "_postman_id": "sinesys-api-collection",
+    "name": "Sinesys API",
+    "description": "API do Sistema de Gestão Jurídica Sinesys - Zattar Advogados\n\nAutenticação:\n- Bearer Token: Authorization header\n- Cookie de sessão: sb-access-token\n- API Key de serviço: x-service-api-key header",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "service_api_key",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Info",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health"]
+            },
+            "description": "Verifica o status da aplicação"
+          }
+        },
+        {
+          "name": "Me - Dados do usuário autenticado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "me"]
+            }
+          }
+        },
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["api", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "OpenAPI Spec",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/docs/openapi.json",
+              "host": ["{{base_url}}"],
+              "path": ["api", "docs", "openapi.json"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Acervo (Processos)",
+      "item": [
+        {
+          "name": "Listar processos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/acervo?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acervo"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" },
+                { "key": "cliente_id", "value": "", "disabled": true },
+                { "key": "tribunal_id", "value": "", "disabled": true },
+                { "key": "busca", "value": "", "disabled": true },
+                { "key": "responsavel_id", "value": "", "disabled": true },
+                { "key": "status", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter processo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/acervo/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acervo", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar responsável do processo",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"responsavel_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/acervo/:id/responsavel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acervo", ":id", "responsavel"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter timeline do processo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/acervo/:id/timeline",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acervo", ":id", "timeline"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Acordos e Condenações",
+      "item": [
+        {
+          "name": "Listar acordos/condenações",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/acordos-condenacoes?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acordos-condenacoes"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" },
+                { "key": "tipo", "value": "", "disabled": true },
+                { "key": "status", "value": "", "disabled": true },
+                { "key": "cliente_id", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Criar acordo/condenação",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"processo_id\": 123,\n  \"tipo\": \"acordo\",\n  \"valor_total\": 50000.00,\n  \"numero_parcelas\": 10,\n  \"data_primeiro_vencimento\": \"2025-01-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/acordos-condenacoes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acordos-condenacoes"]
+            }
+          }
+        },
+        {
+          "name": "Obter acordo/condenação por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/acordos-condenacoes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acordos-condenacoes", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar acordo/condenação",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"valor_total\": 55000.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/acordos-condenacoes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acordos-condenacoes", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir acordo/condenação",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/acordos-condenacoes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acordos-condenacoes", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Recalcular parcelas",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/acordos-condenacoes/:id/recalcular",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acordos-condenacoes", ":id", "recalcular"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar parcela",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"valor\": 5500.00,\n  \"data_vencimento\": \"2025-02-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/acordos-condenacoes/:acordoId/parcelas/:parcelaId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acordos-condenacoes", ":acordoId", "parcelas", ":parcelaId"],
+              "variable": [
+                { "key": "acordoId", "value": "123" },
+                { "key": "parcelaId", "value": "456" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar recebimento de parcela",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data_recebimento\": \"2025-01-15\",\n  \"valor_recebido\": 5000.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/acordos-condenacoes/:acordoId/parcelas/:parcelaId/receber",
+              "host": ["{{base_url}}"],
+              "path": ["api", "acordos-condenacoes", ":acordoId", "parcelas", ":parcelaId", "receber"],
+              "variable": [
+                { "key": "acordoId", "value": "123" },
+                { "key": "parcelaId", "value": "456" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Advogados",
+      "item": [
+        {
+          "name": "Listar advogados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/advogados",
+              "host": ["{{base_url}}"],
+              "path": ["api", "advogados"]
+            }
+          }
+        },
+        {
+          "name": "Criar advogado",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dr. João Silva\",\n  \"oab\": \"12345/PR\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/advogados",
+              "host": ["{{base_url}}"],
+              "path": ["api", "advogados"]
+            }
+          }
+        },
+        {
+          "name": "Obter advogado por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/advogados/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "advogados", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar advogado",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dr. João Paulo Silva\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/advogados/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "advogados", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir advogado",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/advogados/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "advogados", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar credenciais do advogado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/advogados/:id/credenciais",
+              "host": ["{{base_url}}"],
+              "path": ["api", "advogados", ":id", "credenciais"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Adicionar credencial ao advogado",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tribunal_id\": 9,\n  \"login\": \"usuario@email.com\",\n  \"senha\": \"senha123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/advogados/:id/credenciais",
+              "host": ["{{base_url}}"],
+              "path": ["api", "advogados", ":id", "credenciais"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter credencial específica",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/advogados/:advogadoId/credenciais/:credencialId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "advogados", ":advogadoId", "credenciais", ":credencialId"],
+              "variable": [
+                { "key": "advogadoId", "value": "1" },
+                { "key": "credencialId", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar credencial",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"senha\": \"novaSenha123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/advogados/:advogadoId/credenciais/:credencialId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "advogados", ":advogadoId", "credenciais", ":credencialId"],
+              "variable": [
+                { "key": "advogadoId", "value": "1" },
+                { "key": "credencialId", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir credencial",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/advogados/:advogadoId/credenciais/:credencialId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "advogados", ":advogadoId", "credenciais", ":credencialId"],
+              "variable": [
+                { "key": "advogadoId", "value": "1" },
+                { "key": "credencialId", "value": "10" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Audiências",
+      "item": [
+        {
+          "name": "Listar audiências",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/audiencias?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audiencias"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" },
+                { "key": "data_inicio", "value": "", "disabled": true },
+                { "key": "data_fim", "value": "", "disabled": true },
+                { "key": "tipo", "value": "", "disabled": true },
+                { "key": "cliente_id", "value": "", "disabled": true },
+                { "key": "responsavel_id", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar URL virtual",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url_virtual\": \"https://meet.google.com/abc-defg-hij\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/audiencias/:id/url-virtual",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audiencias", ":id", "url-virtual"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar responsável",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"responsavel_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/audiencias/:id/responsavel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audiencias", ":id", "responsavel"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar modalidade",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modalidade\": \"hibrida\",\n  \"url_virtual\": \"https://meet.google.com/abc\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/audiencias/:id/modalidade",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audiencias", ":id", "modalidade"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter observações",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/audiencias/:id/observacoes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audiencias", ":id", "observacoes"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Adicionar observação",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"observacao\": \"Cliente confirmou presença\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/audiencias/:id/observacoes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audiencias", ":id", "observacoes"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar tipos de audiência",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/audiencias/tipos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audiencias", "tipos"]
+            }
+          }
+        },
+        {
+          "name": "Listar salas de audiência",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/audiencias/salas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audiencias", "salas"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cache",
+      "item": [
+        {
+          "name": "Obter estatísticas do cache",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cache/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cache", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Limpar cache",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pattern\": \"acervo:*\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cache/clear",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cache", "clear"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Captura - Agendamentos",
+      "item": [
+        {
+          "name": "Listar agendamentos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/agendamentos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "agendamentos"]
+            }
+          }
+        },
+        {
+          "name": "Criar agendamento",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Captura Diária TRT9\",\n  \"tipo_captura\": \"acervo-geral\",\n  \"advogado_id\": 1,\n  \"credencial_ids\": [1, 2],\n  \"cron_expression\": \"0 8 * * *\",\n  \"ativo\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/captura/agendamentos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "agendamentos"]
+            }
+          }
+        },
+        {
+          "name": "Obter agendamento por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/agendamentos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "agendamentos", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar agendamento",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ativo\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/captura/agendamentos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "agendamentos", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir agendamento",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/agendamentos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "agendamentos", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Executar agendamento manualmente",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/agendamentos/:id/executar",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "agendamentos", ":id", "executar"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Captura - Credenciais",
+      "item": [
+        {
+          "name": "Listar credenciais",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/credenciais",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "credenciais"]
+            }
+          }
+        },
+        {
+          "name": "Criar credencial",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"advogado_id\": 1,\n  \"tribunal_id\": 9,\n  \"login\": \"usuario@email.com\",\n  \"senha\": \"senha123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/captura/credenciais",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "credenciais"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Captura - Tribunais",
+      "item": [
+        {
+          "name": "Listar tribunais",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/tribunais",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "tribunais"]
+            }
+          }
+        },
+        {
+          "name": "Obter tribunal por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/tribunais/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "tribunais", ":id"],
+              "variable": [
+                { "key": "id", "value": "9" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Captura - Histórico",
+      "item": [
+        {
+          "name": "Listar histórico de capturas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/historico?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "historico"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" },
+                { "key": "tipo_captura", "value": "", "disabled": true },
+                { "key": "status", "value": "", "disabled": true },
+                { "key": "advogado_id", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter detalhes de uma captura",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/historico/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "historico", ":id"],
+              "variable": [
+                { "key": "id", "value": "abc123" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Captura TRT - Execução",
+      "item": [
+        {
+          "name": "Capturar acervo geral",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"advogado_id\": 1,\n  \"credencial_ids\": [1, 2, 3]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/captura/trt/acervo-geral",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "trt", "acervo-geral"]
+            }
+          }
+        },
+        {
+          "name": "Capturar processos arquivados",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"advogado_id\": 1,\n  \"credencial_ids\": [1, 2, 3]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/captura/trt/arquivados",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "trt", "arquivados"]
+            }
+          }
+        },
+        {
+          "name": "Capturar audiências",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"advogado_id\": 1,\n  \"credencial_ids\": [1, 2, 3]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/captura/trt/audiencias",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "trt", "audiencias"]
+            }
+          }
+        },
+        {
+          "name": "Capturar pendentes de manifestação",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"advogado_id\": 1,\n  \"credencial_ids\": [1, 2, 3]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/captura/trt/pendentes-manifestacao",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "trt", "pendentes-manifestacao"]
+            }
+          }
+        },
+        {
+          "name": "Capturar timeline de processo",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"advogado_id\": 1,\n  \"credencial_id\": 1,\n  \"numero_processo\": \"0001234-56.2024.5.09.0001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/captura/trt/timeline",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "trt", "timeline"]
+            }
+          }
+        },
+        {
+          "name": "Capturar partes de processo",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"advogado_id\": 1,\n  \"credencial_id\": 1,\n  \"numero_processo\": \"0001234-56.2024.5.09.0001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/captura/trt/partes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "trt", "partes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Captura - Recovery",
+      "item": [
+        {
+          "name": "Listar gaps de recovery",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/recovery?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "recovery"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter detalhes de recovery",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/recovery/:mongoId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "recovery", ":mongoId"],
+              "variable": [
+                { "key": "mongoId", "value": "64abc123def456" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter elementos (modo genérico - todos)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/recovery/:mongoId/elementos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "recovery", ":mongoId", "elementos"],
+              "variable": [
+                { "key": "mongoId", "value": "64abc123def456" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter elementos (modo genérico - faltantes)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/recovery/:mongoId/elementos?filtro=faltantes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "recovery", ":mongoId", "elementos"],
+              "query": [
+                { "key": "filtro", "value": "faltantes" }
+              ],
+              "variable": [
+                { "key": "mongoId", "value": "64abc123def456" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter elementos (modo genérico - existentes)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/recovery/:mongoId/elementos?filtro=existentes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "recovery", ":mongoId", "elementos"],
+              "query": [
+                { "key": "filtro", "value": "existentes" }
+              ],
+              "variable": [
+                { "key": "mongoId", "value": "64abc123def456" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter elementos (modo partes - legado)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/recovery/:mongoId/elementos?modo=partes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "recovery", ":mongoId", "elementos"],
+              "query": [
+                { "key": "modo", "value": "partes" }
+              ],
+              "variable": [
+                { "key": "mongoId", "value": "64abc123def456" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter elementos (modo partes - faltantes)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/captura/recovery/:mongoId/elementos?modo=partes&filtro=faltantes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "recovery", ":mongoId", "elementos"],
+              "query": [
+                { "key": "modo", "value": "partes" },
+                { "key": "filtro", "value": "faltantes" }
+              ],
+              "variable": [
+                { "key": "mongoId", "value": "64abc123def456" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reprocessar recovery",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mongo_ids\": [\"64abc123def456\", \"64abc123def789\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/captura/recovery/reprocess",
+              "host": ["{{base_url}}"],
+              "path": ["api", "captura", "recovery", "reprocess"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "Listar clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/clientes?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" },
+                { "key": "busca", "value": "", "disabled": true },
+                { "key": "tipo", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Criar cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João da Silva\",\n  \"cpf\": \"12345678901\",\n  \"tipo\": \"pessoa_fisica\",\n  \"email\": \"joao@email.com\",\n  \"telefone\": \"41999999999\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/clientes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes"]
+            }
+          }
+        },
+        {
+          "name": "Obter cliente por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/clientes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar cliente",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"joao.silva@email.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/clientes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/clientes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar cliente por CPF",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/clientes/buscar/por-cpf/:cpf",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes", "buscar", "por-cpf", ":cpf"],
+              "variable": [
+                { "key": "cpf", "value": "12345678901" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar cliente por CNPJ",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/clientes/buscar/por-cnpj/:cnpj",
+              "host": ["{{base_url}}"],
+              "path": ["api", "clientes", "buscar", "por-cnpj", ":cnpj"],
+              "variable": [
+                { "key": "cnpj", "value": "12345678000199" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contratos",
+      "item": [
+        {
+          "name": "Listar contratos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/contratos?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contratos"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" },
+                { "key": "cliente_id", "value": "", "disabled": true },
+                { "key": "tipo", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Criar contrato",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente_id\": 1,\n  \"tipo\": \"ajuizamento\",\n  \"descricao\": \"Ação trabalhista\",\n  \"data_assinatura\": \"2025-01-01\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/contratos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contratos"]
+            }
+          }
+        },
+        {
+          "name": "Obter contrato por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/contratos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contratos", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar contrato",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descricao\": \"Ação trabalhista - Horas extras\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/contratos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contratos", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir contrato",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/contratos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contratos", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar processos do contrato",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/contratos/:id/processos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contratos", ":id", "processos"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Vincular processo ao contrato",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"processo_id\": 456\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/contratos/:id/processos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contratos", ":id", "processos"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Desvincular processo do contrato",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/contratos/:contratoId/processos/:processoId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "contratos", ":contratoId", "processos", ":processoId"],
+              "variable": [
+                { "key": "contratoId", "value": "123" },
+                { "key": "processoId", "value": "456" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Endereços",
+      "item": [
+        {
+          "name": "Listar endereços",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/enderecos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enderecos"]
+            }
+          }
+        },
+        {
+          "name": "Criar endereço",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cep\": \"80000000\",\n  \"logradouro\": \"Rua XV de Novembro\",\n  \"numero\": \"100\",\n  \"bairro\": \"Centro\",\n  \"cidade\": \"Curitiba\",\n  \"estado\": \"PR\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enderecos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enderecos"]
+            }
+          }
+        },
+        {
+          "name": "Obter endereço por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/enderecos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enderecos", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar endereço",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numero\": \"200\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enderecos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enderecos", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir endereço",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/enderecos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enderecos", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Expedientes Manuais",
+      "item": [
+        {
+          "name": "Listar expedientes manuais",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/expedientes-manuais?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "expedientes-manuais"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" },
+                { "key": "status", "value": "", "disabled": true },
+                { "key": "responsavel_id", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Criar expediente manual",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"processo_id\": 123,\n  \"tipo_expediente_id\": 1,\n  \"descricao\": \"Audiência de conciliação\",\n  \"data_prazo\": \"2025-02-15\",\n  \"responsavel_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/expedientes-manuais",
+              "host": ["{{base_url}}"],
+              "path": ["api", "expedientes-manuais"]
+            }
+          }
+        },
+        {
+          "name": "Obter expediente manual por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/expedientes-manuais/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "expedientes-manuais", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar expediente manual",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descricao\": \"Audiência de instrução\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/expedientes-manuais/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "expedientes-manuais", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir expediente manual",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/expedientes-manuais/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "expedientes-manuais", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar responsável",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"responsavel_id\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/expedientes-manuais/:id/responsavel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "expedientes-manuais", ":id", "responsavel"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Dar baixa no expediente",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"observacao\": \"Concluído com sucesso\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/expedientes-manuais/:id/baixa",
+              "host": ["{{base_url}}"],
+              "path": ["api", "expedientes-manuais", ":id", "baixa"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reverter baixa",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/expedientes-manuais/:id/reverter-baixa",
+              "host": ["{{base_url}}"],
+              "path": ["api", "expedientes-manuais", ":id", "reverter-baixa"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partes Contrárias",
+      "item": [
+        {
+          "name": "Listar partes contrárias",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/partes-contrarias?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "partes-contrarias"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Criar parte contrária",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Empresa Reclamada Ltda\",\n  \"cnpj\": \"12345678000199\",\n  \"email\": \"contato@empresa.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/partes-contrarias",
+              "host": ["{{base_url}}"],
+              "path": ["api", "partes-contrarias"]
+            }
+          }
+        },
+        {
+          "name": "Obter parte contrária por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/partes-contrarias/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "partes-contrarias", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar parte contrária",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"novo@empresa.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/partes-contrarias/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "partes-contrarias", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir parte contrária",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/partes-contrarias/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "partes-contrarias", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar por CPF",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/partes-contrarias/buscar/por-cpf/:cpf",
+              "host": ["{{base_url}}"],
+              "path": ["api", "partes-contrarias", "buscar", "por-cpf", ":cpf"],
+              "variable": [
+                { "key": "cpf", "value": "12345678901" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar por CNPJ",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/partes-contrarias/buscar/por-cnpj/:cnpj",
+              "host": ["{{base_url}}"],
+              "path": ["api", "partes-contrarias", "buscar", "por-cnpj", ":cnpj"],
+              "variable": [
+                { "key": "cnpj", "value": "12345678000199" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pendentes de Manifestação",
+      "item": [
+        {
+          "name": "Listar pendentes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/pendentes-manifestacao?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pendentes-manifestacao"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" },
+                { "key": "status", "value": "", "disabled": true },
+                { "key": "responsavel_id", "value": "", "disabled": true },
+                { "key": "data_inicio", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar responsável",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"responsavel_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pendentes-manifestacao/:id/responsavel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pendentes-manifestacao", ":id", "responsavel"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar tipo e descrição",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo_expediente_id\": 1,\n  \"descricao\": \"Intimação para manifestação\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pendentes-manifestacao/:id/tipo-descricao",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pendentes-manifestacao", ":id", "tipo-descricao"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Dar baixa",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"observacao\": \"Manifestação protocolada\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pendentes-manifestacao/:id/baixa",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pendentes-manifestacao", ":id", "baixa"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reverter baixa",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/pendentes-manifestacao/:id/reverter-baixa",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pendentes-manifestacao", ":id", "reverter-baixa"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Perfil",
+      "item": [
+        {
+          "name": "Obter perfil",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/perfil",
+              "host": ["{{base_url}}"],
+              "path": ["api", "perfil"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar perfil",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Paulo Silva\",\n  \"telefone\": \"41999999999\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/perfil",
+              "host": ["{{base_url}}"],
+              "path": ["api", "perfil"]
+            }
+          }
+        },
+        {
+          "name": "Alterar senha",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"senha_atual\": \"senhaAntiga123\",\n  \"nova_senha\": \"novaSenha456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/perfil/senha",
+              "host": ["{{base_url}}"],
+              "path": ["api", "perfil", "senha"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Permissões",
+      "item": [
+        {
+          "name": "Listar recursos e permissões",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/permissoes/recursos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "permissoes", "recursos"]
+            }
+          }
+        },
+        {
+          "name": "Obter permissões do usuário",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/permissoes/usuarios/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "permissoes", "usuarios", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar permissões do usuário",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"permissoes\": [\n    {\"recurso_id\": 1, \"ler\": true, \"criar\": true, \"atualizar\": true, \"deletar\": false}\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/permissoes/usuarios/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "permissoes", "usuarios", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Representantes",
+      "item": [
+        {
+          "name": "Listar representantes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/representantes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "representantes"]
+            }
+          }
+        },
+        {
+          "name": "Criar representante",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dr. Maria Silva\",\n  \"oab\": \"12345/PR\",\n  \"email\": \"maria@advocacia.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/representantes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "representantes"]
+            }
+          }
+        },
+        {
+          "name": "Obter representante por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/representantes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "representantes", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar representante",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"novo@email.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/representantes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "representantes", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir representante",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/representantes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "representantes", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upsert representante",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dr. João Silva\",\n  \"oab\": \"54321/PR\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/representantes/upsert",
+              "host": ["{{base_url}}"],
+              "path": ["api", "representantes", "upsert"]
+            }
+          }
+        },
+        {
+          "name": "Buscar por OAB",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/representantes/oab/:numero_oab",
+              "host": ["{{base_url}}"],
+              "path": ["api", "representantes", "oab", ":numero_oab"],
+              "variable": [
+                { "key": "numero_oab", "value": "12345-PR" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar representantes de um processo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/representantes/processo?processo_id=123",
+              "host": ["{{base_url}}"],
+              "path": ["api", "representantes", "processo"],
+              "query": [
+                { "key": "processo_id", "value": "123" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Terceiros",
+      "item": [
+        {
+          "name": "Listar terceiros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/terceiros",
+              "host": ["{{base_url}}"],
+              "path": ["api", "terceiros"]
+            }
+          }
+        },
+        {
+          "name": "Criar terceiro",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Empresa Terceira Ltda\",\n  \"documento\": \"12345678000199\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/terceiros",
+              "host": ["{{base_url}}"],
+              "path": ["api", "terceiros"]
+            }
+          }
+        },
+        {
+          "name": "Obter terceiro por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/terceiros/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "terceiros", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar terceiro",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Empresa Terceira S.A.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/terceiros/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "terceiros", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir terceiro",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/terceiros/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "terceiros", ":id"],
+              "variable": [
+                { "key": "id", "value": "123" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tribunais",
+      "item": [
+        {
+          "name": "Listar tribunais",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tribunais",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tribunais"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tipos de Expedientes",
+      "item": [
+        {
+          "name": "Listar tipos de expedientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tipos-expedientes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tipos-expedientes"]
+            }
+          }
+        },
+        {
+          "name": "Criar tipo de expediente",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Intimação\",\n  \"descricao\": \"Intimação para manifestação\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tipos-expedientes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tipos-expedientes"]
+            }
+          }
+        },
+        {
+          "name": "Obter tipo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tipos-expedientes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tipos-expedientes", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar tipo",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descricao\": \"Intimação judicial\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tipos-expedientes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tipos-expedientes", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir tipo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tipos-expedientes/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tipos-expedientes", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuários",
+      "item": [
+        {
+          "name": "Listar usuários",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Criar usuário",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Novo Usuário\",\n  \"email\": \"usuario@email.com\",\n  \"cpf\": \"12345678901\",\n  \"senha\": \"senhaSegura123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/usuarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "Obter usuário por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar usuário",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Nome Atualizado\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir usuário",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Resetar senha",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nova_senha\": \"novaSenha123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/:id/senha",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios", ":id", "senha"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Sincronizar usuários",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/sincronizar",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios", "sincronizar"]
+            }
+          }
+        },
+        {
+          "name": "Buscar por CPF",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/buscar/por-cpf/:cpf",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios", "buscar", "por-cpf", ":cpf"],
+              "variable": [
+                { "key": "cpf", "value": "12345678901" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar por email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/buscar/por-email/:email",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios", "buscar", "por-email", ":email"],
+              "variable": [
+                { "key": "email", "value": "usuario@email.com" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cargos",
+      "item": [
+        {
+          "name": "Listar cargos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cargos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cargos"]
+            }
+          }
+        },
+        {
+          "name": "Criar cargo",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Advogado Sênior\",\n  \"descricao\": \"Advogado com mais de 10 anos de experiência\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cargos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cargos"]
+            }
+          }
+        },
+        {
+          "name": "Obter cargo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cargos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cargos", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Atualizar cargo",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descricao\": \"Advogado sênior especializado\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cargos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cargos", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Excluir cargo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cargos/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cargos", ":id"],
+              "variable": [
+                { "key": "id", "value": "1" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Repasses",
+      "item": [
+        {
+          "name": "Listar repasses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/repasses?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "repasses"],
+              "query": [
+                { "key": "pagina", "value": "1" },
+                { "key": "limite", "value": "50" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Criar repasse",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"acordo_condenacao_id\": 123,\n  \"parcela_id\": 456,\n  \"valor\": 1000.00,\n  \"data_repasse\": \"2025-01-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/repasses",
+              "host": ["{{base_url}}"],
+              "path": ["api", "repasses"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "PJE",
+      "item": [
+        {
+          "name": "Obter documento de pendente",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pendente_id\": 123,\n  \"advogado_id\": 1,\n  \"credencial_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pje/pendente-manifestacao/documento",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pje", "pendente-manifestacao", "documento"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI",
+      "item": [
+        {
+          "name": "Executar comando AI",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"command\": \"resumir processo\",\n  \"context\": {\"processo_id\": 123}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/ai/command",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ai", "command"]
+            }
+          }
+        },
+        {
+          "name": "Copilot AI",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"prompt\": \"Ajude-me a entender este processo\",\n  \"context\": {\"processo_id\": 123}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/ai/copilot",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ai", "copilot"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Debug",
+      "item": [
+        {
+          "name": "Verificar schema do banco",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/debug/schema-check",
+              "host": ["{{base_url}}"],
+              "path": ["api", "debug", "schema-check"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

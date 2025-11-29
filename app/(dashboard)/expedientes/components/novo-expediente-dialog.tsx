@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -23,7 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle, FileText } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface DadosIniciais {
@@ -77,6 +78,10 @@ const GRAUS = [
   { value: 'segundo_grau', label: '2º Grau' },
 ];
 
+const formatarGrau = (grau: string): string => {
+  return grau === 'primeiro_grau' ? '1º Grau' : '2º Grau';
+};
+
 export function NovoExpedienteDialog({
   open,
   onOpenChange,
@@ -106,21 +111,34 @@ export function NovoExpedienteDialog({
   const [horaPrazo, setHoraPrazo] = React.useState('');
   const [responsavelId, setResponsavelId] = React.useState<string>('');
 
-  // Processo selecionado
+  // Determinar se está no modo com dados iniciais (processo já definido)
+  const modoProcessoDefinido = !!dadosIniciais;
+
+  // Processo selecionado - usa dados iniciais ou busca na lista
   const processoSelecionado = React.useMemo(() => {
+    if (modoProcessoDefinido && dadosIniciais) {
+      return {
+        id: dadosIniciais.processo_id,
+        numero_processo: dadosIniciais.numero_processo,
+        polo_ativo_nome: dadosIniciais.polo_ativo_nome || '',
+        polo_passivo_nome: dadosIniciais.polo_passivo_nome || '',
+        trt: dadosIniciais.trt,
+        grau: dadosIniciais.grau,
+      };
+    }
     if (processoId.length === 0) return null;
     return processos.find((p) => p.id.toString() === processoId[0]) || null;
-  }, [processoId, processos]);
+  }, [modoProcessoDefinido, dadosIniciais, processoId, processos]);
 
-  // Buscar processos quando TRT e Grau forem selecionados
+  // Buscar processos quando TRT e Grau forem selecionados (apenas no modo manual)
   React.useEffect(() => {
-    if (trt && grau) {
+    if (!modoProcessoDefinido && trt && grau) {
       buscarProcessos(trt, grau);
-    } else {
+    } else if (!modoProcessoDefinido) {
       setProcessos([]);
       setProcessoId([]);
     }
-  }, [trt, grau]);
+  }, [trt, grau, modoProcessoDefinido]);
 
   // Buscar tipos de expediente e usuários quando o dialog abrir
   React.useEffect(() => {
@@ -134,26 +152,7 @@ export function NovoExpedienteDialog({
     }
   }, [open]);
 
-  // Inicializar com dados pré-preenchidos quando disponíveis
-  React.useEffect(() => {
-    if (open && dadosIniciais) {
-      setTrt(dadosIniciais.trt);
-      setGrau(dadosIniciais.grau);
-      // O processo será selecionado após buscar processos
-    }
-  }, [open, dadosIniciais]);
-
-  // Selecionar processo automaticamente quando dados iniciais e processos disponíveis
-  React.useEffect(() => {
-    if (dadosIniciais && processos.length > 0) {
-      const processoEncontrado = processos.find(p => p.id === dadosIniciais.processo_id);
-      if (processoEncontrado) {
-        setProcessoId([processoEncontrado.id.toString()]);
-      }
-    }
-  }, [dadosIniciais, processos]);
-
-  // Resetar form quando fechar (apenas se não houver dados iniciais ou ao fechar após sucesso)
+  // Resetar form quando fechar
   React.useEffect(() => {
     if (!open) {
       resetForm();
@@ -191,9 +190,10 @@ export function NovoExpedienteDialog({
       }
 
       setProcessos(result.data.processos || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar processos';
       console.error('Erro ao buscar processos:', err);
-      setError(err.message || 'Erro ao buscar processos');
+      setError(errorMessage);
       setProcessos([]);
     } finally {
       setLoadingProcessos(false);
@@ -212,9 +212,10 @@ export function NovoExpedienteDialog({
       }
 
       setTiposExpediente(result.data.tipos_expedientes || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar tipos de expediente';
       console.error('Erro ao buscar tipos de expediente:', err);
-      setError(err.message || 'Erro ao buscar tipos de expediente');
+      setError(errorMessage);
     } finally {
       setLoadingTipos(false);
     }
@@ -232,7 +233,7 @@ export function NovoExpedienteDialog({
       }
 
       setUsuarios(result.data.usuarios || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Erro ao buscar usuários:', err);
     } finally {
       setLoadingUsuarios(false);
@@ -244,7 +245,9 @@ export function NovoExpedienteDialog({
     setError(null);
 
     // Validações
-    if (!processoId || processoId.length === 0) {
+    const processoIdFinal = modoProcessoDefinido ? dadosIniciais?.processo_id : (processoId.length > 0 ? parseInt(processoId[0]) : null);
+    
+    if (!processoIdFinal) {
       setError('Selecione um processo');
       return;
     }
@@ -257,8 +260,8 @@ export function NovoExpedienteDialog({
     setIsLoading(true);
 
     try {
-      const payload: any = {
-        processo_id: parseInt(processoId[0]),
+      const payload: Record<string, unknown> = {
+        processo_id: processoIdFinal,
         descricao: descricao.trim(),
       };
 
@@ -292,9 +295,10 @@ export function NovoExpedienteDialog({
       onSuccess();
       onOpenChange(false);
       resetForm();
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao criar expediente';
       console.error('Erro ao criar expediente:', err);
-      setError(err.message || 'Erro ao criar expediente');
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -307,6 +311,160 @@ export function NovoExpedienteDialog({
     searchText: `${p.numero_processo} ${p.polo_ativo_nome} ${p.polo_passivo_nome}`,
   }));
 
+  // Layout quando há dados iniciais (processo já definido)
+  if (modoProcessoDefinido && dadosIniciais) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Novo Expediente Manual
+            </DialogTitle>
+            <DialogDescription>
+              Criar expediente vinculado ao processo
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit}>
+            {/* Erro geral */}
+            {error && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            {/* Header com informações do processo */}
+            <div className="bg-muted/50 rounded-lg p-4 mb-6">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+                      {dadosIniciais.trt}
+                    </Badge>
+                    <Badge variant="outline" className="bg-emerald-100 text-emerald-800 border-emerald-200">
+                      {formatarGrau(dadosIniciais.grau)}
+                    </Badge>
+                  </div>
+                  <div className="text-lg font-semibold">{dadosIniciais.numero_processo}</div>
+                </div>
+                <div className="text-right text-sm">
+                  <div className="text-muted-foreground">Parte Autora</div>
+                  <div className="font-medium">{dadosIniciais.polo_ativo_nome || '-'}</div>
+                  <div className="text-muted-foreground mt-2">Parte Ré</div>
+                  <div className="font-medium">{dadosIniciais.polo_passivo_nome || '-'}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Campos do expediente em duas colunas */}
+            <div className="grid grid-cols-2 gap-6">
+              {/* Coluna esquerda */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="tipo">Tipo de Expediente</Label>
+                  <Select
+                    value={tipoExpedienteId}
+                    onValueChange={setTipoExpedienteId}
+                    disabled={isLoading || loadingTipos}
+                  >
+                    <SelectTrigger id="tipo">
+                      <SelectValue placeholder="Selecione o tipo (opcional)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {tiposExpediente.map((tipo) => (
+                        <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                          {tipo.tipo_expediente}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="responsavel">Responsável</Label>
+                  <Select
+                    value={responsavelId}
+                    onValueChange={setResponsavelId}
+                    disabled={isLoading || loadingUsuarios}
+                  >
+                    <SelectTrigger id="responsavel">
+                      <SelectValue placeholder="Selecione (opcional)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {usuarios.map((usuario) => (
+                        <SelectItem key={usuario.id} value={usuario.id.toString()}>
+                          {usuario.nome_exibicao}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="dataPrazo">Data do Prazo</Label>
+                    <Input
+                      id="dataPrazo"
+                      type="date"
+                      value={dataPrazo}
+                      onChange={(e) => setDataPrazo(e.target.value)}
+                      disabled={isLoading}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="horaPrazo">Hora</Label>
+                    <Input
+                      id="horaPrazo"
+                      type="time"
+                      value={horaPrazo}
+                      onChange={(e) => setHoraPrazo(e.target.value)}
+                      disabled={isLoading || !dataPrazo}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Coluna direita */}
+              <div className="space-y-2">
+                <Label htmlFor="descricao">Descrição *</Label>
+                <Textarea
+                  id="descricao"
+                  value={descricao}
+                  onChange={(e) => setDescricao(e.target.value)}
+                  placeholder="Descreva o expediente..."
+                  disabled={isLoading}
+                  className="h-[180px] resize-none"
+                  required
+                />
+              </div>
+            </div>
+
+            <DialogFooter className="mt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={isLoading}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading || !descricao.trim()}
+              >
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Criar Expediente
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Layout padrão quando não há dados iniciais (seleção manual de processo)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -397,10 +555,10 @@ export function NovoExpedienteDialog({
                           <strong>Número:</strong> {processoSelecionado.numero_processo}
                         </div>
                         <div>
-                          <strong>Parte Autora:</strong> {processoSelecionado.polo_ativo_nome}
+                          <strong>Parte Autora:</strong> {processoSelecionado.polo_ativo_nome || '-'}
                         </div>
                         <div>
-                          <strong>Parte Ré:</strong> {processoSelecionado.polo_passivo_nome}
+                          <strong>Parte Ré:</strong> {processoSelecionado.polo_passivo_nome || '-'}
                         </div>
                       </div>
                     )}
