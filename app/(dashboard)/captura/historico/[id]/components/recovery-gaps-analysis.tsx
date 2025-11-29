@@ -271,6 +271,31 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
     };
   }, [elementos, mostrarApenasFaltantes]);
 
+  // Filtrar elementos genéricos baseado no toggle
+  const elementosGenericosFiltrados = useMemo(() => {
+    if (!elementosGenericos) return null;
+
+    if (!mostrarApenasFaltantes) {
+      return elementosGenericos;
+    }
+
+    // Filtrar apenas elementos faltantes
+    const elementosFaltantes = elementosGenericos.elementos.filter(
+      (e) => e.statusPersistencia === 'faltando'
+    );
+
+    return {
+      elementos: elementosFaltantes,
+      totais: {
+        ...elementosGenericos.totais,
+        total: elementosFaltantes.length,
+        existentes: 0,
+        faltantes: elementosFaltantes.length,
+        filtrados: elementosFaltantes.length,
+      },
+    };
+  }, [elementosGenericos, mostrarApenasFaltantes]);
+
   // Toggle seleção de elemento
   const toggleElement = (id: string) => {
     const newSelected = new Set(selectedElements);
@@ -448,23 +473,28 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
       )}
 
       {/* Resumo para tipos genéricos (pendentes, audiências, etc.) */}
-      {elementosGenericos && !totais && (
+      {elementosGenericosFiltrados && !totais && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">Resumo dos Elementos</CardTitle>
+            <CardTitle className="text-sm">
+              Resumo dos Elementos
+              {mostrarApenasFaltantes && (
+                <span className="text-xs font-normal text-muted-foreground ml-2">(filtrado)</span>
+              )}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center p-3 bg-muted/50 rounded-lg">
-                <p className="text-2xl font-bold">{elementosGenericos.totais.total}</p>
+                <p className="text-2xl font-bold">{elementosGenericosFiltrados.totais.total}</p>
                 <p className="text-xs text-muted-foreground">Total</p>
               </div>
               <div className="text-center p-3 bg-muted/50 rounded-lg">
-                <p className="text-2xl font-bold text-green-600">{elementosGenericos.totais.existentes}</p>
+                <p className="text-2xl font-bold text-green-600">{elementosGenericosFiltrados.totais.existentes}</p>
                 <p className="text-xs text-muted-foreground">Existentes</p>
               </div>
               <div className="text-center p-3 bg-muted/50 rounded-lg">
-                <p className="text-2xl font-bold text-red-600">{elementosGenericos.totais.faltantes}</p>
+                <p className="text-2xl font-bold text-red-600">{elementosGenericosFiltrados.totais.faltantes}</p>
                 <p className="text-xs text-muted-foreground">Faltantes</p>
               </div>
             </div>
@@ -654,8 +684,8 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
               )}
 
               {/* Elementos genéricos (pendentes, audiências, processos) */}
-              {elementosGenericos &&
-                elementosGenericos.elementos.length > 0 &&
+              {elementosGenericosFiltrados &&
+                elementosGenericosFiltrados.elementos.length > 0 &&
                 elementosFiltrados.partes.length === 0 &&
                 elementosFiltrados.enderecos.length === 0 &&
                 elementosFiltrados.representantes.length === 0 && (
@@ -663,18 +693,18 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
                     <CollapsibleTrigger asChild>
                       <Button variant="ghost" className="w-full justify-between p-3 h-auto">
                         <div className="flex items-center gap-2">
-                          <TipoElementoIcon tipo={elementosGenericos.elementos[0]?.tipo || 'processo'} />
+                          <TipoElementoIcon tipo={elementosGenericosFiltrados.elementos[0]?.tipo || 'processo'} />
                           <span className="font-medium">
                             {getTipoLabel(log?.tipoCaptura || 'partes')}
                           </span>
                           <Badge variant="outline" className="ml-2">
-                            {elementosGenericos.elementos.length}
+                            {elementosGenericosFiltrados.elementos.length}
                           </Badge>
                         </div>
                       </Button>
                     </CollapsibleTrigger>
                     <CollapsibleContent className="space-y-2 mt-2">
-                      {elementosGenericos.elementos.map((elemento, index) => (
+                      {elementosGenericosFiltrados.elementos.map((elemento, index) => (
                         <ElementoItem
                           key={`${elemento.tipo}-${elemento.identificador}-${index}`}
                           elemento={elemento}
@@ -691,7 +721,7 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
               {elementosFiltrados.partes.length === 0 &&
                 elementosFiltrados.enderecos.length === 0 &&
                 elementosFiltrados.representantes.length === 0 &&
-                (!elementosGenericos || elementosGenericos.elementos.length === 0) && (
+                (!elementosGenericosFiltrados || elementosGenericosFiltrados.elementos.length === 0) && (
                   <Alert>
                     <CheckCircle2 className="h-4 w-4 text-green-500" />
                     <AlertTitle>

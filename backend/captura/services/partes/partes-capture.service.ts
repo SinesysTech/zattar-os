@@ -222,7 +222,7 @@ function extrairCamposPJE(parte: PartePJE) {
       camposExtraidos.naturalidade_municipio = (naturalidade as Record<string, unknown>).nome as string | undefined ?? naturalidade.municipio;
       camposExtraidos.naturalidade_estado_id_pje = naturalidade.estado?.id !== undefined ? Number(naturalidade.estado.id) : undefined;
       camposExtraidos.naturalidade_estado_sigla = naturalidade.estado?.sigla;
-      camposExtraidos.naturalidade_estado_descricao = naturalidade.estado?.descricao;
+      // NOTA: naturalidade_estado_descricao não existe no schema de terceiros
     }
     
     // UF Nascimento (cast para tipo específico)
