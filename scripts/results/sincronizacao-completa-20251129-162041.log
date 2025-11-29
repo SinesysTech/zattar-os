@@ -1,0 +1,22 @@
+[dotenv@17.2.3] injecting env (29) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+════════════════════════════════════════════════════════════════════════════════
+SINCRONIZAÇÃO DE PARTES E PROCESSOS
+════════════════════════════════════════════════════════════════════════════════
+
+📋 Configuração:
+   • Modo: EXECUÇÃO REAL
+   • Limite: sem limite
+   • TRT: todos
+   • Verbose: não
+📋 Buscando processos sem vínculos...
+   📊 Buscando processos com vínculos existentes...
+   📊 6244 processos já têm vínculos
+   📊 Buscando processos do acervo...
+      ... 10000 processos carregados
+      ... 20000 processos carregados
+      ... 30000 processos carregados
+   📊 35547 processos totais no acervo
+   ✅ 29303 processos encontrados sem vínculos
+
+🔄 Processando 29303 processos...
