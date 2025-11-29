@@ -102,7 +102,7 @@ export function EditarEnderecoDialog({
         inputRef.current?.focus();
         inputRef.current?.select();
       }, 100);
-    } else if (open && tipoEndereco === 'presencial' && cepInputRef.current) {
+    } else if (open && (tipoEndereco === 'presencial' || tipoEndereco === 'hibrida') && cepInputRef.current) {
       setTimeout(() => {
         cepInputRef.current?.focus();
         cepInputRef.current?.select();
@@ -279,13 +279,145 @@ export function EditarEnderecoDialog({
     onOpenChange(false);
   };
 
+  // Componente de formulário de endereço reutilizável
+  const EnderecoForm = ({ idPrefix = '' }: { idPrefix?: string }) => (
+    <div className="space-y-4">
+      {/* CEP */}
+      <div className="space-y-2">
+        <Label htmlFor={`${idPrefix}cep`}>CEP</Label>
+        <div className="relative">
+          <Input
+            ref={cepInputRef}
+            id={`${idPrefix}cep`}
+            value={endereco.cep}
+            onChange={(e) => {
+              const formatted = formatarCep(e.target.value);
+              setEndereco(prev => ({ ...prev, cep: formatted }));
+              setError(null);
+            }}
+            onBlur={(e) => {
+              const cep = e.target.value;
+              if (cep.replace(/\D/g, '').length === 8) {
+                buscarEnderecoPorCep(cep);
+              }
+            }}
+            placeholder="00000-000"
+            disabled={isLoading || isFetchingCep}
+            maxLength={9}
+          />
+          {isFetchingCep && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            </div>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Digite o CEP para buscar o endereço automaticamente
+        </p>
+      </div>
+
+      {/* Logradouro e Número */}
+      <div className="grid grid-cols-3 gap-3">
+        <div className="col-span-2 space-y-2">
+          <Label htmlFor={`${idPrefix}logradouro`}>Logradouro</Label>
+          <Input
+            id={`${idPrefix}logradouro`}
+            value={endereco.logradouro}
+            onChange={(e) => {
+              setEndereco(prev => ({ ...prev, logradouro: e.target.value }));
+              setError(null);
+            }}
+            placeholder="Rua, Avenida, etc."
+            disabled={isLoading || isFetchingCep}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor={`${idPrefix}numero`}>Número</Label>
+          <Input
+            id={`${idPrefix}numero`}
+            value={endereco.numero}
+            onChange={(e) => {
+              setEndereco(prev => ({ ...prev, numero: e.target.value }));
+              setError(null);
+            }}
+            placeholder="Nº"
+            disabled={isLoading || isFetchingCep}
+          />
+        </div>
+      </div>
+
+      {/* Complemento */}
+      <div className="space-y-2">
+        <Label htmlFor={`${idPrefix}complemento`}>Complemento</Label>
+        <Input
+          id={`${idPrefix}complemento`}
+          value={endereco.complemento}
+          onChange={(e) => {
+            setEndereco(prev => ({ ...prev, complemento: e.target.value }));
+            setError(null);
+          }}
+          placeholder="Apartamento, sala, etc."
+          disabled={isLoading || isFetchingCep}
+        />
+      </div>
+
+      {/* Bairro e Cidade */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-2">
+          <Label htmlFor={`${idPrefix}bairro`}>Bairro</Label>
+          <Input
+            id={`${idPrefix}bairro`}
+            value={endereco.bairro}
+            onChange={(e) => {
+              setEndereco(prev => ({ ...prev, bairro: e.target.value }));
+              setError(null);
+            }}
+            placeholder="Bairro"
+            disabled={isLoading || isFetchingCep}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor={`${idPrefix}cidade`}>Cidade</Label>
+          <Input
+            id={`${idPrefix}cidade`}
+            value={endereco.cidade}
+            onChange={(e) => {
+              setEndereco(prev => ({ ...prev, cidade: e.target.value }));
+              setError(null);
+            }}
+            placeholder="Cidade"
+            disabled={isLoading || isFetchingCep}
+          />
+        </div>
+      </div>
+
+      {/* Estado */}
+      <div className="grid grid-cols-3 gap-3">
+        <div className="space-y-2">
+          <Label htmlFor={`${idPrefix}estado`}>Estado</Label>
+          <Input
+            id={`${idPrefix}estado`}
+            value={endereco.estado}
+            onChange={(e) => {
+              setEndereco(prev => ({ ...prev, estado: e.target.value.toUpperCase() }));
+              setError(null);
+            }}
+            placeholder="UF"
+            disabled={isLoading || isFetchingCep}
+            maxLength={2}
+          />
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[min(92vw,25rem)] sm:max-w-[min(92vw,34.375rem)]">
+      <DialogContent className="max-w-[min(92vw,25rem)] sm:max-w-[min(92vw,34.375rem)] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Editar Endereço da Audiência</DialogTitle>
           <DialogDescription>
-            Escolha entre URL de videoconferência ou endereço físico
+            Escolha a modalidade da audiência
           </DialogDescription>
         </DialogHeader>
 
@@ -325,7 +457,7 @@ export function EditarEnderecoDialog({
           </div>
 
           {/* Formulário condicional */}
-          {tipoEndereco === 'virtual' ? (
+          {tipoEndereco === 'virtual' && (
             <div className="space-y-2">
               <Label htmlFor="url-input">URL da Audiência Virtual</Label>
               <Input
@@ -344,43 +476,20 @@ export function EditarEnderecoDialog({
                 }}
               />
             </div>
-          ) : (
-            <div className="space-y-4">
-              {/* CEP - Primeiro campo */}
-              <div className="space-y-2">
-                <Label htmlFor="cep">CEP</Label>
-                <div className="relative">
-                  <Input
-                    ref={cepInputRef}
-                    id="cep"
-                    value={endereco.cep}
-                    onChange={(e) => {
-                      const formatted = formatarCep(e.target.value);
-                      setEndereco(prev => ({ ...prev, cep: formatted }));
-                      setError(null);
-                    }}
-                    onBlur={(e) => {
-                      const cep = e.target.value;
-                      if (cep.replace(/\D/g, '').length === 8) {
-                        buscarEnderecoPorCep(cep);
-                      }
-                    }}
-                    placeholder="00000-000"
-                    disabled={isLoading || isFetchingCep}
-                    maxLength={9}
-                  />
-                  {isFetchingCep && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground"               />
-            </div>
-          ) : tipoEndereco === 'hibrida' ? (
+          )}
+
+          {tipoEndereco === 'presencial' && (
+            <EnderecoForm />
+          )}
+
+          {tipoEndereco === 'hibrida' && (
             <div className="space-y-4">
               {/* URL Virtual */}
               <div className="space-y-2">
-                <Label htmlFor="url-hibrida-input">URL da Audiência Virtual</Label>
+                <Label htmlFor="url-hibrida">URL da Audiência Virtual</Label>
                 <Input
                   ref={inputRef}
-                  id="url-hibrida-input"
+                  id="url-hibrida"
                   value={url}
                   onChange={(e) => {
                     setUrl(e.target.value);
@@ -400,239 +509,13 @@ export function EditarEnderecoDialog({
 
               {/* Endereço Presencial */}
               <div className="space-y-4 border-t pt-4">
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label>Endereço Presencial</Label>
                   <p className="text-xs text-muted-foreground">
                     Endereço para participação presencial (advogado ou cliente)
                   </p>
                 </div>
-
-                {/* CEP - Primeiro campo */}
-                <div className="space-y-2">
-                  <Label htmlFor="cep-hibrida">CEP</Label>
-                  <div className="relative">
-                    <Input
-                      ref={cepInputRef}
-                      id="cep-hibrida"
-                      value={endereco.cep}
-                      onChange={(e) => {
-                        const formatted = formatarCep(e.target.value);
-                        setEndereco(prev => ({ ...prev, cep: formatted }));
-                        setError(null);
-                      }}
-                      onBlur={(e) => {
-                        const cep = e.target.value;
-                        if (cep.replace(/\D/g, '').length === 8) {
-                          buscarEnderecoPorCep(cep);
-                        }
-                      }}
-                      placeholder="00000-000"
-                      disabled={isLoading || isFetchingCep}
-                      maxLength={9}
-                    />
-                    {isFetchingCep && (
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Digite o CEP para buscar o endereço automaticamente
-                  </p>
-                </div>
-
-                {/* Logradouro e Número */}
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="col-span-2 space-y-2">
-                    <Label htmlFor="logradouro-hibrida">Logradouro</Label>
-                    <Input
-                      id="logradouro-hibrida"
-                      value={endereco.logradouro}
-                      onChange={(e) => {
-                        setEndereco(prev => ({ ...prev, logradouro: e.target.value }));
-                        setError(null);
-                      }}
-                      placeholder="Rua, Avenida, etc."
-                      disabled={isLoading || isFetchingCep}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="numero-hibrida">Número</Label>
-                    <Input
-                      id="numero-hibrida"
-                      value={endereco.numero}
-                      onChange={(e) => {
-                        setEndereco(prev => ({ ...prev, numero: e.target.value }));
-                        setError(null);
-                      }}
-                      placeholder="Nº"
-                      disabled={isLoading || isFetchingCep}
-                    />
-                  </div>
-                </div>
-
-                {/* Complemento */}
-                <div className="space-y-2">
-                  <Label htmlFor="complemento-hibrida">Complemento</Label>
-                  <Input
-                    id="complemento-hibrida"
-                    value={endereco.complemento}
-                    onChange={(e) => {
-                      setEndereco(prev => ({ ...prev, complemento: e.target.value }));
-                      setError(null);
-                    }}
-                    placeholder="Apartamento, sala, etc."
-                    disabled={isLoading || isFetchingCep}
-                  />
-                </div>
-
-                {/* Bairro e Cidade */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="bairro-hibrida">Bairro</Label>
-                    <Input
-                      id="bairro-hibrida"
-                      value={endereco.bairro}
-                      onChange={(e) => {
-                        setEndereco(prev => ({ ...prev, bairro: e.target.value }));
-                        setError(null);
-                      }}
-                      placeholder="Bairro"
-                      disabled={isLoading || isFetchingCep}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cidade-hibrida">Cidade</Label>
-                    <Input
-                      id="cidade-hibrida"
-                      value={endereco.cidade}
-                      onChange={(e) => {
-                        setEndereco(prev => ({ ...prev, cidade: e.target.value }));
-                        setError(null);
-                      }}
-                      placeholder="Cidade"
-                      disabled={isLoading || isFetchingCep}
-                    />
-                  </div>
-                </div>
-
-                {/* Estado */}
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="estado-hibrida">Estado</Label>
-                    <Input
-                      id="estado-hibrida"
-                      value={endereco.estado}
-                      onChange={(e) => {
-                        setEndereco(prev => ({ ...prev, estado: e.target.value.toUpperCase() }));
-                        setError(null);
-                      }}
-                      placeholder="UF"
-                      disabled={isLoading || isFetchingCep}
-                      maxLength={2}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Digite o CEP para buscar o endereço automaticamente
-                </p>
-              </div>
-
-              {/* Logradouro e Número */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="col-span-2 space-y-2">
-                  <Label htmlFor="logradouro">Logradouro</Label>
-                  <Input
-                    id="logradouro"
-                    value={endereco.logradouro}
-                    onChange={(e) => {
-                      setEndereco(prev => ({ ...prev, logradouro: e.target.value }));
-                      setError(null);
-                    }}
-                    placeholder="Rua, Avenida, etc."
-                    disabled={isLoading || isFetchingCep}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="numero">Número</Label>
-                  <Input
-                    id="numero"
-                    value={endereco.numero}
-                    onChange={(e) => {
-                      setEndereco(prev => ({ ...prev, numero: e.target.value }));
-                      setError(null);
-                    }}
-                    placeholder="Nº"
-                    disabled={isLoading || isFetchingCep}
-                  />
-                </div>
-              </div>
-
-              {/* Complemento */}
-              <div className="space-y-2">
-                <Label htmlFor="complemento">Complemento</Label>
-                <Input
-                  id="complemento"
-                  value={endereco.complemento}
-                  onChange={(e) => {
-                    setEndereco(prev => ({ ...prev, complemento: e.target.value }));
-                    setError(null);
-                  }}
-                  placeholder="Apartamento, sala, etc."
-                  disabled={isLoading || isFetchingCep}
-                />
-              </div>
-
-              {/* Bairro e Cidade */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor="bairro">Bairro</Label>
-                  <Input
-                    id="bairro"
-                    value={endereco.bairro}
-                    onChange={(e) => {
-                      setEndereco(prev => ({ ...prev, bairro: e.target.value }));
-                      setError(null);
-                    }}
-                    placeholder="Bairro"
-                    disabled={isLoading || isFetchingCep}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="cidade">Cidade</Label>
-                  <Input
-                    id="cidade"
-                    value={endereco.cidade}
-                    onChange={(e) => {
-                      setEndereco(prev => ({ ...prev, cidade: e.target.value }));
-                      setError(null);
-                    }}
-                    placeholder="Cidade"
-                    disabled={isLoading || isFetchingCep}
-                  />
-                </div>
-              </div>
-
-              {/* Estado */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor="estado">Estado</Label>
-                  <Input
-                    id="estado"
-                    value={endereco.estado}
-                    onChange={(e) => {
-                      setEndereco(prev => ({ ...prev, estado: e.target.value.toUpperCase() }));
-                      setError(null);
-                    }}
-                    placeholder="UF"
-                    disabled={isLoading || isFetchingCep}
-                    maxLength={2}
-                  />
-                </div>
+                <EnderecoForm idPrefix="hibrida-" />
               </div>
             </div>
           )}
