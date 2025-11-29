@@ -978,18 +978,19 @@ async function extrairElementosDePartes(
     ...resultado.representantes,
   ];
 
+  // Recalcular totais diretamente dos elementos para garantir consistência
+  // (existentes + faltantes + pendentes + erros = total)
+  const existentes = elementos.filter((e) => e.statusPersistencia === 'existente').length;
+  const faltantes = elementos.filter((e) => e.statusPersistencia === 'faltando').length;
+
   return {
     tipoCaptura: 'partes',
     elementos,
     suportaRepersistencia: true,
     totais: {
       total: elementos.length,
-      existentes: resultado.totais.partesExistentes +
-        resultado.totais.enderecosExistentes +
-        resultado.totais.representantesExistentes,
-      faltantes: resultado.totais.partesFaltantes +
-        resultado.totais.enderecosFaltantes +
-        resultado.totais.representantesFaltantes,
+      existentes,
+      faltantes,
     },
   };
 }

@@ -166,7 +166,7 @@ function parseArgumentos(): ConfiguracaoScript {
 
 /**
  * Busca processos no acervo que não têm vínculos em processo_partes
- * Usa RPC (stored procedure) para fazer a query complexa
+ * Usa paginação para buscar todos os registros (Supabase limita a 1000 por query)
  */
 async function buscarProcessosSemVinculos(
   supabase: SupabaseClient,
@@ -174,40 +174,72 @@ async function buscarProcessosSemVinculos(
 ): Promise<ProcessoSemVinculo[]> {
   console.log('📋 Buscando processos sem vínculos...');
 
-  // Primeiro, buscar IDs de processos que TÊM vínculos
-  const { data: processosComVinculos, error: errorVinculos } = await supabase
-    .from('processo_partes')
-    .select('processo_id');
+  // Primeiro, buscar TODOS os IDs de processos que TÊM vínculos (com paginação)
+  const idsComVinculos = new Set<number>();
+  let offsetVinculos = 0;
+  const limitePorPagina = 1000;
 
-  if (errorVinculos) {
-    throw new Error(`Erro ao buscar processos com vínculos: ${errorVinculos.message}`);
+  console.log('   📊 Buscando processos com vínculos existentes...');
+  while (true) {
+    const { data, error } = await supabase
+      .from('processo_partes')
+      .select('processo_id')
+      .range(offsetVinculos, offsetVinculos + limitePorPagina - 1);
+
+    if (error) {
+      throw new Error(`Erro ao buscar processos com vínculos: ${error.message}`);
+    }
+
+    if (!data || data.length === 0) break;
+
+    data.forEach(p => idsComVinculos.add(p.processo_id));
+    offsetVinculos += limitePorPagina;
+
+    if (data.length < limitePorPagina) break; // Última página
   }
 
-  // Criar Set de IDs para busca eficiente
-  const idsComVinculos = new Set((processosComVinculos || []).map(p => p.processo_id));
   console.log(`   📊 ${idsComVinculos.size} processos já têm vínculos`);
 
-  // Buscar todos os processos do acervo (com filtros aplicados)
-  let query = supabase
-    .from('acervo')
-    .select('id, id_pje, trt, grau, numero_processo, nome_parte_autora, nome_parte_re');
+  // Buscar TODOS os processos do acervo (com paginação)
+  const todosProcessos: ProcessoSemVinculo[] = [];
+  let offsetProcessos = 0;
 
-  // Aplicar filtro de TRT se especificado
-  if (config.trt) {
-    query = query.eq('trt', config.trt);
+  console.log('   📊 Buscando processos do acervo...');
+  while (true) {
+    let query = supabase
+      .from('acervo')
+      .select('id, id_pje, trt, grau, numero_processo, nome_parte_autora, nome_parte_re')
+      .order('id', { ascending: true })
+      .range(offsetProcessos, offsetProcessos + limitePorPagina - 1);
+
+    // Aplicar filtro de TRT se especificado
+    if (config.trt) {
+      query = query.eq('trt', config.trt);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      throw new Error(`Erro ao buscar processos: ${error.message}`);
+    }
+
+    if (!data || data.length === 0) break;
+
+    todosProcessos.push(...(data as ProcessoSemVinculo[]));
+    offsetProcessos += limitePorPagina;
+
+    // Log de progresso a cada 10.000 processos
+    if (todosProcessos.length % 10000 === 0) {
+      console.log(`      ... ${todosProcessos.length} processos carregados`);
+    }
+
+    if (data.length < limitePorPagina) break; // Última página
   }
 
-  // Ordenar por ID para processamento consistente
-  query = query.order('id', { ascending: true });
-
-  const { data: todosProcessos, error: errorProcessos } = await query;
-
-  if (errorProcessos) {
-    throw new Error(`Erro ao buscar processos: ${errorProcessos.message}`);
-  }
+  console.log(`   📊 ${todosProcessos.length} processos totais no acervo`);
 
   // Filtrar processos que NÃO têm vínculos
-  let processosSemVinculos = (todosProcessos || []).filter(p => !idsComVinculos.has(p.id));
+  let processosSemVinculos = todosProcessos.filter(p => !idsComVinculos.has(p.id));
 
   // Aplicar limite se especificado
   if (config.limite && processosSemVinculos.length > config.limite) {
@@ -215,7 +247,7 @@ async function buscarProcessosSemVinculos(
   }
 
   console.log(`   ✅ ${processosSemVinculos.length} processos encontrados sem vínculos`);
-  return processosSemVinculos as ProcessoSemVinculo[];
+  return processosSemVinculos;
 }
 
 /**
