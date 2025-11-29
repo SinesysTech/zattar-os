@@ -1,0 +1,13 @@
+{
+  "processosAnalisados": 0,
+  "clientesSalvos": 0,
+  "partesContrariasSalvas": 0,
+  "terceirosSalvos": 0,
+  "representantesSalvos": 0,
+  "vinculosCriados": 0,
+  "payloadsSalvos": 0,
+  "erros": 1,
+  "detalhesErros": [],
+  "dryRun": false,
+  "duracao": 0.327
+}

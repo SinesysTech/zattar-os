@@ -272,12 +272,25 @@ function TipoDescricaoCell({
       <div className="relative min-h-10 max-w-[300px] group">
         <div className="w-full min-h-10 flex items-start gap-2 pr-8 py-2">
           <div className="flex flex-col items-start justify-start gap-1.5 flex-1">
-            <Badge
-              variant="outline"
-              className={`w-fit text-xs shrink-0 ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
-            >
-              {tipoNome}
-            </Badge>
+            {/* Badge de tipo com ícone de documento na frente */}
+            <div className="flex items-center gap-1.5">
+              {temDocumento && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setIsPdfViewerOpen(true); }}
+                  className="p-1 hover:bg-accent rounded-md transition-colors"
+                  title="Visualizar documento"
+                >
+                  <FileText className="h-3.5 w-3.5 text-primary" />
+                </button>
+              )}
+              <Badge
+                variant="outline"
+                className={`w-fit text-xs shrink-0 ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
+              >
+                {tipoNome}
+              </Badge>
+            </div>
             <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed indent-0 text-justify">
               {descricaoExibicao}
             </div>
@@ -292,16 +305,6 @@ function TipoDescricaoCell({
         >
           <Pencil className="h-3 w-3" />
         </Button>
-        {temDocumento && (
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); setIsPdfViewerOpen(true); }}
-            className="absolute bottom-1 right-1 p-1 hover:bg-accent rounded-md transition-colors z-10"
-            title="Visualizar documento"
-          >
-            <FileText className="h-3.5 w-3.5 text-primary" />
-          </button>
-        )}
       </div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-[min(92vw,31.25rem)]">
@@ -612,10 +615,23 @@ function criarColunas(
               <DialogContent className="max-w-sm">
                 <DialogHeader>
                   <DialogTitle>Definir Prazo Legal</DialogTitle>
-                  <DialogDescription>Escolha a data de fim do prazo</DialogDescription>
+                  <DialogDescription>Defina a data de fim do prazo. A data de início será preenchida automaticamente com a data de criação do expediente.</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-3">
-                  <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} />
+                  <div className="space-y-1">
+                    <Label className="text-sm font-medium">Data de Início (automática)</Label>
+                    <Input
+                      type="text"
+                      value={row.original.created_at ? formatarData(row.original.created_at) : '-'}
+                      disabled
+                      className="bg-muted"
+                    />
+                    <p className="text-xs text-muted-foreground">Data de criação do expediente</p>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-sm font-medium">Data de Fim *</Label>
+                    <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} />
+                  </div>
                 </div>
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setOpenPrazo(false)} disabled={isSavingPrazo}>Cancelar</Button>
@@ -645,22 +661,25 @@ function criarColunas(
         return (
           <TooltipProvider>
             <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[520px]">
+              {/* Primeira linha: TRT e Grau */}
               <div className="flex items-center gap-1.5 flex-wrap">
                 <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>{trt}</Badge>
                 <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>{formatarGrau(grau)}</Badge>
+              </div>
+              {/* Segunda linha: Classe judicial + Número do processo + Olho */}
+              <div className="flex items-center gap-1.5">
                 <span className="text-sm font-medium whitespace-nowrap flex items-center gap-1">
                   {classeJudicial && `${classeJudicial} `}
-                  {processoId ? (
+                  {numeroProcesso}
+                  {processoId && (
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Link href={`/processos/${processoId}`} className="inline-flex items-center gap-1 hover:text-primary transition-colors">
-                          <Eye className="h-3.5 w-3.5" />{numeroProcesso}
+                        <Link href={`/processos/${processoId}`} className="inline-flex items-center hover:text-primary transition-colors ml-1">
+                          <Eye className="h-3.5 w-3.5" />
                         </Link>
                       </TooltipTrigger>
                       <TooltipContent><p>Ver timeline do processo</p></TooltipContent>
                     </Tooltip>
-                  ) : (
-                    <span>{numeroProcesso}</span>
                   )}
                 </span>
               </div>

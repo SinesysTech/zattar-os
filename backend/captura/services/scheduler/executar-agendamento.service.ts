@@ -10,8 +10,75 @@ import { pendentesManifestacaoCapture, type PendentesManifestacaoResult } from '
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
 import { atualizarAgendamento } from '../agendamentos/atualizar-agendamento.service';
 import { recalcularProximaExecucaoAposExecucao } from '../agendamentos/calcular-proxima-execucao.service';
-import type { FiltroPrazoPendentes } from '@/backend/types/captura/trt-types';
+import type { FiltroPrazoPendentes, CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 import { registrarCapturaRawLog } from '@/backend/captura/services/persistence/captura-raw-log.service';
+
+/**
+ * Parâmetros para salvar payloads de partes no MongoDB
+ */
+interface SalvarPayloadsPartesParams {
+  payloadsBrutosPartes: Array<{
+    processoId: number;
+    numeroProcesso?: string;
+    payloadBruto: Record<string, unknown> | null;
+  }>;
+  capturaLogId: number;
+  advogadoId: number;
+  credencialId: number;
+  credencialIds: number[];
+  trt: CodigoTRT;
+  grau: GrauTRT;
+  tipoCapturaPai: string;
+}
+
+/**
+ * Salva payloads brutos de partes no MongoDB como logs separados
+ * Cada processo terá seu próprio documento com tipo_captura: 'partes'
+ * Isso permite reprocessamento futuro das partes
+ */
+async function salvarPayloadsBrutosPartes(params: SalvarPayloadsPartesParams): Promise<number> {
+  const { payloadsBrutosPartes, capturaLogId, advogadoId, credencialId, credencialIds, trt, grau, tipoCapturaPai } = params;
+  
+  if (!payloadsBrutosPartes || payloadsBrutosPartes.length === 0) {
+    return 0;
+  }
+
+  let salvos = 0;
+  for (const { processoId, numeroProcesso, payloadBruto } of payloadsBrutosPartes) {
+    // Pular se não há payload
+    if (!payloadBruto) continue;
+
+    try {
+      await registrarCapturaRawLog({
+        captura_log_id: capturaLogId,
+        tipo_captura: 'partes', // Tipo separado para identificar logs de partes
+        advogado_id: advogadoId,
+        credencial_id: credencialId,
+        credencial_ids: credencialIds,
+        trt,
+        grau,
+        status: 'success',
+        requisicao: {
+          processo_id: processoId,
+          numero_processo: numeroProcesso,
+          captura_pai: tipoCapturaPai, // Referência à captura que originou este log
+        },
+        payload_bruto: payloadBruto,
+        resultado_processado: undefined,
+        logs: undefined,
+      });
+      salvos++;
+    } catch (error) {
+      console.warn(`⚠️ [Scheduler] Erro ao salvar payload de partes do processo ${processoId}:`, error);
+    }
+  }
+
+  if (salvos > 0) {
+    console.log(`   📦 [Scheduler] ${salvos} payloads de partes salvos no MongoDB`);
+  }
+
+  return salvos;
+}
 
 const ORDEM_FILTROS_PENDENTES: FiltroPrazoPendentes[] = ['sem_prazo', 'no_prazo'];
 
@@ -130,6 +197,19 @@ export async function executarAgendamento(
               resultado_processado: (resultado as AcervoGeralResult).persistencia,
               logs: (resultado as AcervoGeralResult).logs,
             });
+            // Salvar payloads brutos de partes no MongoDB
+            if ((resultado as AcervoGeralResult).payloadsBrutosPartes) {
+              await salvarPayloadsBrutosPartes({
+                payloadsBrutosPartes: (resultado as AcervoGeralResult).payloadsBrutosPartes!,
+                capturaLogId: logId ?? -1,
+                advogadoId: agendamento.advogado_id,
+                credencialId: credCompleta.credentialId,
+                credencialIds: agendamento.credencial_ids,
+                trt: credCompleta.tribunal,
+                grau: credCompleta.grau,
+                tipoCapturaPai: 'acervo_geral',
+              });
+            }
             break;
           case 'arquivados':
             resultado = await arquivadosCapture({
@@ -152,6 +232,19 @@ export async function executarAgendamento(
               resultado_processado: (resultado as ArquivadosResult).persistencia,
               logs: (resultado as ArquivadosResult).logs,
             });
+            // Salvar payloads brutos de partes no MongoDB
+            if ((resultado as ArquivadosResult).payloadsBrutosPartes) {
+              await salvarPayloadsBrutosPartes({
+                payloadsBrutosPartes: (resultado as ArquivadosResult).payloadsBrutosPartes!,
+                capturaLogId: logId ?? -1,
+                advogadoId: agendamento.advogado_id,
+                credencialId: credCompleta.credentialId,
+                credencialIds: agendamento.credencial_ids,
+                trt: credCompleta.tribunal,
+                grau: credCompleta.grau,
+                tipoCapturaPai: 'arquivados',
+              });
+            }
             break;
           case 'audiencias':
             const paramsAudiencias = agendamento.parametros_extras as { dataInicio?: string; dataFim?: string } | null;
@@ -181,6 +274,19 @@ export async function executarAgendamento(
               resultado_processado: (resultado as AudienciasResult).persistencia,
               logs: (resultado as AudienciasResult).logs,
             });
+            // Salvar payloads brutos de partes no MongoDB
+            if ((resultado as AudienciasResult).payloadsBrutosPartes) {
+              await salvarPayloadsBrutosPartes({
+                payloadsBrutosPartes: (resultado as AudienciasResult).payloadsBrutosPartes!,
+                capturaLogId: logId ?? -1,
+                advogadoId: agendamento.advogado_id,
+                credencialId: credCompleta.credentialId,
+                credencialIds: agendamento.credencial_ids,
+                trt: credCompleta.tribunal,
+                grau: credCompleta.grau,
+                tipoCapturaPai: 'audiencias',
+              });
+            }
             break;
           case 'pendentes': {
             const paramsPendentes = agendamento.parametros_extras as { filtroPrazo?: FiltroPrazoPendentes; filtrosPrazo?: FiltroPrazoPendentes[] } | null;
@@ -225,6 +331,19 @@ export async function executarAgendamento(
                   },
                   logs: (captura as PendentesManifestacaoResult).logs,
                 });
+                // Salvar payloads brutos de partes no MongoDB
+                if ((captura as PendentesManifestacaoResult).payloadsBrutosPartes) {
+                  await salvarPayloadsBrutosPartes({
+                    payloadsBrutosPartes: (captura as PendentesManifestacaoResult).payloadsBrutosPartes!,
+                    capturaLogId: logId ?? -1,
+                    advogadoId: agendamento.advogado_id,
+                    credencialId: credCompleta.credentialId,
+                    credencialIds: agendamento.credencial_ids,
+                    trt: credCompleta.tribunal,
+                    grau: credCompleta.grau,
+                    tipoCapturaPai: 'pendentes',
+                  });
+                }
               } catch (error) {
                 resultadosPendentes.push({
                   filtroPrazo: filtro,

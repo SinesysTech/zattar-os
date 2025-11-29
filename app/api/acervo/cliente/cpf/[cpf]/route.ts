@@ -1,0 +1,263 @@
+/**
+ * @swagger
+ * /api/acervo/cliente/cpf/{cpf}:
+ *   get:
+ *     summary: Buscar processos por CPF do cliente
+ *     description: |
+ *       Retorna todos os processos relacionados a um cliente pelo CPF.
+ *       Endpoint otimizado para consumo pelo Agente IA WhatsApp.
+ *
+ *       **Características:**
+ *       - Busca apenas em clientes cadastrados (não em partes contrárias ou terceiros)
+ *       - Inclui timeline completa de cada processo (movimentações e documentos)
+ *       - Dados sanitizados (sem IDs internos ou campos de sistema)
+ *       - Formatos amigáveis para humanos (datas, nomes de tribunais, etc.)
+ *       - Processos agrupados por número (primeiro e segundo grau juntos)
+ *
+ *     tags:
+ *       - Acervo
+ *     security:
+ *       - bearerAuth: []
+ *       - apiKeyAuth: []
+ *     parameters:
+ *       - name: cpf
+ *         in: path
+ *         required: true
+ *         description: CPF do cliente (aceita com ou sem pontuação)
+ *         schema:
+ *           type: string
+ *           example: "123.456.789-01"
+ *     responses:
+ *       200:
+ *         description: Processos encontrados com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     cliente:
+ *                       type: object
+ *                       properties:
+ *                         nome:
+ *                           type: string
+ *                           example: "João da Silva"
+ *                         cpf:
+ *                           type: string
+ *                           example: "123.456.789-01"
+ *                     resumo:
+ *                       type: object
+ *                       properties:
+ *                         total_processos:
+ *                           type: integer
+ *                           example: 3
+ *                         em_andamento:
+ *                           type: integer
+ *                           example: 2
+ *                         arquivados:
+ *                           type: integer
+ *                           example: 1
+ *                         com_audiencia_proxima:
+ *                           type: integer
+ *                           example: 1
+ *                     processos:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           numero:
+ *                             type: string
+ *                             example: "0001234-56.2024.5.03.0001"
+ *                           tipo:
+ *                             type: string
+ *                             example: "Ação Trabalhista - Rito Ordinário"
+ *                           papel_cliente:
+ *                             type: string
+ *                             example: "Reclamante"
+ *                           parte_contraria:
+ *                             type: string
+ *                             example: "Empresa XYZ Ltda"
+ *                           status_atual:
+ *                             type: string
+ *                             example: "Em andamento"
+ *                           tribunal:
+ *                             type: string
+ *                             example: "TRT da 3ª Região (MG)"
+ *                           sigilo:
+ *                             type: boolean
+ *                             example: false
+ *                           instancias:
+ *                             type: object
+ *                             properties:
+ *                               primeiro_grau:
+ *                                 type: object
+ *                                 nullable: true
+ *                                 properties:
+ *                                   vara:
+ *                                     type: string
+ *                                     example: "1ª Vara do Trabalho de Belo Horizonte"
+ *                                   status:
+ *                                     type: string
+ *                                     example: "Em andamento"
+ *                                   data_inicio:
+ *                                     type: string
+ *                                     example: "10/01/2024"
+ *                                   proxima_audiencia:
+ *                                     type: string
+ *                                     nullable: true
+ *                                     example: "15/03/2025 às 14:00"
+ *                                   arquivado_em:
+ *                                     type: string
+ *                                     nullable: true
+ *                                     example: null
+ *                               segundo_grau:
+ *                                 type: object
+ *                                 nullable: true
+ *                           timeline:
+ *                             type: array
+ *                             items:
+ *                               type: object
+ *                               properties:
+ *                                 data:
+ *                                   type: string
+ *                                   example: "20/11/2024"
+ *                                 evento:
+ *                                   type: string
+ *                                   example: "Audiência designada"
+ *                                 descricao:
+ *                                   type: string
+ *                                   example: "Audiência de instrução designada para 15/03/2025"
+ *                                 tem_documento:
+ *                                   type: boolean
+ *                                   example: false
+ *                           ultima_movimentacao:
+ *                             type: object
+ *                             nullable: true
+ *                             properties:
+ *                               data:
+ *                                 type: string
+ *                                 example: "20/11/2024"
+ *                               evento:
+ *                                 type: string
+ *                                 example: "Audiência designada"
+ *       400:
+ *         description: CPF inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "CPF inválido. Deve conter 11 dígitos."
+ *       401:
+ *         description: Não autorizado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Unauthorized"
+ *       404:
+ *         description: Nenhum processo encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Nenhum processo encontrado para este CPF."
+ *       500:
+ *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Erro interno ao buscar processos"
+ */
+
+import { NextRequest, NextResponse } from 'next/server';
+import { authenticateRequest } from '@/backend/auth/api-auth';
+import { buscarProcessosClientePorCpf } from '@/backend/acervo/services/buscar-processos-cliente-cpf.service';
+
+interface RouteParams {
+  params: Promise<{
+    cpf: string;
+  }>;
+}
+
+export async function GET(
+  request: NextRequest,
+  { params }: RouteParams
+) {
+  try {
+    // Autenticação
+    const authResult = await authenticateRequest(request);
+    if (!authResult.authenticated) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    // Extrair CPF da URL
+    const { cpf } = await params;
+
+    if (!cpf) {
+      return NextResponse.json(
+        { success: false, error: 'CPF é obrigatório' },
+        { status: 400 }
+      );
+    }
+
+    // Buscar processos
+    const resultado = await buscarProcessosClientePorCpf(cpf);
+
+    // Determinar status HTTP baseado no resultado
+    if (resultado.success === false) {
+      const errorMessage = resultado.error;
+      // CPF inválido
+      if (errorMessage.includes('inválido')) {
+        return NextResponse.json(resultado, { status: 400 });
+      }
+      // Nenhum processo encontrado
+      if (errorMessage.includes('Nenhum processo')) {
+        return NextResponse.json(resultado, { status: 404 });
+      }
+      // Erro genérico
+      return NextResponse.json(resultado, { status: 500 });
+    }
+
+    return NextResponse.json(resultado);
+
+  } catch (error) {
+    console.error('❌ [API] Erro em /api/acervo/cliente/cpf:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Erro interno do servidor',
+      },
+      { status: 500 }
+    );
+  }
+}

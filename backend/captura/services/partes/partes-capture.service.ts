@@ -56,18 +56,6 @@ interface SituacaoReceitaPJE {
   descricao?: string;
 }
 
-/** Estrutura de tipo de pessoa retornada pelo PJE */
-interface TipoPessoaPJE {
-  codigo?: string;
-  label?: string;
-}
-
-/** Estrutura de porte de empresa retornada pelo PJE */
-interface PortePJE {
-  codigo?: number;
-  descricao?: string;
-}
-
 /** Tipo para resultado de processamento de parte */
 interface ProcessamentoParteResult {
   tipoParte: TipoParteClassificacao;
@@ -759,6 +747,13 @@ async function processarParte(
           });
           if (result.sucesso && result.cliente) {
             entidadeId = result.cliente.id;
+          } else {
+            throw new PersistenceError(
+              `Erro ao criar cliente PF: ${result.erro || 'erro desconhecido'}`,
+              'insert',
+              'cliente',
+              { parte: parte.nome, cpf: documentoNormalizado }
+            );
           }
         } else {
           const params: CriarClientePJParams = {
@@ -772,6 +767,13 @@ async function processarParte(
           });
           if (result.sucesso && result.cliente) {
             entidadeId = result.cliente.id;
+          } else {
+            throw new PersistenceError(
+              `Erro ao criar cliente PJ: ${result.erro || 'erro desconhecido'}`,
+              'insert',
+              'cliente',
+              { parte: parte.nome, cnpj: documentoNormalizado }
+            );
           }
         }
       }
@@ -798,6 +800,13 @@ async function processarParte(
           });
           if (result.sucesso && result.parteContraria) {
             entidadeId = result.parteContraria.id;
+          } else {
+            throw new PersistenceError(
+              `Erro ao criar parte contrária PF: ${result.erro || 'erro desconhecido'}`,
+              'insert',
+              'parte_contraria',
+              { parte: parte.nome, cpf: documentoNormalizado }
+            );
           }
         } else {
           const params: CriarParteContrariaPJParams = {
@@ -811,6 +820,13 @@ async function processarParte(
           });
           if (result.sucesso && result.parteContraria) {
             entidadeId = result.parteContraria.id;
+          } else {
+            throw new PersistenceError(
+              `Erro ao criar parte contrária PJ: ${result.erro || 'erro desconhecido'}`,
+              'insert',
+              'parte_contraria',
+              { parte: parte.nome, cnpj: documentoNormalizado }
+            );
           }
         }
       }
@@ -857,11 +873,19 @@ async function processarParte(
               );
           if (result.sucesso && result.terceiro) {
             entidadeId = result.terceiro.id;
+          } else {
+            // Erro ao criar terceiro COM documento - lançar exceção com erro específico
+            throw new PersistenceError(
+              `Erro ao criar terceiro com documento: ${result.erro || 'erro desconhecido'}`,
+              'insert',
+              'terceiro',
+              { parte: parte.nome, documento: documentoNormalizado }
+            );
           }
         }
       } else {
         // SEM DOCUMENTO VÁLIDO: Buscar via cadastros_pje (id_pessoa_pje) ou criar novo
-        // Isso é comum para entidades como Ministério Público, Peritos sem CPF cadastrado, etc.
+        // Isso é comum para entidades como Ministério Público, Peritos sem CPF cadastrado, Testemunhas, etc.
         console.log(`[PARTES] Terceiro "${parte.nome}" sem documento válido - usando busca por id_pessoa_pje`);
         
         // 1. Tentar encontrar entidade existente via cadastros_pje
@@ -906,7 +930,13 @@ async function processarParte(
             entidadeId = result.terceiro.id;
             console.log(`[PARTES] Terceiro "${parte.nome}" criado sem documento: ID ${entidadeId}`);
           } else {
-            console.error(`[PARTES] Erro ao criar terceiro "${parte.nome}" sem documento:`, result.erro);
+            // Erro ao criar terceiro SEM documento - lançar exceção com erro específico
+            throw new PersistenceError(
+              `Erro ao criar terceiro sem documento: ${result.erro || 'erro desconhecido'}`,
+              'insert',
+              'terceiro',
+              { parte: parte.nome, idPessoa: parte.idPessoa }
+            );
           }
         }
       }

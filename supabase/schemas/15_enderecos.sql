@@ -71,6 +71,13 @@ create index if not exists idx_enderecos_entidade on public.enderecos(entidade_t
 create index if not exists idx_enderecos_processo on public.enderecos(numero_processo, trt, grau);
 create index if not exists idx_enderecos_id_pje on public.enderecos(id_pje);
 
+-- Índice unique parcial para deduplicação de endereços do PJE
+-- Permite upsert idempotente por (id_pje, entidade_tipo, entidade_id)
+-- Só aplica quando id_pje não é null (endereços manuais não são afetados)
+create unique index if not exists idx_enderecos_pje_unique
+on public.enderecos(id_pje, entidade_tipo, entidade_id)
+where id_pje is not null;
+
 -- RLS
 alter table public.enderecos enable row level security;
 
