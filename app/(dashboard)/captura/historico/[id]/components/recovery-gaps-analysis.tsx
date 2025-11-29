@@ -18,9 +18,12 @@ import {
   Users,
   UserCheck,
   Play,
-  Filter,
   Eye,
   EyeOff,
+  Clock,
+  Calendar,
+  FileText,
+  Info,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -59,6 +62,18 @@ const formatarData = (dataISO: string | Date): string => {
   }
 };
 
+/** Converte tipo de captura em label legível */
+const getTipoLabel = (tipoCaptura: string): string => {
+  const labels: Record<string, string> = {
+    partes: 'Partes',
+    pendentes: 'Processos Pendentes',
+    audiencias: 'Audiências',
+    acervo_geral: 'Processos do Acervo',
+    arquivados: 'Processos Arquivados',
+  };
+  return labels[tipoCaptura] || tipoCaptura;
+};
+
 const TipoElementoIcon = ({ tipo }: { tipo: string }) => {
   switch (tipo) {
     case 'endereco':
@@ -67,6 +82,12 @@ const TipoElementoIcon = ({ tipo }: { tipo: string }) => {
       return <Users className="h-4 w-4" />;
     case 'representante':
       return <UserCheck className="h-4 w-4" />;
+    case 'pendente':
+      return <Clock className="h-4 w-4" />;
+    case 'audiencia':
+      return <Calendar className="h-4 w-4" />;
+    case 'processo':
+      return <FileText className="h-4 w-4" />;
     default:
       return <AlertCircle className="h-4 w-4" />;
   }
@@ -124,36 +145,68 @@ interface ElementoItemProps {
   showCheckbox?: boolean;
 }
 
-const ElementoItem = ({ elemento, isSelected, onToggle, showCheckbox = true }: ElementoItemProps) => (
-  <div className="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/50">
-    {showCheckbox && (
-      <Checkbox
-        checked={isSelected}
-        onCheckedChange={onToggle}
-        disabled={elemento.statusPersistencia === 'erro'}
-      />
-    )}
-    <div className="flex-1 min-w-0">
-      <div className="flex items-center gap-2 mb-1">
-        <TipoElementoIcon tipo={elemento.tipo} />
-        <span className="font-medium text-sm truncate">{elemento.nome}</span>
-        <StatusPersistenciaBadge status={elemento.statusPersistencia} />
-      </div>
-      <p className="text-xs text-muted-foreground font-mono">
-        {elemento.identificador}
-      </p>
-      {elemento.contexto?.entidadeTipo && (
-        <p className="text-xs text-muted-foreground mt-1">
-          Entidade: {elemento.contexto.entidadeTipo}
-          {elemento.contexto.entidadeId && ` #${elemento.contexto.entidadeId}`}
+const ElementoItem = ({ elemento, isSelected, onToggle, showCheckbox = true }: ElementoItemProps) => {
+  // Determinar a descrição do status
+  const getStatusDescricao = () => {
+    if (elemento.erro) return elemento.erro;
+    
+    switch (elemento.statusPersistencia) {
+      case 'faltando':
+        if (elemento.tipo === 'representante') {
+          return 'Representante não encontrado no banco de dados';
+        }
+        if (elemento.tipo === 'endereco') {
+          return 'Endereço não persistido no banco de dados';
+        }
+        if (elemento.tipo === 'parte') {
+          return 'Parte não encontrada no banco de dados';
+        }
+        return 'Elemento não persistido no banco de dados';
+      case 'existente':
+        return 'Elemento já existe no banco de dados';
+      case 'pendente':
+        return 'Aguardando verificação';
+      case 'erro':
+        return 'Erro na verificação';
+      default:
+        return '';
+    }
+  };
+
+  return (
+    <div className="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/50">
+      {showCheckbox && (
+        <Checkbox
+          checked={isSelected}
+          onCheckedChange={onToggle}
+          disabled={elemento.statusPersistencia === 'erro'}
+        />
+      )}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1">
+          <TipoElementoIcon tipo={elemento.tipo} />
+          <span className="font-medium text-sm truncate">{elemento.nome}</span>
+          <StatusPersistenciaBadge status={elemento.statusPersistencia} />
+        </div>
+        <p className="text-xs text-muted-foreground font-mono">
+          {elemento.identificador}
         </p>
-      )}
-      {elemento.erro && (
-        <p className="text-xs text-destructive mt-1">{elemento.erro}</p>
-      )}
+        {elemento.contexto?.entidadeTipo && (
+          <p className="text-xs text-muted-foreground mt-1">
+            Entidade: {elemento.contexto.entidadeTipo}
+            {elemento.contexto.entidadeId && ` #${elemento.contexto.entidadeId}`}
+          </p>
+        )}
+        {/* Mostrar descrição do status ou erro */}
+        {(elemento.statusPersistencia === 'faltando' || elemento.statusPersistencia === 'erro' || elemento.erro) && (
+          <p className={`text-xs mt-1 ${elemento.erro || elemento.statusPersistencia === 'erro' ? 'text-destructive' : 'text-amber-600'}`}>
+            {getStatusDescricao()}
+          </p>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisProps) {
   const [selectedElements, setSelectedElements] = useState<Set<string>>(new Set());
@@ -163,8 +216,19 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
   const [partesOpen, setPartesOpen] = useState(true);
   const [enderecosOpen, setEnderecosOpen] = useState(true);
   const [representantesOpen, setRepresentantesOpen] = useState(true);
+  const [outrosOpen, setOutrosOpen] = useState(true);
 
-  const { log, payloadDisponivel, elementos, isLoading, error, refetch } = useRecoveryElementos({
+  const {
+    log,
+    payloadDisponivel,
+    elementos,
+    elementosGenericos,
+    suportaRepersistencia,
+    mensagem,
+    isLoading,
+    error,
+    refetch,
+  } = useRecoveryElementos({
     mongoId,
   });
 
@@ -321,6 +385,15 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
         </CardContent>
       </Card>
 
+      {/* Mensagem informativa para tipos não suportados */}
+      {mensagem && (
+        <Alert>
+          <Info className="h-4 w-4" />
+          <AlertTitle>Informação sobre este tipo de captura</AlertTitle>
+          <AlertDescription>{mensagem}</AlertDescription>
+        </Alert>
+      )}
+
       {/* Resumo de totais */}
       {totais && (
         <Card>
@@ -358,15 +431,42 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
         </Card>
       )}
 
+      {/* Resumo para tipos genéricos (pendentes, audiências, etc.) */}
+      {elementosGenericos && !totais && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm">Resumo dos Elementos</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center p-3 bg-muted/50 rounded-lg">
+                <p className="text-2xl font-bold">{elementosGenericos.totais.total}</p>
+                <p className="text-xs text-muted-foreground">Total</p>
+              </div>
+              <div className="text-center p-3 bg-muted/50 rounded-lg">
+                <p className="text-2xl font-bold text-green-600">{elementosGenericos.totais.existentes}</p>
+                <p className="text-xs text-muted-foreground">Existentes</p>
+              </div>
+              <div className="text-center p-3 bg-muted/50 rounded-lg">
+                <p className="text-2xl font-bold text-red-600">{elementosGenericos.totais.faltantes}</p>
+                <p className="text-xs text-muted-foreground">Faltantes</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Controles de filtro e ações */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
             <CardTitle className="text-sm">Elementos Capturados</CardTitle>
             <CardDescription>
-              {selectedElements.size > 0
-                ? `${selectedElements.size} elemento(s) selecionado(s)`
-                : 'Selecione elementos para re-persistir'}
+              {!suportaRepersistencia
+                ? 'Visualização dos elementos capturados (re-persistência não disponível para este tipo)'
+                : selectedElements.size > 0
+                  ? `${selectedElements.size} elemento(s) selecionado(s)`
+                  : 'Selecione elementos para re-persistir'}
             </CardDescription>
           </div>
           <div className="flex items-center gap-4">
@@ -392,19 +492,21 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
               </Label>
             </div>
 
-            <Button
-              size="sm"
-              disabled={selectedElements.size === 0 || isProcessing}
-              onClick={() => setShowReprocessDialog(true)}
-              className="gap-2"
-            >
-              {isProcessing ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Play className="h-4 w-4" />
-              )}
-              Re-persistir ({selectedElements.size})
-            </Button>
+            {suportaRepersistencia && (
+              <Button
+                size="sm"
+                disabled={selectedElements.size === 0 || isProcessing}
+                onClick={() => setShowReprocessDialog(true)}
+                className="gap-2"
+              >
+                {isProcessing ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Play className="h-4 w-4" />
+                )}
+                Re-persistir ({selectedElements.size})
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -413,32 +515,31 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
               {/* Partes */}
               {elementosFiltrados.partes.length > 0 && (
                 <Collapsible open={partesOpen} onOpenChange={setPartesOpen}>
-                  <CollapsibleTrigger asChild>
-                    <Button variant="ghost" className="w-full justify-between p-3 h-auto">
-                      <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-blue-500" />
-                        <span className="font-medium">Partes</span>
-                        <Badge variant="outline" className="ml-2">
-                          {elementosFiltrados.partes.length}
-                        </Badge>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleAllOfType('partes', elementosFiltrados.partes);
-                        }}
-                      >
-                        {elementosFiltrados.partes
-                          .filter((e) => e.statusPersistencia !== 'erro')
-                          .every((e) => selectedElements.has(`partes:${e.identificador}`))
-                          ? 'Desmarcar'
-                          : 'Selecionar'}{' '}
-                        todos
+                  <div className="flex items-center justify-between">
+                    <CollapsibleTrigger asChild>
+                      <Button variant="ghost" className="flex-1 justify-start p-3 h-auto">
+                        <div className="flex items-center gap-2">
+                          <Users className="h-4 w-4 text-blue-500" />
+                          <span className="font-medium">Partes</span>
+                          <Badge variant="outline" className="ml-2">
+                            {elementosFiltrados.partes.length}
+                          </Badge>
+                        </div>
                       </Button>
+                    </CollapsibleTrigger>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => toggleAllOfType('partes', elementosFiltrados.partes)}
+                    >
+                      {elementosFiltrados.partes
+                        .filter((e) => e.statusPersistencia !== 'erro')
+                        .every((e) => selectedElements.has(`partes:${e.identificador}`))
+                        ? 'Desmarcar'
+                        : 'Selecionar'}{' '}
+                      todos
                     </Button>
-                  </CollapsibleTrigger>
+                  </div>
                   <CollapsibleContent className="space-y-2 mt-2">
                     {elementosFiltrados.partes.map((elemento) => (
                       <ElementoItem
@@ -456,32 +557,31 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
               {/* Endereços */}
               {elementosFiltrados.enderecos.length > 0 && (
                 <Collapsible open={enderecosOpen} onOpenChange={setEnderecosOpen}>
-                  <CollapsibleTrigger asChild>
-                    <Button variant="ghost" className="w-full justify-between p-3 h-auto">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-green-500" />
-                        <span className="font-medium">Endereços</span>
-                        <Badge variant="outline" className="ml-2">
-                          {elementosFiltrados.enderecos.length}
-                        </Badge>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleAllOfType('enderecos', elementosFiltrados.enderecos);
-                        }}
-                      >
-                        {elementosFiltrados.enderecos
-                          .filter((e) => e.statusPersistencia !== 'erro')
-                          .every((e) => selectedElements.has(`enderecos:${e.identificador}`))
-                          ? 'Desmarcar'
-                          : 'Selecionar'}{' '}
-                        todos
+                  <div className="flex items-center justify-between">
+                    <CollapsibleTrigger asChild>
+                      <Button variant="ghost" className="flex-1 justify-start p-3 h-auto">
+                        <div className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-green-500" />
+                          <span className="font-medium">Endereços</span>
+                          <Badge variant="outline" className="ml-2">
+                            {elementosFiltrados.enderecos.length}
+                          </Badge>
+                        </div>
                       </Button>
+                    </CollapsibleTrigger>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => toggleAllOfType('enderecos', elementosFiltrados.enderecos)}
+                    >
+                      {elementosFiltrados.enderecos
+                        .filter((e) => e.statusPersistencia !== 'erro')
+                        .every((e) => selectedElements.has(`enderecos:${e.identificador}`))
+                        ? 'Desmarcar'
+                        : 'Selecionar'}{' '}
+                      todos
                     </Button>
-                  </CollapsibleTrigger>
+                  </div>
                   <CollapsibleContent className="space-y-2 mt-2">
                     {elementosFiltrados.enderecos.map((elemento) => (
                       <ElementoItem
@@ -498,32 +598,31 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
               {/* Representantes */}
               {elementosFiltrados.representantes.length > 0 && (
                 <Collapsible open={representantesOpen} onOpenChange={setRepresentantesOpen}>
-                  <CollapsibleTrigger asChild>
-                    <Button variant="ghost" className="w-full justify-between p-3 h-auto">
-                      <div className="flex items-center gap-2">
-                        <UserCheck className="h-4 w-4 text-purple-500" />
-                        <span className="font-medium">Representantes</span>
-                        <Badge variant="outline" className="ml-2">
-                          {elementosFiltrados.representantes.length}
-                        </Badge>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleAllOfType('representantes', elementosFiltrados.representantes);
-                        }}
-                      >
-                        {elementosFiltrados.representantes
-                          .filter((e) => e.statusPersistencia !== 'erro')
-                          .every((e) => selectedElements.has(`representantes:${e.identificador}`))
-                          ? 'Desmarcar'
-                          : 'Selecionar'}{' '}
-                        todos
+                  <div className="flex items-center justify-between">
+                    <CollapsibleTrigger asChild>
+                      <Button variant="ghost" className="flex-1 justify-start p-3 h-auto">
+                        <div className="flex items-center gap-2">
+                          <UserCheck className="h-4 w-4 text-purple-500" />
+                          <span className="font-medium">Representantes</span>
+                          <Badge variant="outline" className="ml-2">
+                            {elementosFiltrados.representantes.length}
+                          </Badge>
+                        </div>
                       </Button>
+                    </CollapsibleTrigger>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => toggleAllOfType('representantes', elementosFiltrados.representantes)}
+                    >
+                      {elementosFiltrados.representantes
+                        .filter((e) => e.statusPersistencia !== 'erro')
+                        .every((e) => selectedElements.has(`representantes:${e.identificador}`))
+                        ? 'Desmarcar'
+                        : 'Selecionar'}{' '}
+                      todos
                     </Button>
-                  </CollapsibleTrigger>
+                  </div>
                   <CollapsibleContent className="space-y-2 mt-2">
                     {elementosFiltrados.representantes.map((elemento) => (
                       <ElementoItem
@@ -538,10 +637,44 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
                 </Collapsible>
               )}
 
+              {/* Elementos genéricos (pendentes, audiências, processos) */}
+              {elementosGenericos &&
+                elementosFiltrados.partes.length === 0 &&
+                elementosFiltrados.enderecos.length === 0 &&
+                elementosFiltrados.representantes.length === 0 && (
+                  <Collapsible open={outrosOpen} onOpenChange={setOutrosOpen}>
+                    <CollapsibleTrigger asChild>
+                      <Button variant="ghost" className="w-full justify-between p-3 h-auto">
+                        <div className="flex items-center gap-2">
+                          <TipoElementoIcon tipo={elementosGenericos.elementos[0]?.tipo || 'processo'} />
+                          <span className="font-medium">
+                            {getTipoLabel(log?.tipoCaptura || 'partes')}
+                          </span>
+                          <Badge variant="outline" className="ml-2">
+                            {elementosGenericos.elementos.length}
+                          </Badge>
+                        </div>
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="space-y-2 mt-2">
+                      {elementosGenericos.elementos.map((elemento, index) => (
+                        <ElementoItem
+                          key={`${elemento.tipo}-${elemento.identificador}-${index}`}
+                          elemento={elemento}
+                          isSelected={false}
+                          onToggle={() => {}}
+                          showCheckbox={false}
+                        />
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                )}
+
               {/* Mensagem quando não há elementos */}
               {elementosFiltrados.partes.length === 0 &&
                 elementosFiltrados.enderecos.length === 0 &&
-                elementosFiltrados.representantes.length === 0 && (
+                elementosFiltrados.representantes.length === 0 &&
+                (!elementosGenericos || elementosGenericos.elementos.length === 0) && (
                   <Alert>
                     <CheckCircle2 className="h-4 w-4 text-green-500" />
                     <AlertTitle>

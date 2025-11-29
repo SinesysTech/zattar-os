@@ -164,47 +164,35 @@ interface UseReprocessResult {
 export interface UseRecoveryElementosParams {
   mongoId: string | null;
   filtro?: 'todos' | 'faltantes' | 'existentes';
+  modo?: 'partes' | 'generico';
 }
 
-export interface ElementosResult {
-  partes: Array<{
-    tipo: string;
-    identificador: string;
-    nome: string;
-    dadosBrutos: Record<string, unknown>;
-    statusPersistencia: 'existente' | 'faltando' | 'pendente' | 'erro';
-    contexto?: {
-      entidadeId?: number;
-      entidadeTipo?: string;
-      enderecoId?: number;
-    };
-    erro?: string;
-  }>;
-  enderecos: Array<{
-    tipo: string;
-    identificador: string;
-    nome: string;
-    dadosBrutos: Record<string, unknown>;
-    statusPersistencia: 'existente' | 'faltando' | 'pendente' | 'erro';
-    contexto?: {
-      entidadeId?: number;
-      entidadeTipo?: string;
-      enderecoId?: number;
-    };
-    erro?: string;
-  }>;
-  representantes: Array<{
-    tipo: string;
-    identificador: string;
-    nome: string;
-    dadosBrutos: Record<string, unknown>;
-    statusPersistencia: 'existente' | 'faltando' | 'pendente' | 'erro';
-    contexto?: {
-      entidadeId?: number;
-      entidadeTipo?: string;
-    };
-    erro?: string;
-  }>;
+/** Elemento individual retornado pela API */
+export interface ElementoApi {
+  tipo: string;
+  identificador: string;
+  nome: string;
+  dadosBrutos: Record<string, unknown>;
+  statusPersistencia: 'existente' | 'faltando' | 'pendente' | 'erro';
+  contexto?: {
+    entidadeId?: number;
+    entidadeTipo?: string;
+    enderecoId?: number;
+    numeroProcesso?: string;
+    classeJudicial?: string;
+    prazoVencido?: boolean;
+    dataInicio?: string;
+    tipo?: string;
+    processo?: string;
+  };
+  erro?: string;
+}
+
+/** Resultado no modo "partes" (legado) */
+export interface ElementosResultPartes {
+  partes: ElementoApi[];
+  enderecos: ElementoApi[];
+  representantes: ElementoApi[];
   totais: {
     partes: number;
     partesExistentes: number;
@@ -218,20 +206,38 @@ export interface ElementosResult {
   };
 }
 
+/** Resultado no modo "generico" */
+export interface ElementosResultGenerico {
+  elementos: ElementoApi[];
+  totais: {
+    total: number;
+    existentes: number;
+    faltantes: number;
+    filtrados: number;
+  };
+}
+
+interface LogInfo {
+  mongoId: string;
+  capturaLogId: number;
+  tipoCaptura: string;
+  status: string;
+  trt: string;
+  grau: string;
+  advogadoId?: number;
+  criadoEm: string | Date;
+  erro?: string | null;
+}
+
 interface UseRecoveryElementosResult {
-  log: {
-    mongoId: string;
-    capturaLogId: number;
-    tipoCaptura: string;
-    status: string;
-    trt: string;
-    grau: string;
-    advogadoId?: number;
-    criadoEm: string | Date;
-    erro?: string | null;
-  } | null;
+  log: LogInfo | null;
   payloadDisponivel: boolean;
-  elementos: ElementosResult | null;
+  /** Elementos no modo "partes" (legado) - compatibilidade */
+  elementos: ElementosResultPartes | null;
+  /** Elementos no modo "generico" */
+  elementosGenericos: ElementosResultGenerico | null;
+  suportaRepersistencia: boolean;
+  mensagem?: string;
   filtroAplicado: string;
   isLoading: boolean;
   error: string | null;
@@ -241,9 +247,12 @@ interface UseRecoveryElementosResult {
 export const useRecoveryElementos = (
   params: UseRecoveryElementosParams
 ): UseRecoveryElementosResult => {
-  const [log, setLog] = useState<UseRecoveryElementosResult['log']>(null);
+  const [log, setLog] = useState<LogInfo | null>(null);
   const [payloadDisponivel, setPayloadDisponivel] = useState(false);
-  const [elementos, setElementos] = useState<ElementosResult | null>(null);
+  const [elementos, setElementos] = useState<ElementosResultPartes | null>(null);
+  const [elementosGenericos, setElementosGenericos] = useState<ElementosResultGenerico | null>(null);
+  const [suportaRepersistencia, setSuportaRepersistencia] = useState(false);
+  const [mensagem, setMensagem] = useState<string | undefined>(undefined);
   const [filtroAplicado, setFiltroAplicado] = useState('todos');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -253,6 +262,9 @@ export const useRecoveryElementos = (
       setLog(null);
       setPayloadDisponivel(false);
       setElementos(null);
+      setElementosGenericos(null);
+      setSuportaRepersistencia(false);
+      setMensagem(undefined);
       setIsLoading(false);
       return;
     }
@@ -265,6 +277,8 @@ export const useRecoveryElementos = (
       if (params.filtro) {
         searchParams.set('filtro', params.filtro);
       }
+      // Default to generico mode
+      searchParams.set('modo', params.modo || 'generico');
 
       const response = await fetch(
         `/api/captura/recovery/${params.mongoId}/elementos?${searchParams.toString()}`
@@ -283,18 +297,57 @@ export const useRecoveryElementos = (
 
       setLog(data.data.log);
       setPayloadDisponivel(data.data.payloadDisponivel);
-      setElementos(data.data.elementos);
+      setSuportaRepersistencia(data.data.suportaRepersistencia ?? false);
+      setMensagem(data.data.mensagem);
       setFiltroAplicado(data.data.filtroAplicado || 'todos');
+
+      // Modo genérico
+      if (params.modo === 'generico' || !params.modo) {
+        if (Array.isArray(data.data.elementos)) {
+          setElementosGenericos({
+            elementos: data.data.elementos,
+            totais: data.data.totais,
+          });
+          // Converter para formato de partes para compatibilidade
+          const elems = data.data.elementos as ElementoApi[];
+          setElementos({
+            partes: elems.filter((e) => e.tipo === 'parte'),
+            enderecos: elems.filter((e) => e.tipo === 'endereco'),
+            representantes: elems.filter((e) => e.tipo === 'representante'),
+            totais: {
+              partes: elems.filter((e) => e.tipo === 'parte').length,
+              partesExistentes: elems.filter((e) => e.tipo === 'parte' && e.statusPersistencia === 'existente').length,
+              partesFaltantes: elems.filter((e) => e.tipo === 'parte' && e.statusPersistencia === 'faltando').length,
+              enderecos: elems.filter((e) => e.tipo === 'endereco').length,
+              enderecosExistentes: elems.filter((e) => e.tipo === 'endereco' && e.statusPersistencia === 'existente').length,
+              enderecosFaltantes: elems.filter((e) => e.tipo === 'endereco' && e.statusPersistencia === 'faltando').length,
+              representantes: elems.filter((e) => e.tipo === 'representante').length,
+              representantesExistentes: elems.filter((e) => e.tipo === 'representante' && e.statusPersistencia === 'existente').length,
+              representantesFaltantes: elems.filter((e) => e.tipo === 'representante' && e.statusPersistencia === 'faltando').length,
+            },
+          });
+        } else {
+          setElementosGenericos(null);
+          setElementos(null);
+        }
+      } else {
+        // Modo partes (legado)
+        setElementos(data.data.elementos);
+        setElementosGenericos(null);
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar elementos';
       setError(errorMessage);
       setLog(null);
       setPayloadDisponivel(false);
       setElementos(null);
+      setElementosGenericos(null);
+      setSuportaRepersistencia(false);
+      setMensagem(undefined);
     } finally {
       setIsLoading(false);
     }
-  }, [params.mongoId, params.filtro]);
+  }, [params.mongoId, params.filtro, params.modo]);
 
   useEffect(() => {
     buscarElementos();
@@ -304,6 +357,9 @@ export const useRecoveryElementos = (
     log,
     payloadDisponivel,
     elementos,
+    elementosGenericos,
+    suportaRepersistencia,
+    mensagem,
     filtroAplicado,
     isLoading,
     error,
