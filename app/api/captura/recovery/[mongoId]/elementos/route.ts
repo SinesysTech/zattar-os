@@ -86,6 +86,40 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     };
 
     if (!documento.payload_bruto) {
+      // Retornar estrutura apropriada baseada no modo
+      if (modo === 'partes') {
+        // Modo legado: retorna estrutura separada
+        return NextResponse.json(
+          {
+            success: true,
+            data: {
+              log: logInfo,
+              payloadDisponivel: false,
+              suportaRepersistencia: false,
+              filtroAplicado: filtro,
+              elementos: {
+                partes: [],
+                enderecos: [],
+                representantes: [],
+                totais: {
+                  partes: 0,
+                  partesExistentes: 0,
+                  partesFaltantes: 0,
+                  enderecos: 0,
+                  enderecosExistentes: 0,
+                  enderecosFaltantes: 0,
+                  representantes: 0,
+                  representantesExistentes: 0,
+                  representantesFaltantes: 0,
+                },
+              },
+            },
+          },
+          { status: 200 }
+        );
+      }
+
+      // Modo genérico: retorna array vazio
       return NextResponse.json(
         {
           success: true,
@@ -93,8 +127,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
             log: logInfo,
             payloadDisponivel: false,
             suportaRepersistencia: false,
+            filtroAplicado: filtro,
             elementos: [],
-            totais: { total: 0, existentes: 0, faltantes: 0 },
+            totais: { total: 0, existentes: 0, faltantes: 0, filtrados: 0 },
           },
         },
         { status: 200 }

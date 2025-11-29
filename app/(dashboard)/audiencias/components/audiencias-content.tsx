@@ -140,6 +140,30 @@ const getParteReColorClass = (): string => {
   return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800';
 };
 
+/**
+ * Formata modalidade para exibição
+ */
+const formatarModalidade = (modalidade: 'virtual' | 'presencial' | 'hibrida' | null): string => {
+  const modalidadeMap: Record<string, string> = {
+    virtual: 'Virtual',
+    presencial: 'Presencial',
+    hibrida: 'Híbrida',
+  };
+  return modalidade ? modalidadeMap[modalidade] || modalidade : '-';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge de modalidade
+ */
+const getModalidadeColorClass = (modalidade: 'virtual' | 'presencial' | 'hibrida' | null): string => {
+  const modalidadeColors: Record<string, string> = {
+    virtual: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
+    presencial: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
+    hibrida: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+  };
+  return modalidade ? modalidadeColors[modalidade] || 'bg-gray-100 text-gray-800 border-gray-200' : 'bg-gray-100 text-gray-800 border-gray-200';
+};
+
 type PlataformaVideo = 'zoom' | 'meet' | 'webex' | null;
 
 const detectarPlataforma = (url: string | null): PlataformaVideo => {
@@ -352,17 +376,21 @@ function criarColunas(
         const parteRe = row.original.polo_passivo_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 w-fit">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>{trt}</Badge>
-              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>{formatarGrau(grau)}</Badge>
+              <Badge variant="outline" className={`${getTRTColorClass(trt)} text-xs shrink-0`}>{trt}</Badge>
+              <Badge variant="outline" className={`${getGrauColorClass(grau)} text-xs shrink-0`}>{formatarGrau(grau)}</Badge>
             </div>
             <div className="text-sm font-medium whitespace-nowrap">{classeJudicial && `${classeJudicial} `}{numeroProcesso}</div>
-            <div className="flex flex-col gap-1">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit text-left whitespace-nowrap`}>{parteAutora}</Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} w-fit text-left whitespace-nowrap`}>{parteRe}</Badge>
+            <div className="flex flex-col gap-1 w-full">
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
+                <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteAutora}</span>
+              </Badge>
+              <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
+                <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteRe}</span>
+              </Badge>
             </div>
-            <div className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</div>
+            <div className="text-xs text-muted-foreground">{orgaoJulgador}</div>
           </div>
         );
       },
@@ -381,28 +409,65 @@ function criarColunas(
         const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
         const logoPath = getLogoPlataforma(plataforma);
 
+        const enderecoCompleto = audiencia.endereco_presencial
+          ? [audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'
+          : null;
+        const isHibrida = audiencia.modalidade === 'hibrida';
+
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px] overflow-hidden">
-            <div className="text-sm text-left truncate w-full">{tipo}</div>
-            <div className="text-xs text-muted-foreground truncate w-full text-left">{sala}</div>
-            <div className="relative group h-full w-full min-h-[60px] flex items-center justify-between p-2">
-              <div className="flex-1 flex items-center justify-start overflow-hidden">
-                {audiencia.url_audiencia_virtual ? (
-                  logoPath ? (
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px]">
+            {/* Primeira linha: Tipo da audiência */}
+            <div className="text-sm text-left w-full">{tipo}</div>
+            
+            {/* Segunda linha: Sala da audiência */}
+            <div className="text-xs text-muted-foreground text-left w-full">{sala}</div>
+            
+            {/* Terceira linha: Badge com modalidade */}
+            <div className="w-full">
+              <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs`}>
+                {formatarModalidade(audiencia.modalidade)}
+              </Badge>
+            </div>
+            
+            {/* Quarta linha: URL e/ou Endereço */}
+            <div className="relative group h-full w-full min-h-[60px] flex flex-col items-start justify-start gap-1.5 p-2">
+              {isHibrida ? (
+                <>
+                  {audiencia.url_audiencia_virtual && (
+                    <div className="flex items-center gap-1.5 w-full">
+                      {logoPath ? (
+                        <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label={`Abrir audiência virtual em ${plataforma || 'plataforma de vídeo'}`} className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                          <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
+                        </a>
+                      ) : (
+                        <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline truncate max-w-full">{audiencia.url_audiencia_virtual}</a>
+                      )}
+                    </div>
+                  )}
+                  {enderecoCompleto && (
+                    <div className="text-xs text-muted-foreground w-full">
+                      <span className="font-medium">Presencial: </span>
+                      <span>{enderecoCompleto}</span>
+                    </div>
+                  )}
+                </>
+              ) : audiencia.url_audiencia_virtual ? (
+                <div className="flex-1 flex items-center justify-start w-full">
+                  {logoPath ? (
                     <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label={`Abrir audiência virtual em ${plataforma || 'plataforma de vídeo'}`} className="hover:opacity-70 transition-opacity flex items-center justify-center">
                       <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
                     </a>
                   ) : (
                     <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline truncate max-w-full">{audiencia.url_audiencia_virtual}</a>
-                  )
-                ) : audiencia.endereco_presencial ? (
-                  <span className="text-sm line-clamp-3 w-full break-words">
-                    {[audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'}
-                  </span>
-                ) : (
-                  <span className="text-sm text-muted-foreground">-</span>
-                )}
-              </div>
+                  )}
+                </div>
+              ) : enderecoCompleto ? (
+                <span className="text-sm line-clamp-3 w-full wrap-break-word">
+                  {enderecoCompleto}
+                </span>
+              ) : (
+                <span className="text-sm text-muted-foreground">-</span>
+              )}
               <div className="absolute bottom-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 {audiencia.url_audiencia_virtual && (
                   <Button size="sm" variant="ghost" onClick={async () => { if (!audiencia.url_audiencia_virtual) return; try { await navigator.clipboard.writeText(audiencia.url_audiencia_virtual); } catch {} }} className="h-5 w-5 p-0" title="Copiar URL">
@@ -696,7 +761,9 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
             </Tooltip>
           </ButtonGroup>
         )}
-        <Badge variant="secondary" className="shrink-0">{contadorAtivo} audiências</Badge>
+        <div className="inline-flex items-center h-9 rounded-md border border-input bg-primary/10 px-3 text-sm font-medium text-primary shrink-0">
+          {contadorAtivo} audiências
+        </div>
       </div>
 
       {/* Conteúdo da visualização */}

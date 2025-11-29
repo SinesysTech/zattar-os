@@ -34,8 +34,8 @@ import { CACHE_PREFIXES } from '@/backend/utils/redis/cache-utils';
  *             properties:
  *               tipo:
  *                 type: string
- *                 enum: [virtual, presencial]
- *                 description: Tipo de endereço a atualizar
+ *                 enum: [virtual, presencial, hibrida]
+ *                 description: Tipo de endereço a atualizar (hibrida permite URL e endereço simultaneamente)
  *               urlAudienciaVirtual:
  *                 type: string
  *                 nullable: true
@@ -99,9 +99,9 @@ export async function PATCH(
         const { tipo, urlAudienciaVirtual, enderecoPresencial } = body;
 
         // Validar tipo
-        if (!tipo || !['virtual', 'presencial'].includes(tipo)) {
+        if (!tipo || !['virtual', 'presencial', 'hibrida'].includes(tipo)) {
             return NextResponse.json(
-                { error: 'Tipo deve ser "virtual" ou "presencial"' },
+                { error: 'Tipo deve ser "virtual", "presencial" ou "hibrida"' },
                 { status: 400 }
             );
         }
@@ -111,6 +111,7 @@ export async function PATCH(
         const updateData: {
             url_audiencia_virtual?: string | null;
             endereco_presencial?: Record<string, string> | null;
+            modalidade?: 'virtual' | 'presencial' | 'hibrida';
             updated_at: string;
         } = {
             updated_at: new Date().toISOString(),
@@ -133,8 +134,8 @@ export async function PATCH(
             }
             // Limpar endereço presencial quando for virtual
             updateData.endereco_presencial = null;
-        } else {
-            // tipo === 'presencial'
+            updateData.modalidade = 'virtual';
+        } else if (tipo === 'presencial') {
             if (enderecoPresencial && Object.keys(enderecoPresencial).length > 0) {
                 // Validar se pelo menos logradouro ou cidade estão preenchidos
                 if (!enderecoPresencial.logradouro && !enderecoPresencial.cidade) {
@@ -153,6 +154,48 @@ export async function PATCH(
             }
             // Limpar URL virtual quando for presencial
             updateData.url_audiencia_virtual = null;
+            updateData.modalidade = 'presencial';
+        } else {
+            // tipo === 'hibrida'
+            // Validar URL se fornecida
+            if (urlAudienciaVirtual && urlAudienciaVirtual.trim() !== '') {
+                try {
+                    new URL(urlAudienciaVirtual);
+                } catch {
+                    return NextResponse.json(
+                        { error: 'URL inválida. Use o formato: https://exemplo.com' },
+                        { status: 400 }
+                    );
+                }
+                updateData.url_audiencia_virtual = urlAudienciaVirtual.trim();
+            } else {
+                updateData.url_audiencia_virtual = null;
+            }
+            // Validar endereço presencial
+            if (enderecoPresencial && Object.keys(enderecoPresencial).length > 0) {
+                // Validar se pelo menos logradouro ou cidade estão preenchidos
+                if (!enderecoPresencial.logradouro && !enderecoPresencial.cidade) {
+                    return NextResponse.json(
+                        { error: 'Informe pelo menos o logradouro ou a cidade' },
+                        { status: 400 }
+                    );
+                }
+                // Sempre definir "Brasil" como país padrão
+                updateData.endereco_presencial = {
+                    ...enderecoPresencial,
+                    pais: 'Brasil'
+                };
+            } else {
+                updateData.endereco_presencial = null;
+            }
+            // Para híbrida, ambos devem estar preenchidos
+            if (!updateData.url_audiencia_virtual || !updateData.endereco_presencial) {
+                return NextResponse.json(
+                    { error: 'Para modalidade híbrida, é necessário informar tanto a URL virtual quanto o endereço presencial' },
+                    { status: 400 }
+                );
+            }
+            updateData.modalidade = 'hibrida';
         }
 
         // 5. Atualizar endereço da audiência
