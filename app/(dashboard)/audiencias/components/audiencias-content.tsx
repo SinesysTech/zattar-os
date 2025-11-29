@@ -389,7 +389,7 @@ function criarColunas(
               <div className="flex-1 flex items-center justify-start overflow-hidden">
                 {audiencia.url_audiencia_virtual ? (
                   logoPath ? (
-                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label={`Abrir audiência virtual em ${plataforma || 'plataforma de vídeo'}`} className="hover:opacity-70 transition-opacity flex items-center justify-center">
                       <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
                     </a>
                   ) : (

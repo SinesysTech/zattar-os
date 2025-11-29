@@ -139,7 +139,7 @@ export function UploadDeclaracaoDialog({
           )}
 
           <div className="flex items-start gap-2 p-3 rounded-md bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
-            <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+            <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" />
             <div className="text-sm text-blue-900 dark:text-blue-100">
               <p className="font-medium mb-1">Importante</p>
               <p>

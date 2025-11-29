@@ -1,55 +1,39 @@
 'use client';
 
 import * as React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useIsClient } from '@/app/_lib/hooks/use-is-client';
-
-interface ClientOnlyTabsProps {
-  defaultValue?: string;
-  value?: string;
-  className?: string;
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
-  onValueChange?: (value: string) => void;
-}
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 /**
- * Wrapper para Tabs que renderiza apenas no cliente para evitar
- * hydration mismatch com React 19 + Radix UI.
+ * ClientOnlyTabs - Wrapper para componente Tabs do Radix UI
+ * 
+ * Evita hydration mismatch com React 19 renderizando tabs apenas no cliente.
+ * Isso resolve a incompatibilidade conhecida entre React 19 e Radix UI.
  */
-export function ClientOnlyTabs({
-  defaultValue,
-  value,
-  className,
-  children,
-  fallback,
-  onValueChange
-}: ClientOnlyTabsProps) {
-  const isClient = useIsClient();
 
-  if (!isClient) {
-    return fallback || (
-      <div className="space-y-4">
-        <div className="flex gap-2">
-          <div className="h-9 w-32 animate-pulse bg-muted rounded-lg" />
-          <div className="h-9 w-32 animate-pulse bg-muted rounded-lg" />
-          <div className="h-9 w-32 animate-pulse bg-muted rounded-lg" />
-        </div>
-        <div className="h-64 w-full animate-pulse bg-muted rounded-lg" />
-      </div>
-    );
+interface ClientOnlyTabsProps extends React.ComponentProps<typeof Tabs> {
+  children: React.ReactNode;
+}
+
+const ClientOnlyTabs = React.forwardRef<
+  React.ElementRef<typeof Tabs>,
+  ClientOnlyTabsProps
+>(({ children, ...props }, ref) => {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
   }
 
   return (
-    <Tabs 
-      {...(value !== undefined ? { value } : { defaultValue })}
-      className={className} 
-      onValueChange={onValueChange}
-    >
+    <Tabs ref={ref} {...props}>
       {children}
     </Tabs>
   );
-}
+});
+ClientOnlyTabs.displayName = 'ClientOnlyTabs';
 
-// Re-exportar outros componentes Tabs
-export { TabsContent, TabsList, TabsTrigger };
+export { ClientOnlyTabs, TabsList, TabsTrigger, TabsContent };

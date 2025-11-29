@@ -2,13 +2,14 @@
  * Componente de Visualização de Captura (Client Component)
  *
  * Exibe detalhes completos de uma captura com loading/error states.
+ * Integra com sistema de recovery para análise de gaps e re-processamento.
  */
 
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Trash2, AlertCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Trash2, AlertCircle, Loader2, Database, Search, FileWarning } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +25,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { ClientOnlyTabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/client-only-tabs';
+import { RecoverySection } from './components/recovery-section';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/backend/types/captura/capturas-log-types';
 
 interface CapturaVisualizacaoProps {
@@ -73,12 +76,108 @@ const StatusBadge = ({ status }: { status: StatusCaptura }) => {
   return <Badge tone={tone} variant={variant}>{label}</Badge>;
 };
 
+/**
+ * Conteúdo da aba Informações (dados do PostgreSQL)
+ */
+const InformacoesTab = ({ captura }: { captura: CapturaLog }) => (
+  <div className="space-y-6">
+    {/* Informações Básicas */}
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-sm">Informações Básicas</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">ID</p>
+            <p className="text-sm font-mono">#{captura.id}</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">Tipo de Captura</p>
+            <p className="text-sm">{formatarTipoCaptura(captura.tipo_captura)}</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">Status</p>
+            <StatusBadge status={captura.status} />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">Advogado ID</p>
+            <p className="text-sm">{captura.advogado_id ? `#${captura.advogado_id}` : '-'}</p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+
+    {/* Credenciais */}
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-sm">Credenciais Utilizadas</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap gap-2">
+          {captura.credencial_ids.map((id) => (
+            <Badge key={id} variant="outline">
+              Credencial #{id}
+            </Badge>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+
+    {/* Datas */}
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-sm">Datas e Horários</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">Iniciado Em</p>
+            <p className="text-sm">{formatarDataHora(captura.iniciado_em)}</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">Concluído Em</p>
+            <p className="text-sm">{formatarDataHora(captura.concluido_em)}</p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+
+    {/* Resultado */}
+    {captura.resultado && (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm">Resultado</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <pre className="text-xs bg-muted p-4 rounded-md overflow-x-auto max-h-[500px]">
+            {JSON.stringify(captura.resultado, null, 2)}
+          </pre>
+        </CardContent>
+      </Card>
+    )}
+
+    {/* Erro */}
+    {captura.erro && (
+      <Card className="border-destructive">
+        <CardHeader>
+          <CardTitle className="text-sm text-destructive">Erro</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-destructive">{captura.erro}</p>
+        </CardContent>
+      </Card>
+    )}
+  </div>
+);
+
 export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
   const router = useRouter();
   const [captura, setCaptura] = useState<CapturaLog | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [activeTab, setActiveTab] = useState('informacoes');
 
   useEffect(() => {
     // AbortController para cancelar requisições anteriores
@@ -244,93 +343,27 @@ export function CapturaVisualizacao({ id }: CapturaVisualizacaoProps) {
         </AlertDialog>
       </div>
 
-      {/* Informações Básicas */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Informações Básicas</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">ID</p>
-              <p className="text-sm font-mono">#{captura.id}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Tipo de Captura</p>
-              <p className="text-sm">{formatarTipoCaptura(captura.tipo_captura)}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Status</p>
-              <StatusBadge status={captura.status} />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Advogado ID</p>
-              <p className="text-sm">{captura.advogado_id ? `#${captura.advogado_id}` : '-'}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Tabs de navegação */}
+      <ClientOnlyTabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="informacoes" className="gap-2">
+            <Database className="h-4 w-4" />
+            Informações
+          </TabsTrigger>
+          <TabsTrigger value="recovery" className="gap-2">
+            <Search className="h-4 w-4" />
+            Logs MongoDB
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Credenciais */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Credenciais Utilizadas</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {captura.credencial_ids.map((id) => (
-              <Badge key={id} variant="outline">
-                Credencial #{id}
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+        <TabsContent value="informacoes">
+          <InformacoesTab captura={captura} />
+        </TabsContent>
 
-      {/* Datas */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Datas e Horários</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Iniciado Em</p>
-              <p className="text-sm">{formatarDataHora(captura.iniciado_em)}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Concluído Em</p>
-              <p className="text-sm">{formatarDataHora(captura.concluido_em)}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Resultado */}
-      {captura.resultado && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Resultado</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="text-xs bg-muted p-4 rounded-md overflow-x-auto max-h-[500px]">
-              {JSON.stringify(captura.resultado, null, 2)}
-            </pre>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Erro */}
-      {captura.erro && (
-        <Card className="border-destructive">
-          <CardHeader>
-            <CardTitle className="text-sm text-destructive">Erro</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-destructive">{captura.erro}</p>
-          </CardContent>
-        </Card>
-      )}
+        <TabsContent value="recovery">
+          <RecoverySection capturaLogId={id} />
+        </TabsContent>
+      </ClientOnlyTabs>
     </div>
   );
 }

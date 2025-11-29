@@ -255,6 +255,7 @@ export function UsuarioCreateDialog({
                 <Label htmlFor="genero">Gênero</Label>
                 <select
                   id="genero"
+                  aria-label="Gênero"
                   value={formData.genero || ''}
                   onChange={(e) =>
                     handleChange('genero', e.target.value as GeneroUsuario)
