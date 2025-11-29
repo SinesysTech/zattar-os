@@ -23,6 +23,7 @@ export interface BuscarPartesContrariasParams {
   tipo_pessoa?: 'pf' | 'pj';
   situacao?: 'A' | 'I';
   incluirEndereco?: boolean;
+  incluirProcessos?: boolean;
 }
 
 interface UsePartesContrariasResult {
@@ -54,6 +55,7 @@ export const usePartesContrarias = (params: BuscarPartesContrariasParams = {}): 
   const tipo_pessoa = params.tipo_pessoa || '';
   const situacao = params.situacao || '';
   const incluirEndereco = params.incluirEndereco ?? false;
+  const incluirProcessos = params.incluirProcessos ?? false;
 
   // Normalizar parâmetros para comparação estável
   const paramsKey = useMemo(() => {
@@ -64,8 +66,9 @@ export const usePartesContrarias = (params: BuscarPartesContrariasParams = {}): 
       tipo_pessoa,
       situacao,
       incluirEndereco,
+      incluirProcessos,
     });
-  }, [pagina, limite, busca, tipo_pessoa, situacao, incluirEndereco]);
+  }, [pagina, limite, busca, tipo_pessoa, situacao, incluirEndereco, incluirProcessos]);
 
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
@@ -92,6 +95,9 @@ export const usePartesContrarias = (params: BuscarPartesContrariasParams = {}): 
       }
       if (incluirEndereco) {
         searchParams.set('incluir_endereco', 'true');
+      }
+      if (incluirProcessos) {
+        searchParams.set('incluir_processos', 'true');
       }
 
       const response = await fetch(`/api/partes-contrarias?${searchParams.toString()}`);
@@ -122,7 +128,7 @@ export const usePartesContrarias = (params: BuscarPartesContrariasParams = {}): 
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, tipo_pessoa, situacao, incluirEndereco]);
+  }, [pagina, limite, busca, tipo_pessoa, situacao, incluirEndereco, incluirProcessos]);
 
   useEffect(() => {
     // Só executar se os parâmetros realmente mudaram

@@ -8,6 +8,7 @@ import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
   listarRepresentantes,
   listarRepresentantesComEndereco,
+  listarRepresentantesComEnderecoEProcessos,
   criarRepresentante,
 } from '@/backend/representantes/services/representantes-persistence.service';
 import type {
@@ -105,6 +106,12 @@ import type {
  *           type: boolean
  *           default: false
  *         description: Se true, inclui dados de endereço via JOIN
+ *       - in: query
+ *         name: incluir_processos
+ *         schema:
+ *           type: boolean
+ *           default: false
+ *         description: Se true, inclui processos relacionados via processo_partes (implica incluir_endereco=true)
  *     responses:
  *       200:
  *         description: Lista de representantes retornada com sucesso
@@ -148,6 +155,7 @@ export async function GET(request: NextRequest) {
     // Parse query parameters
     const searchParams = request.nextUrl.searchParams;
     const incluirEndereco = searchParams.get('incluir_endereco') === 'true';
+    const incluirProcessos = searchParams.get('incluir_processos') === 'true';
     const params: ListarRepresentantesParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!) : undefined,
@@ -161,10 +169,12 @@ export async function GET(request: NextRequest) {
       ordem: searchParams.get('ordem') as 'asc' | 'desc' | undefined,
     };
 
-    // List representantes
-    const result = incluirEndereco
-      ? await listarRepresentantesComEndereco(params)
-      : await listarRepresentantes(params);
+    // List representantes - incluir_processos implica incluir_endereco
+    const result = incluirProcessos
+      ? await listarRepresentantesComEnderecoEProcessos(params)
+      : incluirEndereco
+        ? await listarRepresentantesComEndereco(params)
+        : await listarRepresentantes(params);
 
     return NextResponse.json({ success: true, data: result }, { status: 200 });
   } catch (error) {

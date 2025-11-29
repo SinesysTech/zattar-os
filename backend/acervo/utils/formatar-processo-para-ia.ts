@@ -9,6 +9,7 @@ import type {
   InstanciaProcessoIA,
   TimelineItemIA,
   UltimaMovimentacaoIA,
+  TimelineStatus,
 } from '@/backend/types/acervo/processos-cliente-cpf.types';
 import {
   TRT_NOMES,
@@ -264,12 +265,21 @@ export function formatarInstancia(
 }
 
 /**
+ * Opções adicionais para formatação do processo
+ */
+export interface FormatarProcessoOpcoes {
+  timelineStatus?: TimelineStatus;
+  timelineMensagem?: string;
+}
+
+/**
  * Formata um processo agrupado com suas timelines para a resposta da API
  */
 export function formatarProcessoParaIA(
   agrupado: ProcessoAgrupado,
   timelinePrimeiroGrau: TimelineItemIA[],
-  timelineSegundoGrau: TimelineItemIA[]
+  timelineSegundoGrau: TimelineItemIA[],
+  opcoes?: FormatarProcessoOpcoes
 ): ProcessoRespostaIA {
   // Combinar timelines e ordenar
   const timelineCombinada = [...timelinePrimeiroGrau, ...timelineSegundoGrau]
@@ -294,7 +304,12 @@ export function formatarProcessoParaIA(
     ? agrupado.nome_parte_re
     : agrupado.nome_parte_autora;
 
-  return {
+  // Determinar status da timeline
+  // Se foi passado explicitamente, usar. Caso contrário, inferir pela presença de timeline
+  const timelineStatus: TimelineStatus = opcoes?.timelineStatus
+    ?? (timelineCombinada.length > 0 ? 'disponivel' : 'indisponivel');
+
+  const resultado: ProcessoRespostaIA = {
     numero: agrupado.numero_processo,
     tipo: traduzirClasseJudicial(agrupado.classe_judicial),
     papel_cliente: traduzirTipoParte(agrupado.tipo_parte),
@@ -307,6 +322,14 @@ export function formatarProcessoParaIA(
       segundo_grau: formatarInstancia(agrupado.instancias.segundo_grau),
     },
     timeline: timelineCombinada,
+    timeline_status: timelineStatus,
     ultima_movimentacao: extrairUltimaMovimentacao(timelineCombinada),
   };
+
+  // Adicionar mensagem apenas se não disponível
+  if (opcoes?.timelineMensagem && timelineStatus !== 'disponivel') {
+    resultado.timeline_mensagem = opcoes.timelineMensagem;
+  }
+
+  return resultado;
 }

@@ -23,6 +23,11 @@ import {
   formatarTimeline,
   formatarProcessoParaIA,
 } from '../utils/formatar-processo-para-ia';
+import {
+  sincronizarTimelineEmBackground,
+  getMensagemSincronizando,
+  type ProcessoParaSincronizar,
+} from './sincronizar-timeline-cpf.service';
 
 // ============================================================================
 // Tipos Internos
@@ -169,8 +174,31 @@ export async function buscarProcessosClientePorCpf(
     // 3. Buscar timelines do MongoDB em paralelo
     const timelineCache = await buscarTimelinesEmParalelo(processosDb);
 
-    // 4. Formatar cada processo para a resposta
+    // 4. Identificar processos sem timeline para sincronização lazy
+    const processosSemTimeline: ProcessoParaSincronizar[] = [];
+
+    for (const processo of processosDb) {
+      // Só sincronizar se não tem timeline E tem id_pje e advogado_id
+      if (!processo.timeline_mongodb_id && processo.id_pje && processo.advogado_id) {
+        processosSemTimeline.push({
+          processoId: processo.id_pje,
+          numeroProcesso: processo.numero_processo,
+          trt: processo.trt,
+          grau: processo.grau,
+          advogadoId: processo.advogado_id,
+        });
+      }
+    }
+
+    // 5. Disparar sincronização em background (fire-and-forget)
+    if (processosSemTimeline.length > 0) {
+      console.log(`🔄 [BuscarProcessosCpf] ${processosSemTimeline.length} processos sem timeline, disparando sincronização`);
+      sincronizarTimelineEmBackground(processosSemTimeline);
+    }
+
+    // 6. Formatar cada processo para a resposta
     const processosFormatados: ProcessoRespostaIA[] = [];
+    const mensagemSincronizando = getMensagemSincronizando();
 
     for (const agrupado of processosAgrupados) {
       // Buscar timelines das instâncias
@@ -182,17 +210,27 @@ export async function buscarProcessosClientePorCpf(
         ? formatarTimeline(timelineCache[agrupado.instancias.segundo_grau.timeline_mongodb_id] ?? null)
         : [];
 
-      // Formatar processo
+      // Verificar se este processo está sem timeline e foi disparada sincronização
+      const temTimeline = timelinePrimeiroGrau.length > 0 || timelineSegundoGrau.length > 0;
+      const estaSincronizando = !temTimeline && processosSemTimeline.some(
+        p => p.numeroProcesso === agrupado.numero_processo
+      );
+
+      // Formatar processo com status de timeline
       const processoFormatado = formatarProcessoParaIA(
         agrupado,
         timelinePrimeiroGrau,
-        timelineSegundoGrau
+        timelineSegundoGrau,
+        {
+          timelineStatus: temTimeline ? 'disponivel' : (estaSincronizando ? 'sincronizando' : 'indisponivel'),
+          timelineMensagem: estaSincronizando ? mensagemSincronizando : undefined,
+        }
       );
 
       processosFormatados.push(processoFormatado);
     }
 
-    // 5. Ordenar por última movimentação (mais recentes primeiro)
+    // 7. Ordenar por última movimentação (mais recentes primeiro)
     processosFormatados.sort((a, b) => {
       const dataA = a.ultima_movimentacao?.data ?? '01/01/1900';
       const dataB = b.ultima_movimentacao?.data ?? '01/01/1900';
@@ -206,7 +244,7 @@ export async function buscarProcessosClientePorCpf(
       return parseData(dataB) - parseData(dataA);
     });
 
-    // 6. Calcular resumo estatístico
+    // 8. Calcular resumo estatístico
     const resumo = calcularResumo(processosFormatados);
 
     console.log(`✅ [BuscarProcessosCpf] Resposta montada com sucesso`, {

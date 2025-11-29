@@ -177,6 +177,7 @@ export async function GET(request: NextRequest) {
       trt: searchParams.get('trt') || undefined,
       grau: (searchParams.get('grau') as 'primeiro_grau' | 'segundo_grau' | null) || undefined,
       incluir_endereco: searchParams.get('incluir_endereco') === 'true',
+      incluir_processos: searchParams.get('incluir_processos') === 'true',
     };
 
     const resultado = await obterPartesContrarias(params);

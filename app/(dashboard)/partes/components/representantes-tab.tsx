@@ -20,11 +20,20 @@ import { Eye, Pencil, Phone, Mail } from 'lucide-react';
 import { useRepresentantes } from '@/app/_lib/hooks/use-representantes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Representante } from '@/backend/types/representantes/representantes-types';
+import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
+import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
 import {
   formatarCpf,
   formatarNome,
   formatarTelefone,
 } from '@/app/_lib/utils/format-clientes';
+
+/**
+ * Tipo estendido de representante com processos relacionados
+ */
+type RepresentanteComProcessos = Representante & {
+  processos_relacionados?: ProcessoRelacionado[];
+};
 import {
   buildRepresentantesFilterOptions,
   buildRepresentantesFilterGroups,
@@ -154,7 +163,7 @@ function obterEmail(representante: Representante): string | null {
 /**
  * Define as colunas da tabela de representantes
  */
-function criarColunas(onEditSuccess: () => void): ColumnDef<Representante>[] {
+function criarColunas(onEditSuccess: () => void): ColumnDef<RepresentanteComProcessos>[] {
   return [
     // Coluna composta: Representante (Badge OAB+Situação | Nome | CPF)
     {
@@ -244,6 +253,25 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Representante>[] {
         );
       },
     },
+    // Processos relacionados
+    {
+      id: 'processos',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Processos</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 180,
+      cell: ({ row }) => {
+        const representante = row.original;
+        return (
+          <ProcessosRelacionadosCell 
+            processos={representante.processos_relacionados || []}
+          />
+        );
+      },
+    },
     // Ações
     {
       id: 'acoes',
@@ -310,6 +338,7 @@ export function RepresentantesTab() {
       pagina: pagina + 1, // API usa 1-indexed
       limite,
       busca: buscaDebounced || undefined,
+      incluirProcessos: true, // Incluir processos relacionados
       ...filtros,
     };
   }, [pagina, limite, buscaDebounced, filtros]);

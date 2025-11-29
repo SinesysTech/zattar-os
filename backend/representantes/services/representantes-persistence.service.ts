@@ -22,6 +22,21 @@ import type {
   OperacaoRepresentanteResult,
 } from '@/backend/types/representantes/representantes-types';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
+import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
+
+/**
+ * Representante com processos relacionados
+ */
+export interface RepresentanteComProcessos extends Representante {
+  processos_relacionados: ProcessoRelacionado[];
+}
+
+/**
+ * Representante com endereço e processos relacionados
+ */
+export interface RepresentanteComEnderecoEProcessos extends RepresentanteComEndereco {
+  processos_relacionados: ProcessoRelacionado[];
+}
 
 // ============================================================================
 // Validation Functions
@@ -655,6 +670,117 @@ export async function listarRepresentantesComEndereco(
       ...representante,
       endereco,
     } as RepresentanteComEndereco;
+  });
+
+  const total = count ?? 0;
+  const totalPaginas = Math.ceil(total / limite);
+
+  return {
+    representantes,
+    total,
+    pagina,
+    limite,
+    totalPaginas,
+  };
+}
+
+// ============================================================================
+// Funções com JOIN para processos relacionados
+// ============================================================================
+
+/**
+ * Lista representantes com endereços e processos relacionados via processo_partes
+ * Os processos são buscados via JOIN na tabela processo_partes onde tipo_entidade = 'representante'
+ */
+export async function listarRepresentantesComEnderecoEProcessos(
+  params: ListarRepresentantesParams = {}
+): Promise<ListarRepresentantesResult & { representantes: RepresentanteComEnderecoEProcessos[] }> {
+  const supabase = createServiceClient();
+
+  const pagina = params.pagina ?? 1;
+  const limite = params.limite ?? 50;
+  const offset = (pagina - 1) * limite;
+
+  // Primeiro buscar representantes com endereço
+  let query = supabase.from('representantes').select(
+    `
+      *,
+      endereco:enderecos(*)
+    `,
+    { count: 'exact' }
+  );
+
+  // Aplicar filtros
+  if (params.busca) {
+    const busca = params.busca.trim();
+    query = query.or(`nome.ilike.%${busca}%,numero_oab.ilike.%${busca}%,cpf.ilike.%${busca}%`);
+  }
+
+  if (params.cpf) {
+    query = query.eq('cpf', params.cpf);
+  }
+
+  if (params.numero_oab) {
+    query = query.eq('numero_oab', params.numero_oab);
+  }
+
+  if (params.situacao_oab) {
+    query = query.eq('situacao_oab', params.situacao_oab);
+  }
+
+  // Ordenação
+  const ordenarPor = params.ordenar_por ?? 'created_at';
+  const ordem = params.ordem ?? 'desc';
+  query = query.order(ordenarPor, { ascending: ordem === 'asc' });
+
+  // Aplicar paginação
+  query = query.range(offset, offset + limite - 1);
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    throw new Error(`Erro ao listar representantes com endereço e processos: ${error.message}`);
+  }
+
+  // Extrair IDs dos representantes para buscar processos
+  const representanteIds = (data || []).map((row) => row.id as number);
+
+  // Buscar processos relacionados para todos os representantes de uma vez
+  const processosMap: Map<number, ProcessoRelacionado[]> = new Map();
+
+  if (representanteIds.length > 0) {
+    const { data: processosData, error: processosError } = await supabase
+      .from('processo_partes')
+      .select('entidade_id, processo_id, numero_processo, tipo_parte, polo')
+      .eq('tipo_entidade', 'representante')
+      .in('entidade_id', representanteIds);
+
+    if (!processosError && processosData) {
+      // Agrupar processos por entidade_id
+      for (const processo of processosData) {
+        const entidadeId = processo.entidade_id as number;
+        if (!processosMap.has(entidadeId)) {
+          processosMap.set(entidadeId, []);
+        }
+        processosMap.get(entidadeId)!.push({
+          processo_id: processo.processo_id as number,
+          numero_processo: processo.numero_processo as string,
+          tipo_parte: processo.tipo_parte as string,
+          polo: processo.polo as string,
+        });
+      }
+    }
+  }
+
+  const representantes = (data || []).map((row: Record<string, unknown> & { endereco?: Record<string, unknown> | null }) => {
+    const representante = converterParaRepresentante(row);
+    const endereco = row.endereco ? converterParaEndereco(row.endereco) : null;
+    const processos_relacionados = processosMap.get(row.id as number) || [];
+    return {
+      ...representante,
+      endereco,
+      processos_relacionados,
+    } as RepresentanteComEnderecoEProcessos;
   });
 
   const total = count ?? 0;

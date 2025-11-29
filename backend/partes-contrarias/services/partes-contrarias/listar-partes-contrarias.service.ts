@@ -4,6 +4,7 @@
 import {
   listarPartesContrarias as listarPartesContrariasDb,
   listarPartesContrariasComEndereco as listarPartesContrariasComEnderecoDb,
+  listarPartesContrariasComEnderecoEProcessos as listarPartesContrariasComEnderecoEProcessosDb,
 } from '../persistence/parte-contraria-persistence.service';
 import type {
   ListarPartesContrariasParams,
@@ -11,10 +12,11 @@ import type {
 } from '@/backend/types/partes/partes-contrarias-types';
 
 /**
- * Parâmetros estendidos para incluir endereços
+ * Parâmetros estendidos para incluir endereços e processos
  */
 export interface ObterPartesContrariasParams extends ListarPartesContrariasParams {
   incluir_endereco?: boolean;
+  incluir_processos?: boolean;
 }
 
 /**
@@ -25,11 +27,17 @@ export interface ObterPartesContrariasParams extends ListarPartesContrariasParam
  * 2. Aplica paginação
  * 3. Retorna lista paginada de partes contrárias
  * 4. Se incluir_endereco=true, popula dados de endereço via JOIN
+ * 5. Se incluir_processos=true, popula processos relacionados via processo_partes (implica incluir_endereco)
  */
 export async function obterPartesContrarias(
   params: ObterPartesContrariasParams = {}
 ): Promise<ListarPartesContrariasResult> {
-  const { incluir_endereco, ...listParams } = params;
+  const { incluir_endereco, incluir_processos, ...listParams } = params;
+
+  // incluir_processos implica incluir_endereco
+  if (incluir_processos) {
+    return listarPartesContrariasComEnderecoEProcessosDb(listParams);
+  }
 
   if (incluir_endereco) {
     return listarPartesContrariasComEnderecoDb(listParams);

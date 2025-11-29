@@ -143,6 +143,8 @@ async function buscarProcessosPorCpfManual(
     .from('acervo')
     .select(`
       id,
+      id_pje,
+      advogado_id,
       numero_processo,
       trt,
       grau,
@@ -177,6 +179,8 @@ async function buscarProcessosPorCpfManual(
       polo: participacao?.polo || 'NEUTRO',
       parte_principal: participacao?.principal || false,
       processo_id: processo.id,
+      id_pje: processo.id_pje,
+      advogado_id: processo.advogado_id,
       numero_processo: processo.numero_processo,
       trt: processo.trt,
       grau: processo.grau as 'primeiro_grau' | 'segundo_grau',

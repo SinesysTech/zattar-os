@@ -31,7 +31,16 @@ import {
 } from '@/app/_lib/utils/format-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { ParteContraria } from '@/app/_lib/types';
+import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
 import { usePartesContrarias } from '@/app/_lib/hooks/use-partes-contrarias';
+import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
+
+/**
+ * Tipo estendido de parte contrária com processos relacionados
+ */
+type ParteContrariaComProcessos = ParteContraria & {
+  processos_relacionados?: ProcessoRelacionado[];
+};
 
 interface PartesContrariasTabProps {}
 
@@ -70,12 +79,13 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
     limite,
     busca: buscaDebounced || undefined,
     incluirEndereco: true, // Incluir endereços nas respostas
+    incluirProcessos: true, // Incluir processos relacionados
     ...filtros,
   }), [pagina, limite, buscaDebounced, filtros]);
 
   const { partesContrarias, paginacao, isLoading, error } = usePartesContrarias(params);
 
-  const columns = React.useMemo<ColumnDef<ParteContraria>[]>(
+  const columns = React.useMemo<ColumnDef<ParteContrariaComProcessos>[]>(
     () => [
       {
         id: 'identificacao',
@@ -172,6 +182,24 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
             <div className="min-h-10 flex items-center justify-center text-sm">
               {telefone ? formatarTelefone(telefone) : '-'}
             </div>
+          );
+        },
+      },
+      {
+        id: 'processos',
+        header: () => (
+          <div className="flex items-center justify-center">
+            <div className="text-sm font-medium">Processos</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 180,
+        cell: ({ row }) => {
+          const parte = row.original;
+          return (
+            <ProcessosRelacionadosCell 
+              processos={parte.processos_relacionados || []}
+            />
           );
         },
       },

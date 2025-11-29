@@ -18,6 +18,8 @@ export interface ProcessoClienteCpfRow {
   polo: string;
   parte_principal: boolean;
   processo_id: number;
+  id_pje: string;           // ID do processo no PJE (necessário para captura de timeline)
+  advogado_id: number;      // ID do advogado que capturou o processo
   numero_processo: string;
   trt: string;
   grau: 'primeiro_grau' | 'segundo_grau';
@@ -86,6 +88,11 @@ export interface UltimaMovimentacaoIA {
 }
 
 /**
+ * Status da timeline do processo
+ */
+export type TimelineStatus = 'disponivel' | 'sincronizando' | 'indisponivel';
+
+/**
  * Processo formatado para resposta da IA
  */
 export interface ProcessoRespostaIA {
@@ -101,6 +108,8 @@ export interface ProcessoRespostaIA {
     segundo_grau: InstanciaProcessoIA | null;
   };
   timeline: TimelineItemIA[];
+  timeline_status: TimelineStatus; // Status da sincronização da timeline
+  timeline_mensagem?: string;      // Mensagem para o agente quando timeline não disponível
   ultima_movimentacao: UltimaMovimentacaoIA | null;
 }
 
