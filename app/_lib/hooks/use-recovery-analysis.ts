@@ -159,6 +159,159 @@ interface UseReprocessResult {
 }
 
 /**
+ * Hook para buscar todos os elementos de um log MongoDB
+ */
+export interface UseRecoveryElementosParams {
+  mongoId: string | null;
+  filtro?: 'todos' | 'faltantes' | 'existentes';
+}
+
+export interface ElementosResult {
+  partes: Array<{
+    tipo: string;
+    identificador: string;
+    nome: string;
+    dadosBrutos: Record<string, unknown>;
+    statusPersistencia: 'existente' | 'faltando' | 'pendente' | 'erro';
+    contexto?: {
+      entidadeId?: number;
+      entidadeTipo?: string;
+      enderecoId?: number;
+    };
+    erro?: string;
+  }>;
+  enderecos: Array<{
+    tipo: string;
+    identificador: string;
+    nome: string;
+    dadosBrutos: Record<string, unknown>;
+    statusPersistencia: 'existente' | 'faltando' | 'pendente' | 'erro';
+    contexto?: {
+      entidadeId?: number;
+      entidadeTipo?: string;
+      enderecoId?: number;
+    };
+    erro?: string;
+  }>;
+  representantes: Array<{
+    tipo: string;
+    identificador: string;
+    nome: string;
+    dadosBrutos: Record<string, unknown>;
+    statusPersistencia: 'existente' | 'faltando' | 'pendente' | 'erro';
+    contexto?: {
+      entidadeId?: number;
+      entidadeTipo?: string;
+    };
+    erro?: string;
+  }>;
+  totais: {
+    partes: number;
+    partesExistentes: number;
+    partesFaltantes: number;
+    enderecos: number;
+    enderecosExistentes: number;
+    enderecosFaltantes: number;
+    representantes: number;
+    representantesExistentes: number;
+    representantesFaltantes: number;
+  };
+}
+
+interface UseRecoveryElementosResult {
+  log: {
+    mongoId: string;
+    capturaLogId: number;
+    tipoCaptura: string;
+    status: string;
+    trt: string;
+    grau: string;
+    advogadoId?: number;
+    criadoEm: string | Date;
+    erro?: string | null;
+  } | null;
+  payloadDisponivel: boolean;
+  elementos: ElementosResult | null;
+  filtroAplicado: string;
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+}
+
+export const useRecoveryElementos = (
+  params: UseRecoveryElementosParams
+): UseRecoveryElementosResult => {
+  const [log, setLog] = useState<UseRecoveryElementosResult['log']>(null);
+  const [payloadDisponivel, setPayloadDisponivel] = useState(false);
+  const [elementos, setElementos] = useState<ElementosResult | null>(null);
+  const [filtroAplicado, setFiltroAplicado] = useState('todos');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const buscarElementos = useCallback(async () => {
+    if (!params.mongoId) {
+      setLog(null);
+      setPayloadDisponivel(false);
+      setElementos(null);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const searchParams = new URLSearchParams();
+      if (params.filtro) {
+        searchParams.set('filtro', params.filtro);
+      }
+
+      const response = await fetch(
+        `/api/captura/recovery/${params.mongoId}/elementos?${searchParams.toString()}`
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: { message: 'Erro desconhecido' } }));
+        throw new Error(errorData.error?.message || `Erro ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error('Resposta da API indicou falha');
+      }
+
+      setLog(data.data.log);
+      setPayloadDisponivel(data.data.payloadDisponivel);
+      setElementos(data.data.elementos);
+      setFiltroAplicado(data.data.filtroAplicado || 'todos');
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar elementos';
+      setError(errorMessage);
+      setLog(null);
+      setPayloadDisponivel(false);
+      setElementos(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [params.mongoId, params.filtro]);
+
+  useEffect(() => {
+    buscarElementos();
+  }, [buscarElementos]);
+
+  return {
+    log,
+    payloadDisponivel,
+    elementos,
+    filtroAplicado,
+    isLoading,
+    error,
+    refetch: buscarElementos,
+  };
+};
+
+/**
  * Hook para re-processar elementos de recovery
  */
 export const useReprocess = (params: UseReprocessParams = {}): UseReprocessResult => {

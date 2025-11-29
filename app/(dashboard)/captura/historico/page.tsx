@@ -3,11 +3,25 @@
 // Página de histórico de capturas
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
+import { Eye, Trash2 } from 'lucide-react';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { TableToolbar } from '@/components/ui/table-toolbar';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { buildCapturasFilterOptions, buildCapturasFilterGroups, parseCapturasFilters } from './components/capturas-toolbar-filters';
 import { useCapturasLog } from '@/app/_lib/hooks/use-capturas-log';
 import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
@@ -69,7 +83,10 @@ const StatusBadge = ({ status }: { status: StatusCaptura }) => {
 /**
  * Colunas da tabela de histórico
  */
-function criarColunas(): ColumnDef<CapturaLog>[] {
+function criarColunas(
+  router: ReturnType<typeof useRouter>,
+  onDelete: (captura: CapturaLog) => void
+): ColumnDef<CapturaLog>[] {
   return [
     {
       accessorKey: 'id',
@@ -198,10 +215,59 @@ function criarColunas(): ColumnDef<CapturaLog>[] {
         );
       },
     },
+    {
+      id: 'acoes',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="Ações" />
+        </div>
+      ),
+      size: 120,
+      cell: ({ row }) => {
+        const captura = row.original;
+        return (
+          <div className="flex items-center justify-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.push(`/captura/historico/${captura.id}`)}
+              title="Visualizar detalhes"
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="sm" title="Deletar">
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Tem certeza que deseja deletar esta captura? Esta ação não pode ser desfeita.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => onDelete(captura)}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Deletar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        );
+      },
+    },
   ];
 }
 
 export default function HistoricoCapturasPage() {
+  const router = useRouter();
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
@@ -226,9 +292,28 @@ export default function HistoricoCapturasPage() {
   );
 
   // Buscar histórico de capturas
-  const { capturas, paginacao, isLoading, error } = useCapturasLog(params);
+  const { capturas, paginacao, isLoading, error, refetch } = useCapturasLog(params);
 
-  const colunas = React.useMemo(() => criarColunas(), []);
+  // Handler para deletar captura
+  const handleDelete = React.useCallback(async (captura: CapturaLog) => {
+    try {
+      const response = await fetch(`/api/captura/historico/${captura.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Erro ao deletar captura');
+      }
+
+      // Recarregar lista após deletar
+      refetch();
+    } catch (err) {
+      console.error('Erro ao deletar captura:', err);
+    }
+  }, [refetch]);
+
+  const colunas = React.useMemo(() => criarColunas(router, handleDelete), [router, handleDelete]);
 
   // Gerar opções de filtro
   const filterOptions = React.useMemo(() => buildCapturasFilterOptions(advogados), [advogados]);

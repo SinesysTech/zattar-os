@@ -546,3 +546,277 @@ export async function verificarSeLogPossuiGaps(mongoId: string): Promise<boolean
   );
 }
 
+// ============================================================================
+// Extração de Todos os Elementos
+// ============================================================================
+
+/**
+ * Resultado da extração de todos os elementos
+ */
+export interface TodosElementosResult {
+  partes: ElementoRecuperavel[];
+  enderecos: ElementoRecuperavel[];
+  representantes: ElementoRecuperavel[];
+  totais: {
+    partes: number;
+    partesExistentes: number;
+    partesFaltantes: number;
+    enderecos: number;
+    enderecosExistentes: number;
+    enderecosFaltantes: number;
+    representantes: number;
+    representantesExistentes: number;
+    representantesFaltantes: number;
+  };
+}
+
+/**
+ * Extrai TODOS os elementos do payload (não apenas gaps)
+ * Verifica o status de persistência de cada um no PostgreSQL
+ *
+ * @param mongoId - ID do documento no MongoDB
+ * @returns Todos os elementos com status de persistência
+ */
+export async function extrairTodosElementos(
+  mongoId: string
+): Promise<TodosElementosResult | null> {
+  const documento = await buscarLogPorMongoId(mongoId);
+
+  if (!documento || !documento.payload_bruto) {
+    return null;
+  }
+
+  const supabase = createServiceClient();
+  const partes = extrairPartesDoPayload(documento.payload_bruto);
+
+  const elementosPartes: ElementoRecuperavel[] = [];
+  const elementosEnderecos: ElementoRecuperavel[] = [];
+  const elementosRepresentantes: ElementoRecuperavel[] = [];
+
+  const totais = {
+    partes: 0,
+    partesExistentes: 0,
+    partesFaltantes: 0,
+    enderecos: 0,
+    enderecosExistentes: 0,
+    enderecosFaltantes: 0,
+    representantes: 0,
+    representantesExistentes: 0,
+    representantesFaltantes: 0,
+  };
+
+  for (const parte of partes) {
+    if (!parte.numeroDocumento) {
+      continue;
+    }
+
+    totais.partes++;
+
+    // Identificar tipo de entidade baseado no polo
+    const entidadeTipo = identificarTipoEntidade(parte);
+
+    // Verificar se parte existe no banco
+    const entidadeInfo = await buscarEntidadePorDocumento(
+      supabase,
+      entidadeTipo,
+      parte.numeroDocumento
+    );
+
+    const parteExiste = !!entidadeInfo;
+
+    if (parteExiste) {
+      totais.partesExistentes++;
+    } else {
+      totais.partesFaltantes++;
+    }
+
+    // Adicionar parte à lista
+    elementosPartes.push({
+      tipo: 'parte',
+      identificador: parte.numeroDocumento,
+      nome: parte.nome ?? 'Parte sem nome',
+      dadosBrutos: parte as unknown as Record<string, unknown>,
+      statusPersistencia: parteExiste ? 'existente' : 'faltando',
+      contexto: {
+        entidadeId: entidadeInfo?.id,
+        entidadeTipo,
+      },
+    });
+
+    // Processar endereço se a parte tem endereço no payload
+    if (parte.dadosCompletos?.endereco) {
+      totais.enderecos++;
+      const enderecoPJE = parte.dadosCompletos.endereco as EnderecoPJEPayload;
+
+      let enderecoExiste = false;
+      let enderecoId: number | undefined;
+
+      if (entidadeInfo) {
+        const enderecoInfo = await buscarEnderecoExistente(
+          supabase,
+          entidadeTipo,
+          entidadeInfo.id,
+          enderecoPJE
+        );
+        enderecoExiste = !!enderecoInfo;
+        enderecoId = enderecoInfo?.id;
+      }
+
+      if (enderecoExiste) {
+        totais.enderecosExistentes++;
+      } else {
+        totais.enderecosFaltantes++;
+      }
+
+      elementosEnderecos.push({
+        tipo: 'endereco',
+        identificador: String(enderecoPJE.id ?? parte.numeroDocumento),
+        nome: `Endereço de ${parte.nome ?? parte.numeroDocumento}`,
+        dadosBrutos: enderecoPJE as unknown as Record<string, unknown>,
+        statusPersistencia: enderecoExiste ? 'existente' : 'faltando',
+        contexto: {
+          entidadeId: entidadeInfo?.id,
+          entidadeTipo,
+          enderecoId,
+        },
+        erro: !entidadeInfo ? 'Parte principal não existe no banco' : undefined,
+      });
+    }
+
+    // Processar representantes
+    if (parte.representantes && Array.isArray(parte.representantes)) {
+      for (const rep of parte.representantes) {
+        if (!rep.numeroDocumento) continue;
+
+        totais.representantes++;
+
+        const repInfo = await buscarRepresentanteExistente(supabase, rep.numeroDocumento);
+        const repExiste = !!repInfo;
+
+        if (repExiste) {
+          totais.representantesExistentes++;
+        } else {
+          totais.representantesFaltantes++;
+        }
+
+        elementosRepresentantes.push({
+          tipo: 'representante',
+          identificador: rep.numeroDocumento,
+          nome: rep.nome ?? 'Representante sem nome',
+          dadosBrutos: rep as unknown as Record<string, unknown>,
+          statusPersistencia: repExiste ? 'existente' : 'faltando',
+          contexto: {
+            entidadeId: repInfo?.id ?? entidadeInfo?.id,
+            entidadeTipo,
+          },
+        });
+
+        // Endereço do representante
+        if (rep.dadosCompletos?.endereco) {
+          totais.enderecos++;
+          const enderecoRepPJE = rep.dadosCompletos.endereco as EnderecoPJEPayload;
+
+          // Verificar se endereço do representante existe
+          // Para representantes, usamos tipo 'representante' se existir na tabela
+          let enderecoRepExiste = false;
+
+          if (repInfo) {
+            const enderecoRepInfo = await supabase
+              .from('enderecos')
+              .select('id')
+              .eq('entidade_tipo', 'representante')
+              .eq('entidade_id', repInfo.id)
+              .eq('ativo', true)
+              .maybeSingle();
+
+            enderecoRepExiste = !!enderecoRepInfo.data;
+
+            if (enderecoRepExiste) {
+              totais.enderecosExistentes++;
+            } else {
+              totais.enderecosFaltantes++;
+            }
+          } else {
+            totais.enderecosFaltantes++;
+          }
+
+          elementosEnderecos.push({
+            tipo: 'endereco',
+            identificador: String(enderecoRepPJE.id ?? `rep-${rep.numeroDocumento}`),
+            nome: `Endereço de ${rep.nome ?? 'Representante'}`,
+            dadosBrutos: enderecoRepPJE as unknown as Record<string, unknown>,
+            statusPersistencia: enderecoRepExiste ? 'existente' : 'faltando',
+            contexto: {
+              entidadeId: repInfo?.id,
+              entidadeTipo: 'representante' as EntidadeTipoEndereco,
+            },
+            erro: !repInfo ? 'Representante não existe no banco' : undefined,
+          });
+        }
+      }
+    }
+  }
+
+  return {
+    partes: elementosPartes,
+    enderecos: elementosEnderecos,
+    representantes: elementosRepresentantes,
+    totais,
+  };
+}
+
+/**
+ * Busca endereço existente para uma entidade
+ */
+async function buscarEnderecoExistente(
+  supabase: ReturnType<typeof createServiceClient>,
+  entidadeTipo: EntidadeTipoEndereco,
+  entidadeId: number,
+  enderecoPJE: EnderecoPJEPayload
+): Promise<{ id: number } | null> {
+  // Primeiro tenta buscar por id_pje se disponível
+  if (enderecoPJE.id) {
+    const { data } = await supabase
+      .from('enderecos')
+      .select('id')
+      .eq('id_pje', enderecoPJE.id)
+      .eq('entidade_tipo', entidadeTipo)
+      .eq('entidade_id', entidadeId)
+      .maybeSingle();
+
+    if (data) {
+      return { id: data.id };
+    }
+  }
+
+  // Se não tem id_pje ou não encontrou, buscar por entidade
+  const { data } = await supabase
+    .from('enderecos')
+    .select('id')
+    .eq('entidade_tipo', entidadeTipo)
+    .eq('entidade_id', entidadeId)
+    .eq('ativo', true)
+    .limit(1)
+    .maybeSingle();
+
+  return data ? { id: data.id } : null;
+}
+
+/**
+ * Busca representante existente por CPF
+ */
+async function buscarRepresentanteExistente(
+  supabase: ReturnType<typeof createServiceClient>,
+  documento: string
+): Promise<{ id: number } | null> {
+  const documentoLimpo = documento.replace(/\D/g, '');
+
+  const { data } = await supabase
+    .from('representantes')
+    .select('id')
+    .eq('cpf', documentoLimpo)
+    .maybeSingle();
+
+  return data ? { id: data.id } : null;
+}
+

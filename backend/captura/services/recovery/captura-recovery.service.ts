@@ -97,7 +97,8 @@ export async function listarLogsRecovery(
     // Contar total
     const total = await collection.countDocuments(filter);
 
-    // Buscar documentos (sem payload_bruto para performance)
+    // Buscar documentos (apenas campos necessários para performance)
+    // MongoDB não permite misturar inclusão e exclusão de campos na mesma projeção
     const projection = {
       _id: 1,
       captura_log_id: 1,
@@ -109,10 +110,6 @@ export async function listarLogsRecovery(
       criado_em: 1,
       erro: 1,
       requisicao: 1,
-      // Excluir campos pesados
-      payload_bruto: 0,
-      resultado_processado: 0,
-      logs: 0,
     };
 
     const sort: Sort = { criado_em: -1 };

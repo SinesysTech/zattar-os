@@ -124,7 +124,7 @@ async function reprocessarDocumento(
   if (tiposElementos.includes('endereco')) {
     const elementosEndereco = filtros.apenasGaps
       ? analise.gaps.enderecosFaltantes
-      : extrairTodosEnderecos(documento.payload_bruto);
+      : await extrairTodosEnderecos(documento.payload_bruto);
 
     for (const elemento of elementosEndereco) {
       const resultado = await reprocessarEndereco(
@@ -354,9 +354,11 @@ async function vincularEnderecoEntidade(
 
 /**
  * Extrai todos os endereços do payload bruto (não apenas gaps)
+ * Busca o entidadeId correspondente no PostgreSQL
  */
-function extrairTodosEnderecos(payload: unknown): ElementoRecuperavel[] {
+async function extrairTodosEnderecos(payload: unknown): Promise<ElementoRecuperavel[]> {
   const elementos: ElementoRecuperavel[] = [];
+  const supabase = createServiceClient();
 
   const partes = extrairPartes(payload);
 
@@ -364,20 +366,82 @@ function extrairTodosEnderecos(payload: unknown): ElementoRecuperavel[] {
     if (parte.dadosCompletos?.endereco) {
       const entidadeTipo = identificarTipoEntidade(parte);
 
+      // Buscar entidadeId no banco se a parte tiver documento
+      let entidadeId: number | undefined;
+      let erro: string | undefined;
+
+      if (parte.numeroDocumento) {
+        const entidadeInfo = await buscarEntidadePorDocumento(
+          supabase,
+          entidadeTipo,
+          parte.numeroDocumento
+        );
+
+        if (entidadeInfo) {
+          entidadeId = entidadeInfo.id;
+        } else {
+          erro = 'Parte principal não existe no banco';
+        }
+      } else {
+        erro = 'Parte sem documento (CPF/CNPJ)';
+      }
+
       elementos.push({
         tipo: 'endereco',
         identificador: String(parte.dadosCompletos.endereco.id ?? parte.numeroDocumento ?? 'N/A'),
         nome: `Endereço de ${parte.nome ?? 'N/A'}`,
         dadosBrutos: parte.dadosCompletos.endereco as unknown as Record<string, unknown>,
-        statusPersistencia: 'pendente',
+        statusPersistencia: entidadeId ? 'pendente' : 'erro',
         contexto: {
           entidadeTipo,
+          entidadeId,
         },
+        erro,
       });
     }
   }
 
   return elementos;
+}
+
+/**
+ * Busca entidade por documento (CPF/CNPJ)
+ */
+async function buscarEntidadePorDocumento(
+  supabase: ReturnType<typeof createServiceClient>,
+  tipo: EntidadeTipoEndereco,
+  documento: string
+): Promise<{ id: number } | null> {
+  const documentoLimpo = documento.replace(/\D/g, '');
+  const isCpf = documentoLimpo.length === 11;
+  const campo = isCpf ? 'cpf' : 'cnpj';
+
+  let tabela: string;
+  switch (tipo) {
+    case 'cliente':
+      tabela = 'clientes';
+      break;
+    case 'parte_contraria':
+      tabela = 'partes_contrarias';
+      break;
+    case 'terceiro':
+      tabela = 'terceiros';
+      break;
+    default:
+      return null;
+  }
+
+  const { data, error } = await supabase
+    .from(tabela)
+    .select('id')
+    .eq(campo, documentoLimpo)
+    .maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return { id: data.id };
 }
 
 /**
