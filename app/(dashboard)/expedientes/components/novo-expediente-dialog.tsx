@@ -26,10 +26,21 @@ import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
+interface DadosIniciais {
+  processo_id: number;
+  trt: string;
+  grau: string;
+  numero_processo: string;
+  polo_ativo_nome?: string;
+  polo_passivo_nome?: string;
+}
+
 interface NovoExpedienteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
+  /** Dados iniciais pré-preenchidos (ex: ao criar expediente a partir de audiência) */
+  dadosIniciais?: DadosIniciais;
 }
 
 interface Processo {
@@ -70,6 +81,7 @@ export function NovoExpedienteDialog({
   open,
   onOpenChange,
   onSuccess,
+  dadosIniciais,
 }: NovoExpedienteDialogProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -122,7 +134,26 @@ export function NovoExpedienteDialog({
     }
   }, [open]);
 
-  // Resetar form quando fechar
+  // Inicializar com dados pré-preenchidos quando disponíveis
+  React.useEffect(() => {
+    if (open && dadosIniciais) {
+      setTrt(dadosIniciais.trt);
+      setGrau(dadosIniciais.grau);
+      // O processo será selecionado após buscar processos
+    }
+  }, [open, dadosIniciais]);
+
+  // Selecionar processo automaticamente quando dados iniciais e processos disponíveis
+  React.useEffect(() => {
+    if (dadosIniciais && processos.length > 0) {
+      const processoEncontrado = processos.find(p => p.id === dadosIniciais.processo_id);
+      if (processoEncontrado) {
+        setProcessoId([processoEncontrado.id.toString()]);
+      }
+    }
+  }, [dadosIniciais, processos]);
+
+  // Resetar form quando fechar (apenas se não houver dados iniciais ou ao fechar após sucesso)
   React.useEffect(() => {
     if (!open) {
       resetForm();

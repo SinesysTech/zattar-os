@@ -9,6 +9,7 @@ import type {
   ListarAudienciasParams,
   ListarAudienciasResult,
   ModalidadeAudiencia,
+  PresencaHibrida,
 } from '@/backend/types/audiencias/types';
 
 /**
@@ -32,6 +33,7 @@ function converterParaAudiencia(data: Record<string, unknown>): Audiencia {
     hora_inicio: (data.hora_inicio as string | null) ?? null,
     hora_fim: (data.hora_fim as string | null) ?? null,
     modalidade: (data.modalidade as ModalidadeAudiencia | null) ?? null,
+    presenca_hibrida: (data.presenca_hibrida as PresencaHibrida | null) ?? null,
     sala_audiencia_nome: (data.sala_audiencia_nome as string | null) ?? null,
     sala_audiencia_id: (data.sala_audiencia_id as number | null) ?? null,
     status: data.status as string,
@@ -212,7 +214,7 @@ export async function listarAudiencias(
     const rowWithJoins = {
       ...row,
       orgao_julgador_descricao: orgaoJulgador?.descricao ?? null,
-      classe_judicial: classeJudicial?.descricao ?? null,
+      classe_judicial: classeJudicial?.sigla ?? classeJudicial?.descricao ?? null,
       tipo_descricao: tipoDescricao,
       tipo_is_virtual: tipoIsVirtual ?? false,
       tipo_codigo: tipoCodigo,

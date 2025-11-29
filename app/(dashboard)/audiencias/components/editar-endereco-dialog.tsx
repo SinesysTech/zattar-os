@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Loader2 } from 'lucide-react';
 
 type EnderecoPresencial = {
@@ -39,6 +40,7 @@ type Audiencia = {
   url_audiencia_virtual: string | null;
   endereco_presencial: EnderecoPresencial | null;
   modalidade: 'virtual' | 'presencial' | 'hibrida' | null;
+  presenca_hibrida?: 'advogado' | 'cliente' | null;
 };
 
 interface EditarEnderecoDialogProps {
@@ -72,6 +74,9 @@ export function EditarEnderecoDialog({
     cep: audiencia.endereco_presencial?.cep || '',
   });
   const [error, setError] = React.useState<string | null>(null);
+  const [presencaHibrida, setPresencaHibrida] = React.useState<'advogado' | 'cliente'>(
+    audiencia.presenca_hibrida || 'advogado'
+  );
   const inputRef = React.useRef<HTMLInputElement>(null);
   const cepInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -92,6 +97,7 @@ export function EditarEnderecoDialog({
         audiencia.url_audiencia_virtual ? 'virtual' :
           audiencia.endereco_presencial ? 'presencial' : 'virtual'
     );
+    setPresencaHibrida(audiencia.presenca_hibrida || 'advogado');
     setError(null);
   }, [audiencia]);
 
@@ -237,7 +243,8 @@ export function EditarEnderecoDialog({
         bodyData = {
           tipo: 'hibrida',
           urlAudienciaVirtual: urlToSave,
-          enderecoPresencial: endereco
+          enderecoPresencial: endereco,
+          presencaHibrida: presencaHibrida
         };
       }
 
@@ -484,6 +491,33 @@ export function EditarEnderecoDialog({
 
           {tipoEndereco === 'hibrida' && (
             <div className="space-y-4">
+              {/* Switch para definir quem vai presencial */}
+              <div className="space-y-3 p-4 bg-muted/50 rounded-lg">
+                <Label className="text-sm font-medium">Quem comparece presencialmente?</Label>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      id="presenca-hibrida-switch"
+                      checked={presencaHibrida === 'cliente'}
+                      onCheckedChange={(checked) => setPresencaHibrida(checked ? 'cliente' : 'advogado')}
+                      disabled={isLoading}
+                    />
+                    <Label 
+                      htmlFor="presenca-hibrida-switch" 
+                      className="text-sm cursor-pointer"
+                    >
+                      {presencaHibrida === 'advogado' ? 'Advogado' : 'Cliente'}
+                    </Label>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {presencaHibrida === 'advogado' 
+                      ? 'Advogado vai presencialmente, cliente participa online'
+                      : 'Cliente vai presencialmente, advogado participa online'
+                    }
+                  </p>
+                </div>
+              </div>
+
               {/* URL Virtual */}
               <div className="space-y-2">
                 <Label htmlFor="url-hibrida">URL da Audiência Virtual</Label>
@@ -503,7 +537,7 @@ export function EditarEnderecoDialog({
                   }}
                 />
                 <p className="text-xs text-muted-foreground">
-                  URL para participação virtual (advogado ou cliente)
+                  URL para participação virtual ({presencaHibrida === 'advogado' ? 'cliente' : 'advogado'})
                 </p>
               </div>
 
@@ -512,7 +546,7 @@ export function EditarEnderecoDialog({
                 <div className="space-y-1">
                   <Label>Endereço Presencial</Label>
                   <p className="text-xs text-muted-foreground">
-                    Endereço para participação presencial (advogado ou cliente)
+                    Endereço para participação presencial ({presencaHibrida})
                   </p>
                 </div>
                 <EnderecoForm idPrefix="hibrida-" />
