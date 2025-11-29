@@ -9,10 +9,17 @@ import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Copy, Pencil, FileText } from 'lucide-react';
+import { Copy, Pencil, FileText, CheckCircle2, PlusCircle, Loader2 } from 'lucide-react';
 import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';
+import { NovoExpedienteDialog } from '@/app/(dashboard)/expedientes/components/novo-expediente-dialog';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Audiencia, ModalidadeAudiencia } from '@/backend/types/audiencias/types';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';

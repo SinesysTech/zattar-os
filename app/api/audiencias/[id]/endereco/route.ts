@@ -61,6 +61,11 @@ import { CACHE_PREFIXES } from '@/backend/utils/redis/cache-utils';
  *                     type: string
  *                   cep:
  *                     type: string
+ *               presencaHibrida:
+ *                 type: string
+ *                 enum: [advogado, cliente]
+ *                 nullable: true
+ *                 description: Para modalidade híbrida, indica quem comparece presencialmente
  *     responses:
  *       200:
  *         description: Endereço atualizado com sucesso
@@ -96,7 +101,7 @@ export async function PATCH(
 
         // 3. Obter dados do body
         const body = await request.json();
-        const { tipo, urlAudienciaVirtual, enderecoPresencial } = body;
+        const { tipo, urlAudienciaVirtual, enderecoPresencial, presencaHibrida } = body;
 
         // Validar tipo
         if (!tipo || !['virtual', 'presencial', 'hibrida'].includes(tipo)) {
@@ -112,6 +117,7 @@ export async function PATCH(
             url_audiencia_virtual?: string | null;
             endereco_presencial?: Record<string, string> | null;
             modalidade?: 'virtual' | 'presencial' | 'hibrida';
+            presenca_hibrida?: 'advogado' | 'cliente' | null;
             updated_at: string;
         } = {
             updated_at: new Date().toISOString(),
@@ -132,9 +138,10 @@ export async function PATCH(
             } else {
                 updateData.url_audiencia_virtual = null;
             }
-            // Limpar endereço presencial quando for virtual
+            // Limpar endereço presencial e presença híbrida quando for virtual
             updateData.endereco_presencial = null;
             updateData.modalidade = 'virtual';
+            updateData.presenca_hibrida = null;
         } else if (tipo === 'presencial') {
             if (enderecoPresencial && Object.keys(enderecoPresencial).length > 0) {
                 // Validar se pelo menos logradouro ou cidade estão preenchidos
@@ -152,9 +159,10 @@ export async function PATCH(
             } else {
                 updateData.endereco_presencial = null;
             }
-            // Limpar URL virtual quando for presencial
+            // Limpar URL virtual e presença híbrida quando for presencial
             updateData.url_audiencia_virtual = null;
             updateData.modalidade = 'presencial';
+            updateData.presenca_hibrida = null;
         } else {
             // tipo === 'hibrida'
             // Validar URL se fornecida
@@ -195,7 +203,15 @@ export async function PATCH(
                     { status: 400 }
                 );
             }
+            // Validar presença híbrida
+            if (presencaHibrida && !['advogado', 'cliente'].includes(presencaHibrida)) {
+                return NextResponse.json(
+                    { error: 'Presença híbrida deve ser "advogado" ou "cliente"' },
+                    { status: 400 }
+                );
+            }
             updateData.modalidade = 'hibrida';
+            updateData.presenca_hibrida = presencaHibrida || null;
         }
 
         // 5. Atualizar endereço da audiência

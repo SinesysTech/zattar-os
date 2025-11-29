@@ -655,6 +655,7 @@ export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisP
 
               {/* Elementos genéricos (pendentes, audiências, processos) */}
               {elementosGenericos &&
+                elementosGenericos.elementos.length > 0 &&
                 elementosFiltrados.partes.length === 0 &&
                 elementosFiltrados.enderecos.length === 0 &&
                 elementosFiltrados.representantes.length === 0 && (

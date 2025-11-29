@@ -43,6 +43,7 @@ export type StatusAudiencia = 'M' | 'F' | 'C'; // M=Designada, F=Realizada, C=Ca
  * Modalidade da audiência
  */
 export type ModalidadeAudiencia = 'virtual' | 'presencial' | 'hibrida';
+export type PresencaHibrida = 'advogado' | 'cliente';
 
 /**
  * Registro de audiência completo baseado no schema do banco
@@ -64,6 +65,7 @@ export interface Audiencia {
   hora_inicio: string | null; // Formato HH:MM:SS (extraído de pautaAudienciaHorario)
   hora_fim: string | null; // Formato HH:MM:SS (extraído de pautaAudienciaHorario)
   modalidade: ModalidadeAudiencia | null; // virtual, presencial ou híbrida
+  presenca_hibrida: PresencaHibrida | null; // Para audiências híbridas: quem comparece presencialmente
   sala_audiencia_nome: string | null; // Cache desnormalizado (histórico)
   sala_audiencia_id: number | null; // FK para sala_audiencia
   status: string;
