@@ -181,35 +181,69 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
   const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
   const logoPath = getLogoPlataforma(plataforma);
 
+  const enderecoCompleto = audiencia.endereco_presencial
+    ? [audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'
+    : null;
+  const isHibrida = audiencia.modalidade === 'hibrida';
+
   return (
     <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px]">
-      <div className="flex items-center gap-1.5 flex-wrap">
-        <div className="text-sm text-left">{tipo}</div>
+      {/* Primeira linha: Tipo da audiência */}
+      <div className="text-sm text-left w-full">{tipo}</div>
+      
+      {/* Segunda linha: Sala da audiência */}
+      <div className="text-xs text-muted-foreground text-left w-full">{sala}</div>
+      
+      {/* Terceira linha: Badge com modalidade */}
+      <div className="w-full">
         <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs`}>
           {formatarModalidade(audiencia.modalidade)}
         </Badge>
       </div>
-      <div className="text-xs text-muted-foreground truncate max-w-full text-left">{sala}</div>
-      <div className="relative group h-full w-full min-h-[60px] flex items-center justify-between p-2">
-        <div className="flex-1 flex items-center justify-start">
-          {audiencia.url_audiencia_virtual ? (
-            logoPath ? (
+      
+      {/* Quarta linha: URL e/ou Endereço */}
+      <div className="relative group h-full w-full min-h-[60px] flex flex-col items-start justify-start gap-1.5 p-2">
+        {isHibrida ? (
+          <>
+            {audiencia.url_audiencia_virtual && (
+              <div className="flex items-center gap-1.5 w-full">
+                {logoPath ? (
+                  <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                    <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
+                  </a>
+                ) : (
+                  <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-full">
+                    {audiencia.url_audiencia_virtual}
+                  </a>
+                )}
+              </div>
+            )}
+            {enderecoCompleto && (
+              <div className="text-xs text-muted-foreground w-full">
+                <span className="font-medium">Presencial: </span>
+                <span>{enderecoCompleto}</span>
+              </div>
+            )}
+          </>
+        ) : audiencia.url_audiencia_virtual ? (
+          <div className="flex-1 flex items-center justify-start w-full">
+            {logoPath ? (
               <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
                 <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
               </a>
             ) : (
-              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-[100px]">
+              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-full">
                 {audiencia.url_audiencia_virtual}
               </a>
-            )
-          ) : audiencia.endereco_presencial ? (
-            <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
-              {[audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'}
-            </span>
-          ) : (
-            <span className="text-sm text-muted-foreground">-</span>
-          )}
-        </div>
+            )}
+          </div>
+        ) : enderecoCompleto ? (
+          <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+            {enderecoCompleto}
+          </span>
+        ) : (
+          <span className="text-sm text-muted-foreground">-</span>
+        )}
         <div className="absolute bottom-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           {audiencia.url_audiencia_virtual && (
             <Button size="sm" variant="ghost" onClick={async () => { if (!audiencia.url_audiencia_virtual) return; try { await navigator.clipboard.writeText(audiencia.url_audiencia_virtual); } catch { /* ignore */ } }} className="h-5 w-5 p-0" title="Copiar URL">
@@ -383,27 +417,27 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
         const parteRe = row.original.polo_passivo_nome || '-';
 
         return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 w-fit">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
+              <Badge variant="outline" className={`${getTRTColorClass(trt)} text-xs shrink-0`}>
                 {trt}
               </Badge>
-              <Badge variant="outline" className={`${getGrauColorClass(grau)} w-fit text-xs`}>
+              <Badge variant="outline" className={`${getGrauColorClass(grau)} text-xs shrink-0`}>
                 {formatarGrau(grau)}
               </Badge>
             </div>
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
-            <div className="flex flex-col gap-1">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} w-fit text-left whitespace-nowrap`}>
-                {parteAutora}
+            <div className="flex flex-col gap-1 w-full">
+              <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
+                <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteAutora}</span>
               </Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} w-fit text-left whitespace-nowrap`}>
-                {parteRe}
+              <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
+                <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteRe}</span>
               </Badge>
             </div>
-            <div className="text-xs text-muted-foreground max-w-full truncate">
+            <div className="text-xs text-muted-foreground">
               {orgaoJulgador}
             </div>
           </div>
@@ -572,35 +606,35 @@ export function AudienciasVisualizacaoSemana({ audiencias, isLoading, semanaAtua
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Segunda - {formatarDataTab(datasDiasSemana.segunda)}</span>
-          <Badge variant="secondary" className="ml-2">{audienciasPorDia.segunda.filter(a => a.status !== 'C').length}</Badge>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">{audienciasPorDia.segunda.filter(a => a.status !== 'C').length}</Badge>
         </TabsTrigger>
         <TabsTrigger
           value="terca"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Terça - {formatarDataTab(datasDiasSemana.terca)}</span>
-          <Badge variant="secondary" className="ml-2">{audienciasPorDia.terca.filter(a => a.status !== 'C').length}</Badge>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">{audienciasPorDia.terca.filter(a => a.status !== 'C').length}</Badge>
         </TabsTrigger>
         <TabsTrigger
           value="quarta"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Quarta - {formatarDataTab(datasDiasSemana.quarta)}</span>
-          <Badge variant="secondary" className="ml-2">{audienciasPorDia.quarta.filter(a => a.status !== 'C').length}</Badge>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">{audienciasPorDia.quarta.filter(a => a.status !== 'C').length}</Badge>
         </TabsTrigger>
         <TabsTrigger
           value="quinta"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Quinta - {formatarDataTab(datasDiasSemana.quinta)}</span>
-          <Badge variant="secondary" className="ml-2">{audienciasPorDia.quinta.filter(a => a.status !== 'C').length}</Badge>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">{audienciasPorDia.quinta.filter(a => a.status !== 'C').length}</Badge>
         </TabsTrigger>
         <TabsTrigger
           value="sexta"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Sexta - {formatarDataTab(datasDiasSemana.sexta)}</span>
-          <Badge variant="secondary" className="ml-2">{audienciasPorDia.sexta.filter(a => a.status !== 'C').length}</Badge>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">{audienciasPorDia.sexta.filter(a => a.status !== 'C').length}</Badge>
         </TabsTrigger>
       </TabsList>
 

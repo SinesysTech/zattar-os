@@ -38,6 +38,7 @@ type Audiencia = {
   id: number;
   url_audiencia_virtual: string | null;
   endereco_presencial: EnderecoPresencial | null;
+  modalidade: 'virtual' | 'presencial' | 'hibrida' | null;
 };
 
 interface EditarEnderecoDialogProps {
@@ -55,9 +56,10 @@ export function EditarEnderecoDialog({
 }: EditarEnderecoDialogProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isFetchingCep, setIsFetchingCep] = React.useState(false);
-  const [tipoEndereco, setTipoEndereco] = React.useState<'virtual' | 'presencial'>(
-    audiencia.url_audiencia_virtual ? 'virtual' :
-      audiencia.endereco_presencial ? 'presencial' : 'virtual'
+  const [tipoEndereco, setTipoEndereco] = React.useState<'virtual' | 'presencial' | 'hibrida'>(
+    audiencia.modalidade === 'hibrida' ? 'hibrida' :
+      audiencia.url_audiencia_virtual ? 'virtual' :
+        audiencia.endereco_presencial ? 'presencial' : 'virtual'
   );
   const [url, setUrl] = React.useState(audiencia.url_audiencia_virtual || '');
   const [endereco, setEndereco] = React.useState<EnderecoPresencial>({
@@ -86,8 +88,9 @@ export function EditarEnderecoDialog({
       cep: audiencia.endereco_presencial?.cep || '',
     });
     setTipoEndereco(
-      audiencia.url_audiencia_virtual ? 'virtual' :
-        audiencia.endereco_presencial ? 'presencial' : 'virtual'
+      audiencia.modalidade === 'hibrida' ? 'hibrida' :
+        audiencia.url_audiencia_virtual ? 'virtual' :
+          audiencia.endereco_presencial ? 'presencial' : 'virtual'
     );
     setError(null);
   }, [audiencia]);
@@ -184,7 +187,7 @@ export function EditarEnderecoDialog({
           tipo: 'virtual',
           urlAudienciaVirtual: urlToSave
         };
-      } else {
+      } else if (tipoEndereco === 'presencial') {
         // Validar se pelo menos logradouro ou cidade estão preenchidos
         const logradouroPreenchido = endereco.logradouro && endereco.logradouro.trim();
         const cidadePreenchida = endereco.cidade && endereco.cidade.trim();
@@ -197,6 +200,43 @@ export function EditarEnderecoDialog({
 
         bodyData = {
           tipo: 'presencial',
+          enderecoPresencial: endereco
+        };
+      } else {
+        // tipoEndereco === 'hibrida'
+        const urlToSave = url.trim() || null;
+
+        // Validar URL se fornecida
+        if (urlToSave) {
+          try {
+            new URL(urlToSave);
+          } catch {
+            setError('URL inválida. Use o formato: https://exemplo.com');
+            setIsLoading(false);
+            return;
+          }
+        }
+
+        // Validar se pelo menos logradouro ou cidade estão preenchidos
+        const logradouroPreenchido = endereco.logradouro && endereco.logradouro.trim();
+        const cidadePreenchida = endereco.cidade && endereco.cidade.trim();
+
+        if (!logradouroPreenchido && !cidadePreenchida) {
+          setError('Informe pelo menos o logradouro ou a cidade');
+          setIsLoading(false);
+          return;
+        }
+
+        // Para híbrida, ambos devem estar preenchidos
+        if (!urlToSave) {
+          setError('Para modalidade híbrida, é necessário informar a URL virtual');
+          setIsLoading(false);
+          return;
+        }
+
+        bodyData = {
+          tipo: 'hibrida',
+          urlAudienciaVirtual: urlToSave,
           enderecoPresencial: endereco
         };
       }
@@ -250,7 +290,7 @@ export function EditarEnderecoDialog({
         </DialogHeader>
 
         <div className="space-y-4 py-4">
-          {/* Toggle entre Virtual e Presencial */}
+          {/* Toggle entre Virtual, Presencial e Híbrida */}
           <div className="flex gap-2">
             <Button
               type="button"
@@ -260,7 +300,7 @@ export function EditarEnderecoDialog({
               className="flex-1"
               disabled={isLoading}
             >
-              URL Virtual
+              Virtual
             </Button>
             <Button
               type="button"
@@ -270,7 +310,17 @@ export function EditarEnderecoDialog({
               className="flex-1"
               disabled={isLoading}
             >
-              Endereço Físico
+              Presencial
+            </Button>
+            <Button
+              type="button"
+              variant={tipoEndereco === 'hibrida' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setTipoEndereco('hibrida')}
+              className="flex-1"
+              disabled={isLoading}
+            >
+              Híbrida
             </Button>
           </div>
 
@@ -321,9 +371,171 @@ export function EditarEnderecoDialog({
                   />
                   {isFetchingCep && (
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                    </div>
-                  )}
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground"               />
+            </div>
+          ) : tipoEndereco === 'hibrida' ? (
+            <div className="space-y-4">
+              {/* URL Virtual */}
+              <div className="space-y-2">
+                <Label htmlFor="url-hibrida-input">URL da Audiência Virtual</Label>
+                <Input
+                  ref={inputRef}
+                  id="url-hibrida-input"
+                  value={url}
+                  onChange={(e) => {
+                    setUrl(e.target.value);
+                    setError(null);
+                  }}
+                  placeholder="https://meet.google.com/..."
+                  disabled={isLoading}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSave();
+                    if (e.key === 'Escape') handleCancel();
+                  }}
+                />
+                <p className="text-xs text-muted-foreground">
+                  URL para participação virtual (advogado ou cliente)
+                </p>
+              </div>
+
+              {/* Endereço Presencial */}
+              <div className="space-y-4 border-t pt-4">
+                <div className="space-y-2">
+                  <Label>Endereço Presencial</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Endereço para participação presencial (advogado ou cliente)
+                  </p>
+                </div>
+
+                {/* CEP - Primeiro campo */}
+                <div className="space-y-2">
+                  <Label htmlFor="cep-hibrida">CEP</Label>
+                  <div className="relative">
+                    <Input
+                      ref={cepInputRef}
+                      id="cep-hibrida"
+                      value={endereco.cep}
+                      onChange={(e) => {
+                        const formatted = formatarCep(e.target.value);
+                        setEndereco(prev => ({ ...prev, cep: formatted }));
+                        setError(null);
+                      }}
+                      onBlur={(e) => {
+                        const cep = e.target.value;
+                        if (cep.replace(/\D/g, '').length === 8) {
+                          buscarEnderecoPorCep(cep);
+                        }
+                      }}
+                      placeholder="00000-000"
+                      disabled={isLoading || isFetchingCep}
+                      maxLength={9}
+                    />
+                    {isFetchingCep && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Digite o CEP para buscar o endereço automaticamente
+                  </p>
+                </div>
+
+                {/* Logradouro e Número */}
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="col-span-2 space-y-2">
+                    <Label htmlFor="logradouro-hibrida">Logradouro</Label>
+                    <Input
+                      id="logradouro-hibrida"
+                      value={endereco.logradouro}
+                      onChange={(e) => {
+                        setEndereco(prev => ({ ...prev, logradouro: e.target.value }));
+                        setError(null);
+                      }}
+                      placeholder="Rua, Avenida, etc."
+                      disabled={isLoading || isFetchingCep}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="numero-hibrida">Número</Label>
+                    <Input
+                      id="numero-hibrida"
+                      value={endereco.numero}
+                      onChange={(e) => {
+                        setEndereco(prev => ({ ...prev, numero: e.target.value }));
+                        setError(null);
+                      }}
+                      placeholder="Nº"
+                      disabled={isLoading || isFetchingCep}
+                    />
+                  </div>
+                </div>
+
+                {/* Complemento */}
+                <div className="space-y-2">
+                  <Label htmlFor="complemento-hibrida">Complemento</Label>
+                  <Input
+                    id="complemento-hibrida"
+                    value={endereco.complemento}
+                    onChange={(e) => {
+                      setEndereco(prev => ({ ...prev, complemento: e.target.value }));
+                      setError(null);
+                    }}
+                    placeholder="Apartamento, sala, etc."
+                    disabled={isLoading || isFetchingCep}
+                  />
+                </div>
+
+                {/* Bairro e Cidade */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="bairro-hibrida">Bairro</Label>
+                    <Input
+                      id="bairro-hibrida"
+                      value={endereco.bairro}
+                      onChange={(e) => {
+                        setEndereco(prev => ({ ...prev, bairro: e.target.value }));
+                        setError(null);
+                      }}
+                      placeholder="Bairro"
+                      disabled={isLoading || isFetchingCep}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="cidade-hibrida">Cidade</Label>
+                    <Input
+                      id="cidade-hibrida"
+                      value={endereco.cidade}
+                      onChange={(e) => {
+                        setEndereco(prev => ({ ...prev, cidade: e.target.value }));
+                        setError(null);
+                      }}
+                      placeholder="Cidade"
+                      disabled={isLoading || isFetchingCep}
+                    />
+                  </div>
+                </div>
+
+                {/* Estado */}
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="estado-hibrida">Estado</Label>
+                    <Input
+                      id="estado-hibrida"
+                      value={endereco.estado}
+                      onChange={(e) => {
+                        setEndereco(prev => ({ ...prev, estado: e.target.value.toUpperCase() }));
+                        setError(null);
+                      }}
+                      placeholder="UF"
+                      disabled={isLoading || isFetchingCep}
+                      maxLength={2}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Digite o CEP para buscar o endereço automaticamente
