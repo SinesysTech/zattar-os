@@ -13,7 +13,15 @@ import type {
   UpsertTerceiroPorCNPJParams,
   UpsertTerceiroPorDocumentoParams,
 } from '@/backend/types/partes/terceiros-types';
+import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
+
+/**
+ * Terceiro com endereço e processos relacionados
+ */
+export type TerceiroComEnderecoEProcessos = TerceiroComEndereco & {
+  processos_relacionados: ProcessoRelacionado[];
+};
 
 /**
  * Resultado de operação
@@ -1014,6 +1022,126 @@ export async function listarTerceirosComEndereco(
       ...terceiro,
       endereco,
     } as TerceiroComEndereco;
+  });
+
+  const total = count ?? 0;
+  const totalPaginas = Math.ceil(total / limite);
+
+  return {
+    terceiros,
+    total,
+    pagina,
+    limite,
+    totalPaginas,
+  };
+}
+
+/**
+ * Lista terceiros com endereços e processos relacionados
+ */
+export async function listarTerceirosComEnderecoEProcessos(
+  params: ListarTerceirosParams = {}
+): Promise<ListarTerceirosResult & { terceiros: TerceiroComEnderecoEProcessos[] }> {
+  const supabase = createServiceClient();
+
+  const pagina = params.pagina ?? 1;
+  const limite = params.limite ?? 50;
+  const offset = (pagina - 1) * limite;
+
+  // Primeiro buscar terceiros com endereço
+  let query = supabase.from('terceiros').select(
+    `
+      *,
+      endereco:enderecos(*)
+    `,
+    { count: 'exact' }
+  );
+
+  // Aplicar filtros
+  if (params.busca) {
+    const busca = params.busca.trim();
+    query = query.or(
+      `nome.ilike.%${busca}%,nome_social.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+    );
+  }
+
+  if (params.tipo_pessoa) {
+    query = query.eq('tipo_pessoa', params.tipo_pessoa);
+  }
+
+  if (params.tipo_parte) {
+    query = query.eq('tipo_parte', params.tipo_parte);
+  }
+
+  if (params.polo) {
+    query = query.eq('polo', params.polo);
+  }
+
+  if (params.nome) {
+    query = query.ilike('nome', `%${params.nome}%`);
+  }
+
+  if (params.cpf) {
+    query = query.eq('cpf', normalizarCpf(params.cpf));
+  }
+
+  if (params.cnpj) {
+    query = query.eq('cnpj', normalizarCnpj(params.cnpj));
+  }
+
+  // Ordenação
+  const ordenarPor = params.ordenar_por ?? 'created_at';
+  const ordem = params.ordem ?? 'desc';
+  query = query.order(ordenarPor, { ascending: ordem === 'asc' });
+
+  // Aplicar paginação
+  query = query.range(offset, offset + limite - 1);
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    throw new Error(`Erro ao listar terceiros com endereço e processos: ${error.message}`);
+  }
+
+  // Extrair IDs dos terceiros para buscar processos
+  const terceiroIds = (data || []).map((row) => row.id as number);
+
+  // Buscar processos relacionados para todos os terceiros de uma vez
+  const processosMap: Map<number, ProcessoRelacionado[]> = new Map();
+  
+  if (terceiroIds.length > 0) {
+    const { data: processosData, error: processosError } = await supabase
+      .from('processo_partes')
+      .select('entidade_id, processo_id, numero_processo, tipo_parte, polo')
+      .eq('tipo_entidade', 'terceiro')
+      .in('entidade_id', terceiroIds);
+
+    if (!processosError && processosData) {
+      // Agrupar processos por entidade_id
+      for (const processo of processosData) {
+        const entidadeId = processo.entidade_id as number;
+        if (!processosMap.has(entidadeId)) {
+          processosMap.set(entidadeId, []);
+        }
+        processosMap.get(entidadeId)!.push({
+          processo_id: processo.processo_id as number,
+          numero_processo: processo.numero_processo as string,
+          tipo_parte: processo.tipo_parte as string,
+          polo: processo.polo as string,
+        });
+      }
+    }
+  }
+
+  const terceiros = (data || []).map((row) => {
+    const terceiro = converterParaTerceiro(row);
+    const endereco = row.endereco ? converterParaEndereco(row.endereco) : null;
+    const processos_relacionados = processosMap.get(row.id as number) || [];
+    return {
+      ...terceiro,
+      endereco,
+      processos_relacionados,
+    } as TerceiroComEnderecoEProcessos;
   });
 
   const total = count ?? 0;

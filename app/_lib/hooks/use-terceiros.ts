@@ -25,6 +25,7 @@ export interface BuscarTerceirosParams {
   polo?: string;
   situacao?: 'A' | 'I';
   incluirEndereco?: boolean;
+  incluirProcessos?: boolean;
 }
 
 interface UseTerceirosResult {
@@ -58,6 +59,7 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
   const polo = params.polo || '';
   const situacao = params.situacao || '';
   const incluirEndereco = params.incluirEndereco ?? false;
+  const incluirProcessos = params.incluirProcessos ?? false;
 
   // Normalizar parâmetros para comparação estável
   const paramsKey = useMemo(() => {
@@ -70,8 +72,9 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
       polo,
       situacao,
       incluirEndereco,
+      incluirProcessos,
     });
-  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao, incluirEndereco]);
+  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao, incluirEndereco, incluirProcessos]);
 
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
@@ -105,6 +108,9 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
       if (incluirEndereco) {
         searchParams.set('incluir_endereco', 'true');
       }
+      if (incluirProcessos) {
+        searchParams.set('incluir_processos', 'true');
+      }
 
       const response = await fetch(`/api/terceiros?${searchParams.toString()}`);
 
@@ -134,7 +140,7 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao, incluirEndereco]);
+  }, [pagina, limite, busca, tipo_pessoa, tipo_parte, polo, situacao, incluirEndereco, incluirProcessos]);
 
   useEffect(() => {
     // Só executar se os parâmetros realmente mudaram

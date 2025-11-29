@@ -32,7 +32,16 @@ import {
 import { getTipoParteLabel, getPoloLabel } from '@/app/_lib/types/terceiros';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Terceiro } from '@/app/_lib/types';
+import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
 import { useTerceiros } from '@/app/_lib/hooks/use-terceiros';
+import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
+
+/**
+ * Tipo estendido de terceiro com processos relacionados
+ */
+type TerceiroComProcessos = Terceiro & {
+  processos_relacionados?: ProcessoRelacionado[];
+};
 
 interface TerceirosTabProps {}
 
@@ -71,12 +80,13 @@ export function TerceirosTab({}: TerceirosTabProps) {
     limite,
     busca: buscaDebounced || undefined,
     incluirEndereco: true, // Incluir endereços nas respostas
+    incluirProcessos: true, // Incluir processos relacionados
     ...filtros,
   }), [pagina, limite, buscaDebounced, filtros]);
 
   const { terceiros, paginacao, isLoading, error } = useTerceiros(params);
 
-  const columns = React.useMemo<ColumnDef<Terceiro>[]>(
+  const columns = React.useMemo<ColumnDef<TerceiroComProcessos>[]>(
     () => [
       {
         id: 'identificacao',
@@ -213,6 +223,24 @@ export function TerceirosTab({}: TerceirosTabProps) {
             <div className="min-h-10 flex items-center justify-center text-sm">
               {telefone ? formatarTelefone(telefone) : '-'}
             </div>
+          );
+        },
+      },
+      {
+        id: 'processos',
+        header: () => (
+          <div className="flex items-center justify-center">
+            <div className="text-sm font-medium">Processos</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 180,
+        cell: ({ row }) => {
+          const terceiro = row.original;
+          return (
+            <ProcessosRelacionadosCell 
+              processos={terceiro.processos_relacionados || []}
+            />
           );
         },
       },

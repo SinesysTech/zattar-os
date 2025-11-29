@@ -6,6 +6,7 @@ import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
   listarTerceiros,
   listarTerceirosComEndereco,
+  listarTerceirosComEnderecoEProcessos,
   criarTerceiro,
 } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
 import type { CriarTerceiroParams, ListarTerceirosParams } from '@/backend/types/partes';
@@ -99,6 +100,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const incluirEndereco = searchParams.get('incluir_endereco') === 'true';
+    const incluirProcessos = searchParams.get('incluir_processos') === 'true';
     const params: ListarTerceirosParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
@@ -107,9 +109,12 @@ export async function GET(request: NextRequest) {
       tipo_parte: searchParams.get('tipo_parte') as any || undefined,
     };
 
-    const resultado = incluirEndereco
-      ? await listarTerceirosComEndereco(params)
-      : await listarTerceiros(params);
+    // Se incluir processos, usa a função que busca ambos (endereço + processos)
+    const resultado = incluirProcessos
+      ? await listarTerceirosComEnderecoEProcessos(params)
+      : incluirEndereco
+        ? await listarTerceirosComEndereco(params)
+        : await listarTerceiros(params);
 
     return NextResponse.json({
       success: true,

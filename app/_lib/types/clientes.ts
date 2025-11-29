@@ -24,6 +24,9 @@ export type {
   OrdemCliente,
 } from '@/backend/types/partes/clientes-types';
 
+// Re-exporta tipo de processos relacionados
+export type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
+
 // Tipos para API de clientes
 export interface BuscarClientesParams {
   pagina?: number;
@@ -32,6 +35,7 @@ export interface BuscarClientesParams {
   tipoPessoa?: string;
   ativo?: boolean;
   incluirEndereco?: boolean;
+  incluirProcessos?: boolean;
 }
 
 export interface ClientesApiResponse {

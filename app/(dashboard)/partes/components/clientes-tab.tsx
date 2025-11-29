@@ -18,6 +18,8 @@ import { Eye, Pencil } from 'lucide-react';
 import { useClientes } from '@/app/_lib/hooks/use-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Cliente } from '@/app/_lib/types';
+import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
+import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
 import {
   formatarCpf,
   formatarCnpj,
@@ -34,9 +36,16 @@ import {
 } from './clientes-toolbar-filters';
 
 /**
+ * Tipo estendido de cliente com processos relacionados
+ */
+type ClienteComProcessos = Cliente & {
+  processos_relacionados?: ProcessoRelacionado[];
+};
+
+/**
  * Define as colunas da tabela de clientes
  */
-function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
+function criarColunas(onEditSuccess: () => void): ColumnDef<ClienteComProcessos>[] {
   return [
     {
       id: 'identificacao',
@@ -137,6 +146,24 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<Cliente>[] {
       },
     },
     {
+      id: 'processos',
+      header: () => (
+        <div className="flex items-center justify-center">
+          <div className="text-sm font-medium">Processos</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 180,
+      cell: ({ row }) => {
+        const cliente = row.original;
+        return (
+          <ProcessosRelacionadosCell 
+            processos={cliente.processos_relacionados || []}
+          />
+        );
+      },
+    },
+    {
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-center">
@@ -212,6 +239,7 @@ export function ClientesTab() {
       limite,
       busca: buscaDebounced || undefined,
       incluirEndereco: true, // Incluir endereços nas respostas
+      incluirProcessos: true, // Incluir processos relacionados
       ...filtros,
     };
   }, [pagina, limite, buscaDebounced, filtros]);
