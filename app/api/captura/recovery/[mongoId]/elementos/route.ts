@@ -5,11 +5,19 @@
  *
  * Retorna TODOS os elementos capturados no payload MongoDB,
  * com status de persistência de cada um no PostgreSQL.
+ *
+ * IMPORTANTE: A estrutura de elementos varia conforme o tipo de captura:
+ * - partes: partes, endereços, representantes (suporta re-persistência)
+ * - pendentes: processos pendentes (apenas visualização)
+ * - audiencias: audiências (apenas visualização)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { extrairTodosElementos } from '@/backend/captura/services/recovery/recovery-analysis.service';
+import {
+  extrairTodosElementos,
+  extrairElementosPorTipo,
+} from '@/backend/captura/services/recovery/recovery-analysis.service';
 import { buscarLogPorMongoId } from '@/backend/captura/services/recovery/captura-recovery.service';
 
 interface RouteParams {
@@ -21,11 +29,13 @@ interface RouteParams {
 /**
  * GET /api/captura/recovery/[mongoId]/elementos
  *
- * Retorna todos os elementos (partes, endereços, representantes) do payload
- * com status de persistência.
+ * Retorna todos os elementos capturados do payload com status de persistência.
  *
  * Query params:
  * - filtro: 'todos' | 'faltantes' | 'existentes' (default: 'todos')
+ * - modo: 'partes' | 'generico' (default: 'generico')
+ *   - partes: retorna estrutura legada {partes, enderecos, representantes}
+ *   - generico: retorna estrutura unificada {elementos} baseada no tipo de captura
  */
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
@@ -50,6 +60,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // Parâmetros de filtro
     const searchParams = request.nextUrl.searchParams;
     const filtro = searchParams.get('filtro') || 'todos';
+    const modo = searchParams.get('modo') || 'generico';
 
     // Buscar informações básicas do log
     const documento = await buscarLogPorMongoId(mongoId);
@@ -61,36 +72,71 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
+    // Log básico para resposta
+    const logInfo = {
+      mongoId,
+      capturaLogId: documento.captura_log_id,
+      tipoCaptura: documento.tipo_captura,
+      status: documento.status,
+      trt: documento.trt,
+      grau: documento.grau,
+      advogadoId: documento.advogado_id,
+      criadoEm: documento.criado_em,
+      erro: documento.erro,
+    };
+
     if (!documento.payload_bruto) {
       return NextResponse.json(
         {
           success: true,
           data: {
-            log: {
-              mongoId,
-              capturaLogId: documento.captura_log_id,
-              tipoCaptura: documento.tipo_captura,
-              status: documento.status,
-              trt: documento.trt,
-              grau: documento.grau,
-              criadoEm: documento.criado_em,
-            },
+            log: logInfo,
             payloadDisponivel: false,
-            elementos: {
-              partes: [],
-              enderecos: [],
-              representantes: [],
-              totais: {
-                partes: 0,
-                partesExistentes: 0,
-                partesFaltantes: 0,
-                enderecos: 0,
-                enderecosExistentes: 0,
-                enderecosFaltantes: 0,
-                representantes: 0,
-                representantesExistentes: 0,
-                representantesFaltantes: 0,
-              },
+            suportaRepersistencia: false,
+            elementos: [],
+            totais: { total: 0, existentes: 0, faltantes: 0 },
+          },
+        },
+        { status: 200 }
+      );
+    }
+
+    // Modo genérico: usa nova função que suporta todos os tipos de captura
+    if (modo === 'generico') {
+      const resultado = await extrairElementosPorTipo(mongoId);
+
+      if (!resultado) {
+        return NextResponse.json(
+          { success: false, error: { message: 'Erro ao extrair elementos', code: 'EXTRACTION_ERROR' } },
+          { status: 500 }
+        );
+      }
+
+      // Aplicar filtro se necessário
+      let elementosFiltered = resultado.elementos;
+
+      if (filtro === 'faltantes') {
+        elementosFiltered = resultado.elementos.filter((e) => e.statusPersistencia === 'faltando');
+      } else if (filtro === 'existentes') {
+        elementosFiltered = resultado.elementos.filter((e) => e.statusPersistencia === 'existente');
+      }
+
+      return NextResponse.json(
+        {
+          success: true,
+          data: {
+            log: logInfo,
+            payloadDisponivel: true,
+            filtroAplicado: filtro,
+            suportaRepersistencia: resultado.suportaRepersistencia,
+            mensagem: resultado.mensagem,
+            elementos: elementosFiltered,
+            totais: {
+              total: resultado.totais.total,
+              existentes: resultado.totais.existentes,
+              faltantes: resultado.totais.faltantes,
+              // Contar filtrados também
+              filtrados: elementosFiltered.length,
             },
           },
         },
@@ -98,7 +144,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    // Extrair todos os elementos
+    // Modo legado (partes): usa função original que retorna estrutura separada
     const elementos = await extrairTodosElementos(mongoId);
 
     if (!elementos) {
@@ -127,19 +173,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       {
         success: true,
         data: {
-          log: {
-            mongoId,
-            capturaLogId: documento.captura_log_id,
-            tipoCaptura: documento.tipo_captura,
-            status: documento.status,
-            trt: documento.trt,
-            grau: documento.grau,
-            advogadoId: documento.advogado_id,
-            criadoEm: documento.criado_em,
-            erro: documento.erro,
-          },
+          log: logInfo,
           payloadDisponivel: true,
           filtroAplicado: filtro,
+          suportaRepersistencia: documento.tipo_captura === 'partes',
           elementos: {
             partes: partesFiltered,
             enderecos: enderecosFiltered,
@@ -164,4 +201,3 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     );
   }
 }
-

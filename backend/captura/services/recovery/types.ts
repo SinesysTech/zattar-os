@@ -16,12 +16,22 @@ import type { StatusCapturaRaw } from '@/backend/types/mongodb/captura-log';
 
 /**
  * Tipos de entidades que podem ser re-persistidas a partir do payload bruto
+ *
+ * Tipos que suportam re-persistência:
+ * - endereco, parte, representante, cadastro_pje
+ *
+ * Tipos apenas para visualização:
+ * - pendente, audiencia, processo
  */
 export type TipoEntidadeRecuperavel =
   | 'endereco'
   | 'parte'
   | 'representante'
-  | 'cadastro_pje';
+  | 'cadastro_pje'
+  // Tipos apenas para visualização (não suportam re-persistência direta)
+  | 'pendente'
+  | 'audiencia'
+  | 'processo';
 
 /**
  * Status de persistência de um elemento
@@ -50,7 +60,14 @@ export interface ElementoRecuperavel {
   /** Mensagem de erro se statusPersistencia === 'erro' */
   erro?: string;
 
-  /** Informações adicionais de contexto */
+  /**
+   * Informações adicionais de contexto
+   *
+   * Os campos disponíveis variam conforme o tipo de elemento:
+   * - partes/endereços/representantes: entidadeId, entidadeTipo, enderecoId
+   * - pendentes: numeroProcesso, classeJudicial, prazoVencido
+   * - audiências: dataInicio, tipo, processo
+   */
   contexto?: {
     /** ID da entidade no PostgreSQL (se existente) */
     entidadeId?: number;
@@ -58,6 +75,20 @@ export interface ElementoRecuperavel {
     entidadeTipo?: string;
     /** ID do endereço no PostgreSQL (se existente) */
     enderecoId?: number;
+    // Campos para pendentes
+    /** Número do processo (para pendentes/acervo) */
+    numeroProcesso?: string;
+    /** Classe judicial (para pendentes/acervo) */
+    classeJudicial?: string;
+    /** Se o prazo está vencido (para pendentes) */
+    prazoVencido?: boolean;
+    // Campos para audiências
+    /** Data de início da audiência */
+    dataInicio?: string;
+    /** Tipo da audiência */
+    tipo?: string;
+    /** Número do processo da audiência */
+    processo?: string;
   };
 }
 
@@ -383,38 +414,157 @@ export interface EnderecoPJEPayload {
 }
 
 /**
- * Estrutura de parte do PJE (payload bruto simplificado)
+ * Estrutura de parte do PJE (payload bruto)
+ *
+ * O PJE retorna partes com campos variados. Campos principais:
+ * - documento/cpf/cnpj: documento da parte
+ * - endereco: endereço direto (não em dadosCompletos)
+ * - polo: "ativo" ou "passivo"
+ * - tipo: "AUTOR", "REU", "ADVOGADO", etc.
  */
 export interface PartePJEPayload {
+  id?: number;
   idParte?: number;
   idPessoa?: number;
   nome?: string;
-  tipoDocumento?: 'CPF' | 'CNPJ';
-  numeroDocumento?: string;
+  tipoDocumento?: 'CPF' | 'CNPJ' | string;
+  numeroDocumento?: string; // legado
+  documento?: string; // campo principal PJE
+  cpf?: string; // alternativo
+  cnpj?: string; // alternativo
   polo?: string;
+  tipo?: string; // "AUTOR", "REU", etc.
+  idTipoParte?: number;
+  principal?: boolean;
   tipoParte?: {
     id?: number;
     descricao?: string;
   };
+  // Endereço pode estar diretamente ou em dadosCompletos
+  endereco?: EnderecoPJEPayload;
   dadosCompletos?: {
     endereco?: EnderecoPJEPayload;
     [key: string]: unknown;
   };
   representantes?: RepresentantePJEPayload[];
+  // Campos adicionais do PJE
+  situacao?: string;
+  status?: string;
+  enderecoDesconhecido?: boolean;
 }
 
 /**
- * Estrutura de representante do PJE (payload bruto simplificado)
+ * Estrutura de representante do PJE (payload bruto)
  */
 export interface RepresentantePJEPayload {
+  id?: number;
   idRepresentante?: number;
   idPessoa?: number;
   nome?: string;
-  tipoDocumento?: 'CPF' | 'CNPJ';
-  numeroDocumento?: string;
+  tipoDocumento?: 'CPF' | 'CNPJ' | string;
+  numeroDocumento?: string; // legado
+  documento?: string; // campo principal PJE
+  cpf?: string; // alternativo
+  tipo?: string; // "ADVOGADO", etc.
+  numeroOab?: string;
+  situacaoOab?: string;
+  // Endereço pode estar diretamente ou em dadosCompletos
+  endereco?: EnderecoPJEPayload;
   dadosCompletos?: {
     endereco?: EnderecoPJEPayload;
     [key: string]: unknown;
   };
+}
+
+// ============================================================================
+// Tipos de Payload para Outros Tipos de Captura
+// ============================================================================
+
+/**
+ * Estrutura de pendente de manifestação do PJE (payload bruto)
+ *
+ * Este é o payload retornado pela captura de pendentes de manifestação.
+ * Contém apenas informações básicas do processo, NÃO contém partes detalhadas.
+ */
+export interface PendentePayload {
+  id: number;
+  numeroProcesso: string;
+  numero?: number;
+  classeJudicial?: string;
+  descricaoOrgaoJulgador?: string;
+  siglaOrgaoJulgador?: string;
+  segredoDeJustica?: boolean;
+  codigoStatusProcesso?: string;
+  prioridadeProcessual?: number;
+  nomeParteAutora?: string;
+  qtdeParteAutora?: number;
+  nomeParteRe?: string;
+  qtdeParteRe?: number;
+  dataAutuacao?: string;
+  dataArquivamento?: string;
+  juizoDigital?: boolean;
+  idDocumento?: number;
+  dataCriacaoExpediente?: string;
+  dataCienciaParte?: string;
+  dataPrazoLegalParte?: string;
+  prazoVencido?: boolean;
+  temAssociacao?: boolean;
+}
+
+/**
+ * Estrutura de audiência do PJE (payload bruto)
+ *
+ * O payload de audiências é paginado, então pode ter estrutura de paginação.
+ */
+export interface AudienciaPayload {
+  id: number;
+  dataInicio: string;
+  dataFim?: string;
+  status?: string;
+  salaAudiencia?: {
+    nome?: string;
+  };
+  tipo?: {
+    id?: number;
+    descricao?: string;
+    codigo?: string;
+    isVirtual?: boolean;
+  };
+  processo?: {
+    id: number;
+    numero: string;
+    classeJudicial?: {
+      id?: number;
+      codigo?: string;
+      descricao?: string;
+      sigla?: string;
+    };
+    segredoDeJustica?: boolean;
+    juizoDigital?: boolean;
+    orgaoJulgador?: {
+      id?: number;
+      descricao?: string;
+    };
+  };
+  designada?: boolean;
+  emAndamento?: boolean;
+  documentoAtivo?: boolean;
+  poloAtivo?: {
+    nome?: string;
+  };
+  poloPassivo?: {
+    nome?: string;
+  };
+}
+
+/**
+ * Estrutura paginada de audiências (resposta da API do PJE)
+ */
+export interface AudienciasPaginadaPayload {
+  pagina: number;
+  tamanhoPagina: number;
+  qtdPaginas: number;
+  totalRegistros: number;
+  resultado: AudienciaPayload[];
 }
 

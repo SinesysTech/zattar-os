@@ -17,6 +17,7 @@ import type {
   TotaisAnalise,
   ProcessoRecovery,
   PartePJEPayload,
+  RepresentantePJEPayload,
   EnderecoPJEPayload,
   AnaliseAgregadaParams,
   AnaliseAgregadaResult,
@@ -135,8 +136,9 @@ function extrairInfoProcesso(documento: CapturaRawLogDocument): ProcessoRecovery
  * Extrai partes do payload bruto
  *
  * O payload pode ter diferentes estruturas dependendo do tipo de captura:
- * - Captura de partes: payload.partes[] ou payload diretamente é array
- * - Resultado processado pode ter as partes também
+ * - Captura de partes PJE: { ATIVO: [...], PASSIVO: [...] }
+ * - Captura de partes array: payload diretamente é array
+ * - Outras estruturas: payload.partes[], payload.data[], etc.
  */
 function extrairPartesDoPayload(payload: unknown): PartePJEPayload[] {
   if (!payload) {
@@ -150,6 +152,14 @@ function extrairPartesDoPayload(payload: unknown): PartePJEPayload[] {
 
   // Se é objeto, tentar extrair de campos conhecidos
   const payloadObj = payload as Record<string, unknown>;
+
+  // ESTRUTURA PJE: { ATIVO: [...], PASSIVO: [...] }
+  // Esta é a estrutura padrão retornada pelo PJE para capturas de partes
+  if (payloadObj.ATIVO || payloadObj.PASSIVO) {
+    const ativos = Array.isArray(payloadObj.ATIVO) ? payloadObj.ATIVO : [];
+    const passivos = Array.isArray(payloadObj.PASSIVO) ? payloadObj.PASSIVO : [];
+    return [...ativos, ...passivos] as PartePJEPayload[];
+  }
 
   // Tentar campo 'partes'
   if (Array.isArray(payloadObj.partes)) {
@@ -167,6 +177,41 @@ function extrairPartesDoPayload(payload: unknown): PartePJEPayload[] {
   }
 
   return [];
+}
+
+// ============================================================================
+// Funções Auxiliares
+// ============================================================================
+
+/**
+ * Extrai o documento (CPF/CNPJ) de uma parte do payload PJE
+ * O PJE pode ter o documento em diferentes campos
+ */
+function extrairDocumentoParte(parte: PartePJEPayload): string | null {
+  // Tentar os diversos campos possíveis
+  const doc = parte.documento || parte.numeroDocumento || parte.cpf || parte.cnpj;
+  return doc || null;
+}
+
+/**
+ * Extrai o documento de um representante
+ */
+function extrairDocumentoRepresentante(rep: RepresentantePJEPayload): string | null {
+  return rep.documento || rep.numeroDocumento || rep.cpf || null;
+}
+
+/**
+ * Extrai o endereço de uma parte (pode estar em campos diferentes)
+ */
+function extrairEnderecoParte(parte: PartePJEPayload): EnderecoPJEPayload | null {
+  return parte.endereco || parte.dadosCompletos?.endereco || null;
+}
+
+/**
+ * Extrai o endereço de um representante
+ */
+function extrairEnderecoRepresentante(rep: RepresentantePJEPayload): EnderecoPJEPayload | null {
+  return rep.endereco || rep.dadosCompletos?.endereco || null;
 }
 
 // ============================================================================
@@ -198,7 +243,8 @@ async function identificarGaps(
   const supabase = createServiceClient();
 
   for (const parte of partes) {
-    if (!parte.numeroDocumento) {
+    const documentoParte = extrairDocumentoParte(parte);
+    if (!documentoParte) {
       continue;
     }
 
@@ -209,20 +255,23 @@ async function identificarGaps(
     const entidadeInfo = await buscarEntidadePorDocumento(
       supabase,
       entidadeTipo,
-      parte.numeroDocumento
+      documentoParte
     );
+
+    // Extrair endereço da parte
+    const enderecoParte = extrairEnderecoParte(parte);
 
     if (entidadeInfo) {
       totais.partesPersistidas++;
 
       // Verificar endereço se a parte tem endereço no payload
-      if (parte.dadosCompletos?.endereco) {
+      if (enderecoParte) {
         totais.enderecosEsperados++;
         const enderecoExiste = await verificarEnderecoExiste(
           supabase,
           entidadeTipo,
           entidadeInfo.id,
-          parte.dadosCompletos.endereco as EnderecoPJEPayload
+          enderecoParte
         );
 
         if (enderecoExiste) {
@@ -231,9 +280,9 @@ async function identificarGaps(
           // Gap de endereço identificado
           gaps.enderecosFaltantes.push({
             tipo: 'endereco',
-            identificador: String(parte.dadosCompletos.endereco.id ?? parte.numeroDocumento),
+            identificador: String(enderecoParte.id ?? documentoParte),
             nome: `Endereço de ${parte.nome}`,
-            dadosBrutos: parte.dadosCompletos.endereco as unknown as Record<string, unknown>,
+            dadosBrutos: enderecoParte as unknown as Record<string, unknown>,
             statusPersistencia: 'faltando',
             contexto: {
               entidadeId: entidadeInfo.id,
@@ -248,15 +297,16 @@ async function identificarGaps(
         totais.representantes += parte.representantes.length;
 
         for (const rep of parte.representantes) {
-          if (!rep.numeroDocumento) continue;
+          const documentoRep = extrairDocumentoRepresentante(rep);
+          if (!documentoRep) continue;
 
-          const repExiste = await verificarRepresentanteExiste(supabase, rep.numeroDocumento);
+          const repExiste = await verificarRepresentanteExiste(supabase, documentoRep);
           if (repExiste) {
             totais.representantesPersistidos++;
           } else {
             gaps.representantesFaltantes.push({
               tipo: 'representante',
-              identificador: rep.numeroDocumento,
+              identificador: documentoRep,
               nome: rep.nome ?? 'Representante',
               dadosBrutos: rep as unknown as Record<string, unknown>,
               statusPersistencia: 'faltando',
@@ -272,20 +322,20 @@ async function identificarGaps(
       // Parte não existe no banco
       gaps.partesFaltantes.push({
         tipo: 'parte',
-        identificador: parte.numeroDocumento,
+        identificador: documentoParte,
         nome: parte.nome ?? 'Parte',
         dadosBrutos: parte as unknown as Record<string, unknown>,
         statusPersistencia: 'faltando',
       });
 
       // Se parte não existe, endereços também estão faltando
-      if (parte.dadosCompletos?.endereco) {
+      if (enderecoParte) {
         totais.enderecosEsperados++;
         gaps.enderecosFaltantes.push({
           tipo: 'endereco',
-          identificador: String(parte.dadosCompletos.endereco.id ?? parte.numeroDocumento),
+          identificador: String(enderecoParte.id ?? documentoParte),
           nome: `Endereço de ${parte.nome}`,
-          dadosBrutos: parte.dadosCompletos.endereco as unknown as Record<string, unknown>,
+          dadosBrutos: enderecoParte as unknown as Record<string, unknown>,
           statusPersistencia: 'faltando',
           erro: 'Parte principal não existe no banco',
         });
@@ -298,22 +348,39 @@ async function identificarGaps(
 
 /**
  * Identifica o tipo de entidade baseado no polo da parte
+ *
+ * O PJE retorna polo como "ativo" ou "passivo" (minúsculo)
+ * E tipo como "AUTOR", "REU", "ADVOGADO", etc.
  */
 function identificarTipoEntidade(parte: PartePJEPayload): EntidadeTipoEndereco {
-  const polo = parte.polo?.toUpperCase();
+  const polo = parte.polo?.toLowerCase();
+  const tipo = parte.tipo?.toUpperCase();
   const tipoDescricao = parte.tipoParte?.descricao?.toUpperCase();
 
   // Se for polo ativo (autor/reclamante), geralmente é cliente
-  if (polo === 'AT' || polo === 'ATIVO') {
+  if (polo === 'ativo' || polo === 'at') {
     return 'cliente';
   }
 
   // Se for polo passivo (réu/reclamado), geralmente é parte contrária
-  if (polo === 'PA' || polo === 'PASSIVO') {
+  if (polo === 'passivo' || polo === 'pa') {
     return 'parte_contraria';
   }
 
   // Verificar por tipo de parte
+  if (tipo) {
+    if (tipo === 'AUTOR' || tipo === 'RECLAMANTE') {
+      return 'cliente';
+    }
+    if (tipo === 'REU' || tipo === 'RECLAMADO') {
+      return 'parte_contraria';
+    }
+    if (tipo.includes('PERITO') || tipo.includes('TESTEMUNHA') || tipo.includes('MINISTÉRIO')) {
+      return 'terceiro';
+    }
+  }
+
+  // Verificar pela descrição do tipo de parte (legado)
   if (tipoDescricao) {
     if (tipoDescricao.includes('PERITO') || tipoDescricao.includes('TESTEMUNHA') || tipoDescricao.includes('MINISTÉRIO')) {
       return 'terceiro';
@@ -606,7 +673,8 @@ export async function extrairTodosElementos(
   };
 
   for (const parte of partes) {
-    if (!parte.numeroDocumento) {
+    const documentoParte = extrairDocumentoParte(parte);
+    if (!documentoParte) {
       continue;
     }
 
@@ -619,7 +687,7 @@ export async function extrairTodosElementos(
     const entidadeInfo = await buscarEntidadePorDocumento(
       supabase,
       entidadeTipo,
-      parte.numeroDocumento
+      documentoParte
     );
 
     const parteExiste = !!entidadeInfo;
@@ -633,7 +701,7 @@ export async function extrairTodosElementos(
     // Adicionar parte à lista
     elementosPartes.push({
       tipo: 'parte',
-      identificador: parte.numeroDocumento,
+      identificador: documentoParte,
       nome: parte.nome ?? 'Parte sem nome',
       dadosBrutos: parte as unknown as Record<string, unknown>,
       statusPersistencia: parteExiste ? 'existente' : 'faltando',
@@ -644,9 +712,9 @@ export async function extrairTodosElementos(
     });
 
     // Processar endereço se a parte tem endereço no payload
-    if (parte.dadosCompletos?.endereco) {
+    const enderecoParte = extrairEnderecoParte(parte);
+    if (enderecoParte) {
       totais.enderecos++;
-      const enderecoPJE = parte.dadosCompletos.endereco as EnderecoPJEPayload;
 
       let enderecoExiste = false;
       let enderecoId: number | undefined;
@@ -656,7 +724,7 @@ export async function extrairTodosElementos(
           supabase,
           entidadeTipo,
           entidadeInfo.id,
-          enderecoPJE
+          enderecoParte
         );
         enderecoExiste = !!enderecoInfo;
         enderecoId = enderecoInfo?.id;
@@ -670,9 +738,9 @@ export async function extrairTodosElementos(
 
       elementosEnderecos.push({
         tipo: 'endereco',
-        identificador: String(enderecoPJE.id ?? parte.numeroDocumento),
-        nome: `Endereço de ${parte.nome ?? parte.numeroDocumento}`,
-        dadosBrutos: enderecoPJE as unknown as Record<string, unknown>,
+        identificador: String(enderecoParte.id ?? documentoParte),
+        nome: `Endereço de ${parte.nome ?? documentoParte}`,
+        dadosBrutos: enderecoParte as unknown as Record<string, unknown>,
         statusPersistencia: enderecoExiste ? 'existente' : 'faltando',
         contexto: {
           entidadeId: entidadeInfo?.id,
@@ -686,11 +754,12 @@ export async function extrairTodosElementos(
     // Processar representantes
     if (parte.representantes && Array.isArray(parte.representantes)) {
       for (const rep of parte.representantes) {
-        if (!rep.numeroDocumento) continue;
+        const documentoRep = extrairDocumentoRepresentante(rep);
+        if (!documentoRep) continue;
 
         totais.representantes++;
 
-        const repInfo = await buscarRepresentanteExistente(supabase, rep.numeroDocumento);
+        const repInfo = await buscarRepresentanteExistente(supabase, documentoRep);
         const repExiste = !!repInfo;
 
         if (repExiste) {
@@ -701,7 +770,7 @@ export async function extrairTodosElementos(
 
         elementosRepresentantes.push({
           tipo: 'representante',
-          identificador: rep.numeroDocumento,
+          identificador: documentoRep,
           nome: rep.nome ?? 'Representante sem nome',
           dadosBrutos: rep as unknown as Record<string, unknown>,
           statusPersistencia: repExiste ? 'existente' : 'faltando',
@@ -709,12 +778,13 @@ export async function extrairTodosElementos(
             entidadeId: repInfo?.id ?? entidadeInfo?.id,
             entidadeTipo,
           },
+          erro: !repExiste ? 'Representante não cadastrado no banco de dados (CPF não encontrado na tabela representantes)' : undefined,
         });
 
         // Endereço do representante
-        if (rep.dadosCompletos?.endereco) {
+        const enderecoRep = extrairEnderecoRepresentante(rep);
+        if (enderecoRep) {
           totais.enderecos++;
-          const enderecoRepPJE = rep.dadosCompletos.endereco as EnderecoPJEPayload;
 
           // Verificar se endereço do representante existe
           // Para representantes, usamos tipo 'representante' se existir na tabela
@@ -742,9 +812,9 @@ export async function extrairTodosElementos(
 
           elementosEnderecos.push({
             tipo: 'endereco',
-            identificador: String(enderecoRepPJE.id ?? `rep-${rep.numeroDocumento}`),
+            identificador: String(enderecoRep.id ?? `rep-${documentoRep}`),
             nome: `Endereço de ${rep.nome ?? 'Representante'}`,
-            dadosBrutos: enderecoRepPJE as unknown as Record<string, unknown>,
+            dadosBrutos: enderecoRep as unknown as Record<string, unknown>,
             statusPersistencia: enderecoRepExiste ? 'existente' : 'faltando',
             contexto: {
               entidadeId: repInfo?.id,
@@ -819,4 +889,272 @@ async function buscarRepresentanteExistente(
 
   return data ? { id: data.id } : null;
 }
+
+// ============================================================================
+// Funções de Extração por Tipo de Captura
+// ============================================================================
+
+/**
+ * Resultado genérico da extração de elementos por tipo
+ */
+export interface ElementosPorTipoResult {
+  tipoCaptura: TipoCaptura;
+  elementos: ElementoRecuperavel[];
+  suportaRepersistencia: boolean;
+  mensagem?: string;
+  totais: {
+    total: number;
+    existentes: number;
+    faltantes: number;
+  };
+}
+
+/**
+ * Extrai elementos do payload conforme o tipo de captura
+ *
+ * Cada tipo de captura tem estrutura diferente:
+ * - partes: partes, endereços, representantes (suporta re-persistência)
+ * - pendentes: processos pendentes (apenas visualização)
+ * - audiencias: audiências (apenas visualização)
+ *
+ * @param mongoId - ID do documento no MongoDB
+ * @returns Elementos extraídos com informações de tipo
+ */
+export async function extrairElementosPorTipo(
+  mongoId: string
+): Promise<ElementosPorTipoResult | null> {
+  const documento = await buscarLogPorMongoId(mongoId);
+
+  if (!documento) {
+    return null;
+  }
+
+  const tipoCaptura = documento.tipo_captura;
+
+  switch (tipoCaptura) {
+    case 'partes':
+      return await extrairElementosDePartes(documento);
+    case 'pendentes':
+      return extrairElementosDePendentes(documento);
+    case 'audiencias':
+      return extrairElementosDeAudiencias(documento);
+    case 'acervo_geral':
+      return extrairElementosDeAcervo(documento);
+    case 'arquivados':
+      return extrairElementosDeArquivados(documento);
+    default:
+      return {
+        tipoCaptura,
+        elementos: [],
+        suportaRepersistencia: false,
+        mensagem: `Tipo de captura "${tipoCaptura}" não suportado para extração de elementos`,
+        totais: { total: 0, existentes: 0, faltantes: 0 },
+      };
+  }
+}
+
+/**
+ * Extrai elementos de captura de partes (com verificação de persistência)
+ */
+async function extrairElementosDePartes(
+  documento: CapturaRawLogDocument
+): Promise<ElementosPorTipoResult> {
+  const resultado = await extrairTodosElementos(documento._id!.toString());
+
+  if (!resultado) {
+    return {
+      tipoCaptura: 'partes',
+      elementos: [],
+      suportaRepersistencia: true,
+      mensagem: 'Payload não disponível',
+      totais: { total: 0, existentes: 0, faltantes: 0 },
+    };
+  }
+
+  // Combinar todos os elementos em uma lista única
+  const elementos: ElementoRecuperavel[] = [
+    ...resultado.partes,
+    ...resultado.enderecos,
+    ...resultado.representantes,
+  ];
+
+  return {
+    tipoCaptura: 'partes',
+    elementos,
+    suportaRepersistencia: true,
+    totais: {
+      total: elementos.length,
+      existentes: resultado.totais.partesExistentes +
+        resultado.totais.enderecosExistentes +
+        resultado.totais.representantesExistentes,
+      faltantes: resultado.totais.partesFaltantes +
+        resultado.totais.enderecosFaltantes +
+        resultado.totais.representantesFaltantes,
+    },
+  };
+}
+
+/**
+ * Extrai elementos de captura de pendentes (apenas visualização)
+ */
+function extrairElementosDePendentes(
+  documento: CapturaRawLogDocument
+): ElementosPorTipoResult {
+  const payload = documento.payload_bruto;
+
+  if (!payload || !Array.isArray(payload)) {
+    return {
+      tipoCaptura: 'pendentes',
+      elementos: [],
+      suportaRepersistencia: false,
+      mensagem: 'Payload não disponível ou formato inválido',
+      totais: { total: 0, existentes: 0, faltantes: 0 },
+    };
+  }
+
+  const elementos: ElementoRecuperavel[] = payload.map((pendente: PendentePayload) => ({
+    tipo: 'pendente' as TipoEntidadeRecuperavel,
+    identificador: String(pendente.id),
+    nome: pendente.numeroProcesso || `Processo ${pendente.id}`,
+    dadosBrutos: pendente as unknown as Record<string, unknown>,
+    statusPersistencia: 'existente' as const, // Pendentes são apenas visualização
+    contexto: {
+      numeroProcesso: pendente.numeroProcesso,
+      classeJudicial: pendente.classeJudicial,
+      prazoVencido: pendente.prazoVencido,
+    },
+  }));
+
+  return {
+    tipoCaptura: 'pendentes',
+    elementos,
+    suportaRepersistencia: false,
+    mensagem: 'Captura de pendentes contém apenas processos pendentes de manifestação. Partes são capturadas separadamente durante dados complementares.',
+    totais: {
+      total: elementos.length,
+      existentes: elementos.length,
+      faltantes: 0,
+    },
+  };
+}
+
+/**
+ * Extrai elementos de captura de audiências (apenas visualização)
+ */
+function extrairElementosDeAudiencias(
+  documento: CapturaRawLogDocument
+): ElementosPorTipoResult {
+  const payload = documento.payload_bruto;
+
+  if (!payload) {
+    return {
+      tipoCaptura: 'audiencias',
+      elementos: [],
+      suportaRepersistencia: false,
+      mensagem: 'Payload não disponível',
+      totais: { total: 0, existentes: 0, faltantes: 0 },
+    };
+  }
+
+  // O payload pode ser paginado ou direto
+  let audiencias: AudienciaPayload[] = [];
+
+  if (Array.isArray(payload)) {
+    // Pode ser array de páginas ou array de audiências
+    for (const item of payload) {
+      if (item.resultado && Array.isArray(item.resultado)) {
+        // Estrutura paginada
+        audiencias.push(...(item.resultado as AudienciaPayload[]));
+      } else if (item.id && item.dataInicio) {
+        // Audiência direta
+        audiencias.push(item as AudienciaPayload);
+      }
+    }
+  }
+
+  const elementos: ElementoRecuperavel[] = audiencias.map((audiencia: AudienciaPayload) => ({
+    tipo: 'audiencia' as TipoEntidadeRecuperavel,
+    identificador: String(audiencia.id),
+    nome: `Audiência ${audiencia.processo?.numero || audiencia.id} - ${audiencia.tipo?.descricao || 'Sem tipo'}`,
+    dadosBrutos: audiencia as unknown as Record<string, unknown>,
+    statusPersistencia: 'existente' as const,
+    contexto: {
+      dataInicio: audiencia.dataInicio,
+      tipo: audiencia.tipo?.descricao,
+      processo: audiencia.processo?.numero,
+    },
+  }));
+
+  return {
+    tipoCaptura: 'audiencias',
+    elementos,
+    suportaRepersistencia: false,
+    mensagem: 'Captura de audiências contém apenas audiências. Partes são capturadas separadamente durante dados complementares.',
+    totais: {
+      total: elementos.length,
+      existentes: elementos.length,
+      faltantes: 0,
+    },
+  };
+}
+
+/**
+ * Extrai elementos de captura de acervo geral (apenas visualização)
+ */
+function extrairElementosDeAcervo(
+  documento: CapturaRawLogDocument
+): ElementosPorTipoResult {
+  const payload = documento.payload_bruto;
+
+  if (!payload || !Array.isArray(payload)) {
+    return {
+      tipoCaptura: 'acervo_geral',
+      elementos: [],
+      suportaRepersistencia: false,
+      mensagem: 'Payload não disponível ou formato inválido',
+      totais: { total: 0, existentes: 0, faltantes: 0 },
+    };
+  }
+
+  const elementos: ElementoRecuperavel[] = payload.map((processo: Record<string, unknown>) => ({
+    tipo: 'processo' as TipoEntidadeRecuperavel,
+    identificador: String(processo.id || processo.idProcesso),
+    nome: (processo.numeroProcesso as string) || `Processo ${processo.id}`,
+    dadosBrutos: processo,
+    statusPersistencia: 'existente' as const,
+    contexto: {
+      numeroProcesso: processo.numeroProcesso as string | undefined,
+      classeJudicial: processo.classeJudicial as string | undefined,
+    },
+  }));
+
+  return {
+    tipoCaptura: 'acervo_geral',
+    elementos,
+    suportaRepersistencia: false,
+    mensagem: 'Captura de acervo contém apenas processos. Partes são capturadas separadamente.',
+    totais: {
+      total: elementos.length,
+      existentes: elementos.length,
+      faltantes: 0,
+    },
+  };
+}
+
+/**
+ * Extrai elementos de captura de arquivados (apenas visualização)
+ */
+function extrairElementosDeArquivados(
+  documento: CapturaRawLogDocument
+): ElementosPorTipoResult {
+  // Arquivados tem mesma estrutura de acervo
+  return {
+    ...extrairElementosDeAcervo(documento),
+    tipoCaptura: 'arquivados',
+  };
+}
+
+// Importar tipo de captura
+import type { TipoCaptura } from '@/backend/types/captura/capturas-log-types';
+import type { TipoEntidadeRecuperavel, PendentePayload, AudienciaPayload } from './types';
 
