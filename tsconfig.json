@@ -22,6 +22,9 @@
       }
     ],
   "paths": {
+      "@/types/*": ["types/*"],
+      "@/types/domain/*": ["types/domain/*"],
+      "@/types/contracts/*": ["types/contracts/*"],
       "@/_lib/*": ["app/_lib/*"],
       "@/*": ["./*"]
     }
