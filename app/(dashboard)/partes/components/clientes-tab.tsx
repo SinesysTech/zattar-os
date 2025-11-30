@@ -136,30 +136,105 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<ClienteComProcessos>
       ),
       enableSorting: true,
       accessorKey: 'nome',
-      size: 300,
+      size: 320,
       meta: { align: 'left' },
       cell: ({ row }) => {
         const cliente = row.original;
         const isPF = cliente.tipo_pessoa === 'pf';
         const documento = isPF ? formatarCpf(cliente.cpf) : formatarCnpj(cliente.cnpj);
+        const documentoRaw = isPF ? cliente.cpf : cliente.cnpj;
+        const dataNascimento = isPF && cliente.data_nascimento ? cliente.data_nascimento : null;
+        const idade = calcularIdade(dataNascimento);
 
         return (
-          <div className="min-h-10 flex items-start justify-start py-2">
-            <div className="flex flex-col gap-1">
-              <Badge
-                variant="soft"
-                tone={isPF ? 'info' : 'warning'}
-                className="w-fit"
-              >
-                {isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}
-              </Badge>
-              <span className="text-sm font-medium">
-                {formatarNome(cliente.nome)}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {documento}
-              </span>
+          <div className="min-h-10 flex items-start justify-start py-2 group">
+            <div className="flex flex-col gap-0.5">
+              <div className="flex items-center gap-1">
+                <span className="text-sm font-medium">
+                  {formatarNome(cliente.nome)}
+                </span>
+                <CopyButton text={cliente.nome} label="Copiar nome" />
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted-foreground">
+                  {documento}
+                </span>
+                {documentoRaw && (
+                  <CopyButton text={documentoRaw} label={isPF ? 'Copiar CPF' : 'Copiar CNPJ'} />
+                )}
+              </div>
+              {isPF && dataNascimento && (
+                <span className="text-xs text-muted-foreground">
+                  {formatarData(dataNascimento)}
+                  {idade !== null && ` - ${idade} anos`}
+                </span>
+              )}
             </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'contato',
+      header: () => (
+        <div className="flex items-center justify-start">
+          <div className="text-sm font-medium">Contato</div>
+        </div>
+      ),
+      enableSorting: false,
+      size: 280,
+      meta: { align: 'left' },
+      cell: ({ row }) => {
+        const cliente = row.original;
+        const emails = cliente.emails || [];
+
+        // Coletar todos os telefones disponíveis
+        const telefones: { ddd: string; numero: string; tipo: string }[] = [];
+        if (cliente.ddd_celular && cliente.numero_celular) {
+          telefones.push({ ddd: cliente.ddd_celular, numero: cliente.numero_celular, tipo: 'Cel' });
+        }
+        if (cliente.ddd_residencial && cliente.numero_residencial) {
+          telefones.push({ ddd: cliente.ddd_residencial, numero: cliente.numero_residencial, tipo: 'Res' });
+        }
+        if (cliente.ddd_comercial && cliente.numero_comercial) {
+          telefones.push({ ddd: cliente.ddd_comercial, numero: cliente.numero_comercial, tipo: 'Com' });
+        }
+
+        const hasContato = emails.length > 0 || telefones.length > 0;
+
+        return (
+          <div className="min-h-10 flex items-start justify-start py-2 group">
+            {hasContato ? (
+              <div className="flex flex-col gap-0.5">
+                {emails.slice(0, 2).map((email, idx) => (
+                  <div key={idx} className="flex items-center gap-1">
+                    <span className="text-xs text-muted-foreground">
+                      {email}
+                    </span>
+                    <CopyButton text={email} label="Copiar e-mail" />
+                  </div>
+                ))}
+                {emails.length > 2 && (
+                  <span className="text-xs text-muted-foreground">
+                    +{emails.length - 2} e-mail(s)
+                  </span>
+                )}
+                {telefones.map((tel, idx) => {
+                  const telefoneFormatado = formatarTelefone(`${tel.ddd}${tel.numero}`);
+                  const telefoneRaw = `${tel.ddd}${tel.numero}`;
+                  return (
+                    <div key={idx} className="flex items-center gap-1">
+                      <span className="text-xs text-muted-foreground">
+                        {telefoneFormatado}
+                      </span>
+                      <CopyButton text={telefoneRaw} label="Copiar telefone" />
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <span className="text-sm text-muted-foreground">-</span>
+            )}
           </div>
         );
       },
@@ -172,7 +247,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<ClienteComProcessos>
         </div>
       ),
       enableSorting: false,
-      size: 300,
+      size: 260,
       meta: { align: 'left' },
       cell: ({ row }) => {
         const cliente = row.original as Cliente & { endereco?: any };
@@ -185,59 +260,18 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<ClienteComProcessos>
       },
     },
     {
-      id: 'email',
-      header: () => (
-        <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">E-mail</div>
-        </div>
-      ),
-      enableSorting: false,
-      size: 200,
-      meta: { align: 'left' },
-      cell: ({ row }) => {
-        const cliente = row.original;
-        const emails = cliente.emails;
-        return (
-          <div className="min-h-10 flex items-center justify-start text-sm">
-            {emails && emails.length > 0 ? emails[0] : '-'}
-          </div>
-        );
-      },
-    },
-    {
-      id: 'telefone',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Telefone</div>
-        </div>
-      ),
-      enableSorting: false,
-      size: 150,
-      cell: ({ row }) => {
-        const cliente = row.original;
-        const telefone = cliente.ddd_residencial && cliente.numero_residencial
-          ? `${cliente.ddd_residencial}${cliente.numero_residencial}`
-          : null;
-        return (
-          <div className="min-h-10 flex items-center justify-center text-sm">
-            {telefone ? formatarTelefone(telefone) : '-'}
-          </div>
-        );
-      },
-    },
-    {
       id: 'processos',
       header: () => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-start">
           <div className="text-sm font-medium">Processos</div>
         </div>
       ),
       enableSorting: false,
-      size: 180,
+      size: 240,
       cell: ({ row }) => {
         const cliente = row.original;
         return (
-          <ProcessosRelacionadosCell 
+          <ProcessosRelacionadosCell
             processos={cliente.processos_relacionados || []}
           />
         );

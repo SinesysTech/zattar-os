@@ -30,8 +30,9 @@ export const PartePJESchema = z.object({
   polo: z.enum(['ATIVO', 'PASSIVO', 'OUTROS'], {
     errorMap: () => ({ message: 'Polo deve ser ATIVO, PASSIVO ou OUTROS' }),
   }),
-  numeroDocumento: z.string().min(1, 'Número do documento é obrigatório'),
-  tipoDocumento: z.enum(['CPF', 'CNPJ', 'OUTRO']),
+  // NOTA: numeroDocumento pode ser vazio para entidades como MPT, União Federal, etc.
+  numeroDocumento: z.string().nullable().optional(),
+  tipoDocumento: z.enum(['CPF', 'CNPJ', 'OUTRO']).nullable().optional(),
   emails: z.array(z.string()).default([]), // Aceita qualquer string - PJE não valida emails
   telefones: z.array(z.object({
     ddd: z.string().optional(),

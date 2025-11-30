@@ -29,20 +29,12 @@ interface ProcessosRelacionadosCellProps {
 }
 
 /**
- * Formata o número do processo para exibição curta
- * Ex: "0000123-45.2023.5.03.0001" -> "0000123-45...0001"
+ * Formata o número do processo para exibição
+ * Mantém o número completo para melhor legibilidade
  */
-function formatarNumeroProcessoCurto(numero: string): string {
-  if (!numero || numero.length < 10) return numero;
-  // Extrair partes do número (formato CNJ: NNNNNNN-DD.AAAA.J.TR.OOOO)
-  const partes = numero.split('.');
-  if (partes.length >= 4) {
-    // Retornar formato curto: sequencial-digito...origem
-    const sequencial = partes[0]; // NNNNNNN-DD
-    const origem = partes[partes.length - 1]; // OOOO
-    return `${sequencial}...${origem}`;
-  }
-  return numero.length > 15 ? numero.substring(0, 12) + '...' : numero;
+function formatarNumeroProcesso(numero: string): string {
+  if (!numero) return '';
+  return numero;
 }
 
 export function ProcessosRelacionadosCell({
@@ -98,7 +90,7 @@ export function ProcessosRelacionadosCell({
  * Item individual de processo com link
  */
 function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
-  const numeroFormatado = formatarNumeroProcessoCurto(processo.numero_processo);
+  const numeroFormatado = formatarNumeroProcesso(processo.numero_processo);
   
   return (
     <TooltipProvider>

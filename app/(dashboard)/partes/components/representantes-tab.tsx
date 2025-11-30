@@ -16,7 +16,12 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { Eye, Pencil, Phone, Mail } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Eye, Pencil, Phone, Mail, Copy, Check } from 'lucide-react';
 import { useRepresentantes } from '@/app/_lib/hooks/use-representantes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Representante } from '@/backend/types/representantes/representantes-types';
@@ -41,6 +46,46 @@ import {
   type RepresentantesFilters,
 } from './representantes-toolbar-filters';
 import { cn } from '@/app/_lib/utils/utils';
+
+/**
+ * Componente de botão para copiar texto
+ */
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = React.useState(false);
+
+  const handleCopy = React.useCallback(async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Erro ao copiar:', err);
+    }
+  }, [text]);
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="inline-flex items-center justify-center h-5 w-5 rounded hover:bg-muted/50 transition-colors opacity-0 group-hover:opacity-100"
+        >
+          {copied ? (
+            <Check className="h-3 w-3 text-green-500" />
+          ) : (
+            <Copy className="h-3 w-3 text-muted-foreground" />
+          )}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top">
+        {copied ? 'Copiado!' : label}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
 
 /**
  * Extrai UF e número da OAB do campo numero_oab
@@ -181,29 +226,36 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<RepresentanteComProc
         const representante = row.original;
         const nome = formatarNome(representante.nome);
         const cpf = representante.cpf ? formatarCpf(representante.cpf) : null;
+        const cpfRaw = representante.cpf;
         const oab = representante.numero_oab;
         const ufOab = representante.uf_oab;
         const situacaoOab = representante.situacao_oab;
-        
+
         return (
-          <div className="min-h-14 flex flex-col justify-center py-1.5 gap-0.5">
+          <div className="min-h-14 flex flex-col justify-center py-1.5 gap-0.5 group">
             {/* Linha 1: Badge composto OAB + Situação */}
             {oab && (
-              <OabSituacaoBadge 
-                numeroOab={oab} 
-                ufOab={ufOab} 
-                situacaoOab={situacaoOab} 
+              <OabSituacaoBadge
+                numeroOab={oab}
+                ufOab={ufOab}
+                situacaoOab={situacaoOab}
               />
             )}
             {/* Linha 2: Nome */}
-            <span className="font-medium text-sm truncate" title={nome}>
-              {nome}
-            </span>
+            <div className="flex items-center gap-1">
+              <span className="font-medium text-sm" title={nome}>
+                {nome}
+              </span>
+              <CopyButton text={representante.nome} label="Copiar nome" />
+            </div>
             {/* Linha 3: CPF */}
             {cpf && (
-              <span className="text-xs text-muted-foreground">
-                CPF: {cpf}
-              </span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted-foreground">
+                  {cpf}
+                </span>
+                {cpfRaw && <CopyButton text={cpfRaw} label="Copiar CPF" />}
+              </div>
             )}
           </div>
         );
@@ -218,36 +270,45 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<RepresentanteComProc
         </div>
       ),
       enableSorting: false,
-      size: 260,
+      size: 280,
       meta: { align: 'left' },
       cell: ({ row }) => {
         const representante = row.original;
         const telefone = obterTelefone(representante);
+        const telefoneRaw = representante.ddd_celular && representante.numero_celular
+          ? `${representante.ddd_celular}${representante.numero_celular}`
+          : representante.ddd_comercial && representante.numero_comercial
+            ? `${representante.ddd_comercial}${representante.numero_comercial}`
+            : representante.ddd_residencial && representante.numero_residencial
+              ? `${representante.ddd_residencial}${representante.numero_residencial}`
+              : null;
         const email = obterEmail(representante);
-        
+
         // Se não tem nenhum contato
         if (!telefone && !email) {
           return <div className="min-h-14 flex items-center justify-start text-muted-foreground">-</div>;
         }
-        
+
         return (
-          <div className="min-h-14 flex flex-col justify-center py-1.5 gap-1 w-full overflow-hidden">
+          <div className="min-h-14 flex flex-col justify-center py-1.5 gap-1 w-full overflow-hidden group">
             {/* Linha 1: Telefone */}
             <div className="flex items-center gap-1.5 min-w-0">
               <Phone className={cn('h-3.5 w-3.5 shrink-0', telefone ? 'text-muted-foreground' : 'text-muted-foreground/50')} />
               <span className={cn('text-sm whitespace-nowrap', !telefone && 'text-muted-foreground')}>
                 {telefone || '-'}
               </span>
+              {telefoneRaw && <CopyButton text={telefoneRaw} label="Copiar telefone" />}
             </div>
             {/* Linha 2: E-mail */}
             <div className="flex items-center gap-1.5 min-w-0 w-full">
               <Mail className={cn('h-3.5 w-3.5 shrink-0', email ? 'text-muted-foreground' : 'text-muted-foreground/50')} />
-              <span 
-                className={cn('text-sm truncate block', !email && 'text-muted-foreground')} 
+              <span
+                className={cn('text-sm', !email && 'text-muted-foreground')}
                 title={email || undefined}
               >
                 {email || '-'}
               </span>
+              {email && <CopyButton text={email} label="Copiar e-mail" />}
             </div>
           </div>
         );
@@ -257,12 +318,12 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<RepresentanteComProc
     {
       id: 'processos',
       header: () => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-start">
           <div className="text-sm font-medium">Processos</div>
         </div>
       ),
       enableSorting: false,
-      size: 180,
+      size: 240,
       cell: ({ row }) => {
         const representante = row.original;
         return (

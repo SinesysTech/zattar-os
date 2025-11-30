@@ -12,21 +12,24 @@ import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
   buildPartesContrariasFilterOptions,
   buildPartesContrariasFilterGroups,
   parsePartesContrariasFilters,
   type PartesContrariasFilters,
 } from './partes-contrarias-toolbar-filters';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, Pencil, Copy, Check } from 'lucide-react';
 import {
   formatarCpf,
   formatarCnpj,
   formatarTelefone,
   formatarNome,
-  formatarTipoPessoa,
   formatarEnderecoCompleto,
 } from '@/app/_lib/utils/format-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -41,6 +44,83 @@ import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
 type ParteContrariaComProcessos = ParteContraria & {
   processos_relacionados?: ProcessoRelacionado[];
 };
+
+/**
+ * Calcula a idade a partir da data de nascimento
+ */
+function calcularIdade(dataNascimento: string | null): number | null {
+  if (!dataNascimento) return null;
+  try {
+    const nascimento = new Date(dataNascimento);
+    const hoje = new Date();
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mesAtual = hoje.getMonth();
+    const mesNascimento = nascimento.getMonth();
+    if (mesAtual < mesNascimento || (mesAtual === mesNascimento && hoje.getDate() < nascimento.getDate())) {
+      idade--;
+    }
+    return idade;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Formata data para exibição (DD/MM/YYYY)
+ */
+function formatarData(dataISO: string | null): string {
+  if (!dataISO) return '';
+  try {
+    const data = new Date(dataISO);
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Componente de botão para copiar texto
+ */
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = React.useState(false);
+
+  const handleCopy = React.useCallback(async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Erro ao copiar:', err);
+    }
+  }, [text]);
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="inline-flex items-center justify-center h-5 w-5 rounded hover:bg-muted/50 transition-colors opacity-0 group-hover:opacity-100"
+        >
+          {copied ? (
+            <Check className="h-3 w-3 text-green-500" />
+          ) : (
+            <Copy className="h-3 w-3 text-muted-foreground" />
+          )}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top">
+        {copied ? 'Copiado!' : label}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
 
 interface PartesContrariasTabProps {}
 
@@ -96,30 +176,104 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
         ),
         enableSorting: true,
         accessorKey: 'nome',
-        size: 300,
+        size: 320,
         meta: { align: 'left' },
         cell: ({ row }) => {
           const parte = row.original;
           const isPF = parte.tipo_pessoa === 'pf';
           const documento = isPF ? formatarCpf(parte.cpf) : formatarCnpj(parte.cnpj);
+          const documentoRaw = isPF ? parte.cpf : parte.cnpj;
+          const dataNascimento = isPF && parte.data_nascimento ? parte.data_nascimento : null;
+          const idade = calcularIdade(dataNascimento);
 
           return (
-            <div className="min-h-10 flex items-start justify-start py-2">
-              <div className="flex flex-col gap-1">
-                <Badge
-                  variant="soft"
-                  tone={isPF ? 'info' : 'warning'}
-                  className="w-fit"
-                >
-                  {isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}
-                </Badge>
-                <span className="text-sm font-medium">
-                  {formatarNome(parte.nome)}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {documento}
-                </span>
+            <div className="min-h-10 flex items-start justify-start py-2 group">
+              <div className="flex flex-col gap-0.5">
+                <div className="flex items-center gap-1">
+                  <span className="text-sm font-medium">
+                    {formatarNome(parte.nome)}
+                  </span>
+                  <CopyButton text={parte.nome} label="Copiar nome" />
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-muted-foreground">
+                    {documento}
+                  </span>
+                  {documentoRaw && (
+                    <CopyButton text={documentoRaw} label={isPF ? 'Copiar CPF' : 'Copiar CNPJ'} />
+                  )}
+                </div>
+                {isPF && dataNascimento && (
+                  <span className="text-xs text-muted-foreground">
+                    {formatarData(dataNascimento)}
+                    {idade !== null && ` - ${idade} anos`}
+                  </span>
+                )}
               </div>
+            </div>
+          );
+        },
+      },
+      {
+        id: 'contato',
+        header: () => (
+          <div className="flex items-center justify-start">
+            <div className="text-sm font-medium">Contato</div>
+          </div>
+        ),
+        enableSorting: false,
+        size: 280,
+        meta: { align: 'left' },
+        cell: ({ row }) => {
+          const parte = row.original;
+          const emails = parte.emails || [];
+
+          const telefones: { ddd: string; numero: string; tipo: string }[] = [];
+          if (parte.ddd_celular && parte.numero_celular) {
+            telefones.push({ ddd: parte.ddd_celular, numero: parte.numero_celular, tipo: 'Cel' });
+          }
+          if (parte.ddd_residencial && parte.numero_residencial) {
+            telefones.push({ ddd: parte.ddd_residencial, numero: parte.numero_residencial, tipo: 'Res' });
+          }
+          if (parte.ddd_comercial && parte.numero_comercial) {
+            telefones.push({ ddd: parte.ddd_comercial, numero: parte.numero_comercial, tipo: 'Com' });
+          }
+
+          const hasContato = emails.length > 0 || telefones.length > 0;
+
+          return (
+            <div className="min-h-10 flex items-start justify-start py-2 group">
+              {hasContato ? (
+                <div className="flex flex-col gap-0.5">
+                  {emails.slice(0, 2).map((email, idx) => (
+                    <div key={idx} className="flex items-center gap-1">
+                      <span className="text-xs text-muted-foreground">
+                        {email}
+                      </span>
+                      <CopyButton text={email} label="Copiar e-mail" />
+                    </div>
+                  ))}
+                  {emails.length > 2 && (
+                    <span className="text-xs text-muted-foreground">
+                      +{emails.length - 2} e-mail(s)
+                    </span>
+                  )}
+                  {telefones.map((tel, idx) => {
+                    const telefoneFormatado = formatarTelefone(`${tel.ddd}${tel.numero}`);
+                    const telefoneRaw = `${tel.ddd}${tel.numero}`;
+                    return (
+                      <div key={idx} className="flex items-center gap-1">
+                        <span className="text-xs text-muted-foreground">
+                          {telefoneFormatado}
+                        </span>
+                        <CopyButton text={telefoneRaw} label="Copiar telefone" />
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <span className="text-sm text-muted-foreground">-</span>
+              )}
             </div>
           );
         },
@@ -132,7 +286,7 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
           </div>
         ),
         enableSorting: false,
-        size: 300,
+        size: 260,
         meta: { align: 'left' },
         cell: ({ row }) => {
           const parte = row.original as ParteContraria & { endereco?: any };
@@ -145,59 +299,18 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
         },
       },
       {
-        id: 'email',
-        header: () => (
-          <div className="flex items-center justify-start">
-            <div className="text-sm font-medium">E-mail</div>
-          </div>
-        ),
-        enableSorting: false,
-        size: 200,
-        meta: { align: 'left' },
-        cell: ({ row }) => {
-          const parte = row.original;
-          const emails = parte.emails;
-          return (
-            <div className="min-h-10 flex items-center justify-start text-sm">
-              {emails && emails.length > 0 ? emails[0] : '-'}
-            </div>
-          );
-        },
-      },
-      {
-        id: 'telefone',
-        header: () => (
-          <div className="flex items-center justify-center">
-            <div className="text-sm font-medium">Telefone</div>
-          </div>
-        ),
-        enableSorting: false,
-        size: 150,
-        cell: ({ row }) => {
-          const parte = row.original;
-          const telefone = parte.ddd_residencial && parte.numero_residencial
-            ? `${parte.ddd_residencial}${parte.numero_residencial}`
-            : null;
-          return (
-            <div className="min-h-10 flex items-center justify-center text-sm">
-              {telefone ? formatarTelefone(telefone) : '-'}
-            </div>
-          );
-        },
-      },
-      {
         id: 'processos',
         header: () => (
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-start">
             <div className="text-sm font-medium">Processos</div>
           </div>
         ),
         enableSorting: false,
-        size: 180,
+        size: 240,
         cell: ({ row }) => {
           const parte = row.original;
           return (
-            <ProcessosRelacionadosCell 
+            <ProcessosRelacionadosCell
               processos={parte.processos_relacionados || []}
             />
           );
