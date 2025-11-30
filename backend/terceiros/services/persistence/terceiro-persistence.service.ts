@@ -713,11 +713,28 @@ export async function upsertTerceiroPorCPF(
       cpf: cpfNormalizado,
     };
 
-    const { data, error } = await supabase
-      .from('terceiros')
-      .upsert(row, { onConflict: 'cpf' })
-      .select()
-      .single();
+    let data, error;
+
+    if (existente) {
+      // UPDATE existente - evita usar upsert com constraints parciais
+      const result = await supabase
+        .from('terceiros')
+        .update(row)
+        .eq('id', existente.id)
+        .select()
+        .single();
+      data = result.data;
+      error = result.error;
+    } else {
+      // INSERT novo
+      const result = await supabase
+        .from('terceiros')
+        .insert(row)
+        .select()
+        .single();
+      data = result.data;
+      error = result.error;
+    }
 
     if (error) {
       return { sucesso: false, erro: error.message, criado: false };
@@ -754,11 +771,28 @@ export async function upsertTerceiroPorCNPJ(
       cnpj: cnpjNormalizado,
     };
 
-    const { data, error } = await supabase
-      .from('terceiros')
-      .upsert(row, { onConflict: 'cnpj' })
-      .select()
-      .single();
+    let data, error;
+
+    if (existente) {
+      // UPDATE existente - evita usar upsert com constraints parciais
+      const result = await supabase
+        .from('terceiros')
+        .update(row)
+        .eq('id', existente.id)
+        .select()
+        .single();
+      data = result.data;
+      error = result.error;
+    } else {
+      // INSERT novo
+      const result = await supabase
+        .from('terceiros')
+        .insert(row)
+        .select()
+        .single();
+      data = result.data;
+      error = result.error;
+    }
 
     if (error) {
       return { sucesso: false, erro: error.message, criado: false };

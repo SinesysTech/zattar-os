@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect, type ReactNode } from 'react';
 import {
   AreaChart,
   Area,
@@ -17,6 +18,18 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { cn } from '@/app/_lib/utils/utils';
+
+// Wrapper que só renderiza após o mount (evita warnings de SSG)
+function ClientOnly({ children, fallback = null }: { children: ReactNode; fallback?: ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return fallback;
+  return <>{children}</>;
+}
 
 // Cores padrão para gráficos
 export const CHART_COLORS = {
@@ -72,38 +85,40 @@ export function MiniLineChart({
 }: MiniLineChartProps) {
   return (
     <div className={cn('w-full min-w-0', className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-        <LineChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
-          {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />}
-          {showXAxis && (
-            <XAxis
-              dataKey="name"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+      <ClientOnly>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+          <LineChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
+            {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />}
+            {showXAxis && (
+              <XAxis
+                dataKey="name"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+              />
+            )}
+            {showTooltip && (
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--background))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                }}
+                labelStyle={{ color: 'hsl(var(--foreground))' }}
+              />
+            )}
+            <Line
+              type="monotone"
+              dataKey={dataKey}
+              stroke={color}
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 4, fill: color }}
             />
-          )}
-          {showTooltip && (
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'hsl(var(--background))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '6px',
-                fontSize: '12px',
-              }}
-              labelStyle={{ color: 'hsl(var(--foreground))' }}
-            />
-          )}
-          <Line
-            type="monotone"
-            dataKey={dataKey}
-            stroke={color}
-            strokeWidth={2}
-            dot={false}
-            activeDot={{ r: 4, fill: color }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+          </LineChart>
+        </ResponsiveContainer>
+      </ClientOnly>
     </div>
   );
 }
@@ -139,44 +154,46 @@ export function MiniAreaChart({
 
   return (
     <div className={cn('w-full min-w-0', className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-        <AreaChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
-          <defs>
-            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={color} stopOpacity={0.3} />
-              <stop offset="95%" stopColor={color} stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />}
-          {showXAxis && (
-            <XAxis
-              dataKey="name"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+      <ClientOnly>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+          <AreaChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
+            <defs>
+              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={color} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={color} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />}
+            {showXAxis && (
+              <XAxis
+                dataKey="name"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+              />
+            )}
+            {showTooltip && (
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--background))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                }}
+                labelStyle={{ color: 'hsl(var(--foreground))' }}
+              />
+            )}
+            <Area
+              type="monotone"
+              dataKey={dataKey}
+              stroke={color}
+              strokeWidth={2}
+              fill={gradient ? `url(#${gradientId})` : color}
+              fillOpacity={gradient ? 1 : 0.2}
             />
-          )}
-          {showTooltip && (
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'hsl(var(--background))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '6px',
-                fontSize: '12px',
-              }}
-              labelStyle={{ color: 'hsl(var(--foreground))' }}
-            />
-          )}
-          <Area
-            type="monotone"
-            dataKey={dataKey}
-            stroke={color}
-            strokeWidth={2}
-            fill={gradient ? `url(#${gradientId})` : color}
-            fillOpacity={gradient ? 1 : 0.2}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+          </AreaChart>
+        </ResponsiveContainer>
+      </ClientOnly>
     </div>
   );
 }
@@ -214,59 +231,61 @@ export function MiniBarChart({
 
   return (
     <div className={cn('w-full min-w-0', className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-        <BarChart
-          data={data}
-          layout={layout}
-          margin={{ top: 5, right: 5, bottom: 5, left: horizontal ? 60 : 5 }}
-        >
-          {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />}
-          {horizontal ? (
-            <>
-              <XAxis type="number" hide={!showYAxis} />
-              <YAxis
-                type="category"
-                dataKey="name"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
-                width={55}
-              />
-            </>
-          ) : (
-            <>
-              {showXAxis && (
-                <XAxis
+      <ClientOnly>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+          <BarChart
+            data={data}
+            layout={layout}
+            margin={{ top: 5, right: 5, bottom: 5, left: horizontal ? 60 : 5 }}
+          >
+            {showGrid && <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />}
+            {horizontal ? (
+              <>
+                <XAxis type="number" hide={!showYAxis} />
+                <YAxis
+                  type="category"
                   dataKey="name"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                  tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                  width={55}
                 />
-              )}
-              {showYAxis && (
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
-                />
-              )}
-            </>
-          )}
-          {showTooltip && (
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'hsl(var(--background))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '6px',
-                fontSize: '12px',
-              }}
-              labelStyle={{ color: 'hsl(var(--foreground))' }}
-              cursor={{ fill: 'hsl(var(--muted))', opacity: 0.5 }}
-            />
-          )}
-          <Bar dataKey={dataKey} fill={color} radius={[4, 4, 0, 0]} maxBarSize={40} />
-        </BarChart>
-      </ResponsiveContainer>
+              </>
+            ) : (
+              <>
+                {showXAxis && (
+                  <XAxis
+                    dataKey="name"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                  />
+                )}
+                {showYAxis && (
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                  />
+                )}
+              </>
+            )}
+            {showTooltip && (
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--background))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                }}
+                labelStyle={{ color: 'hsl(var(--foreground))' }}
+                cursor={{ fill: 'hsl(var(--muted))', opacity: 0.5 }}
+              />
+            )}
+            <Bar dataKey={dataKey} fill={color} radius={[4, 4, 0, 0]} maxBarSize={40} />
+          </BarChart>
+        </ResponsiveContainer>
+      </ClientOnly>
     </div>
   );
 }
@@ -296,40 +315,42 @@ export function MiniPieChart({
 }: MiniPieChartProps) {
   return (
     <div className={cn('w-full min-w-0', className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-        <PieChart>
-          {showTooltip && (
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'hsl(var(--background))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '6px',
-                fontSize: '12px',
-              }}
-            />
-          )}
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius={innerRadius}
-            outerRadius="80%"
-            paddingAngle={2}
-            dataKey="value"
-            label={
-              showLabels
-                ? ({ name, percent }: { name?: string; percent?: number }) =>
-                    `${name ?? ''}: ${((percent ?? 0) * 100).toFixed(0)}%`
-                : undefined
-            }
-            labelLine={showLabels}
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color || colors[index % colors.length]} />
-            ))}
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
+      <ClientOnly>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+          <PieChart>
+            {showTooltip && (
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--background))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                }}
+              />
+            )}
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius={innerRadius}
+              outerRadius="80%"
+              paddingAngle={2}
+              dataKey="value"
+              label={
+                showLabels
+                  ? ({ name, percent }: { name?: string; percent?: number }) =>
+                      `${name ?? ''}: ${((percent ?? 0) * 100).toFixed(0)}%`
+                  : undefined
+              }
+              labelLine={showLabels}
+            >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color || colors[index % colors.length]} />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      </ClientOnly>
     </div>
   );
 }
@@ -354,33 +375,35 @@ export function MiniDonutChart({
 }: MiniDonutChartProps) {
   return (
     <div className={cn('w-full min-w-0 relative', className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-        <PieChart>
-          {showTooltip && (
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'hsl(var(--background))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '6px',
-                fontSize: '12px',
-              }}
-            />
-          )}
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius={`${100 - thickness * 2}%`}
-            outerRadius="80%"
-            paddingAngle={2}
-            dataKey="value"
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color || colors[index % colors.length]} />
-            ))}
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
+      <ClientOnly>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+          <PieChart>
+            {showTooltip && (
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--background))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                }}
+              />
+            )}
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              innerRadius={`${100 - thickness * 2}%`}
+              outerRadius="80%"
+              paddingAngle={2}
+              dataKey="value"
+            >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color || colors[index % colors.length]} />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      </ClientOnly>
       {centerContent && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           {centerContent}
@@ -413,17 +436,19 @@ export function Sparkline({
 
   return (
     <div className={cn('inline-block min-w-0', className)} style={{ width, height }}>
-      <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-        <LineChart data={chartData} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke={color}
-            strokeWidth={1.5}
-            dot={false}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      <ClientOnly>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+          <LineChart data={chartData} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
+            <Line
+              type="monotone"
+              dataKey="value"
+              stroke={color}
+              strokeWidth={1.5}
+              dot={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </ClientOnly>
     </div>
   );
 }
