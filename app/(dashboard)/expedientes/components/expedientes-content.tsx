@@ -64,6 +64,7 @@ import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dialog';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
+import { ParteDetalheDialog } from './parte-detalhe-dialog';
 import { CheckCircle2, Undo2, Eye } from 'lucide-react';
 import Link from 'next/link';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -556,6 +557,7 @@ function criarColunas(
   onPrazoSort: (field: 'data_ciencia_parte' | 'data_prazo_legal_parte', direction: 'asc' | 'desc') => void,
   onProcessoSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void,
   onResponsavelSort: (direction: 'asc' | 'desc') => void,
+  onParteClick: (processoId: number | null, polo: 'ATIVO' | 'PASSIVO', nome: string) => void,
   isLoadingTipos?: boolean
 ): ColumnDef<PendenteManifestacao>[] {
   return [
@@ -683,8 +685,20 @@ function criarColunas(
                   )}
                 </span>
               </div>
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>{parteAutora}</Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>{parteRe}</Badge>
+              <Badge
+                variant="outline"
+                className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left ${processoId && parteAutora !== '-' ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+                onClick={() => onParteClick(processoId, 'ATIVO', parteAutora)}
+              >
+                {parteAutora}
+              </Badge>
+              <Badge
+                variant="outline"
+                className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left ${processoId && parteRe !== '-' ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+                onClick={() => onParteClick(processoId, 'PASSIVO', parteRe)}
+              >
+                {parteRe}
+              </Badge>
               <div className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</div>
             </div>
           </TooltipProvider>
@@ -783,6 +797,22 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
   const [isSuperAdmin, setIsSuperAdmin] = React.useState(false);
   const [countVencidos, setCountVencidos] = React.useState<number>(0);
   const [countSemResponsavel, setCountSemResponsavel] = React.useState<number>(0);
+  const [parteDialog, setParteDialog] = React.useState<{
+    open: boolean;
+    processoId: number | null;
+    polo: 'ATIVO' | 'PASSIVO';
+    nome: string;
+  }>({ open: false, processoId: null, polo: 'ATIVO', nome: '' });
+
+  // Handler para abrir dialog de parte
+  const handleParteClick = (
+    processoId: number | null,
+    polo: 'ATIVO' | 'PASSIVO',
+    nome: string
+  ) => {
+    if (!processoId || nome === '-') return; // Não abrir se não há processo ou parte
+    setParteDialog({ open: true, processoId, polo, nome });
+  };
 
   React.useEffect(() => {
     const getUserInfo = async () => {
@@ -902,8 +932,8 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
   }, []);
 
   const colunas = React.useMemo(
-    () => criarColunas(handleSuccess, usuariosLista, tiposExpedientes, handlePrazoSort, handleProcessoSort, handleResponsavelSort, isLoadingTipos),
-    [handleSuccess, usuariosLista, tiposExpedientes, handlePrazoSort, handleProcessoSort, handleResponsavelSort, isLoadingTipos]
+    () => criarColunas(handleSuccess, usuariosLista, tiposExpedientes, handlePrazoSort, handleProcessoSort, handleResponsavelSort, handleParteClick, isLoadingTipos),
+    [handleSuccess, usuariosLista, tiposExpedientes, handlePrazoSort, handleProcessoSort, handleResponsavelSort, handleParteClick, isLoadingTipos]
   );
 
   const navegarSemana = React.useCallback((direcao: 'anterior' | 'proxima') => {
@@ -1133,6 +1163,14 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
         open={novoExpedienteOpen}
         onOpenChange={setNovoExpedienteOpen}
         onSuccess={handleSuccess}
+      />
+
+      <ParteDetalheDialog
+        open={parteDialog.open}
+        onOpenChange={(open) => setParteDialog(prev => ({ ...prev, open }))}
+        processoId={parteDialog.processoId}
+        polo={parteDialog.polo}
+        nomeExibido={parteDialog.nome}
       />
     </div>
   );

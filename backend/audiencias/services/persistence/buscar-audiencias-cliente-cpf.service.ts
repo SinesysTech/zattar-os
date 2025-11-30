@@ -93,9 +93,9 @@ export async function buscarAudienciasPorCpf(
       observacoes,
       sala_audiencia_nome,
       processo_id,
-      tipo_audiencia:tipo_audiencia_id(descricao),
-      orgao_julgador:orgao_julgador_id(descricao),
-      classe_judicial:classe_judicial_id(descricao)
+      tipo_audiencia!tipo_audiencia_id(descricao),
+      orgao_julgador!orgao_julgador_id(descricao),
+      classe_judicial!classe_judicial_id(descricao)
     `)
     .in('processo_id', processoIds)
     .order('data_inicio', { ascending: true });
