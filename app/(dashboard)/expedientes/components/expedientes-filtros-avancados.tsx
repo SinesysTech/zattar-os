@@ -27,11 +27,11 @@ import { Filter, X } from 'lucide-react';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
 
-// Lista de TRTs disponíveis
-const TRTS = [
+// Lista de tribunais trabalhistas disponíveis (TRTs + TST)
+const TRIBUNAIS = [
   'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
   'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20',
-  'TRT21', 'TRT22', 'TRT23', 'TRT24',
+  'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST',
 ] as const;
 
 interface ExpedientesFiltrosAvancadosProps {
@@ -104,21 +104,21 @@ export function ExpedientesFiltrosAvancados({
           </DialogHeader>
 
         <div className="space-y-6">
-          {/* TRT */}
+          {/* Tribunal */}
           <div className="space-y-2">
-            <Label htmlFor="trt">TRT</Label>
+            <Label htmlFor="trt">Tribunal</Label>
             <Select
               value={localFilters.trt || 'all'}
               onValueChange={(value) => handleFilterChange('trt', value === 'all' ? undefined : value)}
             >
               <SelectTrigger id="trt">
-                <SelectValue placeholder="Todos os TRTs" />
+                <SelectValue placeholder="Todos os tribunais" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos os TRTs</SelectItem>
-                {TRTS.map((trt) => (
-                  <SelectItem key={trt} value={trt}>
-                    {trt}
+                <SelectItem value="all">Todos os tribunais</SelectItem>
+                {TRIBUNAIS.map((trib) => (
+                  <SelectItem key={trib} value={trib}>
+                    {trib}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -131,7 +131,7 @@ export function ExpedientesFiltrosAvancados({
             <Select
               value={localFilters.grau || 'all'}
               onValueChange={(value) =>
-                handleFilterChange('grau', value === 'all' ? undefined : value as 'primeiro_grau' | 'segundo_grau' | undefined)
+                handleFilterChange('grau', value === 'all' ? undefined : value as 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior' | undefined)
               }
             >
               <SelectTrigger id="grau">
@@ -141,6 +141,7 @@ export function ExpedientesFiltrosAvancados({
                 <SelectItem value="all">Todos os graus</SelectItem>
                 <SelectItem value="primeiro_grau">Primeiro Grau</SelectItem>
                 <SelectItem value="segundo_grau">Segundo Grau</SelectItem>
+                <SelectItem value="tribunal_superior">Tribunal Superior</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -37,7 +37,7 @@ export interface BuscarExpedientesParams extends Partial<ListarPendentesParams> 
  */
 export interface ExpedientesFilters {
   trt?: string;
-  grau?: 'primeiro_grau' | 'segundo_grau';
+  grau?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
   responsavel_id?: number | 'null';
   tipo_expediente_id?: number;
   sem_tipo?: boolean;

@@ -79,14 +79,14 @@ const options: Options = {
             },
             trt_codigo: {
               type: 'string',
-              description: 'Código do TRT (ex: TRT1, TRT2, TRT3)',
-              enum: ['TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24'],
+              description: 'Código do tribunal trabalhista (TRT1 a TRT24 ou TST)',
+              enum: ['TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST'],
               example: 'TRT3',
             },
             grau: {
               type: 'string',
-              enum: ['primeiro_grau', 'segundo_grau'],
-              description: 'Grau do processo (primeiro_grau ou segundo_grau)',
+              enum: ['primeiro_grau', 'segundo_grau', 'tribunal_superior'],
+              description: 'Grau do processo (primeiro_grau, segundo_grau ou tribunal_superior)',
               example: 'primeiro_grau',
             },
           },
@@ -102,14 +102,14 @@ const options: Options = {
             },
             trt_codigo: {
               type: 'string',
-              description: 'Código do TRT (ex: TRT1, TRT2, TRT3)',
-              enum: ['TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24'],
+              description: 'Código do tribunal trabalhista (TRT1 a TRT24 ou TST)',
+              enum: ['TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST'],
               example: 'TRT3',
             },
             grau: {
               type: 'string',
-              enum: ['primeiro_grau', 'segundo_grau'],
-              description: 'Grau do processo (primeiro_grau ou segundo_grau)',
+              enum: ['primeiro_grau', 'segundo_grau', 'tribunal_superior'],
+              description: 'Grau do processo (primeiro_grau, segundo_grau ou tribunal_superior)',
               example: 'primeiro_grau',
             },
             dataInicio: {
@@ -137,14 +137,14 @@ const options: Options = {
             },
             trt_codigo: {
               type: 'string',
-              description: 'Código do TRT (ex: TRT1, TRT2, TRT3)',
-              enum: ['TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24'],
+              description: 'Código do tribunal trabalhista (TRT1 a TRT24 ou TST)',
+              enum: ['TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST'],
               example: 'TRT3',
             },
             grau: {
               type: 'string',
-              enum: ['primeiro_grau', 'segundo_grau'],
-              description: 'Grau do processo (primeiro_grau ou segundo_grau)',
+              enum: ['primeiro_grau', 'segundo_grau', 'tribunal_superior'],
+              description: 'Grau do processo (primeiro_grau, segundo_grau ou tribunal_superior)',
               example: 'primeiro_grau',
             },
             filtroPrazo: {

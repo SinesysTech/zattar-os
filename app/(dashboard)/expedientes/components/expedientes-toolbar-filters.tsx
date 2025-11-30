@@ -6,7 +6,7 @@ import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
 // Filtros para expedientes (interface usada na página)
 export interface ExpedientesFilters {
   trt?: string;
-  grau?: 'primeiro_grau' | 'segundo_grau';
+  grau?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
   responsavel_id?: number | 'null';
   baixado?: boolean;
   prazo_vencido?: boolean;
@@ -17,19 +17,19 @@ export interface ExpedientesFilters {
   sem_responsavel?: boolean;
 }
 
-// Lista de TRTs disponíveis
-const TRTS = [
+// Lista de tribunais trabalhistas disponíveis (TRTs + TST)
+const TRIBUNAIS = [
   'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
   'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20',
-  'TRT21', 'TRT22', 'TRT23', 'TRT24',
+  'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST',
 ] as const;
 
 export const EXPEDIENTES_FILTER_CONFIGS: FilterConfig[] = [
   {
     id: 'trt',
-    label: 'TRT',
+    label: 'Tribunal',
     type: 'select',
-    options: [{ value: 'all', label: 'Todos' }, ...TRTS.map(trt => ({ value: trt, label: trt }))],
+    options: [{ value: 'all', label: 'Todos' }, ...TRIBUNAIS.map(trib => ({ value: trib, label: trib }))],
   },
   {
     id: 'grau',
@@ -39,6 +39,7 @@ export const EXPEDIENTES_FILTER_CONFIGS: FilterConfig[] = [
       { value: 'all', label: 'Todos' },
       { value: 'primeiro_grau', label: 'Primeiro Grau' },
       { value: 'segundo_grau', label: 'Segundo Grau' },
+      { value: 'tribunal_superior', label: 'Tribunal Superior' },
     ],
   },
   {
@@ -270,7 +271,7 @@ export function parseExpedientesFilters(selectedFilters: string[]): ExpedientesF
           }
         } else if (id === 'grau') {
           if (value !== 'all') {
-            filters.grau = value as 'primeiro_grau' | 'segundo_grau';
+            filters.grau = value as 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
           }
         } else if (id === 'responsavel_id') {
           if (value === 'all') {

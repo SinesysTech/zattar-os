@@ -3,7 +3,7 @@
 /**
  * Grau do processo
  */
-export type GrauPendente = 'primeiro_grau' | 'segundo_grau';
+export type GrauPendente = 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
 
 /**
  * Campos disponíveis para ordenação

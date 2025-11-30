@@ -1,20 +1,32 @@
-/**
- * Exportação centralizada de todos os tipos frontend relacionados a partes
- */
-
-// Tipos compartilhados (exportados apenas uma vez)
+// Tipos compartilhados de domínio e contratos (importar diretamente quando possível, aqui apenas re-exportando o essencial para conveniência ou para tipos específicos do frontend)
+export type { TipoPessoa, SituacaoPJE, GrauProcesso } from '@/types/domain/common';
+export type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
 export type {
-  TipoPessoa,
-  SituacaoPJE,
-} from './clientes';
-
-// Clientes
-export type {
-  GrauCliente,
   ClienteBase,
   Cliente,
   ClientePessoaFisica,
   ClientePessoaJuridica,
+  TipoParteTerceiro,
+  PoloTerceiro,
+  Terceiro,
+  TerceiroPessoaFisica,
+  TerceiroPessoaJuridica,
+  ParteContraria,
+  ParteContrariaPessoaFisica,
+  ParteContrariaPessoaJuridica,
+  EntidadeTipoEndereco,
+  SituacaoEndereco,
+  ClassificacaoEndereco,
+  Endereco,
+  EntidadeTipoProcessoParte,
+  PoloProcessoParte,
+  TipoParteProcesso,
+  ProcessoParte,
+  ParteComDadosCompletos,
+  ProcessoComParticipacao,
+} from '@/types/domain';
+
+export type {
   CriarClienteParams,
   AtualizarClienteParams,
   ListarClientesParams,
@@ -24,9 +36,65 @@ export type {
   UpsertClientePorDocumentoParams,
   OrdenarPorCliente,
   OrdemCliente,
-  ClienteFormData,
-} from './clientes';
+  CriarParteContrariaParams,
+  AtualizarParteContrariaParams,
+  ListarPartesContrariasParams,
+  ListarPartesContrariasResult,
+  UpsertParteContrariaPorCPFParams,
+  UpsertParteContrariaPorCNPJParams,
+  UpsertParteContrariaPorDocumentoParams,
+  OrdenarPorParteContraria,
+  OrdemParteContraria,
+  CriarTerceiroParams,
+  AtualizarTerceiroParams,
+  ListarTerceirosParams,
+  ListarTerceirosResult,
+  UpsertTerceiroPorCPFParams,
+  UpsertTerceiroPorCNPJParams,
+  UpsertTerceiroPorDocumentoParams,
+  UpsertTerceiroPorIdPessoaParams,
+  OrdenarPorTerceiro,
+  OrdemTerceiro,
+  CriarEnderecoParams,
+  AtualizarEnderecoParams,
+  ListarEnderecosParams,
+  ListarEnderecosResult,
+  BuscarEnderecosPorEntidadeParams,
+  DefinirEnderecoPrincipalParams,
+  OrdenarPorEndereco,
+  OrdemEndereco,
+  CriarProcessoParteParams,
+  AtualizarProcessoParteParams,
+  ListarProcessoPartesParams,
+  ListarProcessoPartesResult,
+  BuscarPartesPorProcessoParams,
+  BuscarProcessosPorEntidadeParams,
+  VincularParteProcessoParams,
+  DesvincularParteProcessoParams,
+  OrdenarPorProcessoParte,
+  OrdemProcessoParte,
+} from '@/types/contracts';
 
+// Tipos específicos do frontend (UI, Formulários, APIs)
+export type { AcervoApiResponse, BuscarProcessosParams, ProcessosFilters } from './acervo';
+export type { AudienciasApiResponse, BuscarAudienciasParams, AudienciasFilters } from './audiencias';
+export type { ClientesApiResponse, BuscarClientesParams, ClienteFormData } from './clientes';
+export type { ContratosApiResponse, BuscarContratosParams, ContratoFormData } from './contratos';
+export type { CredenciaisApiResponse, CredencialFormData } from './credenciais';
+export type { ExpedientesApiResponse, ExpedienteFormData, BuscarExpedientesParams, ExpedientesFilters } from './expedientes';
+export type { RepresentantesApiResponse, BuscarRepresentantesParams, RepresentanteFormData } from './representantes';
+export type { PartesContrariasApiResponse, BuscarPartesContrariasParams, ParteContrariaFormData } from './partes-contrarias';
+export type { TerceirosApiResponse, BuscarTerceirosParams, TerceiroFormData } from './terceiros';
+export type { UsuariosApiResponse, BuscarUsuariosParams, UsuarioFormData } from './usuarios';
+export type { TimelineApiResponse, BuscarTimelineParams } from './timeline';
+export type { DashboardApiResponse, DashboardFilters } from './dashboard';
+export type { DataTableFilterableColumn, DataTableSearchableColumn } from './data-table';
+export type { TiposExpedientesApiResponse, BuscarTiposExpedientesParams, TipoExpedienteFormData } from './tipos-expedientes';
+export type { TribunaisApiResponse, BuscarTribunaisParams, TribunalFormData } from './tribunais';
+export type { ProcessoParteFormData } from './processo-partes';
+export type { EnderecoFormData } from './enderecos';
+
+// Funções utilitárias de frontend (devem ser importadas de seus respectivos arquivos)
 export {
   isClientePessoaFisica,
   isClientePessoaJuridica,
@@ -37,24 +105,6 @@ export {
   getSituacaoColor as getSituacaoColorCliente,
 } from './clientes';
 
-// Partes Contrárias
-export type {
-  GrauParteContraria,
-  ParteContraria,
-  ParteContrariaPessoaFisica,
-  ParteContrariaPessoaJuridica,
-  CriarParteContrariaParams,
-  AtualizarParteContrariaParams,
-  ListarPartesContrariasParams,
-  ListarPartesContrariasResult,
-  UpsertParteContrariaPorCPFParams,
-  UpsertParteContrariaPorCNPJParams,
-  UpsertParteContrariaPorDocumentoParams,
-  OrdenarPorParteContraria,
-  OrdemParteContraria,
-  ParteContrariaFormData,
-} from './partes-contrarias';
-
 export {
   isParteContrariaPessoaFisica,
   isParteContrariaPessoaJuridica,
@@ -64,23 +114,6 @@ export {
   getSituacaoLabel as getSituacaoLabelParteContraria,
   getSituacaoColor as getSituacaoColorParteContraria,
 } from './partes-contrarias';
-
-// Endereços
-export type {
-  EntidadeTipoEndereco,
-  SituacaoEndereco,
-  ClassificacaoEndereco,
-  Endereco,
-  CriarEnderecoParams,
-  AtualizarEnderecoParams,
-  ListarEnderecosParams,
-  ListarEnderecosResult,
-  BuscarEnderecosPorEntidadeParams,
-  DefinirEnderecoPrincipalParams,
-  OrdenarPorEndereco,
-  OrdemEndereco,
-  EnderecoFormData,
-} from './enderecos';
 
 export {
   isEnderecoCorrespondencia,
@@ -96,24 +129,6 @@ export {
   getNomeEstado,
   UFS_VALIDAS,
 } from './enderecos';
-
-// Terceiros (Peritos, MP, etc.)
-export type {
-  Terceiro,
-  TerceiroPessoaFisica,
-  TerceiroPessoaJuridica,
-  CriarTerceiroParams,
-  AtualizarTerceiroParams,
-  ListarTerceirosParams,
-  ListarTerceirosResult,
-  UpsertTerceiroPorCPFParams,
-  UpsertTerceiroPorCNPJParams,
-  UpsertTerceiroPorDocumentoParams,
-  UpsertTerceiroPorIdPessoaParams,
-  OrdenarPorTerceiro,
-  OrdemTerceiro,
-  TerceiroFormData,
-} from './terceiros';
 
 export {
   isTerceiroPessoaFisica,
@@ -134,28 +149,6 @@ export {
   validarCpf,
   validarCnpj,
 } from './terceiros';
-
-// Processo-Partes (N:N relationship)
-export type {
-  EntidadeTipoProcessoParte,
-  GrauProcessoParte,
-  PoloProcessoParte,
-  TipoParteProcesso,
-  ProcessoParte,
-  CriarProcessoParteParams,
-  AtualizarProcessoParteParams,
-  ListarProcessoPartesParams,
-  ListarProcessoPartesResult,
-  BuscarPartesPorProcessoParams,
-  ParteComDadosCompletos,
-  BuscarProcessosPorEntidadeParams,
-  ProcessoComParticipacao,
-  VincularParteProcessoParams,
-  DesvincularParteProcessoParams,
-  OrdenarPorProcessoParte,
-  OrdemProcessoParte,
-  ProcessoParteFormData,
-} from './processo-partes';
 
 export {
   isPartePrincipal,

@@ -2,6 +2,7 @@
 
 import type { Acervo, ProcessoUnificado } from '@/types/domain/acervo';
 import type { ListarAcervoParams } from '@/types/contracts/acervo';
+import type { GrauProcesso } from '@/types/domain/common';
 
 /**
  * Resposta da API de acervo (formato padrão ou unificado)
@@ -36,7 +37,7 @@ export interface BuscarProcessosParams extends Partial<ListarAcervoParams> {
 export interface ProcessosFilters {
   origem?: 'acervo_geral' | 'arquivado';
   trt?: string;
-  grau?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
+  grau?: GrauProcesso;
   responsavel_id?: number | 'null';
   sem_responsavel?: boolean;
   busca?: string;

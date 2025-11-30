@@ -2,6 +2,7 @@
 
 import type { Audiencia, ModalidadeAudiencia } from '@/types/domain/audiencias';
 import type { ListarAudienciasParams } from '@/types/contracts/audiencias';
+import type { GrauProcesso } from '@/types/domain/common';
 
 /**
  * Resposta da API de audiências (formato padrão)
@@ -40,7 +41,7 @@ export type { ModalidadeAudiencia };
  */
 export interface AudienciasFilters {
   trt?: string;
-  grau?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
+  grau?: GrauProcesso;
   responsavel_id?: number | 'null';
   sem_responsavel?: boolean;
   busca?: string;

@@ -4,28 +4,9 @@
  */
 
 import type { Cliente } from '@/types/domain/partes';
-
-// Re-exporta tipos de domínio
-export type {
-  ClienteBase,
-  Cliente,
-  ClientePessoaFisica,
-  ClientePessoaJuridica,
-} from '@/types/domain/partes';
-
-// Re-exporta tipos comuns de domínio
-export type {
-  TipoPessoa,
-  SituacaoPJE,
-  GrauProcesso,
-} from '@/types/domain/common';
-
-// Alias para compatibilidade
-import type { GrauProcesso } from '@/types/domain/common';
-export type GrauCliente = GrauProcesso;
-
-// Re-exporta tipos de contratos
-export type {
+import type { GrauProcesso, SituacaoPJE, TipoPessoa } from '@/types/domain/common';
+import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
+import type {
   CriarClienteParams,
   AtualizarClienteParams,
   ListarClientesParams,
@@ -37,8 +18,8 @@ export type {
   OrdemCliente,
 } from '@/types/contracts/partes';
 
-// Re-exporta tipo de processos relacionados
-export type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
+// Alias para compatibilidade
+export type GrauCliente = GrauProcesso;
 
 // Tipos para API de clientes
 export interface BuscarClientesParams {
@@ -65,10 +46,10 @@ export interface ClientesApiResponse {
 // Tipos auxiliares para formulários
 export interface ClienteFormData {
   // Campos obrigatórios
-  tipo_pessoa: 'pf' | 'pj';
+  tipo_pessoa: TipoPessoa;
   nome: string;
   trt: string;
-  grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
+  grau: GrauProcesso;
   numero_processo: string;
 
   // PF: CPF obrigatório

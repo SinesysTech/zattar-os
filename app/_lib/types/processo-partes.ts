@@ -173,9 +173,10 @@ export function getEntidadeTipoColor(tipo: 'cliente' | 'parte_contraria' | 'terc
 /**
  * Retorna label do grau
  */
-export function getGrauLabel(grau: '1' | '2' | 'primeiro_grau' | 'segundo_grau' | string): string {
+export function getGrauLabel(grau: '1' | '2' | 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior' | string): string {
   if (grau === '1' || grau === 'primeiro_grau') return 'Primeiro Grau';
   if (grau === '2' || grau === 'segundo_grau') return 'Segundo Grau';
+  if (grau === 'tribunal_superior') return 'Tribunal Superior';
   return grau;
 }
 
