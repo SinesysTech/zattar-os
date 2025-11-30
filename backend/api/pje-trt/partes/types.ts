@@ -153,11 +153,11 @@ export interface PartePJE {
   /** Indica se é a parte principal do polo - usado para priorizar exibição */
   principal: boolean;
 
-  /** Tipo de documento de identificação */
-  tipoDocumento: 'CPF' | 'CNPJ' | 'OUTRO';
+  /** Tipo de documento de identificação - pode ser null/undefined para entidades como MPT, União Federal */
+  tipoDocumento?: 'CPF' | 'CNPJ' | 'OUTRO' | null;
 
-  /** Número do documento sem máscara - ex: "12345678900" (CPF) ou "12345678000195" (CNPJ) */
-  numeroDocumento: string;
+  /** Número do documento sem máscara - pode ser null/undefined para entidades como MPT, União Federal */
+  numeroDocumento?: string | null;
 
   /** Array de e-mails de contato - pode ser vazio [] */
   emails: string[];
