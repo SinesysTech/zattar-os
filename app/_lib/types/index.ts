@@ -11,6 +11,7 @@ export type {
 // Clientes
 export type {
   GrauCliente,
+  ClienteBase,
   Cliente,
   ClientePessoaFisica,
   ClientePessoaJuridica,

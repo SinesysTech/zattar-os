@@ -39,13 +39,13 @@ create type public."TipoTribunal" as enum (
 );
 comment on type public."TipoTribunal" is 'Tipo de tribunal (TRT, TJ, TRF, TST, STF, STJ)';
 
--- Instância do processo
+-- Instância do processo (enum legado - usar grau_tribunal para novos desenvolvimentos)
 create type public."Instancia" as enum (
   'PRIMEIRO_GRAU',
   'SEGUNDO_GRAU',
-  'TST'
+  'TRIBUNAL_SUPERIOR'
 );
-comment on type public."Instancia" is 'Instância do processo (primeiro grau, segundo grau, TST)';
+comment on type public."Instancia" is 'Instância do processo (primeiro grau, segundo grau, tribunal superior). LEGADO: Preferir usar grau_tribunal para novos desenvolvimentos.';
 
 -- ----------------------------------------------------------------------------
 -- Enums de Pessoa

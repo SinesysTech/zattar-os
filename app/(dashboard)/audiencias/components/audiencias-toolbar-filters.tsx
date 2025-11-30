@@ -3,19 +3,19 @@ import type { FilterGroup } from '@/components/ui/table-toolbar';
 import type { AudienciasFilters } from '@/app/_lib/types/audiencias';
 import type { Usuario } from '@/app/_lib/types/usuarios';
 
-// Lista de TRTs disponíveis
-const TRTS = [
+// Lista de tribunais trabalhistas disponíveis (TRTs + TST)
+const TRIBUNAIS = [
   'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
   'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20',
-  'TRT21', 'TRT22', 'TRT23', 'TRT24',
+  'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST',
 ] as const;
 
 export const AUDIENCIAS_FILTER_CONFIGS: FilterConfig[] = [
   {
     id: 'trt',
-    label: 'TRT',
+    label: 'Tribunal',
     type: 'select',
-    options: TRTS.map(trt => ({ value: trt, label: trt })),
+    options: TRIBUNAIS.map(trib => ({ value: trib, label: trib })),
   },
   {
     id: 'grau',
@@ -24,6 +24,7 @@ export const AUDIENCIAS_FILTER_CONFIGS: FilterConfig[] = [
     options: [
       { value: 'primeiro_grau', label: 'Primeiro Grau' },
       { value: 'segundo_grau', label: 'Segundo Grau' },
+      { value: 'tribunal_superior', label: 'Tribunal Superior' },
     ],
   },
   {
@@ -210,7 +211,7 @@ export function parseAudienciasFilters(selectedFilters: string[]): AudienciasFil
         if (id === 'trt') {
           filters.trt = value;
         } else if (id === 'grau') {
-          filters.grau = value as 'primeiro_grau' | 'segundo_grau';
+          filters.grau = value as 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
         } else if (id === 'responsavel_id') {
           if (value === 'null') {
             filters.responsavel_id = 'null';

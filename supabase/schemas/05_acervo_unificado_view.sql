@@ -216,7 +216,7 @@ alter materialized view public.acervo_unificado owner to postgres;
 
 -- Comentários nas colunas principais
 comment on column public.acervo_unificado.id is 'ID da instância principal (grau atual) do processo';
-comment on column public.acervo_unificado.grau_atual is 'Grau atual do processo (primeiro_grau ou segundo_grau), identificado pela maior data_autuacao';
-comment on column public.acervo_unificado.graus_ativos is 'Array de graus onde o processo está ativo (ex: [primeiro_grau, segundo_grau])';
+comment on column public.acervo_unificado.grau_atual is 'Grau atual do processo (primeiro_grau, segundo_grau ou tribunal_superior), identificado pela maior data_autuacao';
+comment on column public.acervo_unificado.graus_ativos is 'Array de graus onde o processo está ativo (ex: [primeiro_grau, segundo_grau, tribunal_superior])';
 comment on column public.acervo_unificado.instances is 'JSONB contendo todas as instâncias do processo, cada uma com id, grau, origem, trt, data_autuacao, updated_at e is_grau_atual';
 

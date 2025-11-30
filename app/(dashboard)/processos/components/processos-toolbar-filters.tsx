@@ -2,11 +2,11 @@ import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/component
 import type { FilterGroup, ComboboxOption } from '@/components/ui/table-toolbar';
 import type { ProcessosFilters } from '@/app/_lib/types/acervo';
 
-// Lista de TRTs disponíveis
-const TRTS = [
+// Lista de tribunais trabalhistas disponíveis (TRTs + TST)
+const TRIBUNAIS = [
   'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
   'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20',
-  'TRT21', 'TRT22', 'TRT23', 'TRT24',
+  'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST',
 ];
 
 export const PROCESSOS_FILTER_CONFIGS: FilterConfig[] = [
@@ -22,10 +22,10 @@ export const PROCESSOS_FILTER_CONFIGS: FilterConfig[] = [
   },
   {
     id: 'trt',
-    label: 'TRT',
+    label: 'Tribunal',
     type: 'select',
-    options: TRTS.map(trt => ({ value: trt, label: trt })),
-    searchText: 'regional tribunal trabalho',
+    options: TRIBUNAIS.map(trib => ({ value: trib, label: trib })),
+    searchText: 'regional tribunal trabalho tst superior',
   },
   {
     id: 'grau',
@@ -34,8 +34,9 @@ export const PROCESSOS_FILTER_CONFIGS: FilterConfig[] = [
     options: [
       { value: 'primeiro_grau', label: 'Primeiro Grau' },
       { value: 'segundo_grau', label: 'Segundo Grau' },
+      { value: 'tribunal_superior', label: 'Tribunal Superior' },
     ],
-    searchText: 'instancia grau judicial',
+    searchText: 'instancia grau judicial superior tst',
   },
   {
     id: 'numero_processo',

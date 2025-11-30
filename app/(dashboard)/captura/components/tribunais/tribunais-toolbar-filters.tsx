@@ -8,11 +8,11 @@ export interface TribunaisFilters {
   tipo_acesso?: 'primeiro_grau' | 'segundo_grau' | 'unificado' | 'unico';
 }
 
-// Lista de TRTs disponíveis
-const TRTS: CodigoTRT[] = [
+// Lista de tribunais trabalhistas disponíveis (TRTs + TST)
+const TRIBUNAIS: CodigoTRT[] = [
   'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
   'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20',
-  'TRT21', 'TRT22', 'TRT23', 'TRT24',
+  'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST',
 ];
 
 export const TRIBUNAIS_FILTER_CONFIGS: FilterConfig[] = [
@@ -20,7 +20,7 @@ export const TRIBUNAIS_FILTER_CONFIGS: FilterConfig[] = [
     id: 'tribunal_codigo',
     label: 'Tribunal',
     type: 'select',
-    options: TRTS.map(trt => ({ value: trt, label: trt })),
+    options: TRIBUNAIS.map(trib => ({ value: trib, label: trib })),
   },
   {
     id: 'tipo_acesso',

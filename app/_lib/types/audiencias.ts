@@ -1,6 +1,7 @@
 // Tipos para integração com API de audiências no frontend
 
-import type { Audiencia, ListarAudienciasParams } from '@/backend/types/audiencias/types';
+import type { Audiencia, ModalidadeAudiencia } from '@/types/domain/audiencias';
+import type { ListarAudienciasParams } from '@/types/contracts/audiencias';
 
 /**
  * Resposta da API de audiências (formato padrão)
@@ -30,16 +31,16 @@ export interface BuscarAudienciasParams extends Partial<ListarAudienciasParams> 
 }
 
 /**
- * Modalidade da audiência (re-exportado do backend)
+ * Modalidade da audiência (re-exportado do domínio compartilhado)
  */
-export type { ModalidadeAudiencia } from '@/backend/types/audiencias/types';
+export type { ModalidadeAudiencia };
 
 /**
  * Estado de filtros da página de audiências
  */
 export interface AudienciasFilters {
   trt?: string;
-  grau?: 'primeiro_grau' | 'segundo_grau';
+  grau?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
   responsavel_id?: number | 'null';
   sem_responsavel?: boolean;
   busca?: string;

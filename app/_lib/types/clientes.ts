@@ -1,18 +1,31 @@
 /**
  * Tipos frontend para Clientes
- * Re-exporta tipos do backend para uso em componentes React
+ * Re-exporta tipos de domínio e contratos para uso em componentes React
  */
 
-import type { Cliente } from '@/backend/types/partes/clientes-types';
+import type { Cliente } from '@/types/domain/partes';
 
-// Re-exporta todos os tipos de clientes do backend
+// Re-exporta tipos de domínio
 export type {
-  TipoPessoa,
-  GrauCliente,
-  SituacaoPJE,
+  ClienteBase,
   Cliente,
   ClientePessoaFisica,
   ClientePessoaJuridica,
+} from '@/types/domain/partes';
+
+// Re-exporta tipos comuns de domínio
+export type {
+  TipoPessoa,
+  SituacaoPJE,
+  GrauProcesso,
+} from '@/types/domain/common';
+
+// Alias para compatibilidade
+import type { GrauProcesso } from '@/types/domain/common';
+export type GrauCliente = GrauProcesso;
+
+// Re-exporta tipos de contratos
+export type {
   CriarClienteParams,
   AtualizarClienteParams,
   ListarClientesParams,
@@ -22,7 +35,7 @@ export type {
   UpsertClientePorDocumentoParams,
   OrdenarPorCliente,
   OrdemCliente,
-} from '@/backend/types/partes/clientes-types';
+} from '@/types/contracts/partes';
 
 // Re-exporta tipo de processos relacionados
 export type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
@@ -55,7 +68,7 @@ export interface ClienteFormData {
   tipo_pessoa: 'pf' | 'pj';
   nome: string;
   trt: string;
-  grau: 'primeiro_grau' | 'segundo_grau';
+  grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
   numero_processo: string;
 
   // PF: CPF obrigatório

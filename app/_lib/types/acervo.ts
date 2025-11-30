@@ -1,6 +1,7 @@
 // Tipos para integração com API de acervo no frontend
 
-import type { Acervo, ProcessoUnificado, ListarAcervoParams } from '@/backend/types/acervo/types';
+import type { Acervo, ProcessoUnificado } from '@/types/domain/acervo';
+import type { ListarAcervoParams } from '@/types/contracts/acervo';
 
 /**
  * Resposta da API de acervo (formato padrão ou unificado)
@@ -35,7 +36,7 @@ export interface BuscarProcessosParams extends Partial<ListarAcervoParams> {
 export interface ProcessosFilters {
   origem?: 'acervo_geral' | 'arquivado';
   trt?: string;
-  grau?: 'primeiro_grau' | 'segundo_grau';
+  grau?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
   responsavel_id?: number | 'null';
   sem_responsavel?: boolean;
   busca?: string;
