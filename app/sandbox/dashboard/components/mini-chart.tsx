@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect, type ReactNode } from 'react';
 import {
   AreaChart,
   Area,
@@ -17,6 +18,18 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { cn } from '@/app/_lib/utils/utils';
+
+// Wrapper que só renderiza após o mount (evita warnings de SSG)
+function ClientOnly({ children, fallback = null }: { children: ReactNode; fallback?: ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return fallback;
+  return <>{children}</>;
+}
 
 // Cores padrão para gráficos
 export const CHART_COLORS = {
