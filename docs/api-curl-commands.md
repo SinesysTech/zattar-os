@@ -221,6 +221,15 @@ curl -X GET "http://localhost:3000/api/audiencias/tipos" \
 # Listar salas de audiência
 curl -X GET "http://localhost:3000/api/audiencias/salas" \
   -H "Authorization: Bearer <token>"
+
+# Buscar audiências por CPF do cliente (para Agente IA WhatsApp)
+# Retorna todas as audiências do cliente com resumo estatístico
+curl -X GET "http://localhost:3000/api/audiencias/cliente/cpf/12345678901" \
+  -H "x-service-api-key: <api-key>"
+
+# Com CPF formatado (aceita ambos os formatos)
+curl -X GET "http://localhost:3000/api/audiencias/cliente/cpf/123.456.789-01" \
+  -H "x-service-api-key: <api-key>"
 ```
 
 ---

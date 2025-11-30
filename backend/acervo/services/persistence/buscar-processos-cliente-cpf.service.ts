@@ -21,79 +21,25 @@ export interface BuscarProcessosPorCpfResult {
 /**
  * Busca todos os processos de um cliente pelo CPF
  *
+ * IMPORTANTE: Usa JOIN direto em vez de VIEW materializada para garantir
+ * dados em tempo real. Isso é necessário porque o campo `timeline_mongodb_id`
+ * é atualizado após a captura da timeline, e a VIEW materializada não reflete
+ * essas mudanças até ser feito um REFRESH manual.
+ *
  * @param cpf - CPF do cliente (com ou sem formatação)
  * @returns Dados do cliente e lista de processos
  */
 export async function buscarProcessosPorCpf(
   cpf: string
 ): Promise<BuscarProcessosPorCpfResult> {
-  const supabase = createServiceClient();
-
   // Normalizar CPF (remover formatação)
   const cpfNormalizado = cpf.replace(/\D/g, '');
 
-  console.log('🔍 [BuscarProcessosCPF] Buscando processos para CPF:', cpfNormalizado);
+  console.log('🔍 [BuscarProcessosCPF] Buscando processos para CPF (JOIN direto):', cpfNormalizado);
 
-  // Primeiro, tenta buscar na VIEW materializada
-  const { data: processosView, error: errorView } = await supabase
-    .from('processos_cliente_por_cpf')
-    .select('*')
-    .eq('cpf', cpfNormalizado);
-
-  // Se a VIEW não existir, faz o JOIN manual
-  // Códigos de erro possíveis:
-  // - 42P01: relation does not exist (PostgreSQL)
-  // - PGRST204: schema cache não encontrou a tabela (Supabase)
-  // - message contém "schema cache": erro de cache do Supabase
-  const isViewNotFound =
-    errorView?.code === '42P01' ||
-    errorView?.code === 'PGRST204' ||
-    errorView?.message?.includes('schema cache') ||
-    errorView?.message?.includes('does not exist');
-
-  if (isViewNotFound) {
-    console.log('⚠️ [BuscarProcessosCPF] VIEW não existe, fazendo JOIN manual');
-    return buscarProcessosPorCpfManual(cpfNormalizado);
-  }
-
-  if (errorView) {
-    console.error('❌ [BuscarProcessosCPF] Erro ao buscar na VIEW:', errorView);
-    throw new Error(`Erro ao buscar processos: ${errorView.message}`);
-  }
-
-  if (!processosView || processosView.length === 0) {
-    console.log('ℹ️ [BuscarProcessosCPF] Nenhum processo encontrado para CPF:', cpfNormalizado);
-
-    // Verificar se o cliente existe
-    const { data: cliente } = await supabase
-      .from('clientes')
-      .select('id, nome, cpf')
-      .eq('cpf', cpfNormalizado)
-      .single();
-
-    return {
-      cliente: cliente ? {
-        id: cliente.id,
-        nome: cliente.nome,
-        cpf: cliente.cpf,
-      } : null,
-      processos: [],
-    };
-  }
-
-  // Extrair dados do cliente do primeiro registro
-  const primeiroRegistro = processosView[0] as ProcessoClienteCpfRow;
-
-  console.log(`✅ [BuscarProcessosCPF] Encontrados ${processosView.length} registros para ${primeiroRegistro.cliente_nome}`);
-
-  return {
-    cliente: {
-      id: primeiroRegistro.cliente_id,
-      nome: primeiroRegistro.cliente_nome,
-      cpf: primeiroRegistro.cpf,
-    },
-    processos: processosView as ProcessoClienteCpfRow[],
-  };
+  // Sempre usar JOIN direto para ter dados em tempo real
+  // A VIEW materializada não reflete mudanças em timeline_mongodb_id até REFRESH
+  return buscarProcessosPorCpfManual(cpfNormalizado);
 }
 
 /**

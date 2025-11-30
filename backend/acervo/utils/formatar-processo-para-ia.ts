@@ -87,33 +87,6 @@ export function traduzirClasseJudicial(classe: string): string {
   return CLASSE_JUDICIAL_NOMES[classe] || classe;
 }
 
-/**
- * Determina o status atual do processo baseado em origem e código
- */
-export function determinarStatusAtual(
-  origem: 'acervo_geral' | 'arquivado',
-  codigoStatus: string
-): string {
-  if (origem === 'arquivado') {
-    return 'Arquivado';
-  }
-
-  // Mapear códigos comuns para textos amigáveis
-  const statusMap: Record<string, string> = {
-    'DISTRIBUIDO': 'Em andamento',
-    'EM_ANDAMENTO': 'Em andamento',
-    'AGUARDANDO_AUDIENCIA': 'Aguardando audiência',
-    'AGUARDANDO_JULGAMENTO': 'Aguardando julgamento',
-    'SUSPENSO': 'Suspenso',
-    'ARQUIVADO': 'Arquivado',
-    'ARQUIVADO_DEFINITIVAMENTE': 'Arquivado definitivamente',
-    'BAIXADO': 'Baixado',
-    'REMETIDO': 'Remetido a outra instância',
-  };
-
-  return statusMap[codigoStatus] || codigoStatus || 'Em andamento';
-}
-
 // ============================================================================
 // Formatação de Timeline
 // ============================================================================
@@ -257,10 +230,8 @@ export function formatarInstancia(
 
   return {
     vara: instancia.descricao_orgao_julgador,
-    status: determinarStatusAtual(instancia.origem, instancia.codigo_status_processo),
     data_inicio: formatarData(instancia.data_autuacao) || 'Não informada',
     proxima_audiencia: formatarDataHora(instancia.data_proxima_audiencia),
-    arquivado_em: formatarData(instancia.data_arquivamento),
   };
 }
 
@@ -293,12 +264,6 @@ export function formatarProcessoParaIA(
     })
     .slice(0, 30); // Limitar a 30 itens no total
 
-  // Determinar status atual (preferir segundo grau se existir)
-  const instanciaAtual = agrupado.instancias.segundo_grau || agrupado.instancias.primeiro_grau;
-  const statusAtual = instanciaAtual
-    ? determinarStatusAtual(instanciaAtual.origem, instanciaAtual.codigo_status_processo)
-    : 'Desconhecido';
-
   // Determinar parte contrária (inverso do polo do cliente)
   const parteContraria = agrupado.polo === 'ATIVO'
     ? agrupado.nome_parte_re
@@ -314,7 +279,6 @@ export function formatarProcessoParaIA(
     tipo: traduzirClasseJudicial(agrupado.classe_judicial),
     papel_cliente: traduzirTipoParte(agrupado.tipo_parte),
     parte_contraria: parteContraria,
-    status_atual: statusAtual,
     tribunal: traduzirTrt(agrupado.trt),
     sigilo: agrupado.segredo_justica,
     instancias: {

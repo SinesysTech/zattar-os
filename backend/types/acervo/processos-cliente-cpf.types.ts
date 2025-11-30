@@ -53,8 +53,6 @@ export interface ClienteRespostaIA {
  */
 export interface ResumoProcessosIA {
   total_processos: number;
-  em_andamento: number;
-  arquivados: number;
   com_audiencia_proxima: number;
 }
 
@@ -63,10 +61,8 @@ export interface ResumoProcessosIA {
  */
 export interface InstanciaProcessoIA {
   vara: string;
-  status: string;
   data_inicio: string; // Formatado: DD/MM/YYYY
   proxima_audiencia: string | null; // Formatado: DD/MM/YYYY às HH:mm
-  arquivado_em: string | null; // Formatado: DD/MM/YYYY
 }
 
 /**
@@ -100,7 +96,6 @@ export interface ProcessoRespostaIA {
   tipo: string; // classe_judicial traduzida
   papel_cliente: string; // tipo_parte traduzido
   parte_contraria: string;
-  status_atual: string;
   tribunal: string; // TRT traduzido para nome completo
   sigilo: boolean;
   instancias: {

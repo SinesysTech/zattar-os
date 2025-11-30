@@ -660,6 +660,28 @@
               "path": ["api", "audiencias", "salas"]
             }
           }
+        },
+        {
+          "name": "Buscar audiências por CPF (Agente IA)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-service-api-key",
+                "value": "{{service_api_key}}",
+                "description": "API Key de serviço para autenticação"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/audiencias/cliente/cpf/:cpf",
+              "host": ["{{base_url}}"],
+              "path": ["api", "audiencias", "cliente", "cpf", ":cpf"],
+              "variable": [
+                { "key": "cpf", "value": "12345678901", "description": "CPF do cliente (com ou sem formatação)" }
+              ]
+            },
+            "description": "Busca todas as audiências de um cliente pelo CPF.\n\nOtimizado para consumo pelo Agente IA WhatsApp.\n\nCaracterísticas:\n- Busca apenas em clientes cadastrados\n- Dados sanitizados (sem IDs internos)\n- Formatos amigáveis (datas, nomes de tribunais)\n- Audiências ordenadas: futuras primeiro (mais próximas), depois passadas (mais recentes)\n\nResumo inclui: total_audiencias, futuras, realizadas, canceladas"
+          }
         }
       ]
     },

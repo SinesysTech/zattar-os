@@ -89,19 +89,9 @@ async function buscarTimelinesEmParalelo(
 function calcularResumo(
   processos: ProcessoRespostaIA[]
 ): ResumoProcessosIA {
-  let emAndamento = 0;
-  let arquivados = 0;
   let comAudienciaProxima = 0;
 
   for (const processo of processos) {
-    // Status atual
-    const statusLower = processo.status_atual.toLowerCase();
-    if (statusLower.includes('arquivado') || statusLower.includes('baixado')) {
-      arquivados++;
-    } else {
-      emAndamento++;
-    }
-
     // Audiência próxima (verificar em ambas instâncias)
     const temAudiencia =
       processo.instancias.primeiro_grau?.proxima_audiencia ||
@@ -113,8 +103,6 @@ function calcularResumo(
 
   return {
     total_processos: processos.length,
-    em_andamento: emAndamento,
-    arquivados,
     com_audiencia_proxima: comAudienciaProxima,
   };
 }
@@ -250,8 +238,7 @@ export async function buscarProcessosClientePorCpf(
     console.log(`✅ [BuscarProcessosCpf] Resposta montada com sucesso`, {
       cliente: cliente.nome,
       totalProcessos: resumo.total_processos,
-      emAndamento: resumo.em_andamento,
-      arquivados: resumo.arquivados,
+      comAudienciaProxima: resumo.com_audiencia_proxima,
     });
 
     return {

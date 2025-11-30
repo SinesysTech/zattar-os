@@ -1,27 +1,20 @@
 /**
  * @swagger
- * /api/acervo/cliente/cpf/{cpf}:
+ * /api/audiencias/cliente/cpf/{cpf}:
  *   get:
- *     summary: Buscar processos por CPF do cliente
+ *     summary: Buscar audiências por CPF do cliente
  *     description: |
- *       Retorna todos os processos relacionados a um cliente pelo CPF.
+ *       Retorna todas as audiências relacionadas a um cliente pelo CPF.
  *       Endpoint otimizado para consumo pelo Agente IA WhatsApp.
  *
  *       **Características:**
  *       - Busca apenas em clientes cadastrados (não em partes contrárias ou terceiros)
- *       - Inclui timeline completa de cada processo (movimentações e documentos)
  *       - Dados sanitizados (sem IDs internos ou campos de sistema)
  *       - Formatos amigáveis para humanos (datas, nomes de tribunais, etc.)
- *       - Processos agrupados por número (primeiro e segundo grau juntos)
- *
- *       **Sincronização Lazy de Timeline:**
- *       Se um processo não possui timeline, o endpoint dispara automaticamente
- *       a captura em background e retorna `timeline_status: "sincronizando"`.
- *       Nesse caso, o campo `timeline_mensagem` instrui o agente a aguardar
- *       1-2 minutos e consultar novamente.
+ *       - Audiências ordenadas: futuras primeiro (mais próximas), depois passadas (mais recentes)
  *
  *     tags:
- *       - Acervo
+ *       - Audiências
  *     security:
  *       - bearerAuth: []
  *       - apiKeyAuth: []
@@ -35,7 +28,7 @@
  *           example: "123.456.789-01"
  *     responses:
  *       200:
- *         description: Processos encontrados com sucesso
+ *         description: Audiências encontradas com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -59,23 +52,71 @@
  *                     resumo:
  *                       type: object
  *                       properties:
- *                         total_processos:
+ *                         total_audiencias:
  *                           type: integer
- *                           example: 3
- *                         com_audiencia_proxima:
+ *                           example: 5
+ *                         futuras:
+ *                           type: integer
+ *                           example: 2
+ *                         realizadas:
+ *                           type: integer
+ *                           example: 2
+ *                         canceladas:
  *                           type: integer
  *                           example: 1
- *                     processos:
+ *                     audiencias:
  *                       type: array
  *                       items:
  *                         type: object
  *                         properties:
- *                           numero:
+ *                           numero_processo:
  *                             type: string
  *                             example: "0001234-56.2024.5.03.0001"
  *                           tipo:
  *                             type: string
- *                             example: "Ação Trabalhista - Rito Ordinário"
+ *                             example: "Audiência de Instrução"
+ *                           data:
+ *                             type: string
+ *                             example: "15/03/2025"
+ *                           horario:
+ *                             type: string
+ *                             example: "14:00 - 15:00"
+ *                           modalidade:
+ *                             type: string
+ *                             enum: [Virtual, Presencial, Híbrida]
+ *                             example: "Virtual"
+ *                           status:
+ *                             type: string
+ *                             example: "Designada"
+ *                           local:
+ *                             type: object
+ *                             properties:
+ *                               tipo:
+ *                                 type: string
+ *                                 enum: [virtual, presencial, hibrido]
+ *                               url_virtual:
+ *                                 type: string
+ *                                 nullable: true
+ *                                 example: "https://zoom.us/j/123456789"
+ *                               endereco:
+ *                                 type: string
+ *                                 nullable: true
+ *                               sala:
+ *                                 type: string
+ *                                 nullable: true
+ *                               presenca_hibrida:
+ *                                 type: string
+ *                                 nullable: true
+ *                                 example: "Advogado comparece presencialmente"
+ *                           partes:
+ *                             type: object
+ *                             properties:
+ *                               polo_ativo:
+ *                                 type: string
+ *                                 example: "João da Silva"
+ *                               polo_passivo:
+ *                                 type: string
+ *                                 example: "Empresa XYZ Ltda"
  *                           papel_cliente:
  *                             type: string
  *                             example: "Reclamante"
@@ -85,70 +126,15 @@
  *                           tribunal:
  *                             type: string
  *                             example: "TRT da 3ª Região (MG)"
+ *                           vara:
+ *                             type: string
+ *                             example: "1ª Vara do Trabalho de Belo Horizonte"
  *                           sigilo:
  *                             type: boolean
  *                             example: false
- *                           instancias:
- *                             type: object
- *                             properties:
- *                               primeiro_grau:
- *                                 type: object
- *                                 nullable: true
- *                                 properties:
- *                                   vara:
- *                                     type: string
- *                                     example: "1ª Vara do Trabalho de Belo Horizonte"
- *                                   data_inicio:
- *                                     type: string
- *                                     example: "10/01/2024"
- *                                   proxima_audiencia:
- *                                     type: string
- *                                     nullable: true
- *                                     example: "15/03/2025 às 14:00"
- *                               segundo_grau:
- *                                 type: object
- *                                 nullable: true
- *                           timeline:
- *                             type: array
- *                             items:
- *                               type: object
- *                               properties:
- *                                 data:
- *                                   type: string
- *                                   example: "20/11/2024"
- *                                 evento:
- *                                   type: string
- *                                   example: "Audiência designada"
- *                                 descricao:
- *                                   type: string
- *                                   example: "Audiência de instrução designada para 15/03/2025"
- *                                 tem_documento:
- *                                   type: boolean
- *                                   example: false
- *                           timeline_status:
- *                             type: string
- *                             enum: [disponivel, sincronizando, indisponivel]
- *                             description: |
- *                               Status da timeline:
- *                               - `disponivel`: Timeline carregada com sucesso
- *                               - `sincronizando`: Captura em andamento, aguarde 1-2 min
- *                               - `indisponivel`: Não foi possível capturar
- *                             example: "disponivel"
- *                           timeline_mensagem:
+ *                           observacoes:
  *                             type: string
  *                             nullable: true
- *                             description: Mensagem para o agente quando timeline não disponível
- *                             example: "A timeline deste processo está sendo sincronizada. Por favor, aguarde 1-2 minutos e consulte novamente."
- *                           ultima_movimentacao:
- *                             type: object
- *                             nullable: true
- *                             properties:
- *                               data:
- *                                 type: string
- *                                 example: "20/11/2024"
- *                               evento:
- *                                 type: string
- *                                 example: "Audiência designada"
  *       400:
  *         description: CPF inválido
  *         content:
@@ -173,7 +159,7 @@
  *                   type: string
  *                   example: "Unauthorized"
  *       404:
- *         description: Nenhum processo encontrado
+ *         description: Cliente não encontrado
  *         content:
  *           application/json:
  *             schema:
@@ -184,7 +170,7 @@
  *                   example: false
  *                 error:
  *                   type: string
- *                   example: "Nenhum processo encontrado para este CPF."
+ *                   example: "Cliente não encontrado para este CPF."
  *       500:
  *         description: Erro interno do servidor
  *         content:
@@ -197,12 +183,12 @@
  *                   example: false
  *                 error:
  *                   type: string
- *                   example: "Erro interno ao buscar processos"
+ *                   example: "Erro interno ao buscar audiências"
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { buscarProcessosClientePorCpf } from '@/backend/acervo/services/buscar-processos-cliente-cpf.service';
+import { buscarAudienciasClientePorCpf } from '@/backend/audiencias/services/buscar-audiencias-cliente-cpf.service';
 
 interface RouteParams {
   params: Promise<{
@@ -234,8 +220,8 @@ export async function GET(
       );
     }
 
-    // Buscar processos
-    const resultado = await buscarProcessosClientePorCpf(cpf);
+    // Buscar audiências
+    const resultado = await buscarAudienciasClientePorCpf(cpf);
 
     // Determinar status HTTP baseado no resultado
     if (resultado.success === false) {
@@ -244,8 +230,8 @@ export async function GET(
       if (errorMessage.includes('inválido')) {
         return NextResponse.json(resultado, { status: 400 });
       }
-      // Nenhum processo encontrado
-      if (errorMessage.includes('Nenhum processo')) {
+      // Cliente não encontrado
+      if (errorMessage.includes('não encontrado')) {
         return NextResponse.json(resultado, { status: 404 });
       }
       // Erro genérico
@@ -255,7 +241,7 @@ export async function GET(
     return NextResponse.json(resultado);
 
   } catch (error) {
-    console.error('❌ [API] Erro em /api/acervo/cliente/cpf:', error);
+    console.error('❌ [API] Erro em /api/audiencias/cliente/cpf:', error);
     return NextResponse.json(
       {
         success: false,
