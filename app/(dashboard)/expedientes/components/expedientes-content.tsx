@@ -124,9 +124,10 @@ const getTRTColorClass = (trt: string): string => {
 /**
  * Retorna a classe CSS de cor para badge do grau
  */
-const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
+const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior'): string => {
   const grauColors: Record<string, string> = {
     'primeiro_grau': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
+    'tribunal_superior': 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
     'segundo_grau': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
   };
   return grauColors[grau] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
@@ -135,8 +136,11 @@ const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
 /**
  * Formata o grau para exibição
  */
-const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
-  return grau === 'primeiro_grau' ? '1º Grau' : '2º Grau';
+const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior'): string => {
+  if (grau === 'primeiro_grau') return '1º Grau';
+  if (grau === 'segundo_grau') return '2º Grau';
+  if (grau === 'tribunal_superior') return 'Tribunal Superior';
+  return grau;
 };
 
 /**
