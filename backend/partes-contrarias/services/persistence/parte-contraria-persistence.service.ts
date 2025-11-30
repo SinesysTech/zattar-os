@@ -4,16 +4,18 @@
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type {
   ParteContraria,
-  ParteContrariaComEndereco,
+} from '@/types/domain/partes';
+import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
+import type {
   CriarParteContrariaParams,
   CriarParteContrariaPFParams,
   CriarParteContrariaPJParams,
   AtualizarParteContrariaParams,
   ListarPartesContrariasParams,
   ListarPartesContrariasResult,
-} from '@/backend/types/partes/partes-contrarias-types';
+  ParteContrariaComEndereco,
+} from '@/types/contracts/partes';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
-import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
 
 /**
  * Parte contrária com processos relacionados
@@ -594,6 +596,32 @@ export async function buscarParteContrariaPorCNPJ(cnpj: string): Promise<ParteCo
   }
 
   return data ? converterParaParteContraria(data) : null;
+}
+
+/**
+ * Busca partes contrárias por nome (busca parcial com ILIKE)
+ * Retorna um array com todas as partes contrárias que contêm o nome buscado
+ */
+export async function buscarPartesContrariasPorNome(nome: string): Promise<ParteContraria[]> {
+  const supabase = createServiceClient();
+  const nomeBusca = nome.trim();
+
+  if (!nomeBusca) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('partes_contrarias')
+    .select('*')
+    .ilike('nome', `%${nomeBusca}%`)
+    .order('nome', { ascending: true })
+    .limit(100); // Limitar a 100 resultados para evitar sobrecarga
+
+  if (error) {
+    throw new Error(`Erro ao buscar partes contrárias por nome: ${error.message}`);
+  }
+
+  return (data || []).map(converterParaParteContraria);
 }
 
 /**

@@ -654,6 +654,32 @@ export async function buscarClientePorCNPJ(cnpj: string): Promise<Cliente | null
 }
 
 /**
+ * Busca clientes por nome (busca parcial com ILIKE)
+ * Retorna um array com todos os clientes que contêm o nome buscado
+ */
+export async function buscarClientesPorNome(nome: string): Promise<Cliente[]> {
+  const supabase = createServiceClient();
+  const nomeBusca = nome.trim();
+
+  if (!nomeBusca) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('clientes')
+    .select('*')
+    .ilike('nome', `%${nomeBusca}%`)
+    .order('nome', { ascending: true })
+    .limit(100); // Limitar a 100 resultados para evitar sobrecarga
+
+  if (error) {
+    throw new Error(`Erro ao buscar clientes por nome: ${error.message}`);
+  }
+
+  return (data || []).map(converterParaCliente);
+}
+
+/**
  * Busca um cliente por documento (CPF ou CNPJ)
  */
 export async function buscarClientePorDocumento(documento: string, tipo: 'cpf' | 'cnpj'): Promise<Cliente | null> {

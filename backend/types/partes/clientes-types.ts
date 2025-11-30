@@ -37,7 +37,7 @@ import type { GrauProcesso } from '@/types/domain/common';
 export type GrauCliente = GrauProcesso;
 
 // Tipos adicionais específicos do backend (com relacionamentos)
-import type { Endereco } from './enderecos-types';
+import type { Endereco } from '@/types/domain/enderecos';
 import type { ClientePessoaFisica, ClientePessoaJuridica } from '@/types/domain/partes';
 
 /**

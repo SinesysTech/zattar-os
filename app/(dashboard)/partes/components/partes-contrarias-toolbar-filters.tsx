@@ -1,9 +1,10 @@
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
+import type { TipoPessoa, SituacaoPJE } from '@/types/domain/common';
 
 export interface PartesContrariasFilters {
-  tipo_pessoa?: 'pf' | 'pj';
-  situacao?: 'A' | 'I';
+  tipo_pessoa?: TipoPessoa;
+  situacao?: SituacaoPJE;
 }
 
 export const PARTES_CONTRARIAS_FILTER_CONFIGS: FilterConfig[] = [
@@ -117,9 +118,9 @@ export function parsePartesContrariasFilters(selectedFilters: string[]): PartesC
 
       if (matchedConfig && matchedId && value && matchedConfig.type === 'select') {
         if (matchedId === 'tipo_pessoa') {
-          filters.tipo_pessoa = value as 'pf' | 'pj';
+          filters.tipo_pessoa = value as TipoPessoa;
         } else if (matchedId === 'situacao') {
-          filters.situacao = value as 'A' | 'I';
+          filters.situacao = value as SituacaoPJE;
         }
       }
     } else {

@@ -9,9 +9,9 @@
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import type { Representante } from '@/types/domain/representantes';
+import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
 import type {
-  Representante,
-  RepresentanteComEndereco,
   CriarRepresentanteParams,
   AtualizarRepresentanteParams,
   ListarRepresentantesParams,
@@ -20,9 +20,10 @@ import type {
   UpsertRepresentantePorCPFParams,
   BuscarRepresentantePorCPFParams,
   OperacaoRepresentanteResult,
-} from '@/backend/types/representantes/representantes-types';
-import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
-import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
+  RepresentanteComEndereco,
+  RepresentanteComProcessos,
+  RepresentanteComEnderecoEProcessos,
+} from '@/types/contracts/representantes';
 
 /**
  * Representante com processos relacionados
@@ -158,12 +159,6 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
   
   const dados_anteriores = data.dados_anteriores as Record<string, unknown> | null;
 
-  // Convert date strings to Date or null
-  const parseDate = (val: unknown): Date | null => {
-    if (!val) return null;
-    if (val instanceof Date) return val;
-    return new Date(val as string);
-  };
 
   return {
     id: data.id as number,
@@ -184,8 +179,8 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
     numero_comercial: data.numero_comercial as string | null,
     endereco_id: data.endereco_id as number | null,
     dados_anteriores,
-    created_at: parseDate(data.created_at),
-    updated_at: parseDate(data.updated_at),
+    created_at: data.created_at as string,
+    updated_at: data.updated_at as string,
   };
 }
 
@@ -390,6 +385,48 @@ export async function buscarRepresentantePorCPF(cpf: string): Promise<Representa
   } catch (error) {
     console.error('Erro ao buscar representante por CPF:', error);
     return null;
+  }
+}
+
+/**
+ * Buscar representante por CNPJ
+ * NOTA: Representantes são sempre pessoas físicas (advogados), portanto não possuem CNPJ.
+ * Esta função sempre retorna null e existe apenas para manter consistência de interface.
+ */
+export async function buscarRepresentantePorCNPJ(_cnpj: string): Promise<Representante | null> {
+  // Representantes são sempre PF (advogados), não têm CNPJ
+  return null;
+}
+
+/**
+ * Busca representantes por nome (busca parcial com ILIKE)
+ * Retorna um array com todos os representantes que contêm o nome buscado
+ */
+export async function buscarRepresentantesPorNome(nome: string): Promise<Representante[]> {
+  try {
+    const supabase = createServiceClient();
+    const nomeBusca = nome.trim();
+
+    if (!nomeBusca) {
+      return [];
+    }
+
+    const { data, error } = await supabase
+      .from('representantes')
+      .select('*')
+      .ilike('nome', `%${nomeBusca}%`)
+      .order('nome', { ascending: true })
+      .limit(100); // Limitar a 100 resultados para evitar sobrecarga
+
+    if (error || !data) {
+      console.error('Erro ao buscar representantes por nome:', error);
+      return [];
+    }
+
+    return data.map(converterParaRepresentante);
+  } catch (error) {
+    console.error('Erro ao buscar representantes por nome:', error);
+    return [];
   }
 }
 

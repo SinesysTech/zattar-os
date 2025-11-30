@@ -10,11 +10,13 @@
 // Tipos
 // ============================================================================
 
+import type { GrauProcesso } from '@/types/domain/common';
+
 export interface ProcessoParaSincronizar {
   processoId: string;      // id_pje do acervo (ID no PJE)
   numeroProcesso: string;
   trt: string;
-  grau: string;
+  grau: GrauProcesso;
   advogadoId: number;
 }
 

@@ -69,6 +69,18 @@ export interface ListarAudienciasResult {
 
 /**
  * Parâmetros para a operação de criar uma nova audiência manualmente.
+ *
+ * **Separação de Responsabilidades:**
+ * Este contrato contém tanto dados de domínio quanto de infraestrutura.
+ * Os serviços de backend devem fazer o mapeamento explícito:
+ *
+ * - **Dados de Domínio** (persistidos na entidade `Audiencia`):
+ *   - `processo_id`, `advogado_id`, `data_inicio`, `data_fim`
+ *   - `tipo_audiencia_id`, `observacoes`, `responsavel_id`
+ *
+ * - **Dados de Infraestrutura** (persistidos via `AudienciaInfra`):
+ *   - `sala_audiencia_id`, `url_audiencia_virtual`, `endereco_presencial`
+ *   - Estes campos não fazem parte da entidade de domínio pura
  */
 export interface CriarAudienciaParams {
   processo_id: number;
