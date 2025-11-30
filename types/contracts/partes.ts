@@ -182,8 +182,12 @@ export interface ListarClientesParams {
   pagina?: number;
   limite?: number;
   tipo_pessoa?: TipoPessoa;
+  trt?: string;
   grau?: GrauProcesso;
   busca?: string;
+  nome?: string;
+  cpf?: string;
+  cnpj?: string;
   ordenar_por?: OrdenarPorCliente;
   ordem?: OrdemCliente;
   numero_processo?: string;
@@ -379,8 +383,12 @@ export interface ListarPartesContrariasParams {
   pagina?: number;
   limite?: number;
   tipo_pessoa?: TipoPessoa;
+  trt?: string;
   grau?: GrauProcesso;
   busca?: string;
+  nome?: string;
+  cpf?: string;
+  cnpj?: string;
   ordenar_por?: OrdenarPorParteContraria;
   ordem?: OrdemParteContraria;
   numero_processo?: string;
@@ -595,6 +603,9 @@ export interface ListarTerceirosParams {
   tipo_parte?: TipoParteTerceiro;
   polo?: PoloTerceiro;
   busca?: string;
+  nome?: string;
+  cpf?: string;
+  cnpj?: string;
   ordenar_por?: OrdenarPorTerceiro;
   ordem?: OrdemTerceiro;
 }
@@ -612,4 +623,22 @@ export interface UpsertTerceiroPorCNPJParams extends CriarTerceiroPJParams {
   cnpj: string;
 }
 export type UpsertTerceiroPorDocumentoParams = UpsertTerceiroPorCPFParams | UpsertTerceiroPorCNPJParams;
+export interface UpsertTerceiroPorIdPessoaParams {
+  id_pessoa_pje: number;
+  tipo_parte: TipoParteTerceiro;
+  polo: PoloTerceiro;
+  tipo_pessoa: 'pf' | 'pj';
+  nome: string;
+  cpf?: string;
+  cnpj?: string;
+  nome_fantasia?: string;
+  emails?: string[];
+  ddd_celular?: string;
+  numero_celular?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+  ddd_comercial?: string;
+  numero_comercial?: string;
+  observacoes?: string;
+}
 // #endregion
