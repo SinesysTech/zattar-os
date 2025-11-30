@@ -1,5 +1,8 @@
 import type { TipoPessoa } from './common';
 
+// Re-exporta TipoPessoa para uso por outros módulos de domínio
+export type { TipoPessoa } from './common';
+
 // #region Tipos de Cliente
 
 /**

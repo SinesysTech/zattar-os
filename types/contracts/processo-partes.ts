@@ -113,3 +113,25 @@ export interface BuscarProcessosPorEntidadeParams {
   tipo_entidade: EntidadeTipoProcessoParte;
   entidade_id: number;
 }
+
+/**
+ * Parâmetros para vincular uma parte a um processo.
+ */
+export interface VincularParteProcessoParams {
+  processo_id: number;
+  tipo_entidade: EntidadeTipoProcessoParte;
+  entidade_id: number;
+  tipo_parte: TipoParteProcesso;
+  polo: PoloProcessoParte;
+  principal?: boolean;
+  ordem?: number;
+}
+
+/**
+ * Parâmetros para desvincular uma parte de um processo.
+ */
+export interface DesvincularParteProcessoParams {
+  processo_id: number;
+  tipo_entidade: EntidadeTipoProcessoParte;
+  entidade_id: number;
+}
