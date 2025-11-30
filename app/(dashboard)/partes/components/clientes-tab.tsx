@@ -11,10 +11,14 @@ import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { Eye, Pencil } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Eye, Pencil, Copy, Check } from 'lucide-react';
 import { useClientes } from '@/app/_lib/hooks/use-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Cliente } from '@/app/_lib/types';
@@ -25,7 +29,6 @@ import {
   formatarCnpj,
   formatarTelefone,
   formatarNome,
-  formatarTipoPessoa,
   formatarEnderecoCompleto,
 } from '@/app/_lib/utils/format-clientes';
 import {
@@ -41,6 +44,83 @@ import {
 type ClienteComProcessos = Cliente & {
   processos_relacionados?: ProcessoRelacionado[];
 };
+
+/**
+ * Calcula a idade a partir da data de nascimento
+ */
+function calcularIdade(dataNascimento: string | null): number | null {
+  if (!dataNascimento) return null;
+  try {
+    const nascimento = new Date(dataNascimento);
+    const hoje = new Date();
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mesAtual = hoje.getMonth();
+    const mesNascimento = nascimento.getMonth();
+    if (mesAtual < mesNascimento || (mesAtual === mesNascimento && hoje.getDate() < nascimento.getDate())) {
+      idade--;
+    }
+    return idade;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Formata data para exibição (DD/MM/YYYY)
+ */
+function formatarData(dataISO: string | null): string {
+  if (!dataISO) return '';
+  try {
+    const data = new Date(dataISO);
+    return data.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Componente de botão para copiar texto
+ */
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = React.useState(false);
+
+  const handleCopy = React.useCallback(async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Erro ao copiar:', err);
+    }
+  }, [text]);
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="inline-flex items-center justify-center h-5 w-5 rounded hover:bg-muted/50 transition-colors opacity-0 group-hover:opacity-100"
+        >
+          {copied ? (
+            <Check className="h-3 w-3 text-green-500" />
+          ) : (
+            <Copy className="h-3 w-3 text-muted-foreground" />
+          )}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top">
+        {copied ? 'Copiado!' : label}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
 
 /**
  * Define as colunas da tabela de clientes
