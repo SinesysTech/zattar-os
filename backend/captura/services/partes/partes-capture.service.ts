@@ -968,8 +968,10 @@ async function processarParte(
 
 /**
  * Normaliza documento removendo máscara (pontos, traços, barras)
+ * Retorna string vazia se documento for null/undefined (ex: MPT, União Federal)
  */
-function normalizarDocumento(documento: string): string {
+function normalizarDocumento(documento: string | null | undefined): string {
+  if (!documento) return '';
   return documento.replace(/[.\-/]/g, '');
 }
 
