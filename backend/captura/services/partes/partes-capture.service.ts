@@ -720,10 +720,21 @@ async function processarParte(
   // Mescla dados comuns com campos extras
   const dadosCompletos = { ...dadosComuns, ...camposExtras };
 
+  // Validar se o documento tem comprimento correto (CPF=11, CNPJ=14)
+  const temDocumentoValido = documentoNormalizado &&
+    ((isPessoaFisica && documentoNormalizado.length === 11) ||
+     (!isPessoaFisica && documentoNormalizado.length === 14));
+
   try {
     let entidadeId: number | null = null;
 
     if (tipoParte === 'cliente') {
+      // Cliente sem documento válido não pode ser processado
+      if (!temDocumentoValido) {
+        console.warn(`[PARTES] Cliente "${parte.nome}" sem documento válido (${isPessoaFisica ? 'CPF' : 'CNPJ'}) - ignorando`);
+        return null;
+      }
+
       // Buscar entidade existente por CPF/CNPJ
       const entidadeExistente = isPessoaFisica
         ? await buscarClientePorCPF(documentoNormalizado)
@@ -778,6 +789,12 @@ async function processarParte(
         }
       }
     } else if (tipoParte === 'parte_contraria') {
+      // Parte contrária sem documento válido não pode ser processada
+      if (!temDocumentoValido) {
+        console.warn(`[PARTES] Parte contrária "${parte.nome}" sem documento válido (${isPessoaFisica ? 'CPF' : 'CNPJ'}) - ignorando`);
+        return null;
+      }
+
       // Buscar entidade existente por CPF/CNPJ
       const entidadeExistente = isPessoaFisica
         ? await buscarParteContrariaPorCPF(documentoNormalizado)
@@ -832,10 +849,6 @@ async function processarParte(
       }
     } else {
       // TERCEIROS: Tratamento especial para partes sem documento válido (ex: Ministério Público)
-      const temDocumentoValido = documentoNormalizado && 
-        ((isPessoaFisica && documentoNormalizado.length === 11) || 
-         (!isPessoaFisica && documentoNormalizado.length === 14));
-
       if (temDocumentoValido) {
         // Buscar entidade existente por CPF/CNPJ
         const entidadeExistente = isPessoaFisica
