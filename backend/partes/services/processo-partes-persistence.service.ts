@@ -6,6 +6,12 @@
 import { createClient } from '@/backend/utils/supabase/server-client';
 import type {
   ProcessoParte,
+  EntidadeTipoProcessoParte,
+  TipoParteProcesso,
+  PoloProcessoParte,
+} from '@/types/domain/processo-partes';
+import type { GrauProcesso } from '@/types/domain/common';
+import type {
   CriarProcessoParteParams,
   AtualizarProcessoParteParams,
   ListarProcessoPartesParams,
@@ -14,11 +20,7 @@ import type {
   BuscarProcessosPorEntidadeParams,
   VincularParteProcessoParams,
   DesvincularParteProcessoParams,
-  EntidadeTipoProcessoParte,
-  TipoParteProcesso,
-  PoloProcessoParte,
-  GrauProcessoParte,
-} from '@/backend/types/partes/processo-partes-types';
+} from '@/types/contracts/processo-partes';
 
 // ============================================================================
 // Type Converter
@@ -46,7 +48,7 @@ export function converterParaProcessoParte(data: Record<string, unknown>): Proce
     endereco_desconhecido: data.endereco_desconhecido as boolean | null,
     dados_pje_completo: data.dados_pje_completo as Record<string, unknown> | null,
     trt: data.trt as string,
-    grau: data.grau as GrauProcessoParte,
+    grau: data.grau as GrauProcesso,
     numero_processo: data.numero_processo as string,
     ultima_atualizacao_pje: data.ultima_atualizacao_pje as string | null,
     created_at: data.created_at as string,

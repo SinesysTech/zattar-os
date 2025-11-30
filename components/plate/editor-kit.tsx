@@ -9,8 +9,8 @@ import { AutoformatKit } from '@/components/plate/autoformat-kit';
 import { BasicBlocksKit } from '@/components/plate/basic-blocks-kit';
 import { BasicMarksKit } from '@/components/plate/basic-marks-kit';
 import { BlockMenuKit } from '@/components/plate/block-menu-kit';
-import { BlockPlaceholderKit } from '@/components/block-placeholder-kit';
-import { CalloutKit } from '@/components/callout-kit';
+import { BlockPlaceholderKit } from '@/components/plate/block-placeholder-kit';
+import { CalloutKit } from '@/components/plate/callout-kit';
 import { CodeBlockKit } from '@/components/plate/code-block-kit';
 import { ColumnKit } from '@/components/plate/column-kit';
 import { CommentKit } from '@/components/plate/comment-kit';
@@ -36,7 +36,7 @@ import { SlashKit } from '@/components/plate/slash-kit';
 import { SuggestionKit } from '@/components/plate/suggestion-kit';
 import { TableKit } from '@/components/plate/table-kit';
 import { TocKit } from '@/components/plate/toc-kit';
-import { ToggleKit } from '@/components/toggle-kit';
+import { ToggleKit } from '@/components/plate/toggle-kit';
 
 export const EditorKit = [
   ...CopilotKit,

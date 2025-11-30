@@ -25,19 +25,8 @@ import type {
   RepresentanteComEnderecoEProcessos,
 } from '@/types/contracts/representantes';
 
-/**
- * Representante com processos relacionados
- */
-export interface RepresentanteComProcessos extends Representante {
-  processos_relacionados: ProcessoRelacionado[];
-}
 
-/**
- * Representante com endereço e processos relacionados
- */
-export interface RepresentanteComEnderecoEProcessos extends RepresentanteComEndereco {
-  processos_relacionados: ProcessoRelacionado[];
-}
+import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
 
 // ============================================================================
 // Validation Functions

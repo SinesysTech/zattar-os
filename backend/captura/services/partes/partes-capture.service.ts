@@ -9,10 +9,9 @@ import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, busc
 import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
 import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/backend/representantes/services/representantes-persistence.service';
 import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
-import type { CriarClientePFParams, CriarClientePJParams, CriarParteContrariaPFParams, CriarParteContrariaPJParams, CriarTerceiroPFParams, CriarTerceiroPJParams, UpsertTerceiroPorCPFParams, UpsertTerceiroPorCNPJParams, TipoParteProcesso, PoloProcessoParte, EntidadeTipoEndereco, SituacaoEndereco } from '@/types/contracts/partes';
+import type { CriarClientePFParams, CriarClientePJParams, CriarParteContrariaPFParams, CriarParteContrariaPJParams, CriarTerceiroPFParams, CriarTerceiroPJParams, UpsertTerceiroPorCPFParams, UpsertTerceiroPorCNPJParams } from '@/types/contracts/partes';
 import type { GrauProcesso } from '@/types/domain/common';
-import type { ClassificacaoEndereco } from '@/types/domain/enderecos';
-
+import type { ClassificacaoEndereco, EntidadeTipoEndereco, SituacaoEndereco } from '@/types/domain/enderecos';
 import type { SituacaoOAB, TipoRepresentante, Polo } from '@/types/domain/representantes';
 import { validarPartePJE, validarPartesArray } from './schemas';
 import getLogger, { withCorrelationId } from '@/backend/utils/logger';
@@ -20,6 +19,7 @@ import { withRetry } from '@/backend/utils/retry';
 import { CAPTURA_CONFIG } from './config';
 import { ValidationError, PersistenceError, extractErrorInfo } from './errors';
 import { upsertCadastroPJE, buscarEntidadePorIdPessoaPJE } from '@/backend/cadastros-pje/services/persistence/cadastro-pje-persistence.service';
+import type { TipoParteProcesso, PoloProcessoParte } from '@/types/domain/processo-partes';
 import { TIPOS_PARTE_PROCESSO_VALIDOS } from '@/types/domain/processo-partes';
 
 // ============================================================================
@@ -103,6 +103,9 @@ interface EnderecoPJE {
   idUsuarioCadastrador?: number;
   dtAlteracao?: string;
 }
+
+/** Campos mínimos para endereço válido (pelo menos um deve estar presente) */
+const CAMPOS_MINIMOS_ENDERECO = ['logradouro', 'municipio', 'cep'] as const;
 
 /**
  * Função auxiliar para validar endereço do PJE

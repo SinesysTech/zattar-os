@@ -72,7 +72,7 @@ import { NextResponse } from 'next/server';
 import { type SlateEditor, createSlateEditor, nanoid } from 'platejs';
 import { z } from 'zod';
 
-import { BaseEditorKit } from '@/components/ui/editor-base-kit';
+import { BaseEditorKit } from '@/components/plate/editor-base-kit';
 import { markdownJoinerTransform } from '@/app/_lib/markdown-joiner-transform';
 
 import {

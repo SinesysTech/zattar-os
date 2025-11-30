@@ -7,6 +7,23 @@ import type {
 } from '@/types/domain/partes';
 import type { GrauProcesso, TipoPessoa } from '@/types/domain/common';
 
+// Re-exporta tipos de domínio usados frequentemente com contratos
+export type {
+  TipoParteTerceiro,
+  PoloTerceiro,
+} from '@/types/domain/partes';
+
+export type {
+  EntidadeTipoProcessoParte,
+  TipoParteProcesso,
+  PoloProcessoParte,
+} from '@/types/domain/processo-partes';
+
+export type {
+  EntidadeTipoEndereco,
+  SituacaoEndereco,
+} from '@/types/domain/enderecos';
+
 // #region Contratos de Cliente
 export interface CriarClientePFParams {
   tipo_pessoa: 'pf';
@@ -206,6 +223,11 @@ export interface UpsertClientePorCNPJParams extends CriarClientePJParams {
   cnpj: string;
 }
 export type UpsertClientePorDocumentoParams = UpsertClientePorCPFParams | UpsertClientePorCNPJParams;
+
+import type { Endereco } from '@/types/domain/enderecos';
+export interface ClienteComEndereco extends Cliente {
+  endereco?: Endereco | null;
+}
 // #endregion
 
 // #region Contratos de Parte Contrária
@@ -407,7 +429,8 @@ export interface UpsertParteContrariaPorCNPJParams extends CriarParteContrariaPJ
   cnpj: string;
 }
 export type UpsertParteContrariaPorDocumentoParams = UpsertParteContrariaPorCPFParams | UpsertParteContrariaPorCNPJParams;
-// #endregion
+
+
 
 // #region Contratos de Terceiro
 export interface CriarTerceiroPFParams {

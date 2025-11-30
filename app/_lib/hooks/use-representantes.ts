@@ -11,11 +11,12 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type {
   RepresentantesApiResponse,
   BuscarRepresentantesParams,
+  RepresentanteComProcessos,
 } from '@/app/_lib/types/representantes';
-import type { Representante } from '@/backend/types/representantes/representantes-types';
+import type { Representante } from '@/types/domain/representantes';
 
-interface UseRepresentantesResult {
-  representantes: Representante[];
+interface UseRepresentantesResult<T extends Representante = Representante> {
+  representantes: T[];
   paginacao: {
     pagina: number;
     limite: number;
@@ -30,10 +31,10 @@ interface UseRepresentantesResult {
 /**
  * Hook para buscar representantes
  */
-export const useRepresentantes = (
+export const useRepresentantes = <T extends Representante = Representante>(
   params: BuscarRepresentantesParams = {}
-): UseRepresentantesResult => {
-  const [representantes, setRepresentantes] = useState<Representante[]>([]);
+): UseRepresentantesResult<T> => {
+  const [representantes, setRepresentantes] = useState<T[]>([]);
   const [paginacao, setPaginacao] = useState<UseRepresentantesResult['paginacao']>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -103,7 +104,7 @@ export const useRepresentantes = (
         throw new Error('Resposta da API indicou falha');
       }
 
-      setRepresentantes(data.data.representantes);
+      setRepresentantes(data.data.representantes as T[]);
       setPaginacao({
         pagina: data.data.pagina,
         limite: data.data.limite,

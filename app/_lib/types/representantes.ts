@@ -1,45 +1,49 @@
-/**
- * Tipos para integração com API de representantes no frontend
- * 
- * NOTA: Após a refatoração do modelo, representantes são sempre advogados
- * (pessoas físicas) com CPF único.
- */
-
-import type {
-  Representante,
-  ListarRepresentantesParams,
-} from '@/backend/types/representantes/representantes-types';
+import type { Representante } from '@/types/domain/representantes';
+import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
+import type { ListarRepresentantesResult, OrdenarPorRepresentante, OrdemRepresentante } from '@/types/contracts/representantes';
+import type { SituacaoOAB } from '@/types/domain/representantes';
 
 /**
  * Resposta da API de representantes (formato padrão)
  */
 export interface RepresentantesApiResponse {
   success: boolean;
-  data: {
-    representantes: Representante[];
-    total: number;
-    pagina: number;
-    limite: number;
-    totalPaginas: number;
-  };
+  data: ListarRepresentantesResult;
+}
+
+/**
+ * Representante com processos relacionados (estendido para uso no frontend)
+ */
+export type RepresentanteComProcessos = Representante & {
+  processos_relacionados?: ProcessoRelacionado[];
+};
+
+/**
+ * Representante com endereço e processos relacionados (estendido para uso no frontend)
+ */
+export type RepresentanteComEnderecoEProcessos = Representante & {
+  endereco?: any; // Temporário, ajustar para tipo Endereco quando disponível
+  processos_relacionados?: ProcessoRelacionado[];
 }
 
 /**
  * Parâmetros para buscar representantes (frontend)
  */
-export interface BuscarRepresentantesParams extends Partial<ListarRepresentantesParams> {
+export interface BuscarRepresentantesParams {
   pagina?: number;
   limite?: number;
   busca?: string;
   numero_oab?: string;
-  situacao_oab?: 'REGULAR' | 'SUSPENSO' | 'CANCELADO' | 'LICENCIADO' | 'FALECIDO';
+  situacao_oab?: string;
   incluirEndereco?: boolean;
   incluirProcessos?: boolean;
+  ordenar_por?: OrdenarPorRepresentante;
+  ordem?: OrdemRepresentante;
 }
 
-/**
- * Estado de filtros da página de representantes
- */
+// TODO: Definir RepresentanteFormData se necessário para formulários
+// export interface RepresentanteFormData {}
+
 export interface RepresentantesFilters {
-  situacao_oab?: 'REGULAR' | 'SUSPENSO' | 'CANCELADO' | 'LICENCIADO' | 'FALECIDO';
+  situacao_oab?: SituacaoOAB;
 }

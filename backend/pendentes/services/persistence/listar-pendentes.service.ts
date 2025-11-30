@@ -476,3 +476,51 @@ export async function listarPendentesAgrupado(
   await setCached(cacheKey, result);
   return result;
 }
+
+/**
+ * Buscar pendentes de manifestação por CPF do cliente
+ * Retorna todos os pendentes dos processos relacionados ao cliente com o CPF informado
+ */
+export async function buscarPendentesPorClienteCPF(cpf: string): Promise<PendenteManifestacao[]> {
+  const supabase = createServiceClient();
+
+  // Normalizar CPF (remover formatação)
+  const cpfNormalizado = cpf.replace(/\D/g, '');
+
+  if (!cpfNormalizado || cpfNormalizado.length !== 11) {
+    throw new Error('CPF inválido. Deve conter 11 dígitos.');
+  }
+
+  // Buscar pendentes através da relação:
+  // clientes -> processo_partes -> processos -> pendentes_manifestacao
+  const { data, error } = await supabase
+    .from('pendentes_manifestacao')
+    .select(`
+      *,
+      processo:processos!inner(
+        id,
+        numero_processo,
+        processo_partes!inner(
+          id,
+          tipo_entidade,
+          entidade_id
+        )
+      )
+    `)
+    .eq('processo.processo_partes.tipo_entidade', 'cliente')
+    .in('processo.processo_partes.entidade_id',
+      supabase
+        .from('clientes')
+        .select('id')
+        .eq('cpf', cpfNormalizado)
+    )
+    .order('data_prazo_legal_parte', { ascending: true, nullsFirst: true })
+    .limit(100);
+
+  if (error) {
+    console.error('Erro ao buscar pendentes por CPF do cliente:', error);
+    throw new Error(`Falha ao buscar pendentes por CPF: ${error.message}`);
+  }
+
+  return (data || []).map(converterParaPendente);
+}

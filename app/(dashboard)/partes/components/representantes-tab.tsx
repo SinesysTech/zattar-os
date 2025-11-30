@@ -411,7 +411,7 @@ export function RepresentantesTab() {
     refetch();
   }, [refetch]);
 
-  const colunas = React.useMemo(() => criarColunas(handleEditSuccess), [handleEditSuccess]);
+  const colunas: ColumnDef<RepresentanteComProcessos>[] = React.useMemo(() => criarColunas(handleEditSuccess), [handleEditSuccess]);
 
   const filterOptions = React.useMemo(() => buildRepresentantesFilterOptions(), []);
   const filterGroups = React.useMemo(() => buildRepresentantesFilterGroups(), []);
@@ -445,7 +445,7 @@ export function RepresentantesTab() {
       />
 
       {/* Tabela */}
-      <DataTable
+      <DataTable<RepresentanteComProcessos>
         data={representantes}
         columns={colunas}
         pagination={

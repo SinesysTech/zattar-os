@@ -5,7 +5,9 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { getCached, setCached, invalidateClientesCache } from '@/backend/utils/redis';
 import type {
   Cliente,
-  ClienteComEndereco,
+} from '@/types/domain/partes';
+import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
+import type {
   CriarClienteParams,
   AtualizarClienteParams,
   ListarClientesParams,
@@ -13,8 +15,8 @@ import type {
   UpsertClientePorCPFParams,
   UpsertClientePorCNPJParams,
   UpsertClientePorDocumentoParams,
-} from '@/backend/types/partes/clientes-types';
-import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
+  ClienteComEndereco,
+} from '@/types/contracts/partes';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
 
 /**
@@ -138,7 +140,7 @@ function converterParaCliente(data: Record<string, unknown>): Cliente {
       situacao_cpf_receita_descricao: (data.situacao_cpf_receita_descricao as string | null) ?? null,
       pode_usar_celular_mensagem: (data.pode_usar_celular_mensagem as boolean | null) ?? null,
       // Campos que são null em PF (específicos de PJ)
-      inscricao_estadual: null,
+
       data_abertura: null,
       data_fim_atividade: null,
       orgao_publico: null,
@@ -180,7 +182,7 @@ function converterParaCliente(data: Record<string, unknown>): Cliente {
       porte_descricao: (data.porte_descricao as string | null) ?? null,
       ultima_atualizacao_pje: (data.ultima_atualizacao_pje as string | null) ?? null,
       // Campos que são null em PJ (específicos de PF)
-      rg: null,
+
       data_nascimento: null,
       genero: null,
       estado_civil: null,

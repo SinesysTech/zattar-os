@@ -340,6 +340,23 @@ export const buscarExpedientesPorClienteCPF = async (
     throw new Error('CPF inválido. Deve conter 11 dígitos.');
   }
 
+  // Buscar IDs dos clientes com o CPF fornecido
+  const { data: clienteIdsData, error: clienteError } = await supabase
+    .from('clientes')
+    .select('id')
+    .eq('cpf', cpfNormalizado);
+
+  if (clienteError) {
+    console.error('Erro ao buscar IDs de clientes:', clienteError);
+    throw new Error(`Falha ao buscar IDs de clientes: ${clienteError.message}`);
+  }
+
+  const entidadeIds = clienteIdsData.map(c => c.id);
+
+  if (entidadeIds.length === 0) {
+    return []; // Nenhum cliente encontrado com este CPF
+  }
+
   // Buscar expedientes através da relação:
   // clientes -> processo_partes -> processos -> expedientes_manuais
   const { data, error } = await supabase
@@ -357,12 +374,7 @@ export const buscarExpedientesPorClienteCPF = async (
       )
     `)
     .eq('processo.processo_partes.tipo_entidade', 'cliente')
-    .in('processo.processo_partes.entidade_id',
-      supabase
-        .from('clientes')
-        .select('id')
-        .eq('cpf', cpfNormalizado)
-    )
+    .in('processo.processo_partes.entidade_id', entidadeIds)
     .order('created_at', { ascending: false })
     .limit(100);
 

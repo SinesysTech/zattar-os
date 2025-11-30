@@ -147,7 +147,7 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       situacao_cpf_receita_descricao: (data.situacao_cpf_receita_descricao as string | null) ?? null,
       pode_usar_celular_mensagem: (data.pode_usar_celular_mensagem as boolean | null) ?? null,
       // Campos que são null em PF (específicos de PJ)
-      inscricao_estadual: null,
+
       data_abertura: null,
       data_fim_atividade: null,
       orgao_publico: null,
@@ -189,7 +189,7 @@ function converterParaParteContraria(data: Record<string, unknown>): ParteContra
       porte_descricao: (data.porte_descricao as string | null) ?? null,
       ultima_atualizacao_pje: (data.ultima_atualizacao_pje as string | null) ?? null,
       // Campos que são null em PJ (específicos de PF)
-      rg: null,
+
       data_nascimento: null,
       genero: null,
       estado_civil: null,

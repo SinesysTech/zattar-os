@@ -79,18 +79,16 @@ export type {
 export type { AcervoApiResponse, BuscarProcessosParams, ProcessosFilters } from './acervo';
 export type { AudienciasApiResponse, BuscarAudienciasParams, AudienciasFilters } from './audiencias';
 export type { ClientesApiResponse, BuscarClientesParams, ClienteFormData } from './clientes';
-export type { ContratosApiResponse, BuscarContratosParams, ContratoFormData } from './contratos';
-export type { CredenciaisApiResponse, CredencialFormData } from './credenciais';
-export type { ExpedientesApiResponse, ExpedienteFormData, BuscarExpedientesParams, ExpedientesFilters } from './expedientes';
-export type { RepresentantesApiResponse, BuscarRepresentantesParams, RepresentanteFormData } from './representantes';
-export type { PartesContrariasApiResponse, BuscarPartesContrariasParams, ParteContrariaFormData } from './partes-contrarias';
-export type { TerceirosApiResponse, BuscarTerceirosParams, TerceiroFormData } from './terceiros';
-export type { UsuariosApiResponse, BuscarUsuariosParams, UsuarioFormData } from './usuarios';
-export type { TimelineApiResponse, BuscarTimelineParams } from './timeline';
-export type { DashboardApiResponse, DashboardFilters } from './dashboard';
-export type { DataTableFilterableColumn, DataTableSearchableColumn } from './data-table';
-export type { TiposExpedientesApiResponse, BuscarTiposExpedientesParams, TipoExpedienteFormData } from './tipos-expedientes';
-export type { TribunaisApiResponse, BuscarTribunaisParams, TribunalFormData } from './tribunais';
+export type { ContratosApiResponse, BuscarContratosParams, ContratosFilters } from './contratos';
+export type { CredenciaisResponse, Credencial, CriarCredencialParams, AtualizarCredencialParams, Advogado, CodigoTRT, GrauTRT } from './credenciais';
+export type { ExpedientesApiResponse, BuscarExpedientesParams, ExpedientesFilters } from './expedientes';
+export type { RepresentantesApiResponse, BuscarRepresentantesParams, RepresentantesFilters } from './representantes';
+export type { ParteContrariaFormData } from './partes-contrarias';
+export type { TerceiroFormData } from './terceiros';
+export type { UsuariosFilters, UsuariosParams, ViewMode, Permissao, PermissaoMatriz, UsuarioDetalhado, PermissoesSaveState } from './usuarios';
+export type { TimelineAPIResponse, TimelineItem, BackblazeB2Info, GoogleDriveInfo, TimelineItemEnriquecido, TimelineMetadata, TimelineDocument, DocumentoDetalhes, CapturaTimelineAPIResponse } from './timeline';
+export type { DataTableColumn, ServerPaginationState, ServerSortingState, DataTableFilters, DataTableProps } from './data-table';
+export type { TribunaisResponse, TribunalConfig, CriarTribunalParams, AtualizarTribunalParams } from './tribunais';
 export type { ProcessoParteFormData } from './processo-partes';
 export type { EnderecoFormData } from './enderecos';
 

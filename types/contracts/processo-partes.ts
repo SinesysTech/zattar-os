@@ -23,8 +23,8 @@ export interface CriarProcessoParteParams {
   trt: string;
   grau: GrauProcesso;
   numero_processo: string;
-  principal: boolean;
-  ordem: number;
+  principal?: boolean; // Made optional
+  ordem?: number; // Made optional
   status_pje?: string;
   situacao_pje?: string;
   autoridade?: boolean;
@@ -121,17 +121,26 @@ export interface VincularParteProcessoParams {
   processo_id: number;
   tipo_entidade: EntidadeTipoProcessoParte;
   entidade_id: number;
+  id_pje: number;
+  id_pessoa_pje?: number; // Adicionado
   tipo_parte: TipoParteProcesso;
   polo: PoloProcessoParte;
+  trt: string;
+  grau: GrauProcesso;
+  numero_processo: string;
   principal?: boolean;
   ordem?: number;
+  dados_pje_completo?: Record<string, unknown>; // Adicionado
 }
 
 /**
  * Parâmetros para desvincular uma parte de um processo.
+ * Apenas o id é obrigatório - os demais campos são opcionais
+ * para identificação alternativa.
  */
 export interface DesvincularParteProcessoParams {
-  processo_id: number;
-  tipo_entidade: EntidadeTipoProcessoParte;
-  entidade_id: number;
+  id: number;
+  processo_id?: number;
+  tipo_entidade?: EntidadeTipoProcessoParte;
+  entidade_id?: number;
 }

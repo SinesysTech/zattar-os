@@ -1,6 +1,12 @@
 // Tipos de domínio para Representantes (Advogados)
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { TipoPessoa } from './common';
+
+/**
+ * Define o polo do representante no processo (versão normalizada em minúsculas).
+ */
+export type Polo = 'ativo' | 'passivo' | 'outros';
 
 /**
  * Define o tipo de um representante (advogado, procurador, etc.).
@@ -45,6 +51,6 @@ export interface Representante {
   numero_comercial: string | null;
   endereco_id: number | null;
   dados_anteriores: Record<string, unknown> | null;
-  created_at: Date | null;
-  updated_at: Date | null;
+  created_at: string | null;
+  updated_at: string | null;
 }

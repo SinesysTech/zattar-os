@@ -15,6 +15,8 @@ export type OrdenarPorRepresentante =
   | 'situacao_oab'
   | 'created_at';
 
+export type OrdemRepresentante = 'asc' | 'desc';
+
 /**
  * Parâmetros para criar um novo representante.
  */

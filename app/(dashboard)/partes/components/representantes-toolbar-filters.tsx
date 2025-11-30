@@ -11,10 +11,7 @@ import type {
 } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
 import type { SituacaoOAB } from '@/types/domain/representantes';
-
-export interface RepresentantesFilters {
-  situacao_oab?: SituacaoOAB;
-}
+import type { RepresentantesFilters } from '@/app/_lib/types/representantes';
 
 export const REPRESENTANTES_FILTER_CONFIGS: FilterConfig[] = [
   {

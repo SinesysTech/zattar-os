@@ -36,6 +36,32 @@ export type TipoParteProcesso =
   | 'OUTRO';
 
 /**
+ * Constante com os tipos de parte válidos.
+ * Usada para validação em runtime.
+ */
+export const TIPOS_PARTE_PROCESSO_VALIDOS: Record<TipoParteProcesso, true> = {
+  AUTOR: true,
+  REU: true,
+  RECLAMANTE: true,
+  RECLAMADO: true,
+  EXEQUENTE: true,
+  EXECUTADO: true,
+  EMBARGANTE: true,
+  EMBARGADO: true,
+  APELANTE: true,
+  APELADO: true,
+  AGRAVANTE: true,
+  AGRAVADO: true,
+  PERITO: true,
+  MINISTERIO_PUBLICO: true,
+  ASSISTENTE: true,
+  TESTEMUNHA: true,
+  CUSTOS_LEGIS: true,
+  AMICUS_CURIAE: true,
+  OUTRO: true,
+};
+
+/**
  * Representa a participação de uma entidade (cliente, parte contrária, terceiro)
  * em um processo judicial. É a tabela de ligação N:N.
  */
