@@ -31,7 +31,8 @@
       "*",
       "Bash(openspec list:*)",
       "Bash(if exist .next rmdir /s /q .next)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []

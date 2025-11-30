@@ -9,11 +9,11 @@ export interface CredenciaisFilters {
   active?: boolean;
 }
 
-// Lista de TRTs disponíveis
-const TRTS: CodigoTRT[] = [
+// Lista de tribunais disponíveis (TRTs + TST)
+const TRIBUNAIS: CodigoTRT[] = [
   'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
   'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20',
-  'TRT21', 'TRT22', 'TRT23', 'TRT24',
+  'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST',
 ];
 
 export const CREDENCIAIS_FILTER_CONFIGS: FilterConfig[] = [
@@ -21,7 +21,7 @@ export const CREDENCIAIS_FILTER_CONFIGS: FilterConfig[] = [
     id: 'tribunal',
     label: 'Tribunal',
     type: 'select',
-    options: TRTS.map(trt => ({ value: trt, label: trt })),
+    options: TRIBUNAIS.map(t => ({ value: t, label: t })),
   },
   {
     id: 'grau',
@@ -30,6 +30,7 @@ export const CREDENCIAIS_FILTER_CONFIGS: FilterConfig[] = [
     options: [
       { value: 'primeiro_grau', label: '1º Grau' },
       { value: 'segundo_grau', label: '2º Grau' },
+      { value: 'tribunal_superior', label: 'Tribunal Superior' },
     ],
   },
   {

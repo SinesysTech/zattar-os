@@ -21,6 +21,7 @@ interface GrauBadgesProps {
 const GRAU_LABELS: Record<GrauAcervo, string> = {
   primeiro_grau: '1º Grau',
   segundo_grau: '2º Grau',
+  tribunal_superior: 'Tribunal Superior',
 };
 
 /**
@@ -29,6 +30,7 @@ const GRAU_LABELS: Record<GrauAcervo, string> = {
 const GRAU_VARIANTS: Record<GrauAcervo, 'default' | 'secondary' | 'outline'> = {
   primeiro_grau: 'secondary',
   segundo_grau: 'default',
+  tribunal_superior: 'outline',
 };
 
 /**
@@ -41,9 +43,9 @@ export function GrauBadges({ instances, grauAtual, grausAtivos }: GrauBadgesProp
     return null;
   }
 
-  // Ordenar instâncias: primeiro grau primeiro, depois segundo grau
+  // Ordenar instâncias: primeiro grau, segundo grau, tribunal superior
   const instancesOrdenadas = [...instances].sort((a, b) => {
-    const ordem = { primeiro_grau: 1, segundo_grau: 2 };
+    const ordem: Record<GrauAcervo, number> = { primeiro_grau: 1, segundo_grau: 2, tribunal_superior: 3 };
     return ordem[a.grau] - ordem[b.grau];
   });
 
@@ -95,9 +97,9 @@ export function GrauBadgesSimple({ grausAtivos }: GrauBadgesProps) {
     return null;
   }
 
-  // Ordenar graus: primeiro grau primeiro, depois segundo grau
+  // Ordenar graus: primeiro grau, segundo grau, tribunal superior
   const grausOrdenados = [...grausAtivos].sort((a, b) => {
-    const ordem = { primeiro_grau: 1, segundo_grau: 2 };
+    const ordem: Record<GrauAcervo, number> = { primeiro_grau: 1, segundo_grau: 2, tribunal_superior: 3 };
     return ordem[a] - ordem[b];
   });
 

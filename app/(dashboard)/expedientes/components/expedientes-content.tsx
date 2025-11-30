@@ -632,7 +632,7 @@ function criarColunas(
                   </div>
                   <div className="space-y-1">
                     <Label className="text-sm font-medium">Data de Fim *</Label>
-                    <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} />
+                    <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} aria-label="Data de fim do prazo" />
                   </div>
                 </div>
                 <DialogFooter>

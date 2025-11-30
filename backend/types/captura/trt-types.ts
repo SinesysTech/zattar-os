@@ -26,7 +26,7 @@ export type TipoAcessoTribunal =
   | 'unico'; // Login único para tribunal superior (TST, STF, STJ)
 
 /**
- * Código do TRT (corresponde ao enum codigo_tribunal)
+ * Código do tribunal (TRTs e TST)
  */
 export type CodigoTRT =
   | 'TRT1'
@@ -52,7 +52,8 @@ export type CodigoTRT =
   | 'TRT21'
   | 'TRT22'
   | 'TRT23'
-  | 'TRT24';
+  | 'TRT24'
+  | 'TST';
 
 /**
  * Parâmetros base para todas as rotas de captura TRT

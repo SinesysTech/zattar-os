@@ -26,9 +26,10 @@ export type CodigoTRT =
   | 'TRT21'
   | 'TRT22'
   | 'TRT23'
-  | 'TRT24';
+  | 'TRT24'
+  | 'TST';
 
-export type GrauTRT = 'primeiro_grau' | 'segundo_grau';
+export type GrauTRT = 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
 
 /**
  * Credencial com informações do advogado (para listagem)

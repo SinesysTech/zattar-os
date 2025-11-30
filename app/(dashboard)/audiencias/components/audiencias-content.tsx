@@ -90,8 +90,11 @@ const normalizarDataParaComparacao = (dataISO: string | null): number => {
 /**
  * Formata o grau para exibição
  */
-const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
-  return grau === 'primeiro_grau' ? '1º Grau' : '2º Grau';
+const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior'): string => {
+  if (grau === 'primeiro_grau') return '1º Grau';
+  if (grau === 'segundo_grau') return '2º Grau';
+  if (grau === 'tribunal_superior') return 'Tribunal Superior';
+  return grau;
 };
 
 /**

@@ -146,20 +146,24 @@ const getTRTColorClass = (trt: string): string => {
 /**
  * Retorna a classe CSS de cor para um grau específico
  */
-const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
+const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior'): string => {
   const grauColors: Record<string, string> = {
     'primeiro_grau': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
     'segundo_grau': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+    'tribunal_superior': 'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-200 dark:border-indigo-800',
   };
-  
+
   return grauColors[grau] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
 };
 
 /**
  * Formata o texto do grau para exibição
  */
-const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
-  return grau === 'primeiro_grau' ? '1º Grau' : '2º Grau';
+const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior'): string => {
+  if (grau === 'primeiro_grau') return '1º Grau';
+  if (grau === 'segundo_grau') return '2º Grau';
+  if (grau === 'tribunal_superior') return 'Tribunal Superior';
+  return grau;
 };
 
 /**
@@ -899,11 +903,11 @@ export default function ProcessosPage() {
       });
     } else if (ordenarPor === 'grau') {
       processosCopy.sort((a, b) => {
-        // primeiro_grau vem antes de segundo_grau
-        const grauOrder = { 'primeiro_grau': 1, 'segundo_grau': 2 };
+        // primeiro_grau vem antes de segundo_grau, tribunal_superior por último
+        const grauOrder: Record<string, number> = { 'primeiro_grau': 1, 'segundo_grau': 2, 'tribunal_superior': 3 };
         const grauA = isProcessoUnificado(a) ? a.grau_atual : a.grau;
         const grauB = isProcessoUnificado(b) ? b.grau_atual : b.grau;
-        const comparison = grauOrder[grauA] - grauOrder[grauB];
+        const comparison = (grauOrder[grauA] || 4) - (grauOrder[grauB] || 4);
         return ordem === 'asc' ? comparison : -comparison;
       });
     }

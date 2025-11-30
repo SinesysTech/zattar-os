@@ -14,32 +14,42 @@ interface CredenciaisComboboxProps {
 }
 
 /**
- * Extrai número do TRT para ordenação (TRT1 = 1, TRT10 = 10)
+ * Extrai número do tribunal para ordenação
+ * TRT1 = 1, TRT10 = 10, TST = 999 (fica no final)
  */
-function extrairNumeroTRT(tribunal: string): number {
+function extrairNumeroTribunal(tribunal: string): number {
+  if (tribunal === 'TST') return 999;
   const match = tribunal.match(/TRT(\d+)/);
-  return match ? parseInt(match[1], 10) : 999;
+  return match ? parseInt(match[1], 10) : 998;
 }
 
 /**
- * Ordena credenciais por número do TRT (crescente) e depois por grau
+ * Retorna peso do grau para ordenação
+ * primeiro_grau = 1, segundo_grau = 2, tribunal_superior = 3
+ */
+function pesoGrau(grau: string): number {
+  if (grau === 'primeiro_grau') return 1;
+  if (grau === 'segundo_grau') return 2;
+  if (grau === 'tribunal_superior') return 3;
+  return 4;
+}
+
+/**
+ * Ordena credenciais por número do tribunal (crescente) e depois por grau
+ * Ordem: TRT1-1º, TRT1-2º, TRT2-1º, ..., TRT24-2º, TST-Tribunal Superior
  */
 function ordenarCredenciais(credenciais: Credencial[]): Credencial[] {
   return [...credenciais].sort((a, b) => {
-    // Primeiro ordenar por número do TRT
-    const numTRTA = extrairNumeroTRT(a.tribunal);
-    const numTRTB = extrairNumeroTRT(b.tribunal);
-    
-    if (numTRTA !== numTRTB) {
-      return numTRTA - numTRTB; // Ordem crescente: TRT1, TRT2, ..., TRT10, TRT11, ...
+    // Primeiro ordenar por número do tribunal
+    const numA = extrairNumeroTribunal(a.tribunal);
+    const numB = extrairNumeroTribunal(b.tribunal);
+
+    if (numA !== numB) {
+      return numA - numB; // Ordem crescente: TRT1, TRT2, ..., TRT24, TST
     }
-    
-    // Se mesmo TRT, ordenar por grau (primeiro_grau antes de segundo_grau)
-    if (a.grau !== b.grau) {
-      return a.grau === 'primeiro_grau' ? -1 : 1;
-    }
-    
-    return 0;
+
+    // Se mesmo tribunal, ordenar por grau
+    return pesoGrau(a.grau) - pesoGrau(b.grau);
   });
 }
 

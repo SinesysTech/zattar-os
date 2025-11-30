@@ -434,12 +434,12 @@ export async function capturarTimeline(
 }
 
 /**
- * Lista de códigos TRT disponíveis
+ * Lista de códigos de tribunais disponíveis (TRTs + TST)
  */
 export const TRT_CODIGOS: CodigoTRT[] = [
   'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
   'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20',
-  'TRT21', 'TRT22', 'TRT23', 'TRT24',
+  'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST',
 ];
 
 /**
@@ -448,6 +448,7 @@ export const TRT_CODIGOS: CodigoTRT[] = [
 export const GRAUS: { value: GrauTRT; label: string }[] = [
   { value: 'primeiro_grau', label: 'Primeiro Grau' },
   { value: 'segundo_grau', label: 'Segundo Grau' },
+  { value: 'tribunal_superior', label: 'Tribunal Superior' },
 ];
 
 /**

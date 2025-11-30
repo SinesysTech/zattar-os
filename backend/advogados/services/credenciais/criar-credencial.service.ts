@@ -16,19 +16,35 @@ export async function criarCredencial(params: CriarCredencialParams): Promise<Cr
     throw new Error('Tribunal é obrigatório');
   }
 
-  // Validar formato de tribunal (TRT1 a TRT24)
+  // Validar formato de tribunal (TRT1 a TRT24 ou TST)
+  const isTST = params.tribunal === 'TST';
   const tribunalMatch = params.tribunal.match(/^TRT(\d{1,2})$/);
-  if (!tribunalMatch) {
-    throw new Error('Tribunal deve estar no formato TRT1 a TRT24');
+
+  if (!isTST && !tribunalMatch) {
+    throw new Error('Tribunal deve estar no formato TRT1 a TRT24 ou TST');
   }
 
-  const trtNum = parseInt(tribunalMatch[1], 10);
-  if (trtNum < 1 || trtNum > 24) {
-    throw new Error('Tribunal deve estar entre TRT1 e TRT24');
+  if (tribunalMatch) {
+    const trtNum = parseInt(tribunalMatch[1], 10);
+    if (trtNum < 1 || trtNum > 24) {
+      throw new Error('Tribunal deve estar entre TRT1 e TRT24');
+    }
   }
 
-  if (!params.grau || (params.grau !== 'primeiro_grau' && params.grau !== 'segundo_grau')) {
-    throw new Error('Grau deve ser "primeiro_grau" ou "segundo_grau"');
+  // Validar grau
+  const grausValidos = ['primeiro_grau', 'segundo_grau', 'tribunal_superior'];
+  if (!params.grau || !grausValidos.includes(params.grau)) {
+    throw new Error('Grau deve ser "primeiro_grau", "segundo_grau" ou "tribunal_superior"');
+  }
+
+  // TST deve ter grau tribunal_superior
+  if (isTST && params.grau !== 'tribunal_superior') {
+    throw new Error('TST deve ter grau "tribunal_superior"');
+  }
+
+  // TRTs não podem ter grau tribunal_superior
+  if (!isTST && params.grau === 'tribunal_superior') {
+    throw new Error('TRTs devem ter grau "primeiro_grau" ou "segundo_grau"');
   }
 
   if (!params.senha || !params.senha.trim()) {

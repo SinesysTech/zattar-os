@@ -8,7 +8,7 @@ export type OrigemAcervo = 'acervo_geral' | 'arquivado';
 /**
  * Grau do processo
  */
-export type GrauAcervo = 'primeiro_grau' | 'segundo_grau';
+export type GrauAcervo = 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
 
 /**
  * Campos disponíveis para ordenação

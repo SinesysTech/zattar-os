@@ -69,10 +69,12 @@ import type { ListarCredenciaisParams, CriarCredencialParams } from '@/backend/t
  *             properties:
  *               tribunal:
  *                 type: string
+ *                 description: Código do tribunal (TRT1 a TRT24 ou TST)
  *                 example: "TRT3"
  *               grau:
  *                 type: string
- *                 enum: [primeiro_grau, segundo_grau]
+ *                 description: Grau do processo (primeiro_grau, segundo_grau, ou tribunal_superior para TST)
+ *                 enum: [primeiro_grau, segundo_grau, tribunal_superior]
  *               senha:
  *                 type: string
  *               active:

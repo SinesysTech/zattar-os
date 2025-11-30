@@ -94,7 +94,7 @@ export function ExpedienteDetalhesDialog({
         <Button size="sm" variant="outline" onClick={() => setOpenEdit(true)}>Definir Prazo</Button>
         {openEdit && (
           <div className="flex items-center gap-2">
-            <input type="date" className="border rounded p-1 text-sm" value={dt} onChange={(e) => setDt(e.target.value)} />
+            <input type="date" className="border rounded p-1 text-sm" value={dt} onChange={(e) => setDt(e.target.value)} aria-label="Data do prazo" />
             <Button size="sm" onClick={salvar} disabled={saving || !dt}>{saving ? 'Salvando...' : 'Salvar'}</Button>
             <Button size="sm" variant="ghost" onClick={() => setOpenEdit(false)} disabled={saving}>Cancelar</Button>
           </div>

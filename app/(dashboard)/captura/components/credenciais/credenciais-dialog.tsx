@@ -32,16 +32,17 @@ interface CredenciaisDialogProps {
   onSuccess: () => void;
 }
 
-// Lista de tribunais disponíveis
+// Lista de tribunais disponíveis (TRTs + TST)
 const TRIBUNAIS: CodigoTRT[] = [
   'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
   'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19',
-  'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24',
+  'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST',
 ];
 
 const GRAUS: { value: GrauTRT; label: string }[] = [
   { value: 'primeiro_grau', label: '1º Grau' },
   { value: 'segundo_grau', label: '2º Grau' },
+  { value: 'tribunal_superior', label: 'Tribunal Superior' },
 ];
 
 /**
@@ -91,6 +92,19 @@ export function CredenciaisDialog({
       setBuscaAdvogado('');
     }
   }, [credencial, open]);
+
+  // Lógica especial para TST: grau é automaticamente "Tribunal Superior"
+  useEffect(() => {
+    if (tribunal === 'TST') {
+      setGrau('tribunal_superior');
+    } else if (grau === 'tribunal_superior') {
+      // Se mudou de TST para outro tribunal, limpa o grau
+      setGrau('');
+    }
+  }, [tribunal]);
+
+  // TST tem grau fixo (Tribunal Superior)
+  const isTST = tribunal === 'TST';
 
   const handleSave = async () => {
     // Validações
@@ -266,18 +280,27 @@ export function CredenciaisDialog({
           {/* Grau */}
           <div className="grid gap-2">
             <Label htmlFor="grau">Grau *</Label>
-            <Select value={grau} onValueChange={(value) => setGrau(value as GrauTRT)}>
-              <SelectTrigger>
+            <Select
+              value={grau}
+              onValueChange={(value) => setGrau(value as GrauTRT)}
+              disabled={isTST}
+            >
+              <SelectTrigger className={isTST ? 'bg-muted' : ''}>
                 <SelectValue placeholder="Selecione o grau" />
               </SelectTrigger>
               <SelectContent>
-                {GRAUS.map((g) => (
+                {GRAUS.filter((g) => isTST ? g.value === 'tribunal_superior' : g.value !== 'tribunal_superior').map((g) => (
                   <SelectItem key={g.value} value={g.value}>
                     {g.label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            {isTST && (
+              <p className="text-xs text-muted-foreground">
+                O TST possui apenas o grau Tribunal Superior
+              </p>
+            )}
           </div>
 
           {/* Senha */}

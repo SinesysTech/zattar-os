@@ -35,6 +35,7 @@ const formatarGrau = (grau: string): string => {
   const graus: Record<string, string> = {
     primeiro_grau: '1º Grau',
     segundo_grau: '2º Grau',
+    tribunal_superior: 'Tribunal Superior',
   };
   return graus[grau] || grau;
 };

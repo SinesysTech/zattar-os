@@ -47,7 +47,7 @@ export interface Endereco {
   // ID da entidade na tabela correspondente (clientes.id, partes_contrarias.id, terceiros.id)
   entidade_id: number;
   trt: string | null;
-  grau: 'primeiro_grau' | 'segundo_grau' | null;
+  grau: GrauAcervo | null;
   numero_processo: string | null;
   logradouro: string | null;
   numero: string | null;
@@ -88,7 +88,7 @@ export interface CriarEnderecoParams {
   entidade_tipo: EntidadeTipoEndereco;
   entidade_id: number;
   trt?: string;
-  grau?: 'primeiro_grau' | 'segundo_grau';
+  grau?: GrauAcervo;
   numero_processo?: string;
   logradouro?: string;
   numero?: string;
@@ -125,7 +125,7 @@ export interface AtualizarEnderecoParams {
   entidade_tipo?: EntidadeTipoEndereco;
   entidade_id?: number;
   trt?: string;
-  grau?: 'primeiro_grau' | 'segundo_grau';
+  grau?: GrauAcervo;
   numero_processo?: string;
   logradouro?: string;
   numero?: string;
@@ -185,7 +185,7 @@ export interface ListarEnderecosParams {
 
   // Filtros por processo
   trt?: string;
-  grau?: 'primeiro_grau' | 'segundo_grau';
+  grau?: GrauAcervo;
   numero_processo?: string;
 
   // Busca textual
