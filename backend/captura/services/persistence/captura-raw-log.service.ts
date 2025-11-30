@@ -6,6 +6,51 @@ export interface RegistrarCapturaRawLogParams extends Omit<CapturaRawLogCreate, 
 }
 
 /**
+ * Sanitiza um objeto para ser inserido no MongoDB
+ * Remove tipos incompatíveis como BigInt, funções, símbolos
+ * Converte BigInt para number ou string
+ */
+function sanitizarParaMongoDB<T>(obj: T): T {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+
+  // BigInt -> string (para não perder precisão)
+  if (typeof obj === 'bigint') {
+    return obj.toString() as unknown as T;
+  }
+
+  // Função ou Symbol -> undefined (será removido)
+  if (typeof obj === 'function' || typeof obj === 'symbol') {
+    return undefined as unknown as T;
+  }
+
+  // Array
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizarParaMongoDB(item)) as unknown as T;
+  }
+
+  // Objeto simples
+  if (typeof obj === 'object') {
+    // Date, Buffer, ObjectId - manter como está
+    if (obj instanceof Date || Buffer.isBuffer(obj)) {
+      return obj;
+    }
+
+    const resultado: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(obj)) {
+      const valorSanitizado = sanitizarParaMongoDB(value);
+      if (valorSanitizado !== undefined) {
+        resultado[key] = valorSanitizado;
+      }
+    }
+    return resultado as T;
+  }
+
+  return obj;
+}
+
+/**
  * Persiste o JSON bruto e metadados da captura no MongoDB
  * @param params Parâmetros para criar o documento
  * @returns Objeto com sucesso, ID do MongoDB e erro opcional
@@ -35,6 +80,7 @@ export async function registrarCapturaRawLog(
 
     const collection = await getCapturaRawLogsCollection();
 
+    // Sanitizar campos que podem conter tipos incompatíveis com MongoDB (BigInt, funções, etc.)
     const documento: CapturaRawLogCreate = {
       captura_log_id: params.captura_log_id,
       tipo_captura: params.tipo_captura,
@@ -44,16 +90,16 @@ export async function registrarCapturaRawLog(
       trt: params.trt,
       grau: params.grau,
       status: params.status || 'success',
-      requisicao: params.requisicao,
-      payload_bruto: params.payload_bruto,
-      resultado_processado: params.resultado_processado,
+      requisicao: sanitizarParaMongoDB(params.requisicao),
+      payload_bruto: sanitizarParaMongoDB(params.payload_bruto),
+      resultado_processado: sanitizarParaMongoDB(params.resultado_processado),
       logs: params.logs,
       erro: params.erro,
       criado_em: new Date(),
       atualizado_em: new Date(),
     };
 
-    const result = await collection.insertOne(documento);
+    const result = await collection.insertOne(documento as CapturaRawLogCreate);
     return { success: true, mongodbId: result.insertedId.toString() };
   } catch (error) {
     // Logar contexto completo
