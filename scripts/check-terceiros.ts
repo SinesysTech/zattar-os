@@ -9,11 +9,18 @@ async function main() {
   const db = await getMongoDatabase();
   const collection = db.collection('captura_logs_brutos');
 
+  // Buscar docs que TEM terceiros
   const docs = await collection
-    .find({ tipo_captura: 'partes', status: 'success' })
+    .find({
+      tipo_captura: 'partes',
+      status: 'success',
+      'payload_bruto.TERCEIROS.0': { $exists: true }
+    })
     .sort({ criado_em: -1 })
-    .limit(3)
+    .limit(5)
     .toArray();
+
+  console.log('Documentos com TERCEIROS encontrados:', docs.length);
 
   for (const doc of docs) {
     const req = doc.requisicao as any;

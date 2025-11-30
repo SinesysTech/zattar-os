@@ -67,10 +67,11 @@ const getTRTColorClass = (trt: string): string => {
 /**
  * Retorna a classe CSS de cor para badge do grau
  */
-const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau'): string => {
+const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior'): string => {
   const grauColors: Record<string, string> = {
     'primeiro_grau': 'bg-emerald-100 text-emerald-800 border-emerald-200',
     'segundo_grau': 'bg-amber-100 text-amber-800 border-amber-200',
+    'tribunal_superior': 'bg-indigo-100 text-indigo-800 border-indigo-200',
   };
   return grauColors[grau] || 'bg-gray-100 text-gray-800 border-gray-200';
 };
