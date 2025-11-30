@@ -7,13 +7,14 @@
 -- Enums de Tribunal
 -- ----------------------------------------------------------------------------
 
--- Código do Tribunal Regional do Trabalho (TRT1 a TRT24)
+-- Código do Tribunal (TRT1 a TRT24 e TST)
 create type public.codigo_tribunal as enum (
   'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8',
   'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16',
-  'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24'
+  'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24',
+  'TST'
 );
-comment on type public.codigo_tribunal is 'Código do Tribunal Regional do Trabalho (TRT1 a TRT24)';
+comment on type public.codigo_tribunal is 'Código do tribunal trabalhista. Inclui TRT1 a TRT24 (Tribunais Regionais) e TST (Tribunal Superior do Trabalho).';
 
 -- Grau do processo no tribunal
 create type public.grau_tribunal as enum (
