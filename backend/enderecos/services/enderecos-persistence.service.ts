@@ -12,14 +12,17 @@
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type {
   Endereco,
+  EntidadeTipoEndereco,
+  SituacaoEndereco,
+} from '@/types/domain/enderecos';
+import type { GrauProcesso } from '@/types/domain/common';
+import type {
   CriarEnderecoParams,
   AtualizarEnderecoParams,
   ListarEnderecosParams,
   ListarEnderecosResult,
   BuscarEnderecosPorEntidadeParams,
-  EntidadeTipoEndereco,
-  SituacaoEndereco,
-} from '@/backend/types/partes/enderecos-types';
+} from '@/types/contracts/enderecos';
 
 /**
  * Resultado de operação de endereço
@@ -51,7 +54,7 @@ export function converterParaEndereco(data: Record<string, unknown>): Endereco {
     entidade_tipo: data.entidade_tipo as EntidadeTipoEndereco,
     entidade_id: data.entidade_id as number,
     trt: (data.trt as string) ?? null,
-    grau: (data.grau as 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior') ?? null,
+    grau: (data.grau as GrauProcesso) ?? null,
     numero_processo: (data.numero_processo as string) ?? null,
     logradouro: (data.logradouro as string) ?? null,
     numero: (data.numero as string) ?? null,

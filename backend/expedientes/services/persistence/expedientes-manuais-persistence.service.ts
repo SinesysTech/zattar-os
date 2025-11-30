@@ -323,3 +323,53 @@ export const atribuirResponsavelExpedienteManual = async (
 
   return data;
 };
+
+/**
+ * Buscar expedientes manuais por CPF do cliente
+ * Retorna todos os expedientes dos processos relacionados ao cliente com o CPF informado
+ */
+export const buscarExpedientesPorClienteCPF = async (
+  cpf: string
+): Promise<ExpedienteManual[]> => {
+  const supabase = await createClient();
+
+  // Normalizar CPF (remover formatação)
+  const cpfNormalizado = cpf.replace(/\D/g, '');
+
+  if (!cpfNormalizado || cpfNormalizado.length !== 11) {
+    throw new Error('CPF inválido. Deve conter 11 dígitos.');
+  }
+
+  // Buscar expedientes através da relação:
+  // clientes -> processo_partes -> processos -> expedientes_manuais
+  const { data, error } = await supabase
+    .from('expedientes_manuais')
+    .select(`
+      *,
+      processo:processos!inner(
+        id,
+        numero_processo,
+        processo_partes!inner(
+          id,
+          tipo_entidade,
+          entidade_id
+        )
+      )
+    `)
+    .eq('processo.processo_partes.tipo_entidade', 'cliente')
+    .in('processo.processo_partes.entidade_id',
+      supabase
+        .from('clientes')
+        .select('id')
+        .eq('cpf', cpfNormalizado)
+    )
+    .order('created_at', { ascending: false })
+    .limit(100);
+
+  if (error) {
+    console.error('Erro ao buscar expedientes por CPF do cliente:', error);
+    throw new Error(`Falha ao buscar expedientes por CPF: ${error.message}`);
+  }
+
+  return data || [];
+};

@@ -1,20 +1,23 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "../browser"
-		},
-		{
-			"path": "../mcp"
-		}
-	],
-	"settings": {
-		"claudeCode.allowDangerouslySkipPermissions": true,
-		"claudeCode.respectGitIgnore": false,
-		"files.associations": {
-			"*.css": "tailwindcss"
-		}
-	}
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "../browser"
+    },
+    {
+      "path": "../mcp"
+    },
+    {
+      "path": "../../Projects/dev/formsign"
+    }
+  ],
+  "settings": {
+    "claudeCode.allowDangerouslySkipPermissions": true,
+    "claudeCode.respectGitIgnore": false,
+    "files.associations": {
+      "*.css": "tailwindcss"
+    }
+  }
 }

@@ -12,9 +12,9 @@ import { type UIMessage, DefaultChatTransport } from 'ai';
 import { type TNode, KEYS, nanoid, NodeApi, TextApi } from 'platejs';
 import { type PlateEditor, useEditorRef, usePluginOption } from 'platejs/react';
 
-import { aiChatPlugin } from '@/components/ai-kit';
+import { aiChatPlugin } from '@/components/plate/ai-kit';
 
-import { discussionPlugin } from './discussion-kit';
+import { discussionPlugin } from './plate/discussion-kit';
 
 export type ToolName = 'comment' | 'edit' | 'generate';
 

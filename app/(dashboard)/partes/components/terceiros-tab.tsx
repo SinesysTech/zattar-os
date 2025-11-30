@@ -33,8 +33,8 @@ import {
   formatarEnderecoCompleto,
 } from '@/app/_lib/utils/format-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Terceiro } from '@/app/_lib/types';
-import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
+import type { Terceiro } from '@/types/domain/partes';
+import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
 import { useTerceiros } from '@/app/_lib/hooks/use-terceiros';
 import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
 

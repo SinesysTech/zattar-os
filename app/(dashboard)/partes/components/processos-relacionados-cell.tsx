@@ -21,7 +21,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
+import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
 
 interface ProcessosRelacionadosCellProps {
   processos: ProcessoRelacionado[];

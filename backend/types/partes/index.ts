@@ -1,71 +1,9 @@
-// Exportação centralizada de todos os tipos relacionados a partes
+// Re-exporta todos os tipos de partes
+// Esta camada existe apenas para compatibilidade; novos módulos devem importar diretamente de @/types
 
-// Exportar tipos compartilhados apenas uma vez (de clientes-types)
-export type { TipoPessoa, SituacaoPJE } from './clientes-types';
-
-// Exportar todos os outros tipos de cada módulo (exceto os já exportados)
-export type {
-  GrauCliente,
-  Cliente,
-  ClientePessoaFisica,
-  ClientePessoaJuridica,
-  CriarClientePFParams,
-  CriarClientePJParams,
-  CriarClienteParams,
-  AtualizarClientePFParams,
-  AtualizarClientePJParams,
-  AtualizarClienteParams,
-  ListarClientesParams,
-  ListarClientesResult,
-  UpsertClientePorCPFParams,
-  UpsertClientePorCNPJParams,
-  UpsertClientePorDocumentoParams,
-  OrdenarPorCliente,
-  OrdemCliente,
-} from './clientes-types';
-
-export type {
-  GrauParteContraria,
-  ParteContraria,
-  ParteContrariaPessoaFisica,
-  ParteContrariaPessoaJuridica,
-  CriarParteContrariaPFParams,
-  CriarParteContrariaPJParams,
-  CriarParteContrariaParams,
-  AtualizarParteContrariaPFParams,
-  AtualizarParteContrariaPJParams,
-  AtualizarParteContrariaParams,
-  ListarPartesContrariasParams,
-  ListarPartesContrariasResult,
-  UpsertParteContrariaPorCPFParams,
-  UpsertParteContrariaPorCNPJParams,
-  UpsertParteContrariaPorDocumentoParams,
-  OrdenarPorParteContraria,
-  OrdemParteContraria,
-} from './partes-contrarias-types';
-
-export type {
-  TipoParteTerceiro,
-  PoloTerceiro,
-  Terceiro,
-  TerceiroPessoaFisica,
-  TerceiroPessoaJuridica,
-  CriarTerceiroPFParams,
-  CriarTerceiroPJParams,
-  CriarTerceiroParams,
-  AtualizarTerceiroPFParams,
-  AtualizarTerceiroPJParams,
-  AtualizarTerceiroParams,
-  ListarTerceirosParams,
-  ListarTerceirosResult,
-  UpsertTerceiroPorCPFParams,
-  UpsertTerceiroPorCNPJParams,
-  UpsertTerceiroPorDocumentoParams,
-  UpsertTerceiroPorIdPessoaParams,
-  BuscarTerceirosPorProcessoParams,
-  OrdenarPorTerceiro,
-  OrdemTerceiro,
-} from './terceiros-types';
-
+export * from './clientes-types';
+export * from './partes-contrarias-types';
+export * from './terceiros-types';
 export * from './enderecos-types';
 export * from './processo-partes-types';
+export * from './processo-relacionado-types';

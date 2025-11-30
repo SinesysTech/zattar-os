@@ -24,8 +24,8 @@ import {
 import { Eye, Pencil, Phone, Mail, Copy, Check } from 'lucide-react';
 import { useRepresentantes } from '@/app/_lib/hooks/use-representantes';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Representante } from '@/backend/types/representantes/representantes-types';
-import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
+import type { Representante } from '@/types/domain/representantes';
+import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
 import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
 import {
   formatarCpf,

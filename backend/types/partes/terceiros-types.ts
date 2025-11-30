@@ -31,11 +31,12 @@ export type {
   UpsertTerceiroPorCPFParams,
   UpsertTerceiroPorCNPJParams,
   UpsertTerceiroPorDocumentoParams,
+  UpsertTerceiroPorIdPessoaParams,
 } from '@/types/contracts/partes';
 
 // Tipos adicionais específicos do backend (com relacionamentos)
-import type { Endereco } from './enderecos-types';
-import type { TerceiroPessoaFisica, TerceiroPessoaJuridica, TipoParteTerceiro, PoloTerceiro } from '@/types/domain/partes';
+import type { Endereco } from '@/types/domain/enderecos';
+import type { TerceiroPessoaFisica, TerceiroPessoaJuridica, TipoParteTerceiro } from '@/types/domain/partes';
 
 /**
  * Terceiro PF com endereço populado (JOIN)
@@ -55,29 +56,6 @@ export interface TerceiroPessoaJuridicaComEndereco extends TerceiroPessoaJuridic
  * Terceiro com endereço populado (Discriminated Union)
  */
 export type TerceiroComEndereco = TerceiroPessoaFisicaComEndereco | TerceiroPessoaJuridicaComEndereco;
-
-/**
- * Upsert terceiro por id_pessoa_pje (tabela global)
- * Usado para captura de terceiros do PJE onde id_pessoa_pje é o identificador único
- */
-export interface UpsertTerceiroPorIdPessoaParams {
-  id_pessoa_pje: number;
-  tipo_parte: TipoParteTerceiro;
-  polo: PoloTerceiro;
-  tipo_pessoa: 'pf' | 'pj';
-  nome: string;
-  cpf?: string;
-  cnpj?: string;
-  nome_fantasia?: string;
-  emails?: string[];
-  ddd_celular?: string;
-  numero_celular?: string;
-  ddd_residencial?: string;
-  numero_residencial?: string;
-  ddd_comercial?: string;
-  numero_comercial?: string;
-  observacoes?: string;
-}
 
 /**
  * Parâmetros para buscar terceiros de um processo

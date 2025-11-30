@@ -9,21 +9,18 @@ import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, busc
 import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
 import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/backend/representantes/services/representantes-persistence.service';
 import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
-import type { CriarClientePFParams, CriarClientePJParams } from '@/backend/types/partes/clientes-types';
-import type { CriarParteContrariaPFParams, CriarParteContrariaPJParams } from '@/backend/types/partes/partes-contrarias-types';
-import type { CriarTerceiroPFParams, CriarTerceiroPJParams, UpsertTerceiroPorCPFParams, UpsertTerceiroPorCNPJParams } from '@/backend/types/partes/terceiros-types';
-import type { TipoParteProcesso, PoloProcessoParte } from '@/backend/types/partes';
-import { TIPOS_PARTE_PROCESSO_VALIDOS } from '@/backend/types/partes/processo-partes-types';
-import type { GrauAcervo } from '@/backend/types/acervo/types';
-import type { EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } from '@/backend/types/partes/enderecos-types';
-import { CAMPOS_MINIMOS_ENDERECO } from '@/backend/types/partes/enderecos-types';
-import type { SituacaoOAB, TipoRepresentante, Polo } from '@/backend/types/representantes/representantes-types';
-import {  validarPartePJE, validarPartesArray } from './schemas';
+import type { CriarClientePFParams, CriarClientePJParams, CriarParteContrariaPFParams, CriarParteContrariaPJParams, CriarTerceiroPFParams, CriarTerceiroPJParams, UpsertTerceiroPorCPFParams, UpsertTerceiroPorCNPJParams, TipoParteProcesso, PoloProcessoParte, EntidadeTipoEndereco, SituacaoEndereco } from '@/types/contracts/partes';
+import type { GrauProcesso } from '@/types/domain/common';
+import type { ClassificacaoEndereco } from '@/types/domain/enderecos';
+
+import type { SituacaoOAB, TipoRepresentante, Polo } from '@/types/domain/representantes';
+import { validarPartePJE, validarPartesArray } from './schemas';
 import getLogger, { withCorrelationId } from '@/backend/utils/logger';
 import { withRetry } from '@/backend/utils/retry';
 import { CAPTURA_CONFIG } from './config';
 import { ValidationError, PersistenceError, extractErrorInfo } from './errors';
 import { upsertCadastroPJE, buscarEntidadePorIdPessoaPJE } from '@/backend/cadastros-pje/services/persistence/cadastro-pje-persistence.service';
+import { TIPOS_PARTE_PROCESSO_VALIDOS } from '@/types/domain/processo-partes';
 
 // ============================================================================
 // Tipos para estruturas do PJE (dadosCompletos)
@@ -174,7 +171,7 @@ export interface ProcessoParaCaptura {
   /** TRT do processo (ex: "TRT3", "TRT5") (OBRIGATÓRIO) */
   trt: string;
   /** Grau do processo (OBRIGATÓRIO) */
-  grau: GrauAcervo;
+  grau: GrauProcesso;
   /** ID do processo na tabela acervo (OPCIONAL - se não fornecido, não cria vínculo) */
   id?: number;
   /** Número CNJ do processo (OPCIONAL - usado em logs e vínculo) */

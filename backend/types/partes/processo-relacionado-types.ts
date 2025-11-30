@@ -1,23 +1,7 @@
-// Tipos para processos relacionados a entidades (clientes, terceiros, representantes)
+// Re-exporta tipos de processo relacionado
+// Esta camada existe apenas para compatibilidade; novos módulos devem importar diretamente de @/types
 
-/**
- * Processo relacionado (dados mínimos para exibição em listagens)
- */
-export interface ProcessoRelacionado {
-  /** ID do processo na tabela acervo */
-  processo_id: number;
-  /** Número do processo (ex: 0000123-45.2023.5.03.0001) */
-  numero_processo: string;
-  /** Tipo de participação no processo */
-  tipo_parte?: string;
-  /** Polo processual */
-  polo?: string;
-}
-
-/**
- * Entidade genérica com processos relacionados
- */
-export interface EntidadeComProcessos {
-  processos_relacionados?: ProcessoRelacionado[];
-}
-
+export type {
+  ProcessoRelacionado,
+  EntidadeComProcessos,
+} from '@/types/domain/processo-relacionado';

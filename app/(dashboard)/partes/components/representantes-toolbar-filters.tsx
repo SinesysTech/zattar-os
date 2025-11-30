@@ -10,9 +10,10 @@ import type {
   ComboboxOption,
 } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
+import type { SituacaoOAB } from '@/types/domain/representantes';
 
 export interface RepresentantesFilters {
-  situacao_oab?: 'REGULAR' | 'SUSPENSO' | 'CANCELADO' | 'LICENCIADO' | 'FALECIDO';
+  situacao_oab?: SituacaoOAB;
 }
 
 export const REPRESENTANTES_FILTER_CONFIGS: FilterConfig[] = [
@@ -98,7 +99,7 @@ export function parseRepresentantesFilters(selectedFilters: string[]): Represent
 
       if (matchedConfig && matchedId && value && matchedConfig.type === 'select') {
         if (matchedId === 'situacao_oab') {
-          filters.situacao_oab = value as 'REGULAR' | 'SUSPENSO' | 'CANCELADO' | 'LICENCIADO' | 'FALECIDO';
+          filters.situacao_oab = value as SituacaoOAB;
         }
       }
     }

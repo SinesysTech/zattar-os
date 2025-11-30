@@ -2,9 +2,9 @@
 // Gerencia operações de CRUD na tabela terceiros (tabela global, sem vinculação direta a processos)
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import type { Terceiro } from '@/types/domain/partes';
+import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
 import type {
-  Terceiro,
-  TerceiroComEndereco,
   CriarTerceiroParams,
   AtualizarTerceiroParams,
   ListarTerceirosParams,
@@ -12,8 +12,8 @@ import type {
   UpsertTerceiroPorCPFParams,
   UpsertTerceiroPorCNPJParams,
   UpsertTerceiroPorDocumentoParams,
-} from '@/backend/types/partes/terceiros-types';
-import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
+  TerceiroComEndereco,
+} from '@/types/contracts/partes';
 import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
 
 /**
@@ -78,13 +78,6 @@ function normalizarCnpj(cnpj: string): string {
 function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
   const tipo_pessoa = data.tipo_pessoa as 'pf' | 'pj';
 
-  // Parse date strings
-  const parseDate = (val: unknown): string | null => {
-    if (!val) return null;
-    if (typeof val === 'string') return val;
-    return new Date(val as any).toISOString().split('T')[0];
-  };
-
   // Campos base comuns a PF e PJ (conforme TerceiroBase)
   const base = {
     id: data.id as number,
@@ -137,7 +130,7 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       rg: (data.rg as string | null) ?? null,
       sexo: (data.sexo as string | null) ?? null,
       nome_genitora: (data.nome_genitora as string | null) ?? null,
-      data_nascimento: parseDate(data.data_nascimento),
+      data_nascimento: data.data_nascimento as string | null,
       genero: (data.genero as string | null) ?? null,
       estado_civil: (data.estado_civil as string | null) ?? null,
       nacionalidade: (data.nacionalidade as string | null) ?? null,
@@ -184,8 +177,8 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       cnpj: data.cnpj as string,
       cpf: null,
       inscricao_estadual: (data.inscricao_estadual as string | null) ?? null,
-      data_abertura: parseDate(data.data_abertura),
-      data_fim_atividade: parseDate(data.data_fim_atividade),
+      data_abertura: data.data_abertura as string | null,
+      data_fim_atividade: data.data_fim_atividade as string | null,
       orgao_publico: (data.orgao_publico as boolean | null) ?? null,
       tipo_pessoa_codigo_pje: (data.tipo_pessoa_codigo_pje as string | null) ?? null,
       tipo_pessoa_label_pje: (data.tipo_pessoa_label_pje as string | null) ?? null,
@@ -565,11 +558,13 @@ export async function buscarTerceiroPorId(id: number): Promise<Terceiro | null> 
 }
 
 /**
- * Busca um terceiro por CPF
+ * Busca um terceiro por CPF (com cache)
  */
 export async function buscarTerceiroPorCPF(cpf: string): Promise<Terceiro | null> {
   const supabase = createServiceClient();
   const cpfNormalizado = normalizarCpf(cpf);
+
+  // Cache não implementado para terceiros ainda - TODO: adicionar se necessário
 
   const { data, error } = await supabase
     .from('terceiros')
@@ -585,11 +580,13 @@ export async function buscarTerceiroPorCPF(cpf: string): Promise<Terceiro | null
 }
 
 /**
- * Busca um terceiro por CNPJ
+ * Busca um terceiro por CNPJ (com cache)
  */
 export async function buscarTerceiroPorCNPJ(cnpj: string): Promise<Terceiro | null> {
   const supabase = createServiceClient();
   const cnpjNormalizado = normalizarCnpj(cnpj);
+
+  // Cache não implementado para terceiros ainda - TODO: adicionar se necessário
 
   const { data, error } = await supabase
     .from('terceiros')
@@ -602,6 +599,32 @@ export async function buscarTerceiroPorCNPJ(cnpj: string): Promise<Terceiro | nu
   }
 
   return data ? converterParaTerceiro(data) : null;
+}
+
+/**
+ * Busca terceiros por nome (busca parcial com ILIKE)
+ * Retorna um array com todos os terceiros que contêm o nome buscado
+ */
+export async function buscarTerceirosPorNome(nome: string): Promise<Terceiro[]> {
+  const supabase = createServiceClient();
+  const nomeBusca = nome.trim();
+
+  if (!nomeBusca) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('terceiros')
+    .select('*')
+    .ilike('nome', `%${nomeBusca}%`)
+    .order('nome', { ascending: true })
+    .limit(100); // Limitar a 100 resultados para evitar sobrecarga
+
+  if (error) {
+    throw new Error(`Erro ao buscar terceiros por nome: ${error.message}`);
+  }
+
+  return (data || []).map(converterParaTerceiro);
 }
 
 /**
