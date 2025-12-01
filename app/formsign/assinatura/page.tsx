@@ -68,18 +68,48 @@ export default function AssinaturaPage() {
           fetch("/api/formsign-admin/segmentos"),
           fetch("/api/formsign-admin/formularios"),
         ]);
-        const tplJson = await tplRes.json();
-        const segJson = await segRes.json();
-        const formJson = await formRes.json();
-        if (tplRes.ok && tplJson.data) {
-          setTemplates(tplJson.data.map((t: any) => ({ id: t.template_uuid || String(t.id), label: t.nome })));
+
+        const errors: string[] = [];
+
+        // Templates
+        if (tplRes.ok) {
+          const tplJson = await tplRes.json();
+          if (tplJson.data) {
+            setTemplates(tplJson.data.map((t: any) => ({ id: t.template_uuid || String(t.id), label: t.nome })));
+          }
+        } else {
+          errors.push("templates");
         }
-        if (segRes.ok && segJson.data) {
-          setSegmentos(segJson.data.map((s: any) => ({ id: String(s.id), label: s.nome })));
+
+        // Segmentos
+        if (segRes.ok) {
+          const segJson = await segRes.json();
+          if (segJson.data) {
+            setSegmentos(segJson.data.map((s: any) => ({ id: String(s.id), label: s.nome })));
+          }
+        } else {
+          errors.push("segmentos");
         }
-        if (formRes.ok && formJson.data) {
-          setFormularios(formJson.data.map((f: any) => ({ id: f.formulario_uuid || String(f.id), label: f.nome })));
+
+        // Formulários
+        if (formRes.ok) {
+          const formJson = await formRes.json();
+          if (formJson.data) {
+            setFormularios(formJson.data.map((f: any) => ({ id: f.formulario_uuid || String(f.id), label: f.nome })));
+          }
+        } else {
+          errors.push("formulários");
         }
+
+        if (errors.length > 0) {
+          const msg = `Erro ao carregar: ${errors.join(", ")}`;
+          setError(msg);
+          toast.error(msg);
+        }
+      } catch (err) {
+        const msg = "Erro ao carregar listas. Verifique sua conexão.";
+        setError(msg);
+        toast.error(msg);
       } finally {
         setLoadingLists(false);
       }
@@ -294,8 +324,8 @@ export default function AssinaturaPage() {
             <CardDescription>Gerado via template.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="aspect-[3/4] border rounded overflow-hidden">
-              <iframe src={previewUrl} className="w-full h-full" />
+            <div className="aspect-3/4 border rounded overflow-hidden">
+              <iframe src={previewUrl} className="w-full h-full" title="Preview do PDF" />
             </div>
           </CardContent>
         </Card>
