@@ -23,7 +23,7 @@ import type { AtualizarDocumentoParams } from '@/backend/types/documentos/types'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authenticateRequest(request);
@@ -31,7 +31,8 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const documento_id = parseInt(params.id);
+    const { id } = await params;
+    const documento_id = parseInt(id);
     if (isNaN(documento_id)) {
       return NextResponse.json(
         { success: false, error: 'ID inválido' },
@@ -86,21 +87,21 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   return await updateDocumento(request, params);
 }
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   return await updateDocumento(request, params);
 }
 
 async function updateDocumento(
   request: NextRequest,
-  params: { id: string }
+  params: Promise<{ id: string }>
 ) {
   try {
     const authResult = await authenticateRequest(request);
@@ -108,7 +109,8 @@ async function updateDocumento(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const documento_id = parseInt(params.id);
+    const { id } = await params;
+    const documento_id = parseInt(id);
     if (isNaN(documento_id)) {
       return NextResponse.json(
         { success: false, error: 'ID inválido' },
@@ -171,7 +173,7 @@ async function updateDocumento(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authenticateRequest(request);
@@ -179,7 +181,8 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const documento_id = parseInt(params.id);
+    const { id } = await params;
+    const documento_id = parseInt(id);
     if (isNaN(documento_id)) {
       return NextResponse.json(
         { success: false, error: 'ID inválido' },

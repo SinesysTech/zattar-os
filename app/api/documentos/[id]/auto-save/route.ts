@@ -20,7 +20,7 @@ import type { AutoSavePayload } from '@/backend/types/documentos/types';
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authenticateRequest(request);
@@ -28,7 +28,8 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const documento_id = parseInt(params.id);
+    const { id } = await params;
+    const documento_id = parseInt(id);
     if (isNaN(documento_id)) {
       return NextResponse.json(
         { success: false, error: 'ID inválido' },

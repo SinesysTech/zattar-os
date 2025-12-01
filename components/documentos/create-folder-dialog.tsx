@@ -1,11 +1,10 @@
 'use client';
 
 /**
- * Dialog para criar novo documento
+ * Dialog para criar nova pasta
  */
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import {
   Dialog,
@@ -19,70 +18,75 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
 
-interface CreateDocumentDialogProps {
+interface CreateFolderDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  pastaId?: number | null;
+  pastaPaiId?: number | null;
   onSuccess?: () => void;
 }
 
-export function CreateDocumentDialog({
+export function CreateFolderDialog({
   open,
   onOpenChange,
-  pastaId,
+  pastaPaiId,
   onSuccess,
-}: CreateDocumentDialogProps) {
-  const router = useRouter();
+}: CreateFolderDialogProps) {
   const [loading, setLoading] = React.useState(false);
-  const [titulo, setTitulo] = React.useState('');
+  const [nome, setNome] = React.useState('');
   const [descricao, setDescricao] = React.useState('');
+  const [tipo, setTipo] = React.useState<'comum' | 'privada'>('comum');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!titulo.trim()) {
-      toast.error('Título é obrigatório');
+    if (!nome.trim()) {
+      toast.error('Nome é obrigatório');
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch('/api/documentos', {
+      const response = await fetch('/api/pastas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          titulo: titulo.trim(),
+          nome: nome.trim(),
           descricao: descricao.trim() || null,
-          pasta_id: pastaId,
-          conteudo: [],
+          tipo,
+          pasta_pai_id: pastaPaiId,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao criar documento');
+        throw new Error(data.error || 'Erro ao criar pasta');
       }
 
-      toast.success('Documento criado', { description: 'Abrindo editor...' });
+      toast.success(`Pasta "${nome}" criada com sucesso`);
 
       // Resetar form
-      setTitulo('');
+      setNome('');
       setDescricao('');
+      setTipo('comum');
       onOpenChange(false);
-
-      // Redirecionar para editor
-      router.push(`/documentos/${data.data.id}`);
 
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
-      console.error('Erro ao criar documento:', error);
-      toast.error(error instanceof Error ? error.message : 'Erro ao criar documento');
+      console.error('Erro ao criar pasta:', error);
+      toast.error(error instanceof Error ? error.message : 'Erro ao criar pasta');
     } finally {
       setLoading(false);
     }
@@ -92,35 +96,57 @@ export function CreateDocumentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Criar novo documento</DialogTitle>
+          <DialogTitle>Criar nova pasta</DialogTitle>
           <DialogDescription>
-            Crie um novo documento jurídico. Você será redirecionado para o editor.
+            Organize seus documentos em pastas
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="titulo">Título *</Label>
+              <Label htmlFor="nome">Nome *</Label>
               <Input
-                id="titulo"
-                placeholder="Ex: Petição Inicial - Processo 1234"
-                value={titulo}
-                onChange={(e) => setTitulo(e.target.value)}
+                id="nome"
+                placeholder="Ex: Processos Trabalhistas"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
                 disabled={loading}
                 autoFocus
               />
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="tipo">Tipo</Label>
+              <Select
+                value={tipo}
+                onValueChange={(v) => setTipo(v as 'comum' | 'privada')}
+                disabled={loading}
+              >
+                <SelectTrigger id="tipo">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="comum">Comum (visível para todos)</SelectItem>
+                  <SelectItem value="privada">Privada (apenas para mim)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                {tipo === 'comum'
+                  ? 'Todos os usuários poderão ver esta pasta'
+                  : 'Apenas você poderá ver esta pasta'}
+              </p>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="descricao">Descrição (opcional)</Label>
               <Textarea
                 id="descricao"
-                placeholder="Breve descrição do documento..."
+                placeholder="Breve descrição da pasta..."
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 disabled={loading}
-                rows={3}
+                rows={2}
               />
             </div>
           </div>
@@ -136,7 +162,7 @@ export function CreateDocumentDialog({
             </Button>
             <Button type="submit" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Criar e Editar
+              Criar Pasta
             </Button>
           </DialogFooter>
         </form>

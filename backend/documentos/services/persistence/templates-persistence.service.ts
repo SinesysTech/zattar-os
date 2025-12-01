@@ -215,9 +215,20 @@ export async function deletarTemplate(id: number): Promise<void> {
 export async function incrementarUsoTemplate(id: number): Promise<void> {
   const supabase = createServiceClient();
 
+  // Primeiro busca o valor atual e depois incrementa
+  const { data: templateAtual, error: selectError } = await supabase
+    .from('templates')
+    .select('uso_count')
+    .eq('id', id)
+    .single();
+
+  if (selectError) {
+    throw new Error(`Erro ao buscar uso do template: ${selectError.message}`);
+  }
+
   const { error } = await supabase
     .from('templates')
-    .update({ uso_count: supabase.sql`uso_count + 1` })
+    .update({ uso_count: (templateAtual?.uso_count ?? 0) + 1 })
     .eq('id', id);
 
   if (error) {

@@ -11,13 +11,34 @@ import type {
   ListarAcervoAgrupadoResult,
   AgrupamentoAcervo,
 } from '@/backend/types/acervo/types';
+import { StatusProcesso } from '@/types/domain/common';
 
 const ACERVO_TTL = 900; // 15 minutos
+
+/**
+ * Mapeia código de status do PJE para enum StatusProcesso
+ */
+function mapearStatusProcesso(codigo: string | null | undefined): StatusProcesso {
+  if (!codigo) return StatusProcesso.OUTRO;
+  const codigoUpper = codigo.toUpperCase();
+
+  // Mapeamento baseado nos códigos conhecidos do PJE
+  if (codigoUpper.includes('ATIVO') || codigoUpper === 'A') return StatusProcesso.ATIVO;
+  if (codigoUpper.includes('SUSPENSO') || codigoUpper === 'S') return StatusProcesso.SUSPENSO;
+  if (codigoUpper.includes('ARQUIVADO') || codigoUpper === 'ARQ') return StatusProcesso.ARQUIVADO;
+  if (codigoUpper.includes('EXTINTO') || codigoUpper === 'E') return StatusProcesso.EXTINTO;
+  if (codigoUpper.includes('BAIXADO') || codigoUpper === 'B') return StatusProcesso.BAIXADO;
+  if (codigoUpper.includes('PENDENTE') || codigoUpper === 'P') return StatusProcesso.PENDENTE;
+  if (codigoUpper.includes('RECURSO') || codigoUpper === 'R') return StatusProcesso.EM_RECURSO;
+
+  return StatusProcesso.OUTRO;
+}
 
 /**
  * Converte dados do banco para formato de retorno
  */
 function converterParaAcervo(data: Record<string, unknown>): Acervo {
+  const codigoStatus = data.codigo_status_processo as string | null;
   return {
     id: data.id as number,
     id_pje: data.id_pje as number,
@@ -30,7 +51,8 @@ function converterParaAcervo(data: Record<string, unknown>): Acervo {
     descricao_orgao_julgador: data.descricao_orgao_julgador as string,
     classe_judicial: data.classe_judicial as string,
     segredo_justica: data.segredo_justica as boolean,
-    codigo_status_processo: data.codigo_status_processo as string,
+    status: mapearStatusProcesso(codigoStatus),
+    codigo_status_processo: codigoStatus ?? undefined,
     prioridade_processual: data.prioridade_processual as number,
     nome_parte_autora: data.nome_parte_autora as string,
     qtde_parte_autora: data.qtde_parte_autora as number,
@@ -349,7 +371,7 @@ export async function listarAcervoAgrupado(
         chaveGrupo = processo.classe_judicial;
         break;
       case 'codigo_status_processo':
-        chaveGrupo = processo.codigo_status_processo;
+        chaveGrupo = String(processo.codigo_status_processo ?? 'sem_status');
         break;
       case 'orgao_julgador':
         chaveGrupo = processo.descricao_orgao_julgador;

@@ -25,6 +25,7 @@ export interface Acervo {
   classe_judicial: string;
   segredo_justica: boolean;
   status: StatusProcesso;
+  codigo_status_processo?: string; // Código do status do processo (opcional, pode vir de joins)
   prioridade_processual: number;
   nome_parte_autora: string;
   qtde_parte_autora: number;

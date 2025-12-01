@@ -2,21 +2,36 @@
 
 import * as React from 'react';
 
-import { normalizeNodeId } from 'platejs';
+import { normalizeNodeId, type Descendant } from 'platejs';
 import { Plate, usePlateEditor } from 'platejs/react';
 
 import { EditorKit } from '@/components/plate/editor-kit';
 import { SettingsDialog } from '@/components/plate/settings-dialog';
 import { Editor, EditorContainer } from '@/components/ui/editor';
 
-export function PlateEditor() {
+interface PlateEditorProps {
+  initialValue?: Descendant[];
+  onChange?: (value: Descendant[]) => void;
+}
+
+export function PlateEditor({ initialValue, onChange }: PlateEditorProps) {
   const editor = usePlateEditor({
     plugins: EditorKit,
-    value,
+    value: (initialValue && initialValue.length > 0 ? initialValue : value) as any,
   });
 
+  // Handler para mudanças no editor
+  const handleChange = React.useCallback(
+    ({ value: newValue }: { value: Descendant[] }) => {
+      if (onChange) {
+        onChange(newValue);
+      }
+    },
+    [onChange]
+  );
+
   return (
-    <Plate editor={editor}>
+    <Plate editor={editor} onChange={handleChange}>
       <EditorContainer variant="default" className="h-full">
         <Editor variant="demo" />
       </EditorContainer>
