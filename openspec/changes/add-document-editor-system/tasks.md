@@ -3,168 +3,170 @@
 ## 🔴 PRIORIDADE ALTA - MVP Funcional (28-36 horas)
 
 ### Navegação (1h)
-- [ ] Reorganizar `components/layout/app-sidebar.tsx` em 3 seções
-  - [ ] Criar array `navPrincipal` com itens atuais (Dashboard, Partes, Contratos, etc)
-  - [ ] Criar array `navServicos` com "Editor de Documentos" e "Chat Interno"
-  - [ ] Criar array `navAdministracao` com "Captura" (movido) e "Usuários"
-  - [ ] Renderizar 3 seções na sidebar com títulos apropriados
+- [x] Reorganizar `components/layout/app-sidebar.tsx` em 3 seções
+  - [x] Criar array `navPrincipal` com itens atuais (Dashboard, Partes, Contratos, etc)
+  - [x] Criar array `navServicos` com "Editor de Documentos" e "Chat Interno"
+  - [x] Criar array `navAdministracao` com "Captura" (movido) e "Usuários"
+  - [x] Renderizar 3 seções na sidebar com títulos apropriados
 
 ### Banco de Dados - Migrations + RLS (2-3h)
-- [ ] Criar migration `20251130000000_create_documentos_system.sql`
-  - [ ] Tabela `documentos` com todos os campos, constraints e índices
-  - [ ] Tabela `pastas` com self-referencing e trigger de validação de ciclos
-  - [ ] Tabela `documentos_compartilhados` com constraint unique
-  - [ ] Tabela `templates` com campos de visibilidade
-  - [ ] Tabela `documentos_uploads` para rastreamento B2
-  - [ ] Tabela `documentos_versoes` para histórico
-  - [ ] Tabela `salas_chat` para salas de chat
-  - [ ] Tabela `mensagens_chat` para mensagens
-  - [ ] Função `validate_pasta_hierarchy()` para prevenir ciclos
-  - [ ] Trigger `validate_pasta_hierarchy_trigger`
-  - [ ] Função `update_updated_at_column()` para timestamps
-- [ ] Criar RLS policies para todas as tabelas (4 policies por tabela: select, insert, update, delete)
-- [ ] Testar migration em ambiente local
-- [ ] Aplicar migration: `npx supabase db push`
+- [x] Criar migration `20251130220000_create_documentos_system.sql`
+  - [x] Tabela `documentos` com todos os campos, constraints e índices
+  - [x] Tabela `pastas` com self-referencing e trigger de validação de ciclos
+  - [x] Tabela `documentos_compartilhados` com constraint unique
+  - [x] Tabela `templates` com campos de visibilidade
+  - [x] Tabela `documentos_uploads` para rastreamento B2
+  - [x] Tabela `documentos_versoes` para histórico
+  - [x] Tabela `salas_chat` para salas de chat
+  - [x] Tabela `mensagens_chat` para mensagens
+  - [x] Função `validate_pasta_hierarchy()` para prevenir ciclos
+  - [x] Trigger `validate_pasta_hierarchy_trigger`
+  - [x] Função `update_updated_at_column()` para timestamps
+- [x] Criar RLS policies para todas as tabelas (4 policies por tabela: select, insert, update, delete)
+- [x] Testar migration em ambiente local (aplicada via Supabase MCP)
+- [x] Aplicar migration via Supabase MCP (inclui índices e fix de policies)
 
 ### Tipos TypeScript (1h)
-- [ ] Criar `backend/types/documentos/types.ts`
-  - [ ] Interface `Documento`
-  - [ ] Interface `CriarDocumentoParams`
-  - [ ] Interface `AtualizarDocumentoParams`
-  - [ ] Interface `ListarDocumentosParams`
-  - [ ] Interface `ListarDocumentosResult`
-  - [ ] Interface `Pasta`
-  - [ ] Interface `CriarPastaParams`
-  - [ ] Interface `ListarPastasParams`
-  - [ ] Interface `DocumentoCompartilhado`
-  - [ ] Interface `CompartilharDocumentoParams`
-  - [ ] Interface `Template`
-  - [ ] Interface `CriarTemplateParams`
-  - [ ] Interface `ListarTemplatesParams`
-  - [ ] Interface `DocumentoUpload`
-  - [ ] Interface `UploadArquivoParams`
-  - [ ] Interface `DocumentoVersao`
+- [x] Criar `backend/types/documentos/types.ts`
+  - [x] Interface `Documento`
+  - [x] Interface `CriarDocumentoParams`
+  - [x] Interface `AtualizarDocumentoParams`
+  - [x] Interface `ListarDocumentosParams`
+  - [x] Interface `DocumentoComUsuario`
+  - [x] Interface `Pasta`
+  - [x] Interface `CriarPastaParams`
+  - [x] Interface `AtualizarPastaParams`
+  - [x] Interface `DocumentoCompartilhado`
+  - [x] Interface `CompartilharDocumentoParams`
+  - [x] Interface `Template`
+  - [x] Interface `CriarTemplateParams`
+  - [x] Interface `ListarTemplatesParams`
+  - [x] Interface `DocumentoUpload`
+  - [x] Interface `UploadArquivoParams`
+  - [x] Interface `DocumentoVersao`
 
 ### Serviços de Persistência (4-5h)
-- [ ] Criar `backend/documentos/services/persistence/documentos-persistence.service.ts`
-  - [ ] `criarDocumento(params, userId)`
-  - [ ] `listarDocumentos(params, userId)`
-  - [ ] `buscarDocumentoPorId(id, userId)`
-  - [ ] `atualizarDocumento(id, params, userId)`
-  - [ ] `deletarDocumento(id, userId)` (soft delete)
-- [ ] Criar `backend/documentos/services/persistence/pastas-persistence.service.ts`
-  - [ ] `criarPasta(params, userId)`
-  - [ ] `listarPastas(params, userId)`
-  - [ ] `buscarPastaPorId(id, userId)`
-  - [ ] `atualizarPasta(id, params, userId)`
-  - [ ] `deletarPasta(id, userId)` (soft delete)
-- [ ] Criar `backend/documentos/services/persistence/compartilhamento-persistence.service.ts`
-  - [ ] `compartilharDocumento(params, userId)`
-  - [ ] `removerCompartilhamento(documentoId, usuarioId, userId)`
-  - [ ] `listarCompartilhamentos(documentoId, userId)`
-  - [ ] `atualizarPermissao(id, permissao, userId)`
-- [ ] Criar `backend/documentos/services/persistence/templates-persistence.service.ts`
-  - [ ] `criarTemplate(params, userId)`
-  - [ ] `listarTemplates(params, userId)`
-  - [ ] `buscarTemplatePorId(id, userId)`
-  - [ ] `atualizarTemplate(id, params, userId)`
-  - [ ] `deletarTemplate(id, userId)`
-- [ ] Criar `backend/documentos/services/persistence/uploads-persistence.service.ts`
-  - [ ] `criarUpload(params, userId)`
-  - [ ] `listarUploads(documentoId, userId)`
-  - [ ] `deletarUpload(id, userId)`
+- [x] Criar `backend/documentos/services/persistence/documentos-persistence.service.ts`
+  - [x] `criarDocumento(params, userId)`
+  - [x] `listarDocumentos(params, userId)`
+  - [x] `buscarDocumentoPorId(id)`
+  - [x] `buscarDocumentoComUsuario(id)`
+  - [x] `atualizarDocumento(id, params, userId)`
+  - [x] `deletarDocumento(id)` (soft delete)
+  - [x] `restaurarDocumento(id)`
+  - [x] `deletarDocumentoPermanentemente(id)`
+  - [x] `verificarAcessoDocumento(documentoId, usuarioId)`
+- [x] Criar `backend/documentos/services/persistence/pastas-persistence.service.ts`
+  - [x] `criarPasta(params, userId)`
+  - [x] `listarPastasComContadores(pastaPaiId, userId)`
+  - [x] `buscarPastaPorId(id)`
+  - [x] `buscarHierarquiaPastas(pastaRaizId, incluirDocumentos, userId)`
+  - [x] `atualizarPasta(id, params)`
+  - [x] `deletarPasta(id)` (soft delete)
+  - [x] `verificarAcessoPasta(pastaId, usuarioId)`
+- [x] Criar `backend/documentos/services/persistence/compartilhamento-persistence.service.ts`
+  - [x] `compartilharDocumento(params, userId)`
+  - [x] `removerCompartilhamento(documentoId, usuarioId)`
+  - [x] `listarCompartilhamentos(documentoId)`
+  - [x] `atualizarPermissao(id, permissao)`
+- [x] Criar `backend/documentos/services/persistence/templates-persistence.service.ts`
+  - [x] `criarTemplate(params, userId)`
+  - [x] `listarTemplates(params, userId)`
+  - [x] `buscarTemplatePorId(id)`
+  - [x] `atualizarTemplate(id, params)`
+  - [x] `deletarTemplate(id)`
+  - [x] `verificarPermissaoTemplate(templateId, usuarioId)`
+- [x] Criar `backend/documentos/services/persistence/uploads-persistence.service.ts`
+  - [x] `registrarUpload(params, userId)`
+  - [x] `listarUploadsPorDocumento(documentoId)`
+  - [x] `deletarUpload(id)`
 
 ### Serviços de Documentos (3-4h)
-- [ ] Criar `backend/documentos/services/documentos/criar-documento.service.ts`
-  - [ ] Validação de título (1-500 chars)
-  - [ ] Validação de conteúdo (JSON válido)
-  - [ ] Chamada de persistência
-- [ ] Criar `backend/documentos/services/documentos/listar-documentos.service.ts`
-  - [ ] Lógica de filtros (pasta, tags, busca textual)
-  - [ ] Paginação (max 200 itens)
-  - [ ] Ordenação customizável
-- [ ] Criar `backend/documentos/services/documentos/buscar-documento.service.ts`
-  - [ ] Verificação de permissões (criador ou compartilhado)
-  - [ ] Retornar documento completo
-- [ ] Criar `backend/documentos/services/documentos/atualizar-documento.service.ts`
-  - [ ] Verificação de permissões (criador ou permissão "editar")
-  - [ ] Incremento de versão
-  - [ ] Atualização de timestamps
-- [ ] Criar `backend/documentos/services/documentos/deletar-documento.service.ts`
-  - [ ] Soft delete (campo `deleted_at`)
-  - [ ] Apenas criador pode deletar
-- [ ] Criar `backend/documentos/services/documentos/salvar-auto.service.ts`
-  - [ ] Auto-save sem incremento de versão
-  - [ ] Atualização apenas de conteúdo
+_Nota: Lógica de negócio implementada diretamente nas API routes (validações e chamadas de persistência)_
+- [x] Validação de título (1-500 chars) - implementado em API routes
+- [x] Validação de conteúdo (JSON válido) - implementado em API routes
+- [x] Lógica de filtros (pasta, tags, busca textual) - implementado em persistence
+- [x] Paginação - implementado em persistence
+- [x] Verificação de permissões (criador ou compartilhado) - implementado via `verificarAcessoDocumento`
+- [x] Auto-save - implementado em `/api/documentos/[id]/auto-save`
 
 ### API Routes Documentos (3-4h)
-- [ ] Criar `app/api/documentos/route.ts`
-  - [ ] `GET`: Listar documentos com autenticação
-  - [ ] `POST`: Criar documento com validação
-- [ ] Criar `app/api/documentos/[id]/route.ts`
-  - [ ] `GET`: Buscar documento por ID
-  - [ ] `PUT`: Atualizar documento completo
-  - [ ] `PATCH`: Atualizar documento parcial
-  - [ ] `DELETE`: Soft delete
-- [ ] Criar `app/api/documentos/[id]/auto-save/route.ts`
-  - [ ] `POST`: Auto-save com debounce no frontend
-- [ ] Adicionar tratamento de erros padronizado
-- [ ] Adicionar validação de inputs
+- [x] Criar `app/api/documentos/route.ts`
+  - [x] `GET`: Listar documentos com autenticação
+  - [x] `POST`: Criar documento com validação
+- [x] Criar `app/api/documentos/[id]/route.ts`
+  - [x] `GET`: Buscar documento por ID
+  - [x] `PUT`: Atualizar documento completo
+  - [x] `PATCH`: Atualizar documento parcial
+  - [x] `DELETE`: Soft delete
+- [x] Criar `app/api/documentos/[id]/auto-save/route.ts`
+  - [x] `POST`: Auto-save com debounce no frontend
+- [x] Adicionar tratamento de erros padronizado
+- [x] Adicionar validação de inputs
 
 ### API Routes Pastas (2-3h)
-- [ ] Criar `app/api/pastas/route.ts`
-  - [ ] `GET`: Listar pastas (hierárquicas)
-  - [ ] `POST`: Criar pasta com validação de tipo
-- [ ] Criar `app/api/pastas/[id]/route.ts`
-  - [ ] `GET`: Buscar pasta por ID
-  - [ ] `PUT`: Atualizar pasta
-  - [ ] `DELETE`: Soft delete
+- [x] Criar `app/api/pastas/route.ts`
+  - [x] `GET`: Listar pastas (hierárquicas)
+  - [x] `POST`: Criar pasta com validação de tipo
+- [x] Criar `app/api/pastas/[id]/route.ts`
+  - [x] `GET`: Buscar pasta por ID
+  - [x] `PUT`: Atualizar pasta
+  - [x] `DELETE`: Soft delete
 
 ### Upload Backblaze B2 (3-5h)
-- [ ] **Remover UploadThing**
-  - [ ] Deletar `app/_lib/uploadthing.ts`
-  - [ ] Deletar `app/api/uploadthing/route.ts`
-  - [ ] Remover dependência `uploadthing` do `package.json`
-- [ ] Criar `backend/documentos/services/uploads/upload-arquivo.service.ts`
-  - [ ] Validação de tipo MIME (whitelist)
-  - [ ] Validação de tamanho (max 50MB)
-  - [ ] Integração com `backend/storage/backblaze-b2.service.ts`
-  - [ ] Nomenclatura: `editor/doc_${documentoId}/${timestamp}_${random}.${ext}`
-  - [ ] Registro na tabela `documentos_uploads`
-- [ ] Criar `hooks/use-editor-upload.ts`
-  - [ ] Upload via FormData
-  - [ ] Progress tracking (simulado)
-  - [ ] Error handling
-  - [ ] Callbacks onSuccess/onError
-- [ ] Criar `app/api/documentos/[id]/uploads/route.ts`
-  - [ ] `POST`: Receber FormData, validar, fazer upload
-  - [ ] `DELETE`: Remover arquivo do B2 + banco
+- [x] **Remover UploadThing**
+  - [x] Deletar `app/_lib/uploadthing.ts`
+  - [x] Deletar `app/api/uploadthing/route.ts`
+  - [x] Deletar `app/_lib/hooks/use-upload-file.ts`
+  - [ ] Remover dependência `uploadthing` do `package.json` (opcional, não bloqueia build)
+- [x] Criar `backend/documentos/services/upload/b2-upload.service.ts`
+  - [x] Validação de tipo MIME (whitelist)
+  - [x] Validação de tamanho (max 50MB)
+  - [x] Integração com `backend/storage/backblaze-b2.service.ts`
+  - [x] Nomenclatura: `documentos/${documentoId}/${timestamp}_${random}.${ext}`
+  - [x] Registro na tabela `documentos_uploads`
+- [x] Criar `hooks/use-editor-upload.tsx`
+  - [x] Upload via FormData
+  - [x] Progress tracking (simulado)
+  - [x] Error handling
+  - [x] Callbacks onSuccess/onError
+  - [x] DocumentEditorContext e Provider para compartilhar documentoId
+- [x] Criar `app/api/documentos/[id]/upload/route.ts`
+  - [x] `POST`: Receber FormData, validar, fazer upload
+  - [x] `GET`: Listar uploads do documento
 
 ### Página de Listagem (4-5h)
-- [ ] Criar `app/(dashboard)/documentos/page.tsx`
-  - [ ] Integração com API `/api/documentos`
+- [x] Criar `app/(dashboard)/documentos/page.tsx`
+  - [x] Integração com API `/api/documentos`
   - [ ] Grid/List view toggle
   - [ ] Filtros (pasta, tags, busca)
   - [ ] Paginação
-  - [ ] Botão "Criar Documento"
-- [ ] Criar `components/documentos/document-list.tsx`
-  - [ ] Cards de documentos com preview
-  - [ ] Ações inline (editar, compartilhar, deletar)
-  - [ ] Loading states
-  - [ ] Empty state
+  - [x] Botão "Criar Documento"
+- [x] Criar `components/documentos/document-list.tsx`
+  - [x] Cards de documentos com preview
+  - [x] Ações inline (editar, compartilhar, deletar)
+  - [x] Loading states
+  - [x] Empty state
+- [x] Criar `components/documentos/folder-tree.tsx`
+- [x] Criar `components/documentos/document-card.tsx`
+- [x] Criar `components/documentos/document-table.tsx`
+- [x] Criar `components/documentos/create-document-dialog.tsx`
+- [x] Criar `components/documentos/create-folder-dialog.tsx`
 
 ### Página de Editor + Auto-save (5-6h)
-- [ ] Criar `app/(dashboard)/documentos/[id]/page.tsx`
-  - [ ] Buscar documento da API
-  - [ ] Renderizar PlateEditor
-  - [ ] Toolbar customizada
-  - [ ] Botão de exportação
-- [ ] Criar `components/documentos/document-editor-wrapper.tsx`
-  - [ ] Wrapper do PlateEditor
-  - [ ] Auto-save com debounce de 2 segundos
-  - [ ] Indicador de status (salvando/salvo)
-  - [ ] Integração com API `/api/documentos/[id]/auto-save`
-  - [ ] Error handling e retry
+- [x] Criar `app/(dashboard)/documentos/[id]/page.tsx`
+  - [x] Buscar documento da API
+  - [x] Renderizar PlateEditor
+  - [x] Toolbar via PlateEditor
+  - [ ] Botão de exportação (pendente)
+- [x] Criar `components/documentos/document-editor.tsx`
+  - [x] Wrapper do PlateEditor com DocumentEditorProvider
+  - [x] Auto-save com debounce de 2 segundos
+  - [x] Indicador de status (salvando/salvo)
+  - [x] Integração com API `/api/documentos/[id]/auto-save`
+  - [x] Error handling
+- [x] Criar `components/documentos/upload-dialog.tsx`
+- [x] Criar `components/documentos/collaborators-avatars.tsx`
 
 ---
 
@@ -219,10 +221,10 @@
   - [ ] Alterar permissão de visualizar/editar
 
 ### API Routes Compartilhamento (2h)
-- [ ] Criar `app/api/documentos/[id]/compartilhar/route.ts`
-  - [ ] `POST`: Compartilhar documento
-  - [ ] `DELETE`: Remover compartilhamento
-  - [ ] `PATCH`: Atualizar permissão
+- [x] Criar `app/api/documentos/[id]/compartilhar/route.ts`
+  - [x] `POST`: Compartilhar documento
+  - [x] `DELETE`: Remover compartilhamento
+  - [x] `PATCH`: Atualizar permissão
 
 ### Componentes de Templates (4-5h)
 - [ ] Criar `components/documentos/template-library.tsx`
@@ -254,13 +256,13 @@
   - [ ] Apenas criador pode deletar
 
 ### API Routes Templates (2-3h)
-- [ ] Criar `app/api/templates/route.ts`
-  - [ ] `GET`: Listar templates
-  - [ ] `POST`: Criar template
-- [ ] Criar `app/api/templates/[id]/route.ts`
-  - [ ] `GET`: Buscar template
-  - [ ] `PUT`: Atualizar template
-  - [ ] `DELETE`: Deletar template
+- [x] Criar `app/api/templates/route.ts`
+  - [x] `GET`: Listar templates
+  - [x] `POST`: Criar template
+- [x] Criar `app/api/templates/[id]/route.ts`
+  - [x] `GET`: Buscar template
+  - [x] `PUT`: Atualizar template
+  - [x] `DELETE`: Deletar template
 - [ ] Criar `app/api/templates/[id]/usar/route.ts`
   - [ ] `POST`: Criar documento a partir do template
 
@@ -363,18 +365,16 @@
   - [ ] Botão "Restaurar"
 
 ### Soft Delete com Lixeira (2h)
-- [ ] Campo `deleted_at` já adicionado nas migrations
-- [ ] Atualizar serviços de delete para soft delete
-  - [ ] `deletarDocumento`: Apenas setar `deleted_at`
-  - [ ] `deletarPasta`: Apenas setar `deleted_at`
-- [ ] Criar `app/api/lixeira/documentos/route.ts`
-  - [ ] `GET`: Listar documentos deletados (where deleted_at IS NOT NULL)
-- [ ] Criar `app/api/lixeira/pastas/route.ts`
-  - [ ] `GET`: Listar pastas deletadas
-- [ ] Criar `app/api/lixeira/documentos/[id]/restaurar/route.ts`
-  - [ ] `POST`: Setar `deleted_at = null`
-- [ ] Criar `app/api/lixeira/pastas/[id]/restaurar/route.ts`
-  - [ ] `POST`: Setar `deleted_at = null`
+- [x] Campo `deleted_at` já adicionado nas migrations
+- [x] Atualizar serviços de delete para soft delete
+  - [x] `deletarDocumento`: Apenas setar `deleted_at`
+  - [x] `deletarPasta`: Apenas setar `deleted_at`
+- [x] Criar `app/api/lixeira/route.ts`
+  - [x] `GET`: Listar documentos deletados (where deleted_at IS NOT NULL)
+- [x] Criar `app/api/lixeira/[id]/route.ts`
+  - [x] `DELETE`: Deletar permanentemente
+- [x] Criar `app/api/lixeira/[id]/restaurar/route.ts`
+  - [x] `POST`: Setar `deleted_at = null`
 - [ ] Criar componente `components/documentos/trash-view.tsx`
   - [ ] Lista de itens deletados
   - [ ] Botão "Restaurar"
@@ -410,25 +410,18 @@
   - [ ] Reconexão após desconexão
 
 ### Chat Interno (8-10h)
-- [ ] Criar tabelas `salas_chat` e `mensagens_chat` (já na migration)
-- [ ] Criar `backend/chat/services/salas/criar-sala.service.ts`
-  - [ ] Validação de tipo (geral/documento/privado)
-  - [ ] Associação com documento (se tipo = documento)
-- [ ] Criar `backend/chat/services/salas/listar-salas.service.ts`
-  - [ ] Filtro por tipo
-  - [ ] Ordenar por última mensagem
-- [ ] Criar `backend/chat/services/mensagens/enviar-mensagem.service.ts`
-  - [ ] Validação de conteúdo
-  - [ ] Broadcast via Realtime
-- [ ] Criar `backend/chat/services/mensagens/listar-mensagens.service.ts`
-  - [ ] Paginação
-  - [ ] Ordenar por created_at
-- [ ] Criar `app/api/chat/salas/route.ts`
-  - [ ] `GET`: Listar salas
-  - [ ] `POST`: Criar sala
-- [ ] Criar `app/api/chat/salas/[id]/mensagens/route.ts`
-  - [ ] `GET`: Listar mensagens
-  - [ ] `POST`: Enviar mensagem
+- [x] Criar tabelas `salas_chat` e `mensagens_chat` (já na migration)
+- [x] Criar `backend/documentos/services/persistence/chat-persistence.service.ts`
+  - [x] Criação de salas
+  - [x] Listagem de salas
+  - [x] Criação de mensagens
+  - [x] Listagem de mensagens
+- [x] Criar `app/api/chat/salas/route.ts`
+  - [x] `GET`: Listar salas
+  - [x] `POST`: Criar sala
+- [x] Criar `app/api/chat/salas/[id]/mensagens/route.ts`
+  - [x] `GET`: Listar mensagens
+  - [x] `POST`: Enviar mensagem
 - [ ] Criar página `app/(dashboard)/chat/page.tsx`
   - [ ] Lista de salas
   - [ ] Seletor de sala ativa

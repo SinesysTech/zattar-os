@@ -1,3 +1,15 @@
+/**
+ * Formsign Admin Types (Backend)
+ *
+ * IMPORTANTE: Estes tipos são simplificados para payloads de API.
+ * Para tipos completos e tipados, veja: @/types/formsign/
+ *
+ * Diferenças principais:
+ * - FormsignTemplate.campos: string (JSON) vs Template.campos: TemplateCampo[]
+ * - FormsignFormulario.form_schema: unknown vs FormularioEntity.form_schema: DynamicFormSchema
+ * - FormsignSegmento é compatível com Segmento (mesma estrutura)
+ */
+
 export interface FormsignTemplate {
   id: number;
   template_uuid: string;

@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Undo2, Loader2, Eye, Pencil, FileText, ChevronsUpDown } from 'lucide-react';
+import { CheckCircle2, Undo2, Loader2, Eye, Pencil, FileText } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -722,8 +722,10 @@ function PrazoColumnHeader({
  */
 function ProcessoColumnHeaderSemanal({
   onSort,
+  onPartesSort,
 }: {
   onSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void;
+  onPartesSort: (field: 'nome_parte_autora' | 'nome_parte_re', direction: 'asc' | 'desc') => void;
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -853,7 +855,7 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                (onSort as any)('nome_parte_autora', 'asc');
+                onPartesSort('nome_parte_autora', 'asc');
                 setIsOpen(false);
               }}
             >
@@ -863,7 +865,7 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                (onSort as any)('nome_parte_autora', 'desc');
+                onPartesSort('nome_parte_autora', 'desc');
                 setIsOpen(false);
               }}
             >
@@ -873,7 +875,7 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                (onSort as any)('nome_parte_re', 'asc');
+                onPartesSort('nome_parte_re', 'asc');
                 setIsOpen(false);
               }}
             >
@@ -883,89 +885,11 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                (onSort as any)('nome_parte_re', 'desc');
+                onPartesSort('nome_parte_re', 'desc');
                 setIsOpen(false);
               }}
             >
               Parte Ré ↓
-            </Button>
-          </div>
-        </PopoverContent>
-      </Popover>
-    </div>
-  );
-}
-
-/**
- * Componente de header para a coluna Partes com opções de ordenação
- */
-function PartesColumnHeader({
-  onSort,
-}: {
-  onSort: (field: 'nome_parte_autora' | 'nome_parte_re', direction: 'asc' | 'desc') => void;
-}) {
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  return (
-    <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
-          >
-            <span className="text-sm font-medium">Partes</span>
-            <ChevronsUpDown className="ml-1 h-4 w-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-2" align="center">
-          <div className="space-y-1">
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
-              Ordenar por Parte Autora
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('nome_parte_autora', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('nome_parte_autora', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
-            </Button>
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
-              Ordenar por Parte Ré
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('nome_parte_re', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('nome_parte_re', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
             </Button>
           </div>
         </PopoverContent>
@@ -1020,6 +944,179 @@ function ResponsavelColumnHeaderSemanal({
 }
 
 /**
+ * Componente de célula para a coluna Prazo
+ */
+function PrazoCell({
+  expediente,
+  onSuccess,
+}: {
+  expediente: PendenteManifestacao;
+  onSuccess: () => void;
+}) {
+  const dataInicio = expediente.data_ciencia_parte;
+  const dataFim = expediente.data_prazo_legal_parte;
+  const diasUteis = calcularDiasUteis(dataInicio, dataFim);
+  const [openPrazo, setOpenPrazo] = React.useState(false);
+  const [isSavingPrazo, setIsSavingPrazo] = React.useState(false);
+  const [dataPrazoStr, setDataPrazoStr] = React.useState<string>('');
+
+  const handleSalvarPrazo = async () => {
+    setIsSavingPrazo(true);
+    try {
+      const iso = dataPrazoStr ? new Date(dataPrazoStr).toISOString() : '';
+      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/prazo-legal`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dataPrazoLegal: iso }),
+      });
+      if (!response.ok) {
+        const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(ed.error || 'Erro ao atualizar prazo legal');
+      }
+      setOpenPrazo(false);
+      setDataPrazoStr('');
+      onSuccess();
+    } finally {
+      setIsSavingPrazo(false);
+    }
+  };
+
+  return (
+    <div className="min-h-10 flex flex-col items-center justify-center gap-2 py-2">
+      <div className="text-sm">
+        <span className="font-semibold">Início:</span> {formatarData(dataInicio)}
+      </div>
+      <div className="text-sm">
+        <span className="font-semibold">Fim:</span> {formatarData(dataFim)}
+      </div>
+      {diasUteis !== null && (
+        <Badge className={`${getCorBadgeDias(diasUteis)} text-sm font-medium mt-1 px-3 py-1`}>
+          {diasUteis} {diasUteis === 1 ? 'dia' : 'dias'}
+        </Badge>
+      )}
+      {!expediente.baixado_em && !dataFim && (
+        <Button size="sm" variant="outline" onClick={() => setOpenPrazo(true)}>
+          Definir Data
+        </Button>
+      )}
+      <Dialog open={openPrazo} onOpenChange={setOpenPrazo}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Definir Prazo Legal</DialogTitle>
+            <DialogDescription>Defina a data de fim do prazo. A data de início será preenchida automaticamente.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <label htmlFor="prazo-inicio" className="text-sm font-medium">Data de Início (automática)</label>
+              <input
+                id="prazo-inicio"
+                type="text"
+                value={expediente.created_at ? formatarData(expediente.created_at) : '-'}
+                disabled
+                className="border rounded p-2 w-full bg-muted text-muted-foreground"
+              />
+              <p className="text-xs text-muted-foreground">Data de criação do expediente</p>
+            </div>
+            <div className="space-y-1">
+              <label htmlFor="prazo-fim" className="text-sm font-medium">Data de Fim *</label>
+              <input
+                id="prazo-fim"
+                type="date"
+                className="border rounded p-2 w-full"
+                value={dataPrazoStr}
+                onChange={(e) => setDataPrazoStr(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpenPrazo(false)} disabled={isSavingPrazo}>Cancelar</Button>
+            <Button onClick={handleSalvarPrazo} disabled={isSavingPrazo || !dataPrazoStr}>{isSavingPrazo ? 'Salvando...' : 'Salvar'}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+/**
+ * Componente de célula para a coluna Observações
+ */
+function ObservacoesCell({
+  expediente,
+  onSuccess,
+}: {
+  expediente: PendenteManifestacao;
+  onSuccess: () => void;
+}) {
+  const [open, setOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [valor, setValor] = React.useState<string>(expediente.observacoes || '');
+
+  React.useEffect(() => {
+    setValor(expediente.observacoes || '');
+  }, [expediente.observacoes]);
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      const observacoes = valor.trim() || null;
+      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/observacoes`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ observacoes }),
+      });
+      if (!response.ok) {
+        const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(ed.error || 'Erro ao atualizar observações');
+      }
+      setOpen(false);
+      onSuccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="relative w-full group">
+      <button type="button" className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer w-full pr-6">
+        <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed text-justify">
+          {expediente.observacoes || '-'}
+        </div>
+      </button>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="absolute bottom-1 right-1 p-1 hover:bg-accent rounded-md transition-colors z-10 opacity-0 group-hover:opacity-100"
+        title="Editar observações"
+      >
+        <Pencil className="h-3.5 w-3.5 text-primary" />
+      </button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-[min(92vw,31.25rem)]">
+          <DialogHeader>
+            <DialogTitle>Editar Observações</DialogTitle>
+            <DialogDescription>Adicionar observações do expediente</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Observações</label>
+              <Textarea value={valor} onChange={(e) => setValor(e.target.value)} disabled={isLoading} rows={3} />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" size="sm" onClick={() => setOpen(false)} disabled={isLoading}>Cancelar</Button>
+              <Button size="sm" onClick={handleSave} disabled={isLoading}>
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                Salvar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+/**
  * Define as colunas da tabela de expedientes para visualização semanal
  */
 function criarColunasSemanais(
@@ -1061,87 +1158,11 @@ function criarColunasSemanais(
       header: () => <PrazoColumnHeader onSort={onPrazoSort} />,
       enableSorting: false,
       size: 170,
-      cell: ({ row }) => {
-        const dataInicio = row.original.data_ciencia_parte;
-        const dataFim = row.original.data_prazo_legal_parte;
-        const diasUteis = calcularDiasUteis(dataInicio, dataFim);
-        const [openPrazo, setOpenPrazo] = React.useState(false);
-        const [isSavingPrazo, setIsSavingPrazo] = React.useState(false);
-        const [dataPrazoStr, setDataPrazoStr] = React.useState<string>('');
-        const handleSalvarPrazo = async () => {
-          setIsSavingPrazo(true);
-          try {
-            const iso = dataPrazoStr ? new Date(dataPrazoStr).toISOString() : '';
-            const response = await fetch(`/api/pendentes-manifestacao/${row.original.id}/prazo-legal`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ dataPrazoLegal: iso }),
-            });
-            if (!response.ok) {
-              const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-              throw new Error(ed.error || 'Erro ao atualizar prazo legal');
-            }
-            setOpenPrazo(false);
-            setDataPrazoStr('');
-            if (onSuccess) onSuccess();
-          } finally {
-            setIsSavingPrazo(false);
-          }
-        };
-
-        return (
-          <div className="min-h-10 flex flex-col items-center justify-center gap-2 py-2">
-            <div className="text-sm">
-              <span className="font-semibold">Início:</span> {formatarData(dataInicio)}
-            </div>
-            <div className="text-sm">
-              <span className="font-semibold">Fim:</span> {formatarData(dataFim)}
-            </div>
-            {diasUteis !== null && (
-              <Badge className={`${getCorBadgeDias(diasUteis)} text-sm font-medium mt-1 px-3 py-1`}>
-                {diasUteis} {diasUteis === 1 ? 'dia' : 'dias'}
-              </Badge>
-            )}
-            {!row.original.baixado_em && !dataFim && (
-              <Button size="sm" variant="outline" onClick={() => setOpenPrazo(true)}>
-                Definir Data
-              </Button>
-            )}
-            <Dialog open={openPrazo} onOpenChange={setOpenPrazo}>
-              <DialogContent className="max-w-sm">
-                <DialogHeader>
-                  <DialogTitle>Definir Prazo Legal</DialogTitle>
-                  <DialogDescription>Defina a data de fim do prazo. A data de início será preenchida automaticamente.</DialogDescription>
-                </DialogHeader>
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <label className="text-sm font-medium">Data de Início (automática)</label>
-                    <input
-                      type="text"
-                      value={row.original.created_at ? formatarData(row.original.created_at) : '-'}
-                      disabled
-                      className="border rounded p-2 w-full bg-muted text-muted-foreground"
-                    />
-                    <p className="text-xs text-muted-foreground">Data de criação do expediente</p>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-sm font-medium">Data de Fim *</label>
-                    <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setOpenPrazo(false)} disabled={isSavingPrazo}>Cancelar</Button>
-                  <Button onClick={handleSalvarPrazo} disabled={isSavingPrazo || !dataPrazoStr}>{isSavingPrazo ? 'Salvando...' : 'Salvar'}</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-        );
-      },
+      cell: ({ row }) => <PrazoCell expediente={row.original} onSuccess={onSuccess} />,
     },
     {
       id: 'processo_partes',
-      header: () => <ProcessoColumnHeaderSemanal onSort={onProcessoSort} />,
+      header: () => <ProcessoColumnHeaderSemanal onSort={onProcessoSort} onPartesSort={onPartesSort} />,
       enableSorting: false,
       size: 520,
       cell: ({ row }) => {
@@ -1205,56 +1226,7 @@ function criarColunasSemanais(
       ),
       enableSorting: false,
       size: 300,
-      cell: ({ row }) => {
-        const expediente = row.original;
-        const [open, setOpen] = React.useState(false);
-        const [isLoading, setIsLoading] = React.useState(false);
-        const [valor, setValor] = React.useState<string>(expediente.observacoes || '');
-        React.useEffect(() => { setValor(expediente.observacoes || ''); }, [expediente.observacoes]);
-        const handleSave = async () => {
-          setIsLoading(true);
-          try {
-            const observacoes = valor.trim() || null;
-            const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/observacoes`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ observacoes }) });
-            if (!response.ok) {
-              const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-              throw new Error(ed.error || 'Erro ao atualizar observações');
-            }
-            setOpen(false);
-            onSuccess();
-          } finally { setIsLoading(false); }
-        };
-        return (
-          <div className="relative w-full group">
-            <button type="button" className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer w-full pr-6">
-              <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed text-justify">
-                {expediente.observacoes || '-'}
-              </div>
-            </button>
-            <button type="button" onClick={() => setOpen(true)} className="absolute bottom-1 right-1 p-1 hover:bg-accent rounded-md transition-colors z-10 opacity-0 group-hover:opacity-100" title="Editar observações">
-              <Pencil className="h-3.5 w-3.5 text-primary" />
-            </button>
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogContent className="max-w-[min(92vw,31.25rem)]">
-                <DialogHeader>
-                  <DialogTitle>Editar Observações</DialogTitle>
-                  <DialogDescription>Adicionar observações do expediente</DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Observações</label>
-                    <Textarea value={valor} onChange={(e) => setValor(e.target.value)} disabled={isLoading} rows={3} />
-                  </div>
-                  <div className="flex justify-end gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setOpen(false)} disabled={isLoading}>Cancelar</Button>
-                    <Button size="sm" onClick={handleSave} disabled={isLoading}>{isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}Salvar</Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        );
-      },
+      cell: ({ row }) => <ObservacoesCell expediente={row.original} onSuccess={onSuccess} />,
     },
     {
       accessorKey: 'responsavel_id',
@@ -1327,12 +1299,13 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
 
   // Filtrar expedientes por dia da semana (usando data de vencimento - prazo legal)
   const expedientesPorDia = React.useMemo(() => {
-    const dias = {
-      segunda: [] as PendenteManifestacao[],
-      terca: [] as PendenteManifestacao[],
-      quarta: [] as PendenteManifestacao[],
-      quinta: [] as PendenteManifestacao[],
-      sexta: [] as PendenteManifestacao[],
+    type DiaSemana = 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta';
+    const dias: Record<DiaSemana, PendenteManifestacao[]> = {
+      segunda: [],
+      terca: [],
+      quarta: [],
+      quinta: [],
+      sexta: [],
     };
 
     // Itens especiais: sem prazo e vencidos (pendentes)
@@ -1369,18 +1342,19 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     });
 
     // Para cada dia: colocar sem prazo e vencidos pendentes no topo
-    Object.keys(dias).forEach((dia) => {
-      const listaDia: PendenteManifestacao[] = (dias as any)[dia];
+    const diasKeys: DiaSemana[] = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+    diasKeys.forEach((dia) => {
+      const listaDia = dias[dia];
       // Remover duplicados com pinned
       const restantes = listaDia.filter((e) => !pinnedIds.has(e.id));
       // Ordenar restantes por data de vencimento (crescentemente)
-      restantes.sort((a: PendenteManifestacao, b: PendenteManifestacao) => {
+      restantes.sort((a, b) => {
         const dataA = a.data_prazo_legal_parte ? new Date(a.data_prazo_legal_parte).getTime() : 0;
         const dataB = b.data_prazo_legal_parte ? new Date(b.data_prazo_legal_parte).getTime() : 0;
         return dataA - dataB;
       });
       // Reconstituir lista do dia com pinned no topo
-      (dias as any)[dia] = [...semPrazoPendentes, ...vencidosPendentes, ...restantes];
+      dias[dia] = [...semPrazoPendentes, ...vencidosPendentes, ...restantes];
     });
 
     return dias;

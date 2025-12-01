@@ -1,3 +1,15 @@
+/**
+ * Formsign Signature Types (Backend)
+ *
+ * IMPORTANTE: Estes tipos são para payloads de API de assinatura.
+ * Para tipos completos de Template e DadosGeracao, veja: @/types/formsign/template.types
+ *
+ * Relação com frontend:
+ * - PreviewPayload e FinalizePayload são específicos de API
+ * - DadosGeracao (frontend) é mais completo e inclui todos os dados para geração de PDF
+ * - Template (frontend) define a estrutura completa do template
+ */
+
 export interface PreviewPayload {
   cliente_id: number;
   acao_id: number;

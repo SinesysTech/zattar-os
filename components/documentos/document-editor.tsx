@@ -32,6 +32,7 @@ import { PlateEditor } from '@/components/plate/plate-editor';
 import { CollaboratorsAvatars } from '@/components/documentos/collaborators-avatars';
 import { UploadDialog } from '@/components/documentos/upload-dialog';
 import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
+import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
 import { createClient } from '@/app/_lib/supabase/client';
 import type { DocumentoComUsuario } from '@/backend/types/documentos/types';
 
@@ -230,7 +231,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Header/Toolbar */}
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="flex h-14 items-center justify-between px-4 gap-4">
           {/* Left */}
           <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -309,10 +310,12 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
       <div className="flex flex-1 overflow-hidden">
         <div className="flex-1 overflow-auto">
           <div className="mx-auto max-w-4xl p-8">
-            <PlateEditor
-              initialValue={conteudo}
-              onChange={(value) => setConteudo(value)}
-            />
+            <DocumentEditorProvider documentoId={documentoId}>
+              <PlateEditor
+                initialValue={conteudo}
+                onChange={(value) => setConteudo(value)}
+              />
+            </DocumentEditorProvider>
           </div>
         </div>
 

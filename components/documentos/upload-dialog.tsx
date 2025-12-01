@@ -140,6 +140,7 @@ export function UploadDialog({
                 className="hidden"
                 onChange={handleFileSelect}
                 accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt"
+                aria-label="Selecionar arquivo para upload"
               />
             </div>
           ) : (
