@@ -235,7 +235,10 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Criar cliente
-    const resultado = await cadastrarCliente(dadosCliente);
+    const resultado = await cadastrarCliente({
+      ...dadosCliente,
+      papel_processual: 'CLIENTE' as const,
+    });
 
     if (!resultado.sucesso) {
       return NextResponse.json(

@@ -366,17 +366,18 @@ export async function buscarCaminhoPasta(pasta_id: number): Promise<Pasta[]> {
   let atual_id: number | null = pasta_id;
 
   while (atual_id !== null) {
-    const { data: pasta } = await supabase
+    const result = await supabase
       .from('pastas')
-      .select()
+      .select('*')
       .eq('id', atual_id)
       .is('deleted_at', null)
       .single();
 
-    if (!pasta) break;
+    const pastaAtual = result.data as Pasta | null;
+    if (!pastaAtual) break;
 
-    caminho.unshift(pasta);
-    atual_id = pasta.pasta_pai_id;
+    caminho.unshift(pastaAtual);
+    atual_id = pastaAtual.pasta_pai_id;
   }
 
   return caminho;

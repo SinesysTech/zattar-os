@@ -11,6 +11,7 @@ export interface AuthResult {
   authenticated: boolean;
   userId?: string; // UUID do Supabase Auth (auth.users.id)
   usuarioId?: number; // ID do usuário na tabela usuarios (usuarios.id)
+  usuario?: { id: number }; // Objeto de usuário para compatibilidade
   source?: 'session' | 'bearer' | 'service';
 }
 
@@ -95,6 +96,7 @@ export async function authenticateRequest(
         authenticated: true,
         userId: user.id,
         usuarioId: usuarioId || undefined,
+        usuario: usuarioId ? { id: usuarioId } : undefined,
         source: 'bearer',
       };
     } catch (error) {
@@ -123,6 +125,7 @@ export async function authenticateRequest(
       authenticated: true,
       userId: user.id,
       usuarioId: usuarioId || undefined,
+      usuario: usuarioId ? { id: usuarioId } : undefined,
       source: 'session',
     };
   } catch (error) {

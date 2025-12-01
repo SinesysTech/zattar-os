@@ -224,9 +224,20 @@ export async function incrementarVersaoDocumento(id: number): Promise<void> {
 
   if (error) {
     // Se a função RPC não existir, fazer update manual
+    // Primeiro busca a versão atual e depois incrementa
+    const { data: docAtual, error: selectError } = await supabase
+      .from('documentos')
+      .select('versao')
+      .eq('id', id)
+      .single();
+
+    if (selectError) {
+      throw new Error(`Erro ao buscar versão atual: ${selectError.message}`);
+    }
+
     const { error: updateError } = await supabase
       .from('documentos')
-      .update({ versao: supabase.sql`versao + 1` })
+      .update({ versao: (docAtual?.versao ?? 0) + 1 })
       .eq('id', id);
 
     if (updateError) {
@@ -337,6 +348,22 @@ export async function listarDocumentosCompartilhadosComUsuario(
 ): Promise<DocumentoComUsuario[]> {
   const supabase = createServiceClient();
 
+  // Primeiro busca os IDs dos documentos compartilhados com o usuário
+  const { data: compartilhados, error: compartilhadosError } = await supabase
+    .from('documentos_compartilhados')
+    .select('documento_id')
+    .eq('usuario_id', usuario_id);
+
+  if (compartilhadosError) {
+    throw new Error(`Erro ao buscar compartilhamentos: ${compartilhadosError.message}`);
+  }
+
+  // Se não há documentos compartilhados, retorna array vazio
+  const documentoIds = (compartilhados ?? []).map(c => c.documento_id);
+  if (documentoIds.length === 0) {
+    return [];
+  }
+
   const { data, error } = await supabase
     .from('documentos')
     .select(`
@@ -353,13 +380,7 @@ export async function listarDocumentosCompartilhadosComUsuario(
         nomeExibicao
       )
     `)
-    .in(
-      'id',
-      supabase
-        .from('documentos_compartilhados')
-        .select('documento_id')
-        .eq('usuario_id', usuario_id)
-    )
+    .in('id', documentoIds)
     .is('deleted_at', null)
     .order('updated_at', { ascending: false });
 

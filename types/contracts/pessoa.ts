@@ -1,4 +1,5 @@
 import type { CriarClienteParams, CriarParteContrariaParams } from './partes';
+import type { Pessoa } from '@/types/domain/pessoa';
 
 export type PapelProcessual = 'CLIENTE' | 'PARTE_CONTRARIA';
 

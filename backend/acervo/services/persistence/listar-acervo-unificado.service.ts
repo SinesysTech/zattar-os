@@ -12,8 +12,27 @@ import type {
   ListarAcervoUnificadoResult,
   GrauAcervo,
 } from '@/backend/types/acervo/types';
+import { StatusProcesso } from '@/types/domain/common';
 
 const ACERVO_UNIFICADO_TTL = 900; // 15 minutos
+
+/**
+ * Mapeia código de status do PJE para enum StatusProcesso
+ */
+function mapearStatusProcesso(codigo: string | null | undefined): StatusProcesso {
+  if (!codigo) return StatusProcesso.OUTRO;
+  const codigoUpper = codigo.toUpperCase();
+
+  if (codigoUpper.includes('ATIVO') || codigoUpper === 'A') return StatusProcesso.ATIVO;
+  if (codigoUpper.includes('SUSPENSO') || codigoUpper === 'S') return StatusProcesso.SUSPENSO;
+  if (codigoUpper.includes('ARQUIVADO') || codigoUpper === 'ARQ') return StatusProcesso.ARQUIVADO;
+  if (codigoUpper.includes('EXTINTO') || codigoUpper === 'E') return StatusProcesso.EXTINTO;
+  if (codigoUpper.includes('BAIXADO') || codigoUpper === 'B') return StatusProcesso.BAIXADO;
+  if (codigoUpper.includes('PENDENTE') || codigoUpper === 'P') return StatusProcesso.PENDENTE;
+  if (codigoUpper.includes('RECURSO') || codigoUpper === 'R') return StatusProcesso.EM_RECURSO;
+
+  return StatusProcesso.OUTRO;
+}
 
 /**
  * Converte JSONB de instâncias da VIEW para formato ProcessoInstancia[]
@@ -29,6 +48,7 @@ function converterInstances(instancesJson: unknown): ProcessoInstancia[] {
     origem: inst.origem as 'acervo_geral' | 'arquivado',
     trt: inst.trt as string,
     data_autuacao: inst.data_autuacao as string,
+    status: mapearStatusProcesso(inst.codigo_status_processo as string | null),
     updated_at: inst.updated_at as string,
     is_grau_atual: (inst.is_grau_atual as boolean) ?? false,
   }));
@@ -38,6 +58,8 @@ function converterInstances(instancesJson: unknown): ProcessoInstancia[] {
  * Converte dados da VIEW materializada para formato ProcessoUnificado
  */
 function converterParaProcessoUnificado(data: Record<string, unknown>): ProcessoUnificado {
+  const codigoStatus = data.codigo_status_processo as string | null;
+  const statusMapeado = mapearStatusProcesso(codigoStatus);
   return {
     id: data.id as number,
     id_pje: data.id_pje as number,
@@ -48,7 +70,9 @@ function converterParaProcessoUnificado(data: Record<string, unknown>): Processo
     descricao_orgao_julgador: data.descricao_orgao_julgador as string,
     classe_judicial: data.classe_judicial as string,
     segredo_justica: data.segredo_justica as boolean,
-    codigo_status_processo: data.codigo_status_processo as string,
+    status: statusMapeado,
+    status_geral: statusMapeado,
+    codigo_status_processo: codigoStatus ?? undefined,
     prioridade_processual: data.prioridade_processual as number,
     nome_parte_autora: data.nome_parte_autora as string,
     qtde_parte_autora: data.qtde_parte_autora as number,

@@ -1,11 +1,10 @@
 'use client';
 
 /**
- * Dialog para criar novo documento
+ * Dialog para criar nova sala de chat
  */
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import {
   Dialog,
@@ -18,71 +17,69 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
 
-interface CreateDocumentDialogProps {
+interface CreateRoomDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  pastaId?: number | null;
   onSuccess?: () => void;
 }
 
-export function CreateDocumentDialog({
+export function CreateRoomDialog({
   open,
   onOpenChange,
-  pastaId,
   onSuccess,
-}: CreateDocumentDialogProps) {
-  const router = useRouter();
+}: CreateRoomDialogProps) {
   const [loading, setLoading] = React.useState(false);
-  const [titulo, setTitulo] = React.useState('');
-  const [descricao, setDescricao] = React.useState('');
+  const [nome, setNome] = React.useState('');
+  const [tipo, setTipo] = React.useState<'privado'>('privado');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!titulo.trim()) {
-      toast.error('Título é obrigatório');
+    if (!nome.trim()) {
+      toast.error('Nome é obrigatório');
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch('/api/documentos', {
+      const response = await fetch('/api/chat/salas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          titulo: titulo.trim(),
-          descricao: descricao.trim() || null,
-          pasta_id: pastaId,
-          conteudo: [],
+          nome: nome.trim(),
+          tipo,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao criar documento');
+        throw new Error(data.error || 'Erro ao criar sala');
       }
 
-      toast.success('Documento criado', { description: 'Abrindo editor...' });
+      toast.success(`Sala "${nome}" criada com sucesso`);
 
       // Resetar form
-      setTitulo('');
-      setDescricao('');
+      setNome('');
+      setTipo('privado');
       onOpenChange(false);
-
-      // Redirecionar para editor
-      router.push(`/documentos/${data.data.id}`);
 
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
-      console.error('Erro ao criar documento:', error);
-      toast.error(error instanceof Error ? error.message : 'Erro ao criar documento');
+      console.error('Erro ao criar sala:', error);
+      toast.error(error instanceof Error ? error.message : 'Erro ao criar sala');
     } finally {
       setLoading(false);
     }
@@ -92,36 +89,43 @@ export function CreateDocumentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Criar novo documento</DialogTitle>
+          <DialogTitle>Criar nova sala de chat</DialogTitle>
           <DialogDescription>
-            Crie um novo documento jurídico. Você será redirecionado para o editor.
+            Crie uma sala privada para conversar com sua equipe
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="titulo">Título *</Label>
+              <Label htmlFor="nome">Nome da sala *</Label>
               <Input
-                id="titulo"
-                placeholder="Ex: Petição Inicial - Processo 1234"
-                value={titulo}
-                onChange={(e) => setTitulo(e.target.value)}
+                id="nome"
+                placeholder="Ex: Equipe de Recursos Humanos"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
                 disabled={loading}
                 autoFocus
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="descricao">Descrição (opcional)</Label>
-              <Textarea
-                id="descricao"
-                placeholder="Breve descrição do documento..."
-                value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
+              <Label htmlFor="tipo">Tipo</Label>
+              <Select
+                value={tipo}
+                onValueChange={(v) => setTipo(v as 'privado')}
                 disabled={loading}
-                rows={3}
-              />
+              >
+                <SelectTrigger id="tipo">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="privado">Privado</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Salas privadas são visíveis para todos os usuários autenticados
+              </p>
             </div>
           </div>
 
@@ -136,7 +140,7 @@ export function CreateDocumentDialog({
             </Button>
             <Button type="submit" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Criar e Editar
+              Criar Sala
             </Button>
           </DialogFooter>
         </form>

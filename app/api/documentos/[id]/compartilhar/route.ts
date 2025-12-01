@@ -23,7 +23,7 @@ import type { CompartilharDocumentoParams } from '@/backend/types/documentos/typ
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authenticateRequest(request);
@@ -31,7 +31,8 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const documento_id = parseInt(params.id);
+    const { id } = await params;
+    const documento_id = parseInt(id);
     if (isNaN(documento_id)) {
       return NextResponse.json(
         { success: false, error: 'ID inválido' },
@@ -76,7 +77,7 @@ export async function GET(
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authenticateRequest(request);
@@ -84,7 +85,8 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const documento_id = parseInt(params.id);
+    const { id } = await params;
+    const documento_id = parseInt(id);
     if (isNaN(documento_id)) {
       return NextResponse.json(
         { success: false, error: 'ID inválido' },
@@ -180,7 +182,7 @@ export async function POST(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authenticateRequest(request);
@@ -188,7 +190,8 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const documento_id = parseInt(params.id);
+    const { id } = await params;
+    const documento_id = parseInt(id);
     if (isNaN(documento_id)) {
       return NextResponse.json(
         { success: false, error: 'ID inválido' },
