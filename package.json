@@ -52,7 +52,7 @@
     "@platejs/dnd": "^52.0.0",
     "@platejs/docx": "^52.0.0",
     "@platejs/emoji": "^52.0.0",
-    "@platejs/excalidraw": "^52.0.0",
+    "@platejs/excalidraw": "^49.0.0",
     "@platejs/floating": "^52.0.0",
     "@platejs/indent": "^52.0.0",
     "@platejs/juice": "^52.0.0",
