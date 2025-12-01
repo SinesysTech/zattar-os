@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { ClienteAutocomplete } from "@/components/formsign/cliente-autocomplete";
 
 type PreviewResponse = { success?: boolean; data?: { pdf_url: string }; error?: string };
 type FinalizeResponse = { success?: boolean; data?: { assinatura_id: number; protocolo: string; pdf_url: string }; error?: string };
@@ -34,7 +35,6 @@ export default function AssinaturaPage() {
   const [templates, setTemplates] = useState<{ id: string; label: string }[]>([]);
   const [segmentos, setSegmentos] = useState<{ id: string; label: string }[]>([]);
   const [formularios, setFormularios] = useState<{ id: string; label: string }[]>([]);
-  const [clientesHint, setClientesHint] = useState<string>("");
   const [clienteId, setClienteId] = useState("");
   const [acaoId, setAcaoId] = useState("");
   const [templateId, setTemplateId] = useState("");
@@ -50,6 +50,10 @@ export default function AssinaturaPage() {
   const [loadingFinalize, setLoadingFinalize] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loadingLists, setLoadingLists] = useState(false);
+
+  const canPreview = useMemo(() => {
+    return clienteId && templateId;
+  }, [clienteId, templateId]);
 
   const canSubmit = useMemo(() => {
     return clienteId && templateId && segmentoId && formularioId && assinaturaBase64;
@@ -174,9 +178,8 @@ export default function AssinaturaPage() {
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-2">
           <div className="grid gap-2">
-            <Label>Cliente ID</Label>
-            <Input value={clienteId} onChange={(e) => setClienteId(e.target.value)} required />
-            {clientesHint && <p className="text-xs text-muted-foreground">{clientesHint}</p>}
+            <Label>Cliente</Label>
+            <ClienteAutocomplete value={clienteId} onChange={setClienteId} />
           </div>
           <div className="grid gap-2">
             <Label>Ação ID (opcional)</Label>
@@ -273,7 +276,7 @@ export default function AssinaturaPage() {
             )}
           </div>
           <div className="md:col-span-2 flex gap-3">
-            <Button type="button" variant="outline" onClick={handlePreview} disabled={loadingPreview}>
+            <Button type="button" variant="outline" onClick={handlePreview} disabled={loadingPreview || !canPreview}>
               {loadingPreview ? "Gerando preview..." : "Gerar preview"}
             </Button>
             <Button type="button" onClick={handleFinalize} disabled={loadingFinalize || !canSubmit}>
