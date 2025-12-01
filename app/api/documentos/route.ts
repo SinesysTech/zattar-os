@@ -1,8 +1,10 @@
 /**
  * API Routes para documentos
  *
- * GET /api/documentos - Lista documentos
- * POST /api/documentos - Cria novo documento
+ * @swagger
+ * tags:
+ *   - name: Documentos
+ *     description: Gerenciamento de documentos do sistema
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -17,8 +19,81 @@ import type {
 } from '@/backend/types/documentos/types';
 
 /**
- * GET /api/documentos
- * Lista documentos com filtros
+ * @swagger
+ * /api/documentos:
+ *   get:
+ *     tags: [Documentos]
+ *     summary: Lista documentos com filtros
+ *     description: Retorna lista paginada de documentos que o usuário tem acesso (criados ou compartilhados)
+ *     parameters:
+ *       - in: query
+ *         name: pasta_id
+ *         schema:
+ *           type: integer
+ *         description: ID da pasta para filtrar. Use 'null' para documentos na raiz.
+ *       - in: query
+ *         name: busca
+ *         schema:
+ *           type: string
+ *         description: Termo de busca no título e descrição
+ *       - in: query
+ *         name: tags
+ *         schema:
+ *           type: string
+ *         description: Tags separadas por vírgula para filtrar
+ *       - in: query
+ *         name: criado_por
+ *         schema:
+ *           type: integer
+ *         description: ID do criador para filtrar
+ *       - in: query
+ *         name: incluir_deletados
+ *         schema:
+ *           type: boolean
+ *         description: Incluir documentos na lixeira
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 50
+ *         description: Limite de registros por página
+ *       - in: query
+ *         name: offset
+ *         schema:
+ *           type: integer
+ *           default: 0
+ *         description: Offset para paginação
+ *     responses:
+ *       200:
+ *         description: Lista de documentos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Documento'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                     limit:
+ *                       type: integer
+ *                     offset:
+ *                       type: integer
+ *                     hasMore:
+ *                       type: boolean
+ *       401:
+ *         description: Não autorizado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 export async function GET(request: NextRequest) {
   try {
@@ -74,8 +149,34 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * POST /api/documentos
- * Cria um novo documento
+ * @swagger
+ * /api/documentos:
+ *   post:
+ *     tags: [Documentos]
+ *     summary: Cria um novo documento
+ *     description: Cria um novo documento associado ao usuário autenticado
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CriarDocumentoParams'
+ *     responses:
+ *       201:
+ *         description: Documento criado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   $ref: '#/components/schemas/Documento'
+ *       400:
+ *         description: Parâmetros inválidos
+ *       401:
+ *         description: Não autorizado
  */
 export async function POST(request: NextRequest) {
   try {

@@ -185,19 +185,19 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [x] Validação
 
 ### Serviços de Pastas (2-3h)
-- [ ] Criar `backend/documentos/services/pastas/criar-pasta.service.ts`
-  - [ ] Validação de nome (1-200 chars)
-  - [ ] Validação de tipo (comum/privada)
-  - [ ] Validação de hierarquia (não permitir ciclos)
-- [ ] Criar `backend/documentos/services/pastas/listar-pastas.service.ts`
-  - [ ] Filtro por tipo
-  - [ ] Filtro por pasta pai (navegação hierárquica)
-- [ ] Criar `backend/documentos/services/pastas/mover-documento.service.ts`
-  - [ ] Validação de permissões
-  - [ ] Atualização de `pasta_id`
-- [ ] Criar `backend/documentos/services/pastas/deletar-pasta.service.ts`
-  - [ ] Soft delete de pasta
-  - [ ] Opção de mover documentos para raiz ou deletar em cascata
+- [x] Criar `backend/documentos/services/pastas/criar-pasta.service.ts`
+  - [x] Validação de nome (1-200 chars)
+  - [x] Validação de tipo (comum/privada)
+  - [x] Validação de hierarquia (não permitir ciclos)
+- [x] Criar `backend/documentos/services/pastas/listar-pastas.service.ts`
+  - [x] Filtro por tipo
+  - [x] Filtro por pasta pai (navegação hierárquica)
+- [x] Criar `backend/documentos/services/pastas/mover-documento.service.ts`
+  - [x] Validação de permissões
+  - [x] Atualização de `pasta_id`
+- [x] Criar `backend/documentos/services/pastas/deletar-pasta.service.ts`
+  - [x] Soft delete de pasta
+  - [x] Opção de mover documentos para raiz ou deletar em cascata
 
 ### Componentes de Compartilhamento (3-4h)
 - [x] Criar `components/documentos/share-document-dialog.tsx`
