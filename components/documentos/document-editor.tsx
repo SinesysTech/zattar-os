@@ -16,6 +16,8 @@ import {
   MoreVertical,
   FileText,
   Upload,
+  Download,
+  Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +37,8 @@ import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
 import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
 import { createClient } from '@/app/_lib/supabase/client';
 import type { DocumentoComUsuario } from '@/backend/types/documentos/types';
+import { exportToDocx } from '@/lib/documentos/export-docx';
+import { exportToPdf, exportTextToPdf } from '@/lib/documentos/export-pdf';
 
 interface DocumentEditorProps {
   documentoId: number;
@@ -53,6 +57,8 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
   const [chatOpen, setChatOpen] = React.useState(false);
   const [uploadOpen, setUploadOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState<any>(null);
+  const [exporting, setExporting] = React.useState<'pdf' | 'docx' | null>(null);
+  const editorContentRef = React.useRef<HTMLDivElement>(null);
 
   // Colaboração em tempo real
   const { collaborators, updateCursor, updateSelection } = useRealtimeCollaboration({
@@ -200,6 +206,43 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
     }
   };
 
+  const handleExportPdf = async () => {
+    if (exporting) return;
+
+    setExporting('pdf');
+    try {
+      // Tentar usar captura visual primeiro
+      const editorElement = editorContentRef.current?.querySelector('[data-slate-editor]');
+      if (editorElement) {
+        await exportToPdf(editorElement as HTMLElement, titulo);
+      } else {
+        // Fallback para exportação baseada em texto
+        await exportTextToPdf(conteudo, titulo);
+      }
+      toast.success('PDF exportado com sucesso');
+    } catch (error) {
+      console.error('Erro ao exportar PDF:', error);
+      toast.error(error instanceof Error ? error.message : 'Erro ao exportar PDF');
+    } finally {
+      setExporting(null);
+    }
+  };
+
+  const handleExportDocx = async () => {
+    if (exporting) return;
+
+    setExporting('docx');
+    try {
+      await exportToDocx(conteudo, titulo);
+      toast.success('DOCX exportado com sucesso');
+    } catch (error) {
+      console.error('Erro ao exportar DOCX:', error);
+      toast.error(error instanceof Error ? error.message : 'Erro ao exportar DOCX');
+    } finally {
+      setExporting(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -295,8 +338,22 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Exportar como PDF</DropdownMenuItem>
-                <DropdownMenuItem>Exportar como DOCX</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportPdf} disabled={exporting !== null}>
+                  {exporting === 'pdf' ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="mr-2 h-4 w-4" />
+                  )}
+                  Exportar como PDF
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportDocx} disabled={exporting !== null}>
+                  {exporting === 'docx' ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="mr-2 h-4 w-4" />
+                  )}
+                  Exportar como DOCX
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Histórico de versões</DropdownMenuItem>
                 <DropdownMenuItem>Configurações</DropdownMenuItem>
@@ -309,7 +366,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
       {/* Editor */}
       <div className="flex flex-1 overflow-hidden">
         <div className="flex-1 overflow-auto">
-          <div className="mx-auto max-w-4xl p-8">
+          <div ref={editorContentRef} className="mx-auto max-w-4xl p-8">
             <DocumentEditorProvider documentoId={documentoId}>
               <PlateEditor
                 initialValue={conteudo}
