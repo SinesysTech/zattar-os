@@ -39,7 +39,8 @@ const teams = [
   },
 ]
 
-const navMain = [
+// Nav Principal - Funcionalidades core do escritório
+const navPrincipal = [
   {
     title: "Dashboard",
     url: "/dashboard",
@@ -100,8 +101,26 @@ const navMain = [
       { title: "Ano", url: "/acordos-condenacoes/ano" },
     ],
   },
+]
+
+// Nav Serviços - Ferramentas e utilitários
+const navServicos = [
   {
-    title: "Captura",
+    name: "Editor de Documentos",
+    url: "/documentos",
+    icon: FileEdit,
+  },
+  {
+    name: "Chat Interno",
+    url: "/chat",
+    icon: MessageSquare,
+  },
+]
+
+// Nav Administração - Configurações e gestão
+const navAdministracao = [
+  {
+    name: "Captura",
     url: "/captura",
     icon: Database,
     items: [
@@ -111,9 +130,6 @@ const navMain = [
       { title: "Tribunais", url: "/captura/tribunais" },
     ],
   },
-]
-
-const navAdmin = [
   {
     name: "Usuários",
     url: "/usuarios",
@@ -192,8 +208,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMain} />
-        <NavProjects projects={navAdmin} label="Administração" showActions={false} />
+        <NavMain items={navPrincipal} />
+        <NavProjects projects={navServicos} label="Serviços" showActions={false} />
+        <NavProjects projects={navAdministracao} label="Administração" showActions={false} />
       </SidebarContent>
       <SidebarFooter>
         {user ? (
