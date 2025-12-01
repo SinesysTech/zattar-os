@@ -18,6 +18,7 @@ import {
   Upload,
   Download,
   Loader2,
+  History,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,6 +34,9 @@ import { toast } from 'sonner';
 import { PlateEditor } from '@/components/plate/plate-editor';
 import { CollaboratorsAvatars } from '@/components/documentos/collaborators-avatars';
 import { UploadDialog } from '@/components/documentos/upload-dialog';
+import { ShareDocumentDialog } from '@/components/documentos/share-document-dialog';
+import { VersionHistoryDialog } from '@/components/documentos/version-history-dialog';
+import { DocumentChat } from '@/components/documentos/document-chat';
 import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
 import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
 import { createClient } from '@/app/_lib/supabase/client';
@@ -56,6 +60,8 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
   const [conteudo, setConteudo] = React.useState<any>([]);
   const [chatOpen, setChatOpen] = React.useState(false);
   const [uploadOpen, setUploadOpen] = React.useState(false);
+  const [shareOpen, setShareOpen] = React.useState(false);
+  const [historyOpen, setHistoryOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState<any>(null);
   const [exporting, setExporting] = React.useState<'pdf' | 'docx' | null>(null);
   const editorContentRef = React.useRef<HTMLDivElement>(null);
@@ -326,7 +332,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
               Salvar
             </Button>
 
-            <Button size="sm">
+            <Button size="sm" onClick={() => setShareOpen(true)}>
               <Share2 className="mr-2 h-4 w-4" />
               Compartilhar
             </Button>
@@ -355,7 +361,10 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
                   Exportar como DOCX
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Histórico de versões</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setHistoryOpen(true)}>
+                  <History className="mr-2 h-4 w-4" />
+                  Histórico de versões
+                </DropdownMenuItem>
                 <DropdownMenuItem>Configurações</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -377,21 +386,13 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
         </div>
 
         {/* Chat Sidebar (conditional) */}
-        {chatOpen && (
+        {chatOpen && currentUser && (
           <div className="w-80 border-l bg-muted/10">
-            <div className="flex h-full flex-col">
-              <div className="border-b p-4">
-                <h3 className="font-semibold">Chat do Documento</h3>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Converse sobre este documento
-                </p>
-              </div>
-              <div className="flex-1 p-4">
-                <p className="text-sm text-muted-foreground text-center">
-                  Chat em desenvolvimento...
-                </p>
-              </div>
-            </div>
+            <DocumentChat
+              documentoId={documentoId}
+              currentUserId={currentUser.id}
+              currentUserName={currentUser.nomeCompleto || currentUser.nomeExibicao || 'Usuário'}
+            />
           </div>
         )}
       </div>
@@ -404,6 +405,25 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
         onSuccess={(url) => {
           toast.success('Arquivo enviado! URL copiada para área de transferência');
           navigator.clipboard.writeText(url);
+        }}
+      />
+
+      {/* Share Dialog */}
+      <ShareDocumentDialog
+        open={shareOpen}
+        onOpenChange={setShareOpen}
+        documentoId={documentoId}
+        documentoTitulo={titulo}
+      />
+
+      {/* Version History Dialog */}
+      <VersionHistoryDialog
+        open={historyOpen}
+        onOpenChange={setHistoryOpen}
+        documentoId={documentoId}
+        onVersionRestored={() => {
+          // Recarregar documento após restaurar versão
+          window.location.reload();
         }}
       />
     </div>

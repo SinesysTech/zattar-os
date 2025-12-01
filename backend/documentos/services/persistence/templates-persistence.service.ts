@@ -317,9 +317,12 @@ export async function listarCategoriasTemplates(
  */
 export async function criarDocumentoDeTemplate(
   template_id: number,
-  titulo: string,
-  usuario_id: number
-): Promise<number> {
+  usuario_id: number,
+  opcoes?: {
+    titulo?: string;
+    pasta_id?: number | null;
+  }
+): Promise<{ id: number; titulo: string }> {
   const supabase = createServiceClient();
 
   // Buscar template
@@ -327,6 +330,9 @@ export async function criarDocumentoDeTemplate(
   if (!template) {
     throw new Error('Template não encontrado');
   }
+
+  // Definir título (usa o do template se não fornecido)
+  const titulo = opcoes?.titulo || `Cópia de ${template.titulo}`;
 
   // Criar documento
   const { data, error } = await supabase
@@ -336,18 +342,16 @@ export async function criarDocumentoDeTemplate(
       conteudo: template.conteudo,
       criado_por: usuario_id,
       editado_por: usuario_id,
+      pasta_id: opcoes?.pasta_id ?? null,
     })
-    .select('id')
+    .select('id, titulo')
     .single();
 
   if (error) {
     throw new Error(`Erro ao criar documento de template: ${error.message}`);
   }
 
-  // Incrementar contador de uso
-  await incrementarUsoTemplate(template_id);
-
-  return data.id;
+  return data;
 }
 
 /**

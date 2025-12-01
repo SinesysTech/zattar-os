@@ -1,27 +1,27 @@
 'use client';
 
 /**
- * Componente de interface de chat reutilizável
- * Usa Supabase Realtime Broadcast para mensagens em tempo real
+ * Componente de chat do documento usando Supabase Realtime Broadcast
+ * Baseado no componente oficial do Supabase UI Library
  * @see https://supabase.com/ui/docs/nextjs/realtime-chat
  */
 
 import * as React from 'react';
 import { MessageSquare } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
 import { RealtimeChat } from '@/components/realtime-chat';
 import type { ChatMessage } from '@/hooks/use-realtime-chat';
 
-interface ChatInterfaceProps {
-  salaId: number;
+interface DocumentChatProps {
+  documentoId: number;
   currentUserId: number;
-  currentUserName?: string;
-  className?: string;
-  showHeader?: boolean;
-  headerTitle?: string;
-  headerSubtitle?: string;
-  compact?: boolean;
+  currentUserName: string;
+}
+
+interface SalaChat {
+  id: number;
+  nome: string;
+  documento_id: number | null;
 }
 
 interface MensagemDB {
@@ -48,51 +48,54 @@ function convertDBMessageToChat(msg: MensagemDB): ChatMessage {
   };
 }
 
-export function ChatInterface({
-  salaId,
-  currentUserId,
-  currentUserName,
-  className,
-  showHeader = true,
-  headerTitle = 'Chat',
-  headerSubtitle,
-  compact = false,
-}: ChatInterfaceProps) {
+export function DocumentChat({ documentoId, currentUserId, currentUserName }: DocumentChatProps) {
+  const [sala, setSala] = React.useState<SalaChat | null>(null);
   const [initialMessages, setInitialMessages] = React.useState<ChatMessage[]>([]);
   const [loading, setLoading] = React.useState(true);
-  const [userName, setUserName] = React.useState(currentUserName || '');
 
-  // Buscar nome do usuário se não fornecido
+  // Buscar ou criar sala de chat do documento
   React.useEffect(() => {
-    async function fetchUserName() {
-      if (currentUserName) {
-        setUserName(currentUserName);
-        return;
-      }
-
+    async function fetchOrCreateSala() {
       try {
-        const response = await fetch('/api/perfil');
+        // Buscar sala existente
+        const response = await fetch(`/api/chat/salas?tipo=documento&documento_id=${documentoId}`);
         const data = await response.json();
 
-        if (data.success && data.data) {
-          setUserName(data.data.nomeCompleto || data.data.nomeExibicao || 'Usuário');
+        if (data.success && data.data.length > 0) {
+          setSala(data.data[0]);
+        } else {
+          // Criar nova sala
+          const createResponse = await fetch('/api/chat/salas', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              nome: `Chat do Documento #${documentoId}`,
+              tipo: 'documento',
+              documento_id: documentoId,
+            }),
+          });
+
+          const createData = await createResponse.json();
+          if (createData.success) {
+            setSala(createData.data);
+          }
         }
       } catch (error) {
-        console.error('Erro ao buscar nome do usuário:', error);
-        setUserName('Usuário');
+        console.error('Erro ao buscar/criar sala:', error);
+        setLoading(false);
       }
     }
 
-    fetchUserName();
-  }, [currentUserName]);
+    fetchOrCreateSala();
+  }, [documentoId]);
 
-  // Buscar mensagens existentes
+  // Buscar mensagens existentes quando sala estiver disponível
   React.useEffect(() => {
     async function fetchMensagens() {
+      if (!sala) return;
+
       try {
-        const response = await fetch(
-          `/api/chat/salas/${salaId}/mensagens?modo=ultimas&limite=100`
-        );
+        const response = await fetch(`/api/chat/salas/${sala.id}/mensagens?modo=ultimas&limite=50`);
         const data = await response.json();
 
         if (data.success) {
@@ -110,23 +113,23 @@ export function ChatInterface({
     }
 
     fetchMensagens();
-  }, [salaId]);
+  }, [sala]);
 
   // Callback para persistir mensagens no banco
   const handleMessage = React.useCallback(
     async (messages: ChatMessage[]) => {
-      if (messages.length === 0) return;
+      if (!sala || messages.length === 0) return;
 
       // Pegar apenas a última mensagem (nova)
       const lastMessage = messages[messages.length - 1];
 
       // Verificar se é uma mensagem nova (não está nas iniciais e é do usuário atual)
       const isNew = !initialMessages.some((m) => m.id === lastMessage.id);
-      const isOwn = lastMessage.user.name === userName;
+      const isOwn = lastMessage.user.name === currentUserName;
 
       if (isNew && isOwn) {
         try {
-          await fetch(`/api/chat/salas/${salaId}/mensagens`, {
+          await fetch(`/api/chat/salas/${sala.id}/mensagens`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -139,18 +142,15 @@ export function ChatInterface({
         }
       }
     },
-    [salaId, initialMessages, userName]
+    [sala, initialMessages, currentUserName]
   );
 
-  if (loading) {
+  if (loading || !sala) {
     return (
-      <div className={cn('flex flex-col h-full', className)}>
-        {showHeader && (
-          <div className="border-b p-4">
-            <Skeleton className="h-5 w-32" />
-            {headerSubtitle && <Skeleton className="h-3 w-24 mt-1" />}
-          </div>
-        )}
+      <div className="flex flex-col h-full">
+        <div className="border-b p-4">
+          <Skeleton className="h-5 w-32" />
+        </div>
         <div className="flex-1 p-4 space-y-4">
           <Skeleton className="h-12 w-3/4" />
           <Skeleton className="h-12 w-1/2 ml-auto" />
@@ -160,29 +160,27 @@ export function ChatInterface({
     );
   }
 
-  // Nome único do room baseado na sala
-  const roomName = `sala-${salaId}-chat`;
+  // Nome único do room baseado no documento
+  const roomName = `documento-${documentoId}-chat`;
 
   return (
-    <div className={cn('flex flex-col h-full', className)}>
+    <div className="flex flex-col h-full">
       {/* Header */}
-      {showHeader && (
-        <div className={cn('border-b', compact ? 'p-3' : 'p-4')}>
-          <h3 className={cn('font-semibold flex items-center gap-2', compact && 'text-sm')}>
-            <MessageSquare className={cn('h-4 w-4', compact && 'h-3 w-3')} />
-            {headerTitle}
-          </h3>
-          {headerSubtitle && (
-            <p className="text-xs text-muted-foreground mt-1">{headerSubtitle}</p>
-          )}
-        </div>
-      )}
+      <div className="border-b p-4">
+        <h3 className="font-semibold flex items-center gap-2">
+          <MessageSquare className="h-4 w-4" />
+          Chat do Documento
+        </h3>
+        <p className="text-xs text-muted-foreground mt-1">
+          Conversa em tempo real
+        </p>
+      </div>
 
       {/* Chat usando componente oficial do Supabase UI */}
       <div className="flex-1 min-h-0">
         <RealtimeChat
           roomName={roomName}
-          username={userName}
+          username={currentUserName}
           messages={initialMessages}
           onMessage={handleMessage}
         />

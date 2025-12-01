@@ -76,7 +76,7 @@ export function generateZodSchema(schema: DynamicFormSchema): z.ZodObject<z.ZodR
   }
 
   // Criar schema base
-  let zodSchema: z.ZodObject<z.ZodRawShape> = z.object(fields);
+  let zodSchema: z.ZodTypeAny = z.object(fields);
 
   // Aplicar globalValidations (cross-field validations)
   if (schema.globalValidations) {
@@ -85,7 +85,7 @@ export function generateZodSchema(schema: DynamicFormSchema): z.ZodObject<z.ZodR
     }
   }
 
-  return zodSchema;
+  return zodSchema as z.ZodObject<z.ZodRawShape>;
 }
 
 /**
@@ -396,9 +396,12 @@ function applyTextLimits(zodType: z.ZodTypeAny, fieldType: FormFieldType, fieldI
 /**
  * Gera validação cross-field usando superRefine
  *
- * @returns Zod object schema with cross-field validation applied
+ * @returns Zod schema with cross-field validation applied (may be ZodEffects)
  */
-function generateCrossFieldValidation(zodSchema: z.ZodObject<z.ZodRawShape>, validation: CrossFieldValidation): z.ZodObject<z.ZodRawShape> {
+function generateCrossFieldValidation(
+  zodSchema: z.ZodTypeAny,
+  validation: CrossFieldValidation
+): z.ZodTypeAny {
   const validator = getCrossFieldValidator(validation.validator);
 
   if (!validator) {
@@ -406,7 +409,8 @@ function generateCrossFieldValidation(zodSchema: z.ZodObject<z.ZodRawShape>, val
     return zodSchema;
   }
 
-  return zodSchema.superRefine((data, ctx) => {
+  // superRefine works on any Zod schema
+  return (zodSchema as z.ZodObject<z.ZodRawShape>).superRefine((data, ctx) => {
     const isValid = validator(data, validation.params || {});
     if (!isValid) {
       // Adicionar erro no primeiro campo da lista
@@ -416,5 +420,5 @@ function generateCrossFieldValidation(zodSchema: z.ZodObject<z.ZodRawShape>, val
         path: [validation.fields[0]],
       });
     }
-  }) as z.ZodObject<z.ZodRawShape>;
+  });
 }

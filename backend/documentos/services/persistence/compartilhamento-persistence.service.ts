@@ -258,3 +258,66 @@ export async function listarUsuariosComAcesso(
 
   return data ?? [];
 }
+
+/**
+ * Busca compartilhamento por ID
+ */
+export async function buscarCompartilhamentoPorId(
+  id: number
+): Promise<DocumentoCompartilhado | null> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('documentos_compartilhados')
+    .select()
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return null;
+    }
+    throw new Error(`Erro ao buscar compartilhamento: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Atualiza permissão de compartilhamento por ID
+ */
+export async function atualizarPermissaoCompartilhamentoPorId(
+  id: number,
+  permissao: 'visualizar' | 'editar'
+): Promise<DocumentoCompartilhado> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('documentos_compartilhados')
+    .update({ permissao })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Erro ao atualizar permissão: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Remove compartilhamento por ID
+ */
+export async function removerCompartilhamentoPorId(id: number): Promise<void> {
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from('documentos_compartilhados')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    throw new Error(`Erro ao remover compartilhamento: ${error.message}`);
+  }
+}
