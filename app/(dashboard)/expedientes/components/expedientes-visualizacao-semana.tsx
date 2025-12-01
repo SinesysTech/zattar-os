@@ -485,22 +485,20 @@ function ResponsavelCell({
 /**
  * Componente de ações para cada expediente
  */
-function AcoesExpediente({ 
-  expediente, 
-  usuarios, 
-  tiposExpedientes 
-}: { 
+function AcoesExpediente({
+  expediente,
+  usuarios,
+  tiposExpedientes,
+  onSuccess,
+}: {
   expediente: PendenteManifestacao;
   usuarios: Usuario[];
   tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+  onSuccess: () => void;
 }) {
   const [baixarDialogOpen, setBaixarDialogOpen] = React.useState(false);
   const [reverterDialogOpen, setReverterDialogOpen] = React.useState(false);
   const [visualizarDialogOpen, setVisualizarDialogOpen] = React.useState(false);
-
-  const handleSuccess = () => {
-    window.location.reload();
-  };
 
   const estaBaixado = !!expediente.baixado_em;
 
@@ -569,14 +567,14 @@ function AcoesExpediente({
         open={baixarDialogOpen}
         onOpenChange={setBaixarDialogOpen}
         expediente={expediente}
-        onSuccess={handleSuccess}
+        onSuccess={onSuccess}
       />
 
       <ExpedientesReverterBaixaDialog
         open={reverterDialogOpen}
         onOpenChange={setReverterDialogOpen}
         expediente={expediente}
-        onSuccess={handleSuccess}
+        onSuccess={onSuccess}
       />
     </TooltipProvider>
   );
@@ -1035,10 +1033,11 @@ function criarColunasSemanais(
   onResponsavelSort: (direction: 'asc' | 'desc') => void
 ): ColumnDef<PendenteManifestacao>[] {
   const handleAcoes = (expediente: PendenteManifestacao) => (
-    <AcoesExpediente 
-      expediente={expediente} 
-      usuarios={usuarios} 
-      tiposExpedientes={tiposExpedientes} 
+    <AcoesExpediente
+      expediente={expediente}
+      usuarios={usuarios}
+      tiposExpedientes={tiposExpedientes}
+      onSuccess={onSuccess}
     />
   );
   return [

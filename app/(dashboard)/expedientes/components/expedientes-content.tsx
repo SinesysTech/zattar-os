@@ -977,29 +977,23 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
     setSelectedFilterIds(ids);
     const parsed = parseExpedientesFilters(ids);
 
-    // Verificar se o usuário selecionou explicitamente um filtro de status de baixa
+    // Atualizar status de baixa baseado nos filtros selecionados
     const hasBaixadoFilter = ids.some(id => id.startsWith('baixado_'));
-    if (hasBaixadoFilter) {
-      if (parsed.baixado !== undefined) {
-        setStatusBaixa(parsed.baixado ? 'baixado' : 'pendente');
-      } else {
-        // Selecionou "Todos" explicitamente
-        setStatusBaixa('todos');
-      }
+    if (hasBaixadoFilter && parsed.baixado !== undefined) {
+      setStatusBaixa(parsed.baixado ? 'baixado' : 'pendente');
+    } else {
+      // Nenhum filtro de baixado selecionado ou "Todos" selecionado - mostrar todos
+      setStatusBaixa('todos');
     }
-    // Se não há filtro de baixado explícito, manter o statusBaixa atual
 
-    // Verificar se o usuário selecionou explicitamente um filtro de prazo
+    // Atualizar status de prazo baseado nos filtros selecionados
     const hasPrazoFilter = ids.some(id => id.startsWith('prazo_vencido_'));
-    if (hasPrazoFilter) {
-      if (parsed.prazo_vencido !== undefined) {
-        setStatusPrazo(parsed.prazo_vencido ? 'vencido' : 'no_prazo');
-      } else {
-        // Selecionou "Todos" explicitamente
-        setStatusPrazo('todos');
-      }
+    if (hasPrazoFilter && parsed.prazo_vencido !== undefined) {
+      setStatusPrazo(parsed.prazo_vencido ? 'vencido' : 'no_prazo');
+    } else {
+      // Nenhum filtro de prazo selecionado ou "Todos" selecionado - mostrar todos
+      setStatusPrazo('todos');
     }
-    // Se não há filtro de prazo explícito, manter o statusPrazo atual
 
     const newFiltros: ExpedientesFilters = {};
     if (parsed.trt) newFiltros.trt = parsed.trt;
