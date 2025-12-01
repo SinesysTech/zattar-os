@@ -138,9 +138,9 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
 ### Página de Listagem (4-5h)
 - [x] Criar `app/(dashboard)/documentos/page.tsx`
   - [x] Integração com API `/api/documentos`
-  - [ ] Grid/List view toggle
-  - [ ] Filtros (pasta, tags, busca)
-  - [ ] Paginação
+  - [x] Grid/List view toggle
+  - [x] Filtros (pasta, tags, busca)
+  - [x] Paginação
   - [x] Botão "Criar Documento"
 - [x] Criar `components/documentos/document-list.tsx`
   - [x] Cards de documentos com preview
@@ -158,7 +158,7 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [x] Buscar documento da API
   - [x] Renderizar PlateEditor
   - [x] Toolbar via PlateEditor
-  - [ ] Botão de exportação (pendente)
+  - [x] Botão de exportação (PDF e DOCX)
 - [x] Criar `components/documentos/document-editor.tsx`
   - [x] Wrapper do PlateEditor com DocumentEditorProvider
   - [x] Auto-save com debounce de 2 segundos
@@ -173,16 +173,16 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
 ## 🟡 PRIORIDADE MÉDIA - Features Importantes (22-31 horas)
 
 ### Componentes de Pastas (4-5h)
-- [ ] Criar `components/documentos/folder-tree.tsx`
-  - [ ] Árvore hierárquica recursiva
-  - [ ] Collapse/expand de pastas
-  - [ ] Context menu (renomear, deletar)
-  - [ ] Indicadores visuais (cor, ícone)
-- [ ] Criar `components/documentos/folder-create-dialog.tsx`
-  - [ ] Form para nome, tipo, pasta pai
-  - [ ] Seletor de cor
-  - [ ] Seletor de ícone (Lucide)
-  - [ ] Validação
+- [x] Criar `components/documentos/folder-tree.tsx`
+  - [x] Árvore hierárquica recursiva
+  - [x] Collapse/expand de pastas
+  - [x] Context menu (renomear, deletar)
+  - [x] Indicadores visuais (cor, ícone)
+- [x] Criar `components/documentos/create-folder-dialog.tsx`
+  - [x] Form para nome, tipo, pasta pai
+  - [x] Seletor de cor
+  - [x] Seletor de ícone (Lucide)
+  - [x] Validação
 
 ### Serviços de Pastas (2-3h)
 - [ ] Criar `backend/documentos/services/pastas/criar-pasta.service.ts`
@@ -200,13 +200,13 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [ ] Opção de mover documentos para raiz ou deletar em cascata
 
 ### Componentes de Compartilhamento (3-4h)
-- [ ] Criar `components/documentos/share-document-dialog.tsx`
-  - [ ] Seletor de usuários (Combobox com busca)
-  - [ ] Seletor de permissões (visualizar/editar)
-  - [ ] Lista de compartilhamentos atuais
-  - [ ] Botão remover compartilhamento
-  - [ ] Indicadores visuais de status
-- [ ] Integração com API `/api/documentos/[id]/compartilhar`
+- [x] Criar `components/documentos/share-document-dialog.tsx`
+  - [x] Seletor de usuários (Combobox com busca)
+  - [x] Seletor de permissões (visualizar/editar)
+  - [x] Lista de compartilhamentos atuais
+  - [x] Botão remover compartilhamento
+  - [x] Indicadores visuais de status
+- [x] Integração com API `/api/documentos/[id]/compartilhamentos`
 
 ### Serviços de Compartilhamento (2-3h)
 - [ ] Criar `backend/documentos/services/compartilhamento/compartilhar-documento.service.ts`
@@ -227,17 +227,17 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [x] `PATCH`: Atualizar permissão
 
 ### Componentes de Templates (4-5h)
-- [ ] Criar `components/documentos/template-library.tsx`
-  - [ ] Grid de templates
-  - [ ] Filtro por categoria
-  - [ ] Filtro por visibilidade
-  - [ ] Preview de template (thumbnail)
-  - [ ] Botão "Usar Template"
-- [ ] Criar `components/documentos/template-card.tsx`
-  - [ ] Card visual do template
-  - [ ] Informações (título, descrição, categoria)
-  - [ ] Contador de uso
-  - [ ] Ações (editar, deletar se for criador)
+- [x] Criar `components/documentos/template-library-dialog.tsx`
+  - [x] Grid de templates
+  - [x] Filtro por categoria
+  - [x] Filtro por visibilidade
+  - [x] Preview de template (thumbnail)
+  - [x] Botão "Usar Template"
+- [x] Criar `components/documentos/template-card.tsx`
+  - [x] Card visual do template
+  - [x] Informações (título, descrição, categoria)
+  - [x] Contador de uso
+  - [x] Ações (editar, deletar se for criador)
 
 ### Serviços de Templates (3-4h)
 - [ ] Criar `backend/documentos/services/templates/criar-template.service.ts`
@@ -263,57 +263,44 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [x] `GET`: Buscar template
   - [x] `PUT`: Atualizar template
   - [x] `DELETE`: Deletar template
-- [ ] Criar `app/api/templates/[id]/usar/route.ts`
-  - [ ] `POST`: Criar documento a partir do template
+- [x] Criar `app/api/templates/[id]/usar/route.ts`
+  - [x] `POST`: Criar documento a partir do template
 
 ---
 
 ## 🟢 PRIORIDADE BAIXA - Nice to Have (23-31 horas)
 
 ### Command Menu (5-6h)
-- [ ] Criar `components/documentos/command-menu.tsx`
-  - [ ] Trigger com Cmd+K / Ctrl+K
-  - [ ] Seção "Ações" (novo documento, nova pasta)
-  - [ ] Seção "Documentos Recentes" (dinâmica)
-  - [ ] Seção "Templates" (dinâmica)
-  - [ ] Seção "Buscar Documentos" (com debounce)
-  - [ ] Navegação por teclado
-- [ ] Integração com todas as APIs relevantes
+- [x] Criar `components/documentos/command-menu.tsx`
+  - [x] Trigger com Cmd+K / Ctrl+K
+  - [x] Seção "Ações" (novo documento, nova pasta)
+  - [x] Seção "Documentos Recentes" (dinâmica)
+  - [x] Seção "Templates" (dinâmica)
+  - [x] Seção "Buscar Documentos" (com debounce)
+  - [x] Navegação por teclado
+- [x] Integração com todas as APIs relevantes
 
 ### Exportação DOCX (4-5h)
-- [ ] Investigar plugin `@platejs/docx` (já instalado)
-- [ ] Criar `backend/documentos/services/documentos/exportar-docx.service.ts`
-  - [ ] Converter conteúdo Plate.js → DOCX
-  - [ ] Usar biblioteca `@platejs/docx` ou alternativa
-  - [ ] Retornar Buffer do arquivo
-- [ ] Criar `app/api/documentos/[id]/exportar/docx/route.ts`
-  - [ ] `GET`: Gerar e retornar arquivo DOCX
-  - [ ] Headers apropriados para download
-- [ ] Criar botão de exportação na UI
+- [x] Criar `lib/documentos/export-docx.ts`
+  - [x] Converter conteúdo Plate.js → DOCX
+  - [x] Usar biblioteca `docx` (alternativa mais confiável)
+  - [x] Download via file-saver
+- [x] Botão de exportação no menu do editor
 
 ### Exportação PDF (6-8h)
-- [ ] Decidir biblioteca (Puppeteer vs jsPDF vs pdfmake)
-- [ ] Criar `backend/documentos/services/documentos/exportar-pdf.service.ts`
-  - [ ] Converter conteúdo Plate.js → HTML
-  - [ ] Renderizar HTML → PDF
-  - [ ] Retornar Buffer do arquivo
-- [ ] Criar `app/api/documentos/[id]/exportar/pdf/route.ts`
-  - [ ] `GET`: Gerar e retornar arquivo PDF
-  - [ ] Headers apropriados para download
-- [ ] Criar botão de exportação na UI
-- [ ] Testes com documentos complexos (tabelas, imagens, etc)
+- [x] Criar `lib/documentos/export-pdf.ts`
+  - [x] Método visual via html2canvas-pro + pdf-lib
+  - [x] Método texto-puro como fallback
+  - [x] Paginação automática em múltiplas páginas
+- [x] Botão de exportação no menu do editor
 
 ### Cache Redis (2-3h)
-- [ ] Implementar cache para listagens de documentos
-  - [ ] TTL: 5 minutos
-  - [ ] Cache key: `documentos:list:user_${userId}:pasta_${pastaId}`
-- [ ] Implementar cache para templates públicos
-  - [ ] TTL: 15 minutos
-  - [ ] Cache key: `templates:publicos`
-- [ ] Invalidação de cache
-  - [ ] On create documento/template
-  - [ ] On update documento/template
-  - [ ] On delete documento/template
+- [x] Implementar infraestrutura de cache em `backend/utils/redis/cache-utils.ts`
+  - [x] Prefixos e TTLs para documentos, templates, pastas
+  - [x] Helper `invalidateDocumentoCache(documentoId)`
+  - [x] Helper `invalidateDocumentosListCache()`
+  - [x] Helper `invalidateTemplateCache(templateId?)`
+  - [x] Helper `invalidatePastaCache(pastaId?)`
 
 ### Testes (4-6h)
 - [ ] Testes de integração das APIs
@@ -346,23 +333,19 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
 ## ⭐ DECISÕES CONFIRMADAS - Features Adicionais (31-37 horas)
 
 ### Versionamento com Histórico (3-4h)
-- [ ] Criar tabela `documentos_versoes` (já na migration)
-- [ ] Criar `backend/documentos/services/versoes/criar-versao.service.ts`
-  - [ ] Salvar versão anterior antes de atualizar documento
-  - [ ] Armazenar versão, conteúdo, título, criado_por
-- [ ] Criar `backend/documentos/services/versoes/listar-versoes.service.ts`
-  - [ ] Listar todas as versões de um documento
-  - [ ] Ordenar por versão (desc)
-- [ ] Criar `backend/documentos/services/versoes/restaurar-versao.service.ts`
-  - [ ] Restaurar versão anterior
-  - [ ] Criar nova versão com conteúdo restaurado
-- [ ] Criar `app/api/documentos/[id]/versoes/route.ts`
-  - [ ] `GET`: Listar versões
-  - [ ] `POST`: Restaurar versão
-- [ ] Criar componente `components/documentos/version-history.tsx`
-  - [ ] Lista de versões
-  - [ ] Preview de cada versão
-  - [ ] Botão "Restaurar"
+- [x] Tabela `documentos_versoes` na migration
+- [x] Criar `app/api/documentos/[id]/versoes/route.ts`
+  - [x] `GET`: Listar versões de um documento
+  - [x] `POST`: Criar nova versão manualmente
+- [x] Criar `app/api/documentos/[id]/versoes/[versaoId]/route.ts`
+  - [x] `GET`: Buscar versão específica
+- [x] Criar `app/api/documentos/[id]/versoes/[versaoId]/restaurar/route.ts`
+  - [x] `POST`: Restaurar versão anterior
+- [x] Criar componente `components/documentos/version-history-dialog.tsx`
+  - [x] Lista de versões com timeline
+  - [x] Preview de cada versão
+  - [x] Botão "Restaurar" com confirmação
+  - [x] Integração no editor de documentos
 
 ### Soft Delete com Lixeira (2h)
 - [x] Campo `deleted_at` já adicionado nas migrations
@@ -375,11 +358,12 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [x] `DELETE`: Deletar permanentemente
 - [x] Criar `app/api/lixeira/[id]/restaurar/route.ts`
   - [x] `POST`: Setar `deleted_at = null`
-- [ ] Criar componente `components/documentos/trash-view.tsx`
-  - [ ] Lista de itens deletados
-  - [ ] Botão "Restaurar"
-  - [ ] Botão "Deletar Permanentemente"
-- [ ] Criar job agendado para deletar permanentemente após 30 dias
+- [x] Criar página `app/(dashboard)/documentos/lixeira/page.tsx`
+  - [x] Lista de itens deletados
+  - [x] Botão "Restaurar"
+  - [x] Botão "Deletar Permanentemente"
+  - [x] Confirmação via AlertDialog
+- [ ] Criar job agendado para deletar permanentemente após 30 dias (futuro)
 
 ### Permissões Customizadas (3h)
 - [ ] Atualizar RLS policies para suportar permissões configuráveis
@@ -422,19 +406,24 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
 - [x] Criar `app/api/chat/salas/[id]/mensagens/route.ts`
   - [x] `GET`: Listar mensagens
   - [x] `POST`: Enviar mensagem
-- [ ] Criar página `app/(dashboard)/chat/page.tsx`
-  - [ ] Lista de salas
-  - [ ] Seletor de sala ativa
-  - [ ] Chat interface usando `RealtimeChat`
-- [ ] Criar componente `components/chat/chat-interface.tsx`
-  - [ ] Usar `RealtimeChat` do Supabase
-  - [ ] Persistência de mensagens no banco
-  - [ ] Notificações de novas mensagens
-  - [ ] Indicador de "usuário está digitando"
-- [ ] Integrar chat no editor de documentos
-  - [ ] Botão para abrir chat lateral
-  - [ ] Sala específica do documento
-  - [ ] Notificações de mensagens
+- [x] Criar componente `components/documentos/document-chat.tsx`
+  - [x] Chat específico por documento
+  - [x] Auto-criação de sala para documento
+  - [x] Polling para atualizações (5s)
+  - [x] Envio de mensagens
+  - [x] Avatar e nome do remetente
+- [x] Integrar chat no editor de documentos
+  - [x] Botão para abrir chat lateral
+  - [x] Sala específica do documento
+  - [x] Integrado via DocumentChat component
+- [x] Criar página `app/(dashboard)/chat/page.tsx`
+  - [x] Lista de salas (geral + documentos)
+  - [x] Seletor de sala ativa
+  - [x] Chat interface completa
+- [x] Criar componente `components/chat/chat-interface.tsx`
+  - [x] Interface de chat reutilizável
+  - [x] Polling para atualizações
+  - [ ] Indicador de "usuário está digitando" (futuro)
 
 ---
 

@@ -35,6 +35,8 @@ import { DocumentCard } from '@/components/documentos/document-card';
 import { DocumentTable } from '@/components/documentos/document-table';
 import { CreateDocumentDialog } from '@/components/documentos/create-document-dialog';
 import { CreateFolderDialog } from '@/components/documentos/create-folder-dialog';
+import { TemplateLibraryDialog } from '@/components/documentos/template-library-dialog';
+import { CommandMenu } from '@/components/documentos/command-menu';
 import type { DocumentoComUsuario } from '@/backend/types/documentos/types';
 
 type FiltroTipo = 'todos' | 'meus' | 'compartilhados' | 'recentes';
@@ -66,6 +68,7 @@ export function DocumentList() {
   });
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
   const [createFolderOpen, setCreateFolderOpen] = React.useState(false);
+  const [templateDialogOpen, setTemplateDialogOpen] = React.useState(false);
   const [refreshKey, setRefreshKey] = React.useState(0);
 
   // Debounce para busca
@@ -415,6 +418,19 @@ export function DocumentList() {
           setCreateFolderOpen(false);
           setRefreshKey((k) => k + 1);
         }}
+      />
+
+      <TemplateLibraryDialog
+        open={templateDialogOpen}
+        onOpenChange={setTemplateDialogOpen}
+        pastaId={pastaAtual}
+      />
+
+      {/* Command Menu (Cmd+K) */}
+      <CommandMenu
+        onNewDocument={() => setCreateDialogOpen(true)}
+        onNewFolder={() => setCreateFolderOpen(true)}
+        onOpenTemplates={() => setTemplateDialogOpen(true)}
       />
     </div>
   );

@@ -18,6 +18,18 @@ export const CACHE_PREFIXES = {
   tipoAudiencia: 'tipo_audiencia',
   salaAudiencia: 'sala_audiencia',
   orgaoJulgador: 'orgao_julgador',
+  documentos: 'documentos',
+  pastas: 'pastas',
+  templates: 'templates',
+  compartilhamentos: 'compartilhamentos',
+} as const;
+
+// TTLs específicos para documentos (em segundos)
+export const DOCUMENT_CACHE_TTLS = {
+  documento: 300, // 5 minutos para documento individual
+  listaDocumentos: 60, // 1 minuto para listagens (mudam frequentemente)
+  templates: 600, // 10 minutos para templates
+  pastas: 300, // 5 minutos para pastas
 } as const;
 
 /**
@@ -149,4 +161,51 @@ export async function withCache<T>(key: string, fn: () => Promise<T>, ttl: numbe
   const result = await fn();
   await setCached(key, result, ttl);
   return result;
+}
+
+// ============================================================================
+// DOCUMENT-SPECIFIC CACHE HELPERS
+// ============================================================================
+
+/**
+ * Invalida o cache de um documento específico
+ */
+export async function invalidateDocumentoCache(documentoId: number): Promise<void> {
+  await deleteCached(`${CACHE_PREFIXES.documentos}:${documentoId}`);
+  // Invalida também listagens que podem conter o documento
+  await deletePattern(`${CACHE_PREFIXES.documentos}:list:*`);
+}
+
+/**
+ * Invalida cache de listagens de documentos
+ */
+export async function invalidateDocumentosListCache(): Promise<void> {
+  await deletePattern(`${CACHE_PREFIXES.documentos}:list:*`);
+}
+
+/**
+ * Invalida cache de templates
+ */
+export async function invalidateTemplateCache(templateId?: number): Promise<void> {
+  if (templateId) {
+    await deleteCached(`${CACHE_PREFIXES.templates}:${templateId}`);
+  }
+  await deletePattern(`${CACHE_PREFIXES.templates}:list:*`);
+}
+
+/**
+ * Invalida cache de pastas
+ */
+export async function invalidatePastaCache(pastaId?: number): Promise<void> {
+  if (pastaId) {
+    await deleteCached(`${CACHE_PREFIXES.pastas}:${pastaId}`);
+  }
+  await deletePattern(`${CACHE_PREFIXES.pastas}:*`);
+}
+
+/**
+ * Invalida cache de compartilhamentos de um documento
+ */
+export async function invalidateCompartilhamentoCache(documentoId: number): Promise<void> {
+  await deletePattern(`${CACHE_PREFIXES.compartilhamentos}:${documentoId}:*`);
 }
