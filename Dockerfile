@@ -49,8 +49,8 @@ ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHA
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build da aplicação (sem turbopack - mais estável)
-# Limita workers para reduzir uso de memória
-RUN NEXT_BUILD_WORKERS=2 npm run build:prod
+# Limita workers para reduzir uso de CPU (1 = sequencial, mais lento mas estável)
+RUN NEXT_BUILD_WORKERS=1 npm run build:prod
 
 # Stage 3: Runner (imagem final leve)
 FROM node:20-slim AS runner
