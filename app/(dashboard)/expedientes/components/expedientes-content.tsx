@@ -1203,4 +1203,3 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
     </div>
   );
 }
-
