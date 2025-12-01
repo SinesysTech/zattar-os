@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { generateSimplePdf } from './pdf.service';
+import { generatePdfFromTemplate } from './template-pdf.service';
 import { storePdf, storePhotoImage, storeSignatureImage } from './storage.service';
 import {
   getClienteBasico,
@@ -24,9 +24,14 @@ function buildProtocol(): string {
   return `FS-${ts}-${rand}`;
 }
 
-async function insertAssinaturaRecord(payload: FinalizePayload, pdfUrl: string, assinaturaUrl?: string, fotoUrl?: string) {
+async function insertAssinaturaRecord(
+  payload: FinalizePayload,
+  pdfUrl: string,
+  protocolo: string,
+  assinaturaUrl?: string,
+  fotoUrl?: string
+) {
   const supabase = createServiceClient();
-  const protocolo = buildProtocol();
   const sessao_uuid = payload.sessao_id || randomUUID();
   const { data, error } = await supabase
     .from('formsign_assinaturas')
@@ -74,13 +79,20 @@ export async function generatePreview(payload: PreviewPayload): Promise<PreviewR
     throw new Error('Template não encontrado ou inativo');
   }
 
-  const pdfBuffer = await generateSimplePdf({
-    cliente: { id: cliente.id, nome: cliente.nome, cpf: cliente.cpf, cnpj: cliente.cnpj },
-    acaoId: payload.acao_id,
-    templateId: template.template_uuid,
-    fotoBase64: payload.foto_base64 || undefined,
-    preview: true,
-  });
+  const dummySegmento = { id: 0, nome: 'Preview', slug: 'preview', ativo: true };
+  const dummyFormulario = { id: 0, formulario_uuid: 'preview', nome: 'Preview', slug: 'preview', segmento_id: 0, ativo: true };
+
+  const pdfBuffer = await generatePdfFromTemplate(
+    template,
+    {
+      cliente,
+      segmento: dummySegmento,
+      formulario: dummyFormulario,
+      protocolo: 'PREVIEW',
+    },
+    { acao_id: payload.acao_id },
+    { fotoBase64: payload.foto_base64 || undefined }
+  );
 
   const stored = await storePdf(pdfBuffer);
   return { pdf_url: stored.url };
@@ -114,27 +126,38 @@ export async function finalizeSignature(payload: FinalizePayload): Promise<Final
   const assinaturaStored = await storeSignatureImage(payload.assinatura_base64);
   const fotoStored = payload.foto_base64 ? await storePhotoImage(payload.foto_base64) : undefined;
 
-  const pdfBuffer = await generateSimplePdf({
-    cliente: { id: cliente.id, nome: cliente.nome, cpf: cliente.cpf, cnpj: cliente.cnpj },
-    acaoId: payload.acao_id,
-    templateId: template.template_uuid,
-    preview: false,
-    assinaturaBase64: payload.assinatura_base64,
-    fotoBase64: payload.foto_base64 || undefined,
-    metadata: {
+  const protocolo = buildProtocol();
+
+  const pdfBuffer = await generatePdfFromTemplate(
+    template,
+    {
+      cliente,
+      segmento,
+      formulario,
+      protocolo,
+      ip: payload.ip_address,
+      user_agent: payload.user_agent,
+    },
+    {
       segmento_id: payload.segmento_id,
       formulario_id: payload.formulario_id,
-      ip_address: payload.ip_address,
-      user_agent: payload.user_agent,
+      acao_id: payload.acao_id,
       latitude: payload.latitude,
       longitude: payload.longitude,
       geolocation_accuracy: payload.geolocation_accuracy,
       geolocation_timestamp: payload.geolocation_timestamp,
     },
-  });
+    { assinaturaBase64: payload.assinatura_base64, fotoBase64: payload.foto_base64 || undefined }
+  );
 
   const pdfStored = await storePdf(pdfBuffer);
-  const record = await insertAssinaturaRecord(payload, pdfStored.url, assinaturaStored.url, fotoStored?.url);
+  const record = await insertAssinaturaRecord(
+    payload,
+    pdfStored.url,
+    protocolo,
+    assinaturaStored.url,
+    fotoStored?.url
+  );
 
   return {
     assinatura_id: record.id,

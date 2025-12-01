@@ -3,6 +3,8 @@
  * Re-exporta tipos do backend e adiciona utilitários para uso em componentes React
  */
 
+import { CEP } from '@/types/domain/value-objects';
+
 // Re-exporta todos os tipos de endereços do backend
 export type {
   EntidadeTipoEndereco,
@@ -65,9 +67,15 @@ export function isEnderecoAtivo(endereco: { ativo: boolean | null }): boolean {
 
 /**
  * Formata CEP para exibição
+ * Aceita tanto string quanto o value object CEP
  */
-export function formatarCep(cep: string | null | undefined): string {
+export function formatarCep(cep: CEP | string | null | undefined): string {
   if (!cep) return '';
+  // Se for instância de CEP (value object), usar o método formatar
+  if (cep instanceof CEP) {
+    return cep.formatar();
+  }
+  // Se for string, formatar manualmente
   const numeros = cep.replace(/\D/g, '');
   if (numeros.length !== 8) return cep;
   return numeros.replace(/(\d{5})(\d{3})/, '$1-$2');
@@ -83,7 +91,7 @@ export function formatarEnderecoCompleto(endereco: {
   bairro?: string | null;
   municipio?: string | null;
   estado_sigla?: string | null;
-  cep?: string | null;
+  cep?: CEP | string | null;
 }): string {
   const partes: string[] = [];
 

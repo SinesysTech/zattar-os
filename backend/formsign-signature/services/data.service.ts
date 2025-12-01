@@ -13,6 +13,8 @@ export interface TemplateBasico {
   template_uuid: string;
   nome: string;
   ativo: boolean;
+  arquivo_original: string;
+  campos: string;
 }
 
 export interface FormularioBasico {
@@ -60,7 +62,7 @@ export async function getTemplateBasico(id: string): Promise<TemplateBasico | nu
   const parsed = parseTemplateId(id);
   const { data, error } = await supabase
     .from('formsign_templates')
-    .select('id, template_uuid, nome, ativo')
+    .select('id, template_uuid, nome, ativo, arquivo_original, campos')
     .eq(parsed.column, parsed.value)
     .single();
 
