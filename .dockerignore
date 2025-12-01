@@ -1,11 +1,28 @@
-# Dependencies
+# ========================================
+# .dockerignore otimizado para CapRover
+# Reduz contexto de build para acelerar deploy
+# ========================================
+
+# Dependencies (maior impacto - ~500MB+)
 node_modules
+.pnpm-store
+
+# Build outputs (não precisam ser copiados)
+.next
+out
+build
+dist
+
+# Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# Testing
+# ========================================
+# Testing (não precisa em produção)
+# ========================================
 coverage
 .nyc_output
 **/*.test.ts
@@ -17,87 +34,89 @@ __mocks__
 jest.config.*
 playwright.config.*
 playwright-report
+e2e
 
-# Next.js
-.next
-out
-build
-dist
-
-# Production
-*.log
-
-# Misc
-.DS_Store
-*.pem
-Thumbs.db
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Local env files
-.env*.local
-.env
-
-# Vercel
-.vercel
-
-# TypeScript
+# ========================================
+# TypeScript build cache
+# ========================================
 *.tsbuildinfo
-next-env.d.ts
+tsconfig.tsbuildinfo
 
-# IDE
+# ========================================
+# IDE e ferramentas de IA (impacto grande)
+# ========================================
 .vscode
 .idea
+.cursor
+.qoder
+.agent
+.amazonq
+.codex
+.gemini
+.kilocode
+.kiro
+.trae
 *.swp
 *.swo
 *~
 .editorconfig
+*.code-workspace
 
+# ========================================
 # Git
+# ========================================
 .git
 .gitignore
 .gitattributes
 
-# Documentation
+# ========================================
+# Documentação (não precisa em runtime)
+# ========================================
 docs
 *.md
-!README.md
 CHANGELOG*
 LICENSE*
 
-# Dev data e scripts de desenvolvimento
+# ========================================
+# Arquivos de ambiente
+# ========================================
+.env*.local
+.env
+.vercel
+
+# ========================================
+# Desenvolvimento
+# ========================================
 dev_data
 openspec
-scripts/results
-
-# Browser service (repositório separado)
+scripts
 browser
 
-# Supabase local
-supabase/.branches
-supabase/.temp
-supabase/seed.sql
+# ========================================
+# Supabase (só migrations são necessárias em alguns casos)
+# ========================================
+supabase
 
-# Cursor
-.cursor
-
-# Qoder
-.qoder
-
-# CapRover
+# ========================================
+# Docker/Deploy (meta-arquivos)
+# ========================================
 captain-definition
-
-# Docker files (não precisam estar no contexto)
 docker-compose*.yml
 Dockerfile*
 .dockerignore
+DEPLOY.md
 
-# Outros
+# ========================================
+# Misc
+# ========================================
+.DS_Store
+*.pem
+Thumbs.db
 *.local
 *.bak
 *.tmp
 .turbo
+.mcp.json
+.npmrc
+.cursorignore
 

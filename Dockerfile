@@ -1,9 +1,14 @@
 # Dockerfile para Sinesys (Next.js App)
-# 
+#
 # Este Dockerfile cria uma imagem LEVE do Next.js.
 # O Playwright/Browser é um serviço SEPARADO (ver DEPLOY.md).
 #
 # Para CapRover: o arquivo captain-definition já aponta para este Dockerfile
+#
+# Otimizações aplicadas:
+# - Cache mount para npm (acelera rebuilds)
+# - .dockerignore otimizado (contexto menor)
+# - Memória limitada para evitar OOM no CapRover
 #
 # Stage 1: Dependencies
 FROM node:20-slim AS deps
@@ -15,18 +20,17 @@ ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 # Copiar arquivos de dependências
 COPY package.json package-lock.json* ./
 
-# Atualizar npm para versão mais recente
-RUN npm install -g npm@latest
-
-# Instalar dependências (sem scripts para evitar problemas com binários nativos)
-RUN npm ci --ignore-scripts
+# Instalar dependências com cache mount (acelera rebuilds significativamente)
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --ignore-scripts
 
 # Stage 2: Builder
 FROM node:20-slim AS builder
 WORKDIR /app
 
-# Aumentar memória disponível para o Node.js durante o build
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+# Memória para Node.js durante build
+# 2GB é suficiente para Next.js e evita OOM em servidores menores
+ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 # Copiar dependências do stage anterior
 COPY --from=deps /app/node_modules ./node_modules
@@ -43,7 +47,7 @@ ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHA
 # Desabilitar telemetria durante build
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build da aplicação SEM turbopack (mais estável e consome menos memória)
+# Build da aplicação (sem turbopack - mais estável)
 RUN npm run build:prod
 
 # Stage 3: Runner (imagem final leve)
