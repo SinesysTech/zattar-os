@@ -1,4 +1,5 @@
 import type { GrauProcesso } from './common';
+import { StatusProcesso } from './common';
 
 /**
  * Origem do processo no acervo.
@@ -23,7 +24,7 @@ export interface Acervo {
   descricao_orgao_julgador: string;
   classe_judicial: string;
   segredo_justica: boolean;
-  codigo_status_processo: string;
+  status: StatusProcesso;
   prioridade_processual: number;
   nome_parte_autora: string;
   qtde_parte_autora: number;
@@ -59,6 +60,7 @@ export interface ProcessoInstancia {
   origem: OrigemAcervo;
   trt: string;
   data_autuacao: string;
+  status: StatusProcesso; // Adicionado
   updated_at: string;
   is_grau_atual: boolean; // True se esta é a instância do grau mais recente
 }
@@ -71,6 +73,7 @@ export interface ProcessoInstancia {
 export interface ProcessoUnificado extends Omit<Acervo, 'id' | 'grau' | 'origem'> {
   id: number; // ID da instância principal (grau atual)
   grau_atual: GrauProcesso;
+  status_geral: StatusProcesso; // Adicionado
   instances: ProcessoInstancia[];
   graus_ativos: GrauProcesso[];
 }

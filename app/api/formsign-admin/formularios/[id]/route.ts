@@ -24,14 +24,18 @@ const updateFormularioSchema = z.object({
   criado_por: z.string().optional().nullable(),
 });
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const authOrError = await requirePermission(request, 'formsign_admin', 'visualizar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }
 
   try {
-    const formulario = await getFormulario(params.id);
+    const { id } = await params;
+    const formulario = await getFormulario(id);
     if (!formulario) {
       return NextResponse.json({ error: 'Formulário não encontrado' }, { status: 404 });
     }
@@ -43,16 +47,20 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const authOrError = await requirePermission(request, 'formsign_admin', 'editar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }
 
   try {
+    const { id } = await params;
     const body = await request.json();
     const payload = updateFormularioSchema.parse(body) as Partial<UpsertFormularioInput>;
-    const formulario = await updateFormulario(params.id, payload);
+    const formulario = await updateFormulario(id, payload);
     return NextResponse.json({ success: true, data: formulario });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -67,14 +75,18 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const authOrError = await requirePermission(request, 'formsign_admin', 'deletar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }
 
   try {
-    await deleteFormulario(params.id);
+    const { id } = await params;
+    await deleteFormulario(id);
     return NextResponse.json({ success: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erro ao deletar formulário';

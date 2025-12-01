@@ -2,8 +2,13 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { decodeDataUrlToBuffer } from './base64';
 
 interface PdfPayload {
-  clienteId: number;
-  acaoId: number;
+  cliente: {
+    id: number;
+    nome: string;
+    cpf?: string | null;
+    cnpj?: string | null;
+  };
+  acaoId?: number;
   templateId: string;
   preview?: boolean;
   assinaturaBase64?: string;
@@ -37,8 +42,10 @@ export async function generateSimplePdf(payload: PdfPayload): Promise<Buffer> {
   };
 
   addLine(payload.preview ? 'Preview de Assinatura Digital' : 'Documento Assinado Digitalmente', true, 16);
-  addLine(`Cliente ID: ${payload.clienteId}`);
-  addLine(`Ação ID: ${payload.acaoId}`);
+  addLine(`Cliente: ${payload.cliente.nome} (ID ${payload.cliente.id})`);
+  if (payload.cliente.cpf) addLine(`CPF: ${payload.cliente.cpf}`);
+  if (payload.cliente.cnpj) addLine(`CNPJ: ${payload.cliente.cnpj}`);
+  if (payload.acaoId) addLine(`Ação ID: ${payload.acaoId}`);
   addLine(`Template: ${payload.templateId}`);
   addLine(`Data: ${new Date().toISOString()}`);
   addLine('');

@@ -23,14 +23,18 @@ const updateSchema = z.object({
   criado_por: z.string().optional().nullable(),
 });
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const authOrError = await requirePermission(request, 'formsign_admin', 'visualizar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }
 
   try {
-    const template = await getTemplate(params.id);
+    const { id } = await params;
+    const template = await getTemplate(id);
     if (!template) {
       return NextResponse.json({ error: 'Template não encontrado' }, { status: 404 });
     }
@@ -42,16 +46,20 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const authOrError = await requirePermission(request, 'formsign_admin', 'editar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }
 
   try {
+    const { id } = await params;
     const body = await request.json();
     const payload = updateSchema.parse(body) as Partial<UpsertTemplateInput>;
-    const template = await updateTemplate(params.id, payload);
+    const template = await updateTemplate(id, payload);
     return NextResponse.json({ success: true, data: template });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -66,14 +74,18 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const authOrError = await requirePermission(request, 'formsign_admin', 'deletar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }
 
   try {
-    await deleteTemplate(params.id);
+    const { id } = await params;
+    await deleteTemplate(id);
     return NextResponse.json({ success: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erro ao deletar template';

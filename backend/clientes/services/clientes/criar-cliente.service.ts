@@ -5,7 +5,13 @@ import {
   criarCliente as criarClienteDb,
   type OperacaoClienteResult,
 } from '../persistence/cliente-persistence.service';
-import type { CriarClienteParams } from '@/backend/types/partes';
+import type { CriarPessoaParams } from '@/types/contracts/pessoa';
+import type { CriarClienteParams } from '@/types/contracts/partes';
+
+function pessoaToClienteParams(params: CriarPessoaParams): CriarClienteParams {
+  const { papel_processual, ...rest } = params;
+  return rest;
+}
 
 /**
  * Cadastra um novo cliente no sistema
@@ -17,7 +23,7 @@ import type { CriarClienteParams } from '@/backend/types/partes';
  * 4. Retorna o cliente criado ou erro
  */
 export async function cadastrarCliente(
-  params: CriarClienteParams
+  params: CriarPessoaParams
 ): Promise<OperacaoClienteResult> {
   console.log('📝 Iniciando cadastro de cliente...', {
     tipo_pessoa: params.tipo_pessoa,
@@ -28,7 +34,8 @@ export async function cadastrarCliente(
   });
 
   try {
-    const resultado = await criarClienteDb(params);
+    const clienteParams = pessoaToClienteParams(params);
+    const resultado = await criarClienteDb(clienteParams);
 
     if (resultado.sucesso && resultado.cliente) {
       console.log('✅ Cliente cadastrado com sucesso:', {

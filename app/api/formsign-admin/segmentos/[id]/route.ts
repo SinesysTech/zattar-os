@@ -15,13 +15,17 @@ const updateSegmentoSchema = z.object({
   ativo: z.boolean().optional(),
 });
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const authOrError = await requirePermission(request, 'formsign_admin', 'visualizar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }
 
-  const id = Number(params.id);
+  const { id: idStr } = await params;
+  const id = Number(idStr);
   if (Number.isNaN(id)) {
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
   }
@@ -39,16 +43,20 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const authOrError = await requirePermission(request, 'formsign_admin', 'editar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }
 
   try {
+    const { id: idStr } = await params;
     const body = await request.json();
     const payload = updateSegmentoSchema.parse(body) as Partial<UpsertSegmentoInput>;
-    const id = Number(params.id);
+    const id = Number(idStr);
     if (Number.isNaN(id)) {
       return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
     }
@@ -68,14 +76,18 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const authOrError = await requirePermission(request, 'formsign_admin', 'deletar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }
 
   try {
-    const id = Number(params.id);
+    const { id: idStr } = await params;
+    const id = Number(idStr);
     if (Number.isNaN(id)) {
       return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
     }

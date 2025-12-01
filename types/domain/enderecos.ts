@@ -1,4 +1,5 @@
 import type { GrauProcesso } from './common';
+import type { CEP } from './value-objects';
 
 /**
  * Define a que tipo de entidade um endereço está associado.
@@ -47,10 +48,10 @@ export interface Endereco {
   estado_descricao: string | null;
   estado: string | null;
   pais_id_pje: number | null;
-  pais_codigo: string | null;
-  pais_descricao: string | null;
+  pais_codigo?: string | null;
+  pais_descricao?: string | null;
   pais: string | null;
-  cep: string | null;
+  cep: CEP | null;
   classificacoes_endereco: ClassificacaoEndereco[] | null;
   correspondencia: boolean | null;
   situacao: SituacaoEndereco | null;

@@ -2,6 +2,12 @@ import { randomUUID } from 'crypto';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { generateSimplePdf } from './pdf.service';
 import { storePdf, storePhotoImage, storeSignatureImage } from './storage.service';
+import {
+  getClienteBasico,
+  getFormularioBasico,
+  getSegmentoBasico,
+  getTemplateBasico,
+} from './data.service';
 import type {
   FinalizePayload,
   FinalizeResult,
@@ -56,10 +62,22 @@ async function insertAssinaturaRecord(payload: FinalizePayload, pdfUrl: string, 
 }
 
 export async function generatePreview(payload: PreviewPayload): Promise<PreviewResult> {
+  const [cliente, template] = await Promise.all([
+    getClienteBasico(payload.cliente_id),
+    getTemplateBasico(payload.template_id),
+  ]);
+
+  if (!cliente) {
+    throw new Error('Cliente não encontrado');
+  }
+  if (!template || !template.ativo) {
+    throw new Error('Template não encontrado ou inativo');
+  }
+
   const pdfBuffer = await generateSimplePdf({
-    clienteId: payload.cliente_id,
+    cliente: { id: cliente.id, nome: cliente.nome, cpf: cliente.cpf, cnpj: cliente.cnpj },
     acaoId: payload.acao_id,
-    templateId: payload.template_id,
+    templateId: template.template_uuid,
     fotoBase64: payload.foto_base64 || undefined,
     preview: true,
   });
@@ -73,13 +91,33 @@ export async function finalizeSignature(payload: FinalizePayload): Promise<Final
     throw new Error('assinatura_base64 é obrigatória');
   }
 
+  const [cliente, template, formulario, segmento] = await Promise.all([
+    getClienteBasico(payload.cliente_id),
+    getTemplateBasico(payload.template_id),
+    getFormularioBasico(payload.formulario_id),
+    getSegmentoBasico(payload.segmento_id),
+  ]);
+
+  if (!cliente) {
+    throw new Error('Cliente não encontrado');
+  }
+  if (!template || !template.ativo) {
+    throw new Error('Template não encontrado ou inativo');
+  }
+  if (!formulario || !formulario.ativo) {
+    throw new Error('Formulário não encontrado ou inativo');
+  }
+  if (!segmento || !segmento.ativo) {
+    throw new Error('Segmento não encontrado ou inativo');
+  }
+
   const assinaturaStored = await storeSignatureImage(payload.assinatura_base64);
   const fotoStored = payload.foto_base64 ? await storePhotoImage(payload.foto_base64) : undefined;
 
   const pdfBuffer = await generateSimplePdf({
-    clienteId: payload.cliente_id,
+    cliente: { id: cliente.id, nome: cliente.nome, cpf: cliente.cpf, cnpj: cliente.cnpj },
     acaoId: payload.acao_id,
-    templateId: payload.template_id,
+    templateId: template.template_uuid,
     preview: false,
     assinaturaBase64: payload.assinatura_base64,
     fotoBase64: payload.foto_base64 || undefined,

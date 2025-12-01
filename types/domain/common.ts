@@ -31,3 +31,18 @@ export type SituacaoPJE = 'A' | 'I' | 'E' | 'H';
  * - `tribunal_superior`: Instância superior (TST, STF, etc.)
  */
 export type GrauProcesso = 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
+
+/**
+ * Status de um processo judicial.
+ */
+export enum StatusProcesso {
+  ATIVO = 'ATIVO',
+  SUSPENSO = 'SUSPENSO',
+  ARQUIVADO = 'ARQUIVADO',
+  EXTINTO = 'EXTINTO',
+  BAIXADO = 'BAIXADO',
+  PENDENTE = 'PENDENTE',
+  EM_RECURSO = 'EM_RECURSO',
+  OUTRO = 'OUTRO',
+}
+
