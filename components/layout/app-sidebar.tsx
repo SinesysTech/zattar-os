@@ -12,6 +12,8 @@ import {
   Users,
   UserCog,
   Database,
+  FileEdit,
+  MessageSquare,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/nav-main"

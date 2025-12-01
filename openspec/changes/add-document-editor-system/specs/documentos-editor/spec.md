@@ -4,7 +4,7 @@
 
 ### Requirement: CRUD de Documentos (REQ-DOC-001)
 
-O sistema deve permitir criar, visualizar, editar e deletar documentos com editor de texto rico.
+O sistema DEVE (MUST) permitir criar, visualizar, editar e deletar documentos com editor de texto rico.
 
 #### Scenario: Criar documento vazio
 GIVEN o usuário está autenticado
@@ -66,7 +66,7 @@ THEN o sistema deve:
 
 ### Requirement: Sistema de Pastas Hierárquico (REQ-DOC-002)
 
-O sistema deve permitir organização de documentos em pastas com hierarquia ilimitada.
+O sistema DEVE (MUST) permitir organização de documentos em pastas com hierarquia ilimitada.
 
 #### Scenario: Criar pasta comum
 GIVEN o usuário está autenticado
@@ -117,7 +117,7 @@ THEN o sistema deve:
 
 ### Requirement: Compartilhamento User-to-User (REQ-DOC-003)
 
-O sistema deve permitir compartilhamento de documentos com permissões configuráveis.
+O sistema DEVE (MUST) permitir compartilhamento de documentos com permissões configuráveis.
 
 #### Scenario: Compartilhar documento com permissão "visualizar"
 GIVEN o usuário é criador do documento
@@ -157,7 +157,7 @@ THEN o sistema deve:
 
 ### Requirement: Templates Reutilizáveis (REQ-DOC-004)
 
-O sistema deve fornecer biblioteca de templates para criação rápida de documentos.
+O sistema DEVE (MUST) fornecer biblioteca de templates para criação rápida de documentos.
 
 #### Scenario: Criar template público
 GIVEN o usuário está autenticado
@@ -194,7 +194,7 @@ THEN o sistema deve:
 
 ### Requirement: Upload para Backblaze B2 (REQ-DOC-005)
 
-O sistema deve permitir upload de arquivos (imagens, vídeos, áudio, PDFs) para Backblaze B2.
+O sistema DEVE (MUST) permitir upload de arquivos (imagens, vídeos, áudio, PDFs) para Backblaze B2.
 
 #### Scenario: Upload de imagem no editor
 GIVEN o usuário está editando documento
@@ -236,7 +236,7 @@ THEN o sistema deve:
 
 ### Requirement: Versionamento com Histórico (REQ-DOC-006)
 
-O sistema deve manter histórico completo de versões de documentos.
+O sistema DEVE (MUST) manter histórico completo de versões de documentos.
 
 #### Scenario: Salvar nova versão
 GIVEN documento foi editado
@@ -268,7 +268,7 @@ THEN o sistema deve:
 
 ### Requirement: Soft Delete com Lixeira (REQ-DOC-007)
 
-O sistema deve permitir recuperação de documentos e pastas deletados.
+O sistema DEVE (MUST) permitir recuperação de documentos e pastas deletados.
 
 #### Scenario: Visualizar lixeira
 GIVEN usuário deletou documentos
@@ -309,7 +309,7 @@ THEN o sistema deve:
 
 ### Requirement: Colaboração em Tempo Real (REQ-DOC-008)
 
-O sistema deve permitir múltiplos usuários editando o mesmo documento simultaneamente.
+O sistema DEVE (MUST) permitir múltiplos usuários editando o mesmo documento simultaneamente.
 
 #### Scenario: Ver usuários online no documento
 GIVEN múltiplos usuários abrem o mesmo documento
@@ -349,7 +349,7 @@ THEN o sistema deve:
 
 ### Requirement: Auto-Save (REQ-DOC-009)
 
-O sistema deve salvar alterações automaticamente sem bloquear o usuário.
+O sistema DEVE (MUST) salvar alterações automaticamente sem bloquear o usuário.
 
 #### Scenario: Auto-save após inatividade
 GIVEN usuário está editando documento
@@ -382,7 +382,7 @@ THEN o sistema deve:
 
 ### Requirement: Exportação PDF/DOCX (REQ-DOC-010)
 
-O sistema deve permitir exportação de documentos para PDF e DOCX.
+O sistema DEVE (MUST) permitir exportação de documentos para PDF e DOCX.
 
 #### Scenario: Exportar para DOCX
 GIVEN documento possui conteúdo formatado
@@ -415,7 +415,7 @@ THEN o sistema deve:
 
 ### Requirement: Integração com IA (Open Router) (REQ-DOC-011)
 
-O sistema deve integrar IA para assistência na escrita usando Open Router.
+O sistema DEVE (MUST) integrar IA para assistência na escrita usando Open Router.
 
 #### Scenario: Configurar API Key
 GIVEN administrador tem chave Open Router
@@ -446,7 +446,7 @@ THEN o sistema deve:
 
 ### Requirement: Command Menu (Command K) (REQ-DOC-012)
 
-O sistema deve fornecer Command Menu para acesso rápido a ações.
+O sistema DEVE (MUST) fornecer Command Menu para acesso rápido a ações.
 
 #### Scenario: Abrir Command Menu
 GIVEN usuário está em qualquer página
@@ -483,7 +483,7 @@ THEN o sistema deve:
 
 ### Requirement: Wrapper do Plate.js (Não Modificar Componentes Originais) (REQ-DOC-013)
 
-O sistema deve criar wrappers customizados sem modificar componentes baseline do Plate.js.
+O sistema DEVE (MUST) criar wrappers customizados sem modificar componentes baseline do Plate.js.
 
 #### Scenario: Criar wrapper do PlateEditor
 GIVEN Plate.js fornece `<PlateEditor />`

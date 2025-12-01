@@ -2,6 +2,9 @@
 # Copy or symlink this file to `$CODEX_HOME/config.toml` (default `~/.codex/config.toml`)
 # so Codex CLI can load these servers.
 
+[features]
+rmcp_client = true
+
 [mcp_servers.sequential-thinking]
 command = "npx"
 args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]

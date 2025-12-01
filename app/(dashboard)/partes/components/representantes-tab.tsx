@@ -43,8 +43,8 @@ import {
   buildRepresentantesFilterOptions,
   buildRepresentantesFilterGroups,
   parseRepresentantesFilters,
-  type RepresentantesFilters,
 } from './representantes-toolbar-filters';
+import type { RepresentantesFilters } from '@/app/_lib/types/representantes';
 import { cn } from '@/app/_lib/utils/utils';
 
 /**
