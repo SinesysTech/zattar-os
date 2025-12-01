@@ -6,7 +6,6 @@
 # Para CapRover: o arquivo captain-definition já aponta para este Dockerfile
 #
 # Otimizações aplicadas:
-# - Cache mount para npm (acelera rebuilds)
 # - .dockerignore otimizado (contexto menor)
 # - Memória limitada para evitar OOM no CapRover
 #
@@ -20,9 +19,8 @@ ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 # Copiar arquivos de dependências
 COPY package.json package-lock.json* ./
 
-# Instalar dependências com cache mount (acelera rebuilds significativamente)
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci --ignore-scripts
+# Instalar dependências
+RUN npm ci --ignore-scripts
 
 # Stage 2: Builder
 FROM node:20-slim AS builder
