@@ -30,6 +30,9 @@ WORKDIR /app
 # 2GB é suficiente para Next.js e evita OOM em servidores menores
 ENV NODE_OPTIONS="--max-old-space-size=2048"
 
+# Silenciar warning do baseline-browser-mapping (não afeta funcionalidade)
+ENV BROWSERSLIST_IGNORE_OLD_DATA=true
+
 # Copiar dependências do stage anterior
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -46,7 +49,8 @@ ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHA
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build da aplicação (sem turbopack - mais estável)
-RUN npm run build:prod
+# Limita workers para reduzir uso de memória
+RUN NEXT_BUILD_WORKERS=2 npm run build:prod
 
 # Stage 3: Runner (imagem final leve)
 FROM node:20-slim AS runner
