@@ -85,8 +85,8 @@ export interface Representante {
   // Address & Metadata
   endereco_id: number | null;
   dados_anteriores: Record<string, unknown> | null;
-  created_at: Date | null;
-  updated_at: Date | null;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 /**

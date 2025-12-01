@@ -2,7 +2,7 @@
 
 ## ADDED Requirements
 
-### REQ-DOC-001: CRUD de Documentos
+### Requirement: CRUD de Documentos (REQ-DOC-001)
 
 O sistema deve permitir criar, visualizar, editar e deletar documentos com editor de texto rico.
 
@@ -64,7 +64,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-002: Sistema de Pastas Hierárquico
+### Requirement: Sistema de Pastas Hierárquico (REQ-DOC-002)
 
 O sistema deve permitir organização de documentos em pastas com hierarquia ilimitada.
 
@@ -115,7 +115,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-003: Compartilhamento User-to-User
+### Requirement: Compartilhamento User-to-User (REQ-DOC-003)
 
 O sistema deve permitir compartilhamento de documentos com permissões configuráveis.
 
@@ -155,7 +155,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-004: Templates Reutilizáveis
+### Requirement: Templates Reutilizáveis (REQ-DOC-004)
 
 O sistema deve fornecer biblioteca de templates para criação rápida de documentos.
 
@@ -192,7 +192,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-005: Upload para Backblaze B2
+### Requirement: Upload para Backblaze B2 (REQ-DOC-005)
 
 O sistema deve permitir upload de arquivos (imagens, vídeos, áudio, PDFs) para Backblaze B2.
 
@@ -234,7 +234,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-006: Versionamento com Histórico
+### Requirement: Versionamento com Histórico (REQ-DOC-006)
 
 O sistema deve manter histórico completo de versões de documentos.
 
@@ -266,7 +266,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-007: Soft Delete com Lixeira
+### Requirement: Soft Delete com Lixeira (REQ-DOC-007)
 
 O sistema deve permitir recuperação de documentos e pastas deletados.
 
@@ -307,7 +307,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-008: Colaboração em Tempo Real
+### Requirement: Colaboração em Tempo Real (REQ-DOC-008)
 
 O sistema deve permitir múltiplos usuários editando o mesmo documento simultaneamente.
 
@@ -347,7 +347,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-009: Auto-Save
+### Requirement: Auto-Save (REQ-DOC-009)
 
 O sistema deve salvar alterações automaticamente sem bloquear o usuário.
 
@@ -380,7 +380,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-010: Exportação PDF/DOCX
+### Requirement: Exportação PDF/DOCX (REQ-DOC-010)
 
 O sistema deve permitir exportação de documentos para PDF e DOCX.
 
@@ -413,7 +413,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-011: Integração com IA (Open Router)
+### Requirement: Integração com IA (Open Router) (REQ-DOC-011)
 
 O sistema deve integrar IA para assistência na escrita usando Open Router.
 
@@ -444,7 +444,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-012: Command Menu (Command K)
+### Requirement: Command Menu (Command K) (REQ-DOC-012)
 
 O sistema deve fornecer Command Menu para acesso rápido a ações.
 
@@ -481,7 +481,7 @@ THEN o sistema deve:
 
 ---
 
-### REQ-DOC-013: Wrapper do Plate.js (Não Modificar Componentes Originais)
+### Requirement: Wrapper do Plate.js (Não Modificar Componentes Originais) (REQ-DOC-013)
 
 O sistema deve criar wrappers customizados sem modificar componentes baseline do Plate.js.
 

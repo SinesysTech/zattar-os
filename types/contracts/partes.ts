@@ -1,11 +1,18 @@
 import type {
   Cliente,
+  ClientePessoaFisica,
+  ClientePessoaJuridica,
   ParteContraria,
+  ParteContrariaPessoaFisica,
+  ParteContrariaPessoaJuridica,
   Terceiro,
+  TerceiroPessoaFisica,
+  TerceiroPessoaJuridica,
   TipoParteTerceiro,
   PoloTerceiro,
 } from '@/types/domain/partes';
 import type { GrauProcesso, TipoPessoa } from '@/types/domain/common';
+import type { Endereco } from '@/types/domain/enderecos';
 
 // Re-exporta tipos de domínio usados frequentemente com contratos
 export type {
@@ -224,10 +231,24 @@ export interface UpsertClientePorCNPJParams extends CriarClientePJParams {
 }
 export type UpsertClientePorDocumentoParams = UpsertClientePorCPFParams | UpsertClientePorCNPJParams;
 
-import type { Endereco } from '@/types/domain/enderecos';
-export interface ClienteComEndereco extends Cliente {
+/**
+ * Cliente PF com endereço populado (JOIN)
+ */
+export type ClientePessoaFisicaComEndereco = ClientePessoaFisica & {
   endereco?: Endereco | null;
-}
+};
+
+/**
+ * Cliente PJ com endereço populado (JOIN)
+ */
+export type ClientePessoaJuridicaComEndereco = ClientePessoaJuridica & {
+  endereco?: Endereco | null;
+};
+
+/**
+ * Cliente com endereço populado (Discriminated Union)
+ */
+export type ClienteComEndereco = ClientePessoaFisicaComEndereco | ClientePessoaJuridicaComEndereco;
 // #endregion
 
 // #region Contratos de Parte Contrária
@@ -430,7 +451,25 @@ export interface UpsertParteContrariaPorCNPJParams extends CriarParteContrariaPJ
 }
 export type UpsertParteContrariaPorDocumentoParams = UpsertParteContrariaPorCPFParams | UpsertParteContrariaPorCNPJParams;
 
+/**
+ * Parte Contrária PF com endereço populado (JOIN)
+ */
+export type ParteContrariaPessoaFisicaComEndereco = ParteContrariaPessoaFisica & {
+  endereco?: Endereco | null;
+};
 
+/**
+ * Parte Contrária PJ com endereço populado (JOIN)
+ */
+export type ParteContrariaPessoaJuridicaComEndereco = ParteContrariaPessoaJuridica & {
+  endereco?: Endereco | null;
+};
+
+/**
+ * Parte Contrária com endereço populado (Discriminated Union)
+ */
+export type ParteContrariaComEndereco = ParteContrariaPessoaFisicaComEndereco | ParteContrariaPessoaJuridicaComEndereco;
+// #endregion
 
 // #region Contratos de Terceiro
 export interface CriarTerceiroPFParams {
@@ -664,4 +703,23 @@ export interface UpsertTerceiroPorIdPessoaParams {
   numero_comercial?: string;
   observacoes?: string;
 }
+
+/**
+ * Terceiro PF com endereço populado (JOIN)
+ */
+export type TerceiroPessoaFisicaComEndereco = TerceiroPessoaFisica & {
+  endereco?: Endereco | null;
+};
+
+/**
+ * Terceiro PJ com endereço populado (JOIN)
+ */
+export type TerceiroPessoaJuridicaComEndereco = TerceiroPessoaJuridica & {
+  endereco?: Endereco | null;
+};
+
+/**
+ * Terceiro com endereço populado (Discriminated Union)
+ */
+export type TerceiroComEndereco = TerceiroPessoaFisicaComEndereco | TerceiroPessoaJuridicaComEndereco;
 // #endregion
