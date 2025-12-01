@@ -2,10 +2,27 @@
 export * from './form-schema.types';
 
 // Segmento Types
-export * from './segmento.types';
+export {
+  type Segmento,
+  type SegmentoForm,
+  type SegmentoSchemaType,
+  segmentoSchema,
+  generateSlugFromNome as generateSegmentoSlugFromNome,
+  mapSegmentoFormToSegmento,
+} from './segmento.types';
 
 // Formulario Entity Types
-export * from './formulario-entity.types';
+export {
+  type FormularioEntity,
+  type FormularioForm,
+  type FormularioComSegmentos,
+  type FormularioEntitySchemaType,
+  type FormularioEntityCreateSchemaType,
+  formularioEntitySchema,
+  formularioEntityCreateSchema,
+  generateSlugFromNome as generateFormularioSlugFromNome,
+  mapFormularioFormToFormulario,
+} from './formulario-entity.types';
 
 // Template Types
 export * from './template.types';
