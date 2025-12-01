@@ -163,37 +163,42 @@ export class NumeroProcesso {
   }
 
   /**
-   * Valida o dígito verificador do número de processo CNJ usando o método mod 97.
+   * Valida o dígito verificador do número de processo CNJ usando o algoritmo mod 97.
    *
-   * Regra CNJ: DV = 98 - (resto % 97)
-   * Onde resto = NNNNNNN + AAAA + J + TR + OOOO (sem o DV)
+   * Algoritmo CNJ (Resolução 65/2008, MNI PJe/TRT):
+   * O dígito verificador é calculado de forma que a verificação em três etapas
+   * resulte em 1 (princípio ISO 7064).
    *
-   * @param numero - Número do processo com 20 dígitos
+   * Etapas:
+   * 1. op1 = NNNNNNN % 97
+   * 2. op2 = parseInt(op1 + AAAA + J + TR) % 97
+   * 3. opFinal = parseInt(op2 + OOOO + DD) % 97
+   * 4. Válido se opFinal === 1
+   *
+   * @param numero - Número do processo com 20 dígitos (NNNNNNNDDAAAAJTROOOO)
    * @returns Error se o dígito verificador for inválido, null se válido
    */
   private static validarDigitoVerificador(numero: string): Error | null {
     // Formato: NNNNNNNDDAAAAJTROOOO
-    // Posições: 0-6 (NNNNNNN), 7-8 (DD), 9-12 (AAAA), 13 (J), 14-15 (TR), 16-19 (OOOO)
+    // Posições: 0-6 (N: sequencial), 7-8 (D: DV), 9-12 (A: ano),
+    //           13 (J: segmento justiça), 14-15 (TR: tribunal), 16-19 (O: origem)
 
-    const sequencial = numero.substring(0, 7);
-    const dvInformado = parseInt(numero.substring(7, 9), 10);
-    const ano = numero.substring(9, 13);
-    const segmento = numero.substring(13, 14);
-    const tribunal = numero.substring(14, 16);
-    const origem = numero.substring(16, 20);
+    const n = numero.slice(0, 7);   // Número sequencial
+    const d = numero.slice(7, 9);   // Dígito verificador
+    const a = numero.slice(9, 13);  // Ano de registro
+    const j = numero.slice(13, 14); // Segmento da justiça (5 = trabalhista)
+    const tr = numero.slice(14, 16); // Tribunal
+    const o = numero.slice(16, 20); // Origem (vara/unidade)
 
-    // Concatenar na ordem correta para cálculo: origem + ano + segmento + tribunal + sequencial
-    const numeroParaCalculo = origem + ano + segmento + tribunal + sequencial;
+    // Algoritmo mod 97 em três etapas (MNI/CNJ/PJe)
+    const op1 = parseInt(n, 10) % 97;
+    const op2 = parseInt(`${op1}${a}${j}${tr}`, 10) % 97;
+    const opFinal = parseInt(`${op2}${o}${d}`, 10) % 97;
 
-    // Calcular dígito verificador: 98 - (número % 97)
-    const resto = BigInt(numeroParaCalculo) % BigInt(97);
-    const dvCalculado = 98 - Number(resto);
-
-    if (dvCalculado !== dvInformado) {
+    // Um número válido resulta em opFinal === 1
+    if (opFinal !== 1) {
       return new Error(
-        `Número do processo com dígito verificador inválido. ` +
-        `Esperado: ${dvCalculado.toString().padStart(2, '0')}, ` +
-        `Informado: ${dvInformado.toString().padStart(2, '0')}`
+        `Número do processo com dígito verificador inválido (CNJ Res.65/2008)`
       );
     }
 

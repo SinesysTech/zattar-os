@@ -1,12 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 type PreviewResponse = { success?: boolean; data?: { pdf_url: string }; error?: string };
 type FinalizeResponse = { success?: boolean; data?: { assinatura_id: number; protocolo: string; pdf_url: string }; error?: string };
@@ -21,6 +31,10 @@ async function fileToDataUrl(file: File): Promise<string> {
 }
 
 export default function AssinaturaPage() {
+  const [templates, setTemplates] = useState<{ id: string; label: string }[]>([]);
+  const [segmentos, setSegmentos] = useState<{ id: string; label: string }[]>([]);
+  const [formularios, setFormularios] = useState<{ id: string; label: string }[]>([]);
+  const [clientesHint, setClientesHint] = useState<string>("");
   const [clienteId, setClienteId] = useState("");
   const [acaoId, setAcaoId] = useState("");
   const [templateId, setTemplateId] = useState("");
@@ -35,6 +49,39 @@ export default function AssinaturaPage() {
   const [loadingPreview, setLoadingPreview] = useState(false);
   const [loadingFinalize, setLoadingFinalize] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadingLists, setLoadingLists] = useState(false);
+
+  const canSubmit = useMemo(() => {
+    return clienteId && templateId && segmentoId && formularioId && assinaturaBase64;
+  }, [clienteId, templateId, segmentoId, formularioId, assinaturaBase64]);
+
+  useEffect(() => {
+    async function fetchLists() {
+      try {
+        setLoadingLists(true);
+        const [tplRes, segRes, formRes] = await Promise.all([
+          fetch("/api/formsign-admin/templates"),
+          fetch("/api/formsign-admin/segmentos"),
+          fetch("/api/formsign-admin/formularios"),
+        ]);
+        const tplJson = await tplRes.json();
+        const segJson = await segRes.json();
+        const formJson = await formRes.json();
+        if (tplRes.ok && tplJson.data) {
+          setTemplates(tplJson.data.map((t: any) => ({ id: t.template_uuid || String(t.id), label: t.nome })));
+        }
+        if (segRes.ok && segJson.data) {
+          setSegmentos(segJson.data.map((s: any) => ({ id: String(s.id), label: s.nome })));
+        }
+        if (formRes.ok && formJson.data) {
+          setFormularios(formJson.data.map((f: any) => ({ id: f.formulario_uuid || String(f.id), label: f.nome })));
+        }
+      } finally {
+        setLoadingLists(false);
+      }
+    }
+    fetchLists();
+  }, []);
 
   async function handlePreview() {
     setLoadingPreview(true);
@@ -57,8 +104,10 @@ export default function AssinaturaPage() {
         throw new Error(json.error || "Erro ao gerar preview");
       }
       setPreviewUrl(json.data.pdf_url);
+      toast.success("Preview gerado");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
+      toast.error(err instanceof Error ? err.message : "Erro ao gerar preview");
     } finally {
       setLoadingPreview(false);
     }
@@ -93,8 +142,10 @@ export default function AssinaturaPage() {
         throw new Error(json.error || "Erro ao finalizar assinatura");
       }
       setFinalizeResult({ protocolo: json.data.protocolo, pdf_url: json.data.pdf_url });
+      toast.success(`Assinatura concluída • Protocolo ${json.data.protocolo}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
+      toast.error(err instanceof Error ? err.message : "Erro ao finalizar assinatura");
     } finally {
       setLoadingFinalize(false);
     }
@@ -125,6 +176,7 @@ export default function AssinaturaPage() {
           <div className="grid gap-2">
             <Label>Cliente ID</Label>
             <Input value={clienteId} onChange={(e) => setClienteId(e.target.value)} required />
+            {clientesHint && <p className="text-xs text-muted-foreground">{clientesHint}</p>}
           </div>
           <div className="grid gap-2">
             <Label>Ação ID (opcional)</Label>
@@ -132,15 +184,57 @@ export default function AssinaturaPage() {
           </div>
           <div className="grid gap-2">
             <Label>Template ID/UUID</Label>
-            <Input value={templateId} onChange={(e) => setTemplateId(e.target.value)} required />
+            <Select value={templateId} onValueChange={setTemplateId} disabled={loadingLists}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecione" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Templates</SelectLabel>
+                  {templates.map((t) => (
+                    <SelectItem key={t.id} value={t.id}>
+                      {t.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid gap-2">
             <Label>Segmento ID</Label>
-            <Input value={segmentoId} onChange={(e) => setSegmentoId(e.target.value)} required />
+            <Select value={segmentoId} onValueChange={setSegmentoId} disabled={loadingLists}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecione" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Segmentos</SelectLabel>
+                  {segmentos.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid gap-2">
             <Label>Formulário ID</Label>
-            <Input value={formularioId} onChange={(e) => setFormularioId(e.target.value)} required />
+            <Select value={formularioId} onValueChange={setFormularioId} disabled={loadingLists}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecione" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Formulários</SelectLabel>
+                  {formularios.map((f) => (
+                    <SelectItem key={f.id} value={f.id}>
+                      {f.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid gap-2">
             <Label>Assinatura (imagem)</Label>
@@ -182,7 +276,7 @@ export default function AssinaturaPage() {
             <Button type="button" variant="outline" onClick={handlePreview} disabled={loadingPreview}>
               {loadingPreview ? "Gerando preview..." : "Gerar preview"}
             </Button>
-            <Button type="button" onClick={handleFinalize} disabled={loadingFinalize}>
+            <Button type="button" onClick={handleFinalize} disabled={loadingFinalize || !canSubmit}>
               {loadingFinalize ? "Finalizando..." : "Finalizar assinatura"}
             </Button>
           </div>

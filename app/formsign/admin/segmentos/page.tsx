@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { toast } from "sonner";
 
 type Segmento = {
   id: number;
@@ -44,6 +45,7 @@ export default function SegmentosPage() {
       setSegmentos(json.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
+      toast.error(err instanceof Error ? err.message : "Erro ao carregar segmentos");
     } finally {
       setLoading(false);
     }
@@ -72,8 +74,10 @@ export default function SegmentosPage() {
       if (!res.ok || json.error) throw new Error(json.error || "Erro ao criar segmento");
       setForm({ nome: "", slug: "", descricao: "", ativo: true });
       loadSegmentos();
+      toast.success("Segmento criado");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
+      toast.error(err instanceof Error ? err.message : "Erro ao criar segmento");
     } finally {
       setLoading(false);
     }

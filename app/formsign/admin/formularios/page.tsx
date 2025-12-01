@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { toast } from "sonner";
 
 type Segmento = { id: number; nome: string };
 type Formulario = {
@@ -58,6 +59,7 @@ export default function FormulariosPage() {
       setFormularios(json.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
+      toast.error(err instanceof Error ? err.message : "Erro ao carregar formulários");
     } finally {
       setLoading(false);
     }
@@ -88,8 +90,10 @@ export default function FormulariosPage() {
       if (!res.ok || json.error) throw new Error(json.error || "Erro ao criar formulário");
       setForm({ nome: "", slug: "", descricao: "", segmento_id: "", ativo: true });
       loadFormularios();
+      toast.success("Formulário criado");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
+      toast.error(err instanceof Error ? err.message : "Erro ao criar formulário");
     } finally {
       setLoading(false);
     }

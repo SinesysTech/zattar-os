@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { toast } from "sonner";
 
 type Template = {
   id: number;
@@ -55,6 +56,7 @@ export default function TemplatesPage() {
       setTemplates(json.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
+      toast.error(err instanceof Error ? err.message : "Erro ao carregar templates");
     } finally {
       setLoading(false);
     }
@@ -95,8 +97,10 @@ export default function TemplatesPage() {
         ativo: true,
       });
       loadTemplates();
+      toast.success("Template criado");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
+      toast.error(err instanceof Error ? err.message : "Erro ao criar template");
     } finally {
       setLoading(false);
     }
@@ -114,8 +118,10 @@ export default function TemplatesPage() {
         throw new Error(json.error || "Erro ao deletar template");
       }
       loadTemplates();
+      toast.success("Template deletado");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
+      toast.error(err instanceof Error ? err.message : "Erro ao deletar template");
     }
   }
 
