@@ -64,6 +64,17 @@ const navPrincipal = [
     icon: FileText,
   },
   {
+    title: "Assinatura Digital",
+    url: "/assinatura-digital/assinatura",
+    icon: FileText,
+    items: [
+      { title: "Fluxo de Assinatura", url: "/assinatura-digital/assinatura" },
+      { title: "Templates", url: "/assinatura-digital/admin/templates" },
+      { title: "Formulários", url: "/assinatura-digital/admin/formularios" },
+      { title: "Segmentos", url: "/assinatura-digital/admin/segmentos" },
+    ],
+  },
+  {
     title: "Processos",
     url: "/processos",
     icon: Scale,

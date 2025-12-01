@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { ClienteAutocomplete } from "@/components/formsign/cliente-autocomplete";
+import { ClienteAutocomplete } from "@/components/assinatura-digital/cliente-autocomplete";
 
 type PreviewResponse = { success?: boolean; data?: { pdf_url: string }; error?: string };
 type FinalizeResponse = { success?: boolean; data?: { assinatura_id: number; protocolo: string; pdf_url: string }; error?: string };
@@ -64,9 +64,9 @@ export default function AssinaturaPage() {
       try {
         setLoadingLists(true);
         const [tplRes, segRes, formRes] = await Promise.all([
-          fetch("/api/formsign-admin/templates"),
-          fetch("/api/formsign-admin/segmentos"),
-          fetch("/api/formsign-admin/formularios"),
+          fetch("/api/assinatura-digital/admin/templates"),
+          fetch("/api/assinatura-digital/admin/segmentos"),
+          fetch("/api/assinatura-digital/admin/formularios"),
         ]);
 
         const errors: string[] = [];
@@ -128,7 +128,7 @@ export default function AssinaturaPage() {
         template_id: templateId,
         foto_base64: fotoBase64 ?? undefined,
       };
-      const res = await fetch("/api/formsign-signature/preview", {
+      const res = await fetch("/api/assinatura-digital/signature/preview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -166,7 +166,7 @@ export default function AssinaturaPage() {
         geolocation_accuracy: useGeo && geo.acc ? Number(geo.acc) : undefined,
         geolocation_timestamp: useGeo && geo.ts ? geo.ts : undefined,
       };
-      const res = await fetch("/api/formsign-signature/finalizar", {
+      const res = await fetch("/api/assinatura-digital/signature/finalizar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

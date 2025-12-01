@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Dados inválidos', issues: error.flatten() }, { status: 400 });
     }
     const message = error instanceof Error ? error.message : 'Erro ao finalizar assinatura';
-    console.error('Erro em POST /formsign-signature/finalizar:', error);
+    console.error('Erro em POST /assinatura-digital/signature/finalizar:', error);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

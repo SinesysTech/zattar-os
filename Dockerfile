@@ -48,10 +48,7 @@ ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHA
 # Desabilitar telemetria durante build
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Limitar workers para reduzir uso de CPU (1 = sequencial, mais lento mas estável)
-ENV NEXT_BUILD_WORKERS=1
-
-# Build da aplicação (sem turbopack - mais estável)
+# Build da aplicação
 RUN npm run build:prod
 
 # Stage 3: Runner (imagem final leve)

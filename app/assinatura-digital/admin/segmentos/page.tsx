@@ -10,18 +10,15 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 
-type Segmento = { id: number; nome: string };
-type Formulario = {
+type Segmento = {
   id: number;
-  formulario_uuid: string;
   nome: string;
   slug: string;
-  segmento_id: number;
+  descricao?: string | null;
   ativo: boolean;
 };
 
-export default function FormulariosPage() {
-  const [formularios, setFormularios] = useState<Formulario[]>([]);
+export default function SegmentosPage() {
   const [segmentos, setSegmentos] = useState<Segmento[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,37 +26,26 @@ export default function FormulariosPage() {
   const [form, setForm] = useState({
     nome: "",
     slug: "",
-    segmento_id: "",
     descricao: "",
     ativo: true,
   });
 
   const filtered = useMemo(() => {
-    if (!search) return formularios;
-    return formularios.filter(
-      (f) => f.nome.toLowerCase().includes(search.toLowerCase()) || f.slug.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [formularios, search]);
+    if (!search) return segmentos;
+    return segmentos.filter((s) => s.nome.toLowerCase().includes(search.toLowerCase()) || s.slug.includes(search));
+  }, [segmentos, search]);
 
   async function loadSegmentos() {
-    const res = await fetch("/api/formsign-admin/segmentos");
-    const json = await res.json();
-    if (res.ok && json.data) {
-      setSegmentos(json.data.map((s: any) => ({ id: s.id, nome: s.nome })));
-    }
-  }
-
-  async function loadFormularios() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/formsign-admin/formularios");
+      const res = await fetch("/api/assinatura-digital/admin/segmentos");
       const json = await res.json();
-      if (!res.ok || json.error) throw new Error(json.error || "Erro ao carregar formulários");
-      setFormularios(json.data || []);
+      if (!res.ok || json.error) throw new Error(json.error || "Erro ao carregar segmentos");
+      setSegmentos(json.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
-      toast.error(err instanceof Error ? err.message : "Erro ao carregar formulários");
+      toast.error(err instanceof Error ? err.message : "Erro ao carregar segmentos");
     } finally {
       setLoading(false);
     }
@@ -67,7 +53,6 @@ export default function FormulariosPage() {
 
   useEffect(() => {
     loadSegmentos();
-    loadFormularios();
   }, []);
 
   async function handleCreate(e: React.FormEvent) {
@@ -75,25 +60,24 @@ export default function FormulariosPage() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch("/api/formsign-admin/formularios", {
+      const res = await fetch("/api/assinatura-digital/admin/segmentos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nome: form.nome,
           slug: form.slug,
           descricao: form.descricao || undefined,
-          segmento_id: Number(form.segmento_id),
           ativo: form.ativo,
         }),
       });
       const json = await res.json();
-      if (!res.ok || json.error) throw new Error(json.error || "Erro ao criar formulário");
-      setForm({ nome: "", slug: "", descricao: "", segmento_id: "", ativo: true });
-      loadFormularios();
-      toast.success("Formulário criado");
+      if (!res.ok || json.error) throw new Error(json.error || "Erro ao criar segmento");
+      setForm({ nome: "", slug: "", descricao: "", ativo: true });
+      loadSegmentos();
+      toast.success("Segmento criado");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
-      toast.error(err instanceof Error ? err.message : "Erro ao criar formulário");
+      toast.error(err instanceof Error ? err.message : "Erro ao criar segmento");
     } finally {
       setLoading(false);
     }
@@ -102,14 +86,14 @@ export default function FormulariosPage() {
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Formulários</h1>
-        <p className="text-sm text-muted-foreground">Cadastre formulários e vincule a um segmento.</p>
+        <h1 className="text-2xl font-semibold">Segmentos</h1>
+        <p className="text-sm text-muted-foreground">Cadastre segmentos de negócio para os formulários.</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Novo formulário</CardTitle>
-          <CardDescription>Defina nome, slug e segmento.</CardDescription>
+          <CardTitle>Novo segmento</CardTitle>
+          <CardDescription>Defina nome e slug do segmento.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleCreate} className="grid gap-4 md:grid-cols-2">
@@ -120,22 +104,6 @@ export default function FormulariosPage() {
             <div className="grid gap-2">
               <Label>Slug</Label>
               <Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} required />
-            </div>
-            <div className="grid gap-2">
-              <Label>Segmento</Label>
-              <select
-                className="border rounded px-2 py-2 bg-background"
-                value={form.segmento_id}
-                onChange={(e) => setForm({ ...form, segmento_id: e.target.value })}
-                required
-              >
-                <option value="">Selecione</option>
-                {segmentos.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.nome}
-                  </option>
-                ))}
-              </select>
             </div>
             <div className="grid gap-2 md:col-span-2">
               <Label>Descrição</Label>
@@ -151,7 +119,7 @@ export default function FormulariosPage() {
             </div>
             <div className="md:col-span-2">
               <Button type="submit" disabled={loading}>
-                {loading ? "Salvando..." : "Criar formulário"}
+                {loading ? "Salvando..." : "Criar segmento"}
               </Button>
             </div>
             {error && <p className="text-sm text-red-600 md:col-span-2">{error}</p>}
@@ -162,7 +130,7 @@ export default function FormulariosPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Formulários</CardTitle>
+            <CardTitle>Segmentos</CardTitle>
             <CardDescription>Busca por nome ou slug.</CardDescription>
           </div>
           <div className="flex items-center gap-2">
@@ -172,7 +140,7 @@ export default function FormulariosPage() {
               onChange={(e) => setSearch(e.target.value)}
               className="w-48"
             />
-            <Button variant="outline" onClick={loadFormularios} disabled={loading}>
+            <Button variant="outline" onClick={loadSegmentos} disabled={loading}>
               Recarregar
             </Button>
           </div>
@@ -185,36 +153,32 @@ export default function FormulariosPage() {
                 <TableRow>
                   <TableHead>Nome</TableHead>
                   <TableHead>Slug</TableHead>
-                  <TableHead>Segmento</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading && filtered.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-sm text-muted-foreground">
+                    <TableCell colSpan={3} className="text-sm text-muted-foreground">
                       Carregando...
                     </TableCell>
                   </TableRow>
                 )}
                 {!loading && filtered.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-sm text-muted-foreground">
-                      Nenhum formulário encontrado.
+                    <TableCell colSpan={3} className="text-sm text-muted-foreground">
+                      Nenhum segmento encontrado.
                     </TableCell>
                   </TableRow>
                 )}
-                {filtered.map((f) => (
-                  <TableRow key={f.formulario_uuid}>
+                {filtered.map((seg) => (
+                  <TableRow key={seg.id}>
                     <TableCell>
-                      <div className="font-medium">{f.nome}</div>
-                      {f.formulario_uuid && (
-                        <div className="text-xs text-muted-foreground">{f.formulario_uuid}</div>
-                      )}
+                      <div className="font-medium">{seg.nome}</div>
+                      {seg.descricao && <div className="text-xs text-muted-foreground">{seg.descricao}</div>}
                     </TableCell>
-                    <TableCell className="text-xs">{f.slug}</TableCell>
-                    <TableCell>#{f.segmento_id}</TableCell>
-                    <TableCell>{f.ativo ? "Ativo" : "Inativo"}</TableCell>
+                    <TableCell className="text-xs">{seg.slug}</TableCell>
+                    <TableCell>{seg.ativo ? "Ativo" : "Inativo"}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -48,7 +48,7 @@ export default function TemplatesPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/formsign-admin/templates");
+      const res = await fetch("/api/assinatura-digital/admin/templates");
       const json: ListResponse = await res.json();
       if (!res.ok || json.error) {
         throw new Error(json.error || "Erro ao carregar templates");
@@ -79,7 +79,7 @@ export default function TemplatesPage() {
         arquivo_tamanho: Number(form.arquivo_tamanho),
         ativo: form.ativo,
       };
-      const res = await fetch("/api/formsign-admin/templates", {
+      const res = await fetch("/api/assinatura-digital/admin/templates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -110,7 +110,7 @@ export default function TemplatesPage() {
     if (!confirm("Deseja deletar este template?")) return;
     setError(null);
     try {
-      const res = await fetch(`/api/formsign-admin/templates/${id}`, {
+      const res = await fetch(`/api/assinatura-digital/admin/templates/${id}`, {
         method: "DELETE",
       });
       const json = await res.json();

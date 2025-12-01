@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Dados inválidos', issues: error.flatten() }, { status: 400 });
     }
     const message = error instanceof Error ? error.message : 'Erro ao gerar preview';
-    console.error('Erro em POST /formsign-signature/preview:', error);
+    console.error('Erro em POST /assinatura-digital/signature/preview:', error);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -507,12 +507,21 @@ function ResponsavelCell({ expediente, onSuccess, usuarios }: { expediente: Pend
 }
 
 // Componente AcoesExpediente
-function AcoesExpediente({ expediente, usuarios, tiposExpedientes }: { expediente: PendenteManifestacao; usuarios: Usuario[]; tiposExpedientes: Array<{ id: number; tipo_expediente: string }> }) {
+function AcoesExpediente({
+  expediente,
+  usuarios,
+  tiposExpedientes,
+  onSuccess,
+}: {
+  expediente: PendenteManifestacao;
+  usuarios: Usuario[];
+  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+  onSuccess: () => void;
+}) {
   const [baixarDialogOpen, setBaixarDialogOpen] = React.useState(false);
   const [reverterDialogOpen, setReverterDialogOpen] = React.useState(false);
   const [visualizarDialogOpen, setVisualizarDialogOpen] = React.useState(false);
 
-  const handleSuccess = () => { window.location.reload(); };
   const estaBaixado = !!expediente.baixado_em;
 
   return (
@@ -547,8 +556,8 @@ function AcoesExpediente({ expediente, usuarios, tiposExpedientes }: { expedient
         )}
       </div>
       <ExpedienteVisualizarDialog open={visualizarDialogOpen} onOpenChange={setVisualizarDialogOpen} expediente={expediente} usuarios={usuarios} tiposExpedientes={tiposExpedientes} />
-      <ExpedientesBaixarDialog open={baixarDialogOpen} onOpenChange={setBaixarDialogOpen} expediente={expediente} onSuccess={handleSuccess} />
-      <ExpedientesReverterBaixaDialog open={reverterDialogOpen} onOpenChange={setReverterDialogOpen} expediente={expediente} onSuccess={handleSuccess} />
+      <ExpedientesBaixarDialog open={baixarDialogOpen} onOpenChange={setBaixarDialogOpen} expediente={expediente} onSuccess={onSuccess} />
+      <ExpedientesReverterBaixaDialog open={reverterDialogOpen} onOpenChange={setReverterDialogOpen} expediente={expediente} onSuccess={onSuccess} />
     </TooltipProvider>
   );
 }
@@ -775,7 +784,7 @@ function criarColunas(
     {
       id: 'acoes',
       header: () => <div className="flex items-center justify-center"><div className="text-sm font-medium">Ações</div></div>,
-      cell: ({ row }) => <AcoesExpediente expediente={row.original} usuarios={usuarios} tiposExpedientes={tiposExpedientes} />,
+      cell: ({ row }) => <AcoesExpediente expediente={row.original} usuarios={usuarios} tiposExpedientes={tiposExpedientes} onSuccess={onSuccess} />,
     },
   ];
 }
@@ -795,7 +804,7 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
   const [mesAtual, setMesAtual] = React.useState(new Date());
   const [anoAtual, setAnoAtual] = React.useState(new Date());
   const [novoExpedienteOpen, setNovoExpedienteOpen] = React.useState(false);
-  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['baixado_false']);
   const [isSearching, setIsSearching] = React.useState(false);
   const [currentUserId, setCurrentUserId] = React.useState<number | null>(null);
   const [isSuperAdmin, setIsSuperAdmin] = React.useState(false);
@@ -967,16 +976,31 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
   const handleFilterIdsChange = React.useCallback((ids: string[]) => {
     setSelectedFilterIds(ids);
     const parsed = parseExpedientesFilters(ids);
-    if (parsed.baixado !== undefined) {
-      setStatusBaixa(parsed.baixado ? 'baixado' : 'pendente');
-    } else {
-      setStatusBaixa('todos');
+
+    // Verificar se o usuário selecionou explicitamente um filtro de status de baixa
+    const hasBaixadoFilter = ids.some(id => id.startsWith('baixado_'));
+    if (hasBaixadoFilter) {
+      if (parsed.baixado !== undefined) {
+        setStatusBaixa(parsed.baixado ? 'baixado' : 'pendente');
+      } else {
+        // Selecionou "Todos" explicitamente
+        setStatusBaixa('todos');
+      }
     }
-    if (parsed.prazo_vencido !== undefined) {
-      setStatusPrazo(parsed.prazo_vencido ? 'vencido' : 'no_prazo');
-    } else {
-      setStatusPrazo('todos');
+    // Se não há filtro de baixado explícito, manter o statusBaixa atual
+
+    // Verificar se o usuário selecionou explicitamente um filtro de prazo
+    const hasPrazoFilter = ids.some(id => id.startsWith('prazo_vencido_'));
+    if (hasPrazoFilter) {
+      if (parsed.prazo_vencido !== undefined) {
+        setStatusPrazo(parsed.prazo_vencido ? 'vencido' : 'no_prazo');
+      } else {
+        // Selecionou "Todos" explicitamente
+        setStatusPrazo('todos');
+      }
     }
+    // Se não há filtro de prazo explícito, manter o statusPrazo atual
+
     const newFiltros: ExpedientesFilters = {};
     if (parsed.trt) newFiltros.trt = parsed.trt;
     if (parsed.grau) newFiltros.grau = parsed.grau;

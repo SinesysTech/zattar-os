@@ -4,7 +4,7 @@ const API_PREFIX = 'http://localhost:3000';
 
 test.describe('Formsign admin e assinatura', () => {
   test('lista templates e cria novo (mockado)', async ({ page }) => {
-    await page.route('**/api/formsign-admin/templates', async (route, request) => {
+    await page.route('**/api/assinatura-digital/admin/templates', async (route, request) => {
       if (request.method() === 'GET') {
         return route.fulfill({
           status: 200,
@@ -26,7 +26,7 @@ test.describe('Formsign admin e assinatura', () => {
       });
     });
 
-    await page.goto(`${API_PREFIX}/formsign/admin/templates`);
+    await page.goto(`${API_PREFIX}/assinatura-digital/admin/templates`);
     await expect(page.getByText('Templates de Assinatura')).toBeVisible();
     await expect(page.getByText('Template A')).toBeVisible();
 
@@ -41,21 +41,21 @@ test.describe('Formsign admin e assinatura', () => {
   });
 
   test('fluxo de assinatura com preview e finalização (mockado)', async ({ page }) => {
-    await page.route('**/api/formsign-admin/templates', (route) =>
+    await page.route('**/api/assinatura-digital/admin/templates', (route) =>
       route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({ data: [{ id: 1, template_uuid: 'tpl-123', nome: 'Template A', ativo: true }] }),
       })
     );
-    await page.route('**/api/formsign-admin/segmentos', (route) =>
+    await page.route('**/api/assinatura-digital/admin/segmentos', (route) =>
       route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({ data: [{ id: 10, nome: 'Seg A', slug: 'seg-a', ativo: true }] }),
       })
     );
-    await page.route('**/api/formsign-admin/formularios', (route) =>
+    await page.route('**/api/assinatura-digital/admin/formularios', (route) =>
       route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -69,14 +69,14 @@ test.describe('Formsign admin e assinatura', () => {
         body: JSON.stringify({ options: [{ id: 999, label: 'Cliente X', cpf: '11122233344' }] }),
       })
     );
-    await page.route('**/api/formsign-signature/preview', (route) =>
+    await page.route('**/api/assinatura-digital/signature/preview', (route) =>
       route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({ success: true, data: { pdf_url: 'https://example.com/preview.pdf' } }),
       })
     );
-    await page.route('**/api/formsign-signature/finalizar', (route) =>
+    await page.route('**/api/assinatura-digital/signature/finalizar', (route) =>
       route.fulfill({
         status: 201,
         contentType: 'application/json',
@@ -87,7 +87,7 @@ test.describe('Formsign admin e assinatura', () => {
       })
     );
 
-    await page.goto(`${API_PREFIX}/formsign/assinatura`);
+    await page.goto(`${API_PREFIX}/assinatura-digital/assinatura`);
     await expect(page.getByText('Fluxo de Assinatura')).toBeVisible();
 
     await page.getByRole('button', { name: 'Selecione' }).first().click();

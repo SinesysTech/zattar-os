@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Parâmetros inválidos', issues: error.flatten() }, { status: 400 });
     }
     const message = error instanceof Error ? error.message : 'Erro ao listar sessões';
-    console.error('Erro em GET /formsign-signature/sessoes:', error);
+    console.error('Erro em GET /assinatura-digital/signature/sessoes:', error);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
