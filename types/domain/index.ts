@@ -6,3 +6,5 @@ export * from './enderecos';
 export * from './processo-partes';
 export * from './processo-relacionado';
 export * from './representantes';
+export * from './value-objects';
+export * from './pessoa';
