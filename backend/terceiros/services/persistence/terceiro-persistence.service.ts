@@ -152,23 +152,6 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       situacao_cpf_receita_id: (data.situacao_cpf_receita_id as number | null) ?? null,
       situacao_cpf_receita_descricao: (data.situacao_cpf_receita_descricao as string | null) ?? null,
       pode_usar_celular_mensagem: (data.pode_usar_celular_mensagem as boolean | null) ?? null,
-      // Campos que são null em PF (específicos de PJ)
-      inscricao_estadual: null,
-      data_abertura: null,
-      data_fim_atividade: null,
-      orgao_publico: null,
-      tipo_pessoa_codigo_pje: null,
-      tipo_pessoa_label_pje: null,
-      tipo_pessoa_validacao_receita: null,
-      ds_tipo_pessoa: null,
-      situacao_cnpj_receita_id: null,
-      situacao_cnpj_receita_descricao: null,
-      ramo_atividade: null,
-      cpf_responsavel: null,
-      oficial: null,
-      ds_prazo_expediente_automatico: null,
-      porte_codigo: null,
-      porte_descricao: null,
     };
   } else {
     return {
@@ -192,29 +175,6 @@ function converterParaTerceiro(data: Record<string, unknown>): Terceiro {
       ds_prazo_expediente_automatico: (data.ds_prazo_expediente_automatico as string | null) ?? null,
       porte_codigo: (data.porte_codigo as number | null) ?? null,
       porte_descricao: (data.porte_descricao as string | null) ?? null,
-      // Campos que são null em PJ (específicos de PF)
-      tipo_documento: null,
-      rg: null,
-      sexo: null,
-      nome_genitora: null,
-      data_nascimento: null,
-      genero: null,
-      estado_civil: null,
-      nacionalidade: null,
-      uf_nascimento_id_pje: null,
-      uf_nascimento_sigla: null,
-      uf_nascimento_descricao: null,
-      naturalidade_id_pje: null,
-      naturalidade_municipio: null,
-      naturalidade_estado_id_pje: null,
-      naturalidade_estado_sigla: null,
-      pais_nascimento_id_pje: null,
-      pais_nascimento_codigo: null,
-      pais_nascimento_descricao: null,
-      escolaridade_codigo: null,
-      situacao_cpf_receita_id: null,
-      situacao_cpf_receita_descricao: null,
-      pode_usar_celular_mensagem: null,
     };
   }
 }

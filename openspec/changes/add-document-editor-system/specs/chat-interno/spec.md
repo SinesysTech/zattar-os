@@ -4,7 +4,7 @@
 
 ### Requirement: Chat Global com Página Dedicada (REQ-CHAT-001)
 
-O sistema deve fornecer um chat interno global acessível por todos os usuários do escritório.
+O sistema DEVE (MUST) fornecer um chat interno global acessível por todos os usuários do escritório.
 
 #### Scenario: Acessar página de chat
 GIVEN o usuário está autenticado
@@ -47,7 +47,7 @@ THEN o sistema deve:
 
 ### Requirement: Tipos de Salas (REQ-CHAT-002)
 
-O sistema deve suportar diferentes tipos de salas de chat.
+O sistema DEVE (MUST) suportar diferentes tipos de salas de chat.
 
 #### Scenario: Sala Geral (pública)
 GIVEN existe sala tipo "geral"
@@ -80,7 +80,7 @@ THEN o sistema deve:
 
 ### Requirement: Enviar e Receber Mensagens (REQ-CHAT-003)
 
-O sistema deve permitir envio e recebimento de mensagens em tempo real.
+O sistema DEVE (MUST) permitir envio e recebimento de mensagens em tempo real.
 
 #### Scenario: Enviar mensagem de texto
 GIVEN usuário está em uma sala
@@ -123,7 +123,7 @@ THEN o sistema deve:
 
 ### Requirement: Integração com RealtimeChat do Supabase (REQ-CHAT-004)
 
-O sistema deve usar o componente `RealtimeChat` existente.
+O sistema DEVE (MUST) usar o componente `RealtimeChat` existente.
 
 #### Scenario: Renderizar chat com RealtimeChat
 GIVEN página de chat está carregada
@@ -158,7 +158,7 @@ THEN o sistema deve:
 
 ### Requirement: Integração com Editor de Documentos (REQ-CHAT-005)
 
-O sistema deve permitir acesso ao chat lateral enquanto edita documento.
+O sistema DEVE (MUST) permitir acesso ao chat lateral enquanto edita documento.
 
 #### Scenario: Abrir chat lateral no editor
 GIVEN usuário está editando documento
@@ -197,7 +197,7 @@ THEN o sistema deve:
 
 ### Requirement: Notificações e Contador de Não Lidas (REQ-CHAT-006)
 
-O sistema deve notificar usuários sobre novas mensagens.
+O sistema DEVE (MUST) notificar usuários sobre novas mensagens.
 
 #### Scenario: Contador de mensagens não lidas
 GIVEN usuário está em sala A
@@ -226,7 +226,7 @@ THEN o sistema deve:
 
 ### Requirement: Histórico e Paginação (REQ-CHAT-007)
 
-O sistema deve permitir acesso ao histórico completo de mensagens.
+O sistema DEVE (MUST) permitir acesso ao histórico completo de mensagens.
 
 #### Scenario: Scroll infinito para mensagens antigas
 GIVEN sala tem mais de 50 mensagens
@@ -258,7 +258,7 @@ THEN o sistema deve:
 
 ### Requirement: Editar e Deletar Mensagens (REQ-CHAT-008)
 
-O sistema deve permitir edição e deleção de mensagens próprias.
+O sistema DEVE (MUST) permitir edição e deleção de mensagens próprias.
 
 #### Scenario: Editar mensagem própria
 GIVEN usuário enviou mensagem
@@ -292,7 +292,7 @@ THEN o sistema deve:
 
 ### Requirement: Presença de Usuários Online (REQ-CHAT-009)
 
-O sistema deve mostrar quem está online na sala.
+O sistema DEVE (MUST) mostrar quem está online na sala.
 
 #### Scenario: Ver usuários online
 GIVEN múltiplos usuários em sala
@@ -322,7 +322,7 @@ THEN o sistema deve:
 
 ### Requirement: Reações e Emojis (REQ-CHAT-010)
 
-O sistema deve permitir reações rápidas a mensagens.
+O sistema DEVE (MUST) permitir reações rápidas a mensagens.
 
 #### Scenario: Reagir a mensagem com emoji
 GIVEN mensagem no chat
@@ -346,7 +346,7 @@ THEN o sistema deve:
 
 ### Requirement: Suprimir Configurações de IA no Chat (REQ-CHAT-011)
 
-O sistema de chat NÃO deve ter configurações de IA visíveis (similar ao editor).
+O sistema de chat NÃO DEVE (MUST NOT) ter configurações de IA visíveis (similar ao editor).
 
 #### Scenario: Configurar IA via environment
 GIVEN chat pode ter assistente IA (futuro)
