@@ -3,6 +3,7 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
+import { DifyChatbot } from "@/components/chat/dify-chatbot"
 
 export default function DashboardLayout({
   children,
@@ -17,6 +18,7 @@ export default function DashboardLayout({
           {children}
         </div>
       </SidebarInset>
+      <DifyChatbot />
     </SidebarProvider>
   );
 }

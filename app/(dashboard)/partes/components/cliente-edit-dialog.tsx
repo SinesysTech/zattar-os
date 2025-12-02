@@ -202,6 +202,18 @@ export function ClienteEditDialog({
     return { ddd: '', numero: '' };
   };
 
+  // Verificar se há dados de endereço preenchidos
+  const hasEnderecoData = () => {
+    return !!(
+      formData.cep?.trim() ||
+      formData.logradouro?.trim() ||
+      formData.numero?.trim() ||
+      formData.bairro?.trim() ||
+      formData.municipio?.trim() ||
+      formData.estado_sigla
+    );
+  };
+
   // Submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -236,6 +248,55 @@ export function ClienteEditDialog({
         // Campos específicos PJ
         dadosAtualizacao.inscricao_estadual = formData.inscricao_estadual || null;
         dadosAtualizacao.data_abertura = formData.data_abertura || null;
+      }
+
+      // Tratar endereço: criar ou atualizar
+      if (hasEnderecoData()) {
+        const enderecoPayload = {
+          entidade_tipo: 'cliente',
+          entidade_id: cliente.id,
+          cep: formData.cep?.replace(/\D/g, '') || null,
+          logradouro: formData.logradouro?.trim() || null,
+          numero: formData.numero?.trim() || null,
+          complemento: formData.complemento?.trim() || null,
+          bairro: formData.bairro?.trim() || null,
+          municipio: formData.municipio?.trim() || null,
+          estado_sigla: formData.estado_sigla || null,
+        };
+
+        const enderecoExistente = (cliente as any).endereco;
+
+        if (enderecoExistente?.id) {
+          // Atualizar endereço existente
+          const enderecoResponse = await fetch(`/api/enderecos/${enderecoExistente.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(enderecoPayload),
+          });
+
+          if (!enderecoResponse.ok) {
+            console.warn('Não foi possível atualizar o endereço');
+          }
+        } else {
+          // Criar novo endereço
+          const enderecoResponse = await fetch('/api/enderecos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(enderecoPayload),
+          });
+
+          if (enderecoResponse.ok) {
+            const enderecoData = await enderecoResponse.json();
+            const enderecoId = enderecoData.data?.id;
+
+            // Vincular ao cliente
+            if (enderecoId) {
+              dadosAtualizacao.endereco_id = enderecoId;
+            }
+          } else {
+            console.warn('Não foi possível criar o endereço');
+          }
+        }
       }
 
       const response = await fetch(`/api/clientes/${cliente.id}`, {

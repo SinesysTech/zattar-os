@@ -25,16 +25,16 @@ export function AssistenteCard({ assistente, onView, onEdit, onDelete, canEdit =
     <Card className="group relative flex flex-col h-full hover:shadow-md transition-shadow">
       {/* Botões editar e deletar no canto superior direito - visíveis no hover */}
       {(canEdit || canDelete) && (
-        <div className="absolute top-2 right-2 flex gap-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-2 right-2 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
           {canEdit && (
             <Button
               variant="ghost"
               size="icon"
-              className="h-4 w-4"
+              className="h-6 w-6"
               onClick={() => onEdit(assistente)}
               title="Editar assistente"
             >
-              <Pencil className="h-2.5 w-2.5 text-blue-600" />
+              <Pencil className="h-3 w-3 text-blue-600" />
               <span className="sr-only">Editar assistente</span>
             </Button>
           )}
@@ -42,11 +42,11 @@ export function AssistenteCard({ assistente, onView, onEdit, onDelete, canEdit =
             <Button
               variant="ghost"
               size="icon"
-              className="h-4 w-4"
+              className="h-6 w-6"
               onClick={() => onDelete(assistente)}
               title="Deletar assistente"
             >
-              <Trash className="h-2.5 w-2.5 text-red-500" />
+              <Trash className="h-3 w-3 text-red-500" />
               <span className="sr-only">Deletar assistente</span>
             </Button>
           )}
