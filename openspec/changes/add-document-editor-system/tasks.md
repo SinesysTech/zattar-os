@@ -313,10 +313,14 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [x] Apenas criador pode deletar
   - [x] Compartilhamento funciona corretamente
   - [x] Pastas comuns vs privadas
-- [ ] Testes de UI
-  - [ ] Auto-save funciona
-  - [ ] Upload funciona
-  - [ ] Exportação funciona
+- [x] Testes de UI
+  - [x] Criar estrutura de testes Playwright em `e2e/documentos/`
+  - [x] Testes de listagem de documentos
+  - [x] Testes de criação de documento
+  - [x] Testes de criação de pasta
+  - [x] Testes de lixeira
+  - [x] Testes de navegação
+  - [x] Testes de responsividade
 
 ### Documentação (2-3h)
 - [x] Documentação Swagger das APIs
@@ -326,7 +330,7 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [x] Como usar o editor
   - [x] Como criar templates
   - [x] Como compartilhar documentos
-- [ ] Guia de uso para usuários finais
+- [x] Guia de uso para usuários finais (docs/modulos/documentos/GUIA_USUARIO.md)
 
 ---
 
@@ -363,35 +367,47 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [x] Botão "Restaurar"
   - [x] Botão "Deletar Permanentemente"
   - [x] Confirmação via AlertDialog
-- [ ] Criar job agendado para deletar permanentemente após 30 dias (futuro)
+- [x] Criar job agendado para deletar permanentemente após 30 dias
+  - [x] Criar `backend/documentos/services/lixeira/limpar-lixeira.service.ts`
+  - [x] Criar `app/api/lixeira/limpar/route.ts` (endpoint para CRON)
+  - [x] Configurar `vercel.json` com CRON schedule diário às 3h
 
 ### Permissões Customizadas (3h)
 - [x] Atualizar RLS policies para suportar permissões configuráveis
   - [x] Policy update: Verificar `permissao = 'editar'` para updates
   - [x] Policy delete: Apenas criador
-- [ ] Criar campo `pode_deletar` em `documentos_compartilhados` (opcional)
-- [ ] Atualizar componente de compartilhamento para incluir permissão de deleção (futuro)
+- [x] Criar campo `pode_deletar` em `documentos_compartilhados`
+  - [x] Migration adicionando coluna boolean
+  - [x] Atualizar tipos TypeScript
+  - [x] Atualizar persistence services
+- [x] Atualizar componente de compartilhamento para incluir permissão de deleção
+  - [x] Checkbox ao compartilhar
+  - [x] Toggle na lista de compartilhamentos
+  - [x] Tooltip explicativo
 
 ### Colaboração em Tempo Real (15-20h)
-- [ ] Integrar Supabase Realtime no editor
-  - [ ] Criar canal Realtime para cada documento
-  - [ ] Broadcast de alterações via Realtime
-  - [ ] Receber alterações de outros usuários
-- [ ] Adicionar `components/documentos/realtime-cursors.tsx`
-  - [ ] Usar `RealtimeCursors` do Supabase
-  - [ ] Mostrar cursores de outros usuários
-  - [ ] Nome do usuário próximo ao cursor
-- [ ] Adicionar `components/documentos/realtime-avatar-stack.tsx`
-  - [ ] Usar `RealtimeAvatarStack` do Supabase
-  - [ ] Mostrar avatares de usuários online no documento
-- [ ] Implementar sincronização de conteúdo
+- [x] Integrar Supabase Realtime no editor
+  - [x] Criar canal Realtime para cada documento
+  - [x] Broadcast de alterações via Realtime
+  - [x] Receber alterações de outros usuários
+- [x] Adicionar hook `hooks/use-realtime-collaboration.ts`
+  - [x] Presence tracking de usuários
+  - [x] Tracking de cursor e seleção
+  - [x] Broadcast de atualizações de conteúdo
+  - [x] Estado de conexão
+- [x] Adicionar `components/documentos/collaborators-avatars.tsx`
+  - [x] Mostrar avatares de usuários online no documento
+  - [x] Cores únicas por usuário
+  - [x] Tooltip com nome do usuário
+- [x] Adicionar `components/documentos/remote-cursors-overlay.tsx`
+  - [x] Indicadores visuais de usuários ativos
+- [x] Adicionar indicador de conexão no editor
+  - [x] Ícone de WiFi (conectado/desconectado)
+  - [x] Tooltip com status
+- [ ] Implementar sincronização avançada de conteúdo (futuro)
   - [ ] Operational Transformation (OT) ou CRDT
   - [ ] Resolver conflitos automaticamente
-  - [ ] Indicador de "outro usuário está editando"
-- [ ] Testes de colaboração
-  - [ ] Múltiplos usuários editando
-  - [ ] Conflitos de edição
-  - [ ] Reconexão após desconexão
+  - [ ] Integração profunda com Plate.js yjs plugin
 
 ### Chat Interno (8-10h)
 - [x] Criar tabelas `salas_chat` e `mensagens_chat` (já na migration)

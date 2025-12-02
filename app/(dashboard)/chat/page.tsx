@@ -23,6 +23,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { ChatInterface } from '@/components/chat/chat-interface';
+import { CreateChatDialog } from '@/components/chat/create-chat-dialog';
 import { createClient } from '@/app/_lib/supabase/client';
 
 interface SalaChat {
@@ -43,6 +44,7 @@ export default function ChatPage() {
   const [loading, setLoading] = React.useState(true);
   const [currentUser, setCurrentUser] = React.useState<any>(null);
   const [busca, setBusca] = React.useState('');
+  const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
 
   // Carregar usuário atual
   React.useEffect(() => {
@@ -139,6 +141,11 @@ export default function ChatPage() {
     }
   };
 
+  const handleSalaCreated = (novaSala: SalaChat) => {
+    setSalas((prev) => [novaSala, ...prev]);
+    setSalaAtiva(novaSala);
+  };
+
   if (loading) {
     return (
       <div className="flex h-full flex-col">
@@ -180,8 +187,15 @@ export default function ChatPage() {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar - Lista de Salas */}
         <div className="w-80 border-r flex flex-col">
-          {/* Busca */}
-          <div className="p-4 border-b">
+          {/* Busca e Botão Nova Conversa */}
+          <div className="p-4 border-b space-y-3">
+            <Button
+              className="w-full"
+              onClick={() => setCreateDialogOpen(true)}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Nova Conversa
+            </Button>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -267,6 +281,16 @@ export default function ChatPage() {
           )}
         </div>
       </div>
+
+      {/* Dialog de Nova Conversa */}
+      {currentUser && (
+        <CreateChatDialog
+          open={createDialogOpen}
+          onOpenChange={setCreateDialogOpen}
+          onSalaCreated={handleSalaCreated}
+          currentUserId={currentUser.id}
+        />
+      )}
     </div>
   );
 }
