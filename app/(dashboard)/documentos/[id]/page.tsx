@@ -9,8 +9,8 @@ import { DocumentEditor } from '@/components/documentos/document-editor';
 import { DocumentEditorSkeleton } from '@/components/documentos/document-editor-skeleton';
 
 export const metadata: Metadata = {
-  title: 'Editor | Sinesys',
-  description: 'Editor de documentos jurídicos',
+  title: 'Documentos | Sinesys',
+  description: 'Gerencie seus documentos',
 };
 
 interface PageProps {
@@ -37,9 +37,12 @@ export default function DocumentoEditorPage({ params }: PageProps) {
 
   return (
     <div className="flex h-full flex-col">
-      <Suspense fallback={<DocumentEditorSkeleton />}>
-        <DocumentEditor documentoId={documentoId} />
-      </Suspense>
+      <div className="flex flex-1 h-full items-center justify-center overflow-hidden rounded-xl border border-border shadow-sm">
+        <div className="text-center px-6">
+          <h2 className="text-lg font-semibold">Editor desativado</h2>
+          <p className="mt-2 text-sm text-muted-foreground">Selecione ações na lista de Documentos.</p>
+        </div>
+      </div>
     </div>
   );
 }

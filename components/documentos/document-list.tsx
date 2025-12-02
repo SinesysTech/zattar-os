@@ -185,10 +185,10 @@ export function DocumentList() {
   return (
     <div className="flex flex-1 overflow-hidden">
       {/* Sidebar - Árvore de pastas */}
-      <div className="w-64 border-r bg-muted/10">
+      <div className="w-80 border-r bg-muted/10">
         <div className="flex h-full flex-col">
           <div className="border-b p-4">
-            <h2 className="text-sm font-semibold">Pastas</h2>
+            <h2 className="text-sm font-semibold">Documentos</h2>
           </div>
           <div className="flex-1 overflow-auto p-2">
             <FolderTree
