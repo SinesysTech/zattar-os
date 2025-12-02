@@ -3,6 +3,7 @@
 import * as React from "react"
 import {
   BookOpen,
+  Bot,
   Calendar,
   FileText,
   FolderOpen,
@@ -125,6 +126,11 @@ const navServicos = [
     name: "Chat Interno",
     url: "/chat",
     icon: MessageSquare,
+  },
+  {
+    name: "Assistentes",
+    url: "/assistentes",
+    icon: Bot,
   },
 ]
 

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /sw.js
+Disallow: /workbox-*.js
+Disallow: /worker-*.js
+
+Sitemap: https://pzadvogados.com/sitemap.xml

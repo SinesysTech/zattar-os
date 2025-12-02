@@ -37,6 +37,8 @@ interface FormStepLayoutProps {
   hidePrevious?: boolean;
   /** Esconder botao de avancar */
   hideNext?: boolean;
+  /** ID do formulário HTML para submit via botão externo */
+  formId?: string;
 }
 
 export default function FormStepLayout({
@@ -55,8 +57,12 @@ export default function FormStepLayout({
   children,
   hidePrevious = false,
   hideNext = false,
+  formId,
 }: FormStepLayoutProps) {
   const isFirstStep = currentStep === 1;
+  const nextButtonType = formId ? 'submit' : 'button';
+  const nextButtonForm = formId ?? undefined;
+  const handleNextClick = formId ? undefined : onNext;
 
   return (
     <Card className={cn("w-full", cardClassName)}>
@@ -98,8 +104,9 @@ export default function FormStepLayout({
 
         {!hideNext && (
           <Button
-            type="button"
-            onClick={onNext}
+            type={nextButtonType}
+            form={nextButtonForm}
+            onClick={handleNextClick}
             disabled={isNextDisabled || isLoading}
           >
             {isLoading ? (

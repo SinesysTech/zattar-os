@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "sonner";
+import { PWAInstallPrompt } from '@/components/pwa-install-prompt';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,6 +18,24 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Zattar Advogados",
   description: "Zattar Advogados",
+  manifest: '/manifest.json',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' }
+  ],
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Zattar Advogados'
+  },
+  applicationName: 'Zattar Advogados',
+  icons: [
+    'apple-touch-icon.png',
+    'android-chrome-192x192.png',
+    'android-chrome-512x512.png'
+  ],
+  keywords: ['gestão jurídica', 'processos', 'advogados', 'zattar']
 };
 
 export default function RootLayout({
@@ -35,6 +54,7 @@ export default function RootLayout({
         >
           {children}
           <Toaster position="top-right" richColors />
+          <PWAInstallPrompt />
         </ThemeProvider>
       </body>
     </html>

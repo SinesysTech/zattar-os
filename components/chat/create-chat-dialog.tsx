@@ -2,6 +2,7 @@
 
 /**
  * Dialog para criar nova sala de chat ou iniciar conversa privada
+ * Usa padrão combobox com lista visível que filtra à medida que o usuário digita
  */
 
 import * as React from 'react';
@@ -47,55 +48,60 @@ export function CreateChatDialog({
   const [nome, setNome] = React.useState('');
   const [loading, setLoading] = React.useState(false);
 
-  // Para modo privado
+  // Para modo privado - combobox pattern
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [searchLoading, setSearchLoading] = React.useState(false);
-  const [searchResults, setSearchResults] = React.useState<Usuario[]>([]);
+  const [allUsers, setAllUsers] = React.useState<Usuario[]>([]);
+  const [usersLoading, setUsersLoading] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState<Usuario | null>(null);
 
-  // Resetar ao abrir/fechar
+  // Carregar todos os usuários quando o dialog abre
+  React.useEffect(() => {
+    if (open && modo === 'privado' && allUsers.length === 0) {
+      loadAllUsers();
+    }
+  }, [open, modo]);
+
+  // Resetar ao fechar
   React.useEffect(() => {
     if (!open) {
       setModo('privado');
       setNome('');
       setSearchQuery('');
-      setSearchResults([]);
       setSelectedUser(null);
+      // Não limpa allUsers para cache
     }
   }, [open]);
 
-  // Buscar usuários
-  const searchUsers = React.useCallback(async (query: string) => {
-    if (query.length < 2) {
-      setSearchResults([]);
-      return;
-    }
-
-    setSearchLoading(true);
+  // Carregar todos os usuários disponíveis
+  const loadAllUsers = async () => {
+    setUsersLoading(true);
     try {
-      const response = await fetch(`/api/usuarios/buscar?q=${encodeURIComponent(query)}`);
+      // Buscar todos os usuários ativos
+      const response = await fetch('/api/usuarios/buscar?q=&limit=100');
       const data = await response.json();
 
       if (data.success) {
         // Filtrar o usuário atual
-        setSearchResults(data.data.filter((u: Usuario) => u.id !== currentUserId));
+        setAllUsers(data.data.filter((u: Usuario) => u.id !== currentUserId));
       }
     } catch (error) {
-      console.error('Erro ao buscar usuários:', error);
+      console.error('Erro ao carregar usuários:', error);
     } finally {
-      setSearchLoading(false);
+      setUsersLoading(false);
     }
-  }, [currentUserId]);
+  };
 
-  // Debounce para busca
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      if (searchQuery && modo === 'privado') {
-        searchUsers(searchQuery);
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [searchQuery, modo, searchUsers]);
+  // Filtrar usuários baseado na busca (client-side filtering)
+  const filteredUsers = React.useMemo(() => {
+    if (!searchQuery.trim()) return allUsers;
+
+    const termo = searchQuery.toLowerCase();
+    return allUsers.filter((u) =>
+      u.nomeCompleto.toLowerCase().includes(termo) ||
+      (u.nomeExibicao && u.nomeExibicao.toLowerCase().includes(termo)) ||
+      (u.emailCorporativo && u.emailCorporativo.toLowerCase().includes(termo))
+    );
+  }, [allUsers, searchQuery]);
 
   const handleCreate = async () => {
     if (modo === 'privado' && !selectedUser) {
@@ -191,57 +197,9 @@ export function CreateChatDialog({
           {modo === 'privado' ? (
             <div className="space-y-3">
               <Label>Selecionar usuário</Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar por nome ou email..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setSelectedUser(null);
-                  }}
-                  className="pl-9"
-                />
-                {searchLoading && (
-                  <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
-                )}
-              </div>
-
-              {/* Resultados da busca */}
-              {searchResults.length > 0 && !selectedUser && (
-                <ScrollArea className="max-h-40 rounded-md border">
-                  {searchResults.map((usuario) => (
-                    <button
-                      key={usuario.id}
-                      type="button"
-                      className="flex w-full items-center gap-3 p-3 hover:bg-accent text-left"
-                      onClick={() => {
-                        setSelectedUser(usuario);
-                        setSearchResults([]);
-                      }}
-                    >
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="text-xs">
-                          {getInitials(usuario.nomeCompleto)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">
-                          {usuario.nomeExibicao || usuario.nomeCompleto}
-                        </p>
-                        {usuario.emailCorporativo && (
-                          <p className="text-xs text-muted-foreground truncate">
-                            {usuario.emailCorporativo}
-                          </p>
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                </ScrollArea>
-              )}
 
               {/* Usuário selecionado */}
-              {selectedUser && (
+              {selectedUser ? (
                 <div className="flex items-center justify-between rounded-md border bg-muted/50 p-3">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">
@@ -271,6 +229,65 @@ export function CreateChatDialog({
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
+              ) : (
+                <>
+                  {/* Combobox: Search + List */}
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      placeholder="Filtrar por nome ou email..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-9"
+                    />
+                    {usersLoading && (
+                      <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+                    )}
+                  </div>
+
+                  {/* Lista de usuários (sempre visível) */}
+                  <ScrollArea className="h-48 rounded-md border">
+                    {usersLoading ? (
+                      <div className="flex items-center justify-center h-full py-8">
+                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                      </div>
+                    ) : filteredUsers.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center h-full py-8 text-center">
+                        <Users className="h-8 w-8 text-muted-foreground mb-2" />
+                        <p className="text-sm text-muted-foreground">
+                          {searchQuery ? 'Nenhum usuário encontrado' : 'Nenhum usuário disponível'}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="p-1">
+                        {filteredUsers.map((usuario) => (
+                          <button
+                            key={usuario.id}
+                            type="button"
+                            className="flex w-full items-center gap-3 p-2 rounded-md hover:bg-accent text-left transition-colors"
+                            onClick={() => setSelectedUser(usuario)}
+                          >
+                            <Avatar className="h-8 w-8">
+                              <AvatarFallback className="text-xs">
+                                {getInitials(usuario.nomeCompleto)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">
+                                {usuario.nomeExibicao || usuario.nomeCompleto}
+                              </p>
+                              {usuario.emailCorporativo && (
+                                <p className="text-xs text-muted-foreground truncate">
+                                  {usuario.emailCorporativo}
+                                </p>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </ScrollArea>
+                </>
               )}
             </div>
           ) : (

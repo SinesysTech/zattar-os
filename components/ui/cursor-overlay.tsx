@@ -48,6 +48,7 @@ function Cursor({
             id === 'selection' && 'bg-brand/25',
             id === 'selection' && isCursor && 'bg-primary'
           )}
+          // Inline styles required: dynamic positioning from cursor overlay plugin
           style={{
             ...selectionStyle,
             ...position,
@@ -60,6 +61,7 @@ function Cursor({
             'pointer-events-none absolute z-10 w-0.5',
             id === 'drag' && 'w-px bg-brand'
           )}
+          // Inline styles required: dynamic caret positioning from plugin
           style={{ ...caretPosition, ...style }}
         />
       )}

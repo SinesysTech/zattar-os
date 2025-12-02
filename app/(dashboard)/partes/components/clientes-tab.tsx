@@ -22,6 +22,7 @@ import { Eye, Pencil, Copy, Check } from 'lucide-react';
 import { useClientes } from '@/app/_lib/hooks/use-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Cliente } from '@/app/_lib/types';
+import { ClienteEditDialog } from './cliente-edit-dialog';
 import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
 import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
 import {
@@ -125,7 +126,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 /**
  * Define as colunas da tabela de clientes
  */
-function criarColunas(onEditSuccess: () => void): ColumnDef<ClienteComProcessos>[] {
+function criarColunas(onEdit: (cliente: Cliente) => void): ColumnDef<ClienteComProcessos>[] {
   return [
     {
       id: 'identificacao',
@@ -290,7 +291,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<ClienteComProcessos>
         const cliente = row.original;
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <ClienteActions cliente={cliente} onEditSuccess={onEditSuccess} />
+            <ClienteActions cliente={cliente} onEdit={onEdit} />
           </div>
         );
       },
@@ -303,33 +304,43 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<ClienteComProcessos>
  */
 function ClienteActions({
   cliente,
-  onEditSuccess,
+  onEdit,
 }: {
   cliente: Cliente;
-  onEditSuccess: () => void;
+  onEdit: (cliente: Cliente) => void;
 }) {
   return (
     <ButtonGroup>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8"
-        asChild
-      >
-        <Link href={`/partes/clientes/${cliente.id}`}>
-          <Eye className="h-4 w-4" />
-          <span className="sr-only">Visualizar cliente</span>
-        </Link>
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8"
-        disabled
-      >
-        <Pencil className="h-4 w-4" />
-        <span className="sr-only">Editar cliente</span>
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            asChild
+          >
+            <Link href={`/partes/clientes/${cliente.id}`}>
+              <Eye className="h-4 w-4" />
+              <span className="sr-only">Visualizar cliente</span>
+            </Link>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Visualizar</TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onEdit(cliente)}
+          >
+            <Pencil className="h-4 w-4" />
+            <span className="sr-only">Editar cliente</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Editar</TooltipContent>
+      </Tooltip>
     </ButtonGroup>
   );
 }
@@ -341,6 +352,8 @@ export function ClientesTab() {
   const [filtros, setFiltros] = React.useState<ClientesFilters>({});
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
   const [createOpen, setCreateOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [clienteParaEditar, setClienteParaEditar] = React.useState<Cliente | null>(null);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -360,12 +373,20 @@ export function ClientesTab() {
 
   const { clientes, paginacao, isLoading, error, refetch } = useClientes(params);
 
+  // Função para abrir dialog de edição
+  const handleEdit = React.useCallback((cliente: Cliente) => {
+    setClienteParaEditar(cliente);
+    setEditOpen(true);
+  }, []);
+
   // Função para atualizar após edição
   const handleEditSuccess = React.useCallback(() => {
     refetch();
+    setEditOpen(false);
+    setClienteParaEditar(null);
   }, [refetch]);
 
-  const colunas = React.useMemo(() => criarColunas(handleEditSuccess), [handleEditSuccess]);
+  const colunas = React.useMemo(() => criarColunas(handleEdit), [handleEdit]);
 
   const filterOptions = React.useMemo(() => buildClientesFilterOptions(), []);
   const filterGroups = React.useMemo(() => buildClientesFilterGroups(), []);
@@ -426,6 +447,19 @@ export function ClientesTab() {
         onOpenChange={setCreateOpen}
         onSuccess={handleEditSuccess}
       /> */}
+
+      {/* Dialog de Edição */}
+      {clienteParaEditar && (
+        <ClienteEditDialog
+          open={editOpen}
+          onOpenChange={(open) => {
+            setEditOpen(open);
+            if (!open) setClienteParaEditar(null);
+          }}
+          cliente={clienteParaEditar}
+          onSuccess={handleEditSuccess}
+        />
+      )}
     </div>
   );
 }

@@ -78,6 +78,7 @@ export type {
 // Tipos específicos do frontend (UI, Formulários, APIs)
 export type { AcervoApiResponse, BuscarProcessosParams, ProcessosFilters } from './acervo';
 export type { AudienciasApiResponse, BuscarAudienciasParams, AudienciasFilters } from './audiencias';
+export type { Assistente, AssistentesParams, AssistentesFilters, ViewMode as AssistentesViewMode, AssistentesApiResponse, CriarAssistenteData, AtualizarAssistenteData } from './assistentes';
 export type { ClientesApiResponse, BuscarClientesParams, ClienteFormData } from './clientes';
 export type { ContratosApiResponse, BuscarContratosParams, ContratosFilters } from './contratos';
 export type { CredenciaisResponse, Credencial, CriarCredencialParams, AtualizarCredencialParams, Advogado, CodigoTRT, GrauTRT } from './credenciais';

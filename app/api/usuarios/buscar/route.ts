@@ -2,6 +2,7 @@
  * API Route para busca simplificada de usuários
  *
  * GET /api/usuarios/buscar?q=termo - Busca usuários por nome ou email
+ * GET /api/usuarios/buscar?limit=100 - Lista todos os usuários ativos (para combobox)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -11,6 +12,7 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 /**
  * GET /api/usuarios/buscar
  * Busca usuários por nome ou email para compartilhamento
+ * Quando q está vazio mas limit é fornecido, retorna todos os usuários ativos
  */
 export async function GET(request: NextRequest) {
   try {
@@ -21,8 +23,11 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q') || '';
+    const limitParam = searchParams.get('limit');
+    const limit = limitParam ? parseInt(limitParam, 10) : 10;
 
-    if (query.length < 2) {
+    // Se não houver query e não houver limit explícito, retorna vazio
+    if (query.length < 2 && !limitParam) {
       return NextResponse.json({
         success: true,
         data: [],
@@ -31,17 +36,24 @@ export async function GET(request: NextRequest) {
 
     const supabase = createServiceClient();
 
-    // Buscar usuários ativos que correspondam à busca
-    const { data, error } = await supabase
+    // Construir query base
+    let queryBuilder = supabase
       .from('usuarios')
       .select('id, nomeCompleto, nomeExibicao, emailCorporativo')
       .eq('ativo', true)
-      .neq('id', authResult.usuario.id) // Excluir o próprio usuário
-      .or(
+      .neq('id', authResult.usuario.id); // Excluir o próprio usuário
+
+    // Aplicar filtro de busca se houver query
+    if (query.length >= 2) {
+      queryBuilder = queryBuilder.or(
         `nomeCompleto.ilike.%${query}%,nomeExibicao.ilike.%${query}%,emailCorporativo.ilike.%${query}%`
-      )
+      );
+    }
+
+    // Ordenar e limitar
+    const { data, error } = await queryBuilder
       .order('nomeCompleto')
-      .limit(10);
+      .limit(limit);
 
     if (error) {
       throw new Error(error.message);

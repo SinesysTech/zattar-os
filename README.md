@@ -442,6 +442,38 @@ B2_APPLICATION_KEY=sua_application_key
 GOOGLE_DRIVE_WEBHOOK_URL=https://webhook.sinesys.app/webhook/drive
 ```
 
+## 🌐 Progressive Web App (PWA)
+
+O Sinesys é um Progressive Web App que pode ser instalado em dispositivos móveis e desktop.
+
+### Funcionalidades PWA
+- ✅ Instalável em dispositivos móveis e desktop
+- ✅ Funciona offline com página de fallback
+- ✅ Cache inteligente de recursos estáticos
+- ✅ Ícones otimizados para todas as plataformas
+- ✅ Suporte a tema claro/escuro
+- ✅ Atualizações automáticas do service worker
+
+### Instalação
+Os usuários podem instalar o app:
+- **Android/Chrome**: Clique no banner de instalação ou menu > "Instalar app"
+- **iOS/Safari**: Toque em Compartilhar > "Adicionar à Tela de Início"
+- **Desktop**: Clique no ícone de instalação na barra de endereços
+
+### Desenvolvimento
+Em modo de desenvolvimento, o PWA está desabilitado para facilitar debugging.
+Para testar PWA localmente:
+```bash
+npm run build
+npm start
+```
+
+### Arquivos PWA
+- `public/manifest.json` - Web App Manifest
+- `public/sw.js` - Service Worker (gerado automaticamente)
+- `app/offline/page.tsx` - Página offline
+- `components/pwa-install-prompt.tsx` - Prompt de instalação
+
 ## 🚀 Execução
 
 ### Desenvolvimento

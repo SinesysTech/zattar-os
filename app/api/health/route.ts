@@ -22,14 +22,23 @@ import { NextResponse } from 'next/server';
  *                 timestamp:
  *                   type: string
  *                   format: date-time
+ *                 version:
+ *                   type: string
+ *                   example: 0.1.0
  */
 export async function GET() {
   return NextResponse.json(
     {
       status: 'ok',
       timestamp: new Date().toISOString(),
+      version: '0.1.0',
     },
-    { status: 200 }
+    {
+      status: 200,
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+      },
+    }
   );
 }
 
