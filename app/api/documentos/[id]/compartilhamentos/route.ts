@@ -133,6 +133,7 @@ export async function POST(
         documento_id,
         usuario_id: body.usuario_id,
         permissao: body.permissao,
+        pode_deletar: body.pode_deletar === true,
       },
       authResult.usuario.id
     );

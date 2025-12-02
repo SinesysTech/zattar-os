@@ -27,6 +27,7 @@ export async function compartilharDocumento(
       documento_id: params.documento_id,
       usuario_id: params.usuario_id,
       permissao: params.permissao,
+      pode_deletar: params.pode_deletar ?? false,
       compartilhado_por,
     })
     .select()
@@ -38,7 +39,8 @@ export async function compartilharDocumento(
       return await atualizarPermissaoCompartilhamento(
         params.documento_id,
         params.usuario_id,
-        params.permissao
+        params.permissao,
+        params.pode_deletar
       );
     }
     throw new Error(`Erro ao compartilhar documento: ${error.message}`);
@@ -53,13 +55,22 @@ export async function compartilharDocumento(
 export async function atualizarPermissaoCompartilhamento(
   documento_id: number,
   usuario_id: number,
-  permissao: 'visualizar' | 'editar'
+  permissao: 'visualizar' | 'editar',
+  pode_deletar?: boolean
 ): Promise<DocumentoCompartilhado> {
   const supabase = createServiceClient();
 
+  const updateData: { permissao: 'visualizar' | 'editar'; pode_deletar?: boolean } = {
+    permissao,
+  };
+
+  if (pode_deletar !== undefined) {
+    updateData.pode_deletar = pode_deletar;
+  }
+
   const { data, error } = await supabase
     .from('documentos_compartilhados')
-    .update({ permissao })
+    .update(updateData)
     .eq('documento_id', documento_id)
     .eq('usuario_id', usuario_id)
     .select()
@@ -288,13 +299,22 @@ export async function buscarCompartilhamentoPorId(
  */
 export async function atualizarPermissaoCompartilhamentoPorId(
   id: number,
-  permissao: 'visualizar' | 'editar'
+  permissao: 'visualizar' | 'editar',
+  pode_deletar?: boolean
 ): Promise<DocumentoCompartilhado> {
   const supabase = createServiceClient();
 
+  const updateData: { permissao: 'visualizar' | 'editar'; pode_deletar?: boolean } = {
+    permissao,
+  };
+
+  if (pode_deletar !== undefined) {
+    updateData.pode_deletar = pode_deletar;
+  }
+
   const { data, error } = await supabase
     .from('documentos_compartilhados')
-    .update({ permissao })
+    .update(updateData)
     .eq('id', id)
     .select()
     .single();

@@ -1,6 +1,6 @@
 /**
  * Hook customizado para colaboração em tempo real
- * Gerencia presence tracking e broadcast de eventos do editor
+ * Gerencia presence tracking, broadcast de eventos do editor e sync de conteúdo
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
@@ -23,13 +23,31 @@ export interface CollaboratorPresence {
   last_active: string;
 }
 
+export interface RemoteCursor {
+  userId: number;
+  userName: string;
+  color: string;
+  selection: {
+    anchor: { path: number[]; offset: number };
+    focus: { path: number[]; offset: number };
+  } | null;
+}
+
+interface ContentUpdate {
+  type: 'content_update';
+  userId: number;
+  content: any;
+  timestamp: number;
+}
+
 interface UseRealtimeCollaborationProps {
   documentoId: number;
   userId: number;
   userName: string;
   userEmail: string;
   onPresenceChange?: (users: CollaboratorPresence[]) => void;
-  onRemoteUpdate?: (update: any) => void;
+  onRemoteUpdate?: (update: ContentUpdate) => void;
+  onRemoteCursors?: (cursors: RemoteCursor[]) => void;
 }
 
 export function useRealtimeCollaboration({
@@ -37,10 +55,22 @@ export function useRealtimeCollaboration({
   userId,
   userName,
   userEmail,
+  onRemoteUpdate,
+  onRemoteCursors,
 }: UseRealtimeCollaborationProps) {
   const supabase = createClient();
   const [collaborators, setCollaborators] = useState<CollaboratorPresence[]>([]);
+  const [remoteCursors, setRemoteCursors] = useState<RemoteCursor[]>([]);
+  const [isConnected, setIsConnected] = useState(false);
   const channelRef = useRef<RealtimeChannel | null>(null);
+  const onRemoteUpdateRef = useRef(onRemoteUpdate);
+  const onRemoteCursorsRef = useRef(onRemoteCursors);
+
+  // Atualizar refs quando callbacks mudam
+  useEffect(() => {
+    onRemoteUpdateRef.current = onRemoteUpdate;
+    onRemoteCursorsRef.current = onRemoteCursors;
+  }, [onRemoteUpdate, onRemoteCursors]);
 
   // Gerar cor única para o usuário
   const userColor = useCallback(() => {
@@ -55,8 +85,10 @@ export function useRealtimeCollaboration({
     return colors[userId % colors.length];
   }, [userId]);
 
-  // Inicializar presence tracking
+  // Inicializar presence tracking e broadcast
   useEffect(() => {
+    if (!userId || userId === 0) return;
+
     const channel = supabase.channel(`documento:${documentoId}`, {
       config: {
         presence: {
@@ -70,26 +102,53 @@ export function useRealtimeCollaboration({
       .on('presence', { event: 'sync' }, () => {
         const presenceState = channel.presenceState();
         const users: CollaboratorPresence[] = [];
+        const cursors: RemoteCursor[] = [];
 
         Object.keys(presenceState).forEach((key) => {
           const presences = presenceState[key] as any[];
           presences.forEach((presence) => {
             if (presence.user_id !== userId) {
               users.push(presence);
+
+              // Extrair cursor para overlay
+              if (presence.selection) {
+                cursors.push({
+                  userId: presence.user_id,
+                  userName: presence.name,
+                  color: presence.color,
+                  selection: presence.selection,
+                });
+              }
             }
           });
         });
 
         setCollaborators(users);
+        setRemoteCursors(cursors);
+
+        // Notificar sobre mudanças de cursors
+        if (onRemoteCursorsRef.current) {
+          onRemoteCursorsRef.current(cursors);
+        }
       })
       .on('presence', { event: 'join' }, ({ key, newPresences }) => {
-        console.log('User joined:', key, newPresences);
+        console.log('[Collaboration] User joined:', key, newPresences);
       })
       .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
-        console.log('User left:', key, leftPresences);
+        console.log('[Collaboration] User left:', key, leftPresences);
+      })
+      // Escutar broadcasts de atualização de conteúdo
+      .on('broadcast', { event: 'content_update' }, ({ payload }) => {
+        if (payload && payload.userId !== userId) {
+          console.log('[Collaboration] Remote content update received');
+          if (onRemoteUpdateRef.current) {
+            onRemoteUpdateRef.current(payload as ContentUpdate);
+          }
+        }
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
+          setIsConnected(true);
           // Enviar presence inicial
           await channel.track({
             user_id: userId,
@@ -98,6 +157,8 @@ export function useRealtimeCollaboration({
             color: userColor(),
             last_active: new Date().toISOString(),
           });
+        } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
+          setIsConnected(false);
         }
       });
 
@@ -107,7 +168,9 @@ export function useRealtimeCollaboration({
     return () => {
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
       }
+      setIsConnected(false);
     };
   }, [documentoId, userId, userName, userEmail, userColor, supabase]);
 
@@ -164,6 +227,8 @@ export function useRealtimeCollaboration({
 
   return {
     collaborators,
+    remoteCursors,
+    isConnected,
     updateCursor,
     updateSelection,
     broadcastUpdate,

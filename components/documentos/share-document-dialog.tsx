@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react';
-import { Loader2, Search, UserPlus, X, Users, Mail, Trash2 } from 'lucide-react';
+import { Loader2, Search, UserPlus, X, Users, Mail, Trash2, Shield } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -28,6 +28,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import type { DocumentoCompartilhadoComUsuario } from '@/backend/types/documentos/types';
 
@@ -60,6 +67,7 @@ export function ShareDocumentDialog({
   const [searchResults, setSearchResults] = React.useState<Usuario[]>([]);
   const [selectedUser, setSelectedUser] = React.useState<Usuario | null>(null);
   const [permissao, setPermissao] = React.useState<PermissaoTipo>('visualizar');
+  const [podeDeletar, setPodeDeletar] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState<number | null>(null);
 
   // Buscar compartilhamentos existentes
@@ -126,6 +134,7 @@ export function ShareDocumentDialog({
         body: JSON.stringify({
           usuario_id: selectedUser.id,
           permissao,
+          pode_deletar: podeDeletar,
         }),
       });
 
@@ -139,6 +148,7 @@ export function ShareDocumentDialog({
       setSelectedUser(null);
       setSearchQuery('');
       setSearchResults([]);
+      setPodeDeletar(false);
       fetchCompartilhamentos();
     } catch (error) {
       console.error('Erro ao compartilhar:', error);
@@ -169,6 +179,32 @@ export function ShareDocumentDialog({
     } catch (error) {
       console.error('Erro ao atualizar permissão:', error);
       toast.error(error instanceof Error ? error.message : 'Erro ao atualizar permissão');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  // Toggle permissão de deletar
+  const handleTogglePodeDeletar = async (compartilhamentoId: number, novoPodeDeletar: boolean) => {
+    setActionLoading(compartilhamentoId);
+    try {
+      const response = await fetch(`/api/documentos/${documentoId}/compartilhamentos/${compartilhamentoId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pode_deletar: novoPodeDeletar }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Erro ao atualizar permissão');
+      }
+
+      toast.success(novoPodeDeletar ? 'Permissão de deleção concedida' : 'Permissão de deleção removida');
+      fetchCompartilhamentos();
+    } catch (error) {
+      console.error('Erro ao atualizar permissão de deleção:', error);
+      toast.error(error instanceof Error ? error.message : 'Erro ao atualizar permissão de deleção');
     } finally {
       setActionLoading(null);
     }
@@ -249,6 +285,31 @@ export function ShareDocumentDialog({
                   <SelectItem value="editar">Editar</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* Opção de permissão de deleção */}
+            <div className="flex items-center gap-2 mt-2">
+              <Checkbox
+                id="pode-deletar"
+                checked={podeDeletar}
+                onCheckedChange={(checked) => setPodeDeletar(checked === true)}
+              />
+              <Label htmlFor="pode-deletar" className="text-sm text-muted-foreground cursor-pointer">
+                Permitir mover para lixeira
+              </Label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Shield className="h-4 w-4 text-muted-foreground cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs text-xs">
+                      Quando ativado, o usuário poderá mover este documento para a lixeira.
+                      Apenas o proprietário pode excluir permanentemente.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             {/* Resultados da busca */}
@@ -380,6 +441,37 @@ export function ShareDocumentDialog({
                             <SelectItem value="editar">Editar</SelectItem>
                           </SelectContent>
                         </Select>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className={`h-8 w-8 ${
+                                  compartilhamento.pode_deletar
+                                    ? 'text-amber-500 hover:text-amber-600'
+                                    : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                                onClick={() =>
+                                  handleTogglePodeDeletar(
+                                    compartilhamento.id,
+                                    !compartilhamento.pode_deletar
+                                  )
+                                }
+                                disabled={actionLoading === compartilhamento.id}
+                              >
+                                <Shield className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="text-xs">
+                                {compartilhamento.pode_deletar
+                                  ? 'Pode mover para lixeira (clique para revogar)'
+                                  : 'Não pode mover para lixeira (clique para permitir)'}
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                         <Button
                           variant="ghost"
                           size="icon"

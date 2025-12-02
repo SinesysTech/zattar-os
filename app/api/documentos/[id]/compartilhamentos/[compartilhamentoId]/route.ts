@@ -40,12 +40,12 @@ export async function PATCH(
     }
 
     // Verificar se é proprietário ou tem permissão de editar
-    const { temAcesso, permissao } = await verificarAcessoDocumento(
+    const { temAcesso, permissao: permissaoAcesso } = await verificarAcessoDocumento(
       documento_id,
       authResult.usuario.id
     );
 
-    if (!temAcesso || permissao === 'visualizar') {
+    if (!temAcesso || permissaoAcesso === 'visualizar') {
       return NextResponse.json(
         { success: false, error: 'Sem permissão para modificar compartilhamentos' },
         { status: 403 }
@@ -63,16 +63,33 @@ export async function PATCH(
 
     const body = await request.json();
 
-    if (!body.permissao || !['visualizar', 'editar'].includes(body.permissao)) {
+    // Validar que pelo menos um campo foi enviado
+    const temPermissao = body.permissao !== undefined;
+    const temPodeDeletar = body.pode_deletar !== undefined;
+
+    if (!temPermissao && !temPodeDeletar) {
+      return NextResponse.json(
+        { success: false, error: 'Nenhum campo para atualizar' },
+        { status: 400 }
+      );
+    }
+
+    // Validar permissão se foi enviada
+    if (temPermissao && !['visualizar', 'editar'].includes(body.permissao)) {
       return NextResponse.json(
         { success: false, error: 'Permissão inválida' },
         { status: 400 }
       );
     }
 
+    // Se não tem permissão, usar a permissão atual
+    const permissao = temPermissao ? body.permissao : compartilhamento.permissao;
+    const podeDeletar = temPodeDeletar ? body.pode_deletar === true : undefined;
+
     const atualizado = await atualizarPermissaoCompartilhamentoPorId(
       compartilhamento_id,
-      body.permissao
+      permissao,
+      podeDeletar
     );
 
     return NextResponse.json({ success: true, data: atualizado });

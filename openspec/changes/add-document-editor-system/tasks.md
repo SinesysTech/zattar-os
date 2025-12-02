@@ -209,16 +209,16 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
 - [x] Integração com API `/api/documentos/[id]/compartilhamentos`
 
 ### Serviços de Compartilhamento (2-3h)
-- [ ] Criar `backend/documentos/services/compartilhamento/compartilhar-documento.service.ts`
-  - [ ] Validação: apenas criador pode compartilhar
-  - [ ] Validação: usuário existe
-  - [ ] Validação: não compartilhar com si mesmo
-- [ ] Criar `backend/documentos/services/compartilhamento/remover-compartilhamento.service.ts`
-  - [ ] Validação: apenas criador ou quem compartilhou pode remover
-- [ ] Criar `backend/documentos/services/compartilhamento/listar-compartilhamentos.service.ts`
-  - [ ] Join com tabela `usuarios` para nomes
-- [ ] Criar `backend/documentos/services/compartilhamento/atualizar-permissao.service.ts`
-  - [ ] Alterar permissão de visualizar/editar
+- [x] Criar `backend/documentos/services/compartilhamento/compartilhar-documento.service.ts`
+  - [x] Validação: apenas criador pode compartilhar
+  - [x] Validação: usuário existe
+  - [x] Validação: não compartilhar com si mesmo
+- [x] Criar `backend/documentos/services/compartilhamento/remover-compartilhamento.service.ts`
+  - [x] Validação: apenas criador ou quem compartilhou pode remover
+- [x] Criar `backend/documentos/services/compartilhamento/listar-compartilhamentos.service.ts`
+  - [x] Join com tabela `usuarios` para nomes
+- [x] Criar `backend/documentos/services/compartilhamento/atualizar-permissao.service.ts`
+  - [x] Alterar permissão de visualizar/editar
 
 ### API Routes Compartilhamento (2h)
 - [x] Criar `app/api/documentos/[id]/compartilhar/route.ts`
@@ -240,20 +240,20 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [x] Ações (editar, deletar se for criador)
 
 ### Serviços de Templates (3-4h)
-- [ ] Criar `backend/documentos/services/templates/criar-template.service.ts`
-  - [ ] Validação de título (1-200 chars)
-  - [ ] Validação de conteúdo (JSON Plate.js válido)
-  - [ ] Validação de categoria
-- [ ] Criar `backend/documentos/services/templates/listar-templates.service.ts`
-  - [ ] Filtro por visibilidade (públicos + privados do usuário)
-  - [ ] Filtro por categoria
-  - [ ] Busca textual
-- [ ] Criar `backend/documentos/services/templates/usar-template.service.ts`
-  - [ ] Criar documento a partir de template
-  - [ ] Incrementar `uso_count` do template
-  - [ ] Copiar conteúdo do template
-- [ ] Criar `backend/documentos/services/templates/deletar-template.service.ts`
-  - [ ] Apenas criador pode deletar
+- [x] Criar `backend/documentos/services/templates/criar-template.service.ts`
+  - [x] Validação de título (1-200 chars)
+  - [x] Validação de conteúdo (JSON Plate.js válido)
+  - [x] Validação de categoria
+- [x] Criar `backend/documentos/services/templates/listar-templates.service.ts`
+  - [x] Filtro por visibilidade (públicos + privados do usuário)
+  - [x] Filtro por categoria
+  - [x] Busca textual
+- [x] Criar `backend/documentos/services/templates/usar-template.service.ts`
+  - [x] Criar documento a partir de template
+  - [x] Incrementar `uso_count` do template
+  - [x] Copiar conteúdo do template
+- [x] Criar `backend/documentos/services/templates/deletar-template.service.ts`
+  - [x] Apenas criador pode deletar
 
 ### API Routes Templates (2-3h)
 - [x] Criar `app/api/templates/route.ts`
@@ -303,29 +303,29 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [x] Helper `invalidatePastaCache(pastaId?)`
 
 ### Testes (4-6h)
-- [ ] Testes de integração das APIs
-  - [ ] CRUD de documentos
-  - [ ] CRUD de pastas
-  - [ ] Compartilhamento
-  - [ ] Templates
-  - [ ] Upload
-- [ ] Testes de RLS policies
-  - [ ] Apenas criador pode deletar
-  - [ ] Compartilhamento funciona corretamente
-  - [ ] Pastas comuns vs privadas
+- [x] Testes de integração das APIs
+  - [x] CRUD de documentos
+  - [x] CRUD de pastas
+  - [x] Compartilhamento
+  - [x] Templates
+  - [x] Upload
+- [x] Testes de RLS policies
+  - [x] Apenas criador pode deletar
+  - [x] Compartilhamento funciona corretamente
+  - [x] Pastas comuns vs privadas
 - [ ] Testes de UI
   - [ ] Auto-save funciona
   - [ ] Upload funciona
   - [ ] Exportação funciona
 
 ### Documentação (2-3h)
-- [ ] Documentação Swagger das APIs
-  - [ ] JSDoc annotations nos endpoints
-  - [ ] Schemas de request/response
-- [ ] README do módulo
-  - [ ] Como usar o editor
-  - [ ] Como criar templates
-  - [ ] Como compartilhar documentos
+- [x] Documentação Swagger das APIs
+  - [x] JSDoc annotations nos endpoints
+  - [x] Schemas de request/response
+- [x] README do módulo
+  - [x] Como usar o editor
+  - [x] Como criar templates
+  - [x] Como compartilhar documentos
 - [ ] Guia de uso para usuários finais
 
 ---
@@ -366,9 +366,9 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
 - [ ] Criar job agendado para deletar permanentemente após 30 dias (futuro)
 
 ### Permissões Customizadas (3h)
-- [ ] Atualizar RLS policies para suportar permissões configuráveis
-  - [ ] Policy update: Verificar `permissao = 'editar'` para updates
-  - [ ] Policy delete: Apenas criador
+- [x] Atualizar RLS policies para suportar permissões configuráveis
+  - [x] Policy update: Verificar `permissao = 'editar'` para updates
+  - [x] Policy delete: Apenas criador
 - [ ] Criar campo `pode_deletar` em `documentos_compartilhados` (opcional)
 - [ ] Atualizar componente de compartilhamento para incluir permissão de deleção (futuro)
 

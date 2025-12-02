@@ -156,6 +156,7 @@ export interface DocumentoCompartilhado {
   documento_id: number;
   usuario_id: number;
   permissao: 'visualizar' | 'editar';
+  pode_deletar: boolean;
   compartilhado_por: number;
   created_at: string;
 }
@@ -167,6 +168,7 @@ export interface CompartilharDocumentoParams {
   documento_id: number;
   usuario_id: number;
   permissao: 'visualizar' | 'editar';
+  pode_deletar?: boolean;
 }
 
 /**

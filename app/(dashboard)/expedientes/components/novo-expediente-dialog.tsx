@@ -1,6 +1,7 @@
 'use client';
 
 // Componente de diálogo para criar novo expediente manual
+// Refatorado com melhorias de UI/UX seguindo padrões shadcn/ui
 
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import {
   Dialog,
   DialogContent,
@@ -24,8 +27,20 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { Loader2, AlertCircle, FileText } from 'lucide-react';
+import {
+  Loader2,
+  AlertCircle,
+  FileText,
+  Calendar,
+  Clock,
+  User,
+  Scale,
+  Building2,
+  FileType,
+  CheckCircle2
+} from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { cn } from '@/app/_lib/utils/utils';
 
 interface DadosIniciais {
   processo_id: number;
@@ -58,9 +73,10 @@ interface TipoExpediente {
   tipo_expediente: string;
 }
 
+// Corrigido: Usando camelCase para corresponder ao retorno da API
 interface Usuario {
   id: number;
-  nome_exibicao: string;
+  nomeExibicao: string;
 }
 
 // Opções de TRT (TRT1 a TRT24)
@@ -311,6 +327,13 @@ export function NovoExpedienteDialog({
     searchText: `${p.numero_processo} ${p.polo_ativo_nome} ${p.polo_passivo_nome}`,
   }));
 
+  // Opções para Combobox de responsáveis
+  const usuariosOptions: ComboboxOption[] = usuarios.map((u) => ({
+    value: u.id.toString(),
+    label: u.nomeExibicao,
+    searchText: u.nomeExibicao,
+  }));
+
   // Layout quando há dados iniciais (processo já definido)
   if (modoProcessoDefinido && dadosIniciais) {
     return (
@@ -383,65 +406,82 @@ export function NovoExpedienteDialog({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="responsavel">Responsável</Label>
-                  <Select
-                    value={responsavelId}
-                    onValueChange={setResponsavelId}
-                    disabled={isLoading || loadingUsuarios}
-                  >
-                    <SelectTrigger id="responsavel">
-                      <SelectValue placeholder="Selecione (opcional)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {usuarios.map((usuario) => (
-                        <SelectItem key={usuario.id} value={usuario.id.toString()}>
-                          {usuario.nome_exibicao}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="responsavel" className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-muted-foreground" />
+                    Responsável
+                  </Label>
+                  {loadingUsuarios ? (
+                    <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Carregando usuários...</span>
+                    </div>
+                  ) : (
+                    <Combobox
+                      options={usuariosOptions}
+                      value={responsavelId ? [responsavelId] : []}
+                      onValueChange={(values) => setResponsavelId(values[0] || '')}
+                      placeholder="Selecione o responsável (opcional)"
+                      searchPlaceholder="Buscar por nome..."
+                      emptyText="Nenhum usuário encontrado"
+                      disabled={isLoading}
+                    />
+                  )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="dataPrazo">Data do Prazo</Label>
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    Prazo
+                  </Label>
+                  <div className="grid grid-cols-2 gap-3">
                     <Input
                       id="dataPrazo"
                       type="date"
                       value={dataPrazo}
                       onChange={(e) => setDataPrazo(e.target.value)}
                       disabled={isLoading}
+                      className="h-10"
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="horaPrazo">Hora</Label>
-                    <Input
-                      id="horaPrazo"
-                      type="time"
-                      value={horaPrazo}
-                      onChange={(e) => setHoraPrazo(e.target.value)}
-                      disabled={isLoading || !dataPrazo}
-                    />
+                    <div className="relative">
+                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                      <Input
+                        id="horaPrazo"
+                        type="time"
+                        value={horaPrazo}
+                        onChange={(e) => setHoraPrazo(e.target.value)}
+                        disabled={isLoading || !dataPrazo}
+                        className="h-10 pl-10"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Coluna direita */}
               <div className="space-y-2">
-                <Label htmlFor="descricao">Descrição *</Label>
+                <Label htmlFor="descricao" className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                  Descrição
+                  <span className="text-destructive">*</span>
+                </Label>
                 <Textarea
                   id="descricao"
                   value={descricao}
                   onChange={(e) => setDescricao(e.target.value)}
-                  placeholder="Descreva o expediente..."
+                  placeholder="Descreva o expediente em detalhes..."
                   disabled={isLoading}
                   className="h-[180px] resize-none"
                   required
                 />
+                <p className="text-xs text-muted-foreground">
+                  Informe detalhes sobre o expediente a ser realizado.
+                </p>
               </div>
             </div>
 
-            <DialogFooter className="mt-6">
+            <Separator className="my-6" />
+
+            <DialogFooter>
               <Button
                 type="button"
                 variant="outline"
@@ -453,8 +493,13 @@ export function NovoExpedienteDialog({
               <Button
                 type="submit"
                 disabled={isLoading || !descricao.trim()}
+                className="gap-2"
               >
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="h-4 w-4" />
+                )}
                 Criar Expediente
               </Button>
             </DialogFooter>
@@ -469,7 +514,10 @@ export function NovoExpedienteDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Novo Expediente Manual</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            Novo Expediente Manual
+          </DialogTitle>
           <DialogDescription>
             Criar um expediente manual vinculado a um processo existente
           </DialogDescription>
@@ -485,172 +533,251 @@ export function NovoExpedienteDialog({
           )}
 
           {/* Etapa 1: Selecionar TRT e Grau */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium">1. Selecione o Tribunal e Grau</h3>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="trt">TRT *</Label>
-                <Select value={trt} onValueChange={setTrt} disabled={isLoading}>
-                  <SelectTrigger id="trt">
-                    <SelectValue placeholder="Selecione o TRT" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {TRTS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="grau">Grau *</Label>
-                <Select value={grau} onValueChange={setGrau} disabled={isLoading}>
-                  <SelectTrigger id="grau">
-                    <SelectValue placeholder="Selecione o grau" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {GRAUS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          {/* Etapa 2: Selecionar Processo */}
-          {trt && grau && (
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium">2. Selecione o Processo</h3>
-
-              <div className="space-y-2">
-                <Label htmlFor="processo">Processo *</Label>
-                {loadingProcessos ? (
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground p-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Carregando processos...
-                  </div>
-                ) : processos.length === 0 ? (
-                  <div className="text-sm text-muted-foreground p-2">
-                    Nenhum processo encontrado para {trt} - {grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
-                  </div>
-                ) : (
-                  <>
-                    <Combobox
-                      options={processosOptions}
-                      value={processoId}
-                      onValueChange={setProcessoId}
-                      placeholder="Buscar por número, parte autora ou ré..."
-                      disabled={isLoading}
-                    />
-                    {processoSelecionado && (
-                      <div className="text-sm text-muted-foreground mt-2 p-3 bg-muted rounded-md">
-                        <div className="font-medium">Processo selecionado:</div>
-                        <div className="mt-1">
-                          <strong>Número:</strong> {processoSelecionado.numero_processo}
-                        </div>
-                        <div>
-                          <strong>Parte Autora:</strong> {processoSelecionado.polo_ativo_nome || '-'}
-                        </div>
-                        <div>
-                          <strong>Parte Ré:</strong> {processoSelecionado.polo_passivo_nome || '-'}
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Etapa 3: Dados do Expediente */}
-          {processoSelecionado && (
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium">3. Dados do Expediente</h3>
-
-              <div className="space-y-2">
-                <Label htmlFor="tipo">Tipo de Expediente</Label>
-                <Select
-                  value={tipoExpedienteId}
-                  onValueChange={setTipoExpedienteId}
-                  disabled={isLoading || loadingTipos}
-                >
-                  <SelectTrigger id="tipo">
-                    <SelectValue placeholder="Selecione o tipo (opcional)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {tiposExpediente.map((tipo) => (
-                      <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                        {tipo.tipo_expediente}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="descricao">Descrição *</Label>
-                <Textarea
-                  id="descricao"
-                  value={descricao}
-                  onChange={(e) => setDescricao(e.target.value)}
-                  placeholder="Descreva o expediente..."
-                  disabled={isLoading}
-                  rows={4}
-                  required
-                />
+          <Card className={cn(trt && grau ? 'border-primary/20' : '')}>
+            <CardContent className="pt-6 space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <div className={cn(
+                  'flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium',
+                  trt && grau
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-muted-foreground'
+                )}>
+                  {trt && grau ? <CheckCircle2 className="h-4 w-4" /> : '1'}
+                </div>
+                <h3 className="text-sm font-medium">Selecione o Tribunal e Grau</h3>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="dataPrazo">Data do Prazo</Label>
-                  <Input
-                    id="dataPrazo"
-                    type="date"
-                    value={dataPrazo}
-                    onChange={(e) => setDataPrazo(e.target.value)}
+                  <Label htmlFor="trt" className="flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-muted-foreground" />
+                    TRT
+                    <span className="text-destructive">*</span>
+                  </Label>
+                  <Select value={trt} onValueChange={setTrt} disabled={isLoading}>
+                    <SelectTrigger id="trt" className="h-10">
+                      <SelectValue placeholder="Selecione o TRT" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TRTS.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="grau" className="flex items-center gap-2">
+                    <Scale className="h-4 w-4 text-muted-foreground" />
+                    Grau
+                    <span className="text-destructive">*</span>
+                  </Label>
+                  <Select value={grau} onValueChange={setGrau} disabled={isLoading}>
+                    <SelectTrigger id="grau" className="h-10">
+                      <SelectValue placeholder="Selecione o grau" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {GRAUS.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Etapa 2: Selecionar Processo */}
+          {trt && grau && (
+            <Card className={cn(processoSelecionado ? 'border-primary/20' : '')}>
+              <CardContent className="pt-6 space-y-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className={cn(
+                    'flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium',
+                    processoSelecionado
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-muted-foreground'
+                  )}>
+                    {processoSelecionado ? <CheckCircle2 className="h-4 w-4" /> : '2'}
+                  </div>
+                  <h3 className="text-sm font-medium">Selecione o Processo</h3>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="processo" className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    Processo
+                    <span className="text-destructive">*</span>
+                  </Label>
+                  {loadingProcessos ? (
+                    <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Carregando processos...</span>
+                    </div>
+                  ) : processos.length === 0 ? (
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        Nenhum processo encontrado para {trt} - {grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
+                      </AlertDescription>
+                    </Alert>
+                  ) : (
+                    <>
+                      <Combobox
+                        options={processosOptions}
+                        value={processoId}
+                        onValueChange={setProcessoId}
+                        placeholder="Buscar por número, parte autora ou ré..."
+                        searchPlaceholder="Digite para buscar..."
+                        emptyText="Nenhum processo encontrado"
+                        disabled={isLoading}
+                      />
+                      {processoSelecionado && (
+                        <div className="mt-3 p-4 bg-muted/50 rounded-lg border">
+                          <div className="flex items-center gap-2 text-sm font-medium mb-2">
+                            <CheckCircle2 className="h-4 w-4 text-primary" />
+                            Processo selecionado
+                          </div>
+                          <div className="text-lg font-semibold mb-2">
+                            {processoSelecionado.numero_processo}
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 text-sm">
+                            <div>
+                              <span className="text-muted-foreground">Parte Autora:</span>
+                              <div className="font-medium truncate">{processoSelecionado.polo_ativo_nome || '-'}</div>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">Parte Ré:</span>
+                              <div className="font-medium truncate">{processoSelecionado.polo_passivo_nome || '-'}</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Etapa 3: Dados do Expediente */}
+          {processoSelecionado && (
+            <Card className="border-primary/20">
+              <CardContent className="pt-6 space-y-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                    3
+                  </div>
+                  <h3 className="text-sm font-medium">Dados do Expediente</h3>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="tipo" className="flex items-center gap-2">
+                    <FileType className="h-4 w-4 text-muted-foreground" />
+                    Tipo de Expediente
+                  </Label>
+                  {loadingTipos ? (
+                    <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Carregando tipos...</span>
+                    </div>
+                  ) : (
+                    <Select
+                      value={tipoExpedienteId}
+                      onValueChange={setTipoExpedienteId}
+                      disabled={isLoading}
+                    >
+                      <SelectTrigger id="tipo" className="h-10">
+                        <SelectValue placeholder="Selecione o tipo (opcional)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {tiposExpediente.map((tipo) => (
+                          <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                            {tipo.tipo_expediente}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="descricao" className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    Descrição
+                    <span className="text-destructive">*</span>
+                  </Label>
+                  <Textarea
+                    id="descricao"
+                    value={descricao}
+                    onChange={(e) => setDescricao(e.target.value)}
+                    placeholder="Descreva o expediente em detalhes..."
                     disabled={isLoading}
+                    rows={4}
+                    required
+                    className="resize-none"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="horaPrazo">Hora do Prazo</Label>
-                  <Input
-                    id="horaPrazo"
-                    type="time"
-                    value={horaPrazo}
-                    onChange={(e) => setHoraPrazo(e.target.value)}
-                    disabled={isLoading || !dataPrazo}
-                  />
+                  <Label className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    Prazo
+                  </Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      id="dataPrazo"
+                      type="date"
+                      value={dataPrazo}
+                      onChange={(e) => setDataPrazo(e.target.value)}
+                      disabled={isLoading}
+                      className="h-10"
+                    />
+                    <div className="relative">
+                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                      <Input
+                        id="horaPrazo"
+                        type="time"
+                        value={horaPrazo}
+                        onChange={(e) => setHoraPrazo(e.target.value)}
+                        disabled={isLoading || !dataPrazo}
+                        className="h-10 pl-10"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="responsavel">Responsável</Label>
-                <Select
-                  value={responsavelId}
-                  onValueChange={setResponsavelId}
-                  disabled={isLoading || loadingUsuarios}
-                >
-                  <SelectTrigger id="responsavel">
-                    <SelectValue placeholder="Selecione o responsável (opcional)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {usuarios.map((usuario) => (
-                      <SelectItem key={usuario.id} value={usuario.id.toString()}>
-                        {usuario.nome_exibicao}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="responsavel" className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-muted-foreground" />
+                    Responsável
+                  </Label>
+                  {loadingUsuarios ? (
+                    <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Carregando usuários...</span>
+                    </div>
+                  ) : (
+                    <Combobox
+                      options={usuariosOptions}
+                      value={responsavelId ? [responsavelId] : []}
+                      onValueChange={(values) => setResponsavelId(values[0] || '')}
+                      placeholder="Selecione o responsável (opcional)"
+                      searchPlaceholder="Buscar por nome..."
+                      emptyText="Nenhum usuário encontrado"
+                      disabled={isLoading}
+                    />
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           )}
+
+          <Separator className="my-2" />
 
           <DialogFooter>
             <Button
@@ -664,8 +791,13 @@ export function NovoExpedienteDialog({
             <Button
               type="submit"
               disabled={isLoading || !processoSelecionado || !descricao.trim()}
+              className="gap-2"
             >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <CheckCircle2 className="h-4 w-4" />
+              )}
               Criar Expediente
             </Button>
           </DialogFooter>

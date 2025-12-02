@@ -19,6 +19,8 @@ import {
   Download,
   Loader2,
   History,
+  Wifi,
+  WifiOff,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +32,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { PlateEditor } from '@/components/plate/plate-editor';
 import { CollaboratorsAvatars } from '@/components/documentos/collaborators-avatars';
@@ -67,7 +75,14 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
   const editorContentRef = React.useRef<HTMLDivElement>(null);
 
   // Colaboração em tempo real
-  const { collaborators, updateCursor, updateSelection } = useRealtimeCollaboration({
+  const {
+    collaborators,
+    remoteCursors,
+    isConnected,
+    updateCursor,
+    updateSelection,
+    broadcastUpdate,
+  } = useRealtimeCollaboration({
     documentoId,
     userId: currentUser?.id || 0,
     userName: currentUser?.nomeCompleto || 'Usuário',
@@ -308,6 +323,34 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
 
           {/* Right */}
           <div className="flex items-center gap-2">
+            {/* Indicador de conexão em tempo real */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div
+                    className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs ${
+                      isConnected
+                        ? 'bg-green-500/10 text-green-600'
+                        : 'bg-muted text-muted-foreground'
+                    }`}
+                  >
+                    {isConnected ? (
+                      <Wifi className="h-3 w-3" />
+                    ) : (
+                      <WifiOff className="h-3 w-3" />
+                    )}
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-xs">
+                    {isConnected
+                      ? 'Colaboração em tempo real ativa'
+                      : 'Conectando...'}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
             {/* Avatares dos colaboradores */}
             <CollaboratorsAvatars collaborators={collaborators} />
 
