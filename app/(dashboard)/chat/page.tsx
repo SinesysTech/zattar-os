@@ -30,6 +30,7 @@ interface SalaChat {
   tipo: 'geral' | 'documento' | 'privado' | 'grupo';
   documento_id: number | null;
   participante_id: number | null;
+  criado_por: number;
   created_at: string;
   updated_at: string;
 }
@@ -144,9 +145,28 @@ export default function ChatPage() {
     }
   };
 
-  const handleSalaCreated = (novaSala: SalaChat) => {
-    setSalas((prev) => [novaSala, ...prev]);
-    setSalaAtiva(novaSala);
+  const handleSalaCreated = async (novaSala: SalaChat) => {
+    try {
+      const salasRes = await fetch('/api/chat/salas?limit=50');
+      const salasData = await salasRes.json();
+      if (salasData.success) {
+        const todasSalas = salasData.data as SalaChat[];
+        const ordenadas = todasSalas.sort((a, b) => {
+          if (a.tipo === 'geral') return -1;
+          if (b.tipo === 'geral') return 1;
+          return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+        });
+        setSalas(ordenadas);
+        const criada = ordenadas.find((s) => s.id === novaSala.id) ?? ordenadas[0] ?? null;
+        if (criada) setSalaAtiva(criada);
+      } else {
+        setSalas((prev) => [novaSala, ...prev]);
+        setSalaAtiva(novaSala);
+      }
+    } catch {
+      setSalas((prev) => [novaSala, ...prev]);
+      setSalaAtiva(novaSala);
+    }
   };
 
   if (loading) {
@@ -192,7 +212,7 @@ export default function ChatPage() {
               <Input
                 placeholder="Buscar salas..."
                 value={busca}
-                onChange={(e) => setBusca(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBusca(e.target.value)}
                 className="pl-9"
               />
             </div>
@@ -227,7 +247,7 @@ export default function ChatPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-sm truncate">
-                            {sala.tipo === 'geral' ? 'ABED Geral' : sala.nome}
+                            {sala.tipo === 'geral' ? 'Sala Geral' : sala.nome}
                           </span>
                         </div>
                         <div className="flex items-center gap-2 mt-1">
@@ -250,7 +270,7 @@ export default function ChatPage() {
               currentUserId={currentUser.id}
               currentUserName={currentUser.nomeCompleto || currentUser.nomeExibicao || 'Usuário'}
               showHeader={true}
-              headerTitle={salaAtiva.tipo === 'geral' ? 'ABED Geral' : salaAtiva.nome}
+              headerTitle={salaAtiva.tipo === 'geral' ? 'Sala Geral' : salaAtiva.nome}
               headerSubtitle={
                 salaAtiva.tipo === 'geral'
                   ? 'Canal público do escritório'
@@ -260,6 +280,69 @@ export default function ChatPage() {
                   ? 'Grupo de conversa'
                   : undefined // Privado: sem subtitle, o nome já mostra com quem é a conversa
               }
+              headerActions={(
+                <div className="flex items-center gap-2">
+                  {/* Excluir conversa */}
+                  {((salaAtiva.tipo === 'grupo' && (currentUser.isSuperAdmin || salaAtiva.criado_por === currentUser.id)) ||
+                    (salaAtiva.tipo === 'privado' && salaAtiva.criado_por === currentUser.id)) && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={async () => {
+                        const confirmDelete = window.confirm('Tem certeza que deseja excluir esta conversa?')
+                        if (!confirmDelete) return
+                        try {
+                          const res = await fetch(`/api/chat/salas/${salaAtiva.id}`, { method: 'DELETE' })
+                          const json = await res.json()
+                          if (json.success) {
+                            setSalas((prev) => prev.filter((s) => s.id !== salaAtiva.id))
+                            // Após excluir, selecionar Sala Geral se existir ou a primeira
+                            const geral = salas.find((s) => s.tipo === 'geral') || null
+                            const restante = salas.filter((s) => s.id !== salaAtiva.id)
+                            setSalaAtiva(geral ?? restante[0] ?? null)
+                          } else {
+                            alert(json.error || 'Falha ao excluir a conversa')
+                          }
+                        } catch (e) {
+                          alert('Erro ao excluir a conversa')
+                        }
+                      }}
+                    >
+                      Excluir
+                    </Button>
+                  )}
+
+                  {/* Editar nome do grupo */}
+                  {(salaAtiva.tipo === 'grupo' && (currentUser.isSuperAdmin || salaAtiva.criado_por === currentUser.id)) && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={async () => {
+                        const novoNome = window.prompt('Novo nome do grupo', salaAtiva.nome)
+                        if (!novoNome) return
+                        try {
+                          const res = await fetch(`/api/chat/salas/${salaAtiva.id}`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ nome: novoNome.trim() })
+                          })
+                          const json = await res.json()
+                          if (json.success) {
+                            setSalas((prev) => prev.map((s) => s.id === salaAtiva.id ? { ...s, nome: novoNome.trim() } as SalaChat : s))
+                            setSalaAtiva((prev) => (prev ? { ...prev, nome: novoNome.trim() } : prev))
+                          } else {
+                            alert(json.error || 'Falha ao renomear grupo')
+                          }
+                        } catch (e) {
+                          alert('Erro ao renomear grupo')
+                        }
+                      }}
+                    >
+                      Editar nome
+                    </Button>
+                  )}
+                </div>
+              )}
             />
           ) : (
             <div className="flex-1 flex items-center justify-center">

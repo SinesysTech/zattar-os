@@ -8,6 +8,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import { buscarSalaChatPorId } from '@/backend/documentos/services/persistence/chat-persistence.service';
+import { buscarCompartilhamento } from '@/backend/documentos/services/persistence/compartilhamento-persistence.service';
+import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import {
   listarMensagensChat,
   criarMensagemChat,
@@ -49,6 +51,32 @@ export async function GET(
         { success: false, error: 'Sala não encontrada' },
         { status: 404 }
       );
+    }
+
+    const usuarioId = authResult.usuario.id;
+    if (sala.tipo === 'privado' && sala.criado_por !== usuarioId && sala.participante_id !== usuarioId) {
+      return NextResponse.json(
+        { success: false, error: 'Acesso negado à conversa privada' },
+        { status: 403 }
+      );
+    }
+
+    if (sala.tipo === 'documento' && sala.documento_id) {
+      const supabase = createServiceClient();
+      const { data: doc } = await supabase
+        .from('documentos')
+        .select('criado_por')
+        .eq('id', sala.documento_id)
+        .single();
+
+      const compartilhamento = await buscarCompartilhamento(sala.documento_id, usuarioId);
+      const temAcessoDocumento = (doc?.criado_por === usuarioId) || Boolean(compartilhamento);
+      if (!temAcessoDocumento) {
+        return NextResponse.json(
+          { success: false, error: 'Acesso negado ao chat do documento' },
+          { status: 403 }
+        );
+      }
     }
 
     const { searchParams } = new URL(request.url);
@@ -149,6 +177,32 @@ export async function POST(
         { success: false, error: 'Sala não encontrada' },
         { status: 404 }
       );
+    }
+
+    const usuarioId = authResult.usuario.id;
+    if (sala.tipo === 'privado' && sala.criado_por !== usuarioId && sala.participante_id !== usuarioId) {
+      return NextResponse.json(
+        { success: false, error: 'Acesso negado à conversa privada' },
+        { status: 403 }
+      );
+    }
+
+    if (sala.tipo === 'documento' && sala.documento_id) {
+      const supabase = createServiceClient();
+      const { data: doc } = await supabase
+        .from('documentos')
+        .select('criado_por')
+        .eq('id', sala.documento_id)
+        .single();
+
+      const compartilhamento = await buscarCompartilhamento(sala.documento_id, usuarioId);
+      const temAcessoDocumento = (doc?.criado_por === usuarioId) || Boolean(compartilhamento);
+      if (!temAcessoDocumento) {
+        return NextResponse.json(
+          { success: false, error: 'Acesso negado ao chat do documento' },
+          { status: 403 }
+        );
+      }
     }
 
     const body = await request.json();

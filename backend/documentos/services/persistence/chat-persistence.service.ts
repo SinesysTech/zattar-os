@@ -72,6 +72,40 @@ export async function buscarSalaChatPorId(id: number): Promise<SalaChat | null> 
 }
 
 /**
+ * Atualiza o nome de uma sala de chat
+ */
+export async function atualizarSalaChatNome(id: number, nome: string): Promise<SalaChat> {
+  const supabase = createServiceClient();
+
+  const { data: sala } = await supabase
+    .from('salas_chat')
+    .select('tipo')
+    .eq('id', id)
+    .single();
+
+  if (!sala) {
+    throw new Error('Sala não encontrada');
+  }
+
+  if (sala.tipo !== 'grupo') {
+    throw new Error('Apenas grupos podem ter o nome editado');
+  }
+
+  const { data, error } = await supabase
+    .from('salas_chat')
+    .update({ nome })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Erro ao atualizar nome da sala: ${error.message}`);
+  }
+
+  return data as SalaChat;
+}
+
+/**
  * Busca sala de chat de um documento (cria se não existir)
  */
 export async function buscarOuCriarSalaPorDocumento(
@@ -151,6 +185,13 @@ export async function listarSalasChat(
 
   // Ordenação
   query = query.order('created_at', { ascending: false });
+
+  // Restringir conversas privadas ao usuário atual
+  if (usuario_id) {
+    query = query.or(
+      `tipo.eq.geral,tipo.eq.documento,criado_por.eq.${usuario_id},participante_id.eq.${usuario_id}`
+    );
+  }
 
   // Paginação
   const limit = params.limit ?? 50;

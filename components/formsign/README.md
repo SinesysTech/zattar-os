@@ -550,6 +550,150 @@ Toolbar components for FieldMappingEditor (desktop vertical and mobile horizonta
 
 ---
 
+## Schema Builder Components (`schema-builder/`)
+
+Base components for building dynamic form schemas with drag-and-drop interface.
+
+### FieldPalette
+
+Draggable palette of form field types organized by categories.
+
+**Location:** `components/formsign/schema-builder/FieldPalette.tsx`
+
+**Features:**
+- 11 field types across 5 categories:
+  - **Texto:** text, email, textarea
+  - **Números:** number
+  - **Datas:** date
+  - **Seleção:** select, radio, checkbox
+  - **Formatados BR:** CPF, CNPJ, phone, CEP (with BR badges)
+- Search filtering across all fields
+- Collapsible categories with expand/collapse state
+- Tooltips with field descriptions
+- Drag-and-drop using @dnd-kit/core
+- Empty state when no fields match search
+
+**Usage:**
+```typescript
+import { FieldPalette } from '@/components/formsign/schema-builder';
+
+function FormBuilder() {
+  return (
+    <div className="grid grid-cols-[300px_1fr] gap-4">
+      <FieldPalette />
+      {/* SchemaCanvas goes here */}
+    </div>
+  );
+}
+```
+
+**Props:** None - component is self-contained.
+
+**Drag Data Format:**
+```typescript
+{
+  id: `palette-${fieldType}`,
+  data: { type: FormFieldType, label: string }
+}
+```
+
+---
+
+### SchemaCanvas
+
+Droppable canvas where fields are organized into sections with drag-and-drop reordering.
+
+**Location:** `components/formsign/schema-builder/SchemaCanvas.tsx`
+
+**Features:**
+- Droppable sections using @dnd-kit/core
+- Sortable fields within sections using @dnd-kit/sortable
+- Field selection states with visual feedback
+- Drag-over states for sections
+- Edit/duplicate/delete actions with tooltips
+- Empty states for no sections and no fields
+- Badge indicators (Obrigatório, Condicional, N opções)
+- Grip handle for drag-and-drop
+- Section management (add, edit, delete)
+
+**Usage:**
+```typescript
+import { SchemaCanvas } from '@/components/formsign/schema-builder';
+import type { DynamicFormSchema } from '@/types/formsign';
+
+function FormBuilder() {
+  const [schema, setSchema] = useState<DynamicFormSchema>({
+    sections: []
+  });
+  const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
+  const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
+
+  return (
+    <SchemaCanvas
+      schema={schema}
+      selectedFieldId={selectedFieldId}
+      selectedSectionId={selectedSectionId}
+      onFieldSelect={setSelectedFieldId}
+      onSectionSelect={setSelectedSectionId}
+      onFieldDelete={(id) => {/* delete field */}}
+      onFieldDuplicate={(id) => {/* duplicate field */}}
+      onSectionAdd={() => {/* add section */}}
+      onSectionEdit={(id) => {/* edit section */}}
+      onSectionDelete={(id) => {/* delete section */}}
+    />
+  );
+}
+```
+
+**Props:**
+- `schema: DynamicFormSchema` - Current form schema
+- `selectedFieldId: string | null` - ID of selected field
+- `selectedSectionId: string | null` - ID of selected section
+- `onFieldSelect: (fieldId: string) => void` - Field selection handler
+- `onSectionSelect: (sectionId: string) => void` - Section selection handler
+- `onFieldDelete: (fieldId: string) => void` - Field deletion handler
+- `onFieldDuplicate: (fieldId: string) => void` - Field duplication handler
+- `onSectionAdd: () => void` - Section addition handler
+- `onSectionEdit: (sectionId: string) => void` - Section edit handler
+- `onSectionDelete: (sectionId: string) => void` - Section deletion handler
+
+**Drag Data Format:**
+```typescript
+// For fields
+{
+  id: fieldId,
+  data: { type: 'field', sectionId: string, fieldId: string }
+}
+
+// For sections
+{
+  id: sectionId,
+  data: { type: 'section', sectionId: string }
+}
+```
+
+**Helper Function:**
+```typescript
+import { getFieldIcon } from '@/components/formsign/schema-builder';
+
+const Icon = getFieldIcon(FormFieldType.CPF); // Returns CreditCard icon
+```
+
+---
+
+### Integration with FormSchemaBuilder
+
+These components are the base building blocks for the full FormSchemaBuilder (FORMSIGN-011), which adds:
+- DndContext wrapper for drag-and-drop coordination
+- FieldPropertiesPanel for editing field properties
+- Section management dialogs
+- Schema validation and persistence
+- Preview integration with DynamicFormRenderer
+
+**Next Phase:** FORMSIGN-011 will integrate these components with FieldPropertiesPanel and the main FormSchemaBuilder wrapper.
+
+---
+
 ## Dependencies
 
 **Novas dependências adicionadas:**

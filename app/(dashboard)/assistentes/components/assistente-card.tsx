@@ -5,10 +5,9 @@
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
 import { Eye, Pencil, Trash } from 'lucide-react';
 import type { Assistente } from '@/app/_lib/types/assistentes';
-import { formatarDataCriacao, truncarDescricao } from '@/app/_lib/utils/format-assistentes';
+import { truncarDescricao } from '@/app/_lib/utils/format-assistentes';
 
 interface AssistenteCardProps {
   assistente: Assistente;
@@ -20,66 +19,68 @@ interface AssistenteCardProps {
 }
 
 export function AssistenteCard({ assistente, onView, onEdit, onDelete, canEdit = false, canDelete = false }: AssistenteCardProps) {
+  const temDescricao = assistente.descricao && assistente.descricao.trim().length > 0;
+
   return (
-    <Card className="relative flex flex-col h-full hover:shadow-md transition-shadow">
-      <CardHeader className="p-2.5 pb-1.5">
-        <CardTitle className="text-sm leading-tight truncate">
+    <Card className="group relative flex flex-col h-full hover:shadow-md transition-shadow">
+      {/* Botões editar e deletar no canto superior direito - visíveis no hover */}
+      {(canEdit || canDelete) && (
+        <div className="absolute top-2 right-2 flex gap-0 opacity-0 group-hover:opacity-100 transition-opacity">
+          {canEdit && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-4 w-4"
+              onClick={() => onEdit(assistente)}
+              title="Editar assistente"
+            >
+              <Pencil className="h-2.5 w-2.5 text-blue-600" />
+              <span className="sr-only">Editar assistente</span>
+            </Button>
+          )}
+          {canDelete && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-4 w-4"
+              onClick={() => onDelete(assistente)}
+              title="Deletar assistente"
+            >
+              <Trash className="h-2.5 w-2.5 text-red-500" />
+              <span className="sr-only">Deletar assistente</span>
+            </Button>
+          )}
+        </div>
+      )}
+
+      <CardHeader className="px-4 pt-4 pb-2">
+        <CardTitle className="text-sm font-semibold leading-tight line-clamp-2 pr-12">
           {assistente.nome}
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="flex-1 space-y-0.5 text-xs p-2.5 pt-0 pb-12">
-        <div className="flex flex-col gap-1.5">
-          <Typography.Muted as="span">Descrição:</Typography.Muted>
-          <span className="font-medium line-clamp-3" title={assistente.descricao || '-'}>
-            {truncarDescricao(assistente.descricao, 100)}
-          </span>
-        </div>
+      {temDescricao && (
+        <CardContent className="flex-1 px-4 pt-0 pb-12">
+          <p className="text-xs text-muted-foreground line-clamp-3" title={assistente.descricao || ''}>
+            {truncarDescricao(assistente.descricao, 120)}
+          </p>
+        </CardContent>
+      )}
 
-        <div className="flex items-center gap-1.5">
-          <Typography.Muted as="span">Criado em:</Typography.Muted>
-          <span className="font-medium">
-            {formatarDataCriacao(assistente.created_at)}
-          </span>
-        </div>
-      </CardContent>
+      {!temDescricao && <div className="flex-1 pb-12" />}
 
-      {/* Botões de ação no canto inferior direito */}
-      <div className="absolute bottom-2 right-2 flex gap-0.5">
+      {/* Botão visualizar no canto inferior direito - visível no hover */}
+      <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8"
+          className="h-7 w-7"
           onClick={() => onView(assistente)}
           title="Visualizar assistente"
         >
-          <Eye className="h-4 w-4" />
+          <Eye className="h-4 w-4 text-emerald-600" />
           <span className="sr-only">Visualizar assistente</span>
         </Button>
-        {canEdit && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => onEdit(assistente)}
-            title="Editar assistente"
-          >
-            <Pencil className="h-4 w-4" />
-            <span className="sr-only">Editar assistente</span>
-          </Button>
-        )}
-        {canDelete && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => onDelete(assistente)}
-            title="Deletar assistente"
-          >
-            <Trash className="h-4 w-4" />
-            <span className="sr-only">Deletar assistente</span>
-          </Button>
-        )}
       </div>
     </Card>
   );
