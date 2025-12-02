@@ -10,7 +10,7 @@ import {
   MessageSquare,
   Users,
   FileText,
-  Hash,
+  Globe,
   Search,
   Plus,
 } from 'lucide-react';
@@ -116,7 +116,7 @@ export default function ChatPage() {
   const getTipoIcon = (tipo: string) => {
     switch (tipo) {
       case 'geral':
-        return <Hash className="h-4 w-4" />;
+        return <Globe className="h-4 w-4" />;
       case 'documento':
         return <FileText className="h-4 w-4" />;
       case 'privado':
@@ -131,7 +131,7 @@ export default function ChatPage() {
   const getTipoBadge = (tipo: string) => {
     switch (tipo) {
       case 'geral':
-        return <Badge variant="secondary" className="text-xs">Geral</Badge>;
+        return null;
       case 'documento':
         return <Badge variant="outline" className="text-xs">Documento</Badge>;
       case 'grupo':
@@ -174,18 +174,6 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Header */}
-      <div className="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-        <div className="flex h-16 items-center justify-between px-6">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Chat Interno</h1>
-            <p className="text-sm text-muted-foreground">
-              Converse com sua equipe em tempo real
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar - Lista de Salas */}
@@ -239,7 +227,7 @@ export default function ChatPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-sm truncate">
-                            {sala.nome}
+                            {sala.tipo === 'geral' ? 'ABED Geral' : sala.nome}
                           </span>
                         </div>
                         <div className="flex items-center gap-2 mt-1">
@@ -262,7 +250,7 @@ export default function ChatPage() {
               currentUserId={currentUser.id}
               currentUserName={currentUser.nomeCompleto || currentUser.nomeExibicao || 'Usuário'}
               showHeader={true}
-              headerTitle={salaAtiva.nome}
+              headerTitle={salaAtiva.tipo === 'geral' ? 'ABED Geral' : salaAtiva.nome}
               headerSubtitle={
                 salaAtiva.tipo === 'geral'
                   ? 'Canal público do escritório'

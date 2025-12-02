@@ -9,7 +9,6 @@ import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildAssistentesFilterOptions, buildAssistentesFilterGroups, parseAssistentesFilters } from './components/assistentes-toolbar-filters';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Eye, Pencil, Trash2, MoreHorizontal } from 'lucide-react';
 import {
@@ -80,26 +79,6 @@ function criarColunas(
           {truncarDescricao(row.getValue('descricao'), 100)}
         </div>
       ),
-    },
-    {
-      accessorKey: 'ativo',
-      header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Status" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 100,
-      cell: ({ row }) => {
-        const ativo = row.getValue('ativo') as boolean;
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            <Badge tone={ativo ? 'success' : 'neutral'} variant={ativo ? 'soft' : 'outline'}>
-              {ativo ? 'Ativo' : 'Inativo'}
-            </Badge>
-          </div>
-        );
-      },
     },
     {
       accessorKey: 'created_at',
@@ -336,7 +315,8 @@ export default function AssistentesPage() {
           onDelete={handleDelete}
           onPageChange={setPagina}
           onPageSizeChange={setLimite}
-          isSuperAdmin={isSuperAdmin ?? false}
+          canEdit={canEdit}
+          canDelete={canDelete}
         />
       ) : (
         <DataTable

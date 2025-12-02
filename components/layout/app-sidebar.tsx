@@ -123,7 +123,7 @@ const navServicos = [
     icon: FileEdit,
   },
   {
-    name: "Chat Interno",
+    name: "Chat",
     url: "/chat",
     icon: MessageSquare,
   },

@@ -3,7 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuthentication } from '@/backend/auth/require-permission';
-import { listarPermissoesUsuario } from '@/backend/permissoes/services/permissoes/listar-permissoes.service';
+import { listarPermissoesUsuario } from '@/backend/permissoes/services/persistence/permissao-persistence.service';
+import type { Permissao } from '@/backend/types/permissoes/types';
 import { obterUsuarioPorId } from '@/backend/usuarios/services/usuarios/buscar-usuario.service';
 
 /**
@@ -59,7 +60,7 @@ export async function GET(request: NextRequest) {
 
     let permissoesFiltradas = permissoes;
     if (recurso) {
-      permissoesFiltradas = permissoes.filter((p) => p.recurso === recurso);
+      permissoesFiltradas = permissoes.filter((p: Permissao) => p.recurso === (recurso as any));
     }
 
     // 5. Se for super admin, todas as operações são permitidas
@@ -69,7 +70,7 @@ export async function GET(request: NextRequest) {
       data: {
         usuarioId,
         isSuperAdmin: usuario.isSuperAdmin,
-        permissoes: permissoesFiltradas.map((p) => ({
+        permissoes: permissoesFiltradas.map((p: Permissao) => ({
           recurso: p.recurso,
           operacao: p.operacao,
           permitido: p.permitido,

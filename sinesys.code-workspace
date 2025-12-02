@@ -18,6 +18,7 @@
     "claudeCode.respectGitIgnore": false,
     "files.associations": {
       "*.css": "tailwindcss"
-    }
+    },
+    "traycer.alwaysAllowPayToRun": true
   }
 }

@@ -4,7 +4,6 @@
 
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
 import { Eye, Pencil, Trash } from 'lucide-react';
@@ -16,30 +15,20 @@ interface AssistenteCardProps {
   onView: (assistente: Assistente) => void;
   onEdit: (assistente: Assistente) => void;
   onDelete: (assistente: Assistente) => void;
-  isSuperAdmin?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
-export function AssistenteCard({ assistente, onView, onEdit, onDelete, isSuperAdmin = false }: AssistenteCardProps) {
+export function AssistenteCard({ assistente, onView, onEdit, onDelete, canEdit = false, canDelete = false }: AssistenteCardProps) {
   return (
     <Card className="relative flex flex-col h-full hover:shadow-md transition-shadow">
       <CardHeader className="p-2.5 pb-1.5">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-sm leading-tight truncate">
-              {assistente.nome}
-            </CardTitle>
-          </div>
-          <Badge
-            tone={assistente.ativo ? 'success' : 'neutral'}
-            variant={assistente.ativo ? 'soft' : 'outline'}
-            className="text-xs h-5 px-1.5 shrink-0"
-          >
-            {assistente.ativo ? 'Ativo' : 'Inativo'}
-          </Badge>
-        </div>
+        <CardTitle className="text-sm leading-tight truncate">
+          {assistente.nome}
+        </CardTitle>
       </CardHeader>
 
-      <CardContent className="flex-1 space-y-0.5 text-xs p-2.5 pt-0 pb-7">
+      <CardContent className="flex-1 space-y-0.5 text-xs p-2.5 pt-0 pb-12">
         <div className="flex flex-col gap-1.5">
           <Typography.Muted as="span">Descrição:</Typography.Muted>
           <span className="font-medium line-clamp-3" title={assistente.descricao || '-'}>
@@ -55,17 +44,6 @@ export function AssistenteCard({ assistente, onView, onEdit, onDelete, isSuperAd
         </div>
       </CardContent>
 
-      {/* Badge de status no canto inferior esquerdo */}
-      <div className="absolute bottom-2 left-2">
-        <Badge
-          tone={assistente.ativo ? 'success' : 'neutral'}
-          variant={assistente.ativo ? 'soft' : 'outline'}
-          className="text-xs h-5 px-1.5"
-        >
-          {assistente.ativo ? 'Ativo' : 'Inativo'}
-        </Badge>
-      </div>
-
       {/* Botões de ação no canto inferior direito */}
       <div className="absolute bottom-2 right-2 flex gap-0.5">
         <Button
@@ -78,29 +56,29 @@ export function AssistenteCard({ assistente, onView, onEdit, onDelete, isSuperAd
           <Eye className="h-4 w-4" />
           <span className="sr-only">Visualizar assistente</span>
         </Button>
-        {isSuperAdmin && (
-          <>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => onEdit(assistente)}
-              title="Editar assistente"
-            >
-              <Pencil className="h-4 w-4" />
-              <span className="sr-only">Editar assistente</span>
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => onDelete(assistente)}
-              title="Deletar assistente"
-            >
-              <Trash className="h-4 w-4" />
-              <span className="sr-only">Deletar assistente</span>
-            </Button>
-          </>
+        {canEdit && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onEdit(assistente)}
+            title="Editar assistente"
+          >
+            <Pencil className="h-4 w-4" />
+            <span className="sr-only">Editar assistente</span>
+          </Button>
+        )}
+        {canDelete && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onDelete(assistente)}
+            title="Deletar assistente"
+          >
+            <Trash className="h-4 w-4" />
+            <span className="sr-only">Deletar assistente</span>
+          </Button>
         )}
       </div>
     </Card>

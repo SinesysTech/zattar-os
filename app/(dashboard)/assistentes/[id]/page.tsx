@@ -2,15 +2,13 @@
 
 import { useParams, useRouter } from 'next/navigation'
 import { useState, useEffect, useMemo } from 'react'
-import { ArrowLeft, Edit } from 'lucide-react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import type { Assistente } from '@/app/_lib/types/assistentes'
-import { formatarDataCriacao, truncarDescricao, sanitizarIframeCode } from '@/app/_lib/utils/format-assistentes'
-import { AssistenteEditDialog } from '../components/assistente-edit-dialog'
+import { sanitizarIframeCode } from '@/app/_lib/utils/format-assistentes'
+import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes'
 
 export default function AssistentePage() {
   const params = useParams()
@@ -21,31 +19,25 @@ export default function AssistentePage() {
   const [assistente, setAssistente] = useState<Assistente | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false)
-  const [editOpen, setEditOpen] = useState(false)
+
+  // Usar permissões granulares
+  const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('assistentes')
+  const canView = temPermissao('assistentes', 'visualizar')
 
   useEffect(() => {
-    // Verificar se usuário é super admin
-    const checkPermissions = async () => {
-      try {
-        const response = await fetch('/api/perfil')
-        if (response.ok) {
-          const data = await response.json()
-          setIsSuperAdmin(data.isSuperAdmin || false)
-        } else {
-          setIsSuperAdmin(false)
-        }
-      } catch (err) {
-        setIsSuperAdmin(false)
-      }
+    // Aguardar carregamento das permissões
+    if (isLoadingPermissoes) {
+      return
     }
 
-    checkPermissions()
-  }, [])
-
-  useEffect(() => {
     if (isNaN(assistenteId)) {
       setError('ID do assistente inválido')
+      setIsLoading(false)
+      return
+    }
+
+    // Se não tem permissão para visualizar, não buscar
+    if (!canView) {
       setIsLoading(false)
       return
     }
@@ -63,6 +55,8 @@ export default function AssistentePage() {
           }
         } else if (response.status === 404) {
           setError('Assistente não encontrado')
+        } else if (response.status === 403) {
+          setError('Você não tem permissão para visualizar este assistente')
         } else {
           setError('Erro ao carregar assistente')
         }
@@ -73,12 +67,8 @@ export default function AssistentePage() {
       }
     }
 
-    if (isSuperAdmin) {
-      fetchAssistente()
-    } else {
-      setIsLoading(false)
-    }
-  }, [assistenteId, isSuperAdmin])
+    fetchAssistente()
+  }, [assistenteId, canView, isLoadingPermissoes])
 
   // Sanitizar o código do iframe antes de renderizar
   const sanitizedIframeResult = useMemo(() => {
@@ -96,27 +86,25 @@ export default function AssistentePage() {
     }
   }, [assistente?.iframe_code])
 
-  // Função para recarregar dados após edição
-  const handleEditSuccess = async () => {
-    try {
-      const response = await fetch(`/api/assistentes/${assistenteId}`)
-      if (response.ok) {
-        const data = await response.json()
-        if (data.success) {
-          setAssistente(data.data)
-        }
-      }
-    } catch {
-      // Silently handle error
-    }
+  // Aguardar carregamento das permissões
+  if (isLoadingPermissoes) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-9 w-9 rounded-full" />
+          <Skeleton className="h-7 w-48" />
+        </div>
+        <Skeleton className="h-[80vh] w-full" />
+      </div>
+    )
   }
 
-  if (!isSuperAdmin) {
+  if (!canView) {
     return (
-      <div className="container mx-auto py-8">
+      <div className="py-8">
         <Alert>
           <AlertDescription>
-            Você não tem permissão para acessar esta página.
+            Você não tem permissão para visualizar este assistente.
           </AlertDescription>
         </Alert>
       </div>
@@ -125,30 +113,19 @@ export default function AssistentePage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8 space-y-6">
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-10 w-10" />
-          <Skeleton className="h-8 w-64" />
-          <Skeleton className="h-6 w-16" />
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-9 w-9 rounded-full" />
+          <Skeleton className="h-7 w-48" />
         </div>
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-6 w-48" />
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
-          </CardContent>
-        </Card>
-        <Skeleton className="h-[600px] w-full" />
+        <Skeleton className="h-[80vh] w-full" />
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="container mx-auto py-8">
+      <div className="py-8">
         <Alert>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
@@ -158,7 +135,7 @@ export default function AssistentePage() {
 
   if (!assistente) {
     return (
-      <div className="container mx-auto py-8">
+      <div className="py-8">
         <Alert>
           <AlertDescription>Assistente não encontrado</AlertDescription>
         </Alert>
@@ -167,89 +144,35 @@ export default function AssistentePage() {
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.push('/assistentes')}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar
-          </Button>
-          <h1 className="text-2xl font-bold">{assistente.nome}</h1>
-          <Badge variant={assistente.ativo ? 'default' : 'secondary'}>
-            {assistente.ativo ? 'Ativo' : 'Inativo'}
-          </Badge>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
-          <Edit className="h-4 w-4 mr-2" />
-          Editar
+      <div className="flex items-center gap-3">
+        <Button
+          variant="outline"
+          size="icon"
+          className="rounded-full"
+          onClick={() => router.push('/assistentes')}
+        >
+          <ArrowLeft className="h-4 w-4" />
         </Button>
+        <h1 className="text-xl font-semibold">{assistente.nome}</h1>
       </div>
 
-      {/* Dialog de edição */}
-      <AssistenteEditDialog
-        open={editOpen}
-        onOpenChange={setEditOpen}
-        assistente={assistente}
-        onSuccess={handleEditSuccess}
-      />
-
-      {/* Informações do Assistente */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Informações do Assistente</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <label className="text-sm font-medium">Nome</label>
-            <p className="text-sm text-muted-foreground">{assistente.nome}</p>
-          </div>
-          <div>
-            <label className="text-sm font-medium">Descrição</label>
-            <p className="text-sm text-muted-foreground">
-              {truncarDescricao(assistente.descricao, 500) || 'Sem descrição'}
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium">Data de Criação</label>
-              <p className="text-sm text-muted-foreground">
-                {formatarDataCriacao(assistente.created_at)}
-              </p>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Última Atualização</label>
-              <p className="text-sm text-muted-foreground">
-                {formatarDataCriacao(assistente.updated_at)}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Iframe */}
-      <Card>
-        <CardContent className="p-0">
-          <div className="relative w-full min-h-[600px] h-[80vh]">
-            {sanitizedIframeResult.error ? (
-              <Alert variant="destructive" className="m-4">
-                <AlertDescription>
-                  Erro ao processar iframe: {sanitizedIframeResult.error}
-                </AlertDescription>
-              </Alert>
-            ) : (
-              <div
-                dangerouslySetInnerHTML={{ __html: sanitizedIframeResult.html }}
-                className="w-full min-h-[600px] h-[80vh]"
-              />
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="relative w-full min-h-[600px] h-[80vh]">
+        {sanitizedIframeResult.error ? (
+          <Alert variant="destructive">
+            <AlertDescription>
+              Erro ao processar iframe: {sanitizedIframeResult.error}
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <div
+            dangerouslySetInnerHTML={{ __html: sanitizedIframeResult.html }}
+            className="w-full min-h-[600px] h-[80vh]"
+          />
+        )}
+      </div>
     </div>
   )
 }
