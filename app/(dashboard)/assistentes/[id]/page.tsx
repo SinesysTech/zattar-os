@@ -184,11 +184,19 @@ export default function AssistentePage() {
             {assistente.ativo ? 'Ativo' : 'Inativo'}
           </Badge>
         </div>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
           <Edit className="h-4 w-4 mr-2" />
           Editar
         </Button>
       </div>
+
+      {/* Dialog de edição */}
+      <AssistenteEditDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        assistente={assistente}
+        onSuccess={handleEditSuccess}
+      />
 
       {/* Informações do Assistente */}
       <Card>
