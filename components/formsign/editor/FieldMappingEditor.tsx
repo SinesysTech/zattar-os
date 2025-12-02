@@ -1069,7 +1069,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
       // IMPORTANTE: Enviar payload completo com TODAS as colunas da tabela templates
       // (exceto id, createdAt, updatedAt que são gerenciados pelo sistema)
       const response = await fetch(`/api/assinatura-digital/admin/templates/${template.id}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
@@ -1082,7 +1082,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
           status: template.status,
           versao: template.versao,
           ativo: template.ativo,
-          campos: templateCampos,
+          campos: JSON.stringify(templateCampos),
           conteudo_markdown: template.conteudo_markdown || null,
           criado_por: template.criado_por,
         }),
@@ -1144,7 +1144,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
 
         // IMPORTANTE: Autosave também envia payload completo com TODAS as colunas
         const response = await fetch(`/api/assinatura-digital/admin/templates/${template.id}`, {
-          method: 'PATCH',
+          method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
           body: JSON.stringify({
@@ -1157,7 +1157,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
             status: template.status,
             versao: template.versao,
             ativo: template.ativo,
-            campos: templateCampos,
+            campos: JSON.stringify(templateCampos),
             conteudo_markdown: template.conteudo_markdown || null,
             criado_por: template.criado_por,
           }),
@@ -1365,7 +1365,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
     } finally {
       setIsGeneratingPreview(false);
     }
-  }, [fields, template.id, template.conteudo_markdown, mode, createdTemplate]);
+  }, [fields, template.id, template.conteudo_markdown, mode, createdTemplate, showFilledPreview]);
 
   /**
    * Handler para sucesso no carregamento do iframe
@@ -1596,7 +1596,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
 
       // Modo edição: atualizar metadados
       const response = await fetch(`/api/assinatura-digital/admin/templates/${template.id}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify(updates),

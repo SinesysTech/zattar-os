@@ -75,7 +75,7 @@ import type { AtualizarAssistenteData } from '@/app/_lib/types/assistentes';
  *       400:
  *         description: Dados inválidos
  *       403:
- *         description: Acesso negado - apenas super admins
+ *         description: Sem permissão (requer assistentes.editar)
  *       404:
  *         description: Assistente não encontrado
  *       401:
@@ -102,7 +102,7 @@ import type { AtualizarAssistenteData } from '@/app/_lib/types/assistentes';
  *       200:
  *         description: Assistente deletado com sucesso
  *       403:
- *         description: Acesso negado - apenas super admins
+ *         description: Sem permissão (requer assistentes.deletar)
  *       404:
  *         description: Assistente não encontrado
  *       401:
@@ -115,24 +115,13 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+    // 1. Autenticação + Autorização
+    const authOrError = await requirePermission(request, 'assistentes', 'visualizar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
-    // 2. Verificar se é super admin
-    if (!(await isSuperAdmin())) {
-      return NextResponse.json(
-        { success: false, error: 'Acesso negado: apenas super admins podem acessar assistentes' },
-        { status: 403 }
-      );
-    }
-
-    // 3. Obter ID do parâmetro
+    // 2. Obter ID do parâmetro
     const { id } = await params;
     const assistenteId = parseInt(id, 10);
 
@@ -143,7 +132,7 @@ export async function GET(
       );
     }
 
-    // 4. Buscar assistente
+    // 3. Buscar assistente
     const assistente = await buscarAssistentePorId(assistenteId);
 
     if (!assistente) {
@@ -172,24 +161,13 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+    // 1. Autenticação + Autorização
+    const authOrError = await requirePermission(request, 'assistentes', 'editar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
-    // 2. Verificar se é super admin
-    if (!(await isSuperAdmin())) {
-      return NextResponse.json(
-        { success: false, error: 'Acesso negado: apenas super admins podem editar assistentes' },
-        { status: 403 }
-      );
-    }
-
-    // 3. Obter ID do parâmetro
+    // 2. Obter ID do parâmetro
     const { id } = await params;
     const assistenteId = parseInt(id, 10);
 
@@ -200,11 +178,11 @@ export async function PATCH(
       );
     }
 
-    // 4. Validar e parsear body da requisição
+    // 3. Validar e parsear body da requisição
     const body = await request.json();
     const dadosAtualizacao = body as Partial<AtualizarAssistenteData>;
 
-    // 5. Atualizar assistente
+    // 4. Atualizar assistente
     const resultado = await atualizarAssistente(assistenteId, dadosAtualizacao);
 
     if (!resultado.sucesso) {
@@ -239,24 +217,13 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+    // 1. Autenticação + Autorização
+    const authOrError = await requirePermission(request, 'assistentes', 'deletar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
-    // 2. Verificar se é super admin
-    if (!(await isSuperAdmin())) {
-      return NextResponse.json(
-        { success: false, error: 'Acesso negado: apenas super admins podem deletar assistentes' },
-        { status: 403 }
-      );
-    }
-
-    // 3. Obter ID do parâmetro
+    // 2. Obter ID do parâmetro
     const { id } = await params;
     const assistenteId = parseInt(id, 10);
 
@@ -267,7 +234,7 @@ export async function DELETE(
       );
     }
 
-    // 4. Deletar assistente
+    // 3. Deletar assistente
     const resultado = await deletarAssistente(assistenteId);
 
     if (!resultado.sucesso) {

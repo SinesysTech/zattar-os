@@ -26,7 +26,7 @@
         "@/types/domain/*": ["types/domain/*"],
         "@/types/contracts/*": ["types/contracts/*"],
         "@/_lib/*": ["app/_lib/*"],
-        "@/lib/*": ["app/_lib/*"],
+        "@/lib/*": ["lib/*", "app/_lib/*"],
         "@/*": ["./*"]
       }  },
   "include": [

@@ -286,12 +286,12 @@ export function RichTextEditor({ value, onChange, formularios }: RichTextEditorP
               <CommandInput placeholder="Buscar variável..." />
               <CommandList>
                 <CommandEmpty>Nenhuma variável encontrada.</CommandEmpty>
-                {['comum', 'apps', 'trabalhista'].map(category => {
-                  const categoryVariables = variables.filter(v => v.category === category);
+                {['comum', 'apps', 'trabalhista'].map((category: string) => {
+                  const categoryVariables = variables.filter((v: VariableOption) => v.category === category);
                   if (categoryVariables.length === 0) return null;
                   return (
                     <CommandGroup key={category} heading={category.charAt(0).toUpperCase() + category.slice(1)}>
-                      {categoryVariables.map(variable => (
+                      {categoryVariables.map((variable: VariableOption) => (
                         <CommandItem
                           key={variable.value}
                           onSelect={() => insertVariable(variable)}

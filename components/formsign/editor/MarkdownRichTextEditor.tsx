@@ -206,22 +206,18 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
         </Button>
         <Separator orientation="vertical" className="h-6" />
         <Combobox
-          items={variables.map(v => ({ value: v.value, label: `${v.category}: ${v.label}` }))}
-          value=""
-          onValueChange={(value) => {
-            const variable = variables.find(v => v.value === value);
+          options={variables.map((v: VariableOption) => ({ value: v.value, label: `${v.category}: ${v.label}` }))}
+          value={[]}
+          onValueChange={(values: string[]) => {
+            const selected = values[0];
+            const variable = variables.find((v: VariableOption) => v.value === selected);
             if (variable) insertVariable(variable);
           }}
           placeholder="Inserir variável..."
           searchPlaceholder="Buscar variável..."
-          emptyMessage="Nenhuma variável encontrada"
+          emptyText="Nenhuma variável encontrada"
           className="w-48"
-        >
-          <Button variant="ghost" size="sm">
-            <VariableIcon className="h-4 w-4 mr-2" />
-            Variável
-          </Button>
-        </Combobox>
+        />
         <Separator orientation="vertical" className="h-6" />
         <Button
           variant="ghost"

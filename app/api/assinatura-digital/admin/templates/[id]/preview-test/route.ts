@@ -14,6 +14,30 @@ export async function POST(
     const { id } = await params;
     const body = await request.json().catch(() => ({}));
 
+    // Validar que body é um objeto
+    if (typeof body !== 'object' || body === null) {
+      return NextResponse.json(
+        { success: false, error: 'Payload inválido: esperado um objeto' },
+        { status: 400 }
+      );
+    }
+
+    // Validar segmento se presente: deve ter id numérico e nome string
+    let validatedSegmento: { id: number; nome: string } | undefined;
+    if (body.segmento !== undefined) {
+      if (
+        typeof body.segmento !== 'object' ||
+        body.segmento === null ||
+        typeof body.segmento.id !== 'number' ||
+        typeof body.segmento.nome !== 'string'
+      ) {
+        // Ignorar segmento inválido (fall back to defaults)
+        validatedSegmento = undefined;
+      } else {
+        validatedSegmento = { id: body.segmento.id, nome: body.segmento.nome };
+      }
+    }
+
     // Autenticação
     const authOrError = await requirePermission(request, 'formsign_admin', 'visualizar');
     if (authOrError instanceof NextResponse) return authOrError;
@@ -27,12 +51,12 @@ export async function POST(
     try {
       campos_parsed = typeof template.campos === 'string' ? JSON.parse(template.campos) : template.campos;
     } catch { campos_parsed = []; }
-    
+
     const finalCampos = body.campos || campos_parsed;
 
     // Validar template tem conteúdo
     const hasCampos = finalCampos.length > 0;
-    const hasMarkdown = template.conteudo_markdown?.trim().length > 0;
+    const hasMarkdown = !!template.conteudo_markdown && template.conteudo_markdown.trim().length > 0;
     if (!hasCampos && !hasMarkdown) {
       return NextResponse.json(
         { success: false, error: 'Template deve ter campos ou markdown para preview' },
@@ -42,8 +66,21 @@ export async function POST(
 
     // Gerar dados mock
     const mockData = generateMockDataForPreview(
-      { ...template, campos: finalCampos },
-      { segmentoId: body.segmento?.id, segmentoNome: body.segmento?.nome }
+      {
+        id: String(template.id),
+        template_uuid: template.template_uuid,
+        nome: template.nome,
+        descricao: template.descricao ?? undefined,
+        arquivo_original: template.arquivo_original,
+        arquivo_nome: template.arquivo_nome,
+        arquivo_tamanho: template.arquivo_tamanho,
+        status: template.status as any,
+        versao: template.versao,
+        ativo: template.ativo,
+        campos: finalCampos,
+        conteudo_markdown: template.conteudo_markdown ?? null,
+      },
+      { segmentoId: validatedSegmento?.id, segmentoNome: validatedSegmento?.nome }
     );
 
     // Gerar PDF
@@ -51,6 +88,7 @@ export async function POST(
       id: template.id,
       template_uuid: template.template_uuid,
       nome: template.nome,
+      ativo: template.ativo,
       arquivo_original: template.arquivo_original,
       campos: JSON.stringify(finalCampos),
       conteudo_markdown: template.conteudo_markdown,
@@ -71,14 +109,15 @@ export async function POST(
     );
 
     // Armazenar PDF temporariamente
-    const fileName = `preview-${id}-${Date.now()}.pdf`;
     const stored = await storePdf(pdfBuffer);
     const pdfUrl = stored.url;
+    // Derivar nome do arquivo do key retornado pelo storage (ex: "formsign/pdfs/documento-xxx.pdf" -> "documento-xxx.pdf")
+    const storedFileName = stored.key.split('/').pop() || `preview-${id}.pdf`;
 
     return NextResponse.json({
       success: true,
       arquivo_url: pdfUrl,
-      arquivo_nome: fileName,
+      arquivo_nome: storedFileName,
       is_preview: true,
     }, {
       headers: {
@@ -89,7 +128,7 @@ export async function POST(
   } catch (error) {
     console.error('Preview generation error:', error);
     return NextResponse.json(
-      { success: false, error: 'Erro ao gerar preview', detalhes: error.message },
+      { success: false, error: 'Erro ao gerar preview', detalhes: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

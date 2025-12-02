@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAssistentes } from '@/app/_lib/hooks/use-assistentes';
+import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
 import { AssistentesGridView } from './components/assistentes-grid-view';
 import { ViewToggle } from './components/view-toggle';
 import { AssistenteCreateDialog } from './components/assistente-create-dialog';
@@ -44,7 +45,8 @@ const VIEW_MODE_STORAGE_KEY = 'assistentes-view-mode';
 function criarColunas(
   onEdit: (assistente: Assistente) => void,
   onDelete: (assistente: Assistente) => void,
-  isSuperAdmin: boolean
+  canEdit: boolean,
+  canDelete: boolean
 ): ColumnDef<Assistente>[] {
   return [
     {
@@ -127,7 +129,7 @@ function criarColunas(
         const assistente = row.original;
         return (
           <div className="min-h-10 flex items-center justify-center gap-2">
-            <AssistenteActions assistente={assistente} onEdit={onEdit} onDelete={onDelete} isSuperAdmin={isSuperAdmin} />
+            <AssistenteActions assistente={assistente} onEdit={onEdit} onDelete={onDelete} canEdit={canEdit} canDelete={canDelete} />
           </div>
         );
       },
@@ -142,12 +144,14 @@ function AssistenteActions({
   assistente,
   onEdit,
   onDelete,
-  isSuperAdmin
+  canEdit,
+  canDelete
 }: {
   assistente: Assistente;
   onEdit: (assistente: Assistente) => void;
   onDelete: (assistente: Assistente) => void;
-  isSuperAdmin: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
 }) {
   const router = useRouter();
 
@@ -172,17 +176,17 @@ function AssistenteActions({
           <Eye className="mr-2 h-4 w-4" />
           Visualizar
         </DropdownMenuItem>
-        {isSuperAdmin && (
-          <>
-            <DropdownMenuItem onClick={() => onEdit(assistente)}>
-              <Pencil className="mr-2 h-4 w-4" />
-              Editar
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onDelete(assistente)}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              Deletar
-            </DropdownMenuItem>
-          </>
+        {canEdit && (
+          <DropdownMenuItem onClick={() => onEdit(assistente)}>
+            <Pencil className="mr-2 h-4 w-4" />
+            Editar
+          </DropdownMenuItem>
+        )}
+        {canDelete && (
+          <DropdownMenuItem onClick={() => onDelete(assistente)}>
+            <Trash2 className="mr-2 h-4 w-4" />
+            Deletar
+          </DropdownMenuItem>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
@@ -201,7 +205,14 @@ export default function AssistentesPage() {
   const [editOpen, setEditOpen] = React.useState(false);
   const [selectedAssistente, setSelectedAssistente] = React.useState<Assistente | null>(null);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
-  const [isSuperAdmin, setIsSuperAdmin] = React.useState<boolean | null>(null);
+
+  // Buscar permissões do usuário para o recurso 'assistentes'
+  const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('assistentes');
+
+  // Permissões granulares
+  const canCreate = temPermissao('assistentes', 'criar');
+  const canEdit = temPermissao('assistentes', 'editar');
+  const canDelete = temPermissao('assistentes', 'deletar');
 
   // Preparar opções e grupos de filtros
   const filterOptions = React.useMemo(() => buildAssistentesFilterOptions(), []);
@@ -216,28 +227,6 @@ export default function AssistentesPage() {
       setViewMode(savedViewMode);
     }
   }, []);
-
-  // Verificar permissão de super admin
-  React.useEffect(() => {
-    const checkPermission = async () => {
-      try {
-        const response = await fetch('/api/perfil');
-        if (response.ok) {
-          const data = await response.json();
-          // API retorna { success: true, data: usuario }
-          setIsSuperAdmin(data.data?.isSuperAdmin ?? false);
-        } else {
-          setIsSuperAdmin(false);
-        }
-      } catch {
-        setIsSuperAdmin(false);
-      }
-    };
-    checkPermission();
-  }, []);
-
-  // Se ainda carregando permissão, mostra loading
-  const isLoadingPermission = isSuperAdmin === null;
 
   // Salvar preferência de visualização no localStorage
   const handleViewModeChange = React.useCallback((mode: ViewMode) => {
@@ -304,7 +293,7 @@ export default function AssistentesPage() {
     []
   );
 
-  const colunas = React.useMemo(() => criarColunas(handleEdit, handleDelete, isSuperAdmin ?? false), [handleEdit, handleDelete, isSuperAdmin]);
+  const colunas = React.useMemo(() => criarColunas(handleEdit, handleDelete, canEdit, canDelete), [handleEdit, handleDelete, canEdit, canDelete]);
 
   return (
     <div className="space-y-3">
@@ -323,7 +312,7 @@ export default function AssistentesPage() {
           selectedFilters={selectedFilterIds}
           onFiltersChange={handleFilterIdsChange}
           filterButtonsMode="buttons"
-          onNewClick={isSuperAdmin ? () => setCreateOpen(true) : undefined}
+          onNewClick={canCreate ? () => setCreateOpen(true) : undefined}
           newButtonTooltip="Novo Assistente"
         />
         <ViewToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />

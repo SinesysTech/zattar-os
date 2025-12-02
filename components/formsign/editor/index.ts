@@ -1,8 +1,8 @@
-export { CreateTemplateForm } from './CreateTemplateForm';
-export { PdfCanvasArea } from './PdfCanvasArea';
-export { PropertiesPopover } from './PropertiesPopover';
-export { TemplateInfoPopover } from './TemplateInfoPopover';
-export { ReplacePdfDialog } from './ReplacePdfDialog';
+export { default as CreateTemplateForm } from './CreateTemplateForm';
+export { default as PdfCanvasArea } from './PdfCanvasArea';
+export { default as PropertiesPopover } from './PropertiesPopover';
+export { default as TemplateInfoPopover } from './TemplateInfoPopover';
+export { default as ReplacePdfDialog } from './ReplacePdfDialog';
 export { RichTextEditor } from './RichTextEditor';
 export { RichTextEditorPopover } from './RichTextEditorPopover';
 export { MarkdownRichTextEditor } from './MarkdownRichTextEditor';

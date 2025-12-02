@@ -23,6 +23,7 @@ import { useClientes } from '@/app/_lib/hooks/use-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Cliente } from '@/app/_lib/types';
 import { ClienteEditDialog } from './cliente-edit-dialog';
+import { ClienteCreateDialog } from './cliente-create-dialog';
 import type { ProcessoRelacionado } from '@/backend/types/partes/processo-relacionado-types';
 import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
 import {
@@ -441,12 +442,12 @@ export function ClientesTab() {
         emptyMessage="Nenhum cliente encontrado."
       />
 
-      {/* TODO: Implementar ClienteCreateSheet */}
-      {/* <ClienteCreateSheet
+      {/* Dialog de Criação (Wizard) */}
+      <ClienteCreateDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
         onSuccess={handleEditSuccess}
-      /> */}
+      />
 
       {/* Dialog de Edição */}
       {clienteParaEditar && (
