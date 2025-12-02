@@ -10,7 +10,6 @@ import {
   Clock,
   User,
   RotateCcw,
-  Eye,
   Loader2,
   FileText,
 } from 'lucide-react';

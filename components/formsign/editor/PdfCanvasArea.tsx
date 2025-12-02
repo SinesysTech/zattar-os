@@ -44,7 +44,6 @@ interface PdfCanvasAreaProps {
   pdfUrl: string | null;
   previewKey: number;
   currentPage: number;
-  totalPages: number;
   onPageChange: (page: number) => void;
   onLoadSuccess: (numPages: number) => void;
   onLoadError: (error: Error) => void;
@@ -82,7 +81,6 @@ export default function PdfCanvasArea({
   pdfUrl,
   previewKey,
   currentPage,
-  totalPages,
   onPageChange,
   onLoadSuccess,
   onLoadError,

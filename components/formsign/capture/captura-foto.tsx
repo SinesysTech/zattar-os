@@ -19,17 +19,11 @@ interface CapturaFotoProps {
 }
 
 const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto, onWebcamErrorChange, onPhotoCaptured }, ref) => {
-  const [capturedPhoto, setCapturedPhoto] = useState<string>("");
+  const [overriddenPhoto, setOverriddenPhoto] = useState<string | null>(null);
+  const capturedPhoto = overriddenPhoto ?? initialPhoto ?? "";
   const [webcamError, setWebcamError] = useState<string>("");
   const [isWebcamReady, setIsWebcamReady] = useState(false);
   const webcamRef = useRef<Webcam>(null);
-
-  // Pre-fill captured photo if initialPhoto is provided
-  useEffect(() => {
-    if (initialPhoto && initialPhoto.trim() !== "") {
-      setCapturedPhoto(initialPhoto);
-    }
-  }, [initialPhoto]);
 
   useImperativeHandle(ref, () => ({
     getPhotoBase64: () => {
@@ -54,7 +48,7 @@ const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto
           return;
         }
 
-        setCapturedPhoto(imageSrc);
+        setOverriddenPhoto(imageSrc);
         // Persist immediately to store
         onPhotoCaptured?.(imageSrc);
       }
@@ -62,7 +56,7 @@ const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto
   }, [onPhotoCaptured]);
 
   const handleRetakePhoto = () => {
-    setCapturedPhoto("");
+    setOverriddenPhoto("");
   };
 
   const handleWebcamError = (error: string | DOMException) => {

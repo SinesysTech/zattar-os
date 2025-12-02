@@ -14,7 +14,6 @@ import type { ChatMessage } from '@/hooks/use-realtime-chat';
 
 interface DocumentChatProps {
   documentoId: number;
-  currentUserId: number;
   currentUserName: string;
 }
 
@@ -48,7 +47,7 @@ function convertDBMessageToChat(msg: MensagemDB): ChatMessage {
   };
 }
 
-export function DocumentChat({ documentoId, currentUserId, currentUserName }: DocumentChatProps) {
+export function DocumentChat({ documentoId, currentUserName }: DocumentChatProps) {
   const [sala, setSala] = React.useState<SalaChat | null>(null);
   const [initialMessages, setInitialMessages] = React.useState<ChatMessage[]>([]);
   const [loading, setLoading] = React.useState(true);

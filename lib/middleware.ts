@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function updateSession(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -63,4 +63,21 @@ export async function updateSession(request: NextRequest) {
   // of sync and terminate the user's session prematurely!
 
   return supabaseResponse
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - sw.js (pwa service worker)
+     * - manifest.json (pwa manifest)
+     * - offline (pwa offline page)
+     * - public folder files
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|sw.js|manifest.json|offline|android-chrome-192x192.png|android-chrome-512x512.png|apple-touch-icon.png|logo_facebook.png|meet_logo.png|webex_logo.png|zattar.png|Zoom_Logo.png).*)',
+  ],
 }

@@ -371,7 +371,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
     return () => window.removeEventListener('resize', updateZoomForViewport);
      
     // canvasSize.width é usado internamente em updateZoomForViewport, mas não deve triggerar re-render
-  }, [hasManualZoom, clampZoomValue]);
+  }, [hasManualZoom, clampZoomValue, canvasSize.width]);
 
   const selectField = useCallback((fieldId: string) => {
     console.log('[DEBUG] selectField chamado com:', { fieldId, type: typeof fieldId });
@@ -1119,7 +1119,22 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
         description: message,
       });
     }
-  }, [fields, template.id, router]);
+  }, [
+    fields,
+    template.id,
+    template.template_uuid,
+    template.nome,
+    template.descricao,
+    template.arquivo_original,
+    template.arquivo_nome,
+    template.arquivo_tamanho,
+    template.status,
+    template.versao,
+    template.ativo,
+    template.conteudo_markdown,
+    template.criado_por,
+    router,
+  ]);
 
   // Autosave hook - saves every 5 seconds when there are unsaved changes
   useEffect(() => {
@@ -1180,7 +1195,22 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
     }, 5000); // 5 seconds
 
     return () => clearTimeout(autosaveTimer);
-  }, [hasUnsavedChanges, fields, template.id]);
+  }, [
+    hasUnsavedChanges,
+    fields,
+    template.id,
+    template.template_uuid,
+    template.nome,
+    template.descricao,
+    template.arquivo_original,
+    template.arquivo_nome,
+    template.arquivo_tamanho,
+    template.status,
+    template.versao,
+    template.ativo,
+    template.conteudo_markdown,
+    template.criado_por,
+  ]);
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -1970,7 +2000,6 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
           pdfUrl={pdfUrl}
           previewKey={previewKey}
           currentPage={currentPage}
-          totalPages={totalPages}
           onPageChange={setCurrentPage}
           onLoadSuccess={handlePdfLoadSuccess}
           onLoadError={(error) => {
