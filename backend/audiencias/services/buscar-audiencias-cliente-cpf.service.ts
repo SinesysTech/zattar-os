@@ -13,9 +13,6 @@ import type {
   ClienteRespostaIA,
   ResumoAudienciasIA,
   LocalAudienciaIA,
-  TRT_NOMES,
-  TIPO_PARTE_NOMES,
-  STATUS_AUDIENCIA_NOMES,
 } from '@/backend/types/audiencias/audiencias-cliente-cpf.types';
 import { buscarAudienciasPorCpf } from './persistence/buscar-audiencias-cliente-cpf.service';
 

@@ -13,10 +13,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Badge } from '@/components/ui/badge';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { FormFieldSchema, FormFieldType, fieldRequiresOptions } from '@/types/formsign/form-schema.types';
-import { ChevronDown, Trash2, Plus, X, Info, Save, ChevronUp, ChevronDown as MoveDown, ChevronUp as MoveUp } from 'lucide-react';
+import { ChevronDown, Trash2, Plus, Info, Save, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 

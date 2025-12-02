@@ -64,6 +64,7 @@ export async function criarCredencial(params: CriarCredencialParams): Promise<Cr
   }
 
   // Retornar sem senha por segurança
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { senha, ...credencialSemSenha } = data;
   return credencialSemSenha as Credencial;
 }

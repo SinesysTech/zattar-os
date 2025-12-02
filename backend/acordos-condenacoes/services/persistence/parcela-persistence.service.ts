@@ -28,7 +28,7 @@ export interface ParcelaDados {
   honorariosSucumbenciais: number;
   dataVencimento: string; // ISO date string (YYYY-MM-DD)
   formaPagamento: FormaPagamento;
-  dadosPagamento?: any; // JSONB
+  dadosPagamento?: Record<string, unknown>; // JSONB
   editadoManualmente?: boolean;
 }
 
@@ -40,7 +40,7 @@ export interface ParcelaAtualizacaoDados {
   honorariosSucumbenciais?: number;
   dataVencimento?: string;
   formaPagamento?: FormaPagamento;
-  dadosPagamento?: any;
+  dadosPagamento?: Record<string, unknown>;
   status?: StatusParcela;
   dataEfetivacao?: string | null;
   editadoManualmente?: boolean;
@@ -60,7 +60,7 @@ export interface Parcela {
   status: StatusParcela;
   dataEfetivacao: string | null;
   formaPagamento: FormaPagamento;
-  dadosPagamento: any | null;
+  dadosPagamento: Record<string, unknown> | null;
   editadoManualmente: boolean;
   valorRepasseCliente: number | null;
   statusRepasse: StatusRepasse;
@@ -265,7 +265,7 @@ export async function atualizarParcela(
   const supabase = createServiceClient();
 
   try {
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
 
     if (dados.valorBrutoCreditoPrincipal !== undefined) {
       updateData.valor_bruto_credito_principal = dados.valorBrutoCreditoPrincipal;
@@ -416,10 +416,35 @@ export async function buscarParcelasNaoEditadas(
   }
 }
 
+// Raw data from Supabase
+interface ParcelaDb {
+    id: number;
+    acordo_condenacao_id: number;
+    numero_parcela: number;
+    valor_bruto_credito_principal: number;
+    honorarios_sucumbenciais: number;
+    honorarios_contratuais: number;
+    data_vencimento: string;
+    status: StatusParcela;
+    data_efetivacao: string | null;
+    forma_pagamento: FormaPagamento;
+    dados_pagamento: Record<string, unknown> | null;
+    editado_manualmente: boolean;
+    valor_repasse_cliente: number | null;
+    status_repasse: StatusRepasse;
+    arquivo_declaracao_prestacao_contas: string | null;
+    data_declaracao_anexada: string | null;
+    arquivo_comprovante_repasse: string | null;
+    data_repasse: string | null;
+    usuario_repasse_id: number | null;
+    created_at: string;
+    updated_at: string;
+}
+
 /**
  * Mapeia dados do banco para o tipo Parcela
  */
-function mapearParcela(data: any): Parcela {
+function mapearParcela(data: ParcelaDb): Parcela {
   return {
     id: data.id,
     acordoCondenacaoId: data.acordo_condenacao_id,

@@ -14,6 +14,15 @@ import {
   GetUrlResult,
 } from './storage.interface';
 
+interface WebhookResponse {
+  path?: string;
+  url?: string;
+  fileId?: string;
+  id?: string;
+  expiresAt?: string;
+  exists?: boolean;
+}
+
 export class GoogleDriveStorageService implements IStorageService {
   private webhookUrl: string;
   private webhookToken?: string;
@@ -30,7 +39,7 @@ export class GoogleDriveStorageService implements IStorageService {
   /**
    * Faz requisição POST para o webhook com a operação especificada
    */
-  private async callWebhook(body: any): Promise<any> {
+  private async callWebhook(body: Record<string, unknown>): Promise<WebhookResponse> {
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
     };

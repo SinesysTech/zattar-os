@@ -4,6 +4,7 @@ import type {
   GrauTRT,
   TipoAcessoTribunal,
   TribunalConfigDb,
+  CustomTimeouts,
 } from '@/backend/types/captura/trt-types';
 
 /**
@@ -80,7 +81,7 @@ export const getConfigByTribunalAndTipoAcesso = async (
     url_base: data.url_base,
     url_login_seam: data.url_login_seam,
     url_api: data.url_api,
-    custom_timeouts: data.custom_timeouts as any,
+    custom_timeouts: data.custom_timeouts as CustomTimeouts | null,
     created_at: data.created_at,
     updated_at: data.updated_at,
     tribunal_id: data.tribunal_id,
@@ -119,6 +120,25 @@ export const getConfigByTRTAndGrau = async (
  * Lista todas as configurações de tribunais disponíveis
  * @returns Array de configurações
  */
+interface TribunalConfigRow {
+  id: number;
+  sistema: string;
+  tipo_acesso: string;
+  url_base: string;
+  url_login_seam: string;
+  url_api: string;
+  custom_timeouts: Record<string, unknown> | null;
+  created_at: string;
+  updated_at: string;
+  tribunal_id: number;
+  tribunais: {
+    codigo: string;
+    nome: string;
+  } | {
+    codigo: string;
+    nome: string;
+  }[] | null;
+}
 export const listAllConfigs = async (): Promise<TribunalConfigDb[]> => {
   const supabase = createServiceClient();
 
@@ -152,7 +172,7 @@ export const listAllConfigs = async (): Promise<TribunalConfigDb[]> => {
   }
 
   return data
-    .map((row: any) => {
+    .map((row: TribunalConfigRow) => {
       const tribunal = Array.isArray(row.tribunais)
         ? row.tribunais[0]
         : row.tribunais;
@@ -170,7 +190,7 @@ export const listAllConfigs = async (): Promise<TribunalConfigDb[]> => {
         url_base: row.url_base,
         url_login_seam: row.url_login_seam,
         url_api: row.url_api,
-        custom_timeouts: row.custom_timeouts as any,
+        custom_timeouts: row.custom_timeouts as CustomTimeouts | null,
         created_at: row.created_at,
         updated_at: row.updated_at,
         tribunal_id: row.tribunal_id,

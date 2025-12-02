@@ -44,7 +44,7 @@ export class BackblazeB2StorageService implements IStorageService {
       },
     });
 
-    console.log(`Ì≥¶ [Backblaze B2] Storage service inicializado com bucket: ${this.bucket}`);
+    console.log(`ÔøΩÔøΩÔøΩ [Backblaze B2] Storage service inicializado com bucket: ${this.bucket}`);
   }
 
   async upload(
@@ -103,7 +103,7 @@ export class BackblazeB2StorageService implements IStorageService {
 
   async delete(path: string): Promise<DeleteResult> {
     try {
-      console.log(`Ì∑ëÔ∏è [Backblaze B2] Deletando arquivo: ${path}`);
+      console.log(`ÔøΩÔøΩÔøΩÔ∏è [Backblaze B2] Deletando arquivo: ${path}`);
 
       const command = new DeleteObjectCommand({
         Bucket: this.bucket,
@@ -126,11 +126,11 @@ export class BackblazeB2StorageService implements IStorageService {
     }
   }
 
-  async getUrl(path: string, expiresIn?: number): Promise<GetUrlResult> {
+  async getUrl(path: string): Promise<GetUrlResult> {
     try {
       const url = `${this.endpoint}/${this.bucket}/${path}`;
 
-      console.log(`Ì¥ó [Backblaze B2] URL gerada: ${url}`);
+      console.log(`ÔøΩÔøΩÔøΩ [Backblaze B2] URL gerada: ${url}`);
 
       return {
         success: true,
@@ -157,10 +157,13 @@ export class BackblazeB2StorageService implements IStorageService {
 
       console.log(`‚úÖ [Backblaze B2] Arquivo existe: ${path}`);
       return true;
-    } catch (error: any) {
-      if (error.name === 'NoSuchKey' || error.$metadata?.httpStatusCode === 404) {
-        console.log(`‚ÑπÔ∏è [Backblaze B2] Arquivo n√£o existe: ${path}`);
-        return false;
+    } catch (error: unknown) {
+      if (typeof error === 'object' && error !== null) {
+        const s3Error = error as { name?: string; $metadata?: { httpStatusCode?: number } };
+        if (s3Error.name === 'NoSuchKey' || s3Error.$metadata?.httpStatusCode === 404) {
+          console.log(`‚ÑπÔ∏è [Backblaze B2] Arquivo n√£o existe: ${path}`);
+          return false;
+        }
       }
 
       console.error(`‚ùå [Backblaze B2] Erro ao verificar exist√™ncia: ${path}`, error);

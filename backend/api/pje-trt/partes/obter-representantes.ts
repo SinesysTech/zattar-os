@@ -59,6 +59,37 @@ import type { Page } from 'playwright';
 import { fetchPJEAPI } from '../shared/fetch';
 import type { RepresentantePJE, TelefoneContato } from './types';
 
+// Raw data from PJE API
+interface RepresentantePJERaw {
+  idPessoa?: number;
+  id_pessoa?: number;
+  nome?: string;
+  nomeCompleto?: string;
+  tipoDocumento?: string;
+  tipo_documento?: string;
+  numeroDocumento?: string;
+  numero_documento?: string;
+  cpf?: string;
+  cnpj?: string;
+  numeroOAB?: string;
+  numeroOab?: string;
+  numero_oab?: string;
+  ufOAB?: string;
+  ufOab?: string;
+  uf_oab?: string;
+  situacaoOAB?: string;
+  situacaoOab?: string;
+  situacao_oab?: string;
+  tipo?: string;
+  tipoRepresentante?: string;
+  email?: string;
+  telefones?: { ddd: string; numero: string }[];
+  ddd_telefone?: string;
+  numero_telefone?: string;
+  ddd_celular?: string;
+  numero_celular?: string;
+}
+
 /**
  * Função: obterRepresentantesPartePorID
  *
@@ -86,7 +117,7 @@ export async function obterRepresentantesPartePorID(
     console.log(`[PJE-PARTES-API] Buscando representantes da parte ${idParte}`);
 
     // Faz requisição para obter representantes da parte
-    const response = await fetchPJEAPI<any[]>(
+    const response = await fetchPJEAPI<RepresentantePJERaw[]>(
       page,
       `/pje-comum-api/api/partes/${idParte}/representantes`
     );
@@ -100,7 +131,7 @@ export async function obterRepresentantesPartePorID(
     console.log(`[PJE-PARTES-API] Encontrados ${response.length} representantes para parte ${idParte}`);
 
     // Mapeia cada representante para tipo padronizado
-    const representantes: RepresentantePJE[] = response.map((repData: any) => {
+    const representantes: RepresentantePJE[] = response.map((repData: RepresentantePJERaw) => {
       // Extrair número da OAB e UF (pode vir junto como "BA79812" ou separado)
       const numeroOabRaw = String(repData.numeroOAB || repData.numeroOab || repData.numero_oab || '');
       const { numeroOAB, ufOAB } = extrairOabEUf(
@@ -209,7 +240,7 @@ function extrairOabEUf(
 /**
  * Extrai telefones do representante (pode estar em diferentes formatos)
  */
-function extrairTelefones(repData: any): TelefoneContato[] {
+function extrairTelefones(repData: RepresentantePJERaw): TelefoneContato[] {
   const telefones: TelefoneContato[] = [];
 
   // Pode vir como array de objetos

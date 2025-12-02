@@ -536,7 +536,7 @@ export async function analisarGapsAgregado(
     .limit(1000)
     .toArray();
 
-  let totalLogs = documentos.length;
+  const totalLogs = documentos.length;
   let logsComGaps = 0;
   const resumoGaps = { enderecos: 0, partes: 0, representantes: 0 };
   const processosGaps: Map<string, { trt: string; gaps: number }> = new Map();
@@ -1058,7 +1058,7 @@ function extrairElementosDeAudiencias(
   }
 
   // O payload pode ser paginado ou direto
-  let audiencias: AudienciaPayload[] = [];
+  const audiencias: AudienciaPayload[] = [];
 
   if (Array.isArray(payload)) {
     // Pode ser array de páginas ou array de audiências

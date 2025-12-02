@@ -1,8 +1,8 @@
 'use client';
 
-import { Database, CheckCircle, XCircle, Loader2, Clock, RefreshCw } from 'lucide-react';
+import { Database, CheckCircle, XCircle, Loader2, RefreshCw } from 'lucide-react';
 import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
-import { MiniDonutChart, CHART_COLORS, CHART_PALETTE } from './mini-chart';
+import { MiniDonutChart } from './mini-chart';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CapturaMock, StatusCapturas } from '../types/dashboard.types';
@@ -176,7 +176,7 @@ export function WidgetStatusCapturas({
           <div className="pt-3 border-t">
             <p className="text-xs font-medium text-muted-foreground mb-2">Por tipo</p>
             <div className="flex flex-wrap gap-2">
-              {data.porTipo.map((tipo, index) => (
+              {data.porTipo.map((tipo) => (
                 <Badge
                   key={tipo.tipo}
                   variant="soft"

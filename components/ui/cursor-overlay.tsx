@@ -41,7 +41,7 @@ function Cursor({
   return (
     <>
       {selectionRects.map((position, i) => (
-        // eslint-disable-next-line react/forbid-dom-props -- Inline styles required: dynamic positioning from cursor overlay plugin
+         
         <div
           key={i}
           className={cn(
@@ -56,7 +56,7 @@ function Cursor({
         />
       ))}
       {caretPosition && (
-        // eslint-disable-next-line react/forbid-dom-props -- Inline styles required: dynamic caret positioning from plugin
+         
         <div
           className={cn(
             'pointer-events-none absolute z-10 w-0.5',

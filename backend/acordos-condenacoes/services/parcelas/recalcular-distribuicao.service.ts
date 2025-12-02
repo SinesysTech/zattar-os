@@ -3,7 +3,6 @@
 
 import {
   listarParcelasDoAcordo,
-  buscarParcelasNaoEditadas,
   atualizarParcela,
   type Parcela,
 } from '../persistence/parcela-persistence.service';

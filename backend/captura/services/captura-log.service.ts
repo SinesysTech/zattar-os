@@ -6,7 +6,6 @@ import {
   atualizarCapturaLog,
 } from './persistence/captura-log-persistence.service';
 import type {
-  TipoCaptura,
   StatusCaptura,
   CriarCapturaLogParams,
 } from '@/backend/types/captura/capturas-log-types';

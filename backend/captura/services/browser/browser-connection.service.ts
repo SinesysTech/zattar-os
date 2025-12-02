@@ -100,7 +100,7 @@ async function connectToRemoteBrowser(
 
   const browserContext = await browser.newContext({
     viewport: options.viewport || { width: 1920, height: 1080 },
-    userAgent: options.userAgent || getDefaultUserAgent('firefox'),
+    userAgent: options.userAgent || getDefaultUserAgent(),
   });
 
   const page = await browserContext.newPage();
@@ -129,7 +129,7 @@ async function launchLocalBrowser(
 
   const browserContext = await browser.newContext({
     viewport: options.viewport || { width: 1920, height: 1080 },
-    userAgent: options.userAgent || getDefaultUserAgent('firefox'),
+    userAgent: options.userAgent || getDefaultUserAgent(),
   });
 
   const page = await browserContext.newPage();
@@ -267,7 +267,7 @@ export async function checkBrowserServiceHealth(): Promise<{
 /**
  * Retorna o user agent padrão do Firefox
  */
-function getDefaultUserAgent(_browserType: 'firefox' = 'firefox'): string {
+function getDefaultUserAgent(): string {
   return 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0';
 }
 

@@ -96,12 +96,12 @@ export default function ReplacePdfDialog({
   });
 
   // Remover arquivo
-  const removeFile = () => {
+  const removeFile = useCallback(() => {
     if (uploadedFile?.preview) {
       URL.revokeObjectURL(uploadedFile.preview);
     }
     setUploadedFile(null);
-  };
+  }, [uploadedFile]);
 
   // Cleanup: revogar URL do blob quando componente desmonta ou dialog fecha
   useEffect(() => {
@@ -117,9 +117,7 @@ export default function ReplacePdfDialog({
     if (!open) {
       removeFile();
     }
-     
-    // removeFile é uma função estável, não precisa ser dependência
-  }, [open]);
+  }, [open, removeFile]);
 
   const handleReplace = async () => {
     if (!uploadedFile || !uploadedFile.isValid) {

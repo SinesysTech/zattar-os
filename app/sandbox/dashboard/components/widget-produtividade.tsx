@@ -4,7 +4,6 @@ import { TrendingUp, Scale, Calendar, FileCheck, CheckSquare } from 'lucide-reac
 import { WidgetWrapper } from './widget-wrapper';
 import { MiniAreaChart, CHART_COLORS, CHART_PALETTE } from './mini-chart';
 import { ProdutividadeResumo } from '../types/dashboard.types';
-import { cn } from '@/app/_lib/utils/utils';
 
 interface WidgetProdutividadeProps {
   data: ProdutividadeResumo;

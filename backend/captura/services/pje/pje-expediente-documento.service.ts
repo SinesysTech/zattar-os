@@ -220,7 +220,7 @@ export async function downloadAndUploadDocumento(
   page: Page,
   params: FetchDocumentoParams
 ): Promise<FetchDocumentoResult> {
-  const { processoId, documentoId, pendenteId, numeroProcesso, trt, grau } = params;
+  const { processoId, documentoId, pendenteId, numeroProcesso } = params;
 
   try {
     console.log(`\n🚀 Iniciando captura de documento para pendente ${pendenteId}`);

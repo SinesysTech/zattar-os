@@ -1,7 +1,29 @@
-// Serviço de persistência de acordos e condenações
-// Gerencia operações de CRUD na tabela acordos_condenacoes
-
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { type Parcela } from './parcela-persistence.service';
+
+// Raw data from Supabase
+interface AcordoCondenacaoDb {
+  id: number;
+  processo_id: number;
+  tipo: TipoAcordoCondenacao;
+  direcao: DirecaoPagamento;
+  valor_total: number;
+  data_vencimento_primeira_parcela: string;
+  status: StatusAcordoCondenacao;
+  numero_parcelas: number;
+  forma_distribuicao: FormaDistribuicao | null;
+  percentual_escritorio: number | null;
+  percentual_cliente: number | null;
+  honorarios_sucumbenciais_total: number;
+  created_at: string;
+  updated_at: string;
+  created_by: string | null;
+}
+
+// Raw data from Supabase with joined parcelas
+interface AcordoCondenacaoComParcelasDb extends AcordoCondenacaoDb {
+  parcelas: { id: number; status: string }[];
+}
 
 /**
  * Tipo de registro
@@ -76,7 +98,7 @@ export interface AcordoCondenacao {
  * Acordo com informações de parcelas
  */
 export interface AcordoCondenacaoComParcelas extends AcordoCondenacao {
-  parcelas?: any[]; // Será tipado com Parcela do outro service
+  parcelas?: Parcela[]; // Será tipado com Parcela do outro service
   totalParcelas: number;
   parcelasPagas: number;
   parcelasPendentes: number;
@@ -167,6 +189,7 @@ export async function criarAcordoCondenacao(
 /**
  * Lista acordos/condenações com paginação e filtros
  */
+// FORCER REBUILD
 export async function listarAcordosCondenacoes(
   params: ListarAcordosParams = {}
 ): Promise<AcordosCondenacoesPaginado> {
@@ -178,7 +201,7 @@ export async function listarAcordosCondenacoes(
   try {
     let query = supabase
       .from('acordos_condenacoes')
-      .select('*, parcelas(id, status)', { count: 'exact' });
+      .select('*, parcelas(*)', { count: 'exact' });
 
     // Aplicar filtros
     if (params.processoId) {
@@ -213,10 +236,10 @@ export async function listarAcordosCondenacoes(
       throw new Error(`Erro ao listar acordos/condenações: ${error.message}`);
     }
 
-    const acordos = (data || []).map((item: any) => {
+    const acordos = (data || []).map((item: AcordoCondenacaoComParcelasDb) => {
       const acordo = mapearAcordoCondenacao(item);
       const parcelas = item.parcelas || [];
-      const parcelasPagas = parcelas.filter((p: any) =>
+      const parcelasPagas = parcelas.filter((p: { id: number; status: string }) =>
         ['recebida', 'paga'].includes(p.status)
       ).length;
 
@@ -296,7 +319,7 @@ export async function atualizarAcordoCondenacao(
   const supabase = createServiceClient();
 
   try {
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
 
     if (dados.valorTotal !== undefined) updateData.valor_total = dados.valorTotal;
     if (dados.dataVencimentoPrimeiraParcela !== undefined) {
@@ -357,7 +380,7 @@ export async function deletarAcordoCondenacao(
       .select('status')
       .eq('acordo_condenacao_id', id);
 
-    if (parcelas && parcelas.some((p: any) => ['recebida', 'paga'].includes(p.status))) {
+    if (parcelas && parcelas.some((p: { status: string }) => ['recebida', 'paga'].includes(p.status))) {
       return {
         sucesso: false,
         erro: 'Não é possível deletar acordo com parcelas já pagas/recebidas',
@@ -391,7 +414,7 @@ export async function deletarAcordoCondenacao(
 /**
  * Mapeia dados do banco para o tipo AcordoCondenacao
  */
-function mapearAcordoCondenacao(data: any): AcordoCondenacao {
+function mapearAcordoCondenacao(data: AcordoCondenacaoDb): AcordoCondenacao {
   return {
     id: data.id,
     processoId: data.processo_id,

@@ -144,29 +144,6 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
     fetchUser();
   }, [supabase]);
 
-  // Auto-save quando conteúdo mudar
-  React.useEffect(() => {
-    if (!documento || loading) return;
-
-    const currentContent = JSON.stringify(conteudo);
-    if (currentContent === lastSavedRef.current) return;
-
-    // Debounce de 2 segundos
-    if (autoSaveTimerRef.current) {
-      clearTimeout(autoSaveTimerRef.current);
-    }
-
-    autoSaveTimerRef.current = setTimeout(() => {
-      handleAutoSave();
-    }, 2000);
-
-    return () => {
-      if (autoSaveTimerRef.current) {
-        clearTimeout(autoSaveTimerRef.current);
-      }
-    };
-  }, [conteudo, titulo, documento, loading, handleAutoSave]);
-
   const handleAutoSave = React.useCallback(async () => {
     if (!documento) return;
 
@@ -199,6 +176,29 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
       setSaving(false);
     }
   }, [documento, documentoId, conteudo, titulo]);
+
+  // Auto-save quando conteúdo mudar
+  React.useEffect(() => {
+    if (!documento || loading) return;
+
+    const currentContent = JSON.stringify(conteudo);
+    if (currentContent === lastSavedRef.current) return;
+
+    // Debounce de 2 segundos
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+    }
+
+    autoSaveTimerRef.current = setTimeout(() => {
+      handleAutoSave();
+    }, 2000);
+
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, [conteudo, titulo, documento, loading, handleAutoSave]);
 
   const handleManualSave = async () => {
     if (!documento) return;

@@ -2,7 +2,7 @@
 // Gerencia operações relacionadas a repasses ao cliente
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { Parcela, StatusRepasse } from './parcela-persistence.service';
+import type { StatusRepasse } from './parcela-persistence.service';
 
 /**
  * Dados de repasse pendente (da view)
@@ -201,6 +201,34 @@ export async function realizarRepasse(
 /**
  * Lista repasses realizados (histórico)
  */
+export interface RepasseRealizadoDb {
+  id: number;
+  acordo_condenacao_id: number;
+  numero_parcela: number;
+  valor_bruto_credito_principal: number;
+  honorarios_sucumbenciais: number;
+  honorarios_contratuais: number;
+  data_vencimento: string;
+  status: string; // StatusParcela
+  data_efetivacao: string | null;
+  forma_pagamento: string; // FormaPagamento
+  dados_pagamento: Record<string, unknown> | null;
+  editado_manualmente: boolean;
+  valor_repasse_cliente: number | null;
+  status_repasse: string; // StatusRepasse
+  arquivo_declaracao_prestacao_contas: string | null;
+  data_declaracao_anexada: string | null;
+  arquivo_comprovante_repasse: string | null;
+  data_repasse: string | null;
+  usuario_repasse_id: number | null;
+  created_at: string;
+  updated_at: string;
+  acordos_condenacoes: {
+    processo_id: number;
+    tipo: string;
+  };
+}
+
 export async function listarRepassesRealizados(params: {
   dataInicio?: string;
   dataFim?: string;
@@ -209,7 +237,7 @@ export async function listarRepassesRealizados(params: {
   pagina?: number;
   limite?: number;
 }): Promise<{
-  repasses: any[];
+  repasses: RepasseRealizadoDb[];
   total: number;
   totalRepassado: number;
 }> {
@@ -307,10 +335,28 @@ export async function removerDeclaracao(
   }
 }
 
+// Raw data for repasse pendente from Supabase view
+interface RepassePendenteDb {
+  parcela_id: number;
+  acordo_condenacao_id: number;
+  numero_parcela: number;
+  valor_bruto_credito_principal: number;
+  valor_repasse_cliente: number;
+  status_repasse: StatusRepasse;
+  data_efetivacao: string;
+  arquivo_declaracao_prestacao_contas: string | null;
+  data_declaracao_anexada: string | null;
+  processo_id: number;
+  tipo: string;
+  acordo_valor_total: number;
+  percentual_cliente: number;
+  acordo_numero_parcelas: number;
+}
+
 /**
  * Mapeia dados da view para o tipo RepassePendente
  */
-function mapearRepassePendente(data: any): RepassePendente {
+function mapearRepassePendente(data: RepassePendenteDb): RepassePendente {
   return {
     parcelaId: data.parcela_id,
     acordoCondenacaoId: data.acordo_condenacao_id,

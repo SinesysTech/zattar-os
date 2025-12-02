@@ -78,14 +78,14 @@ export async function buscarDocumentoComUsuario(id: number): Promise<DocumentoCo
       *,
       criador:usuarios!documentos_criado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao,
+        nome_completo,
+        nome_exibicao,
         emailCorporativo
       ),
       editor:usuarios!documentos_editado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao
+        nome_completo,
+        nome_exibicao
       )
     `)
     .eq('id', id)
@@ -116,14 +116,14 @@ export async function listarDocumentos(
       *,
       criador:usuarios!documentos_criado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao,
+        nome_completo,
+        nome_exibicao,
         emailCorporativo
       ),
       editor:usuarios!documentos_editado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao
+        nome_completo,
+        nome_exibicao
       )
     `, { count: 'exact' });
 
@@ -313,14 +313,14 @@ export async function listarDocumentosLixeira(
       *,
       criador:usuarios!documentos_criado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao,
+        nome_completo,
+        nome_exibicao,
         emailCorporativo
       ),
       editor:usuarios!documentos_editado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao
+        nome_completo,
+        nome_exibicao
       )
     `)
     .not('deleted_at', 'is', null);
@@ -370,14 +370,14 @@ export async function listarDocumentosCompartilhadosComUsuario(
       *,
       criador:usuarios!documentos_criado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao,
+        nome_completo,
+        nome_exibicao,
         emailCorporativo
       ),
       editor:usuarios!documentos_editado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao
+        nome_completo,
+        nome_exibicao
       )
     `)
     .in('id', documentoIds)

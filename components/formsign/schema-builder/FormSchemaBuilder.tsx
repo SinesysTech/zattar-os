@@ -1,8 +1,7 @@
 "use client"
 
 import { useState, useCallback, useEffect } from 'react';
-import { DndContext, DragEndEvent, DragOverEvent, DragStartEvent, PointerSensor, useSensor, useSensors, closestCenter, DragOverlay } from '@dnd-kit/core';
-import { arrayMove } from '@dnd-kit/sortable';
+import { DndContext, DragEndEvent, DragStartEvent, PointerSensor, useSensor, useSensors, closestCenter, DragOverlay } from '@dnd-kit/core';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -18,7 +17,6 @@ import FieldPalette from '@/components/formsign/schema-builder/FieldPalette';
 import SchemaCanvas, { getFieldIcon } from '@/components/formsign/schema-builder/SchemaCanvas';
 import FieldPropertiesPanel from '@/components/formsign/schema-builder/FieldPropertiesPanel';
 import { Eye, Code, Save, X, AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface FormSchemaBuilderProps {

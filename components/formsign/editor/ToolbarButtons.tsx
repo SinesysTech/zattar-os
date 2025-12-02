@@ -152,7 +152,7 @@ export default function ToolbarButtons({
               onClick={() => onModeChange('add_image')}
               aria-label="Adicionar Campo de Imagem"
             >
-              <Image className="h-4 w-4" />
+              <Image className="h-4 w-4" aria-hidden="true" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right">

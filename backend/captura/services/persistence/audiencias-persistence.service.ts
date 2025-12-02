@@ -9,7 +9,7 @@ import { buscarProcessoNoAcervo } from './acervo-persistence.service';
 import { salvarOrgaoJulgador } from './orgao-julgador-persistence.service';
 import { salvarClasseJudicial, buscarClasseJudicial } from './classe-judicial-persistence.service';
 import { salvarTipoAudiencia, buscarTipoAudiencia } from './tipo-audiencia-persistence.service';
-import { salvarSalaAudiencia, buscarSalaAudiencia } from './sala-audiencia-persistence.service';
+import { salvarSalaAudiencia } from './sala-audiencia-persistence.service';
 import {
   compararObjetos,
   removerCamposControle,

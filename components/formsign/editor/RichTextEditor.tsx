@@ -42,7 +42,12 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { ConteudoComposto } from '@/types/formsign/template.types';
-import { getAvailableVariables, type VariableOption } from '@/lib/formsign';
+import {
+  getAvailableVariables,
+  type VariableOption,
+  type TiptapDocument,
+  type TiptapNode,
+} from '@/lib/formsign';
 
 interface RichTextEditorProps {
   value?: ConteudoComposto;
@@ -89,10 +94,10 @@ export function RichTextEditor({ value, onChange, formularios }: RichTextEditorP
     }
   }, [value?.json, editor]);
 
-  const generateTemplateString = useCallback((json: any): string => {
+  const generateTemplateString = useCallback((json: TiptapDocument): string => {
     let template = '';
 
-    const traverse = (node: any) => {
+    const traverse = (node: TiptapNode) => {
       if (node.type === 'text') {
         template += node.text;
       } else if (node.type === 'variable') {

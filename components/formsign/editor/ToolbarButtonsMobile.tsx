@@ -152,7 +152,7 @@ export default function ToolbarButtonsMobile({
                 onClick={() => onModeChange('add_image')}
                 aria-label="Imagem"
               >
-                <Image className="h-4 w-4" />
+                <Image className="h-4 w-4" aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">

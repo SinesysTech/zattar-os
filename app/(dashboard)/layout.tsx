@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Pedrinho } from "@/components/layout/pedrinho"; // <--- Importe aqui
+import { DifyChatbot } from "@/components/layout/dify-chatbot";
 
 export default function DashboardLayout({
   children,
@@ -14,11 +14,10 @@ export default function DashboardLayout({
         <div className="flex flex-1 flex-col gap-4 p-6 overflow-x-hidden">
           {children}
         </div>
-        
-        {/* Adicione o chatbot aqui no final */}
-        <Pedrinho />
-        
       </SidebarInset>
+
+      {/* Chatbot fora do SidebarInset para não ser cortado pelo overflow */}
+      <DifyChatbot />
     </SidebarProvider>
   );
 }

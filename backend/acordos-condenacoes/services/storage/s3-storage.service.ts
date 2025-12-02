@@ -9,6 +9,10 @@ import type {
   StorageConfig,
 } from './storage.interface';
 
+interface S3Client {
+  send(command: unknown): Promise<unknown>;
+}
+
 /**
  * Serviço de storage usando AWS S3
  *
@@ -20,7 +24,7 @@ import type {
  * - STORAGE_ENDPOINT: (Opcional) Endpoint customizado para S3-compatible services
  */
 export class S3StorageService implements IStorageService {
-  private client: any; // S3Client será tipado quando biblioteca for instalada
+  private client: S3Client | undefined; // S3Client será tipado quando biblioteca for instalada
   private bucket: string;
   private config: StorageConfig;
 
@@ -65,7 +69,7 @@ export class S3StorageService implements IStorageService {
   async upload(
     file: Buffer | ReadableStream,
     path: string,
-    contentType: string
+    _contentType: string
   ): Promise<UploadResult> {
     try {
       if (!this.client) {
@@ -139,7 +143,7 @@ export class S3StorageService implements IStorageService {
     }
   }
 
-  async getUrl(path: string, expiresIn: number = 3600): Promise<GetUrlResult> {
+  async getUrl(path: string, _expiresIn: number = 3600): Promise<GetUrlResult> {
     try {
       if (!this.client) {
         return {
@@ -192,9 +196,12 @@ export class S3StorageService implements IStorageService {
       // await this.client.send(command);
 
       return true;
-    } catch (error: any) {
-      if (error.name === 'NotFound' || error.$metadata?.httpStatusCode === 404) {
-        return false;
+    } catch (error: unknown) {
+      if (typeof error === 'object' && error !== null) {
+        const s3Error = error as { name?: string; $metadata?: { httpStatusCode?: number } };
+        if (s3Error.name === 'NotFound' || s3Error.$metadata?.httpStatusCode === 404) {
+          return false;
+        }
       }
       console.error('❌ Erro ao verificar existência do arquivo:', error);
       return false;

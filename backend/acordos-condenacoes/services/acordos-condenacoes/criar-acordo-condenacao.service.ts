@@ -9,6 +9,7 @@ import {
 import {
   criarParcelas,
   type ParcelaDados,
+  type Parcela,
 } from '../persistence/parcela-persistence.service';
 
 /**
@@ -17,7 +18,7 @@ import {
 export interface CriarAcordoResult {
   sucesso: boolean;
   acordo?: AcordoCondenacao;
-  parcelas?: any[];
+  parcelas?: Parcela[];
   erro?: string;
 }
 

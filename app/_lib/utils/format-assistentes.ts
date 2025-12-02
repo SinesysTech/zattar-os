@@ -50,7 +50,7 @@ export function sanitizarIframeCode(iframeCode: string): string {
   if (!iframeCode) return '';
   
   // Remover tags script
-  let sanitized = iframeCode.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  const sanitized = iframeCode.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
   
   // Verificar se contém iframe
   if (!/<iframe[^>]*>[\s\S]*?<\/iframe>/i.test(sanitized)) {

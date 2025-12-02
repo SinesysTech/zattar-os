@@ -9,6 +9,15 @@ import type {
   StorageConfig,
 } from './storage.interface';
 
+interface MinioClient {
+  bucketExists(bucket: string): Promise<boolean>;
+  makeBucket(bucket: string, region: string): Promise<void>;
+  putObject(bucket: string, path: string, file: Buffer | ReadableStream, ...args: (number | Record<string, string>)[]): Promise<void>;
+  presignedGetObject(bucket: string, path: string, expires: number): Promise<string>;
+  removeObject(bucket: string, path: string): Promise<void>;
+  statObject(bucket: string, path: string): Promise<void>;
+}
+
 /**
  * Serviço de storage usando Minio
  *
@@ -21,7 +30,7 @@ import type {
  * - STORAGE_USE_SSL: "true" ou "false" (padrão: "false")
  */
 export class MinioStorageService implements IStorageService {
-  private client: any; // MinioClient será tipado quando biblioteca for instalada
+  private client: MinioClient | undefined; // MinioClient será tipado quando biblioteca for instalada
   private bucket: string;
   private config: StorageConfig;
 
@@ -174,8 +183,8 @@ export class MinioStorageService implements IStorageService {
 
       await this.client.statObject(this.bucket, path);
       return true;
-    } catch (error: any) {
-      if (error.code === 'NotFound') {
+    } catch (error: unknown) {
+      if (typeof error === 'object' && error !== null && 'code' in error && (error as { code: unknown }).code === 'NotFound') {
         return false;
       }
       console.error('❌ Erro ao verificar existência do arquivo:', error);

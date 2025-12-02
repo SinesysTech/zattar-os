@@ -62,8 +62,6 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
     transition,
   };
 
-  const Icon = getFieldIcon(field.type);
-
   return (
     <Card
       ref={setNodeRef}
@@ -83,7 +81,7 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
           <GripVertical className="w-4 h-4" />
         </div>
 
-        <Icon className="w-4 h-4 text-muted-foreground shrink-0" />
+        {React.createElement(getFieldIcon(field.type), { className: "w-4 h-4 text-muted-foreground shrink-0" })}
 
         <div className="flex-1 min-w-0">
           <div className="font-medium text-sm truncate">{field.label}</div>

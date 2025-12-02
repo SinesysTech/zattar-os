@@ -5,7 +5,6 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 import {
   compararObjetos,
-  removerCamposControle,
 } from '@/backend/utils/captura/comparison.util';
 import { CACHE_PREFIXES, withCache } from '@/backend/utils/redis/cache-utils';
 
