@@ -158,7 +158,7 @@ export function ChatInterface({
     return (
       <div className={cn('flex flex-col h-full', className)}>
         {showHeader && (
-          <div className="border-b p-4">
+          <div className="border-b border-border p-4">
             <Skeleton className="h-5 w-32" />
             {headerSubtitle && <Skeleton className="h-3 w-24 mt-1" />}
           </div>
@@ -179,7 +179,7 @@ export function ChatInterface({
     <div className={cn('flex flex-col h-full', className)}>
       {/* Header */}
       {showHeader && (
-        <div className={cn('border-b', compact ? 'p-3' : 'p-4')}>
+        <div className={cn('border-b border-border', compact ? 'p-3' : 'p-4')}>
           <div className={cn('flex items-center justify-between', compact && 'gap-2')}>
             <h3 className={cn('font-semibold flex items-center gap-2', compact && 'text-sm')}>
               <MessageSquare className={cn('h-4 w-4', compact && 'h-3 w-3')} />

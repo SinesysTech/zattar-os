@@ -199,14 +199,14 @@ export default function ChatPage() {
             <Skeleton className="h-7 w-48" />
           </div>
         </div>
-        <div className="flex flex-1">
-          <div className="w-80 border-r p-4 space-y-4">
+        <div className="flex flex-1 overflow-hidden rounded-xl border border-border shadow-sm">
+          <div className="w-80 border-r p-4 space-y-4 h-full">
             <Skeleton className="h-10 w-full" />
             <Skeleton className="h-14 w-full" />
             <Skeleton className="h-14 w-full" />
             <Skeleton className="h-14 w-full" />
           </div>
-          <div className="flex-1 p-8">
+          <div className="flex-1 p-8 min-h-0">
             <Skeleton className="h-full w-full" />
           </div>
         </div>
@@ -217,19 +217,21 @@ export default function ChatPage() {
   return (
     <div className="flex h-full flex-col">
       {/* Content */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className={cn('flex flex-1 h-full overflow-hidden rounded-xl border border-border shadow-sm')}> 
         {/* Sidebar - Lista de Salas */}
-        <div className="w-80 border-r flex flex-col">
+        <div className="w-80 border-r flex flex-col h-full">
           {/* Busca e Botão Nova Conversa */}
-          <div className="p-4 border-b space-y-3">
-            <Button
-              className="w-full"
-              onClick={() => setCreateDialogOpen(true)}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Nova Conversa
-            </Button>
-            <div className="relative">
+          <div className="p-4 border-b">
+            <div className="-mx-4 px-4 pb-3 border-b border-border">
+              <Button
+                className="w-full"
+                onClick={() => setCreateDialogOpen(true)}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Nova Conversa
+              </Button>
+            </div>
+            <div className="relative pt-3">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Buscar salas..."
@@ -285,7 +287,7 @@ export default function ChatPage() {
         </div>
 
         {/* Chat Principal */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0">
           {salaAtiva && currentUser ? (
             <>
             <ChatInterface
