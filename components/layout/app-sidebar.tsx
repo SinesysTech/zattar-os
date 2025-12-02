@@ -118,7 +118,7 @@ const navPrincipal = [
 // Nav Serviços - Ferramentas e utilitários
 const navServicos = [
   {
-    name: "Editor de Documentos",
+    name: "Documentos",
     url: "/documentos",
     icon: FileEdit,
   },
