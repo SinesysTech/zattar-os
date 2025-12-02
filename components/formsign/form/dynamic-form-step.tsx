@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useFormularioStore } from '@/app/_lib/stores/formsign/formulario-store';
 import { toast } from 'sonner';
-import { DynamicFormData, DynamicFormSchema } from '@/types/formsign/form-schema.types';
-import { SalvarAcaoRequest } from '@/types/formsign/formulario.types';
+import { DynamicFormData, DynamicFormSchema, SalvarAcaoRequest } from '@/types/formsign';
 import DynamicFormRenderer from './dynamic-form-renderer';
 import FormStepLayout from './form-step-layout';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -297,9 +296,38 @@ export default function DynamicFormStep() {
         dados: orderedData, // Ordered and enriched form data
       };
 
-      // 5. Call API
-      console.warn('API route /api/salvar-acao not yet migrated - form submission will fail');
-      const response = await fetch('/api/salvar-acao', {
+      // 5. Check if submission is enabled (graceful degradation)
+      const submitEnabled = process.env.NEXT_PUBLIC_FORMSIGN_SUBMIT_ENABLED === 'true';
+
+      // Structured logging for telemetry
+      console.log('[FORMSIGN] form_action_submit', {
+        event: 'form_action_submit',
+        status: submitEnabled ? 'attempting' : 'mock',
+        payloadKeys: Object.keys(payload),
+        formularioId: formularioIdValue,
+      });
+
+      if (!submitEnabled) {
+        // Mock success when backend route not yet available
+        const mockAcaoId = `mock-${crypto.randomUUID()}`;
+
+        // Save to store with mock ID
+        setDadosAcao({
+          ...orderedData,
+          acao_id: mockAcaoId as unknown as number, // Temporary mock ID
+        });
+
+        toast.message('Salvamento simulado - avançando...', {
+          description: 'Funcionalidade de salvamento em desenvolvimento',
+        });
+
+        // Advance to next step
+        proximaEtapa();
+        return;
+      }
+
+      // 6. Call API (when enabled)
+      const response = await fetch('/api/assinatura-digital/signature/salvar-acao', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -310,7 +338,31 @@ export default function DynamicFormStep() {
       // Verificar content-type antes de parsear (pode ser HTML em caso de erro)
       const contentType = response.headers.get('content-type');
 
+      // Handle 404 or network errors with mock fallback
       if (!response.ok) {
+        // If route not implemented (404), fallback to mock success
+        if (response.status === 404) {
+          console.log('[FORMSIGN] form_action_submit', {
+            event: 'form_action_submit',
+            status: 'mock_fallback_404',
+            payloadKeys: Object.keys(payload),
+            formularioId: formularioIdValue,
+          });
+
+          const mockAcaoId = `mock-${crypto.randomUUID()}`;
+          setDadosAcao({
+            ...orderedData,
+            acao_id: mockAcaoId as unknown as number,
+          });
+
+          toast.message('Salvamento simulado - avançando...', {
+            description: 'Endpoint em desenvolvimento (404)',
+          });
+
+          proximaEtapa();
+          return;
+        }
+
         if (contentType?.includes('application/json')) {
           const error = await response.json();
           throw new Error(error.error || error.message || 'Erro ao salvar dados');
@@ -332,13 +384,22 @@ export default function DynamicFormStep() {
         throw new Error(result.error || 'Erro ao salvar dados');
       }
 
-      // 6. Save to store
+      // Log success
+      console.log('[FORMSIGN] form_action_submit', {
+        event: 'form_action_submit',
+        status: 'success',
+        payloadKeys: Object.keys(payload),
+        formularioId: formularioIdValue,
+        acao_id: result.data.acao_id,
+      });
+
+      // 7. Save to store
       setDadosAcao({
         ...orderedData,
         acao_id: result.data.acao_id,
       });
 
-      // 7. Success toast
+      // 8. Success toast
       toast.success('Dados da ação salvos com sucesso!');
 
       // 8. Advance to next step

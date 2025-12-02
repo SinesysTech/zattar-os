@@ -150,6 +150,8 @@ export default function DynamicFormRenderer({
 
   /**
    * Render individual field based on type
+   * Note: FormControl is now rendered inside renderFieldControl for each field type
+   * to avoid nested FormControl issues (especially with SELECT which has its own structure)
    */
   const renderField = (field: FormFieldSchema) => {
     return (
@@ -167,7 +169,7 @@ export default function DynamicFormRenderer({
                 <Info className="h-3.5 w-3.5 text-muted-foreground" />
               )}
             </FormLabel>
-            <FormControl>{renderFieldControl(field, fieldProps)}</FormControl>
+            {renderFieldControl(field, fieldProps)}
             <FormMessage />
             {field.helpText && (
               <p className="text-xs text-muted-foreground">{field.helpText}</p>
@@ -180,6 +182,8 @@ export default function DynamicFormRenderer({
 
   /**
    * Render field control based on field type
+   * Each field type is wrapped with FormControl to ensure proper ARIA attributes
+   * and tooltip behavior for validation errors.
    */
   const renderFieldControl = (
     field: FormFieldSchema,
@@ -194,61 +198,85 @@ export default function DynamicFormRenderer({
     switch (field.type) {
       case FormFieldType.TEXT:
       case FormFieldType.EMAIL:
-        return <Input {...commonProps} {...fieldProps} />;
+        return (
+          <FormControl>
+            <Input {...commonProps} {...fieldProps} />
+          </FormControl>
+        );
 
       case FormFieldType.TEXTAREA:
-        return <Textarea rows={4} {...commonProps} {...fieldProps} />;
+        return (
+          <FormControl>
+            <Textarea rows={4} {...commonProps} {...fieldProps} />
+          </FormControl>
+        );
 
       case FormFieldType.NUMBER:
-        return <Input type="number" {...commonProps} {...fieldProps} />;
+        return (
+          <FormControl>
+            <Input type="number" {...commonProps} {...fieldProps} />
+          </FormControl>
+        );
 
       case FormFieldType.DATE:
         return (
-          <InputData
-            placeholder={field.placeholder || 'dd/mm/aaaa'}
-            disabled={field.disabled || isSubmitting}
-            {...fieldProps}
-          />
+          <FormControl>
+            <InputData
+              placeholder={field.placeholder || 'dd/mm/aaaa'}
+              disabled={field.disabled || isSubmitting}
+              {...fieldProps}
+            />
+          </FormControl>
         );
 
       case FormFieldType.CPF:
         return (
-          <InputCPF
-            placeholder={field.placeholder || '000.000.000-00'}
-            disabled={field.disabled || isSubmitting}
-            {...fieldProps}
-          />
+          <FormControl>
+            <InputCPF
+              placeholder={field.placeholder || '000.000.000-00'}
+              disabled={field.disabled || isSubmitting}
+              {...fieldProps}
+            />
+          </FormControl>
         );
 
       case FormFieldType.CNPJ:
         return (
-          <InputCPFCNPJ
-            placeholder={field.placeholder}
-            disabled={field.disabled || isSubmitting}
-            {...fieldProps}
-          />
+          <FormControl>
+            <InputCPFCNPJ
+              placeholder={field.placeholder}
+              disabled={field.disabled || isSubmitting}
+              {...fieldProps}
+            />
+          </FormControl>
         );
 
       case FormFieldType.PHONE:
         return (
-          <InputTelefone
-            placeholder={field.placeholder || '(00) 00000-0000'}
-            disabled={field.disabled || isSubmitting}
-            {...fieldProps}
-          />
+          <FormControl>
+            <InputTelefone
+              placeholder={field.placeholder || '(00) 00000-0000'}
+              disabled={field.disabled || isSubmitting}
+              {...fieldProps}
+            />
+          </FormControl>
         );
 
       case FormFieldType.CEP:
         return (
-          <InputCEP
-            placeholder={field.placeholder || '00000-000'}
-            disabled={field.disabled || isSubmitting}
-            onAddressFound={handleAddressFound}
-            {...fieldProps}
-          />
+          <FormControl>
+            <InputCEP
+              placeholder={field.placeholder || '00000-000'}
+              disabled={field.disabled || isSubmitting}
+              onAddressFound={handleAddressFound}
+              {...fieldProps}
+            />
+          </FormControl>
         );
 
       case FormFieldType.SELECT:
+        // SELECT: FormControl wraps only the SelectTrigger (not the entire Select)
+        // This ensures proper ARIA attributes and tooltip behavior
         return (
           <Select
             onValueChange={fieldProps.onChange}
@@ -278,50 +306,58 @@ export default function DynamicFormRenderer({
 
       case FormFieldType.RADIO:
         return (
-          <RadioGroup
-            onValueChange={(value) => {
-              // Convert string back to original type (number, boolean, or string)
-              // Per FormFieldOption.value: string | number | boolean
-              const firstOptionValue = field.options?.[0]?.value;
-              if (typeof firstOptionValue === 'number') {
-                fieldProps.onChange(Number(value));
-              } else if (typeof firstOptionValue === 'boolean') {
-                // Convert string "true"/"false" to actual boolean
-                fieldProps.onChange(value === 'true');
-              } else {
-                fieldProps.onChange(value);
-              }
-            }}
-            value={String(fieldProps.value ?? '')}
-            disabled={field.disabled || isSubmitting}
-            className="flex flex-wrap gap-6"
-          >
-            {field.options?.map((option) => (
-              <div key={option.value} className="flex items-center gap-2">
-                <RadioGroupItem
-                  value={String(option.value)}
-                  id={`${field.id}-${option.value}`}
-                  disabled={option.disabled}
-                />
-                <Label htmlFor={`${field.id}-${option.value}`}>
-                  {option.label}
-                </Label>
-              </div>
-            ))}
-          </RadioGroup>
+          <FormControl>
+            <RadioGroup
+              onValueChange={(value) => {
+                // Convert string back to original type (number, boolean, or string)
+                // Per FormFieldOption.value: string | number | boolean
+                const firstOptionValue = field.options?.[0]?.value;
+                if (typeof firstOptionValue === 'number') {
+                  fieldProps.onChange(Number(value));
+                } else if (typeof firstOptionValue === 'boolean') {
+                  // Convert string "true"/"false" to actual boolean
+                  fieldProps.onChange(value === 'true');
+                } else {
+                  fieldProps.onChange(value);
+                }
+              }}
+              value={String(fieldProps.value ?? '')}
+              disabled={field.disabled || isSubmitting}
+              className="flex flex-wrap gap-6"
+            >
+              {field.options?.map((option) => (
+                <div key={option.value} className="flex items-center gap-2">
+                  <RadioGroupItem
+                    value={String(option.value)}
+                    id={`${field.id}-${option.value}`}
+                    disabled={option.disabled}
+                  />
+                  <Label htmlFor={`${field.id}-${option.value}`}>
+                    {option.label}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </FormControl>
         );
 
       case FormFieldType.CHECKBOX:
         return (
-          <Checkbox
-            checked={!!fieldProps.value}
-            onCheckedChange={(checked) => fieldProps.onChange(checked === true)}
-            disabled={field.disabled || isSubmitting}
-          />
+          <FormControl>
+            <Checkbox
+              checked={!!fieldProps.value}
+              onCheckedChange={(checked) => fieldProps.onChange(checked === true)}
+              disabled={field.disabled || isSubmitting}
+            />
+          </FormControl>
         );
 
       default:
-        return <Input {...commonProps} {...fieldProps} />;
+        return (
+          <FormControl>
+            <Input {...commonProps} {...fieldProps} />
+          </FormControl>
+        );
     }
   };
 
