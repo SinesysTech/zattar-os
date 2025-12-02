@@ -17,7 +17,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
@@ -165,40 +164,28 @@ export function CreateChatDialog({
 
         <div className="space-y-4 py-4">
           {/* Seletor de modo */}
-          <RadioGroup
-            value={modo}
-            onValueChange={(value) => setModo(value as ModoChat)}
-            className="grid grid-cols-2 gap-4"
-          >
-            <div>
-              <RadioGroupItem
-                value="privado"
-                id="privado"
-                className="peer sr-only"
-              />
-              <Label
-                htmlFor="privado"
-                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
-              >
-                <Users className="mb-3 h-6 w-6" />
-                <span className="text-sm font-medium">Conversa Privada</span>
-              </Label>
-            </div>
-            <div>
-              <RadioGroupItem
-                value="grupo"
-                id="grupo"
-                className="peer sr-only"
-              />
-              <Label
-                htmlFor="grupo"
-                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
-              >
-                <MessageSquare className="mb-3 h-6 w-6" />
-                <span className="text-sm font-medium">Grupo</span>
-              </Label>
-            </div>
-          </RadioGroup>
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              type="button"
+              onClick={() => setModo('privado')}
+              className={`flex flex-col items-center justify-between rounded-md border-2 bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors ${
+                modo === 'privado' ? 'border-primary' : 'border-muted'
+              }`}
+            >
+              <Users className="mb-3 h-6 w-6" />
+              <span className="text-sm font-medium">Conversa Privada</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setModo('grupo')}
+              className={`flex flex-col items-center justify-between rounded-md border-2 bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors ${
+                modo === 'grupo' ? 'border-primary' : 'border-muted'
+              }`}
+            >
+              <MessageSquare className="mb-3 h-6 w-6" />
+              <span className="text-sm font-medium">Grupo</span>
+            </button>
+          </div>
 
           {/* Conteúdo baseado no modo */}
           {modo === 'privado' ? (

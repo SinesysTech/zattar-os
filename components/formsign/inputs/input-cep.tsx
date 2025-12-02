@@ -1,14 +1,26 @@
 import * as React from 'react';
 import { IMaskInput } from 'react-imask';
 import { cn } from '@/lib/utils';
-import { buscarEnderecoPorCep, type EnderecoViaCep } from '@/app/_lib/utils/viacep';
+import { buscarEnderecoPorCep } from '@/app/_lib/utils/viacep';
 import { Loader2 } from 'lucide-react';
+
+/**
+ * Adapter type for address data returned by InputCEP's onAddressFound callback.
+ * Maps from EnderecoViaCep (cidade → localidade, estado → uf) to match common
+ * form field naming conventions.
+ */
+export type InputCepAddress = {
+  logradouro: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+};
 
 export interface InputCEPProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'onBlur'> {
   label?: string;
   error?: string;
-  onAddressFound?: (address: { logradouro: string; bairro: string; localidade: string; uf: string }) => void;
+  onAddressFound?: (address: InputCepAddress) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
@@ -68,6 +80,7 @@ const InputCEP = React.forwardRef<HTMLInputElement, InputCEPProps>(
               if (onChange) {
                 const syntheticEvent = {
                   target: { value: maskedValue },
+                  currentTarget: { value: maskedValue }
                 } as React.ChangeEvent<HTMLInputElement>;
                 onChange(syntheticEvent);
               }

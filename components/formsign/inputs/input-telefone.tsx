@@ -30,6 +30,7 @@ const InputTelefone = React.forwardRef<HTMLInputElement, InputTelefoneProps>(
               if (onChange) {
                 const syntheticEvent = {
                   target: { value: maskedValue },
+                  currentTarget: { value: maskedValue }
                 } as React.ChangeEvent<HTMLInputElement>;
                 onChange(syntheticEvent);
               }
@@ -72,6 +73,7 @@ const InputTelefone = React.forwardRef<HTMLInputElement, InputTelefoneProps>(
               if (onChange) {
                 const syntheticEvent = {
                   target: { value: maskedValue },
+                  currentTarget: { value: maskedValue }
                 } as React.ChangeEvent<HTMLInputElement>;
                 onChange(syntheticEvent);
               }

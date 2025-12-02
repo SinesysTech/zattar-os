@@ -38,6 +38,7 @@ const InputCPFCNPJ = React.forwardRef<HTMLInputElement, InputCPFCNPJProps>(
             if (onChange) {
               const syntheticEvent = {
                 target: { value: maskedValue },
+                currentTarget: { value: maskedValue }
               } as React.ChangeEvent<HTMLInputElement>;
               onChange(syntheticEvent);
             }

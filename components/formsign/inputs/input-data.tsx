@@ -32,6 +32,7 @@ const InputData = React.forwardRef<HTMLInputElement, InputDataProps>(
             if (onChange) {
               const syntheticEvent = {
                 target: { value: maskedValue },
+                currentTarget: { value: maskedValue }
               } as React.ChangeEvent<HTMLInputElement>;
               onChange(syntheticEvent);
             }
