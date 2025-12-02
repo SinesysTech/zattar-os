@@ -6,12 +6,14 @@ import { useCallback, useEffect, useState } from 'react'
 interface UseRealtimeChatProps {
   roomName: string
   username: string
+  userId?: number
 }
 
 export interface ChatMessage {
   id: string
   content: string
   user: {
+    id?: number
     name: string
   }
   createdAt: string
@@ -19,13 +21,16 @@ export interface ChatMessage {
 
 const EVENT_MESSAGE_TYPE = 'message'
 
-export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
+export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatProps) {
   const supabase = createClient()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [channel, setChannel] = useState<ReturnType<typeof supabase.channel> | null>(null)
   const [isConnected, setIsConnected] = useState(false)
 
   useEffect(() => {
+    // Reset messages when room changes to avoid context mixing
+    setMessages([])
+
     const newChannel = supabase.channel(roomName)
 
     newChannel
@@ -45,7 +50,7 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
     return () => {
       supabase.removeChannel(newChannel)
     }
-  }, [roomName, username, supabase])
+  }, [roomName, username, userId, supabase])
 
   const sendMessage = useCallback(
     async (content: string) => {
@@ -55,6 +60,7 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
         id: crypto.randomUUID(),
         content,
         user: {
+          id: userId,
           name: username,
         },
         createdAt: new Date().toISOString(),
@@ -69,7 +75,7 @@ export function useRealtimeChat({ roomName, username }: UseRealtimeChatProps) {
         payload: message,
       })
     },
-    [channel, isConnected, username]
+    [channel, isConnected, username, userId]
   )
 
   return { messages, sendMessage, isConnected }

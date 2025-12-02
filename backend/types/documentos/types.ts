@@ -377,8 +377,9 @@ export interface ListarVersoesParams {
 export interface SalaChat {
   id: number;
   nome: string;
-  tipo: 'geral' | 'documento' | 'privado';
+  tipo: 'geral' | 'documento' | 'privado' | 'grupo';
   documento_id: number | null;
+  participante_id: number | null;
   criado_por: number;
   created_at: string;
 }
@@ -388,8 +389,9 @@ export interface SalaChat {
  */
 export interface CriarSalaChatParams {
   nome: string;
-  tipo: 'geral' | 'documento' | 'privado';
+  tipo: 'geral' | 'documento' | 'privado' | 'grupo';
   documento_id?: number | null;
+  participante_id?: number | null;
 }
 
 /**
@@ -415,7 +417,7 @@ export interface SalaChatComInfo extends SalaChat {
  * Parâmetros para listar salas de chat
  */
 export interface ListarSalasChatParams {
-  tipo?: 'geral' | 'documento' | 'privado';
+  tipo?: 'geral' | 'documento' | 'privado' | 'grupo';
   documento_id?: number;
   limit?: number;
   offset?: number;

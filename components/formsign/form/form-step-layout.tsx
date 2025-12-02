@@ -76,10 +76,17 @@ export default function FormStepLayout({
         {description && <CardDescription>{description}</CardDescription>}
 
         {/* Progress bar */}
-        <div className="w-full bg-muted rounded-full h-2 mt-4">
+        {/* eslint-disable-next-line react/forbid-dom-props */}
+        <div 
+          className="w-full bg-muted rounded-full h-2 mt-4"
+          // Inline style required: dynamic progress value calculated at runtime
+          style={{ '--progress-width': `${(currentStep / totalSteps) * 100}%` } as React.CSSProperties}
+        >
+          {/* eslint-disable-next-line react/forbid-dom-props */}
           <div
             className="bg-primary h-2 rounded-full transition-all duration-300"
-            style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+            // Inline style required: uses CSS custom property for dynamic width
+            style={{ width: 'var(--progress-width)' }}
           />
         </div>
       </CardHeader>

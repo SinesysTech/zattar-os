@@ -116,8 +116,10 @@ export function CreateChatDialog({
 
     setLoading(true);
     try {
+      // Para conversas privadas, usamos nomes genéricos que serão substituídos na exibição
+      // O backend usa participante_id para determinar o nome correto para cada usuário
       const nomeSala = modo === 'privado'
-        ? `Conversa com ${selectedUser!.nomeExibicao || selectedUser!.nomeCompleto}`
+        ? `Conversa privada` // Nome genérico - será substituído na exibição
         : nome.trim();
 
       const response = await fetch('/api/chat/salas', {
@@ -125,7 +127,8 @@ export function CreateChatDialog({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nome: nomeSala,
-          tipo: 'privado',
+          tipo: modo === 'privado' ? 'privado' : 'grupo',
+          participante_id: modo === 'privado' ? selectedUser!.id : undefined,
         }),
       });
 

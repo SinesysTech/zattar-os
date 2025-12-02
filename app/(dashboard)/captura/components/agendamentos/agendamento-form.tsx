@@ -12,26 +12,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { TipoCapturaSelect, type TipoCaptura as TipoCapturaUI } from '../tipo-captura-select';
 import { criarAgendamento } from '@/app/api/captura/agendamentos/agendamentos';
 import type { TipoCaptura } from '@/backend/types/captura/capturas-log-types';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock } from 'lucide-react';
 
 interface AgendamentoFormProps {
   onSuccess?: () => void;
 }
 
-const TIPOS_CAPTURA: Array<{ value: TipoCaptura; label: string }> = [
-  { value: 'acervo_geral', label: 'Acervo Geral' },
-  { value: 'arquivados', label: 'Arquivados' },
-  { value: 'audiencias', label: 'Audiências' },
-  { value: 'pendentes', label: 'Pendentes' },
-];
+/**
+ * Mapeia tipos de captura da UI (com hífen) para tipos do backend (com underscore)
+ */
+const mapTipoCapturaUIToBackend = (tipoUI: TipoCapturaUI): TipoCaptura => {
+  const mapping: Record<TipoCapturaUI, TipoCaptura> = {
+    'acervo-geral': 'acervo_geral',
+    'arquivados': 'arquivados',
+    'audiencias': 'audiencias',
+    'pendentes': 'pendentes',
+    'timeline': 'acervo_geral', // Timeline não tem agendamento específico, mapeia para acervo geral
+    'partes': 'acervo_geral', // Partes não tem agendamento específico, mapeia para acervo geral
+  };
+  return mapping[tipoUI];
+};
 
 export function AgendamentoForm({ onSuccess }: AgendamentoFormProps) {
   const [advogadoId, setAdvogadoId] = useState<number | null>(null);
   const [credenciaisSelecionadas, setCredenciaisSelecionadas] = useState<number[]>([]);
-  const [tipoCaptura, setTipoCaptura] = useState<TipoCaptura | ''>('');
+  const [tipoCaptura, setTipoCaptura] = useState<TipoCapturaUI | ''>('');
   const [periodicidade, setPeriodicidade] = useState<'diario' | 'a_cada_N_dias' | ''>('');
   const [diasIntervalo, setDiasIntervalo] = useState<number>(1);
   const [horario, setHorario] = useState<string>('07:00');
@@ -43,6 +52,13 @@ export function AgendamentoForm({ onSuccess }: AgendamentoFormProps) {
     success: boolean | null;
     error?: string;
   }>({ success: null });
+
+  // Controle de campos habilitados/desabilitados
+  const isTipoCapturaSelected = Boolean(tipoCaptura);
+  const isPeriodicidadeSelected = Boolean(periodicidade);
+  const needsAudienciasDates = tipoCaptura === 'audiencias';
+  const needsPendentesFiltro = tipoCaptura === 'pendentes';
+  const showDiasIntervalo = periodicidade === 'a_cada_N_dias';
 
   const handleSubmit = async () => {
     // Validações
@@ -78,7 +94,7 @@ export function AgendamentoForm({ onSuccess }: AgendamentoFormProps) {
     }
 
     if (tipoCaptura === 'pendentes' && !filtroPrazo) {
-      setResult({ success: false, error: 'Para pendentes, selecione o filtro de prazo.' });
+      setResult({ success: false, error: 'Para expedientes, selecione o filtro de prazo.' });
       return;
     }
 
@@ -96,8 +112,11 @@ export function AgendamentoForm({ onSuccess }: AgendamentoFormProps) {
         parametrosExtras.filtroPrazo = filtroPrazo;
       }
 
+      // Converter tipo de captura UI para backend
+      const tipoCapturaBackend = mapTipoCapturaUIToBackend(tipoCaptura);
+
       const response = await criarAgendamento({
-        tipo_captura: tipoCaptura,
+        tipo_captura: tipoCapturaBackend,
         advogado_id: advogadoId!,
         credencial_ids: credenciaisSelecionadas,
         periodicidade: periodicidade as 'diario' | 'a_cada_N_dias',
@@ -145,117 +164,186 @@ export function AgendamentoForm({ onSuccess }: AgendamentoFormProps) {
         credenciaisSelecionadas={credenciaisSelecionadas}
         onCredenciaisChange={setCredenciaisSelecionadas}
       >
-        {/* Tipo de Captura */}
-        <div className="space-y-2">
-          <Label htmlFor="tipo-captura">Tipo de Captura *</Label>
-          <Select value={tipoCaptura} onValueChange={(value) => setTipoCaptura(value as TipoCaptura)}>
-            <SelectTrigger id="tipo-captura">
-              <SelectValue placeholder="Selecione o tipo de captura" />
-            </SelectTrigger>
-            <SelectContent>
-              {TIPOS_CAPTURA.map((tipo) => (
-                <SelectItem key={tipo.value} value={tipo.value}>
-                  {tipo.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Periodicidade */}
-        <div className="space-y-2">
-          <Label htmlFor="periodicidade">Periodicidade *</Label>
-          <Select
-            value={periodicidade}
-            onValueChange={(value) => {
-              setPeriodicidade(value as 'diario' | 'a_cada_N_dias');
-              if (value === 'diario') {
-                setDiasIntervalo(1);
-              }
-            }}
-          >
-            <SelectTrigger id="periodicidade">
-              <SelectValue placeholder="Selecione a periodicidade" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="diario">Diário (todos os dias)</SelectItem>
-              <SelectItem value="a_cada_N_dias">A cada N dias</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Dias Intervalo (apenas se a_cada_N_dias) */}
-        {periodicidade === 'a_cada_N_dias' && (
-          <div className="space-y-2">
-            <Label htmlFor="dias-intervalo">A cada quantos dias? *</Label>
-            <Input
-              id="dias-intervalo"
-              type="number"
-              min="1"
-              value={diasIntervalo}
-              onChange={(e) => setDiasIntervalo(parseInt(e.target.value, 10) || 1)}
-              placeholder="Ex: 2, 3, 5, 7..."
-            />
-            <p className="text-sm text-muted-foreground">
-              Informe quantos dias entre cada execução (ex: 2 = a cada 2 dias, 3 = a cada 3 dias)
-            </p>
-          </div>
-        )}
-
-        {/* Horário */}
-        <div className="space-y-2">
-          <Label htmlFor="horario">Horário de Execução *</Label>
-          <Input
-            id="horario"
-            type="time"
-            value={horario}
-            onChange={(e) => setHorario(e.target.value)}
-          />
-          <p className="text-sm text-muted-foreground">Horário em que a captura será executada (formato HH:mm)</p>
-        </div>
-
-        {/* Parâmetros extras para Audiências */}
-        {tipoCaptura === 'audiencias' && (
-          <div className="space-y-4">
+        {/* Grid de 2 colunas para melhor aproveitamento do espaço */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Coluna 1: Configurações Principais */}
+          <div className="space-y-6">
+            {/* Tipo de Captura */}
             <div className="space-y-2">
-              <Label htmlFor="data-inicio">Data Início *</Label>
-              <Input
-                id="data-inicio"
-                type="date"
-                value={dataInicio}
-                onChange={(e) => setDataInicio(e.target.value)}
+              <Label htmlFor="tipo-captura">Tipo de Captura *</Label>
+              <TipoCapturaSelect
+                value={tipoCaptura as TipoCapturaUI}
+                onValueChange={(value) => {
+                  setTipoCaptura(value);
+                  // Resetar campos específicos quando mudar o tipo
+                  setDataInicio('');
+                  setDataFim('');
+                  setFiltroPrazo('');
+                }}
+                disabled={false}
+                apenasAgendaveis={true}
               />
+              <p className="text-xs text-muted-foreground">
+                Selecione o tipo de captura que será executada automaticamente
+              </p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="data-fim">Data Fim *</Label>
-              <Input
-                id="data-fim"
-                type="date"
-                value={dataFim}
-                onChange={(e) => setDataFim(e.target.value)}
-              />
-            </div>
-          </div>
-        )}
 
-        {/* Parâmetros extras para Pendentes */}
-        {tipoCaptura === 'pendentes' && (
-          <div className="space-y-2">
-            <Label htmlFor="filtro-prazo">Filtro de Prazo *</Label>
-            <Select value={filtroPrazo} onValueChange={(value) => setFiltroPrazo(value as 'no_prazo' | 'sem_prazo')}>
-              <SelectTrigger id="filtro-prazo">
-                <SelectValue placeholder="Selecione o filtro de prazo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="no_prazo">No Prazo</SelectItem>
-                <SelectItem value="sem_prazo">Sem Prazo</SelectItem>
-              </SelectContent>
-            </Select>
+            {/* Periodicidade */}
+            <div className="space-y-2">
+              <Label htmlFor="periodicidade">Periodicidade *</Label>
+              <Select
+                value={periodicidade}
+                onValueChange={(value) => {
+                  setPeriodicidade(value as 'diario' | 'a_cada_N_dias');
+                  if (value === 'diario') {
+                    setDiasIntervalo(1);
+                  }
+                }}
+                disabled={!isTipoCapturaSelected}
+              >
+                <SelectTrigger id="periodicidade" className="w-full">
+                  <SelectValue placeholder="Selecione a periodicidade" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="diario">Diário (todos os dias)</SelectItem>
+                  <SelectItem value="a_cada_N_dias">A cada N dias</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Frequência de execução do agendamento
+              </p>
+            </div>
+
+            {/* Dias Intervalo (sempre renderizado) */}
+            <div className="space-y-2">
+              <Label htmlFor="dias-intervalo" className={!showDiasIntervalo ? 'text-muted-foreground' : ''}>
+                Intervalo de Dias {showDiasIntervalo && '*'}
+              </Label>
+              <Input
+                id="dias-intervalo"
+                type="number"
+                min="1"
+                value={diasIntervalo}
+                onChange={(e) => setDiasIntervalo(parseInt(e.target.value, 10) || 1)}
+                placeholder="Ex: 2, 3, 5, 7..."
+                disabled={!showDiasIntervalo}
+                className="w-full"
+              />
+              <p className="text-xs text-muted-foreground">
+                {showDiasIntervalo
+                  ? 'Quantos dias entre cada execução'
+                  : 'Disponível quando selecionar "A cada N dias"'}
+              </p>
+            </div>
+
+            {/* Horário */}
+            <div className="space-y-2">
+              <Label htmlFor="horario">
+                <Clock className="inline h-4 w-4 mr-1" />
+                Horário de Execução *
+              </Label>
+              <Input
+                id="horario"
+                type="time"
+                value={horario}
+                onChange={(e) => setHorario(e.target.value)}
+                disabled={!isPeriodicidadeSelected}
+                className="w-full"
+              />
+              <p className="text-xs text-muted-foreground">
+                Horário em que a captura será executada (formato HH:mm)
+              </p>
+            </div>
           </div>
-        )}
+
+          {/* Coluna 2: Parâmetros Específicos */}
+          <div className="space-y-6">
+            <div className="rounded-lg border p-4 bg-muted/50">
+              <h4 className="text-sm font-semibold mb-4">Parâmetros Específicos do Tipo</h4>
+
+              {/* Parâmetros para Audiências */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="data-inicio"
+                    className={!needsAudienciasDates ? 'text-muted-foreground' : ''}
+                  >
+                    Data Início {needsAudienciasDates && '*'}
+                  </Label>
+                  <Input
+                    id="data-inicio"
+                    type="date"
+                    value={dataInicio}
+                    onChange={(e) => setDataInicio(e.target.value)}
+                    disabled={!needsAudienciasDates}
+                    className="w-full"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {needsAudienciasDates
+                      ? 'Data inicial do período de audiências'
+                      : 'Necessário para tipo "Audiências"'}
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="data-fim" className={!needsAudienciasDates ? 'text-muted-foreground' : ''}>
+                    Data Fim {needsAudienciasDates && '*'}
+                  </Label>
+                  <Input
+                    id="data-fim"
+                    type="date"
+                    value={dataFim}
+                    onChange={(e) => setDataFim(e.target.value)}
+                    disabled={!needsAudienciasDates}
+                    className="w-full"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {needsAudienciasDates
+                      ? 'Data final do período de audiências'
+                      : 'Necessário para tipo "Audiências"'}
+                  </p>
+                </div>
+
+                {/* Parâmetros para Pendentes/Expedientes */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="filtro-prazo"
+                    className={!needsPendentesFiltro ? 'text-muted-foreground' : ''}
+                  >
+                    Filtro de Prazo {needsPendentesFiltro && '*'}
+                  </Label>
+                  <Select
+                    value={filtroPrazo}
+                    onValueChange={(value) => setFiltroPrazo(value as 'no_prazo' | 'sem_prazo')}
+                    disabled={!needsPendentesFiltro}
+                  >
+                    <SelectTrigger id="filtro-prazo" className="w-full">
+                      <SelectValue placeholder="Selecione o filtro de prazo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="no_prazo">No Prazo</SelectItem>
+                      <SelectItem value="sem_prazo">Sem Prazo</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    {needsPendentesFiltro
+                      ? 'Filtrar expedientes por situação de prazo'
+                      : 'Necessário para tipo "Expedientes"'}
+                  </p>
+                </div>
+              </div>
+
+              {!needsAudienciasDates && !needsPendentesFiltro && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  Nenhum parâmetro adicional necessário para este tipo de captura.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
       </CapturaFormBase>
 
-      <Button onClick={handleSubmit} disabled={isLoading} className="w-full">
+      <Button onClick={handleSubmit} disabled={isLoading} className="w-full" size="lg">
         {isLoading ? 'Criando Agendamento...' : 'Criar Agendamento'}
       </Button>
 

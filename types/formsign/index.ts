@@ -27,6 +27,9 @@ export {
 // Template Types
 export * from './template.types';
 
+// PDF Preview Types
+export * from './pdf-preview.types';
+
 // Adapter Types
 export * from './cliente-adapter.types';
 export * from './acao-adapter.types';

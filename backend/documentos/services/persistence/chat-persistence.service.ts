@@ -36,6 +36,7 @@ export async function criarSalaChat(
       nome: params.nome,
       tipo: params.tipo,
       documento_id: params.documento_id ?? null,
+      participante_id: params.participante_id ?? null,
       criado_por: usuario_id,
     })
     .select()
@@ -124,7 +125,13 @@ export async function listarSalasChat(
       *,
       criador:usuarios!salas_chat_criado_por_fkey(
         id,
-        nomeCompleto
+        nome_completo,
+        nome_exibicao
+      ),
+      participante:usuarios!salas_chat_participante_id_fkey(
+        id,
+        nome_completo,
+        nome_exibicao
       ),
       documento:documentos!salas_chat_documento_id_fkey(
         id,
@@ -180,8 +187,21 @@ export async function listarSalasChat(
         totalNaoLidas = 0;
       }
 
+      // Para conversas privadas, determinar o nome correto baseado em quem está vendo
+      let nomeExibicao = sala.nome;
+      if (sala.tipo === 'privado' && usuario_id) {
+        // Se o usuário atual é o criador, mostrar nome do participante
+        // Se o usuário atual é o participante, mostrar nome do criador
+        if (sala.criado_por === usuario_id && sala.participante) {
+          nomeExibicao = sala.participante.nome_exibicao || sala.participante.nome_completo;
+        } else if (sala.participante_id === usuario_id && sala.criador) {
+          nomeExibicao = sala.criador.nome_exibicao || sala.criador.nome_completo;
+        }
+      }
+
       return {
         ...sala,
+        nome: nomeExibicao,
         ultima_mensagem: ultimaMensagem ?? undefined,
         total_nao_lidas: totalNaoLidas,
       };
@@ -306,9 +326,9 @@ export async function listarMensagensChat(
       *,
       usuario:usuarios!mensagens_chat_usuario_id_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao,
-        emailCorporativo
+        nome_completo,
+        nome_exibicao,
+        email_corporativo
       )
     `, { count: 'exact' })
     .eq('sala_id', params.sala_id)
@@ -418,9 +438,9 @@ export async function buscarUltimasMensagens(
       *,
       usuario:usuarios!mensagens_chat_usuario_id_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao,
-        emailCorporativo
+        nome_completo,
+        nome_exibicao,
+        email_corporativo
       )
     `)
     .eq('sala_id', sala_id)
@@ -451,9 +471,9 @@ export async function buscarMensagensPorTexto(
       *,
       usuario:usuarios!mensagens_chat_usuario_id_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao,
-        emailCorporativo
+        nome_completo,
+        nome_exibicao,
+        email_corporativo
       )
     `)
     .eq('sala_id', sala_id)

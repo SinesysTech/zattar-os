@@ -1,0 +1,17 @@
+/* FieldMappingEditor - Estilos para toolbar flutuante e elementos dinâmicos */
+
+/**
+ * Toolbar flutuante e arrastável
+ * Usa CSS custom properties para posicionamento dinâmico
+ */
+.floatingToolbar {
+  position: fixed;
+  z-index: 50;
+  cursor: grab;
+  left: var(--toolbar-x, 300px);
+  top: var(--toolbar-y, 100px);
+}
+
+.floatingToolbar:active {
+  cursor: grabbing;
+}

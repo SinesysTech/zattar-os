@@ -36,32 +36,40 @@ export async function GET(request: NextRequest) {
 
     const supabase = createServiceClient();
 
-    // Construir query base
+    // Construir query base (colunas são snake_case no banco)
     let queryBuilder = supabase
       .from('usuarios')
-      .select('id, nomeCompleto, nomeExibicao, emailCorporativo')
+      .select('id, nome_completo, nome_exibicao, email_corporativo')
       .eq('ativo', true)
       .neq('id', authResult.usuario.id); // Excluir o próprio usuário
 
     // Aplicar filtro de busca se houver query
     if (query.length >= 2) {
       queryBuilder = queryBuilder.or(
-        `nomeCompleto.ilike.%${query}%,nomeExibicao.ilike.%${query}%,emailCorporativo.ilike.%${query}%`
+        `nome_completo.ilike.%${query}%,nome_exibicao.ilike.%${query}%,email_corporativo.ilike.%${query}%`
       );
     }
 
     // Ordenar e limitar
     const { data, error } = await queryBuilder
-      .order('nomeCompleto')
+      .order('nome_completo')
       .limit(limit);
 
     if (error) {
       throw new Error(error.message);
     }
 
+    // Mapear para camelCase para o frontend
+    const mappedData = (data || []).map((u) => ({
+      id: u.id,
+      nomeCompleto: u.nome_completo,
+      nomeExibicao: u.nome_exibicao,
+      emailCorporativo: u.email_corporativo,
+    }));
+
     return NextResponse.json({
       success: true,
-      data: data || [],
+      data: mappedData,
     });
   } catch (error) {
     console.error('Erro ao buscar usuários:', error);

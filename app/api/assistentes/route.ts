@@ -5,13 +5,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import { listarAssistentes } from '@/backend/assistentes/services/listar-assistentes.service';
 import { criarAssistente } from '@/backend/assistentes/services/criar-assistente.service';
-import { createClient } from '@/utils/supabase/server'; // Ajuste o caminho conforme necessário
+import { createClient } from '@/backend/utils/supabase/server';
 
 /**
  * Verifica se o usuário autenticado é super admin
  */
-async function isSuperAdmin(request: NextRequest): Promise<boolean> {
-  const supabase = createClient();
+async function isSuperAdmin(): Promise<boolean> {
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return false;
 
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 2. Verificar se é super admin
-    if (!(await isSuperAdmin(request))) {
+    if (!(await isSuperAdmin())) {
       return NextResponse.json(
         { success: false, error: 'Acesso negado: apenas super admins podem acessar assistentes' },
         { status: 403 }
@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. Verificar se é super admin
-    if (!(await isSuperAdmin(request))) {
+    if (!(await isSuperAdmin())) {
       return NextResponse.json(
         { success: false, error: 'Acesso negado: apenas super admins podem criar assistentes' },
         { status: 403 }
@@ -200,7 +200,7 @@ export async function POST(request: NextRequest) {
 
     // 4. Obter ID numérico do usuário logado para criado_por
     // criado_por referencia usuarios.id (bigint), não auth_user_id (uuid)
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json(

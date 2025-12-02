@@ -15,6 +15,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 interface RealtimeChatProps {
   roomName: string
   username: string
+  userId?: number
   onMessage?: (messages: ChatMessage[]) => void
   messages?: ChatMessage[]
 }
@@ -23,6 +24,7 @@ interface RealtimeChatProps {
  * Realtime chat component
  * @param roomName - The name of the room to join. Each room is a unique chat.
  * @param username - The username of the user
+ * @param userId - The unique ID of the user (used for proper message attribution)
  * @param onMessage - The callback function to handle the messages. Useful if you want to store the messages in a database.
  * @param messages - The messages to display in the chat. Useful if you want to display messages from a database.
  * @returns The chat component
@@ -30,6 +32,7 @@ interface RealtimeChatProps {
 export const RealtimeChat = ({
   roomName,
   username,
+  userId,
   onMessage,
   messages: initialMessages = [],
 }: RealtimeChatProps) => {
@@ -42,6 +45,7 @@ export const RealtimeChat = ({
   } = useRealtimeChat({
     roomName,
     username,
+    userId,
   })
   const [newMessage, setNewMessage] = useState('')
 
@@ -101,7 +105,7 @@ export const RealtimeChat = ({
               >
                 <ChatMessageItem
                   message={message}
-                  isOwnMessage={message.user.name === username}
+                  isOwnMessage={userId ? message.user.id === userId : message.user.name === username}
                   showHeader={showHeader}
                 />
               </div>

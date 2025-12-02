@@ -43,7 +43,8 @@ const VIEW_MODE_STORAGE_KEY = 'assistentes-view-mode';
  */
 function criarColunas(
   onEdit: (assistente: Assistente) => void,
-  onDelete: (assistente: Assistente) => void
+  onDelete: (assistente: Assistente) => void,
+  isSuperAdmin: boolean
 ): ColumnDef<Assistente>[] {
   return [
     {
@@ -126,7 +127,7 @@ function criarColunas(
         const assistente = row.original;
         return (
           <div className="min-h-10 flex items-center justify-center gap-2">
-            <AssistenteActions assistente={assistente} onEdit={onEdit} onDelete={onDelete} />
+            <AssistenteActions assistente={assistente} onEdit={onEdit} onDelete={onDelete} isSuperAdmin={isSuperAdmin} />
           </div>
         );
       },
@@ -140,11 +141,13 @@ function criarColunas(
 function AssistenteActions({
   assistente,
   onEdit,
-  onDelete
+  onDelete,
+  isSuperAdmin
 }: {
   assistente: Assistente;
   onEdit: (assistente: Assistente) => void;
   onDelete: (assistente: Assistente) => void;
+  isSuperAdmin: boolean;
 }) {
   const router = useRouter();
 
@@ -169,14 +172,18 @@ function AssistenteActions({
           <Eye className="mr-2 h-4 w-4" />
           Visualizar
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onEdit(assistente)}>
-          <Pencil className="mr-2 h-4 w-4" />
-          Editar
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onDelete(assistente)}>
-          <Trash2 className="mr-2 h-4 w-4" />
-          Deletar
-        </DropdownMenuItem>
+        {isSuperAdmin && (
+          <>
+            <DropdownMenuItem onClick={() => onEdit(assistente)}>
+              <Pencil className="mr-2 h-4 w-4" />
+              Editar
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(assistente)}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Deletar
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -217,7 +224,8 @@ export default function AssistentesPage() {
         const response = await fetch('/api/perfil');
         if (response.ok) {
           const data = await response.json();
-          setIsSuperAdmin(data.isSuperAdmin);
+          // API retorna { success: true, data: usuario }
+          setIsSuperAdmin(data.data?.isSuperAdmin ?? false);
         } else {
           setIsSuperAdmin(false);
         }
@@ -228,28 +236,8 @@ export default function AssistentesPage() {
     checkPermission();
   }, []);
 
-  // Se ainda carregando permissão
-  if (isSuperAdmin === null) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-sm text-muted-foreground">Verificando permissões...</div>
-      </div>
-    );
-  }
-
-  // Se não é super admin, mostrar acesso negado
-  if (!isSuperAdmin) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-center">
-          <h2 className="text-lg font-semibold text-destructive">Acesso Negado</h2>
-          <p className="text-sm text-muted-foreground">
-            Você não tem permissão para acessar esta página. Apenas super administradores podem gerenciar assistentes.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // Se ainda carregando permissão, mostra loading
+  const isLoadingPermission = isSuperAdmin === null;
 
   // Salvar preferência de visualização no localStorage
   const handleViewModeChange = React.useCallback((mode: ViewMode) => {
@@ -316,7 +304,7 @@ export default function AssistentesPage() {
     []
   );
 
-  const colunas = React.useMemo(() => criarColunas(handleEdit, handleDelete), [handleEdit, handleDelete]);
+  const colunas = React.useMemo(() => criarColunas(handleEdit, handleDelete, isSuperAdmin ?? false), [handleEdit, handleDelete, isSuperAdmin]);
 
   return (
     <div className="space-y-3">
@@ -335,7 +323,7 @@ export default function AssistentesPage() {
           selectedFilters={selectedFilterIds}
           onFiltersChange={handleFilterIdsChange}
           filterButtonsMode="buttons"
-          onNewClick={() => setCreateOpen(true)}
+          onNewClick={isSuperAdmin ? () => setCreateOpen(true) : undefined}
           newButtonTooltip="Novo Assistente"
         />
         <ViewToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
@@ -359,6 +347,7 @@ export default function AssistentesPage() {
           onDelete={handleDelete}
           onPageChange={setPagina}
           onPageSizeChange={setLimite}
+          isSuperAdmin={isSuperAdmin ?? false}
         />
       ) : (
         <DataTable

@@ -234,14 +234,17 @@ export default function AssistentePage() {
       {/* Iframe */}
       <Card>
         <CardContent className="p-0">
-          <div className="relative w-full" style={{ minHeight: '600px', height: '80vh' }}>
-            {isLoading ? (
-              <Skeleton className="w-full h-full" />
+          <div className="relative w-full min-h-[600px] h-[80vh]">
+            {sanitizedIframeResult.error ? (
+              <Alert variant="destructive" className="m-4">
+                <AlertDescription>
+                  Erro ao processar iframe: {sanitizedIframeResult.error}
+                </AlertDescription>
+              </Alert>
             ) : (
               <div
-                dangerouslySetInnerHTML={{ __html: assistente.iframe_code }}
-                className="w-full h-full"
-                style={{ minHeight: '600px', height: '80vh' }}
+                dangerouslySetInnerHTML={{ __html: sanitizedIframeResult.html }}
+                className="w-full min-h-[600px] h-[80vh]"
               />
             )}
           </div>

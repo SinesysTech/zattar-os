@@ -105,9 +105,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!body.tipo || !['geral', 'documento', 'privado'].includes(body.tipo)) {
+    if (!body.tipo || !['geral', 'documento', 'privado', 'grupo'].includes(body.tipo)) {
       return NextResponse.json(
-        { success: false, error: 'Tipo inválido (geral, documento ou privado)' },
+        { success: false, error: 'Tipo inválido (geral, documento, privado ou grupo)' },
         { status: 400 }
       );
     }
@@ -116,6 +116,14 @@ export async function POST(request: NextRequest) {
     if (body.tipo === 'documento' && !body.documento_id) {
       return NextResponse.json(
         { success: false, error: 'documento_id é obrigatório para salas de documento' },
+        { status: 400 }
+      );
+    }
+
+    // Validação: sala privada deve ter participante_id
+    if (body.tipo === 'privado' && !body.participante_id) {
+      return NextResponse.json(
+        { success: false, error: 'participante_id é obrigatório para conversas privadas' },
         { status: 400 }
       );
     }

@@ -3,9 +3,6 @@
 // Componente Dialog para criação de novo assistente
 
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {
   Dialog,
   DialogContent,
@@ -16,25 +13,10 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
 import { Loader2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-
-const assistenteSchema = z.object({
-  nome: z.string().min(1, 'Nome é obrigatório').max(200, 'Nome deve ter no máximo 200 caracteres'),
-  descricao: z.string().max(1000, 'Descrição deve ter no máximo 1000 caracteres').optional(),
-  iframe_code: z.string().min(1, 'Código do iframe é obrigatório'),
-});
-
-type AssistenteFormData = z.infer<typeof assistenteSchema>;
+import { toast } from 'sonner';
 
 interface AssistenteCreateDialogProps {
   open: boolean;
@@ -47,25 +29,58 @@ export function AssistenteCreateDialog({
   onOpenChange,
   onSuccess,
 }: AssistenteCreateDialogProps) {
-  const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
+  
+  // Estados do formulário
+  const [nome, setNome] = React.useState('');
+  const [descricao, setDescricao] = React.useState('');
+  const [iframeCode, setIframeCode] = React.useState('');
+  
+  // Erros de validação
+  const [errors, setErrors] = React.useState<{
+    nome?: string;
+    descricao?: string;
+    iframe_code?: string;
+  }>({});
 
-  const form = useForm<AssistenteFormData>({
-    resolver: zodResolver(assistenteSchema),
-    defaultValues: {
-      nome: '',
-      descricao: '',
-      iframe_code: '',
-    },
-  });
-
+  // Resetar formulário quando o dialog fechar
   React.useEffect(() => {
     if (!open) {
-      form.reset();
+      setNome('');
+      setDescricao('');
+      setIframeCode('');
+      setErrors({});
     }
-  }, [open, form]);
+  }, [open]);
 
-  const onSubmit = async (data: AssistenteFormData) => {
+  const validateForm = (): boolean => {
+    const newErrors: typeof errors = {};
+
+    if (!nome.trim()) {
+      newErrors.nome = 'Nome é obrigatório';
+    } else if (nome.length > 200) {
+      newErrors.nome = 'Nome deve ter no máximo 200 caracteres';
+    }
+
+    if (descricao.length > 1000) {
+      newErrors.descricao = 'Descrição deve ter no máximo 1000 caracteres';
+    }
+
+    if (!iframeCode.trim()) {
+      newErrors.iframe_code = 'Código do iframe é obrigatório';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -74,7 +89,11 @@ export function AssistenteCreateDialog({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          nome: nome.trim(),
+          descricao: descricao.trim() || undefined,
+          iframe_code: iframeCode.trim(),
+        }),
       });
 
       if (!response.ok) {
@@ -91,21 +110,14 @@ export function AssistenteCreateDialog({
         throw new Error('Resposta da API indicou falha');
       }
 
-      toast({
-        title: 'Sucesso',
-        description: 'Assistente criado com sucesso.',
-      });
+      toast.success('Assistente criado com sucesso.');
 
       onSuccess();
       onOpenChange(false);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Erro ao criar assistente';
-      toast({
-        title: 'Erro',
-        description: errorMessage,
-        variant: 'destructive',
-      });
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -114,92 +126,78 @@ export function AssistenteCreateDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <DialogHeader>
-              <DialogTitle>Novo Assistente</DialogTitle>
-              <DialogDescription>
-                Preencha os dados para criar um novo assistente de IA no sistema
-              </DialogDescription>
-            </DialogHeader>
+        <form onSubmit={handleSubmit}>
+          <DialogHeader>
+            <DialogTitle>Novo Assistente</DialogTitle>
+            <DialogDescription>
+              Preencha os dados para criar um novo assistente de IA no sistema
+            </DialogDescription>
+          </DialogHeader>
 
-            <div className="space-y-4 py-4">
-              <FormField
-                control={form.control}
-                name="nome"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Nome <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Digite o nome do assistente"
-                        disabled={isLoading}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+          <div className="space-y-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="nome">
+                Nome <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="nome"
+                placeholder="Digite o nome do assistente"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                disabled={isLoading}
               />
-
-              <FormField
-                control={form.control}
-                name="descricao"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Descrição</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Digite uma descrição opcional para o assistente"
-                        disabled={isLoading}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="iframe_code"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Código do Iframe <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder={`Exemplo: <iframe src="https://example.com/assistant" width="100%" height="400" frameborder="0"></iframe>`}
-                        disabled={isLoading}
-                        rows={4}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {errors.nome && (
+                <p className="text-sm text-destructive">{errors.nome}</p>
+              )}
             </div>
 
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
+            <div className="grid gap-2">
+              <Label htmlFor="descricao">Descrição</Label>
+              <Textarea
+                id="descricao"
+                placeholder="Digite uma descrição opcional para o assistente"
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
                 disabled={isLoading}
-              >
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Criar Assistente
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+              />
+              {errors.descricao && (
+                <p className="text-sm text-destructive">{errors.descricao}</p>
+              )}
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="iframe_code">
+                Código do Iframe <span className="text-destructive">*</span>
+              </Label>
+              <Textarea
+                id="iframe_code"
+                placeholder={`Exemplo: <iframe src="https://example.com/assistant" width="100%" height="400" frameborder="0"></iframe>`}
+                value={iframeCode}
+                onChange={(e) => setIframeCode(e.target.value)}
+                disabled={isLoading}
+                rows={4}
+              />
+              {errors.iframe_code && (
+                <p className="text-sm text-destructive">{errors.iframe_code}</p>
+              )}
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={isLoading}
+            >
+              Cancelar
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Criar Assistente
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

@@ -276,9 +276,317 @@ function MyStep() {
 - `hidePrevious?: boolean` - Hide previous button
 - `hideNext?: boolean` - Hide next button
 
+## Editor de Templates (`editor/`)
+
+Componentes base para o editor visual de templates PDF.
+
+### CreateTemplateForm
+
+Formulário para criar novos templates com informações básicas.
+
+**Props:**
+- `pdfFile: File` - Arquivo PDF a ser usado como template
+- `onSubmit: (data) => Promise<void>` - Callback ao criar template
+- `onCancel?: () => void` - Callback ao cancelar
+
+**Features:**
+- Campos: nome (obrigatório), descrição, conteúdo markdown
+- Validação de markdown (máximo 100KB, deve conter variáveis)
+- Preview de markdown com ReactMarkdown
+- Documentação inline de variáveis disponíveis
+- Integração com MarkdownRichTextEditorDialog
+
+### PdfCanvasArea
+
+Área principal do editor onde o PDF é exibido e os campos são posicionados.
+
+**Props:**
+- `canvasRef`, `canvasSize`, `zoom` - Controle do canvas
+- `pdfUrl`, `currentPage`, `totalPages` - Controle do PDF
+- `fields` - Array de campos a renderizar
+- `onFieldClick`, `onFieldMouseDown`, `onResizeMouseDown` - Handlers de interação
+- `onOpenProperties`, `onDuplicateField`, `onDeleteField` - Ações de campo
+- `onAddTextField`, `onAddImageField`, `onAddRichTextField` - Adicionar campos
+
+**Features:**
+- Renderização de PDF como fundo usando PdfPreview
+- Overlay de campos com drag-and-drop
+- 8 resize handles por campo (4 cantos + 4 bordas)
+- Context menu com ações (editar, duplicar, deletar, zoom)
+- Suporte a 3 tipos de campo: texto, imagem, texto composto
+- Avisos visuais para campos com altura insuficiente
+- Filtro automático de campos por página
+
+### PropertiesPopover
+
+Popover lateral para editar propriedades de campos selecionados.
+
+**Props:**
+- `trigger: React.ReactNode` - Elemento que abre o popover
+- `open`, `onOpenChange` - Controle de estado
+- `selectedField` - Campo selecionado
+- `onUpdateField`, `onDeleteField` - Callbacks de ação
+
+**Features:**
+- Seletor de variável com autocomplete (Command component)
+- Variáveis agrupadas por categoria (Cliente, Ação, Sistema, Assinatura)
+- Seções colapsáveis: Informações gerais, Posicionamento, Estilo
+- Campos de posição (X, Y, width, height)
+- Campos de estilo (tamanho_fonte, fonte) para texto
+- Atualização automática do nome ao selecionar variável
+
+### TemplateInfoPopover
+
+Popover lateral para editar metadados do template.
+
+**Props:**
+- `trigger: React.ReactNode` - Elemento que abre o popover
+- `open`, `onOpenChange` - Controle de estado
+- `template?: Template` - Template a editar (opcional para criação)
+- `onUpdate: (updates) => Promise<void>` - Callback de atualização
+- `isCreating?: boolean` - Modo criação
+- `pdfFile?: File` - Arquivo PDF (modo criação)
+
+**Features:**
+- Campos: nome, descrição, status, conteúdo markdown
+- Suporte a dois modos: criação e edição
+- Preview de markdown em dialog separado
+- Salvamento direto de markdown no backend
+- Validação de markdown
+- Integração com API `/api/assinatura-digital/admin/templates`
+
+### ReplacePdfDialog
+
+Dialog para substituir o arquivo PDF de um template.
+
+**Props:**
+- `open`, `onOpenChange` - Controle de estado
+- `templateId: string | number` - ID do template
+- `onSuccess: () => void` - Callback após sucesso
+
+**Features:**
+- Drag-and-drop usando react-dropzone
+- Validação de arquivo (tipo PDF, 10KB-10MB)
+- Preview do novo PDF antes de confirmar
+- Upload via FormData
+- Cleanup automático de blob URLs
+- Integração com API `/api/assinatura-digital/admin/templates/:id/replace-pdf`
+
+## Preview de PDF (`pdf/`)
+
+Componentes para renderizar PDFs no editor.
+
+### PdfPreview
+
+Componente base para renderizar PDFs usando react-pdf.
+
+**Props:** Ver `PdfPreviewProps` em `@/types/formsign/pdf-preview.types`
+
+**Features:**
+- Dois modos: `default` (com controles) e `background` (apenas PDF)
+- Controles de zoom (0.5x a 3.0x)
+- Navegação de páginas
+- Estados de loading e erro
+- Suporte a dimensões fixas
+- Renderização opcional de text layer e annotation layer
+
+### PdfPreviewDynamic
+
+Wrapper dinâmico do PdfPreview para evitar problemas de SSR.
+
+**Props:** Mesmas do PdfPreview
+
+**Uso:** Sempre use este componente ao invés do PdfPreview diretamente.
+
+## Validação (`lib/formsign/validation/`)
+
+### markdown.ts
+
+Utilitários para validar conteúdo Markdown de templates.
+
+**Funções:**
+- `validateMarkdownContent(content)` - Validação completa com XSS
+- `normalizeMarkdownContent(content)` - Normalização (CRLF→LF)
+- `validateMarkdownForForm(content)` - Validação simplificada
+
+**Constantes:**
+- `MAX_MARKDOWN_CHARS = 100000` - Limite de 100KB
+
+## Template Editor Components
+
+### FieldMappingEditor
+
+Main visual PDF template editor with drag-and-drop field placement, zoom controls, autosave, and test preview generation.
+
+**Location:** `components/formsign/editor/FieldMappingEditor.tsx`
+
+**Features:**
+- Visual PDF template editing with overlay canvas
+- Drag-and-drop field placement (text, image, signature, rich text)
+- Field resize with 8 handles (corners + edges)
+- Zoom controls (50%-200%, responsive defaults)
+- Multi-page PDF navigation
+- Autosave every 5 seconds
+- Test preview generation with mock data
+- Toggle between original template and filled preview
+- Navigation guards for unsaved changes
+- Create mode with PDF upload dropzone
+- Keyboard shortcuts (Delete, Escape, Arrow keys)
+- Floating draggable toolbar (desktop) and horizontal toolbar (mobile)
+
+**Props:**
+```typescript
+interface FieldMappingEditorProps {
+  template: Template; // Template to edit (from API or new)
+  onCancel?: () => void; // Callback when user cancels editing
+  mode?: 'edit' | 'create'; // Edit existing or create new template
+}
+```
+
+**Usage Example:**
+```typescript
+import { FieldMappingEditor } from '@/components/formsign/editor';
+import { useRouter } from 'next/navigation';
+
+function TemplateEditPage({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  const [template, setTemplate] = useState<Template | null>(null);
+  
+  useEffect(() => {
+    // Fetch template from API
+    fetch(`/api/assinatura-digital/admin/templates/${params.id}`)
+      .then(res => res.json())
+      .then(data => setTemplate(data.data));
+  }, [params.id]);
+  
+  if (!template) return <div>Carregando...</div>;
+  
+  return (
+    <FieldMappingEditor
+      template={template}
+      mode="edit"
+      onCancel={() => router.push('/assinatura-digital/admin/templates')}
+    />
+  );
+}
+```
+
+**Create Mode Example:**
+```typescript
+// For new template creation
+const emptyTemplate: Template = {
+  id: '',
+  template_uuid: '',
+  nome: '',
+  descricao: null,
+  arquivo_original: '',
+  arquivo_nome: '',
+  arquivo_tamanho: 0,
+  status: 'rascunho',
+  versao: 1,
+  ativo: true,
+  campos: [],
+  conteudo_markdown: null,
+  criado_por: null,
+  criado_em: new Date().toISOString(),
+  atualizado_em: new Date().toISOString(),
+};
+
+return (
+  <FieldMappingEditor
+    template={emptyTemplate}
+    mode="create"
+    onCancel={() => router.back()}
+  />
+);
+```
+
+**API Integration:**
+- **GET** `/api/assinatura-digital/admin/templates/[id]` - Load template
+- **PUT** `/api/assinatura-digital/admin/templates/[id]` - Save changes (autosave)
+- **POST** `/api/assinatura-digital/admin/templates/[id]/preview-test` - Generate test PDF
+- **POST** `/api/assinatura-digital/admin/templates` - Create new template (create mode)
+
+**Keyboard Shortcuts:**
+- `Delete` - Delete selected field
+- `Escape` - Deselect field / cancel drag
+- `Arrow Keys` - Move selected field (1px increments)
+- `Shift + Arrow Keys` - Move selected field (10px increments)
+
+**Field Types Supported:**
+- `texto` - Single-line text field
+- `assinatura` - Signature image field
+- `foto` - Photo image field
+- `texto_composto` - Rich text field with variables
+
+**Dependencies:**
+- `react-dropzone` (v14.3.8) - PDF upload in create mode
+- `react-pdf` (v9.2.1) - PDF rendering
+- `pdfjs-dist` (v4.9.155) - PDF.js worker
+- All editor subcomponents from FORMSIGN-007/008
+
+---
+
+### ToolbarButtons & ToolbarButtonsMobile
+
+Toolbar components for FieldMappingEditor (desktop vertical and mobile horizontal layouts).
+
+**Location:** 
+- `components/formsign/editor/ToolbarButtons.tsx` (desktop)
+- `components/formsign/editor/ToolbarButtonsMobile.tsx` (mobile)
+
+**Features:**
+- Editor mode selection (select, add text, add image, add rich text)
+- Zoom controls with percentage display
+- Page navigation for multi-page PDFs
+- Properties/template info/PDF replacement dialogs
+- Save/cancel actions
+- Test preview generation
+- Preview toggle (original vs filled)
+
+**Props:** Both components share identical props interface (23 props total) - see FieldMappingEditor source for full list.
+
+**Usage:** Automatically used by FieldMappingEditor - not intended for standalone use.
+
+---
+
 ## Dependencies
 
+**Novas dependências adicionadas:**
+- `react-pdf@^9.1.0` - Renderização de PDFs
+- `pdfjs-dist@^4.10.38` - Worker do PDF.js
+- `react-markdown@^10.1.0` - Renderização de Markdown
+- `rehype-raw@^7.0.0` - Processamento de HTML em Markdown
+- `rehype-sanitize@^7.0.0` - Sanitização de HTML
+
+**Dependências já existentes:**
 - `react-hook-form` ^7.53.2 - Form state management
 - `@hookform/resolvers` ^3.9.1 - Zod schema resolver
 - `zod` ^3.22.4 - Schema validation (already in Sinesys)
 - `sonner` - Toast notifications (already in Sinesys)
+- `react-dropzone` - Upload de arquivos
+- `lucide-react` - Ícones
+
+## Notas de Implementação
+
+### Stub Temporário
+
+O componente `MarkdownRichTextEditorDialog` está implementado como stub temporário em `MarkdownRichTextEditorDialog.stub.tsx`. Ele será substituído pelo editor completo em **FORMSIGN-008**.
+
+### Rotas de API
+
+Os componentes esperam as seguintes rotas de API:
+- `POST /api/assinatura-digital/admin/templates` - Criar template
+- `PUT /api/assinatura-digital/admin/templates/:id` - Atualizar template
+- `PUT /api/assinatura-digital/admin/templates/:id/replace-pdf` - Substituir PDF
+- `POST /api/assinatura-digital/admin/templates/[id]/preview-test` - Generate test PDF
+
+Estas rotas já existem no Sinesys.
+
+### Coordenadas do Canvas
+
+O editor usa dimensões fixas de **540×765px** (`PDF_CANVAS_SIZE`) para o canvas. Durante a geração do PDF, as coordenadas são convertidas proporcionalmente para as dimensões reais do PDF (ex: A4 = 595×842pt). **Não altere estas dimensões** sem revisar as funções de conversão em `lib/pdf/generator.ts`.
+
+### CSS Module
+
+O componente `FieldMappingEditor` utiliza o arquivo CSS module `FieldMappingEditor.module.css` para estilos da toolbar flutuante e elementos dinâmicos.

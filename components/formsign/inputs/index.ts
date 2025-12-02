@@ -9,4 +9,4 @@ export type { InputCPFProps } from './input-cpf';
 export type { InputCPFCNPJProps } from './input-cpf-cnpj';
 export type { InputTelefoneProps } from './input-telefone';
 export type { InputDataProps } from './input-data';
-export type { InputCEPProps } from './input-cep';
+export type { InputCEPProps, InputCepAddress, AddressData } from './input-cep';

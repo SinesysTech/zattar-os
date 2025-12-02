@@ -6,7 +6,6 @@
  */
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
 import {
   MessageSquare,
   Users,
@@ -14,7 +13,6 @@ import {
   Hash,
   Search,
   Plus,
-  Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,14 +27,14 @@ import { createClient } from '@/app/_lib/supabase/client';
 interface SalaChat {
   id: number;
   nome: string;
-  tipo: 'geral' | 'documento' | 'privado';
+  tipo: 'geral' | 'documento' | 'privado' | 'grupo';
   documento_id: number | null;
+  participante_id: number | null;
   created_at: string;
   updated_at: string;
 }
 
 export default function ChatPage() {
-  const router = useRouter();
   const supabase = createClient();
 
   const [salas, setSalas] = React.useState<SalaChat[]>([]);
@@ -123,6 +121,8 @@ export default function ChatPage() {
         return <FileText className="h-4 w-4" />;
       case 'privado':
         return <Users className="h-4 w-4" />;
+      case 'grupo':
+        return <MessageSquare className="h-4 w-4" />;
       default:
         return <MessageSquare className="h-4 w-4" />;
     }
@@ -134,8 +134,11 @@ export default function ChatPage() {
         return <Badge variant="secondary" className="text-xs">Geral</Badge>;
       case 'documento':
         return <Badge variant="outline" className="text-xs">Documento</Badge>;
+      case 'grupo':
+        return <Badge variant="outline" className="text-xs">Grupo</Badge>;
       case 'privado':
-        return <Badge className="text-xs">Privado</Badge>;
+        // Não mostrar badge para conversas privadas - o nome já indica com quem é a conversa
+        return null;
       default:
         return null;
     }
@@ -265,7 +268,9 @@ export default function ChatPage() {
                   ? 'Canal público do escritório'
                   : salaAtiva.tipo === 'documento'
                   ? 'Chat vinculado a documento'
-                  : 'Conversa privada'
+                  : salaAtiva.tipo === 'grupo'
+                  ? 'Grupo de conversa'
+                  : undefined // Privado: sem subtitle, o nome já mostra com quem é a conversa
               }
             />
           ) : (

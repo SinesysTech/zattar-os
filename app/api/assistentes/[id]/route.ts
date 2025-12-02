@@ -2,12 +2,30 @@
 // GET: Buscar assistente por ID | PATCH: Atualizar assistente | DELETE: Deletar assistente
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/auth/require-permission';
-import { obterUsuarioPorId } from '@/backend/usuarios/services/usuarios/buscar-usuario.service';
+import { authenticateRequest } from '@/backend/auth/api-auth';
+import { createClient } from '@/backend/utils/supabase/server';
 import { buscarAssistentePorId } from '@/backend/assistentes/services/assistente-persistence.service';
 import { atualizarAssistente } from '@/backend/assistentes/services/atualizar-assistente.service';
 import { deletarAssistente } from '@/backend/assistentes/services/deletar-assistente.service';
 import type { AtualizarAssistenteData } from '@/app/_lib/types/assistentes';
+
+/**
+ * Verifica se o usuário autenticado é super admin
+ * Padrão unificado para rotas de assistentes
+ */
+async function isSuperAdmin(): Promise<boolean> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const { data: usuario } = await supabase
+    .from('usuarios')
+    .select('isSuperAdmin')
+    .eq('auth_user_id', user.id)
+    .single();
+
+  return usuario?.isSuperAdmin === true;
+}
 
 /**
  * @swagger
@@ -116,17 +134,19 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Verificar autenticação
-    const authOrError = await requirePermission(request, 'assistentes', 'visualizar');
-    if (authOrError instanceof NextResponse) {
-      return authOrError;
+    // 1. Autenticação
+    const authResult = await authenticateRequest(request);
+    if (!authResult.authenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
     }
 
-    // 2. Verificar se usuário é super admin
-    const usuarioLogado = await obterUsuarioPorId(authOrError.usuarioId!);
-    if (!usuarioLogado?.isSuperAdmin) {
+    // 2. Verificar se é super admin
+    if (!(await isSuperAdmin())) {
       return NextResponse.json(
-        { error: 'Acesso negado: apenas super admins podem acessar assistentes' },
+        { success: false, error: 'Acesso negado: apenas super admins podem acessar assistentes' },
         { status: 403 }
       );
     }
@@ -137,7 +157,7 @@ export async function GET(
 
     if (isNaN(assistenteId)) {
       return NextResponse.json(
-        { error: 'ID inválido' },
+        { success: false, error: 'ID inválido' },
         { status: 400 }
       );
     }
@@ -147,7 +167,7 @@ export async function GET(
 
     if (!assistente) {
       return NextResponse.json(
-        { error: 'Assistente não encontrado' },
+        { success: false, error: 'Assistente não encontrado' },
         { status: 404 }
       );
     }
@@ -160,7 +180,7 @@ export async function GET(
     console.error('Erro ao buscar assistente:', error);
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
     return NextResponse.json(
-      { error: erroMsg },
+      { success: false, error: erroMsg },
       { status: 500 }
     );
   }
@@ -171,17 +191,19 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Verificar autenticação
-    const authOrError = await requirePermission(request, 'assistentes', 'editar');
-    if (authOrError instanceof NextResponse) {
-      return authOrError;
+    // 1. Autenticação
+    const authResult = await authenticateRequest(request);
+    if (!authResult.authenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
     }
 
-    // 2. Verificar se usuário é super admin
-    const usuarioLogado = await obterUsuarioPorId(authOrError.usuarioId!);
-    if (!usuarioLogado?.isSuperAdmin) {
+    // 2. Verificar se é super admin
+    if (!(await isSuperAdmin())) {
       return NextResponse.json(
-        { error: 'Acesso negado: apenas super admins podem editar assistentes' },
+        { success: false, error: 'Acesso negado: apenas super admins podem editar assistentes' },
         { status: 403 }
       );
     }
@@ -192,7 +214,7 @@ export async function PATCH(
 
     if (isNaN(assistenteId)) {
       return NextResponse.json(
-        { error: 'ID inválido' },
+        { success: false, error: 'ID inválido' },
         { status: 400 }
       );
     }
@@ -207,12 +229,12 @@ export async function PATCH(
     if (!resultado.sucesso) {
       if (resultado.erro?.includes('não encontrado')) {
         return NextResponse.json(
-          { error: resultado.erro },
+          { success: false, error: resultado.erro },
           { status: 404 }
         );
       }
       return NextResponse.json(
-        { error: resultado.erro || 'Erro ao atualizar assistente' },
+        { success: false, error: resultado.erro || 'Erro ao atualizar assistente' },
         { status: 400 }
       );
     }
@@ -225,7 +247,7 @@ export async function PATCH(
     console.error('Erro ao atualizar assistente:', error);
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
     return NextResponse.json(
-      { error: erroMsg },
+      { success: false, error: erroMsg },
       { status: 500 }
     );
   }
@@ -236,17 +258,19 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Verificar autenticação
-    const authOrError = await requirePermission(request, 'assistentes', 'deletar');
-    if (authOrError instanceof NextResponse) {
-      return authOrError;
+    // 1. Autenticação
+    const authResult = await authenticateRequest(request);
+    if (!authResult.authenticated) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
     }
 
-    // 2. Verificar se usuário é super admin
-    const usuarioLogado = await obterUsuarioPorId(authOrError.usuarioId!);
-    if (!usuarioLogado?.isSuperAdmin) {
+    // 2. Verificar se é super admin
+    if (!(await isSuperAdmin())) {
       return NextResponse.json(
-        { error: 'Acesso negado: apenas super admins podem deletar assistentes' },
+        { success: false, error: 'Acesso negado: apenas super admins podem deletar assistentes' },
         { status: 403 }
       );
     }
@@ -257,17 +281,17 @@ export async function DELETE(
 
     if (isNaN(assistenteId)) {
       return NextResponse.json(
-        { error: 'ID inválido' },
+        { success: false, error: 'ID inválido' },
         { status: 400 }
       );
     }
 
     // 4. Deletar assistente
-    const sucesso = await deletarAssistente(assistenteId);
+    const resultado = await deletarAssistente(assistenteId);
 
-    if (!sucesso) {
+    if (!resultado.sucesso) {
       return NextResponse.json(
-        { error: 'Assistente não encontrado' },
+        { success: false, error: resultado.erro || 'Assistente não encontrado' },
         { status: 404 }
       );
     }
@@ -279,7 +303,7 @@ export async function DELETE(
     console.error('Erro ao deletar assistente:', error);
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
     return NextResponse.json(
-      { error: erroMsg },
+      { success: false, error: erroMsg },
       { status: 500 }
     );
   }

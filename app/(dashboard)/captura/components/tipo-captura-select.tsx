@@ -15,6 +15,11 @@ interface TipoCapturaSelectProps {
   value: TipoCaptura;
   onValueChange: (value: TipoCaptura) => void;
   disabled?: boolean;
+  /**
+   * Filtrar apenas tipos agendáveis (acervo-geral, arquivados, audiencias, pendentes)
+   * @default false
+   */
+  apenasAgendaveis?: boolean;
 }
 
 const tiposCaptura = [
@@ -60,8 +65,15 @@ export function TipoCapturaSelect({
   value,
   onValueChange,
   disabled,
+  apenasAgendaveis = false,
 }: TipoCapturaSelectProps) {
-  const selectedTipo = tiposCaptura.find((tipo) => tipo.value === value);
+  // Filtrar tipos agendáveis se necessário
+  const tiposAgendaveis: TipoCaptura[] = ['acervo-geral', 'arquivados', 'audiencias', 'pendentes'];
+  const tiposFiltrados = apenasAgendaveis
+    ? tiposCaptura.filter((tipo) => tiposAgendaveis.includes(tipo.value))
+    : tiposCaptura;
+
+  const selectedTipo = tiposFiltrados.find((tipo) => tipo.value === value);
   const Icon = selectedTipo?.icon || Database;
 
   return (
@@ -75,7 +87,7 @@ export function TipoCapturaSelect({
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        {tiposCaptura.map((tipo) => {
+        {tiposFiltrados.map((tipo) => {
           const TipoIcon = tipo.icon;
           return (
             <SelectItem key={tipo.value} value={tipo.value}>

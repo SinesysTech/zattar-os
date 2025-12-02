@@ -22,6 +22,7 @@ interface AssistentesGridViewProps {
   onDelete: (assistente: Assistente) => void;
   onPageChange?: (pageIndex: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
+  isSuperAdmin?: boolean;
 }
 
 export function AssistentesGridView({
@@ -32,6 +33,7 @@ export function AssistentesGridView({
   onDelete,
   onPageChange,
   onPageSizeChange,
+  isSuperAdmin = false,
 }: AssistentesGridViewProps) {
   if (assistentes.length === 0) {
     return (
@@ -56,6 +58,7 @@ export function AssistentesGridView({
             onView={onView}
             onEdit={onEdit}
             onDelete={onDelete}
+            isSuperAdmin={isSuperAdmin}
           />
         ))}
       </div>

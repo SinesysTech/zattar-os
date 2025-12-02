@@ -30,19 +30,25 @@ interface MensagemDB {
   usuario_id: number;
   created_at: string;
   usuario?: {
-    nomeCompleto: string;
+    id: number;
+    nome_completo: string;
+    nome_exibicao: string | null;
+    email_corporativo: string | null;
   };
 }
 
 /**
  * Converte mensagens do banco para o formato do Supabase UI
+ * Preferimos nome_exibicao (mais curto) sobre nome_completo
+ * Inclui o ID do usuário para identificação correta do autor
  */
 function convertDBMessageToChat(msg: MensagemDB): ChatMessage {
   return {
     id: String(msg.id),
     content: msg.conteudo,
     user: {
-      name: msg.usuario?.nomeCompleto || 'Usuário',
+      id: msg.usuario?.id ?? msg.usuario_id,
+      name: msg.usuario?.nome_exibicao || msg.usuario?.nome_completo || 'Usuário',
     },
     createdAt: msg.created_at,
   };
@@ -75,7 +81,8 @@ export function ChatInterface({
         const data = await response.json();
 
         if (data.success && data.data) {
-          setUserName(data.data.nomeCompleto || data.data.nomeExibicao || 'Usuário');
+          // Preferir nome de exibição (mais curto)
+          setUserName(data.data.nomeExibicao || data.data.nomeCompleto || 'Usuário');
         }
       } catch (error) {
         console.error('Erro ao buscar nome do usuário:', error);
@@ -122,7 +129,10 @@ export function ChatInterface({
 
       // Verificar se é uma mensagem nova (não está nas iniciais e é do usuário atual)
       const isNew = !initialMessages.some((m) => m.id === lastMessage.id);
-      const isOwn = lastMessage.user.name === userName;
+      // Verificar por ID se disponível, senão fallback para nome
+      const isOwn = lastMessage.user.id
+        ? lastMessage.user.id === currentUserId
+        : lastMessage.user.name === userName;
 
       if (isNew && isOwn) {
         try {
@@ -139,7 +149,7 @@ export function ChatInterface({
         }
       }
     },
-    [salaId, initialMessages, userName]
+    [salaId, initialMessages, userName, currentUserId]
   );
 
   if (loading) {
@@ -183,6 +193,7 @@ export function ChatInterface({
         <RealtimeChat
           roomName={roomName}
           username={userName}
+          userId={currentUserId}
           messages={initialMessages}
           onMessage={handleMessage}
         />
