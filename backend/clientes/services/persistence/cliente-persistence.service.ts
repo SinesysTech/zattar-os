@@ -386,6 +386,8 @@ export async function atualizarCliente(
     if (params.situacao_pje !== undefined) dadosAtualizacao.situacao_pje = params.situacao_pje;
     if (params.observacoes !== undefined)
       dadosAtualizacao.observacoes = params.observacoes?.trim() || null;
+    if (params.endereco_id !== undefined) dadosAtualizacao.endereco_id = params.endereco_id;
+    if (params.ativo !== undefined) dadosAtualizacao.ativo = params.ativo;
 
     // Campos específicos por tipo de pessoa
     if (tipoPessoaAtual === 'pf' && params.tipo_pessoa === 'pf') {

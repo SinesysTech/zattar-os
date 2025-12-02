@@ -358,6 +358,18 @@ export function ClienteCreateDialog({
     setCurrentStep(prev => Math.max(prev - 1, 1));
   };
 
+  // Verificar se há dados de endereço preenchidos
+  const hasEnderecoData = () => {
+    return !!(
+      formData.cep.trim() ||
+      formData.logradouro.trim() ||
+      formData.numero.trim() ||
+      formData.bairro.trim() ||
+      formData.municipio.trim() ||
+      formData.estado_sigla
+    );
+  };
+
   // Submit do formulário
   const handleSubmit = async () => {
     const errors = validateStep(currentStep);
@@ -371,7 +383,7 @@ export function ClienteCreateDialog({
     setStepErrors([]);
 
     try {
-      // Preparar payload
+      // Preparar payload do cliente
       const payload: Record<string, unknown> = {
         tipo_pessoa: formData.tipo_pessoa,
         nome: formData.nome.trim(),
@@ -405,15 +417,57 @@ export function ClienteCreateDialog({
         payload.data_abertura = formData.data_abertura || null;
       }
 
-      const response = await fetch('/api/clientes', {
+      // 1. Criar o cliente primeiro
+      const clienteResponse = await fetch('/api/clientes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        const error = await response.json();
+      if (!clienteResponse.ok) {
+        const error = await clienteResponse.json();
         throw new Error(error.error || 'Erro ao criar cliente');
+      }
+
+      const clienteData = await clienteResponse.json();
+      const clienteId = clienteData.data?.id;
+
+      // 2. Se há dados de endereço, criar o endereço e vincular ao cliente
+      if (hasEnderecoData() && clienteId) {
+        const enderecoPayload = {
+          entidade_tipo: 'cliente',
+          entidade_id: clienteId,
+          cep: formData.cep.replace(/\D/g, '') || null,
+          logradouro: formData.logradouro.trim() || null,
+          numero: formData.numero.trim() || null,
+          complemento: formData.complemento.trim() || null,
+          bairro: formData.bairro.trim() || null,
+          municipio: formData.municipio.trim() || null,
+          estado_sigla: formData.estado_sigla || null,
+        };
+
+        const enderecoResponse = await fetch('/api/enderecos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(enderecoPayload),
+        });
+
+        if (enderecoResponse.ok) {
+          const enderecoData = await enderecoResponse.json();
+          const enderecoId = enderecoData.data?.id;
+
+          // 3. Atualizar o cliente com o endereco_id
+          if (enderecoId) {
+            await fetch(`/api/clientes/${clienteId}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ endereco_id: enderecoId }),
+            });
+          }
+        } else {
+          // Log do erro mas não falha a criação do cliente
+          console.warn('Não foi possível criar o endereço, mas o cliente foi criado');
+        }
       }
 
       toast.success('Cliente criado com sucesso!');

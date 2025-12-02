@@ -19,6 +19,25 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+  DialogClose,
+} from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { CreateChatDialog } from '@/components/chat/create-chat-dialog';
@@ -44,6 +63,9 @@ export default function ChatPage() {
   const [currentUser, setCurrentUser] = React.useState<any>(null);
   const [busca, setBusca] = React.useState('');
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
+  const [editName, setEditName] = React.useState('');
 
   // Carregar usuário atual
   React.useEffect(() => {
@@ -265,6 +287,7 @@ export default function ChatPage() {
         {/* Chat Principal */}
         <div className="flex-1 flex flex-col">
           {salaAtiva && currentUser ? (
+            <>
             <ChatInterface
               salaId={salaAtiva.id}
               currentUserId={currentUser.id}
@@ -288,25 +311,7 @@ export default function ChatPage() {
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={async () => {
-                        const confirmDelete = window.confirm('Tem certeza que deseja excluir esta conversa?')
-                        if (!confirmDelete) return
-                        try {
-                          const res = await fetch(`/api/chat/salas/${salaAtiva.id}`, { method: 'DELETE' })
-                          const json = await res.json()
-                          if (json.success) {
-                            setSalas((prev) => prev.filter((s) => s.id !== salaAtiva.id))
-                            // Após excluir, selecionar Sala Geral se existir ou a primeira
-                            const geral = salas.find((s) => s.tipo === 'geral') || null
-                            const restante = salas.filter((s) => s.id !== salaAtiva.id)
-                            setSalaAtiva(geral ?? restante[0] ?? null)
-                          } else {
-                            alert(json.error || 'Falha ao excluir a conversa')
-                          }
-                        } catch (e) {
-                          alert('Erro ao excluir a conversa')
-                        }
-                      }}
+                      onClick={() => setDeleteDialogOpen(true)}
                     >
                       Excluir
                     </Button>
@@ -317,26 +322,7 @@ export default function ChatPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={async () => {
-                        const novoNome = window.prompt('Novo nome do grupo', salaAtiva.nome)
-                        if (!novoNome) return
-                        try {
-                          const res = await fetch(`/api/chat/salas/${salaAtiva.id}`, {
-                            method: 'PATCH',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ nome: novoNome.trim() })
-                          })
-                          const json = await res.json()
-                          if (json.success) {
-                            setSalas((prev) => prev.map((s) => s.id === salaAtiva.id ? { ...s, nome: novoNome.trim() } as SalaChat : s))
-                            setSalaAtiva((prev) => (prev ? { ...prev, nome: novoNome.trim() } : prev))
-                          } else {
-                            alert(json.error || 'Falha ao renomear grupo')
-                          }
-                        } catch (e) {
-                          alert('Erro ao renomear grupo')
-                        }
-                      }}
+                      onClick={() => { setEditName(salaAtiva.nome); setEditDialogOpen(true); }}
                     >
                       Editar nome
                     </Button>
@@ -344,6 +330,84 @@ export default function ChatPage() {
                 </div>
               )}
             />
+
+            <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Excluir conversa</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta ação não pode ser desfeita. Deseja excluir esta conversa?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={async () => {
+                      try {
+                        const res = await fetch(`/api/chat/salas/${salaAtiva.id}`, { method: 'DELETE' })
+                        const json = await res.json()
+                        if (json.success) {
+                          setDeleteDialogOpen(false)
+                          setSalas((prev) => prev.filter((s) => s.id !== salaAtiva.id))
+                          const geral = salas.find((s) => s.tipo === 'geral') || null
+                          const restante = salas.filter((s) => s.id !== salaAtiva.id)
+                          setSalaAtiva(geral ?? restante[0] ?? null)
+                        } else {
+                          alert(json.error || 'Falha ao excluir a conversa')
+                        }
+                      } catch (e) {
+                        alert('Erro ao excluir a conversa')
+                      }
+                    }}
+                  >
+                    Excluir
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
+            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Renomear grupo</DialogTitle>
+                  <DialogDescription>Defina um novo nome para o grupo.</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-2">
+                  <Input value={editName} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditName(e.target.value)} />
+                </div>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="outline">Cancelar</Button>
+                  </DialogClose>
+                  <Button
+                    onClick={async () => {
+                      const nome = editName.trim()
+                      if (!nome) return
+                      try {
+                        const res = await fetch(`/api/chat/salas/${salaAtiva.id}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ nome })
+                        })
+                        const json = await res.json()
+                        if (json.success) {
+                          setSalas((prev) => prev.map((s) => s.id === salaAtiva.id ? { ...s, nome } as SalaChat : s))
+                          setSalaAtiva((prev) => (prev ? { ...prev, nome } : prev))
+                          setEditDialogOpen(false)
+                        } else {
+                          alert(json.error || 'Falha ao renomear grupo')
+                        }
+                      } catch (e) {
+                        alert('Erro ao renomear grupo')
+                      }
+                    }}
+                  >
+                    Salvar
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            </>
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
