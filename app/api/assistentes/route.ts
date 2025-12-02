@@ -2,27 +2,9 @@
 // GET: Listar assistentes | POST: Criar assistente
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { requirePermission } from '@/backend/auth/require-permission';
 import { listarAssistentes } from '@/backend/assistentes/services/listar-assistentes.service';
 import { criarAssistente } from '@/backend/assistentes/services/criar-assistente.service';
-import { createClient } from '@/backend/utils/supabase/server';
-
-/**
- * Verifica se o usuário autenticado é super admin
- */
-async function isSuperAdmin(): Promise<boolean> {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
-
-  const { data: usuario } = await supabase
-    .from('usuarios')
-    .select('isSuperAdmin')
-    .eq('auth_user_id', user.id)
-    .single();
-
-  return usuario?.isSuperAdmin === true;
-}
 
 /**
  * @swagger
@@ -65,12 +47,12 @@ async function isSuperAdmin(): Promise<boolean> {
  *       401:
  *         description: Não autenticado
  *       403:
- *         description: Acesso negado (não é super admin)
+ *         description: Sem permissão (requer assistentes.listar)
  *       500:
  *         description: Erro interno do servidor
  *   post:
  *     summary: Cria um novo assistente
- *     description: Cadastra um novo assistente no sistema. Apenas super admins podem criar.
+ *     description: Cadastra um novo assistente no sistema. Requer permissão assistentes.criar.
  *     tags:
  *       - Assistentes
  *     security:
@@ -104,30 +86,19 @@ async function isSuperAdmin(): Promise<boolean> {
  *       401:
  *         description: Não autenticado
  *       403:
- *         description: Acesso negado (não é super admin)
+ *         description: Sem permissão (requer assistentes.criar)
  *       500:
  *         description: Erro interno do servidor
  */
 export async function GET(request: NextRequest) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+    // 1. Autenticação + Autorização
+    const authOrError = await requirePermission(request, 'assistentes', 'listar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
-    // 2. Verificar se é super admin
-    if (!(await isSuperAdmin())) {
-      return NextResponse.json(
-        { success: false, error: 'Acesso negado: apenas super admins podem acessar assistentes' },
-        { status: 403 }
-      );
-    }
-
-    // 3. Obter parâmetros da query string
+    // 2. Obter parâmetros da query string
     const { searchParams } = new URL(request.url);
     const params = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : 1,
@@ -136,7 +107,7 @@ export async function GET(request: NextRequest) {
       ativo: searchParams.get('ativo') === 'true' ? true : searchParams.get('ativo') === 'false' ? false : undefined,
     };
 
-    // 4. Listar assistentes
+    // 3. Listar assistentes
     const resultado = await listarAssistentes(params);
 
     return NextResponse.json({
@@ -155,24 +126,15 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+    // 1. Autenticação + Autorização
+    const authOrError = await requirePermission(request, 'assistentes', 'criar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
-    // 2. Verificar se é super admin
-    if (!(await isSuperAdmin())) {
-      return NextResponse.json(
-        { success: false, error: 'Acesso negado: apenas super admins podem criar assistentes' },
-        { status: 403 }
-      );
-    }
+    const { usuarioId } = authOrError;
 
-    // 3. Validar e parsear body da requisição
+    // 2. Validar e parsear body da requisição
     const body = await request.json();
     const { nome, descricao, iframe_code } = body;
 
@@ -198,38 +160,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 4. Obter ID numérico do usuário logado para criado_por
-    // criado_por referencia usuarios.id (bigint), não auth_user_id (uuid)
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'Usuário não encontrado' },
-        { status: 401 }
-      );
-    }
-
-    // Buscar o ID numérico do usuário na tabela usuarios usando auth_user_id
-    const { data: usuario, error: usuarioError } = await supabase
-      .from('usuarios')
-      .select('id')
-      .eq('auth_user_id', user.id)
-      .single();
-
-    if (usuarioError || !usuario) {
-      console.error('Erro ao buscar usuário:', usuarioError);
-      return NextResponse.json(
-        { success: false, error: 'Usuário não encontrado no sistema' },
-        { status: 401 }
-      );
-    }
-
-    // 5. Criar assistente
+    // 3. Criar assistente (usuarioId já vem do requirePermission)
     const resultado = await criarAssistente({
       nome: nome.trim(),
       descricao: descricao?.trim() || null,
       iframe_code: iframe_code.trim(),
-      criado_por: usuario.id, // usuarios.id (bigint), não auth_user_id
+      criado_por: usuarioId,
     });
 
     // Verificar resultado do serviço

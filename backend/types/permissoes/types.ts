@@ -27,7 +27,8 @@ export type Recurso =
   | 'captura'
   | 'tipos_expedientes'
   | 'cargos'
-  | 'formsign_admin';
+  | 'formsign_admin'
+  | 'assistentes';
 
 /**
  * Operações disponíveis no sistema
@@ -258,6 +259,16 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
 
   // Administração de assinatura digital (Formsign)
   formsign_admin: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
+
+  // Assistentes de IA (6 permissões)
+  assistentes: [
+    'listar',
+    'visualizar',
+    'criar',
+    'editar',
+    'deletar',
+    'ativar_desativar',
+  ],
 };
 
 /**

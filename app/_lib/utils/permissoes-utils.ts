@@ -79,6 +79,7 @@ export function formatarNomeRecurso(recurso: string): string {
     captura: 'Captura',
     tipos_expedientes: 'Tipos de Expedientes',
     cargos: 'Cargos',
+    assistentes: 'Assistentes',
   };
 
   return nomes[recurso] || capitalize(recurso);

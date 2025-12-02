@@ -617,7 +617,7 @@ export async function listarTerceiros(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(
-      `nome.ilike.%${busca}%,nome_social.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+      `nome.ilike.%${busca}%,nome_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
     );
   }
 
@@ -988,7 +988,7 @@ export async function listarTerceirosComEndereco(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(
-      `nome.ilike.%${busca}%,nome_social.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+      `nome.ilike.%${busca}%,nome_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
     );
   }
 
@@ -1078,7 +1078,7 @@ export async function listarTerceirosComEnderecoEProcessos(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(
-      `nome.ilike.%${busca}%,nome_social.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+      `nome.ilike.%${busca}%,nome_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
     );
   }
 

@@ -2,30 +2,11 @@
 // GET: Buscar assistente por ID | PATCH: Atualizar assistente | DELETE: Deletar assistente
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
-import { createClient } from '@/backend/utils/supabase/server';
+import { requirePermission } from '@/backend/auth/require-permission';
 import { buscarAssistentePorId } from '@/backend/assistentes/services/assistente-persistence.service';
 import { atualizarAssistente } from '@/backend/assistentes/services/atualizar-assistente.service';
 import { deletarAssistente } from '@/backend/assistentes/services/deletar-assistente.service';
 import type { AtualizarAssistenteData } from '@/app/_lib/types/assistentes';
-
-/**
- * Verifica se o usuário autenticado é super admin
- * Padrão unificado para rotas de assistentes
- */
-async function isSuperAdmin(): Promise<boolean> {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
-
-  const { data: usuario } = await supabase
-    .from('usuarios')
-    .select('isSuperAdmin')
-    .eq('auth_user_id', user.id)
-    .single();
-
-  return usuario?.isSuperAdmin === true;
-}
 
 /**
  * @swagger
@@ -50,7 +31,7 @@ async function isSuperAdmin(): Promise<boolean> {
  *       200:
  *         description: Assistente encontrado
  *       403:
- *         description: Acesso negado - apenas super admins
+ *         description: Sem permissão (requer assistentes.visualizar)
  *       404:
  *         description: Assistente não encontrado
  *       401:

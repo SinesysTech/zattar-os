@@ -670,7 +670,7 @@ export async function listarClientes(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(
-      `nome.ilike.%${busca}%,nome_social.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+      `nome.ilike.%${busca}%,nome_social_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
     );
   }
 
@@ -868,7 +868,7 @@ export async function listarClientesComEndereco(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(
-      `nome.ilike.%${busca}%,nome_social.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+      `nome.ilike.%${busca}%,nome_social_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
     );
   }
 
@@ -948,7 +948,7 @@ export async function listarClientesComEnderecoEProcessos(
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(
-      `nome.ilike.%${busca}%,nome_social.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
+      `nome.ilike.%${busca}%,nome_social_fantasia.ilike.%${busca}%,cpf.ilike.%${busca}%,cnpj.ilike.%${busca}%`
     );
   }
 

@@ -466,7 +466,7 @@ export async function listarTerceiros(
       query = query.eq('cnpj', params.cnpj.replace(/\D/g, ''));
     }
     if (params.busca) {
-      query = query.or(`nome.ilike.%${params.busca}%,cpf.ilike.%${params.busca}%,cnpj.ilike.%${params.busca}%,nome_social.ilike.%${params.busca}%`);
+      query = query.or(`nome.ilike.%${params.busca}%,cpf.ilike.%${params.busca}%,cnpj.ilike.%${params.busca}%,nome_fantasia.ilike.%${params.busca}%`);
     }
 
     // Apply ordering
