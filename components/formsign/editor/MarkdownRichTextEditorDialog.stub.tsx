@@ -9,7 +9,7 @@ interface MarkdownRichTextEditorDialogProps {
   onOpenChange: (open: boolean) => void;
   value: string;
   onChange: (value: string) => void;
-  formularios?: any[];
+  formularios?: string[];
   title?: string;
   onSaveToBackend?: (markdown: string) => Promise<void>;
 }

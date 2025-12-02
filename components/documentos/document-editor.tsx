@@ -11,7 +11,6 @@ import {
   ArrowLeft,
   Save,
   Share2,
-  Users,
   MessageSquare,
   MoreVertical,
   FileText,
@@ -51,6 +50,7 @@ import { createClient } from '@/app/_lib/supabase/client';
 import type { DocumentoComUsuario } from '@/backend/types/documentos/types';
 import { exportToDocx } from '@/lib/documentos/export-docx';
 import { exportToPdf, exportTextToPdf } from '@/lib/documentos/export-pdf';
+import type { Descendant } from 'platejs';
 
 interface DocumentEditorProps {
   documentoId: number;
@@ -65,23 +65,26 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
   const [titulo, setTitulo] = React.useState('');
-  const [conteudo, setConteudo] = React.useState<any>([]);
+  const [conteudo, setConteudo] = React.useState<Descendant[]>([]);
   const [chatOpen, setChatOpen] = React.useState(false);
   const [uploadOpen, setUploadOpen] = React.useState(false);
   const [shareOpen, setShareOpen] = React.useState(false);
   const [historyOpen, setHistoryOpen] = React.useState(false);
-  const [currentUser, setCurrentUser] = React.useState<any>(null);
-  const [exporting, setExporting] = React.useState<'pdf' | 'docx' | null>(null);
+  const [
+    currentUser,
+    setCurrentUser,
+  ] = React.useState<
+    { id: number; nomeCompleto: string; emailCorporativo: string } | null
+  >(null);
+  const [exporting, setExporting] = React.useState<'pdf' | 'docx' | null>(
+    null
+  );
   const editorContentRef = React.useRef<HTMLDivElement>(null);
 
   // Colaboração em tempo real
   const {
     collaborators,
-    remoteCursors,
     isConnected,
-    updateCursor,
-    updateSelection,
-    broadcastUpdate,
   } = useRealtimeCollaboration({
     documentoId,
     userId: currentUser?.id || 0,
@@ -162,9 +165,9 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
         clearTimeout(autoSaveTimerRef.current);
       }
     };
-  }, [conteudo, titulo]);
+  }, [conteudo, titulo, documento, loading, handleAutoSave]);
 
-  const handleAutoSave = async () => {
+  const handleAutoSave = React.useCallback(async () => {
     if (!documento) return;
 
     setSaving(true);
@@ -189,11 +192,13 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
       lastSavedRef.current = JSON.stringify(conteudo);
     } catch (error) {
       console.error('Erro no auto-save:', error);
-      toast.error('Erro ao salvar', { description: 'Não foi possível salvar automaticamente' });
+      toast.error('Erro ao salvar', {
+        description: 'Não foi possível salvar automaticamente',
+      });
     } finally {
       setSaving(false);
     }
-  };
+  }, [documento, documentoId, conteudo, titulo]);
 
   const handleManualSave = async () => {
     if (!documento) return;

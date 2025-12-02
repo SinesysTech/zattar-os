@@ -9,10 +9,11 @@ import {
   type VariableOption,
   markdownToTiptapJSON,
   tiptapJSONToMarkdown,
+  type TiptapDocument,
 } from '@/lib/formsign';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -31,7 +32,6 @@ import {
   Undo,
   Redo,
   Link as LinkIcon,
-  Variable as VariableIcon,
 } from 'lucide-react';
 
 interface MarkdownRichTextEditorProps {
@@ -44,7 +44,6 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
   const [linkText, setLinkText] = useState('');
-  const [variableSearch, setVariableSearch] = useState('');
   const isInternalUpdate = useRef(false);
 
   const editor = useEditor({
@@ -64,14 +63,14 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
         isInternalUpdate.current = false;
         return;
       }
-      const markdown = tiptapJSONToMarkdown(editor.getJSON() as any);
+      const markdown = tiptapJSONToMarkdown(editor.getJSON() as TiptapDocument);
       onChange(markdown);
     },
   });
 
   useEffect(() => {
     if (editor && !isInternalUpdate.current) {
-      const currentMarkdown = tiptapJSONToMarkdown(editor.getJSON() as any);
+      const currentMarkdown = tiptapJSONToMarkdown(editor.getJSON() as TiptapDocument);
       if (currentMarkdown !== value) {
         isInternalUpdate.current = true;
         editor.commands.setContent(markdownToTiptapJSON(value));
