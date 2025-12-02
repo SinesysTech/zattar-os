@@ -1,6 +1,7 @@
 'use client'
 
 import { createClient } from '@/lib/client'
+import { v4 as uuidv4 } from 'uuid'
 import { useCallback, useEffect, useState } from 'react'
 
 interface UseRealtimeChatProps {
@@ -57,7 +58,7 @@ export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatP
       if (!channel || !isConnected) return
 
       const message: ChatMessage = {
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         content,
         user: {
           id: userId,

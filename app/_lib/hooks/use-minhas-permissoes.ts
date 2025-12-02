@@ -18,6 +18,7 @@ interface MinhasPermissoesResponse {
 
 interface UseMinhasPermissoesResult {
   permissoes: Permissao[];
+  usuarioId: number | null;
   isSuperAdmin: boolean;
   isLoading: boolean;
   error: string | null;
@@ -67,6 +68,7 @@ export function useMinhasPermissoes(recurso?: string): UseMinhasPermissoesResult
 
   return {
     permissoes: data?.permissoes ?? [],
+    usuarioId: data?.usuarioId ?? null,
     isSuperAdmin: data?.isSuperAdmin ?? false,
     isLoading,
     error: error?.message ?? null,

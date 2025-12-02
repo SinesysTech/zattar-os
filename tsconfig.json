@@ -26,6 +26,9 @@
         "@/types/domain/*": ["types/domain/*"],
         "@/types/contracts/*": ["types/contracts/*"],
         "@/_lib/*": ["app/_lib/*"],
+        "@/app/*": ["app/*"],
+        "@/components/*": ["components/*"],
+        "@/backend/*": ["backend/*"],
         "@/lib/*": ["lib/*", "app/_lib/*"],
         "@/*": ["./*"]
       }  },

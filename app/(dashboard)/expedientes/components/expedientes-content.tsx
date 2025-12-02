@@ -58,6 +58,7 @@ import { ExpedientesVisualizacaoSemana } from './expedientes-visualizacao-semana
 import { ExpedientesVisualizacaoMes } from './expedientes-visualizacao-mes';
 import { ExpedientesVisualizacaoAno } from './expedientes-visualizacao-ano';
 import { usePendentes } from '@/app/_lib/hooks/use-pendentes';
+import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { useTiposExpedientes } from '@/app/_lib/hooks/use-tipos-expedientes';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
@@ -806,8 +807,6 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
   const [novoExpedienteOpen, setNovoExpedienteOpen] = React.useState(false);
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['baixado_false']);
   const [isSearching, setIsSearching] = React.useState(false);
-  const [currentUserId, setCurrentUserId] = React.useState<number | null>(null);
-  const [isSuperAdmin, setIsSuperAdmin] = React.useState(false);
   const [countVencidos, setCountVencidos] = React.useState<number>(0);
   const [countSemResponsavel, setCountSemResponsavel] = React.useState<number>(0);
   const [parteDialog, setParteDialog] = React.useState<{
@@ -827,21 +826,8 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
     setParteDialog({ open: true, processoId, polo, nome });
   };
 
-  React.useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const response = await fetch('/api/me');
-        if (response.ok) {
-          const data = await response.json();
-          setCurrentUserId(data.id);
-          setIsSuperAdmin(data.isSuperAdmin || false);
-        }
-      } catch (error) {
-        console.error('Erro ao obter informações do usuário:', error);
-      }
-    };
-    getUserInfo();
-  }, []);
+  // Buscar permissões e ID do usuário logado
+  const { usuarioId: currentUserId, isSuperAdmin } = useMinhasPermissoes();
 
   const buscaDebounced = useDebounce(busca, 500);
 
