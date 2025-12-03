@@ -2,14 +2,30 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 
+/**
+ * Schema para dados do cliente no formato Formsign.
+ *
+ * Campos obrigatórios apenas: nome, cpf, email, celular
+ * Demais campos são opcionais para permitir clientes com dados parciais.
+ *
+ * Campos _txt são textos descritivos adicionados pelo DadosPessoais component
+ * para facilitar a leitura em PDFs e logs.
+ */
 const clienteFormsignSchema = z.object({
-  id: z.number(),
-  nome: z.string(),
-  cpf: z.string(),
-  rg: z.string().nullable(),
-  data_nascimento: z.string().nullable(),
-  email: z.string(),
-  celular: z.string(),
+  // Identificador (presente em updates, gerado pelo form como placeholder em inserts)
+  id: z.number().optional(),
+
+  // Campos obrigatórios
+  nome: z.string().min(1, 'Nome é obrigatório'),
+  cpf: z.string().length(11, 'CPF deve ter 11 dígitos'),
+  email: z.string().email('Email inválido'),
+  celular: z.string().min(10, 'Celular inválido'),
+
+  // Campos opcionais de identificação
+  rg: z.string().nullable().optional(),
+  data_nascimento: z.string().nullable().optional(),
+
+  // Campos opcionais de endereço
   endereco_completo: z.string().optional(),
   endereco_rua: z.string().optional(),
   endereco_numero: z.string().optional(),
@@ -18,9 +34,19 @@ const clienteFormsignSchema = z.object({
   endereco_cidade: z.string().optional(),
   endereco_uf: z.string().optional(),
   endereco_cep: z.string().optional(),
+
+  // Campos opcionais de estado civil/gênero/nacionalidade (códigos)
   estado_civil: z.string().optional(),
-  genero: z.string().optional(),
-  nacionalidade: z.string().optional(),
+  genero: z.number().optional(),
+  nacionalidade_id: z.number().optional(),
+
+  // Campos descritivos (textos legíveis para estado_civil, genero, nacionalidade)
+  estado_civil_txt: z.string().optional(),
+  genero_txt: z.string().optional(),
+  nacionalidade_txt: z.string().optional(),
+
+  // Campos adicionais de contato
+  telefone: z.string().optional(),
 });
 
 const schema = z.object({

@@ -124,3 +124,79 @@ export function clienteFormsignToSinesys(clienteFormsign: ClienteFormsign): {
 
   return { cliente, endereco };
 }
+
+/**
+ * Dados do formulário de Dados Pessoais (DadosPessoaisFormData)
+ * Tipagem para o input da função mapClienteFormToCliente
+ */
+interface DadosPessoaisFormInput {
+  name: string;
+  cpf: string;
+  rg?: string;
+  dataNascimento: string;
+  estadoCivil: string;
+  genero: string;
+  nacionalidade: string;
+  email: string;
+  celular: string;
+  telefone?: string;
+  cep: string;
+  logradouro: string;
+  numero: string;
+  complemento?: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+}
+
+/**
+ * Formato de saída do mapeamento para envio à API save-client
+ */
+export interface ClienteFormMapped {
+  id?: number;
+  nome: string;
+  cpf: string;
+  rg: string | null;
+  data_nascimento: string | null;
+  email: string;
+  celular: string;
+  telefone?: string;
+  endereco_rua: string;
+  endereco_numero: string;
+  endereco_complemento?: string;
+  endereco_bairro: string;
+  endereco_cidade: string;
+  endereco_uf: string;
+  endereco_cep: string;
+  estado_civil: string;
+  genero: number;
+  nacionalidade_id: number;
+}
+
+/**
+ * Mapeia dados do formulário DadosPessoais para formato da API save-client.
+ *
+ * @param formData - Dados do formulário (DadosPessoaisFormData após sanitização)
+ * @returns Objeto no formato esperado pela API save-client (clienteFormsignSchema)
+ */
+export function mapClienteFormToCliente(formData: DadosPessoaisFormInput): ClienteFormMapped {
+  return {
+    nome: formData.name,
+    cpf: formData.cpf,
+    rg: formData.rg || null,
+    data_nascimento: formData.dataNascimento || null,
+    email: formData.email,
+    celular: formData.celular,
+    telefone: formData.telefone || undefined,
+    endereco_rua: formData.logradouro,
+    endereco_numero: formData.numero,
+    endereco_complemento: formData.complemento || undefined,
+    endereco_bairro: formData.bairro,
+    endereco_cidade: formData.cidade,
+    endereco_uf: formData.estado,
+    endereco_cep: formData.cep,
+    estado_civil: formData.estadoCivil,
+    genero: parseInt(formData.genero, 10),
+    nacionalidade_id: parseInt(formData.nacionalidade, 10),
+  };
+}

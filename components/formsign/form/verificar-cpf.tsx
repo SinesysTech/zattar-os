@@ -28,7 +28,7 @@ type VerificarCPFResponse = {
 
 export default function VerificarCPF() {
   const [isValidating, setIsValidating] = useState(false);
-  const { setDadosCPF, proximaEtapa, getTotalSteps } = useFormularioStore();
+  const { setDadosCPF, proximaEtapa, getTotalSteps, etapaAtual } = useFormularioStore();
 
   const form = useForm<VerificarCPFFormData>({
     resolver: zodResolver(verificarCPFSchema),
@@ -39,81 +39,37 @@ export default function VerificarCPF() {
   });
 
   const onSubmit = async (data: VerificarCPFFormData) => {
-    const sessionId = Math.random().toString(36).substring(7);
-    console.log(`\n[CLIENT-${sessionId}] 🚀 Iniciando validação de CPF no frontend`);
-    console.log(`[CLIENT-${sessionId}] 📝 CPF original: ${data.cpf}`);
-
     try {
       // Remover formatação do CPF
       const cpfDigits = parseCPF(data.cpf);
-      console.log(`[CLIENT-${sessionId}] 🔢 CPF parseado: ${cpfDigits}`);
 
       // Validação local redundante (segurança)
-      console.log(`[CLIENT-${sessionId}] 🔍 Validando CPF localmente...`);
       if (!validateCPF(cpfDigits)) {
-        console.error(`[CLIENT-${sessionId}] ❌ CPF INVÁLIDO na validação local`);
         toast.error('CPF inválido', {
           description: 'CPF inválido. Verifique os dígitos informados.',
         });
         return;
       }
-      console.log(`[CLIENT-${sessionId}] ✅ CPF válido na validação local`);
 
       setIsValidating(true);
-      console.log(`[CLIENT-${sessionId}] 🔍 Verificando se CPF existe no sistema...`);
 
-      // Verificar se cliente existe no sistema
-      const n8nResult = await fetch(API_ROUTES.verificarCpf, {
+      // Verificar se cliente existe no sistema via API verificar-cpf
+      const response = await fetch(API_ROUTES.verificarCpf, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cpf: cpfDigits }),
-      }).then(async (res) => {
-        console.log(`[CLIENT-${sessionId}] 📥 n8n API respondeu: ${res.status}`);
-        if (!res.ok) {
-          console.error(`[CLIENT-${sessionId}] ❌ n8n API erro: ${res.status} ${res.statusText}`);
-          throw new Error(`Erro ${res.status}: ${res.statusText}`);
-        }
-        const text = await res.text();
-        console.log(`[CLIENT-${sessionId}] 📄 n8n API body:`, text);
-        if (!text) {
-          console.warn(`[CLIENT-${sessionId}] ⚠️  n8n API retornou body vazio`);
-          return { exists: false, cliente: null };
-        }
-        const parsed = JSON.parse(text) as VerificarCPFResponse;
-        console.log(`[CLIENT-${sessionId}] 📦 n8n result:`, parsed);
-        return parsed;
       });
 
-      console.log(`[CLIENT-${sessionId}] 🎯 Resultado:`, n8nResult);
-
-      // Lógica de decisão simplificada (apenas validação local + n8n)
-      console.log(`[CLIENT-${sessionId}] 🧠 Analisando lógica de decisão...`);
-
-      // Verificar se n8n teve erro (não resposta válida)
-      if ('error' in n8nResult || typeof n8nResult.exists !== 'boolean') {
-        console.warn(`[CLIENT-${sessionId}] ⚠️  n8n com erro ou resposta inválida`);
-        console.warn(`[CLIENT-${sessionId}]    exists type: ${typeof n8nResult.exists}`);
-        console.warn(`[CLIENT-${sessionId}]    has error: ${'error' in n8nResult}`);
-        // Fallback: erro do serviço n8n, permitir continuar
-        toast.warning('Atenção', {
-          description: 'Não foi possível validar completamente. Continuando...',
-        });
-
-        setDadosCPF({
-          cpf: cpfDigits,
-          clienteExistente: false,
-        });
-
-        console.log(`[CLIENT-${sessionId}] ➡️  Avançando para próxima etapa (fallback n8n)`);
-        proximaEtapa();
-        return;
+      // Tratar erros HTTP (4xx, 5xx)
+      if (!response.ok) {
+        console.error(`verificarCpf API erro: ${response.status} ${response.statusText}`);
+        throw new Error(`Erro ${response.status}: ${response.statusText}`);
       }
 
+      const apiResult: VerificarCPFResponse = await response.json();
+
       // Cenário 1: Cliente existe no sistema
-      if (n8nResult.exists && n8nResult.cliente) {
-        console.log(`[CLIENT-${sessionId}] ✅ CENÁRIO 1: CLIENTE EXISTE NO SISTEMA`);
-        console.log(`[CLIENT-${sessionId}]    Cliente ID: ${n8nResult.cliente.id}`);
-        console.log(`[CLIENT-${sessionId}]    Cliente:`, n8nResult.cliente);
+      if (apiResult.exists === true && apiResult.cliente) {
         toast.success('CPF encontrado!', {
           description: 'Seus dados foram localizados no sistema.',
         });
@@ -121,18 +77,16 @@ export default function VerificarCPF() {
         setDadosCPF({
           cpf: cpfDigits,
           clienteExistente: true,
-          clienteId: n8nResult.cliente.id,
-          dadosCliente: n8nResult.cliente,
+          clienteId: apiResult.cliente.id,
+          dadosCliente: apiResult.cliente,
         });
 
-        console.log(`[CLIENT-${sessionId}] ➡️  Avançando para próxima etapa (cliente existente)`);
         proximaEtapa();
         return;
       }
 
       // Cenário 2: Cliente não existe no sistema (novo cadastro)
-      if (n8nResult.exists === false) {
-        console.log(`[CLIENT-${sessionId}] ✅ CENÁRIO 2: NOVO CLIENTE`);
+      if (apiResult.exists === false) {
         toast.info('CPF válido', {
           description: 'Por favor, preencha seus dados cadastrais.',
         });
@@ -142,29 +96,26 @@ export default function VerificarCPF() {
           clienteExistente: false,
         });
 
-        console.log(`[CLIENT-${sessionId}] ➡️  Avançando para próxima etapa (novo cliente)`);
         proximaEtapa();
         return;
       }
 
-      // Cenário 3: Fallback
-      console.warn(`[CLIENT-${sessionId}] ⚠️  CENÁRIO 3: FALLBACK`);
-      console.warn(`[CLIENT-${sessionId}]    n8nResult.exists: ${n8nResult.exists}`);
-      toast.warning('Atenção', {
-        description: 'Não foi possível validar completamente. Continuando...',
-      });
+      // Cenário 3: Fallback (exists não é boolean - resposta inesperada)
+      if (typeof apiResult.exists !== 'boolean') {
+        console.warn('verificarCpf API retornou resposta inesperada:', apiResult);
+        toast.warning('Atenção', {
+          description: 'Não foi possível validar completamente. Continuando...',
+        });
 
-      setDadosCPF({
-        cpf: cpfDigits,
-        clienteExistente: false,
-      });
+        setDadosCPF({
+          cpf: cpfDigits,
+          clienteExistente: false,
+        });
 
-      console.log(`[CLIENT-${sessionId}] ➡️  Avançando para próxima etapa (fallback)`);
-      proximaEtapa();
+        proximaEtapa();
+      }
     } catch (error) {
-      const sessionId = Math.random().toString(36).substring(7);
-      console.error(`[CLIENT-${sessionId}] ❌ ERRO CRÍTICO ao verificar CPF:`, error);
-      console.error(`[CLIENT-${sessionId}] 📋 Stack trace:`, error instanceof Error ? error.stack : 'N/A');
+      console.error('Erro ao verificar CPF:', error);
 
       toast.error('Erro ao verificar CPF', {
         description: 'Ocorreu um erro ao validar o CPF. Tente novamente.',
@@ -178,12 +129,12 @@ export default function VerificarCPF() {
     <FormStepLayout
       title="Verificação de CPF"
       description="Informe seu CPF para iniciar o cadastro"
-      currentStep={0}
+      currentStep={etapaAtual}
       totalSteps={getTotalSteps()}
       nextLabel="Continuar"
       isNextDisabled={isValidating || !form.formState.isValid}
       isLoading={isValidating}
-      showPrevious={false}
+      hidePrevious={true}
       cardClassName="w-full max-w-lg mx-auto"
       formId="verificar-cpf-form"
     >

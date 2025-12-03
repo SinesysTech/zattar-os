@@ -13,3 +13,14 @@ export {
   truncateText,
   getTemplateDisplayName,
 } from './format-template';
+
+// Formulario utilities
+export {
+  getFormularioDisplayName,
+  formatBooleanBadge,
+  getBooleanBadgeVariant,
+  getAtivoBadgeVariant,
+  formatAtivoStatus,
+  getTemplatePreviewText,
+  generateSlug,
+} from './formulario-utils';

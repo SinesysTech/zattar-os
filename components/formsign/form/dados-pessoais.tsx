@@ -64,6 +64,7 @@ export default function DadosPessoais() {
     proximaEtapa,
     etapaAnterior,
     getTotalSteps,
+    etapaAtual,
   } = useFormularioStore();
 
   const form = useForm({
@@ -314,7 +315,7 @@ export default function DadosPessoais() {
     <FormStepLayout
       title="Dados Pessoais"
       description={dadosCPF?.clienteExistente ? 'Revise e atualize seus dados cadastrais' : 'Preencha seus dados cadastrais'}
-      currentStep={1}
+      currentStep={etapaAtual}
       totalSteps={getTotalSteps()}
       onPrevious={etapaAnterior}
       nextLabel="Próximo"
@@ -727,7 +728,7 @@ export default function DadosPessoais() {
                         {Object.entries(ESTADOS_BRASILEIROS)
                           .sort((a, b) => a[1].localeCompare(b[1]))
                           .map(([uf, nome]) => (
-                            <SelectItem key={uf} value={nome}>
+                            <SelectItem key={uf} value={uf}>
                               {nome}
                             </SelectItem>
                           ))}
