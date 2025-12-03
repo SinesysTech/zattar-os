@@ -101,7 +101,7 @@ export function CredenciaisDialog({
       // Se mudou de TST para outro tribunal, limpa o grau
       setGrau('');
     }
-  }, [tribunal]);
+  }, [tribunal, grau]);
 
   // TST tem grau fixo (Tribunal Superior)
   const isTST = tribunal === 'TST';

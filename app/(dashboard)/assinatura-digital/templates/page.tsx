@@ -304,10 +304,8 @@ function TemplateActions({
   canCreate: boolean;
   canDelete: boolean;
 }) {
-  const router = useRouter();
-
   const handleEdit = () => {
-    router.push(`/assinatura-digital/templates/${template.template_uuid}/edit`);
+    onEdit(template);
   };
 
   return (
@@ -360,7 +358,7 @@ export default function TemplatesPage() {
   const [selectedTemplates, setSelectedTemplates] = React.useState<AssinaturaDigitalTemplate[]>([]);
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
 
-  const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('assinatura_digital');
+  const { temPermissao } = useMinhasPermissoes('assinatura_digital');
   const canCreate = temPermissao('assinatura_digital', 'criar');
   const canEdit = temPermissao('assinatura_digital', 'editar');
   const canDelete = temPermissao('assinatura_digital', 'deletar');
