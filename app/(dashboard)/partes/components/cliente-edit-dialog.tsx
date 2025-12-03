@@ -38,14 +38,27 @@ import { Loader2, Save, User, Phone, MapPin, X, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import InputCEP, { type InputCepAddress } from '@/components/assinatura-digital/inputs/input-cep';
 import InputTelefone from '@/components/assinatura-digital/inputs/input-telefone';
-import type { Cliente } from '@/types/domain/partes';
+import type { Cliente, ClientePessoaFisica, ClientePessoaJuridica } from '@/types/domain/partes';
 
 interface ClienteEditDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  cliente: Cliente;
+  cliente: ClienteComEndereco;
   onSuccess?: () => void;
 }
+
+type ClienteEndereco = {
+  id?: number;
+  cep?: string | null;
+  logradouro?: string | null;
+  numero?: string | null;
+  complemento?: string | null;
+  bairro?: string | null;
+  municipio?: string | null;
+  estado_sigla?: string | null;
+};
+
+type ClienteComEndereco = Cliente & { endereco?: ClienteEndereco | null };
 
 // Estados brasileiros
 const ESTADOS_BR = [
@@ -125,21 +138,23 @@ export function ClienteEditDialog({
   // Preencher formulário quando cliente mudar
   React.useEffect(() => {
     if (cliente) {
-      const endereco = (cliente as any).endereco;
+      const endereco = cliente.endereco ?? null;
+      const clientePF = cliente.tipo_pessoa === 'pf' ? (cliente as ClientePessoaFisica) : null;
+      const clientePJ = cliente.tipo_pessoa === 'pj' ? (cliente as ClientePessoaJuridica) : null;
       setFormData({
         nome: cliente.nome || '',
         nome_social_fantasia: cliente.nome_social_fantasia || '',
-        cpf: cliente.cpf || '',
-        cnpj: cliente.cnpj || '',
-        rg: isPF ? (cliente as any).rg || '' : '',
-        data_nascimento: isPF ? (cliente as any).data_nascimento || '' : '',
-        data_abertura: !isPF ? (cliente as any).data_abertura || '' : '',
-        genero: isPF ? (cliente as any).genero || '' : '',
-        sexo: isPF ? (cliente as any).sexo || '' : '',
-        estado_civil: isPF ? (cliente as any).estado_civil || '' : '',
-        nacionalidade: isPF ? (cliente as any).nacionalidade || '' : '',
-        nome_genitora: isPF ? (cliente as any).nome_genitora || '' : '',
-        inscricao_estadual: !isPF ? (cliente as any).inscricao_estadual || '' : '',
+        cpf: clientePF?.cpf || '',
+        cnpj: clientePJ?.cnpj || '',
+        rg: clientePF?.rg || '',
+        data_nascimento: clientePF?.data_nascimento || '',
+        data_abertura: clientePJ?.data_abertura || '',
+        genero: clientePF?.genero || '',
+        sexo: clientePF?.sexo || '',
+        estado_civil: clientePF?.estado_civil || '',
+        nacionalidade: clientePF?.nacionalidade || '',
+        nome_genitora: clientePF?.nome_genitora || '',
+        inscricao_estadual: clientePJ?.inscricao_estadual || '',
         emails: cliente.emails || [],
         ddd_celular: cliente.ddd_celular || '',
         numero_celular: cliente.numero_celular || '',
@@ -264,7 +279,7 @@ export function ClienteEditDialog({
           estado_sigla: formData.estado_sigla || null,
         };
 
-        const enderecoExistente = (cliente as any).endereco;
+        const enderecoExistente = cliente.endereco;
 
         if (enderecoExistente?.id) {
           // Atualizar endereço existente

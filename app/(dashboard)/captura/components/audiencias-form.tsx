@@ -78,7 +78,7 @@ export function AudienciasForm({ onSuccess }: AudienciasFormProps) {
         setResult({
           success: true,
           data: response.data,
-          capture_id: (response as any).capture_id,
+          capture_id: response.capture_id,
         });
         onSuccess?.();
       }
@@ -152,7 +152,7 @@ export function AudienciasForm({ onSuccess }: AudienciasFormProps) {
       <CapturaResult
         success={result.success}
         error={result.error}
-        data={result.data as any}
+        data={result.data}
         captureId={result.capture_id}
       />
     </div>

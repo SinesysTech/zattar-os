@@ -3,7 +3,6 @@
 // Página de segmentos de assinatura digital
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
@@ -106,7 +105,6 @@ function SegmentoActions({ segmento, onEdit, onDuplicate, onDelete, canEdit, can
 }
 
 export function SegmentosClient() {
-  const _router = useRouter();
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
@@ -124,9 +122,6 @@ export function SegmentosClient() {
   const canCreate = temPermissao('assinatura_digital', 'criar');
   const canEdit = temPermissao('assinatura_digital', 'editar');
   const canDelete = temPermissao('assinatura_digital', 'deletar');
-
-  const filterOptions = React.useMemo(() => buildSegmentosFilterOptions(), []);
-  const filterGroups = React.useMemo(() => buildSegmentosFilterGroups(), []);
 
   const buscaDebounced = useDebounce(busca, 500);
 

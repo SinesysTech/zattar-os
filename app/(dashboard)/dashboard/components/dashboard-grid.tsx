@@ -7,6 +7,7 @@ import { NotasWidget } from './notas-widget';
 import { LinksWidget } from './links-widget';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { DashboardWidget } from '@/app/api/dashboard-api';
 
 export function DashboardGrid() {
   const { 
@@ -44,7 +45,7 @@ export function DashboardGrid() {
     );
   }
 
-  const renderWidget = (widget: any) => {
+  const renderWidget = (widget: DashboardWidget) => {
     switch (widget.type) {
       case 'tarefas':
         return <TarefasWidget key={widget.id} />;

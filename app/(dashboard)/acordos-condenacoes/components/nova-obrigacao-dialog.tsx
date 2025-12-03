@@ -77,7 +77,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
   const [numeroParcelas, setNumeroParcelas] = React.useState('1');
   const [dataVencimentoPrimeiraParcela, setDataVencimentoPrimeiraParcela] = React.useState('');
   const [formaPagamentoPadrao, setFormaPagamentoPadrao] = React.useState<string>('');
-  const [formaDistribuicao, setFormaDistribuicao] = React.useState('');
+  const [formaDistribuicao, setFormaDistribuicao] = React.useState<'' | 'integral' | 'dividido'>('');
   const [observacoes, setObservacoes] = React.useState('');
 
   // Determinar se está no modo com dados iniciais (processo já definido)
@@ -166,6 +166,16 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
       return;
     }
 
+    if (direcao === 'recebimento' && tipo !== 'custas_processuais' && !formaDistribuicao) {
+      setError('Selecione a forma de distribuição');
+      return;
+    }
+
+    if (tipo === 'custas_processuais' && direcao !== 'pagamento') {
+      setError('Custas processuais devem ter direção Pagamento');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -182,7 +192,10 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
           numeroParcelas: parseInt(numeroParcelas),
           dataVencimentoPrimeiraParcela,
           formaPagamentoPadrao,
-          formaDistribuicao: formaDistribuicao || undefined,
+          formaDistribuicao:
+            direcao === 'recebimento' && tipo !== 'custas_processuais' && formaDistribuicao
+              ? formaDistribuicao
+              : undefined,
           observacoes: observacoes || undefined,
         }),
       });
@@ -217,6 +230,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
     setFormaPagamentoPadrao('');
     setFormaDistribuicao('');
     setObservacoes('');
+    setFormaDistribuicao('');
     setError(null);
   };
 
@@ -366,16 +380,20 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="formaDistribuicao">Forma de Distribuição</Label>
-                  <Input
-                    id="formaDistribuicao"
-                    type="text"
-                    placeholder="Ex: 60% cliente, 40% honorários"
-                    value={formaDistribuicao}
-                    onChange={(e) => setFormaDistribuicao(e.target.value)}
-                  />
-                </div>
+                {direcao === 'recebimento' && tipo !== 'custas_processuais' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="formaDistribuicao">Forma de Distribuição</Label>
+                    <Select value={formaDistribuicao} onValueChange={(v) => setFormaDistribuicao(v as typeof formaDistribuicao)}>
+                      <SelectTrigger id="formaDistribuicao">
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="integral">Integral</SelectItem>
+                        <SelectItem value="dividido">Dividido</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
 
               {/* Coluna direita */}
@@ -568,17 +586,20 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
             </div>
           </div>
 
-          {/* Forma de Distribuição */}
-          <div className="space-y-2">
-            <Label htmlFor="formaDistribuicao">Forma de Distribuição</Label>
-            <Input
-              id="formaDistribuicao"
-              type="text"
-              placeholder="Ex: 60% para cliente, 40% honorários"
-              value={formaDistribuicao}
-              onChange={(e) => setFormaDistribuicao(e.target.value)}
-            />
-          </div>
+          {direcao === 'recebimento' && tipo !== 'custas_processuais' && (
+            <div className="space-y-2">
+              <Label htmlFor="formaDistribuicao">Forma de Distribuição</Label>
+              <Select value={formaDistribuicao} onValueChange={(v) => setFormaDistribuicao(v as typeof formaDistribuicao)}>
+                <SelectTrigger id="formaDistribuicao">
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="integral">Integral</SelectItem>
+                  <SelectItem value="dividido">Dividido</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {/* Observações */}
           <div className="space-y-2">

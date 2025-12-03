@@ -319,7 +319,7 @@ export function TimelineForm({ onSuccess }: TimelineFormProps) {
       <CapturaResult
         success={result.success}
         error={result.error}
-        data={result.data as any}
+        data={result.data}
       />
     </div>
   );

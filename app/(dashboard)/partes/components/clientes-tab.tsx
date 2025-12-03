@@ -43,8 +43,19 @@ import {
 /**
  * Tipo estendido de cliente com processos relacionados
  */
+type ClienteEndereco = {
+  cep?: string | null;
+  logradouro?: string | null;
+  numero?: string | null;
+  complemento?: string | null;
+  bairro?: string | null;
+  municipio?: string | null;
+  estado_sigla?: string | null;
+};
+
 type ClienteComProcessos = Cliente & {
   processos_relacionados?: ProcessoRelacionado[];
+  endereco?: ClienteEndereco | null;
 };
 
 /**
@@ -127,7 +138,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 /**
  * Define as colunas da tabela de clientes
  */
-function criarColunas(onEdit: (cliente: Cliente) => void): ColumnDef<ClienteComProcessos>[] {
+function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): ColumnDef<ClienteComProcessos>[] {
   return [
     {
       id: 'identificacao',
@@ -252,7 +263,7 @@ function criarColunas(onEdit: (cliente: Cliente) => void): ColumnDef<ClienteComP
       size: 260,
       meta: { align: 'left' },
       cell: ({ row }) => {
-        const cliente = row.original as Cliente & { endereco?: any };
+        const cliente = row.original;
         const enderecoFormatado = formatarEnderecoCompleto(cliente.endereco);
         return (
           <div className="min-h-10 flex items-center justify-start text-sm">
@@ -307,8 +318,8 @@ function ClienteActions({
   cliente,
   onEdit,
 }: {
-  cliente: Cliente;
-  onEdit: (cliente: Cliente) => void;
+  cliente: ClienteComProcessos;
+  onEdit: (cliente: ClienteComProcessos) => void;
 }) {
   return (
     <ButtonGroup>
@@ -354,7 +365,7 @@ export function ClientesTab() {
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
-  const [clienteParaEditar, setClienteParaEditar] = React.useState<Cliente | null>(null);
+  const [clienteParaEditar, setClienteParaEditar] = React.useState<ClienteComProcessos | null>(null);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -375,7 +386,7 @@ export function ClientesTab() {
   const { clientes, paginacao, isLoading, error, refetch } = useClientes(params);
 
   // Função para abrir dialog de edição
-  const handleEdit = React.useCallback((cliente: Cliente) => {
+  const handleEdit = React.useCallback((cliente: ClienteComProcessos) => {
     setClienteParaEditar(cliente);
     setEditOpen(true);
   }, []);
