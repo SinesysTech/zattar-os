@@ -56,7 +56,7 @@ function resolveVariable(variable: TipoVariavel | undefined, ctx: PdfDataContext
     'segmento.id': ctx.segmento.id,
     'segmento.nome': ctx.segmento.nome,
     'segmento.slug': ctx.segmento.slug,
-    'segmento.descricao': (ctx.segmento as any).descricao,
+    'segmento.descricao': (ctx.segmento as SegmentoBasico & { descricao?: string }).descricao,
     'sistema.protocolo': ctx.protocolo,
     'sistema.ip_cliente': ctx.ip,
     'sistema.user_agent': ctx.user_agent,
@@ -124,7 +124,7 @@ function hexToRgb(hex: string) {
   return rgb(r / 255, g / 255, b / 255);
 }
 
-async function embedText(page: any, font: PDFFont, text: string, x: number, y: number, maxWidth: number, size: number) {
+async function embedText(page: { drawText: (text: string, options: { x: number; y: number; size: number; font: PDFFont }) => void }, font: PDFFont, text: string, x: number, y: number, maxWidth: number, size: number) {
   const chunks = wrapText(font, text, size, maxWidth);
   let currentY = y;
   chunks.forEach((line) => {

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DynamicFormSchema } from '@/types/formsign/form-schema.types';
 import { FormsignFormulario } from '@/backend/types/formsign-admin/types';
-import { useMinhasPermissoes } from '@/_lib/hooks/use-minhas-permissoes';
+import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
 
 interface PageProps {
   params: { id: string };
@@ -78,6 +78,17 @@ export default function FormularioSchemaPage({ params }: PageProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Skip fetch while permissions are loading
+    if (isLoadingPermissoes) {
+      return;
+    }
+
+    // Skip fetch if user doesn't have edit permission
+    if (!canEdit) {
+      setLoading(false);
+      return;
+    }
+
     const fetchFormulario = async () => {
       try {
         if (!id || id === 'undefined' || id === 'null' || id === '') {
@@ -102,7 +113,7 @@ export default function FormularioSchemaPage({ params }: PageProps) {
     };
 
     fetchFormulario();
-  }, [id, router]);
+  }, [id, router, isLoadingPermissoes, canEdit]);
 
   const handleRetry = () => {
     setError(null);

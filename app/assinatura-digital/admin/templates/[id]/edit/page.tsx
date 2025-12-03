@@ -78,6 +78,17 @@ export default function EditTemplatePage({ params }: PageProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Skip fetch while permissions are loading
+    if (isLoadingPermissoes) {
+      return;
+    }
+
+    // Skip fetch if user doesn't have edit permission
+    if (!canEdit) {
+      setLoading(false);
+      return;
+    }
+
     const fetchTemplate = async () => {
       try {
         // Log para debug do ID recebido
@@ -113,7 +124,7 @@ export default function EditTemplatePage({ params }: PageProps) {
     };
 
     fetchTemplate();
-  }, [id, router]);
+  }, [id, router, isLoadingPermissoes, canEdit]);
 
   const handleRetry = () => {
     setError(null);

@@ -36,7 +36,7 @@ export const DOCUMENT_CACHE_TTLS = {
  * Generates a consistent cache key from prefix and params.
  * Serializes params deterministically by sorting object keys.
  */
-export function generateCacheKey(prefix: string, params?: any): string {
+export function generateCacheKey(prefix: string, params?: Record<string, unknown>): string {
   if (!params) return prefix;
   const sortedParams = sortObjectKeys(params);
   return `${prefix}:${JSON.stringify(sortedParams)}`;
@@ -45,12 +45,12 @@ export function generateCacheKey(prefix: string, params?: any): string {
 /**
  * Recursively sorts object keys for deterministic serialization.
  */
-function sortObjectKeys(obj: any): any {
+function sortObjectKeys(obj: unknown): unknown {
   if (obj === null || typeof obj !== 'object') return obj;
   if (Array.isArray(obj)) return obj.map(sortObjectKeys);
-  const sorted: any = {};
-  Object.keys(obj).sort().forEach(key => {
-    sorted[key] = sortObjectKeys(obj[key]);
+  const sorted: Record<string, unknown> = {};
+  Object.keys(obj as Record<string, unknown>).sort().forEach(key => {
+    sorted[key] = sortObjectKeys((obj as Record<string, unknown>)[key]);
   });
   return sorted;
 }
@@ -126,14 +126,14 @@ export async function deletePattern(pattern: string): Promise<number> {
  * Retrieves Redis cache statistics.
  * Returns an object with stats or empty if unavailable.
  */
-export async function getCacheStats(): Promise<{ [key: string]: any }> {
+export async function getCacheStats(): Promise<Record<string, string>> {
   const client = getRedisClient();
   if (!client || !isRedisAvailable()) return {};
 
   try {
     const info = await client.info();
     // Parse relevant stats from INFO output
-    const stats: { [key: string]: any } = {};
+    const stats: Record<string, string> = {};
     const lines = info.split('\n');
     for (const line of lines) {
       if (line.includes(':')) {

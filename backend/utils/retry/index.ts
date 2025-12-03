@@ -48,8 +48,8 @@ function isDefaultRetryableError(error: unknown): boolean {
   }
   
   // Erros HTTP 5xx (server errors)
-  if ('status' in error && typeof (error as any).status === 'number') {
-    const status = (error as any).status;
+  if ('status' in error && typeof (error as { status: unknown }).status === 'number') {
+    const status = (error as { status: number }).status;
     return status >= 500 && status < 600;
   }
   
@@ -124,7 +124,7 @@ function sleep(ms: number): Promise<void> {
 /**
  * Wrapper para criar função retryable com opções pré-configuradas
  */
-export function createRetryable<T extends (...args: any[]) => Promise<any>>(
+export function createRetryable<T extends (...args: never[]) => Promise<unknown>>(
   fn: T,
   options: Partial<RetryOptions> = {}
 ): T {

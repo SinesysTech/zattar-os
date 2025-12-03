@@ -77,7 +77,7 @@ export const atualizarExpedienteManual = async (
 ): Promise<ExpedienteManual> => {
   const supabase = await createClient();
 
-  const updateData: Record<string, any> = {};
+  const updateData: Record<string, unknown> = {};
 
   if (params.tipo_expediente_id !== undefined) {
     updateData.tipo_expediente_id = params.tipo_expediente_id;

@@ -210,9 +210,9 @@ function converterParaUsuario(data: Record<string, unknown>): Usuario {
     endereco: (data.endereco as Endereco | null) ?? null,
     cargoId: (data.cargo_id as number | null) ?? null,
     cargo: data.cargos ? {
-      id: (data.cargos as any).id,
-      nome: (data.cargos as any).nome,
-      descricao: (data.cargos as any).descricao || null,
+      id: (data.cargos as { id: number; nome: string; descricao?: string }).id,
+      nome: (data.cargos as { id: number; nome: string; descricao?: string }).nome,
+      descricao: (data.cargos as { id: number; nome: string; descricao?: string }).descricao || null,
     } : undefined,
     isSuperAdmin: (data.is_super_admin as boolean) ?? false,
     ativo: data.ativo as boolean,

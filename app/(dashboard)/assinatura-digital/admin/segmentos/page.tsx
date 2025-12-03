@@ -153,6 +153,7 @@ function criarColunas(
   onDuplicate: (segmento: FormsignSegmento) => void,
   onDelete: (segmento: FormsignSegmento) => void,
   canEdit: boolean,
+  canCreate: boolean,
   canDelete: boolean
 ): ColumnDef<FormsignSegmento>[] {
   return [
@@ -292,6 +293,7 @@ function criarColunas(
               onDuplicate={onDuplicate}
               onDelete={onDelete}
               canEdit={canEdit}
+              canCreate={canCreate}
               canDelete={canDelete}
             />
           </div>
@@ -308,6 +310,7 @@ function SegmentoActions({
   onDuplicate,
   onDelete,
   canEdit,
+  canCreate,
   canDelete,
 }: {
   segmento: FormsignSegmento;
@@ -315,6 +318,7 @@ function SegmentoActions({
   onDuplicate: (segmento: FormsignSegmento) => void;
   onDelete: (segmento: FormsignSegmento) => void;
   canEdit: boolean;
+  canCreate: boolean;
   canDelete: boolean;
 }) {
   return (
@@ -477,8 +481,8 @@ export default function SegmentosPage() {
   }, [refetch]);
 
   const colunas = React.useMemo(
-    () => criarColunas(handleEdit, handleDuplicate, handleDelete, canEdit, canDelete),
-    [handleEdit, handleDuplicate, handleDelete, canEdit, canDelete]
+    () => criarColunas(handleEdit, handleDuplicate, handleDelete, canEdit, canCreate, canDelete),
+    [handleEdit, handleDuplicate, handleDelete, canEdit, canCreate, canDelete]
   );
 
   // Bulk actions buttons

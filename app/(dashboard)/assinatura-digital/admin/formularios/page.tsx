@@ -303,6 +303,7 @@ function criarColunas(
   onDelete: (formulario: FormsignFormulario) => void,
   templates: FormsignTemplate[],
   canEdit: boolean,
+  canCreate: boolean,
   canDelete: boolean
 ): ColumnDef<FormsignFormulario>[] {
   return [
@@ -522,6 +523,7 @@ function criarColunas(
               onDuplicate={onDuplicate}
               onDelete={onDelete}
               canEdit={canEdit}
+              canCreate={canCreate}
               canDelete={canDelete}
             />
           </div>
@@ -538,6 +540,7 @@ function FormularioActions({
   onDuplicate,
   onDelete,
   canEdit,
+  canCreate,
   canDelete,
 }: {
   formulario: FormsignFormulario;
@@ -545,6 +548,7 @@ function FormularioActions({
   onDuplicate: (formulario: FormsignFormulario) => void;
   onDelete: (formulario: FormsignFormulario) => void;
   canEdit: boolean;
+  canCreate: boolean;
   canDelete: boolean;
 }) {
   return (
@@ -708,7 +712,7 @@ export default function FormulariosPage() {
     setRowSelection({});
   }, [refetch]);
 
-  const colunas = React.useMemo(() => criarColunas(handleEditSchema, handleDuplicate, handleDelete, templates, canEdit, canDelete), [handleEditSchema, handleDuplicate, handleDelete, templates, canEdit, canDelete]);
+  const colunas = React.useMemo(() => criarColunas(handleEditSchema, handleDuplicate, handleDelete, templates, canEdit, canCreate, canDelete), [handleEditSchema, handleDuplicate, handleDelete, templates, canEdit, canCreate, canDelete]);
 
   // Bulk actions buttons
   const bulkActions = React.useMemo(() => {

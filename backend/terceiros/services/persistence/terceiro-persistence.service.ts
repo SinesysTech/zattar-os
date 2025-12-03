@@ -593,7 +593,7 @@ export async function buscarTerceirosPorNome(nome: string): Promise<Terceiro[]> 
  * A vinculação é feita através da tabela processo_partes com tipo_entidade='terceiro'.
  */
 export async function buscarTerceirosPorProcesso(
-  _params: { processo_id: number; tipo_parte?: string }
+  __params: { processo_id: number; tipo_parte?: string }
 ): Promise<Terceiro[]> {
   throw new Error(
     'buscarTerceirosPorProcesso está obsoleto. Use query via processo_partes para buscar terceiros de um processo.'

@@ -145,7 +145,7 @@ export async function criarEndereco(
     }
 
     // Validação de campos mínimos
-    const { valido, avisos } = validarEnderecoMinimo(params);
+    const { avisos } = validarEnderecoMinimo(params);
     if (avisos.length > 0) {
       console.warn('[ENDERECOS] Endereço incompleto:', avisos);
     }

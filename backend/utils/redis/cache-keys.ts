@@ -6,9 +6,9 @@ import type { ListarAcervoParams } from '@/backend/types/acervo/types';
 /**
  * Normalizes params by removing undefined values and sorting keys for consistency.
  */
-function normalizeParams(params: any): any {
+function normalizeParams(params: Record<string, unknown>): Record<string, unknown> {
   if (!params || typeof params !== 'object') return params;
-  const normalized: any = {};
+  const normalized: Record<string, unknown> = {};
   for (const key of Object.keys(params).sort()) {
     if (params[key] !== undefined) {
       normalized[key] = params[key];
@@ -60,7 +60,7 @@ export function getAcervoGroupKey(params: ListarAcervoParams): string {
 /**
  * Generates cache key for usuarios list.
  */
-export function getUsuariosListKey(params: any): string {
+export function getUsuariosListKey(params: Record<string, unknown>): string {
   const normalized = normalizeParams(params);
   return generateCacheKey(CACHE_PREFIXES.usuarios, normalized);
 }
@@ -68,7 +68,7 @@ export function getUsuariosListKey(params: any): string {
 /**
  * Generates cache key for clientes list.
  */
-export function getClientesListKey(params: any): string {
+export function getClientesListKey(params: Record<string, unknown>): string {
   const normalized = normalizeParams(params);
   return generateCacheKey(CACHE_PREFIXES.clientes, normalized);
 }
@@ -76,7 +76,7 @@ export function getClientesListKey(params: any): string {
 /**
  * Generates cache key for contratos list.
  */
-export function getContratosListKey(params: any): string {
+export function getContratosListKey(params: Record<string, unknown>): string {
   const normalized = normalizeParams(params);
   return generateCacheKey(CACHE_PREFIXES.contratos, normalized);
 }
@@ -84,7 +84,7 @@ export function getContratosListKey(params: any): string {
 /**
  * Generates cache key for tipos expedientes list.
  */
-export function getTiposExpedientesListKey(params: any): string {
+export function getTiposExpedientesListKey(params: Record<string, unknown>): string {
   const normalized = normalizeParams(params);
   return generateCacheKey(CACHE_PREFIXES.tiposExpedientes, normalized);
 }
@@ -92,7 +92,7 @@ export function getTiposExpedientesListKey(params: any): string {
 /**
  * Generates cache key for cargos list.
  */
-export function getCargosListKey(params: any): string {
+export function getCargosListKey(params: Record<string, unknown>): string {
   const normalized = normalizeParams(params);
   return generateCacheKey(CACHE_PREFIXES.cargos, normalized);
 }

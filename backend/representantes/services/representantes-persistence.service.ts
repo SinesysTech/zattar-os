@@ -16,12 +16,10 @@ import type {
   AtualizarRepresentanteParams,
   ListarRepresentantesParams,
   ListarRepresentantesResult,
-  BuscarRepresentantesPorOABParams,
   UpsertRepresentantePorCPFParams,
   BuscarRepresentantePorCPFParams,
   OperacaoRepresentanteResult,
   RepresentanteComEndereco,
-  RepresentanteComProcessos,
   RepresentanteComEnderecoEProcessos,
 } from '@/types/contracts/representantes';
 
@@ -294,7 +292,7 @@ export async function atualizarRepresentante(
       .eq('id', params.id)
       .single();
 
-    const { id, ...updates } = params;
+    const { id: _id, ...updates } = params;
 
     // dados_anteriores armazena o estado anterior do registro, não os dados do PJE
     if (current) {
@@ -382,7 +380,7 @@ export async function buscarRepresentantePorCPF(cpf: string): Promise<Representa
  * NOTA: Representantes são sempre pessoas físicas (advogados), portanto não possuem CNPJ.
  * Esta função sempre retorna null e existe apenas para manter consistência de interface.
  */
-export async function buscarRepresentantePorCNPJ(_cnpj: string): Promise<Representante | null> {
+export async function buscarRepresentantePorCNPJ(__cnpj: string): Promise<Representante | null> {
   // Representantes são sempre PF (advogados), não têm CNPJ
   return null;
 }

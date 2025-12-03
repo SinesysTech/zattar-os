@@ -600,7 +600,8 @@ export default function AssinaturaManuscritaStep() {
 
       // Comment 2: Priorizar error antes de message
       if (error instanceof Error && 'response' in error) {
-        const errorData = (error as any).response?.data;
+        const httpError = error as HttpError;
+        const errorData = httpError.response?.data;
         errorMessage = errorData?.error || errorData?.message || errorMessage;
       } else if (error instanceof Error) {
         errorMessage = error.message;
