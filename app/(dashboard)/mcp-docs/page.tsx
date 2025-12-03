@@ -242,7 +242,7 @@ const toolsData: Tool[] = [
   {
     name: 'buscar_representante_por_oab',
     title: 'Buscar Representante por OAB',
-    description: 'Busca um representante pelo número da OAB e estado (ex: "123456/SP").',
+    description: 'Busca um representante pelo número da OAB e estado (ex: &quot;123456/SP&quot;).',
     category: 'Representantes',
     readOnly: true,
     params: ['oab'],
@@ -933,7 +933,7 @@ export default function MCPDocsPage() {
             </ul>
             <p className="text-sm text-muted-foreground mt-2">
               Para usar o formato Markdown, adicione o parâmetro{' '}
-              <code>response_format: "markdown"</code> nas chamadas.
+              <code>response_format: &quot;markdown&quot;</code> nas chamadas.
             </p>
           </div>
         </CardContent>
@@ -941,3 +941,4 @@ export default function MCPDocsPage() {
     </div>
   );
 }
+

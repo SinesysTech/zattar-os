@@ -161,6 +161,16 @@ function validarDadosAcordo(params: CriarAcordoComParcelasParams): {
     }
   }
 
+  // Bloquear forma de distribuição quando não aplicável
+  if (params.direcao === 'pagamento' || params.tipo === 'custas_processuais') {
+    if (params.formaDistribuicao) {
+      return {
+        valido: false,
+        erro: 'Em pagamentos e custas processuais, forma_distribuicao deve ser vazia',
+      };
+    }
+  }
+
   // Validar percentual do escritório
   if (params.percentualEscritorio !== undefined) {
     if (params.percentualEscritorio < 0 || params.percentualEscritorio > 100) {

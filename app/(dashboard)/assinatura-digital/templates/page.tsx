@@ -289,7 +289,7 @@ function criarColunas(
 // Componente de ações para cada template
 function TemplateActions({
   template,
-  onEdit: _onEdit,
+  onEdit,
   onDuplicate,
   onDelete,
   canEdit,

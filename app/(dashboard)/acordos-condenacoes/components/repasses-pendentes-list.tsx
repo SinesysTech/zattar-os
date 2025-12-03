@@ -54,7 +54,7 @@ export function RepassesPendentesList({
       } else {
         setError(data.error || 'Erro ao carregar repasses');
       }
-    } catch (_err) {
+    } catch {
       setError('Erro ao comunicar com o servidor');
     } finally {
       setIsLoading(false);

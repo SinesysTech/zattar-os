@@ -41,8 +41,19 @@ import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
 /**
  * Tipo estendido de terceiro com processos relacionados
  */
+type TerceiroEndereco = {
+  cep?: string | null;
+  logradouro?: string | null;
+  numero?: string | null;
+  complemento?: string | null;
+  bairro?: string | null;
+  municipio?: string | null;
+  estado_sigla?: string | null;
+};
+
 type TerceiroComProcessos = Terceiro & {
   processos_relacionados?: ProcessoRelacionado[];
+  endereco?: TerceiroEndereco | null;
 };
 
 /**
@@ -208,9 +219,7 @@ function getTipoParteBadgeClasses(tipoParte: string): string {
   return classes[tipoParte] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-800';
 }
 
-interface TerceirosTabProps {}
-
-function TerceiroActions({ terceiro }: { terceiro: Terceiro }) {
+function TerceiroActions({ terceiro }: { terceiro: TerceiroComProcessos }) {
   return (
     <ButtonGroup>
       <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
@@ -227,7 +236,7 @@ function TerceiroActions({ terceiro }: { terceiro: Terceiro }) {
   );
 }
 
-export function TerceirosTab({}: TerceirosTabProps) {
+export function TerceirosTab() {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
@@ -384,8 +393,7 @@ export function TerceirosTab({}: TerceirosTabProps) {
         size: 260,
         meta: { align: 'left' },
         cell: ({ row }) => {
-          const terceiro = row.original as Terceiro & { endereco?: any };
-          const enderecoFormatado = formatarEnderecoCompleto(terceiro.endereco);
+          const enderecoFormatado = formatarEnderecoCompleto(row.original.endereco);
           return (
             <div className="min-h-10 flex items-center justify-start text-sm">
               {enderecoFormatado}

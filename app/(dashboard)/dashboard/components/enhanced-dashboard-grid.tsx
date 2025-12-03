@@ -11,6 +11,7 @@ import { DraggableWidget } from './draggable-widget';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { GripVertical } from 'lucide-react';
+import type { DashboardWidget } from '@/app/api/dashboard-api';
 
 export function EnhancedDashboardGrid() {
   const { 
@@ -87,7 +88,7 @@ export function EnhancedDashboardGrid() {
     );
   }
 
-  const renderWidget = (widget: any) => {
+  const renderWidget = (widget: DashboardWidget) => {
     switch (widget.type) {
       case 'tarefas':
         return <TarefasWidget key={widget.id} />;

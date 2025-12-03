@@ -128,8 +128,12 @@ export function parseCredenciaisFilters(selectedFilters: string[]): CredenciaisF
       if (config && config.type === 'select') {
         if (id === 'active') {
           filters.active = value === 'true';
+        } else if (id === 'tribunal') {
+          filters.tribunal = value as CodigoTRT;
+        } else if (id === 'grau') {
+          filters.grau = value as GrauTRT;
         } else {
-          filters[id as keyof CredenciaisFilters] = value as any;
+          filters[id as keyof CredenciaisFilters] = value as never;
         }
       }
     }

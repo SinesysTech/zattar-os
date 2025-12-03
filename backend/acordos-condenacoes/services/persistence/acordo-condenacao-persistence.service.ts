@@ -147,6 +147,11 @@ export async function criarAcordoCondenacao(
   const supabase = createServiceClient();
 
   try {
+    const formaDistribuicaoDb =
+      dados.direcao === 'recebimento' && dados.tipo !== 'custas_processuais'
+        ? dados.formaDistribuicao || null
+        : null;
+
     const { data, error } = await supabase
       .from('acordos_condenacoes')
       .insert({
@@ -156,7 +161,7 @@ export async function criarAcordoCondenacao(
         valor_total: dados.valorTotal,
         data_vencimento_primeira_parcela: dados.dataVencimentoPrimeiraParcela,
         numero_parcelas: dados.numeroParcelas,
-        forma_distribuicao: dados.formaDistribuicao || null,
+        forma_distribuicao: formaDistribuicaoDb,
         percentual_escritorio: dados.percentualEscritorio || 30.00,
         honorarios_sucumbenciais_total: dados.honorariosSucumbenciaisTotal || 0,
         created_by: dados.createdBy || null,
@@ -166,9 +171,13 @@ export async function criarAcordoCondenacao(
 
     if (error) {
       console.error('Erro ao criar acordo/condenação:', error);
+      const msg = error.message || '';
+      const friendly = msg.includes('forma_distribuicao')
+        ? 'Forma de distribuição inválida: use "integral" ou "dividido" apenas para recebimentos. Em pagamentos e custas, deixe em branco.'
+        : `Erro ao criar acordo/condenação: ${msg}`;
       return {
         sucesso: false,
-        erro: `Erro ao criar acordo/condenação: ${error.message}`,
+        erro: friendly,
       };
     }
 

@@ -11,11 +11,7 @@ import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildAssistentesFilterOptions, buildAssistentesFilterGroups, parseAssistentesFilters } from './components/assistentes-toolbar-filters';
 import { Button } from '@/components/ui/button';
 import { Eye, Pencil, Trash2, MoreHorizontal } from 'lucide-react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -186,7 +182,7 @@ export default function AssistentesPage() {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
   // Buscar permissões do usuário para o recurso 'assistentes'
-  const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('assistentes');
+  const { temPermissao } = useMinhasPermissoes('assistentes');
 
   // Permissões granulares
   const canCreate = temPermissao('assistentes', 'criar');

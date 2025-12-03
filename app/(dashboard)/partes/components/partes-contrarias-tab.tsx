@@ -41,8 +41,19 @@ import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
 /**
  * Tipo estendido de parte contrária com processos relacionados
  */
+type ParteEndereco = {
+  cep?: string | null;
+  logradouro?: string | null;
+  numero?: string | null;
+  complemento?: string | null;
+  bairro?: string | null;
+  municipio?: string | null;
+  estado_sigla?: string | null;
+};
+
 type ParteContrariaComProcessos = ParteContraria & {
   processos_relacionados?: ProcessoRelacionado[];
+  endereco?: ParteEndereco | null;
 };
 
 /**
@@ -122,9 +133,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
   );
 }
 
-interface PartesContrariasTabProps {}
-
-function ParteContrariaActions({ parte }: { parte: ParteContraria }) {
+function ParteContrariaActions({ parte }: { parte: ParteContrariaComProcessos }) {
   return (
     <ButtonGroup>
       <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
@@ -141,7 +150,7 @@ function ParteContrariaActions({ parte }: { parte: ParteContraria }) {
   );
 }
 
-export function PartesContrariasTab({}: PartesContrariasTabProps) {
+export function PartesContrariasTab() {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
@@ -289,8 +298,7 @@ export function PartesContrariasTab({}: PartesContrariasTabProps) {
         size: 260,
         meta: { align: 'left' },
         cell: ({ row }) => {
-          const parte = row.original as ParteContraria & { endereco?: any };
-          const enderecoFormatado = formatarEnderecoCompleto(parte.endereco);
+          const enderecoFormatado = formatarEnderecoCompleto(row.original.endereco);
           return (
             <div className="min-h-10 flex items-center justify-start text-sm">
               {enderecoFormatado}
