@@ -63,9 +63,9 @@ export default function AssinaturaPage() {
       try {
         setLoadingLists(true);
         const [tplRes, segRes, formRes] = await Promise.all([
-          fetch("/api/assinatura-digital/admin/templates"),
-          fetch("/api/assinatura-digital/admin/segmentos"),
-          fetch("/api/assinatura-digital/admin/formularios"),
+          fetch("/api/assinatura-digital/templates"),
+          fetch("/api/assinatura-digital/segmentos"),
+          fetch("/api/assinatura-digital/formularios"),
         ]);
 
         const errors: string[] = [];

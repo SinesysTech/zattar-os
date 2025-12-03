@@ -33,9 +33,7 @@ test.describe('Listagem de Documentos', () => {
   test('deve ter opções de visualização (grid/lista)', async ({ page }) => {
     await page.goto('/documentos');
 
-    // Verificar que há toggle de visualização
-    const _viewToggle = page.locator('[data-testid="view-toggle"], .view-toggle');
-    // Se não existir, verificar por ícones de grid/list
+    // Verificar que há toggle de visualização (alternativa: icons de grid/list)
     const hasGridIcon = await page.locator('svg.lucide-grid-2x2').count() > 0;
     const hasListIcon = await page.locator('svg.lucide-list').count() > 0;
 

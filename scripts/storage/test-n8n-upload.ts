@@ -1,7 +1,7 @@
 // Script simples para testar upload de PDF para Google Drive via N8N
 
-import { readFileSync, readdirSync } from 'fs';
-import { resolve, join } from 'path';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 
 /**
  * Teste simples do fluxo N8N - Pega PDF de results e envia

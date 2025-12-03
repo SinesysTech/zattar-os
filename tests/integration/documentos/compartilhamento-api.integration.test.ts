@@ -91,7 +91,7 @@ describe('Compartilhamento API Integration', () => {
       }
 
       // Tentar compartilhar consigo mesmo (constraint unique deve impedir duplicata)
-      const { error } = await supabase
+      const { error: _error } = await supabase
         .from('documentos_compartilhados')
         .insert({
           documento_id: testDocumentoId,

@@ -1,7 +1,5 @@
 import type {
   ProcessoParte,
-  ParteComDadosCompletos,
-  ProcessoComParticipacao,
   EntidadeTipoProcessoParte,
   PoloProcessoParte,
   TipoParteProcesso,

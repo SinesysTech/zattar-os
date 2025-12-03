@@ -1,6 +1,6 @@
 // Contratos (DTOs e Parâmetros) para o módulo de Representantes
 
-import type { Representante, SituacaoOAB } from '@/types/domain/representantes';
+import type { Representante } from '@/types/domain/representantes';
 import type { Endereco } from '@/types/domain/enderecos';
 import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
 

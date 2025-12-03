@@ -123,7 +123,7 @@ Region: ${process.env.B2_REGION}
                 console.log(`\n🧹 Tentando limpar arquivo de teste...`);
                 await deleteFromBackblaze(testKey);
                 console.log(`   ✅ Arquivo de teste deletado`);
-            } catch (cleanupError) {
+            } catch {
                 console.log(`   ⚠️  Não foi possível deletar o arquivo de teste (${testKey})`);
             }
         }
