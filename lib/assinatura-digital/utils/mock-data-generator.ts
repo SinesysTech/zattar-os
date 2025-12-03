@@ -41,9 +41,9 @@ export interface MockPreviewData {
  * @returns Data URI válido para imagem PNG
  */
 export function generateDummyBase64Image(
-  width: number = 200,
-  height: number = 100,
-  text: string = 'PREVIEW'
+  _width: number = 200,
+  _height: number = 100,
+  _text: string = 'PREVIEW'
 ): string {
   // PNG transparente 1x1 mínimo (válido)
   // Este é um PNG válido que pode ser processado pelo pdf-lib
