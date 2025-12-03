@@ -142,11 +142,11 @@ export function extractFieldValue(variavel: string, dados: DadosGeracao): string
       }
       if (campo === 'data_inicio_plataforma' && 'data_inicio_plataforma' in dados.acao) {
         const data = dados.acao.data_inicio_plataforma;
-        return data ? format(new Date(data), 'dd/MM/yyyy') : '';
+        return typeof data === 'string' || typeof data === 'number' ? format(new Date(data), 'dd/MM/yyyy') : '';
       }
       if (campo === 'data_bloqueado_plataforma' && 'data_bloqueado_plataforma' in dados.acao) {
         const data = dados.acao.data_bloqueado_plataforma;
-        return data ? format(new Date(data), 'dd/MM/yyyy') : '';
+        return typeof data === 'string' || typeof data === 'number' ? format(new Date(data), 'dd/MM/yyyy') : '';
       }
 
       // Dados específicos de Trabalhista
@@ -160,12 +160,12 @@ export function extractFieldValue(variavel: string, dados: DadosGeracao): string
         return valor ? formatCEP(valor) : '';
       }
       if (campo === 'data_inicio' && 'data_inicio' in dados.acao) {
-        const data = dados.acao.data_inicio;
-        return data ? format(new Date(data), 'dd/MM/yyyy') : '';
+        const data = (dados.acao as Record<string, unknown>).data_inicio as unknown;
+        return typeof data === 'string' || typeof data === 'number' ? format(new Date(data), 'dd/MM/yyyy') : '';
       }
       if (campo === 'data_rescisao' && 'data_rescisao' in dados.acao) {
-        const data = dados.acao.data_rescisao;
-        return data ? format(new Date(data), 'dd/MM/yyyy') : '';
+        const data = (dados.acao as Record<string, unknown>).data_rescisao as unknown;
+        return typeof data === 'string' || typeof data === 'number' ? format(new Date(data), 'dd/MM/yyyy') : '';
       }
 
       return dados.acao[campo as keyof typeof dados.acao] as string || '';
@@ -174,31 +174,40 @@ export function extractFieldValue(variavel: string, dados: DadosGeracao): string
       // Assinatura: suporta assinatura_base64, foto_base64, latitude, longitude, geolocation_accuracy, geolocation_timestamp
       // Formatar coordenadas GPS com 6 casas decimais e símbolo de grau
       if (campo === 'latitude' || campo === 'longitude') {
-        const coord = dados.assinatura[campo as keyof typeof dados.assinatura];
-        // Coerce string numbers to numbers before formatting
+        const assinatura = dados.assinatura;
+        const coord = assinatura ? assinatura[campo as keyof typeof assinatura] : undefined;
         if (typeof coord === 'number') {
           return coord.toFixed(6) + '°';
-        } else if (typeof coord === 'string') {
+        }
+        if (typeof coord === 'string') {
           const parsed = parseFloat(coord);
           if (!isNaN(parsed)) {
             return parsed.toFixed(6) + '°';
           }
         }
       }
-      const valor = dados.assinatura[campo as keyof typeof dados.assinatura];
-      return valor ? String(valor) : '';
+      {
+        const assinatura = dados.assinatura;
+        const valor = assinatura ? assinatura[campo as keyof typeof assinatura] : undefined;
+        return valor ? String(valor) : '';
+      }
 
     case 'sistema':
       // Sistema: suporta numero_contrato, protocolo, data_geracao, ip_cliente, user_agent, timestamp
       // data_geracao: formato extenso brasileiro (ex: "16 de outubro de 2025")
       if (campo === 'data_geracao') {
-        return formatDataExtenso(dados.sistema.data_geracao);
+        const dg = dados.sistema.data_geracao;
+        return dg ? formatDataExtenso(dg) : '';
       }
       // timestamp: carimbo de data/hora (ex: "16/10/2025 às 14:30:45")
       if (campo === 'timestamp') {
-        return format(new Date(dados.sistema.timestamp), "dd/MM/yyyy 'às' HH:mm:ss");
+        const ts = dados.sistema.timestamp;
+        return ts ? format(new Date(ts), "dd/MM/yyyy 'às' HH:mm:ss") : '';
       }
-      return dados.sistema[campo as keyof typeof dados.sistema] || '';
+      {
+        const v = dados.sistema[campo as keyof typeof dados.sistema];
+        return v ? String(v) : '';
+      }
 
     case 'segmento':
       // Suporte a dados do segmento
