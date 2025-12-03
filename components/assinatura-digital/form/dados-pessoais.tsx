@@ -110,24 +110,33 @@ export default function DadosPessoais() {
       if (dadosCPF?.clienteExistente && dadosCPF.dadosCliente) {
         const cliente = dadosCPF.dadosCliente;
 
+        const anyCliente = cliente as Record<string, unknown>;
+        const cep = (anyCliente.cep as string | undefined) ?? cliente.endereco_cep ?? '';
+        const logradouro = (anyCliente.logradouro as string | undefined) ?? cliente.endereco_rua ?? cliente.endereco_completo ?? '';
+        const numero = (anyCliente.numero as string | undefined) ?? cliente.endereco_numero ?? '';
+        const complemento = (anyCliente.complemento as string | undefined) ?? cliente.endereco_complemento ?? '';
+        const bairro = (anyCliente.bairro as string | undefined) ?? cliente.endereco_bairro ?? '';
+        const cidade = (anyCliente.cidade as string | undefined) ?? cliente.endereco_cidade ?? '';
+        const estado = (anyCliente.estado as string | undefined) ?? cliente.endereco_uf ?? '';
+
         form.reset({
-          name: cliente.name || '',
+          name: (anyCliente.name as string | undefined) ?? cliente.nome ?? '',
           cpf: formatCPF(cliente.cpf || ''),
           rg: cliente.rg || '',
           dataNascimento: formatData(cliente.data_nascimento || ''),
-          estadoCivil: cliente.estado_civil || '1',
-          genero: cliente.genero !== undefined ? String(cliente.genero) : '1',
-          nacionalidade: cliente.nacionalidade_id !== undefined ? String(cliente.nacionalidade_id) : '30',
+          estadoCivil: (anyCliente.estado_civil as string | undefined) || '1',
+          genero: (anyCliente.genero as string | number | undefined) !== undefined ? String(anyCliente.genero) : '1',
+          nacionalidade: (anyCliente.nacionalidade_id as number | undefined) !== undefined ? String(anyCliente.nacionalidade_id) : '30',
           email: cliente.email || '',
           celular: formatTelefone(cliente.celular || ''),
-          telefone: cliente.telefone_1 ? formatTelefone(cliente.telefone_1) : '',
-          cep: cliente.cep || '',
-          logradouro: cliente.logradouro || '',
-          numero: cliente.numero || '',
-          complemento: cliente.complemento || '',
-          bairro: cliente.bairro || '',
-          cidade: cliente.cidade || '',
-          estado: cliente.estado || '',
+          telefone: (anyCliente.telefone_1 as string | undefined) ? formatTelefone(anyCliente.telefone_1 as string) : '',
+          cep,
+          logradouro,
+          numero,
+          complemento,
+          bairro,
+          cidade,
+          estado,
         });
 
         // Trigger validation to update isValid state
@@ -268,7 +277,7 @@ export default function DadosPessoais() {
         throw new Error(response.error || 'Erro ao salvar dados');
       }
 
-      const result = response;
+      const result = response as { success: true; data: { cliente_id: number } };
 
       setDadosPessoais({
         cliente_id: result.data.cliente_id,

@@ -16,7 +16,7 @@ import {
 
 async function getClientIP(): Promise<{ ip: string; source?: string }> {
   try {
-    const response = await apiFetch(API_ROUTES.getClientIp);
+    const response = await apiFetch<{ ip: string; source?: string; warning?: string }>(API_ROUTES.getClientIp);
     const ip = response.data?.ip || "unknown";
     const source = response.data?.source || "unknown";
 
@@ -417,7 +417,7 @@ export default function AssinaturaManuscritaStep() {
 
         try {
           const result = await retryWithBackoff(async () => {
-            const response = await apiFetch(API_ROUTES.finalize, {
+            const response = await apiFetch<{ pdf_url: string; protocolo: string; assinatura_id: number | null }>(API_ROUTES.finalize, {
               method: "POST",
               body: JSON.stringify({
                 ...basePayload,

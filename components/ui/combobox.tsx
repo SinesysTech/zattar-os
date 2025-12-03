@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/popover"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty"
+import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 
 export interface ComboboxOption {
   value: string
@@ -105,7 +105,7 @@ export function Combobox({
     }
   }
 
-  const handleRemove = (valueToRemove: string, e: React.MouseEvent) => {
+  const handleRemove = (valueToRemove: string, e: React.MouseEvent | React.KeyboardEvent) => {
     e.stopPropagation()
     if (multiple) {
       onValueChange(selectedValues.filter((v) => v !== valueToRemove))
@@ -144,7 +144,7 @@ export function Combobox({
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault()
-                            handleRemove(opt.value, e as any)
+                            handleRemove(opt.value, e)
                           }
                         }}
                         className="ml-1 hover:bg-secondary-foreground/20 rounded-full p-0.5 cursor-pointer inline-flex items-center"
@@ -169,7 +169,7 @@ export function Combobox({
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault()
-                          handleRemove(opt.value, e as any)
+                          handleRemove(opt.value, e)
                         }
                       }}
                       className="ml-1 hover:bg-secondary-foreground/20 rounded-full p-0.5 cursor-pointer inline-flex items-center"

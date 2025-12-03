@@ -18,6 +18,7 @@ import type {
   ListarRepresentantesResult,
   UpsertRepresentantePorCPFParams,
   BuscarRepresentantePorCPFParams,
+  BuscarRepresentantesPorOABParams,
   OperacaoRepresentanteResult,
   RepresentanteComEndereco,
   RepresentanteComEnderecoEProcessos,

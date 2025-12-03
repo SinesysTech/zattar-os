@@ -151,13 +151,13 @@ export function extractFieldValue(variavel: string, dados: DadosGeracao): string
 
       // Dados específicos de Trabalhista
       if (campo === 'cpf_cnpj_empresa_pessoa' && 'cpf_cnpj_empresa_pessoa' in dados.acao) {
-        const valor = dados.acao.cpf_cnpj_empresa_pessoa;
-        if (!valor) return '';
+        const valor = (dados.acao as Record<string, unknown>).cpf_cnpj_empresa_pessoa;
+        if (typeof valor !== 'string' || !valor) return '';
         return valor.length === 11 ? formatCPF(valor) : formatCNPJ(valor);
       }
       if (campo === 'cep_empresa_pessoa' && 'cep_empresa_pessoa' in dados.acao) {
-        const valor = dados.acao.cep_empresa_pessoa;
-        return valor ? formatCEP(valor) : '';
+        const valor = (dados.acao as Record<string, unknown>).cep_empresa_pessoa;
+        return typeof valor === 'string' && valor ? formatCEP(valor) : '';
       }
       if (campo === 'data_inicio' && 'data_inicio' in dados.acao) {
         const data = (dados.acao as Record<string, unknown>).data_inicio as unknown;
@@ -174,8 +174,8 @@ export function extractFieldValue(variavel: string, dados: DadosGeracao): string
       // Assinatura: suporta assinatura_base64, foto_base64, latitude, longitude, geolocation_accuracy, geolocation_timestamp
       // Formatar coordenadas GPS com 6 casas decimais e símbolo de grau
       if (campo === 'latitude' || campo === 'longitude') {
-        const assinatura = dados.assinatura;
-        const coord = assinatura ? assinatura[campo as keyof typeof assinatura] : undefined;
+        const assinatura = dados.assinatura as { latitude?: number | string; longitude?: number | string } | undefined;
+        const coord = assinatura ? assinatura[campo as 'latitude' | 'longitude'] : undefined;
         if (typeof coord === 'number') {
           return coord.toFixed(6) + '°';
         }
@@ -187,8 +187,8 @@ export function extractFieldValue(variavel: string, dados: DadosGeracao): string
         }
       }
       {
-        const assinatura = dados.assinatura;
-        const valor = assinatura ? assinatura[campo as keyof typeof assinatura] : undefined;
+        const assinatura = dados.assinatura as { assinatura_base64?: string; foto_base64?: string } | undefined;
+        const valor = assinatura ? (campo === 'assinatura_base64' ? assinatura.assinatura_base64 : assinatura.foto_base64) : undefined;
         return valor ? String(valor) : '';
       }
 

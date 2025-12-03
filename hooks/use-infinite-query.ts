@@ -18,6 +18,12 @@ interface FallbackTableDefinition {
   Row: Record<string, unknown>
   Insert: Record<string, unknown>
   Update: Record<string, unknown>
+  Relationships: never[]
+}
+
+interface FallbackFunction {
+  Args: Record<string, unknown>
+  Returns: unknown
 }
 
 // Extracts the database type from the supabase client. If the supabase client doesn't have a type, it will fallback properly.
@@ -29,7 +35,7 @@ type Database =
           public: {
             Tables: Record<string, FallbackTableDefinition>
             Views: Record<string, FallbackTableDefinition>
-            Functions: Record<string, unknown>
+            Functions: Record<string, FallbackFunction>
           }
         },
         U
@@ -38,7 +44,7 @@ type Database =
         public: {
           Tables: Record<string, FallbackTableDefinition>
           Views: Record<string, FallbackTableDefinition>
-          Functions: Record<string, unknown>
+          Functions: Record<string, FallbackFunction>
         }
       }
 

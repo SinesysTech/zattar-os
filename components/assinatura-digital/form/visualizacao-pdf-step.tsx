@@ -42,6 +42,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { apiFetch } from "@/lib/api";
+import type { PreviewResult } from "@/backend/types/assinatura-digital/types";
 import { API_ROUTES } from "@/lib/assinatura-digital/constants/apiRoutes";
 
 interface TemplateMetadata {
@@ -256,20 +257,20 @@ export default function VisualizacaoPdfStep() {
       console.log('[PDF-PREVIEW] Payload completo:', payload);
 
       // Chamar API
-      const response = await apiFetch(API_ROUTES.preview, {
+      const response = await apiFetch<PreviewResult>(API_ROUTES.preview, {
         method: "POST",
         body: JSON.stringify(payload),
       });
 
-      if (response.success && response.pdfUrl) {
+      if (response.success && response.data?.pdf_url) {
         const pdfData = {
-          pdfUrl: response.pdfUrl,
+          pdfUrl: response.data.pdf_url,
           templateId,
           geradoEm: new Date().toISOString(),
           temporario: true,
         };
 
-        setPdfUrl(response.pdfUrl);
+        setPdfUrl(response.data.pdf_url);
         setDadosVisualizacaoPdf(pdfData);
         toast.success("Sucesso", { description: "Documento gerado com sucesso!" });
       } else {

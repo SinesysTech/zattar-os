@@ -101,7 +101,9 @@ export function RichTextEditor({ value, onChange, formularios }: RichTextEditorP
       if (node.type === 'text') {
         template += node.text;
       } else if (node.type === 'variable') {
-        template += `{{${node.attrs.key}}}`;
+        if (node && node.attrs && typeof node.attrs.key === 'string') {
+          template += `{{${node.attrs.key}}}`;
+        }
       } else if (node.type === 'hardBreak') {
         template += '\n';
       } else if (node.content) {
