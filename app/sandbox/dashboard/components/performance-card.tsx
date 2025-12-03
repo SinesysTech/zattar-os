@@ -389,7 +389,6 @@ interface ProdutividadeCardProps {
 }
 
 export function ProdutividadeCard({
-  _nomeUsuario,
   baixasHoje,
   baixasSemana,
   baixasMes,

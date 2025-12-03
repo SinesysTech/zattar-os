@@ -570,7 +570,7 @@ function FormularioActions({
             Editar Schema
           </DropdownMenuItem>
         )}
-        {canCreate && (
+        {canEdit && (
           <DropdownMenuItem onClick={() => onDuplicate(formulario)}>
             <Copy className="mr-2 h-4 w-4" />
             Duplicar

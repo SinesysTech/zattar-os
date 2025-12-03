@@ -340,7 +340,7 @@ function SegmentoActions({
             Editar
           </DropdownMenuItem>
         )}
-        {canCreate && (
+        {canEdit && (
           <DropdownMenuItem onClick={() => onDuplicate(segmento)}>
             <Copy className="mr-2 h-4 w-4" />
             Duplicar
