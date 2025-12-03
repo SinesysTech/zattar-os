@@ -217,8 +217,9 @@ export async function GET(
       },
       { status: 200 }
     );
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Erro interno';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -245,8 +246,9 @@ export async function POST(
     const permissoes = await atribuirPermissoesBatch(usuarioId, body.permissoes, executadoPor);
 
     return NextResponse.json({ success: true, data: permissoes }, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Erro interno';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -273,7 +275,8 @@ export async function PUT(
     const permissoes = await substituirPermissoes(usuarioId, body.permissoes, executadoPor);
 
     return NextResponse.json({ success: true, data: permissoes }, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Erro interno';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

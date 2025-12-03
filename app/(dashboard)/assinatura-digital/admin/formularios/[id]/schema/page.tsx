@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DynamicFormSchema } from '@/types/formsign/form-schema.types';
 import { FormsignFormulario } from '@/backend/types/formsign-admin/types';
+import { useMinhasPermissoes } from '@/_lib/hooks/use-minhas-permissoes';
 
 interface PageProps {
   params: { id: string };
@@ -70,6 +71,8 @@ async function getFormulario(id: string): Promise<FormsignFormulario> {
 export default function FormularioSchemaPage({ params }: PageProps) {
   const { id } = params;
   const router = useRouter();
+  const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('formsign_admin');
+  const canEdit = temPermissao('formsign_admin', 'editar');
   const [formulario, setFormulario] = useState<FormsignFormulario | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -125,7 +128,7 @@ export default function FormularioSchemaPage({ params }: PageProps) {
     fetchFormulario();
   };
 
-  if (loading) {
+  if (loading || isLoadingPermissoes) {
     return (
       <div className="h-full flex flex-col gap-6">
         <div className="shrink-0 space-y-2">
@@ -137,6 +140,29 @@ export default function FormularioSchemaPage({ params }: PageProps) {
           <Skeleton className="h-full w-full" />
           <Skeleton className="h-full w-full" />
           <Skeleton className="h-full w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoadingPermissoes && !canEdit) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center space-y-4 max-w-md">
+          <div className="flex justify-center">
+            <AlertCircle className="h-10 w-10 text-destructive" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-foreground">
+              Acesso negado
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Você não tem permissão para editar schemas de formulários.
+            </p>
+          </div>
+          <Button onClick={() => router.push('/assinatura-digital/admin/formularios')} variant="outline">
+            Voltar para lista
+          </Button>
         </div>
       </div>
     );

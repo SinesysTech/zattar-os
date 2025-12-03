@@ -1,5 +1,5 @@
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { TABLE_FORMULARIOS, TABLE_SEGMENTOS } from './constants';
+import { TABLE_FORMULARIOS } from './constants';
 import type {
   FormsignFormulario,
   FormsignFormularioList,
@@ -105,6 +105,10 @@ export async function getFormulario(id: string): Promise<FormsignFormulario | nu
   return data as FormsignFormulario;
 }
 
+/**
+ * Busca formulário por slug e segmento_id para uso em formulários públicos.
+ * Retorna apenas formulários ativos (ativo = true).
+ */
 export async function getFormularioBySlugAndSegmentoId(
   slug: string,
   segmentoId: number
@@ -116,6 +120,7 @@ export async function getFormularioBySlugAndSegmentoId(
     .select(FORMULARIO_SELECT)
     .eq('slug', slug)
     .eq('segmento_id', segmentoId)
+    .eq('ativo', true)
     .single();
 
   if (error) {

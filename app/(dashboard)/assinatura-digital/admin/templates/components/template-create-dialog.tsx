@@ -68,13 +68,13 @@ export function TemplateCreateDialog({
   const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting }, reset } = form;
 
   const uploadHook = useSupabaseUpload({
-    bucket: 'templates',
-    accept: { 'application/pdf': ['.pdf'] },
+    bucketName: 'templates',
+    allowedMimeTypes: ['application/pdf'],
     maxFiles: 1,
     maxFileSize: 10 * 1024 * 1024, // 10MB
   });
 
-  const { files, isSuccess, successes } = uploadHook;
+  const { files, isSuccess, successes, errors: uploadErrors, loading: isUploading } = uploadHook;
 
   // When upload succeeds, set the form fields
   React.useEffect(() => {
@@ -92,6 +92,12 @@ export function TemplateCreateDialog({
       reset();
     }
   }, [open, reset]);
+
+  // Check if we have a valid file based on the form fields
+  const arquivoOriginal = watch('arquivo_original');
+  const arquivoNome = watch('arquivo_nome');
+  const arquivoTamanho = watch('arquivo_tamanho');
+  const hasValidFile = Boolean(arquivoOriginal && arquivoNome && arquivoTamanho > 0);
 
   const onSubmit = async (data: CreateTemplateFormData) => {
     try {
@@ -173,6 +179,16 @@ export function TemplateCreateDialog({
               {errors.arquivo_original && (
                 <p className="text-sm text-destructive">{errors.arquivo_original.message}</p>
               )}
+              {uploadErrors && uploadErrors.length > 0 && (
+                <div className="text-sm text-destructive">
+                  {uploadErrors.map((err, i) => (
+                    <p key={i}>{err.name}: {err.message || 'Erro no upload do arquivo'}</p>
+                  ))}
+                </div>
+              )}
+              {isUploading && (
+                <p className="text-sm text-muted-foreground">Fazendo upload...</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -215,7 +231,7 @@ export function TemplateCreateDialog({
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting || !isSuccess}>
+            <Button type="submit" disabled={isSubmitting || !hasValidFile || isUploading}>
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Criar Template
             </Button>

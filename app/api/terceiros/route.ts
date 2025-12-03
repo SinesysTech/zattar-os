@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,
       tipo_pessoa: (searchParams.get('tipo_pessoa') as 'pf' | 'pj' | null) || undefined,
-      tipo_parte: searchParams.get('tipo_parte') as any || undefined,
+      tipo_parte: searchParams.get('tipo_parte') || undefined,
     };
 
     // Se incluir processos, usa a função que busca ambos (endereço + processos)

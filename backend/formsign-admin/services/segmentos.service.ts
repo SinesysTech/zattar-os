@@ -1,5 +1,5 @@
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { TABLE_SEGMENTOS } from './constants';
+import { TABLE_SEGMENTOS, TABLE_FORMULARIOS } from './constants';
 import type {
   FormsignSegmento,
   FormsignSegmentoList,
@@ -28,8 +28,39 @@ export async function listSegmentos(params: ListSegmentosParams = {}): Promise<F
     throw new Error(`Erro ao listar segmentos: ${error.message}`);
   }
 
+  const segmentos = (data as FormsignSegmento[]) || [];
+
+  // Fetch formulario counts per segmento
+  const segmentoIds = segmentos.map(s => s.id);
+  if (segmentoIds.length > 0) {
+    const { data: formularioData, error: countError } = await supabase
+      .from(TABLE_FORMULARIOS)
+      .select('segmento_id')
+      .in('segmento_id', segmentoIds);
+
+    if (countError) {
+      throw new Error(`Erro ao contar formulários: ${countError.message}`);
+    }
+
+    // Safely default to empty array if formularioData is null
+    const rows = formularioData ?? [];
+
+    // Group counts by segmento_id
+    const countMap = new Map<number, number>();
+    rows.forEach(row => {
+      const id = row.segmento_id;
+      countMap.set(id, (countMap.get(id) || 0) + 1);
+    });
+
+    // Merge counts into segmentos
+    segmentos.forEach(s => {
+      s.formularios_count = countMap.get(s.id) || 0;
+    });
+  }
+  // Note: When segmentoIds is empty, segmentos array is also empty, so no iteration needed
+
   return {
-    segmentos: (data as FormsignSegmento[]) || [],
+    segmentos,
     total: count ?? 0,
   };
 }
@@ -74,7 +105,35 @@ export async function getSegmento(id: number): Promise<FormsignSegmento | null> 
   return data as FormsignSegmento;
 }
 
+/**
+ * Busca segmento por slug para uso em formulários públicos.
+ * Retorna apenas segmentos ativos (ativo = true).
+ */
 export async function getSegmentoBySlug(slug: string): Promise<FormsignSegmento | null> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from(TABLE_SEGMENTOS)
+    .select(SEGMENTO_SELECT)
+    .eq('slug', slug)
+    .eq('ativo', true)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return null;
+    }
+    throw new Error(`Erro ao obter segmento por slug: ${error.message}`);
+  }
+
+  return data as FormsignSegmento;
+}
+
+/**
+ * Busca segmento por slug para uso em validação de admin.
+ * Retorna qualquer segmento com o slug exato, independente do status ativo.
+ * Usado para validação de unicidade de slugs.
+ */
+export async function getSegmentoBySlugAdmin(slug: string): Promise<FormsignSegmento | null> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
     .from(TABLE_SEGMENTOS)

@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
 
     let permissoesFiltradas = permissoes;
     if (recurso) {
-      permissoesFiltradas = permissoes.filter((p: Permissao) => p.recurso === (recurso as any));
+      permissoesFiltradas = permissoes.filter((p: Permissao) => p.recurso === recurso);
     }
 
     // 5. Se for super admin, todas as operações são permitidas

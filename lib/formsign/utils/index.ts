@@ -22,5 +22,13 @@ export {
   getAtivoBadgeTone,
   formatAtivoStatus,
   getTemplatePreviewText,
-  generateSlug,
 } from './formulario-utils';
+
+// Segmento utilities (generateSlug is the canonical source)
+export {
+  generateSlug,
+  validateSlugFormat,
+  getSegmentoDisplayName,
+  formatAtivoBadge,
+  getAtivoBadgeVariant,
+} from './segmento-utils';

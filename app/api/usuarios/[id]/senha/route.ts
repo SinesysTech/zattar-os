@@ -125,7 +125,7 @@ export async function PATCH(
 
     // 5. Atualizar senha usando Admin API
     const supabase = createServiceClient();
-    const { data, error } = await supabase.auth.admin.updateUserById(
+    const { error } = await supabase.auth.admin.updateUserById(
       usuario.authUserId,
       { password: novaSenha }
     );

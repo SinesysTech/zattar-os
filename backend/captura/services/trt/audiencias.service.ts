@@ -59,7 +59,6 @@ import { captureLogService, type LogEntry } from '../persistence/capture-log.ser
 import {
   buscarDadosComplementaresProcessos,
   extrairProcessosUnicos,
-  type DadosComplementaresResult,
 } from './dados-complementares.service';
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';

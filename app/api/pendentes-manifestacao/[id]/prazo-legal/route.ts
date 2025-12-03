@@ -99,7 +99,7 @@ export async function PATCH(
     }
 
     // Preparar dados para atualização
-    const updateData: Record<string, any> = {
+    const updateData: Record<string, string | boolean | null> = {
       data_prazo_legal_parte: dataPrazoLegal,
       prazo_vencido: novoPrazoVencido
     }
@@ -121,7 +121,8 @@ export async function PATCH(
     }
 
     return NextResponse.json({ success: true, data: updated }, { status: 200 })
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Internal server error'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
