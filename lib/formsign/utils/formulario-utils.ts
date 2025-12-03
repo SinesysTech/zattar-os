@@ -1,5 +1,8 @@
 import type { FormsignFormulario, FormsignTemplate } from '@/backend/types/formsign-admin/types';
 
+// Re-export generateSlug from the centralized slug-helpers module
+export { generateSlug } from '@/app/_lib/formsign/slug-helpers';
+
 /**
  * Returns the display name for a formulario, falling back to a default if nome is not available.
  */
@@ -22,10 +25,11 @@ export function getBooleanBadgeVariant(value: boolean): 'default' | 'secondary' 
 }
 
 /**
- * Returns the badge variant for the ativo status.
+ * Returns the badge tone for the ativo status.
+ * Use with <Badge tone={...}> instead of variant.
  */
-export function getAtivoBadgeVariant(ativo: boolean): 'success' | 'secondary' {
-  return ativo ? 'success' : 'secondary';
+export function getAtivoBadgeTone(ativo: boolean): 'success' | 'neutral' {
+  return ativo ? 'success' : 'neutral';
 }
 
 /**
@@ -48,20 +52,4 @@ export function getTemplatePreviewText(templateIds: string[], templates: Formsig
   const firstThree = names.slice(0, 3).join(', ');
   const moreCount = names.length - 3;
   return `${firstThree} e mais ${moreCount}`;
-}
-
-/**
- * Generates a slug from the given text in kebab-case.
- * Removes accents, converts to lowercase, replaces spaces and special characters with hyphens,
- * removes duplicate hyphens, and trims.
- */
-export function generateSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // Remove accents
-    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .replace(/-+/g, '-') // Replace multiple hyphens with single
-    .replace(/^-+|-+$/g, ''); // Trim hyphens from start and end
 }

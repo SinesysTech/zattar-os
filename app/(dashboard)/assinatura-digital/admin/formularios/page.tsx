@@ -10,7 +10,8 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Edit, MoreHorizontal, Copy, Trash2, Download, FileText } from 'lucide-react';
+import { MoreHorizontal, Copy, Trash2, Download, FileText } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Tooltip,
   TooltipContent,
@@ -24,12 +25,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Formulario as FormsignFormulario, Segmento as FormsignSegmento, Template as FormsignTemplate } from '@/backend/types/formsign-admin/types';
+import type { FormsignFormulario, FormsignSegmento, FormsignTemplate } from '@/backend/types/formsign-admin/types';
 import {
   getFormularioDisplayName,
   formatBooleanBadge,
   getBooleanBadgeVariant,
-  getAtivoBadgeVariant,
+  getAtivoBadgeTone,
   formatAtivoStatus,
   getTemplatePreviewText,
 } from '@/lib/formsign/utils/formulario-utils';
@@ -298,9 +299,38 @@ function useTemplates() {
 function criarColunas(
   onEditSchema: (formulario: FormsignFormulario) => void,
   onDuplicate: (formulario: FormsignFormulario) => void,
-  onDelete: (formulario: FormsignFormulario) => void
+  onDelete: (formulario: FormsignFormulario) => void,
+  templates: FormsignTemplate[]
 ): ColumnDef<FormsignFormulario>[] {
   return [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && 'indeterminate')
+            }
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Selecionar todos"
+          />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Selecionar linha"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 50,
+    },
     {
       accessorKey: 'nome',
       header: ({ column }) => (
@@ -391,11 +421,21 @@ function criarColunas(
       cell: ({ row }) => {
         const templateIds = row.getValue('template_ids') as string[] | null;
         const count = templateIds ? templateIds.length : 0;
+        const previewText = templateIds && templateIds.length > 0
+          ? getTemplatePreviewText(templateIds, templates)
+          : 'Nenhum template';
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge variant="secondary" className="capitalize">
-              {count}
-            </Badge>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="secondary" className="capitalize cursor-help">
+                  {count}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                {previewText}
+              </TooltipContent>
+            </Tooltip>
           </div>
         );
       },
@@ -453,7 +493,7 @@ function criarColunas(
         const ativo = row.getValue('ativo') as boolean;
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge variant={getAtivoBadgeVariant(ativo)} className="capitalize">
+            <Badge tone={getAtivoBadgeTone(ativo)} className="capitalize">
               {formatAtivoStatus(ativo)}
             </Badge>
           </div>
@@ -647,7 +687,7 @@ export default function FormulariosPage() {
     setRowSelection({});
   }, [refetch]);
 
-  const colunas = React.useMemo(() => criarColunas(handleEditSchema, handleDuplicate, handleDelete), [handleEditSchema, handleDuplicate, handleDelete]);
+  const colunas = React.useMemo(() => criarColunas(handleEditSchema, handleDuplicate, handleDelete, templates), [handleEditSchema, handleDuplicate, handleDelete, templates]);
 
   // Bulk actions buttons
   const bulkActions = React.useMemo(() => {
@@ -718,6 +758,11 @@ export default function FormulariosPage() {
           onPageSizeChange: setLimite,
         }}
         sorting={undefined}
+        rowSelection={{
+          state: rowSelection,
+          onRowSelectionChange: setRowSelection,
+          getRowId: (row) => row.id.toString(),
+        }}
         isLoading={isLoading}
         error={error}
         emptyMessage="Nenhum formulário encontrado."

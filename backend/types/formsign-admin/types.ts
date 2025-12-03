@@ -102,9 +102,11 @@ export interface FormsignFormulario {
 }
 
 export interface ListFormulariosParams {
-  segmento_id?: number;
+  segmento_id?: number | number[];
   ativo?: boolean;
   search?: string;
+  foto_necessaria?: boolean;
+  geolocation_necessaria?: boolean;
 }
 
 export interface FormsignFormularioList {

@@ -19,8 +19,10 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Combobox } from '@/components/ui/combobox';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import type { FormsignSegmento, FormsignTemplate } from '@/backend/types/formsign-admin/types';
+import { generateSlug } from '@/app/_lib/formsign/slug-helpers';
 
 const createFormularioSchema = z.object({
   nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
@@ -41,17 +43,6 @@ interface FormularioCreateDialogProps {
   onSuccess: () => void;
   segmentos: FormsignSegmento[];
   templates: FormsignTemplate[];
-}
-
-function generateSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // Remove accents
-    .replace(/[^a-z0-9\s-]/g, '') // Remove special chars except spaces and hyphens
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .replace(/-+/g, '-') // Replace multiple hyphens with single
-    .replace(/^-|-$/g, ''); // Trim hyphens
 }
 
 export function FormularioCreateDialog({
@@ -116,7 +107,7 @@ export function FormularioCreateDialog({
   const templateOptions = templates.map((t) => ({
     value: t.template_uuid,
     label: t.nome,
-    searchText: t.descricao,
+    searchText: t.descricao ?? undefined,
   }));
 
   const onSubmit = async (data: CreateFormularioFormData) => {
@@ -232,6 +223,34 @@ export function FormularioCreateDialog({
                 multiple={true}
                 disabled={isSubmitting}
               />
+              {/* Preview dos templates selecionados */}
+              {templateIds.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {templateIds.map((templateUuid) => {
+                    const template = templates.find(t => t.template_uuid === templateUuid);
+                    return (
+                      <Badge
+                        key={templateUuid}
+                        variant="secondary"
+                        className="gap-1 pr-1"
+                      >
+                        <span className="truncate max-w-[150px]">
+                          {template?.nome || templateUuid}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setTemplateIds(templateIds.filter(id => id !== templateUuid))}
+                          className="ml-0.5 rounded-full p-0.5 hover:bg-muted-foreground/20"
+                          disabled={isSubmitting}
+                        >
+                          <X className="h-3 w-3" />
+                          <span className="sr-only">Remover {template?.nome || 'template'}</span>
+                        </button>
+                      </Badge>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center space-x-2">
