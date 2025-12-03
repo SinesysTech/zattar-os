@@ -12,10 +12,13 @@
 /**
  * Documento completo do banco de dados
  */
+// Plate.js JSONB content structure (can be deeply nested)
+export type PlateContent = unknown;
+
 export interface Documento {
   id: number;
   titulo: string;
-  conteudo: any; // JSONB - Estrutura do Plate.js
+  conteudo: PlateContent; // JSONB - Estrutura do Plate.js
   pasta_id: number | null;
   criado_por: number;
   editado_por: number | null;
@@ -33,7 +36,7 @@ export interface Documento {
  */
 export interface CriarDocumentoParams {
   titulo: string;
-  conteudo?: any; // Opcional - default '[]'
+  conteudo?: PlateContent; // Opcional - default '[]'
   pasta_id?: number | null;
   descricao?: string | null;
   tags?: string[];
@@ -44,7 +47,7 @@ export interface CriarDocumentoParams {
  */
 export interface AtualizarDocumentoParams {
   titulo?: string;
-  conteudo?: any;
+  conteudo?: PlateContent;
   pasta_id?: number | null;
   descricao?: string | null;
   tags?: string[];
@@ -206,7 +209,7 @@ export interface Template {
   id: number;
   titulo: string;
   descricao: string | null;
-  conteudo: any; // JSONB - Estrutura do Plate.js
+  conteudo: PlateContent; // JSONB - Estrutura do Plate.js
   visibilidade: 'publico' | 'privado';
   categoria: string | null;
   thumbnail_url: string | null;
@@ -222,7 +225,7 @@ export interface Template {
 export interface CriarTemplateParams {
   titulo: string;
   descricao?: string | null;
-  conteudo: any;
+  conteudo: PlateContent;
   visibilidade: 'publico' | 'privado';
   categoria?: string | null;
   thumbnail_url?: string | null;
@@ -234,7 +237,7 @@ export interface CriarTemplateParams {
 export interface AtualizarTemplateParams {
   titulo?: string;
   descricao?: string | null;
-  conteudo?: any;
+  conteudo?: PlateContent;
   visibilidade?: 'publico' | 'privado';
   categoria?: string | null;
   thumbnail_url?: string | null;
@@ -331,7 +334,7 @@ export interface DocumentoVersao {
   id: number;
   documento_id: number;
   versao: number;
-  conteudo: any; // JSONB - Estrutura do Plate.js
+  conteudo: PlateContent; // JSONB - Estrutura do Plate.js
   titulo: string;
   criado_por: number;
   created_at: string;
@@ -343,7 +346,7 @@ export interface DocumentoVersao {
 export interface CriarVersaoParams {
   documento_id: number;
   versao: number;
-  conteudo: any;
+  conteudo: PlateContent;
   titulo: string;
 }
 
@@ -504,7 +507,7 @@ export interface EventoColaboracao {
   tipo: 'cursor' | 'selection' | 'typing' | 'edit';
   usuario_id: number;
   documento_id: number;
-  dados: any;
+  dados: unknown;
   timestamp: string;
 }
 
@@ -513,7 +516,7 @@ export interface EventoColaboracao {
  */
 export interface AutoSavePayload {
   documento_id: number;
-  conteudo: any;
+  conteudo: PlateContent;
   titulo?: string;
 }
 

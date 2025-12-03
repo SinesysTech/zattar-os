@@ -53,7 +53,7 @@ export interface CadastroPJE {
   grau: GrauCadastroPJE;
 
   /** Dados extras do cadastro no sistema judicial (telefones, emails, status, etc.) */
-  dados_cadastro_pje: Record<string, any>;
+  dados_cadastro_pje: Record<string, unknown>;
 
   /** Data de criação do registro */
   created_at: string;
@@ -86,7 +86,7 @@ export interface CriarCadastroPJEParams {
   grau: GrauCadastroPJE;
 
   /** Dados extras do cadastro (opcional) */
-  dados_cadastro_pje?: Record<string, any>;
+  dados_cadastro_pje?: Record<string, unknown>;
 }
 
 /**
@@ -159,7 +159,7 @@ export interface UpsertCadastroPJEParams {
   grau: GrauCadastroPJE;
 
   /** Dados extras do cadastro (opcional) */
-  dados_cadastro_pje?: Record<string, any>;
+  dados_cadastro_pje?: Record<string, unknown>;
 }
 
 /**
