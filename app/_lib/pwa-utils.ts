@@ -16,7 +16,8 @@ export function isPWAInstalled(): boolean {
     // Check for standalone display mode (modern browsers)
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
     // Check for iOS standalone mode
-    const isIOSStandalone = (window.navigator as any).standalone === true;
+    const nav = window.navigator as Navigator & { standalone?: boolean };
+    const isIOSStandalone = nav.standalone === true;
     return isStandalone || isIOSStandalone;
   } catch (error) {
     console.error('Error checking if PWA is installed:', error);
@@ -32,7 +33,7 @@ export function isPWASupported(): boolean {
   if (typeof window === 'undefined') return false;
 
   try {
-    return 'serviceWorker' in navigator && typeof (window as any).BeforeInstallPromptEvent !== 'undefined';
+    return 'serviceWorker' in navigator && 'BeforeInstallPromptEvent' in window;
   } catch (error) {
     console.error('Error checking PWA support:', error);
     return false;

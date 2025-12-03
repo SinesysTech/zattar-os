@@ -22,7 +22,7 @@ export type RepresentanteComProcessos = Representante & {
  * Representante com endereço e processos relacionados (estendido para uso no frontend)
  */
 export type RepresentanteComEnderecoEProcessos = Representante & {
-  endereco?: any; // Temporário, ajustar para tipo Endereco quando disponível
+  endereco?: unknown; // Temporário, ajustar para tipo Endereco quando disponível
   processos_relacionados?: ProcessoRelacionado[];
 }
 

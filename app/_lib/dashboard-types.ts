@@ -23,7 +23,7 @@ export interface Nota {
 export interface LayoutPainel {
   id: number;
   usuario_id: number;
-  configuracao_layout: Record<string, any>;
+  configuracao_layout: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
@@ -44,7 +44,7 @@ export interface DashboardWidget {
   title: string;
   position: { x: number; y: number };
   size: { width: number; height: number };
-  data?: any;
+  data?: unknown;
 }
 
 export interface CreateTarefaData {
@@ -55,7 +55,7 @@ export interface CreateTarefaData {
   data_prevista?: string;
 }
 
-export interface UpdateTarefaData extends Partial<CreateTarefaData> {}
+export type UpdateTarefaData = Partial<CreateTarefaData>;
 
 export interface CreateNotaData {
   titulo: string;
@@ -63,7 +63,7 @@ export interface CreateNotaData {
   etiquetas?: string[];
 }
 
-export interface UpdateNotaData extends Partial<CreateNotaData> {}
+export type UpdateNotaData = Partial<CreateNotaData>;
 
 export interface CreateLinkData {
   titulo: string;
@@ -72,4 +72,4 @@ export interface CreateLinkData {
   ordem?: number;
 }
 
-export interface UpdateLinkData extends Partial<CreateLinkData> {}
+export type UpdateLinkData = Partial<CreateLinkData>;

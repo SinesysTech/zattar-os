@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { z } from 'zod';
 
 import { validateCPF } from '@/lib/assinatura-digital/validators/cpf.validator';

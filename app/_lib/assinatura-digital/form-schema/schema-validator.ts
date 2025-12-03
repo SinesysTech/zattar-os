@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Schema Validator - Validação estrutural de schemas JSON para formulários dinâmicos
  *

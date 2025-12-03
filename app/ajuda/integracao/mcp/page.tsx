@@ -924,7 +924,7 @@ export default function MCPDocsPage() {
               <li><code className="bg-muted px-1 rounded">MARKDOWN</code>: Formatado para legibilidade</li>
             </ul>
             <p className="text-sm text-muted-foreground mt-2">
-              Para Markdown, adicione <code className="bg-muted px-1 rounded">response_format: "markdown"</code>
+              Para Markdown, adicione <code className="bg-muted px-1 rounded">response_format: &quot;markdown&quot;</code>
             </p>
           </div>
         </CardContent>

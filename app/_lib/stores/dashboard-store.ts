@@ -18,16 +18,16 @@ interface DashboardState {
   
   // Actions
   loadDashboardData: () => Promise<void>;
-  createTarefa: (data: any) => Promise<void>;
-  updateTarefa: (id: number, data: any) => Promise<void>;
+  createTarefa: (data: CreateTarefaData) => Promise<void>;
+  updateTarefa: (id: number, data: UpdateTarefaData) => Promise<void>;
   deleteTarefa: (id: number) => Promise<void>;
-  createNota: (data: any) => Promise<void>;
-  updateNota: (id: number, data: any) => Promise<void>;
+  createNota: (data: CreateNotaData) => Promise<void>;
+  updateNota: (id: number, data: UpdateNotaData) => Promise<void>;
   deleteNota: (id: number) => Promise<void>;
-  createLink: (data: any) => Promise<void>;
-  updateLink: (id: number, data: any) => Promise<void>;
+  createLink: (data: CreateLinkData) => Promise<void>;
+  updateLink: (id: number, data: UpdateLinkData) => Promise<void>;
   deleteLink: (id: number) => Promise<void>;
-  updateLayout: (config: Record<string, any>) => Promise<void>;
+  updateLayout: (config: Record<string, unknown>) => Promise<void>;
   updateWidgets: (widgets: DashboardWidget[]) => void;
 }
 
@@ -96,7 +96,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     }
   },
 
-  createTarefa: async (data) => {
+  createTarefa: async (data: CreateTarefaData) => {
     try {
       const newTarefa = await createTarefa(data);
       set(state => ({ tarefas: [newTarefa, ...state.tarefas] }));
@@ -105,7 +105,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     }
   },
 
-  updateTarefa: async (id, data) => {
+  updateTarefa: async (id: number, data: UpdateTarefaData) => {
     try {
       const updatedTarefa = await updateTarefa(id, data);
       set(state => ({
@@ -127,7 +127,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     }
   },
 
-  createNota: async (data) => {
+  createNota: async (data: CreateNotaData) => {
     try {
       const newNota = await createNota(data);
       set(state => ({ notas: [newNota, ...state.notas] }));
@@ -136,7 +136,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     }
   },
 
-  updateNota: async (id, data) => {
+  updateNota: async (id: number, data: UpdateNotaData) => {
     try {
       const updatedNota = await updateNota(id, data);
       set(state => ({
@@ -158,7 +158,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     }
   },
 
-  createLink: async (data) => {
+  createLink: async (data: CreateLinkData) => {
     try {
       const newLink = await createLinkPersonalizado(data);
       set(state => ({ 
@@ -169,7 +169,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     }
   },
 
-  updateLink: async (id, data) => {
+  updateLink: async (id: number, data: UpdateLinkData) => {
     try {
       const updatedLink = await updateLinkPersonalizado(id, data);
       set(state => ({
@@ -191,7 +191,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     }
   },
 
-  updateLayout: async (config) => {
+  updateLayout: async (config: Record<string, unknown>) => {
     try {
       const { layoutPainel } = get();
       let updatedLayout: LayoutPainel;

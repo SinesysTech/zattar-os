@@ -1,4 +1,5 @@
 import { createClient } from './supabase/client';
+import type { PostgrestError } from '@supabase/supabase-js';
 import { 
   Tarefa, Nota, LayoutPainel, LinkPersonalizado, DashboardWidget,
   CreateTarefaData, UpdateTarefaData, CreateNotaData, UpdateNotaData,
@@ -130,7 +131,7 @@ export async function getLayoutPainel(): Promise<LayoutPainel | null> {
       .select('*')
       .eq('usuario_id', usuarioId)
       .single();
-    if (error && (error as any).code !== 'PGRST116') throw error;
+    if (error && (error as PostgrestError | undefined)?.code !== 'PGRST116') throw error;
     return data as LayoutPainel;
   } catch (error) {
     console.error('Error fetching layout:', error);
@@ -138,7 +139,7 @@ export async function getLayoutPainel(): Promise<LayoutPainel | null> {
   }
 }
 
-export async function createLayoutPainel(configuracao_layout: Record<string, any>): Promise<LayoutPainel> {
+export async function createLayoutPainel(configuracao_layout: Record<string, unknown>): Promise<LayoutPainel> {
   const usuarioId = await getUsuarioId();
   const { data, error } = await supabase
     .from('layouts_painel')
@@ -149,7 +150,7 @@ export async function createLayoutPainel(configuracao_layout: Record<string, any
   return data as LayoutPainel;
 }
 
-export async function updateLayoutPainel(id: number, configuracao_layout: Record<string, any>): Promise<LayoutPainel> {
+export async function updateLayoutPainel(id: number, configuracao_layout: Record<string, unknown>): Promise<LayoutPainel> {
   const { data, error } = await supabase
     .from('layouts_painel')
     .update({ configuracao_layout })

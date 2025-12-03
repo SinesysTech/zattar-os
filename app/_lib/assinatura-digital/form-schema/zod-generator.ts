@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Zod Generator - Gerador de schemas Zod a partir de schemas JSON
  *

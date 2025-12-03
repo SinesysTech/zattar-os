@@ -404,12 +404,6 @@ export function RepresentantesTab() {
 
   const { representantes, paginacao, isLoading, error, refetch } = useRepresentantes(params);
 
-  // Função para atualizar após edição
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleEditSuccess = React.useCallback(() => {
-    refetch();
-  }, [refetch]);
-
   const colunas: ColumnDef<RepresentanteComProcessos>[] = React.useMemo(() => criarColunas(), []);
 
   const filterOptions = React.useMemo(() => buildRepresentantesFilterOptions(), []);

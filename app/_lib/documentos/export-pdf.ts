@@ -7,6 +7,8 @@ import html2canvas from 'html2canvas-pro';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import { saveAs } from 'file-saver';
 
+type PdfNode = string | { text?: string; stack?: PdfNode[]; columns?: PdfNode[]; children?: PdfNode[] };
+
 /**
  * Exporta o conteúdo do editor para um arquivo PDF
  * Captura a área do editor como imagem e converte para PDF
@@ -88,7 +90,7 @@ export async function exportToPdf(
  * Alternativa quando a captura de elemento não está disponível
  */
 export async function exportTextToPdf(
-  content: any[],
+  content: PdfNode[],
   titulo: string = 'documento'
 ): Promise<void> {
   try {
@@ -184,10 +186,10 @@ export async function exportTextToPdf(
 /**
  * Extrai texto puro do conteúdo Plate
  */
-function extractTextFromContent(nodes: any[]): string {
+function extractTextFromContent(nodes: PdfNode[]): string {
   const lines: string[] = [];
 
-  function processNode(node: any): string {
+  function processNode(node: PdfNode): string {
     if (typeof node === 'string') return node;
     if (node.text !== undefined) return node.text;
     if (node.children) {

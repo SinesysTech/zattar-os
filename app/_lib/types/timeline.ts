@@ -132,7 +132,7 @@ export interface DocumentoDetalhes {
 export interface TimelineAPIResponse {
   success: boolean;
   data: {
-    acervo: any; // Dados do processo (tipo Acervo do backend)
+    acervo: unknown; // Dados do processo (tipo Acervo do backend)
     timeline: TimelineDocument | null; // Timeline do MongoDB ou null se não existe
   };
   error?: string;
@@ -159,3 +159,4 @@ export interface CapturaTimelineAPIResponse {
   };
   error?: string;
 }
+

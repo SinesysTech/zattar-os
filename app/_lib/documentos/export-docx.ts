@@ -15,7 +15,6 @@ import {
   TableCell,
   WidthType,
   convertInchesToTwip,
-  ImageRun,
   ExternalHyperlink,
 } from 'docx';
 import { saveAs } from 'file-saver';
