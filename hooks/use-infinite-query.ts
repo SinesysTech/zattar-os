@@ -3,7 +3,7 @@
 import { createClient } from '@/app/_lib/supabase/client'
 import { PostgrestQueryBuilder, type PostgrestClientOptions } from '@supabase/postgrest-js'
 import { type SupabaseClient } from '@supabase/supabase-js'
-import { useEffect, useRef, useSyncExternalStore } from 'react'
+import { useEffect, useMemo, useSyncExternalStore } from 'react'
 
 const supabase = createClient()
 
@@ -182,15 +182,19 @@ function useInfiniteQuery<
   TData extends SupabaseTableData<T>,
   T extends SupabaseTableName = SupabaseTableName,
 >(props: UseInfiniteQueryProps<T>) {
-  const storeRef = useRef<ReturnType<typeof createStore<TData, T>> | null>(null)
+  const store = useMemo(
+    () =>
+      createStore<TData, T>({
+        tableName: props.tableName,
+        columns: props.columns,
+        pageSize: props.pageSize,
+        trailingQuery: props.trailingQuery,
+      }),
+    [props.columns, props.pageSize, props.tableName, props.trailingQuery]
+  )
 
-  // Initialize store lazily to avoid issues with refs during render
-  if (!storeRef.current) {
-    storeRef.current = createStore<TData, T>(props)
-  }
-
-  const subscribe = storeRef.current.subscribe
-  const getSnapshot = () => storeRef.current!.getState()
+  const subscribe = store.subscribe
+  const getSnapshot = () => store.getState()
   const getServerSnapshot = () => initialState as StoreState<TData>
 
   const state = useSyncExternalStore(
@@ -200,23 +204,10 @@ function useInfiniteQuery<
   )
 
   useEffect(() => {
-    const store = storeRef.current
-    if (!store) return
-
-    // Recreate store if props change
-    if (
-      store.getState().hasInitialFetch &&
-      (props.tableName !== props.tableName ||
-        props.columns !== props.columns ||
-        props.pageSize !== props.pageSize)
-    ) {
-      storeRef.current = createStore<TData, T>(props)
-    }
-
     if (!state.hasInitialFetch && typeof window !== 'undefined') {
       store.initialize()
     }
-  }, [props.tableName, props.columns, props.pageSize, state.hasInitialFetch, props])
+  }, [state.hasInitialFetch, store])
 
   return {
     data: state.data,
@@ -226,7 +217,7 @@ function useInfiniteQuery<
     isFetching: state.isFetching,
     error: state.error,
     hasMore: state.count > state.data.length,
-    fetchNextPage: storeRef.current.fetchNextPage,
+    fetchNextPage: store.fetchNextPage,
   }
 }
 

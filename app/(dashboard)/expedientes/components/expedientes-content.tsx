@@ -897,6 +897,19 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
 
   const buscaDebounced = useDebounce(busca, 500);
 
+  const { inicioSemana, fimSemana } = React.useMemo(() => {
+    const date = new Date(semanaAtual);
+    date.setHours(0, 0, 0, 0);
+    const day = date.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    const inicio = new Date(date);
+    inicio.setDate(date.getDate() + diff);
+    const fim = new Date(inicio);
+    fim.setDate(fim.getDate() + 4);
+    fim.setHours(23, 59, 59, 999);
+    return { inicioSemana: inicio, fimSemana: fim };
+  }, [semanaAtual]);
+
   const params = React.useMemo(() => {
     const { responsavel_id: _responsavel_id, ...filtrosSemResponsavel } = filtros;
     const responsavelIdFinal = viewMode === 'tabela'
@@ -905,7 +918,7 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
 
     return {
       pagina: pagina + 1,
-      limite,
+      limite: viewMode === 'semana' ? 100 : limite,
       busca: buscaDebounced || undefined,
       ordenar_por: ordenarPor || undefined,
       ordem,
@@ -915,8 +928,10 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
       prazo_vencido: viewMode === 'semana' ? undefined : (viewMode === 'tabela' ? undefined : (statusPrazo === 'vencido' ? true : statusPrazo === 'no_prazo' ? false : undefined)),
       responsavel_id: responsavelIdFinal,
       ...filtrosSemResponsavel,
+      data_prazo_legal_inicio: viewMode === 'semana' ? inicioSemana.toISOString() : filtros.data_prazo_legal_inicio,
+      data_prazo_legal_fim: viewMode === 'semana' ? fimSemana.toISOString() : filtros.data_prazo_legal_fim,
     };
-  }, [pagina, limite, buscaDebounced, ordenarPor, ordem, statusBaixa, statusPrazo, filtros, isSuperAdmin, currentUserId, viewMode]);
+  }, [pagina, limite, buscaDebounced, ordenarPor, ordem, statusBaixa, statusPrazo, filtros, isSuperAdmin, currentUserId, viewMode, inicioSemana, fimSemana]);
 
   const { expedientes, paginacao, isLoading, error, refetch } = usePendentes(params);
 
@@ -1061,19 +1076,6 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
     setFiltros(newFiltros);
     setPagina(0);
   }, []);
-
-  const { inicioSemana, fimSemana } = React.useMemo(() => {
-    const date = new Date(semanaAtual);
-    date.setHours(0, 0, 0, 0);
-    const day = date.getDay();
-    const diff = day === 0 ? -6 : 1 - day;
-    const inicio = new Date(date);
-    inicio.setDate(date.getDate() + diff);
-    const fim = new Date(inicio);
-    fim.setDate(fim.getDate() + 4);
-    fim.setHours(23, 59, 59, 999);
-    return { inicioSemana: inicio, fimSemana: fim };
-  }, [semanaAtual]);
 
   const formatarDataCabecalho = (data: Date) => {
     return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });

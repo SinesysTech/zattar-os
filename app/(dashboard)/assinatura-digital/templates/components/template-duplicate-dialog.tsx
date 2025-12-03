@@ -27,7 +27,7 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Loader2 } from "lucide-react";
 
-import type { AssinaturaDigitalTemplate } from "@/types/assinatura-digital/template.types";
+import type { Template as AssinaturaDigitalTemplate } from "@/types/assinatura-digital/template.types";
 
 const duplicateSchema = z.object({
   nome: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),

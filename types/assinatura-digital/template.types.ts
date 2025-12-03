@@ -96,6 +96,10 @@ export interface AcaoDadosGeracao {
   data_inicio_plataforma?: string;
   data_bloqueado_plataforma?: string | null;
   nome_empresa_pessoa?: string;
+  cpf_cnpj_empresa_pessoa?: string;
+  cep_empresa_pessoa?: string;
+  data_inicio?: string;
+  data_rescisao?: string;
   [key: string]: unknown;
 }
 
@@ -109,6 +113,7 @@ export interface SistemaDadosGeracao {
   user_agent?: string;
   protocolo?: string;
   numero_contrato?: string;
+  timestamp?: string;
   latitude?: string;
   longitude?: string;
   [key: string]: unknown;
@@ -134,12 +139,13 @@ export interface DadosGeracao {
   cliente: ClienteDadosGeracao;
   acao: AcaoDadosGeracao;
   sistema: SistemaDadosGeracao;
+  segmento?: import('@/backend/types/assinatura-digital/types').AssinaturaDigitalSegmento;
   escritorio?: EscritorioDadosGeracao;
   assinatura?: {
     assinatura_base64?: string;
     foto_base64?: string;
-    latitude?: string;
-    longitude?: string;
+    latitude?: string | number;
+    longitude?: string | number;
   };
   [key: string]: unknown;
 }

@@ -1,5 +1,5 @@
 import { createClient } from '@/app/_lib/supabase/client'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { type FileError, type FileRejection, useDropzone } from 'react-dropzone'
 
 const supabase = createClient()
@@ -63,7 +63,7 @@ const useSupabaseUpload = (options: UseSupabaseUploadOptions) => {
     upsert = false,
   } = options
 
-  const [files, setFiles] = useState<FileWithPreview[]>([])
+  const [files, setFilesState] = useState<FileWithPreview[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [errors, setErrors] = useState<{ name: string; message: string }[]>([])
   const [successes, setSuccesses] = useState<string[]>([])
@@ -78,27 +78,60 @@ const useSupabaseUpload = (options: UseSupabaseUploadOptions) => {
     return false
   }, [errors.length, successes.length, files.length])
 
+  const normalizeFiles = useCallback(
+    (incoming: FileWithPreview[]) => {
+      if (incoming.length <= maxFiles) {
+        let changed = false
+        const sanitized = incoming.map((file) => {
+          const hasTooMany = file.errors.some((e) => e.code === 'too-many-files')
+          if (hasTooMany) {
+            changed = true
+            return { ...file, errors: file.errors.filter((err) => err.code !== 'too-many-files') }
+          }
+          return file
+        })
+        return changed ? sanitized : incoming
+      }
+      return incoming
+    },
+    [maxFiles]
+  )
+
+  const setFiles = useCallback(
+    (value: FileWithPreview[] | ((previous: FileWithPreview[]) => FileWithPreview[])) => {
+      setFilesState((previous) => {
+        const next = typeof value === 'function' ? (value as (prev: FileWithPreview[]) => FileWithPreview[])(previous) : value
+        const normalized = normalizeFiles(next)
+        if (normalized.length === 0) {
+          setErrors((prevErrors) => (prevErrors.length ? [] : prevErrors))
+        }
+        return normalized
+      })
+    },
+    [normalizeFiles]
+  )
+
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-      const validFiles = acceptedFiles
-        .filter((file) => !files.find((x) => x.name === file.name))
-        .map((file) => {
+      setFiles((previous) => {
+        const validFiles = acceptedFiles
+          .filter((file) => !previous.find((x) => x.name === file.name))
+          .map((file) => {
+            ;(file as FileWithPreview).preview = URL.createObjectURL(file)
+            ;(file as FileWithPreview).errors = []
+            return file as FileWithPreview
+          })
+
+        const invalidFiles = fileRejections.map(({ file, errors: rejectionErrors }) => {
           ;(file as FileWithPreview).preview = URL.createObjectURL(file)
-          ;(file as FileWithPreview).errors = []
+          ;(file as FileWithPreview).errors = rejectionErrors
           return file as FileWithPreview
         })
 
-      const invalidFiles = fileRejections.map(({ file, errors }) => {
-        ;(file as FileWithPreview).preview = URL.createObjectURL(file)
-        ;(file as FileWithPreview).errors = errors
-        return file as FileWithPreview
+        return [...previous, ...validFiles, ...invalidFiles]
       })
-
-      const newFiles = [...files, ...validFiles, ...invalidFiles]
-
-      setFiles(newFiles)
     },
-    [files, setFiles]
+    [setFiles]
   )
 
   const dropzoneProps = useDropzone({
@@ -151,28 +184,7 @@ const useSupabaseUpload = (options: UseSupabaseUploadOptions) => {
     setSuccesses(newSuccesses)
 
     setLoading(false)
-  }, [files, path, bucketName, errors, successes])
-
-  useEffect(() => {
-    if (files.length === 0) {
-      setErrors([])
-    }
-
-    // If the number of files doesn't exceed the maxFiles parameter, remove the error 'Too many files' from each file
-    if (files.length <= maxFiles) {
-      let changed = false
-      const newFiles = files.map((file) => {
-        if (file.errors.some((e) => e.code === 'too-many-files')) {
-          file.errors = file.errors.filter((e) => e.code !== 'too-many-files')
-          changed = true
-        }
-        return file
-      })
-      if (changed) {
-        setFiles(newFiles)
-      }
-    }
-  }, [files.length, setFiles, maxFiles])
+  }, [bucketName, cacheControl, errors, files, path, successes, upsert])
 
   return {
     files,
