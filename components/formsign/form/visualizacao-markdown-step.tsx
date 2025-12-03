@@ -1,0 +1,355 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import { useFormularioStore } from "@/app/_lib/stores/formsign/formulario-store";
+import FormStepLayout from "@/components/formsign/form/form-step-layout";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Loader2, AlertCircle, RefreshCw } from "lucide-react";
+import { toast } from 'sonner';
+import ReactMarkdown from "react-markdown";
+import { renderMarkdownWithVariables, getMarkdownPlugins, getMarkdownStyles } from "@/lib/formsign/utils/markdown-renderer";
+import { DadosGeracao, Template } from "@/types/formsign/template.types";
+import { VisualizacaoMarkdownData } from "@/types/formsign/formulario.types";
+import { ClienteFormsign } from "@/types/formsign/cliente-adapter.types";
+import { apiFetch } from "@/lib/api";
+
+interface TemplateMetadata {
+  id: string;
+  nome: string;
+  versao?: number;
+  status?: string;
+}
+
+export default function VisualizacaoMarkdownStep() {
+  // Estados locais
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isFetchingTemplate, setIsFetchingTemplate] = useState(false);
+  const [conteudoRenderizado, setConteudoRenderizado] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [templateMetadatas, setTemplateMetadatas] = useState<TemplateMetadata[]>([]);
+  const [templateMeta, setTemplateMeta] = useState<{ nome?: string; versao?: number; status?: string } | null>(null);
+
+  // Extrair dados do store
+  const {
+    dadosPessoais,
+    dadosAcao,
+    fotoBase64,
+    templateIdSelecionado,
+    templateIds,
+    dadosVisualizacaoMarkdown,
+    setDadosVisualizacaoMarkdown,
+    setTemplateIdSelecionado,
+    segmentoId,
+    formularioId,
+    proximaEtapa,
+    etapaAnterior,
+    getCachedTemplate,
+    setCachedTemplate,
+    getTotalSteps,
+    etapaAtual,
+  } = useFormularioStore();
+
+  // useEffect 1: Buscar metadados de múltiplos templates
+  // Comment 3 fix: Use cache to avoid duplicate fetches
+  useEffect(() => {
+    if (!templateIds || templateIds.length <= 1) {
+      setTemplateMetadatas([]);
+      return;
+    }
+
+    let cancelled = false;
+    setIsFetchingTemplate(true);
+    (async () => {
+      try {
+        const metadataPromises = templateIds.map(async (id) => {
+          // Comment 3 fix: Check cache first
+          const cachedTemplate = getCachedTemplate(id);
+          if (cachedTemplate) {
+            return {
+              id: String(id),
+              nome: cachedTemplate.nome || String(id),
+              versao: cachedTemplate.versao,
+              status: cachedTemplate.status,
+            };
+          } else {
+            // Fetch from API
+            const response = await apiFetch(`/api/templates/${id}`);
+            const template: Template = response.data;
+            setCachedTemplate(id, template);
+            return {
+              id: String(id),
+              nome: template.nome || String(id),
+              versao: template.versao,
+              status: template.status,
+            };
+          }
+        });
+        if (!cancelled) {
+          const metadatas = await Promise.all(metadataPromises);
+          setTemplateMetadatas(metadatas);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error("Erro ao buscar metadados:", err);
+          setError("Erro ao buscar metadados dos templates");
+        }
+      } finally {
+        if (!cancelled) {
+          setIsFetchingTemplate(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [templateIds, getCachedTemplate, setCachedTemplate]);
+
+  // Função processarMarkdown
+  const processarMarkdown = async (templateId?: string) => {
+    const effectiveTemplateId = templateId || templateIdSelecionado || (templateIds && templateIds[0]);
+    if (!effectiveTemplateId) {
+      setError("Nenhum template selecionado");
+      return;
+    }
+
+    setIsProcessing(true);
+    setError(null);
+
+    try {
+      // Buscar template se não estiver em cache
+      let template = getCachedTemplate(effectiveTemplateId);
+      if (!template) {
+        const response = await apiFetch(`/api/templates/${effectiveTemplateId}`);
+        template = response.data as Template;
+        setCachedTemplate(effectiveTemplateId, template);
+      }
+
+      if (!template.conteudo_markdown) {
+        throw new Error("Template não possui conteúdo Markdown");
+      }
+
+      // Preparar dados para geração
+      const cliente: ClienteFormsign = {
+        ...dadosPessoais,
+        segmento_id: segmentoId || 1,
+      };
+      const dadosGeracao: DadosGeracao = {
+        template_id: effectiveTemplateId,
+        cliente,
+        acao: dadosAcao || {},
+        assinatura: {
+          foto_base64: fotoBase64 || "",
+          assinatura_base64: "", // Vazio para preview
+        },
+        sistema: {
+          numero_contrato: `PREVIEW-${Date.now()}`,
+          protocolo: `PREV-${dadosPessoais.cliente_id}-${Date.now()}`,
+          data_geracao: new Date().toISOString(),
+          timestamp: new Date().toISOString(),
+        },
+        segmento: {
+          id: cliente.segmento_id || segmentoId || 1,
+          nome: `Segmento ${cliente.segmento_id || segmentoId || 1}`,
+        },
+      };
+
+      // Processar Markdown com variáveis
+      const conteudoProcessado = renderMarkdownWithVariables(
+        template.conteudo_markdown,
+        dadosGeracao,
+        {
+          fallbackStrategy: "empty",
+          preserveNewlines: true  // Preservar quebras de linha duplas do Markdown
+        }
+      );
+
+      console.log("[MARKDOWN-PREVIEW] Markdown processado:", {
+        template_id: effectiveTemplateId,
+        content_length: conteudoProcessado.length,
+      });
+
+      // Armazenar resultado
+      const dadosVisualizacao: VisualizacaoMarkdownData = {
+        conteudoMarkdown: conteudoProcessado,
+        templateId: effectiveTemplateId,
+        geradoEm: new Date().toISOString(),
+      };
+
+      setConteudoRenderizado(conteudoProcessado);
+      setDadosVisualizacaoMarkdown(dadosVisualizacao);
+
+      toast.success("Documento processado com sucesso!");
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Erro ao processar documento";
+      setError(errorMessage);
+      toast.error(errorMessage);
+      console.error("Erro ao processar Markdown:", err);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // useEffect 3: Processar Markdown na montagem (com cache)
+  useEffect(() => {
+    const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutos
+
+    if (dadosVisualizacaoMarkdown?.conteudoMarkdown && dadosVisualizacaoMarkdown.geradoEm) {
+      const geradoEm = new Date(dadosVisualizacaoMarkdown.geradoEm).getTime();
+      const agora = Date.now();
+
+      // Verificar se o cache ainda é válido (dentro do TTL)
+      if (agora - geradoEm < CACHE_TTL_MS) {
+        setConteudoRenderizado(dadosVisualizacaoMarkdown.conteudoMarkdown);
+        return;
+      }
+    }
+
+    // Se não há cache válido, processar novo
+    processarMarkdown();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // useEffect 4: Auto-invalidar ao mudar dados críticos
+  const lastKeysRef = useRef<string | null>(null);
+  useEffect(() => {
+    const key = `${dadosPessoais?.cliente_id ?? ""}-${dadosAcao?.acao_id ?? ""}`;
+    if (lastKeysRef.current && lastKeysRef.current !== key && dadosVisualizacaoMarkdown?.conteudoMarkdown) {
+      setDadosVisualizacaoMarkdown(null);
+      setConteudoRenderizado(null);
+      if (!isProcessing && !isFetchingTemplate) {
+        toast.info("Documento atualizado automaticamente.");
+        processarMarkdown();
+      }
+    }
+    lastKeysRef.current = key;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dadosPessoais?.cliente_id, dadosAcao?.acao_id]);
+
+  // Handler handleContinuar
+  const handleContinuar = () => {
+    if (!conteudoRenderizado) {
+      toast.warning("Aguarde o documento ser processado antes de continuar.");
+      return;
+    }
+    proximaEtapa();
+  };
+
+  // Handler handleRegenerar
+  const handleRegenerar = () => {
+    setConteudoRenderizado(null);
+    setDadosVisualizacaoMarkdown(null);
+    processarMarkdown();
+  };
+
+  // Handler handleTemplateChange
+  const handleTemplateChange = (newTemplateId: string) => {
+    setTemplateIdSelecionado(newTemplateId);
+    // Limpar cache e reprocessar com novo template
+    setDadosVisualizacaoMarkdown(null);
+    setConteudoRenderizado(null);
+    processarMarkdown(newTemplateId);
+  };
+
+  // Variáveis auxiliares
+  const isLoading = isProcessing || isFetchingTemplate;
+  const effectiveTemplateId = templateIdSelecionado || (templateIds && templateIds[0]);
+  const plugins = getMarkdownPlugins();
+  const styles = getMarkdownStyles();
+
+  return (
+    <FormStepLayout
+      title="Visualização do Documento"
+      description="Revise o documento antes de assinar"
+      currentStep={etapaAtual}
+      totalSteps={getTotalSteps()}
+      onPrevious={etapaAnterior}
+      onNext={handleContinuar}
+      nextLabel="Continuar para Selfie"
+      isNextDisabled={isLoading || !conteudoRenderizado}
+      isPreviousDisabled={isLoading}
+      isLoading={isLoading}
+      cardClassName="w-full max-w-5xl mx-auto"
+    >
+      {isLoading && (
+        <div className="flex flex-col items-center justify-center py-12 space-y-4">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <p className="text-lg font-medium text-gray-700">
+            {isFetchingTemplate ? "Buscando template..." : "Processando documento..."}
+          </p>
+          <p className="text-sm text-gray-500">Isso pode levar alguns segundos</p>
+        </div>
+      )}
+
+      {error && !isLoading && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Erro ao processar documento</AlertTitle>
+          <AlertDescription className="mt-2 space-y-3">
+            <p>{error}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => processarMarkdown()}
+              className="mt-2"
+            >
+              Tentar Novamente
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {conteudoRenderizado && !isLoading && (
+        <div className="space-y-4">
+          {/* Seletor de múltiplos templates */}
+          {templateMetadatas.length > 1 && (
+            <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
+              <Label className="text-sm font-medium text-gray-700">
+                Escolha o modelo do documento
+              </Label>
+              <RadioGroup
+                value={templateIdSelecionado || ""}
+                onValueChange={handleTemplateChange}
+                className="space-y-2"
+              >
+                {templateMetadatas.map((meta) => (
+                  <div key={meta.id} className="flex items-center space-x-2">
+                    <RadioGroupItem value={meta.id} id={meta.id} />
+                    <Label htmlFor={meta.id} className="font-normal cursor-pointer">
+                      {meta.nome}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          )}
+
+          {/* Alert informativo */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p className="text-sm text-blue-900">
+              <strong>Importante:</strong> Revise cuidadosamente todas as informações do documento antes de prosseguir para a assinatura.
+            </p>
+          </div>
+
+          {/* Conteúdo Markdown renderizado */}
+          <div className="border rounded-lg overflow-hidden bg-white">
+            <div className={styles.container}>
+              <div className={styles.prose}>
+                <ReactMarkdown
+                  remarkPlugins={plugins.remarkPlugins}
+                  rehypePlugins={plugins.rehypePlugins}
+                >
+                  {conteudoRenderizado}
+                </ReactMarkdown>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </FormStepLayout>
+  );
+}

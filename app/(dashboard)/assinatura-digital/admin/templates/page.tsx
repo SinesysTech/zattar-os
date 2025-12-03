@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
+import { Edit, Plus } from "lucide-react";
 
 type Template = {
   id: number;
@@ -26,6 +28,7 @@ type ListResponse = {
 };
 
 export default function TemplatesPage() {
+  const router = useRouter();
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -127,11 +130,17 @@ export default function TemplatesPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Templates de Assinatura</h1>
-        <p className="text-sm text-muted-foreground">
-          Cadastre e gerencie templates usados na geração de PDFs assinados.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">Templates de Assinatura</h1>
+          <p className="text-sm text-muted-foreground">
+            Cadastre e gerencie templates usados na geração de PDFs assinados.
+          </p>
+        </div>
+        <Button onClick={() => router.push('/assinatura-digital/admin/templates/new/edit')}>
+          <Plus className="h-4 w-4 mr-2" />
+          Novo Template
+        </Button>
       </div>
 
       <Card>
@@ -249,7 +258,16 @@ export default function TemplatesPage() {
                     </TableCell>
                     <TableCell className="text-xs">{tpl.template_uuid}</TableCell>
                     <TableCell>{tpl.ativo ? "Ativo" : "Inativo"}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right space-x-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => router.push(`/assinatura-digital/admin/templates/${tpl.template_uuid}/edit`)}
+                        className="h-8 w-8 p-0"
+                        title="Editar template"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
                       <Button
                         variant="ghost"
                         size="sm"

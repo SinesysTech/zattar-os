@@ -37,9 +37,9 @@ export function DifyChatbot() {
       // 1. Obtém o usuário do Supabase
       const { data: { user } } = await supabase.auth.getUser();
 
-      // Tratamento para garantir que sempre tenha um nome
-      const userName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || "Visitante";
-      const userId = user?.id;
+      // Dados do usuário para o chatbot
+      const userName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || "Visitante";
+      const userId = user?.id || 'anonymous';
 
       // 2. Define a configuração ANTES de carregar o script
       window.difyChatbotConfig = {
@@ -53,12 +53,19 @@ export function DifyChatbot() {
 
         draggable: true,
         dragAxis: 'both',
+
+        // Variáveis de sistema - aparecem no histórico do Dify para rastreamento
         systemVariables: {
           user_id: userId,
         },
+
+        // Inputs - variáveis de entrada do fluxo do chatbot
+        // O chatbot pode usar {{name}} nas mensagens
         inputs: {
-          name: userName,
+          nome: userName,
         },
+
+        // Perfil do usuário - exibido na interface do chat
         userVariables: {
           name: userName,
         }
@@ -71,19 +78,19 @@ export function DifyChatbot() {
       style.textContent = `
         #dify-chatbot-bubble-button {
           --dify-chatbot-bubble-button-bg-color: #1C64F2;
-          --dify-chatbot-bubble-button-width: 60px;
-          --dify-chatbot-bubble-button-height: 60px;
-          --dify-chatbot-bubble-button-border-radius: 30px;
-          --dify-chatbot-bubble-button-box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 8px 0px;
+          --dify-chatbot-bubble-button-width: 44px;
+          --dify-chatbot-bubble-button-height: 44px;
+          --dify-chatbot-bubble-button-border-radius: 22px;
+          --dify-chatbot-bubble-button-box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 6px 0px;
           --dify-chatbot-bubble-button-hover-transform: scale(1.1);
-          --dify-chatbot-bubble-button-bottom: 2rem;
-          --dify-chatbot-bubble-button-right: 2rem;
+          --dify-chatbot-bubble-button-bottom: 1.5rem;
+          --dify-chatbot-bubble-button-right: 1.5rem;
           z-index: 9999 !important;
           position: fixed !important;
         }
         #dify-chatbot-bubble-window {
-          width: 24rem !important;
-          height: 40rem !important;
+          width: 32rem !important;
+          height: 44rem !important;
           z-index: 9999 !important;
         }
       `;

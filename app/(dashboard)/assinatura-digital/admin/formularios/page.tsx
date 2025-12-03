@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Edit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,6 +23,7 @@ type Formulario = {
 };
 
 export default function FormulariosPage() {
+  const router = useRouter();
   const [formularios, setFormularios] = useState<Formulario[]>([]);
   const [segmentos, setSegmentos] = useState<Segmento[]>([]);
   const [loading, setLoading] = useState(false);
@@ -187,19 +190,20 @@ export default function FormulariosPage() {
                   <TableHead>Slug</TableHead>
                   <TableHead>Segmento</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading && filtered.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-sm text-muted-foreground">
+                    <TableCell colSpan={5} className="text-sm text-muted-foreground">
                       Carregando...
                     </TableCell>
                   </TableRow>
                 )}
                 {!loading && filtered.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-sm text-muted-foreground">
+                    <TableCell colSpan={5} className="text-sm text-muted-foreground">
                       Nenhum formulário encontrado.
                     </TableCell>
                   </TableRow>
@@ -215,6 +219,17 @@ export default function FormulariosPage() {
                     <TableCell className="text-xs">{f.slug}</TableCell>
                     <TableCell>#{f.segmento_id}</TableCell>
                     <TableCell>{f.ativo ? "Ativo" : "Inativo"}</TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => router.push(`/assinatura-digital/admin/formularios/${f.id}/schema`)}
+                        className="gap-2"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                        Editar Schema
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

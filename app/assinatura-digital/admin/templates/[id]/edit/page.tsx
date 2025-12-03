@@ -11,7 +11,7 @@
  * - Tratamento de erros TypeScript-safe (unknown)
  */
 
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { AlertCircle, RefreshCw } from 'lucide-react';
@@ -60,14 +60,15 @@ async function getTemplate(id: string): Promise<Template> {
 }
 
 interface PageProps {
-  params: Promise<{
-    id: string;
-  }>;
+  params: { id: string };
 }
 
 export default function EditTemplatePage({ params }: PageProps) {
-  const { id } = use(params);
+  const { id } = params;
   const router = useRouter();
+
+  // Shared auth error handler for DRY
+  const handleAuthError = () => setTimeout(() => router.push('/auth/login'), 2000);
   const [template, setTemplate] = useState<Template | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -100,7 +101,7 @@ export default function EditTemplatePage({ params }: PageProps) {
         toast.error(message);
 
         if (message.includes('Sessão expirada')) {
-          setTimeout(() => router.push('/admin/login'), 2000);
+          handleAuthError();
         }
       } finally {
         setLoading(false);
@@ -124,7 +125,7 @@ export default function EditTemplatePage({ params }: PageProps) {
         toast.error(message);
 
         if (message.includes('Sessão expirada')) {
-          setTimeout(() => router.push('/admin/login'), 2000);
+          handleAuthError();
         }
       } finally {
         setLoading(false);

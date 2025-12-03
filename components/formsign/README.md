@@ -276,6 +276,157 @@ function MyStep() {
 - `hidePrevious?: boolean` - Hide previous button
 - `hideNext?: boolean` - Hide next button
 
+## Public Form Flow
+
+### VerificarCPF
+First step in public form flow. Validates CPF and checks if client exists in system.
+
+**Usage:**
+```tsx
+import { VerificarCPF } from '@/components/formsign/form';
+
+<VerificarCPF />
+```
+
+**Dependencies:**
+- Store: `formulario-store` (FORMSIGN-003)
+- Inputs: `input-cpf` (FORMSIGN-004)
+- Validation: `verificarCPF.schema`
+- API: `/api/assinatura-digital/forms/verificar-cpf`
+
+### DadosPessoais
+Personal data form step (collects/updates client info).
+
+**Usage:**
+```tsx
+import { DadosPessoais } from '@/components/formsign/form';
+
+<DadosPessoais />
+```
+
+**Dependencies:**
+- Store: `formulario-store` (FORMSIGN-003)
+- Inputs: `input-cpf`, `input-telefone`, `input-cep` (FORMSIGN-004)
+- Validation: `dadosPessoais.schema`
+- API: `/api/assinatura-digital/forms/save-client`
+- Constants: `ESTADOS_CIVIS`, `NACIONALIDADES`
+
+### VisualizacaoPdfStep
+PDF preview step (generates and displays PDF).
+
+**Usage:**
+```tsx
+import { VisualizacaoPdfStep } from '@/components/formsign/form';
+
+<VisualizacaoPdfStep />
+```
+
+**Dependencies:**
+- Store: `formulario-store` (FORMSIGN-003)
+- Renderer: `PdfPreviewDynamic` (FORMSIGN-006)
+- API: `/api/assinatura-digital/signature/preview`
+
+### VisualizacaoMarkdownStep
+Markdown preview step (alternative to PDF).
+
+**Usage:**
+```tsx
+import { VisualizacaoMarkdownStep } from '@/components/formsign/form';
+
+<VisualizacaoMarkdownStep />
+```
+
+**Dependencies:**
+- Store: `formulario-store` (FORMSIGN-003)
+- Utils: `markdown-renderer` (FORMSIGN-008)
+- Types: `template.types`, `cliente-adapter.types`
+
+### AssinaturaManuscritaStep
+Signature step (captures signature, generates PDFs).
+
+**Usage:**
+```tsx
+import { AssinaturaManuscritaStep } from '@/components/formsign/form';
+
+<AssinaturaManuscritaStep />
+```
+
+**Dependencies:**
+- Store: `formulario-store` (FORMSIGN-003)
+- Signature: `canvas-assinatura` (FORMSIGN-007)
+- Capture: `captura-foto-step`, `geolocation-step` (FORMSIGN-005)
+- Validation: `business.validations` (FORMSIGN-002)
+- API: `/api/assinatura-digital/utils/get-client-ip`, `/api/assinatura-digital/signature/finalizar`
+
+### Sucesso
+Success page (displays PDFs, allows download).
+
+**Usage:**
+```tsx
+import { Sucesso } from '@/components/formsign/form';
+
+<Sucesso />
+```
+
+**Dependencies:**
+- Store: `formulario-store` (FORMSIGN-003)
+- Dependency: `jszip` (for ZIP downloads)
+
+### FormularioContainer
+Main orchestrator (manages steps, navigation).
+
+**Usage:**
+```tsx
+import { FormularioContainer } from '@/components/formsign/form';
+
+<FormularioContainer />
+```
+
+**Dependencies:**
+- Store: `formulario-store` (FORMSIGN-003)
+- All step components: `verificar-cpf`, `dados-pessoais`, `dynamic-form-step`, `captura-foto-step`, `geolocation-step`, `visualizacao-pdf-step`, `visualizacao-markdown-step`, `assinatura-manuscrita-step`, `sucesso`
+- Form: `form-step-layout` (FORMSIGN-006)
+
+### FormularioPage
+Top-level wrapper (initializes context).
+
+**Usage:**
+```tsx
+import { FormularioPage } from '@/components/formsign/form';
+
+<FormularioPage />
+```
+
+**Dependencies:**
+- Container: `formulario-container`
+- Store: `formulario-store` (FORMSIGN-003)
+- Types: `form-schema.types`, `template.types`
+
+**Notes on Dependencies:**
+- Store: `formulario-store` (FORMSIGN-003) - Manages form state, navigation, and data persistence
+- Inputs: `input-cpf`, `input-telefone`, `input-cep` (FORMSIGN-004) - Specialized input components
+- Capture: `captura-foto-step`, `geolocation-step` (FORMSIGN-005) - Photo and location capture
+- Renderer: `PdfPreviewDynamic` (FORMSIGN-006) - PDF rendering component
+- Signature: `canvas-assinatura` (FORMSIGN-007) - Signature capture canvas
+- Utils: `markdown-renderer` (FORMSIGN-008) - Markdown processing utilities
+- Form: `form-step-layout`, `dynamic-form-step` (FORMSIGN-006) - Form layout and dynamic rendering
+
+**Notes on API Routes:**
+- `/api/assinatura-digital/forms/verificar-cpf` - CPF verification
+- `/api/assinatura-digital/forms/save-client` - Client data save/update
+- `/api/assinatura-digital/utils/get-client-ip` - Client IP retrieval
+- `/api/assinatura-digital/signature/preview` - PDF preview generation
+- `/api/assinatura-digital/signature/finalizar` - Final PDF generation and signature
+
+**Notes on Constants:**
+- `API_ROUTES` - Centralized API endpoint paths
+- `ESTADOS_CIVIS` - Brazilian marital status options
+- `NACIONALIDADES` - Nationality options
+
+**Notes on Validation Schemas:**
+- `verificarCPF.schema` - CPF validation schema
+- `dadosPessoais.schema` - Personal data validation schema
+
 ## Editor de Templates (`editor/`)
 
 Componentes base para o editor visual de templates PDF.
@@ -702,6 +853,7 @@ These components are the base building blocks for the full FormSchemaBuilder (FO
 - `react-markdown@^10.1.0` - Renderização de Markdown
 - `rehype-raw@^7.0.0` - Processamento de HTML em Markdown
 - `rehype-sanitize@^7.0.0` - Sanitização de HTML
+- `jszip@^3.10.1` - ZIP downloads for success page
 
 **Dependências já existentes:**
 - `react-hook-form` ^7.53.2 - Form state management
