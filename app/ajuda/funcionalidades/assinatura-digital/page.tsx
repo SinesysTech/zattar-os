@@ -1,6 +1,6 @@
 'use client';
 
-import { PenTool, FileCheck, Camera, MapPin, Download, Settings, FileText, Layers, AlertCircle, CheckCircle, HelpCircle } from 'lucide-react';
+import { PenTool, FileCheck, Camera, MapPin, Settings, FileText, Layers, AlertCircle, CheckCircle, HelpCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -335,7 +335,7 @@ export default function AssinaturaDigitalPage() {
                   <div>
                     <h4 className="font-semibold">Criar Segmento</h4>
                     <p className="text-sm text-muted-foreground">
-                      Acesse <code className="bg-muted px-1 rounded">/assinatura-digital/segmentos</code> → "Novo Segmento"
+                      Acesse <code className="bg-muted px-1 rounded">/assinatura-digital/segmentos</code> → &quot;Novo Segmento&quot;
                     </p>
                   </div>
                 </div>
@@ -522,7 +522,7 @@ export default function AssinaturaDigitalPage() {
                 <div>
                   <h4 className="font-semibold mb-2">Templates</h4>
                   <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
-                    <li>Use status "Rascunho" durante edição</li>
+                    <li>Use status &quot;Rascunho&quot; durante edição</li>
                     <li>Teste preview antes de ativar</li>
                     <li>Campos mínimo 50x20px</li>
                   </ul>
@@ -584,7 +584,7 @@ export default function AssinaturaDigitalPage() {
                 <AccordionItem value="faq-5">
                   <AccordionTrigger>Como funciona o autosave no editor?</AccordionTrigger>
                   <AccordionContent className="text-muted-foreground">
-                    Salva automaticamente a cada 5 segundos. Não é necessário clicar em "Salvar".
+                    Salva automaticamente a cada 5 segundos. Não é necessário clicar em &quot;Salvar&quot;.
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="faq-6">
