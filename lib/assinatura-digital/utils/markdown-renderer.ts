@@ -568,3 +568,4 @@ export function validateMarkdownContent(content: string): {
  *    - Classes Tailwind aplicadas corretamente
  *    - Responsividade (prose-sm, md:prose-base, lg:prose-lg)
  *    - Modo escuro (dark:prose-invert)
+ */
