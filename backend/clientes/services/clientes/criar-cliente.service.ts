@@ -9,7 +9,7 @@ import type { CriarPessoaParams } from '@/types/contracts/pessoa';
 import type { CriarClienteParams } from '@/types/contracts/partes';
 
 function pessoaToClienteParams(params: CriarPessoaParams): CriarClienteParams {
-  const { papel_processual: _papel_processual, ...rest } = params;
+  const { papel_processual: _, ...rest } = params;
   return rest;
 }
 

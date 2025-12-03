@@ -7,13 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Loader2, AlertCircle, RefreshCw } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 import { toast } from 'sonner';
 import ReactMarkdown from "react-markdown";
 import { renderMarkdownWithVariables, getMarkdownPlugins, getMarkdownStyles } from "@/lib/assinatura-digital/utils/markdown-renderer";
 import { DadosGeracao, Template } from "@/types/assinatura-digital/template.types";
 import { VisualizacaoMarkdownData } from "@/types/assinatura-digital/formulario.types";
-import { ClienteAssinaturaDigital } from "@/types/assinatura-digital/cliente-adapter.types";
 import { apiFetch } from "@/lib/api";
 
 interface TemplateMetadata {
@@ -30,7 +29,6 @@ export default function VisualizacaoMarkdownStep() {
   const [conteudoRenderizado, setConteudoRenderizado] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [templateMetadatas, setTemplateMetadatas] = useState<TemplateMetadata[]>([]);
-  const [templateMeta, setTemplateMeta] = useState<{ nome?: string; versao?: number; status?: string } | null>(null);
 
   // Extrair dados do store
   const {
@@ -43,7 +41,6 @@ export default function VisualizacaoMarkdownStep() {
     setDadosVisualizacaoMarkdown,
     setTemplateIdSelecionado,
     segmentoId,
-    formularioId,
     proximaEtapa,
     etapaAnterior,
     getCachedTemplate,
@@ -255,13 +252,6 @@ export default function VisualizacaoMarkdownStep() {
     proximaEtapa();
   };
 
-  // Handler handleRegenerar
-  const handleRegenerar = () => {
-    setConteudoRenderizado(null);
-    setDadosVisualizacaoMarkdown(null);
-    processarMarkdown();
-  };
-
   // Handler handleTemplateChange
   const handleTemplateChange = (newTemplateId: string) => {
     setTemplateIdSelecionado(newTemplateId);
@@ -273,7 +263,6 @@ export default function VisualizacaoMarkdownStep() {
 
   // Variáveis auxiliares
   const isLoading = isProcessing || isFetchingTemplate;
-  const effectiveTemplateId = templateIdSelecionado || (templateIds && templateIds[0]);
   const plugins = getMarkdownPlugins();
   const styles = getMarkdownStyles();
 

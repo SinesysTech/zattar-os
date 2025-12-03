@@ -63,12 +63,18 @@ async function testTwoFAuth() {
       const accounts = await listResponse.json();
       console.log(`   ✅ Contas disponíveis:\n`);
       
+      interface TwoFAuthAccount {
+        id: number;
+        service?: string;
+        account?: string;
+      }
+
       if (Array.isArray(accounts)) {
-        accounts.forEach((acc: any) => {
+        (accounts as TwoFAuthAccount[]).forEach((acc) => {
           console.log(`      - ID: ${acc.id}, Service: ${acc.service || 'N/A'}, Account: ${acc.account || 'N/A'}`);
         });
       } else if (accounts.data && Array.isArray(accounts.data)) {
-        accounts.data.forEach((acc: any) => {
+        (accounts.data as TwoFAuthAccount[]).forEach((acc) => {
           console.log(`      - ID: ${acc.id}, Service: ${acc.service || 'N/A'}, Account: ${acc.account || 'N/A'}`);
         });
       }
@@ -92,14 +98,15 @@ async function testTwoFAuth() {
     if (otpResult.nextPassword) {
       console.log(`      Next Password: ${otpResult.nextPassword}`);
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error(`   ❌ Erro ao obter OTP:`);
-    console.error(`      ${error.message}`);
-    if (error.statusCode) {
-      console.error(`      Status Code: ${error.statusCode}`);
+    const err = error as { message?: string; statusCode?: number; reason?: unknown };
+    console.error(`      ${err.message || String(error)}`);
+    if (err.statusCode) {
+      console.error(`      Status Code: ${err.statusCode}`);
     }
-    if (error.reason) {
-      console.error(`      Reason: ${JSON.stringify(error.reason)}`);
+    if (err.reason) {
+      console.error(`      Reason: ${JSON.stringify(err.reason)}`);
     }
   }
 }

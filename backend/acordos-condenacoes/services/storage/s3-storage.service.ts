@@ -69,7 +69,7 @@ export class S3StorageService implements IStorageService {
   async upload(
     file: Buffer | ReadableStream,
     path: string,
-    __contentType: string
+    _contentType: string
   ): Promise<UploadResult> {
     try {
       if (!this.client) {
@@ -143,7 +143,7 @@ export class S3StorageService implements IStorageService {
     }
   }
 
-  async getUrl(path: string, __expiresIn: number = 3600): Promise<GetUrlResult> {
+  async getUrl(path: string, _expiresIn: number = 3600): Promise<GetUrlResult> {
     try {
       if (!this.client) {
         return {

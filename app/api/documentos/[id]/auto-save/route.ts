@@ -9,7 +9,6 @@ import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
   atualizarDocumento,
   verificarAcessoDocumento,
-  incrementarVersaoDocumento,
 } from '@/backend/documentos/services/persistence/documentos-persistence.service';
 import { criarVersao } from '@/backend/documentos/services/persistence/versoes-persistence.service';
 import type { AutoSavePayload } from '@/backend/types/documentos/types';

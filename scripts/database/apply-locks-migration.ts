@@ -41,14 +41,14 @@ async function applyMigration() {
         console.log(`📈 Total de locks ativos: ${activeLocks.length}`);
         if (activeLocks.length > 0) {
           console.log('🔒 Locks ativos:');
-          activeLocks.forEach((lock: any) => {
+          activeLocks.forEach((lock) => {
             const expiresAt = new Date(lock.expires_at);
             const isExpired = expiresAt < new Date();
             console.log(`  - ${lock.key} (${isExpired ? '❌ EXPIRADO' : '✅ ATIVO'} - expires: ${lock.expires_at})`);
           });
 
           // Limpar locks expirados
-          const expiredCount = activeLocks.filter((lock: any) => new Date(lock.expires_at) < new Date()).length;
+          const expiredCount = activeLocks.filter((lock) => new Date(lock.expires_at) < new Date()).length;
           if (expiredCount > 0) {
             console.log(`\n🧹 Limpando ${expiredCount} lock(s) expirado(s)...`);
             const { error: deleteError } = await supabase
@@ -109,8 +109,9 @@ async function applyMigration() {
         } else {
           throw new Error(`HTTP ${response.status}: ${await response.text()}`);
         }
-      } catch (rpcError: any) {
-        console.log('⚠️ Não foi possível executar via RPC:', rpcError.message);
+      } catch (rpcError) {
+        const errorMessage = rpcError instanceof Error ? rpcError.message : String(rpcError);
+        console.log('⚠️ Não foi possível executar via RPC:', errorMessage);
         console.log('');
         console.log('📋 Por favor, aplique manualmente via Supabase Dashboard:');
         console.log('');
@@ -127,8 +128,8 @@ async function applyMigration() {
       console.error('❌ Erro ao verificar tabela:', error);
     }
 
-  } catch (error: any) {
-    console.error('❌ Erro:', error.message);
+  } catch (error) {
+    console.error('❌ Erro:', error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }

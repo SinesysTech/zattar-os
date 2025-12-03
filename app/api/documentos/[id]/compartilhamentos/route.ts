@@ -37,7 +37,7 @@ export async function GET(
     }
 
     // Verificar se tem acesso ao documento
-    const { temAcesso, permissao } = await verificarAcessoDocumento(
+    const { temAcesso } = await verificarAcessoDocumento(
       documento_id,
       authResult.usuario.id
     );

@@ -15,7 +15,7 @@ jest.setTimeout(30000);
 // Mock do console.error para evitar poluir output
 const originalError = console.error;
 beforeAll(() => {
-  console.error = (...args: any[]) => {
+  console.error = (...args: unknown[]) => {
     // Silenciar erros esperados em testes
     if (
       typeof args[0] === 'string' &&

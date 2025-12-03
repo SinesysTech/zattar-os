@@ -15,6 +15,7 @@ import { capturarPartesProcesso } from '@/backend/captura/services/partes/partes
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type { ProcessoParaCaptura } from '@/backend/captura/services/partes/partes-capture.service';
 import type { GrauAcervo } from '@/backend/types/acervo/types';
+import type { CodigoTRT } from '@/backend/types/captura/trt-types';
 
 // ==========================================
 // CONFIGURAÇÕES DE TESTE (HARDCODED)
@@ -43,7 +44,7 @@ async function main() {
   console.log('========================================\n');
 
   const supabase = createServiceClient();
-  let page: any = null;
+  let page: Awaited<ReturnType<typeof autenticarPJE>>['page'] | null = null;
 
   try {
     // 1. Buscar advogado pelo CPF (apenas para pegar o ID)
@@ -81,7 +82,7 @@ async function main() {
 
     // 3. Obter configuração do tribunal e autenticar no PJE
     console.log(`[3/4] Obtendo configuração do TRT ${TRT} e autenticando...`);
-    const codigoTRT = `TRT${TRT}` as any; // TRT + código = TRT03
+    const codigoTRT = `TRT${TRT}` as CodigoTRT; // TRT + código = TRT03
     const config = await getTribunalConfig(codigoTRT, GRAU);
     console.log(`✓ Configuração obtida: ${config.nome}`);
 

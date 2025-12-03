@@ -23,7 +23,13 @@ async function main() {
   console.log('Tribunais disponíveis:');
   console.log('='.repeat(80));
 
-  data?.forEach((config: any) => {
+  interface TribunalConfig {
+    id: number;
+    tipo_acesso: string;
+    tribunais: { codigo: string; nome: string } | { codigo: string; nome: string }[];
+  }
+
+  data?.forEach((config: TribunalConfig) => {
     const tribunal = Array.isArray(config.tribunais) ? config.tribunais[0] : config.tribunais;
     console.log(`- ${tribunal.codigo} | ${config.tipo_acesso} | ${tribunal.nome}`);
   });

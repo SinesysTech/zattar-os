@@ -23,15 +23,15 @@ async function main() {
   console.log('Documentos com TERCEIROS encontrados:', docs.length);
 
   for (const doc of docs) {
-    const req = doc.requisicao as any;
-    const payload = doc.payload_bruto as any;
+    const req = doc.requisicao as { numero_processo?: string };
+    const payload = doc.payload_bruto as { ATIVO?: unknown[]; PASSIVO?: unknown[]; TERCEIROS?: { nome: string }[] };
     console.log('---');
     console.log('Processo:', req?.numero_processo);
     console.log('ATIVO:', payload?.ATIVO?.length || 0);
     console.log('PASSIVO:', payload?.PASSIVO?.length || 0);
     console.log('TERCEIROS:', payload?.TERCEIROS?.length || 0);
     if (payload?.TERCEIROS?.length > 0) {
-      console.log('Nomes:', payload.TERCEIROS.map((t: any) => t.nome).join(', '));
+      console.log('Nomes:', payload.TERCEIROS.map((t) => t.nome).join(', '));
     }
   }
 

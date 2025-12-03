@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import {
-  BookOpen,
   Bot,
   Calendar,
   FileText,
@@ -151,11 +150,6 @@ const navAdministracao = [
     name: "Usuários",
     url: "/usuarios",
     icon: UserCog,
-  },
-  {
-    name: "Documentação MCP",
-    url: "/mcp-docs",
-    icon: BookOpen,
   },
 ]
 

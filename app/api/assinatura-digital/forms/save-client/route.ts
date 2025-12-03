@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
 
     if (payload.operation === 'insert') {
-      const { id: _id, ...insertData } = payload.dados;
+      const { id: _, ...insertData } = payload.dados;
       const { data, error } = await supabase
         .from('clientes')
         .insert({ ...insertData, segmento_id: payload.segmentoId })
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({ success: true, data: { cliente_id: data.id } });
     } else {
-      const { id: _id, ...updateData } = payload.dados;
+      const { id: __, ...updateData } = payload.dados;
       const { error } = await supabase
         .from('clientes')
         .update(updateData)
