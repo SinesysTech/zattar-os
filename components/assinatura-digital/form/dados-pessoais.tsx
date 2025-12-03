@@ -14,7 +14,7 @@ import {
 import InputCPF from '@/components/assinatura-digital/inputs/input-cpf';
 import InputTelefone from '@/components/assinatura-digital/inputs/input-telefone';
 import InputCEP, { type AddressData } from '@/components/assinatura-digital/inputs/input-cep';
-import InputData from '@/components/shared/InputData';
+import InputData from '@/components/assinatura-digital/inputs/input-data';
 import { useFormularioStore } from '@/app/_lib/stores/assinatura-digital/formulario-store';
 import { toast } from 'sonner';
 import { apiFetch } from '@/lib/api';
