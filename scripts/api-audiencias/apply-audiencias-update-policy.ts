@@ -62,7 +62,7 @@ async function applyMigration() {
         .map(s => s.trim())
         .filter(s => s.length > 0 && !s.startsWith('--'));
 
-      for (const _ of statements) {
+      for (const _statement of statements) {
         const { error: execError } = await supabase.from('_migrations').insert({
           name: '20250120000003_add_audiencias_update_policy',
           executed_at: new Date().toISOString(),

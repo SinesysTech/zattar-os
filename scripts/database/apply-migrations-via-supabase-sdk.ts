@@ -11,16 +11,9 @@ if (!supabaseUrl || !supabaseServiceKey) {
   process.exit(1);
 }
 
-// Criar cliente admin (bypassa RLS)
-const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-  db: {
-    schema: 'public',
-  },
-});
+// Nota: Cliente Supabase não utilizado neste script (usa fetch direto)
+// Mantido para referência futura caso seja necessário usar a SDK
+// const _supabase = createClient(supabaseUrl, supabaseServiceKey, { ... });
 
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations', 'nao-aplicadas');
 

@@ -160,7 +160,6 @@ export const useRealtimeCursors = ({
       channel.unsubscribe()
       channelRef.current = null
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomName, userId])
 
   useEffect(() => {

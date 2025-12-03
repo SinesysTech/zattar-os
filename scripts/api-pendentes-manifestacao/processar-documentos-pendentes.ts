@@ -21,7 +21,7 @@ import { autenticarPJE } from '@/backend/captura/services/trt/trt-auth.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
 import { downloadAndUploadDocumento } from '@/backend/captura/services/pje/pje-expediente-documento.service';
 import type { FetchDocumentoParams } from '@/backend/types/pje-trt/documento-types';
-import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
+import type { GrauTRT } from '@/backend/types/captura/trt-types';
 import type { Browser, Page } from 'playwright';
 
 // Configuração
