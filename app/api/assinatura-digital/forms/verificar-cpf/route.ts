@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/server';
 import type { ClienteAssinaturaDigital } from '@/types/assinatura-digital/cliente-adapter.types';
 import { clienteSinesysToAssinaturaDigital } from '@/types/assinatura-digital/cliente-adapter.types';
 
