@@ -90,7 +90,7 @@ const MIGRATION_CHECKS: Record<string, {
 
 async function checkTableExists(tableName: string): Promise<boolean> {
   try {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from(tableName)
       .select('*')
       .limit(1);
@@ -102,7 +102,7 @@ async function checkTableExists(tableName: string): Promise<boolean> {
     }
 
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -110,7 +110,7 @@ async function checkTableExists(tableName: string): Promise<boolean> {
 async function checkColumnExists(tableName: string, columnName: string): Promise<boolean> {
   try {
     // Tentar fazer uma query selecionando a coluna específica
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from(tableName)
       .select(columnName)
       .limit(1);
@@ -127,7 +127,7 @@ async function checkColumnExists(tableName: string, columnName: string): Promise
     }
 
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

@@ -151,7 +151,7 @@ async function testarCasosEspeciais(page: Page) {
     log('Testando com ID de processo inválido (999999)...');
     await obterPartesProcesso(page, 999999);
     testes.push({ nome: 'Processo inválido', resultado: 'FALHOU - Deveria ter lançado erro' });
-  } catch (error) {
+  } catch {
     log('Erro esperado capturado corretamente', 'success');
     testes.push({ nome: 'Processo inválido', resultado: 'PASSOU' });
   }
@@ -166,7 +166,7 @@ async function testarCasosEspeciais(page: Page) {
     } else {
       testes.push({ nome: 'Parte sem representantes', resultado: 'FALHOU' });
     }
-  } catch (error) {
+  } catch {
     log('Erro ao testar parte sem representantes', 'warn');
     testes.push({ nome: 'Parte sem representantes', resultado: 'FALHOU' });
   }

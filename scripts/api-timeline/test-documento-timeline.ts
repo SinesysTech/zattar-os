@@ -5,7 +5,6 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config();
 
-import { chromium } from 'playwright';
 import { autenticarPJE } from '@/backend/captura/services/trt/trt-auth.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
 import { fetchPJEAPI } from '@/backend/api/pje-trt';

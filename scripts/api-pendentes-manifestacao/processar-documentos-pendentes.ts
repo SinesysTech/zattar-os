@@ -24,10 +24,6 @@ import type { FetchDocumentoParams } from '@/backend/types/pje-trt/documento-typ
 import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 import type { Browser, Page } from 'playwright';
 
-// Credenciais fixas
-const CPF = '07529294610';
-const SENHA = '12345678A@';
-
 // Configuração
 const DELAY_ENTRE_DOCUMENTOS = 1000; // 1 segundo entre documentos
 const DELAY_ENTRE_TRIBUNAIS = 2000; // 2 segundos entre mudança de tribunal

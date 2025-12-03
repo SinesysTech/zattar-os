@@ -7,7 +7,6 @@ import { resolve, join, dirname } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config(); // Carregar .env também se existir
 
-import { chromium } from 'playwright';
 import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { autenticarPJE, type AuthResult } from '@/backend/captura/services/trt/trt-auth.service';

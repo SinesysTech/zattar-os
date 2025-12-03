@@ -6,7 +6,7 @@ import { resolve, join, dirname } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config();
 
-import { writeFile, mkdir, readFile } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { autenticarPJE, type AuthResult } from '@/backend/captura/services/trt/trt-auth.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';

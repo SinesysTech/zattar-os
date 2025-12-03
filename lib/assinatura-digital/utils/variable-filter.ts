@@ -81,9 +81,6 @@ const VARIABLE_MAPPING: Record<string, VariableOption[]> = {
 /**
  * Helper para criar VariableOption de forma type-safe
  */
-function asVariableOption(value: TipoVariavel, label: string, category: string): VariableOption {
-  return { value, label, category };
-}
 
 /**
  * Retorna lista filtrada de variáveis disponíveis baseada nos formulários habilitados

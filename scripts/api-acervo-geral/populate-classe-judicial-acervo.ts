@@ -8,7 +8,6 @@ config({ path: resolve(process.cwd(), '.env.local') });
 config(); // Carregar .env também se existir
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { buscarClasseJudicial } from '@/backend/captura/services/persistence/classe-judicial-persistence.service';
 import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 
 /**

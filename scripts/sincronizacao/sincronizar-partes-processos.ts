@@ -80,14 +80,6 @@ interface CadastroPJE {
   grau: string | null;
 }
 
-interface VinculoCriado {
-  processo_id: number;
-  tipo_entidade: string;
-  entidade_id: number;
-  polo: string;
-  tipo_parte: string;
-}
-
 interface ResultadoSincronizacao {
   processosAnalisados: number;
   vinculosCriados: number;
@@ -120,13 +112,6 @@ function normalizarNome(nome: string | null): string {
     .trim()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
-}
-
-/**
- * Determina o tipo de parte baseado no polo
- */
-function determinarTipoParte(polo: 'ATIVO' | 'PASSIVO'): string {
-  return polo === 'ATIVO' ? 'RECLAMANTE' : 'RECLAMADO';
 }
 
 /**

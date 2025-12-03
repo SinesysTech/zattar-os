@@ -113,7 +113,7 @@ export function SegmentoDeleteDialog({
           <AlertDialogDescription>
             {isBulk
               ? `Tem certeza que deseja excluir ${segmentoCount} segmento(s) selecionado(s)?`
-              : `Tem certeza que deseja excluir o segmento '${segmentos[0].nome}'?`}
+              : `Tem certeza que deseja excluir o segmento '${segmentos[0]?.nome ?? ''}'?`}
             {getSegmentoNamesList()}
             {error && (
               <p className="text-destructive text-sm mt-2">{error}</p>
