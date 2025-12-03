@@ -140,7 +140,6 @@ export function AIMenu() {
     api.aiChat.stop();
 
     // remove when you implement the route /api/ai/command
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (chat as unknown as { _abortFakeStream: () => void })._abortFakeStream();
   });
 

@@ -17,7 +17,6 @@ interface PlateEditorProps {
 export function PlateEditor({ initialValue, onChange }: PlateEditorProps) {
   const editor = usePlateEditor({
     plugins: EditorKit,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     value: (initialValue && initialValue.length > 0 ? initialValue : value) as Descendant[],
   });
 

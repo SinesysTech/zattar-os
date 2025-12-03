@@ -160,7 +160,8 @@ export const useRealtimeCursors = ({
       channel.unsubscribe()
       channelRef.current = null
     }
-  }, [roomName, supabase, userId])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomName, userId])
 
   useEffect(() => {
     // Add event listener for mousemove

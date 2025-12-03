@@ -26,7 +26,6 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/command';
-import { toast } from 'sonner';
 import type { DocumentoComUsuario } from '@/backend/types/documentos/types';
 
 interface CommandMenuProps {

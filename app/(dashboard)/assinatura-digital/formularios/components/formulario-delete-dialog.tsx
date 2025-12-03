@@ -109,7 +109,7 @@ export function FormularioDeleteDialog({
           <AlertDialogDescription>
             {isBulk
               ? `Tem certeza que deseja excluir ${formularioCount} formulário(s) selecionado(s)?`
-              : `Tem certeza que deseja excluir o formulário '${formularios[0].nome}'?`}
+              : `Tem certeza que deseja excluir o formulário '${formularios[0]?.nome ?? ''}'?`}
             {getFormularioNamesList()}
             {error && (
               <p className="text-destructive text-sm mt-2">{error}</p>
