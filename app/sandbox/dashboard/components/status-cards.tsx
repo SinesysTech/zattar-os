@@ -1,6 +1,6 @@
 'use client';
 
-import { Scale, Calendar, FileCheck, AlertTriangle, Clock, CheckCircle, TrendingUp, Users } from 'lucide-react';
+import { Scale, Calendar, FileCheck, AlertTriangle, Clock, TrendingUp, Users } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/app/_lib/utils/utils';

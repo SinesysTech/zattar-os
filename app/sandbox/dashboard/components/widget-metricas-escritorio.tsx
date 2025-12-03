@@ -2,8 +2,7 @@
 
 import { Building2, Scale, Calendar, FileCheck, Users, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 import { WidgetWrapper } from './widget-wrapper';
-import { StatCard, MiniStat } from './stat-card';
-import { MiniAreaChart, Sparkline, CHART_COLORS } from './mini-chart';
+import { MiniAreaChart, CHART_COLORS } from './mini-chart';
 import { MetricasEscritorio } from '../types/dashboard.types';
 import { cn } from '@/app/_lib/utils/utils';
 

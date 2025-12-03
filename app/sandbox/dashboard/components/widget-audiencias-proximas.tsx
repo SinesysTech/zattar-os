@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar, Clock, Video, MapPin, ExternalLink, ChevronRight } from 'lucide-react';
+import { Calendar, Video, MapPin, ExternalLink, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
 import { Badge } from '@/components/ui/badge';

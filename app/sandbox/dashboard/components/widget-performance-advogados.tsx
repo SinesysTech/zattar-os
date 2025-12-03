@@ -1,6 +1,6 @@
 'use client';
 
-import { Trophy, Medal, Award, Star, TrendingUp, Scale, Calendar, FileCheck, Clock } from 'lucide-react';
+import { Trophy, Medal, Award, Star, Scale, Calendar, FileCheck, Clock } from 'lucide-react';
 import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
 import { MiniBarChart, CHART_PALETTE } from './mini-chart';
 import { Badge } from '@/components/ui/badge';

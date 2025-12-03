@@ -1,13 +1,12 @@
 'use client';
 
-import { Scale, FileCheck, Archive, TrendingUp } from 'lucide-react';
+import { Scale } from 'lucide-react';
 import Link from 'next/link';
 import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
 import { MiniDonutChart, CHART_COLORS, CHART_PALETTE } from './mini-chart';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ProcessoResumo } from '../types/dashboard.types';
-import { cn } from '@/app/_lib/utils/utils';
 
 interface WidgetProcessosResumoProps {
   data: ProcessoResumo;

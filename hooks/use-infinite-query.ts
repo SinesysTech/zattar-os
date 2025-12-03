@@ -13,6 +13,13 @@ type SupabaseClientType = typeof supabase
 // Utility type to check if the type is any
 type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N
 
+// Fallback table definition when types aren't available
+interface FallbackTableDefinition {
+  Row: Record<string, unknown>
+  Insert: Record<string, unknown>
+  Update: Record<string, unknown>
+}
+
 // Extracts the database type from the supabase client. If the supabase client doesn't have a type, it will fallback properly.
 type Database =
   SupabaseClientType extends SupabaseClient<infer U>
@@ -20,18 +27,18 @@ type Database =
         U,
         {
           public: {
-            Tables: Record<string, any>
-            Views: Record<string, any>
-            Functions: Record<string, any>
+            Tables: Record<string, FallbackTableDefinition>
+            Views: Record<string, FallbackTableDefinition>
+            Functions: Record<string, unknown>
           }
         },
         U
       >
     : {
         public: {
-          Tables: Record<string, any>
-          Views: Record<string, any>
-          Functions: Record<string, any>
+          Tables: Record<string, FallbackTableDefinition>
+          Views: Record<string, FallbackTableDefinition>
+          Functions: Record<string, unknown>
         }
       }
 
@@ -61,7 +68,7 @@ type SupabaseQueryHandler<T extends SupabaseTableName> = (
   query: SupabaseSelectBuilder<T>
 ) => SupabaseSelectBuilder<T>
 
-interface UseInfiniteQueryProps<T extends SupabaseTableName, Query extends string = '*'> {
+interface UseInfiniteQueryProps<T extends SupabaseTableName> {
   // The table name to query
   tableName: T
   // The columns to select, defaults to `*`
@@ -161,7 +168,7 @@ function createStore<TData extends SupabaseTableData<T>, T extends SupabaseTable
 }
 
 // Empty initial state to avoid hydration errors.
-const initialState: any = {
+const initialState: StoreState<unknown> = {
   data: [],
   count: 0,
   isSuccess: false,
@@ -175,18 +182,30 @@ function useInfiniteQuery<
   TData extends SupabaseTableData<T>,
   T extends SupabaseTableName = SupabaseTableName,
 >(props: UseInfiniteQueryProps<T>) {
-  const storeRef = useRef(createStore<TData, T>(props))
+  const storeRef = useRef<ReturnType<typeof createStore<TData, T>> | null>(null)
+
+  // Initialize store lazily to avoid issues with refs during render
+  if (!storeRef.current) {
+    storeRef.current = createStore<TData, T>(props)
+  }
+
+  const subscribe = storeRef.current.subscribe
+  const getSnapshot = () => storeRef.current!.getState()
+  const getServerSnapshot = () => initialState as StoreState<TData>
 
   const state = useSyncExternalStore(
-    storeRef.current.subscribe,
-    () => storeRef.current.getState(),
-    () => initialState as StoreState<TData>
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
   )
 
   useEffect(() => {
+    const store = storeRef.current
+    if (!store) return
+
     // Recreate store if props change
     if (
-      storeRef.current.getState().hasInitialFetch &&
+      store.getState().hasInitialFetch &&
       (props.tableName !== props.tableName ||
         props.columns !== props.columns ||
         props.pageSize !== props.pageSize)
@@ -195,9 +214,9 @@ function useInfiniteQuery<
     }
 
     if (!state.hasInitialFetch && typeof window !== 'undefined') {
-      storeRef.current.initialize()
+      store.initialize()
     }
-  }, [props.tableName, props.columns, props.pageSize, state.hasInitialFetch])
+  }, [props.tableName, props.columns, props.pageSize, state.hasInitialFetch, props])
 
   return {
     data: state.data,

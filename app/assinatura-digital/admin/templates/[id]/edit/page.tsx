@@ -124,6 +124,7 @@ export default function EditTemplatePage({ params }: PageProps) {
     };
 
     fetchTemplate();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, router, isLoadingPermissoes, canEdit]);
 
   const handleRetry = () => {

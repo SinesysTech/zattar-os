@@ -29,11 +29,9 @@ import {
   Trash,
   TrendingDown,
   TrendingUp,
-  TriangleAlert,
   Clock,
   FileCheck,
   Calendar,
-  Scale,
 } from 'lucide-react';
 import { cn } from '@/app/_lib/utils/utils';
 
@@ -391,7 +389,7 @@ interface ProdutividadeCardProps {
 }
 
 export function ProdutividadeCard({
-  nomeUsuario,
+  _nomeUsuario,
   baixasHoje,
   baixasSemana,
   baixasMes,

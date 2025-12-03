@@ -3,9 +3,7 @@
 import { Users, Scale, Calendar, FileCheck, FolderOpen } from 'lucide-react';
 import { WidgetWrapper } from './widget-wrapper';
 import { MiniBarChart, CHART_PALETTE } from './mini-chart';
-import { Badge } from '@/components/ui/badge';
 import { CargaUsuario } from '../types/dashboard.types';
-import { cn } from '@/app/_lib/utils/utils';
 
 interface WidgetCargaUsuariosProps {
   data: CargaUsuario[];
