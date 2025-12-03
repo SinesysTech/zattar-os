@@ -24,7 +24,7 @@ async function applyMigration() {
     console.log('🔍 Verificando se tabela locks existe...');
 
     // Tentar consultar a tabela
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('locks')
       .select('key')
       .limit(1);
@@ -96,7 +96,7 @@ async function applyMigration() {
           console.log('✅ Migration aplicada com sucesso via RPC!');
 
           // Validar criação
-          const { data: validateData, error: validateError } = await supabase
+          const { error: validateError } = await supabase
             .from('locks')
             .select('key')
             .limit(1);

@@ -51,15 +51,10 @@ export async function exportToPdf(
 
     // Dividir em páginas se necessário
     let remainingHeight = scaledHeight;
-    let yOffset = 0;
 
     while (remainingHeight > 0) {
       const page = pdfDoc.addPage([pageWidth, pageHeight]);
       const contentHeight = Math.min(remainingHeight, pageHeight - (margin * 2));
-
-      // Calcular a porção da imagem a ser desenhada
-      // const sourceY = yOffset / scale;
-      // const sourceHeight = contentHeight / scale;
 
       page.drawImage(pngImage, {
         x: margin,
@@ -69,7 +64,6 @@ export async function exportToPdf(
       });
 
       remainingHeight -= contentHeight;
-      yOffset += contentHeight;
     }
 
     // Gerar bytes do PDF
