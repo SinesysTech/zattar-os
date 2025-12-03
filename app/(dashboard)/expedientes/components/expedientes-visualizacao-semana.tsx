@@ -1317,10 +1317,18 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
       sexta: [],
     };
 
-    // Expedientes vencidos (prazo_vencido === true e não baixados)
-    dias.vencidos = expedientes.filter(
-      (e) => !e.baixado_em && e.prazo_vencido === true
-    );
+    // Data de hoje para comparação
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    // Expedientes vencidos (data_prazo_legal_parte < hoje e não baixados)
+    dias.vencidos = expedientes.filter((e) => {
+      if (e.baixado_em) return false;
+      if (!e.data_prazo_legal_parte) return false;
+      const prazoDate = new Date(e.data_prazo_legal_parte);
+      prazoDate.setHours(0, 0, 0, 0);
+      return prazoDate < hoje;
+    });
 
     // Expedientes sem data de prazo (não baixados)
     dias.semData = expedientes.filter(

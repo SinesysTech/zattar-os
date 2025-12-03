@@ -520,6 +520,7 @@ function criarColunas(
       size: 280,
       meta: { align: 'left' },
       cell: ({ row }) => <TipoSalaAcoesCell audiencia={row.original} onSuccess={onSuccess} />,
+    },
     {
       accessorKey: 'observacoes',
       header: () => <div className="flex items-center justify-center"><div className="text-sm font-medium">Observações</div></div>,

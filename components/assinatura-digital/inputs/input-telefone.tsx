@@ -150,7 +150,6 @@ const InputTelefone = React.forwardRef<HTMLInputElement, InputTelefoneProps>(
         </div>
       );
     }
-  }
 );
 
 InputTelefone.displayName = 'InputTelefone';

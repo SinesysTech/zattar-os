@@ -70,9 +70,9 @@ const navPrincipal = [
     icon: FileText,
     items: [
       { title: "Fluxo de Assinatura", url: "/assinatura-digital/assinatura" },
-      { title: "Templates", url: "/assinatura-digital/admin/templates" },
-      { title: "Formulários", url: "/assinatura-digital/admin/formularios" },
-      { title: "Segmentos", url: "/assinatura-digital/admin/segmentos" },
+      { title: "Templates", url: "/assinatura-digital/templates" },
+      { title: "Formulários", url: "/assinatura-digital/formularios" },
+      { title: "Segmentos", url: "/assinatura-digital/segmentos" },
     ],
   },
   {

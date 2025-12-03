@@ -173,7 +173,7 @@ export async function listSessoes(params: ListSessoesParams = {}): Promise<ListS
   const offset = (page - 1) * pageSize;
 
   let query = supabase
-    .from('formsign_sessoes_assinatura')
+    .from('assinatura_digital_sessoes_assinatura')
     .select('*', { count: 'exact' });
 
   if (params.status) {

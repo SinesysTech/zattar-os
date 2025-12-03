@@ -150,28 +150,13 @@ function AdminDashboard({ data }: AdminDashboardProps) {
   return (
     <div className="space-y-6">
       {/* Cards de Status */}
-      <section>
-        <AdminStatusCards
-          metricas={data.metricas}
-          expedientesVencidos={expedientesVencidos}
-        />
-      </section>
+      <AdminStatusCards
+        metricas={data.metricas}
+        expedientesVencidos={expedientesVencidos}
+      />
 
       {/* Próximas Audiências */}
-      <section>
-        <WidgetAudienciasProximas audiencias={data.proximasAudiencias} />
-      </section>
-
-      {/* Última atualização */}
-      <div className="text-center pt-4 border-t">
-        <Typography.Muted className="text-xs">
-          Última atualização:{' '}
-          {new Date(data.ultimaAtualizacao).toLocaleString('pt-BR', {
-            dateStyle: 'short',
-            timeStyle: 'short',
-          })}
-        </Typography.Muted>
-      </div>
+      <WidgetAudienciasProximas audiencias={data.proximasAudiencias} />
     </div>
   );
 }

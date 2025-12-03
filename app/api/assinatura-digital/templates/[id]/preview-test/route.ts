@@ -111,7 +111,7 @@ export async function POST(
     // Armazenar PDF temporariamente
     const stored = await storePdf(pdfBuffer);
     const pdfUrl = stored.url;
-    // Derivar nome do arquivo do key retornado pelo storage (ex: "formsign/pdfs/documento-xxx.pdf" -> "documento-xxx.pdf")
+    // Derivar nome do arquivo do key retornado pelo storage (ex: "assinatura-digital/pdfs/documento-xxx.pdf" -> "documento-xxx.pdf")
     const storedFileName = stored.key.split('/').pop() || `preview-${id}.pdf`;
 
     return NextResponse.json({

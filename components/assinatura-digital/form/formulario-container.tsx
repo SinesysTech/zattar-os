@@ -14,8 +14,8 @@ import Sucesso from "./sucesso";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import type { Template } from "@/types/formsign/template.types";
-import type { StepConfig } from "@/app/_lib/stores/formsign/formulario-store";
+import type { Template } from "@/types/assinatura-digital/template.types";
+import type { StepConfig } from "@/app/_lib/stores/assinatura-digital/formulario-store";
 
 export default function FormularioContainer() {
   const etapaAtual = useFormularioStore((state) => state.etapaAtual);

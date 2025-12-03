@@ -294,7 +294,7 @@ export function FormularioCreateDialog({
             <Button
               type="button"
               variant="outline"
-              onClick={() => onClick={() => onOpenChange(false)}
+              onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
             >
               Cancelar
