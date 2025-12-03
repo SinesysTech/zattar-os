@@ -539,7 +539,7 @@ function FormularioActions({
   onDuplicate,
   onDelete,
   canEdit,
-  canCreate: _canCreate,
+  canCreate,
   canDelete,
 }: {
   formulario: AssinaturaDigitalFormulario;

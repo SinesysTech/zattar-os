@@ -296,8 +296,14 @@ function TipoDescricaoCell({
                 }
               }}
             >
-              {/* Badge de tipo com ícone de documento na frente */}
+              {/* Badge de tipo seguido do ícone de documento */}
               <div className="flex items-center gap-1.5">
+                <Badge
+                  variant="outline"
+                  className={`text-xs w-fit ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
+                >
+                  {tipoNome}
+                </Badge>
                 {temDocumento && (
                   <button
                     type="button"
@@ -311,12 +317,6 @@ function TipoDescricaoCell({
                     <FileText className="h-3.5 w-3.5 text-primary" />
                   </button>
                 )}
-                <Badge
-                  variant="outline"
-                  className={`text-xs w-fit ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
-                >
-                  {tipoNome}
-                </Badge>
               </div>
               <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed text-justify">
                 {descricaoExibicao}

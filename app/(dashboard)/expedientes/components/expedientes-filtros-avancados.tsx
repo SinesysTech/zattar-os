@@ -22,7 +22,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Typography } from '@/components/ui/typography';
 import { Filter, X } from 'lucide-react';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';

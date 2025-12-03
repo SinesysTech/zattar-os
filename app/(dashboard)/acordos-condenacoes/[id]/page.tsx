@@ -26,9 +26,15 @@ import { toast } from 'sonner';
 interface Parcela {
   id: number;
   numeroParcela: number;
+  valorBrutoCreditoPrincipal: number;
+  honorariosSucumbenciais: number;
+  honorariosContratuais: number;
   dataVencimento: string;
-  valor: number;
-  status: string;
+  status: 'pendente' | 'recebida' | 'paga' | 'atrasado';
+  formaPagamento: string;
+  statusRepasse: string;
+  valorRepasseCliente: number | null;
+  editadoManualmente: boolean;
   dataPagamento?: string | null;
 }
 

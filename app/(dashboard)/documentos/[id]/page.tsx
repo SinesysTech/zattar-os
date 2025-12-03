@@ -3,10 +3,7 @@
  * /documentos/[id]
  */
 
-import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { DocumentEditor } from '@/components/documentos/document-editor';
-import { DocumentEditorSkeleton } from '@/components/documentos/document-editor-skeleton';
 
 export const metadata: Metadata = {
   title: 'Documentos | Sinesys',

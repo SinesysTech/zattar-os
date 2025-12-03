@@ -32,7 +32,7 @@ export function NotasWidget({ className }: NotasWidgetProps) {
     setFormData({ titulo: '', conteudo: '', etiquetas: [] });
   };
 
-  const handleUpdate = async () => {
+  const _handleUpdate = async () => {
     if (!editingNota) return;
     await updateNota(editingNota.id, formData);
     setEditingNota(null);

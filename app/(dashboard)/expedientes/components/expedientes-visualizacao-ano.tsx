@@ -3,9 +3,6 @@
 // Componente de visualização de expedientes por ano com calendários mensais
 
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 
@@ -67,7 +64,7 @@ export function ExpedientesVisualizacaoAno({
     return mapa;
   }, [expedientes, anoSelecionado]);
 
-  const navegarAno = (direcao: 'anterior' | 'proximo') => {
+  const _navegarAno = (direcao: 'anterior' | 'proximo') => {
     const novoAno = new Date(anoSelecionado + (direcao === 'proximo' ? 1 : -1), 0, 1);
     onAnoAtualChange?.(novoAno);
     if (!anoAtual) {

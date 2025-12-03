@@ -5,7 +5,6 @@
 import * as React from 'react';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { NovoExpedienteDialog } from './novo-expediente-dialog';
 import {
@@ -22,7 +21,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import {
   Popover,
@@ -72,9 +70,6 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
-import { DateRangePicker } from '@/components/ui/date-range-picker';
-import { Combobox } from '@/components/ui/combobox';
 
 interface ExpedientesContentProps {
   viewMode: 'tabela' | 'semana' | 'mes' | 'ano';
@@ -278,8 +273,14 @@ function TipoDescricaoCell({
       <div className="relative min-h-10 max-w-[300px] group">
         <div className="w-full min-h-10 flex items-start gap-2 pr-8 py-2">
           <div className="flex flex-col items-start justify-start gap-1.5 flex-1">
-            {/* Badge de tipo com ícone de documento na frente */}
+            {/* Badge de tipo seguido do ícone de documento */}
             <div className="flex items-center gap-1.5">
+              <Badge
+                variant="outline"
+                className={`w-fit text-xs shrink-0 ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
+              >
+                {tipoNome}
+              </Badge>
               {temDocumento && (
                 <button
                   type="button"
@@ -290,12 +291,6 @@ function TipoDescricaoCell({
                   <FileText className="h-3.5 w-3.5 text-primary" />
                 </button>
               )}
-              <Badge
-                variant="outline"
-                className={`w-fit text-xs shrink-0 ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
-              >
-                {tipoNome}
-              </Badge>
             </div>
             <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed indent-0 text-justify">
               {descricaoExibicao}
@@ -563,6 +558,147 @@ function AcoesExpediente({
   );
 }
 
+// Componente PrazoCell - extraído para evitar violação de hooks
+function PrazoCell({
+  expediente,
+  onSuccess
+}: {
+  expediente: PendenteManifestacao;
+  onSuccess: () => void;
+}) {
+  const dataInicio = expediente.data_ciencia_parte;
+  const dataFim = expediente.data_prazo_legal_parte;
+  const diasUteis = calcularDiasUteis(dataInicio, dataFim);
+  const [openPrazo, setOpenPrazo] = React.useState(false);
+  const [isSavingPrazo, setIsSavingPrazo] = React.useState(false);
+  const [dataPrazoStr, setDataPrazoStr] = React.useState<string>('');
+
+  const handleSalvarPrazo = async () => {
+    setIsSavingPrazo(true);
+    try {
+      const iso = dataPrazoStr ? new Date(dataPrazoStr).toISOString() : '';
+      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/prazo-legal`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dataPrazoLegal: iso }),
+      });
+      if (!response.ok) {
+        const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(ed.error || 'Erro ao atualizar prazo legal');
+      }
+      setOpenPrazo(false);
+      setDataPrazoStr('');
+      onSuccess();
+    } finally {
+      setIsSavingPrazo(false);
+    }
+  };
+
+  return (
+    <div className="min-h-10 flex flex-col items-center justify-center gap-2 py-2">
+      <div className="text-sm"><span className="font-semibold">Início:</span> {formatarData(dataInicio)}</div>
+      <div className="text-sm"><span className="font-semibold">Fim:</span> {formatarData(dataFim)}</div>
+      {diasUteis !== null && (
+        <Badge className={`${getCorBadgeDias(diasUteis)} text-sm font-medium mt-1 px-3 py-1`}>
+          {diasUteis} {diasUteis === 1 ? 'dia' : 'dias'}
+        </Badge>
+      )}
+      {!expediente.baixado_em && !dataFim && (
+        <Button size="sm" variant="outline" onClick={() => setOpenPrazo(true)}>Definir Data</Button>
+      )}
+      <Dialog open={openPrazo} onOpenChange={setOpenPrazo}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Definir Prazo Legal</DialogTitle>
+            <DialogDescription>Defina a data de fim do prazo. A data de início será preenchida automaticamente com a data de criação do expediente.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <Label className="text-sm font-medium">Data de Início (automática)</Label>
+              <Input
+                type="text"
+                value={expediente.created_at ? formatarData(expediente.created_at) : '-'}
+                disabled
+                className="bg-muted"
+              />
+              <p className="text-xs text-muted-foreground">Data de criação do expediente</p>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-sm font-medium">Data de Fim *</Label>
+              <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} aria-label="Data de fim do prazo" />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpenPrazo(false)} disabled={isSavingPrazo}>Cancelar</Button>
+            <Button onClick={handleSalvarPrazo} disabled={isSavingPrazo || !dataPrazoStr}>{isSavingPrazo ? 'Salvando...' : 'Salvar'}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+// Componente ObservacoesCell - extraído para evitar violação de hooks
+function ObservacoesCell({
+  expediente,
+  onSuccess
+}: {
+  expediente: PendenteManifestacao;
+  onSuccess: () => void;
+}) {
+  const [open, setOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [valor, setValor] = React.useState<string>(expediente.observacoes || '');
+
+  React.useEffect(() => { setValor(expediente.observacoes || ''); }, [expediente.observacoes]);
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      const observacoes = valor.trim() || null;
+      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/observacoes`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ observacoes }) });
+      if (!response.ok) {
+        const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(ed.error || 'Erro ao atualizar observações');
+      }
+      setOpen(false);
+      onSuccess();
+    } finally { setIsLoading(false); }
+  };
+
+  return (
+    <div className="relative min-h-10 max-w-[300px] group">
+      <div className="w-full min-h-10 flex items-start gap-2 pr-8 py-2">
+        <div className="flex flex-col items-start justify-start gap-1.5 flex-1">
+          <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed indent-0 text-justify">{expediente.observacoes || '-'}</div>
+        </div>
+      </div>
+      <Button size="sm" variant="ghost" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1" title="Editar observações" onClick={() => setOpen(true)}>
+        <Pencil className="h-3 w-3" />
+      </Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-[min(92vw,25rem)] sm:max-w-[min(92vw,37.5rem)]">
+          <DialogHeader>
+            <DialogTitle>Editar Observações</DialogTitle>
+            <DialogDescription>Adicionar observações do expediente</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="observacoes-exp">Observações</Label>
+              <Textarea id="observacoes-exp" value={valor} onChange={(e) => setValor(e.target.value)} disabled={isLoading} className="min-h-[250px] resize-y" />
+              <p className="text-xs text-muted-foreground">{valor.length} caracteres</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isLoading}>Cancelar</Button>
+            <Button type="button" onClick={handleSave} disabled={isLoading}>{isLoading ? 'Salvando...' : 'Salvar'}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
 // Função para criar colunas
 function criarColunas(
   onSuccess: () => void,
@@ -587,77 +723,7 @@ function criarColunas(
       header: () => <PrazoColumnHeader onSort={onPrazoSort} />,
       enableSorting: false,
       size: 170,
-      cell: ({ row }) => {
-        const dataInicio = row.original.data_ciencia_parte;
-        const dataFim = row.original.data_prazo_legal_parte;
-        const diasUteis = calcularDiasUteis(dataInicio, dataFim);
-        const [openPrazo, setOpenPrazo] = React.useState(false);
-        const [isSavingPrazo, setIsSavingPrazo] = React.useState(false);
-        const [dataPrazoStr, setDataPrazoStr] = React.useState<string>('');
-        const handleSalvarPrazo = async () => {
-          setIsSavingPrazo(true);
-          try {
-            const iso = dataPrazoStr ? new Date(dataPrazoStr).toISOString() : '';
-            const response = await fetch(`/api/pendentes-manifestacao/${row.original.id}/prazo-legal`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ dataPrazoLegal: iso }),
-            });
-            if (!response.ok) {
-              const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-              throw new Error(ed.error || 'Erro ao atualizar prazo legal');
-            }
-            setOpenPrazo(false);
-            setDataPrazoStr('');
-            onSuccess();
-          } finally {
-            setIsSavingPrazo(false);
-          }
-        };
-
-        return (
-          <div className="min-h-10 flex flex-col items-center justify-center gap-2 py-2">
-            <div className="text-sm"><span className="font-semibold">Início:</span> {formatarData(dataInicio)}</div>
-            <div className="text-sm"><span className="font-semibold">Fim:</span> {formatarData(dataFim)}</div>
-            {diasUteis !== null && (
-              <Badge className={`${getCorBadgeDias(diasUteis)} text-sm font-medium mt-1 px-3 py-1`}>
-                {diasUteis} {diasUteis === 1 ? 'dia' : 'dias'}
-              </Badge>
-            )}
-            {!row.original.baixado_em && !dataFim && (
-              <Button size="sm" variant="outline" onClick={() => setOpenPrazo(true)}>Definir Data</Button>
-            )}
-            <Dialog open={openPrazo} onOpenChange={setOpenPrazo}>
-              <DialogContent className="max-w-sm">
-                <DialogHeader>
-                  <DialogTitle>Definir Prazo Legal</DialogTitle>
-                  <DialogDescription>Defina a data de fim do prazo. A data de início será preenchida automaticamente com a data de criação do expediente.</DialogDescription>
-                </DialogHeader>
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium">Data de Início (automática)</Label>
-                    <Input
-                      type="text"
-                      value={row.original.created_at ? formatarData(row.original.created_at) : '-'}
-                      disabled
-                      className="bg-muted"
-                    />
-                    <p className="text-xs text-muted-foreground">Data de criação do expediente</p>
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium">Data de Fim *</Label>
-                    <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} aria-label="Data de fim do prazo" />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setOpenPrazo(false)} disabled={isSavingPrazo}>Cancelar</Button>
-                  <Button onClick={handleSalvarPrazo} disabled={isSavingPrazo || !dataPrazoStr}>{isSavingPrazo ? 'Salvando...' : 'Salvar'}</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-        );
-      },
+      cell: ({ row }) => <PrazoCell expediente={row.original} onSuccess={onSuccess} />,
     },
     {
       id: 'processo_partes',
@@ -807,8 +873,8 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
   const [novoExpedienteOpen, setNovoExpedienteOpen] = React.useState(false);
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['baixado_false']);
   const [isSearching, setIsSearching] = React.useState(false);
-  const [countVencidos, setCountVencidos] = React.useState<number>(0);
-  const [countSemResponsavel, setCountSemResponsavel] = React.useState<number>(0);
+  const [_countVencidos, setCountVencidos] = React.useState<number>(0);
+  const [_countSemResponsavel, setCountSemResponsavel] = React.useState<number>(0);
   const [parteDialog, setParteDialog] = React.useState<{
     open: boolean;
     processoId: number | null;
@@ -817,14 +883,14 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
   }>({ open: false, processoId: null, polo: 'ATIVO', nome: '' });
 
   // Handler para abrir dialog de parte
-  const handleParteClick = (
+  const handleParteClick = React.useCallback((
     processoId: number | null,
     polo: 'ATIVO' | 'PASSIVO',
     nome: string
   ) => {
     if (!processoId || nome === '-') return; // Não abrir se não há processo ou parte
     setParteDialog({ open: true, processoId, polo, nome });
-  };
+  }, []);
 
   // Buscar permissões e ID do usuário logado
   const { usuarioId: currentUserId, isSuperAdmin } = useMinhasPermissoes();
@@ -832,7 +898,7 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
   const buscaDebounced = useDebounce(busca, 500);
 
   const params = React.useMemo(() => {
-    const { responsavel_id: _, ...filtrosSemResponsavel } = filtros;
+    const { responsavel_id: _responsavel_id, ...filtrosSemResponsavel } = filtros;
     const responsavelIdFinal = viewMode === 'tabela'
       ? filtros.responsavel_id
       : (!isSuperAdmin && currentUserId ? currentUserId : filtros.responsavel_id);
@@ -867,7 +933,7 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
       .then(r => r.ok ? r.json() : Promise.reject(r))
       .then((data) => {
         const grupos = data?.data?.agrupamentos || [];
-        const found = grupos.find((g: any) => g.grupo === 'vencido' || g.grupo === true || g.grupo === 'true' || g.grupo === 1);
+        const found = grupos.find((g: { grupo: unknown; quantidade?: number }) => g.grupo === 'vencido' || g.grupo === true || g.grupo === 'true' || g.grupo === 1);
         setCountVencidos(found?.quantidade || 0);
       })
       .catch(() => setCountVencidos(0));
@@ -886,14 +952,14 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
       .then(r => r.ok ? r.json() : Promise.reject(r))
       .then((data) => {
         const grupos = data?.data?.agrupamentos || [];
-        const found = grupos.find((g: any) => g.grupo === null || g.grupo === 'null' || g.grupo === 'NULL' || g.grupo === '');
+        const found = grupos.find((g: { grupo: unknown; quantidade?: number }) => g.grupo === null || g.grupo === 'null' || g.grupo === 'NULL' || g.grupo === '');
         setCountSemResponsavel(found?.quantidade || 0);
       })
       .catch(() => setCountSemResponsavel(0));
   }, [params]);
 
   const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 100 });
-  const { tiposExpedientes, isLoading: isLoadingTipos, error: errorTipos } = useTiposExpedientes({ limite: 100 });
+  const { tiposExpedientes, isLoading: isLoadingTipos, error: _errorTipos } = useTiposExpedientes({ limite: 100 });
 
   const handleSuccess = React.useCallback(() => { refetch(); }, [refetch]);
 

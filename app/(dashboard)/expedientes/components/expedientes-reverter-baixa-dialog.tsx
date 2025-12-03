@@ -12,7 +12,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Typography } from '@/components/ui/typography';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 

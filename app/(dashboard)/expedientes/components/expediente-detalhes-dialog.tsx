@@ -14,7 +14,6 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
 import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
 
 /**
  * Formata data ISO para formato brasileiro

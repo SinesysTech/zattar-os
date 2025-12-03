@@ -309,7 +309,7 @@ function SegmentoActions({
   onDuplicate,
   onDelete,
   canEdit,
-  canCreate: _canCreate,
+  canCreate,
   canDelete,
 }: {
   segmento: AssinaturaDigitalSegmento;

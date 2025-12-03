@@ -3,20 +3,9 @@
 // Componente de visualização de expedientes por mês em calendário
 
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Typography } from '@/components/ui/typography';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
 import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
-
-/**
- * Formata data para exibição
- */
-const formatarData = (dataISO: string): string => {
-  const data = new Date(dataISO);
-  return data.toLocaleDateString('pt-BR');
-};
 
 interface ExpedientesVisualizacaoMesProps {
   expedientes: PendenteManifestacao[];
@@ -114,7 +103,7 @@ export function ExpedientesVisualizacaoMes({
     return mapa;
   }, [expedientes, mesSelecionado]);
 
-  const navegarMes = (direcao: 'anterior' | 'proximo') => {
+  const _navegarMes = (direcao: 'anterior' | 'proximo') => {
     const novoMes = new Date(mesSelecionado);
     if (direcao === 'proximo') {
       novoMes.setMonth(novoMes.getMonth() + 1);
@@ -127,7 +116,7 @@ export function ExpedientesVisualizacaoMes({
     }
   };
 
-  const formatarMesAno = () => {
+  const _formatarMesAno = () => {
     return mesSelecionado.toLocaleDateString('pt-BR', {
       month: 'long',
       year: 'numeric',

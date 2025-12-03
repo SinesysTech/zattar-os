@@ -48,7 +48,7 @@ export function TarefasWidget({ className }: TarefasWidgetProps) {
     });
   };
 
-  const handleUpdate = async () => {
+  const _handleUpdate = async () => {
     if (!editingTarefa) return;
     await updateTarefa(editingTarefa.id, formData);
     setEditingTarefa(null);
@@ -136,7 +136,7 @@ export function TarefasWidget({ className }: TarefasWidgetProps) {
               />
               <Select
                 value={formData.status}
-                onValueChange={(value) => setFormData({ ...formData, status: value as any })}
+                onValueChange={(value) => setFormData({ ...formData, status: value as FormData['status'] })}
               >
                 <SelectTrigger>
                   <SelectValue />
