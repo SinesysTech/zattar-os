@@ -36,7 +36,7 @@ export interface RemoteCursor {
 interface ContentUpdate {
   type: 'content_update';
   userId: number;
-  content: any;
+  content: unknown;
   timestamp: number;
 }
 
@@ -105,18 +105,19 @@ export function useRealtimeCollaboration({
         const cursors: RemoteCursor[] = [];
 
         Object.keys(presenceState).forEach((key) => {
-          const presences = presenceState[key] as any[];
+          const presences = presenceState[key] as unknown[];
           presences.forEach((presence) => {
-            if (presence.user_id !== userId) {
-              users.push(presence);
+            const typed = presence as Partial<CollaboratorPresence>;
+            if (typed.user_id !== userId) {
+              users.push(typed as CollaboratorPresence);
 
               // Extrair cursor para overlay
-              if (presence.selection) {
+              if (typed.selection) {
                 cursors.push({
-                  userId: presence.user_id,
-                  userName: presence.name,
-                  color: presence.color,
-                  selection: presence.selection,
+                  userId: typed.user_id ?? 0,
+                  userName: typed.name ?? '',
+                  color: typed.color ?? '#000',
+                  selection: typed.selection ?? null,
                 });
               }
             }
@@ -139,11 +140,16 @@ export function useRealtimeCollaboration({
       })
       // Escutar broadcasts de atualização de conteúdo
       .on('broadcast', { event: 'content_update' }, ({ payload }) => {
-        if (payload && payload.userId !== userId) {
-          console.log('[Collaboration] Remote content update received');
-          if (onRemoteUpdateRef.current) {
-            onRemoteUpdateRef.current(payload as ContentUpdate);
-          }
+        const incoming = payload as Partial<ContentUpdate>;
+        if (!incoming || typeof incoming.userId !== 'number' || incoming.userId === userId) return;
+        const safeUpdate: ContentUpdate = {
+          type: 'content_update',
+          userId: incoming.userId,
+          content: incoming.content,
+          timestamp: typeof incoming.timestamp === 'number' ? incoming.timestamp : Date.now(),
+        };
+        if (onRemoteUpdateRef.current) {
+          onRemoteUpdateRef.current(safeUpdate);
         }
       })
       .subscribe(async (status) => {
@@ -213,7 +219,7 @@ export function useRealtimeCollaboration({
 
   // Broadcast de mudança de conteúdo
   const broadcastUpdate = useCallback(
-    async (update: any) => {
+    async (update: ContentUpdate) => {
       if (channelRef.current) {
         await channelRef.current.send({
           type: 'broadcast',
@@ -234,3 +240,4 @@ export function useRealtimeCollaboration({
     broadcastUpdate,
   };
 }
+

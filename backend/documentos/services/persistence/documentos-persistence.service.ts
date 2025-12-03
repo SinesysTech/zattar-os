@@ -80,7 +80,7 @@ export async function buscarDocumentoComUsuario(id: number): Promise<DocumentoCo
         id,
         nome_completo,
         nome_exibicao,
-        emailCorporativo
+        email_corporativo
       ),
       editor:usuarios!documentos_editado_por_fkey(
         id,
@@ -118,7 +118,7 @@ export async function listarDocumentos(
         id,
         nome_completo,
         nome_exibicao,
-        emailCorporativo
+        email_corporativo
       ),
       editor:usuarios!documentos_editado_por_fkey(
         id,
@@ -315,7 +315,7 @@ export async function listarDocumentosLixeira(
         id,
         nome_completo,
         nome_exibicao,
-        emailCorporativo
+        email_corporativo
       ),
       editor:usuarios!documentos_editado_por_fkey(
         id,

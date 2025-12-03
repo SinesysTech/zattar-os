@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
@@ -297,11 +297,7 @@ export function AcordosCondenacoesList({ busca, filtros, refreshKey }: AcordosCo
   const [ordenarPor, setOrdenarPor] = useState<string | null>(null);
   const [ordem, setOrdem] = useState<'asc' | 'desc'>('asc');
 
-  useEffect(() => {
-    loadData();
-  }, [filtros, busca, pagina, limite, ordenarPor, ordem, refreshKey]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -332,7 +328,11 @@ export function AcordosCondenacoesList({ busca, filtros, refreshKey }: AcordosCo
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [busca, filtros, limite, ordenarPor, ordem, pagina]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData, refreshKey]);
 
   const colunas = React.useMemo(() => criarColunas(router), [router]);
 

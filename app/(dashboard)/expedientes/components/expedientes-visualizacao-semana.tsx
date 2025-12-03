@@ -1266,7 +1266,9 @@ function criarColunasSemanais(
 
 interface ExpedientesVisualizacaoSemanaProps {
   expedientes: PendenteManifestacao[];
+  expedientesEspeciais?: PendenteManifestacao[];
   isLoading: boolean;
+  isLoadingEspeciais?: boolean;
   onRefresh?: () => void;
   usuarios: Usuario[];
   tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
@@ -1278,8 +1280,10 @@ interface ExpedientesVisualizacaoSemanaProps {
   onResponsavelSort: (direction: 'asc' | 'desc') => void;
 }
 
-export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefresh, usuarios, tiposExpedientes, semanaAtual, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort }: ExpedientesVisualizacaoSemanaProps) {
+export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciais, isLoading, isLoadingEspeciais, onRefresh, usuarios, tiposExpedientes, semanaAtual, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort }: ExpedientesVisualizacaoSemanaProps) {
   const [diaAtivo, setDiaAtivo] = React.useState<string>('vencidos');
+  const isLoadingTabs = isLoading || !!isLoadingEspeciais;
+  const dadosEspeciais = expedientesEspeciais ?? expedientes;
 
   const handleSuccess = React.useCallback(() => {
     if (onRefresh) {
@@ -1308,8 +1312,8 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
   const expedientesPorDia = React.useMemo(() => {
     type DiaSemana = 'vencidos' | 'semData' | 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta';
     const dias: Record<DiaSemana, PendenteManifestacao[]> = {
-      vencidos: [],  // Primeira aba - expedientes vencidos
-      semData: [],   // Segunda aba - expedientes sem data de prazo
+      vencidos: [],
+      semData: [],
       segunda: [],
       terca: [],
       quarta: [],
@@ -1317,12 +1321,12 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
       sexta: [],
     };
 
-    // Data de hoje para comparação
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
-    // Expedientes vencidos (data_prazo_legal_parte < hoje e não baixados)
-    dias.vencidos = expedientes.filter((e) => {
+    const baseEspecial = expedientesEspeciais ?? expedientes;
+
+    dias.vencidos = baseEspecial.filter((e) => {
       if (e.baixado_em) return false;
       if (!e.data_prazo_legal_parte) return false;
       const prazoDate = new Date(e.data_prazo_legal_parte);
@@ -1330,29 +1334,21 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
       return prazoDate < hoje;
     });
 
-    // Expedientes sem data de prazo (não baixados)
-    dias.semData = expedientes.filter(
+    dias.semData = baseEspecial.filter(
       (e) => !e.baixado_em && !e.data_prazo_legal_parte
     );
 
-    // IDs dos expedientes especiais para evitar duplicação
     const idsEspeciais = new Set<number>([
       ...dias.vencidos.map((e) => e.id),
       ...dias.semData.map((e) => e.id),
     ]);
 
-    // Distribuir expedientes por dia da semana (excluindo vencidos e sem data)
     expedientes.forEach((expediente) => {
-      // Ignorar expedientes sem data ou que já estão nas abas especiais
       if (!expediente.data_prazo_legal_parte || idsEspeciais.has(expediente.id)) return;
 
-      // Criar data a partir do ISO string e normalizar para timezone local
       const data = new Date(expediente.data_prazo_legal_parte);
-
-      // Extrair apenas a parte da data (ignorando timezone)
       const dataLocal = new Date(data.getFullYear(), data.getMonth(), data.getDate());
 
-      // Verificar se o expediente está dentro da semana atual
       if (dataLocal >= inicioSemana && dataLocal <= fimSemana) {
         const diaSemana = dataLocal.getDay();
 
@@ -1364,10 +1360,8 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
       }
     });
 
-    // Ordenar cada dia por data de vencimento (crescentemente)
-    const diasDaSemana: DiaSemana[] = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
-    diasDaSemana.forEach((dia) => {
-      dias[dia].sort((a, b) => {
+    ['segunda', 'terca', 'quarta', 'quinta', 'sexta'].forEach((dia) => {
+      dias[dia as DiaSemana].sort((a, b) => {
         const dataA = a.data_prazo_legal_parte ? new Date(a.data_prazo_legal_parte).getTime() : 0;
         const dataB = b.data_prazo_legal_parte ? new Date(b.data_prazo_legal_parte).getTime() : 0;
         return dataA - dataB;
@@ -1375,7 +1369,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     });
 
     return dias;
-  }, [expedientes, inicioSemana, fimSemana]);
+  }, [expedientes, expedientesEspeciais, inicioSemana, fimSemana]);
 
   const colunas = React.useMemo(() => criarColunasSemanais(handleSuccess, usuarios, tiposExpedientes, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort), [handleSuccess, usuarios, tiposExpedientes, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort]);
 
@@ -1418,13 +1412,13 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     ) > 0;
   }, [expedientesPorDia]);
 
-  if (!isLoading && !temExpedientesNaSemana) {
+  if (!isLoadingTabs && !temExpedientesNaSemana) {
     return (
       <div className="mt-0">
         <DataTable
           data={expedientes}
           columns={colunas}
-          isLoading={isLoading}
+          isLoading={isLoadingTabs}
           error={null}
           emptyMessage="Nenhum expediente encontrado."
         />
@@ -1506,7 +1500,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
           <DataTable
             data={expedientesPorDia.vencidos}
             columns={colunas}
-            isLoading={isLoading}
+            isLoading={isLoadingTabs}
             emptyMessage="Nenhum expediente vencido."
             hideTableBorder={true}
             hideColumnBorders={true}
@@ -1520,7 +1514,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
           <DataTable
             data={expedientesPorDia.semData}
             columns={colunas}
-            isLoading={isLoading}
+            isLoading={isLoadingTabs}
             emptyMessage="Nenhum expediente sem data de prazo."
             hideTableBorder={true}
             hideColumnBorders={true}
@@ -1545,7 +1539,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
               <DataTable
                 data={expedientesPorDia[dia]}
                 columns={colunas}
-                isLoading={isLoading}
+                isLoading={isLoadingTabs}
                 emptyMessage={`Nenhum expediente com prazo para ${nomeDiaCompleto}, ${formatarDataCompleta(dataDia)}.`}
                 hideTableBorder={true}
                 hideColumnBorders={true}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -41,10 +41,9 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
   const [localValue, setLocalValue] = useState<ConteudoComposto | undefined>(value);
 
   // Height estimation logic
-  const estimatedHeight = useMemo(() => {
-    if (!localValue?.template) return 0;
-    return estimateTextHeightSimplified(localValue.template, fieldWidth, fontSize);
-  }, [localValue?.template, fieldWidth, fontSize]);
+  const estimatedHeight = localValue?.template
+    ? estimateTextHeightSimplified(localValue.template, fieldWidth, fontSize)
+    : 0;
 
   const isOverflow = estimatedHeight > fieldHeight;
   const lineCount = Math.ceil(estimatedHeight / (fontSize * 1.2));

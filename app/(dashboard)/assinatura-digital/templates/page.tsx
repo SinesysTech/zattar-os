@@ -486,7 +486,7 @@ export default function TemplatesPage() {
         )}
       </div>
     );
-  }, [rowSelection, handleExportCSV, handleBulkDelete]);
+  }, [rowSelection, handleExportCSV, handleBulkDelete, canDelete]);
 
   return (
     <div className="space-y-3">

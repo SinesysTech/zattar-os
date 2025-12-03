@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AcordoCondenacaoForm } from '../../components/acordo-condenacao-form';
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
@@ -43,13 +43,7 @@ export default function EditarAcordoCondenacaoPage({
     resolveParams();
   }, [params]);
 
-  useEffect(() => {
-    if (acordoId !== null) {
-      loadAcordo();
-    }
-  }, [acordoId]);
-
-  const loadAcordo = async () => {
+  const loadAcordo = useCallback(async () => {
     if (acordoId === null) return;
 
     try {
@@ -70,7 +64,13 @@ export default function EditarAcordoCondenacaoPage({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [acordoId]);
+
+  useEffect(() => {
+    if (acordoId !== null) {
+      loadAcordo();
+    }
+  }, [acordoId, loadAcordo]);
 
   const handleSuccess = () => {
     // Redirecionar para detalhes do acordo após salvar

@@ -22,7 +22,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Typography } from '@/components/ui/typography';
 import { atualizarAgendamento } from '@/app/api/captura/agendamentos/agendamentos';
 
 /**
@@ -86,7 +85,7 @@ export function AgendamentosList({ onEdit, onRefresh, actionButton }: Agendament
     ordem: 'asc',
   });
 
-  const handleToggleAtivo = async (agendamento: Agendamento) => {
+  const handleToggleAtivo = React.useCallback(async (agendamento: Agendamento) => {
     try {
       await atualizarAgendamento(agendamento.id, {
         ativo: !agendamento.ativo,
@@ -96,9 +95,9 @@ export function AgendamentosList({ onEdit, onRefresh, actionButton }: Agendament
     } catch (error) {
       console.error('Erro ao atualizar agendamento:', error);
     }
-  };
+  }, [onRefresh, refetch]);
 
-  const handleExecutar = async (agendamento: Agendamento) => {
+  const handleExecutar = React.useCallback(async (agendamento: Agendamento) => {
     try {
       await executarAgendamento(agendamento.id);
       refetch();
@@ -106,9 +105,9 @@ export function AgendamentosList({ onEdit, onRefresh, actionButton }: Agendament
     } catch (error) {
       console.error('Erro ao executar agendamento:', error);
     }
-  };
+  }, [onRefresh, refetch]);
 
-  const handleDeletar = async (agendamento: Agendamento) => {
+  const handleDeletar = React.useCallback(async (agendamento: Agendamento) => {
     try {
       await deletarAgendamento(agendamento.id);
       refetch();
@@ -116,7 +115,7 @@ export function AgendamentosList({ onEdit, onRefresh, actionButton }: Agendament
     } catch (error) {
       console.error('Erro ao deletar agendamento:', error);
     }
-  };
+  }, [onRefresh, refetch]);
 
   const colunas: ColumnDef<Agendamento>[] = React.useMemo(
     () => [
@@ -284,7 +283,7 @@ export function AgendamentosList({ onEdit, onRefresh, actionButton }: Agendament
         },
       },
     ],
-    [onEdit, refetch, onRefresh]
+    [handleDeletar, handleExecutar, handleToggleAtivo, onEdit]
   );
 
   return (

@@ -105,7 +105,7 @@ export default function AssinaturaPage() {
           setError(msg);
           toast.error(msg);
         }
-      } catch (_err) {
+      } catch {
         const msg = "Erro ao carregar listas. Verifique sua conexão.";
         setError(msg);
         toast.error(msg);
@@ -350,3 +350,4 @@ export default function AssinaturaPage() {
     </div>
   );
 }
+

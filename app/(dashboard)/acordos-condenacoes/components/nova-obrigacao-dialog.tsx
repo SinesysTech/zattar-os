@@ -103,9 +103,6 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
 
   const { processos: processosRaw, isLoading: loadingProcessos, error: processoError } = useAcervo(acervoParams);
 
-  // Só usa processos quando deve buscar
-  const processos = shouldFetchProcessos ? processosRaw : [];
-
   // Atualizar erro se houver problema ao buscar processos
   React.useEffect(() => {
     if (processoError && !error) {
@@ -230,12 +227,13 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
 
   // Opções para o combobox de processos
   const processosOptions: ComboboxOption[] = React.useMemo(() => {
+    const processos = shouldFetchProcessos ? processosRaw : [];
     return processos.map((p) => ({
       value: p.id.toString(),
       label: `${p.numero_processo} - ${p.nome_parte_autora || 'Sem nome'} vs ${p.nome_parte_re || 'Sem nome'}`,
       searchText: `${p.numero_processo} ${p.nome_parte_autora || ''} ${p.nome_parte_re || ''}`,
     }));
-  }, [processos]);
+  }, [processosRaw, shouldFetchProcessos]);
 
   // Layout quando há dados iniciais (processo já definido)
   if (modoProcessoDefinido && dadosIniciais) {

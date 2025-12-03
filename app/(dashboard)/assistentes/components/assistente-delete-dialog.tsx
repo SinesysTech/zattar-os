@@ -43,7 +43,7 @@ export function AssistenteDeleteDialog({ open, onOpenChange, assistente, onSucce
         <AlertDialogHeader>
           <AlertDialogTitle>Deletar Assistente</AlertDialogTitle>
           <AlertDialogDescription>
-            Tem certeza que deseja deletar o assistente "{assistente?.nome}"? Esta ação não pode ser desfeita.
+            Tem certeza que deseja deletar o assistente &quot;{assistente?.nome}&quot;? Esta ação não pode ser desfeita.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

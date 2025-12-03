@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Edit, Trash2, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -84,13 +84,7 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
     resolveParams();
   }, [params]);
 
-  useEffect(() => {
-    if (acordoId !== null) {
-      loadAcordo();
-    }
-  }, [acordoId]);
-
-  const loadAcordo = async () => {
+  const loadAcordo = useCallback(async () => {
     if (acordoId === null) return;
 
     try {
@@ -111,7 +105,13 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [acordoId]);
+
+  useEffect(() => {
+    if (acordoId !== null) {
+      loadAcordo();
+    }
+  }, [acordoId, loadAcordo]);
 
   const handleDelete = async () => {
     if (acordoId === null) return;

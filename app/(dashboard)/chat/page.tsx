@@ -54,13 +54,20 @@ interface SalaChat {
   updated_at: string;
 }
 
+interface ChatUser {
+  id: number;
+  nome?: string;
+  email?: string;
+  [key: string]: unknown;
+}
+
 export default function ChatPage() {
   const supabase = createClient();
 
   const [salas, setSalas] = React.useState<SalaChat[]>([]);
   const [salaAtiva, setSalaAtiva] = React.useState<SalaChat | null>(null);
   const [loading, setLoading] = React.useState(true);
-  const [currentUser, setCurrentUser] = React.useState<any>(null);
+  const [currentUser, setCurrentUser] = React.useState<ChatUser | null>(null);
   const [busca, setBusca] = React.useState('');
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);

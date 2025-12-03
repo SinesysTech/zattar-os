@@ -5,6 +5,10 @@ import withPWA from '@ducanh2912/next-pwa';
 const nextConfig: NextConfig = {
   output: 'standalone',
   serverExternalPackages: ['pino', 'pino-pretty', 'thread-stream'],
+  productionBrowserSourceMaps: false,
+  experimental: {
+    serverSourceMaps: false,
+  },
   turbopack: {
     resolveAlias: {
       '@': path.resolve(__dirname),

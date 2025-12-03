@@ -60,7 +60,7 @@ export default function AssistentePage() {
         } else {
           setError('Erro ao carregar assistente')
         }
-      } catch (err) {
+      } catch {
         setError('Erro de conexão')
       } finally {
         setIsLoading(false)
@@ -78,7 +78,7 @@ export default function AssistentePage() {
     try {
       const sanitized = sanitizarIframeCode(assistente.iframe_code)
       return { html: sanitized, error: null }
-    } catch (err) {
+    } catch {
       return {
         html: '',
         error: err instanceof Error ? err.message : 'Erro ao processar código do iframe',
@@ -176,3 +176,4 @@ export default function AssistentePage() {
     </div>
   )
 }
+

@@ -117,13 +117,13 @@ export async function listarCompartilhamentos(
       *,
       usuario:usuarios!documentos_compartilhados_usuario_id_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao,
-        emailCorporativo
+        nome_completo,
+        nome_exibicao,
+        email_corporativo
       ),
       compartilhador:usuarios!documentos_compartilhados_compartilhado_por_fkey(
         id,
-        nomeCompleto
+        nome_completo
       )
     `);
 

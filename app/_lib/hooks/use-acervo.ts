@@ -135,7 +135,7 @@ export const useAcervo = (params: BuscarProcessosParams = {}): UseAcervoResult =
     } finally {
       setIsLoading(false);
     }
-  }, [queryString]);
+  }, [queryString, params]);
 
   useEffect(() => {
     buscarProcessos();

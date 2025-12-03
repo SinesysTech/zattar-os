@@ -42,7 +42,7 @@ export function DataTableColumnHeaderWithFilter<TData, TValue>({
   filterOptions = [],
   onSort,
   onFilter,
-  currentSort,
+  currentSort: _currentSort,
   currentFilter,
 }: DataTableColumnHeaderWithFilterProps<TData, TValue>) {
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);

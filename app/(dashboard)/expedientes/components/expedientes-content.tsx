@@ -883,6 +883,33 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
 
   const { expedientes, paginacao, isLoading, error, refetch } = usePendentes(params);
 
+  // Busca global (sem faixa de data) usada para preencher abas "Vencidos" e "Sem Data" na visão semanal
+  const paramsEspeciaisSemana = React.useMemo(() => {
+    const { responsavel_id, data_prazo_legal_inicio: _ini, data_prazo_legal_fim: _fim, ...filtrosRestantes } = filtros;
+    const responsavelIdFinal = viewMode === 'tabela'
+      ? responsavel_id
+      : (!isSuperAdmin && currentUserId ? currentUserId : responsavel_id);
+
+    return {
+      pagina: 1,
+      limite: 100,
+      busca: buscaDebounced || undefined,
+      ordenar_por: ordenarPor || undefined,
+      ordem,
+      baixado: statusBaixa === 'baixado' ? true : statusBaixa === 'pendente' ? false : undefined,
+      // Não aplicamos filtro de prazo_vencido aqui para trazer tudo e filtrar localmente
+      prazo_vencido: undefined,
+      responsavel_id: responsavelIdFinal,
+      ...filtrosRestantes,
+      data_prazo_legal_inicio: undefined,
+      data_prazo_legal_fim: undefined,
+    };
+  }, [buscaDebounced, ordenarPor, ordem, statusBaixa, filtros, isSuperAdmin, currentUserId, viewMode]);
+
+  const { expedientes: expedientesEspeciais, isLoading: isLoadingEspeciais } = usePendentes(
+    viewMode === 'semana' ? paramsEspeciaisSemana : params
+  );
+
   const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 100 });
   const { tiposExpedientes, isLoading: isLoadingTipos } = useTiposExpedientes({ limite: 100 });
 
@@ -1136,7 +1163,9 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
       {viewMode === 'semana' && (
         <ExpedientesVisualizacaoSemana
           expedientes={expedientes}
+          expedientesEspeciais={expedientesEspeciais}
           isLoading={isLoading}
+          isLoadingEspeciais={isLoadingEspeciais}
           onRefresh={refetch}
           usuarios={usuariosLista}
           tiposExpedientes={tiposExpedientes}

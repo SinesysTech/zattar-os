@@ -178,7 +178,7 @@ export function AcordoCondenacaoForm({
           : 'Erro ao criar acordo/condenação';
         setResult({ success: false, error: data.error || errorMsg });
       }
-    } catch (_error) {
+    } catch {
       setResult({ success: false, error: 'Erro ao comunicar com o servidor' });
     } finally {
       setIsLoading(false);
