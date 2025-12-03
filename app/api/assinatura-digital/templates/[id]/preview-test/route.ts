@@ -4,7 +4,7 @@ import { getTemplate } from '@/backend/assinatura-digital/services/templates.ser
 import { generatePdfFromTemplate } from '@/backend/assinatura-digital/services/template-pdf.service';
 import { storePdf } from '@/backend/assinatura-digital/services/storage.service';
 import { generateMockDataForPreview } from '@/lib/assinatura-digital/utils/mock-data-generator';
-import type { TemplateCampo, ApiPreviewTestResponse } from '@/types/assinatura-digital/template.types';
+import type { TemplateCampo, StatusTemplate } from '@/types/assinatura-digital/template.types';
 
 export async function POST(
   request: NextRequest,
@@ -74,7 +74,7 @@ export async function POST(
         arquivo_original: template.arquivo_original,
         arquivo_nome: template.arquivo_nome,
         arquivo_tamanho: template.arquivo_tamanho,
-        status: template.status as any,
+        status: template.status as StatusTemplate,
         versao: template.versao,
         ativo: template.ativo,
         campos: finalCampos,
