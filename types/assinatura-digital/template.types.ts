@@ -156,10 +156,14 @@ export interface DadosGeracao {
 export interface ApiPreviewTestResponse {
   success: boolean;
   pdfBase64?: string;
+  arquivo_url?: string;
+  arquivo_nome?: string;
+  is_preview?: boolean;
   error?: string;
   details?: {
     template_id: string;
     campos_count: number;
     mock_data_used: boolean;
   };
+  avisos?: string[];
 }

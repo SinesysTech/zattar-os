@@ -790,57 +790,7 @@ function criarColunas(
       header: () => <div className="flex items-center justify-center"><div className="text-sm font-medium">Observações</div></div>,
       enableSorting: false,
       size: 300,
-      cell: ({ row }) => {
-        const expediente = row.original;
-        const [open, setOpen] = React.useState(false);
-        const [isLoading, setIsLoading] = React.useState(false);
-        const [valor, setValor] = React.useState<string>(expediente.observacoes || '');
-        React.useEffect(() => { setValor(expediente.observacoes || ''); }, [expediente.observacoes]);
-        const handleSave = async () => {
-          setIsLoading(true);
-          try {
-            const observacoes = valor.trim() || null;
-            const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/observacoes`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ observacoes }) });
-            if (!response.ok) {
-              const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-              throw new Error(ed.error || 'Erro ao atualizar observações');
-            }
-            setOpen(false);
-            onSuccess();
-          } finally { setIsLoading(false); }
-        };
-        return (
-          <div className="relative min-h-10 max-w-[300px] group">
-            <div className="w-full min-h-10 flex items-start gap-2 pr-8 py-2">
-              <div className="flex flex-col items-start justify-start gap-1.5 flex-1">
-                <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed indent-0 text-justify">{expediente.observacoes || '-'}</div>
-              </div>
-            </div>
-            <Button size="sm" variant="ghost" className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1" title="Editar observações" onClick={() => setOpen(true)}>
-              <Pencil className="h-3 w-3" />
-            </Button>
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogContent className="max-w-[min(92vw,25rem)] sm:max-w-[min(92vw,37.5rem)]">
-                <DialogHeader>
-                  <DialogTitle>Editar Observações</DialogTitle>
-                  <DialogDescription>Adicionar observações do expediente</DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="observacoes-exp">Observações</Label>
-                    <Textarea id="observacoes-exp" value={valor} onChange={(e) => setValor(e.target.value)} disabled={isLoading} className="min-h-[250px] resize-y" />
-                    <p className="text-xs text-muted-foreground">{valor.length} caracteres</p>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isLoading}>Cancelar</Button>
-                  <Button type="button" onClick={handleSave} disabled={isLoading}>{isLoading ? 'Salvando...' : 'Salvar'}</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-        );
-      },
+      cell: ({ row }) => <ObservacoesCell expediente={row.original} onSuccess={onSuccess} />,
     },
     {
       accessorKey: 'responsavel_id',
@@ -873,8 +823,6 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
   const [novoExpedienteOpen, setNovoExpedienteOpen] = React.useState(false);
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['baixado_false']);
   const [isSearching, setIsSearching] = React.useState(false);
-  const [_countVencidos, setCountVencidos] = React.useState<number>(0);
-  const [_countSemResponsavel, setCountSemResponsavel] = React.useState<number>(0);
   const [parteDialog, setParteDialog] = React.useState<{
     open: boolean;
     processoId: number | null;
@@ -911,10 +859,10 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
   }, [semanaAtual]);
 
   const params = React.useMemo(() => {
-    const { responsavel_id: _responsavel_id, ...filtrosSemResponsavel } = filtros;
+    const { responsavel_id, ...filtrosSemResponsavel } = filtros;
     const responsavelIdFinal = viewMode === 'tabela'
-      ? filtros.responsavel_id
-      : (!isSuperAdmin && currentUserId ? currentUserId : filtros.responsavel_id);
+      ? responsavel_id
+      : (!isSuperAdmin && currentUserId ? currentUserId : responsavel_id);
 
     return {
       pagina: pagina + 1,
@@ -935,46 +883,8 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
 
   const { expedientes, paginacao, isLoading, error, refetch } = usePendentes(params);
 
-  React.useEffect(() => {
-    const sp = new URLSearchParams();
-    Object.entries(params).forEach(([k, v]) => {
-      if (v === undefined || v === null) return;
-      if (k === 'pagina' || k === 'limite' || k === 'ordenar_por' || k === 'ordem') return;
-      sp.set(k, String(v));
-    });
-    sp.set('agrupar_por', 'prazo_vencido');
-    sp.set('incluir_contagem', 'true');
-    fetch(`/api/pendentes-manifestacao?${sp.toString()}`)
-      .then(r => r.ok ? r.json() : Promise.reject(r))
-      .then((data) => {
-        const grupos = data?.data?.agrupamentos || [];
-        const found = grupos.find((g: { grupo: unknown; quantidade?: number }) => g.grupo === 'vencido' || g.grupo === true || g.grupo === 'true' || g.grupo === 1);
-        setCountVencidos(found?.quantidade || 0);
-      })
-      .catch(() => setCountVencidos(0));
-  }, [params]);
-
-  React.useEffect(() => {
-    const sp = new URLSearchParams();
-    Object.entries(params).forEach(([k, v]) => {
-      if (v === undefined || v === null) return;
-      if (k === 'pagina' || k === 'limite' || k === 'ordenar_por' || k === 'ordem') return;
-      sp.set(k, String(v));
-    });
-    sp.set('agrupar_por', 'responsavel_id');
-    sp.set('incluir_contagem', 'true');
-    fetch(`/api/pendentes-manifestacao?${sp.toString()}`)
-      .then(r => r.ok ? r.json() : Promise.reject(r))
-      .then((data) => {
-        const grupos = data?.data?.agrupamentos || [];
-        const found = grupos.find((g: { grupo: unknown; quantidade?: number }) => g.grupo === null || g.grupo === 'null' || g.grupo === 'NULL' || g.grupo === '');
-        setCountSemResponsavel(found?.quantidade || 0);
-      })
-      .catch(() => setCountSemResponsavel(0));
-  }, [params]);
-
   const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 100 });
-  const { tiposExpedientes, isLoading: isLoadingTipos, error: _errorTipos } = useTiposExpedientes({ limite: 100 });
+  const { tiposExpedientes, isLoading: isLoadingTipos } = useTiposExpedientes({ limite: 100 });
 
   const handleSuccess = React.useCallback(() => { refetch(); }, [refetch]);
 

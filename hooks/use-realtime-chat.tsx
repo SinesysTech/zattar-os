@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/client'
 import { v4 as uuidv4 } from 'uuid'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 interface UseRealtimeChatProps {
   roomName: string
@@ -25,13 +25,14 @@ const EVENT_MESSAGE_TYPE = 'message'
 export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatProps) {
   const supabase = useMemo(() => createClient(), [])
   const [messagesByRoom, setMessagesByRoom] = useState<Record<string, ChatMessage[]>>({})
-  const [channel, setChannel] = useState<ReturnType<typeof supabase.channel> | null>(null)
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
   const [isConnected, setIsConnected] = useState(false)
 
   const messages = messagesByRoom[roomName] ?? []
 
   useEffect(() => {
     const newChannel = supabase.channel(roomName)
+    channelRef.current = newChannel
 
     newChannel
       .on('broadcast', { event: EVENT_MESSAGE_TYPE }, (payload) => {
@@ -44,22 +45,19 @@ export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatP
         })
       })
       .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          setIsConnected(true)
-        } else {
-          setIsConnected(false)
-        }
+        setIsConnected(status === 'SUBSCRIBED')
       })
-
-    setChannel(newChannel)
 
     return () => {
       supabase.removeChannel(newChannel)
+      channelRef.current = null
+      setIsConnected(false)
     }
   }, [roomName, supabase])
 
   const sendMessage = useCallback(
     async (content: string) => {
+      const channel = channelRef.current
       if (!channel || !isConnected) return
 
       const message: ChatMessage = {
@@ -87,7 +85,7 @@ export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatP
         payload: message,
       })
     },
-    [channel, isConnected, roomName, username, userId]
+    [isConnected, roomName, username, userId]
   )
 
   return { messages, sendMessage, isConnected }

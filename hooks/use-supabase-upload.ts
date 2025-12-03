@@ -108,7 +108,7 @@ const useSupabaseUpload = (options: UseSupabaseUploadOptions) => {
         return normalized
       })
     },
-    [normalizeFiles]
+    [normalizeFiles, setErrors]
   )
 
   const onDrop = useCallback(
@@ -184,7 +184,7 @@ const useSupabaseUpload = (options: UseSupabaseUploadOptions) => {
     setSuccesses(newSuccesses)
 
     setLoading(false)
-  }, [bucketName, cacheControl, errors, files, path, successes, upsert])
+  }, [bucketName, cacheControl, errors, files, path, successes, upsert, setErrors, setLoading, setSuccesses])
 
   return {
     files,

@@ -47,7 +47,7 @@ export function CommandMenu({
   const [search, setSearch] = React.useState('');
   const [recentDocuments, setRecentDocuments] = React.useState<DocumentoComUsuario[]>([]);
   const [searchResults, setSearchResults] = React.useState<DocumentoComUsuario[]>([]);
-  const [loading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   // Atalho de teclado global
   React.useEffect(() => {

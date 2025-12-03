@@ -27,12 +27,17 @@ export function CalloutElement({
       setIsOpen,
     });
 
+  const backgroundColor =
+    typeof props.element.backgroundColor === 'string'
+      ? props.element.backgroundColor
+      : undefined;
+  const icon =
+    typeof props.element.icon === 'string' ? props.element.icon : '??';
+
   return (
     <PlateElement
       className={cn('my-1 flex rounded-sm bg-muted p-4 pl-3', className)}
-      style={{
-        backgroundColor: props.element.backgroundColor as any,
-      }}
+      style={{ backgroundColor }}
       attributes={{
         ...attributes,
         'data-plate-open-context-menu': true,
@@ -52,7 +57,7 @@ export function CalloutElement({
               }}
               contentEditable={false}
             >
-              {(props.element.icon as any) || '💡'}
+              {icon}
             </Button>
           }
         >

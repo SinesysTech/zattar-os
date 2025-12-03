@@ -7,14 +7,6 @@ import { Column } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp, ArrowUpDown, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -53,7 +45,6 @@ export function DataTableColumnHeaderWithFilter<TData, TValue>({
   currentSort,
   currentFilter,
 }: DataTableColumnHeaderWithFilterProps<TData, TValue>) {
-  const [filterValue, setFilterValue] = React.useState('');
   const [isFilterOpen, setIsFilterOpen] = React.useState(false);
 
   const hasSortOptions = sortOptions.length > 0;

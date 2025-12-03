@@ -34,7 +34,7 @@ export type MessageDataPart = {
 
 export type Chat = UseChatHelpers<ChatMessage>;
 
-export type ChatMessage = UIMessage<{}, MessageDataPart>;
+export type ChatMessage = UIMessage<Record<string, unknown>, MessageDataPart>;
 
 export const useChat = () => {
   const editor = useEditorRef();
@@ -73,9 +73,17 @@ export const useChat = () => {
           let sample: 'comment' | 'markdown' | 'mdx' | null = null;
 
           try {
-            const content = JSON.parse(init?.body as string)
-              .messages.at(-1)
-              .parts.find((p: any) => p.type === 'text')?.text;
+            const parsedBody = JSON.parse(init?.body as string) as {
+              messages: Array<{ parts: Array<{ type: string; text?: string }> }>;
+            };
+
+            const lastMessage = parsedBody.messages.at(-1);
+            const lastTextPart = lastMessage?.parts.find(
+              (p): p is { type: 'text'; text: string } =>
+                typeof p === 'object' && p !== null && p.type === 'text' && typeof p.text === 'string'
+            );
+
+            const content = lastTextPart?.text ?? '';
 
             if (content.includes('Generate a markdown sample')) {
               sample = 'markdown';

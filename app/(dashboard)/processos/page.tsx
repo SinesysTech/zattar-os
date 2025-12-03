@@ -573,6 +573,66 @@ function ResponsavelColumnHeader({ ordenarPor, ordem, onSortChange }: Responsave
   );
 }
 
+function ProcessoInfoCell({ processo }: { processo: ProcessoComParticipacao }) {
+  const classeJudicial = processo.classe_judicial || '';
+  const numeroProcesso = processo.numero_processo;
+  const orgaoJulgador = processo.descricao_orgao_julgador || '-';
+  const trt = processo.trt;
+  const isUnificado = isProcessoUnificado(processo);
+  const [copiado, setCopiado] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!copiado) return undefined;
+    const timeout = setTimeout(() => setCopiado(false), 2000);
+    return () => clearTimeout(timeout);
+  }, [copiado]);
+
+  const copiarNumeroProcesso = async () => {
+    try {
+      await navigator.clipboard.writeText(numeroProcesso);
+      setCopiado(true);
+    } catch (err) {
+      console.error('Erro ao copiar número do processo:', err);
+    }
+  };
+
+  return (
+    <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,23.75rem)]">
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
+          {trt}
+        </Badge>
+        {isUnificado ? (
+          <GrauBadges instances={processo.instances} grauAtual={processo.grau_atual} />
+        ) : (
+          <Badge variant="outline" className={`${getGrauColorClass(processo.grau)} w-fit text-xs`}>
+            {formatarGrau(processo.grau)}
+          </Badge>
+        )}
+      </div>
+      <div className="flex items-center gap-2">
+        <div className="text-sm font-medium whitespace-nowrap">
+          {classeJudicial && `${classeJudicial} `}
+          {numeroProcesso}
+        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="icon" className="h-6 w-6" onClick={copiarNumeroProcesso}>
+                <Copy className={`h-3 w-3 ${copiado ? 'text-green-600' : ''}`} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{copiado ? 'Copiado!' : 'Copiar número do processo'}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+      <div className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</div>
+    </div>
+  );
+}
+
 /**
  * Define as colunas da tabela de processos
  */
@@ -611,70 +671,7 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 380,
-      cell: ({ row }) => {
-        const processo = row.original;
-        const classeJudicial = processo.classe_judicial || '';
-        const numeroProcesso = processo.numero_processo;
-        const orgaoJulgador = processo.descricao_orgao_julgador || '-';
-        const trt = processo.trt;
-        const isUnificado = isProcessoUnificado(processo);
-        const [copiado, setCopiado] = React.useState(false);
-
-        const copiarNumeroProcesso = async () => {
-          try {
-            await navigator.clipboard.writeText(numeroProcesso);
-            setCopiado(true);
-            setTimeout(() => setCopiado(false), 2000);
-          } catch (err) {
-            console.error('Erro ao copiar número do processo:', err);
-          }
-        };
-
-        return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,23.75rem)]">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
-                {trt}
-              </Badge>
-              {isUnificado ? (
-                <GrauBadges
-                  instances={processo.instances}
-                  grauAtual={processo.grau_atual}
-                />
-              ) : (
-                <Badge variant="outline" className={`${getGrauColorClass(processo.grau)} w-fit text-xs`}>
-                  {formatarGrau(processo.grau)}
-                </Badge>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="text-sm font-medium whitespace-nowrap">
-                {classeJudicial && `${classeJudicial} `}{numeroProcesso}
-              </div>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={copiarNumeroProcesso}
-                    >
-                      <Copy className={`h-3 w-3 ${copiado ? 'text-green-600' : ''}`} />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{copiado ? 'Copiado!' : 'Copiar número do processo'}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <div className="text-xs text-muted-foreground max-w-full truncate">
-              {orgaoJulgador}
-            </div>
-          </div>
-        );
-      },
+      cell: ({ row }) => <ProcessoInfoCell processo={row.original} />,
     },
     {
       id: 'partes',
@@ -735,47 +732,18 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 100,
-      cell: ({ row }) => {
-        const dataProximaAudiencia = row.original.data_proxima_audiencia;
-        const temAudiencia = !!dataProximaAudiencia;
-
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            <ButtonGroup>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => {
-                        router.push(`/processos/${row.original.id}`);
-                      }}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Visualizar processo completo</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              {temAudiencia && (
-                <AudienciaDialog dataProximaAudiencia={dataProximaAudiencia}>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-red-700 hover:text-red-800 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-950"
-                  >
-                    <CalendarClock className="h-4 w-4" />
-                  </Button>
-                </AudienciaDialog>
-              )}
-            </ButtonGroup>
-          </div>
-        );
-      },
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center">
+          <a
+            href={`/processos/${row.original.id}`}
+            className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+            title="Ver detalhes do processo"
+          >
+            <Eye className="h-4 w-4" />
+            Ver
+          </a>
+        </div>
+      ),
     },
   ];
 }
@@ -985,4 +953,5 @@ export default function ProcessosPage() {
     </div>
   );
 }
+
 

@@ -76,8 +76,8 @@ export default function VisualizacaoMarkdownStep() {
             };
           } else {
             // Fetch from API
-            const response = await apiFetch(`/api/templates/${id}`);
-            const template: Template = response.data;
+            const response = await apiFetch<Template>(`/api/templates/${id}`);
+            const template = response.data as Template;
             setCachedTemplate(id, template);
             return {
               id: String(id),
@@ -123,7 +123,7 @@ export default function VisualizacaoMarkdownStep() {
       // Buscar template se não estiver em cache
       let template = getCachedTemplate(effectiveTemplateId);
       if (!template) {
-        const response = await apiFetch(`/api/templates/${effectiveTemplateId}`);
+        const response = await apiFetch<Template>(`/api/templates/${effectiveTemplateId}`);
         template = response.data as Template;
         setCachedTemplate(effectiveTemplateId, template);
       }
@@ -133,9 +133,23 @@ export default function VisualizacaoMarkdownStep() {
       }
 
       // Preparar dados para geração
-      const cliente: ClienteAssinaturaDigital = {
-        ...dadosPessoais,
-        segmento_id: segmentoId || 1,
+      const cliente: import('@/types/assinatura-digital/template.types').ClienteDadosGeracao = {
+        nome: dadosPessoais?.nome_completo || '',
+        cpf: dadosPessoais?.cpf || '',
+        rg: dadosPessoais?.rg || undefined,
+        data_nascimento: dadosPessoais?.data_nascimento || '',
+        estado_civil: dadosPessoais?.estado_civil || '',
+        genero: dadosPessoais?.genero || '',
+        nacionalidade: dadosPessoais?.nacionalidade || '',
+        email: dadosPessoais?.email || '',
+        celular: dadosPessoais?.celular || '',
+        logradouro: dadosPessoais?.endereco_logradouro || '',
+        numero: dadosPessoais?.endereco_numero || '',
+        complemento: dadosPessoais?.endereco_complemento || undefined,
+        bairro: dadosPessoais?.endereco_bairro || '',
+        cidade: dadosPessoais?.endereco_cidade || '',
+        estado: dadosPessoais?.endereco_uf || '',
+        cep: dadosPessoais?.endereco_cep || '',
       };
       const dadosGeracao: DadosGeracao = {
         template_id: effectiveTemplateId,
@@ -147,13 +161,15 @@ export default function VisualizacaoMarkdownStep() {
         },
         sistema: {
           numero_contrato: `PREVIEW-${Date.now()}`,
-          protocolo: `PREV-${dadosPessoais.cliente_id}-${Date.now()}`,
+          protocolo: `PREV-${dadosPessoais?.cliente_id ?? 0}-${Date.now()}`,
           data_geracao: new Date().toISOString(),
           timestamp: new Date().toISOString(),
         },
         segmento: {
-          id: cliente.segmento_id || segmentoId || 1,
-          nome: `Segmento ${cliente.segmento_id || segmentoId || 1}`,
+          id: segmentoId || 1,
+          nome: `Segmento ${segmentoId || 1}`,
+          slug: `segmento-${segmentoId || 1}`,
+          ativo: true,
         },
       };
 
