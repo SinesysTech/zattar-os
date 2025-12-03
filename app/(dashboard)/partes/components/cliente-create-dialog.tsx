@@ -233,7 +233,7 @@ export function ClienteCreateDialog({
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [formData, setFormData] = React.useState(INITIAL_FORM_STATE);
   const [novoEmail, setNovoEmail] = React.useState('');
-  const [stepErrors, setStepErrors] = React.useState<string[]>([]);
+  const [, setStepErrors] = React.useState<string[]>([]);
 
   // Reset ao fechar
   React.useEffect(() => {

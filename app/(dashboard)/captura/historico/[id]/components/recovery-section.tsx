@@ -8,7 +8,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Database, AlertCircle, Loader2, ChevronRight, RefreshCw, CheckCircle2, XCircle } from 'lucide-react';
+import { Database, AlertCircle, ChevronRight, RefreshCw, CheckCircle2, XCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

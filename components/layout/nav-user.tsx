@@ -7,6 +7,7 @@ import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
+  HelpCircle,
   LogOut,
   Moon,
   Sun,
@@ -121,6 +122,10 @@ export function NavUser({
               <DropdownMenuItem>
                 <Bell />
                 Notificações
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/ajuda')}>
+                <HelpCircle />
+                Ajuda
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

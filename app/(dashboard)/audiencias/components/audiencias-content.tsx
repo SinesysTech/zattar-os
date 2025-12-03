@@ -147,30 +147,6 @@ const getParteReColorClass = (): string => {
   return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800';
 };
 
-/**
- * Formata modalidade para exibição
- */
-const formatarModalidade = (modalidade: 'virtual' | 'presencial' | 'hibrida' | null): string => {
-  const modalidadeMap: Record<string, string> = {
-    virtual: 'Virtual',
-    presencial: 'Presencial',
-    hibrida: 'Híbrida',
-  };
-  return modalidade ? modalidadeMap[modalidade] || modalidade : '-';
-};
-
-/**
- * Retorna a classe CSS de cor para badge de modalidade
- */
-const getModalidadeColorClass = (modalidade: 'virtual' | 'presencial' | 'hibrida' | null): string => {
-  const modalidadeColors: Record<string, string> = {
-    virtual: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
-    presencial: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
-    hibrida: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
-  };
-  return modalidade ? modalidadeColors[modalidade] || 'bg-gray-100 text-gray-800 border-gray-200' : 'bg-gray-100 text-gray-800 border-gray-200';
-};
-
 type PlataformaVideo = 'zoom' | 'meet' | 'webex' | null;
 
 const detectarPlataforma = (url: string | null): PlataformaVideo => {

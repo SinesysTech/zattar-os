@@ -31,7 +31,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Typography } from '@/components/ui/typography';
 
 /**
  * Formata data e hora ISO para formato brasileiro (DD/MM/YYYY HH:mm)

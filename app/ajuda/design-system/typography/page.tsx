@@ -2,25 +2,25 @@
 
 import { Typography } from '@/components/ui/typography';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ClientOnlyTabs } from '@/components/ui/client-only-tabs';
+import { TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Type } from 'lucide-react';
 
-/**
- * Página de documentação do Sistema de Tipografia shadcn/ui
- *
- * Demonstra todos os estilos tipográficos disponíveis com exemplos de código
- * Acesse em: http://localhost:3000/docs/typography
- */
 export default function TypographyDocsPage() {
   return (
-    <div className="container mx-auto py-10 px-4 max-w-5xl">
-      <div className="mb-8">
-        <Typography.H1>Sistema de Tipografia</Typography.H1>
-        <Typography.Lead className="mt-4">
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <Type className="h-8 w-8 text-primary" />
+          <h1 className="text-3xl font-bold tracking-tight">Tipografia</h1>
+        </div>
+        <p className="text-muted-foreground text-lg">
           Estilos tipográficos consistentes baseados no shadcn/ui para garantir hierarquia visual clara em todo o sistema.
-        </Typography.Lead>
+        </p>
       </div>
 
-      <Tabs defaultValue="headings" className="w-full">
+      <ClientOnlyTabs defaultValue="headings" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="headings">Títulos</TabsTrigger>
           <TabsTrigger value="text">Texto</TabsTrigger>
@@ -29,7 +29,7 @@ export default function TypographyDocsPage() {
         </TabsList>
 
         {/* Títulos */}
-        <TabsContent value="headings" className="space-y-6">
+        <TabsContent value="headings" className="space-y-6 mt-6">
           <Card>
             <CardHeader>
               <CardTitle>H1 - Título Principal</CardTitle>
@@ -41,14 +41,12 @@ export default function TypographyDocsPage() {
               <div className="border rounded-lg p-6 bg-muted/20">
                 <Typography.H1>Taxing Laughter: The Joke Tax Chronicles</Typography.H1>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.H1>Taxing Laughter: The Joke Tax Chronicles</Typography.H1>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.H1>Taxing Laughter: The Joke Tax Chronicles</Typography.H1>
 
 // Ou usando classe CSS:
-<h1 className="typography-h1">Taxing Laughter: The Joke Tax Chronicles</h1>`}</code>
-                </pre>
-              </div>
+<h1 className="typography-h1">Taxing Laughter: The Joke Tax Chronicles</h1>`}
+              </pre>
             </CardContent>
           </Card>
 
@@ -63,14 +61,12 @@ export default function TypographyDocsPage() {
               <div className="border rounded-lg p-6 bg-muted/20">
                 <Typography.H2>The People of the Kingdom</Typography.H2>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.H2>The People of the Kingdom</Typography.H2>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.H2>The People of the Kingdom</Typography.H2>
 
 // Ou usando classe CSS:
-<h2 className="typography-h2">The People of the Kingdom</h2>`}</code>
-                </pre>
-              </div>
+<h2 className="typography-h2">The People of the Kingdom</h2>`}
+              </pre>
             </CardContent>
           </Card>
 
@@ -85,14 +81,12 @@ export default function TypographyDocsPage() {
               <div className="border rounded-lg p-6 bg-muted/20">
                 <Typography.H3>The Joke Tax</Typography.H3>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.H3>The Joke Tax</Typography.H3>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.H3>The Joke Tax</Typography.H3>
 
 // Ou usando classe CSS:
-<h3 className="typography-h3">The Joke Tax</h3>`}</code>
-                </pre>
-              </div>
+<h3 className="typography-h3">The Joke Tax</h3>`}
+              </pre>
             </CardContent>
           </Card>
 
@@ -107,20 +101,18 @@ export default function TypographyDocsPage() {
               <div className="border rounded-lg p-6 bg-muted/20">
                 <Typography.H4>People stopped telling jokes</Typography.H4>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.H4>People stopped telling jokes</Typography.H4>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.H4>People stopped telling jokes</Typography.H4>
 
 // Ou usando classe CSS:
-<h4 className="typography-h4">People stopped telling jokes</h4>`}</code>
-                </pre>
-              </div>
+<h4 className="typography-h4">People stopped telling jokes</h4>`}
+              </pre>
             </CardContent>
           </Card>
         </TabsContent>
 
         {/* Texto */}
-        <TabsContent value="text" className="space-y-6">
+        <TabsContent value="text" className="space-y-6 mt-6">
           <Card>
             <CardHeader>
               <CardTitle>Parágrafo</CardTitle>
@@ -134,16 +126,14 @@ export default function TypographyDocsPage() {
                   The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax.
                 </Typography.P>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.P>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.P>
   The king, seeing how much happier his subjects were...
 </Typography.P>
 
 // Ou usando classe CSS:
-<p className="typography-p">The king, seeing how much happier...</p>`}</code>
-                </pre>
-              </div>
+<p className="typography-p">The king, seeing how much happier...</p>`}
+              </pre>
             </CardContent>
           </Card>
 
@@ -160,16 +150,14 @@ export default function TypographyDocsPage() {
                   A modal dialog that interrupts the user with important content and expects a response.
                 </Typography.Lead>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.Lead>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.Lead>
   A modal dialog that interrupts the user...
 </Typography.Lead>
 
 // Ou usando classe CSS:
-<p className="typography-lead">A modal dialog that...</p>`}</code>
-                </pre>
-              </div>
+<p className="typography-lead">A modal dialog that...</p>`}
+              </pre>
             </CardContent>
           </Card>
 
@@ -184,14 +172,12 @@ export default function TypographyDocsPage() {
               <div className="border rounded-lg p-6 bg-muted/20">
                 <Typography.Large>Are you absolutely sure?</Typography.Large>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.Large>Are you absolutely sure?</Typography.Large>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.Large>Are you absolutely sure?</Typography.Large>
 
 // Ou usando classe CSS:
-<div className="typography-large">Are you absolutely sure?</div>`}</code>
-                </pre>
-              </div>
+<div className="typography-large">Are you absolutely sure?</div>`}
+              </pre>
             </CardContent>
           </Card>
 
@@ -206,14 +192,12 @@ export default function TypographyDocsPage() {
               <div className="border rounded-lg p-6 bg-muted/20">
                 <Typography.Small>Email address</Typography.Small>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.Small>Email address</Typography.Small>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.Small>Email address</Typography.Small>
 
 // Ou usando classe CSS:
-<small className="typography-small">Email address</small>`}</code>
-                </pre>
-              </div>
+<small className="typography-small">Email address</small>`}
+              </pre>
             </CardContent>
           </Card>
 
@@ -228,20 +212,18 @@ export default function TypographyDocsPage() {
               <div className="border rounded-lg p-6 bg-muted/20">
                 <Typography.Muted>Enter your email address.</Typography.Muted>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.Muted>Enter your email address.</Typography.Muted>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.Muted>Enter your email address.</Typography.Muted>
 
 // Ou usando classe CSS:
-<p className="typography-muted">Enter your email address.</p>`}</code>
-                </pre>
-              </div>
+<p className="typography-muted">Enter your email address.</p>`}
+              </pre>
             </CardContent>
           </Card>
         </TabsContent>
 
         {/* Especiais */}
-        <TabsContent value="special" className="space-y-6">
+        <TabsContent value="special" className="space-y-6 mt-6">
           <Card>
             <CardHeader>
               <CardTitle>Blockquote</CardTitle>
@@ -255,18 +237,16 @@ export default function TypographyDocsPage() {
                   &quot;After all,&quot; he said, &quot;everyone enjoys a good joke, so it&apos;s only fair that they should pay for the privilege.&quot;
                 </Typography.Blockquote>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.Blockquote>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.Blockquote>
   "After all," he said, "everyone enjoys a good joke..."
 </Typography.Blockquote>
 
 // Ou usando classe CSS:
 <blockquote className="typography-blockquote">
   "After all," he said...
-</blockquote>`}</code>
-                </pre>
-              </div>
+</blockquote>`}
+              </pre>
             </CardContent>
           </Card>
 
@@ -282,24 +262,22 @@ export default function TypographyDocsPage() {
                 <ul className="typography-list" role="list">
                   <li>1st level of puns: 5 gold coins</li>
                   <li>2nd level of jokes: 10 gold coins</li>
-                  <li>3rd level of one-liners : 20 gold coins</li>
+                  <li>3rd level of one-liners: 20 gold coins</li>
                 </ul>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.List>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.List>
   <li>1st level of puns: 5 gold coins</li>
   <li>2nd level of jokes: 10 gold coins</li>
-  <li>3rd level of one-liners : 20 gold coins</li>
+  <li>3rd level of one-liners: 20 gold coins</li>
 </Typography.List>
 
 // Ou usando classe CSS:
 <ul className="typography-list">
   <li>1st level of puns: 5 gold coins</li>
   ...
-</ul>`}</code>
-                </pre>
-              </div>
+</ul>`}
+              </pre>
             </CardContent>
           </Card>
 
@@ -316,18 +294,16 @@ export default function TypographyDocsPage() {
                   Install dependencies with <Typography.InlineCode>npm install</Typography.InlineCode> command.
                 </Typography.P>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.P>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.P>
   Install dependencies with <Typography.InlineCode>npm install</Typography.InlineCode> command.
 </Typography.P>
 
 // Ou usando classe CSS:
 <p className="typography-p">
   Install dependencies with <code className="typography-inline-code">npm install</code> command.
-</p>`}</code>
-                </pre>
-              </div>
+</p>`}
+              </pre>
             </CardContent>
           </Card>
 
@@ -363,9 +339,8 @@ export default function TypographyDocsPage() {
                   </tbody>
                 </Typography.Table>
               </div>
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`<Typography.Table>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`<Typography.Table>
   <thead>
     <tr>
       <th>King's Treasury</th>
@@ -378,37 +353,27 @@ export default function TypographyDocsPage() {
       <td>Overflowing</td>
     </tr>
   </tbody>
-</Typography.Table>
-
-// Ou usando classes CSS:
-<div className="typography-table-wrapper">
-  <table className="typography-table">
-    ...
-  </table>
-</div>`}</code>
-                </pre>
-              </div>
+</Typography.Table>`}
+              </pre>
             </CardContent>
           </Card>
         </TabsContent>
 
         {/* Guidelines */}
-        <TabsContent value="guidelines" className="space-y-6">
+        <TabsContent value="guidelines" className="space-y-6 mt-6">
           <Card>
             <CardHeader>
               <CardTitle>Hierarquia Tipográfica</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Typography.H3>Estrutura Recomendada</Typography.H3>
-                <ul className="typography-list" role="list">
-                  <li><strong>H1:</strong> Título principal da página (apenas um por página)</li>
-                  <li><strong>H2:</strong> Seções principais</li>
-                  <li><strong>H3:</strong> Subseções</li>
-                  <li><strong>H4:</strong> Títulos menores ou em componentes</li>
-                  <li><strong>P:</strong> Texto de corpo padrão</li>
-                </ul>
-              </div>
+              <h3 className="font-semibold">Estrutura Recomendada</h3>
+              <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                <li><strong>H1:</strong> Título principal da página (apenas um por página)</li>
+                <li><strong>H2:</strong> Seções principais</li>
+                <li><strong>H3:</strong> Subseções</li>
+                <li><strong>H4:</strong> Títulos menores ou em componentes</li>
+                <li><strong>P:</strong> Texto de corpo padrão</li>
+              </ul>
             </CardContent>
           </Card>
 
@@ -416,32 +381,30 @@ export default function TypographyDocsPage() {
             <CardHeader>
               <CardTitle>Quando Usar Cada Variante</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-4">
-                <div>
-                  <Typography.H4>Lead</Typography.H4>
-                  <Typography.Muted>
-                    Use para parágrafos introdutórios de artigos, páginas de destino, ou para destacar a primeira frase de uma seção importante.
-                  </Typography.Muted>
-                </div>
-                <div>
-                  <Typography.H4>Large</Typography.H4>
-                  <Typography.Muted>
-                    Use para perguntas importantes, chamadas para ação (CTA), ou texto que precisa de ênfase visual sem ser um título.
-                  </Typography.Muted>
-                </div>
-                <div>
-                  <Typography.H4>Muted</Typography.H4>
-                  <Typography.Muted>
-                    Use para metadados (datas, autores), instruções secundárias, ou informações complementares que não são o foco principal.
-                  </Typography.Muted>
-                </div>
-                <div>
-                  <Typography.H4>Small</Typography.H4>
-                  <Typography.Muted>
-                    Use para labels de formulário, legendas de imagens, ou notas de rodapé.
-                  </Typography.Muted>
-                </div>
+            <CardContent className="space-y-6">
+              <div>
+                <h4 className="font-semibold">Lead</h4>
+                <p className="text-sm text-muted-foreground">
+                  Use para parágrafos introdutórios de artigos, páginas de destino, ou para destacar a primeira frase de uma seção importante.
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold">Large</h4>
+                <p className="text-sm text-muted-foreground">
+                  Use para perguntas importantes, chamadas para ação (CTA), ou texto que precisa de ênfase visual sem ser um título.
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold">Muted</h4>
+                <p className="text-sm text-muted-foreground">
+                  Use para metadados (datas, autores), instruções secundárias, ou informações complementares que não são o foco principal.
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold">Small</h4>
+                <p className="text-sm text-muted-foreground">
+                  Use para labels de formulário, legendas de imagens, ou notas de rodapé.
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -450,8 +413,8 @@ export default function TypographyDocsPage() {
             <CardHeader>
               <CardTitle>Acessibilidade</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <ul className="typography-list" role="list">
+            <CardContent>
+              <ul className="list-disc list-inside space-y-2 text-muted-foreground">
                 <li>Sempre use tags HTML semânticas corretas (h1, h2, p, etc.)</li>
                 <li>Mantenha hierarquia lógica de headings (não pule níveis)</li>
                 <li>Contraste mínimo de 4.5:1 para texto normal, 3:1 para texto grande</li>
@@ -465,13 +428,12 @@ export default function TypographyDocsPage() {
             <CardHeader>
               <CardTitle>Uso com Polimorfismo</CardTitle>
               <CardDescription>
-                Os componentes Typography suportam a prop <code>as</code> para renderizar elementos diferentes mantendo os estilos.
+                Os componentes Typography suportam a prop <code className="bg-muted px-1 rounded">as</code> para renderizar elementos diferentes mantendo os estilos.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`// Renderizar h1 com estilos de h2
+            <CardContent>
+              <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
+{`// Renderizar h1 com estilos de h2
 <Typography.H2 as="h1">
   Título Principal com Visual de H2
 </Typography.H2>
@@ -479,37 +441,12 @@ export default function TypographyDocsPage() {
 // Útil para SEO mantendo hierarquia visual
 <Typography.H3 as="h2">
   Seção Principal (SEO) com Visual de H3
-</Typography.H3>`}</code>
-                </pre>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Composição com Classes Customizadas</CardTitle>
-              <CardDescription>
-                Você pode adicionar classes Tailwind adicionais mantendo os estilos base.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="bg-muted p-4 rounded-md">
-                <pre className="text-sm overflow-x-auto">
-                  <code>{`// Adicionar margem e cor personalizadas
-<Typography.H2 className="mt-8 text-primary">
-  Título com Espaçamento e Cor Customizados
-</Typography.H2>
-
-// Classes customizadas são mescladas com classes base
-<Typography.P className="max-w-prose text-justify">
-  Parágrafo com largura máxima e texto justificado
-</Typography.P>`}</code>
-                </pre>
-              </div>
+</Typography.H3>`}
+              </pre>
             </CardContent>
           </Card>
         </TabsContent>
-      </Tabs>
+      </ClientOnlyTabs>
     </div>
   );
 }

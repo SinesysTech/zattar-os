@@ -19,24 +19,19 @@ export function NotasWidget({ className }: NotasWidgetProps) {
   const { notas, createNota, updateNota, deleteNota } = useDashboardStore();
   const [isCreating, setIsCreating] = useState(false);
   const [editingNota, setEditingNota] = useState<Nota | null>(null);
-  const [formData, setFormData] = useState({
-    titulo: '',
-    conteudo: '',
-    etiquetas: [] as string[]
-  });
+  const initialForm = { titulo: '', conteudo: '', etiquetas: [] as string[] };
+  const [formData, setFormData] = useState(initialForm);
   const [newTag, setNewTag] = useState('');
 
   const handleCreate = async () => {
-    await createNota(formData);
+    if (editingNota) {
+      await updateNota(editingNota.id, formData);
+    } else {
+      await createNota(formData);
+    }
     setIsCreating(false);
-    setFormData({ titulo: '', conteudo: '', etiquetas: [] });
-  };
-
-  const _handleUpdate = async () => {
-    if (!editingNota) return;
-    await updateNota(editingNota.id, formData);
     setEditingNota(null);
-    setFormData({ titulo: '', conteudo: '', etiquetas: [] });
+    setFormData(initialForm);
   };
 
   const handleDelete = async (id: number) => {
@@ -47,6 +42,7 @@ export function NotasWidget({ className }: NotasWidgetProps) {
 
   const openEditDialog = (nota: Nota) => {
     setEditingNota(nota);
+    setIsCreating(true);
     setFormData({
       titulo: nota.titulo,
       conteudo: nota.conteudo || '',
@@ -69,7 +65,16 @@ export function NotasWidget({ className }: NotasWidgetProps) {
     <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">Notas Rápidas</CardTitle>
-        <Dialog open={isCreating} onOpenChange={setIsCreating}>
+        <Dialog
+          open={isCreating}
+          onOpenChange={(open) => {
+            setIsCreating(open);
+            if (!open) {
+              setEditingNota(null);
+              setFormData(initialForm);
+            }
+          }}
+        >
           <DialogTrigger asChild>
             <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <Plus className="h-4 w-4" />

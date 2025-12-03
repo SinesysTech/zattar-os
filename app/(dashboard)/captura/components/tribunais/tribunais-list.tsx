@@ -13,7 +13,6 @@ import {
   parseTribunaisFilters,
 } from './tribunais-toolbar-filters';
 import type { TribunalConfig } from '@/app/_lib/types/tribunais';
-import type { TribunaisFilters } from './tribunais-toolbar-filters';
 
 interface TribunaisListProps {
   onNewClick?: () => void;
@@ -26,8 +25,6 @@ interface TribunaisListProps {
 export function TribunaisList({ onNewClick, newButtonTooltip = 'Nova Configuração de Tribunal' }: TribunaisListProps) {
   const {
     tribunais,
-    tribunaisCodigos,
-    tiposAcesso,
     isLoading,
     error,
     refetch,

@@ -207,14 +207,16 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
       setProcessos([]);
       setProcessoId([]);
     }
-  }, [trt, grau, buscarProcessos]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trt, grau]);
 
   // Buscar usuários quando o dialog abrir
   React.useEffect(() => {
     if (open && usuarios.length === 0) {
       buscarUsuarios();
     }
-  }, [open, usuarios.length, buscarUsuarios]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, usuarios.length]);
 
   // Buscar tipos de audiência quando TRT e Grau forem selecionados
   React.useEffect(() => {
@@ -224,7 +226,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
       setTiposAudiencia([]);
       setTipoAudienciaId('');
     }
-  }, [trt, grau, buscarTiposAudiencia]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trt, grau]);
 
   // Buscar salas quando processo for selecionado (precisa do orgao_julgador_id)
   React.useEffect(() => {
@@ -234,7 +237,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
       setSalas([]);
       setSalaAudienciaId('');
     }
-  }, [processoSelecionado, buscarSalas]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [processoSelecionado]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

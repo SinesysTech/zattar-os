@@ -21,7 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Shield, Save, RotateCcw, Info, Loader2, AlertCircle } from 'lucide-react';
 import type { PermissaoMatriz } from '@/app/_lib/types/usuarios';
 import { formatarNomeRecurso, formatarNomeOperacao, contarPermissoesAtivas } from '@/app/_lib/utils/permissoes-utils';
-import { MATRIZ_PERMISSOES, obterTotalPermissoes } from '@/backend/types/permissoes/types';
+import { obterTotalPermissoes } from '@/backend/types/permissoes/types';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
 

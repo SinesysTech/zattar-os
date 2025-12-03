@@ -13,14 +13,6 @@ interface AdvogadoComboboxProps {
   placeholder?: string;
 }
 
-/**
- * Extrai número do TRT para ordenação (TRT1 = 1, TRT10 = 10)
- */
-function extrairNumeroTRT(tribunal: string): number {
-  const match = tribunal.match(/TRT(\d+)/);
-  return match ? parseInt(match[1], 10) : 999;
-}
-
 export function AdvogadoCombobox({
   advogados,
   selectedId,

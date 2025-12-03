@@ -18,25 +18,19 @@ export function LinksWidget({ className }: LinksWidgetProps) {
   const { linksPersonalizados, createLink, updateLink, deleteLink } = useDashboardStore();
   const [isCreating, setIsCreating] = useState(false);
   const [editingLink, setEditingLink] = useState<LinkPersonalizado | null>(null);
-  const [formData, setFormData] = useState({
-    titulo: '',
-    url: '',
-    icone: '',
-    ordem: 0
-  });
+  const initialForm = { titulo: '', url: '', icone: '', ordem: 0 };
+  const [formData, setFormData] = useState(initialForm);
 
   const handleCreate = async () => {
-    const maxOrder = Math.max(...linksPersonalizados.map(l => l.ordem), -1);
-    await createLink({ ...formData, ordem: maxOrder + 1 });
+    if (editingLink) {
+      await updateLink(editingLink.id, formData);
+    } else {
+      const maxOrder = Math.max(...linksPersonalizados.map(l => l.ordem), -1);
+      await createLink({ ...formData, ordem: maxOrder + 1 });
+    }
     setIsCreating(false);
-    setFormData({ titulo: '', url: '', icone: '', ordem: 0 });
-  };
-
-  const handleUpdate = async () => {
-    if (!editingLink) return;
-    await updateLink(editingLink.id, formData);
     setEditingLink(null);
-    setFormData({ titulo: '', url: '', icone: '', ordem: 0 });
+    setFormData(initialForm);
   };
 
   const handleDelete = async (id: number) => {
@@ -47,6 +41,7 @@ export function LinksWidget({ className }: LinksWidgetProps) {
 
   const openEditDialog = (link: LinkPersonalizado) => {
     setEditingLink(link);
+    setIsCreating(true);
     setFormData({
       titulo: link.titulo,
       url: link.url,
@@ -63,7 +58,16 @@ export function LinksWidget({ className }: LinksWidgetProps) {
     <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">Links Úteis</CardTitle>
-        <Dialog open={isCreating} onOpenChange={setIsCreating}>
+        <Dialog
+          open={isCreating}
+          onOpenChange={(open) => {
+            setIsCreating(open);
+            if (!open) {
+              setEditingLink(null);
+              setFormData(initialForm);
+            }
+          }}
+        >
           <DialogTrigger asChild>
             <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <Plus className="h-4 w-4" />

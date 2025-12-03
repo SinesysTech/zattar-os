@@ -9,7 +9,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Trash2, AlertCircle, Loader2, Database, Search, FileWarning } from 'lucide-react';
+import { ArrowLeft, Trash2, AlertCircle, Loader2, Database, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

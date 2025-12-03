@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
-  BookOpen,
+  Bot,
   Users,
   FileText,
   Gavel,
@@ -242,7 +242,7 @@ const toolsData: Tool[] = [
   {
     name: 'buscar_representante_por_oab',
     title: 'Buscar Representante por OAB',
-    description: 'Busca um representante pelo número da OAB e estado (ex: &quot;123456/SP&quot;).',
+    description: 'Busca um representante pelo número da OAB e estado (ex: "123456/SP").',
     category: 'Representantes',
     readOnly: true,
     params: ['oab'],
@@ -722,12 +722,12 @@ export default function MCPDocsPage() {
   const [activeCategory, setActiveCategory] = React.useState<string>(categories[0]);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <BookOpen className="w-6 h-6 text-brand" />
-          <h1 className="text-3xl font-bold">Documentação MCP</h1>
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <Bot className="h-8 w-8 text-primary" />
+          <h1 className="text-3xl font-bold tracking-tight">Ferramentas MCP</h1>
         </div>
         <p className="text-muted-foreground">
           Ferramentas disponíveis no servidor MCP do Sinesys para integração com assistentes de IA
@@ -749,7 +749,7 @@ export default function MCPDocsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Ferramentas Somente Leitura</CardTitle>
+            <CardTitle className="text-sm font-medium">Somente Leitura</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -760,7 +760,7 @@ export default function MCPDocsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium">Ferramentas de Escrita</CardTitle>
+            <CardTitle className="text-sm font-medium">Escrita</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -772,101 +772,97 @@ export default function MCPDocsPage() {
       </div>
 
       {/* Main Content */}
-      <div className="grid gap-6 lg:grid-cols-[250px_1fr]">
-        {/* Sidebar */}
-        <div className="space-y-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Categorias</CardTitle>
-            </CardHeader>
-            <CardContent className="p-2">
-              <ScrollArea className="h-[600px]">
-                <div className="space-y-1">
-                  {categories.map((category) => (
-                    <button
-                      key={category}
-                      onClick={() => setActiveCategory(category)}
-                      className={`
-                        w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors
-                        ${
-                          activeCategory === category
-                            ? 'bg-primary text-primary-foreground font-medium'
-                            : 'hover:bg-accent hover:text-accent-foreground'
-                        }
-                      `}
-                    >
-                      {categoryIcons[category]}
-                      <span className="flex-1 text-left">{category}</span>
-                      <Badge variant="secondary" className="ml-auto">
-                        {toolsByCategory[category].length}
-                      </Badge>
-                    </button>
-                  ))}
-                </div>
-              </ScrollArea>
-            </CardContent>
-          </Card>
-        </div>
+      <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
+        {/* Category Sidebar */}
+        <Card className="h-fit">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm">Categorias</CardTitle>
+          </CardHeader>
+          <CardContent className="p-2">
+            <ScrollArea className="h-[400px]">
+              <div className="space-y-1">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setActiveCategory(category)}
+                    className={`
+                      w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors
+                      ${
+                        activeCategory === category
+                          ? 'bg-primary text-primary-foreground font-medium'
+                          : 'hover:bg-accent hover:text-accent-foreground'
+                      }
+                    `}
+                  >
+                    {categoryIcons[category]}
+                    <span className="flex-1 text-left">{category}</span>
+                    <Badge variant="secondary" className="ml-auto text-xs">
+                      {toolsByCategory[category].length}
+                    </Badge>
+                  </button>
+                ))}
+              </div>
+            </ScrollArea>
+          </CardContent>
+        </Card>
 
         {/* Tools List */}
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                {categoryIcons[activeCategory]}
-                <CardTitle>{activeCategory}</CardTitle>
-              </div>
-              <CardDescription>
-                {toolsByCategory[activeCategory].length} ferramenta
-                {toolsByCategory[activeCategory].length !== 1 ? 's' : ''} disponível
-                {toolsByCategory[activeCategory].length !== 1 ? 'is' : ''}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {toolsByCategory[activeCategory].map((tool, index) => (
-                <div key={tool.name}>
-                  {index > 0 && <Separator className="my-4" />}
-                  <div className="space-y-3">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="space-y-1 flex-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-lg">{tool.title}</h3>
-                          {tool.readOnly ? (
-                            <Badge variant="secondary" className="text-xs">
-                              Somente Leitura
-                            </Badge>
-                          ) : (
-                            <Badge variant="default" className="text-xs">
-                              Escrita
-                            </Badge>
-                          )}
-                        </div>
-                        <code className="text-sm text-muted-foreground bg-muted px-2 py-1 rounded">
-                          {tool.name}
-                        </code>
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              {categoryIcons[activeCategory]}
+              <CardTitle>{activeCategory}</CardTitle>
+            </div>
+            <CardDescription>
+              {toolsByCategory[activeCategory].length} ferramenta
+              {toolsByCategory[activeCategory].length !== 1 ? 's' : ''} disponível
+              {toolsByCategory[activeCategory].length !== 1 ? 'is' : ''}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {toolsByCategory[activeCategory].map((tool, index) => (
+              <div key={tool.name}>
+                {index > 0 && <Separator className="my-4" />}
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-semibold">{tool.title}</h3>
+                        {tool.readOnly ? (
+                          <Badge variant="secondary" className="text-xs">
+                            Somente Leitura
+                          </Badge>
+                        ) : (
+                          <Badge variant="default" className="text-xs">
+                            Escrita
+                          </Badge>
+                        )}
+                      </div>
+                      <code className="text-sm text-muted-foreground bg-muted px-2 py-1 rounded inline-block">
+                        {tool.name}
+                      </code>
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-muted-foreground">{tool.description}</p>
+
+                  {tool.params && tool.params.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium">Parâmetros:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {tool.params.map((param) => (
+                          <Badge key={param} variant="outline" className="text-xs">
+                            {param}
+                          </Badge>
+                        ))}
                       </div>
                     </div>
-
-                    <p className="text-sm text-muted-foreground">{tool.description}</p>
-
-                    {tool.params && tool.params.length > 0 && (
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium">Parâmetros:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {tool.params.map((param) => (
-                            <Badge key={param} variant="outline" className="text-xs">
-                              {param}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Configuration Info */}
@@ -877,10 +873,10 @@ export default function MCPDocsPage() {
             Como conectar o servidor MCP do Sinesys ao Claude Desktop
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           <div className="space-y-2">
             <p className="text-sm font-medium">1. Localização do Servidor MCP:</p>
-            <code className="block text-xs bg-muted p-3 rounded-md">
+            <code className="block text-sm bg-muted p-3 rounded-md">
               E:\Development\mcp
             </code>
           </div>
@@ -888,9 +884,9 @@ export default function MCPDocsPage() {
           <div className="space-y-2">
             <p className="text-sm font-medium">2. Configuração no Claude Desktop:</p>
             <p className="text-sm text-muted-foreground">
-              Adicione o servidor no arquivo de configuração do Claude Desktop (~/.config/claude/config.json):
+              Adicione o servidor no arquivo de configuração do Claude Desktop:
             </p>
-            <code className="block text-xs bg-muted p-3 rounded-md whitespace-pre">
+            <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
 {`{
   "mcpServers": {
     "sinesys": {
@@ -903,17 +899,17 @@ export default function MCPDocsPage() {
     }
   }
 }`}
-            </code>
+            </pre>
           </div>
 
           <div className="space-y-2">
-            <p className="text-sm font-medium">3. Variáveis de Ambiente Necessárias:</p>
+            <p className="text-sm font-medium">3. Variáveis de Ambiente:</p>
             <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
               <li>
-                <code>SINESYS_API_URL</code>: URL base da API do Sinesys (geralmente http://localhost:3000)
+                <code className="bg-muted px-1 rounded">SINESYS_API_URL</code>: URL base da API do Sinesys
               </li>
               <li>
-                <code>SINESYS_API_KEY</code>: Chave de autenticação da API (obtida em Perfil → API Keys)
+                <code className="bg-muted px-1 rounded">SINESYS_API_KEY</code>: Chave de autenticação (Perfil → API Keys)
               </li>
             </ul>
           </div>
@@ -921,19 +917,14 @@ export default function MCPDocsPage() {
           <div className="space-y-2">
             <p className="text-sm font-medium">4. Formato de Resposta:</p>
             <p className="text-sm text-muted-foreground">
-              Todas as ferramentas suportam dois formatos de resposta:
+              Todas as ferramentas suportam dois formatos:
             </p>
             <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
-              <li>
-                <code>JSON</code> (padrão): Retorna dados estruturados em formato JSON
-              </li>
-              <li>
-                <code>MARKDOWN</code>: Retorna dados formatados em Markdown para melhor legibilidade
-              </li>
+              <li><code className="bg-muted px-1 rounded">JSON</code> (padrão): Dados estruturados</li>
+              <li><code className="bg-muted px-1 rounded">MARKDOWN</code>: Formatado para legibilidade</li>
             </ul>
             <p className="text-sm text-muted-foreground mt-2">
-              Para usar o formato Markdown, adicione o parâmetro{' '}
-              <code>response_format: &quot;markdown&quot;</code> nas chamadas.
+              Para Markdown, adicione <code className="bg-muted px-1 rounded">response_format: "markdown"</code>
             </p>
           </div>
         </CardContent>
@@ -941,4 +932,3 @@ export default function MCPDocsPage() {
     </div>
   );
 }
-

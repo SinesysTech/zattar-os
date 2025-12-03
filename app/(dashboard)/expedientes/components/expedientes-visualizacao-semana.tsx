@@ -1283,8 +1283,6 @@ interface ExpedientesVisualizacaoSemanaProps {
 export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciais, isLoading, isLoadingEspeciais, onRefresh, usuarios, tiposExpedientes, semanaAtual, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort }: ExpedientesVisualizacaoSemanaProps) {
   const [diaAtivo, setDiaAtivo] = React.useState<string>('vencidos');
   const isLoadingTabs = isLoading || !!isLoadingEspeciais;
-  const dadosEspeciais = expedientesEspeciais ?? expedientes;
-
   const handleSuccess = React.useCallback(() => {
     if (onRefresh) {
       onRefresh();

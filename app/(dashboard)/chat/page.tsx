@@ -364,7 +364,7 @@ export default function ChatPage() {
                         } else {
                           alert(json.error || 'Falha ao excluir a conversa')
                         }
-                      } catch (e) {
+                      } catch {
                         alert('Erro ao excluir a conversa')
                       }
                     }}
@@ -406,7 +406,7 @@ export default function ChatPage() {
                         } else {
                           alert(json.error || 'Falha ao renomear grupo')
                         }
-                      } catch (e) {
+                      } catch {
                         alert('Erro ao renomear grupo')
                       }
                     }}
