@@ -5,7 +5,7 @@
 import { Browser, BrowserContext, Page } from 'playwright';
 import { getOTP, type TwoFAuthConfig } from '@/backend/api/twofauth.service';
 import type { CredenciaisTRT, ConfigTRT } from '@/backend/types/captura/trt-types';
-import { getFirefoxConnection, closeBrowser } from '@/backend/captura/services/browser/browser-connection.service';
+import { getFirefoxConnection } from '@/backend/captura/services/browser/browser-connection.service';
 
 // ============================================================================
 // TIPOS E INTERFACES

@@ -5,6 +5,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -300,7 +301,9 @@ function criarColunas(
   onEditSchema: (formulario: FormsignFormulario) => void,
   onDuplicate: (formulario: FormsignFormulario) => void,
   onDelete: (formulario: FormsignFormulario) => void,
-  templates: FormsignTemplate[]
+  templates: FormsignTemplate[],
+  canEdit: boolean,
+  canDelete: boolean
 ): ColumnDef<FormsignFormulario>[] {
   return [
     {
@@ -518,6 +521,8 @@ function criarColunas(
               onEditSchema={onEditSchema}
               onDuplicate={onDuplicate}
               onDelete={onDelete}
+              canEdit={canEdit}
+              canDelete={canDelete}
             />
           </div>
         );
@@ -532,11 +537,15 @@ function FormularioActions({
   onEditSchema,
   onDuplicate,
   onDelete,
+  canEdit,
+  canDelete,
 }: {
   formulario: FormsignFormulario;
   onEditSchema: (formulario: FormsignFormulario) => void;
   onDuplicate: (formulario: FormsignFormulario) => void;
   onDelete: (formulario: FormsignFormulario) => void;
+  canEdit: boolean;
+  canDelete: boolean;
 }) {
   return (
     <DropdownMenu>
@@ -551,18 +560,24 @@ function FormularioActions({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => onEditSchema(formulario)}>
-          <FileText className="mr-2 h-4 w-4" />
-          Editar Schema
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onDuplicate(formulario)}>
-          <Copy className="mr-2 h-4 w-4" />
-          Duplicar
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onDelete(formulario)} className="text-destructive">
-          <Trash2 className="mr-2 h-4 w-4" />
-          Deletar
-        </DropdownMenuItem>
+        {canEdit && (
+          <DropdownMenuItem onClick={() => onEditSchema(formulario)}>
+            <FileText className="mr-2 h-4 w-4" />
+            Editar Schema
+          </DropdownMenuItem>
+        )}
+        {canCreate && (
+          <DropdownMenuItem onClick={() => onDuplicate(formulario)}>
+            <Copy className="mr-2 h-4 w-4" />
+            Duplicar
+          </DropdownMenuItem>
+        )}
+        {canDelete && (
+          <DropdownMenuItem onClick={() => onDelete(formulario)} className="text-destructive">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Deletar
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -581,6 +596,12 @@ export default function FormulariosPage() {
   const [selectedFormulario, setSelectedFormulario] = React.useState<FormsignFormulario | null>(null);
   const [selectedFormularios, setSelectedFormularios] = React.useState<FormsignFormulario[]>([]);
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
+
+  // Buscar permissões do usuário para o recurso 'formsign_admin'
+  const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('formsign_admin');
+  const canCreate = temPermissao('formsign_admin', 'criar');
+  const canEdit = temPermissao('formsign_admin', 'editar');
+  const canDelete = temPermissao('formsign_admin', 'deletar');
 
   // Hooks para dados
   const { segmentos, isLoading: segmentosLoading } = useSegmentos();
@@ -687,7 +708,7 @@ export default function FormulariosPage() {
     setRowSelection({});
   }, [refetch]);
 
-  const colunas = React.useMemo(() => criarColunas(handleEditSchema, handleDuplicate, handleDelete, templates), [handleEditSchema, handleDuplicate, handleDelete, templates]);
+  const colunas = React.useMemo(() => criarColunas(handleEditSchema, handleDuplicate, handleDelete, templates, canEdit, canDelete), [handleEditSchema, handleDuplicate, handleDelete, templates, canEdit, canDelete]);
 
   // Bulk actions buttons
   const bulkActions = React.useMemo(() => {
@@ -703,13 +724,15 @@ export default function FormulariosPage() {
           <Download className="h-4 w-4 mr-2" />
           Exportar CSV
         </Button>
-        <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
-          <Trash2 className="h-4 w-4 mr-2" />
-          Deletar
-        </Button>
+        {canDelete && (
+          <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
+            <Trash2 className="h-4 w-4 mr-2" />
+            Deletar
+          </Button>
+        )}
       </div>
     );
-  }, [rowSelection, handleExportCSV, handleBulkDelete]);
+  }, [rowSelection, handleExportCSV, handleBulkDelete, canDelete]);
 
   return (
     <div className="space-y-3">
@@ -729,7 +752,7 @@ export default function FormulariosPage() {
           onFiltersChange={handleFilterIdsChange}
           filterButtonsMode="buttons"
           extraButtons={bulkActions}
-          onNewClick={() => setCreateOpen(true)}
+          onNewClick={canCreate ? () => setCreateOpen(true) : undefined}
           newButtonTooltip="Novo Formulário"
         />
       </div>

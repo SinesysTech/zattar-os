@@ -22,6 +22,25 @@ const schema = z.object({
 });
 
 /**
+ * Extrai IP do cliente a partir dos headers da requisição.
+ * Verifica x-forwarded-for (proxies/load balancers) e x-real-ip.
+ */
+function getClientIp(request: NextRequest): string | null {
+  // x-forwarded-for pode conter múltiplos IPs: "client, proxy1, proxy2"
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  if (forwardedFor) {
+    const firstIp = forwardedFor.split(',')[0]?.trim();
+    if (firstIp) return firstIp;
+  }
+
+  // Fallback para x-real-ip (usado por alguns proxies)
+  const realIp = request.headers.get('x-real-ip');
+  if (realIp) return realIp;
+
+  return null;
+}
+
+/**
  * Endpoint PÚBLICO para finalizar assinatura de formulários.
  *
  * IMPORTANTE: Este endpoint NÃO requer autenticação pois é usado
@@ -29,14 +48,26 @@ const schema = z.object({
  *
  * Segurança:
  * - Validação Zod de todos os campos
- * - Logs de IP/user-agent para auditoria
+ * - IP e user-agent extraídos do request e mesclados ao payload
  * - UUID de sessão para rastreamento
  * - Rate limiting recomendado (TODO: implementar)
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const payload = schema.parse(body) as FinalizePayload;
+
+    // Extrair IP e user-agent do request para garantir auditoria
+    const serverIp = getClientIp(request);
+    const serverUserAgent = request.headers.get('user-agent');
+
+    // Mesclar valores do servidor se não fornecidos pelo cliente (ou vazios)
+    const enrichedBody = {
+      ...body,
+      ip_address: body.ip_address || serverIp || null,
+      user_agent: body.user_agent || serverUserAgent || null,
+    };
+
+    const payload = schema.parse(enrichedBody) as FinalizePayload;
     const result = await finalizeSignature(payload);
     return NextResponse.json({ success: true, data: result }, { status: 201 });
   } catch (error) {

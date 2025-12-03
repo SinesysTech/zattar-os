@@ -8,8 +8,8 @@ import type { DynamicFormSchema } from '@/types/formsign/form-schema.types'
 import type { MetadadoSeguranca } from '@/types/formsign/template.types'
 
 interface PageProps {
-  params: Promise<{ segmento: string; formulario: string }>
-  searchParams?: Promise<{ templates?: string }>
+  params: { segmento: string; formulario: string }
+  searchParams?: { templates?: string | string[] }
 }
 
 function validateSlug(slug: string): boolean {
@@ -17,17 +17,27 @@ function validateSlug(slug: string): boolean {
   return regex.test(slug)
 }
 
-function parseTemplateIds(templatesParam?: string): string[] | null {
+/**
+ * Parseia o parâmetro templates da query string.
+ * Suporta tanto string única quanto array de strings (Next.js app router).
+ */
+function parseTemplateIds(templatesParam?: string | string[]): string[] | null {
   if (!templatesParam) return null
-  const ids = templatesParam.split(',').map(id => id.trim()).filter(id => id.length > 0)
+
+  // Se for array, flatten e juntar em string separada por vírgula
+  const templatesStr = Array.isArray(templatesParam)
+    ? templatesParam.join(',')
+    : templatesParam
+
+  const ids = templatesStr.split(',').map(id => id.trim()).filter(id => id.length > 0)
   return ids.length > 0 ? ids : null
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   try {
     const { params, searchParams } = props
-    const { segmento, formulario } = await params
-    const search = await searchParams
+    const { segmento, formulario } = params
+    const search = searchParams
 
     // Validar slugs
     if (!validateSlug(segmento) || !validateSlug(formulario)) {
@@ -56,7 +66,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     }
 
     // Buscar nomes dos templates se fornecidos
-    let templateNames: string[] = []
+    const templateNames: string[] = []
     const templateIds = parseTemplateIds(search?.templates)
     if (templateIds) {
       for (const templateId of templateIds) {
@@ -88,8 +98,8 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 export default async function FormularioDinamicoPage(props: PageProps) {
   try {
     const { params, searchParams } = props
-    const { segmento, formulario } = await params
-    const search = await searchParams
+    const { segmento, formulario } = params
+    const search = searchParams
 
     console.log('Params:', { segmento, formulario })
     console.log('SearchParams:', search)

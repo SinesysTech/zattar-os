@@ -59,7 +59,6 @@ import { downloadAndUploadDocumento } from '../pje/pje-expediente-documento.serv
 import type { FetchDocumentoParams } from '@/backend/types/pje-trt/documento-types';
 import {
   buscarDadosComplementaresProcessos,
-  type DadosComplementaresResult,
 } from './dados-complementares.service';
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';

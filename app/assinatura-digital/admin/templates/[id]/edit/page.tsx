@@ -19,6 +19,7 @@ import FieldMappingEditor from '@/components/formsign/editor/FieldMappingEditor'
 import { Button } from '@/components/ui/button';
 import { Template } from '@/types/formsign/template.types';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
 
 async function getTemplate(id: string): Promise<Template> {
   const response = await fetch(`/api/assinatura-digital/admin/templates/${id}`, {
@@ -66,6 +67,9 @@ interface PageProps {
 export default function EditTemplatePage({ params }: PageProps) {
   const { id } = params;
   const router = useRouter();
+
+  const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('formsign_admin');
+  const canEdit = temPermissao('formsign_admin', 'editar');
 
   // Shared auth error handler for DRY
   const handleAuthError = () => setTimeout(() => router.push('/auth/login'), 2000);
@@ -135,7 +139,7 @@ export default function EditTemplatePage({ params }: PageProps) {
     fetchTemplate();
   };
 
-  if (loading) {
+  if (loading || isLoadingPermissoes) {
     return (
       <div className="h-full flex flex-col gap-6">
         <div className="shrink-0 space-y-2">
@@ -151,6 +155,31 @@ export default function EditTemplatePage({ params }: PageProps) {
           </div>
           
           <Skeleton className="h-full w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoadingPermissoes && !canEdit) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center space-y-4 max-w-md">
+          <div className="flex justify-center">
+            <div className="rounded-full bg-destructive/10 p-3">
+              <AlertCircle className="h-10 w-10 text-destructive" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-foreground">
+              Acesso negado
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Você não tem permissão para editar templates.
+            </p>
+          </div>
+          <Button onClick={() => router.push('/assinatura-digital/admin/templates')} variant="outline">
+            Voltar para lista
+          </Button>
         </div>
       </div>
     );

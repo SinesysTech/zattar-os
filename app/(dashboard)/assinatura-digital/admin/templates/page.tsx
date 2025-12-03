@@ -5,12 +5,14 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Edit, MoreHorizontal, Copy, Trash2, Download } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Tooltip,
   TooltipContent,
@@ -35,75 +37,12 @@ import {
 import { TemplateCreateDialog } from './components/template-create-dialog';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
 import { TemplateDeleteDialog } from './components/template-delete-dialog';
-
-// Tipos locais para filtros
-interface TemplatesFilters {
-  status?: 'ativo' | 'inativo' | 'rascunho';
-  ativo?: boolean;
-}
-
-// Configurações de filtros
-const TEMPLATES_FILTER_CONFIGS = [
-  {
-    id: 'status',
-    label: 'Status',
-    type: 'select' as const,
-    options: [
-      { value: 'ativo', label: 'Ativo' },
-      { value: 'inativo', label: 'Inativo' },
-      { value: 'rascunho', label: 'Rascunho' },
-    ],
-  },
-  {
-    id: 'ativo',
-    label: 'Disponibilidade',
-    type: 'select' as const,
-    options: [
-      { value: 'true', label: 'Sim' },
-      { value: 'false', label: 'Não' },
-    ],
-  },
-];
-
-// Funções de filtro
-function buildTemplatesFilterOptions() {
-  const options = [];
-  for (const config of TEMPLATES_FILTER_CONFIGS) {
-    if (config.type === 'select') {
-      for (const opt of config.options) {
-        options.push({
-          value: `${config.id}_${opt.value}`,
-          label: opt.label,
-          group: config.label,
-        });
-      }
-    }
-  }
-  return options;
-}
-
-function buildTemplatesFilterGroups() {
-  return TEMPLATES_FILTER_CONFIGS.map(config => ({
-    label: config.label,
-    options: config.options.map(opt => ({
-      value: `${config.id}_${opt.value}`,
-      label: opt.label,
-    })),
-  }));
-}
-
-function parseTemplatesFilters(selectedIds: string[]): TemplatesFilters {
-  const filters: TemplatesFilters = {};
-  for (const id of selectedIds) {
-    const [key, value] = id.split('_', 2);
-    if (key === 'status') {
-      filters.status = value as 'ativo' | 'inativo' | 'rascunho';
-    } else if (key === 'ativo') {
-      filters.ativo = value === 'true';
-    }
-  }
-  return filters;
-}
+import {
+  type TemplatesFilters,
+  buildTemplatesFilterOptions,
+  buildTemplatesFilterGroups,
+  parseTemplatesFilters,
+} from './components/template-filters';
 
 // Hook para buscar templates
 function useTemplates(params: {
@@ -111,6 +50,7 @@ function useTemplates(params: {
   limite: number;
   busca?: string;
   ativo?: boolean;
+  status?: 'ativo' | 'inativo' | 'rascunho';
 }) {
   const [data, setData] = React.useState<{
     templates: FormsignTemplate[];
@@ -133,6 +73,7 @@ function useTemplates(params: {
       });
       if (params.busca) searchParams.set('search', params.busca);
       if (params.ativo !== undefined) searchParams.set('ativo', params.ativo.toString());
+      if (params.status !== undefined) searchParams.set('status', params.status);
 
       const res = await fetch(`/api/assinatura-digital/admin/templates?${searchParams}`);
       const json = await res.json();
@@ -166,9 +107,40 @@ function useTemplates(params: {
 function criarColunas(
   onEdit: (template: FormsignTemplate) => void,
   onDuplicate: (template: FormsignTemplate) => void,
-  onDelete: (template: FormsignTemplate) => void
+  onDelete: (template: FormsignTemplate) => void,
+  canEdit: boolean,
+  canCreate: boolean,
+  canDelete: boolean
 ): ColumnDef<FormsignTemplate>[] {
   return [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && 'indeterminate')
+            }
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Selecionar todos"
+          />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Selecionar linha"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 50,
+    },
     {
       accessorKey: 'nome',
       header: ({ column }) => (
@@ -243,7 +215,7 @@ function criarColunas(
       enableSorting: true,
       size: 120,
       cell: ({ row }) => {
-        const status = row.getValue('status') as string;
+        const status = row.getValue('status') as 'ativo' | 'inativo' | 'rascunho';
         return (
           <div className="min-h-10 flex items-center justify-center">
             <Badge variant={getStatusBadgeVariant(status)} className="capitalize">
@@ -304,6 +276,9 @@ function criarColunas(
               onEdit={onEdit}
               onDuplicate={onDuplicate}
               onDelete={onDelete}
+              canEdit={canEdit}
+              canCreate={canCreate}
+              canDelete={canDelete}
             />
           </div>
         );
@@ -318,11 +293,17 @@ function TemplateActions({
   onEdit,
   onDuplicate,
   onDelete,
+  canEdit,
+  canCreate,
+  canDelete,
 }: {
   template: FormsignTemplate;
   onEdit: (template: FormsignTemplate) => void;
   onDuplicate: (template: FormsignTemplate) => void;
   onDelete: (template: FormsignTemplate) => void;
+  canEdit: boolean;
+  canCreate: boolean;
+  canDelete: boolean;
 }) {
   const router = useRouter();
 
@@ -343,18 +324,24 @@ function TemplateActions({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleEdit}>
-          <Edit className="mr-2 h-4 w-4" />
-          Editar
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onDuplicate(template)}>
-          <Copy className="mr-2 h-4 w-4" />
-          Duplicar
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onDelete(template)} className="text-destructive">
-          <Trash2 className="mr-2 h-4 w-4" />
-          Deletar
-        </DropdownMenuItem>
+        {canEdit && (
+          <DropdownMenuItem onClick={handleEdit}>
+            <Edit className="mr-2 h-4 w-4" />
+            Editar
+          </DropdownMenuItem>
+        )}
+        {canCreate && (
+          <DropdownMenuItem onClick={() => onDuplicate(template)}>
+            <Copy className="mr-2 h-4 w-4" />
+            Duplicar
+          </DropdownMenuItem>
+        )}
+        {canDelete && (
+          <DropdownMenuItem onClick={() => onDelete(template)} className="text-destructive">
+            <Trash2 className="mr-2 h-4 w-4" />
+            Deletar
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -374,6 +361,11 @@ export default function TemplatesPage() {
   const [selectedTemplates, setSelectedTemplates] = React.useState<FormsignTemplate[]>([]);
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
 
+  const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('formsign_admin');
+  const canCreate = temPermissao('formsign_admin', 'criar');
+  const canEdit = temPermissao('formsign_admin', 'editar');
+  const canDelete = temPermissao('formsign_admin', 'deletar');
+
   // Preparar opções e grupos de filtros
   const filterOptions = React.useMemo(() => buildTemplatesFilterOptions(), []);
   const filterGroups = React.useMemo(() => buildTemplatesFilterGroups(), []);
@@ -381,26 +373,18 @@ export default function TemplatesPage() {
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
 
-  // Parâmetros para buscar templates
+  // Parâmetros para buscar templates (inclui status para filtro server-side)
   const params = React.useMemo(() => {
     return {
       pagina: pagina + 1, // API usa 1-indexed
       limite,
       busca: buscaDebounced || undefined,
       ativo: filtros.ativo,
+      status: filtros.status,
     };
-  }, [pagina, limite, buscaDebounced, filtros.ativo]);
+  }, [pagina, limite, buscaDebounced, filtros.ativo, filtros.status]);
 
   const { templates, total, isLoading, error, refetch } = useTemplates(params);
-
-  // Filtrar templates por status client-side (já que API não suporta)
-  const filteredTemplates = React.useMemo(() => {
-    let filtered = templates;
-    if (filtros.status) {
-      filtered = filtered.filter(t => t.status === filtros.status);
-    }
-    return filtered;
-  }, [templates, filtros.status]);
 
   // Definir se está buscando (debounced)
   const isSearching = busca !== buscaDebounced && busca.length > 0;
@@ -435,15 +419,15 @@ export default function TemplatesPage() {
   }, []);
 
   const handleBulkDelete = React.useCallback(() => {
-    const selected = Object.keys(rowSelection).map(id => templates.find(t => t.id === id)).filter(Boolean) as FormsignTemplate[];
+    const selected = Object.keys(rowSelection).map(id => templates.find(t => t.id.toString() === id)).filter(Boolean) as FormsignTemplate[];
     setSelectedTemplates(selected);
     setDeleteOpen(true);
   }, [rowSelection, templates]);
 
   const handleExportCSV = React.useCallback(() => {
     const selected = Object.keys(rowSelection).length > 0
-      ? Object.keys(rowSelection).map(id => templates.find(t => t.id === id)).filter(Boolean) as FormsignTemplate[]
-      : filteredTemplates;
+      ? Object.keys(rowSelection).map(id => templates.find(t => t.id.toString() === id)).filter(Boolean) as FormsignTemplate[]
+      : templates;
 
     const csv = [
       ['Nome', 'Descrição', 'Status', 'Versão', 'Tamanho', 'UUID'].join(','),
@@ -464,7 +448,7 @@ export default function TemplatesPage() {
     a.download = 'templates.csv';
     a.click();
     URL.revokeObjectURL(url);
-  }, [rowSelection, templates, filteredTemplates]);
+  }, [rowSelection, templates]);
 
   const handleDuplicateSuccess = React.useCallback(() => {
     refetch();
@@ -479,7 +463,7 @@ export default function TemplatesPage() {
     setRowSelection({});
   }, [refetch]);
 
-  const colunas = React.useMemo(() => criarColunas(handleEdit, handleDuplicate, handleDelete), [handleEdit, handleDuplicate, handleDelete]);
+  const colunas = React.useMemo(() => criarColunas(handleEdit, handleDuplicate, handleDelete, canEdit, canCreate, canDelete), [handleEdit, handleDuplicate, handleDelete, canEdit, canCreate, canDelete]);
 
   // Bulk actions buttons
   const bulkActions = React.useMemo(() => {
@@ -495,10 +479,12 @@ export default function TemplatesPage() {
           <Download className="h-4 w-4 mr-2" />
           Exportar CSV
         </Button>
-        <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
-          <Trash2 className="h-4 w-4 mr-2" />
-          Deletar
-        </Button>
+        {canDelete && (
+          <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
+            <Trash2 className="h-4 w-4 mr-2" />
+            Deletar
+          </Button>
+        )}
       </div>
     );
   }, [rowSelection, handleExportCSV, handleBulkDelete]);
@@ -521,7 +507,7 @@ export default function TemplatesPage() {
           onFiltersChange={handleFilterIdsChange}
           filterButtonsMode="buttons"
           extraButtons={bulkActions}
-          onNewClick={() => setCreateOpen(true)}
+          onNewClick={canCreate ? () => setCreateOpen(true) : undefined}
           newButtonTooltip="Novo Template"
         />
       </div>
@@ -539,7 +525,7 @@ export default function TemplatesPage() {
 
       {/* Tabela */}
       <DataTable
-        data={filteredTemplates}
+        data={templates}
         columns={colunas}
         pagination={{
           pageIndex: pagina,
@@ -550,6 +536,11 @@ export default function TemplatesPage() {
           onPageSizeChange: setLimite,
         }}
         sorting={undefined}
+        rowSelection={{
+          state: rowSelection,
+          onRowSelectionChange: setRowSelection,
+          getRowId: (row) => row.id.toString(),
+        }}
         isLoading={isLoading}
         error={error}
         emptyMessage="Nenhum template encontrado."

@@ -5,7 +5,9 @@ import {
   createTemplate,
   listTemplates,
 } from '@/backend/formsign-admin/services/templates.service';
-import type { UpsertTemplateInput } from '@/backend/types/formsign-admin/types';
+import type { UpsertTemplateInput, StatusTemplate } from '@/backend/types/formsign-admin/types';
+
+const VALID_STATUS_VALUES: StatusTemplate[] = ['ativo', 'inativo', 'rascunho'];
 
 const upsertTemplateSchema = z.object({
   template_uuid: z.string().uuid().optional(),
@@ -34,7 +36,13 @@ export async function GET(request: NextRequest) {
     const ativoParam = searchParams.get('ativo');
     const ativo = ativoParam === null ? undefined : ativoParam === 'true';
 
-    const result = await listTemplates({ search, ativo });
+    // Validate and parse status parameter
+    const statusParam = searchParams.get('status');
+    const status = statusParam && VALID_STATUS_VALUES.includes(statusParam as StatusTemplate)
+      ? (statusParam as StatusTemplate)
+      : undefined;
+
+    const result = await listTemplates({ search, ativo, status });
     return NextResponse.json({ success: true, data: result.templates, total: result.total });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erro ao listar templates';

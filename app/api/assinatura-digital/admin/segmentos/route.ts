@@ -4,6 +4,7 @@ import { requirePermission } from '@/backend/auth/require-permission';
 import {
   createSegmento,
   listSegmentos,
+  getSegmentoBySlugAdmin,
 } from '@/backend/formsign-admin/services/segmentos.service';
 import type { UpsertSegmentoInput } from '@/backend/types/formsign-admin/types';
 
@@ -22,6 +23,19 @@ export async function GET(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
+
+    // Check for exact slug lookup (for uniqueness validation)
+    const slugParam = searchParams.get('slug');
+    if (slugParam) {
+      const segmento = await getSegmentoBySlugAdmin(slugParam);
+      return NextResponse.json({
+        success: true,
+        data: segmento,
+        exists: segmento !== null,
+      });
+    }
+
+    // Regular listing with filters
     const ativoParam = searchParams.get('ativo');
     const search = searchParams.get('search') ?? undefined;
 

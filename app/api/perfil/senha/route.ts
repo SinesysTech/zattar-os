@@ -85,7 +85,7 @@ export async function PATCH(request: NextRequest) {
 
     // 3. Atualizar senha no Supabase Auth
     const supabase = await createClient();
-    const { data, error } = await supabase.auth.updateUser({
+    const { error } = await supabase.auth.updateUser({
       password: novaSenha,
     });
 

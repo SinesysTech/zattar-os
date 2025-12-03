@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const filtros: FiltrosRepassesPendentes = {
-      statusRepasse: searchParams.get('statusRepasse') as any,
+      statusRepasse: searchParams.get('statusRepasse') as FiltrosRepassesPendentes['statusRepasse'],
       processoId: searchParams.get('processoId')
         ? parseInt(searchParams.get('processoId')!, 10)
         : undefined,

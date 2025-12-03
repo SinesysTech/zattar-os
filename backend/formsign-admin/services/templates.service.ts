@@ -59,6 +59,10 @@ export async function listTemplates(params: ListTemplatesParams = {}): Promise<F
     query = query.eq('ativo', params.ativo);
   }
 
+  if (params.status !== undefined) {
+    query = query.eq('status', params.status);
+  }
+
   if (params.search) {
     const term = params.search.trim();
     query = query.or(

@@ -91,7 +91,7 @@ export async function PATCH(
       .single();
 
     if (error) {
-      if ((error as any).code === 'PGRST116') {
+      if ((error as { code?: string }).code === 'PGRST116') {
         return NextResponse.json({ error: 'Expediente não encontrado' }, { status: 404 });
       }
       throw error;

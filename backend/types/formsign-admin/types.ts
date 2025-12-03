@@ -33,9 +33,12 @@ export interface FormsignTemplateList {
   total: number;
 }
 
+export type StatusTemplate = 'ativo' | 'inativo' | 'rascunho';
+
 export interface ListTemplatesParams {
   search?: string;
   ativo?: boolean;
+  status?: StatusTemplate;
 }
 
 export interface UpsertTemplateInput {
@@ -59,6 +62,11 @@ export interface FormsignSegmento {
   slug: string;
   descricao?: string | null;
   ativo: boolean;
+  /**
+   * Number of formularios associated with this segmento.
+   * Populated by the list service when needed.
+   */
+  formularios_count?: number;
   created_at?: string;
   updated_at?: string;
 }

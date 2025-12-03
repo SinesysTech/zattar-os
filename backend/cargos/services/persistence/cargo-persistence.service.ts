@@ -13,10 +13,20 @@ import type {
   ListarCargosResponse,
 } from '@/backend/types/cargos/types';
 
+interface CargoRecord {
+  id: number;
+  nome: string;
+  descricao: string | null;
+  ativo: boolean;
+  created_by: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
 /**
  * Converte registro do banco para interface Cargo
  */
-const mapearCargo = (registro: any): Cargo => {
+const mapearCargo = (registro: CargoRecord): Cargo => {
   return {
     id: registro.id,
     nome: registro.nome,
@@ -191,7 +201,7 @@ export const atualizarCargo = async (
 ): Promise<Cargo> => {
   const supabase = createServiceClient();
 
-  const updateData: any = {};
+  const updateData: Partial<Pick<CargoRecord, 'nome' | 'descricao' | 'ativo'>> = {};
 
   if (data.nome !== undefined) {
     updateData.nome = data.nome.trim();

@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import { buscarRepresentantesPorOAB } from '@/backend/representantes/services/representantes-persistence.service';
-import type { BuscarRepresentantesPorOABParams, Grau } from '@/backend/types/representantes/representantes-types';
+import type { BuscarRepresentantesPorOABParams } from '@/backend/types/representantes/representantes-types';
 
 type RouteContext = {
   params: Promise<{

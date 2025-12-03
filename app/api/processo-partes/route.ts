@@ -135,8 +135,8 @@ export async function GET(request: NextRequest) {
       processo_id: searchParams.get('processo_id') ? parseInt(searchParams.get('processo_id')!, 10) : undefined,
       tipo_entidade: (searchParams.get('tipo_entidade') as 'cliente' | 'parte_contraria' | 'terceiro' | null) || undefined,
       entidade_id: searchParams.get('entidade_id') ? parseInt(searchParams.get('entidade_id')!, 10) : undefined,
-      polo: searchParams.get('polo') as any || undefined,
-      tipo_parte: searchParams.get('tipo_parte') as any || undefined,
+      polo: searchParams.get('polo') || undefined,
+      tipo_parte: searchParams.get('tipo_parte') || undefined,
       trt: searchParams.get('trt') || undefined,
       grau,
     };
