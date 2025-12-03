@@ -27,8 +27,7 @@ import { toast } from 'sonner';
 import type { Credencial } from '@/app/_lib/types/credenciais';
 
 export default function CredenciaisPage() {
-  const { credenciais, tribunais, graus, isLoading, error, refetch, toggleStatus } =
-    useCredenciais();
+  const { credenciais, isLoading, error, refetch, toggleStatus } = useCredenciais();
 
   // Estados de busca e filtros
   const [busca, setBusca] = useState('');

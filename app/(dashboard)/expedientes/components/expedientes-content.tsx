@@ -885,7 +885,7 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
 
   // Busca global (sem faixa de data) usada para preencher abas "Vencidos" e "Sem Data" na visão semanal
   const paramsEspeciaisSemana = React.useMemo(() => {
-    const { responsavel_id, data_prazo_legal_inicio: _ini, data_prazo_legal_fim: _fim, ...filtrosRestantes } = filtros;
+    const { responsavel_id, ...filtrosRestantes } = filtros;
     const responsavelIdFinal = viewMode === 'tabela'
       ? responsavel_id
       : (!isSuperAdmin && currentUserId ? currentUserId : responsavel_id);

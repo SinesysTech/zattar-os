@@ -4,7 +4,7 @@ import { RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Typography } from '@/components/ui/typography';
-import { useDashboard, isDashboardAdmin, isDashboardUsuario } from '@/app/_lib/hooks/use-dashboard';
+import { useDashboard } from '@/app/_lib/hooks/use-dashboard';
 import type {
   DashboardUsuarioData,
   DashboardAdminData,

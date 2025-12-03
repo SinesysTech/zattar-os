@@ -14,7 +14,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Typography } from '@/components/ui/typography';
 import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
 import { criarColunasCredenciais } from './credenciais-columns';
 import { AdvogadoViewDialog } from './advogado-view-dialog';
@@ -26,7 +25,6 @@ import {
 } from './credenciais-toolbar-filters';
 import { toast } from 'sonner';
 import type { Credencial } from '@/app/_lib/types/credenciais';
-import type { CredenciaisFilters } from './credenciais-toolbar-filters';
 
 interface CredenciaisListProps {
   onNewClick?: () => void;
@@ -37,8 +35,7 @@ interface CredenciaisListProps {
  * Componente de listagem de credenciais
  */
 export function CredencialsList({ onNewClick, newButtonTooltip = 'Nova Credencial' }: CredenciaisListProps) {
-  const { credenciais, tribunais, graus, isLoading, error, refetch, toggleStatus } =
-    useCredenciais();
+  const { credenciais, isLoading, error, refetch, toggleStatus } = useCredenciais();
 
   // Estados de busca e filtros
   const [busca, setBusca] = useState('');

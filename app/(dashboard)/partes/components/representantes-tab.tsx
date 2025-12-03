@@ -208,7 +208,7 @@ function obterEmail(representante: Representante): string | null {
 /**
  * Define as colunas da tabela de representantes
  */
-function criarColunas(onEditSuccess: () => void): ColumnDef<RepresentanteComProcessos>[] {
+function criarColunas(): ColumnDef<RepresentanteComProcessos>[] {
   return [
     // Coluna composta: Representante (Badge OAB+Situação | Nome | CPF)
     {
@@ -347,7 +347,7 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<RepresentanteComProc
         const representante = row.original;
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <RepresentanteActions representante={representante} onEditSuccess={onEditSuccess} />
+            <RepresentanteActions representante={representante} />
           </div>
         );
       },
@@ -360,10 +360,8 @@ function criarColunas(onEditSuccess: () => void): ColumnDef<RepresentanteComProc
  */
 function RepresentanteActions({
   representante,
-  onEditSuccess,
 }: {
   representante: Representante;
-  onEditSuccess: () => void;
 }) {
   return (
     <ButtonGroup>
@@ -407,11 +405,12 @@ export function RepresentantesTab() {
   const { representantes, paginacao, isLoading, error, refetch } = useRepresentantes(params);
 
   // Função para atualizar após edição
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleEditSuccess = React.useCallback(() => {
     refetch();
   }, [refetch]);
 
-  const colunas: ColumnDef<RepresentanteComProcessos>[] = React.useMemo(() => criarColunas(handleEditSuccess), [handleEditSuccess]);
+  const colunas: ColumnDef<RepresentanteComProcessos>[] = React.useMemo(() => criarColunas(), []);
 
   const filterOptions = React.useMemo(() => buildRepresentantesFilterOptions(), []);
   const filterGroups = React.useMemo(() => buildRepresentantesFilterGroups(), []);

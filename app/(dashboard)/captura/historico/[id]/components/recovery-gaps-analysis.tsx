@@ -44,7 +44,6 @@ import type { TipoEntidadeRecuperavel } from '@/backend/captura/services/recover
 
 interface RecoveryGapsAnalysisProps {
   mongoId: string;
-  onClose?: () => void;
 }
 
 const formatarData = (dataISO: string | Date): string => {
@@ -208,7 +207,7 @@ const ElementoItem = ({ elemento, isSelected, onToggle, showCheckbox = true }: E
   );
 };
 
-export function RecoveryGapsAnalysis({ mongoId, onClose }: RecoveryGapsAnalysisProps) {
+export function RecoveryGapsAnalysis({ mongoId }: RecoveryGapsAnalysisProps) {
   const [selectedElements, setSelectedElements] = useState<Set<string>>(new Set());
   const [showReprocessDialog, setShowReprocessDialog] = useState(false);
   const [mostrarApenasFaltantes, setMostrarApenasFaltantes] = useState(false);

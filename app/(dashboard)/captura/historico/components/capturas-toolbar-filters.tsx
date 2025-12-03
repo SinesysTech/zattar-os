@@ -145,12 +145,9 @@ export function buildCapturasFilterGroups(advogados?: Advogado[]): FilterGroup[]
 
 export function parseCapturasFilters(selectedFilters: string[]): CapturasFilters {
   const filters: CapturasFilters = {};
-  const configMap = new Map(CAPTURAS_FILTER_CONFIGS.map(c => [c.id, c]));
 
   for (const selected of selectedFilters) {
     if (selected.includes('_')) {
-      const parts = selected.split('_');
-
       // Handle multi-word IDs like tipo_captura
       if (selected.startsWith('tipo_captura_')) {
         const value = selected.replace('tipo_captura_', '');

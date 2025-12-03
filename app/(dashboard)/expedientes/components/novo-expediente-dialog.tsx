@@ -166,7 +166,7 @@ export function NovoExpedienteDialog({
         buscarUsuarios();
       }
     }
-  }, [open]);
+  }, [open, tiposExpediente.length, usuarios.length, buscarTiposExpediente, buscarUsuarios]);
 
   // Resetar form quando fechar
   React.useEffect(() => {

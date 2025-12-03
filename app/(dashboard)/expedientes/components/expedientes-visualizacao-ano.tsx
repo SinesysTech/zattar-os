@@ -10,14 +10,12 @@ interface ExpedientesVisualizacaoAnoProps {
   expedientes: PendenteManifestacao[];
   isLoading: boolean;
   anoAtual?: Date;
-  onAnoAtualChange?: (novoAno: Date) => void;
 }
 
 export function ExpedientesVisualizacaoAno({
   expedientes,
   isLoading,
   anoAtual,
-  onAnoAtualChange,
 }: ExpedientesVisualizacaoAnoProps) {
   const [anoLocal, setAnoLocal] = React.useState(new Date());
   const anoSelecionado = (anoAtual ?? anoLocal).getFullYear();
@@ -63,14 +61,6 @@ export function ExpedientesVisualizacaoAno({
 
     return mapa;
   }, [expedientes, anoSelecionado]);
-
-  const _navegarAno = (direcao: 'anterior' | 'proximo') => {
-    const novoAno = new Date(anoSelecionado + (direcao === 'proximo' ? 1 : -1), 0, 1);
-    onAnoAtualChange?.(novoAno);
-    if (!anoAtual) {
-      setAnoLocal(novoAno);
-    }
-  };
 
   const temExpediente = (ano: number, mes: number, dia: number) => {
     const chave = `${ano}-${mes}-${dia}`;

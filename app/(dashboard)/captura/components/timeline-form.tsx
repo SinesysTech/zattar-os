@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Typography } from '@/components/ui/typography';
 import { ChevronDown, Info } from 'lucide-react';
 
 /**

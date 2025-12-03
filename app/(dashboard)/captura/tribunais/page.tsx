@@ -17,8 +17,6 @@ import type { TribunalConfig } from '@/app/_lib/types/tribunais';
 export default function TribunaisPage() {
   const {
     tribunais,
-    tribunaisCodigos,
-    tiposAcesso,
     isLoading,
     error,
     refetch,

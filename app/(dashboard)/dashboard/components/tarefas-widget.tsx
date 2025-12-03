@@ -28,37 +28,24 @@ export function TarefasWidget({ className }: TarefasWidgetProps) {
   const { tarefas, createTarefa, updateTarefa, deleteTarefa } = useDashboardStore();
   const [isCreating, setIsCreating] = useState(false);
   const [editingTarefa, setEditingTarefa] = useState<Tarefa | null>(null);
-  const [formData, setFormData] = useState<FormData>({
+  const initialForm: FormData = {
     titulo: '',
     descricao: '',
     status: 'pendente',
     prioridade: 3,
     data_prevista: ''
-  });
+  };
+  const [formData, setFormData] = useState<FormData>(initialForm);
 
   const handleCreate = async () => {
-    await createTarefa(formData);
+    if (editingTarefa) {
+      await updateTarefa(editingTarefa.id, formData);
+    } else {
+      await createTarefa(formData);
+    }
     setIsCreating(false);
-    setFormData({
-      titulo: '',
-      descricao: '',
-      status: 'pendente',
-      prioridade: 3,
-      data_prevista: ''
-    });
-  };
-
-  const _handleUpdate = async () => {
-    if (!editingTarefa) return;
-    await updateTarefa(editingTarefa.id, formData);
     setEditingTarefa(null);
-    setFormData({
-      titulo: '',
-      descricao: '',
-      status: 'pendente',
-      prioridade: 3,
-      data_prevista: ''
-    });
+    setFormData(initialForm);
   };
 
   const handleDelete = async (id: number) => {
@@ -69,6 +56,7 @@ export function TarefasWidget({ className }: TarefasWidgetProps) {
 
   const openEditDialog = (tarefa: Tarefa) => {
     setEditingTarefa(tarefa);
+    setIsCreating(true);
     setFormData({
       titulo: tarefa.titulo,
       descricao: tarefa.descricao || '',
@@ -110,7 +98,16 @@ export function TarefasWidget({ className }: TarefasWidgetProps) {
     <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">Minhas Tarefas</CardTitle>
-        <Dialog open={isCreating} onOpenChange={setIsCreating}>
+        <Dialog
+          open={isCreating}
+          onOpenChange={(open) => {
+            setIsCreating(open);
+            if (!open) {
+              setEditingTarefa(null);
+              setFormData(initialForm);
+            }
+          }}
+        >
           <DialogTrigger asChild>
             <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
               <Plus className="h-4 w-4" />

@@ -11,14 +11,12 @@ interface ExpedientesVisualizacaoMesProps {
   expedientes: PendenteManifestacao[];
   isLoading: boolean;
   mesAtual?: Date;
-  onMesAtualChange?: (novoMes: Date) => void;
 }
 
 export function ExpedientesVisualizacaoMes({
   expedientes,
   isLoading,
   mesAtual,
-  onMesAtualChange,
 }: ExpedientesVisualizacaoMesProps) {
   const [mesLocal, setMesLocal] = React.useState(new Date());
   const mesSelecionado = mesAtual ?? mesLocal;
@@ -102,26 +100,6 @@ export function ExpedientesVisualizacaoMes({
 
     return mapa;
   }, [expedientes, mesSelecionado]);
-
-  const _navegarMes = (direcao: 'anterior' | 'proximo') => {
-    const novoMes = new Date(mesSelecionado);
-    if (direcao === 'proximo') {
-      novoMes.setMonth(novoMes.getMonth() + 1);
-    } else {
-      novoMes.setMonth(novoMes.getMonth() - 1);
-    }
-    onMesAtualChange?.(novoMes);
-    if (!mesAtual) {
-      setMesLocal(novoMes);
-    }
-  };
-
-  const _formatarMesAno = () => {
-    return mesSelecionado.toLocaleDateString('pt-BR', {
-      month: 'long',
-      year: 'numeric',
-    });
-  };
 
   const getExpedientesDia = (dia: Date | null) => {
     if (!dia) return [];
