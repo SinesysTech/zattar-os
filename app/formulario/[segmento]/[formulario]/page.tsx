@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import FormularioPage from '@/components/formsign/form/formulario-page'
-import { getSegmentoBySlug } from '@/backend/formsign-admin/services/segmentos.service'
-import { getFormularioBySlugAndSegmentoId } from '@/backend/formsign-admin/services/formularios.service'
-import { getTemplate } from '@/backend/formsign-admin/services/templates.service'
-import type { DynamicFormSchema } from '@/types/formsign/form-schema.types'
-import type { MetadadoSeguranca } from '@/types/formsign/template.types'
+import FormularioPage from '@/components/assinatura-digital/form/formulario-page'
+import { getSegmentoBySlug } from '@/backend/assinatura-digital/services/segmentos.service'
+import { getFormularioBySlugAndSegmentoId } from '@/backend/assinatura-digital/services/formularios.service'
+import { getTemplate } from '@/backend/assinatura-digital/services/templates.service'
+import type { DynamicFormSchema } from '@/types/assinatura-digital/form-schema.types'
+import type { MetadadoSeguranca } from '@/types/assinatura-digital/template.types'
 
 interface PageProps {
   params: { segmento: string; formulario: string }

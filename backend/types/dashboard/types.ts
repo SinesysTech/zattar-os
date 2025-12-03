@@ -116,6 +116,7 @@ export interface DashboardUsuarioData {
 export interface MetricasEscritorio {
   totalProcessos: number;
   processosAtivos: number;
+  processosAtivosUnicos: number; // Contagem por número de processo único
   totalAudiencias: number;
   audienciasMes: number;
   totalExpedientes: number;

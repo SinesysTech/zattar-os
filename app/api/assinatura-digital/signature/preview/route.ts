@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { requirePermission } from '@/backend/auth/require-permission';
-import { generatePreview } from '@/backend/formsign-signature/services/signature.service';
-import type { PreviewPayload } from '@/backend/types/formsign-signature/types';
+import { generatePreview } from '@/backend/assinatura-digital/services/signature.service';
+import type { PreviewPayload } from '@/backend/types/assinatura-digital/types';
 
 const schema = z.object({
   cliente_id: z.number(),

@@ -285,9 +285,16 @@ function TipoDescricaoCell({
       <div className="relative w-full group">
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
-            <button
-              type="button"
+            <div
+              role="button"
+              tabIndex={0}
               className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer w-full pr-6"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setIsOpen(true);
+                }
+              }}
             >
               {/* Badge de tipo com ícone de documento na frente */}
               <div className="flex items-center gap-1.5">
@@ -314,7 +321,7 @@ function TipoDescricaoCell({
               <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed text-justify">
                 {descricaoExibicao}
               </div>
-            </button>
+            </div>
           </PopoverTrigger>
           <PopoverContent className="w-80" align="start">
             <div className="space-y-4">

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { requirePermission } from '@/backend/auth/require-permission';
-import { listSessoes } from '@/backend/formsign-signature/services/signature.service';
-import type { ListSessoesParams } from '@/backend/types/formsign-signature/types';
+import { listSessoes } from '@/backend/assinatura-digital/services/signature.service';
+import type { ListSessoesParams } from '@/backend/types/assinatura-digital/types';
 
 const querySchema = z.object({
   segmento_id: z.string().optional(),
@@ -16,7 +16,7 @@ const querySchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
-  const authOrError = await requirePermission(request, 'formsign_admin', 'listar');
+  const authOrError = await requirePermission(request, 'assinatura_digital', 'listar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }

@@ -80,6 +80,7 @@ export async function getAudienciasResumo(
 
 /**
  * Obtém lista de próximas audiências
+ * Prioridade: 1) Audiências de hoje, 2) Audiências de amanhã, 3) Próximas disponíveis
  */
 export async function getProximasAudiencias(
   responsavelId?: number,
@@ -89,35 +90,74 @@ export async function getProximasAudiencias(
 
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
+  const hojeStr = hoje.toISOString().split('T')[0];
 
+  const amanha = new Date(hoje);
+  amanha.setDate(amanha.getDate() + 1);
+  const amanhaStr = amanha.toISOString().split('T')[0];
+
+  const selectFields = `
+    id,
+    processo_id,
+    numero_processo,
+    data_inicio,
+    hora_inicio,
+    sala_audiencia_nome,
+    url_audiencia_virtual,
+    responsavel_id,
+    tipo_audiencia:tipo_audiencia_id (descricao),
+    usuarios:responsavel_id (nome_exibicao)
+  `;
+
+  // Tentar buscar audiências de HOJE primeiro
   let query = supabase
     .from('audiencias')
-    .select(`
-      id,
-      processo_id,
-      numero_processo,
-      data_inicio,
-      hora_inicio,
-      sala_audiencia_nome,
-      url_audiencia_virtual,
-      responsavel_id,
-      tipo_audiencia:tipo_audiencia_id (descricao),
-      usuarios:responsavel_id (nome_exibicao)
-    `)
-    .gte('data_inicio', hoje.toISOString())
+    .select(selectFields)
     .eq('designada', true)
-    .order('data_inicio', { ascending: true })
+    .gte('data_inicio', `${hojeStr}T00:00:00`)
+    .lt('data_inicio', `${hojeStr}T23:59:59`)
+    .order('hora_inicio', { ascending: true })
     .limit(limite);
 
   if (responsavelId) {
     query = query.eq('responsavel_id', responsavelId);
   }
 
-  const { data, error } = await query;
+  let { data } = await query;
 
-  if (error) {
-    console.error('Erro ao buscar próximas audiências:', error);
-    throw new Error(`Erro ao buscar próximas audiências: ${error.message}`);
+  // Se não houver audiências hoje, buscar de AMANHÃ
+  if (!data?.length) {
+    query = supabase
+      .from('audiencias')
+      .select(selectFields)
+      .eq('designada', true)
+      .gte('data_inicio', `${amanhaStr}T00:00:00`)
+      .lt('data_inicio', `${amanhaStr}T23:59:59`)
+      .order('hora_inicio', { ascending: true })
+      .limit(limite);
+
+    if (responsavelId) {
+      query = query.eq('responsavel_id', responsavelId);
+    }
+
+    ({ data } = await query);
+  }
+
+  // Se ainda não houver, buscar PRÓXIMAS disponíveis
+  if (!data?.length) {
+    query = supabase
+      .from('audiencias')
+      .select(selectFields)
+      .eq('designada', true)
+      .gte('data_inicio', hoje.toISOString())
+      .order('data_inicio', { ascending: true })
+      .limit(limite);
+
+    if (responsavelId) {
+      query = query.eq('responsavel_id', responsavelId);
+    }
+
+    ({ data } = await query);
   }
 
   return (data || []).map((a) => ({

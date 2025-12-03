@@ -39,6 +39,16 @@ export async function getMetricasEscritorio(): Promise<MetricasEscritorio> {
     .select('id', { count: 'exact', head: true })
     .eq('origem', 'acervo_geral');
 
+  // Processos ativos únicos (contagem por número de processo)
+  const { data: processosUnicosData } = await supabase
+    .from('acervo')
+    .select('numero_processo')
+    .eq('origem', 'acervo_geral');
+
+  const processosAtivosUnicos = processosUnicosData
+    ? new Set(processosUnicosData.map((p) => p.numero_processo)).size
+    : 0;
+
   // Total de audiências (todas)
   const { count: totalAudiencias } = await supabase
     .from('audiencias')
@@ -134,6 +144,7 @@ export async function getMetricasEscritorio(): Promise<MetricasEscritorio> {
   return {
     totalProcessos: totalProcessos || 0,
     processosAtivos: processosAtivos || 0,
+    processosAtivosUnicos,
     totalAudiencias: totalAudiencias || 0,
     audienciasMes: audienciasMes || 0,
     totalExpedientes,

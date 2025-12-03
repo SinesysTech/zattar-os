@@ -27,7 +27,7 @@ export type Recurso =
   | 'captura'
   | 'tipos_expedientes'
   | 'cargos'
-  | 'formsign_admin'
+  | 'assinatura_digital'
   | 'assistentes';
 
 /**
@@ -257,8 +257,8 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'ativar_desativar',
   ],
 
-  // Administração de assinatura digital (Formsign)
-  formsign_admin: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
+  // Administração de assinatura digital
+  assinatura_digital: ['listar', 'visualizar', 'criar', 'editar', 'deletar'],
 
   // Assistentes de IA (6 permissões)
   assistentes: [

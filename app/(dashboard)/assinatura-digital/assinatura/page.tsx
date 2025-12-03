@@ -15,7 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { ClienteAutocomplete } from "@/components/assinatura-digital/cliente-autocomplete";
 
@@ -75,7 +74,7 @@ export default function AssinaturaPage() {
         if (tplRes.ok) {
           const tplJson = await tplRes.json();
           if (tplJson.data) {
-            setTemplates(tplJson.data.map((t: any) => ({ id: t.template_uuid || String(t.id), label: t.nome })));
+            setTemplates(tplJson.data.map((t: { template_uuid?: string; id: number; nome: string }) => ({ id: t.template_uuid || String(t.id), label: t.nome })));
           }
         } else {
           errors.push("templates");
@@ -85,7 +84,7 @@ export default function AssinaturaPage() {
         if (segRes.ok) {
           const segJson = await segRes.json();
           if (segJson.data) {
-            setSegmentos(segJson.data.map((s: any) => ({ id: String(s.id), label: s.nome })));
+            setSegmentos(segJson.data.map((s: { id: number; nome: string }) => ({ id: String(s.id), label: s.nome })));
           }
         } else {
           errors.push("segmentos");
@@ -95,7 +94,7 @@ export default function AssinaturaPage() {
         if (formRes.ok) {
           const formJson = await formRes.json();
           if (formJson.data) {
-            setFormularios(formJson.data.map((f: any) => ({ id: f.formulario_uuid || String(f.id), label: f.nome })));
+            setFormularios(formJson.data.map((f: { formulario_uuid?: string; id: number; nome: string }) => ({ id: f.formulario_uuid || String(f.id), label: f.nome })));
           }
         } else {
           errors.push("formulários");
@@ -106,7 +105,7 @@ export default function AssinaturaPage() {
           setError(msg);
           toast.error(msg);
         }
-      } catch (err) {
+      } catch (_err) {
         const msg = "Erro ao carregar listas. Verifique sua conexão.";
         setError(msg);
         toast.error(msg);

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { finalizeSignature } from '@/backend/formsign-signature/services/signature.service';
-import type { FinalizePayload } from '@/backend/types/formsign-signature/types';
+import { finalizeSignature } from '@/backend/assinatura-digital/services/signature.service';
+import type { FinalizePayload } from '@/backend/types/assinatura-digital/types';
 
 const schema = z.object({
   cliente_id: z.number(),

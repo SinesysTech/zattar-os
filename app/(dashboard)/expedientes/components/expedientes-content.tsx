@@ -844,7 +844,9 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
       ordenar_por: ordenarPor || undefined,
       ordem,
       baixado: statusBaixa === 'baixado' ? true : statusBaixa === 'pendente' ? false : undefined,
-      prazo_vencido: viewMode === 'tabela' ? undefined : (statusPrazo === 'vencido' ? true : statusPrazo === 'no_prazo' ? false : undefined),
+      // Na visualização de semana, não filtrar por prazo_vencido para carregar todos (vencidos, no prazo e sem data)
+      // As abas "Vencidos" e "Sem Data" fazem a filtragem local
+      prazo_vencido: viewMode === 'semana' ? undefined : (viewMode === 'tabela' ? undefined : (statusPrazo === 'vencido' ? true : statusPrazo === 'no_prazo' ? false : undefined)),
       responsavel_id: responsavelIdFinal,
       ...filtrosSemResponsavel,
     };

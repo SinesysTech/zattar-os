@@ -13,7 +13,6 @@ import type {
 import {
   UserStatusCards,
   AdminStatusCards,
-  AdminInfoCards,
   WidgetProcessosResumo,
   WidgetAudienciasProximas,
   WidgetExpedientesUrgentes,
@@ -31,7 +30,6 @@ interface UserDashboardProps {
 
 interface AdminDashboardProps {
   data: DashboardAdminData;
-  onRefetch: () => void;
 }
 
 function DashboardSkeleton() {
@@ -144,21 +142,13 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
   );
 }
 
-function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
+function AdminDashboard({ data }: AdminDashboardProps) {
   const expedientesVencidos = data.expedientesUrgentes.filter(
     (e) => e.dias_restantes < 0
   ).length;
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <Button variant="outline" size="sm" onClick={onRefetch}>
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Atualizar
-        </Button>
-      </div>
-
       {/* Cards de Status */}
       <section>
         <AdminStatusCards
@@ -167,19 +157,9 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
         />
       </section>
 
-      {/* Info Cards */}
+      {/* Próximas Audiências */}
       <section>
-        <AdminInfoCards metricas={data.metricas} />
-      </section>
-
-      {/* Widgets de Detalhe */}
-      <section className="space-y-4">
-        <Typography.H4 className="text-muted-foreground">Expedientes e Audiências</Typography.H4>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <WidgetAudienciasProximas audiencias={data.proximasAudiencias} />
-          <WidgetExpedientesUrgentes expedientes={data.expedientesUrgentes} />
-        </div>
+        <WidgetAudienciasProximas audiencias={data.proximasAudiencias} />
       </section>
 
       {/* Última atualização */}
@@ -216,7 +196,6 @@ export function DashboardContent() {
     return (
       <AdminDashboard
         data={data as DashboardAdminData}
-        onRefetch={refetch}
       />
     );
   }

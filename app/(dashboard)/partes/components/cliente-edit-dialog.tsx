@@ -36,8 +36,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Save, User, Phone, MapPin, X, Plus } from 'lucide-react';
 import { toast } from 'sonner';
-import InputCEP, { type InputCepAddress } from '@/components/formsign/inputs/input-cep';
-import InputTelefone from '@/components/formsign/inputs/input-telefone';
+import InputCEP, { type InputCepAddress } from '@/components/assinatura-digital/inputs/input-cep';
+import InputTelefone from '@/components/assinatura-digital/inputs/input-telefone';
 import type { Cliente } from '@/types/domain/partes';
 
 interface ClienteEditDialogProps {

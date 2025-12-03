@@ -1,6 +1,6 @@
 'use client';
 
-import { Scale, Calendar, FileCheck, Users, AlertTriangle } from 'lucide-react';
+import { Scale, Calendar, FileCheck, AlertTriangle } from 'lucide-react';
 import { StatCard } from './stat-card';
 import type {
   ProcessoResumo,
@@ -67,7 +67,7 @@ export function UserStatusCards({ processos, audiencias, expedientes }: UserStat
 }
 
 // ============================================================================
-// Status Cards para Admin
+// Status Cards para Admin (3 cards)
 // ============================================================================
 
 interface AdminStatusCardsProps {
@@ -79,27 +79,18 @@ export function AdminStatusCards({ metricas, expedientesVencidos }: AdminStatusC
   const comparativo = metricas.comparativoMesAnterior;
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-3">
+      {/* Card 1: Processos Ativos (contagem única) */}
       <StatCard
-        title="Total de Processos"
-        value={metricas.totalProcessos}
-        change={comparativo.processos}
-        changeLabel="vs mês anterior"
-        trend={comparativo.processos > 0 ? 'up' : comparativo.processos < 0 ? 'down' : 'neutral'}
+        title="Processos Ativos"
+        value={metricas.processosAtivosUnicos}
+        description={`${metricas.totalProcessos - metricas.processosAtivosUnicos} arquivados`}
         icon={Scale}
         href="/processos"
         variant="default"
       />
 
-      <StatCard
-        title="Processos Ativos"
-        value={metricas.processosAtivos}
-        description={`${metricas.totalProcessos - metricas.processosAtivos} arquivados`}
-        icon={Scale}
-        href="/processos?status=ativo"
-        variant="success"
-      />
-
+      {/* Card 2: Audiências do Mês */}
       <StatCard
         title="Audiências do Mês"
         value={metricas.audienciasMes}
@@ -111,56 +102,14 @@ export function AdminStatusCards({ metricas, expedientesVencidos }: AdminStatusC
         variant="info"
       />
 
-      <StatCard
-        title="Expedientes Pendentes"
-        value={metricas.expedientesPendentes}
-        description={
-          expedientesVencidos > 0
-            ? `${expedientesVencidos} vencido${expedientesVencidos > 1 ? 's' : ''}`
-            : 'Nenhum vencido'
-        }
-        icon={FileCheck}
-        href="/expedientes"
-        variant={expedientesVencidos > 0 ? 'danger' : 'success'}
-      />
-    </div>
-  );
-}
-
-// ============================================================================
-// Cards de Info Geral Admin
-// ============================================================================
-
-interface AdminInfoCardsProps {
-  metricas: MetricasEscritorio;
-}
-
-export function AdminInfoCards({ metricas }: AdminInfoCardsProps) {
-  return (
-    <div className="grid gap-4 md:grid-cols-3">
-      <StatCard
-        title="Usuários Ativos"
-        value={metricas.totalUsuarios}
-        icon={Users}
-        href="/configuracoes/usuarios"
-        variant="info"
-      />
-
-      <StatCard
-        title="Taxa de Resolução"
-        value={`${metricas.taxaResolucao}%`}
-        description="Expedientes resolvidos no prazo"
-        icon={FileCheck}
-        variant={metricas.taxaResolucao >= 80 ? 'success' : metricas.taxaResolucao >= 60 ? 'warning' : 'danger'}
-      />
-
+      {/* Card 3: Expedientes Vencidos */}
       <StatCard
         title="Expedientes Vencidos"
-        value={metricas.expedientesVencidos}
-        description="Requerem atenção imediata"
+        value={expedientesVencidos}
+        description={expedientesVencidos > 0 ? 'Requerem atenção' : 'Tudo em dia'}
         icon={AlertTriangle}
         href="/expedientes?status=vencido"
-        variant={metricas.expedientesVencidos > 0 ? 'danger' : 'success'}
+        variant={expedientesVencidos > 0 ? 'danger' : 'success'}
       />
     </div>
   );

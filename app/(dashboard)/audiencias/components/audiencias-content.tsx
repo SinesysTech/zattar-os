@@ -326,6 +326,135 @@ function ResponsavelCell({ audiencia, onSuccess, usuarios }: { audiencia: Audien
   );
 }
 
+// Cell component for data/hora column
+function DataHoraCell({ audiencia }: { audiencia: Audiencia }) {
+  const [openAta, setOpenAta] = React.useState(false);
+  const fileKey = extractKeyFromBackblazeUrl(audiencia.url_ata_audiencia);
+  const canOpenAta = audiencia.status === 'F' && fileKey !== null;
+
+  return (
+    <div className="min-h-10 flex flex-col items-center justify-center text-sm gap-1">
+      <div className="font-medium">{formatarData(audiencia.data_inicio)}</div>
+      <div className="text-sm font-medium">{formatarHora(audiencia.data_inicio)}h</div>
+      {canOpenAta && (
+        <button className="h-6 w-6 flex items-center justify-center rounded" onClick={(e) => { e.stopPropagation(); setOpenAta(true); }} title="Ver Ata de Audiência">
+          <FileText className="h-4 w-4 text-primary" />
+        </button>
+      )}
+      <PdfViewerDialog open={openAta} onOpenChange={setOpenAta} fileKey={fileKey} documentTitle={`Ata da audiência ${audiencia.numero_processo}`} />
+    </div>
+  );
+}
+
+// Cell component for tipo/sala/ações column
+function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuccess: () => void }) {
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [isExpedienteDialogOpen, setIsExpedienteDialogOpen] = React.useState(false);
+  const [isObrigacaoDialogOpen, setIsObrigacaoDialogOpen] = React.useState(false);
+  const [isMarkingRealizada, setIsMarkingRealizada] = React.useState(false);
+
+  const tipo = audiencia.tipo_descricao || '-';
+  const sala = audiencia.sala_audiencia_nome || '-';
+  const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
+  const logoPath = getLogoPlataforma(plataforma);
+
+  const enderecoCompleto = audiencia.endereco_presencial
+    ? [audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'
+    : null;
+  const isHibrida = audiencia.modalidade === 'hibrida';
+  const isDesignada = audiencia.status === 'M';
+
+  // Marcar audiência como realizada
+  const handleMarcarRealizada = async () => {
+    setIsMarkingRealizada(true);
+    try {
+      const response = await fetch(`/api/audiencias/${audiencia.id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'F' }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Erro ao marcar como realizada');
+      }
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao marcar audiência como realizada:', error);
+    } finally {
+      setIsMarkingRealizada(false);
+    }
+  };
+
+  // Dados iniciais para o dialog de expediente
+  const expedienteInicial = {
+    numero_processo_id: audiencia.numero_processo_id,
+    numero_processo: audiencia.numero_processo,
+  };
+
+  return (
+    <div className="relative group min-h-[60px] flex flex-col items-start justify-start p-2 gap-2">
+      <div className="flex items-start gap-2 w-full">
+        <div className="flex-1">
+          <div className="text-sm font-medium">{tipo}</div>
+          <div className="text-xs text-muted-foreground">Sala: {sala}</div>
+        </div>
+      </div>
+
+      {/* URL Audiência Virtual + Logo (quando disponível) */}
+      {audiencia.url_audiencia_virtual && (
+        <div className="flex items-center gap-2 text-xs">
+          <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline max-w-[200px] truncate">
+            {audiencia.url_audiencia_virtual}
+          </a>
+          <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(audiencia.url_audiencia_virtual || ''); }} title="Copiar link">
+            <Copy className="h-3 w-3 text-muted-foreground hover:text-primary" />
+          </button>
+          {logoPath && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Image src={logoPath} alt={plataforma || 'Plataforma'} width={16} height={16} className="rounded" />
+                </TooltipTrigger>
+                <TooltipContent>{plataforma}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
+      )}
+
+      {/* Endereço presencial (modal híbrida ou presencial) */}
+      {enderecoCompleto && (
+        <div className="text-xs text-muted-foreground">{isHibrida ? 'Híbrida: ' : 'Presencial: '}{enderecoCompleto}</div>
+      )}
+
+      {/* Botões de ação (aparecem no hover ou sempre visi em mobile) */}
+      <ButtonGroup className="opacity-0 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity absolute bottom-1 right-1">
+        <ButtonGroupText>
+          {isDesignada && (
+            <Button size="sm" variant="ghost" onClick={handleMarcarRealizada} disabled={isMarkingRealizada} title="Marcar como realizada">
+              {isMarkingRealizada ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />}
+            </Button>
+          )}
+          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setIsDialogOpen(true); }} title="Editar endereço">
+            <Pencil className="h-3.5 w-3.5" />
+          </Button>
+          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setIsExpedienteDialogOpen(true); }} title="Criar expediente">
+            <PlusCircle className="h-3.5 w-3.5" />
+          </Button>
+          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setIsObrigacaoDialogOpen(true); }} title="Criar acordo/condenação">
+            <Scale className="h-3.5 w-3.5" />
+          </Button>
+        </ButtonGroupText>
+      </ButtonGroup>
+
+      {/* Dialogs */}
+      <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />
+      <NovoExpedienteDialog open={isExpedienteDialogOpen} onOpenChange={setIsExpedienteDialogOpen} onSuccess={onSuccess} dadosIniciais={expedienteInicial} />
+      <NovaObrigacaoDialog open={isObrigacaoDialogOpen} onOpenChange={setIsObrigacaoDialogOpen} onSuccess={onSuccess} processoId={audiencia.numero_processo_id} />
+    </div>
+  );
+}
+
 function criarColunas(
   onSuccess: () => void,
   usuarios: Array<{ id: number; nomeExibicao: string }>,
@@ -348,25 +477,7 @@ function criarColunas(
         const dataB = normalizarDataParaComparacao(rowB.original.data_inicio);
         return dataA - dataB;
       },
-      cell: ({ row }) => {
-        const dataInicio = row.getValue('data_inicio') as string | null;
-        const audiencia = row.original as Audiencia;
-        const [openAta, setOpenAta] = React.useState(false);
-        const fileKey = extractKeyFromBackblazeUrl(audiencia.url_ata_audiencia);
-        const canOpenAta = audiencia.status === 'F' && fileKey !== null;
-        return (
-          <div className="min-h-10 flex flex-col items-center justify-center text-sm gap-1">
-            <div className="font-medium">{formatarData(dataInicio)}</div>
-            <div className="text-sm font-medium">{formatarHora(dataInicio)}h</div>
-            {canOpenAta && (
-              <button className="h-6 w-6 flex items-center justify-center rounded" onClick={(e) => { e.stopPropagation(); setOpenAta(true); }} title="Ver Ata de Audiência">
-                <FileText className="h-4 w-4 text-primary" />
-              </button>
-            )}
-            <PdfViewerDialog open={openAta} onOpenChange={setOpenAta} fileKey={fileKey} documentTitle={`Ata da audiência ${audiencia.numero_processo}`} />
-          </div>
-        );
-      },
+      cell: ({ row }) => <DataHoraCell audiencia={row.original} />,
     },
     {
       id: 'processo',
@@ -408,212 +519,7 @@ function criarColunas(
       enableSorting: false,
       size: 280,
       meta: { align: 'left' },
-      cell: ({ row }) => {
-        const tipo = row.original.tipo_descricao || '-';
-        const sala = row.original.sala_audiencia_nome || '-';
-        const audiencia = row.original;
-        const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-        const [isExpedienteDialogOpen, setIsExpedienteDialogOpen] = React.useState(false);
-        const [isObrigacaoDialogOpen, setIsObrigacaoDialogOpen] = React.useState(false);
-        const [isMarkingRealizada, setIsMarkingRealizada] = React.useState(false);
-        const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
-        const logoPath = getLogoPlataforma(plataforma);
-
-        const enderecoCompleto = audiencia.endereco_presencial
-          ? [audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'
-          : null;
-        const isHibrida = audiencia.modalidade === 'hibrida';
-        const isDesignada = audiencia.status === 'M';
-
-        // Marcar audiência como realizada
-        const handleMarcarRealizada = async () => {
-          setIsMarkingRealizada(true);
-          try {
-            const response = await fetch(`/api/audiencias/${audiencia.id}/status`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ status: 'F' }),
-            });
-            if (!response.ok) {
-              const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-              throw new Error(errorData.error || 'Erro ao marcar como realizada');
-            }
-            onSuccess();
-          } catch (error) {
-            console.error('Erro ao marcar audiência como realizada:', error);
-          } finally {
-            setIsMarkingRealizada(false);
-          }
-        };
-
-        // Dados iniciais para o dialog de expediente
-        const dadosIniciaisExpediente = {
-          processo_id: audiencia.processo_id,
-          trt: audiencia.trt,
-          grau: audiencia.grau,
-          numero_processo: audiencia.numero_processo,
-          polo_ativo_nome: audiencia.polo_ativo_nome || undefined,
-          polo_passivo_nome: audiencia.polo_passivo_nome || undefined,
-        };
-
-        return (
-          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[260px]">
-            {/* Primeira linha: Tipo da audiência */}
-            <div className="text-sm text-left w-full">{tipo}</div>
-            
-            {/* Segunda linha: Sala da audiência */}
-            <div className="text-xs text-muted-foreground text-left w-full">{sala}</div>
-            
-            {/* Terceira linha: Badge com modalidade */}
-            <div className="w-full">
-              <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs`}>
-                {formatarModalidade(audiencia.modalidade)}
-              </Badge>
-            </div>
-            
-            {/* Quarta linha: URL e/ou Endereço */}
-            <div className="relative group h-full w-full min-h-[60px] flex flex-col items-start justify-start gap-1.5 p-2">
-              {isHibrida ? (
-                <>
-                  {audiencia.url_audiencia_virtual && (
-                    <div className="flex items-center gap-1.5 w-full">
-                      {logoPath ? (
-                        <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label={`Abrir audiência virtual em ${plataforma || 'plataforma de vídeo'}`} className="hover:opacity-70 transition-opacity flex items-center justify-center">
-                          <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
-                        </a>
-                      ) : (
-                        <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline truncate max-w-full">{audiencia.url_audiencia_virtual}</a>
-                      )}
-                    </div>
-                  )}
-                  {enderecoCompleto && (
-                    <div className="text-xs text-muted-foreground w-full">
-                      <span className="font-medium">Presencial: </span>
-                      <span>{enderecoCompleto}</span>
-                    </div>
-                  )}
-                </>
-              ) : audiencia.url_audiencia_virtual ? (
-                <div className="flex-1 flex items-center justify-start w-full">
-                  {logoPath ? (
-                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label={`Abrir audiência virtual em ${plataforma || 'plataforma de vídeo'}`} className="hover:opacity-70 transition-opacity flex items-center justify-center">
-                      <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
-                    </a>
-                  ) : (
-                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline truncate max-w-full">{audiencia.url_audiencia_virtual}</a>
-                  )}
-                </div>
-              ) : enderecoCompleto ? (
-                <span className="text-sm line-clamp-3 w-full wrap-break-word">
-                  {enderecoCompleto}
-                </span>
-              ) : (
-                <span className="text-sm text-muted-foreground">-</span>
-              )}
-              <div className="absolute bottom-1 right-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                {audiencia.url_audiencia_virtual && (
-                  <Button size="sm" variant="ghost" onClick={async () => { if (!audiencia.url_audiencia_virtual) return; try { await navigator.clipboard.writeText(audiencia.url_audiencia_virtual); } catch {} }} className="h-5 w-5 p-0" title="Copiar URL">
-                    <Copy className="h-3 w-3" />
-                  </Button>
-                )}
-                <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-5 w-5 p-0" title="Editar Endereço">
-                  <Pencil className="h-3 w-3" />
-                </Button>
-              </div>
-              <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />
-            </div>
-
-            {/* Quinta linha: Botões de ação */}
-            <div className="flex items-center gap-2 w-full pt-2 border-t flex-wrap">
-              <TooltipProvider>
-                {isDesignada ? (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={handleMarcarRealizada}
-                        disabled={isMarkingRealizada}
-                        className="h-7 px-2 text-xs gap-1 text-green-700 border-green-200 hover:bg-green-50 hover:text-green-800"
-                      >
-                        {isMarkingRealizada ? (
-                          <Loader2 className="h-3 w-3 animate-spin" />
-                        ) : (
-                          <CheckCircle2 className="h-3 w-3" />
-                        )}
-                        Realizada
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Marcar audiência como realizada</p>
-                    </TooltipContent>
-                  </Tooltip>
-                ) : audiencia.status === 'F' ? (
-                  <Badge variant="outline" className="h-7 px-2 text-xs gap-1 bg-green-100 text-green-800 border-green-300">
-                    <CheckCircle2 className="h-3 w-3" />
-                    Realizada
-                  </Badge>
-                ) : null}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setIsExpedienteDialogOpen(true)}
-                      className="h-7 px-2 text-xs gap-1"
-                    >
-                      <PlusCircle className="h-3 w-3" />
-                      Expediente
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Criar expediente a partir desta audiência</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setIsObrigacaoDialogOpen(true)}
-                      className="h-7 px-2 text-xs gap-1 text-amber-700 border-amber-200 hover:bg-amber-50 hover:text-amber-800"
-                    >
-                      <Scale className="h-3 w-3" />
-                      Obrigação
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Criar acordo/condenação a partir desta audiência</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-
-            {/* Dialog de criar expediente */}
-            <NovoExpedienteDialog
-              open={isExpedienteDialogOpen}
-              onOpenChange={setIsExpedienteDialogOpen}
-              onSuccess={() => {
-                setIsExpedienteDialogOpen(false);
-                onSuccess();
-              }}
-              dadosIniciais={dadosIniciaisExpediente}
-            />
-
-            {/* Dialog de criar obrigação */}
-            <NovaObrigacaoDialog
-              open={isObrigacaoDialogOpen}
-              onOpenChange={setIsObrigacaoDialogOpen}
-              onSuccess={() => {
-                setIsObrigacaoDialogOpen(false);
-                onSuccess();
-              }}
-              dadosIniciais={dadosIniciaisExpediente}
-            />
-          </div>
-        );
-      },
-    },
+      cell: ({ row }) => <TipoSalaAcoesCell audiencia={row.original} onSuccess={onSuccess} />,
     {
       accessorKey: 'observacoes',
       header: () => <div className="flex items-center justify-center"><div className="text-sm font-medium">Observações</div></div>,

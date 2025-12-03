@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
-import type { ClienteFormsign } from '@/types/formsign/cliente-adapter.types';
-import { clienteSinesysToFormsign } from '@/types/formsign/cliente-adapter.types';
+import type { ClienteAssinaturaDigital } from '@/types/assinatura-digital/cliente-adapter.types';
+import { clienteSinesysToAssinaturaDigital } from '@/types/assinatura-digital/cliente-adapter.types';
 
 const schema = z.object({ cpf: z.string().length(11) });
 
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     
     if (error && error.code !== 'PGRST116') throw error;
     
-    const cliente = data ? clienteSinesysToFormsign(data, data.enderecos) : null;
+    const cliente = data ? clienteSinesysToAssinaturaDigital(data, data.enderecos) : null;
     
     return NextResponse.json({
       exists: !!data,
