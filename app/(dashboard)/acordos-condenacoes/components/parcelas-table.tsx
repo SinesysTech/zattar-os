@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { BadgeProps } from '@/components/ui/badge';
-import { CheckCircle2, Edit2, XCircle, FileX } from 'lucide-react';
+import { CheckCircle2, Edit2, FileX } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/app/_lib/utils/utils';
 import { toast } from 'sonner';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
