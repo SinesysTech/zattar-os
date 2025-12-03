@@ -101,8 +101,8 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
     // Parse query parameters
     const searchParams = request.nextUrl.searchParams;
-    const params = {
-      entidade_tipo: tipo as any,
+    const params: BuscarEnderecosPorEntidadeParams = {
+      entidade_tipo: tipo as BuscarEnderecosPorEntidadeParams['entidade_tipo'],
       entidade_id: entidadeId,
       correspondencia: searchParams.get('correspondencia') === 'true' ? true : searchParams.get('correspondencia') === 'false' ? false : undefined,
       ativo: searchParams.get('ativo') === 'true' ? true : searchParams.get('ativo') === 'false' ? false : undefined,

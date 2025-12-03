@@ -231,7 +231,7 @@ export async function listarCredenciais(): Promise<CredenciaisApiResponse> {
 /**
  * Cliente API para captura de acervo geral
  */
-function getApiErrorMessage(data: any, response: Response): string {
+function getApiErrorMessage(data: { error?: string | { message?: string } } | null, response: Response): string {
   if (data && typeof data.error === 'object' && data.error !== null) {
     return data.error.message ?? `Erro ${response.status}: ${response.statusText}`;
   }

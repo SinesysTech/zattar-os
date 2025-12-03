@@ -58,8 +58,8 @@ export async function exportToPdf(
       const contentHeight = Math.min(remainingHeight, pageHeight - (margin * 2));
 
       // Calcular a porção da imagem a ser desenhada
-      const sourceY = yOffset / scale;
-      const sourceHeight = contentHeight / scale;
+      const _sourceY = yOffset / scale;
+      const _sourceHeight = contentHeight / scale;
 
       page.drawImage(pngImage, {
         x: margin,

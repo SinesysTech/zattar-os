@@ -17,8 +17,8 @@ export async function GET(request: NextRequest) {
     const options = result.clientes.map((c) => ({
       id: c.id,
       label: c.nome,
-      cpf: (c as any).cpf || undefined,
-      cnpj: (c as any).cnpj || undefined,
+      cpf: c.cpf || undefined,
+      cnpj: c.cnpj || undefined,
     }));
     return NextResponse.json({ options });
   } catch (error) {

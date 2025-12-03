@@ -324,12 +324,12 @@ export const useFormularioStore = create<FormularioState>((set, get) => ({
 
   setDadosAcao: (dados) => set({ dadosAcao: dados }),
 
-  setDadosVisualizacaoPdf: (dados) => set((state) => ({
+  setDadosVisualizacaoPdf: (dados) => set(() => ({
     dadosVisualizacaoPdf: dados,
     ...(dados ? { dadosVisualizacaoMarkdown: null } : {}),
   })),
 
-  setDadosVisualizacaoMarkdown: (dados) => set((state) => ({
+  setDadosVisualizacaoMarkdown: (dados) => set(() => ({
     dadosVisualizacaoMarkdown: dados,
     ...(dados ? { dadosVisualizacaoPdf: null } : {}),
   })),

@@ -132,14 +132,14 @@ export async function GET(request: NextRequest) {
     const params: ListarEnderecosParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!) : undefined,
-      entidade_tipo: searchParams.get('entidade_tipo') as any,
+      entidade_tipo: searchParams.get('entidade_tipo') as ListarEnderecosParams['entidade_tipo'],
       entidade_id: searchParams.get('entidade_id') ? parseInt(searchParams.get('entidade_id')!) : undefined,
       cep: searchParams.get('cep') || undefined,
       municipio: searchParams.get('municipio') || undefined,
       estado_sigla: searchParams.get('estado_sigla') || undefined,
       correspondencia: searchParams.get('correspondencia') === 'true' ? true : searchParams.get('correspondencia') === 'false' ? false : undefined,
       ativo: searchParams.get('ativo') === 'true' ? true : searchParams.get('ativo') === 'false' ? false : undefined,
-      ordenar_por: searchParams.get('ordenar_por') as any,
+      ordenar_por: searchParams.get('ordenar_por') as ListarEnderecosParams['ordenar_por'],
       ordem: searchParams.get('ordem') as 'asc' | 'desc' | undefined,
     };
 

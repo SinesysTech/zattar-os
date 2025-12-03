@@ -11,7 +11,6 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type {
   RepresentantesApiResponse,
   BuscarRepresentantesParams,
-  RepresentanteComProcessos,
 } from '@/app/_lib/types/representantes';
 import type { Representante } from '@/types/domain/representantes';
 

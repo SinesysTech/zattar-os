@@ -4,19 +4,7 @@
  */
 
 import type { Cliente } from '@/types/domain/partes';
-import type { GrauProcesso, SituacaoPJE, TipoPessoa } from '@/types/domain/common';
-import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
-import type {
-  CriarClienteParams,
-  AtualizarClienteParams,
-  ListarClientesParams,
-  ListarClientesResult,
-  UpsertClientePorCPFParams,
-  UpsertClientePorCNPJParams,
-  UpsertClientePorDocumentoParams,
-  OrdenarPorCliente,
-  OrdemCliente,
-} from '@/types/contracts/partes';
+import type { GrauProcesso, TipoPessoa } from '@/types/domain/common';
 
 // Alias para compatibilidade
 export type GrauCliente = GrauProcesso;

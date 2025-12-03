@@ -107,12 +107,12 @@ export async function PATCH(
     );
 
     return NextResponse.json({ success: true, data: expediente }, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Erro ao atribuir responsável a expediente manual:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || 'Erro ao atribuir responsável a expediente manual',
+        error: error instanceof Error ? error.message : 'Erro ao atribuir responsável a expediente manual',
       },
       { status: 500 }
     );

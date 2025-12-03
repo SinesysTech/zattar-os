@@ -91,7 +91,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     }
 
     const params: BuscarProcessosPorEntidadeParams = {
-      tipo_entidade: tipo as any,
+      tipo_entidade: tipo as BuscarProcessosPorEntidadeParams['tipo_entidade'],
       entidade_id: entidadeId,
     };
 

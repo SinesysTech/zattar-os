@@ -158,15 +158,51 @@ export function NovoExpedienteDialog({
 
   // Buscar tipos de expediente e usuários quando o dialog abrir
   React.useEffect(() => {
+    const fetchTiposExpediente = async () => {
+      setLoadingTipos(true);
+      try {
+        const response = await fetch('/api/tipos-expedientes?limite=100');
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || 'Erro ao buscar tipos de expediente');
+        }
+        setTiposExpediente(result.data.tipos_expedientes || []);
+      } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar tipos de expediente';
+        console.error('Erro ao buscar tipos de expediente:', err);
+        setError(errorMessage);
+      } finally {
+        setLoadingTipos(false);
+      }
+    };
+
+    const fetchUsuarios = async () => {
+      setLoadingUsuarios(true);
+      try {
+        const response = await fetch('/api/usuarios?limite=100');
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || 'Erro ao buscar usuários');
+        }
+        setUsuarios(result.data || []);
+      } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar usuários';
+        console.error('Erro ao buscar usuários:', err);
+        setError(errorMessage);
+      } finally {
+        setLoadingUsuarios(false);
+      }
+    };
+
     if (open) {
       if (tiposExpediente.length === 0) {
-        buscarTiposExpediente();
+        fetchTiposExpediente();
       }
       if (usuarios.length === 0) {
-        buscarUsuarios();
+        fetchUsuarios();
       }
     }
-  }, [open, tiposExpediente.length, usuarios.length, buscarTiposExpediente, buscarUsuarios]);
+  }, [open, tiposExpediente.length, usuarios.length]);
 
   // Resetar form quando fechar
   React.useEffect(() => {
@@ -213,46 +249,6 @@ export function NovoExpedienteDialog({
       setProcessos([]);
     } finally {
       setLoadingProcessos(false);
-    }
-  };
-
-  const buscarTiposExpediente = async () => {
-    setLoadingTipos(true);
-
-    try {
-      const response = await fetch('/api/tipos-expedientes?limite=100');
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.error || 'Erro ao buscar tipos de expediente');
-      }
-
-      setTiposExpediente(result.data.tipos_expedientes || []);
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar tipos de expediente';
-      console.error('Erro ao buscar tipos de expediente:', err);
-      setError(errorMessage);
-    } finally {
-      setLoadingTipos(false);
-    }
-  };
-
-  const buscarUsuarios = async () => {
-    setLoadingUsuarios(true);
-
-    try {
-      const response = await fetch('/api/usuarios?limite=100');
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.error || 'Erro ao buscar usuários');
-      }
-
-      setUsuarios(result.data.usuarios || []);
-    } catch (err: unknown) {
-      console.error('Erro ao buscar usuários:', err);
-    } finally {
-      setLoadingUsuarios(false);
     }
   };
 

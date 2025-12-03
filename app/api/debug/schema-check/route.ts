@@ -55,9 +55,9 @@ export async function GET() {
         select: {
           success: !selectError,
           error: selectError?.message,
-          errorCode: (selectError as any)?.code,
-          errorDetails: (selectError as any)?.details,
-          errorHint: (selectError as any)?.hint,
+          errorCode: selectError?.code,
+          errorDetails: selectError?.details,
+          errorHint: selectError?.hint,
           data: testSelect,
         },
       },

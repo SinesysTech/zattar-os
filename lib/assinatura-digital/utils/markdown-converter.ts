@@ -145,7 +145,7 @@ function parseInline(text: string): TiptapNode[] {
       length: number;
       type: string;
       content: string;
-      attrs?: Record<string, any>;
+      attrs?: Record<string, unknown>;
     }> = [];
 
     // Bold: **text**

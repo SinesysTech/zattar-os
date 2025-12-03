@@ -166,10 +166,10 @@ export async function GET(
     }
 
     return NextResponse.json({ success: true, data: expediente }, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Erro ao buscar expediente manual:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Erro ao buscar expediente manual' },
+      { success: false, error: error instanceof Error ? error.message : 'Erro ao buscar expediente manual' },
       { status: 500 }
     );
   }
@@ -223,10 +223,10 @@ export async function PATCH(
     const expediente = await atualizarExpedienteManual(expedienteId, body);
 
     return NextResponse.json({ success: true, data: expediente }, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Erro ao atualizar expediente manual:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Erro ao atualizar expediente manual' },
+      { success: false, error: error instanceof Error ? error.message : 'Erro ao atualizar expediente manual' },
       { status: 500 }
     );
   }
@@ -280,10 +280,10 @@ export async function DELETE(
       { success: true, message: 'Expediente deletado com sucesso' },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Erro ao deletar expediente manual:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Erro ao deletar expediente manual' },
+      { success: false, error: error instanceof Error ? error.message : 'Erro ao deletar expediente manual' },
       { status: 500 }
     );
   }

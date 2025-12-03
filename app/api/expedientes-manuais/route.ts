@@ -145,7 +145,7 @@ import {
   criarExpedienteManual,
   listarExpedientesManuais,
 } from '@/backend/expedientes/services/persistence/expedientes-manuais-persistence.service';
-import { CriarExpedienteManualParams } from '@/backend/types/expedientes-manuais/types';
+import { CriarExpedienteManualParams, ListarExpedientesManuaisParams } from '@/backend/types/expedientes-manuais/types';
 
 /**
  * GET /api/expedientes-manuais
@@ -214,24 +214,24 @@ export async function GET(request: NextRequest) {
       limite,
       busca,
       processo_id,
-      trt: trt as any,
-      grau: grau as any,
+      trt,
+      grau: grau as ListarExpedientesManuaisParams['grau'],
       tipo_expediente_id,
-      responsavel_id: responsavel_id as any,
+      responsavel_id: responsavel_id as ListarExpedientesManuaisParams['responsavel_id'],
       prazo_vencido,
       baixado,
       criado_por,
       data_prazo_legal_inicio,
       data_prazo_legal_fim,
-      ordenar_por: ordenar_por as any,
-      ordem: ordem as any,
+      ordenar_por: ordenar_por as ListarExpedientesManuaisParams['ordenar_por'],
+      ordem: ordem as ListarExpedientesManuaisParams['ordem'],
     });
 
     return NextResponse.json({ success: true, data: result }, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Erro ao listar expedientes manuais:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Erro ao listar expedientes manuais' },
+      { success: false, error: error instanceof Error ? error.message : 'Erro ao listar expedientes manuais' },
       { status: 500 }
     );
   }
@@ -290,10 +290,10 @@ export async function POST(request: NextRequest) {
       { success: true, data: expediente },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Erro ao criar expediente manual:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Erro ao criar expediente manual' },
+      { success: false, error: error instanceof Error ? error.message : 'Erro ao criar expediente manual' },
       { status: 500 }
     );
   }

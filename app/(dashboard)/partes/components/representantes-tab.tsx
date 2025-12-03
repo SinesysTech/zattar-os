@@ -385,7 +385,7 @@ export function RepresentantesTab() {
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<RepresentantesFilters>({});
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
-  const [createOpen, setCreateOpen] = React.useState(false);
+  const [_createOpen, setCreateOpen] = React.useState(false);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -402,7 +402,7 @@ export function RepresentantesTab() {
     };
   }, [pagina, limite, buscaDebounced, filtros]);
 
-  const { representantes, paginacao, isLoading, error, refetch } = useRepresentantes(params);
+  const { representantes, paginacao, isLoading, error } = useRepresentantes(params);
 
   const colunas: ColumnDef<RepresentanteComProcessos>[] = React.useMemo(() => criarColunas(), []);
 

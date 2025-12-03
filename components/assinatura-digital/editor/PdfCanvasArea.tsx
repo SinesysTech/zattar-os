@@ -248,6 +248,7 @@ export default function PdfCanvasArea({
                           className="pointer-events-none absolute -top-6 left-0 flex items-center gap-1 rounded-full px-2 py-0 text-[11px] shadow-sm"
                         >
                           {isImageField ? (
+                            // eslint-disable-next-line jsx-a11y/alt-text
                             <Image className="h-3 w-3" aria-hidden="true" />
                           ) : isRichTextField ? (
                             <AlignLeft className="h-3 w-3" aria-hidden="true" />

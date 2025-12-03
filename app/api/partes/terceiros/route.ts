@@ -86,8 +86,8 @@ export async function GET(request: NextRequest) {
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,
       tipo_pessoa: (searchParams.get('tipo_pessoa') as 'pf' | 'pj' | null) || undefined,
-      tipo_parte: (searchParams.get('tipo_parte') as any) || undefined,
-      polo: (searchParams.get('polo') as any) || undefined,
+      tipo_parte: (searchParams.get('tipo_parte') as ListarTerceirosParams['tipo_parte']) || undefined,
+      polo: (searchParams.get('polo') as ListarTerceirosParams['polo']) || undefined,
     };
 
     // 3. Listar terceiros

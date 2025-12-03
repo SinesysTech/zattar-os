@@ -142,9 +142,9 @@ export async function GET(request: NextRequest) {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       processoId: searchParams.get('processoId') ? parseInt(searchParams.get('processoId')!, 10) : undefined,
-      tipo: searchParams.get('tipo') as any,
-      direcao: searchParams.get('direcao') as any,
-      status: searchParams.get('status') as any,
+      tipo: searchParams.get('tipo') as ListarAcordosParams['tipo'],
+      direcao: searchParams.get('direcao') as ListarAcordosParams['direcao'],
+      status: searchParams.get('status') as ListarAcordosParams['status'],
       dataInicio: searchParams.get('dataInicio') || undefined,
       dataFim: searchParams.get('dataFim') || undefined,
     };

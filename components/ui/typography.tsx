@@ -19,7 +19,7 @@ function createTypographyComponent<T extends React.ElementType>(
   defaultElement: T,
   className: string,
   displayName: string,
-  additionalProps?: Record<string, any>
+  additionalProps?: Record<string, unknown>
 ) {
   type TypographyProps<C extends React.ElementType = T> = PolymorphicComponentProp<
     C,
@@ -39,7 +39,7 @@ function createTypographyComponent<T extends React.ElementType>(
         ref={ref}
         className={cn(className, userClassName)}
         {...additionalProps}
-        {...(props as any)}
+        {...(props as Record<string, unknown>)}
       >
         {children}
       </Element>

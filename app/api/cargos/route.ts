@@ -144,7 +144,7 @@ export async function GET(request: NextRequest) {
     const ativo = searchParams.get('ativo')
       ? searchParams.get('ativo') === 'true'
       : undefined;
-    const ordenarPor = (searchParams.get('ordenarPor') || 'nome') as any;
+    const ordenarPor = (searchParams.get('ordenarPor') || 'nome') as 'nome' | 'created_at' | 'updated_at';
     const ordem = (searchParams.get('ordem') || 'asc') as 'asc' | 'desc';
 
     // Listar cargos
@@ -164,10 +164,10 @@ export async function GET(request: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error('Erro ao listar cargos:', error);
     return NextResponse.json(
-      { error: error.message || 'Erro interno do servidor' },
+      { error: error instanceof Error ? error.message : 'Erro interno do servidor' },
       { status: 500 }
     );
   }
@@ -216,10 +216,10 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error('Erro ao criar cargo:', error);
     return NextResponse.json(
-      { error: error.message || 'Erro interno do servidor' },
+      { error: error instanceof Error ? error.message : 'Erro interno do servidor' },
       { status: 500 }
     );
   }

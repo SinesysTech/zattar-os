@@ -42,8 +42,8 @@ export function buildFilterOptions(configs: FilterConfig[]): ComboboxOption[] {
   return options;
 }
 
-export function parseFilterValues(selectedFilters: string[], configs: FilterConfig[]): Record<string, any> {
-  const filters: Record<string, any> = {};
+export function parseFilterValues(selectedFilters: string[], configs: FilterConfig[]): Record<string, unknown> {
+  const filters: Record<string, unknown> = {};
   const configMap = new Map(configs.map(c => [c.id, c]));
 
   for (const selected of selectedFilters) {

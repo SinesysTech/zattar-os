@@ -91,7 +91,7 @@ export function MediaToolbarButton({
     accept: currentConfig.accept,
     multiple: true,
     readFilesContent: false,
-    onFilesSelected: (data: any) => {
+    onFilesSelected: (data: { plainFiles?: File[] }) => {
       if ('plainFiles' in data) {
         const updatedFiles = data.plainFiles;
         editor.getTransforms(PlaceholderPlugin).insert.media(updatedFiles);

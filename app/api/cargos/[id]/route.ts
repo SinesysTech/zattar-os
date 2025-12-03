@@ -141,8 +141,8 @@ export async function GET(
     }
 
     return NextResponse.json({ success: true, data: cargo }, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Erro interno' }, { status: 500 });
   }
 }
 
@@ -167,8 +167,8 @@ export async function PUT(
 
     const cargo = await atualizarCargo(id, body);
     return NextResponse.json({ success: true, data: cargo }, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Erro interno' }, { status: 500 });
   }
 }
 
@@ -196,7 +196,7 @@ export async function DELETE(
     const totalUsuarios = await contarUsuariosComCargo(id);
     if (totalUsuarios > 0) {
       const usuarios = await listarUsuariosComCargo(id);
-      const nomesUsuarios = usuarios.map((u: any) => u.nome_completo).join(', ');
+      const nomesUsuarios = usuarios.map((u) => u.nome_completo).join(', ');
 
       return NextResponse.json(
         {
@@ -212,7 +212,7 @@ export async function DELETE(
 
     await deletarCargo(id);
     return NextResponse.json({ success: true }, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Erro interno' }, { status: 500 });
   }
 }

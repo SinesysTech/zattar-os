@@ -1,6 +1,7 @@
 // Rota de API para captura de partes de processos do PJE-TRT
 // Captura partes, representantes e cria vínculos processo-partes
 
+import type { Browser, Page } from 'playwright';
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateRequest } from "@/backend/auth/api-auth";
 import { getCredentialComplete } from "@/backend/captura/credentials/credential.service";
@@ -448,8 +449,8 @@ export async function POST(request: NextRequest) {
         // Buscar configuração do tribunal
         const config = await getTribunalConfig(credencial.tribunal, credencial.grau);
 
-        let browser: any = null;
-        let page: any = null;
+        let browser: Browser | null = null;
+        let page: Page | null = null;
 
         try {
           // ✅ AUTENTICAR UMA VEZ POR GRUPO

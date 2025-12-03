@@ -138,11 +138,11 @@ export async function GET(request: NextRequest) {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       advogado_id: searchParams.get('advogado_id') ? parseInt(searchParams.get('advogado_id')!, 10) : undefined,
-      tipo_captura: searchParams.get('tipo_captura') as any,
+      tipo_captura: searchParams.get('tipo_captura') as ListarAgendamentosParams['tipo_captura'],
       ativo: searchParams.get('ativo') === 'true' ? true : searchParams.get('ativo') === 'false' ? false : undefined,
       proxima_execucao_min: searchParams.get('proxima_execucao_min') || undefined,
       proxima_execucao_max: searchParams.get('proxima_execucao_max') || undefined,
-      ordenar_por: searchParams.get('ordenar_por') as any,
+      ordenar_por: searchParams.get('ordenar_por') as ListarAgendamentosParams['ordenar_por'],
       ordem: searchParams.get('ordem') as 'asc' | 'desc' | undefined,
     };
 

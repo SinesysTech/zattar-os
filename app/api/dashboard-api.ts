@@ -159,7 +159,7 @@ export async function getLayoutPainel(): Promise<LayoutPainel | null> {
   }
 }
 
-export async function createLayoutPainel(configuracao_layout: Record<string, any>): Promise<LayoutPainel> {
+export async function createLayoutPainel(configuracao_layout: Record<string, unknown>): Promise<LayoutPainel> {
   const { usuarioId, supabase } = await getUsuarioId();
   const { data, error } = await supabase
     .from('layouts_painel')
@@ -171,7 +171,7 @@ export async function createLayoutPainel(configuracao_layout: Record<string, any
   return data;
 }
 
-export async function updateLayoutPainel(id: number, configuracao_layout: Record<string, any>): Promise<LayoutPainel> {
+export async function updateLayoutPainel(id: number, configuracao_layout: Record<string, unknown>): Promise<LayoutPainel> {
   const { supabase } = await getUsuarioId();
   const { data, error } = await supabase
     .from('layouts_painel')

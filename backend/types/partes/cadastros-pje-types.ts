@@ -98,7 +98,7 @@ export interface AtualizarCadastroPJEParams {
   id: number;
 
   /** Novos dados extras do cadastro (opcional) */
-  dados_cadastro_pje?: Record<string, any>;
+  dados_cadastro_pje?: Record<string, unknown>;
 
   /** Novo grau processual (opcional) */
   grau?: GrauCadastroPJE;

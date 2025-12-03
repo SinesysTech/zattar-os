@@ -165,16 +165,16 @@ export async function GET(request: NextRequest) {
     const params: ListarProcessoPartesParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!) : undefined,
-      tipo_entidade: searchParams.get('tipo_entidade') as any,
+      tipo_entidade: searchParams.get('tipo_entidade') as ListarProcessoPartesParams['tipo_entidade'],
       entidade_id: searchParams.get('entidade_id') ? parseInt(searchParams.get('entidade_id')!) : undefined,
       processo_id: searchParams.get('processo_id') ? parseInt(searchParams.get('processo_id')!) : undefined,
       trt: searchParams.get('trt') || undefined,
       grau: normalizeGrauInput(searchParams.get('grau')),
       numero_processo: searchParams.get('numero_processo') || undefined,
-      polo: searchParams.get('polo') as any,
-      tipo_parte: searchParams.get('tipo_parte') as any,
+      polo: searchParams.get('polo') as ListarProcessoPartesParams['polo'],
+      tipo_parte: searchParams.get('tipo_parte') as ListarProcessoPartesParams['tipo_parte'],
       principal: searchParams.get('principal') === 'true' ? true : searchParams.get('principal') === 'false' ? false : undefined,
-      ordenar_por: searchParams.get('ordenar_por') as any,
+      ordenar_por: searchParams.get('ordenar_por') as ListarProcessoPartesParams['ordenar_por'],
       ordem: searchParams.get('ordem') as 'asc' | 'desc' | undefined,
     };
 

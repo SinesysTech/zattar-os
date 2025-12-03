@@ -7,7 +7,8 @@ import { EmojiInputElement } from '@/components/ui/emoji-node';
 
 export const EmojiKit = [
   EmojiPlugin.configure({
-    options: { data: emojiMartData as any },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    options: { data: emojiMartData as unknown },
   }),
   EmojiInputPlugin.withComponent(EmojiInputElement),
 ];

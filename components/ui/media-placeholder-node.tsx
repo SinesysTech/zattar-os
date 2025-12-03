@@ -70,7 +70,7 @@ export const PlaceholderElement = withHOC(
       accept: currentContent.accept,
       multiple: true,
       readFilesContent: false,
-      onFilesSelected: (data: any) => {
+      onFilesSelected: (data: { plainFiles?: File[] }) => {
         if ('plainFiles' in data) {
           const updatedFiles = data.plainFiles;
           const firstFile = updatedFiles[0];

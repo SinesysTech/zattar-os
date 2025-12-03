@@ -86,10 +86,10 @@ export async function POST(
     const expediente = await reverterBaixaExpedienteManual(expedienteId);
 
     return NextResponse.json({ success: true, data: expediente }, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error('[API] Erro ao reverter baixa de expediente manual:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Erro ao reverter baixa de expediente manual' },
+      { success: false, error: error instanceof Error ? error.message : 'Erro ao reverter baixa de expediente manual' },
       { status: 500 }
     );
   }

@@ -84,7 +84,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     const searchParams = request.nextUrl.searchParams;
     const params: BuscarPartesPorProcessoParams = {
       processo_id: processoId,
-      polo: searchParams.get('polo') as any,
+      polo: searchParams.get('polo') as BuscarPartesPorProcessoParams['polo'],
     };
 
     // Find partes

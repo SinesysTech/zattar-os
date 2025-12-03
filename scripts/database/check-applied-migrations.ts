@@ -1,6 +1,6 @@
 // Script para verificar quais migrations foram aplicadas
 import { createClient } from '@supabase/supabase-js';
-import { readdirSync } from 'fs';
+import { readdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -214,8 +214,7 @@ async function main() {
 main()
   .then((result) => {
     // Salvar resultado em arquivo JSON
-    const fs = require('fs');
-    fs.writeFileSync(
+    writeFileSync(
       join(process.cwd(), 'migration-status.json'),
       JSON.stringify(result, null, 2)
     );

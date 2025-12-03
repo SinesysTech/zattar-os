@@ -538,7 +538,7 @@ export interface ApiSuccessResponse<T> {
 export interface ApiErrorResponse {
   success: false;
   error: string;
-  details?: any;
+  details?: unknown;
 }
 
 /**
