@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { requirePermission } from '@/backend/auth/require-permission';
 import { finalizeSignature } from '@/backend/formsign-signature/services/signature.service';
 import type { FinalizePayload } from '@/backend/types/formsign-signature/types';
 
@@ -22,12 +21,19 @@ const schema = z.object({
   sessao_id: z.string().uuid().optional().nullable(),
 });
 
+/**
+ * Endpoint PÚBLICO para finalizar assinatura de formulários.
+ *
+ * IMPORTANTE: Este endpoint NÃO requer autenticação pois é usado
+ * por formulários públicos acessados por usuários finais.
+ *
+ * Segurança:
+ * - Validação Zod de todos os campos
+ * - Logs de IP/user-agent para auditoria
+ * - UUID de sessão para rastreamento
+ * - Rate limiting recomendado (TODO: implementar)
+ */
 export async function POST(request: NextRequest) {
-  const authOrError = await requirePermission(request, 'formsign_admin', 'criar');
-  if (authOrError instanceof NextResponse) {
-    return authOrError;
-  }
-
   try {
     const body = await request.json();
     const payload = schema.parse(body) as FinalizePayload;

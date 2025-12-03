@@ -90,6 +90,29 @@ export async function getFormulario(id: string): Promise<FormsignFormulario | nu
   return data as FormsignFormulario;
 }
 
+export async function getFormularioBySlugAndSegmentoId(
+  slug: string,
+  segmentoId: number
+): Promise<FormsignFormulario | null> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from(TABLE_FORMULARIOS)
+    .select(FORMULARIO_SELECT)
+    .eq('slug', slug)
+    .eq('segmento_id', segmentoId)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return null;
+    }
+    throw new Error(`Erro ao obter formulário por slug: ${error.message}`);
+  }
+
+  return data as FormsignFormulario;
+}
+
 export async function createFormulario(input: UpsertFormularioInput): Promise<FormsignFormulario> {
   const supabase = createServiceClient();
   const payload = buildFormularioPayload(input);

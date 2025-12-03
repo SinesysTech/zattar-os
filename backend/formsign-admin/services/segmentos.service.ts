@@ -74,6 +74,24 @@ export async function getSegmento(id: number): Promise<FormsignSegmento | null> 
   return data as FormsignSegmento;
 }
 
+export async function getSegmentoBySlug(slug: string): Promise<FormsignSegmento | null> {
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from(TABLE_SEGMENTOS)
+    .select(SEGMENTO_SELECT)
+    .eq('slug', slug)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return null;
+    }
+    throw new Error(`Erro ao obter segmento por slug: ${error.message}`);
+  }
+
+  return data as FormsignSegmento;
+}
+
 export async function updateSegmento(id: number, input: Partial<UpsertSegmentoInput>): Promise<FormsignSegmento> {
   const supabase = createServiceClient();
   const payload: Record<string, unknown> = {};
