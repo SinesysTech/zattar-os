@@ -1421,38 +1421,100 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
     <ClientOnlyTabs value={diaAtivo} onValueChange={setDiaAtivo} className="gap-0">
       <TabsList className="bg-background justify-start rounded-t-lg rounded-b-none border-b p-0 w-full">
         <TabsTrigger
+          value="vencidos"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Vencidos</span>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">
+            {expedientesPorDia.vencidos.length}
+          </Badge>
+        </TabsTrigger>
+        <TabsTrigger
+          value="semData"
+          className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
+        >
+          <span className="text-sm font-medium text-center whitespace-normal">Sem Data</span>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">
+            {expedientesPorDia.semData.length}
+          </Badge>
+        </TabsTrigger>
+        <TabsTrigger
           value="segunda"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Segunda - {formatarDataTab(datasDiasSemana.segunda)}</span>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">
+            {expedientesPorDia.segunda.length}
+          </Badge>
         </TabsTrigger>
         <TabsTrigger
           value="terca"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Terça - {formatarDataTab(datasDiasSemana.terca)}</span>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">
+            {expedientesPorDia.terca.length}
+          </Badge>
         </TabsTrigger>
         <TabsTrigger
           value="quarta"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Quarta - {formatarDataTab(datasDiasSemana.quarta)}</span>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">
+            {expedientesPorDia.quarta.length}
+          </Badge>
         </TabsTrigger>
         <TabsTrigger
           value="quinta"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4 after:absolute after:right-0 after:top-[25%] after:h-[50%] after:w-px after:bg-border data-[state=active]:after:opacity-0"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Quinta - {formatarDataTab(datasDiasSemana.quinta)}</span>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">
+            {expedientesPorDia.quinta.length}
+          </Badge>
         </TabsTrigger>
         <TabsTrigger
           value="sexta"
           className="relative bg-muted/50 border-b-border dark:data-[state=active]:bg-background data-[state=active]:bg-background data-[state=active]:border-border data-[state=active]:border-b-background h-full rounded-none rounded-t border border-transparent data-[state=active]:-mb-0.5 data-[state=active]:shadow-none dark:border-b-0 dark:data-[state=active]:-mb-0.5 px-4 py-4"
         >
           <span className="text-sm font-medium text-center whitespace-normal">Sexta - {formatarDataTab(datasDiasSemana.sexta)}</span>
+          <Badge className="ml-2 bg-primary/10 text-primary border-primary/20 hover:bg-primary/10">
+            {expedientesPorDia.sexta.length}
+          </Badge>
         </TabsTrigger>
       </TabsList>
 
-      {Object.entries(expedientesPorDia).map(([dia, expedientesDia]) => {
+      {/* Aba Vencidos */}
+      <TabsContent key="vencidos" value="vencidos" className="mt-0">
+        <div className="rounded-b-lg border border-t-0 bg-card text-card-foreground shadow-sm">
+          <DataTable
+            data={expedientesPorDia.vencidos}
+            columns={colunas}
+            isLoading={isLoading}
+            emptyMessage="Nenhum expediente vencido."
+            hideTableBorder={true}
+            hideColumnBorders={true}
+          />
+        </div>
+      </TabsContent>
+
+      {/* Aba Sem Data */}
+      <TabsContent key="semData" value="semData" className="mt-0">
+        <div className="rounded-b-lg border border-t-0 bg-card text-card-foreground shadow-sm">
+          <DataTable
+            data={expedientesPorDia.semData}
+            columns={colunas}
+            isLoading={isLoading}
+            emptyMessage="Nenhum expediente sem data de prazo."
+            hideTableBorder={true}
+            hideColumnBorders={true}
+          />
+        </div>
+      </TabsContent>
+
+      {/* Abas dos dias da semana */}
+      {(['segunda', 'terca', 'quarta', 'quinta', 'sexta'] as const).map((dia) => {
         const dataDia = datasDiasSemana[dia];
         const nomeDiaCompleto = {
           segunda: 'Segunda-feira',
@@ -1466,7 +1528,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
           <TabsContent key={dia} value={dia} className="mt-0">
             <div className="rounded-b-lg border border-t-0 bg-card text-card-foreground shadow-sm">
               <DataTable
-                data={expedientesDia}
+                data={expedientesPorDia[dia]}
                 columns={colunas}
                 isLoading={isLoading}
                 emptyMessage={`Nenhum expediente com prazo para ${nomeDiaCompleto}, ${formatarDataCompleta(dataDia)}.`}
