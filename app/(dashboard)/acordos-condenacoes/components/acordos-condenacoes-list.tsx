@@ -7,7 +7,6 @@ import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
 import { Eye } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/app/_lib/utils/utils';
 import type { ColumnDef } from '@tanstack/react-table';

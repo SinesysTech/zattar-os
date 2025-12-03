@@ -1272,7 +1272,7 @@ interface ExpedientesVisualizacaoSemanaProps {
 }
 
 export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefresh, usuarios, tiposExpedientes, semanaAtual, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort }: ExpedientesVisualizacaoSemanaProps) {
-  const [diaAtivo, setDiaAtivo] = React.useState<string>('segunda');
+  const [diaAtivo, setDiaAtivo] = React.useState<string>('vencidos');
 
   const handleSuccess = React.useCallback(() => {
     if (onRefresh) {
@@ -1299,8 +1299,10 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
 
   // Filtrar expedientes por dia da semana (usando data de vencimento - prazo legal)
   const expedientesPorDia = React.useMemo(() => {
-    type DiaSemana = 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta';
+    type DiaSemana = 'vencidos' | 'semData' | 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta';
     const dias: Record<DiaSemana, PendenteManifestacao[]> = {
+      vencidos: [],  // Primeira aba - expedientes vencidos
+      semData: [],   // Segunda aba - expedientes sem data de prazo
       segunda: [],
       terca: [],
       quarta: [],
@@ -1308,20 +1310,26 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
       sexta: [],
     };
 
-    // Itens especiais: sem prazo e vencidos (pendentes)
-    const semPrazoPendentes = expedientes.filter(
-      (e) => !e.baixado_em && !e.data_prazo_legal_parte
-    );
-    const vencidosPendentes = expedientes.filter(
+    // Expedientes vencidos (prazo_vencido === true e não baixados)
+    dias.vencidos = expedientes.filter(
       (e) => !e.baixado_em && e.prazo_vencido === true
     );
-    const pinnedIds = new Set<number>([
-      ...semPrazoPendentes.map((e) => e.id),
-      ...vencidosPendentes.map((e) => e.id),
+
+    // Expedientes sem data de prazo (não baixados)
+    dias.semData = expedientes.filter(
+      (e) => !e.baixado_em && !e.data_prazo_legal_parte
+    );
+
+    // IDs dos expedientes especiais para evitar duplicação
+    const idsEspeciais = new Set<number>([
+      ...dias.vencidos.map((e) => e.id),
+      ...dias.semData.map((e) => e.id),
     ]);
 
+    // Distribuir expedientes por dia da semana (excluindo vencidos e sem data)
     expedientes.forEach((expediente) => {
-      if (!expediente.data_prazo_legal_parte) return;
+      // Ignorar expedientes sem data ou que já estão nas abas especiais
+      if (!expediente.data_prazo_legal_parte || idsEspeciais.has(expediente.id)) return;
 
       // Criar data a partir do ISO string e normalizar para timezone local
       const data = new Date(expediente.data_prazo_legal_parte);
@@ -1341,20 +1349,14 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
       }
     });
 
-    // Para cada dia: colocar sem prazo e vencidos pendentes no topo
-    const diasKeys: DiaSemana[] = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
-    diasKeys.forEach((dia) => {
-      const listaDia = dias[dia];
-      // Remover duplicados com pinned
-      const restantes = listaDia.filter((e) => !pinnedIds.has(e.id));
-      // Ordenar restantes por data de vencimento (crescentemente)
-      restantes.sort((a, b) => {
+    // Ordenar cada dia por data de vencimento (crescentemente)
+    const diasDaSemana: DiaSemana[] = ['segunda', 'terca', 'quarta', 'quinta', 'sexta'];
+    diasDaSemana.forEach((dia) => {
+      dias[dia].sort((a, b) => {
         const dataA = a.data_prazo_legal_parte ? new Date(a.data_prazo_legal_parte).getTime() : 0;
         const dataB = b.data_prazo_legal_parte ? new Date(b.data_prazo_legal_parte).getTime() : 0;
         return dataA - dataB;
       });
-      // Reconstituir lista do dia com pinned no topo
-      dias[dia] = [...semPrazoPendentes, ...vencidosPendentes, ...restantes];
     });
 
     return dias;
@@ -1391,6 +1393,8 @@ export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, onRefres
 
   const temExpedientesNaSemana = React.useMemo(() => {
     return (
+      expedientesPorDia.vencidos.length +
+      expedientesPorDia.semData.length +
       expedientesPorDia.segunda.length +
       expedientesPorDia.terca.length +
       expedientesPorDia.quarta.length +

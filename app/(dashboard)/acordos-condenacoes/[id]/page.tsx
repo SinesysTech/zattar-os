@@ -23,6 +23,15 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 
+interface Parcela {
+  id: number;
+  numeroParcela: number;
+  dataVencimento: string;
+  valor: number;
+  status: string;
+  dataPagamento?: string | null;
+}
+
 interface AcordoCondenacao {
   id: number;
   processoId: number;
@@ -38,7 +47,7 @@ interface AcordoCondenacao {
   honorariosSucumbenciaisTotal?: number;
   createdAt: string;
   updatedAt: string;
-  parcelas?: any[];
+  parcelas?: Parcela[];
 }
 
 interface AcordoDetalhesPageProps {
@@ -54,7 +63,7 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
   const [acordoId, setAcordoId] = useState<number | null>(null);
   const [editDialog, setEditDialog] = useState<{
     open: boolean;
-    parcela: any | null;
+    parcela: Parcela | null;
   }>({
     open: false,
     parcela: null,
@@ -123,7 +132,7 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
     }
   };
 
-  const handleEditParcela = (parcela: any) => {
+  const handleEditParcela = (parcela: Parcela) => {
     setEditDialog({ open: true, parcela });
   };
 

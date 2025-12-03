@@ -1011,6 +1011,21 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
     return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
 
+  // Contador de expedientes da semana (apenas dias úteis, excluindo vencidos e sem data)
+  const contadorExpedientesSemana = React.useMemo(() => {
+    if (viewMode !== 'semana' || !expedientes) return 0;
+    return expedientes.filter((e) => {
+      // Apenas expedientes com data de prazo
+      if (!e.data_prazo_legal_parte) return false;
+      // Excluir vencidos
+      if (e.prazo_vencido === true) return false;
+      // Verificar se está dentro da semana atual
+      const data = new Date(e.data_prazo_legal_parte);
+      const dataLocal = new Date(data.getFullYear(), data.getMonth(), data.getDate());
+      return dataLocal >= inicioSemana && dataLocal <= fimSemana;
+    }).length;
+  }, [viewMode, expedientes, inicioSemana, fimSemana]);
+
   const formatarPeriodo = React.useMemo(() => {
     if (viewMode === 'semana') {
       return `${formatarDataCabecalho(inicioSemana)} - ${formatarDataCabecalho(fimSemana)}`;
@@ -1052,7 +1067,7 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
 
       {/* Linha 2: Controles de navegação temporal (apenas para visualizações de calendário) */}
       {viewMode !== 'tabela' && (
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex items-center justify-start gap-4 pt-2">
           <ButtonGroup>
             <Button
               variant="outline"
@@ -1102,6 +1117,11 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
               </TooltipContent>
             </Tooltip>
           </ButtonGroup>
+          {viewMode === 'semana' && (
+            <div className="inline-flex items-center h-9 rounded-md border border-input bg-primary/10 px-3 text-sm font-medium text-primary shrink-0">
+              {contadorExpedientesSemana} expedientes
+            </div>
+          )}
         </div>
       )}
 

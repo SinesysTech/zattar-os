@@ -14,6 +14,18 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
+interface AcordoCondenacaoData {
+  id: number;
+  tipo: 'acordo' | 'condenacao' | 'custas_processuais';
+  direcao: 'recebimento' | 'pagamento';
+  valorTotal: number;
+  dataVencimentoPrimeiraParcela: string;
+  numeroParcelas: number;
+  formaDistribuicao?: string | null;
+  percentualEscritorio?: number;
+  honorariosSucumbenciaisTotal?: number;
+}
+
 interface AcordoCondenacaoFormProps {
   processoId?: number;
   acordoId?: number; // Para modo de edição
@@ -27,7 +39,7 @@ interface AcordoCondenacaoFormProps {
     percentualEscritorio?: number;
     honorariosSucumbenciaisTotal?: number;
   };
-  onSuccess?: (data: any) => void;
+  onSuccess?: (data: AcordoCondenacaoData) => void;
   onCancel?: () => void;
 }
 
@@ -129,7 +141,7 @@ export function AcordoCondenacaoForm({
         : '/api/acordos-condenacoes';
       const method = isEditMode ? 'PUT' : 'POST';
 
-      const payload: any = {
+      const payload: Record<string, unknown> = {
         tipo,
         direcao,
         valorTotal: parseFloat(valorTotal),
@@ -166,7 +178,7 @@ export function AcordoCondenacaoForm({
           : 'Erro ao criar acordo/condenação';
         setResult({ success: false, error: data.error || errorMsg });
       }
-    } catch (error) {
+    } catch (_error) {
       setResult({ success: false, error: 'Erro ao comunicar com o servidor' });
     } finally {
       setIsLoading(false);
@@ -191,7 +203,7 @@ export function AcordoCondenacaoForm({
         {/* Tipo */}
         <div className="space-y-2">
           <Label htmlFor="tipo">Tipo *</Label>
-          <Select value={tipo} onValueChange={(v: any) => setTipo(v)} disabled={isEditMode}>
+          <Select value={tipo} onValueChange={(v) => setTipo(v as typeof tipo)} disabled={isEditMode}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione o tipo" />
             </SelectTrigger>
@@ -208,7 +220,7 @@ export function AcordoCondenacaoForm({
           <Label htmlFor="direcao">Direção *</Label>
           <Select
             value={direcao}
-            onValueChange={(v: any) => setDirecao(v)}
+            onValueChange={(v) => setDirecao(v as typeof direcao)}
             disabled={isEditMode || tipo === 'custas_processuais'}
           >
             <SelectTrigger>
@@ -280,7 +292,7 @@ export function AcordoCondenacaoForm({
           {/* Forma de Pagamento */}
           <div className="space-y-2">
             <Label htmlFor="formaPagamento">Forma de Pagamento *</Label>
-            <Select value={formaPagamento} onValueChange={(v: any) => setFormaPagamento(v)}>
+            <Select value={formaPagamento} onValueChange={(v) => setFormaPagamento(v as typeof formaPagamento)}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
@@ -299,7 +311,7 @@ export function AcordoCondenacaoForm({
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="formaDistribuicao">Forma de Distribuição *</Label>
-            <Select value={formaDistribuicao} onValueChange={(v: any) => setFormaDistribuicao(v)}>
+            <Select value={formaDistribuicao} onValueChange={(v) => setFormaDistribuicao(v as typeof formaDistribuicao)}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
