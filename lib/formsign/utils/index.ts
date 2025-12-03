@@ -19,7 +19,7 @@ export {
   getFormularioDisplayName,
   formatBooleanBadge,
   getBooleanBadgeVariant,
-  getAtivoBadgeVariant,
+  getAtivoBadgeTone,
   formatAtivoStatus,
   getTemplatePreviewText,
   generateSlug,

@@ -10,6 +10,7 @@ import {
   type ColumnDef,
   type SortingState,
   type PaginationState,
+  type RowSelectionState,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -53,6 +54,13 @@ export interface DataTableProps<TData> {
     onSortingChange: (columnId: string | null, direction: 'asc' | 'desc' | null) => void;
   };
 
+  // Seleção de linhas
+  rowSelection?: {
+    state: RowSelectionState;
+    onRowSelectionChange: (state: RowSelectionState) => void;
+    getRowId?: (row: TData) => string;
+  };
+
   // Estados
   isLoading?: boolean;
   error?: string | null;
@@ -70,6 +78,7 @@ export function DataTable<TData>({
   columns,
   pagination,
   sorting,
+  rowSelection,
   isLoading = false,
   error = null,
   onRowClick,
@@ -117,9 +126,12 @@ export function DataTable<TData>({
     manualPagination: !!pagination,
     manualSorting: !!sorting,
     pageCount: pagination?.totalPages ?? -1,
+    getRowId: rowSelection?.getRowId,
+    enableRowSelection: !!rowSelection,
     state: {
       pagination: paginationState,
       sorting: internalSorting,
+      rowSelection: rowSelection?.state ?? {},
     },
     onSortingChange: (updater) => {
       const newSorting = typeof updater === 'function' ? updater(internalSorting) : updater;
@@ -130,6 +142,12 @@ export function DataTable<TData>({
         sorting.onSortingChange(sort.id, sort.desc ? 'desc' : 'asc');
       } else if (sorting) {
         sorting.onSortingChange(null, null);
+      }
+    },
+    onRowSelectionChange: (updater) => {
+      if (rowSelection) {
+        const newSelection = typeof updater === 'function' ? updater(rowSelection.state) : updater;
+        rowSelection.onRowSelectionChange(newSelection);
       }
     },
   });

@@ -41,12 +41,27 @@ export async function listFormularios(
   const supabase = createServiceClient();
   let query = supabase.from(TABLE_FORMULARIOS).select(FORMULARIO_SELECT, { count: 'exact' });
 
+  // Filtro de segmento_id: suporta tanto único ID quanto array de IDs
   if (params.segmento_id !== undefined) {
-    query = query.eq('segmento_id', params.segmento_id);
+    if (Array.isArray(params.segmento_id)) {
+      if (params.segmento_id.length > 0) {
+        query = query.in('segmento_id', params.segmento_id);
+      }
+    } else {
+      query = query.eq('segmento_id', params.segmento_id);
+    }
   }
 
   if (params.ativo !== undefined) {
     query = query.eq('ativo', params.ativo);
+  }
+
+  if (params.foto_necessaria !== undefined) {
+    query = query.eq('foto_necessaria', params.foto_necessaria);
+  }
+
+  if (params.geolocation_necessaria !== undefined) {
+    query = query.eq('geolocation_necessaria', params.geolocation_necessaria);
   }
 
   if (params.search) {

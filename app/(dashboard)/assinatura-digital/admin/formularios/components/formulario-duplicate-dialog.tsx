@@ -23,7 +23,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Loader2 } from "lucide-react";
 
 import type { FormsignFormulario } from "@/backend/types/formsign-admin/types";
-import { generateSlug } from "@/lib/formsign/utils/slug-helpers";
+import { generateSlug } from "@/app/_lib/formsign/slug-helpers";
 
 const duplicateSchema = z.object({
   nome: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
@@ -76,7 +76,8 @@ export function FormularioDuplicateDialog({
 
   const onSubmit = async (data: DuplicateFormData) => {
     try {
-      const payload = {
+      // Omitimos ordem para que o backend aplique o default
+      const payload: Record<string, unknown> = {
         nome: data.nome,
         slug: data.slug,
         descricao: data.descricao,
@@ -87,7 +88,6 @@ export function FormularioDuplicateDialog({
         foto_necessaria: formulario.foto_necessaria,
         geolocation_necessaria: formulario.geolocation_necessaria,
         ativo: true,
-        ordem: null,
       };
 
       const response = await fetch("/api/assinatura-digital/admin/formularios", {

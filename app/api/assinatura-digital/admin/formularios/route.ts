@@ -16,7 +16,7 @@ const upsertFormularioSchema = z.object({
   schema_version: z.string().optional(),
   template_ids: z.array(z.string()).optional(),
   ativo: z.boolean().optional(),
-  ordem: z.coerce.number().optional(),
+  ordem: z.number().nullable().optional(),
   foto_necessaria: z.boolean().optional(),
   geolocation_necessaria: z.boolean().optional(),
   metadados_seguranca: z.string().optional(),
@@ -31,13 +31,23 @@ export async function GET(request: NextRequest) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const segmentoId = searchParams.get('segmento_id');
+
+    // Suporta múltiplos segmento_id via getAll
+    const segmentoIds = searchParams.getAll('segmento_id');
+    const segmento_id = segmentoIds.length > 0
+      ? segmentoIds.map(id => Number(id)).filter(id => !isNaN(id))
+      : undefined;
+
     const ativoParam = searchParams.get('ativo');
+    const fotoNecessariaParam = searchParams.get('foto_necessaria');
+    const geolocationNecessariaParam = searchParams.get('geolocation_necessaria');
     const search = searchParams.get('search') ?? undefined;
 
     const result = await listFormularios({
-      segmento_id: segmentoId ? Number(segmentoId) : undefined,
+      segmento_id: segmento_id && segmento_id.length > 0 ? segmento_id : undefined,
       ativo: ativoParam === null ? undefined : ativoParam === 'true',
+      foto_necessaria: fotoNecessariaParam === null ? undefined : fotoNecessariaParam === 'true',
+      geolocation_necessaria: geolocationNecessariaParam === null ? undefined : geolocationNecessariaParam === 'true',
       search,
     });
 
