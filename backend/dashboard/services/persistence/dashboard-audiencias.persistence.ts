@@ -113,7 +113,6 @@ export async function getProximasAudiencias(
   let query = supabase
     .from('audiencias')
     .select(selectFields)
-    .eq('designada', true)
     .gte('data_inicio', `${hojeStr}T00:00:00`)
     .lt('data_inicio', `${hojeStr}T23:59:59`)
     .order('hora_inicio', { ascending: true })
@@ -130,7 +129,6 @@ export async function getProximasAudiencias(
     query = supabase
       .from('audiencias')
       .select(selectFields)
-      .eq('designada', true)
       .gte('data_inicio', `${amanhaStr}T00:00:00`)
       .lt('data_inicio', `${amanhaStr}T23:59:59`)
       .order('hora_inicio', { ascending: true })
@@ -148,7 +146,6 @@ export async function getProximasAudiencias(
     query = supabase
       .from('audiencias')
       .select(selectFields)
-      .eq('designada', true)
       .gte('data_inicio', hoje.toISOString())
       .order('data_inicio', { ascending: true })
       .limit(limite);

@@ -12,7 +12,7 @@ const schema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const authOrError = await requirePermission(request, 'formsign_admin', 'visualizar');
+  const authOrError = await requirePermission(request, 'assinatura_digital', 'visualizar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }

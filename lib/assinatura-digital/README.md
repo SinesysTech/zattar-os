@@ -187,7 +187,7 @@ interface MockPreviewData {
 **Example:**
 ```typescript
 import { generateMockDataForPreview } from '@/lib/assinatura-digital/utils';
-import { generatePdfFromTemplate } from '@/backend/formsign-signature/services/template-pdf.service';
+import { generatePdfFromTemplate } from '@/backend/assinatura-digital/services/template-pdf.service';
 
 const template = await getTemplate('123');
 const mockData = generateMockDataForPreview(template, {
