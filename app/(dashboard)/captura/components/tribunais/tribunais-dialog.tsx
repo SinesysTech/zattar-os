@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -76,6 +76,23 @@ export function TribunaisDialog({
 
   const isEditMode = tribunal !== null;
 
+  const limparTimeouts = useCallback(() => {
+    setTimeoutLogin('');
+    setTimeoutRedirect('');
+    setTimeoutNetworkIdle('');
+    setTimeoutApi('');
+  }, []);
+
+  const limparFormulario = useCallback(() => {
+    setTribunalId('');
+    setTipoAcesso('');
+    setUrlBase('');
+    setUrlLoginSeam('');
+    setUrlApi('');
+    limparTimeouts();
+    setMostrarTimeouts(false);
+  }, [limparTimeouts]);
+
   // Carregar lista de tribunais disponíveis
   useEffect(() => {
     if (open && !isEditMode) {
@@ -123,24 +140,7 @@ export function TribunaisDialog({
       // Limpar formulário em modo criação
       limparFormulario();
     }
-  }, [tribunal, open]);
-
-  const limparFormulario = () => {
-    setTribunalId('');
-    setTipoAcesso('');
-    setUrlBase('');
-    setUrlLoginSeam('');
-    setUrlApi('');
-    limparTimeouts();
-    setMostrarTimeouts(false);
-  };
-
-  const limparTimeouts = () => {
-    setTimeoutLogin('');
-    setTimeoutRedirect('');
-    setTimeoutNetworkIdle('');
-    setTimeoutApi('');
-  };
+  }, [tribunal, open, limparFormulario, limparTimeouts]);
 
   const handleSave = async () => {
     // Validações

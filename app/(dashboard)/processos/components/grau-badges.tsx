@@ -11,8 +11,6 @@ import type { ProcessoInstancia, GrauAcervo } from '@/backend/types/acervo/types
 
 interface GrauBadgesProps {
   instances?: ProcessoInstancia[];
-  grauAtual?: GrauAcervo;
-  grausAtivos?: GrauAcervo[];
 }
 
 /**
@@ -37,7 +35,7 @@ const GRAU_VARIANTS: Record<GrauAcervo, 'default' | 'secondary' | 'outline'> = {
  * Componente que exibe badges dos graus ativos de um processo
  * Destaca o grau atual com estilo diferenciado
  */
-export function GrauBadges({ instances, grauAtual, grausAtivos }: GrauBadgesProps) {
+export function GrauBadges({ instances }: GrauBadgesProps) {
   // Se não há instâncias, não renderiza nada (processo legado/não-unificado)
   if (!instances || instances.length === 0) {
     return null;
@@ -92,7 +90,7 @@ export function GrauBadges({ instances, grauAtual, grausAtivos }: GrauBadgesProp
 /**
  * Versão simplificada sem tooltip (para células de tabela compactas)
  */
-export function GrauBadgesSimple({ grausAtivos }: GrauBadgesProps) {
+export function GrauBadgesSimple({ grausAtivos }: { grausAtivos?: GrauAcervo[] }) {
   if (!grausAtivos || grausAtivos.length === 0) {
     return null;
   }

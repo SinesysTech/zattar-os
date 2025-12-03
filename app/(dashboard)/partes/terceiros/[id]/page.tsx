@@ -81,7 +81,7 @@ type TerceiroCompleto = Terceiro & {
   status_pje?: string | null;
   situacao_pje?: string | null;
   ativo?: boolean | null;
-  dados_anteriores?: any | null;
+  dados_anteriores?: unknown | null;
 };
 
 // Componente auxiliar para exibir campo

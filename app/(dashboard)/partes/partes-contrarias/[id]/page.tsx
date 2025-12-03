@@ -71,7 +71,7 @@ type ParteContrariaCompleta = ParteContraria & {
   tipo_documento?: string | null;
   genero?: string | null;
   ativo?: boolean | null;
-  dados_anteriores?: any | null;
+  dados_anteriores?: unknown | null;
 };
 
 // Componente auxiliar para exibir campo

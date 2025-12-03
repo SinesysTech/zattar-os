@@ -10,7 +10,6 @@ import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-pe
 import {
   formatarCpf,
   formatarTelefone,
-  formatarOab,
   formatarNomeExibicao,
 } from '@/app/_lib/utils/format-usuarios';
 import { User, Mail, Phone, FileText, Shield, MapPin, Calendar, UserCircle, Briefcase } from 'lucide-react';

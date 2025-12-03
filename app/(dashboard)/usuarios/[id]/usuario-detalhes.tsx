@@ -148,6 +148,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   useEffect(() => {
     fetchUsuario();
     fetchUsuarioLogado();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchUsuario = async () => {
@@ -588,7 +589,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               <thead>
                 <tr className="border-b">
                   <th className="text-left p-2 font-medium text-sm">Recurso</th>
-                  {Object.entries(RECURSOS_CONFIG).reduce<Operacao[]>((acc, [_, operacoes]) => {
+                  {Object.entries(RECURSOS_CONFIG).reduce<Operacao[]>((acc, [, operacoes]) => {
                     operacoes.forEach((op) => {
                       if (!acc.includes(op)) acc.push(op);
                     });
@@ -606,7 +607,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                     <td className="p-2 font-medium text-sm">
                       {RECURSO_LABELS[recurso] || recurso}
                     </td>
-                    {Object.entries(RECURSOS_CONFIG).reduce<Operacao[]>((acc, [_, ops]) => {
+                    {Object.entries(RECURSOS_CONFIG).reduce<Operacao[]>((acc, [, ops]) => {
                       ops.forEach((op) => {
                         if (!acc.includes(op)) acc.push(op);
                       });

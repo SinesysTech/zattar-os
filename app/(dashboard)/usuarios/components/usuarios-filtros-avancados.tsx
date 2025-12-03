@@ -6,7 +6,6 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Typography } from '@/components/ui/typography';
 import type { UsuariosFilters } from '@/app/_lib/types/usuarios';
 

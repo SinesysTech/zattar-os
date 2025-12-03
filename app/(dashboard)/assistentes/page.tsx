@@ -11,7 +11,6 @@ import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildAssistentesFilterOptions, buildAssistentesFilterGroups, parseAssistentesFilters } from './components/assistentes-toolbar-filters';
 import { Button } from '@/components/ui/button';
 import { Eye, Pencil, Trash2, MoreHorizontal } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   DropdownMenu,
   DropdownMenuContent,

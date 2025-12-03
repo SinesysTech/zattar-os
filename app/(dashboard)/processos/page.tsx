@@ -3,7 +3,6 @@
 // Página de processos - Lista processos do acervo
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
@@ -11,7 +10,6 @@ import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildProcessosFilterOptions, buildProcessosFilterGroups, parseProcessosFilters } from './components/processos-toolbar-filters';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ButtonGroup } from '@/components/ui/button-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Tooltip,
@@ -19,15 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { ArrowUpDown, ArrowUp, ArrowDown, Eye, CalendarClock, Pencil, Loader2, Copy } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, Eye, Pencil, Loader2, Copy } from 'lucide-react';
 import { useAcervo } from '@/app/_lib/hooks/use-acervo';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { GrauBadges } from './components/grau-badges';
@@ -55,59 +45,6 @@ const formatarData = (dataISO: string | null): string => {
     return '-';
   }
 };
-
-/**
- * Formata data e hora ISO para formato brasileiro (DD/MM/YYYY HH:mm)
- */
-const formatarDataHora = (dataISO: string | null): string => {
-  if (!dataISO) return '-';
-  try {
-    const data = new Date(dataISO);
-    return data.toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return '-';
-  }
-};
-
-/**
- * Componente Dialog para exibir informações da próxima audiência
- */
-interface AudienciaDialogProps {
-  dataProximaAudiencia: string | null;
-  children: React.ReactNode;
-}
-
-function AudienciaDialog({ dataProximaAudiencia, children }: AudienciaDialogProps) {
-  if (!dataProximaAudiencia) return null;
-
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Próxima Audiência</DialogTitle>
-          <DialogDescription>
-            Informações sobre a próxima audiência agendada para este processo.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="space-y-4 py-4">
-          <div>
-            <div className="text-sm font-medium text-muted-foreground mb-1">Data e Hora</div>
-            <div className="text-base">{formatarDataHora(dataProximaAudiencia)}</div>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
 
 /**
  * Retorna a classe CSS de cor para um TRT específico
@@ -182,137 +119,6 @@ const getParteReColorClass = (): string => {
 
 /**
  * Componente de header customizado para coluna de Tribunal com popover de ordenação
- */
-interface TribunalColumnHeaderProps {
-  ordenarPor: 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau' | null;
-  ordem: 'asc' | 'desc';
-  onSortChange: (sortType: 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau' | null, direction: 'asc' | 'desc' | null) => void;
-}
-
-function TribunalColumnHeader({ ordenarPor, ordem, onSortChange }: TribunalColumnHeaderProps) {
-  const [open, setOpen] = React.useState(false);
-
-  const handleSort = (sortType: 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau', direction: 'asc' | 'desc') => {
-    onSortChange(sortType, direction);
-    setOpen(false);
-  };
-
-  const handleClear = () => {
-    onSortChange(null, null);
-    setOpen(false);
-  };
-
-  const getSortIcon = (sortType: 'trt' | 'grau' | 'trt_primeiro_grau' | 'trt_segundo_grau') => {
-    if (ordenarPor === sortType) {
-      return ordem === 'asc' ? <ArrowUp className="ml-1 h-3 w-3" /> : <ArrowDown className="ml-1 h-3 w-3" />;
-    }
-    return null;
-  };
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          className="h-8 p-0 hover:bg-transparent text-sm font-medium"
-        >
-          <span>Tribunal</span>
-          {ordenarPor ? (
-            ordem === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />
-          ) : (
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          )}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-64 p-2" align="start">
-        <div className="space-y-1">
-          <div className="px-2 py-1.5 text-sm font-semibold">Ordenar por:</div>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => handleSort('trt', 'asc')}
-          >
-            TRT (A-Z)
-            {getSortIcon('trt')}
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => handleSort('trt', 'desc')}
-          >
-            TRT (Z-A)
-            {getSortIcon('trt')}
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => handleSort('grau', 'asc')}
-          >
-            Grau (1º → 2º)
-            {getSortIcon('grau')}
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => handleSort('grau', 'desc')}
-          >
-            Grau (2º → 1º)
-            {getSortIcon('grau')}
-          </Button>
-          <div className="my-1 h-px bg-border" />
-          <div className="px-2 py-1.5 text-sm font-semibold">Ordenação composta:</div>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => handleSort('trt_primeiro_grau', 'asc')}
-          >
-            TRT, 1º Grau (A-Z)
-            {getSortIcon('trt_primeiro_grau')}
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => handleSort('trt_primeiro_grau', 'desc')}
-          >
-            TRT, 1º Grau (Z-A)
-            {getSortIcon('trt_primeiro_grau')}
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => handleSort('trt_segundo_grau', 'asc')}
-          >
-            TRT, 2º Grau (A-Z)
-            {getSortIcon('trt_segundo_grau')}
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => handleSort('trt_segundo_grau', 'desc')}
-          >
-            TRT, 2º Grau (Z-A)
-            {getSortIcon('trt_segundo_grau')}
-          </Button>
-          {ordenarPor && (
-            <>
-              <div className="my-1 h-px bg-border" />
-              <Button
-                variant="ghost"
-                className="w-full justify-start"
-                onClick={handleClear}
-              >
-                Limpar ordenação
-              </Button>
-            </>
-          )}
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-/**
- * Componente de header customizado para coluna de Partes com popover de ordenação
  */
 interface PartesColumnHeaderProps {
   ordenarPor: 'nome_parte_autora' | 'nome_parte_re' | null;
@@ -603,7 +409,7 @@ function ProcessoInfoCell({ processo }: { processo: ProcessoComParticipacao }) {
           {trt}
         </Badge>
         {isUnificado ? (
-          <GrauBadges instances={processo.instances} grauAtual={processo.grau_atual} />
+          <GrauBadges instances={processo.instances} />
         ) : (
           <Badge variant="outline" className={`${getGrauColorClass(processo.grau)} w-fit text-xs`}>
             {formatarGrau(processo.grau)}
@@ -644,7 +450,6 @@ function criarColunas(
   onResponsavelSortChange: (columnId: 'responsavel_id' | null, direction: 'asc' | 'desc' | null) => void,
   usuarios: Usuario[],
   onSuccess: () => void,
-  router: ReturnType<typeof useRouter>
 ): ColumnDef<Acervo | ProcessoUnificado>[] {
   return [
     {
@@ -749,7 +554,6 @@ function criarColunas(
 }
 
 export default function ProcessosPage() {
-  const router = useRouter();
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
@@ -891,10 +695,9 @@ export default function ProcessosPage() {
       handleTribunalSortChange,
       handleResponsavelSortChange,
       usuarios || [],
-      refetch,
-      router
+      refetch
     ),
-    [ordenarPor, ordem, handlePartesSortChange, handleTribunalSortChange, handleResponsavelSortChange, usuarios, refetch, router]
+    [ordenarPor, ordem, handlePartesSortChange, handleTribunalSortChange, handleResponsavelSortChange, usuarios, refetch]
   );
 
   const filterOptions = React.useMemo(() => buildProcessosFilterOptions(), []);
@@ -953,5 +756,6 @@ export default function ProcessosPage() {
     </div>
   );
 }
+
 
 

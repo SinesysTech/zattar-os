@@ -9,7 +9,6 @@ import { AlterarSenhaDialog } from './components/alterar-senha-dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Edit, Mail, Phone, MapPin, Briefcase, User, Calendar, KeyRound } from 'lucide-react';
 import {

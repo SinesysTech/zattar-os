@@ -125,44 +125,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     return tiposAudiencia.find((t) => t.id.toString() === tipoAudienciaId) || null;
   }, [tipoAudienciaId, tiposAudiencia]);
 
-  // Buscar processos quando TRT e Grau forem selecionados
-  React.useEffect(() => {
-    if (trt && grau) {
-      buscarProcessos(trt, grau);
-    } else {
-      setProcessos([]);
-      setProcessoId([]);
-    }
-  }, [trt, grau]);
-
-  // Buscar usuários quando o dialog abrir
-  React.useEffect(() => {
-    if (open && usuarios.length === 0) {
-      buscarUsuarios();
-    }
-  }, [open]);
-
-  // Buscar tipos de audiência quando TRT e Grau forem selecionados
-  React.useEffect(() => {
-    if (trt && grau) {
-      buscarTiposAudiencia(trt, grau);
-    } else {
-      setTiposAudiencia([]);
-      setTipoAudienciaId('');
-    }
-  }, [trt, grau]);
-
-  // Buscar salas quando processo for selecionado (precisa do orgao_julgador_id)
-  React.useEffect(() => {
-    if (processoSelecionado) {
-      buscarSalas(processoSelecionado.trt, processoSelecionado.grau, processoSelecionado.orgao_julgador_id);
-    } else {
-      setSalas([]);
-      setSalaAudienciaId('');
-    }
-  }, [processoSelecionado]);
-
-  const buscarProcessos = async (trtParam: string, grauParam: string) => {
+  const buscarProcessos = React.useCallback(async (trtParam: string, grauParam: string) => {
     setLoadingProcessos(true);
     try {
       const response = await fetch(
@@ -180,9 +143,9 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     } finally {
       setLoadingProcessos(false);
     }
-  };
+  }, []);
 
-  const buscarTiposAudiencia = async (trt: string, grau: string) => {
+  const buscarTiposAudiencia = React.useCallback(async (trt: string, grau: string) => {
     setLoadingTipos(true);
     try {
       const response = await fetch(`/api/audiencias/tipos?trt=${trt}&grau=${grau}`);
@@ -198,9 +161,9 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     } finally {
       setLoadingTipos(false);
     }
-  };
+  }, []);
 
-  const buscarSalas = async (trt: string, grau: string, orgaoJulgadorId: number) => {
+  const buscarSalas = React.useCallback(async (trt: string, grau: string, orgaoJulgadorId: number) => {
     setLoadingSalas(true);
     try {
       const response = await fetch(`/api/audiencias/salas?trt=${trt}&grau=${grau}&orgao_julgador_id=${orgaoJulgadorId}`);
@@ -216,9 +179,9 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     } finally {
       setLoadingSalas(false);
     }
-  };
+  }, []);
 
-  const buscarUsuarios = async () => {
+  const buscarUsuarios = React.useCallback(async () => {
     setLoadingUsuarios(true);
     try {
       const response = await fetch('/api/usuarios?ativo=true&limite=1000');
@@ -234,7 +197,44 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     } finally {
       setLoadingUsuarios(false);
     }
-  };
+  }, []);
+
+  // Buscar processos quando TRT e Grau forem selecionados
+  React.useEffect(() => {
+    if (trt && grau) {
+      buscarProcessos(trt, grau);
+    } else {
+      setProcessos([]);
+      setProcessoId([]);
+    }
+  }, [trt, grau, buscarProcessos]);
+
+  // Buscar usuários quando o dialog abrir
+  React.useEffect(() => {
+    if (open && usuarios.length === 0) {
+      buscarUsuarios();
+    }
+  }, [open, usuarios.length, buscarUsuarios]);
+
+  // Buscar tipos de audiência quando TRT e Grau forem selecionados
+  React.useEffect(() => {
+    if (trt && grau) {
+      buscarTiposAudiencia(trt, grau);
+    } else {
+      setTiposAudiencia([]);
+      setTipoAudienciaId('');
+    }
+  }, [trt, grau, buscarTiposAudiencia]);
+
+  // Buscar salas quando processo for selecionado (precisa do orgao_julgador_id)
+  React.useEffect(() => {
+    if (processoSelecionado) {
+      buscarSalas(processoSelecionado.trt, processoSelecionado.grau, processoSelecionado.orgao_julgador_id);
+    } else {
+      setSalas([]);
+      setSalaAudienciaId('');
+    }
+  }, [processoSelecionado, buscarSalas]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -695,3 +695,4 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     </Dialog>
   );
 }
+

@@ -147,7 +147,7 @@ export function PermissoesMatriz({
 
           <div className="overflow-x-auto">
             <div className="space-y-4">
-              {matriz.map((item, index) => (
+              {matriz.map((item) => (
                 <div
                   key={item.recurso}
                   className="border rounded-lg p-4"
