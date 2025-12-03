@@ -10,7 +10,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { ButtonGroup } from '@/components/ui/button-group';
 import { Badge } from '@/components/ui/badge';
 import { Upload, FileCheck, Loader2, AlertCircle, FileX } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/app/_lib/utils/utils';
@@ -55,7 +54,7 @@ export function RepassesPendentesList({
       } else {
         setError(data.error || 'Erro ao carregar repasses');
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Erro ao comunicar com o servidor');
     } finally {
       setIsLoading(false);
