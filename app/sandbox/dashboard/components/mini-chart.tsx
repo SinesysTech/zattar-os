@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useId, useSyncExternalStore, type ReactNode } from 'react';
+import { useId, useSyncExternalStore, type ReactNode } from 'react';
 import {
   AreaChart,
   Area,

@@ -42,7 +42,7 @@ const CREDENCIAIS = {
 
 // Configuração do TRT1 (obtida do banco via MCP)
 const CONFIG_TRT13: ConfigTRT = {
-  codigo: 'TRT13' as any,
+  codigo: 'TRT13',
   nome: 'TRT da 13ª Região',
   grau: 'primeiro_grau',
   tipoAcesso: 'primeiro_grau',
@@ -60,7 +60,7 @@ async function main() {
   console.log('TESTE DE CAPTURA DE PARTES (SIMPLIFICADO)');
   console.log('========================================\n');
 
-  let page: any = null;
+  let page: Awaited<ReturnType<typeof autenticarPJE>>['page'] | null = null;
 
   try {
     // 1. Autenticar no PJE

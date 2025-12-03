@@ -10,9 +10,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
   listarDocumentosLixeira,
-  restaurarDocumento,
-  deletarDocumentoPermanentemente,
-  verificarAcessoDocumento,
 } from '@/backend/documentos/services/persistence/documentos-persistence.service';
 
 /**

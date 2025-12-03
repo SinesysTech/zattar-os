@@ -31,8 +31,8 @@ for (const migration of status.applied) {
     renameSync(source, dest);
     console.log(`   ✓ ${migration}`);
     movidosAplicadas++;
-  } catch (error: any) {
-    console.log(`   ✗ ${migration} - Erro: ${error.message}`);
+  } catch (error) {
+    console.log(`   ✗ ${migration} - Erro: ${error instanceof Error ? error.message : String(error)}`);
     erros++;
   }
 }
@@ -53,8 +53,8 @@ for (const migration of status.notApplied) {
     renameSync(source, dest);
     console.log(`   ✓ ${migration}`);
     movidosNaoAplicadas++;
-  } catch (error: any) {
-    console.log(`   ✗ ${migration} - Erro: ${error.message}`);
+  } catch (error) {
+    console.log(`   ✗ ${migration} - Erro: ${error instanceof Error ? error.message : String(error)}`);
     erros++;
   }
 }

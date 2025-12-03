@@ -9,7 +9,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
   buscarVersaoPorId,
-  restaurarVersao,
 } from '@/backend/documentos/services/persistence/versoes-persistence.service';
 import { verificarAcessoDocumento } from '@/backend/documentos/services/persistence/documentos-persistence.service';
 

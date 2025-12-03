@@ -58,8 +58,6 @@ export default function AssinaturaManuscritaStep() {
     dadosCPF,
     dadosPessoais,
     dadosAcao,
-    dadosVisualizacaoPdf,
-    dadosVisualizacaoMarkdown,
     setDadosAssinatura,
     setPdfsGerados,
     proximaEtapa,

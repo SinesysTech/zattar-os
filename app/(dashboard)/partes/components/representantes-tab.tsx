@@ -385,7 +385,7 @@ export function RepresentantesTab() {
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<RepresentantesFilters>({});
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
-  const [_createOpen, setCreateOpen] = React.useState(false);
+  const [, setCreateOpen] = React.useState(false);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);

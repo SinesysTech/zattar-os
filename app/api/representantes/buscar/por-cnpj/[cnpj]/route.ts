@@ -32,7 +32,7 @@ import { authenticateRequest } from '@/backend/auth/api-auth';
  */
 export async function GET(
   request: NextRequest,
-  _context: { params: Promise<{ cnpj: string }> }
+  _: { params: Promise<{ cnpj: string }> }
 ) {
   try {
     // 1. Autenticação

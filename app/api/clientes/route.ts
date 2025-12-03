@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { obterClientes, type ObterClientesParams } from '@/backend/clientes/services/clientes/listar-clientes.service';
+import { obterClientes } from '@/backend/clientes/services/clientes/listar-clientes.service';
 import { cadastrarCliente } from '@/backend/clientes/services/clientes/criar-cliente.service';
 import type { CriarClienteParams } from '@/backend/types/partes';
 

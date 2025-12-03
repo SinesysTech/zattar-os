@@ -67,8 +67,9 @@ export const BlockDraggable: RenderNodeWrapper = (props) => {
 
   if (!enabled) return;
 
-  const DraggableWrapper = (props: PlateElementProps) => <Draggable {...props} />;
-  DraggableWrapper.displayName = 'DraggableWrapper';
+  function DraggableWrapper(props: PlateElementProps) {
+    return <Draggable {...props} />;
+  }
   return DraggableWrapper;
 };
 

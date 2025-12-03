@@ -36,7 +36,7 @@ const CREDENCIAIS = {
 
 // Configuração do TRT13
 const CONFIG_TRT13: ConfigTRT = {
-  codigo: 'TRT13' as any,
+  codigo: 'TRT13',
   nome: 'TRT da 13ª Região',
   grau: 'primeiro_grau',
   tipoAcesso: 'primeiro_grau',
@@ -49,7 +49,7 @@ const CONFIG_TRT13: ConfigTRT = {
 // FUNÇÃO PARA CAPTURA RAW
 // ==========================================
 
-async function capturarPartesRaw(page: Page, idProcesso: number): Promise<any> {
+async function capturarPartesRaw(page: Page, idProcesso: number): Promise<unknown> {
   console.log(`[RAW-CAPTURE] Buscando partes do processo ${idProcesso} via API...`);
 
   // Fazer requisição direta via evaluate para capturar resposta crua
@@ -85,7 +85,7 @@ async function main() {
   console.log('TESTE DE CAPTURA RAW DE PARTES');
   console.log('========================================\n');
 
-  let page: any = null;
+  let page: Page | null = null;
 
   try {
     // 1. Autenticar no PJE
