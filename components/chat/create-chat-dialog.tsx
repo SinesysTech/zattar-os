@@ -65,6 +65,7 @@ export function CreateChatDialog({
     if (open && modo === 'privado' && allUsers.length === 0) {
       loadAllUsers();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, modo, allUsers.length]);
 
   // Resetar ao fechar

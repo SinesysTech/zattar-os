@@ -291,7 +291,7 @@ export async function arquivadosCapture(
 
     // Finalizar logs
     captureLogService.imprimirResumo();
-    const logsPersistencia = captureLogService.consumirLogs();
+    logsPersistencia = captureLogService.consumirLogs();
 
     // ═══════════════════════════════════════════════════════════════
     // RESULTADO FINAL

@@ -37,7 +37,7 @@ import FormStepLayout from "@/components/assinatura-digital/form/form-step-layou
 import PdfPreviewDynamic from "@/components/assinatura-digital/pdf/PdfPreviewDynamic";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Loader2, AlertCircle, RefreshCw } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -58,7 +58,6 @@ export default function VisualizacaoPdfStep() {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [templateMetadatas, setTemplateMetadatas] = useState<TemplateMetadata[]>([]);
-  const [templateMeta, setTemplateMeta] = useState<{ nome?: string; versao?: number; status?: string } | null>(null);
 
   const {
     dadosPessoais,
@@ -331,12 +330,6 @@ export default function VisualizacaoPdfStep() {
     proximaEtapa();
   };
 
-  const handleRegenerar = () => {
-    setPdfUrl(null);
-    setDadosVisualizacaoPdf(null);
-    gerarPdfPreview();
-  };
-
   const handleTemplateChange = (newTemplateId: string) => {
     setTemplateIdSelecionado(newTemplateId);
     // Clear cache and regenerate with new template
@@ -346,7 +339,6 @@ export default function VisualizacaoPdfStep() {
   };
 
   const isLoading = isGenerating || isFetchingTemplate;
-  const effectiveTemplateId = templateIdSelecionado || (templateIds && templateIds[0]);
 
   return (
     <FormStepLayout
