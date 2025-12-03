@@ -13,17 +13,21 @@ export function PWAInstallPrompt() {
 
   useEffect(() => {
     // Check if already installed via display-mode
-    if (isPWAInstalled()) {
-      setIsVisible(false);
-      return;
-    }
+    const checkAndSetVisibility = () => {
+      if (isPWAInstalled()) {
+        setIsVisible(false);
+        return;
+      }
 
-    // Show prompt only if installable and not dismissed
-    if (isInstallable && installationStatus !== 'dismissed' && !isInstalled) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
-    }
+      // Show prompt only if installable and not dismissed
+      if (isInstallable && installationStatus !== 'dismissed' && !isInstalled) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    checkAndSetVisibility();
   }, [isInstallable, installationStatus, isInstalled]);
 
   const handleInstall = async () => {

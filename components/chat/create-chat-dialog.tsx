@@ -29,10 +29,16 @@ interface Usuario {
   emailCorporativo: string | null;
 }
 
+interface Sala {
+  id: number;
+  nome: string;
+  tipo: 'privado' | 'grupo';
+}
+
 interface CreateChatDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSalaCreated: (sala: any) => void;
+  onSalaCreated: (sala: Sala) => void;
   currentUserId: number;
 }
 
@@ -59,7 +65,7 @@ export function CreateChatDialog({
     if (open && modo === 'privado' && allUsers.length === 0) {
       loadAllUsers();
     }
-  }, [open, modo]);
+  }, [open, modo, allUsers.length]);
 
   // Resetar ao fechar
   React.useEffect(() => {

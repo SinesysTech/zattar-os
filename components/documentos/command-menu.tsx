@@ -8,21 +8,13 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import {
   FileText,
-  Search,
-  Plus,
-  FolderOpen,
-  Trash2,
   Upload,
-  Share2,
-  Download,
-  Settings,
-  HelpCircle,
   Home,
   Clock,
-  Star,
-  File,
   FilePlus,
   FolderPlus,
+  Trash2,
+  File,
 } from 'lucide-react';
 import {
   CommandDialog,
@@ -55,7 +47,7 @@ export function CommandMenu({
   const [search, setSearch] = React.useState('');
   const [recentDocuments, setRecentDocuments] = React.useState<DocumentoComUsuario[]>([]);
   const [searchResults, setSearchResults] = React.useState<DocumentoComUsuario[]>([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading] = React.useState(false);
 
   // Atalho de teclado global
   React.useEffect(() => {

@@ -170,7 +170,7 @@ export async function atualizarTemplate(
 ): Promise<Template> {
   const supabase = createServiceClient();
 
-  const updateData: any = {};
+  const updateData: Record<string, unknown> = {};
 
   if (params.titulo !== undefined) updateData.titulo = params.titulo;
   if (params.descricao !== undefined) updateData.descricao = params.descricao;

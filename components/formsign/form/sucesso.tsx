@@ -20,10 +20,8 @@ import type { PdfGerado } from '@/app/_lib/stores/formsign/formulario-store';
 export default function Sucesso() {
   const resetAll = useFormularioStore((state) => state.resetAll);
   const getCachedTemplate = useFormularioStore((state) => state.getCachedTemplate);
-  const {
-    dadosPessoais,
-    pdfsGerados,
-  } = useFormularioStore();
+  const dadosPessoais = useFormularioStore((state) => state.dadosPessoais);
+  const pdfsGerados = useFormularioStore((state) => state.pdfsGerados);
 
   const [isDownloadingZip, setIsDownloadingZip] = useState(false);
 

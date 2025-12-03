@@ -186,7 +186,7 @@ export async function atualizarDocumento(
 ): Promise<Documento> {
   const supabase = createServiceClient();
 
-  const updateData: any = {
+  const updateData: Record<string, unknown> = {
     editado_por: usuario_id,
     editado_em: new Date().toISOString(),
   };

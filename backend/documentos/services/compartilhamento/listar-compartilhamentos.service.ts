@@ -12,7 +12,6 @@ import {
 import { buscarDocumentoPorId, verificarAcessoDocumento } from '../persistence/documentos-persistence.service';
 import type {
   DocumentoCompartilhadoComUsuario,
-  ListarCompartilhamentosParams,
 } from '@/backend/types/documentos/types';
 
 /**

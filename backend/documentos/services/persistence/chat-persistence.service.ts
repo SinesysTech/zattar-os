@@ -204,7 +204,16 @@ export async function listarSalasChat(
     throw new Error(`Erro ao listar salas de chat: ${error.message}`);
   }
 
-  const salas = (data ?? []) as any[];
+  interface SalaWithRelations {
+    id: number;
+    nome: string;
+    tipo: string;
+    criado_por: number;
+    participante_id: number | null;
+    criador?: { nome_exibicao?: string; nome_completo?: string };
+    participante?: { nome_exibicao?: string; nome_completo?: string };
+  }
+  const salas = (data ?? []) as SalaWithRelations[];
 
   // Buscar última mensagem e contador de não lidas para cada sala
   const salasComInfo: SalaChatComInfo[] = await Promise.all(

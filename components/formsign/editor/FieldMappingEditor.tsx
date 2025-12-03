@@ -1133,8 +1133,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
     template.ativo,
     template.conteudo_markdown,
     template.criado_por,
-    router,
-  ]);
+  ]); // router is not needed for save operation
 
   // Autosave hook - saves every 5 seconds when there are unsaved changes
   useEffect(() => {
@@ -1210,7 +1209,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
     template.ativo,
     template.conteudo_markdown,
     template.criado_por,
-  ]);
+  ]); // Necessary for autosave with all template properties
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {

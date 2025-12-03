@@ -108,7 +108,12 @@ export async function listarPastasComContadores(
     throw new Error(`Erro ao listar pastas: ${error.message}`);
   }
 
-  const pastas = (data ?? []) as any[];
+  interface PastaWithRelations {
+    id: number;
+    nome: string;
+    criador?: { nomeCompleto?: string };
+  }
+  const pastas = (data ?? []) as PastaWithRelations[];
 
   // Buscar contadores para cada pasta
   const pastasComContadores: PastaComContadores[] = await Promise.all(
@@ -227,7 +232,7 @@ export async function atualizarPasta(
 ): Promise<Pasta> {
   const supabase = createServiceClient();
 
-  const updateData: any = {};
+  const updateData: Record<string, unknown> = {};
 
   if (params.nome !== undefined) updateData.nome = params.nome;
   if (params.pasta_pai_id !== undefined) updateData.pasta_pai_id = params.pasta_pai_id;

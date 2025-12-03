@@ -425,8 +425,8 @@ export async function executarAgendamento(
               ?.filter((f) => f.erro)
               .map((f) => `${r.tribunal} ${r.grau} (ID ${r.credencial_id}) - ${f.filtroPrazo}: ${f.erro}`) || [];
 
-            if ((r as any).erro) {
-              return [`${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${(r as any).erro}`, ...errosFiltro];
+            if (r.erro) {
+              return [`${r.tribunal} ${r.grau} (ID ${r.credencial_id}): ${r.erro}`, ...errosFiltro];
             }
 
             return errosFiltro;
@@ -467,7 +467,7 @@ export async function executarAgendamento(
           updateData.proxima_execucao = proximaExecucao;
         }
 
-        await atualizarAgendamento(agendamento.id, updateData as any);
+        await atualizarAgendamento(agendamento.id, updateData);
         console.log(`[Scheduler] Agendamento ID ${agendamento.id} atualizado após execução`);
       } catch (error) {
         console.error('Erro ao atualizar agendamento após execução:', error);

@@ -72,7 +72,7 @@ export function converterParaEndereco(data: Record<string, unknown>): Endereco {
     pais_descricao: (data.pais_descricao as string) ?? null,
     pais: (data.pais as string) ?? null,
     cep: (data.cep as string) ?? null,
-    classificacoes_endereco: (data.classificacoes_endereco as any[]) ?? null,
+    classificacoes_endereco: (data.classificacoes_endereco as unknown[]) ?? null,
     correspondencia: (data.correspondencia as boolean) ?? null,
     situacao: (data.situacao as SituacaoEndereco | null) ?? null,
     dados_pje_completo: (data.dados_pje_completo as Record<string, unknown>) ?? null,

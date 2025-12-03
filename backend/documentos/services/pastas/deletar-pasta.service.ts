@@ -7,7 +7,6 @@
 import {
   deletarPasta as deletarPastaPersistence,
   buscarPastaPorId,
-  verificarAcessoPasta,
   listarPastasComContadores,
 } from '../persistence/pastas-persistence.service';
 import {

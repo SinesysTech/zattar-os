@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useImperativeHandle, forwardRef, useCallback, useEffect } from "react";
+import { useState, useRef, useImperativeHandle, forwardRef, useCallback } from "react";
 import Webcam from "react-webcam";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";

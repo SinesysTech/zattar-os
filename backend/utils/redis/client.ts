@@ -7,8 +7,10 @@ const ENABLE_REDIS_CACHE = process.env.ENABLE_REDIS_CACHE === 'true';
 // O ioredis dá precedência à opção 'password' sobre senha embutida na URL.
 const REDIS_URL = process.env.REDIS_URL;
 const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
-const REDIS_CACHE_TTL = parseInt(process.env.REDIS_CACHE_TTL || '600', 10);
-const REDIS_CACHE_MAX_MEMORY = process.env.REDIS_CACHE_MAX_MEMORY || '256mb';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _REDIS_CACHE_TTL = parseInt(process.env.REDIS_CACHE_TTL || '600', 10);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _REDIS_CACHE_MAX_MEMORY = process.env.REDIS_CACHE_MAX_MEMORY || '256mb';
 
 export function getRedisClient(): Redis | null {
   if (!ENABLE_REDIS_CACHE) {

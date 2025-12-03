@@ -235,10 +235,10 @@ export async function getStatusCapturas(): Promise<StatusCaptura[]> {
   // Agrupar por TRT (extrair do resultado se disponível)
   const statusMap = new Map<string, StatusCaptura>();
 
-  capturas.forEach((cap: any) => {
-    const resultado = cap.resultado as any;
-    const trt = resultado?.tribunal || 'N/A';
-    const grau = resultado?.grau || 'primeiro_grau';
+  capturas.forEach((cap) => {
+    const resultado = cap.resultado as Record<string, unknown> | null;
+    const trt = (resultado?.tribunal as string) || 'N/A';
+    const grau = (resultado?.grau as string) || 'primeiro_grau';
     const key = `${trt}-${grau}`;
 
     if (!statusMap.has(key)) {
@@ -248,9 +248,9 @@ export async function getStatusCapturas(): Promise<StatusCaptura[]> {
         ultimaExecucao: cap.concluido_em || cap.iniciado_em,
         status: cap.status === 'completed' ? 'sucesso' : cap.status === 'failed' ? 'erro' : 'pendente',
         mensagemErro: cap.erro || null,
-        processosCapturados: resultado?.processosCapturados || 0,
-        audienciasCapturadas: resultado?.audienciasCapturadas || 0,
-        expedientesCapturados: resultado?.expedientesCapturados || 0,
+        processosCapturados: (resultado?.processosCapturados as number) || 0,
+        audienciasCapturadas: (resultado?.audienciasCapturadas as number) || 0,
+        expedientesCapturados: (resultado?.expedientesCapturados as number) || 0,
       });
     }
   });

@@ -120,18 +120,18 @@ export async function getProximasAudiencias(
     throw new Error(`Erro ao buscar próximas audiências: ${error.message}`);
   }
 
-  return (data || []).map((a: any) => ({
+  return (data || []).map((a) => ({
     id: a.id,
     processo_id: a.processo_id,
     numero_processo: a.numero_processo,
     data_audiencia: a.data_inicio,
     hora_audiencia: a.hora_inicio,
-    tipo_audiencia: a.tipo_audiencia?.descricao || null,
+    tipo_audiencia: (a.tipo_audiencia as { descricao?: string })?.descricao || null,
     local: null,
     sala: a.sala_audiencia_nome,
     url_audiencia_virtual: a.url_audiencia_virtual,
     responsavel_id: a.responsavel_id,
-    responsavel_nome: a.usuarios?.nome_exibicao || null,
+    responsavel_nome: (a.usuarios as { nome_exibicao?: string })?.nome_exibicao || null,
   }));
 }
 

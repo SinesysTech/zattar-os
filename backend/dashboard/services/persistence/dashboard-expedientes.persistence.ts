@@ -70,13 +70,13 @@ export async function getExpedientesResumo(
 
   // Consolidar todos os expedientes
   const todosExpedientes = [
-    ...(pendentes || []).map((p: any) => ({
+    ...(pendentes || []).map((p) => ({
       prazo: p.data_prazo_legal_parte,
-      tipo: p.tipos_expedientes?.tipo_expediente || 'Sem tipo',
+      tipo: (p.tipos_expedientes as { tipo_expediente?: string })?.tipo_expediente || 'Sem tipo',
     })),
-    ...(manuais || []).map((m: any) => ({
+    ...(manuais || []).map((m) => ({
       prazo: m.prazo_fatal,
-      tipo: m.tipos_expedientes?.tipo_expediente || 'Manual',
+      tipo: (m.tipos_expedientes as { tipo_expediente?: string })?.tipo_expediente || 'Manual',
     })),
   ];
 
@@ -192,7 +192,7 @@ export async function getExpedientesUrgentes(
 
   // Consolidar e ordenar
   const todos: ExpedienteUrgente[] = [
-    ...(pendentes || []).map((p: any) => {
+    ...(pendentes || []).map((p) => {
       const prazoDate = new Date(p.data_prazo_legal_parte);
       prazoDate.setHours(0, 0, 0, 0);
       const diasRestantes = Math.ceil(
@@ -203,16 +203,16 @@ export async function getExpedientesUrgentes(
         id: p.id,
         processo_id: p.processo_id,
         numero_processo: p.numero_processo,
-        tipo_expediente: p.tipos_expedientes?.tipo_expediente || 'Pendente',
+        tipo_expediente: (p.tipos_expedientes as { tipo_expediente?: string })?.tipo_expediente || 'Pendente',
         prazo_fatal: p.data_prazo_legal_parte,
         status: diasRestantes < 0 ? 'vencido' : 'pendente',
         dias_restantes: diasRestantes,
         responsavel_id: p.responsavel_id,
-        responsavel_nome: p.usuarios?.nome_exibicao || null,
+        responsavel_nome: (p.usuarios as { nome_exibicao?: string })?.nome_exibicao || null,
         origem: 'pendentes_manifestacao' as const,
       };
     }),
-    ...(manuais || []).map((m: any) => {
+    ...(manuais || []).map((m) => {
       const prazoDate = new Date(m.prazo_fatal);
       prazoDate.setHours(0, 0, 0, 0);
       const diasRestantes = Math.ceil(
@@ -223,12 +223,12 @@ export async function getExpedientesUrgentes(
         id: m.id,
         processo_id: m.processo_id,
         numero_processo: m.numero_processo,
-        tipo_expediente: m.tipos_expedientes?.tipo_expediente || 'Manual',
+        tipo_expediente: (m.tipos_expedientes as { tipo_expediente?: string })?.tipo_expediente || 'Manual',
         prazo_fatal: m.prazo_fatal,
         status: diasRestantes < 0 ? 'vencido' : m.status,
         dias_restantes: diasRestantes,
         responsavel_id: m.responsavel_id,
-        responsavel_nome: m.usuarios?.nome_exibicao || null,
+        responsavel_nome: (m.usuarios as { nome_exibicao?: string })?.nome_exibicao || null,
         origem: 'expedientes_manuais' as const,
       };
     }),

@@ -68,7 +68,7 @@ export class DistributedLock {
     
     try {
       // Tenta inserir lock na tabela
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('locks')
         .insert({
           key: this.key,

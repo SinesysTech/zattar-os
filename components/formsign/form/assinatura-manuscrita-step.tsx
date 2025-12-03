@@ -33,6 +33,17 @@ async function getClientIP(): Promise<{ ip: string; source?: string }> {
   }
 }
 
+interface HttpError extends Error {
+  response?: {
+    status?: number;
+    data?: {
+      error?: string;
+      message?: string;
+      code?: string;
+    };
+  };
+}
+
 export default function AssinaturaManuscritaStep() {
   const [loading, setLoading] = useState(false);
   const canvasRef = useRef<CanvasAssinaturaRef>(null);
@@ -379,7 +390,8 @@ export default function AssinaturaManuscritaStep() {
 
             // Não fazer retry em erros 4xx (exceto 408 timeout)
             if (error instanceof Error && 'response' in error) {
-              const status = (error as any).response?.status;
+              const httpError = error as HttpError;
+              const status = httpError.response?.status;
               if (status && status >= 400 && status < 500 && status !== 408) {
                 throw error; // Erro de validação, não retry
               }
@@ -435,8 +447,9 @@ export default function AssinaturaManuscritaStep() {
         } catch (error: unknown) {
           // Comment 3: Capturar erro de rede ou resposta HTTP
           if (error instanceof Error && 'response' in error) {
-            const statusCode = (error as any).response?.status;
-            const errorData = (error as any).response?.data;
+            const httpError = error as HttpError;
+            const statusCode = httpError.response?.status;
+            const errorData = httpError.response?.data;
             // Comment 2: Priorizar error antes de message na extração
             const errorMsg = errorData?.error || errorData?.message || error.message;
 
