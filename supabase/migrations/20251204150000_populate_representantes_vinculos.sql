@@ -12,6 +12,9 @@
 --
 -- RESULTADO ESPERADO:
 -- ~29.901 novos registros em processo_partes com tipo_entidade='representante'
+--
+-- NOTA: Esta migration foi aplicada como 'populate_representantes_vinculos_v2'
+-- devido a ajustes no DISTINCT ON para respeitar constraint UNIQUE
 
 -- Primeiro, alterar a constraint para incluir 'representante'
 alter table processo_partes drop constraint if exists processo_partes_tipo_entidade_check;
