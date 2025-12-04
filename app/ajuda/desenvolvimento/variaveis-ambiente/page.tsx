@@ -2,7 +2,22 @@ import { Settings, Server, Database, Lock, Cloud } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
-const categories = [
+interface EnvVariable {
+  name: string;
+  description: string;
+  example: string;
+  location?: string;
+  required: boolean;
+  public: boolean;
+}
+
+interface Category {
+  title: string;
+  icon: typeof Database;
+  variables: EnvVariable[];
+}
+
+const categories: Category[] = [
   {
     title: 'Supabase',
     icon: Database,
