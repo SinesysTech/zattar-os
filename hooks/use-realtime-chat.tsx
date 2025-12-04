@@ -1,7 +1,6 @@
 'use client'
 
-import { createClient } from '@/lib/client'
-import { v4 as uuidv4 } from 'uuid'
+import { createClient } from '@/lib/supabase/client'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 interface UseRealtimeChatProps {
@@ -24,24 +23,31 @@ const EVENT_MESSAGE_TYPE = 'message'
 
 export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatProps) {
   const supabase = useMemo(() => createClient(), [])
-  const [messagesByRoom, setMessagesByRoom] = useState<Record<string, ChatMessage[]>>({})
+  const [messages, setMessages] = useState<ChatMessage[]>([])
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
   const [isConnected, setIsConnected] = useState(false)
-
-  const messages = messagesByRoom[roomName] ?? []
+  const currentRoomRef = useRef<string>(roomName)
 
   useEffect(() => {
+    // Limpar mensagens ao trocar de sala
+    if (currentRoomRef.current !== roomName) {
+      setMessages([])
+      currentRoomRef.current = roomName
+    }
+
     const newChannel = supabase.channel(roomName)
     channelRef.current = newChannel
 
     newChannel
       .on('broadcast', { event: EVENT_MESSAGE_TYPE }, (payload) => {
-        setMessagesByRoom((current) => {
-          const currentMessages = current[roomName] ?? []
-          return {
-            ...current,
-            [roomName]: [...currentMessages, payload.payload as ChatMessage],
+        const incomingMessage = payload.payload as ChatMessage
+
+        setMessages((current) => {
+          // Evitar duplicatas
+          if (current.some((m) => m.id === incomingMessage.id)) {
+            return current
           }
+          return [...current, incomingMessage]
         })
       })
       .subscribe(async (status) => {
@@ -61,7 +67,7 @@ export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatP
       if (!channel || !isConnected) return
 
       const message: ChatMessage = {
-        id: uuidv4(),
+        id: crypto.randomUUID(),
         content,
         user: {
           id: userId,
@@ -71,13 +77,7 @@ export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatP
       }
 
       // Update local state immediately for the sender
-      setMessagesByRoom((current) => {
-        const currentMessages = current[roomName] ?? []
-        return {
-          ...current,
-          [roomName]: [...currentMessages, message],
-        }
-      })
+      setMessages((current) => [...current, message])
 
       await channel.send({
         type: 'broadcast',
@@ -85,7 +85,7 @@ export function useRealtimeChat({ roomName, username, userId }: UseRealtimeChatP
         payload: message,
       })
     },
-    [isConnected, roomName, username, userId]
+    [isConnected, username, userId]
   )
 
   return { messages, sendMessage, isConnected }

@@ -13,16 +13,41 @@ import { cn } from '@/lib/utils';
 import { RealtimeChat } from '@/components/realtime-chat';
 import type { ChatMessage } from '@/hooks/use-realtime-chat';
 
+type TipoSala = 'geral' | 'documento' | 'privado' | 'grupo';
+
 interface ChatInterfaceProps {
   salaId: number;
   currentUserId: number;
   currentUserName?: string;
+  tipo?: TipoSala;
+  participanteId?: number | null;
   className?: string;
   showHeader?: boolean;
   headerTitle?: string;
   headerSubtitle?: string;
   headerActions?: React.ReactNode;
   compact?: boolean;
+}
+
+/**
+ * Gera o nome do canal Realtime baseado no tipo de chat
+ * - Chat privado (1:1): baseado nos IDs dos dois usuários (ordenados)
+ * - Chat de sala/grupo: baseado no ID da sala
+ */
+function getRoomName(
+  tipo: TipoSala | undefined,
+  salaId: number,
+  participanteId: number | null | undefined,
+  currentUserId: number
+): string {
+  if (tipo === 'privado' && participanteId) {
+    // Chat privado: canal baseado nos IDs dos dois usuários (ordenados)
+    // Isso garante que ambos usuários entrem no mesmo canal
+    const ids = [participanteId, currentUserId].sort((a, b) => a - b);
+    return `private-chat-${ids[0]}-${ids[1]}`;
+  }
+  // Chat de sala/grupo/geral: canal baseado no ID da sala
+  return `sala-${salaId}-chat`;
 }
 
 interface MensagemDB {
@@ -59,6 +84,8 @@ export function ChatInterface({
   salaId,
   currentUserId,
   currentUserName,
+  tipo,
+  participanteId,
   className,
   showHeader = true,
   headerTitle = 'Chat',
@@ -172,8 +199,8 @@ export function ChatInterface({
     );
   }
 
-  // Nome único do room baseado na sala
-  const roomName = `sala-${salaId}-chat`;
+  // Nome único do room baseado no tipo de chat
+  const roomName = getRoomName(tipo, salaId, participanteId, currentUserId);
 
   return (
     <div className={cn('flex flex-col h-full', className)}>

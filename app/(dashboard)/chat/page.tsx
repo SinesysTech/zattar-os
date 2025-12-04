@@ -58,6 +58,9 @@ interface ChatUser {
   id: number;
   nome?: string;
   email?: string;
+  nomeCompleto?: string;
+  nomeExibicao?: string;
+  isSuperAdmin?: boolean;
   [key: string]: unknown;
 }
 
@@ -301,6 +304,8 @@ export default function ChatPage() {
               salaId={salaAtiva.id}
               currentUserId={currentUser.id}
               currentUserName={currentUser.nomeCompleto || currentUser.nomeExibicao || 'Usuário'}
+              tipo={salaAtiva.tipo}
+              participanteId={salaAtiva.participante_id}
               showHeader={true}
               headerTitle={salaAtiva.tipo === 'geral' ? 'Sala Geral' : salaAtiva.nome}
               headerSubtitle={
