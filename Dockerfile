@@ -10,7 +10,7 @@
 # - Memória limitada para evitar OOM no CapRover
 #
 # Stage 1: Dependencies
-FROM node:20-slim AS deps
+FROM node:22-slim AS deps
 WORKDIR /app
 
 # Impedir download de browsers do Playwright (browser está em container separado)
@@ -23,7 +23,7 @@ COPY package.json package-lock.json* ./
 RUN npm ci --ignore-scripts
 
 # Stage 2: Builder
-FROM node:20-slim AS builder
+FROM node:22-slim AS builder
 WORKDIR /app
 
 # Memória para Node.js durante build
@@ -52,7 +52,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build:prod
 
 # Stage 3: Runner (imagem final leve)
-FROM node:20-slim AS runner
+FROM node:22-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

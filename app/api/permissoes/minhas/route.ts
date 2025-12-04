@@ -23,7 +23,7 @@ import { obterUsuarioPorId } from '@/backend/usuarios/services/usuarios/buscar-u
  *         name: recurso
  *         schema:
  *           type: string
- *         description: Filtrar por recurso específico (ex: assistentes)
+ *         description: Filtrar por recurso específico, por exemplo assistentes
  *     responses:
  *       200:
  *         description: Permissões retornadas com sucesso
