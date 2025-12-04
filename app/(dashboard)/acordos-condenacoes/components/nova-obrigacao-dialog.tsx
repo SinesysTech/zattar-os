@@ -83,8 +83,21 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
   // Determinar se está no modo com dados iniciais (processo já definido)
   const modoProcessoDefinido = !!dadosIniciais;
 
+  // Estado para busca de processos
+  const [buscaProcesso, setBuscaProcesso] = React.useState('');
+  const [debouncedBusca, setDebouncedBusca] = React.useState('');
+
+  // Debounce da busca para evitar muitas requisições
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedBusca(buscaProcesso);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [buscaProcesso]);
+
   // Buscar processos com hook quando TRT e Grau forem selecionados (apenas no modo manual)
-  const shouldFetchProcessos = open && !modoProcessoDefinido && !!trt && !!grau;
+  // Agora só busca se houver termo de busca com pelo menos 3 caracteres
+  const shouldFetchProcessos = open && !modoProcessoDefinido && !!trt && !!grau && debouncedBusca.length >= 3;
 
   // Hook com params fixos para evitar re-renders
   const acervoParams = React.useMemo(() => {
@@ -95,11 +108,12 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
     return {
       trt,
       grau: grau as 'primeiro_grau' | 'segundo_grau',
-      limite: 100,
+      busca: debouncedBusca,
+      limite: 50,
       ordenar_por: 'numero_processo' as const,
       ordem: 'asc' as const,
     };
-  }, [shouldFetchProcessos, trt, grau]);
+  }, [shouldFetchProcessos, trt, grau, debouncedBusca]);
 
   const { processos: processosRaw, isLoading: loadingProcessos, error: processoError } = useAcervo(acervoParams);
 
@@ -110,10 +124,12 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
     }
   }, [processoError, error]);
 
-  // Resetar processo quando TRT ou Grau mudarem (apenas no modo manual)
+  // Resetar processo e busca quando TRT ou Grau mudarem (apenas no modo manual)
   React.useEffect(() => {
     if (!modoProcessoDefinido) {
       setProcessoId([]);
+      setBuscaProcesso('');
+      setDebouncedBusca('');
     }
   }, [trt, grau, modoProcessoDefinido]);
 
@@ -222,6 +238,8 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
     setTrt('');
     setGrau('');
     setProcessoId([]);
+    setBuscaProcesso('');
+    setDebouncedBusca('');
     setTipo('');
     setDirecao('');
     setValorTotal('');
@@ -230,7 +248,6 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
     setFormaPagamentoPadrao('');
     setFormaDistribuicao('');
     setObservacoes('');
-    setFormaDistribuicao('');
     setError(null);
   };
 
@@ -476,28 +493,64 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
             </div>
           </div>
 
-          {/* Processo - Combobox com busca */}
+          {/* Processo - Busca assíncrona + Combobox */}
           <div className="space-y-2">
             <Label htmlFor="processo">Processo *</Label>
             {!trt || !grau ? (
               <div className="flex items-center gap-2 p-2 border rounded-md bg-muted">
                 <span className="text-sm text-muted-foreground">Selecione o TRT e Grau primeiro</span>
               </div>
-            ) : loadingProcessos ? (
-              <div className="flex items-center gap-2 p-2 border rounded-md">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="text-sm text-muted-foreground">Carregando processos...</span>
-              </div>
             ) : (
-              <Combobox
-                options={processosOptions}
-                value={processoId}
-                onValueChange={setProcessoId}
-                placeholder="Buscar por número ou nome das partes..."
-                searchPlaceholder="Buscar processo..."
-                emptyText="Nenhum processo encontrado"
-                multiple={false}
-              />
+              <div className="space-y-2">
+                {/* Campo de busca */}
+                <Input
+                  placeholder="Digite o número do processo ou nome da parte (mín. 3 caracteres)..."
+                  value={buscaProcesso}
+                  onChange={(e) => setBuscaProcesso(e.target.value)}
+                />
+
+                {/* Feedback de busca */}
+                {buscaProcesso.length > 0 && buscaProcesso.length < 3 && (
+                  <p className="text-xs text-muted-foreground">Digite pelo menos 3 caracteres para buscar</p>
+                )}
+
+                {/* Loading */}
+                {loadingProcessos && (
+                  <div className="flex items-center gap-2 p-2 border rounded-md">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span className="text-sm text-muted-foreground">Buscando processos...</span>
+                  </div>
+                )}
+
+                {/* Combobox com resultados */}
+                {!loadingProcessos && debouncedBusca.length >= 3 && (
+                  <Combobox
+                    options={processosOptions}
+                    value={processoId}
+                    onValueChange={setProcessoId}
+                    placeholder={processosOptions.length === 0 ? "Nenhum processo encontrado" : "Selecione o processo..."}
+                    searchPlaceholder="Filtrar resultados..."
+                    emptyText="Nenhum processo encontrado"
+                    multiple={false}
+                  />
+                )}
+
+                {/* Mensagem quando não há busca */}
+                {!loadingProcessos && debouncedBusca.length < 3 && processoId.length === 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Use a busca acima para encontrar o processo pelo número ou nome das partes
+                  </p>
+                )}
+
+                {/* Processo selecionado */}
+                {processoId.length > 0 && (
+                  <div className="p-2 border rounded-md bg-green-50 dark:bg-green-950">
+                    <span className="text-sm text-green-800 dark:text-green-200">
+                      ✓ Processo selecionado: {processosOptions.find(p => p.value === processoId[0])?.label || processoId[0]}
+                    </span>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
