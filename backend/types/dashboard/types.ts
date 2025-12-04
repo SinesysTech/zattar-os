@@ -71,6 +71,8 @@ export interface AudienciaProxima {
   url_audiencia_virtual: string | null;
   responsavel_id: number | null;
   responsavel_nome: string | null;
+  polo_ativo_nome: string | null;
+  polo_passivo_nome: string | null;
 }
 
 // ============================================================================

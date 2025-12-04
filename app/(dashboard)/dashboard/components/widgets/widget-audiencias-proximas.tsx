@@ -18,7 +18,9 @@ interface WidgetAudienciasProximasProps {
 }
 
 function formatDate(dateStr: string): string {
-  const date = new Date(dateStr + 'T00:00:00');
+  // Se a string já contém 'T', extrair apenas a parte da data
+  const dateOnlyStr = dateStr.includes('T') ? dateStr.split('T')[0] : dateStr;
+  const date = new Date(dateOnlyStr + 'T00:00:00');
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -81,6 +83,11 @@ function AudienciaItem({ audiencia }: { audiencia: AudienciaProxima }) {
 
         <p className="text-xs text-muted-foreground truncate">
           {audiencia.numero_processo}
+          {(audiencia.polo_ativo_nome || audiencia.polo_passivo_nome) && (
+            <span className="ml-1 text-foreground/70">
+              - {audiencia.polo_ativo_nome || '?'} x {audiencia.polo_passivo_nome || '?'}
+            </span>
+          )}
         </p>
 
         <div className="flex items-center gap-2 pt-1">

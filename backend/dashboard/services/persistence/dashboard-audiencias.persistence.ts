@@ -105,6 +105,8 @@ export async function getProximasAudiencias(
     sala_audiencia_nome,
     url_audiencia_virtual,
     responsavel_id,
+    polo_ativo_nome,
+    polo_passivo_nome,
     tipo_audiencia:tipo_audiencia_id (descricao),
     usuarios:responsavel_id (nome_exibicao)
   `;
@@ -169,6 +171,8 @@ export async function getProximasAudiencias(
     url_audiencia_virtual: a.url_audiencia_virtual,
     responsavel_id: a.responsavel_id,
     responsavel_nome: (a.usuarios as { nome_exibicao?: string })?.nome_exibicao || null,
+    polo_ativo_nome: a.polo_ativo_nome,
+    polo_passivo_nome: a.polo_passivo_nome,
   }));
 }
 

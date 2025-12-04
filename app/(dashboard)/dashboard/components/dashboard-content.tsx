@@ -155,8 +155,14 @@ function AdminDashboard({ data }: AdminDashboardProps) {
         expedientesVencidos={expedientesVencidos}
       />
 
-      {/* Próximas Audiências */}
-      <WidgetAudienciasProximas audiencias={data.proximasAudiencias} />
+      {/* Widgets em duas colunas */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Próximas Audiências */}
+        <WidgetAudienciasProximas audiencias={data.proximasAudiencias} />
+
+        {/* Expedientes Urgentes */}
+        <WidgetExpedientesUrgentes expedientes={data.expedientesUrgentes} />
+      </div>
     </div>
   );
 }

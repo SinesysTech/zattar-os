@@ -179,12 +179,12 @@ export function NovoExpedienteDialog({
     const fetchUsuarios = async () => {
       setLoadingUsuarios(true);
       try {
-        const response = await fetch('/api/usuarios?limite=100');
+        const response = await fetch('/api/usuarios?limite=100&ativo=true');
         const result = await response.json();
         if (!response.ok || !result.success) {
           throw new Error(result.error || 'Erro ao buscar usuários');
         }
-        setUsuarios(result.data || []);
+        setUsuarios(result.data?.usuarios || []);
       } catch (err: unknown) {
         const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar usuários';
         console.error('Erro ao buscar usuários:', err);

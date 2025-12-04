@@ -118,6 +118,7 @@ caprover deploy -a sinesys
 > **Importante**: O CapRover pedirá os build args. Informe:
 > - `NEXT_PUBLIC_SUPABASE_URL`
 > - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
+> ⚠️ Importante: Antes de configurar deploy, leia a seção 'Prevenindo Múltiplos Builds Simultâneos' para evitar problemas.
 
 **Variáveis de ambiente:**
 ```env
@@ -238,6 +239,7 @@ O Next.js pode consumir muita memória durante o build. Soluções:
    docker push seu-registry/sinesys:latest
    ```
    E no CapRover, use "Deploy via ImageName".
+   💡 Dica: Se o OOM ocorre durante múltiplos builds simultâneos, veja a seção 'Prevenindo Múltiplos Builds Simultâneos'.
 
 ### Container reinicia constantemente
 
@@ -251,6 +253,99 @@ Verifique os logs no dashboard do CapRover: App > App Logs
    ```bash
    curl http://srv-captain--sinesys-browser:3000/health
    ```
+
+## Prevenindo Múltiplos Builds Simultâneos
+
+Múltiplos builds simultâneos podem causar **Out of Memory (OOM)** no servidor, especialmente quando cada build consome ~2GB de RAM. Isso acontece quando webhooks duplicados ou configurações incorretas no CapRover triggeram builds em paralelo.
+
+### Diagnóstico de Webhooks Duplicados
+
+Para identificar webhooks duplicados no GitHub:
+
+1. Acesse o repositório no GitHub
+2. Vá para **Settings → Webhooks**
+3. Verifique a lista de webhooks ativos
+4. Procure por múltiplos webhooks apontando para a mesma URL do CapRover
+
+**Como identificar duplicados:**
+- Mesmo **Payload URL** (ex: `https://captain.yourdomain.com/api/v2/user/apps/webhooks/trigger`)
+- Mesmo **Content type** e **Secret** (se aplicável)
+- Webhooks com status "Active" para o mesmo app
+
+**Comando para listar webhooks via GitHub CLI:**
+```bash
+gh api repos/{owner}/{repo}/hooks
+```
+
+> ⚠️ **Importante**: Cada app no CapRover deve ter apenas **uma URL de webhook ativa** no GitHub. Múltiplos webhooks para o mesmo app causam builds simultâneos.
+
+### Configuração Correta no CapRover
+
+O CapRover oferece duas opções principais para deploy automático: **"Deploy via GitHub"** e **"Deploy Triggers (Webhook)"**. A diferença é:
+
+- **Deploy via GitHub**: O CapRover monitora o repositório diretamente (requer credenciais Git configuradas)
+- **Deploy Triggers (Webhook)**: Usa webhooks externos (como do GitHub) para triggerar builds
+
+**Opção A (Recomendada): Usar apenas "Deploy Triggers (Webhook)" do CapRover**
+- No dashboard do CapRover: Apps → [seu-app] → Deployment → Desabilitar "Deploy via GitHub"
+- No GitHub: Configure apenas **1 webhook** com a URL fornecida pelo CapRover (Deployment → Deploy Triggers → Copy Webhook URL)
+
+**Opção B: Usar apenas "Deploy via GitHub" (sem webhook externo)**
+- No GitHub: Remova todos os webhooks relacionados ao CapRover
+- No CapRover: Configure credenciais Git (Deployment → Deploy via GitHub) e habilite o monitoramento
+
+> 🚫 **NUNCA use ambos simultaneamente** (Deploy via GitHub + Webhook): Isso causa builds duplicados e simultâneos, levando a OOM.
+
+### Verificação de Configuração Atual
+
+Para verificar a configuração atual no CapRover:
+
+1. Acesse o dashboard: Apps → [seu-app] → Deployment
+2. Verifique se "Deploy via GitHub" está habilitado
+3. Verifique se há webhook configurado em "Deploy Triggers"
+4. Se ambos estiverem ativos, **desabilite um deles** (recomendado: mantenha apenas o webhook)
+
+### Boas Práticas para Deploy
+
+- Faça commits atômicos: Evite múltiplos pushes em sequência rápida
+- Aguarde a conclusão do build anterior antes de fazer novo push
+- Use `git push --force` com cautela: Pode triggerar múltiplos builds se houver conflitos
+- Considere usar branches de staging para testes antes de deploy em produção
+
+### Checklist de Verificação Pré-Deploy
+
+Antes de cada deploy, verifique:
+
+- [ ] Existe apenas **1 webhook ativo** no GitHub para este app
+- [ ] Apenas **uma opção de deploy** está habilitada no CapRover (webhook OU auto-deploy)
+- [ ] Não há builds em andamento antes de fazer push
+- [ ] O servidor tem memória suficiente (mínimo 4GB disponível)
+
+### Troubleshooting de Múltiplos Builds
+
+**Sintoma**: Logs mostram "A build for [app] was queued, it's now being replaced with a new build..." ou builds simultâneos causando OOM.
+
+**Diagnóstico**:
+- No GitHub: Settings → Webhooks → Recent Deliveries → Procure múltiplas requisições para o mesmo commit SHA
+- No CapRover: Verifique logs do app para identificar origem dos triggers (webhook vs auto-deploy)
+
+**Solução**:
+- Remova webhooks duplicados no GitHub
+- Desabilite auto-deploy se estiver usando webhook manual
+- Aumente memória do servidor ou adicione swap (ver seção "Build falha com OOM")
+
+### Exemplo de Configuração Correta
+
+```
+✅ CONFIGURAÇÃO RECOMENDADA:
+- GitHub: 1 webhook ativo (URL do CapRover)
+- CapRover: Deploy Triggers habilitado
+- CapRover: Deploy via GitHub DESABILITADO
+
+❌ CONFIGURAÇÃO INCORRETA (causa múltiplos builds):
+- GitHub: 2+ webhooks ativos
+- CapRover: Deploy Triggers E Deploy via GitHub ambos habilitados
+```
 
 ---
 
