@@ -18,6 +18,20 @@ import {
   Shield,
   Type,
   Component,
+  FileText,
+  FileSignature,
+  Smartphone,
+  Wrench,
+  FolderTree,
+  Scale,
+  MapPin,
+  HardDrive,
+  FileCode,
+  Terminal,
+  Container,
+  Settings,
+  Database,
+  AlertTriangle,
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DocsNavSection, type NavSection } from './docs-nav-item';
