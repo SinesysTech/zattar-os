@@ -203,12 +203,20 @@ function calcularParcelas(
     acordo.honorariosSucumbenciaisTotal / numeroParcelas;
 
   // Data base para vencimentos
-  const dataBase = new Date(acordo.dataVencimentoPrimeiraParcela);
+  // Parse manual para evitar problemas de timezone (new Date("YYYY-MM-DD") interpreta como UTC)
+  const [ano, mes, dia] = acordo.dataVencimentoPrimeiraParcela.split('-').map(Number);
 
   for (let i = 0; i < numeroParcelas; i++) {
     // Calcular data de vencimento (parcela 1 = dataBase, parcela 2 = dataBase + intervalo, etc)
-    const dataVencimento = new Date(dataBase);
-    dataVencimento.setDate(dataVencimento.getDate() + i * intervalo);
+    // Criar data no timezone local para evitar offset de UTC
+    const dataVencimento = new Date(ano, mes - 1, dia + i * intervalo);
+
+    // Formatar como YYYY-MM-DD sem conversão UTC
+    const dataFormatada = [
+      dataVencimento.getFullYear(),
+      String(dataVencimento.getMonth() + 1).padStart(2, '0'),
+      String(dataVencimento.getDate()).padStart(2, '0'),
+    ].join('-');
 
     // Ajuste para última parcela (arredondamento)
     const valorParcela = i === numeroParcelas - 1
@@ -224,7 +232,7 @@ function calcularParcelas(
       numeroParcela: i + 1,
       valorBrutoCreditoPrincipal: parseFloat(valorParcela.toFixed(2)),
       honorariosSucumbenciais: parseFloat(honorariosParcela.toFixed(2)),
-      dataVencimento: dataVencimento.toISOString().split('T')[0], // YYYY-MM-DD
+      dataVencimento: dataFormatada,
       formaPagamento: params.formaPagamentoPadrao,
       editadoManualmente: false,
     });

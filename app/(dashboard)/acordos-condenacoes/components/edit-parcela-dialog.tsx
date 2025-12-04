@@ -47,6 +47,7 @@ export function EditParcelaDialog({
   const [valores, setValores] = useState({
     valorBrutoCreditoPrincipal: 0,
     honorariosSucumbenciais: 0,
+    dataVencimento: '',
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -55,6 +56,7 @@ export function EditParcelaDialog({
       setValores({
         valorBrutoCreditoPrincipal: parcela.valorBrutoCreditoPrincipal,
         honorariosSucumbenciais: parcela.honorariosSucumbenciais,
+        dataVencimento: parcela.dataVencimento,
       });
     }
   }, [parcela]);
@@ -86,6 +88,11 @@ export function EditParcelaDialog({
       return;
     }
 
+    if (!valores.dataVencimento) {
+      toast.error('A data de vencimento é obrigatória');
+      return;
+    }
+
     try {
       setIsSaving(true);
 
@@ -100,6 +107,7 @@ export function EditParcelaDialog({
           body: JSON.stringify({
             valorBrutoCreditoPrincipal: valores.valorBrutoCreditoPrincipal,
             honorariosSucumbenciais: valores.honorariosSucumbenciais,
+            dataVencimento: valores.dataVencimento,
             editadoManualmente: true,
           }),
         }
@@ -204,6 +212,25 @@ export function EditParcelaDialog({
             />
             <p className="text-xs text-muted-foreground">
               Atual: {formatCurrency(parcela.honorariosSucumbenciais)}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="dataVencimento">Data de Vencimento</Label>
+            <Input
+              id="dataVencimento"
+              type="date"
+              value={valores.dataVencimento}
+              onChange={(e) =>
+                setValores((prev) => ({
+                  ...prev,
+                  dataVencimento: e.target.value,
+                }))
+              }
+              disabled={isSaving}
+            />
+            <p className="text-xs text-muted-foreground">
+              Atual: {new Date(parcela.dataVencimento + 'T00:00:00').toLocaleDateString('pt-BR')}
             </p>
           </div>
 
