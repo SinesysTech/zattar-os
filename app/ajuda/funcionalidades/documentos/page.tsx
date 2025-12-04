@@ -113,17 +113,17 @@ export default function DocumentosPage() {
           <div>
             <h4 className="font-semibold mb-2">Método 1: Documento em Branco</h4>
             <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
-              <li>Clique no botão <strong className="text-foreground">"Novo Documento"</strong></li>
+              <li>Clique no botão <strong className="text-foreground">&quot;Novo Documento&quot;</strong></li>
               <li>Digite um título para o documento</li>
               <li>(Opcional) Escolha uma pasta para salvar</li>
-              <li>Clique em <strong className="text-foreground">"Criar"</strong></li>
+              <li>Clique em <strong className="text-foreground">&quot;Criar&quot;</strong></li>
             </ol>
           </div>
           <div>
             <h4 className="font-semibold mb-2">Método 2: A partir de um Template</h4>
             <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
-              <li>Clique no botão <strong className="text-foreground">"Novo Documento"</strong></li>
-              <li>Clique em <strong className="text-foreground">"Usar Template"</strong></li>
+              <li>Clique no botão <strong className="text-foreground">&quot;Novo Documento&quot;</strong></li>
+              <li>Clique em <strong className="text-foreground">&quot;Usar Template&quot;</strong></li>
               <li>Navegue pelos templates disponíveis</li>
               <li>Clique no template desejado</li>
               <li>O documento será criado com o conteúdo do template</li>
@@ -212,17 +212,17 @@ export default function DocumentosPage() {
             <div>
               <h5 className="font-medium mb-2">Criando uma Pasta</h5>
               <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
-                <li>Clique em "Nova Pasta"</li>
+                <li>Clique em &quot;Nova Pasta&quot;</li>
                 <li>Digite o nome da pasta</li>
                 <li>Escolha: Comum ou Privada</li>
-                <li>Clique em "Criar"</li>
+                <li>Clique em &quot;Criar&quot;</li>
               </ol>
             </div>
             <div>
               <h5 className="font-medium mb-2">Movendo Documentos</h5>
               <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
                 <li>Clique nos três pontos ao lado do documento</li>
-                <li>Selecione "Mover para..."</li>
+                <li>Selecione &quot;Mover para...&quot;</li>
                 <li>Escolha a pasta de destino</li>
               </ol>
             </div>
@@ -269,9 +269,9 @@ export default function DocumentosPage() {
             <div>
               <h5 className="font-medium mb-2">Restaurando uma Versão</h5>
               <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
-                <li>Menu "..." → "Histórico de Versões"</li>
-                <li>Clique em "Visualizar" na versão desejada</li>
-                <li>Se for a correta, clique em "Restaurar"</li>
+                <li>Menu &quot;...&quot; → &quot;Histórico de Versões&quot;</li>
+                <li>Clique em &quot;Visualizar&quot; na versão desejada</li>
+                <li>Se for a correta, clique em &quot;Restaurar&quot;</li>
               </ol>
             </div>
           </CardContent>
@@ -290,9 +290,9 @@ export default function DocumentosPage() {
               Documentos deletados vão para a lixeira e podem ser recuperados.
             </p>
             <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-              <li>Acesse: Menu de documentos → "Lixeira"</li>
-              <li>Clique em "Restaurar" para recuperar</li>
-              <li>"Deletar Permanentemente" remove definitivamente</li>
+              <li>Acesse: Menu de documentos → &quot;Lixeira&quot;</li>
+              <li>Clique em &quot;Restaurar&quot; para recuperar</li>
+              <li>&quot;Deletar Permanentemente&quot; remove definitivamente</li>
             </ul>
             <p className="text-sm text-amber-600 dark:text-amber-500">
               Documentos na lixeira são deletados automaticamente após 30 dias.
@@ -317,7 +317,7 @@ export default function DocumentosPage() {
               <Badge>Word (DOCX)</Badge>
             </div>
             <p className="text-sm text-muted-foreground mt-4">
-              Acesse: Menu "..." → "Exportar como..."
+              Acesse: Menu &quot;...&quot; → &quot;Exportar como...&quot;
             </p>
           </CardContent>
         </Card>
@@ -383,7 +383,7 @@ export default function DocumentosPage() {
               <h5 className="font-medium mb-2">Criando seu Template</h5>
               <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground">
                 <li>Crie um documento com a estrutura desejada</li>
-                <li>Menu "..." → "Salvar como Template"</li>
+                <li>Menu &quot;...&quot; → &quot;Salvar como Template&quot;</li>
                 <li>Escolha: Público ou Privado</li>
               </ol>
             </div>

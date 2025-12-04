@@ -199,7 +199,6 @@ export async function arquivadosCapture(
     // 5.2 Persistir processos no acervo (PRIMEIRO para obter IDs)
     console.log('   📦 Persistindo processos arquivados no acervo...');
     let persistencia: SalvarAcervoResult | undefined;
-    let logsPersistencia: LogEntry[] | undefined;
     let mapeamentoIds = new Map<number, number>();
 
     try {
@@ -291,7 +290,7 @@ export async function arquivadosCapture(
 
     // Finalizar logs
     captureLogService.imprimirResumo();
-    logsPersistencia = captureLogService.consumirLogs();
+    const logsPersistencia = captureLogService.consumirLogs();
 
     // ═══════════════════════════════════════════════════════════════
     // RESULTADO FINAL
