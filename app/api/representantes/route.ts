@@ -21,6 +21,7 @@ import type {
  * /api/representantes:
  *   get:
  *     summary: Lista representantes com paginação e filtros
+ *     description: Lista representantes (advogados) cadastrados. Representantes são únicos por CPF e podem ter múltiplas inscrições na OAB.
  *     tags: [Representantes]
  *     security:
  *       - bearerAuth: []
@@ -38,56 +39,33 @@ import type {
  *           type: integer
  *           minimum: 1
  *           maximum: 100
- *           default: 10
+ *           default: 50
  *         description: Itens por página
  *       - in: query
- *         name: parte_tipo
+ *         name: nome
  *         schema:
  *           type: string
- *           enum: [cliente, parte_contraria, terceiro]
- *         description: Filtrar por tipo de parte
+ *         description: Filtrar por nome (busca parcial)
  *       - in: query
- *         name: parte_id
- *         schema:
- *           type: integer
- *         description: Filtrar por ID da parte
- *       - in: query
- *         name: trt
+ *         name: cpf
  *         schema:
  *           type: string
- *         description: Filtrar por TRT
+ *         description: Filtrar por CPF (busca exata)
  *       - in: query
- *         name: grau
+ *         name: oab
  *         schema:
  *           type: string
- *           enum: ["1", "2"]
- *         description: Filtrar por grau
+ *         description: Filtrar por número OAB (busca no array JSONB)
  *       - in: query
- *         name: numero_processo
+ *         name: uf_oab
  *         schema:
  *           type: string
- *         description: Filtrar por número do processo
- *       - in: query
- *         name: numero_oab
- *         schema:
- *           type: string
- *         description: Filtrar por número OAB
- *       - in: query
- *         name: situacao_oab
- *         schema:
- *           type: string
- *         description: Filtrar por situação OAB
- *       - in: query
- *         name: tipo_pessoa
- *         schema:
- *           type: string
- *           enum: [pf, pj]
- *         description: Filtrar por tipo de pessoa
+ *         description: Filtrar por UF da OAB
  *       - in: query
  *         name: busca
  *         schema:
  *           type: string
- *         description: Busca textual em nome
+ *         description: Busca textual em nome, CPF, email e OABs
  *       - in: query
  *         name: ordenar_por
  *         schema:
@@ -161,9 +139,8 @@ export async function GET(request: NextRequest) {
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!) : undefined,
       nome: searchParams.get('nome') || undefined,
       cpf: searchParams.get('cpf') || undefined,
-      numero_oab: searchParams.get('numero_oab') || undefined,
+      oab: searchParams.get('oab') || undefined,
       uf_oab: searchParams.get('uf_oab') || undefined,
-      situacao_oab: searchParams.get('situacao_oab') || undefined,
       busca: searchParams.get('busca') || undefined,
       ordenar_por: searchParams.get('ordenar_por') as ListarRepresentantesParams['ordenar_por'],
       ordem: searchParams.get('ordem') as 'asc' | 'desc' | undefined,

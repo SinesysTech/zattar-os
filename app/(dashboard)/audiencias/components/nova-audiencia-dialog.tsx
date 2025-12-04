@@ -5,6 +5,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -352,6 +353,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     setCep('');
     setError(null);
   };
+  const parseLocalDate = (dateString: string): Date => { const [year, month, day] = dateString.split('-').map(Number); return new Date(year, month - 1, day); };
+  const formatYYYYMMDD = (d: Date): string => { const y = d.getFullYear(); const m = String(d.getMonth() + 1).padStart(2, '0'); const da = String(d.getDate()).padStart(2, '0'); return `${y}-${m}-${da}`; };
 
   const handleClose = () => {
     resetForm();
@@ -447,12 +450,10 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="dataInicio">Data de Início *</Label>
-              <Input
-                id="dataInicio"
-                type="date"
-                value={dataInicio}
-                onChange={(e) => setDataInicio(e.target.value)}
-                required
+              <DatePicker
+                value={dataInicio ? parseLocalDate(dataInicio) : null}
+                onChange={(d) => setDataInicio(d ? formatYYYYMMDD(d) : '')}
+                placeholder="Selecionar data"
               />
             </div>
             <div className="space-y-2">
@@ -471,12 +472,10 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="dataFim">Data de Fim *</Label>
-              <Input
-                id="dataFim"
-                type="date"
-                value={dataFim}
-                onChange={(e) => setDataFim(e.target.value)}
-                required
+              <DatePicker
+                value={dataFim ? parseLocalDate(dataFim) : null}
+                onChange={(d) => setDataFim(d ? formatYYYYMMDD(d) : '')}
+                placeholder="Selecionar data"
               />
             </div>
             <div className="space-y-2">

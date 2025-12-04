@@ -1,5 +1,5 @@
 import { generateCacheKey, CACHE_PREFIXES } from './cache-utils';
-import type { ListarPendentesParams } from '@/backend/types/pendentes/types';
+import type { ListarPendentesParams } from '@/backend/types/expedientes/types';
 import type { ListarAudienciasParams } from '@/backend/types/audiencias/types';
 import type { ListarAcervoParams } from '@/backend/types/acervo/types';
 

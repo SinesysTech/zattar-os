@@ -4,8 +4,10 @@
 
 import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Calendar } from '@/components/ui/calendar';
+import { DayButton } from 'react-day-picker';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
-import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
+import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
 
 interface ExpedientesVisualizacaoMesProps {
   expedientes: PendenteManifestacao[];
@@ -136,78 +138,61 @@ export function ExpedientesVisualizacaoMes({
     return <div className="text-center py-8">Carregando...</div>;
   }
 
+  const CustomDayButton = ({ day, modifiers, className, ...props }: React.ComponentProps<typeof DayButton>) => {
+    const date = day.date;
+    const lista = getExpedientesDia(date);
+    return (
+      <button
+        {...props}
+        className={`relative w-full h-full p-1 text-left aspect-square ${className || ''}`}
+        onClick={(e) => {
+          if (lista.length > 0) {
+            e.stopPropagation();
+            handleMaisClick(date);
+          }
+        }}
+      >
+        <div className="text-xs font-medium mb-1">{date.getDate()}</div>
+        {lista.length > 0 && (
+          <div className="space-y-1">
+            {lista.slice(0, 3).map((expediente) => (
+              <div
+                key={expediente.id}
+                className="text-[10px] bg-primary/10 hover:bg-primary/20 rounded px-1 py-0.5 truncate cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleExpedienteClick(expediente);
+                }}
+              >
+                {expediente.classe_judicial} {expediente.numero_processo}
+              </div>
+            ))}
+            {lista.length > 3 && (
+              <Badge
+                variant="secondary"
+                className="text-[10px] cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleMaisClick(date);
+                }}
+              >
+                +{lista.length - 3} mais
+              </Badge>
+            )}
+          </div>
+        )}
+      </button>
+    );
+  };
+
   return (
     <div className="space-y-4">
-      {/* Calendário */}
-      <div className="border rounded-lg overflow-hidden">
-        {/* Cabeçalho dos dias da semana */}
-        <div className="grid grid-cols-7 bg-muted">
-          {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map((dia) => (
-            <div key={dia} className="p-2 text-center text-sm font-medium">
-              {dia}
-            </div>
-          ))}
-        </div>
-
-        {/* Grade de dias */}
-        <div className="grid grid-cols-7">
-          {diasMes.map((dia, index) => {
-            const expedientesDia = getExpedientesDia(dia);
-            const temExpedientes = expedientesDia.length > 0;
-            const hoje = ehHoje(dia);
-
-            return (
-              <div
-                key={index}
-                className={`
-                  min-h-[120px] border-r border-b p-2
-                  ${!dia ? 'bg-muted/50' : ''}
-                  ${hoje ? 'bg-blue-50 dark:bg-blue-950' : ''}
-                  ${temExpedientes ? 'hover:bg-accent cursor-pointer' : ''}
-                `}
-              >
-                {dia && (
-                  <>
-                    <div className={`text-sm font-medium mb-1 ${hoje ? 'text-blue-600 dark:text-blue-400' : ''}`}>
-                      {dia.getDate()}
-                    </div>
-                    {temExpedientes && (
-                      <div className="space-y-1">
-                        {expedientesDia.slice(0, 3).map((expediente) => (
-                          <div
-                            key={expediente.id}
-                            className="text-xs bg-primary/10 hover:bg-primary/20 rounded px-1 py-0.5 truncate cursor-pointer transition-colors"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleExpedienteClick(expediente);
-                            }}
-                          >
-                            {expediente.classe_judicial} {expediente.numero_processo}
-                          </div>
-                        ))}
-                        {expedientesDia.length > 3 && (
-                          <Badge
-                            variant="secondary"
-                            className="text-xs cursor-pointer hover:bg-secondary/80 transition-colors"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleMaisClick(dia);
-                            }}
-                          >
-                            +{expedientesDia.length - 3} mais
-                          </Badge>
-                        )}
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Dialog de detalhes */}
+      <Calendar
+        month={mesSelecionado}
+        onMonthChange={(m) => setMesLocal(m)}
+        showOutsideDays
+        components={{ DayButton: CustomDayButton as any }}
+      />
       <ExpedienteDetalhesDialog
         expediente={expedienteSelecionado}
         expedientes={expedientesDia.length > 0 ? expedientesDia : undefined}

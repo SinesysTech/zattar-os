@@ -172,7 +172,7 @@ export async function tipoExpedienteEmUso(id: number): Promise<boolean> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('id')
     .eq('tipo_expediente_id', id)
     .limit(1)

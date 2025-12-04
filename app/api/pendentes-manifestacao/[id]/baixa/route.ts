@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { baixarExpediente } from '@/backend/pendentes/services/baixa-expediente.service';
+import { baixarExpediente } from '@/backend/expedientes/services/baixa-expediente.service';
 
 /**
  * @swagger

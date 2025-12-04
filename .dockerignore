@@ -110,6 +110,7 @@ dev_data
 openspec
 scripts
 browser
+dev
 
 # ========================================
 # Supabase (não requerido no container; migrations/seed executados fora via CLI/SDK)

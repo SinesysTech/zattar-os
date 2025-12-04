@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import {
   Popover,
@@ -67,7 +68,7 @@ import { ParteDetalheDialog } from './parte-detalhe-dialog';
 import { CheckCircle2, Undo2, Eye } from 'lucide-react';
 import Link from 'next/link';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
+import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
 import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
@@ -625,7 +626,7 @@ function PrazoCell({
             </div>
             <div className="space-y-1">
               <Label className="text-sm font-medium">Data de Fim *</Label>
-              <input type="date" className="border rounded p-2 w-full" value={dataPrazoStr} onChange={(e) => setDataPrazoStr(e.target.value)} aria-label="Data de fim do prazo" />
+              <FormDatePicker id="prazo-legal-fim" value={dataPrazoStr || undefined} onChange={(v) => setDataPrazoStr(v || '')} />
             </div>
           </div>
           <DialogFooter>

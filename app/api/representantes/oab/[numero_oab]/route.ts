@@ -83,9 +83,11 @@ export async function GET(request: NextRequest, context: RouteContext) {
       );
     }
 
-    // Parse query params
+    // Parse query params - extract UF if present in numero_oab
+    const uf = request.nextUrl.searchParams.get('uf') || undefined;
     const params: BuscarRepresentantesPorOABParams = {
-      numero_oab,
+      oab: numero_oab,
+      uf,
     };
 
     // Find representantes

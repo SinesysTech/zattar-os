@@ -85,28 +85,28 @@ async function getProdutividadeUsuario(
 
   // Baixas de hoje
   const { count: baixasHoje } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('id', { count: 'exact', head: true })
     .eq('responsavel_id', usuarioId)
     .gte('baixado_em', hoje.toISOString());
 
   // Baixas da semana
   const { count: baixasSemana } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('id', { count: 'exact', head: true })
     .eq('responsavel_id', usuarioId)
     .gte('baixado_em', inicioSemana.toISOString());
 
   // Baixas do mês
   const { count: baixasMes } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('id', { count: 'exact', head: true })
     .eq('responsavel_id', usuarioId)
     .gte('baixado_em', inicioMes.toISOString());
 
   // Baixas da semana anterior (para comparativo)
   const { count: baixasSemanaAnterior } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('id', { count: 'exact', head: true })
     .eq('responsavel_id', usuarioId)
     .gte('baixado_em', inicioSemanaAnterior.toISOString())
@@ -136,7 +136,7 @@ async function getProdutividadeUsuario(
     proximoDia.setDate(proximoDia.getDate() + 1);
 
     const { count } = await supabase
-      .from('pendentes_manifestacao')
+      .from('expedientes')
       .select('id', { count: 'exact', head: true })
       .eq('responsavel_id', usuarioId)
       .gte('baixado_em', dia.toISOString())

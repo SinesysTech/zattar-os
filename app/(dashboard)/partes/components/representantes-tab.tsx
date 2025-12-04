@@ -88,30 +88,13 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 }
 
 /**
- * Extrai UF e número da OAB do campo numero_oab
- * O campo pode vir em formatos como "SP323806", "RJ085143", etc.
- * Retorna { uf: "SP", numero: "323.806" }
+ * Formata número da OAB removendo UF do início se presente
+ * Ex: "MG128404" -> "128.404"
  */
-function extrairDadosOab(numeroOabCompleto: string, ufOabSeparado: string | null): { uf: string; numero: string } {
-  // Se já temos a UF separada, usamos ela
-  if (ufOabSeparado) {
-    const apenasNumeros = numeroOabCompleto.replace(/\D/g, '');
-    const numeroFormatado = apenasNumeros.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    return { uf: ufOabSeparado, numero: numeroFormatado };
-  }
-  
-  // Tenta extrair UF do início do numero_oab (ex: "SP323806" -> UF: "SP", Numero: "323806")
-  const match = numeroOabCompleto.match(/^([A-Z]{2})(\d+)$/i);
-  if (match) {
-    const uf = match[1].toUpperCase();
-    const numero = match[2].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    return { uf, numero };
-  }
-  
-  // Fallback: apenas formata o número sem UF
-  const apenasNumeros = numeroOabCompleto.replace(/\D/g, '');
-  const numeroFormatado = apenasNumeros.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return { uf: '', numero: numeroFormatado };
+function formatarNumeroOab(numero: string): string {
+  // Remove UF do início se presente
+  const apenasNumeros = numero.replace(/^[A-Z]{2}/i, '').replace(/\D/g, '');
+  return apenasNumeros.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
 /**
@@ -140,18 +123,18 @@ function obterSituacaoOab(situacao: string | null | undefined): { label: string;
  * Badge composto para OAB + Situação
  * Metade esquerda em azul (OAB), metade direita na cor da situação
  */
-function OabSituacaoBadge({ 
-  numeroOab, 
-  ufOab, 
-  situacaoOab 
-}: { 
-  numeroOab: string; 
-  ufOab: string | null; 
-  situacaoOab: string | null;
+function OabSituacaoBadge({
+  numero,
+  uf,
+  situacao
+}: {
+  numero: string;
+  uf: string;
+  situacao: string | null;
 }) {
-  const { uf, numero } = extrairDadosOab(numeroOab, ufOab);
-  const { label: situacaoLabel, tone: situacaoTone } = obterSituacaoOab(situacaoOab);
-  
+  const numeroFormatado = formatarNumeroOab(numero);
+  const { label: situacaoLabel, tone: situacaoTone } = obterSituacaoOab(situacao);
+
   // Classes para cada tone
   const toneClasses = {
     success: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
@@ -159,18 +142,45 @@ function OabSituacaoBadge({
     danger: 'bg-red-500/15 text-red-700 dark:text-red-400',
     neutral: 'bg-muted text-muted-foreground',
   };
-  
+
   return (
     <div className="inline-flex items-center text-xs font-medium rounded-full overflow-hidden shrink-0">
       {/* Lado esquerdo: OAB (azul/info) */}
       <span className="bg-sky-500/15 text-sky-700 dark:text-sky-400 px-2 py-0.5">
-        {numero} OAB-{uf || 'XX'}
+        {numeroFormatado} OAB-{uf}
       </span>
       {/* Separador e lado direito: Situação */}
       {situacaoLabel && (
         <span className={cn('px-2 py-0.5 border-l border-background/50', toneClasses[situacaoTone])}>
           {situacaoLabel}
         </span>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Componente para exibir múltiplas OABs
+ */
+function OabsBadges({ oabs }: { oabs: Array<{ numero: string; uf: string; situacao: string }> }) {
+  if (!oabs || oabs.length === 0) return null;
+
+  // Mostrar até 2 OABs na listagem, com indicador de +N se houver mais
+  const oabsVisiveis = oabs.slice(0, 2);
+  const oabsRestantes = oabs.length - 2;
+
+  return (
+    <div className="flex flex-wrap gap-1 items-center">
+      {oabsVisiveis.map((oab, index) => (
+        <OabSituacaoBadge
+          key={index}
+          numero={oab.numero}
+          uf={oab.uf}
+          situacao={oab.situacao}
+        />
+      ))}
+      {oabsRestantes > 0 && (
+        <span className="text-xs text-muted-foreground">+{oabsRestantes}</span>
       )}
     </div>
   );
@@ -227,20 +237,11 @@ function criarColunas(): ColumnDef<RepresentanteComProcessos>[] {
         const nome = formatarNome(representante.nome);
         const cpf = representante.cpf ? formatarCpf(representante.cpf) : null;
         const cpfRaw = representante.cpf;
-        const oab = representante.numero_oab;
-        const ufOab = representante.uf_oab;
-        const situacaoOab = representante.situacao_oab;
 
         return (
           <div className="min-h-14 flex flex-col justify-center py-1.5 gap-0.5 group">
-            {/* Linha 1: Badge composto OAB + Situação */}
-            {oab && (
-              <OabSituacaoBadge
-                numeroOab={oab}
-                ufOab={ufOab}
-                situacaoOab={situacaoOab}
-              />
-            )}
+            {/* Linha 1: Badges de OABs */}
+            <OabsBadges oabs={representante.oabs || []} />
             {/* Linha 2: Nome */}
             <div className="flex items-center gap-1">
               <span className="font-medium text-sm" title={nome}>

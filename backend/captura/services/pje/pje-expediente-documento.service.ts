@@ -182,7 +182,7 @@ export async function fetchDocumentoConteudo(
  *
  * PARÂMETROS:
  * - page: Instância do Playwright com cookies de autenticação
- * - params: FetchDocumentoParams contendo processoId, documentoId, pendenteId, numeroProcesso, trt, grau
+ * - params: FetchDocumentoParams contendo processoId, documentoId, expedienteId, numeroProcesso, trt, grau
  *
  * RETORNO:
  * Promise<FetchDocumentoResult> - Resultado da operação com success e arquivoInfo ou error
@@ -191,7 +191,7 @@ export async function fetchDocumentoConteudo(
  * const result = await downloadAndUploadDocumento(page, {
  *   processoId: "12345678",
  *   documentoId: "87654321",
- *   pendenteId: 999,
+ *   expedienteId: 999,
  *   numeroProcesso: "0010702-80.2025.5.03.0111",
  *   trt: "TRT3",
  *   grau: "1"
@@ -200,7 +200,7 @@ export async function fetchDocumentoConteudo(
  * EXEMPLO DE SUCESSO:
  * {
  *   success: true,
- *   pendenteId: 999,
+ *   expedienteId: 999,
  *   arquivoInfo: {
  *     arquivo_nome: "exp_789_doc_234517663_20251121.pdf",
  *     arquivo_url: "https://s3.us-east-005.backblazeb2.com/zattar-advogados/processos/.../exp_789_doc_234517663_20251121.pdf",
@@ -212,7 +212,7 @@ export async function fetchDocumentoConteudo(
  * EXEMPLO DE ERRO:
  * {
  *   success: false,
- *   pendenteId: 999,
+ *   expedienteId: 999,
  *   error: "Documento não é um PDF válido"
  * }
  */
@@ -220,10 +220,10 @@ export async function downloadAndUploadDocumento(
   page: Page,
   params: FetchDocumentoParams
 ): Promise<FetchDocumentoResult> {
-  const { processoId, documentoId, pendenteId, numeroProcesso } = params;
+  const { processoId, documentoId, expedienteId, numeroProcesso } = params;
 
   try {
-    console.log(`\n🚀 Iniciando captura de documento para pendente ${pendenteId}`);
+    console.log(`\n🚀 Iniciando captura de documento para pendente ${expedienteId}`);
 
     // 1. Buscar metadados
     const metadata = await fetchDocumentoMetadata(page, processoId, documentoId);
@@ -243,7 +243,7 @@ export async function downloadAndUploadDocumento(
     console.log(`📦 Buffer criado: ${buffer.length} bytes`);
 
     // 5. Gerar caminho e nome do arquivo no Backblaze
-    const key = gerarCaminhoCompletoPendente(numeroProcesso, pendenteId, documentoId);
+    const key = gerarCaminhoCompletoPendente(numeroProcesso, expedienteId, documentoId);
     const nomeArquivo = key.split('/').pop()!; // Extrair nome do arquivo do path
 
     console.log(`📂 Caminho no Backblaze: ${key}`);
@@ -270,14 +270,14 @@ export async function downloadAndUploadDocumento(
     };
 
     // 8. Atualizar banco de dados
-    console.log(`💾 Atualizando banco de dados: pendente ${pendenteId}`);
-    await atualizarDocumentoPendente(pendenteId, arquivoInfo);
+    console.log(`💾 Atualizando banco de dados: pendente ${expedienteId}`);
+    await atualizarDocumentoPendente(expedienteId, arquivoInfo);
 
-    console.log(`🎉 Documento capturado com sucesso para pendente ${pendenteId}\n`);
+    console.log(`🎉 Documento capturado com sucesso para pendente ${expedienteId}\n`);
 
     return {
       success: true,
-      pendenteId,
+      expedienteId,
       arquivoInfo,
     };
   } catch (error) {
@@ -285,13 +285,13 @@ export async function downloadAndUploadDocumento(
       error instanceof Error ? error.message : 'Erro desconhecido';
 
     console.error(
-      `❌ Erro ao capturar documento para pendente ${pendenteId}:`,
+      `❌ Erro ao capturar documento para pendente ${expedienteId}:`,
       errorMessage
     );
 
     return {
       success: false,
-      pendenteId,
+      expedienteId,
       error: errorMessage,
     };
   }

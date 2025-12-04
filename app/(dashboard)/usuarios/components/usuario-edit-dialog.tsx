@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -266,13 +267,11 @@ export function UsuarioEditDialog({
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="dataNascimento">Data de Nascimento</Label>
-                <Input
+                <FormDatePicker
                   id="dataNascimento"
-                  type="date"
-                  value={formData.dataNascimento}
-                  onChange={(e) =>
-                    setFormData({ ...formData, dataNascimento: e.target.value })
-                  }
+                  value={formData.dataNascimento || undefined}
+                  onChange={(v) => setFormData({ ...formData, dataNascimento: v || '' })}
+                  className="max-w-xs"
                 />
               </div>
 

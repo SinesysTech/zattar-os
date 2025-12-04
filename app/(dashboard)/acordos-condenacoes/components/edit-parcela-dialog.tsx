@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { AlertCircle, Save } from 'lucide-react';
 import { toast } from 'sonner';
@@ -217,17 +218,11 @@ export function EditParcelaDialog({
 
           <div className="space-y-2">
             <Label htmlFor="dataVencimento">Data de Vencimento</Label>
-            <Input
+            <FormDatePicker
               id="dataVencimento"
-              type="date"
-              value={valores.dataVencimento}
-              onChange={(e) =>
-                setValores((prev) => ({
-                  ...prev,
-                  dataVencimento: e.target.value,
-                }))
-              }
-              disabled={isSaving}
+              value={valores.dataVencimento || undefined}
+              onChange={(v) => setValores((prev) => ({ ...prev, dataVencimento: v || '' }))}
+              className="max-w-xs"
             />
             <p className="text-xs text-muted-foreground">
               Atual: {new Date(parcela.dataVencimento + 'T00:00:00').toLocaleDateString('pt-BR')}

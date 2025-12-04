@@ -448,11 +448,11 @@ const toolsData: Tool[] = [
     params: ['id'],
   },
 
-  // Pendentes de Manifestação (5 tools)
+  // Pendentes de Manifestação (5 tools) - armazenados na tabela 'expedientes'
   {
     name: 'listar_pendentes_manifestacao',
     title: 'Listar Pendentes de Manifestação',
-    description: 'Lista processos pendentes de manifestação com filtros avançados, paginação, ordenação e agrupamento.',
+    description: 'Lista processos pendentes de manifestação (tabela: expedientes) com filtros avançados, paginação, ordenação e agrupamento.',
     category: 'Pendentes',
     readOnly: true,
     params: ['pagina', 'limite', 'trt', 'grau', 'responsavelId', 'prazoVencido', 'baixado', 'agruparPor'],
@@ -460,7 +460,7 @@ const toolsData: Tool[] = [
   {
     name: 'buscar_pendentes_por_cliente_cpf',
     title: 'Buscar Pendentes por CPF do Cliente',
-    description: 'Busca todos os pendentes de manifestação dos processos relacionados a um cliente pelo CPF.',
+    description: 'Busca todos os pendentes de manifestação (tabela: expedientes) dos processos relacionados a um cliente pelo CPF.',
     category: 'Pendentes',
     readOnly: true,
     params: ['cpf'],
@@ -468,7 +468,7 @@ const toolsData: Tool[] = [
   {
     name: 'atribuir_responsavel_pendente',
     title: 'Atribuir Responsável ao Pendente',
-    description: 'Atribui, transfere ou desatribui um responsável de um processo pendente de manifestação.',
+    description: 'Atribui, transfere ou desatribui um responsável de um processo pendente de manifestação (tabela: expedientes).',
     category: 'Pendentes',
     readOnly: false,
     params: ['id', 'responsavelId'],
@@ -476,7 +476,7 @@ const toolsData: Tool[] = [
   {
     name: 'baixar_pendente',
     title: 'Baixar Pendente',
-    description: 'Marca um expediente pendente de manifestação como baixado. É obrigatório fornecer protocolo_id OU justificativa.',
+    description: 'Marca um expediente pendente de manifestação (tabela: expedientes) como baixado. É obrigatório fornecer protocolo_id OU justificativa.',
     category: 'Pendentes',
     readOnly: false,
     params: ['id', 'protocoloId ou justificativa'],
@@ -484,7 +484,7 @@ const toolsData: Tool[] = [
   {
     name: 'reverter_baixa_pendente',
     title: 'Reverter Baixa de Pendente',
-    description: 'Reverte a baixa de um expediente pendente de manifestação.',
+    description: 'Reverte a baixa de um expediente pendente de manifestação (tabela: expedientes).',
     category: 'Pendentes',
     readOnly: false,
     params: ['id'],

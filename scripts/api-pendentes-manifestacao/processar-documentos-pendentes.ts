@@ -61,7 +61,7 @@ async function buscarPendentesSemDocumento(): Promise<PendenteProcessar[]> {
     console.log('\n📋 Buscando pendentes sem documento...');
 
     const { data, error } = await supabase
-        .from('pendentes_manifestacao')
+        .from('expedientes')
         .select('id, id_pje, numero_processo, id_documento, trt, grau')
         .is('arquivo_nome', null)
         .not('id_documento', 'is', null)
@@ -224,7 +224,7 @@ async function processarDocumentos() {
                         const params: FetchDocumentoParams = {
                             processoId: String(pendente.id_pje),
                             documentoId: String(pendente.id_documento),
-                            pendenteId: pendente.id,
+                            expedienteId: pendente.id,
                             numeroProcesso: pendente.numero_processo,
                             trt: pendente.trt,
                             grau: pendente.grau,

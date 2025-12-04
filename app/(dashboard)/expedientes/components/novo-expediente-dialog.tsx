@@ -6,6 +6,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -430,12 +431,10 @@ export function NovoExpedienteDialog({
                     Prazo
                   </Label>
                   <div className="grid grid-cols-2 gap-3">
-                    <Input
+                    <FormDatePicker
                       id="dataPrazo"
-                      type="date"
-                      value={dataPrazo}
-                      onChange={(e) => setDataPrazo(e.target.value)}
-                      disabled={isLoading}
+                      value={dataPrazo || undefined}
+                      onChange={(v) => setDataPrazo(v || '')}
                       className="h-10"
                     />
                     <div className="relative">
@@ -725,12 +724,10 @@ export function NovoExpedienteDialog({
                     Prazo
                   </Label>
                   <div className="grid grid-cols-2 gap-4">
-                    <Input
+                    <FormDatePicker
                       id="dataPrazo"
-                      type="date"
-                      value={dataPrazo}
-                      onChange={(e) => setDataPrazo(e.target.value)}
-                      disabled={isLoading}
+                      value={dataPrazo || undefined}
+                      onChange={(v) => setDataPrazo(v || '')}
                       className="h-10"
                     />
                     <div className="relative">

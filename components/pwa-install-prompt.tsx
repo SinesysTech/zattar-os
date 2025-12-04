@@ -4,16 +4,31 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Download } from 'lucide-react';
 import { usePWAInstall } from '@/hooks/use-pwa-install';
-import { isPWAInstalled } from '@/lib/pwa-utils';
+import { isPWAInstalled, isSecureContext } from '@/lib/pwa-utils';
 import { useEffect, useState } from 'react';
 
 export function PWAInstallPrompt() {
   const { isInstallable, isInstalled, promptInstall, dismissPrompt, installationStatus } = usePWAInstall();
   const [isVisible, setIsVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('[PWA] Install status:', {
+      isInstallable,
+      isInstalled,
+      installationStatus,
+      isSecureContext: isSecureContext(),
+      isPWAInstalled: isPWAInstalled()
+    });
     // Check if already installed via display-mode
     const checkAndSetVisibility = () => {
+      // Check HTTPS requirement
+      if (!isSecureContext()) {
+        setErrorMessage('PWA requer HTTPS ou localhost para funcionar');
+        setIsVisible(false);
+        return;
+      }
+
       if (isPWAInstalled()) {
         setIsVisible(false);
         return;
@@ -21,6 +36,7 @@ export function PWAInstallPrompt() {
 
       // Show prompt only if installable and not dismissed
       if (isInstallable && installationStatus !== 'dismissed' && !isInstalled) {
+        setErrorMessage(null);
         setIsVisible(true);
       } else {
         setIsVisible(false);

@@ -84,7 +84,7 @@ export async function PATCH(
     const supabase = createServiceClient();
 
     const { data, error } = await supabase
-      .from('pendentes_manifestacao')
+      .from('expedientes')
       .update({ observacoes: observacoes || null, updated_at: new Date().toISOString() })
       .eq('id', expedienteId)
       .select()

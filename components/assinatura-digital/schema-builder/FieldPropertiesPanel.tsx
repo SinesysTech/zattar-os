@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -393,11 +394,10 @@ export default function FieldPropertiesPanel({
                             placeholder="Valor padrão"
                           />
                         ) : fieldType === FormFieldType.DATE ? (
-                          <Input
-                            type="date"
-                            {...formField}
-                            value={String(formField.value ?? '')}
-                            onChange={e => formField.onChange(e.target.value || undefined)}
+                          <FormDatePicker
+                            id="defaultValue-date"
+                            value={String(formField.value ?? '') || undefined}
+                            onChange={(v) => formField.onChange(v || undefined)}
                           />
                         ) : fieldType === FormFieldType.CHECKBOX ? (
                           <div className="flex items-center space-x-2">

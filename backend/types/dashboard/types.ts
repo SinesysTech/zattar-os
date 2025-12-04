@@ -89,7 +89,7 @@ export interface ExpedienteUrgente {
   dias_restantes: number; // negativo se vencido
   responsavel_id: number | null;
   responsavel_nome: string | null;
-  origem: 'pendentes_manifestacao' | 'expedientes_manuais';
+  origem: 'expedientes' | 'expedientes_manuais';
 }
 
 // ============================================================================

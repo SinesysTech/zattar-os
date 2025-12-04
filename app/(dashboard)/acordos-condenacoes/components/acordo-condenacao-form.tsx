@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import {
   Select,
   SelectContent,
@@ -251,12 +252,7 @@ export function AcordoCondenacaoForm({
         {/* Data de Vencimento */}
         <div className="space-y-2">
           <Label htmlFor="dataVencimento">Data de Vencimento (1ª Parcela) *</Label>
-          <Input
-            id="dataVencimento"
-            type="date"
-            value={dataVencimento}
-            onChange={(e) => setDataVencimento(e.target.value)}
-          />
+          <FormDatePicker id="dataVencimento" value={dataVencimento || undefined} onChange={(v) => setDataVencimento(v || '')} />
         </div>
       </div>
 

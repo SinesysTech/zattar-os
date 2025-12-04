@@ -29,6 +29,16 @@ export type SituacaoOAB =
   | 'FALECIDO';
 
 /**
+ * Inscrição na OAB.
+ * Um advogado pode ter inscrições em múltiplos estados.
+ */
+export interface InscricaoOAB {
+  numero: string;
+  uf: string;
+  situacao: SituacaoOAB | string;
+}
+
+/**
  * Representa um Representante (Advogado) no sistema.
  * Estes são sempre pessoas físicas.
  */
@@ -38,9 +48,8 @@ export interface Representante {
   nome: string;
   sexo: string | null;
   tipo: string | null; // Refere-se a TipoRepresentante, mas pode ser string para flexibilidade
-  numero_oab: string | null;
-  uf_oab: string | null;
-  situacao_oab: string | null; // Refere-se a SituacaoOAB, mas pode ser string para flexibilidade
+  /** Array de inscrições na OAB (advogado pode atuar em múltiplos estados) */
+  oabs: InscricaoOAB[];
   emails: string[] | null;
   email: string | null;
   ddd_celular: string | null;

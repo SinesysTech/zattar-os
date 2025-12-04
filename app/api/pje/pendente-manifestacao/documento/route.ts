@@ -17,7 +17,7 @@ import type { FetchDocumentoParams } from '@/backend/types/pje-trt/documento-typ
 import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 
 interface DocumentoRequestBody {
-  pendente_id: number;
+  expediente_id: number;
   processo_id: string;
   numero_processo: string;
   documento_id: string;
@@ -56,15 +56,15 @@ interface DocumentoRequestBody {
  *           schema:
  *             type: object
  *             required:
- *               - pendente_id
+ *               - expediente_id
  *               - processo_id
  *               - numero_processo
  *               - documento_id
  *               - credencial_id
  *             properties:
- *               pendente_id:
+ *               expediente_id:
  *                 type: integer
- *                 description: ID do pendente na tabela pendentes_manifestacao
+ *                 description: ID do expediente na tabela expedientes
  *               processo_id:
  *                 type: string
  *                 description: ID do processo no PJE (usado na URL da API)
@@ -78,7 +78,7 @@ interface DocumentoRequestBody {
  *                 type: integer
  *                 description: ID da credencial para autenticação no PJE (deve ser do tribunal correto)
  *           example:
- *             pendente_id: 999
+ *             expediente_id: 999
  *             processo_id: "12345678"
  *             numero_processo: "0010702-80.2025.5.03.0111"
  *             documento_id: "87654321"
@@ -97,7 +97,7 @@ interface DocumentoRequestBody {
  *                 data:
  *                   type: object
  *                   properties:
- *                     pendente_id:
+ *                     expediente_id:
  *                       type: integer
  *                       example: 999
  *                     arquivo_nome:
@@ -121,7 +121,7 @@ interface DocumentoRequestBody {
  *             examples:
  *               missingParams:
  *                 value:
- *                   error: "Missing required parameters: pendente_id, processo_id, numero_processo, documento_id, credencial_id"
+ *                   error: "Missing required parameters: expediente_id, processo_id, numero_processo, documento_id, credencial_id"
  *               invalidPdf:
  *                 value:
  *                   error: "Documento não é um PDF válido"
@@ -164,10 +164,10 @@ export async function POST(request: NextRequest) {
 
     // 2. Validar body da requisição
     const body: DocumentoRequestBody = await request.json();
-    const { pendente_id, processo_id, numero_processo, documento_id, credencial_id } = body;
+    const { expediente_id, processo_id, numero_processo, documento_id, credencial_id } = body;
 
     if (
-      !pendente_id ||
+      !expediente_id ||
       !processo_id ||
       !numero_processo ||
       !documento_id ||
@@ -176,14 +176,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            'Missing required parameters: pendente_id, processo_id, numero_processo, documento_id, credencial_id',
+            'Missing required parameters: expediente_id, processo_id, numero_processo, documento_id, credencial_id',
         },
         { status: 400 }
       );
     }
 
     console.log('\n🚀 Iniciando busca de documento via API');
-    console.log(`Pendente ID: ${pendente_id}`);
+    console.log(`Expediente ID: ${expediente_id}`);
     console.log(`Processo ID: ${processo_id}`);
     console.log(`Número Processo: ${numero_processo}`);
     console.log(`Documento ID: ${documento_id}`);
@@ -239,7 +239,7 @@ export async function POST(request: NextRequest) {
       const params: FetchDocumentoParams = {
         processoId: processo_id,
         documentoId: documento_id,
-        pendenteId: pendente_id,
+        expedienteId: expediente_id,
         numeroProcesso: numero_processo,
         trt,
         grau,
@@ -264,7 +264,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         data: {
-          pendente_id: result.pendenteId,
+          expediente_id: result.expedienteId,
           arquivo_nome: result.arquivoInfo?.arquivo_nome,
           arquivo_url: result.arquivoInfo?.arquivo_url,
           arquivo_key: result.arquivoInfo?.arquivo_key,

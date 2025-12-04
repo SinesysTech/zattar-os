@@ -278,7 +278,7 @@ export function tiptapJSONToMarkdown(json: TiptapDocument): string {
 function nodeToMarkdown(node: TiptapNode): string {
   switch (node.type) {
     case 'heading':
-      const level = node.attrs?.level || 1;
+      const level = Number(node.attrs?.level ?? 1);
       const headingText = node.content ? node.content.map(inlineToMarkdown).join('') : '';
       return '#'.repeat(level) + ' ' + headingText;
 

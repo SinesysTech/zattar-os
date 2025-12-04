@@ -7,6 +7,7 @@ import { capturarAudiencias } from '@/app/api/captura/captura';
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import {
   Select,
   SelectContent,
@@ -119,11 +120,10 @@ export function AudienciasForm({ onSuccess }: AudienciasFormProps) {
         </div>
         <div className="space-y-2">
           <Label htmlFor="dataInicio">Data Início (opcional)</Label>
-          <Input
+          <FormDatePicker
             id="dataInicio"
-            type="date"
-            value={dataInicio}
-            onChange={(e) => setDataInicio(e.target.value)}
+            value={dataInicio || undefined}
+            onChange={(v) => setDataInicio(v || '')}
           />
           <p className="text-sm text-muted-foreground">
             Se não informada, será usada a data de hoje
@@ -132,11 +132,10 @@ export function AudienciasForm({ onSuccess }: AudienciasFormProps) {
 
         <div className="space-y-2">
           <Label htmlFor="dataFim">Data Fim (opcional)</Label>
-          <Input
+          <FormDatePicker
             id="dataFim"
-            type="date"
-            value={dataFim}
-            onChange={(e) => setDataFim(e.target.value)}
+            value={dataFim || undefined}
+            onChange={(v) => setDataFim(v || '')}
           />
           <p className="text-sm text-muted-foreground">
             Se não informada, será usada hoje + 365 dias

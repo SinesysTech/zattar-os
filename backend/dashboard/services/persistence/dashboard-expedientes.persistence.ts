@@ -1,7 +1,7 @@
 /**
  * Persistência de dados de expedientes para Dashboard
  *
- * Consolida dados de pendentes_manifestacao e expedientes_manuais
+ * Consolida dados de expedientes e expedientes_manuais
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
@@ -24,9 +24,9 @@ export async function getExpedientesResumo(
   const em7dias = new Date(hoje);
   em7dias.setDate(em7dias.getDate() + 7);
 
-  // Buscar pendentes de manifestação (não baixados)
+  // Buscar expedientes (não baixados)
   let pendentesQuery = supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select(`
       id,
       data_prazo_legal_parte,
@@ -142,9 +142,9 @@ export async function getExpedientesUrgentes(
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
 
-  // Buscar pendentes de manifestação urgentes
+  // Buscar expedientes urgentes
   let pendentesQuery = supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select(`
       id,
       processo_id,
@@ -209,7 +209,7 @@ export async function getExpedientesUrgentes(
         dias_restantes: diasRestantes,
         responsavel_id: p.responsavel_id,
         responsavel_nome: (p.usuarios as { nome_exibicao?: string })?.nome_exibicao || null,
-        origem: 'pendentes_manifestacao' as const,
+        origem: 'expedientes' as const,
       };
     }),
     ...(manuais || []).map((m) => {
@@ -256,15 +256,15 @@ export async function getTotalExpedientesPendentes(): Promise<{
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
 
-  // Contar pendentes não baixados
+  // Contar expedientes não baixados
   const { count: pendentesTotal } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('id', { count: 'exact', head: true })
     .is('baixado_em', null);
 
-  // Contar pendentes vencidos
+  // Contar expedientes vencidos
   const { count: pendentesVencidos } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('id', { count: 'exact', head: true })
     .is('baixado_em', null)
     .lt('data_prazo_legal_parte', hoje.toISOString());

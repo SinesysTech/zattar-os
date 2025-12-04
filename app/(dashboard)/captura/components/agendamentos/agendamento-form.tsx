@@ -5,6 +5,7 @@ import { CapturaFormBase, validarCamposCaptura } from '../captura-form-base';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import {
   Select,
   SelectContent,
@@ -270,12 +271,10 @@ export function AgendamentoForm({ onSuccess }: AgendamentoFormProps) {
                   >
                     Data Início {needsAudienciasDates && '*'}
                   </Label>
-                  <Input
+                  <FormDatePicker
                     id="data-inicio"
-                    type="date"
-                    value={dataInicio}
-                    onChange={(e) => setDataInicio(e.target.value)}
-                    disabled={!needsAudienciasDates}
+                    value={dataInicio || undefined}
+                    onChange={(v) => setDataInicio(v || '')}
                     className="w-full"
                   />
                   <p className="text-xs text-muted-foreground">
@@ -289,12 +288,10 @@ export function AgendamentoForm({ onSuccess }: AgendamentoFormProps) {
                   <Label htmlFor="data-fim" className={!needsAudienciasDates ? 'text-muted-foreground' : ''}>
                     Data Fim {needsAudienciasDates && '*'}
                   </Label>
-                  <Input
+                  <FormDatePicker
                     id="data-fim"
-                    type="date"
-                    value={dataFim}
-                    onChange={(e) => setDataFim(e.target.value)}
-                    disabled={!needsAudienciasDates}
+                    value={dataFim || undefined}
+                    onChange={(v) => setDataFim(v || '')}
                     className="w-full"
                   />
                   <p className="text-xs text-muted-foreground">

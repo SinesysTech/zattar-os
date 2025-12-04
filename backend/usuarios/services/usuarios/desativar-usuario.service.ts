@@ -66,7 +66,7 @@ export async function desativarUsuarioComDesatribuicao(
 
     // Contar pendentes
     const { count: countPendentes, error: errorPendentes } = await supabase
-      .from('pendentes_manifestacao')
+      .from('expedientes')
       .select('*', { count: 'exact', head: true })
       .eq('responsavel_id', usuarioId);
 

@@ -1,7 +1,6 @@
 import type { Representante } from '@/types/domain/representantes';
 import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
 import type { ListarRepresentantesResult, OrdenarPorRepresentante, OrdemRepresentante } from '@/types/contracts/representantes';
-import type { SituacaoOAB } from '@/types/domain/representantes';
 
 /**
  * Resposta da API de representantes (formato padrão)
@@ -33,8 +32,10 @@ export interface BuscarRepresentantesParams {
   pagina?: number;
   limite?: number;
   busca?: string;
-  numero_oab?: string;
-  situacao_oab?: string;
+  /** Número da OAB para filtrar (com ou sem UF) */
+  oab?: string;
+  /** UF da OAB para filtrar (opcional) */
+  uf_oab?: string;
   incluirEndereco?: boolean;
   incluirProcessos?: boolean;
   ordenar_por?: OrdenarPorRepresentante;
@@ -45,5 +46,5 @@ export interface BuscarRepresentantesParams {
 // export interface RepresentanteFormData {}
 
 export interface RepresentantesFilters {
-  situacao_oab?: SituacaoOAB;
+  // Filtros para representantes - agora oabs é um array JSONB
 }

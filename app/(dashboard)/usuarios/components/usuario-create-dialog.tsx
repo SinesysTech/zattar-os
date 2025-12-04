@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2 } from 'lucide-react';
@@ -242,12 +243,11 @@ export function UsuarioCreateDialog({
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="dataNascimento">Data de Nascimento</Label>
-                <Input
+                <FormDatePicker
                   id="dataNascimento"
-                  type="date"
-                  value={formData.dataNascimento || ''}
-                  onChange={(e) => handleChange('dataNascimento', e.target.value)}
-                  disabled={isLoading}
+                  value={formData.dataNascimento || undefined}
+                  onChange={(v) => handleChange('dataNascimento', v)}
+                  className="max-w-xs"
                 />
               </div>
 

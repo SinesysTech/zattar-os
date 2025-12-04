@@ -1,5 +1,5 @@
 -- VIEW unificada para listar todos os expedientes (PJE + Manuais)
--- Combina pendentes_manifestacao e expedientes_manuais em uma única interface
+-- Combina expedientes e expedientes_manuais em uma única interface
 
 create or replace view public.expedientes_unificados as
 select
@@ -29,7 +29,7 @@ select
   pm.juizo_digital,
   pm.created_at,
   pm.updated_at
-from public.pendentes_manifestacao pm
+from public.expedientes pm
 
 union all
 

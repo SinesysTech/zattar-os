@@ -8,6 +8,7 @@ import { capturarTimeline, type TimelineParams, type FiltroDocumentosTimeline } 
 import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -283,12 +284,10 @@ export function TimelineForm({ onSuccess }: TimelineFormProps) {
                   <Label htmlFor="data-inicial" className="text-sm">
                     Data Inicial
                   </Label>
-                  <Input
+                  <FormDatePicker
                     id="data-inicial"
-                    type="date"
-                    value={dataInicial}
-                    onChange={(e) => setDataInicial(e.target.value)}
-                    disabled={isLoading}
+                    value={dataInicial || undefined}
+                    onChange={(v) => setDataInicial(v || '')}
                   />
                 </div>
 
@@ -296,12 +295,10 @@ export function TimelineForm({ onSuccess }: TimelineFormProps) {
                   <Label htmlFor="data-final" className="text-sm">
                     Data Final
                   </Label>
-                  <Input
+                  <FormDatePicker
                     id="data-final"
-                    type="date"
-                    value={dataFinal}
-                    onChange={(e) => setDataFinal(e.target.value)}
-                    disabled={isLoading}
+                    value={dataFinal || undefined}
+                    onChange={(v) => setDataFinal(v || '')}
                   />
                 </div>
               </div>

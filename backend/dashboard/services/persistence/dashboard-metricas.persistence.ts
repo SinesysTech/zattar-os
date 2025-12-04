@@ -62,7 +62,7 @@ export async function getMetricasEscritorio(): Promise<MetricasEscritorio> {
 
   // Total de expedientes pendentes
   const { count: pendentesCount } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('id', { count: 'exact', head: true })
     .is('baixado_em', null);
 
@@ -75,7 +75,7 @@ export async function getMetricasEscritorio(): Promise<MetricasEscritorio> {
 
   // Expedientes vencidos
   const { count: pendentesVencidos } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('id', { count: 'exact', head: true })
     .is('baixado_em', null)
     .lt('data_prazo_legal_parte', hoje.toISOString());
@@ -96,12 +96,12 @@ export async function getMetricasEscritorio(): Promise<MetricasEscritorio> {
 
   // Expedientes resolvidos no prazo (taxa de resolução)
   const { count: totalBaixados } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('id', { count: 'exact', head: true })
     .not('baixado_em', 'is', null);
 
   const { count: baixadosNoPrazo } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('id', { count: 'exact', head: true })
     .not('baixado_em', 'is', null)
     .eq('prazo_vencido', false);
@@ -193,7 +193,7 @@ export async function getCargaUsuarios(): Promise<CargaUsuario[]> {
 
     // Expedientes pendentes
     const { count: pendentes } = await supabase
-      .from('pendentes_manifestacao')
+      .from('expedientes')
       .select('id', { count: 'exact', head: true })
       .eq('responsavel_id', usuario.id)
       .is('baixado_em', null);
@@ -297,27 +297,27 @@ export async function getPerformanceAdvogados(): Promise<PerformanceAdvogado[]> 
   for (const usuario of usuarios) {
     // Baixas na semana
     const { count: baixasSemana } = await supabase
-      .from('pendentes_manifestacao')
+      .from('expedientes')
       .select('id', { count: 'exact', head: true })
       .eq('responsavel_id', usuario.id)
       .gte('baixado_em', inicioSemana.toISOString());
 
     // Baixas no mês
     const { count: baixasMes } = await supabase
-      .from('pendentes_manifestacao')
+      .from('expedientes')
       .select('id', { count: 'exact', head: true })
       .eq('responsavel_id', usuario.id)
       .gte('baixado_em', inicioMes.toISOString());
 
     // Taxa de cumprimento de prazo
     const { count: totalBaixados } = await supabase
-      .from('pendentes_manifestacao')
+      .from('expedientes')
       .select('id', { count: 'exact', head: true })
       .eq('responsavel_id', usuario.id)
       .not('baixado_em', 'is', null);
 
     const { count: baixadosNoPrazo } = await supabase
-      .from('pendentes_manifestacao')
+      .from('expedientes')
       .select('id', { count: 'exact', head: true })
       .eq('responsavel_id', usuario.id)
       .not('baixado_em', 'is', null)
@@ -325,7 +325,7 @@ export async function getPerformanceAdvogados(): Promise<PerformanceAdvogado[]> 
 
     // Expedientes vencidos atualmente
     const { count: expedientesVencidos } = await supabase
-      .from('pendentes_manifestacao')
+      .from('expedientes')
       .select('id', { count: 'exact', head: true })
       .eq('responsavel_id', usuario.id)
       .is('baixado_em', null)

@@ -15,10 +15,10 @@
 
 ## Refatoração de Código
 
-- [ ] Atualizar referências de `pendentes_manifestacao` para `expedientes` no backend
-- [ ] Atualizar referências de `pendentes_manifestacao` para `expedientes` nos tipos TypeScript
-- [ ] Atualizar referências de `pendentes_manifestacao` para `expedientes` nas API routes
-- [ ] Remover código relacionado a `expedientes_manuais`
+- [x] Atualizar referências de `pendentes_manifestacao` para `expedientes` no backend
+- [x] Atualizar referências de `pendentes_manifestacao` para `expedientes` nos tipos TypeScript
+- [x] Atualizar referências de `pendentes_manifestacao` para `expedientes` nas API routes
+- [x] Remover código relacionado a `expedientes_manuais`
 
 ## Backend - Cliente HTTP
 

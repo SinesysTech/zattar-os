@@ -329,6 +329,341 @@ npm run type-check
 
 ---
 
+## Progressive Web App (PWA)
+
+### Visão Geral
+
+O Sinesys é um **Progressive Web App (PWA)** completo, permitindo instalação como aplicativo nativo em dispositivos móveis e desktop.
+
+**Tecnologias**:
+- `@ducanh2912/next-pwa` v10.2.9 (geração automática de service worker)
+- Workbox (estratégias de cache avançadas)
+- Web App Manifest (metadados do app)
+
+**Benefícios**:
+- 📱 Instalação como app nativo (ícone na tela inicial)
+- ⚡ Carregamento instantâneo (cache inteligente)
+- 🔌 Funciona offline (páginas em cache)
+- 🔔 Notificações push (futuro)
+- 📊 Menor consumo de dados (cache de assets)
+
+---
+
+### Requisitos para Instalação
+
+Para que o navegador mostre a opção "Instalar app", **TODOS** os critérios abaixo devem ser atendidos:
+
+#### 1. Requisitos Técnicos (Automáticos)
+
+| Requisito | Status | Verificação |
+|-----------|--------|-------------|
+| **HTTPS** | ✅ Obrigatório | Produção: HTTPS / Dev: localhost |
+| **Manifest** | ✅ Configurado | `public/manifest.json` |
+| **Service Worker** | ✅ Auto-gerado | Gerado pelo next-pwa no build |
+| **Ícones** | ✅ Presentes | 192x192 e 512x512 em `public/` |
+| **Display Mode** | ✅ Standalone | `"display": "standalone"` |
+| **prefer_related_applications** | ✅ False | Adicionado no manifest |
+
+#### 2. Requisitos de Interação do Usuário (Chrome/Edge)
+
+⚠️ **IMPORTANTE**: O Chrome/Edge só mostra o prompt de instalação se:
+
+1. ✅ **Usuário clicou/tocou na página** pelo menos uma vez
+2. ✅ **Usuário passou 30 segundos** visualizando a página
+3. ✅ **App não está instalado** ainda
+
+**Isso significa**: Mesmo com tudo configurado corretamente, o prompt **NÃO aparecerá imediatamente** ao abrir a página. É necessário interagir e esperar 30 segundos.
+
+---
+
+### Como Testar o PWA
+
+#### Passo 1: Build de Produção
+
+⚠️ **IMPORTANTE**: O PWA **só funciona em build de produção** (não em `npm run dev`).
+
+```bash
+# Build com Webpack (obrigatório para PWA)
+npm run build:prod
+
+# Iniciar servidor de produção
+npm start
+```
+
+**Por que Webpack?** O `@ducanh2912/next-pwa` requer Webpack para gerar o service worker com Workbox. Turbopack não é compatível.
+
+#### Passo 2: Verificar Requisitos
+
+```bash
+# Verificar se todos os requisitos estão OK
+npm run check:pwa
+```
+
+**Saída esperada**:
+```
+🔍 Verificando requisitos do PWA...
+
+✅ Sucesso:
+  ✅ Manifest: name/short_name OK
+  ✅ Manifest: start_url OK
+  ✅ Manifest: display OK
+  ✅ Manifest: prefer_related_applications OK
+  ✅ Manifest: ícones 192x192 e 512x512 OK
+  ✅ next.config.ts: next-pwa configurado
+  ✅ next.config.ts: register: true OK
+  ✅ Service worker gerado pelo next-pwa encontrado
+  ✅ Página offline configurada
+  ✅ @ducanh2912/next-pwa v10.2.9 instalado
+
+🎉 Todos os requisitos do PWA estão OK!
+```
+
+#### Passo 3: Testar no Navegador
+
+**Chrome/Edge (Desktop)**:
+
+1. Abra `http://localhost:3000` (ou URL de produção com HTTPS)
+2. Abra DevTools (F12) → aba **Application**
+3. Verifique:
+   - **Manifest**: deve mostrar nome, ícones, display mode
+   - **Service Workers**: deve mostrar "activated and is running"
+4. **Interaja com a página** (clique em qualquer lugar)
+5. **Espere 30 segundos**
+6. Verifique se aparece:
+   - Ícone de instalação na barra de endereço (⊕)
+   - Banner de instalação no rodapé da página
+
+**Chrome/Edge (Mobile)**:
+
+1. Acesse via HTTPS (não funciona com IP local sem HTTPS)
+2. Interaja com a página por 30 segundos
+3. Menu (⋮) → "Instalar app" ou "Adicionar à tela inicial"
+
+**Safari (iOS)**:
+
+⚠️ Safari não suporta `beforeinstallprompt`. Instalação manual:
+
+1. Abra a página
+2. Toque no botão Compartilhar (□↑)
+3. "Adicionar à Tela de Início"
+
+---
+
+### Troubleshooting
+
+#### ❌ Prompt de instalação não aparece
+
+**Checklist**:
+
+1. **Build de produção?**
+   ```bash
+   # Deve usar build:prod, não dev
+   npm run build:prod && npm start
+   ```
+
+2. **HTTPS ou localhost?**
+   - ✅ `https://seudominio.com`
+   - ✅ `http://localhost:3000`
+   - ❌ `http://192.168.1.100:3000` (IP local sem HTTPS)
+
+3. **Service worker registrado?**
+   - DevTools → Application → Service Workers
+   - Deve mostrar "activated and is running"
+   - Se não aparecer, verifique console por erros
+
+4. **Manifest válido?**
+   - DevTools → Application → Manifest
+   - Deve mostrar todos os campos (nome, ícones, display)
+   - Se aparecer erro, rode `npm run check:pwa`
+
+5. **Interagiu por 30 segundos?**
+   - Chrome/Edge exigem 30 segundos de interação
+   - Clique em qualquer lugar da página
+   - Espere 30 segundos
+
+6. **App já instalado?**
+   - Se já instalou antes, o prompt não aparece
+   - Desinstale o app e limpe o cache
+   - Chrome: chrome://apps → remover app
+
+7. **Console mostra erros?**
+   ```javascript
+   // Abra console e verifique logs do PWA
+   [PWA] Install status: {
+     isInstallable: true,  // Deve ser true
+     isInstalled: false,   // Deve ser false
+     installationStatus: 'prompted',
+     isSecureContext: true // Deve ser true
+   }
+   ```
+
+#### ❌ Service worker não registra
+
+**Possíveis causas**:
+
+1. **Build não gerou o service worker**:
+   ```bash
+   # Verificar se existe após build
+   ls -la public/sw.js
+   ls -la public/workbox-*.js
+   ```
+   - Se não existir, o next-pwa não rodou
+   - Verifique se usou `npm run build:prod` (Webpack)
+
+2. **Service worker manual conflitando**:
+   - Não deve existir `public/sw.js` versionado no git
+   - O `.gitignore` ignora `**/public/sw.js`
+   - Se existir, delete e faça novo build
+
+3. **Registro manual conflitando**:
+   - Não deve ter `navigator.serviceWorker.register('/sw.js')` no código
+   - O next-pwa registra automaticamente com `register: true`
+
+#### ❌ Offline não funciona
+
+**Verificações**:
+
+1. **Página offline existe?**
+   ```bash
+   # Deve existir
+   ls app/offline/page.tsx
+   ```
+
+2. **Fallback configurado?**
+   ```typescript
+   // next.config.ts deve ter:
+   fallbacks: {
+     document: '/offline',
+   }
+   ```
+
+3. **Testar offline**:
+   - DevTools → Network → Throttling → Offline
+   - Recarregar página
+   - Deve mostrar página offline customizada
+
+#### ❌ Cache não funciona
+
+**Verificações**:
+
+1. **Estratégias de cache configuradas?**
+   - Verifique `workboxOptions.runtimeCaching` no `next.config.ts`
+   - Deve ter estratégias para imagens, fonts, APIs
+
+2. **Cache Storage no DevTools**:
+   - DevTools → Application → Cache Storage
+   - Deve mostrar caches: `google-fonts`, `images`, `next-static-js`, `api-cache`
+
+3. **Limpar cache e testar novamente**:
+   - DevTools → Application → Clear storage → Clear site data
+   - Recarregar página
+   - Verificar se caches são criados
+
+---
+
+### Arquitetura do PWA
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Build Process                            │
+├─────────────────────────────────────────────────────────────┤
+│  npm run build:prod (Webpack)                               │
+│         │                                                    │
+│         ├─→ Next.js build                                   │
+│         ├─→ @ducanh2912/next-pwa                            │
+│         │      ├─→ Gera public/sw.js (Workbox)              │
+│         │      ├─→ Gera public/workbox-*.js                 │
+│         │      └─→ Injeta script de registro                │
+│         └─→ Output: .next/standalone/                       │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│                     Runtime (Browser)                        │
+├─────────────────────────────────────────────────────────────┤
+│  1. Usuário acessa página                                   │
+│  2. next-pwa registra service worker (register: true)       │
+│  3. Service worker ativa e faz cache inicial                │
+│  4. Workbox aplica estratégias de cache:                    │
+│     - CacheFirst: imagens, fonts (cache → network)          │
+│     - NetworkFirst: APIs (network → cache)                  │
+│     - NetworkOnly: /api/health (sempre network)             │
+│  5. Após 30s de interação:                                  │
+│     - Chrome dispara 'beforeinstallprompt'                  │
+│     - PWAInstallPrompt mostra banner                        │
+│  6. Usuário clica "Instalar":                               │
+│     - App instalado como nativo                             │
+│     - Ícone na tela inicial                                 │
+│     - Abre em janela standalone                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Arquivos Relacionados
+
+| Arquivo | Descrição |
+|---------|----------|
+| `public/manifest.json` | Metadados do PWA (nome, ícones, display) |
+| `public/sw.js` | Service worker (gerado automaticamente) |
+| `public/android-chrome-*.png` | Ícones do app (192x192, 512x512) |
+| `public/apple-touch-icon.png` | Ícone para iOS |
+| `next.config.ts` | Configuração do next-pwa e Workbox |
+| `app/layout.tsx` | Metadados PWA (manifest, icons, theme) |
+| `app/offline/page.tsx` | Página mostrada quando offline |
+| `components/pwa-install-prompt.tsx` | Banner de instalação |
+| `hooks/use-pwa-install.ts` | Hook para gerenciar instalação |
+| `lib/pwa-utils.ts` | Utilitários PWA (verificações) |
+| `scripts/check-pwa.js` | Script de verificação de requisitos |
+
+---
+
+### Deploy em Produção
+
+#### CapRover
+
+**Variáveis de ambiente** (não há variáveis específicas de PWA):
+```env
+NODE_ENV=production
+# ... outras variáveis
+```
+
+**Build**:
+```bash
+# O Dockerfile já usa build:prod automaticamente
+docker build -t sinesys .
+```
+
+**HTTPS obrigatório**:
+- CapRover fornece HTTPS automaticamente via Let's Encrypt
+- Habilite "Enable HTTPS" nas configurações do app
+- Redirecione HTTP → HTTPS
+
+#### Vercel/Netlify
+
+**Build command**:
+```bash
+npm run build:prod
+```
+
+**Output directory**:
+```
+.next
+```
+
+**HTTPS**: Automático (ambos fornecem HTTPS por padrão)
+
+---
+
+### Referências
+
+- [Chrome Install Criteria](https://web.dev/articles/install-criteria) (2024-09-19)
+- [MDN: Making PWAs installable](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable) (2025-11-30)
+- [@ducanh2912/next-pwa Documentation](https://www.npmjs.com/@ducanh2912/next-pwa)
+- [Next.js PWA Guide](https://nextjs.org/docs/app/guides/progressive-web-apps)
+- [Workbox Documentation](https://developer.chrome.com/docs/workbox/)
+
+---
+
 ## Build Args vs Environment Variables
 
 ### Build Args (tempo de build)
@@ -427,7 +762,7 @@ O `.dockerignore` reduz o contexto de build de ~1.2GB para ~100MB, evitando que 
 | `package.json` | deps + builder + runner | ~3-5min |
 | Código-fonte | builder + runner | ~2-3min |
 | Build args | builder + runner | ~2-3min |
-| `.dockerignore` | tudo | ~3-5min |
+| `.dockerignore` | tudo | ~3-5min |}
 
 **Dica**: Evite mudar `package.json` e código no mesmo commit se possível.
 
@@ -444,7 +779,7 @@ O `.dockerignore` reduz o contexto de build de ~1.2GB para ~100MB, evitando que 
 Para identificar se o cache está sendo usado, leia os logs do Docker:
 
 - **Cache hit**: `---> Using cache`
-- **Cache miss**: `---> Running in ...`
+- **Cache miss**: `---> Running in ...`}
 
 **Exemplo de log com cache:**
 ```
@@ -483,7 +818,7 @@ Erros de Out-Of-Memory (OOM) ocorrem quando o Next.js build consome mais memóri
 |---------|------------|-----------------|-------|
 | Build único | 4GB | 6GB | Inclui 2GB para Node.js + 2GB para sistema |
 | Build com cache | 3GB | 4GB | Builds subsequentes consomem menos |
-| Múltiplos builds simultâneos | 4GB × número de builds | 6GB × número de builds | Evite builds simultâneos |
+| Múltiplos builds simultâneos | 4GB × número de builds | 6GB × número de builds | Evite builds simultâneos |}
 
 O `NODE_OPTIONS="--max-old-space-size=2048"` no Dockerfile limita o heap do Node.js a 2GB. O sistema operacional precisa de ~1-2GB adicionais para operações normais.
 
@@ -497,7 +832,6 @@ Acesse App Configs → Build Timeout & Memory para ajustar:
 #### Build Timeout
 Recomendações baseadas no cenário:
 - **Build sem cache**: 600s (10 minutos) - primeira vez ou após mudanças em dependências
-- **Build com cache**: 300s (5 minutos) - builds subsequentes
 - **Build com dependências novas**: 900s (15 minutos) - quando `package.json` muda
 
 #### Instance Count
@@ -505,7 +839,7 @@ Mantenha em 1 durante o build para evitar múltiplas instâncias consumindo mem�
 
 ### Configuração de Swap (Servidores com RAM Limitada)
 
-Use swap quando o servidor tiver menos de 4GB RAM. O swap permite que o sistema use disco como memória adicional, mas torna os builds 2-3x mais lentos.
+Use swap quando o servidor tiver menos de 4GB RAM física. O swap permite que o sistema use disco como memória adicional, mas torna os builds 2-3x mais lentos.
 
 #### Quando usar swap
 - Servidores com <4GB RAM física
@@ -524,11 +858,7 @@ sudo mkswap /swapfile
 sudo swapon /swapfile
 
 # Tornar permanente (adicionar ao /etc/fstab)
-echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
-
-# Verificar swap ativo
-sudo swapon --show
-free -h
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/sysctl.conf
 ```
 
 #### Otimizar uso de swap
@@ -688,7 +1018,7 @@ Para verificar a configuração atual no CapRover:
 ### Boas Práticas para Deploy
 
 - Faça commits atômicos: Evite múltiplos pushes em sequência rápida
-- Aguarde a conclusão do build anterior antes de fazer novo push
+- Aguarde a conclusão do build anterior antes de fazer push
 - Use `git push --force` com cautela: Pode triggerar múltiplos builds se houver conflitos
 - Considere usar branches de staging para testes antes de deploy em produção
 
@@ -735,7 +1065,7 @@ Antes de cada deploy, verifique:
 |---------|----------------------|---------------------------|----------------|-----|
 | sinesys_app | 512MB | 1GB | 4GB (mínimo) | 1 core |
 | sinesys_mcp | 128MB | 256MB | N/A | 0.5 core |
-| sinesys_browser | 1GB | 2GB | N/A | 1-2 cores |
+| sinesys_browser | 1GB | 2GB | N/A | 1-2 cores |}
 
 **Total recomendado para runtime**: VPS com 4GB RAM, 2-4 cores  
 **Total recomendado para build**: Pelo menos 4GB RAM adicional disponível durante builds
@@ -750,7 +1080,7 @@ Antes de cada deploy, verifique:
 # Supabase (obrigatório)
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=eyJ...
-SUPABASE_SECRET_KEY=eyJ...
+SUPABASE_SECRET_KEY=eyJ...}
 
 # API Key (para comunicação entre serviços)
 SERVICE_API_KEY=sua_api_key_segura
@@ -788,3 +1118,4 @@ SINESYS_API_KEY=sua_api_key_segura
 ```env
 PORT=3000
 BROWSER_TOKEN=opcional_token_seguranca
+```

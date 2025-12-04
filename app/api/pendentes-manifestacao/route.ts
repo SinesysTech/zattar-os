@@ -3,8 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { obterPendentes } from '@/backend/pendentes/services/listar-pendentes.service';
-import type { ListarPendentesParams } from '@/backend/types/pendentes/types';
+import { obterPendentes } from '@/backend/expedientes/services/listar-pendentes.service';
+import type { ListarPendentesParams } from '@/backend/types/expedientes/types';
 
 /**
  * @swagger

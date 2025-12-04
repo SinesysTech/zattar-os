@@ -76,7 +76,7 @@ export async function PATCH(
 
     const supabase = createServiceClient()
     const { data: registro, error: getError } = await supabase
-      .from('pendentes_manifestacao')
+      .from('expedientes')
       .select('*')
       .eq('id', expedienteId)
       .limit(1)
@@ -111,7 +111,7 @@ export async function PATCH(
     }
 
     const { data: updated, error: updError } = await supabase
-      .from('pendentes_manifestacao')
+      .from('expedientes')
       .update(updateData)
       .eq('id', expedienteId)
       .select('*')

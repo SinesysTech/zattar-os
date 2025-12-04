@@ -1,7 +1,7 @@
 -- Tabela de processos pendentes de manifestação
 -- Armazena processos que aguardam manifestação do advogado
 
-create table public.pendentes_manifestacao (
+create table public.expedientes (
   id bigint generated always as identity primary key,
   id_pje bigint not null,
   advogado_id bigint not null references public.advogados(id) on delete cascade,
@@ -48,62 +48,62 @@ create table public.pendentes_manifestacao (
     )
   )
 );
-comment on table public.pendentes_manifestacao is 'Processos pendentes de manifestação do advogado. A unicidade do expediente é garantida por (id_pje, trt, grau, numero_processo), permitindo que múltiplos advogados vejam o mesmo expediente sem duplicação';
-comment on column public.pendentes_manifestacao.id_pje is 'ID do expediente no sistema PJE (não é o ID do processo)';
-comment on column public.pendentes_manifestacao.advogado_id is 'Referência ao advogado que capturou o expediente (não faz parte da unicidade, pois múltiplos advogados podem ver o mesmo expediente)';
-comment on column public.pendentes_manifestacao.processo_id is 'Referência ao processo na tabela acervo (preenchido via trigger baseado no numero_processo)';
-comment on column public.pendentes_manifestacao.trt is 'Código do TRT onde o processo está tramitando';
-comment on column public.pendentes_manifestacao.grau is 'Grau do processo (primeiro_grau ou segundo_grau)';
-comment on column public.pendentes_manifestacao.numero_processo is 'Número do processo no formato CNJ (usado para relacionar com acervo)';
-comment on column public.pendentes_manifestacao.descricao_orgao_julgador is 'Descrição completa do órgão julgador';
-comment on column public.pendentes_manifestacao.classe_judicial is 'Classe judicial do processo (ex: ATOrd, ATSum)';
-comment on column public.pendentes_manifestacao.numero is 'Número sequencial do processo';
-comment on column public.pendentes_manifestacao.segredo_justica is 'Indica se o processo está em segredo de justiça';
-comment on column public.pendentes_manifestacao.codigo_status_processo is 'Código do status do processo (ex: DISTRIBUIDO)';
-comment on column public.pendentes_manifestacao.prioridade_processual is 'Prioridade processual do processo';
-comment on column public.pendentes_manifestacao.nome_parte_autora is 'Nome da parte autora';
-comment on column public.pendentes_manifestacao.qtde_parte_autora is 'Quantidade de partes autoras';
-comment on column public.pendentes_manifestacao.nome_parte_re is 'Nome da parte ré';
-comment on column public.pendentes_manifestacao.qtde_parte_re is 'Quantidade de partes rés';
-comment on column public.pendentes_manifestacao.data_autuacao is 'Data de autuação do processo';
-comment on column public.pendentes_manifestacao.juizo_digital is 'Indica se o processo é de juízo digital';
-comment on column public.pendentes_manifestacao.data_arquivamento is 'Data de arquivamento do processo';
-comment on column public.pendentes_manifestacao.id_documento is 'ID do documento/expediente pendente';
-comment on column public.pendentes_manifestacao.data_ciencia_parte is 'Data em que a parte tomou ciência do expediente';
-comment on column public.pendentes_manifestacao.data_prazo_legal_parte is 'Data limite para manifestação da parte';
-comment on column public.pendentes_manifestacao.data_criacao_expediente is 'Data de criação do expediente';
-comment on column public.pendentes_manifestacao.prazo_vencido is 'Indica se o prazo para manifestação já venceu';
-comment on column public.pendentes_manifestacao.sigla_orgao_julgador is 'Sigla do órgão julgador (ex: VT33RJ)';
-comment on column public.pendentes_manifestacao.baixado_em is 'Data e hora em que o expediente foi baixado (marcado como respondido). Null indica que o expediente ainda está pendente';
-comment on column public.pendentes_manifestacao.protocolo_id is 'ID do protocolo da peça protocolada em resposta ao expediente. Deve estar preenchido quando houve protocolo de peça';
-comment on column public.pendentes_manifestacao.justificativa_baixa is 'Justificativa para baixa do expediente sem protocolo de peça. Deve estar preenchido quando não houve protocolo';
-comment on column public.pendentes_manifestacao.observacoes is 'Anotações/observações internas do expediente pendente de manifestação';
-comment on column public.pendentes_manifestacao.dados_anteriores is 'Armazena o estado anterior do registro antes da última atualização. Null quando o registro foi inserido ou quando não houve mudanças na última captura.';
-comment on column public.pendentes_manifestacao.responsavel_id is 'Usuário responsável pelo processo pendente de manifestação. Pode ser atribuído, transferido ou desatribuído. Todas as alterações são registradas em logs_alteracao';
+comment on table public.expedientes is 'Processos pendentes de manifestação do advogado. A unicidade do expediente é garantida por (id_pje, trt, grau, numero_processo), permitindo que múltiplos advogados vejam o mesmo expediente sem duplicação';
+comment on column public.expedientes.id_pje is 'ID do expediente no sistema PJE (não é o ID do processo)';
+comment on column public.expedientes.advogado_id is 'Referência ao advogado que capturou o expediente (não faz parte da unicidade, pois múltiplos advogados podem ver o mesmo expediente)';
+comment on column public.expedientes.processo_id is 'Referência ao processo na tabela acervo (preenchido via trigger baseado no numero_processo)';
+comment on column public.expedientes.trt is 'Código do TRT onde o processo está tramitando';
+comment on column public.expedientes.grau is 'Grau do processo (primeiro_grau ou segundo_grau)';
+comment on column public.expedientes.numero_processo is 'Número do processo no formato CNJ (usado para relacionar com acervo)';
+comment on column public.expedientes.descricao_orgao_julgador is 'Descrição completa do órgão julgador';
+comment on column public.expedientes.classe_judicial is 'Classe judicial do processo (ex: ATOrd, ATSum)';
+comment on column public.expedientes.numero is 'Número sequencial do processo';
+comment on column public.expedientes.segredo_justica is 'Indica se o processo está em segredo de justiça';
+comment on column public.expedientes.codigo_status_processo is 'Código do status do processo (ex: DISTRIBUIDO)';
+comment on column public.expedientes.prioridade_processual is 'Prioridade processual do processo';
+comment on column public.expedientes.nome_parte_autora is 'Nome da parte autora';
+comment on column public.expedientes.qtde_parte_autora is 'Quantidade de partes autoras';
+comment on column public.expedientes.nome_parte_re is 'Nome da parte ré';
+comment on column public.expedientes.qtde_parte_re is 'Quantidade de partes rés';
+comment on column public.expedientes.data_autuacao is 'Data de autuação do processo';
+comment on column public.expedientes.juizo_digital is 'Indica se o processo é de juízo digital';
+comment on column public.expedientes.data_arquivamento is 'Data de arquivamento do processo';
+comment on column public.expedientes.id_documento is 'ID do documento/expediente pendente';
+comment on column public.expedientes.data_ciencia_parte is 'Data em que a parte tomou ciência do expediente';
+comment on column public.expedientes.data_prazo_legal_parte is 'Data limite para manifestação da parte';
+comment on column public.expedientes.data_criacao_expediente is 'Data de criação do expediente';
+comment on column public.expedientes.prazo_vencido is 'Indica se o prazo para manifestação já venceu';
+comment on column public.expedientes.sigla_orgao_julgador is 'Sigla do órgão julgador (ex: VT33RJ)';
+comment on column public.expedientes.baixado_em is 'Data e hora em que o expediente foi baixado (marcado como respondido). Null indica que o expediente ainda está pendente';
+comment on column public.expedientes.protocolo_id is 'ID do protocolo da peça protocolada em resposta ao expediente. Deve estar preenchido quando houve protocolo de peça';
+comment on column public.expedientes.justificativa_baixa is 'Justificativa para baixa do expediente sem protocolo de peça. Deve estar preenchido quando não houve protocolo';
+comment on column public.expedientes.observacoes is 'Anotações/observações internas do expediente pendente de manifestação';
+comment on column public.expedientes.dados_anteriores is 'Armazena o estado anterior do registro antes da última atualização. Null quando o registro foi inserido ou quando não houve mudanças na última captura.';
+comment on column public.expedientes.responsavel_id is 'Usuário responsável pelo processo pendente de manifestação. Pode ser atribuído, transferido ou desatribuído. Todas as alterações são registradas em logs_alteracao';
 
 -- Índices para melhor performance
-create index idx_pendentes_advogado_id on public.pendentes_manifestacao using btree (advogado_id);
-create index idx_pendentes_processo_id on public.pendentes_manifestacao using btree (processo_id);
-create index idx_pendentes_trt on public.pendentes_manifestacao using btree (trt);
-create index idx_pendentes_grau on public.pendentes_manifestacao using btree (grau);
-create index idx_pendentes_numero_processo on public.pendentes_manifestacao using btree (numero_processo);
-create index idx_pendentes_id_pje on public.pendentes_manifestacao using btree (id_pje);
-create index idx_pendentes_prazo_vencido on public.pendentes_manifestacao using btree (prazo_vencido);
-create index idx_pendentes_data_prazo_legal on public.pendentes_manifestacao using btree (data_prazo_legal_parte);
-create index idx_pendentes_advogado_trt_grau on public.pendentes_manifestacao using btree (advogado_id, trt, grau);
-create index idx_pendentes_numero_processo_advogado on public.pendentes_manifestacao using btree (numero_processo, advogado_id);
-create index idx_pendentes_baixado_em on public.pendentes_manifestacao using btree (baixado_em) where baixado_em is not null;
-create index idx_pendentes_advogado_baixado on public.pendentes_manifestacao using btree (advogado_id, baixado_em) where baixado_em is null;
-create index idx_pendentes_responsavel_id on public.pendentes_manifestacao using btree (responsavel_id);
+create index idx_expedientes_advogado_id on public.expedientes using btree (advogado_id);
+create index idx_expedientes_processo_id on public.expedientes using btree (processo_id);
+create index idx_expedientes_trt on public.expedientes using btree (trt);
+create index idx_expedientes_grau on public.expedientes using btree (grau);
+create index idx_expedientes_numero_processo on public.expedientes using btree (numero_processo);
+create index idx_expedientes_id_pje on public.expedientes using btree (id_pje);
+create index idx_expedientes_prazo_vencido on public.expedientes using btree (prazo_vencido);
+create index idx_expedientes_data_prazo_legal on public.expedientes using btree (data_prazo_legal_parte);
+create index idx_expedientes_advogado_trt_grau on public.expedientes using btree (advogado_id, trt, grau);
+create index idx_expedientes_numero_processo_advogado on public.expedientes using btree (numero_processo, advogado_id);
+create index idx_expedientes_baixado_em on public.expedientes using btree (baixado_em) where baixado_em is not null;
+create index idx_expedientes_advogado_baixado on public.expedientes using btree (advogado_id, baixado_em) where baixado_em is null;
+create index idx_expedientes_responsavel_id on public.expedientes using btree (responsavel_id);
 
 -- Trigger para atualizar updated_at automaticamente
-create trigger update_pendentes_manifestacao_updated_at
-before update on public.pendentes_manifestacao
+create trigger update_expedientes_updated_at
+before update on public.expedientes
 for each row
 execute function public.update_updated_at_column();
 
 -- Function para preencher processo_id baseado no numero_processo
-create or replace function public.sync_pendentes_processo_id()
+create or replace function public.sync_expedientes_processo_id()
 returns trigger
 language plpgsql
 security invoker
@@ -121,18 +121,18 @@ begin
       and acervo.grau = new.grau
     limit 1;
   end if;
-  
+
   return new;
 end;
 $$;
-comment on function public.sync_pendentes_processo_id() is 'Preenche automaticamente processo_id em pendentes_manifestacao baseado no numero_processo';
+comment on function public.sync_expedientes_processo_id() is 'Preenche automaticamente processo_id em expedientes baseado no numero_processo';
 
 -- Trigger para preencher processo_id antes de inserir ou atualizar
-create trigger sync_pendentes_processo_id_trigger
-before insert or update on public.pendentes_manifestacao
+create trigger sync_expedientes_processo_id_trigger
+before insert or update on public.expedientes
 for each row
 when (new.processo_id is null)
-execute function public.sync_pendentes_processo_id();
+execute function public.sync_expedientes_processo_id();
 
 -- Função para registrar baixa nos logs
 create or replace function public.registrar_baixa_expediente(
@@ -154,7 +154,7 @@ begin
     usuario_que_executou_id,
     dados_evento
   ) values (
-    'pendentes_manifestacao',
+    'expedientes',
     p_expediente_id,
     'baixa_expediente',
     p_usuario_id,
@@ -189,7 +189,7 @@ begin
     usuario_que_executou_id,
     dados_evento
   ) values (
-    'pendentes_manifestacao',
+    'expedientes',
     p_expediente_id,
     'reversao_baixa_expediente',
     p_usuario_id,
@@ -205,5 +205,5 @@ $$;
 comment on function public.registrar_reversao_baixa_expediente is 'Registra a reversão da baixa de um expediente nos logs de alteração';
 
 -- Habilitar RLS
-alter table public.pendentes_manifestacao enable row level security;
+alter table public.expedientes enable row level security;
 

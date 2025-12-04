@@ -7,6 +7,7 @@ import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from '@/components
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Undo2, Loader2, Eye, Pencil, FileText } from 'lucide-react';
 import {
@@ -34,7 +35,7 @@ import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dia
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
+import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 /**
@@ -1026,13 +1027,7 @@ function PrazoCell({
             </div>
             <div className="space-y-1">
               <label htmlFor="prazo-fim" className="text-sm font-medium">Data de Fim *</label>
-              <input
-                id="prazo-fim"
-                type="date"
-                className="border rounded p-2 w-full"
-                value={dataPrazoStr}
-                onChange={(e) => setDataPrazoStr(e.target.value)}
-              />
+              <FormDatePicker id="prazo-fim" value={dataPrazoStr || undefined} onChange={(v) => setDataPrazoStr(v || '')} />
             </div>
           </div>
           <DialogFooter>

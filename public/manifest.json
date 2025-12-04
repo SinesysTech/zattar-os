@@ -10,6 +10,7 @@
   "scope": "/",
   "lang": "pt-BR",
   "dir": "ltr",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "android-chrome-192x192.png",

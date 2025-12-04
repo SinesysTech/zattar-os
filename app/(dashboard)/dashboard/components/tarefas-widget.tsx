@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -152,12 +153,7 @@ export function TarefasWidget({ className }: TarefasWidgetProps) {
                 min="1"
                 max="5"
               />
-              <Input
-                type="date"
-                placeholder="Data prevista"
-                value={formData.data_prevista}
-                onChange={(e) => setFormData({ ...formData, data_prevista: e.target.value })}
-              />
+              <FormDatePicker id="data_prevista" value={formData.data_prevista || undefined} onChange={(v) => setFormData({ ...formData, data_prevista: v || '' })} />
             </div>
             <Button onClick={handleCreate}>Criar Tarefa</Button>
           </DialogContent>

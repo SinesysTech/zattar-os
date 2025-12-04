@@ -1,8 +1,10 @@
 /**
  * Filtros para a tabela de representantes
- * 
+ *
  * NOTA: Após a refatoração do modelo, representantes são sempre advogados
- * (pessoas físicas) com CPF único. O único filtro relevante é a situação OAB.
+ * (pessoas físicas) com CPF único e podem ter múltiplas OABs (array JSONB).
+ * Os filtros de situação OAB foram removidos pois cada advogado pode ter
+ * múltiplas inscrições com situações diferentes.
  */
 
 import type {
@@ -10,23 +12,12 @@ import type {
   ComboboxOption,
 } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { SituacaoOAB } from '@/types/domain/representantes';
 import type { RepresentantesFilters } from '@/app/_lib/types/representantes';
 
-export const REPRESENTANTES_FILTER_CONFIGS: FilterConfig[] = [
-  {
-    id: 'situacao_oab',
-    label: 'Situação OAB',
-    type: 'select',
-    options: [
-      { value: 'REGULAR', label: 'Regular' },
-      { value: 'SUSPENSO', label: 'Suspenso' },
-      { value: 'CANCELADO', label: 'Cancelado' },
-      { value: 'LICENCIADO', label: 'Licenciado' },
-      { value: 'FALECIDO', label: 'Falecido' },
-    ],
-  },
-];
+// Filtros disponíveis para representantes
+// Por enquanto, não há filtros específicos além da busca por texto
+// O filtro de situação OAB foi removido porque representantes podem ter múltiplas OABs
+export const REPRESENTANTES_FILTER_CONFIGS: FilterConfig[] = [];
 
 export function buildRepresentantesFilterOptions(): ComboboxOption[] {
   const options: ComboboxOption[] = [];
@@ -47,60 +38,11 @@ export function buildRepresentantesFilterOptions(): ComboboxOption[] {
 }
 
 export function buildRepresentantesFilterGroups(): FilterGroup[] {
-  const configMap = new Map(REPRESENTANTES_FILTER_CONFIGS.map((c) => [c.id, c]));
-
-  const buildOptionsWithoutPrefix = (configs: FilterConfig[]): ComboboxOption[] => {
-    const options: ComboboxOption[] = [];
-
-    for (const config of configs) {
-      if (config.type === 'select' && config.options) {
-        for (const opt of config.options) {
-          options.push({
-            value: `${config.id}_${opt.value}`,
-            label: opt.label,
-            searchText: config.searchText || opt.searchText,
-          });
-        }
-      }
-    }
-
-    return options;
-  };
-
-  return [
-    {
-      label: 'Situação OAB',
-      options: buildOptionsWithoutPrefix([configMap.get('situacao_oab')!]),
-    },
-  ];
+  // Sem filtros de grupo por enquanto
+  return [];
 }
 
-export function parseRepresentantesFilters(selectedFilters: string[]): RepresentantesFilters {
-  const filters: RepresentantesFilters = {};
-  const configMap = new Map(REPRESENTANTES_FILTER_CONFIGS.map((c) => [c.id, c]));
-
-  for (const selected of selectedFilters) {
-    if (selected.includes('_')) {
-      let matchedConfig: FilterConfig | undefined;
-      let matchedId: string | undefined;
-      let value: string | undefined;
-
-      for (const [configId] of configMap) {
-        if (selected.startsWith(`${configId}_`)) {
-          matchedId = configId;
-          value = selected.slice(configId.length + 1);
-          matchedConfig = configMap.get(configId);
-          break;
-        }
-      }
-
-      if (matchedConfig && matchedId && value && matchedConfig.type === 'select') {
-        if (matchedId === 'situacao_oab') {
-          filters.situacao_oab = value as SituacaoOAB;
-        }
-      }
-    }
-  }
-
-  return filters;
+export function parseRepresentantesFilters(_selectedFilters: string[]): RepresentantesFilters {
+  // Sem filtros específicos por enquanto
+  return {};
 }

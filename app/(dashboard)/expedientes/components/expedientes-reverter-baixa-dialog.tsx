@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Loader2, AlertTriangle } from 'lucide-react';
-import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
+import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
 
 interface ExpedientesReverterBaixaDialogProps {
   open: boolean;

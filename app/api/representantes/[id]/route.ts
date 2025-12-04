@@ -122,16 +122,22 @@ export async function GET(request: NextRequest, context: RouteContext) {
  *               nome:
  *                 type: string
  *                 description: Nome completo do representante
- *               numero_oab:
- *                 type: string
- *                 description: Número da OAB
- *               uf_oab:
- *                 type: string
- *                 description: UF da OAB
- *               situacao_oab:
- *                 type: string
- *                 description: Situação da OAB
- *             description: Campos tipo_pessoa, parte_tipo e parte_id não podem ser alterados
+ *               oabs:
+ *                 type: array
+ *                 description: Lista de inscrições na OAB (advogado pode atuar em múltiplos estados)
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     numero:
+ *                       type: string
+ *                       description: Número da OAB (com UF, ex "MG128404")
+ *                     uf:
+ *                       type: string
+ *                       description: UF da inscrição
+ *                     situacao:
+ *                       type: string
+ *                       description: Situação da inscrição (REGULAR, SUSPENSO, etc.)
+ *             description: Campos imutáveis não podem ser alterados
  *     responses:
  *       200:
  *         description: Representante atualizado com sucesso

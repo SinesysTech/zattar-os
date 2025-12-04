@@ -5,7 +5,7 @@
 
 create table if not exists public.logs_alteracao (
   id bigint generated always as identity primary key,
-  tipo_entidade text not null check (tipo_entidade in ('acervo', 'audiencias', 'pendentes_manifestacao', 'usuarios', 'advogados', 'clientes', 'partes_contrarias', 'contratos')),
+  tipo_entidade text not null check (tipo_entidade in ('acervo', 'audiencias', 'expedientes', 'usuarios', 'advogados', 'clientes', 'partes_contrarias', 'contratos')),
   entidade_id bigint not null,
   tipo_evento text not null,
   usuario_que_executou_id bigint not null references public.usuarios(id),
@@ -16,7 +16,7 @@ create table if not exists public.logs_alteracao (
 );
 
 comment on table public.logs_alteracao is 'Logs de auditoria de alterações. RLS: Service role tem acesso total. Usuários autenticados podem ler.';
-comment on column public.logs_alteracao.tipo_entidade is 'Tipo da entidade alterada (acervo, audiencias, pendentes_manifestacao, etc)';
+comment on column public.logs_alteracao.tipo_entidade is 'Tipo da entidade alterada (acervo, audiencias, expedientes, etc)';
 comment on column public.logs_alteracao.entidade_id is 'ID do registro da entidade alterada';
 comment on column public.logs_alteracao.tipo_evento is 'Tipo do evento/alteração (atribuicao_responsavel, transferencia_responsavel, etc)';
 comment on column public.logs_alteracao.usuario_que_executou_id is 'Usuário que executou a ação';

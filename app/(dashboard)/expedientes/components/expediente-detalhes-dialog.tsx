@@ -11,8 +11,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import type { PendenteManifestacao } from '@/backend/types/pendentes/types';
+import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
 import { Button } from '@/components/ui/button';
 
 /**
@@ -93,7 +94,7 @@ export function ExpedienteDetalhesDialog({
         <Button size="sm" variant="outline" onClick={() => setOpenEdit(true)}>Definir Prazo</Button>
         {openEdit && (
           <div className="flex items-center gap-2">
-            <input type="date" className="border rounded p-1 text-sm" value={dt} onChange={(e) => setDt(e.target.value)} aria-label="Data do prazo" />
+            <FormDatePicker id="prazo-editor" value={dt || undefined} onChange={(v) => setDt(v || '')} />
             <Button size="sm" onClick={salvar} disabled={saving || !dt}>{saving ? 'Salvando...' : 'Salvar'}</Button>
             <Button size="sm" variant="ghost" onClick={() => setOpenEdit(false)} disabled={saving}>Cancelar</Button>
           </div>

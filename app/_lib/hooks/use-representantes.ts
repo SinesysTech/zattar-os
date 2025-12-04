@@ -42,8 +42,7 @@ export const useRepresentantes = <T extends Representante = Representante>(
   const pagina = params.pagina ?? 1;
   const limite = params.limite ?? 50;
   const busca = params.busca || '';
-  const numeroOab = params.numero_oab || '';
-  const situacaoOab = params.situacao_oab || '';
+  const oab = params.oab || '';
   const incluirEndereco = params.incluirEndereco ?? false;
   const incluirProcessos = params.incluirProcessos ?? false;
 
@@ -53,12 +52,11 @@ export const useRepresentantes = <T extends Representante = Representante>(
       pagina,
       limite,
       busca,
-      numeroOab,
-      situacaoOab,
+      oab,
       incluirEndereco,
       incluirProcessos,
     });
-  }, [pagina, limite, busca, numeroOab, situacaoOab, incluirEndereco, incluirProcessos]);
+  }, [pagina, limite, busca, oab, incluirEndereco, incluirProcessos]);
 
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
@@ -77,11 +75,8 @@ export const useRepresentantes = <T extends Representante = Representante>(
       if (busca) {
         searchParams.set('busca', busca);
       }
-      if (numeroOab) {
-        searchParams.set('numero_oab', numeroOab);
-      }
-      if (situacaoOab) {
-        searchParams.set('situacao_oab', situacaoOab);
+      if (oab) {
+        searchParams.set('oab', oab);
       }
       if (incluirEndereco) {
         searchParams.set('incluir_endereco', 'true');
@@ -119,7 +114,7 @@ export const useRepresentantes = <T extends Representante = Representante>(
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, numeroOab, situacaoOab, incluirEndereco, incluirProcessos]);
+  }, [pagina, limite, busca, oab, incluirEndereco, incluirProcessos]);
 
   useEffect(() => {
     // Só executar se os parâmetros realmente mudaram

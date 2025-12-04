@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { atribuirResponsavelPendente } from '@/backend/pendentes/services/atribuir-responsavel.service';
+import { atribuirResponsavelPendente } from '@/backend/expedientes/services/atribuir-responsavel.service';
 
 /**
  * @swagger

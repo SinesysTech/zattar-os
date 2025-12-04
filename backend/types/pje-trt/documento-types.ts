@@ -104,7 +104,7 @@ export interface DocumentoConteudo {
  * CAMPOS:
  * - processoId: string - ID do processo no PJE (usado na URL da API)
  * - documentoId: string - ID do documento/expediente no PJE
- * - pendenteId: number - ID do registro na tabela pendente_manifestacao (para atualização)
+ * - expedienteId: number - ID do registro na tabela expedientes (para atualização)
  * - numeroProcesso: string - Número do processo (ex: "0010702-80.2025.5.03.0111") - usado no webhook
  * - trt: string - Código do TRT (ex: "TRT3") - usado para gerar path do arquivo
  * - grau: string - Grau do processo ("1" ou "2") - usado para gerar path do arquivo
@@ -116,7 +116,7 @@ export interface DocumentoConteudo {
  * {
  *   processoId: "12345678",
  *   documentoId: "87654321",
- *   pendenteId: 999,
+ *   expedienteId: 999,
  *   numeroProcesso: "0010702-80.2025.5.03.0111",
  *   trt: "TRT3",
  *   grau: "1"
@@ -125,7 +125,7 @@ export interface DocumentoConteudo {
 export interface FetchDocumentoParams {
   processoId: string;
   documentoId: string;
-  pendenteId: number;
+  expedienteId: number;
   numeroProcesso: string;
   trt: string;
   grau: string;
@@ -141,18 +141,18 @@ export interface FetchDocumentoParams {
  * CAMPOS:
  * - arquivo_nome: string - Nome do arquivo (ex: "exp_789_doc_234517663_20251121.pdf")
  * - arquivo_url: string - URL pública do arquivo no Backblaze B2
- * - arquivo_key: string - Chave (path) do arquivo no bucket S3 (ex: "processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf")
+ * - arquivo_key: string - Chave (path) do arquivo no bucket S3 (ex: "processos/0010702-80.2025.5.03.0111/expedientes/exp_789_doc_234517663_20251121.pdf")
  * - arquivo_bucket: string - Nome do bucket no Backblaze B2 (ex: "zattar-advogados")
  *
  * USO:
  * Retornado pelo serviço Backblaze após upload bem-sucedido.
- * Usado para atualizar os campos correspondentes na tabela pendente_manifestacao.
+ * Usado para atualizar os campos correspondentes na tabela expedientes.
  *
  * EXEMPLO:
  * {
  *   arquivo_nome: "exp_789_doc_234517663_20251121.pdf",
- *   arquivo_url: "https://s3.us-east-005.backblazeb2.com/zattar-advogados/processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf",
- *   arquivo_key: "processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf",
+ *   arquivo_url: "https://s3.us-east-005.backblazeb2.com/zattar-advogados/processos/0010702-80.2025.5.03.0111/expedientes/exp_789_doc_234517663_20251121.pdf",
+ *   arquivo_key: "processos/0010702-80.2025.5.03.0111/expedientes/exp_789_doc_234517663_20251121.pdf",
  *   arquivo_bucket: "zattar-advogados"
  * }
  */
@@ -172,7 +172,7 @@ export interface ArquivoInfo {
  *
  * CAMPOS:
  * - success: boolean - Indica se a operação foi bem-sucedida
- * - pendenteId: number - ID do pendente que teve documento capturado
+ * - expedienteId: number - ID do expediente que teve documento capturado
  * - arquivoInfo?: ArquivoInfo - Informações do arquivo (presente se success=true)
  * - error?: string - Mensagem de erro (presente se success=false)
  *
@@ -184,11 +184,11 @@ export interface ArquivoInfo {
  * EXEMPLO DE SUCESSO:
  * {
  *   success: true,
- *   pendenteId: 999,
+ *   expedienteId: 999,
  *   arquivoInfo: {
  *     arquivo_nome: "exp_789_doc_234517663_20251121.pdf",
  *     arquivo_url: "https://s3.us-east-005.backblazeb2.com/zattar-advogados/processos/.../exp_789_doc_234517663_20251121.pdf",
- *     arquivo_key: "processos/0010702-80.2025.5.03.0111/pendente_manifestacao/exp_789_doc_234517663_20251121.pdf",
+ *     arquivo_key: "processos/0010702-80.2025.5.03.0111/expedientes/exp_789_doc_234517663_20251121.pdf",
  *     arquivo_bucket: "zattar-advogados"
  *   }
  * }
@@ -196,13 +196,13 @@ export interface ArquivoInfo {
  * EXEMPLO DE ERRO:
  * {
  *   success: false,
- *   pendenteId: 999,
+ *   expedienteId: 999,
  *   error: "Documento não é um PDF válido"
  * }
  */
 export interface FetchDocumentoResult {
   success: boolean;
-  pendenteId: number;
+  expedienteId: number;
   arquivoInfo?: ArquivoInfo;
   error?: string;
 }

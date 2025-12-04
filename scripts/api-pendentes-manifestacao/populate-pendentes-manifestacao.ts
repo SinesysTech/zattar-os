@@ -224,7 +224,7 @@ async function inserirProcessoPendente(
     };
     
     // Tentar inserir
-    const { error } = await supabase.from('pendentes_manifestacao').insert(dadosNovos);
+    const { error } = await supabase.from('expedientes').insert(dadosNovos);
     
     if (error) {
       // Verificar se é erro de constraint única (código 23505)

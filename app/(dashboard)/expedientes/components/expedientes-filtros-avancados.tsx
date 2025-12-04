@@ -5,6 +5,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -302,78 +303,60 @@ export function ExpedientesFiltrosAvancados({
                 <Label htmlFor="data_prazo_legal_inicio" className="text-xs">
                   Prazo Legal (Início)
                 </Label>
-                <Input
+                <FormDatePicker
                   id="data_prazo_legal_inicio"
-                  type="date"
-                  value={localFilters.data_prazo_legal_inicio || ''}
-                  onChange={(e) =>
-                    handleFilterChange('data_prazo_legal_inicio', e.target.value || undefined)
-                  }
+                  value={localFilters.data_prazo_legal_inicio || undefined}
+                  onChange={(v) => handleFilterChange('data_prazo_legal_inicio', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="data_prazo_legal_fim" className="text-xs">
                   Prazo Legal (Fim)
                 </Label>
-                <Input
+                <FormDatePicker
                   id="data_prazo_legal_fim"
-                  type="date"
-                  value={localFilters.data_prazo_legal_fim || ''}
-                  onChange={(e) =>
-                    handleFilterChange('data_prazo_legal_fim', e.target.value || undefined)
-                  }
+                  value={localFilters.data_prazo_legal_fim || undefined}
+                  onChange={(v) => handleFilterChange('data_prazo_legal_fim', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="data_ciencia_inicio" className="text-xs">
                   Data Ciência (Início)
                 </Label>
-                <Input
+                <FormDatePicker
                   id="data_ciencia_inicio"
-                  type="date"
-                  value={localFilters.data_ciencia_inicio || ''}
-                  onChange={(e) =>
-                    handleFilterChange('data_ciencia_inicio', e.target.value || undefined)
-                  }
+                  value={localFilters.data_ciencia_inicio || undefined}
+                  onChange={(v) => handleFilterChange('data_ciencia_inicio', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="data_ciencia_fim" className="text-xs">
                   Data Ciência (Fim)
                 </Label>
-                <Input
+                <FormDatePicker
                   id="data_ciencia_fim"
-                  type="date"
-                  value={localFilters.data_ciencia_fim || ''}
-                  onChange={(e) =>
-                    handleFilterChange('data_ciencia_fim', e.target.value || undefined)
-                  }
+                  value={localFilters.data_ciencia_fim || undefined}
+                  onChange={(v) => handleFilterChange('data_ciencia_fim', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="data_criacao_expediente_inicio" className="text-xs">
                   Criação Expediente (Início)
                 </Label>
-                <Input
+                <FormDatePicker
                   id="data_criacao_expediente_inicio"
-                  type="date"
-                  value={localFilters.data_criacao_expediente_inicio || ''}
-                  onChange={(e) =>
-                    handleFilterChange('data_criacao_expediente_inicio', e.target.value || undefined)
-                  }
+                  value={localFilters.data_criacao_expediente_inicio || undefined}
+                  onChange={(v) => handleFilterChange('data_criacao_expediente_inicio', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="data_criacao_expediente_fim" className="text-xs">
                   Criação Expediente (Fim)
                 </Label>
-                <Input
+                <FormDatePicker
                   id="data_criacao_expediente_fim"
-                  type="date"
-                  value={localFilters.data_criacao_expediente_fim || ''}
-                  onChange={(e) =>
-                    handleFilterChange('data_criacao_expediente_fim', e.target.value || undefined)
-                  }
+                  value={localFilters.data_criacao_expediente_fim || undefined}
+                  onChange={(v) => handleFilterChange('data_criacao_expediente_fim', v || undefined)}
                 />
               </div>
             </div>
@@ -387,52 +370,40 @@ export function ExpedientesFiltrosAvancados({
                 <Label htmlFor="data_autuacao_inicio" className="text-xs">
                   Data Autuação (Início)
                 </Label>
-                <Input
+                <FormDatePicker
                   id="data_autuacao_inicio"
-                  type="date"
-                  value={localFilters.data_autuacao_inicio || ''}
-                  onChange={(e) =>
-                    handleFilterChange('data_autuacao_inicio', e.target.value || undefined)
-                  }
+                  value={localFilters.data_autuacao_inicio || undefined}
+                  onChange={(v) => handleFilterChange('data_autuacao_inicio', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="data_autuacao_fim" className="text-xs">
                   Data Autuação (Fim)
                 </Label>
-                <Input
+                <FormDatePicker
                   id="data_autuacao_fim"
-                  type="date"
-                  value={localFilters.data_autuacao_fim || ''}
-                  onChange={(e) =>
-                    handleFilterChange('data_autuacao_fim', e.target.value || undefined)
-                  }
+                  value={localFilters.data_autuacao_fim || undefined}
+                  onChange={(v) => handleFilterChange('data_autuacao_fim', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="data_arquivamento_inicio" className="text-xs">
                   Data Arquivamento (Início)
                 </Label>
-                <Input
+                <FormDatePicker
                   id="data_arquivamento_inicio"
-                  type="date"
-                  value={localFilters.data_arquivamento_inicio || ''}
-                  onChange={(e) =>
-                    handleFilterChange('data_arquivamento_inicio', e.target.value || undefined)
-                  }
+                  value={localFilters.data_arquivamento_inicio || undefined}
+                  onChange={(v) => handleFilterChange('data_arquivamento_inicio', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="data_arquivamento_fim" className="text-xs">
                   Data Arquivamento (Fim)
                 </Label>
-                <Input
+                <FormDatePicker
                   id="data_arquivamento_fim"
-                  type="date"
-                  value={localFilters.data_arquivamento_fim || ''}
-                  onChange={(e) =>
-                    handleFilterChange('data_arquivamento_fim', e.target.value || undefined)
-                  }
+                  value={localFilters.data_arquivamento_fim || undefined}
+                  onChange={(v) => handleFilterChange('data_arquivamento_fim', v || undefined)}
                 />
               </div>
             </div>

@@ -13,12 +13,12 @@ export {
   obterTotalizadoresAcervoGeral,
 } from './acervo-geral';
 
-// Pendentes de Manifestação
+// Expedientes (Pendentes de Manifestação)
 export {
   obterProcessosPendentesManifestacao,
   obterTodosProcessosPendentesManifestacao,
   obterTotalizadoresPendentesManifestacao,
-} from './pendentes-manifestacao';
+} from './expedientes';
 
 // Audiências
 export {

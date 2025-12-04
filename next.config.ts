@@ -51,14 +51,27 @@ const nextConfig: NextConfig = {
   },
 };
 
+// ============================================================================
+// PWA Configuration (@ducanh2912/next-pwa)
+// ============================================================================
+// Generates a production-ready service worker with Workbox strategies.
+// IMPORTANT: Requires Webpack build (use 'npm run build:prod').
+// The service worker is auto-generated in public/ during build and ignored by git.
+// See DEPLOY.md section "Progressive Web App (PWA)" for troubleshooting.
 export default withPWA({
+  // Destination folder for generated service worker files
   dest: 'public',
+  // Disable PWA in development to avoid caching issues
   disable: process.env.NODE_ENV === 'development',
+  // Automatically register the service worker (no manual registration needed)
   register: true,
+  // Fallback page when offline
   fallbacks: {
     document: '/offline',
   },
+  // Workbox caching strategies
   workboxOptions: {
+    // Activate new service worker immediately
     skipWaiting: true,
     clientsClaim: true,
     runtimeCaching: [

@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { reverterBaixa } from '@/backend/pendentes/services/reverter-baixa.service';
+import { reverterBaixa } from '@/backend/expedientes/services/reverter-baixa.service';
 
 /**
  * @swagger

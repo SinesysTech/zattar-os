@@ -362,7 +362,7 @@ export async function pendentesManifestacaoCapture(
 
         try {
           const { data: pendenteDb } = await supabase
-            .from('pendentes_manifestacao')
+            .from('expedientes')
             .select('id')
             .eq('id_pje', processo.id)
             .eq('trt', params.config.codigo)
@@ -377,7 +377,7 @@ export async function pendentesManifestacaoCapture(
           const documentoParams: FetchDocumentoParams = {
             processoId: String(processo.id),
             documentoId: String(processo.idDocumento),
-            pendenteId: pendenteDb.id,
+            expedienteId: pendenteDb.id,
             numeroProcesso: processo.numeroProcesso,
             trt: params.config.codigo,
             grau: params.config.grau,

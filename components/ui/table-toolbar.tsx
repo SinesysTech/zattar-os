@@ -44,39 +44,30 @@ export interface FilterGroup {
 }
 
 /**
- * Converte label para slug estável (usado como ID)
- */
-const toSlug = (label: string) => label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')
-
-/**
  * Botão de filtro individual para um grupo de opções
- * Usa ID estável baseado no label para evitar hydration mismatch
  */
 function FilterButton({
   group,
   selectedFilters,
   onFilterSelect,
-  index,
 }: {
   group: FilterGroup
   selectedFilters: string[]
   onFilterSelect: (value: string) => void
-  index: number
 }) {
   const [open, setOpen] = React.useState(false)
-  const stableId = `filter-${toSlug(group.label)}-${index}`
-  
+
   // Conta quantas opções deste grupo estão selecionadas
-  const selectedCount = group.options.filter(opt => 
+  const selectedCount = group.options.filter((opt) =>
     selectedFilters.includes(opt.value)
   ).length
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild aria-controls={stableId}>
-        <Button 
-          variant="outline" 
-          size="sm" 
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
           className={cn(
             "h-9 gap-1.5 px-3 font-normal",
             selectedCount > 0 && "bg-accent"
@@ -84,8 +75,8 @@ function FilterButton({
         >
           <span>{group.label}</span>
           {selectedCount > 0 && (
-            <Badge 
-              variant="secondary" 
+            <Badge
+              variant="secondary"
               className="h-5 min-w-5 px-1 text-xs flex items-center justify-center rounded-full"
             >
               {selectedCount}
@@ -94,10 +85,9 @@ function FilterButton({
           <ChevronDown className="h-3.5 w-3.5 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent 
-        id={stableId}
-        className="p-1 w-auto min-w-[140px]" 
-        align="start" 
+      <PopoverContent
+        className="p-1 w-auto min-w-[140px]"
+        align="start"
         sideOffset={4}
       >
         <div className="max-h-[300px] overflow-auto">
@@ -230,15 +220,15 @@ export function TableToolbar({
       <ButtonGroupSeparator />
       
       {/* Modo: Botões individuais de filtro */}
-      {useFilterButtons && filterGroups!.map((group, index) => (
-        <FilterButton
-          key={group.label}
-          group={group}
-          selectedFilters={selectedFilters}
-          onFilterSelect={handleFilterSelect}
-          index={index}
-        />
-      ))}
+      {useFilterButtons &&
+        filterGroups!.map((group) => (
+          <FilterButton
+            key={group.label}
+            group={group}
+            selectedFilters={selectedFilters}
+            onFilterSelect={handleFilterSelect}
+          />
+        ))}
 
       {/* Modo: Botão único de filtro (comportamento antigo) */}
       {!useFilterButtons && showFilterButton && (

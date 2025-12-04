@@ -2,7 +2,7 @@
 -- SCRIPT DE ATRIBUIÇÃO DE EXPEDIENTES BASEADO NOS PROCESSOS
 -- ============================================================================
 -- Data: 2025-01-24
--- Objetivo: Atribuir expedientes (pendentes_manifestacao) aos mesmos responsáveis
+-- Objetivo: Atribuir expedientes (tabela: expedientes) aos mesmos responsáveis
 --           dos processos correspondentes
 --
 -- REGRA: Quando um processo é atribuído a um usuário, todos os expedientes
@@ -17,14 +17,14 @@ SELECT
   COUNT(*) as total_expedientes,
   COUNT(CASE WHEN responsavel_id IS NOT NULL THEN 1 END) as ja_atribuidos,
   COUNT(CASE WHEN responsavel_id IS NULL THEN 1 END) as sem_responsavel
-FROM pendentes_manifestacao;
+FROM expedientes;
 
 -- ============================================================================
 -- ATRIBUIÇÃO DE EXPEDIENTES BASEADA NO PROCESSO
 -- ============================================================================
 
 -- Atualizar responsavel_id dos expedientes com base no processo_id
-UPDATE pendentes_manifestacao pm
+UPDATE expedientes pm
 SET
   responsavel_id = a.responsavel_id,
   updated_at = NOW()
@@ -44,7 +44,7 @@ SELECT
   COUNT(*) as total_expedientes,
   COUNT(CASE WHEN responsavel_id IS NOT NULL THEN 1 END) as expedientes_atribuidos,
   COUNT(CASE WHEN responsavel_id IS NULL THEN 1 END) as expedientes_sem_responsavel
-FROM pendentes_manifestacao;
+FROM expedientes;
 
 -- 2. Distribuição de expedientes por responsável
 SELECT
@@ -55,7 +55,7 @@ SELECT
   COUNT(CASE WHEN pm.baixado_em IS NULL THEN 1 END) as expedientes_pendentes,
   COUNT(CASE WHEN pm.baixado_em IS NOT NULL THEN 1 END) as expedientes_baixados,
   ROUND(COUNT(pm.id) * 100.0 / SUM(COUNT(pm.id)) OVER (), 1) as percentual
-FROM pendentes_manifestacao pm
+FROM expedientes pm
 INNER JOIN usuarios u ON u.id = pm.responsavel_id
 WHERE pm.responsavel_id IN (21, 22, 24, 20)
 GROUP BY u.id, u.nome_exibicao
@@ -73,7 +73,7 @@ SELECT
   END as regiao,
   u.nome_exibicao,
   COUNT(pm.id) as total_expedientes
-FROM pendentes_manifestacao pm
+FROM expedientes pm
 INNER JOIN usuarios u ON u.id = pm.responsavel_id
 WHERE pm.responsavel_id IN (21, 22, 24, 20)
 GROUP BY regiao, u.nome_exibicao
@@ -83,14 +83,14 @@ ORDER BY regiao, total_expedientes DESC;
 SELECT
   'EXPEDIENTES SEM PROCESSO VINCULADO' as status,
   COUNT(*) as total
-FROM pendentes_manifestacao
+FROM expedientes
 WHERE processo_id IS NULL;
 
 -- 5. Verificar expedientes com processo mas sem responsável
 SELECT
   'EXPEDIENTES COM PROCESSO MAS SEM RESPONSÁVEL' as status,
   COUNT(*) as total
-FROM pendentes_manifestacao pm
+FROM expedientes pm
 INNER JOIN acervo a ON a.id = pm.processo_id
 WHERE pm.responsavel_id IS NULL
   AND a.responsavel_id IS NOT NULL;

@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -232,49 +233,37 @@ export function ContratoEditSheet({
 
               <div className="space-y-2">
                 <Label htmlFor="dataContratacao">Data de Contratação</Label>
-                <Input
+                <FormDatePicker
                   id="dataContratacao"
-                  type="date"
-                  value={formData.dataContratacao || ''}
-                  onChange={(e) =>
-                    setFormData({ ...formData, dataContratacao: e.target.value })
-                  }
+                  value={formData.dataContratacao || undefined}
+                  onChange={(v) => setFormData({ ...formData, dataContratacao: v })}
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="dataAssinatura">Data de Assinatura</Label>
-                <Input
+                <FormDatePicker
                   id="dataAssinatura"
-                  type="date"
-                  value={formData.dataAssinatura || ''}
-                  onChange={(e) =>
-                    setFormData({ ...formData, dataAssinatura: e.target.value })
-                  }
+                  value={formData.dataAssinatura || undefined}
+                  onChange={(v) => setFormData({ ...formData, dataAssinatura: v })}
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="dataDistribuicao">Data de Distribuição</Label>
-                <Input
+                <FormDatePicker
                   id="dataDistribuicao"
-                  type="date"
-                  value={formData.dataDistribuicao || ''}
-                  onChange={(e) =>
-                    setFormData({ ...formData, dataDistribuicao: e.target.value })
-                  }
+                  value={formData.dataDistribuicao || undefined}
+                  onChange={(v) => setFormData({ ...formData, dataDistribuicao: v })}
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="dataDesistencia">Data de Desistência</Label>
-                <Input
+                <FormDatePicker
                   id="dataDesistencia"
-                  type="date"
-                  value={formData.dataDesistencia || ''}
-                  onChange={(e) =>
-                    setFormData({ ...formData, dataDesistencia: e.target.value })
-                  }
+                  value={formData.dataDesistencia || undefined}
+                  onChange={(v) => setFormData({ ...formData, dataDesistencia: v })}
                 />
               </div>
             </div>

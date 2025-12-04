@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -614,12 +615,7 @@ export function ClienteCreateDialog({
             </div>
             <div className="grid gap-2">
               <Label htmlFor="data_nascimento">Data de Nascimento</Label>
-              <Input
-                id="data_nascimento"
-                type="date"
-                value={formData.data_nascimento}
-                onChange={(e) => setFormData(prev => ({ ...prev, data_nascimento: e.target.value }))}
-              />
+              <FormDatePicker id="data_nascimento" value={formData.data_nascimento || undefined} onChange={(v) => setFormData(prev => ({ ...prev, data_nascimento: v || '' }))} />
             </div>
           </div>
 
@@ -713,12 +709,7 @@ export function ClienteCreateDialog({
             </div>
             <div className="grid gap-2">
               <Label htmlFor="data_abertura">Data de Abertura</Label>
-              <Input
-                id="data_abertura"
-                type="date"
-                value={formData.data_abertura}
-                onChange={(e) => setFormData(prev => ({ ...prev, data_abertura: e.target.value }))}
-              />
+              <FormDatePicker id="data_abertura" value={formData.data_abertura || undefined} onChange={(v) => setFormData(prev => ({ ...prev, data_abertura: v || '' }))} />
             </div>
           </div>
         </>

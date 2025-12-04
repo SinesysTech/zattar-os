@@ -9,7 +9,7 @@
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { Representante } from '@/types/domain/representantes';
+import type { Representante, InscricaoOAB } from '@/types/domain/representantes';
 import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
 import type {
   CriarRepresentanteParams,
@@ -143,9 +143,15 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
     emails = Object.values(rawEmails).filter(v => typeof v === 'string') as string[];
     if (emails.length === 0) emails = null;
   }
-  
-  const dados_anteriores = data.dados_anteriores as Record<string, unknown> | null;
 
+  // Parse oabs JSONB array
+  const rawOabs = data.oabs;
+  let oabs: InscricaoOAB[] = [];
+  if (Array.isArray(rawOabs)) {
+    oabs = rawOabs as InscricaoOAB[];
+  }
+
+  const dados_anteriores = data.dados_anteriores as Record<string, unknown> | null;
 
   return {
     id: data.id as number,
@@ -153,9 +159,7 @@ export function converterParaRepresentante(data: Record<string, unknown>): Repre
     nome: data.nome as string,
     sexo: data.sexo as string | null,
     tipo: data.tipo as string | null,
-    numero_oab: data.numero_oab as string | null,
-    uf_oab: data.uf_oab as string | null,
-    situacao_oab: data.situacao_oab as string | null,
+    oabs,
     emails,
     email: data.email as string | null,
     ddd_celular: data.ddd_celular as string | null,
@@ -219,11 +223,6 @@ export async function criarRepresentante(
       return { sucesso: false, erro: 'CPF inválido' };
     }
 
-    // Validate OAB if provided
-    if (params.numero_oab && !validarOAB(params.numero_oab)) {
-      return { sucesso: false, erro: 'Número OAB inválido' };
-    }
-
     // Validate email if provided
     if (params.email && !validarEmail(params.email)) {
       return { sucesso: false, erro: 'Email inválido' };
@@ -276,11 +275,6 @@ export async function atualizarRepresentante(
     // Validate email if provided
     if (params.email && !validarEmail(params.email)) {
       return { sucesso: false, erro: 'Email inválido' };
-    }
-
-    // Validate OAB if provided
-    if (params.numero_oab && !validarOAB(params.numero_oab)) {
-      return { sucesso: false, erro: 'Número OAB inválido' };
     }
 
     const supabase = createServiceClient();
@@ -419,6 +413,7 @@ export async function buscarRepresentantesPorNome(nome: string): Promise<Represe
 
 /**
  * Buscar representantes por número OAB
+ * Busca no array JSONB 'oabs' usando operadores @> ou filtro de texto
  */
 export async function buscarRepresentantesPorOAB(
   params: BuscarRepresentantesPorOABParams
@@ -426,10 +421,24 @@ export async function buscarRepresentantesPorOAB(
   try {
     const supabase = createServiceClient();
 
-    const { data, error } = await supabase
-      .from('representantes')
-      .select('*')
-      .eq('numero_oab', params.numero_oab);
+    // Normalizar o número da OAB (remover UF se presente)
+    const numeroNormalizado = params.oab.replace(/^[A-Z]{2}/i, '').replace(/\D/g, '');
+
+    // Se UF foi especificada, buscar pelo objeto completo
+    // Caso contrário, buscar apenas pelo número em qualquer UF
+    let query = supabase.from('representantes').select('*');
+
+    if (params.uf) {
+      // Buscar com UF específica usando operador @> (contém)
+      const oabBusca = { numero: `${params.uf}${numeroNormalizado}`, uf: params.uf };
+      query = query.contains('oabs', [oabBusca]);
+    } else {
+      // Buscar pelo número em qualquer UF usando operador de texto
+      // Usa ILIKE no campo oabs convertido para texto
+      query = query.filter('oabs', 'cs', `[{"numero":"%${numeroNormalizado}%"}]`);
+    }
+
+    const { data, error } = await query;
 
     if (error || !data) return [];
 
@@ -459,14 +468,21 @@ export async function listarRepresentantes(
     if (params.cpf) {
       query = query.eq('cpf', params.cpf);
     }
-    if (params.numero_oab) {
-      query = query.eq('numero_oab', params.numero_oab);
+    if (params.nome) {
+      query = query.ilike('nome', `%${params.nome}%`);
     }
-    if (params.situacao_oab) {
-      query = query.eq('situacao_oab', params.situacao_oab);
+    // Filtro por OAB no array JSONB
+    if (params.oab) {
+      // Busca por número da OAB no campo oabs (JSONB array)
+      // O número da OAB é armazenado como "UF" + número (ex: "MG128404")
+      const numeroNormalizado = params.oab.replace(/^[A-Z]{2}/i, '').replace(/\D/g, '');
+      // Usa RPC ou raw filter para buscar no JSONB
+      query = query.or(`oabs::text.ilike.%${numeroNormalizado}%`);
     }
     if (params.busca) {
-      query = query.or(`nome.ilike.%${params.busca}%,cpf.ilike.%${params.busca}%,email.ilike.%${params.busca}%`);
+      // Busca geral inclui nome, CPF, email e OAB
+      const busca = params.busca.trim();
+      query = query.or(`nome.ilike.%${busca}%,cpf.ilike.%${busca}%,email.ilike.%${busca}%,oabs::text.ilike.%${busca}%`);
     }
 
     // Apply ordering
@@ -658,19 +674,21 @@ export async function listarRepresentantesComEndereco(
   // Aplicar filtros
   if (params.busca) {
     const busca = params.busca.trim();
-    query = query.or(`nome.ilike.%${busca}%,numero_oab.ilike.%${busca}%,cpf.ilike.%${busca}%`);
+    query = query.or(`nome.ilike.%${busca}%,cpf.ilike.%${busca}%,email.ilike.%${busca}%,oabs::text.ilike.%${busca}%`);
   }
 
   if (params.cpf) {
     query = query.eq('cpf', params.cpf);
   }
 
-  if (params.numero_oab) {
-    query = query.eq('numero_oab', params.numero_oab);
+  if (params.nome) {
+    query = query.ilike('nome', `%${params.nome}%`);
   }
 
-  if (params.situacao_oab) {
-    query = query.eq('situacao_oab', params.situacao_oab);
+  // Filtro por OAB no array JSONB
+  if (params.oab) {
+    const numeroNormalizado = params.oab.replace(/^[A-Z]{2}/i, '').replace(/\D/g, '');
+    query = query.or(`oabs::text.ilike.%${numeroNormalizado}%`);
   }
 
   // Ordenação
@@ -737,19 +755,21 @@ export async function listarRepresentantesComEnderecoEProcessos(
   // Aplicar filtros
   if (params.busca) {
     const busca = params.busca.trim();
-    query = query.or(`nome.ilike.%${busca}%,numero_oab.ilike.%${busca}%,cpf.ilike.%${busca}%`);
+    query = query.or(`nome.ilike.%${busca}%,cpf.ilike.%${busca}%,email.ilike.%${busca}%,oabs::text.ilike.%${busca}%`);
   }
 
   if (params.cpf) {
     query = query.eq('cpf', params.cpf);
   }
 
-  if (params.numero_oab) {
-    query = query.eq('numero_oab', params.numero_oab);
+  if (params.nome) {
+    query = query.ilike('nome', `%${params.nome}%`);
   }
 
-  if (params.situacao_oab) {
-    query = query.eq('situacao_oab', params.situacao_oab);
+  // Filtro por OAB no array JSONB
+  if (params.oab) {
+    const numeroNormalizado = params.oab.replace(/^[A-Z]{2}/i, '').replace(/\D/g, '');
+    query = query.or(`oabs::text.ilike.%${numeroNormalizado}%`);
   }
 
   // Ordenação

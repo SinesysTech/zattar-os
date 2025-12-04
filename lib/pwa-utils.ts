@@ -4,6 +4,16 @@
  */
 
 /**
+ * Checks if the app is running over HTTPS or localhost.
+ * PWAs require HTTPS to work (except on localhost for development).
+ * @returns {boolean} True if HTTPS or localhost, false otherwise.
+ */
+export function isSecureContext(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.isSecureContext || window.location.hostname === 'localhost';
+}
+
+/**
  * Checks if the app is running as an installed PWA.
  * @returns {boolean} True if the app is installed as a PWA, false otherwise.
  */
@@ -39,7 +49,8 @@ export function isPWASupported(): boolean {
 
 /**
  * Registers the service worker manually if needed.
- * Useful for special cases where automatic registration is not desired.
+ * NOTE: The @ducanh2912/next-pwa plugin already registers the service worker automatically
+ * when 'register: true' is set in next.config.ts. This function is only for special cases.
  * @returns {Promise<ServiceWorkerRegistration | null>} The service worker registration or null if failed.
  */
 export async function registerServiceWorker(): Promise<ServiceWorkerRegistration | null> {
@@ -48,7 +59,13 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
     return null;
   }
 
+  if (!isSecureContext()) {
+    console.error('Service worker requires HTTPS or localhost');
+    return null;
+  }
+
   try {
+    // The next-pwa plugin generates the service worker at /sw.js during build
     const registration = await navigator.serviceWorker.register('/sw.js');
     console.log('Service worker registered successfully:', registration);
     return registration;

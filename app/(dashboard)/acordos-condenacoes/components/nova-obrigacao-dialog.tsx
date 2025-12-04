@@ -5,6 +5,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -374,13 +375,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
                     <Label htmlFor="dataVencimento">1ª Parcela *</Label>
-                    <Input
-                      id="dataVencimento"
-                      type="date"
-                      value={dataVencimentoPrimeiraParcela}
-                      onChange={(e) => setDataVencimentoPrimeiraParcela(e.target.value)}
-                      required
-                    />
+                    <FormDatePicker id="dataVencimento" value={dataVencimentoPrimeiraParcela || undefined} onChange={(v) => setDataVencimentoPrimeiraParcela(v || '')} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="formaPagamento">Pagamento *</Label>
@@ -616,13 +611,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="dataVencimento">Data Venc. 1ª Parcela *</Label>
-              <Input
-                id="dataVencimento"
-                type="date"
-                value={dataVencimentoPrimeiraParcela}
-                onChange={(e) => setDataVencimentoPrimeiraParcela(e.target.value)}
-                required
-              />
+              <FormDatePicker id="dataVencimento" value={dataVencimentoPrimeiraParcela || undefined} onChange={(v) => setDataVencimentoPrimeiraParcela(v || '')} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="formaPagamento">Forma de Pagamento *</Label>

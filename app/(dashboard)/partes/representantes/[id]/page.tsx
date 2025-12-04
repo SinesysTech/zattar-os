@@ -105,8 +105,9 @@ export default function RepresentantePage() {
     );
   }
 
-  const situacaoOAB = representante.situacao_oab;
-  const isRegular = situacaoOAB === 'REGULAR';
+  // Pegar a primeira OAB para exibição no header
+  const primeiraOab = representante.oabs?.[0];
+  const isRegular = primeiraOab?.situacao === 'REGULAR';
 
   return (
     <div className="flex h-full flex-col gap-6 p-6">
@@ -121,21 +122,21 @@ export default function RepresentantePage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-3xl font-bold tracking-tight">
                 {formatarNome(representante.nome)}
               </h1>
-              {representante.numero_oab && representante.uf_oab && (
-                <Badge variant="outline" tone="info">
-                  OAB {representante.uf_oab} {representante.numero_oab}
+              {representante.oabs?.map((oab, index) => (
+                <Badge key={index} variant="outline" tone="info">
+                  OAB {oab.uf} {oab.numero.replace(/^[A-Z]{2}/, '')}
                 </Badge>
-              )}
-              {situacaoOAB && (
+              ))}
+              {primeiraOab?.situacao && (
                 <Badge
                   tone={isRegular ? 'success' : 'neutral'}
                   variant={isRegular ? 'soft' : 'outline'}
                 >
-                  {formatarSituacaoOAB(situacaoOAB)}
+                  {formatarSituacaoOAB(primeiraOab.situacao)}
                 </Badge>
               )}
             </div>
@@ -161,15 +162,32 @@ export default function RepresentantePage() {
               <Campo label="CPF" value={representante.cpf ? formatarCpf(representante.cpf) : null} />
               <Campo label="Sexo" value={representante.sexo?.replace('_', ' ')} />
               <Campo label="Tipo" value={representante.tipo} />
-              <Campo 
-                label="OAB" 
-                value={representante.numero_oab && representante.uf_oab 
-                  ? `${representante.uf_oab} ${representante.numero_oab}` 
-                  : representante.numero_oab} 
-              />
-              <Campo label="Situação OAB" value={formatarSituacaoOAB(representante.situacao_oab)} />
             </div>
           </div>
+
+          {/* Inscrições na OAB */}
+          {representante.oabs && representante.oabs.length > 0 && (
+            <div className="rounded-lg border p-6 space-y-4">
+              <h2 className="text-xl font-semibold">Inscrições na OAB ({representante.oabs.length})</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {representante.oabs.map((oab, index) => (
+                  <div key={index} className="flex items-center gap-2 p-3 rounded-md border bg-muted/30">
+                    <Badge variant="outline" tone="info">
+                      {oab.uf}
+                    </Badge>
+                    <span className="font-medium">{oab.numero.replace(/^[A-Z]{2}/, '')}</span>
+                    <Badge
+                      tone={oab.situacao === 'REGULAR' ? 'success' : 'neutral'}
+                      variant={oab.situacao === 'REGULAR' ? 'soft' : 'outline'}
+                      className="ml-auto"
+                    >
+                      {formatarSituacaoOAB(oab.situacao)}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Contato */}
           <div className="rounded-lg border p-6 space-y-4">

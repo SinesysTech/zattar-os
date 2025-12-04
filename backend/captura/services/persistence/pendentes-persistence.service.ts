@@ -70,7 +70,7 @@ async function buscarPendenteExistente(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .select('*')
     .eq('id_pje', idPje)
     .eq('trt', trt)
@@ -113,7 +113,7 @@ export async function salvarPendentes(
   let naoAtualizados = 0;
   let erros = 0;
 
-  const entidade: TipoEntidade = 'pendentes_manifestacao';
+  const entidade: TipoEntidade = 'expedientes';
 
   // Processar cada processo individualmente
   for (const processo of processos) {
@@ -158,7 +158,7 @@ export async function salvarPendentes(
       if (!registroExistente) {
         // Inserir
         const { error } = await supabase
-          .from('pendentes_manifestacao')
+          .from('expedientes')
           .insert(dadosNovos);
 
         if (error) {
@@ -195,7 +195,7 @@ export async function salvarPendentes(
           );
 
           const { error } = await supabase
-            .from('pendentes_manifestacao')
+            .from('expedientes')
             .update({
               ...dadosNovos,
               dados_anteriores: dadosAnteriores,
@@ -247,10 +247,10 @@ export async function salvarPendentes(
 }
 
 /**
- * Atualiza informações de arquivo/documento de um pendente de manifestação
+ * Atualiza informações de arquivo/documento de um expediente
  * Usado após upload bem-sucedido de documento para Google Drive
  *
- * @param pendenteId - ID do pendente na tabela pendentes_manifestacao
+ * @param pendenteId - ID do expediente na tabela expedientes
  * @param arquivoInfo - Informações do arquivo (nome, URLs de visualização e download, file_id)
  * @returns Promise<void>
  * @throws Error se a atualização falhar
@@ -267,7 +267,7 @@ export async function atualizarDocumentoPendente(
   const supabase = createServiceClient();
 
   const { error } = await supabase
-    .from('pendentes_manifestacao')
+    .from('expedientes')
     .update({
       arquivo_nome: arquivoInfo.arquivo_nome,
       arquivo_url: arquivoInfo.arquivo_url,
@@ -278,10 +278,10 @@ export async function atualizarDocumentoPendente(
 
   if (error) {
     throw new Error(
-      `Erro ao atualizar documento do pendente ${pendenteId}: ${error.message}`
+      `Erro ao atualizar documento do expediente ${pendenteId}: ${error.message}`
     );
   }
 
-  console.log(`✅ Documento atualizado no banco para pendente ${pendenteId}`);
+  console.log(`✅ Documento atualizado no banco para expediente ${pendenteId}`);
 }
 

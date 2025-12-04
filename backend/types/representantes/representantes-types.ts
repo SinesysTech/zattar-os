@@ -37,12 +37,19 @@ export type SituacaoOAB =
   | 'LICENCIADO'
   | 'FALECIDO';
 
+/**
+ * Inscrição na OAB
+ * Um advogado pode ter inscrições em múltiplos estados
+ */
+export interface InscricaoOAB {
+  numero: string;
+  uf: string;
+  situacao: SituacaoOAB | string;
+}
+
 export type OrdenarPorRepresentante =
   | 'nome'
   | 'cpf'
-  | 'numero_oab'
-  | 'uf_oab'
-  | 'situacao_oab'
   | 'created_at';
 
 // ============================================================================
@@ -68,9 +75,8 @@ export interface Representante {
 
   // Lawyer-specific
   tipo: string | null;
-  numero_oab: string | null;
-  uf_oab: string | null;
-  situacao_oab: string | null;
+  /** Array de inscrições na OAB (advogado pode atuar em múltiplos estados) */
+  oabs: InscricaoOAB[];
 
   // Contact
   emails: string[] | null;
@@ -114,9 +120,8 @@ export interface CriarRepresentanteParams {
   // Optional fields
   sexo?: string | null;
   tipo?: string | null;
-  numero_oab?: string | null;
-  uf_oab?: string | null;
-  situacao_oab?: string | null;
+  /** Array de inscrições na OAB */
+  oabs?: InscricaoOAB[];
   emails?: string[] | null;
   email?: string | null;
   ddd_celular?: string | null;
@@ -140,9 +145,8 @@ export interface AtualizarRepresentanteParams {
   nome?: string;
   sexo?: string | null;
   tipo?: string | null;
-  numero_oab?: string | null;
-  uf_oab?: string | null;
-  situacao_oab?: string | null;
+  /** Array de inscrições na OAB */
+  oabs?: InscricaoOAB[];
   emails?: string[] | null;
   email?: string | null;
   ddd_celular?: string | null;
@@ -166,9 +170,10 @@ export interface ListarRepresentantesParams {
   // Filters
   nome?: string;
   cpf?: string;
-  numero_oab?: string;
+  /** Busca por número da OAB (em qualquer UF) */
+  oab?: string;
+  /** Filtra por UF da OAB */
   uf_oab?: string;
-  situacao_oab?: string;
   busca?: string;
 
   // Sorting
@@ -181,7 +186,10 @@ export interface ListarRepresentantesParams {
 // ============================================================================
 
 export interface BuscarRepresentantesPorOABParams {
-  numero_oab: string;
+  /** Número da OAB (com ou sem UF, ex: "MG128404" ou "128404") */
+  oab: string;
+  /** UF opcional para filtrar */
+  uf?: string;
 }
 
 /**

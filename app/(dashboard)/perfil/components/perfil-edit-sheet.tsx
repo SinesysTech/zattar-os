@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Typography } from '@/components/ui/typography';
 import { Loader2 } from 'lucide-react';
@@ -186,16 +187,10 @@ export function PerfilEditSheet({
                 </div>
                 <div>
                   <Label htmlFor="dataNascimento">Data de Nascimento</Label>
-                  <Input
+                  <FormDatePicker
                     id="dataNascimento"
-                    type="date"
-                    value={formData.dataNascimento || ''}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        dataNascimento: e.target.value,
-                      })
-                    }
+                    value={formData.dataNascimento || undefined}
+                    onChange={(v) => setFormData({ ...formData, dataNascimento: v })}
                   />
                 </div>
                 <div>

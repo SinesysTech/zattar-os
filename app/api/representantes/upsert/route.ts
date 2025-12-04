@@ -33,15 +33,21 @@ import type { UpsertRepresentantePorCPFParams } from '@/backend/types/representa
  *               nome:
  *                 type: string
  *                 description: Nome completo do representante
- *               numero_oab:
- *                 type: string
- *                 description: Número da OAB
- *               uf_oab:
- *                 type: string
- *                 description: UF da OAB
- *               situacao_oab:
- *                 type: string
- *                 description: Situação na OAB
+ *               oabs:
+ *                 type: array
+ *                 description: Lista de inscrições na OAB (advogado pode atuar em múltiplos estados)
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     numero:
+ *                       type: string
+ *                       description: Número da OAB (com UF, ex "MG128404")
+ *                     uf:
+ *                       type: string
+ *                       description: UF da inscrição
+ *                     situacao:
+ *                       type: string
+ *                       description: Situação da inscrição (REGULAR, SUSPENSO, etc.)
  *               email:
  *                 type: string
  *                 description: Email do representante
