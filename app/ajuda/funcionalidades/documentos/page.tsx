@@ -1,4 +1,4 @@
-import { FileText, Keyboard, FolderOpen, Share2, History, Trash2, Download, MessageSquare, Search, FileTemplate, Lightbulb, AlertCircle } from 'lucide-react';
+import { FileText, Keyboard, FolderOpen, Share2, History, Trash2, Download, MessageSquare, Search, Files, Lightbulb, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -371,7 +371,7 @@ export default function DocumentosPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <FileTemplate className="h-5 w-5" />
+              <Files className="h-5 w-5" />
               <CardTitle className="text-lg">Templates</CardTitle>
             </div>
           </CardHeader>
