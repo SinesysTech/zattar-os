@@ -207,17 +207,17 @@ O projeto possui diferentes scripts de build para diferentes cenários:
 
 | Script | Comando | Uso | Turbopack | Otimizações |
 |--------|---------|-----|-----------|-------------|
-| `build:prod` | `next build --turbopack` | **Produção (CapRover)** | ✅ Sim | Máximas |
+| `build:prod` | `next build --webpack` | **Produção (CapRover)** | ❌ Não | Máximas |
 | `build` | `next build --turbopack` + filtros | Desenvolvimento local | ✅ Sim | Warnings filtrados |
 | `build:prod:webpack` | `next build --webpack` | Fallback se Turbopack falhar | ❌ Não | Máximas |
-| `build:debug-memory` | `next build --turbopack --experimental-debug-memory-usage` | Debug de OOM | ✅ Sim | + Debug |
-| `analyze` | `ANALYZE=true next build` | Análise de bundle | ✅ Sim | + Analyzer |
+| `build:prod:turbopack` | `next build --turbopack` | Produção (experimental) | ✅ Sim | Experimental |
+| `build:debug-memory` | `node scripts/run-build-debug-memory.js` | Debug de OOM | ✅ Sim | + GC trace |
+| `analyze` | `node scripts/run-analyze.js` | Análise de bundle | ✅ Sim | + Analyzer |
 
-**Por que Turbopack em produção?**
-- Turbopack é **estável e production-ready** no Next.js 16 (desde outubro 2025)
-- Oferece builds **2-5x mais rápidos** que Webpack
-- É o bundler **padrão** para novos projetos Next.js
-- Reduz tempo de build de ~4-6min para ~2-3min
+**Por que Webpack em produção?**
+- O plugin PWA `@ducanh2912/next-pwa` requer Webpack para gerar corretamente o service worker e assets offline.
+- Garante compatibilidade total com a configuração `withPWA(...)` em `next.config.ts`.
+- Turbopack permanece disponível para desenvolvimento local e experimentos, mas não é usado no caminho principal de produção.
 
 **Quando usar Webpack?**
 - Se houver problemas de compatibilidade com Turbopack
@@ -286,10 +286,9 @@ npm run build:debug-memory
 ```
 
 Este script:
-- Imprime uso de heap em tempo real
-- Mostra estatísticas de garbage collection
-- Gera heap snapshots quando memória está alta
-- Ajuda a identificar vazamentos de memória
+- Define `NODE_OPTIONS` com `--max-old-space-size=2048` e `--trace-gc`
+- Mostra eventos de garbage collection durante o build
+- Ajuda a identificar picos de memória e possíveis vazamentos
 
 **Analisando heap snapshots:**
 ```bash

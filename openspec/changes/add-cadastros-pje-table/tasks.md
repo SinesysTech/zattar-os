@@ -171,16 +171,37 @@
   - Verificar que não há duplicatas por CPF
   - **Status**: Concluído - constraint UNIQUE em CPF garante unicidade
 
-## Fase 7: Limpeza
+## Fase 7: Melhorias de Representantes
 
-- [ ] **7.1** Remover tabela representantes_old (após 30 dias)
+- [x] **7.1** Popular vínculos de representantes em processo_partes
+  - Extrair dados de `dados_pje_completo->'representantes'`
+  - Criar entradas com `tipo_entidade='representante'` em processo_partes
+  - Atualizar constraint `processo_partes_tipo_entidade_check` para incluir 'representante'
+  - **Status**: Concluído - migration `20251204150000_populate_representantes_vinculos.sql`
+  - **Resultado**: 29.892 vínculos criados + 688 cadastros_pje para representantes
+  - **Índice**: `idx_processo_partes_representante_entidade` criado
+
+- [x] **7.2** Transformar campo OAB em JSONB (array de OABs)
+  - Advogados podem ter OAB em múltiplos estados
+  - Nova coluna `oabs` JSONB: `[{"numero": "MG128404", "uf": "MG", "situacao": "REGULAR"}]`
+  - Popular com dados existentes + dados de `dados_pje_completo`
+  - **Status**: Concluído - migration `20251204160000_transform_oab_to_jsonb.sql`
+  - **Resultado**: Até 9 OABs por representante (ex: Raissa Bressanim)
+  - **Índice GIN**: `idx_representantes_oabs` criado para buscas
+
+## Fase 8: Limpeza
+
+- [ ] **8.1** Remover tabela representantes_old (após 30 dias)
   - **Status**: Pendente - aguardando período de observação
   - **Previsão**: Após 2024-12-28
 
-- [ ] **7.2** Remover backups (após validação completa)
+- [x] **8.2** Remover colunas antigas de OAB (numero_oab, uf_oab, situacao_oab)
+  - **Status**: Concluído - migration `20251204170000_remove_old_oab_columns.sql`
+
+- [ ] **8.3** Remover backups (após validação completa)
   - **Status**: Pendente
 
-- [ ] **7.3** Atualizar documentação (CLAUDE.md, specs)
+- [ ] **8.4** Atualizar documentação (CLAUDE.md, specs)
   - **Status**: Pendente
 
 ---
@@ -195,7 +216,9 @@
 | Fase 4 | ✅ Concluído | Constraints e remoção de id_pessoa_pje |
 | Fase 5 | ✅ Concluído | Tipos e código de captura atualizados |
 | Fase 6 | ✅ Concluído | Validado em produção |
-| Fase 7 | ⏳ Pendente | Aguardando período de observação |
+| Fase 7 | ✅ Concluído | 29.892 vínculos + OAB JSONB |
+| Fase 8 | ⏳ Pendente | Aguardando período de observação |
 
-**Data de conclusão das fases 1-6**: 2024-12-04
-**Previsão para fase 7**: Após 2024-12-28 (30 dias de observação)
+**Data de conclusão das fases 1-6**: 2024-11-28
+**Data de conclusão da fase 7**: 2024-12-04
+**Previsão para fase 8**: Após 2024-12-28 (30 dias de observação)

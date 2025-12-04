@@ -13,7 +13,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { useComunicaCNJStore } from '@/lib/stores/comunica-cnj-store';
 import { listAdvogadosAction } from '@/app/actions/pje';
 import type { AdvogadoWithCredenciais } from '@/lib/types/credentials';
-import { DateRangePicker, parseLocalDate } from './date-range-picker';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Check, ChevronDown, Loader2, Search, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 const searchSchema = z.object({
@@ -68,6 +68,8 @@ export function ComunicaCNJSearchForm({ tribunaisCNJ }: ComunicaCNJSearchFormPro
   const selectedTribunalData = tribunaisCNJ.find((t) => t.sigla === selectedTribunal);
   const selectedOrgaoData = orgaos.find((o) => o.orgaoIdCNJ === selectedOrgaoId);
   const selectedAdvogadoData = advogados.find((a) => a.id === selectedAdvogadoId);
+  const parseLocalDate = (dateString: string): Date => { const [year, month, day] = dateString.split('-').map(Number); return new Date(year, month - 1, day); };
+  const formatYYYYMMDD = (d: Date): string => { const year = d.getFullYear(); const month = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); return `${year}-${month}-${day}`; };
   if (!isMounted) { useEffect(() => setIsMounted(true), []); return (<form className="space-y-4 p-4 border rounded-lg"><div className="grid grid-cols-1 md:grid-cols-4 gap-4"><div className="space-y-2"><Label htmlFor="siglaTribunal">Tribunal</Label><Button variant="outline" className="w-full justify-between" disabled>Carregando...</Button></div></div></form>); }
   const onError = (errors: any) => { console.error('[SearchForm] Validation errors:', errors); };
   return (
@@ -95,7 +97,20 @@ export function ComunicaCNJSearchForm({ tribunaisCNJ }: ComunicaCNJSearchFormPro
         <div className="space-y-2"><Label htmlFor="advogado">Advogado</Label><Select value={modoAdvogado || ''} onValueChange={(value) => { if (value === 'cadastrado') { setAdvogadoDialogOpen(true); } else if (value === 'manual') { setManualDialogOpen(true); } }}><SelectTrigger id="advogado"><SelectValue placeholder="Selecione o modo" /></SelectTrigger><SelectContent><SelectItem value="cadastrado">Advogado Cadastrado</SelectItem><SelectItem value="manual">Dados Manuais</SelectItem></SelectContent></Select></div>
         <Dialog open={advogadoDialogOpen} onOpenChange={setAdvogadoDialogOpen}><DialogContent className="max-w-2xl"><DialogHeader><DialogTitle>Selecionar Advogado Cadastrado</DialogTitle><DialogDescription>Escolha um advogado cadastrado no sistema</DialogDescription></DialogHeader>{loadingAdvogados ? (<div className="flex items-center justify-center py-8"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /><span className="ml-3 text-muted-foreground">Carregando advogados...</span></div>) : (<Command className="border rounded-lg"><CommandInput placeholder="Buscar advogado..." /><CommandList className="max-h-[300px]"><CommandEmpty>Nenhum advogado encontrado</CommandEmpty><CommandGroup>{advogados.map((advogado) => (<CommandItem key={advogado.id} value={`${advogado.nome} ${advogado.oabNumero} ${advogado.oabUf}`} onSelect={() => { setValue('modoAdvogado', 'cadastrado'); if (advogado.id && typeof advogado.id === 'string') { setValue('advogadoId', advogado.id, { shouldValidate: true }); setValue('numeroOab', advogado.oabNumero?.toString() || '', { shouldValidate: false, shouldDirty: true, shouldTouch: false }); setValue('ufOab', advogado.oabUf || '', { shouldValidate: false, shouldDirty: true, shouldTouch: false }); } else { setValue('advogadoId', undefined); } setValue('nomeAdvogado', undefined); setAdvogadoDialogOpen(false); }} className="cursor-pointer"><Check className={cn('mr-2 h-4 w-4', selectedAdvogadoId === advogado.id ? 'opacity-100' : 'opacity-0')} /><div className="flex flex-col"><span className="font-medium">{advogado.nome}</span><span className="text-sm text-muted-foreground">OAB {advogado.oabNumero}/{advogado.oabUf}</span></div></CommandItem>))}</CommandGroup></CommandList></Command>)}</DialogContent></Dialog>
         <Dialog open={manualDialogOpen} onOpenChange={setManualDialogOpen}><DialogContent><DialogHeader><DialogTitle>Dados do Advogado (Manual)</DialogTitle><DialogDescription>Preencha os dados do advogado manualmente</DialogDescription></DialogHeader><div className="space-y-4 py-4"><div className="space-y-2"><Label htmlFor="nomeAdvogadoDialog">Nome do Advogado</Label><Input id="nomeAdvogadoDialog" placeholder="Nome completo" defaultValue={nomeAdvogado} onChange={(e) => setValue('nomeAdvogado', e.target.value)} /></div><div className="grid grid-cols-2 gap-4"><div className="space-y-2"><Label htmlFor="numeroOabDialog">Número OAB</Label><Input id="numeroOabDialog" placeholder="Ex: 123456" defaultValue={numeroOab} onChange={(e) => setValue('numeroOab', e.target.value)} /></div><div className="space-y-2"><Label htmlFor="ufOabDialog">UF</Label><Input id="ufOabDialog" placeholder="Ex: SP" maxLength={2} defaultValue={ufOab} onChange={(e) => setValue('ufOab', e.target.value.toUpperCase())} /></div></div><div className="flex justify-end gap-2 pt-4"><Button type="button" variant="outline" onClick={() => setManualDialogOpen(false)}>Cancelar</Button><Button type="button" onClick={() => { setValue('modoAdvogado', 'manual'); setValue('advogadoId', undefined); setManualDialogOpen(false); }}>Confirmar</Button></div></div></DialogContent></Dialog>
-        <div className="space-y-2"><DateRangePicker label="Período" value={{ from: watch('dataInicio') ? parseLocalDate(watch('dataInicio')!) : undefined, to: watch('dataFim') ? parseLocalDate(watch('dataFim')!) : undefined }} onFromChange={(date) => { setValue('dataInicio', date || undefined); }} onToChange={(date) => { setValue('dataFim', date || undefined); }} id="dateRange" /></div>
+        <div className="space-y-2">
+          <Label htmlFor="dateRange">Período</Label>
+          <DateRangePicker
+            value={{
+              from: watch('dataInicio') ? parseLocalDate(watch('dataInicio')!) : undefined,
+              to: watch('dataFim') ? parseLocalDate(watch('dataFim')!) : undefined,
+            }}
+            onChange={(range) => {
+              setValue('dataInicio', range?.from ? formatYYYYMMDD(range.from) : undefined);
+              setValue('dataFim', range?.to ? formatYYYYMMDD(range.to) : undefined);
+            }}
+            allowSingle
+          />
+        </div>
         <div className="space-y-2"><Label htmlFor="meio">Meio</Label><Select onValueChange={(value) => setValue('meio', value as any)}><SelectTrigger id="meio"><SelectValue placeholder="Selecione o meio" /></SelectTrigger><SelectContent><SelectItem value="E">Edital</SelectItem><SelectItem value="D">Diário Eletrônico</SelectItem></SelectContent></Select></div>
       </div>
       {(errors.root || Object.keys(errors).length > 0) && (<div className="space-y-1">{errors.root && (<p className="text-sm text-destructive">{errors.root.message}</p>)}{Object.keys(errors).filter(key => key !== 'root').map((key) => (<p key={key} className="text-sm text-destructive">{key}: {errors[key as keyof typeof errors]?.message || 'Erro de validação'}</p>))}</div>)}
