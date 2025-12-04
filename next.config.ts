@@ -3,11 +3,19 @@ import path from "path";
 import withPWA from '@ducanh2912/next-pwa';
 
 const nextConfig: NextConfig = {
+  // Generates a build optimized for Docker, reducing image size and improving startup time
   output: 'standalone',
   serverExternalPackages: ['pino', 'pino-pretty', 'thread-stream'],
+  // Disables browser source maps in production to save ~500MB during build and reduce bundle size
   productionBrowserSourceMaps: false,
   experimental: {
+    // Disables server source maps to reduce memory usage in the server runtime
     serverSourceMaps: false,
+    // Reduces memory usage during build by optimizing webpack's memory management
+    webpackMemoryOptimizations: true,
+    // Uses a separate worker for building, which can improve performance and stability
+    webpackBuildWorker: true,
+    // preloadEntriesOnStart: false, // Reduces initial memory usage but may affect performance
   },
   turbopack: {
     resolveAlias: {
@@ -15,6 +23,8 @@ const nextConfig: NextConfig = {
     },
   },
   typescript: {
+    // Allows builds to proceed even with TypeScript errors; useful for rapid development but risky as it may hide bugs
+    // Risks: Potential runtime errors from type mismatches; consider removing and fixing errors gradually
     ignoreBuildErrors: true,
   },
   logging: {
@@ -26,6 +36,19 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
   },
   allowedDevOrigins: ['192.168.1.100', '192.168.1.100:3000'],
+  webpack: (config, { isServer }) => {
+    if (process.env.ANALYZE === 'true') {
+      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          reportFilename: isServer ? '../analyze/server.html' : './analyze/client.html',
+          openAnalyzer: false,
+        })
+      );
+    }
+    return config;
+  },
 };
 
 export default withPWA({

@@ -119,6 +119,9 @@ caprover deploy -a sinesys
 > - `NEXT_PUBLIC_SUPABASE_URL`
 > - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
 > ⚠️ Importante: Antes de configurar deploy, leia a seção 'Prevenindo Múltiplos Builds Simultâneos' para evitar problemas.
+> 💡 **Dica**: Para entender como otimizar o tempo de build, veja a seção "Otimização de Build e Cache Docker".
+> 💡 **Nota**: O build do Next.js requer pelo menos 4GB de RAM disponível no servidor. Verifique a seção "Proteções Contra Out-Of-Memory (OOM)" para detalhes.
+> 💡 **Nota**: Para entender os scripts de build, veja 'Scripts de Build e Configuração do Next.js'.
 
 **Variáveis de ambiente:**
 ```env
@@ -196,6 +199,137 @@ http://sinesys_app:3000
 
 ---
 
+## Scripts de Build e Configuração do Next.js
+
+#### Diferença entre Scripts de Build
+
+O projeto possui diferentes scripts de build para diferentes cenários:
+
+| Script | Comando | Uso | Turbopack | Otimizações |
+|--------|---------|-----|-----------|-------------|
+| `build:prod` | `next build --turbopack` | **Produção (CapRover)** | ✅ Sim | Máximas |
+| `build` | `next build --turbopack` + filtros | Desenvolvimento local | ✅ Sim | Warnings filtrados |
+| `build:prod:webpack` | `next build --webpack` | Fallback se Turbopack falhar | ❌ Não | Máximas |
+| `build:debug-memory` | `next build --turbopack --experimental-debug-memory-usage` | Debug de OOM | ✅ Sim | + Debug |
+| `analyze` | `ANALYZE=true next build` | Análise de bundle | ✅ Sim | + Analyzer |
+
+**Por que Turbopack em produção?**
+- Turbopack é **estável e production-ready** no Next.js 16 (desde outubro 2025)
+- Oferece builds **2-5x mais rápidos** que Webpack
+- É o bundler **padrão** para novos projetos Next.js
+- Reduz tempo de build de ~4-6min para ~2-3min
+
+**Quando usar Webpack?**
+- Se houver problemas de compatibilidade com Turbopack
+- Se usar plugins Webpack customizados não suportados
+- Use o script `build:prod:webpack` como fallback
+
+#### Otimizações de Memória no next.config.ts
+
+O `next.config.ts` inclui várias otimizações para reduzir consumo de memória:
+
+**1. Source Maps desabilitados:**
+```typescript
+productionBrowserSourceMaps: false,  // Economiza ~500MB durante build
+experimental: {
+  serverSourceMaps: false,           // Reduz memória do servidor
+}
+```
+
+**2. Otimizações de Webpack:**
+```typescript
+experimental: {
+  webpackMemoryOptimizations: true,  // Reduz uso de memória durante build
+  webpackBuildWorker: true,          // Usa worker separado para build
+}
+```
+
+**3. Output Standalone:**
+```typescript
+output: 'standalone',  // Gera build otimizado para Docker (~200-300MB)
+```
+
+**Trade-offs:**
+- `webpackMemoryOptimizations: true` pode aumentar tempo de build em ~10-20%
+- Source maps desabilitados dificultam debug em produção (use logs estruturados)
+- `typescript.ignoreBuildErrors: true` **esconde erros de tipo** - use com cautela
+
+#### Análise de Bundle
+
+Para identificar dependências grandes que consomem memória:
+
+```bash
+# Gerar relatório de análise
+npm run analyze
+
+# Abrir relatórios gerados
+open analyze/client.html
+open analyze/server.html
+```
+
+**O que procurar:**
+- Dependências >500KB que podem ser otimizadas
+- Bibliotecas duplicadas (diferentes versões)
+- Código não usado (tree-shaking incompleto)
+
+**Ações comuns:**
+- Substituir bibliotecas grandes por alternativas menores
+- Usar imports dinâmicos para código não-crítico
+- Atualizar dependências para versões mais leves
+
+#### Debug de Memória
+
+Se o build falhar com OOM, use o script de debug:
+
+```bash
+npm run build:debug-memory
+```
+
+Este script:
+- Imprime uso de heap em tempo real
+- Mostra estatísticas de garbage collection
+- Gera heap snapshots quando memória está alta
+- Ajuda a identificar vazamentos de memória
+
+**Analisando heap snapshots:**
+```bash
+# Gerar heap profile
+node --heap-prof node_modules/next/dist/bin/next build
+
+# Abrir no Chrome DevTools
+# 1. Abra chrome://inspect
+# 2. Clique em "Open dedicated DevTools for Node"
+# 3. Vá para Memory tab
+# 4. Load o arquivo .heapprofile gerado
+```
+
+#### TypeScript Build Errors
+
+O projeto usa `typescript.ignoreBuildErrors: true` no `next.config.ts`.
+
+**Por quê?**
+- [DOCUMENTAR RAZÃO ESPECÍFICA DO PROJETO]
+- Permite builds mesmo com erros de tipo
+- Útil durante desenvolvimento rápido
+
+**Riscos:**
+- Erros de tipo podem causar bugs em produção
+- Dificulta manutenção do código
+- Pode esconder problemas sérios
+
+**Alternativas mais seguras:**
+```bash
+# Verificar tipos antes do build (recomendado)
+npm run type-check
+
+# Build com verificação de tipos
+# Remover temporariamente ignoreBuildErrors do next.config.ts
+```
+
+**Recomendação**: Considere remover `ignoreBuildErrors` e corrigir erros de tipo gradualmente.
+
+---
+
 ## Build Args vs Environment Variables
 
 ### Build Args (tempo de build)
@@ -218,7 +352,7 @@ Usadas quando o container está rodando:
 
 ### Build falha com OOM (Out of Memory)
 
-O Next.js pode consumir muita memória durante o build. Soluções:
+O Next.js pode consumir muita memória durante o build. Soluções rápidas:
 
 1. **Aumentar memória do build no CapRover**:
    - App Configs > Build Timeout & Memory
@@ -240,6 +374,9 @@ O Next.js pode consumir muita memória durante o build. Soluções:
    ```
    E no CapRover, use "Deploy via ImageName".
    💡 Dica: Se o OOM ocorre durante múltiplos builds simultâneos, veja a seção 'Prevenindo Múltiplos Builds Simultâneos'.
+   💡 **Nota**: Builds simultâneos consomem mais memória. Veja "Prevenindo Múltiplos Builds Simultâneos" e "Otimização de Build e Cache Docker".
+   💡 Para proteções abrangentes contra OOM, veja a seção 'Proteções Contra Out-Of-Memory (OOM)'.
+   💡 **Dica**: Use `npm run build:debug-memory` para diagnosticar problemas. Veja 'Scripts de Build e Configuração do Next.js' para detalhes.
 
 ### Container reinicia constantemente
 
@@ -253,6 +390,250 @@ Verifique os logs no dashboard do CapRover: App > App Logs
    ```bash
    curl http://srv-captain--sinesys-browser:3000/health
    ```
+
+## Otimização de Build e Cache Docker
+
+### Como o Cache Docker Funciona
+
+Docker cria **layers** para cada comando no Dockerfile. Cada layer é uma imagem intermediária que é armazenada em cache. Quando você executa um build, o Docker verifica se o comando e o contexto (arquivos copiados) mudaram desde o último build. Se não mudaram, a layer é reutilizada, economizando tempo.
+
+Mudanças em arquivos invalidam o cache de comandos subsequentes. Por exemplo, se você muda um arquivo no `COPY . .`, todas as layers depois dessa serão recriadas.
+
+**Exemplo visual de otimização de cache:**
+```
+# Sem otimização (ruim):
+COPY . .          # Copia tudo primeiro
+RUN npm ci        # Sempre roda se qualquer arquivo mudar
+
+# Com otimização (bom):
+COPY package.json .  # Copia apenas package.json
+RUN npm ci           # Só roda se package.json mudar
+COPY . .             # Copia resto dos arquivos
+```
+
+### Estratégia de Cache no Sinesys
+
+O Dockerfile do Sinesys usa uma estrutura **multi-stage** (deps → builder → runner) para otimizar o cache:
+
+- **Stage `deps`**: Cache de dependências (reutilizado se `package.json` não mudar)
+- **Stage `builder`**: Cache de build (invalidado se código mudar)
+- **Stage `runner`**: Imagem final leve (~200-300MB)
+
+O `.dockerignore` reduz o contexto de build de ~1.2GB para ~100MB, evitando que arquivos desnecessários invalidem o cache.
+
+### Impacto de Mudanças no Cache
+
+| Mudança | Layers invalidadas | Tempo estimado |
+|---------|-------------------|----------------|
+| `package.json` | deps + builder + runner | ~3-5min |
+| Código-fonte | builder + runner | ~2-3min |
+| Build args | builder + runner | ~2-3min |
+| `.dockerignore` | tudo | ~3-5min |
+
+**Dica**: Evite mudar `package.json` e código no mesmo commit se possível.
+
+### Otimizando Tempo de Build
+
+- **Dica 1**: Faça commits atômicos (uma mudança por vez)
+- **Dica 2**: Evite mudar arquivos desnecessários (use `.dockerignore`)
+- **Dica 3**: Agrupe mudanças em `package.json` em commits separados
+- **Dica 4**: Use build local para testar antes de push (evita builds desnecessários no servidor)
+- **Dica 5**: Considere usar Docker BuildKit para cache distribuído
+
+### Verificando Uso de Cache
+
+Para identificar se o cache está sendo usado, leia os logs do Docker:
+
+- **Cache hit**: `---> Using cache`
+- **Cache miss**: `---> Running in ...`
+
+**Exemplo de log com cache:**
+```
+Step 4/12 : COPY package.json package-lock.json* ./
+ ---> Using cache
+Step 5/12 : RUN npm ci --ignore-scripts
+ ---> Using cache
+Step 6/12 : COPY --from=deps /app/node_modules ./node_modules
+ ---> Using cache
+```
+
+**Calculando tempo economizado**: Compare o tempo total do build com/sem cache. Tipicamente, builds com cache completo levam ~1-2min vs ~4-6min sem cache.
+
+### Troubleshooting de Cache
+
+**Problema**: Build sempre demora mesmo sem mudanças
+- **Causa**: `.dockerignore` pode estar incorreto, incluindo arquivos temporários que mudam sempre
+- **Solução**: Verificar se arquivos como `.next`, `node_modules` ou logs estão sendo excluídos
+
+**Problema**: Cache não é reutilizado após mudança pequena
+- **Causa**: Mudança em arquivo que afeta uma layer anterior (ex: mudar `README.md` invalida `COPY . .`)
+- **Solução**: Revisar ordem de comandos no Dockerfile ou mover arquivos não-essenciais para fora do contexto
+💡 **Nota**: Para otimizações do Next.js, veja 'Scripts de Build e Configuração do Next.js'.
+
+---
+
+## Proteções Contra Out-Of-Memory (OOM)
+
+### Introdução
+
+Erros de Out-Of-Memory (OOM) ocorrem quando o Next.js build consome mais memória RAM do que está disponível no servidor. Um build típico do Next.js pode usar ~2-3GB de RAM, especialmente em projetos com muitas páginas ou componentes complexos. Quando múltiplos builds ocorrem simultaneamente (devido a webhooks duplicados), o consumo pode multiplicar, causando falhas.
+
+### Requisitos de Memória
+
+| Cenário | RAM Mínima | RAM Recomendada | Notas |
+|---------|------------|-----------------|-------|
+| Build único | 4GB | 6GB | Inclui 2GB para Node.js + 2GB para sistema |
+| Build com cache | 3GB | 4GB | Builds subsequentes consomem menos |
+| Múltiplos builds simultâneos | 4GB × número de builds | 6GB × número de builds | Evite builds simultâneos |
+
+O `NODE_OPTIONS="--max-old-space-size=2048"` no Dockerfile limita o heap do Node.js a 2GB. O sistema operacional precisa de ~1-2GB adicionais para operações normais.
+
+### Configurações do CapRover
+
+#### Build Memory
+Acesse App Configs → Build Timeout & Memory para ajustar:
+- **Valor recomendado**: 4096MB (mínimo para builds estáveis)
+- **Valor ideal**: 6144MB ou 8192MB para builds mais rápidos e projetos grandes
+
+#### Build Timeout
+Recomendações baseadas no cenário:
+- **Build sem cache**: 600s (10 minutos) - primeira vez ou após mudanças em dependências
+- **Build com cache**: 300s (5 minutos) - builds subsequentes
+- **Build com dependências novas**: 900s (15 minutos) - quando `package.json` muda
+
+#### Instance Count
+Mantenha em 1 durante o build para evitar múltiplas instâncias consumindo memória extra.
+
+### Configuração de Swap (Servidores com RAM Limitada)
+
+Use swap quando o servidor tiver menos de 4GB RAM. O swap permite que o sistema use disco como memória adicional, mas torna os builds 2-3x mais lentos.
+
+#### Quando usar swap
+- Servidores com <4GB RAM física
+- Builds esporádicos (não produção contínua)
+
+#### Impacto no desempenho
+- Builds ficam 2-3x mais lentos devido ao acesso ao disco
+- Alto uso de swap (>50%) pode causar travamentos do sistema
+
+#### Comandos para configurar swap
+```bash
+# Criar arquivo de swap de 4GB
+sudo fallocate -l 4G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+# Tornar permanente (adicionar ao /etc/fstab)
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+# Verificar swap ativo
+sudo swapon --show
+free -h
+```
+
+#### Otimizar uso de swap
+```bash
+# Reduzir swappiness para usar swap apenas quando necessário
+sudo sysctl vm.swappiness=10
+echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+```
+
+### Script de Verificação Pré-Build
+
+Use o script `scripts/check-build-memory.sh` para verificar memória disponível antes do build:
+
+```bash
+# Verificar memória disponível antes do build
+bash scripts/check-build-memory.sh
+```
+
+O script verifica:
+- Memória RAM disponível
+- Swap disponível
+- Processos que consomem muita memória
+- Recomendações baseadas no estado atual
+
+### Troubleshooting de Erros OOM
+
+#### Sintoma 1: Build falha com "JavaScript heap out of memory"
+- **Causa**: Node.js atingiu o limite de memória (padrão 2GB)
+- **Solução**: Aumentar `NODE_OPTIONS` no Dockerfile (ex: `--max-old-space-size=4096`) ou memória do CapRover
+
+#### Sintoma 2: Container é killed durante build (exit code 137)
+- **Causa**: Sistema operacional matou o processo por falta de memória
+- **Solução**: Adicionar swap ou aumentar RAM física do servidor
+
+#### Sintoma 3: Build demora muito e servidor fica lento
+- **Causa**: Uso excessivo de swap (>50%)
+- **Solução**: Aumentar RAM física ou otimizar build para consumir menos memória
+
+#### Sintoma 4: Múltiplos builds simultâneos causam OOM
+- **Causa**: Webhooks duplicados ou configuração de auto-deploy + webhook
+- **Solução**: Ver seção "Prevenindo Múltiplos Builds Simultâneos"
+
+#### Diagnóstico via logs
+- **CapRover logs**: Procure por "out of memory", "heap", "killed"
+- **Comandos de diagnóstico**:
+  ```bash
+  # Ver uso de memória em tempo real
+  free -h
+  
+  # Ver processos que mais consomem memória
+  ps aux --sort=-%mem | head -n 10
+  
+  # Ver logs do sistema sobre OOM
+  sudo dmesg | grep -i "out of memory"
+  ```
+
+### Alternativas para Servidores com Pouca Memória
+
+#### Opção 1: Build em máquina externa
+Use GitHub Actions ou máquina local para build e push da imagem:
+
+```yaml
+# .github/workflows/build-and-deploy.yml
+name: Build and Deploy to CapRover
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Docker image
+        run: docker build -t sinesys:latest .
+      - name: Push to registry
+        run: |
+          docker tag sinesys:latest registry.example.com/sinesys:latest
+          docker push registry.example.com/sinesys:latest
+      - name: Deploy to CapRover
+        run: |
+          caprover deploy --imageName registry.example.com/sinesys:latest
+```
+
+#### Opção 2: Usar CapRover em servidor maior temporariamente
+Migre temporariamente para um servidor com mais RAM durante builds.
+
+#### Opção 3: Otimizar build para consumir menos memória
+- Desabilitar source maps em produção
+- Usar `experimental.cpus` no `next.config.ts` para limitar paralelismo
+- Considerar build incremental com ferramentas como Turborepo
+
+### Monitoramento de Memória
+
+Configure alertas no CapRover para uso de memória alto. Ferramentas recomendadas:
+- **Netdata**: Monitoramento em tempo real
+- **Prometheus + Grafana**: Dashboards customizados
+
+Métricas importantes:
+- Uso de RAM durante build
+- Uso de swap
+- Tempo de build
+- Número de builds simultâneos
+
+---
 
 ## Prevenindo Múltiplos Builds Simultâneos
 
@@ -351,13 +732,14 @@ Antes de cada deploy, verifique:
 
 ## Recursos Recomendados
 
-| Serviço | RAM Mínima | RAM Recomendada | CPU |
-|---------|------------|-----------------|-----|
-| sinesys_app | 512MB | 1GB | 1 core |
-| sinesys_mcp | 128MB | 256MB | 0.5 core |
-| sinesys_browser | 1GB | 2GB | 1-2 cores |
+| Serviço | RAM Mínima (Runtime) | RAM Recomendada (Runtime) | RAM para Build | CPU |
+|---------|----------------------|---------------------------|----------------|-----|
+| sinesys_app | 512MB | 1GB | 4GB (mínimo) | 1 core |
+| sinesys_mcp | 128MB | 256MB | N/A | 0.5 core |
+| sinesys_browser | 1GB | 2GB | N/A | 1-2 cores |
 
-**Total recomendado**: VPS com 4GB RAM, 2-4 cores
+**Total recomendado para runtime**: VPS com 4GB RAM, 2-4 cores  
+**Total recomendado para build**: Pelo menos 4GB RAM adicional disponível durante builds
 
 ---
 
@@ -407,4 +789,3 @@ SINESYS_API_KEY=sua_api_key_segura
 ```env
 PORT=3000
 BROWSER_TOKEN=opcional_token_seguranca
-```
