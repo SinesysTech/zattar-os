@@ -85,6 +85,16 @@ const docsNavigation: NavSection[] = [
         href: '/ajuda/funcionalidades/captura',
         icon: <Download className="h-4 w-4" />,
       },
+      {
+        title: 'Documentos',
+        href: '/ajuda/funcionalidades/documentos',
+        icon: <FileText className="h-4 w-4" />,
+      },
+      {
+        title: 'Assinatura Digital',
+        href: '/ajuda/funcionalidades/assinatura-digital',
+        icon: <FileSignature className="h-4 w-4" />,
+      },
     ],
   },
   {
@@ -129,6 +139,76 @@ const docsNavigation: NavSection[] = [
         title: 'Componentes',
         href: '/ajuda/design-system/componentes',
         icon: <Component className="h-4 w-4" />,
+      },
+      {
+        title: 'Responsividade',
+        href: '/ajuda/design-system/responsividade',
+        icon: <Smartphone className="h-4 w-4" />,
+      },
+    ],
+  },
+  {
+    title: 'Desenvolvimento',
+    items: [
+      {
+        title: 'Visão Geral',
+        href: '/ajuda/desenvolvimento',
+        icon: <Wrench className="h-4 w-4" />,
+      },
+      {
+        title: 'Arquitetura',
+        href: '/ajuda/desenvolvimento/arquitetura',
+        icon: <FolderTree className="h-4 w-4" />,
+      },
+      {
+        title: 'Arq. Assinatura Digital',
+        href: '/ajuda/desenvolvimento/arquitetura-assinatura-digital',
+        icon: <FileSignature className="h-4 w-4" />,
+      },
+      {
+        title: 'Integração PJE',
+        href: '/ajuda/desenvolvimento/integracao-pje',
+        icon: <Scale className="h-4 w-4" />,
+      },
+      {
+        title: 'Integração ViaCEP',
+        href: '/ajuda/desenvolvimento/integracao-viacep',
+        icon: <MapPin className="h-4 w-4" />,
+      },
+      {
+        title: 'Integração Google Drive',
+        href: '/ajuda/desenvolvimento/integracao-google-drive',
+        icon: <HardDrive className="h-4 w-4" />,
+      },
+      {
+        title: 'API Swagger',
+        href: '/ajuda/desenvolvimento/api-swagger',
+        icon: <FileCode className="h-4 w-4" />,
+      },
+      {
+        title: 'Referência de API',
+        href: '/ajuda/desenvolvimento/api-referencia',
+        icon: <Terminal className="h-4 w-4" />,
+      },
+      {
+        title: 'Deploy',
+        href: '/ajuda/desenvolvimento/deploy',
+        icon: <Container className="h-4 w-4" />,
+      },
+      {
+        title: 'Variáveis de Ambiente',
+        href: '/ajuda/desenvolvimento/variaveis-ambiente',
+        icon: <Settings className="h-4 w-4" />,
+      },
+      {
+        title: 'Migrations',
+        href: '/ajuda/desenvolvimento/migrations',
+        icon: <Database className="h-4 w-4" />,
+      },
+      {
+        title: 'Troubleshooting',
+        href: '/ajuda/desenvolvimento/troubleshooting',
+        icon: <AlertTriangle className="h-4 w-4" />,
       },
     ],
   },
