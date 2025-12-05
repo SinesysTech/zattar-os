@@ -244,8 +244,11 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
 
       setIsLoading(true);
 
+      // Garantir que campos é sempre um array (defensivo contra dados inconsistentes do backend)
+      const campos = Array.isArray(template.campos) ? template.campos : [];
+
       // Diagnóstico: Verificar campos sem ID válido (ajuda a debugar problemas no backend)
-      const camposSemId = template.campos.filter((c) => c.id == null);
+      const camposSemId = campos.filter((c) => c.id == null);
       if (camposSemId.length > 0) {
         console.warn(
           `[FieldMappingEditor] ${camposSemId.length} campo(s) retornados do backend sem ID válido:`,
@@ -254,7 +257,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
       }
 
       // Diagnóstico: Verificar campos sem posição válida (corrigido com valores padrão)
-      const camposSemPosicao = template.campos.filter((c) => !c.posicao);
+      const camposSemPosicao = campos.filter((c) => !c.posicao);
       if (camposSemPosicao.length > 0) {
         console.warn(
           `[FieldMappingEditor] ${camposSemPosicao.length} campo(s) sem posição válida (usando padrão):`,
@@ -265,7 +268,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
       // Normalizar IDs dos campos ao carregar do backend
       // Backend n8n retorna campo.id como number, mas TypeScript espera string
       // Se campo.id for null/undefined, gera ID único temporário (defensivo contra bugs do backend)
-      const editorFields: EditorField[] = template.campos.map((campo) => ({
+      const editorFields: EditorField[] = campos.map((campo) => ({
         ...campo,
         id: campo.id != null
           ? String(campo.id)

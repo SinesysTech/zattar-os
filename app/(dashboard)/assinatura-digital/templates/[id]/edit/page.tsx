@@ -158,14 +158,14 @@ export default function EditTemplatePage({ params }: PageProps) {
           <Skeleton className="h-9 w-64" />
           <Skeleton className="h-4 w-96" />
         </div>
-        
+
         <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
           <div className="space-y-4">
             <Skeleton className="h-32 w-full" />
             <Skeleton className="h-32 w-full" />
             <Skeleton className="h-48 w-full" />
           </div>
-          
+
           <Skeleton className="h-full w-full" />
         </div>
       </div>
