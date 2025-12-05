@@ -7,7 +7,6 @@
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { obterTimelinePorMongoId } from '@/backend/captura/services/timeline/timeline-persistence.service';
-import type { TimelineDocument } from '@/backend/types/mongodb/timeline';
 import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
 import type { GrauProcesso } from '@/types/domain/common';
 

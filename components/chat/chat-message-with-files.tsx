@@ -1,16 +1,15 @@
 'use client';
 
 import * as React from 'react';
-import { MessageSquare, Download, Eye, Play, Pause } from 'lucide-react';
+import { Download, Eye, Play, Pause } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ChatMessageItem } from '@/components/chat-message';
 import type { ChatMessage } from '@/hooks/use-realtime-chat';
-import { 
-  formatChatTimestamp, 
-  shouldShowMessageHeader, 
+import {
+  shouldShowMessageHeader,
   shouldGroupWithPrevious,
-  parseMessageContent 
+  parseMessageContent
 } from '@/lib/utils/chat-utils';
 
 interface FileAttachment {
@@ -44,8 +43,8 @@ export function ChatMessageWithFiles({
   // Determinar se deve mostrar o nome do usuário
   const shouldShowHeader = showHeader && shouldShowMessageHeader(tipo);
   
-  // Determinar se deve agrupar com a mensagem anterior
-  const shouldGroup = shouldGroupWithPrevious(message, previousMessage, tipo);
+  // Verificar se deve agrupar com a mensagem anterior (usado para lógica interna)
+  shouldGroupWithPrevious(message, previousMessage, tipo);
 
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';

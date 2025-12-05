@@ -69,6 +69,7 @@ export class S3StorageService implements IStorageService {
   async upload(
     file: Buffer | ReadableStream,
     path: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- será usado quando biblioteca @aws-sdk for instalada
     _contentType: string
   ): Promise<UploadResult> {
     try {
@@ -143,6 +144,7 @@ export class S3StorageService implements IStorageService {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- será usado quando biblioteca @aws-sdk for instalada
   async getUrl(path: string, _expiresIn: number = 3600): Promise<GetUrlResult> {
     try {
       if (!this.client) {
@@ -180,6 +182,7 @@ export class S3StorageService implements IStorageService {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- será usado quando biblioteca @aws-sdk for instalada
   async exists(_path: string): Promise<boolean> {
     try {
       if (!this.client) {

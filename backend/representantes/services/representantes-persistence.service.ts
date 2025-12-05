@@ -286,6 +286,7 @@ export async function atualizarRepresentante(
       .eq('id', params.id)
       .single();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- removendo id do payload de update
     const { id: _, ...updates } = params;
 
     // dados_anteriores armazena o estado anterior do registro, não os dados do PJE
@@ -374,6 +375,7 @@ export async function buscarRepresentantePorCPF(cpf: string): Promise<Representa
  * NOTA: Representantes são sempre pessoas físicas (advogados), portanto não possuem CNPJ.
  * Esta função sempre retorna null e existe apenas para manter consistência de interface.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetro existe para manter consistência de interface
 export async function buscarRepresentantePorCNPJ(_cnpj: string): Promise<Representante | null> {
   // Representantes são sempre PF (advogados), não têm CNPJ
   return null;

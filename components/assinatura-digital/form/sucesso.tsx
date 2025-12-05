@@ -41,6 +41,7 @@ export default function Sucesso() {
    * @param pdf - Objeto com informações do PDF
    * @param index - Índice do PDF na lista (para nomenclatura fallback)
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetro mantido para consistência de interface
   const handleDownloadIndividual = async (pdf: PdfGerado, _index: number) => {
     if (!pdf.pdf_url) {
       toast.error('URL do documento não disponível');

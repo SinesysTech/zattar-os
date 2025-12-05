@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Mic, Square, Play, Pause, X } from 'lucide-react';
+import { Mic, Square } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/app/_lib/supabase/client';
@@ -31,15 +31,14 @@ export function AudioRecordButton({
   className,
 }: AudioRecordButtonProps) {
   const [isRecording, setIsRecording] = React.useState(false);
-  const [isPaused, setIsPaused] = React.useState(false);
+  const [, setIsPaused] = React.useState(false);
   const [recordedAudio, setRecordedAudio] = React.useState<Blob | null>(null);
   const [recordingDuration, setRecordingDuration] = React.useState(0);
   const [audioURL, setAudioURL] = React.useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = React.useState(false);
-  
+  const [, setIsPlaying] = React.useState(false);
+
   const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
   const audioChunksRef = React.useRef<Blob[]>([]);
-  const audioPlayerRef = React.useRef<HTMLAudioElement | null>(null);
   const recordingTimerRef = React.useRef<NodeJS.Timeout | null>(null);
   const recordingStartTimeRef = React.useRef<number>(0);
   const pausedTimeRef = React.useRef<number>(0);
@@ -141,7 +140,7 @@ export function AudioRecordButton({
             const randomId = Math.random().toString(36).substring(7);
             const uniqueName = `chat/audio/${timestamp}-${randomId}.webm`;
 
-            const { data, error } = await supabase.storage
+            const { error } = await supabase.storage
               .from('chat-files')
               .upload(uniqueName, recordedAudio, {
                 cacheControl: '3600',
