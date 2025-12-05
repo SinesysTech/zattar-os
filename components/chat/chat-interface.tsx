@@ -12,6 +12,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { RealtimeChat } from '@/components/realtime-chat';
 import type { ChatMessage } from '@/hooks/use-realtime-chat';
+import { NotificationProvider } from '@/hooks/use-notifications';
+import { NotificationBell } from '@/components/chat/notification-badge';
 
 type TipoSala = 'geral' | 'documento' | 'privado' | 'grupo';
 
@@ -212,7 +214,10 @@ export function ChatInterface({
               <MessageSquare className={cn('h-4 w-4', compact && 'h-3 w-3')} />
               {headerTitle}
             </h3>
-            {headerActions}
+            <div className="flex items-center gap-2">
+              <NotificationBell className="h-5 w-5" />
+              {headerActions}
+            </div>
           </div>
           {headerSubtitle && (
             <p className="text-xs text-muted-foreground mt-1">{headerSubtitle}</p>
@@ -222,13 +227,19 @@ export function ChatInterface({
 
       {/* Chat usando componente oficial do Supabase UI */}
       <div className="flex-1 min-h-0">
-        <RealtimeChat
-          roomName={roomName}
-          username={userName}
-          userId={currentUserId}
-          messages={initialMessages}
-          onMessage={handleMessage}
-        />
+        <NotificationProvider 
+          currentUserId={currentUserId}
+          currentUserName={userName}
+        >
+          <RealtimeChat
+            roomName={roomName}
+            username={userName}
+            userId={currentUserId}
+            messages={initialMessages}
+            onMessage={handleMessage}
+            tipo={tipo}
+          />
+        </NotificationProvider>
       </div>
     </div>
   );

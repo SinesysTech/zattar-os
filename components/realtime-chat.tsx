@@ -2,6 +2,9 @@
 
 import { cn } from '@/lib/utils'
 import { ChatMessageItem } from '@/components/chat-message'
+import { ChatMessageWithFiles } from '@/components/chat/chat-message-with-files'
+import { ChatFileUpload } from '@/components/chat/chat-file-upload'
+import { AudioRecordButton } from '@/components/chat/audio-record-button'
 import { useChatScroll } from '@/hooks/use-chat-scroll'
 import {
   type ChatMessage,
@@ -9,7 +12,7 @@ import {
 } from '@/hooks/use-realtime-chat'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Send } from 'lucide-react'
+import { Send, Paperclip, X, Mic } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 interface RealtimeChatProps {
@@ -18,6 +21,7 @@ interface RealtimeChatProps {
   userId?: number
   onMessage?: (messages: ChatMessage[]) => void
   messages?: ChatMessage[]
+  tipo?: 'privado' | 'grupo' | 'geral' | 'documento'
 }
 
 /**
@@ -35,6 +39,7 @@ export const RealtimeChat = ({
   userId,
   onMessage,
   messages: initialMessages = [],
+  tipo = 'geral',
 }: RealtimeChatProps) => {
   const { containerRef, scrollToBottom } = useChatScroll()
 
@@ -50,6 +55,9 @@ export const RealtimeChat = ({
     userId,
   })
   const [newMessage, setNewMessage] = useState('')
+  const [showFileUpload, setShowFileUpload] = useState(false)
+  const [attachedFiles, setAttachedFiles] = useState<any[]>([])
+  const [audioFiles, setAudioFiles] = useState<any[]>([])
 
   // Merge realtime messages with initial messages
   const allMessages = useMemo(() => {
@@ -78,12 +86,26 @@ export const RealtimeChat = ({
   const handleSendMessage = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault()
-      if (!newMessage.trim() || !isConnected) return
+      if ((!newMessage.trim() && attachedFiles.length === 0) || !isConnected) return
 
-      sendMessage(newMessage)
+      // Construir conteúdo da mensagem com arquivos anexos
+      let messageContent = newMessage.trim()
+      
+      // Separar arquivos de áudio de outros anexos
+      const allAttachments = [...attachedFiles, ...audioFiles]
+      
+      if (allAttachments.length > 0) {
+        const filesJson = JSON.stringify(allAttachments)
+        messageContent += `\n[FILES_START]${filesJson}[FILES_END]`
+      }
+
+      sendMessage(messageContent)
       setNewMessage('')
+      setAttachedFiles([])
+      setAudioFiles([])
+      setShowFileUpload(false)
     },
-    [newMessage, isConnected, sendMessage]
+    [newMessage, attachedFiles, audioFiles, isConnected, sendMessage]
   )
 
   // Handler para input com indicação de typing
@@ -96,6 +118,39 @@ export const RealtimeChat = ({
     },
     [startTyping]
   )
+
+  // Handler para quando arquivos são carregados
+  const handleFileUploaded = useCallback((fileInfo: any) => {
+    setAttachedFiles(prev => [...prev, fileInfo])
+  }, [])
+
+  // Handler para quando áudio é gravado (botão separado)
+  const handleAudioRecorded = useCallback((audioInfo: any) => {
+    // Adicionar arquivo de áudio à lista separada
+    setAudioFiles(prev => [...prev, audioInfo])
+  }, [])
+
+  // Handler para quando áudio está pronto para envio (aparece no input)
+  const handleAudioReady = useCallback((audioFile: any) => {
+    // O áudio já foi processado e adicionado pelo handleAudioRecorded
+    // Aqui podemos adicionar lógica adicional se necessário
+    console.log('Áudio pronto para envio:', audioFile)
+  }, [])
+
+  // Handler para remover arquivo anexado
+  const handleRemoveAttachedFile = useCallback((index: number) => {
+    setAttachedFiles(prev => prev.filter((_, i) => i !== index))
+  }, [])
+
+  // Handler para remover arquivo de áudio
+  const handleRemoveAudioFile = useCallback((index: number) => {
+    setAudioFiles(prev => prev.filter((_, i) => i !== index))
+  }, [])
+
+  // Verificar se mensagem contém arquivos
+  const hasFiles = (content: string) => {
+    return content.includes('[FILES_START]') && content.includes('[FILES_END]')
+  }
 
   return (
     <div className="flex flex-col h-full w-full bg-background text-foreground antialiased">
@@ -110,17 +165,30 @@ export const RealtimeChat = ({
           {allMessages.map((message, index) => {
             const prevMessage = index > 0 ? allMessages[index - 1] : null
             const showHeader = !prevMessage || prevMessage.user.name !== message.user.name
+            const isOwnMessage = userId ? message.user.id === userId : message.user.name === username
 
             return (
               <div
                 key={message.id}
                 className="animate-in fade-in slide-in-from-bottom-4 duration-300"
               >
-                <ChatMessageItem
-                  message={message}
-                  isOwnMessage={userId ? message.user.id === userId : message.user.name === username}
-                  showHeader={showHeader}
-                />
+                {hasFiles(message.content) ? (
+                  <ChatMessageWithFiles
+                    message={message}
+                    isOwnMessage={isOwnMessage}
+                    showHeader={showHeader}
+                    tipo={tipo}
+                    previousMessage={prevMessage}
+                  />
+                ) : (
+                  <ChatMessageItem
+                    message={message}
+                    isOwnMessage={isOwnMessage}
+                    showHeader={showHeader}
+                    tipo={tipo}
+                    previousMessage={prevMessage}
+                  />
+                )}
               </div>
             )
           })}
@@ -141,19 +209,86 @@ export const RealtimeChat = ({
         </div>
       )}
 
-      <form onSubmit={handleSendMessage} className="flex w-full gap-2 border-t border-border p-4">
-        <Input
-          className={cn(
-            'rounded-full bg-background text-sm transition-all duration-300',
-            isConnected && newMessage.trim() ? 'w-[calc(100%-36px)]' : 'w-full'
+      {/* Upload de arquivos */}
+      {showFileUpload && (
+        <div className="border-t border-border p-4 bg-muted/20">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-medium">Anexar arquivos</h4>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowFileUpload(false)}
+              className="h-6 w-6 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          <ChatFileUpload
+            onFileUploaded={handleFileUploaded}
+            className="mb-3"
+          />
+          
+          {/* Lista de arquivos anexados */}
+          {attachedFiles.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground">Arquivos anexados:</p>
+              {attachedFiles.map((file, index) => (
+                <div key={index} className="flex items-center gap-2 p-2 bg-background rounded border">
+                  <span className="text-sm truncate flex-1">{file.name}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRemoveAttachedFile(index)}
+                    className="h-5 w-5 p-0"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
+            </div>
           )}
-          type="text"
-          value={newMessage}
-          onChange={handleInputChange}
-          placeholder="Digite uma mensagem..."
-          disabled={!isConnected}
-        />
-        {isConnected && newMessage.trim() && (
+        </div>
+      )}
+
+      <form onSubmit={handleSendMessage} className="flex w-full gap-2 border-t border-border p-4">
+        <div className="flex flex-1 gap-2">
+          <Input
+            className={cn(
+              'rounded-full bg-background text-sm transition-all duration-300 flex-1',
+              isConnected && (newMessage.trim() || attachedFiles.length > 0 || audioFiles.length > 0) ? '' : ''
+            )}
+            type="text"
+            value={newMessage}
+            onChange={handleInputChange}
+            placeholder="Digite uma mensagem..."
+            disabled={!isConnected}
+          />
+          
+          {/* Botão de anexar arquivo */}
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowFileUpload(!showFileUpload)}
+            className={cn(
+              'aspect-square rounded-full transition-all duration-300',
+              showFileUpload ? 'bg-primary text-primary-foreground' : ''
+            )}
+            disabled={!isConnected}
+          >
+            <Paperclip className="size-4" />
+          </Button>
+
+          {/* Botão de gravação de áudio */}
+          <AudioRecordButton
+            onAudioRecorded={handleAudioRecorded}
+            onAudioReady={handleAudioReady}
+            disabled={!isConnected}
+            className="aspect-square rounded-full px-3"
+          />
+        </div>
+        
+        {isConnected && (newMessage.trim() || attachedFiles.length > 0 || audioFiles.length > 0) && (
           <Button
             className="aspect-square rounded-full animate-in fade-in slide-in-from-right-4 duration-300"
             type="submit"
@@ -163,6 +298,30 @@ export const RealtimeChat = ({
           </Button>
         )}
       </form>
+
+      {/* Lista de arquivos de áudio gravados */}
+      {audioFiles.length > 0 && (
+        <div className="border-t border-border p-4 bg-muted/20">
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">Áudios gravados:</p>
+            {audioFiles.map((audio, index) => (
+              <div key={index} className="flex items-center gap-2 p-2 bg-background rounded border">
+                <span className="text-sm truncate flex-1">
+                  {audio.name} ({Math.round(audio.duration)}s)
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleRemoveAudioFile(index)}
+                  className="h-5 w-5 p-0"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
