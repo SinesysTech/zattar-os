@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/auth/require-permission';
 import { getTemplate } from '@/backend/assinatura-digital/services/templates.service';
 
 /**
@@ -7,16 +6,17 @@ import { getTemplate } from '@/backend/assinatura-digital/services/templates.ser
  *
  * Proxy para servir o PDF do template armazenado no Backblaze B2.
  * Evita problemas de CORS ao carregar PDFs de origem externa.
+ *
+ * NOTA: Este endpoint não exige autenticação porque:
+ * 1. O PDF já está armazenado publicamente no Backblaze B2
+ * 2. O react-pdf/pdf.js não consegue enviar cookies de sessão corretamente
+ * 3. A segurança está no conhecimento do ID do template (UUID)
+ * 4. Este endpoint é apenas um proxy para evitar CORS, não adiciona proteção
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const authOrError = await requirePermission(request, 'assinatura_digital', 'visualizar');
-  if (authOrError instanceof NextResponse) {
-    return authOrError;
-  }
-
   try {
     const { id } = await params;
 
