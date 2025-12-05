@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTemplate } from '@/backend/assinatura-digital/services/templates.service';
+import { generatePresignedUrl } from '@/backend/storage/backblaze-b2.service';
 
 /**
  * GET /api/assinatura-digital/templates/[id]/preview
  *
- * Proxy para servir o PDF do template armazenado no Backblaze B2.
- * Evita problemas de CORS ao carregar PDFs de origem externa.
+ * Faz proxy do PDF do template para evitar problemas de CORS com Backblaze B2.
+ * O endpoint gera uma URL presigned e faz o fetch do PDF, retornando-o diretamente.
  *
- * NOTA: Este endpoint não exige autenticação porque:
- * 1. O PDF já está armazenado publicamente no Backblaze B2
- * 2. O react-pdf/pdf.js não consegue enviar cookies de sessão corretamente
- * 3. A segurança está no conhecimento do ID do template (UUID)
- * 4. Este endpoint é apenas um proxy para evitar CORS, não adiciona proteção
+ * Esta abordagem é mais confiável que redirect porque:
+ * - Não há problemas de CORS com cross-origin redirects
+ * - Não há issues com withCredentials em redirects
+ * - Funciona consistentemente com react-pdf/pdf.js
  */
 export async function GET(
   request: NextRequest,
@@ -31,15 +31,23 @@ export async function GET(
       return NextResponse.json({ error: 'Template não possui PDF associado' }, { status: 404 });
     }
 
-    // Fazer proxy da requisição ao Backblaze
-    const response = await fetch(pdfUrl, {
-      headers: {
-        'Accept': 'application/pdf',
-      },
+    // Determinar URL para fetch
+    let fetchUrl = pdfUrl;
+    const bucket = process.env.B2_BUCKET;
+
+    // Se a URL contém o bucket, gerar URL presigned para acesso
+    if (bucket && pdfUrl.includes(`/${bucket}/`)) {
+      const fileKey = pdfUrl.split(`/${bucket}/`)[1];
+      fetchUrl = await generatePresignedUrl(fileKey, 3600);
+    }
+
+    // Fazer proxy do PDF (evita problemas de CORS)
+    const response = await fetch(fetchUrl, {
+      headers: { 'Accept': 'application/pdf' },
     });
 
     if (!response.ok) {
-      console.error(`Erro ao buscar PDF do Backblaze: ${response.status} ${response.statusText}`);
+      console.error('[PREVIEW] Erro ao buscar PDF:', response.status, response.statusText);
       return NextResponse.json(
         { error: `Erro ao buscar PDF: ${response.statusText}` },
         { status: response.status }
@@ -48,18 +56,16 @@ export async function GET(
 
     const pdfBuffer = await response.arrayBuffer();
 
-    // Retornar o PDF com headers apropriados
     return new NextResponse(pdfBuffer, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `inline; filename="${template.arquivo_nome || 'template.pdf'}"`,
-        'Cache-Control': 'public, max-age=3600', // Cache por 1 hora
-        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'public, max-age=3600',
       },
     });
   } catch (error) {
-    console.error('Erro no proxy de preview do template:', error);
+    console.error('Erro no preview do template:', error);
     const message = error instanceof Error ? error.message : 'Erro ao carregar preview';
     return NextResponse.json({ error: message }, { status: 500 });
   }

@@ -367,8 +367,8 @@ async function criarExpedienteFromComunicacao(
     juizo_digital: false,
     data_arquivamento: null,
     id_documento: null,
-    data_ciencia_parte: null,
-    data_prazo_legal_parte: null,
+    data_ciencia_parte: comunicacao.dataDisponibilizacao, // Data de ciência = data de disponibilização da comunicação
+    data_prazo_legal_parte: null, // Data fim do prazo deve ser preenchida pelo usuário após análise
     data_criacao_expediente: comunicacao.dataDisponibilizacao,
     prazo_vencido: false,
     sigla_orgao_julgador: null,
