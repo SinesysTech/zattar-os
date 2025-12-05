@@ -18,9 +18,7 @@ import {
   WidgetExpedientesUrgentes,
   WidgetProdutividadePerformance,
 } from './widgets';
-import { TarefasWidget } from './tarefas-widget';
-import { NotasWidget } from './notas-widget';
-import { LinksWidget } from './links-widget';
+import { SortablePersonalWidgets } from './sortable-personal-widgets';
 
 // ============================================================================
 // Interfaces de Props
@@ -131,15 +129,10 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
         </div>
       </section>
 
-      {/* Área Pessoal - Widgets de Produtividade */}
+      {/* Área Pessoal - Widgets com drag-and-drop */}
       <section className="space-y-4">
         <Typography.H4 className="text-muted-foreground">Área Pessoal</Typography.H4>
-
-        <div className="grid gap-6 lg:grid-cols-3">
-          <TarefasWidget />
-          <NotasWidget />
-          <LinksWidget />
-        </div>
+        <SortablePersonalWidgets />
       </section>
 
       {/* Última atualização */}
@@ -178,15 +171,10 @@ function AdminDashboard({ data }: AdminDashboardProps) {
         <WidgetExpedientesUrgentes expedientes={data.expedientesUrgentes} />
       </div>
 
-      {/* Área Pessoal - Widgets de Produtividade */}
+      {/* Área Pessoal - Widgets com drag-and-drop */}
       <section className="space-y-4">
         <Typography.H4 className="text-muted-foreground">Área Pessoal</Typography.H4>
-
-        <div className="grid gap-6 lg:grid-cols-3">
-          <TarefasWidget />
-          <NotasWidget />
-          <LinksWidget />
-        </div>
+        <SortablePersonalWidgets />
       </section>
     </div>
   );
