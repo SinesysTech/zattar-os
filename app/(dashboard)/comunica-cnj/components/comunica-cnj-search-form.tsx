@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -31,6 +31,53 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Check, ChevronDown, Loader2, Search, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
+
+// Ordem de prioridade dos grupos de tribunais
+const TRIBUNAL_GROUP_ORDER = ['TRT', 'TRF', 'TRE', 'STJ', 'STF', 'TST', 'TSE', 'STM', 'CNJ', 'TJ', 'TJMM', 'TJMMG'];
+
+// Função para extrair número do tribunal (ex: TRT1 -> 1, TRT24 -> 24)
+const extractTribunalNumber = (sigla: string): number => {
+  const match = sigla.match(/\d+/);
+  return match ? parseInt(match[0], 10) : 999;
+};
+
+// Função para identificar o grupo do tribunal
+const getTribunalGroup = (sigla: string): string => {
+  // TRTs (Tribunais Regionais do Trabalho)
+  if (/^TRT\d+$/i.test(sigla)) return 'TRT';
+  // TRFs (Tribunais Regionais Federais)
+  if (/^TRF\d+$/i.test(sigla)) return 'TRF';
+  // TREs (Tribunais Regionais Eleitorais)
+  if (/^TRE-?[A-Z]{2}$/i.test(sigla)) return 'TRE';
+  // TJMMs (Tribunais de Justiça Militar)
+  if (/^TJM+/i.test(sigla)) return 'TJMM';
+  // TJs (Tribunais de Justiça Estaduais)
+  if (/^TJ[A-Z]{0,2}$/i.test(sigla)) return 'TJ';
+  // Tribunais Superiores e outros
+  if (sigla === 'STJ') return 'STJ';
+  if (sigla === 'STF') return 'STF';
+  if (sigla === 'TST') return 'TST';
+  if (sigla === 'TSE') return 'TSE';
+  if (sigla === 'STM') return 'STM';
+  if (sigla === 'CNJ') return 'CNJ';
+  return 'OUTROS';
+};
+
+// Labels para os grupos
+const GROUP_LABELS: Record<string, string> = {
+  TRT: 'Tribunais Regionais do Trabalho',
+  TRF: 'Tribunais Regionais Federais',
+  TRE: 'Tribunais Regionais Eleitorais',
+  TJ: 'Tribunais de Justiça Estaduais',
+  TJMM: 'Tribunais de Justiça Militar',
+  STJ: 'Superior Tribunal de Justiça',
+  STF: 'Supremo Tribunal Federal',
+  TST: 'Tribunal Superior do Trabalho',
+  TSE: 'Tribunal Superior Eleitoral',
+  STM: 'Superior Tribunal Militar',
+  CNJ: 'Conselho Nacional de Justiça',
+  OUTROS: 'Outros Tribunais',
+};
 
 // Schema de validação
 const searchSchema = z
@@ -95,7 +142,18 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>();
   const [selectedMeio, setSelectedMeio] = useState<string>('');
 
+  // Refs para medir largura dos triggers
+  const tribunalTriggerRef = useRef<HTMLButtonElement>(null);
+  const [tribunalPopoverWidth, setTribunalPopoverWidth] = useState<number>(0);
+
   const { advogados, isLoading: loadingAdvogados } = useAdvogados();
+
+  // Atualizar largura do popover quando o trigger muda
+  useEffect(() => {
+    if (tribunalTriggerRef.current) {
+      setTribunalPopoverWidth(tribunalTriggerRef.current.offsetWidth);
+    }
+  }, [tribunalSearchOpen]);
 
   const {
     register,
@@ -138,15 +196,50 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
     fetchTribunais();
   }, []);
 
-  // Filtrar tribunais por busca
-  const filteredTribunais = useMemo(() => {
-    if (!tribunalSearchTerm) return tribunais;
-    const searchLower = tribunalSearchTerm.toLowerCase();
-    return tribunais.filter(
-      (t) =>
-        t.sigla.toLowerCase().includes(searchLower) ||
-        t.nome.toLowerCase().includes(searchLower)
-    );
+  // Agrupar e ordenar tribunais
+  const groupedTribunais = useMemo(() => {
+    // Filtrar por termo de busca
+    let filtered = tribunais;
+    if (tribunalSearchTerm) {
+      const searchLower = tribunalSearchTerm.toLowerCase();
+      filtered = tribunais.filter(
+        (t) =>
+          t.sigla.toLowerCase().includes(searchLower) ||
+          t.nome.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Agrupar por tipo
+    const groups: Record<string, TribunalCNJ[]> = {};
+    filtered.forEach((tribunal) => {
+      const group = getTribunalGroup(tribunal.sigla);
+      if (!groups[group]) groups[group] = [];
+      groups[group].push(tribunal);
+    });
+
+    // Ordenar cada grupo
+    Object.keys(groups).forEach((group) => {
+      groups[group].sort((a, b) => {
+        // TRTs e TRFs: ordenar por número
+        if (group === 'TRT' || group === 'TRF') {
+          return extractTribunalNumber(a.sigla) - extractTribunalNumber(b.sigla);
+        }
+        // Demais: ordenar alfabeticamente pela sigla
+        return a.sigla.localeCompare(b.sigla);
+      });
+    });
+
+    // Ordenar grupos pela prioridade definida
+    const sortedGroups = Object.entries(groups).sort(([a], [b]) => {
+      const indexA = TRIBUNAL_GROUP_ORDER.indexOf(a);
+      const indexB = TRIBUNAL_GROUP_ORDER.indexOf(b);
+      if (indexA === -1 && indexB === -1) return a.localeCompare(b);
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    });
+
+    return sortedGroups;
   }, [tribunais, tribunalSearchTerm]);
 
   // Encontrar tribunal selecionado
@@ -187,6 +280,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
           <Popover open={tribunalSearchOpen} onOpenChange={setTribunalSearchOpen}>
             <PopoverTrigger asChild>
               <Button
+                ref={tribunalTriggerRef}
                 variant="outline"
                 role="combobox"
                 aria-expanded={tribunalSearchOpen}
@@ -208,7 +302,11 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                 <ChevronDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[450px] p-0" align="start">
+            <PopoverContent
+              className="p-0"
+              align="start"
+              style={{ width: tribunalPopoverWidth > 0 ? tribunalPopoverWidth : 'auto' }}
+            >
               <Command>
                 <CommandInput
                   placeholder="Buscar tribunal..."
@@ -216,33 +314,35 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                   onValueChange={setTribunalSearchTerm}
                   className="h-9"
                 />
-                <CommandList>
+                <CommandList className="max-h-[300px]">
                   <CommandEmpty>Nenhum tribunal encontrado</CommandEmpty>
-                  <CommandGroup>
-                    {filteredTribunais.map((tribunal) => (
-                      <CommandItem
-                        key={tribunal.sigla}
-                        value={`${tribunal.sigla} ${tribunal.nome}`}
-                        onSelect={() => {
-                          setValue('siglaTribunal', tribunal.sigla);
-                          setTribunalSearchOpen(false);
-                          setTribunalSearchTerm('');
-                        }}
-                        className="py-1.5"
-                      >
-                        <Check
-                          className={cn(
-                            'mr-1.5 h-3 w-3 shrink-0',
-                            selectedTribunal === tribunal.sigla ? 'opacity-100' : 'opacity-0'
-                          )}
-                        />
-                        <span className="font-medium text-sm shrink-0">{tribunal.sigla}</span>
-                        <span className="ml-1.5 text-muted-foreground text-sm truncate">
-                          {tribunal.nome}
-                        </span>
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
+                  {groupedTribunais.map(([groupKey, tribunaisDoGrupo]) => (
+                    <CommandGroup key={groupKey} heading={GROUP_LABELS[groupKey] || groupKey}>
+                      {tribunaisDoGrupo.map((tribunal) => (
+                        <CommandItem
+                          key={tribunal.sigla}
+                          value={`${tribunal.sigla} ${tribunal.nome}`}
+                          onSelect={() => {
+                            setValue('siglaTribunal', tribunal.sigla);
+                            setTribunalSearchOpen(false);
+                            setTribunalSearchTerm('');
+                          }}
+                          className="py-1.5"
+                        >
+                          <Check
+                            className={cn(
+                              'mr-1.5 h-3 w-3 shrink-0',
+                              selectedTribunal === tribunal.sigla ? 'opacity-100' : 'opacity-0'
+                            )}
+                          />
+                          <span className="font-medium text-sm shrink-0">{tribunal.sigla}</span>
+                          <span className="ml-1.5 text-muted-foreground text-sm truncate">
+                            {tribunal.nome}
+                          </span>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  ))}
                 </CommandList>
               </Command>
             </PopoverContent>
@@ -363,24 +463,27 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
         </div>
 
         {/* Botões */}
-        <div className="space-y-1.5 col-span-2 md:col-span-3 flex items-end gap-2">
-          <Button type="submit" disabled={isLoading} className="h-9">
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
-                Buscando...
-              </>
-            ) : (
-              <>
-                <Search className="mr-1.5 h-3 w-3" />
-                Buscar
-              </>
-            )}
-          </Button>
-          <Button type="button" variant="outline" onClick={handleReset} className="h-9">
-            <RotateCcw className="mr-1.5 h-3 w-3" />
-            Limpar
-          </Button>
+        <div className="col-span-2 md:col-span-3 flex flex-col justify-end">
+          <Label className="text-xs invisible">Ações</Label>
+          <div className="flex gap-2 mt-1.5">
+            <Button type="submit" disabled={isLoading} className="h-9">
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
+                  Buscando...
+                </>
+              ) : (
+                <>
+                  <Search className="mr-1.5 h-3 w-3" />
+                  Buscar
+                </>
+              )}
+            </Button>
+            <Button type="button" variant="outline" onClick={handleReset} className="h-9">
+              <RotateCcw className="mr-1.5 h-3 w-3" />
+              Limpar
+            </Button>
+          </div>
         </div>
       </div>
 
