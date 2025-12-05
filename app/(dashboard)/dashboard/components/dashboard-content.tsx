@@ -131,6 +131,17 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
         </div>
       </section>
 
+      {/* Área Pessoal - Widgets de Produtividade */}
+      <section className="space-y-4">
+        <Typography.H4 className="text-muted-foreground">Área Pessoal</Typography.H4>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          <TarefasWidget />
+          <NotasWidget />
+          <LinksWidget />
+        </div>
+      </section>
+
       {/* Última atualização */}
       <div className="text-center pt-4 border-t">
         <Typography.Muted className="text-xs">
@@ -166,6 +177,17 @@ function AdminDashboard({ data }: AdminDashboardProps) {
         {/* Expedientes Urgentes */}
         <WidgetExpedientesUrgentes expedientes={data.expedientesUrgentes} />
       </div>
+
+      {/* Área Pessoal - Widgets de Produtividade */}
+      <section className="space-y-4">
+        <Typography.H4 className="text-muted-foreground">Área Pessoal</Typography.H4>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          <TarefasWidget />
+          <NotasWidget />
+          <LinksWidget />
+        </div>
+      </section>
     </div>
   );
 }
