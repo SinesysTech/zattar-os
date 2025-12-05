@@ -91,8 +91,8 @@
 
 ## Atualização de Tipos Globais
 
-- [ ] Gerar tipos TypeScript atualizados do Supabase
-- [ ] Atualizar `lib/types/` com novos tipos
+- [x] Gerar tipos TypeScript atualizados do Supabase
+- [x] Atualizar `lib/types/` com novos tipos (`lib/types/database.ts`)
 
 ---
 
