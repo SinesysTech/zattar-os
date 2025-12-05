@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { Button } from '@/components/ui/button';
 import { ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Loader2, AlertCircle } from 'lucide-react';
@@ -12,6 +12,19 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 if (typeof window !== 'undefined') {
   // Usar a mesma configuração do PdfPreviewDynamic que funciona
   pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+}
+
+/**
+ * Prepara o objeto file para o react-pdf Document
+ * Para URLs de API locais, inclui withCredentials para enviar cookies de autenticação
+ */
+function prepareFileSource(url: string): string | { url: string; withCredentials: boolean } {
+  // Se for uma URL de API local, incluir credenciais
+  if (url.startsWith('/api/') || url.startsWith('http://localhost') || url.startsWith('https://localhost')) {
+    return { url, withCredentials: true };
+  }
+  // Para URLs externas (Backblaze, etc), usar string simples
+  return url;
 }
 
 export default function PdfPreview({
@@ -42,6 +55,9 @@ export default function PdfPreview({
 
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [zoom, setZoom] = useState(initialZoom);
+
+  // Preparar fonte do PDF com credenciais se for API local
+  const fileSource = useMemo(() => prepareFileSource(pdfUrl), [pdfUrl]);
 
   // Sincronizar currentPage quando initialPage muda (necessário para modo background)
   useEffect(() => {
@@ -116,7 +132,7 @@ export default function PdfPreview({
     return (
       <div className={`${className} pointer-events-none relative`} style={{ maxHeight, maxWidth }}>
         <Document
-          file={pdfUrl}
+          file={fileSource}
           onLoadSuccess={handleLoadSuccess}
           onLoadError={handleLoadError}
           loading={null}
@@ -219,7 +235,7 @@ export default function PdfPreview({
         style={{ maxHeight, maxWidth }}
       >
         <Document
-          file={pdfUrl}
+          file={fileSource}
           onLoadSuccess={handleLoadSuccess}
           onLoadError={handleLoadError}
           loading={

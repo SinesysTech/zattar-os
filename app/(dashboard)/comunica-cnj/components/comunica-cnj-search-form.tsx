@@ -262,10 +262,10 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4 border rounded-lg bg-card">
-      {/* Primeira linha: Tribunal, Parte, Texto */}
+      {/* Primeira linha: Tribunal, Parte, Texto - larguras iguais */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
-        {/* Tribunal - largura correspondente ao dropdown */}
-        <div className="space-y-1.5 lg:col-span-5">
+        {/* Tribunal */}
+        <div className="space-y-1.5 lg:col-span-4">
           <Label className="text-xs">Tribunal</Label>
           <Popover open={tribunalSearchOpen} onOpenChange={setTribunalSearchOpen}>
             <PopoverTrigger asChild>
@@ -344,7 +344,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
         </div>
 
         {/* Busca Textual */}
-        <div className="space-y-1.5 lg:col-span-3">
+        <div className="space-y-1.5 lg:col-span-4">
           <Label className="text-xs">Texto</Label>
           <Input {...register('texto')} placeholder="Busca textual" className="h-9 text-sm" />
         </div>
@@ -352,8 +352,8 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
 
       {/* Segunda linha: Processo, Advogado, Meio, Período + Botões */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
-        {/* Número do Processo - largura maior para não cortar */}
-        <div className="space-y-1.5 lg:col-span-3">
+        {/* Número do Processo */}
+        <div className="space-y-1.5 lg:col-span-4">
           <Label className="text-xs">Processo</Label>
           <Input
             {...register('numeroProcesso')}
@@ -444,7 +444,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
         </div>
 
         {/* Período */}
-        <div className="space-y-1.5 lg:col-span-3">
+        <div className="space-y-1.5 lg:col-span-2">
           <Label className="text-xs">Período</Label>
           <DateRangePicker
             value={dateRange}
