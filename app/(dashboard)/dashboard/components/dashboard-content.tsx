@@ -18,6 +18,9 @@ import {
   WidgetExpedientesUrgentes,
   WidgetProdutividadePerformance,
 } from './widgets';
+import { TarefasWidget } from './tarefas-widget';
+import { NotasWidget } from './notas-widget';
+import { LinksWidget } from './links-widget';
 
 // ============================================================================
 // Interfaces de Props

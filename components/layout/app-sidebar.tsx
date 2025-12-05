@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import {
+  Bell,
   Bot,
   Calendar,
   FileText,
@@ -145,6 +146,11 @@ const navAdministracao = [
       { title: "Credenciais", url: "/captura/credenciais" },
       { title: "Tribunais", url: "/captura/tribunais" },
     ],
+  },
+  {
+    name: "Comunica CNJ",
+    url: "/comunica-cnj",
+    icon: Bell,
   },
   {
     name: "Usuários",
