@@ -79,50 +79,64 @@ export interface ComunicacaoDestinatarioAdvogado {
 }
 
 /**
- * Item de comunicação retornado pela API CNJ
+ * Item de comunicação raw da API CNJ (formato original da API)
+ * Campos em snake_case/camelCase misturados como retornado pela API
  */
-export interface ComunicacaoItem {
-  // IDs e identificadores
+export interface ComunicacaoItemRaw {
   id: number;
   hash: string;
+  numero_processo: string;
+  numeroprocessocommascara?: string;
+  siglaTribunal: string;
+  nomeClasse?: string;
+  codigoClasse?: string;
+  tipoComunicacao?: string;
+  tipoDocumento?: string;
+  numeroComunicacao?: number;
+  texto?: string;
+  link?: string;
+  nomeOrgao?: string;
+  idOrgao?: number;
+  data_disponibilizacao: string;
+  datadisponibilizacao?: string;
+  meio: MeioComunicacao;
+  meiocompleto?: string;
+  ativo: boolean;
+  status?: string;
+  motivo_cancelamento?: string | null;
+  data_cancelamento?: string | null;
+  destinatarios?: ComunicacaoDestinatario[];
+  destinatarioadvogados?: ComunicacaoDestinatarioAdvogado[];
+}
 
-  // Dados do processo
+/**
+ * Item de comunicação normalizado (formato interno)
+ */
+export interface ComunicacaoItem {
+  id: number;
+  hash: string;
   numeroProcesso: string;
   numeroProcessoComMascara: string;
   siglaTribunal: string;
   nomeClasse: string;
   codigoClasse: string;
-
-  // Dados da comunicação
   tipoComunicacao: string;
   tipoDocumento: string;
   numeroComunicacao: number;
   texto: string;
   link: string;
-
-  // Dados do órgão
   nomeOrgao: string;
   idOrgao: number;
-
-  // Datas
-  dataDisponibilizacao: string; // yyyy-mm-dd
-  dataDisponibilizacaoFormatada: string; // dd/mm/yyyy
+  dataDisponibilizacao: string;
+  dataDisponibilizacaoFormatada: string;
   dataCancelamento?: string | null;
-
-  // Meio de comunicação
   meio: MeioComunicacao;
   meioCompleto: string;
-
-  // Status
   ativo: boolean;
-  status: string; // "P" (Publicado)
+  status: string;
   motivoCancelamento?: string | null;
-
-  // Arrays estruturados
   destinatarios: ComunicacaoDestinatario[];
   destinatarioAdvogados: ComunicacaoDestinatarioAdvogado[];
-
-  // Campos derivados (para facilitar exibição)
   partesAutoras?: string[];
   partesReus?: string[];
   advogados?: string[];
@@ -130,7 +144,17 @@ export interface ComunicacaoItem {
 }
 
 /**
- * Metadados de paginação da API
+ * Resposta raw da API de consulta (formato original)
+ */
+export interface ComunicacaoAPIResponseRaw {
+  status: string;
+  message: string;
+  count: number;
+  items: ComunicacaoItemRaw[];
+}
+
+/**
+ * Metadados de paginação da API (normalizado)
  */
 export interface ComunicacaoPaginationMetadata {
   pagina: number;
@@ -140,7 +164,7 @@ export interface ComunicacaoPaginationMetadata {
 }
 
 /**
- * Resposta da API de consulta
+ * Resposta da API de consulta (normalizado)
  */
 export interface ComunicacaoAPIResponse {
   comunicacoes: ComunicacaoItem[];
@@ -148,7 +172,26 @@ export interface ComunicacaoAPIResponse {
 }
 
 /**
- * Informações de tribunal retornadas pela API
+ * Instituição dentro da resposta de tribunais
+ */
+export interface TribunalInstituicao {
+  sigla: string;
+  nome: string;
+  dataUltimoEnvio?: string;
+  active?: boolean;
+}
+
+/**
+ * Estrutura de UF/Estado na resposta de tribunais
+ */
+export interface TribunalUFResponse {
+  uf: string;
+  nomeEstado: string;
+  instituicoes: TribunalInstituicao[];
+}
+
+/**
+ * Informações de tribunal normalizadas
  */
 export interface TribunalCNJInfo {
   id: string;
@@ -221,7 +264,7 @@ export interface ComunicaCNJ {
   meio_completo: string | null;
   texto: string | null;
   link: string | null;
-  data_disponibilizacao: string; // date
+  data_disponibilizacao: string;
   ativo: boolean;
   status: string | null;
   motivo_cancelamento: string | null;

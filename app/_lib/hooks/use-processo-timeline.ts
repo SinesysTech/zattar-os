@@ -7,6 +7,7 @@
  * 3. Acionar captura automática se necessário
  * 4. Polling durante a captura
  * 5. Gerenciar estados de loading e erro
+ * 6. Suporte a timeline unificada (multi-instância)
  */
 
 'use client';
@@ -14,17 +15,63 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Acervo } from '@/backend/types/acervo/types';
 import type { TimelineDocument } from '@/backend/types/mongodb/timeline';
+import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type { GrauProcesso } from '@/types/domain/common';
+
+/**
+ * Item da timeline com metadados de origem (para modo unificado)
+ */
+export interface TimelineItemUnificado extends TimelineItemEnriquecido {
+  grauOrigem?: GrauProcesso;
+  trtOrigem?: string;
+  instanciaId?: number;
+}
+
+/**
+ * Metadados da timeline unificada
+ */
+export interface TimelineUnificadaMetadata {
+  totalItens: number;
+  totalDocumentos: number;
+  totalMovimentos: number;
+  instancias: {
+    id: number;
+    grau: GrauProcesso;
+    trt: string;
+    totalItensOriginal: number;
+  }[];
+  duplicatasRemovidas: number;
+}
+
+/**
+ * Timeline com suporte a modo unificado
+ */
+export interface TimelineData {
+  timeline: TimelineItemUnificado[];
+  metadata?: TimelineUnificadaMetadata | TimelineDocument['metadata'];
+  unified: boolean;
+  // Campos do TimelineDocument para compatibilidade
+  processoId?: string;
+  trtCodigo?: string;
+  grau?: string;
+  capturadoEm?: Date;
+}
 
 interface ProcessoTimelineData {
   acervo: Acervo;
-  timeline: TimelineDocument | null;
+  timeline: TimelineData | null;
+}
+
+interface UseProcessoTimelineOptions {
+  /** Usar timeline unificada (agregar todas as instâncias) */
+  unified?: boolean;
 }
 
 interface UseProcessoTimelineReturn {
   /** Dados do processo */
   processo: Acervo | null;
   /** Timeline do processo (se existir) */
-  timeline: TimelineDocument | null;
+  timeline: TimelineData | null;
   /** Carregando dados iniciais */
   isLoading: boolean;
   /** Capturando timeline no PJE */
@@ -35,14 +82,21 @@ interface UseProcessoTimelineReturn {
   refetch: () => Promise<void>;
   /** Forçar recaptura da timeline (mesmo se já existir) */
   forceRecapture: () => Promise<void>;
+  /** Se está usando modo unificado */
+  isUnified: boolean;
 }
 
 const POLLING_INTERVAL = 5000; // 5 segundos
 const MAX_POLLING_ATTEMPTS = 120; // 10 minutos (120 * 5s)
 
-export function useProcessoTimeline(id: number): UseProcessoTimelineReturn {
+export function useProcessoTimeline(
+  id: number,
+  options: UseProcessoTimelineOptions = {}
+): UseProcessoTimelineReturn {
+  const { unified = true } = options; // Default: usar timeline unificada
+
   const [processo, setProcesso] = useState<Acervo | null>(null);
-  const [timeline, setTimeline] = useState<TimelineDocument | null>(null);
+  const [timeline, setTimeline] = useState<TimelineData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCapturing, setIsCapturing] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -55,7 +109,8 @@ export function useProcessoTimeline(id: number): UseProcessoTimelineReturn {
     try {
       setError(null);
 
-      const response = await fetch(`/api/acervo/${id}/timeline`);
+      const url = `/api/acervo/${id}/timeline${unified ? '?unified=true' : ''}`;
+      const response = await fetch(url);
       const result = await response.json();
 
       if (!response.ok) {
@@ -72,7 +127,7 @@ export function useProcessoTimeline(id: number): UseProcessoTimelineReturn {
       setError(errorObj);
       throw errorObj;
     }
-  }, [id]);
+  }, [id, unified]);
 
   /**
    * Acionar captura de timeline
@@ -248,5 +303,6 @@ export function useProcessoTimeline(id: number): UseProcessoTimelineReturn {
     error,
     refetch,
     forceRecapture,
+    isUnified: unified,
   };
 }

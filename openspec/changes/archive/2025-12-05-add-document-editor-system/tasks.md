@@ -118,7 +118,7 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
   - [x] Deletar `app/_lib/uploadthing.ts`
   - [x] Deletar `app/api/uploadthing/route.ts`
   - [x] Deletar `app/_lib/hooks/use-upload-file.ts`
-  - [ ] Remover dependência `uploadthing` do `package.json` (opcional, não bloqueia build)
+  - [x] Remover dependência `uploadthing` do `package.json`
 - [x] Criar `backend/documentos/services/upload/b2-upload.service.ts`
   - [x] Validação de tipo MIME (whitelist)
   - [x] Validação de tamanho (max 50MB)
@@ -404,10 +404,10 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
 - [x] Adicionar indicador de conexão no editor
   - [x] Ícone de WiFi (conectado/desconectado)
   - [x] Tooltip com status
-- [ ] Implementar sincronização avançada de conteúdo (futuro)
-  - [ ] Operational Transformation (OT) ou CRDT
-  - [ ] Resolver conflitos automaticamente
-  - [ ] Integração profunda com Plate.js yjs plugin
+- [x] Implementar sincronização avançada de conteúdo via CRDT
+  - [x] CRDT via Yjs (`lib/yjs/supabase-yjs-provider.ts`)
+  - [x] Resolver conflitos automaticamente (merge conflict-free)
+  - [x] Integração com Plate.js YjsPlugin (`components/plate/collaborative-plate-editor.tsx`)
 
 ### Chat Interno (8-10h)
 - [x] Criar tabelas `salas_chat` e `mensagens_chat` (já na migration)
@@ -439,7 +439,7 @@ _Nota: Lógica de negócio implementada diretamente nas API routes (validações
 - [x] Criar componente `components/chat/chat-interface.tsx`
   - [x] Interface de chat reutilizável
   - [x] Polling para atualizações
-  - [ ] Indicador de "usuário está digitando" (futuro)
+  - [x] Indicador de "usuário está digitando" (`hooks/use-realtime-chat.tsx`, `components/chat/chat-room.tsx`)
 
 ---
 
