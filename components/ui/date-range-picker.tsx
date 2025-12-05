@@ -1,9 +1,11 @@
 'use client'
 
 import * as React from 'react'
+import { CalendarIcon } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
+import { cn } from '@/lib/utils'
 
 type Range = { from?: Date; to?: Date } | undefined
 
@@ -12,6 +14,7 @@ interface DateRangePickerProps {
   onChange?: (range: Range) => void
   placeholder?: string
   allowSingle?: boolean
+  className?: string
 }
 
 interface DateRange {
@@ -19,13 +22,21 @@ interface DateRange {
   to?: Date
 }
 
-export function DateRangePicker({ value, onChange, placeholder, allowSingle = true }: DateRangePickerProps) {
+export function DateRangePicker({ value, onChange, placeholder, allowSingle = true, className }: DateRangePickerProps) {
   const [open, setOpen] = React.useState(false)
   const [selected, setSelected] = React.useState<Range>(value)
+  const triggerRef = React.useRef<HTMLButtonElement>(null)
+  const [popoverWidth, setPopoverWidth] = React.useState<number>(0)
 
   React.useEffect(() => {
     setSelected(value)
   }, [value])
+
+  React.useEffect(() => {
+    if (triggerRef.current) {
+      setPopoverWidth(triggerRef.current.offsetWidth)
+    }
+  }, [open])
 
   const handleSelect = (range: Range) => {
     let next = range
@@ -45,14 +56,33 @@ export function DateRangePicker({ value, onChange, placeholder, allowSingle = tr
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="justify-start w-[220px]" onClick={() => setOpen(true)}>
+        <Button
+          ref={triggerRef}
+          variant="outline"
+          className={cn(
+            "justify-start w-full h-9 text-sm font-normal",
+            !selected?.from && "text-muted-foreground",
+            className
+          )}
+          onClick={() => setOpen(true)}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
           {label}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="p-0">
-        <Calendar selected={selected as DateRange} onSelect={handleSelect} mode="range" initialFocus />
+      <PopoverContent
+        align="start"
+        className="w-auto p-0"
+        style={{ minWidth: popoverWidth > 0 ? popoverWidth : 'auto' }}
+      >
+        <Calendar
+          selected={selected as DateRange}
+          onSelect={handleSelect}
+          mode="range"
+          initialFocus
+          numberOfMonths={2}
+        />
       </PopoverContent>
     </Popover>
   )
 }
-
