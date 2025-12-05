@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -142,18 +142,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>();
   const [selectedMeio, setSelectedMeio] = useState<string>('');
 
-  // Refs para medir largura dos triggers
-  const tribunalTriggerRef = useRef<HTMLButtonElement>(null);
-  const [tribunalPopoverWidth, setTribunalPopoverWidth] = useState<number>(0);
-
   const { advogados, isLoading: loadingAdvogados } = useAdvogados();
-
-  // Atualizar largura do popover quando o trigger muda
-  useEffect(() => {
-    if (tribunalTriggerRef.current) {
-      setTribunalPopoverWidth(tribunalTriggerRef.current.offsetWidth);
-    }
-  }, [tribunalSearchOpen]);
 
   const {
     register,
@@ -272,15 +261,15 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 p-4 border rounded-lg bg-card">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-        {/* Tribunal - coluna dupla em telas grandes */}
-        <div className="space-y-1.5 sm:col-span-2 xl:col-span-2">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4 border rounded-lg bg-card">
+      {/* Primeira linha: Tribunal, Parte, Texto */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
+        {/* Tribunal - largura correspondente ao dropdown */}
+        <div className="space-y-1.5 lg:col-span-5">
           <Label className="text-xs">Tribunal</Label>
           <Popover open={tribunalSearchOpen} onOpenChange={setTribunalSearchOpen}>
             <PopoverTrigger asChild>
               <Button
-                ref={tribunalTriggerRef}
                 variant="outline"
                 role="combobox"
                 aria-expanded={tribunalSearchOpen}
@@ -297,15 +286,14 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                     {selectedTribunalData.sigla} - {selectedTribunalData.nome}
                   </span>
                 ) : (
-                  <span className="text-muted-foreground">Selecione</span>
+                  <span className="text-muted-foreground">Selecione o tribunal</span>
                 )}
                 <ChevronDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent
-              className="p-0"
+              className="p-0 w-[480px]"
               align="start"
-              style={{ width: tribunalPopoverWidth > 0 ? tribunalPopoverWidth : 'auto' }}
             >
               <Command>
                 <CommandInput
@@ -349,18 +337,33 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
           </Popover>
         </div>
 
-        {/* Número do Processo */}
-        <div className="space-y-1.5">
+        {/* Nome da Parte */}
+        <div className="space-y-1.5 lg:col-span-4">
+          <Label className="text-xs">Parte</Label>
+          <Input {...register('nomeParte')} placeholder="Nome da parte" className="h-9 text-sm" />
+        </div>
+
+        {/* Busca Textual */}
+        <div className="space-y-1.5 lg:col-span-3">
+          <Label className="text-xs">Texto</Label>
+          <Input {...register('texto')} placeholder="Busca textual" className="h-9 text-sm" />
+        </div>
+      </div>
+
+      {/* Segunda linha: Processo, Advogado, Meio, Período + Botões */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
+        {/* Número do Processo - largura maior para não cortar */}
+        <div className="space-y-1.5 lg:col-span-3">
           <Label className="text-xs">Processo</Label>
           <Input
             {...register('numeroProcesso')}
             placeholder="0000000-00.0000.0.00.0000"
-            className="h-9 text-sm"
+            className="h-9 text-sm font-mono"
           />
         </div>
 
         {/* Advogado (OAB) */}
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 lg:col-span-2">
           <Label className="text-xs">Advogado</Label>
           <Popover open={advogadoSearchOpen} onOpenChange={setAdvogadoSearchOpen}>
             <PopoverTrigger asChild>
@@ -422,20 +425,26 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
           </Popover>
         </div>
 
-        {/* Nome da Parte */}
-        <div className="space-y-1.5">
-          <Label className="text-xs">Parte</Label>
-          <Input {...register('nomeParte')} placeholder="Nome" className="h-9 text-sm" />
-        </div>
-
-        {/* Busca Textual */}
-        <div className="space-y-1.5">
-          <Label className="text-xs">Texto</Label>
-          <Input {...register('texto')} placeholder="Busca" className="h-9 text-sm" />
+        {/* Meio - largura fixa para alinhar com dropdown */}
+        <div className="space-y-1.5 lg:col-span-2">
+          <Label className="text-xs">Meio</Label>
+          <Select
+            value={selectedMeio}
+            onValueChange={setSelectedMeio}
+          >
+            <SelectTrigger className="h-9 text-sm w-full">
+              <SelectValue placeholder="Todos" />
+            </SelectTrigger>
+            <SelectContent className="min-w-[160px]">
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="E">Edital</SelectItem>
+              <SelectItem value="D">Diário Eletrônico</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Período */}
-        <div className="space-y-1.5 sm:col-span-2 lg:col-span-2">
+        <div className="space-y-1.5 lg:col-span-3">
           <Label className="text-xs">Período</Label>
           <DateRangePicker
             value={dateRange}
@@ -444,45 +453,27 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
           />
         </div>
 
-        {/* Meio */}
-        <div className="space-y-1.5">
-          <Label className="text-xs">Meio</Label>
-          <Select
-            value={selectedMeio}
-            onValueChange={setSelectedMeio}
-          >
-            <SelectTrigger className="h-9 text-sm">
-              <SelectValue placeholder="Todos" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="E">Edital</SelectItem>
-              <SelectItem value="D">Diário Eletrônico</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Botões - responsivo */}
-        <div className="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col justify-end">
-          <Label className="text-xs invisible hidden sm:block">Ações</Label>
-          <div className="flex gap-2 mt-1.5 sm:mt-0">
-            <Button type="submit" disabled={isLoading} className="h-9 flex-1 sm:flex-none">
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
-                  Buscando...
-                </>
-              ) : (
-                <>
-                  <Search className="mr-1.5 h-3 w-3" />
-                  Buscar
-                </>
-              )}
-            </Button>
-            <Button type="button" variant="outline" onClick={handleReset} className="h-9 flex-1 sm:flex-none">
-              <RotateCcw className="mr-1.5 h-3 w-3" />
-              Limpar
-            </Button>
+        {/* Botões - alinhados à direita */}
+        <div className="space-y-1.5 lg:col-span-2">
+          <Label className="text-xs invisible">Ações</Label>
+          <div className="flex gap-2 justify-end">
+          <Button type="submit" disabled={isLoading} className="h-9">
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
+                Buscando...
+              </>
+            ) : (
+              <>
+                <Search className="mr-1.5 h-3 w-3" />
+                Buscar
+              </>
+            )}
+          </Button>
+          <Button type="button" variant="outline" onClick={handleReset} className="h-9">
+            <RotateCcw className="mr-1.5 h-3 w-3" />
+            Limpar
+          </Button>
           </div>
         </div>
       </div>

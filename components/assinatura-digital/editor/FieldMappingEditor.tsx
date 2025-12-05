@@ -339,7 +339,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
       setSelectedField(null);
       setHasUnsavedChanges(false);
 
-      // Salvar URL do template original
+      // Usar endpoint de preview que faz proxy do PDF (evita CORS com Backblaze B2)
       const originalUrl = `/api/assinatura-digital/templates/${template.id}/preview`;
       setTemplatePdfUrl(originalUrl);
       setPdfUrl(originalUrl);
@@ -1615,7 +1615,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
         const newTemplate = updates as Template;
         setCreatedTemplate(newTemplate);
 
-        // Atualizar URL do PDF para usar a API
+        // Usar endpoint de preview que faz proxy do PDF (evita CORS com Backblaze B2)
         setPdfUrl(`/api/assinatura-digital/templates/${newTemplate.id}/preview`);
         setPreviewKey((prev) => prev + 1);
 
@@ -1721,7 +1721,8 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
         changed: oldArquivoOriginal !== template.arquivo_original,
       });
 
-      // Agora sim, forçar reload do preview PDF
+      // Usar endpoint de preview que faz proxy do PDF (evita CORS com Backblaze B2)
+      // Adicionar timestamp para forçar cache-bust
       const newPdfUrl = `/api/assinatura-digital/templates/${templateId}/preview?t=${Date.now()}`;
       console.log('[REPLACE_PDF_SUCCESS] Atualizando preview URL:', newPdfUrl);
 
@@ -1815,7 +1816,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
       const newTemplate = result.data;
       setCreatedTemplate(newTemplate);
 
-      // Atualizar URL do PDF para usar a API
+      // Usar endpoint de preview que faz proxy do PDF (evita CORS com Backblaze B2)
       setPdfUrl(`/api/assinatura-digital/templates/${newTemplate.id}/preview`);
       setPreviewKey((prev) => prev + 1);
 
