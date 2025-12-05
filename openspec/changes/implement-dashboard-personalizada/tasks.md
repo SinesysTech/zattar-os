@@ -97,19 +97,22 @@
   - LinksWidget integrado no DashboardContent ✓
   - Seção "Área Pessoal" adicionada para usuários e admins
 
-## Fase 5: Personalização (Futuro)
+## Fase 5: Personalização
 
-- [ ] **5.1** Implementar drag-and-drop para reordenar widgets
-  - Usar @dnd-kit (já instalado)
-  - Integrar com useDashboardStore existente
+- [x] **5.1** Implementar drag-and-drop para reordenar widgets
+  - Componente `SortablePersonalWidgets` com @dnd-kit/sortable ✓
+  - Sensores de pointer e keyboard ✓
+  - DragOverlay para feedback visual ✓
 
-- [ ] **5.2** Implementar persistência de layout
-  - Salvar ordem dos widgets em `layouts_painel`
-  - Carregar preferências ao iniciar
+- [x] **5.2** Implementar persistência de layout
+  - Salvar ordem no localStorage ✓
+  - Carregar preferências ao iniciar ✓
+  - Restaurar padrão disponível ✓
 
-- [ ] **5.3** Implementar show/hide de widgets
-  - Permitir usuário ocultar widgets
-  - Menu para reativar widgets ocultos
+- [x] **5.3** Implementar show/hide de widgets
+  - Menu dropdown de configuração ✓
+  - Toggle de visibilidade por widget ✓
+  - Indicador de widgets ocultos ✓
 
 ## Fase 6: Testes e Refinamentos
 
@@ -135,7 +138,7 @@
 
 ## Status Atual
 
-**Fases 1-4 e 6.4 concluídas**: Dashboard funcional com dados reais da API.
+**Fases 1-5 e 6.4 concluídas**: Dashboard personalizada completa com drag-and-drop.
 
 **Implementado**:
 - Backend completo (tipos, persistência, serviços, API)
@@ -146,7 +149,9 @@
 - Documentação Swagger completa ✓
 - Sandbox removido ✓
 - Widgets pessoais integrados (Tarefas, Notas, Links) ✓
+- Drag-and-drop para reordenar widgets (Fase 5) ✓
+- Persistência de layout no localStorage ✓
+- Show/hide de widgets com menu ✓
 
 **Pendente** (opcional/futuro):
-- Personalização drag-and-drop (Fase 5)
 - Testes de responsividade, performance e acessibilidade (6.1-6.3)

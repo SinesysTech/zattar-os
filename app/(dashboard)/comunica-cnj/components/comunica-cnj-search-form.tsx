@@ -28,7 +28,7 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
-import { Check, ChevronDown, Loader2, Search, X, RotateCcw } from 'lucide-react';
+import { Check, ChevronDown, Loader2, Search, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
 import type { MeioComunicacao } from '@/backend/comunica-cnj/types/types';
@@ -84,7 +84,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
   const [tribunalSearchOpen, setTribunalSearchOpen] = useState(false);
   const [tribunalSearchTerm, setTribunalSearchTerm] = useState('');
   const [advogadoSearchOpen, setAdvogadoSearchOpen] = useState(false);
-  const [selectedAdvogadoId, setSelectedAdvogadoId] = useState<string | null>(null);
+  const [selectedAdvogadoId, setSelectedAdvogadoId] = useState<number | null>(null);
 
   const { advogados, isLoading: loadingAdvogados } = useAdvogados();
 
@@ -112,8 +112,15 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
       try {
         const response = await fetch('/api/comunica-cnj/tribunais');
         const data = await response.json();
-        if (data.success) {
-          setTribunais(data.data || []);
+        if (data.success && data.data?.tribunais) {
+          // Deduplicar tribunais por sigla
+          const uniqueTribunais = data.data.tribunais.reduce((acc: TribunalCNJ[], tribunal: TribunalCNJ) => {
+            if (!acc.find(t => t.sigla === tribunal.sigla)) {
+              acc.push(tribunal);
+            }
+            return acc;
+          }, []);
+          setTribunais(uniqueTribunais);
         }
       } catch (error) {
         console.error('Erro ao carregar tribunais:', error);
@@ -141,28 +148,13 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
   // Encontrar advogado selecionado
   const selectedAdvogado = advogados?.find((a) => a.id === selectedAdvogadoId);
 
-  // Formatar data para YYYY-MM-DD
-  const formatDateToYYYYMMDD = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
-  // Parse data de YYYY-MM-DD para Date
-  const parseYYYYMMDD = (dateStr: string): Date | undefined => {
-    if (!dateStr) return undefined;
-    const [year, month, day] = dateStr.split('-').map(Number);
-    return new Date(year, month - 1, day);
-  };
-
   const onSubmit = async (data: SearchFormData) => {
     await onSearch({
       ...data,
       // Adicionar OAB do advogado selecionado
       ...(selectedAdvogado && {
-        numeroOab: selectedAdvogado.oab_numero,
-        ufOab: selectedAdvogado.oab_uf,
+        numeroOab: selectedAdvogado.oab,
+        ufOab: selectedAdvogado.uf_oab,
       }),
     });
   };
@@ -269,7 +261,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                   </span>
                 ) : selectedAdvogado ? (
                   <span className="truncate">
-                    {selectedAdvogado.nome} - OAB {selectedAdvogado.oab_numero}/{selectedAdvogado.oab_uf}
+                    {selectedAdvogado.nome_completo} - OAB {selectedAdvogado.oab}/{selectedAdvogado.uf_oab}
                   </span>
                 ) : (
                   'Selecione um advogado'
@@ -286,7 +278,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                     {advogados?.map((advogado) => (
                       <CommandItem
                         key={advogado.id}
-                        value={`${advogado.nome} ${advogado.oab_numero} ${advogado.oab_uf}`}
+                        value={`${advogado.nome_completo} ${advogado.oab} ${advogado.uf_oab}`}
                         onSelect={() => {
                           setSelectedAdvogadoId(advogado.id);
                           setAdvogadoSearchOpen(false);
@@ -299,9 +291,9 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                           )}
                         />
                         <div className="flex flex-col">
-                          <span className="font-medium">{advogado.nome}</span>
+                          <span className="font-medium">{advogado.nome_completo}</span>
                           <span className="text-sm text-muted-foreground">
-                            OAB {advogado.oab_numero}/{advogado.oab_uf}
+                            OAB {advogado.oab}/{advogado.uf_oab}
                           </span>
                         </div>
                       </CommandItem>
@@ -329,9 +321,9 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
         <div className="space-y-2">
           <Label>Data Início</Label>
           <FormDatePicker
-            value={dataInicio ? parseYYYYMMDD(dataInicio) : undefined}
-            onChange={(date) => {
-              setValue('dataInicio', date ? formatDateToYYYYMMDD(date) : undefined);
+            value={dataInicio}
+            onChange={(value) => {
+              setValue('dataInicio', value);
             }}
             placeholder="Selecione a data"
           />
@@ -341,9 +333,9 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
         <div className="space-y-2">
           <Label>Data Fim</Label>
           <FormDatePicker
-            value={dataFim ? parseYYYYMMDD(dataFim) : undefined}
-            onChange={(date) => {
-              setValue('dataFim', date ? formatDateToYYYYMMDD(date) : undefined);
+            value={dataFim}
+            onChange={(value) => {
+              setValue('dataFim', value);
             }}
             placeholder="Selecione a data"
           />
