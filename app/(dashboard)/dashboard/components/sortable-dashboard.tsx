@@ -27,7 +27,6 @@ import {
   EyeOff,
   RotateCcw,
   Maximize2,
-  RectangleHorizontal,
   Square,
   Columns2,
   Columns3,
@@ -86,14 +85,6 @@ interface DashboardWidget {
   section: 'status' | 'detail' | 'personal';
   size: WidgetSize;
 }
-
-// Mapeamento de tamanhos para classes CSS do grid
-const SIZE_CLASSES: Record<WidgetSize, string> = {
-  small: 'col-span-1', // 1/4 em desktop
-  medium: 'col-span-2', // 2/4 em desktop
-  large: 'col-span-3', // 3/4 em desktop
-  full: 'col-span-4', // Full width
-};
 
 // Labels para o menu de tamanhos
 const SIZE_LABELS: Record<WidgetSize, string> = {
@@ -257,6 +248,7 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
 
   // Carregar ordem salva
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- necessário para hydration guard
     setMounted(true);
     const saved = localStorage.getItem(USER_STORAGE_KEY);
     if (saved) {
@@ -469,6 +461,7 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
   ).length;
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- necessário para hydration guard
     setMounted(true);
     const saved = localStorage.getItem(ADMIN_STORAGE_KEY);
     if (saved) {

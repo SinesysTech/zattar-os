@@ -39,7 +39,6 @@ import {
   Search,
   FileStack,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/app/_lib/hooks/use-mobile';
 import Link from 'next/link';
 import type { ComunicaCNJ, ComunicacaoItem } from '@/backend/comunica-cnj/types/types';
@@ -51,7 +50,7 @@ export function ComunicaCNJCapturadas() {
   const isMobile = useIsMobile();
   const [comunicacoes, setComunicacoes] = useState<ComunicaCNJ[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const [tribunalFilter, setTribunalFilter] = useState<string>('all');
   const [vinculacaoFilter, setVinculacaoFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -80,7 +79,7 @@ export function ComunicaCNJCapturadas() {
 
       const data = await response.json();
       setComunicacoes(data.data || []);
-    } catch (err) {
+    } catch {
       // Se o endpoint não existir, apenas mostrar estado vazio
       console.warn('Endpoint /api/comunica-cnj/capturadas ainda não implementado');
       setComunicacoes([]);

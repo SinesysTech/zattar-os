@@ -12,8 +12,16 @@ import {
 } from '@/hooks/use-realtime-chat'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Send, Paperclip, X, Mic } from 'lucide-react'
+import { Send, Paperclip, X } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+
+interface FileAttachment {
+  name: string
+  url: string
+  type: string
+  size?: number
+  [key: string]: unknown
+}
 
 interface RealtimeChatProps {
   roomName: string
@@ -56,8 +64,8 @@ export const RealtimeChat = ({
   })
   const [newMessage, setNewMessage] = useState('')
   const [showFileUpload, setShowFileUpload] = useState(false)
-  const [attachedFiles, setAttachedFiles] = useState<any[]>([])
-  const [audioFiles, setAudioFiles] = useState<any[]>([])
+  const [attachedFiles, setAttachedFiles] = useState<FileAttachment[]>([])
+  const [audioFiles, setAudioFiles] = useState<FileAttachment[]>([])
 
   // Merge realtime messages with initial messages
   const allMessages = useMemo(() => {
@@ -120,18 +128,18 @@ export const RealtimeChat = ({
   )
 
   // Handler para quando arquivos são carregados
-  const handleFileUploaded = useCallback((fileInfo: any) => {
+  const handleFileUploaded = useCallback((fileInfo: FileAttachment) => {
     setAttachedFiles(prev => [...prev, fileInfo])
   }, [])
 
   // Handler para quando áudio é gravado (botão separado)
-  const handleAudioRecorded = useCallback((audioInfo: any) => {
+  const handleAudioRecorded = useCallback((audioInfo: FileAttachment) => {
     // Adicionar arquivo de áudio à lista separada
     setAudioFiles(prev => [...prev, audioInfo])
   }, [])
 
   // Handler para quando áudio está pronto para envio (aparece no input)
-  const handleAudioReady = useCallback((audioFile: any) => {
+  const handleAudioReady = useCallback((audioFile: FileAttachment) => {
     // O áudio já foi processado e adicionado pelo handleAudioRecorded
     // Aqui podemos adicionar lógica adicional se necessário
     console.log('Áudio pronto para envio:', audioFile)

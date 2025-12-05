@@ -85,6 +85,8 @@ export function RichTextEditor({ value, onChange, formularios }: RichTextEditorP
       const template = generateTemplateString(json);
       onChange({ json, template });
     },
+    // Evitar hydration mismatch em SSR/Next.js
+    immediatelyRender: false,
   });
 
   // Sync editor content when value prop changes

@@ -2,6 +2,24 @@
  * Utilitários para formatação e manipulação de mensagens do chat
  */
 
+interface ChatMessageUser {
+  name: string;
+  [key: string]: unknown;
+}
+
+interface ChatMessageLike {
+  user: ChatMessageUser;
+  createdAt: string;
+  [key: string]: unknown;
+}
+
+interface ChatAttachment {
+  name: string;
+  url: string;
+  type: string;
+  [key: string]: unknown;
+}
+
 /**
  * Formata timestamp para exibição conforme especificação
  * - Conversas privadas: "HH:mm - DD/MM/AAAA"
@@ -70,8 +88,8 @@ export function shouldShowMessageHeader(tipoChat: 'privado' | 'grupo' | 'geral' 
  * (mesmo usuário e tempo muito próximo)
  */
 export function shouldGroupWithPrevious(
-  currentMessage: any,
-  previousMessage: any,
+  currentMessage: ChatMessageLike,
+  previousMessage: ChatMessageLike | null,
   tipoChat: 'privado' | 'grupo' | 'geral' | 'documento'
 ): boolean {
   if (!previousMessage) return false;
@@ -99,7 +117,7 @@ export function shouldGroupWithPrevious(
 export function parseMessageContent(content: string): {
   textContent: string;
   hasAttachments: boolean;
-  attachments?: any[];
+  attachments?: ChatAttachment[];
 } {
   try {
     // Procurar por anexos no formato [FILES_START]...[/FILES_END]

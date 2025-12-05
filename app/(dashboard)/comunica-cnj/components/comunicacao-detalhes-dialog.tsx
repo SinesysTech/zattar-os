@@ -18,7 +18,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
 import { FileText, ExternalLink } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/app/_lib/hooks/use-mobile';
 import type { ComunicacaoItem } from '@/backend/comunica-cnj/types/types';
 
@@ -44,7 +43,7 @@ export function ComunicacaoDetalhesDialog({
   if (!comunicacao) return null;
 
   // Conteúdo compartilhado entre Dialog e Sheet
-  const Content = () => (
+  const renderContent = () => (
     <div className="space-y-6">
       {/* Processo */}
       <div>
@@ -201,7 +200,7 @@ export function ComunicacaoDetalhesDialog({
               Informações completas sobre a comunicação processual
             </SheetDescription>
           </SheetHeader>
-          <Content />
+          {renderContent()}
         </SheetContent>
       </Sheet>
     );
@@ -217,7 +216,7 @@ export function ComunicacaoDetalhesDialog({
             Informações completas sobre a comunicação processual
           </DialogDescription>
         </DialogHeader>
-        <Content />
+        {renderContent()}
       </DialogContent>
     </Dialog>
   );
