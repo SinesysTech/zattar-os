@@ -247,6 +247,77 @@ async function processarComunicacao(
 // =============================================================================
 
 /**
+ * Busca data de autuação real do processo na tabela acervo
+ *
+ * @param numeroProcesso - Número do processo normalizado
+ * @param siglaTribunal - Sigla do tribunal (TRT3, TRT19, etc.)
+ * @param grau - Grau do tribunal
+ * @returns Data de autuação e ID do processo, ou null se não encontrado
+ */
+async function buscarDataAutuacaoDoAcervo(
+  numeroProcesso: string,
+  siglaTribunal: string,
+  grau: GrauTribunal
+): Promise<{ dataAutuacao: string; processoId: number } | null> {
+  const supabase = createServiceClient();
+
+  // Primeiro tenta buscar pelo grau exato
+  const { data: processoGrauExato } = await supabase
+    .from('acervo')
+    .select('id, data_autuacao')
+    .eq('numero_processo', numeroProcesso)
+    .eq('trt', siglaTribunal)
+    .eq('grau', grau)
+    .limit(1)
+    .single();
+
+  if (processoGrauExato?.data_autuacao) {
+    return {
+      dataAutuacao: processoGrauExato.data_autuacao,
+      processoId: processoGrauExato.id,
+    };
+  }
+
+  // Se não encontrou, tenta buscar pelo primeiro grau (data de autuação original)
+  if (grau !== 'primeiro_grau') {
+    const { data: processoPrimeiroGrau } = await supabase
+      .from('acervo')
+      .select('id, data_autuacao')
+      .eq('numero_processo', numeroProcesso)
+      .eq('trt', siglaTribunal)
+      .eq('grau', 'primeiro_grau')
+      .limit(1)
+      .single();
+
+    if (processoPrimeiroGrau?.data_autuacao) {
+      return {
+        dataAutuacao: processoPrimeiroGrau.data_autuacao,
+        processoId: processoPrimeiroGrau.id,
+      };
+    }
+  }
+
+  // Última tentativa: qualquer registro desse processo nesse tribunal
+  const { data: processoQualquer } = await supabase
+    .from('acervo')
+    .select('id, data_autuacao')
+    .eq('numero_processo', numeroProcesso)
+    .eq('trt', siglaTribunal)
+    .order('data_autuacao', { ascending: true })
+    .limit(1)
+    .single();
+
+  if (processoQualquer?.data_autuacao) {
+    return {
+      dataAutuacao: processoQualquer.data_autuacao,
+      processoId: processoQualquer.id,
+    };
+  }
+
+  return null;
+}
+
+/**
  * Cria expediente a partir de comunicação CNJ
  *
  * @param comunicacao - Comunicação da API
@@ -264,6 +335,13 @@ async function criarExpedienteFromComunicacao(
   const nomeParteRe = obterNomeParteRe(comunicacao.destinatarios);
   const { qtdePoloAtivo, qtdePoloPassivo } = contarPartes(comunicacao.destinatarios);
 
+  // Busca data de autuação real do acervo
+  const dadosAcervo = await buscarDataAutuacaoDoAcervo(
+    numeroProcesso,
+    comunicacao.siglaTribunal,
+    grau
+  );
+
   // Gera id_pje único negativo para expedientes criados via CNJ
   // Usamos timestamp negativo para garantir unicidade
   const idPje = -Date.now();
@@ -271,7 +349,7 @@ async function criarExpedienteFromComunicacao(
   const expedienteData = {
     id_pje: idPje,
     advogado_id: null,
-    processo_id: null, // Será vinculado depois se existir no acervo
+    processo_id: dadosAcervo?.processoId ?? null, // Vincula ao processo se encontrado no acervo
     trt: comunicacao.siglaTribunal,
     grau,
     numero_processo: numeroProcesso,
@@ -285,7 +363,7 @@ async function criarExpedienteFromComunicacao(
     qtde_parte_autora: qtdePoloAtivo,
     nome_parte_re: nomeParteRe,
     qtde_parte_re: qtdePoloPassivo,
-    data_autuacao: null,
+    data_autuacao: dadosAcervo?.dataAutuacao ?? null, // Data real do acervo ou null
     juizo_digital: false,
     data_arquivamento: null,
     id_documento: null,
@@ -323,6 +401,8 @@ async function criarExpedienteFromComunicacao(
     id: data.id,
     numeroProcesso,
     trt: comunicacao.siglaTribunal,
+    dataAutuacao: dadosAcervo?.dataAutuacao ?? 'não encontrada no acervo',
+    processoVinculado: dadosAcervo?.processoId ?? 'não vinculado',
   });
 
   return data.id;

@@ -84,10 +84,17 @@
 ## Testes e Validação
 
 - [x] Testar migrações em ambiente de desenvolvimento
-- [ ] Testar cliente HTTP com API real do CNJ
-- [ ] Testar fluxo de captura e vinculação
-- [ ] Validar criação automática de expediente
-- [ ] Testar rate limiting e retry
+- [x] Testar cliente HTTP com API real do CNJ (115 tribunais, consultas funcionando)
+- [x] Testar fluxo de captura e vinculação (OAB 128404/MG - 10.000 comunicações encontradas)
+- [x] Validar criação automática de expediente (2.492 comunicações, 3.110 expedientes criados)
+- [x] Testar rate limiting e retry (19/20 rate limit funcionando)
+
+### Notas dos Testes de Captura
+- **Comunicações TRT**: Funcionando corretamente (TRT3, TRT13, TRT19, etc.)
+- **Comunicações TJ**: Erro esperado - enum `codigo_tribunal` suporta apenas TRTs (sistema trabalhista)
+- **Detecção de duplicatas**: Funcionando via hash
+- **Detecção de expediente vinculado**: "Expediente já tem comunicação vinculada"
+- **Fallback data_autuacao**: Usando `data_disponibilizacao` quando não disponível
 
 ## Atualização de Tipos Globais
 

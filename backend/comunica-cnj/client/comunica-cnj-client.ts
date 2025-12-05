@@ -10,10 +10,14 @@ import type {
   CadernoMetadataAPI,
   ComunicacaoAPIParams,
   ComunicacaoAPIResponse,
+  ComunicacaoAPIResponseRaw,
+  ComunicacaoItem,
+  ComunicacaoItemRaw,
   ComunicaCNJClientConfig,
   MeioComunicacao,
   RateLimitStatus,
   TribunalCNJInfo,
+  TribunalUFResponse,
 } from '../types/types';
 
 // =============================================================================
@@ -43,6 +47,81 @@ function sanitizeError(error: unknown): string {
     return error;
   }
   return 'Erro desconhecido';
+}
+
+/**
+ * Normaliza item de comunicação raw para formato interno
+ */
+function normalizeItemComunicacao(raw: ComunicacaoItemRaw): ComunicacaoItem {
+  return {
+    id: raw.id,
+    hash: raw.hash,
+    numeroProcesso: raw.numero_processo,
+    numeroProcessoComMascara: raw.numeroprocessocommascara || raw.numero_processo,
+    siglaTribunal: raw.siglaTribunal,
+    nomeClasse: raw.nomeClasse || '',
+    codigoClasse: raw.codigoClasse || '',
+    tipoComunicacao: raw.tipoComunicacao || '',
+    tipoDocumento: raw.tipoDocumento || '',
+    numeroComunicacao: raw.numeroComunicacao || 0,
+    texto: raw.texto || '',
+    link: raw.link || '',
+    nomeOrgao: raw.nomeOrgao || '',
+    idOrgao: raw.idOrgao || 0,
+    dataDisponibilizacao: raw.data_disponibilizacao,
+    dataDisponibilizacaoFormatada: raw.datadisponibilizacao || raw.data_disponibilizacao,
+    dataCancelamento: raw.data_cancelamento,
+    meio: raw.meio,
+    meioCompleto: raw.meiocompleto || (raw.meio === 'D' ? 'Diário Eletrônico' : 'Edital'),
+    ativo: raw.ativo,
+    status: raw.status || 'P',
+    motivoCancelamento: raw.motivo_cancelamento,
+    destinatarios: raw.destinatarios || [],
+    destinatarioAdvogados: raw.destinatarioadvogados || [],
+  };
+}
+
+/**
+ * Normaliza resposta raw da API para formato interno
+ */
+function normalizeAPIResponse(
+  raw: ComunicacaoAPIResponseRaw,
+  pagina: number,
+  itensPorPagina: number
+): ComunicacaoAPIResponse {
+  const total = raw.count;
+  const totalPaginas = Math.ceil(total / itensPorPagina);
+
+  return {
+    comunicacoes: raw.items.map(normalizeItemComunicacao),
+    paginacao: {
+      pagina,
+      itensPorPagina,
+      total,
+      totalPaginas,
+    },
+  };
+}
+
+/**
+ * Flatten tribunais response - API returns nested structure by UF
+ */
+function flattenTribunais(data: TribunalUFResponse[]): TribunalCNJInfo[] {
+  const tribunais: TribunalCNJInfo[] = [];
+
+  for (const uf of data) {
+    for (const inst of uf.instituicoes) {
+      tribunais.push({
+        id: inst.sigla,
+        sigla: inst.sigla,
+        nome: inst.nome,
+        jurisdicao: uf.nomeEstado,
+        ultimaAtualizacao: inst.dataUltimoEnvio,
+      });
+    }
+  }
+
+  return tribunais;
 }
 
 // =============================================================================
@@ -102,21 +181,27 @@ export class ComunicaCNJClient {
         params: sanitizedParams,
       });
 
-      const response = await this.client.get<ComunicacaoAPIResponse>(
+      // API returns raw format: { status, message, count, items }
+      const response = await this.client.get<ComunicacaoAPIResponseRaw>(
         '/api/v1/comunicacao',
         { params: sanitizedParams }
       );
 
       this.updateRateLimitState(response.headers);
 
+      // Normalize to internal format
+      const pagina = params.pagina || 1;
+      const itensPorPagina = params.itensPorPagina || 100;
+      const normalized = normalizeAPIResponse(response.data, pagina, itensPorPagina);
+
       console.log('[ComunicaCNJClient] Resposta recebida:', {
-        total: response.data.paginacao.total,
-        pagina: response.data.paginacao.pagina,
-        comunicacoes: response.data.comunicacoes.length,
+        total: normalized.paginacao.total,
+        pagina: normalized.paginacao.pagina,
+        comunicacoes: normalized.comunicacoes.length,
       });
 
       return {
-        data: response.data,
+        data: normalized,
         rateLimit: this.extractRateLimitFromHeaders(response.headers),
       };
     } catch (error) {
@@ -203,16 +288,20 @@ export class ComunicaCNJClient {
     try {
       console.log('[ComunicaCNJClient] Listando tribunais...');
 
-      const response = await this.client.get<TribunalCNJInfo[]>(
+      // API returns nested structure: [{ uf, nomeEstado, instituicoes: [...] }, ...]
+      const response = await this.client.get<TribunalUFResponse[]>(
         '/api/v1/comunicacao/tribunal'
       );
 
+      // Flatten the nested structure
+      const tribunais = flattenTribunais(response.data);
+
       console.log(
         '[ComunicaCNJClient] Tribunais obtidos:',
-        response.data.length
+        tribunais.length
       );
 
-      return Array.isArray(response.data) ? response.data : [];
+      return tribunais;
     } catch (error) {
       throw new Error(`Erro ao listar tribunais: ${sanitizeError(error)}`);
     }

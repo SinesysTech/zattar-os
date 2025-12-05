@@ -8,7 +8,10 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle, RefreshCw } from 'lucide-react';
-import { useProcessoTimeline } from '@/app/_lib/hooks/use-processo-timeline';
+import {
+  useProcessoTimeline,
+  type TimelineUnificadaMetadata,
+} from '@/app/_lib/hooks/use-processo-timeline';
 import { ProcessoHeader } from '@/app/(dashboard)/processos/components/processo-header';
 import { TimelineContainer } from '@/app/(dashboard)/processos/components/timeline-container';
 import { TimelineLoading } from '@/app/(dashboard)/processos/components/timeline-loading';
@@ -108,7 +111,19 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
       </div>
 
       {/* Dados do processo */}
-      <ProcessoHeader processo={processo} />
+      <ProcessoHeader
+        processo={processo}
+        instancias={
+          timeline?.unified
+            ? (timeline.metadata as TimelineUnificadaMetadata)?.instancias
+            : undefined
+        }
+        duplicatasRemovidas={
+          timeline?.unified
+            ? (timeline.metadata as TimelineUnificadaMetadata)?.duplicatasRemovidas
+            : undefined
+        }
+      />
 
       {/* Estado: Capturando timeline */}
       {isCapturing && (

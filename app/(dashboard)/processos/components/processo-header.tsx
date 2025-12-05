@@ -3,23 +3,39 @@
  *
  * Exibe metadados completos do processo: número, partes, tribunal,
  * órgão julgador, datas e responsável.
+ * Suporta exibição de múltiplas instâncias (unificado).
  */
 
 'use client';
 
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Lock, User, Calendar } from 'lucide-react';
+import { Lock, User, Calendar, Layers } from 'lucide-react';
 import type { Acervo } from '@/backend/types/acervo/types';
+import type { GrauProcesso } from '@/types/domain/common';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
-interface ProcessoHeaderProps {
-  processo: Acervo;
+/**
+ * Informações de instância para exibição
+ */
+interface InstanciaInfo {
+  id: number;
+  grau: GrauProcesso;
+  trt: string;
+  totalItensOriginal: number;
 }
 
-export function ProcessoHeader({ processo }: ProcessoHeaderProps) {
+interface ProcessoHeaderProps {
+  processo: Acervo;
+  /** Instâncias do processo (quando usando timeline unificada) */
+  instancias?: InstanciaInfo[];
+  /** Quantidade de duplicatas removidas na timeline */
+  duplicatasRemovidas?: number;
+}
+
+export function ProcessoHeader({ processo, instancias, duplicatasRemovidas }: ProcessoHeaderProps) {
   const formatarData = (data: string | null) => {
     if (!data) return '—';
     try {
@@ -30,7 +46,10 @@ export function ProcessoHeader({ processo }: ProcessoHeaderProps) {
   };
 
   const getGrauLabel = (grau: string) => {
-    return grau === 'primeiro_grau' ? 'Primeiro Grau' : 'Segundo Grau';
+    if (grau === 'primeiro_grau') return '1º Grau';
+    if (grau === 'segundo_grau') return '2º Grau';
+    if (grau === 'tribunal_superior') return 'TST';
+    return grau;
   };
 
   const getOrigemLabel = (origem: string) => {
@@ -152,6 +171,53 @@ export function ProcessoHeader({ processo }: ProcessoHeaderProps) {
           <div className="text-sm text-muted-foreground">
             <span className="font-medium">Arquivado em:</span>{' '}
             {formatarData(processo.data_arquivamento)}
+          </div>
+        </>
+      )}
+
+      {/* Instâncias do Processo (modo unificado) */}
+      {instancias && instancias.length > 1 && (
+        <>
+          <Separator />
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Layers className="h-4 w-4 text-muted-foreground" />
+              <h3 className="text-sm font-medium text-muted-foreground">
+                Instâncias do Processo ({instancias.length})
+              </h3>
+              {duplicatasRemovidas !== undefined && duplicatasRemovidas > 0 && (
+                <Badge variant="soft" tone="neutral" className="text-xs">
+                  {duplicatasRemovidas} eventos duplicados removidos
+                </Badge>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {instancias.map((inst) => (
+                <div
+                  key={inst.id}
+                  className="flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2"
+                >
+                  <Badge
+                    variant="outline"
+                    tone={
+                      inst.grau === 'tribunal_superior'
+                        ? 'warning'
+                        : inst.grau === 'segundo_grau'
+                          ? 'info'
+                          : 'neutral'
+                    }
+                  >
+                    {getGrauLabel(inst.grau)}
+                  </Badge>
+                  <span className="text-xs text-muted-foreground">
+                    {inst.trt}
+                  </span>
+                  <span className="text-xs font-medium">
+                    {inst.totalItensOriginal} eventos
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </>
       )}
