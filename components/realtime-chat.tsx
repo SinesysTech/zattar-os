@@ -42,6 +42,8 @@ export const RealtimeChat = ({
     messages: realtimeMessages,
     sendMessage,
     isConnected,
+    typingIndicatorText,
+    startTyping,
   } = useRealtimeChat({
     roomName,
     username,
@@ -84,6 +86,17 @@ export const RealtimeChat = ({
     [newMessage, isConnected, sendMessage]
   )
 
+  // Handler para input com indicação de typing
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setNewMessage(e.target.value)
+      if (e.target.value.length > 0) {
+        startTyping()
+      }
+    },
+    [startTyping]
+  )
+
   return (
     <div className="flex flex-col h-full w-full bg-background text-foreground antialiased">
       {/* Messages */}
@@ -114,6 +127,20 @@ export const RealtimeChat = ({
         </div>
       </div>
 
+      {/* Indicador de digitação */}
+      {typingIndicatorText && (
+        <div className="px-4 py-2 border-t border-border bg-muted/30">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span className="flex gap-0.5">
+              <span className="animate-bounce" style={{ animationDelay: '0ms' }}>•</span>
+              <span className="animate-bounce" style={{ animationDelay: '150ms' }}>•</span>
+              <span className="animate-bounce" style={{ animationDelay: '300ms' }}>•</span>
+            </span>
+            <span>{typingIndicatorText}</span>
+          </div>
+        </div>
+      )}
+
       <form onSubmit={handleSendMessage} className="flex w-full gap-2 border-t border-border p-4">
         <Input
           className={cn(
@@ -122,8 +149,8 @@ export const RealtimeChat = ({
           )}
           type="text"
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
+          onChange={handleInputChange}
+          placeholder="Digite uma mensagem..."
           disabled={!isConnected}
         />
         {isConnected && newMessage.trim() && (
