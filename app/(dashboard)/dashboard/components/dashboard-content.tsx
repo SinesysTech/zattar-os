@@ -10,28 +10,11 @@ import type {
   DashboardAdminData,
 } from '@/backend/types/dashboard/types';
 
-import {
-  UserStatusCards,
-  AdminStatusCards,
-  WidgetProcessosResumo,
-  WidgetAudienciasProximas,
-  WidgetExpedientesUrgentes,
-  WidgetProdutividadePerformance,
-} from './widgets';
-import { SortablePersonalWidgets } from './sortable-personal-widgets';
+import { SortableUserDashboard, SortableAdminDashboard } from './sortable-dashboard';
 
 // ============================================================================
-// Interfaces de Props
+// Loading e Error States
 // ============================================================================
-
-interface UserDashboardProps {
-  data: DashboardUsuarioData;
-  onRefetch: () => void;
-}
-
-interface AdminDashboardProps {
-  data: DashboardAdminData;
-}
 
 function DashboardSkeleton() {
   return (
@@ -78,6 +61,15 @@ function DashboardError({ error, onRetry }: { error: string; onRetry: () => void
   );
 }
 
+// ============================================================================
+// User Dashboard Wrapper
+// ============================================================================
+
+interface UserDashboardProps {
+  data: DashboardUsuarioData;
+  onRefetch: () => void;
+}
+
 function UserDashboard({ data, onRefetch }: UserDashboardProps) {
   return (
     <div className="space-y-6">
@@ -89,51 +81,14 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
             Acompanhe seus processos, audiências e expedientes
           </Typography.Muted>
         </div>
-        <Button variant="outline" size="sm" onClick={onRefetch}>
+        <Button variant="ghost" size="sm" onClick={onRefetch}>
           <RefreshCw className="h-4 w-4 mr-2" />
           Atualizar
         </Button>
       </div>
 
-      {/* Cards de Status */}
-      <section>
-        <UserStatusCards
-          processos={data.processos}
-          audiencias={data.audiencias}
-          expedientes={data.expedientes}
-        />
-      </section>
-
-      {/* Widgets de Detalhe */}
-      <section className="space-y-4">
-        <Typography.H4 className="text-muted-foreground">Detalhamento</Typography.H4>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* Coluna 1 */}
-          <div className="space-y-6">
-            <WidgetProcessosResumo data={data.processos} />
-            <WidgetAudienciasProximas
-              audiencias={data.proximasAudiencias}
-              resumo={data.audiencias}
-            />
-          </div>
-
-          {/* Coluna 2 */}
-          <div className="space-y-6">
-            <WidgetExpedientesUrgentes
-              expedientes={data.expedientesUrgentes}
-              resumo={data.expedientes}
-            />
-            <WidgetProdutividadePerformance data={data.produtividade} />
-          </div>
-        </div>
-      </section>
-
-      {/* Área Pessoal - Widgets com drag-and-drop */}
-      <section className="space-y-4">
-        <Typography.H4 className="text-muted-foreground">Área Pessoal</Typography.H4>
-        <SortablePersonalWidgets />
-      </section>
+      {/* Dashboard Sortable */}
+      <SortableUserDashboard data={data} />
 
       {/* Última atualização */}
       <div className="text-center pt-4 border-t">
@@ -149,36 +104,26 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
   );
 }
 
-function AdminDashboard({ data }: AdminDashboardProps) {
-  const expedientesVencidos = data.expedientesUrgentes.filter(
-    (e) => e.dias_restantes < 0
-  ).length;
+// ============================================================================
+// Admin Dashboard Wrapper
+// ============================================================================
 
+interface AdminDashboardProps {
+  data: DashboardAdminData;
+}
+
+function AdminDashboard({ data }: AdminDashboardProps) {
   return (
     <div className="space-y-6">
-      {/* Cards de Status */}
-      <AdminStatusCards
-        metricas={data.metricas}
-        expedientesVencidos={expedientesVencidos}
-      />
-
-      {/* Widgets em duas colunas */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Próximas Audiências */}
-        <WidgetAudienciasProximas audiencias={data.proximasAudiencias} />
-
-        {/* Expedientes Urgentes */}
-        <WidgetExpedientesUrgentes expedientes={data.expedientesUrgentes} />
-      </div>
-
-      {/* Área Pessoal - Widgets com drag-and-drop */}
-      <section className="space-y-4">
-        <Typography.H4 className="text-muted-foreground">Área Pessoal</Typography.H4>
-        <SortablePersonalWidgets />
-      </section>
+      {/* Dashboard Sortable */}
+      <SortableAdminDashboard data={data} />
     </div>
   );
 }
+
+// ============================================================================
+// Main Component
+// ============================================================================
 
 export function DashboardContent() {
   const { data, isAdmin, isLoading, error, refetch } = useDashboard();
@@ -197,11 +142,7 @@ export function DashboardContent() {
 
   // Passa os dados tipados para o componente apropriado
   if (isAdmin) {
-    return (
-      <AdminDashboard
-        data={data as DashboardAdminData}
-      />
-    );
+    return <AdminDashboard data={data as DashboardAdminData} />;
   }
 
   return (
