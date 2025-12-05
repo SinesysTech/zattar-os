@@ -474,6 +474,83 @@ const options: Options = {
             created_at: { type: 'string', format: 'date-time' },
           },
         },
+        // ======================================
+        // DASHBOARD
+        // ======================================
+        MetricasEscritorio: {
+          type: 'object',
+          description: 'Métricas consolidadas do escritório',
+          properties: {
+            totalProcessos: { type: 'integer', description: 'Total de processos no sistema' },
+            processosAtivos: { type: 'integer', description: 'Processos com status ativo' },
+            processosAtivosUnicos: { type: 'integer', description: 'Contagem por número de processo único' },
+            totalAudiencias: { type: 'integer', description: 'Total de audiências' },
+            audienciasMes: { type: 'integer', description: 'Audiências do mês atual' },
+            totalExpedientes: { type: 'integer', description: 'Total de expedientes' },
+            expedientesPendentes: { type: 'integer', description: 'Expedientes aguardando resolução' },
+            expedientesVencidos: { type: 'integer', description: 'Expedientes com prazo vencido' },
+            totalUsuarios: { type: 'integer', description: 'Usuários ativos no sistema' },
+            taxaResolucao: { type: 'integer', description: 'Percentual de expedientes resolvidos no prazo' },
+            comparativoMesAnterior: {
+              type: 'object',
+              properties: {
+                processos: { type: 'integer', description: 'Variação percentual de processos' },
+                audiencias: { type: 'integer', description: 'Variação percentual de audiências' },
+                expedientes: { type: 'integer', description: 'Variação percentual de expedientes' },
+              },
+            },
+            evolucaoMensal: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  mes: { type: 'string', description: 'Mês no formato YYYY-MM' },
+                  processos: { type: 'integer' },
+                  audiencias: { type: 'integer' },
+                  expedientes: { type: 'integer' },
+                },
+              },
+            },
+          },
+        },
+        CargaUsuario: {
+          type: 'object',
+          description: 'Carga de trabalho por usuário',
+          properties: {
+            usuario_id: { type: 'integer' },
+            usuario_nome: { type: 'string' },
+            processosAtivos: { type: 'integer', description: 'Processos atribuídos ao usuário' },
+            expedientesPendentes: { type: 'integer', description: 'Expedientes pendentes do usuário' },
+            audienciasProximas: { type: 'integer', description: 'Audiências nos próximos 7 dias' },
+            cargaTotal: { type: 'integer', description: 'Score ponderado de carga de trabalho' },
+          },
+        },
+        PerformanceAdvogado: {
+          type: 'object',
+          description: 'Métricas de performance por advogado',
+          properties: {
+            usuario_id: { type: 'integer' },
+            usuario_nome: { type: 'string' },
+            baixasSemana: { type: 'integer', description: 'Expedientes baixados na semana' },
+            baixasMes: { type: 'integer', description: 'Expedientes baixados no mês' },
+            taxaCumprimentoPrazo: { type: 'integer', description: 'Percentual de baixas dentro do prazo' },
+            expedientesVencidos: { type: 'integer', description: 'Expedientes atualmente vencidos' },
+          },
+        },
+        StatusCaptura: {
+          type: 'object',
+          description: 'Status da última captura por tribunal',
+          properties: {
+            trt: { type: 'string', description: 'Código do TRT (ex: TRT3)' },
+            grau: { type: 'string', enum: ['primeiro_grau', 'segundo_grau', 'tribunal_superior'] },
+            ultimaExecucao: { type: 'string', format: 'date-time', nullable: true },
+            status: { type: 'string', enum: ['sucesso', 'erro', 'pendente', 'executando'] },
+            mensagemErro: { type: 'string', nullable: true },
+            processosCapturados: { type: 'integer' },
+            audienciasCapturadas: { type: 'integer' },
+            expedientesCapturados: { type: 'integer' },
+          },
+        },
       },
     },
     security: [

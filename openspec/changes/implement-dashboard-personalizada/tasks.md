@@ -51,14 +51,17 @@
   - Retornar dados baseado no role do usuário autenticado
   - Cache diferenciado por perfil
 
-- [ ] **3.2** Criar endpoint `GET /api/dashboard/metricas` (admin only) - OPCIONAL
+- [x] **3.2** Criar endpoint `GET /api/dashboard/metricas` (admin only)
   - Métricas globais do escritório
   - Comparativos mensais
+  - Cache Redis (10 minutos)
 
-- [ ] **3.3** Criar endpoint `GET /api/dashboard/capturas` (admin only) - OPCIONAL
+- [x] **3.3** Criar endpoint `GET /api/dashboard/capturas` (admin only)
   - Status das últimas capturas por TRT
+  - Cache Redis (2 minutos)
 
-- [ ] **3.4** Documentar endpoints no Swagger - OPCIONAL
+- [x] **3.4** Documentar endpoints no Swagger
+  - Schemas adicionados: MetricasEscritorio, CargaUsuario, PerformanceAdvogado, StatusCaptura
 
 ## Fase 4: Migração para Produção
 
@@ -123,25 +126,26 @@
   - Labels em elementos interativos
   - Navegação por teclado
 
-- [ ] **6.4** Remover sandbox após migração completa
-  - Deletar `app/sandbox/dashboard/`
-  - Atualizar documentação
+- [x] **6.4** Remover sandbox após migração completa
+  - Deletar `app/sandbox/dashboard/` ✓
+  - Atualizar documentação ✓
 
 ---
 
 ## Status Atual
 
-**Fases 1-4 concluídas**: Dashboard funcional com dados reais da API.
+**Fases 1-4 e 6.4 concluídas**: Dashboard funcional com dados reais da API.
 
 **Implementado**:
 - Backend completo (tipos, persistência, serviços, API)
 - Frontend completo (hook, widgets, página)
 - Cache Redis integrado
 - Detecção automática de perfil (admin/usuário)
+- Endpoints de métricas e capturas (admin only) ✓
+- Documentação Swagger completa ✓
+- Sandbox removido ✓
 
 **Pendente** (opcional/futuro):
-- Endpoints adicionais de métricas (3.2, 3.3)
-- Documentação Swagger (3.4)
 - Integração com widgets existentes (4.6)
 - Personalização drag-and-drop (Fase 5)
-- Testes e refinamentos (Fase 6)
+- Testes de responsividade, performance e acessibilidade (6.1-6.3)
