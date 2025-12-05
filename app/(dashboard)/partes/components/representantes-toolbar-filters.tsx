@@ -42,6 +42,7 @@ export function buildRepresentantesFilterGroups(): FilterGroup[] {
   return [];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetro placeholder para interface futura
 export function parseRepresentantesFilters(_selectedFilters: string[]): RepresentantesFilters {
   // Sem filtros específicos por enquanto
   return {};

@@ -16,6 +16,7 @@ export function RoomTitleWithBadge({
   roomName,
   className,
   showBadge = true,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetro reservado para uso futuro
   maxCount = 9,
 }: RoomTitleWithBadgeProps) {
   if (showBadge) {
@@ -45,6 +46,7 @@ export function ChatHeaderTitle({
   roomName,
   tipo,
   compact = false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetro reservado para uso futuro
   className,
 }: ChatHeaderTitleProps) {
   return (
@@ -80,6 +82,7 @@ interface ResponsiveRoomTitleProps {
 export function ResponsiveRoomTitle({
   roomId,
   roomName,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetro reservado para uso futuro
   tipo,
   showNotificationCount = true,
   className,

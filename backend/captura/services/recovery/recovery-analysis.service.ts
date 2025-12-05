@@ -223,6 +223,7 @@ function extrairEnderecoRepresentante(rep: RepresentantePJEPayload): EnderecoPJE
  */
 async function identificarGaps(
   partes: PartePJEPayload[],
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetro reservado para implementação futura
   _processo: ProcessoRecovery
 ): Promise<{ totais: TotaisAnalise; gaps: GapsAnalise }> {
   const totais: TotaisAnalise = {

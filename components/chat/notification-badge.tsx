@@ -144,7 +144,6 @@ export function NotificationDot({ className }: { className?: string }) {
 // Badge para indicar que há notificações sem ler (ícone de sino)
 export function NotificationBell({ className }: { className?: string }) {
   const { totalUnread } = useNotifications();
-  const { requestPermission } = useNotifications();
 
   const handleClick = () => {
     if (totalUnread > 0) {

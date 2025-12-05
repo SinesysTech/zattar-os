@@ -9,6 +9,7 @@ import type { CriarPessoaParams } from '@/types/contracts/pessoa';
 import type { CriarClienteParams } from '@/types/contracts/partes';
 
 function pessoaToClienteParams(params: CriarPessoaParams): CriarClienteParams {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- removendo papel_processual do payload
   const { papel_processual: _, ...rest } = params;
   return rest;
 }

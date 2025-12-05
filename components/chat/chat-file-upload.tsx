@@ -117,7 +117,7 @@ export function ChatFileUpload({ onFileUploaded, className }: ChatFileUploadProp
         const uniqueName = `chat/${timestamp}-${randomId}.${extension}`;
 
         // Upload para Supabase Storage
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
           .from('chat-files')
           .upload(uniqueName, fileItem.file, {
             cacheControl: '3600',
