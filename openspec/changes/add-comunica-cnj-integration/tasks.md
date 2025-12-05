@@ -75,10 +75,11 @@
 
 ## MCP Tools
 
-- [ ] Criar tool `comunica-cnj-search` no repositório MCP
-- [ ] Criar tool `comunica-cnj-capture` no repositório MCP
-- [ ] Criar tool `comunica-cnj-certidao` no repositório MCP
-- [ ] Documentar tools no README do MCP
+- [x] Criar tool `consultar_comunicacoes_cnj` no repositório MCP
+- [x] Criar tool `executar_captura_comunica_cnj` no repositório MCP
+- [x] Criar tool `obter_certidao_cnj` no repositório MCP
+- [x] Criar tool `listar_tribunais_cnj` no repositório MCP
+- [x] Adicionar tools ao allTools no index.ts
 
 ## Testes e Validação
 

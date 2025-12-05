@@ -1,64 +1,33 @@
 /**
- * Kit Yjs para Plate.js com Supabase Realtime
+ * Kit Yjs para Plate.js com utilitários
  *
- * Integra CRDT via Yjs para edição colaborativa em tempo real.
- * Usa Supabase Realtime como transporte ao invés de Hocuspocus/WebRTC.
+ * Funções auxiliares para configuração do Yjs com Plate.
  */
 
 'use client';
 
-import { YjsPlugin as BaseYjsPlugin } from '@platejs/yjs';
-import { withPlaceholder } from '@platejs/yjs/react';
-import { CursorOverlay, type CursorData } from '@slate-yjs/react';
-import * as React from 'react';
-
-export { CursorOverlay, type CursorData };
+// Re-exportar YjsPlugin do pacote correto
+export { YjsPlugin } from '@platejs/yjs/react';
 
 /**
- * Cria plugin Yjs para uso com Plate
- *
- * @param ydoc - Documento Yjs já configurado
- * @param cursorData - Dados do cursor do usuário atual
+ * Cores para cursores de usuários
  */
-export function createYjsPlugin(options: {
-  cursorData?: CursorData;
-}) {
-  return BaseYjsPlugin.configure({
-    render: {
-      afterEditable: options.cursorData
-        ? () => <CursorOverlay />
-        : undefined,
-    },
-    options: {
-      cursorOptions: options.cursorData
-        ? {
-            data: options.cursorData,
-          }
-        : undefined,
-    },
-  });
-}
-
-/**
- * HOC para adicionar placeholder em elementos Yjs
- */
-export { withPlaceholder };
+export const CURSOR_COLORS = [
+  '#ef4444', // red
+  '#f59e0b', // amber
+  '#10b981', // emerald
+  '#3b82f6', // blue
+  '#8b5cf6', // violet
+  '#ec4899', // pink
+  '#06b6d4', // cyan
+  '#84cc16', // lime
+];
 
 /**
  * Gera cor única baseada no ID do usuário
  */
 export function getUserColor(userId: number): string {
-  const colors = [
-    '#ef4444', // red
-    '#f59e0b', // amber
-    '#10b981', // emerald
-    '#3b82f6', // blue
-    '#8b5cf6', // violet
-    '#ec4899', // pink
-    '#06b6d4', // cyan
-    '#84cc16', // lime
-  ];
-  return colors[userId % colors.length];
+  return CURSOR_COLORS[userId % CURSOR_COLORS.length];
 }
 
 /**
@@ -68,7 +37,7 @@ export function createCursorData(user: {
   id: number;
   name: string;
   email?: string;
-}): CursorData {
+}): { name: string; color: string } {
   return {
     name: user.name,
     color: getUserColor(user.id),

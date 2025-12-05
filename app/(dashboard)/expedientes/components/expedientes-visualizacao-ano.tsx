@@ -4,8 +4,6 @@
 
 import * as React from 'react';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
-import { Calendar } from '@/components/ui/calendar';
-import { DayButton } from 'react-day-picker';
 import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
 
 interface ExpedientesVisualizacaoAnoProps {
@@ -144,35 +142,50 @@ export function ExpedientesVisualizacaoAno({
     return <div className="text-center py-8">Carregando...</div>;
   }
 
-  const CustomDayButton = ({ day, className, ...props }: React.ComponentProps<typeof DayButton>) => {
-    const d = day.date;
-    const has = temExpediente(d.getFullYear(), d.getMonth(), d.getDate());
-    return (
-      <button
-        {...props}
-        className={`aspect-square text-xs rounded ${className || ''} ${has ? 'bg-primary text-primary-foreground hover:opacity-80' : 'text-muted-foreground'}`}
-        onClick={() => has && handleDiaClick(d.getFullYear(), d.getMonth(), d.getDate())}
-      >
-        {d.getDate()}
-      </button>
-    );
-  };
-
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {meses.map((nomeMes, mes) => (
-          <div key={mes} className="border rounded-lg p-3">
-            <div className="text-sm font-semibold mb-2 text-center">{nomeMes}</div>
-            <Calendar
-              month={new Date(anoSelecionado, mes, 1)}
-              showOutsideDays={false}
-              components={{ DayButton: CustomDayButton as any }}
-            />
-          </div>
-        ))}
+        {meses.map((nomeMes, mes) => {
+          const diasMes = getDiasMes(mes);
+          return (
+            <div key={mes} className="border rounded-lg p-3">
+              <div className="text-sm font-semibold mb-2 text-center">
+                {nomeMes}
+              </div>
+              <div className="space-y-1">
+                <div className="grid grid-cols-7 gap-1">
+                  {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((dia, i) => (
+                    <div key={i} className="text-center text-xs text-muted-foreground">
+                      {dia}
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-7 gap-1">
+                  {diasMes.map((dia, index) => {
+                    const temExp = dia ? temExpediente(anoSelecionado, mes, dia) : false;
+                    const hoje = dia ? ehHoje(mes, dia) : false;
+                    return (
+                      <div
+                        key={index}
+                        className={`
+                          aspect-square flex items-center justify-center text-xs rounded
+                          ${!dia ? 'invisible' : ''}
+                          ${hoje ? 'bg-blue-500 text-white font-semibold' : ''}
+                          ${temExp && !hoje ? 'bg-primary text-primary-foreground font-medium cursor-pointer hover:opacity-80 transition-opacity' : ''}
+                          ${!temExp && !hoje ? 'text-muted-foreground' : ''}
+                        `}
+                        onClick={() => dia && temExp && handleDiaClick(anoSelecionado, mes, dia)}
+                      >
+                        {dia}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
-
       <ExpedienteDetalhesDialog
         expediente={null}
         expedientes={expedientesDia.length > 0 ? expedientesDia : undefined}
