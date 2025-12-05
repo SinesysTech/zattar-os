@@ -132,6 +132,11 @@ const navServicos = [
     url: "/assistentes",
     icon: Bot,
   },
+  {
+    name: "Comunica CNJ",
+    url: "/comunica-cnj",
+    icon: Bell,
+  },
 ]
 
 // Nav Administração - Configurações e gestão
@@ -146,11 +151,6 @@ const navAdministracao = [
       { title: "Credenciais", url: "/captura/credenciais" },
       { title: "Tribunais", url: "/captura/tribunais" },
     ],
-  },
-  {
-    name: "Comunica CNJ",
-    url: "/comunica-cnj",
-    icon: Bell,
   },
   {
     name: "Usuários",
