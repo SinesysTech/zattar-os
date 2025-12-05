@@ -91,10 +91,11 @@
   - Integrar com API routes
   - Usar novos componentes
 
-- [ ] **4.6** Integrar widgets existentes (Tarefas, Notas, Links) - FUTURO
-  - Reutilizar TarefasWidget existente
-  - Reutilizar NotasWidget existente
-  - Reutilizar LinksWidget existente
+- [x] **4.6** Integrar widgets existentes (Tarefas, Notas, Links)
+  - TarefasWidget integrado no DashboardContent ✓
+  - NotasWidget integrado no DashboardContent ✓
+  - LinksWidget integrado no DashboardContent ✓
+  - Seção "Área Pessoal" adicionada para usuários e admins
 
 ## Fase 5: Personalização (Futuro)
 
@@ -144,8 +145,8 @@
 - Endpoints de métricas e capturas (admin only) ✓
 - Documentação Swagger completa ✓
 - Sandbox removido ✓
+- Widgets pessoais integrados (Tarefas, Notas, Links) ✓
 
 **Pendente** (opcional/futuro):
-- Integração com widgets existentes (4.6)
 - Personalização drag-and-drop (Fase 5)
 - Testes de responsividade, performance e acessibilidade (6.1-6.3)
