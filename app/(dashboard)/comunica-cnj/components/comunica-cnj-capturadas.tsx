@@ -26,7 +26,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { TribunalBadge } from '@/lib/components/badges';
+import { TribunalBadge } from '@/components/ui/tribunal-badge';
 import { ComunicacaoDetalhesDialog } from './comunicacao-detalhes-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
 import {

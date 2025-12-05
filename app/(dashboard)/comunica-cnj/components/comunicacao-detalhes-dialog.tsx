@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { TribunalBadge } from '@/lib/components/badges';
+import { TribunalBadge } from '@/components/ui/tribunal-badge';
 import { FileText, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ComunicacaoItem } from '@/backend/comunica-cnj/types/types';
