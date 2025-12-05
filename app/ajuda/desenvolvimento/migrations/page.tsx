@@ -1,6 +1,5 @@
 import { Database, Terminal, CheckCircle, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 
 export default function MigrationsPage() {
   return (

@@ -140,10 +140,10 @@ export async function atualizarTipoDescricaoExpediente(
         tipo_evento: 'alteracao_tipo_descricao',
         usuario_que_executou_id: usuarioExecutouId,
         dados_evento: {
-          tipo_expediente_id_anterior: (atualAntes as any).tipo_expediente_id ?? null,
-          tipo_expediente_id_novo: (atualizado as any).tipo_expediente_id ?? null,
-          descricao_arquivos_anterior: (atualAntes as any).descricao_arquivos ?? null,
-          descricao_arquivos_novo: (atualizado as any).descricao_arquivos ?? null,
+          tipo_expediente_id_anterior: atualAntes.tipo_expediente_id ?? null,
+          tipo_expediente_id_novo: (atualizado as Record<string, unknown>).tipo_expediente_id ?? null,
+          descricao_arquivos_anterior: atualAntes.descricao_arquivos ?? null,
+          descricao_arquivos_novo: (atualizado as Record<string, unknown>).descricao_arquivos ?? null,
           alterado_em: new Date().toISOString(),
         },
       });

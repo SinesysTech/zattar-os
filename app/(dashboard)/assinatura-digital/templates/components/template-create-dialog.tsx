@@ -67,7 +67,7 @@ export function TemplateCreateDialog({
 
   const [isUploading, setIsUploading] = React.useState(false);
   const [uploadError, setUploadError] = React.useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [, setSelectedFile] = React.useState<File | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Reset form when dialog closes

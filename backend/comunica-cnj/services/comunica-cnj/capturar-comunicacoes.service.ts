@@ -16,7 +16,6 @@ import type {
 import {
   inserirComunicacao,
   buscarPorHash,
-  vincularExpediente,
   buscarExpedienteCorrespondente,
 } from '../persistence/comunica-cnj-persistence.service';
 import {

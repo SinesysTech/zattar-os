@@ -38,6 +38,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ['192.168.1.100', '192.168.1.100:3000'],
   webpack: (config, { isServer }) => {
     if (process.env.ANALYZE === 'true') {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports -- require necessário em configuração webpack
       const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
       config.plugins.push(
         new BundleAnalyzerPlugin({

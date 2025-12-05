@@ -45,6 +45,6 @@ export interface BuscarRepresentantesParams {
 // TODO: Definir RepresentanteFormData se necessário para formulários
 // export interface RepresentanteFormData {}
 
-export interface RepresentantesFilters {
-  // Filtros para representantes - agora oabs é um array JSONB
-}
+// Filtros para representantes - agora oabs é um array JSONB
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- interface placeholder para futura extensão
+export interface RepresentantesFilters {}

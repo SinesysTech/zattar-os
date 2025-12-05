@@ -6,7 +6,6 @@ import { CapturaResult } from './captura-result';
 import { capturarAudiencias } from '@/app/api/captura/captura';
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import {
   Select,

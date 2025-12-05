@@ -54,10 +54,9 @@ const STORAGE_KEY = 'dashboard-personal-widgets-order';
 // Componente Sortable Item
 interface SortableWidgetItemProps {
   widget: PersonalWidget;
-  isDragging?: boolean;
 }
 
-function SortableWidgetItem({ widget, isDragging }: SortableWidgetItemProps) {
+function SortableWidgetItem({ widget }: SortableWidgetItemProps) {
   const {
     attributes,
     listeners,
@@ -127,6 +126,7 @@ export function SortablePersonalWidgets() {
 
   // Carregar ordem salva do localStorage
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- necessário para hydration guard
     setMounted(true);
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
