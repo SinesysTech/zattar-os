@@ -393,15 +393,15 @@ export function ComunicaCNJResultsTable({
             <TipoComunicacaoBadge tipo={comunicacao.tipoComunicacao} />
             <TipoDocumentoBadge tipo={comunicacao.tipoDocumento} />
           </div>
-          {(comunicacao.partesAutoras?.length > 0 || comunicacao.partesReus?.length > 0) && (
+          {((comunicacao.partesAutoras && comunicacao.partesAutoras.length > 0) || (comunicacao.partesReus && comunicacao.partesReus.length > 0)) && (
             <div className="text-xs space-y-1 pt-2 border-t">
-              {comunicacao.partesAutoras?.length > 0 && (
+              {comunicacao.partesAutoras && comunicacao.partesAutoras.length > 0 && (
                 <p className="line-clamp-1">
                   <span className="text-muted-foreground">Autor: </span>
                   {comunicacao.partesAutoras.join(', ')}
                 </p>
               )}
-              {comunicacao.partesReus?.length > 0 && (
+              {comunicacao.partesReus && comunicacao.partesReus.length > 0 && (
                 <p className="line-clamp-1">
                   <span className="text-muted-foreground">Réu: </span>
                   {comunicacao.partesReus.join(', ')}
