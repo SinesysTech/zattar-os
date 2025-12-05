@@ -273,9 +273,9 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 p-4 border rounded-lg bg-card">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        {/* Tribunal - coluna dupla */}
-        <div className="space-y-1.5 col-span-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        {/* Tribunal - coluna dupla em telas grandes */}
+        <div className="space-y-1.5 sm:col-span-2 xl:col-span-2">
           <Label className="text-xs">Tribunal</Label>
           <Popover open={tribunalSearchOpen} onOpenChange={setTribunalSearchOpen}>
             <PopoverTrigger asChild>
@@ -435,7 +435,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
         </div>
 
         {/* Período */}
-        <div className="space-y-1.5 col-span-2">
+        <div className="space-y-1.5 sm:col-span-2 lg:col-span-2">
           <Label className="text-xs">Período</Label>
           <DateRangePicker
             value={dateRange}
@@ -462,11 +462,11 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
           </Select>
         </div>
 
-        {/* Botões */}
-        <div className="col-span-2 md:col-span-3 flex flex-col justify-end">
-          <Label className="text-xs invisible">Ações</Label>
-          <div className="flex gap-2 mt-1.5">
-            <Button type="submit" disabled={isLoading} className="h-9">
+        {/* Botões - responsivo */}
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col justify-end">
+          <Label className="text-xs invisible hidden sm:block">Ações</Label>
+          <div className="flex gap-2 mt-1.5 sm:mt-0">
+            <Button type="submit" disabled={isLoading} className="h-9 flex-1 sm:flex-none">
               {isLoading ? (
                 <>
                   <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
@@ -479,7 +479,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
                 </>
               )}
             </Button>
-            <Button type="button" variant="outline" onClick={handleReset} className="h-9">
+            <Button type="button" variant="outline" onClick={handleReset} className="h-9 flex-1 sm:flex-none">
               <RotateCcw className="mr-1.5 h-3 w-3" />
               Limpar
             </Button>

@@ -55,8 +55,6 @@ export function SegmentoCreateDialog({
 
   const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting }, reset, setError } = form;
 
-  const nomeRef = React.useRef<HTMLInputElement>(null);
-
   // Auto-generate slug on nome blur if slug is empty
   const handleNomeBlur = () => {
     const nome = watch('nome');
@@ -133,11 +131,11 @@ export function SegmentoCreateDialog({
               </Label>
               <Input
                 id="nome"
-                {...register('nome')}
+                {...register('nome', {
+                  onBlur: handleNomeBlur,
+                })}
                 placeholder="Nome do segmento"
                 disabled={isSubmitting}
-                ref={nomeRef}
-                onBlur={handleNomeBlur}
               />
               {errors.nome && (
                 <p className="text-sm text-destructive">{errors.nome.message}</p>

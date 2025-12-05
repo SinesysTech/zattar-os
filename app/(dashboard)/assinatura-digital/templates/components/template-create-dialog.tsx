@@ -24,10 +24,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/components/dropzone';
-import { useSupabaseUpload } from '@/hooks/use-supabase-upload';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import { Loader2, FileUp, X, FileText } from 'lucide-react';
 
 const createTemplateSchema = z.object({
   nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
@@ -67,29 +65,17 @@ export function TemplateCreateDialog({
 
   const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting }, reset } = form;
 
-  const uploadHook = useSupabaseUpload({
-    bucketName: 'templates',
-    allowedMimeTypes: ['application/pdf'],
-    maxFiles: 1,
-    maxFileSize: 10 * 1024 * 1024, // 10MB
-  });
-
-  const { files, isSuccess, successes, errors: uploadErrors, loading: isUploading } = uploadHook;
-
-  // When upload succeeds, set the form fields
-  React.useEffect(() => {
-    if (isSuccess && successes.length > 0 && files.length > 0) {
-      const file = files[0];
-      setValue('arquivo_original', successes[0]); // Assuming successes[0] is the public URL
-      setValue('arquivo_nome', file.name);
-      setValue('arquivo_tamanho', file.size);
-    }
-  }, [isSuccess, successes, files, setValue]);
+  const [isUploading, setIsUploading] = React.useState(false);
+  const [uploadError, setUploadError] = React.useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Reset form when dialog closes
   React.useEffect(() => {
     if (!open) {
       reset();
+      setSelectedFile(null);
+      setUploadError(null);
     }
   }, [open, reset]);
 
@@ -98,6 +84,72 @@ export function TemplateCreateDialog({
   const arquivoNome = watch('arquivo_nome');
   const arquivoTamanho = watch('arquivo_tamanho');
   const hasValidFile = Boolean(arquivoOriginal && arquivoNome && arquivoTamanho > 0);
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (file.type !== 'application/pdf') {
+      setUploadError('Apenas arquivos PDF são permitidos');
+      return;
+    }
+
+    // Validate file size (10MB)
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setUploadError('Arquivo muito grande. Máximo permitido: 10MB');
+      return;
+    }
+
+    setSelectedFile(file);
+    setUploadError(null);
+    setIsUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/assinatura-digital/templates/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Erro ao fazer upload');
+      }
+
+      // Set form fields with upload result
+      setValue('arquivo_original', result.data.url);
+      setValue('arquivo_nome', result.data.nome);
+      setValue('arquivo_tamanho', result.data.tamanho);
+      toast.success('PDF enviado com sucesso!');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Erro ao fazer upload';
+      setUploadError(message);
+      setSelectedFile(null);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    setValue('arquivo_original', '');
+    setValue('arquivo_nome', '');
+    setValue('arquivo_tamanho', 0);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  };
 
   const onSubmit = async (data: CreateTemplateFormData) => {
     try {
@@ -173,21 +225,64 @@ export function TemplateCreateDialog({
               <Label>
                 Upload de PDF <span className="text-destructive">*</span>
               </Label>
-              <Dropzone {...uploadHook}>
-                {files.length > 0 ? <DropzoneContent /> : <DropzoneEmptyState />}
-              </Dropzone>
+
+              {!hasValidFile ? (
+                <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-muted-foreground/50 transition-colors">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="application/pdf"
+                    onChange={handleFileSelect}
+                    disabled={isUploading || isSubmitting}
+                    className="hidden"
+                    id="pdf-upload"
+                  />
+                  <label
+                    htmlFor="pdf-upload"
+                    className="cursor-pointer flex flex-col items-center gap-2"
+                  >
+                    {isUploading ? (
+                      <>
+                        <Loader2 className="h-8 w-8 text-muted-foreground animate-spin" />
+                        <span className="text-sm text-muted-foreground">Enviando arquivo...</span>
+                      </>
+                    ) : (
+                      <>
+                        <FileUp className="h-8 w-8 text-muted-foreground" />
+                        <span className="text-sm font-medium">Clique para selecionar um PDF</span>
+                        <span className="text-xs text-muted-foreground">Máximo 10MB</span>
+                      </>
+                    )}
+                  </label>
+                </div>
+              ) : (
+                <div className="border rounded-lg p-4 bg-muted/50">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <FileText className="h-8 w-8 text-red-500" />
+                      <div>
+                        <p className="text-sm font-medium">{arquivoNome}</p>
+                        <p className="text-xs text-muted-foreground">{formatFileSize(arquivoTamanho)}</p>
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleRemoveFile}
+                      disabled={isSubmitting}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               {errors.arquivo_original && (
                 <p className="text-sm text-destructive">{errors.arquivo_original.message}</p>
               )}
-              {uploadErrors && uploadErrors.length > 0 && (
-                <div className="text-sm text-destructive">
-                  {uploadErrors.map((err, i) => (
-                    <p key={i}>{err.name}: {err.message || 'Erro no upload do arquivo'}</p>
-                  ))}
-                </div>
-              )}
-              {isUploading && (
-                <p className="text-sm text-muted-foreground">Fazendo upload...</p>
+              {uploadError && (
+                <p className="text-sm text-destructive">{uploadError}</p>
               )}
             </div>
 

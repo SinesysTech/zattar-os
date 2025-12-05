@@ -24,6 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Skeleton } from '@/components/ui/skeleton';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
 import { ComunicacaoDetalhesDialog } from './comunicacao-detalhes-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
@@ -33,28 +34,66 @@ import {
   Eye,
   FileText,
   ExternalLink,
-  Loader2,
+  AlertCircle,
+  Bell,
+  Mail,
+  ScrollText,
+  Gavel,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/app/_lib/hooks/use-mobile';
 import type { ComunicacaoItem } from '@/backend/comunica-cnj/types/types';
 
-// Cores para tipos de comunicação
-const TIPO_COMUNICACAO_COLORS: Record<string, string> = {
-  Intimação: 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300',
-  Citação: 'bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-900/30 dark:text-orange-300',
-  Notificação: 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300',
-  'Lista de distribuição': 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300',
-  'Carta Precatória': 'bg-purple-100 text-purple-800 border-purple-300 dark:bg-purple-900/30 dark:text-purple-300',
-  Aviso: 'bg-cyan-100 text-cyan-800 border-cyan-300 dark:bg-cyan-900/30 dark:text-cyan-300',
+// Configuração de tipos de comunicação (cores + ícones para acessibilidade)
+const TIPO_COMUNICACAO_CONFIG: Record<string, { color: string; icon: typeof AlertCircle }> = {
+  Intimação: {
+    color: 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/30 dark:text-red-300',
+    icon: AlertCircle
+  },
+  Citação: {
+    color: 'bg-orange-100 text-orange-800 border-orange-300 dark:bg-orange-900/30 dark:text-orange-300',
+    icon: Mail
+  },
+  Notificação: {
+    color: 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300',
+    icon: Bell
+  },
+  'Lista de distribuição': {
+    color: 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300',
+    icon: ScrollText
+  },
+  'Carta Precatória': {
+    color: 'bg-purple-100 text-purple-800 border-purple-300 dark:bg-purple-900/30 dark:text-purple-300',
+    icon: Mail
+  },
+  Aviso: {
+    color: 'bg-cyan-100 text-cyan-800 border-cyan-300 dark:bg-cyan-900/30 dark:text-cyan-300',
+    icon: Bell
+  },
 };
 
-// Cores para tipos de documento
-const TIPO_DOCUMENTO_COLORS: Record<string, string> = {
-  Despacho: 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-800 dark:text-gray-300',
-  Sentença: 'bg-indigo-100 text-indigo-800 border-indigo-300 dark:bg-indigo-900/30 dark:text-indigo-300',
-  Acórdão: 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300',
-  Decisão: 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300',
-  Certidão: 'bg-teal-100 text-teal-800 border-teal-300 dark:bg-teal-900/30 dark:text-teal-300',
+// Configuração de tipos de documento (cores + ícones para acessibilidade)
+const TIPO_DOCUMENTO_CONFIG: Record<string, { color: string; icon: typeof FileText }> = {
+  Despacho: {
+    color: 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-800 dark:text-gray-300',
+    icon: FileText
+  },
+  Sentença: {
+    color: 'bg-indigo-100 text-indigo-800 border-indigo-300 dark:bg-indigo-900/30 dark:text-indigo-300',
+    icon: Gavel
+  },
+  Acórdão: {
+    color: 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300',
+    icon: ScrollText
+  },
+  Decisão: {
+    color: 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300',
+    icon: Gavel
+  },
+  Certidão: {
+    color: 'bg-teal-100 text-teal-800 border-teal-300 dark:bg-teal-900/30 dark:text-teal-300',
+    icon: FileText
+  },
 };
 
 type SortField = 'data' | 'tribunal' | 'processo';
@@ -79,6 +118,7 @@ export function ComunicaCNJResultsTable({
   paginacao,
   isLoading,
 }: ComunicaCNJResultsTableProps) {
+  const isMobile = useIsMobile();
   const [sortField, setSortField] = useState<SortField>('data');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [tribunalFilter, setTribunalFilter] = useState<string>('all');
@@ -145,21 +185,92 @@ export function ComunicaCNJResultsTable({
     }
   };
 
-  const getTipoComunicacaoColor = (tipo: string) => {
-    return TIPO_COMUNICACAO_COLORS[tipo] || 'bg-gray-100 text-gray-800 border-gray-300';
+  const getTipoComunicacaoConfig = (tipo: string) => {
+    return TIPO_COMUNICACAO_CONFIG[tipo] || {
+      color: 'bg-gray-100 text-gray-800 border-gray-300',
+      icon: FileText
+    };
   };
 
-  const getTipoDocumentoColor = (tipo: string) => {
-    return TIPO_DOCUMENTO_COLORS[tipo] || 'bg-gray-100 text-gray-800 border-gray-300';
+  const getTipoDocumentoConfig = (tipo: string) => {
+    return TIPO_DOCUMENTO_CONFIG[tipo] || {
+      color: 'bg-gray-100 text-gray-800 border-gray-300',
+      icon: FileText
+    };
   };
+
+  // Skeleton loading para mobile (cards)
+  const MobileLoadingSkeleton = () => (
+    <div className="space-y-3">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="border rounded-lg p-4 space-y-3">
+          <div className="flex items-start justify-between">
+            <div className="space-y-2 flex-1">
+              <Skeleton className="h-5 w-16" />
+              <Skeleton className="h-4 w-48" />
+              <Skeleton className="h-3 w-24" />
+            </div>
+            <div className="flex gap-1">
+              <Skeleton className="h-8 w-8 rounded" />
+              <Skeleton className="h-8 w-8 rounded" />
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-5 w-16" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  // Skeleton loading para desktop (tabela)
+  const DesktopLoadingSkeleton = () => (
+    <div className="border rounded-lg">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">Data</TableHead>
+            <TableHead className="w-[100px]">Tribunal</TableHead>
+            <TableHead className="w-[200px]">Processo</TableHead>
+            <TableHead className="w-[150px]">Tipo</TableHead>
+            <TableHead className="w-[120px]">Documento</TableHead>
+            <TableHead className="w-[200px]">Autor(es)</TableHead>
+            <TableHead className="w-[200px]">Réu(s)</TableHead>
+            <TableHead className="w-[100px] text-center">Ações</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <TableRow key={i}>
+              <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+              <TableCell><Skeleton className="h-6 w-16" /></TableCell>
+              <TableCell>
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-40" />
+                  <Skeleton className="h-3 w-32" />
+                </div>
+              </TableCell>
+              <TableCell><Skeleton className="h-6 w-24" /></TableCell>
+              <TableCell><Skeleton className="h-6 w-20" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+              <TableCell>
+                <div className="flex justify-center gap-1">
+                  <Skeleton className="h-8 w-8 rounded" />
+                  <Skeleton className="h-8 w-8 rounded" />
+                  <Skeleton className="h-8 w-8 rounded" />
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        <span className="ml-3 text-muted-foreground">Carregando comunicações...</span>
-      </div>
-    );
+    return isMobile ? <MobileLoadingSkeleton /> : <DesktopLoadingSkeleton />;
   }
 
   if (comunicacoes.length === 0) {
@@ -170,11 +281,261 @@ export function ComunicaCNJResultsTable({
     );
   }
 
+  // Componente de Badge com ícone para acessibilidade
+  const TipoComunicacaoBadge = ({ tipo }: { tipo: string }) => {
+    const config = getTipoComunicacaoConfig(tipo);
+    const Icon = config.icon;
+    return (
+      <Badge className={cn('text-xs border flex items-center gap-1', config.color)}>
+        <Icon className="h-3 w-3" aria-hidden="true" />
+        <span>{tipo}</span>
+      </Badge>
+    );
+  };
+
+  const TipoDocumentoBadge = ({ tipo }: { tipo: string }) => {
+    const config = getTipoDocumentoConfig(tipo);
+    const Icon = config.icon;
+    return (
+      <Badge className={cn('text-xs border flex items-center gap-1', config.color)}>
+        <Icon className="h-3 w-3" aria-hidden="true" />
+        <span>{tipo}</span>
+      </Badge>
+    );
+  };
+
+  // Botões de ação reutilizáveis
+  const ActionButtons = ({ comunicacao }: { comunicacao: ComunicacaoItem }) => (
+    <div className="flex items-center gap-1">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setSelectedComunicacao(comunicacao)}
+              aria-label="Ver detalhes"
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Ver detalhes</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => {
+                setSelectedPdfHash(comunicacao.hash);
+                setPdfViewerOpen(true);
+              }}
+              aria-label="Ver certidão PDF"
+            >
+              <FileText className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Ver certidão PDF</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+              <a
+                href={comunicacao.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Abrir no PJE"
+              >
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Abrir no PJE</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
+  );
+
+  // Versão mobile com cards
+  const MobileView = () => (
+    <div className="space-y-3">
+      {filteredAndSortedComunicacoes.map((comunicacao) => (
+        <div
+          key={comunicacao.hash}
+          className="border rounded-lg p-4 space-y-3 bg-card hover:bg-accent/50 transition-colors"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-1 min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <TribunalBadge codigo={comunicacao.siglaTribunal} className="text-xs" />
+                <span className="text-xs text-muted-foreground">
+                  {comunicacao.dataDisponibilizacaoFormatada || '-'}
+                </span>
+              </div>
+              <p className="font-mono text-sm font-medium truncate">
+                {comunicacao.numeroProcessoComMascara}
+              </p>
+              <p className="text-xs text-muted-foreground truncate">
+                {comunicacao.nomeClasse}
+              </p>
+            </div>
+            <ActionButtons comunicacao={comunicacao} />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <TipoComunicacaoBadge tipo={comunicacao.tipoComunicacao} />
+            <TipoDocumentoBadge tipo={comunicacao.tipoDocumento} />
+          </div>
+          {(comunicacao.partesAutoras?.length > 0 || comunicacao.partesReus?.length > 0) && (
+            <div className="text-xs space-y-1 pt-2 border-t">
+              {comunicacao.partesAutoras?.length > 0 && (
+                <p className="line-clamp-1">
+                  <span className="text-muted-foreground">Autor: </span>
+                  {comunicacao.partesAutoras.join(', ')}
+                </p>
+              )}
+              {comunicacao.partesReus?.length > 0 && (
+                <p className="line-clamp-1">
+                  <span className="text-muted-foreground">Réu: </span>
+                  {comunicacao.partesReus.join(', ')}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
+  // Versão desktop com tabela
+  const DesktopView = () => (
+    <div className="border rounded-lg overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 px-2 font-semibold"
+                onClick={() => handleSort('data')}
+              >
+                Data
+                <ArrowUpDown className="ml-1 h-3 w-3" />
+              </Button>
+            </TableHead>
+            <TableHead className="w-[100px]">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 px-2 font-semibold"
+                onClick={() => handleSort('tribunal')}
+              >
+                Tribunal
+                <ArrowUpDown className="ml-1 h-3 w-3" />
+              </Button>
+            </TableHead>
+            <TableHead className="w-[200px]">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 px-2 font-semibold"
+                onClick={() => handleSort('processo')}
+              >
+                Processo
+                <ArrowUpDown className="ml-1 h-3 w-3" />
+              </Button>
+            </TableHead>
+            <TableHead className="w-[150px]">Tipo</TableHead>
+            <TableHead className="w-[120px]">Documento</TableHead>
+            <TableHead className="w-[200px]">Autor(es)</TableHead>
+            <TableHead className="w-[200px]">Réu(s)</TableHead>
+            <TableHead className="w-[100px] text-center">Ações</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {filteredAndSortedComunicacoes.map((comunicacao) => (
+            <TableRow key={comunicacao.hash}>
+              <TableCell className="text-xs">
+                {comunicacao.dataDisponibilizacaoFormatada || '-'}
+              </TableCell>
+              <TableCell>
+                <TribunalBadge codigo={comunicacao.siglaTribunal} className="text-xs" />
+              </TableCell>
+              <TableCell className="font-mono text-xs">
+                <div className="flex flex-col gap-0.5">
+                  <span className="font-medium">{comunicacao.numeroProcessoComMascara}</span>
+                  <span className="text-muted-foreground text-[10px] truncate max-w-[180px]">
+                    {comunicacao.nomeClasse}
+                  </span>
+                </div>
+              </TableCell>
+              <TableCell>
+                <TipoComunicacaoBadge tipo={comunicacao.tipoComunicacao} />
+              </TableCell>
+              <TableCell>
+                <TipoDocumentoBadge tipo={comunicacao.tipoDocumento} />
+              </TableCell>
+              <TableCell className="text-xs">
+                {comunicacao.partesAutoras && comunicacao.partesAutoras.length > 0 ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="line-clamp-2 cursor-help">
+                          {comunicacao.partesAutoras.join(', ')}
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">{comunicacao.partesAutoras.join(', ')}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
+                )}
+              </TableCell>
+              <TableCell className="text-xs">
+                {comunicacao.partesReus && comunicacao.partesReus.length > 0 ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="line-clamp-2 cursor-help">
+                          {comunicacao.partesReus.join(', ')}
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">{comunicacao.partesReus.join(', ')}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <span className="text-muted-foreground">-</span>
+                )}
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center justify-center">
+                  <ActionButtons comunicacao={comunicacao} />
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+
   return (
     <div className="space-y-4">
-      {/* Filtros */}
-      <div className="flex flex-wrap items-end gap-4">
-        <div className="flex flex-col gap-2 min-w-[180px]">
+      {/* Filtros - responsivos */}
+      <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-end gap-3 sm:gap-4">
+        <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[180px]">
           <label className="text-sm font-medium">Tribunal</label>
           <Select value={tribunalFilter} onValueChange={setTribunalFilter}>
             <SelectTrigger>
@@ -191,7 +552,7 @@ export function ComunicaCNJResultsTable({
           </Select>
         </div>
 
-        <div className="flex flex-col gap-2 min-w-[180px]">
+        <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[180px]">
           <label className="text-sm font-medium">Tipo de Comunicação</label>
           <Select value={tipoFilter} onValueChange={setTipoFilter}>
             <SelectTrigger>
@@ -208,20 +569,20 @@ export function ComunicaCNJResultsTable({
           </Select>
         </div>
 
-        {(tribunalFilter !== 'all' || tipoFilter !== 'all') && (
-          <Button
-            variant="outline"
-            onClick={() => {
-              setTribunalFilter('all');
-              setTipoFilter('all');
-            }}
-          >
-            Limpar Filtros
-          </Button>
-        )}
-
-        <div className="ml-auto flex items-center gap-2">
-          <Button variant="outline" size="sm">
+        <div className="flex gap-2 sm:ml-auto">
+          {(tribunalFilter !== 'all' || tipoFilter !== 'all') && (
+            <Button
+              variant="outline"
+              onClick={() => {
+                setTribunalFilter('all');
+                setTipoFilter('all');
+              }}
+              className="flex-1 sm:flex-none"
+            >
+              Limpar Filtros
+            </Button>
+          )}
+          <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
             <Download className="h-4 w-4 mr-2" />
             Exportar
           </Button>
@@ -236,178 +597,8 @@ export function ComunicaCNJResultsTable({
         )}
       </div>
 
-      {/* Tabela */}
-      <div className="border rounded-lg">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 px-2 font-semibold"
-                  onClick={() => handleSort('data')}
-                >
-                  Data
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
-                </Button>
-              </TableHead>
-              <TableHead className="w-[100px]">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 px-2 font-semibold"
-                  onClick={() => handleSort('tribunal')}
-                >
-                  Tribunal
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
-                </Button>
-              </TableHead>
-              <TableHead className="w-[200px]">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 px-2 font-semibold"
-                  onClick={() => handleSort('processo')}
-                >
-                  Processo
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
-                </Button>
-              </TableHead>
-              <TableHead className="w-[150px]">Tipo</TableHead>
-              <TableHead className="w-[120px]">Documento</TableHead>
-              <TableHead className="w-[200px]">Autor(es)</TableHead>
-              <TableHead className="w-[200px]">Réu(s)</TableHead>
-              <TableHead className="w-[100px] text-center">Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredAndSortedComunicacoes.map((comunicacao) => (
-              <TableRow key={comunicacao.hash}>
-                <TableCell className="text-xs">
-                  {comunicacao.dataDisponibilizacaoFormatada || '-'}
-                </TableCell>
-                <TableCell>
-                  <TribunalBadge codigo={comunicacao.siglaTribunal} className="text-xs" />
-                </TableCell>
-                <TableCell className="font-mono text-xs">
-                  <div className="flex flex-col gap-0.5">
-                    <span className="font-medium">{comunicacao.numeroProcessoComMascara}</span>
-                    <span className="text-muted-foreground text-[10px] truncate max-w-[180px]">
-                      {comunicacao.nomeClasse}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    className={cn('text-xs border', getTipoComunicacaoColor(comunicacao.tipoComunicacao))}
-                  >
-                    {comunicacao.tipoComunicacao}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    className={cn('text-xs border', getTipoDocumentoColor(comunicacao.tipoDocumento))}
-                  >
-                    {comunicacao.tipoDocumento}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-xs">
-                  {comunicacao.partesAutoras && comunicacao.partesAutoras.length > 0 ? (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="line-clamp-2 cursor-help">
-                            {comunicacao.partesAutoras.join(', ')}
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-xs">{comunicacao.partesAutoras.join(', ')}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ) : (
-                    <span className="text-muted-foreground">-</span>
-                  )}
-                </TableCell>
-                <TableCell className="text-xs">
-                  {comunicacao.partesReus && comunicacao.partesReus.length > 0 ? (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="line-clamp-2 cursor-help">
-                            {comunicacao.partesReus.join(', ')}
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-xs">{comunicacao.partesReus.join(', ')}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ) : (
-                    <span className="text-muted-foreground">-</span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center justify-center gap-1">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => setSelectedComunicacao(comunicacao)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Ver detalhes</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => {
-                              setSelectedPdfHash(comunicacao.hash);
-                              setPdfViewerOpen(true);
-                            }}
-                          >
-                            <FileText className="h-4 w-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Ver certidão PDF</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                            <a
-                              href={comunicacao.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <ExternalLink className="h-4 w-4" />
-                            </a>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Abrir no PJE</TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      {/* Conteúdo - Mobile ou Desktop */}
+      {isMobile ? <MobileView /> : <DesktopView />}
 
       {/* Dialog de detalhes */}
       <ComunicacaoDetalhesDialog

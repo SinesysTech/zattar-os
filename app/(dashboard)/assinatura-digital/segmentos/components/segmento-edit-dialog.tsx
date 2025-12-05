@@ -51,8 +51,6 @@ export function SegmentoEditDialog({
 
   const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting }, reset, setError } = form;
 
-  const nomeRef = React.useRef<HTMLInputElement>(null);
-
   // Pre-populate form when segmento changes
   React.useEffect(() => {
     if (segmento) {
@@ -160,11 +158,11 @@ export function SegmentoEditDialog({
                 </Label>
                 <Input
                   id="nome"
-                  {...register('nome')}
+                  {...register('nome', {
+                    onBlur: handleNomeBlur,
+                  })}
                   placeholder="Nome do segmento"
                   disabled={isSubmitting}
-                  ref={nomeRef}
-                  onBlur={handleNomeBlur}
                 />
                 {errors.nome && (
                   <p className="text-sm text-destructive">{errors.nome.message}</p>

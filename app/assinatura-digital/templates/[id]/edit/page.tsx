@@ -11,7 +11,7 @@
  * - Tratamento de erros TypeScript-safe (unknown)
  */
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { AlertCircle, RefreshCw } from 'lucide-react';
@@ -61,11 +61,11 @@ async function getTemplate(id: string): Promise<Template> {
 }
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default function EditTemplatePage({ params }: PageProps) {
-  const { id } = params;
+  const { id } = use(params);
   const router = useRouter();
 
   const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('assinatura_digital');

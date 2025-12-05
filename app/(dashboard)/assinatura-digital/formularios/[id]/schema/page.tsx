@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { AlertCircle, RefreshCw } from 'lucide-react';
@@ -12,7 +12,7 @@ import { AssinaturaDigitalFormulario } from '@/backend/types/assinatura-digital/
 import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 /**
@@ -69,7 +69,7 @@ async function getFormulario(id: string): Promise<AssinaturaDigitalFormulario> {
 }
 
 export default function FormularioSchemaPage({ params }: PageProps) {
-  const { id } = params;
+  const { id } = use(params);
   const router = useRouter();
   const { temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes('assinatura_digital');
   const canEdit = temPermissao('assinatura_digital', 'editar');
