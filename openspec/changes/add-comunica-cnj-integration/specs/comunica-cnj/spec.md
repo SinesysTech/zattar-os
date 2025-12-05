@@ -2,15 +2,15 @@
 
 ## ADDED Requirements
 
-### REQ-CNJ-001: Tabela `comunica_cnj`
+### Requirement: Tabela comunica_cnj
 
-O sistema deve armazenar comunicações capturadas da API do CNJ na tabela `comunica_cnj`.
+The system MUST armazenar comunicações capturadas da API do CNJ na tabela `comunica_cnj`.
 
 #### Scenario: Estrutura da tabela
 
 ```
 GIVEN a tabela comunica_cnj existe
-THEN deve conter as seguintes colunas:
+THEN MUST conter as seguintes colunas:
   | Coluna                   | Tipo                      | Nullable | Descrição                           |
   |--------------------------|---------------------------|----------|-------------------------------------|
   | id                       | bigint (identity)         | NOT NULL | PK                                  |
@@ -46,32 +46,32 @@ THEN deve conter as seguintes colunas:
 
 ---
 
-### REQ-CNJ-002: Enum `meio_comunicacao`
+### Requirement: Enum `meio_comunicacao`
 
-O sistema deve ter um enum para o meio de comunicação.
+The system MUST ter um enum para o meio de comunicação.
 
 #### Scenario: Valores do enum
 
 ```
 GIVEN o enum meio_comunicacao
-THEN deve aceitar os valores:
+THEN MUST aceitar os valores:
   - 'E' (Edital)
   - 'D' (Diário Eletrônico)
 ```
 
 ---
 
-### REQ-CNJ-003: Cliente HTTP para API CNJ
+### Requirement: Cliente HTTP para API CNJ
 
-O sistema deve ter um cliente HTTP para comunicação com a API do CNJ.
+The system MUST ter um cliente HTTP para comunicação com a API do CNJ.
 
 #### Scenario: Consultar comunicações
 
 ```
 GIVEN parâmetros de busca válidos
 WHEN o método consultarComunicacoes é chamado
-THEN deve retornar lista de comunicações paginada
-AND deve respeitar rate limiting da API
+THEN MUST retornar lista de comunicações paginada
+AND MUST respeitar rate limiting da API
 ```
 
 #### Scenario: Obter certidão PDF
@@ -79,7 +79,7 @@ AND deve respeitar rate limiting da API
 ```
 GIVEN um hash válido de comunicação
 WHEN o método obterCertidao é chamado
-THEN deve retornar o PDF da certidão como ArrayBuffer
+THEN MUST retornar o PDF da certidão como ArrayBuffer
 ```
 
 #### Scenario: Rate limiting
@@ -87,15 +87,15 @@ THEN deve retornar o PDF da certidão como ArrayBuffer
 ```
 GIVEN uma resposta com status 429
 WHEN o cliente recebe a resposta
-THEN deve aguardar 60 segundos antes de retry
-AND deve aplicar backoff exponencial em retries subsequentes
+THEN MUST aguardar 60 segundos antes de retry
+AND MUST aplicar backoff exponencial em retries subsequentes
 ```
 
 ---
 
-### REQ-CNJ-004: Busca Manual de Comunicações
+### Requirement: Busca Manual de Comunicações
 
-Usuários autenticados devem poder buscar comunicações na API do CNJ.
+Authenticated users MUST poder buscar comunicações na API do CNJ.
 
 #### Scenario: Busca com filtros
 
@@ -103,7 +103,7 @@ Usuários autenticados devem poder buscar comunicações na API do CNJ.
 GIVEN um usuário autenticado
 AND pelo menos um filtro preenchido (siglaTribunal, texto, nomeParte, nomeAdvogado, numeroOab, numeroProcesso ou itensPorPagina=5)
 WHEN o usuário executa a busca
-THEN o sistema deve consultar a API do CNJ em tempo real
+THEN o system must consultar a API do CNJ em tempo real
 AND retornar os resultados sem persistir no banco
 ```
 
@@ -113,14 +113,14 @@ AND retornar os resultados sem persistir no banco
 GIVEN um usuário autenticado
 AND nenhum filtro preenchido
 WHEN o usuário tenta executar a busca
-THEN o sistema deve retornar erro de validação
+THEN o system must retornar erro de validação
 ```
 
 ---
 
-### REQ-CNJ-005: Captura de Comunicações
+### Requirement: Captura de Comunicações
 
-O sistema deve capturar e persistir comunicações do CNJ.
+The system MUST capturar e persistir comunicações do CNJ.
 
 #### Scenario: Captura por OAB
 
@@ -128,7 +128,7 @@ O sistema deve capturar e persistir comunicações do CNJ.
 GIVEN um agendamento de captura ativo
 AND um advogado com OAB cadastrada
 WHEN o scheduler executa a captura
-THEN deve buscar comunicações por OAB na API CNJ
+THEN MUST buscar comunicações por OAB na API CNJ
 AND persistir comunicações não existentes
 AND vincular com expedientes correspondentes
 ```
@@ -138,14 +138,14 @@ AND vincular com expedientes correspondentes
 ```
 GIVEN uma comunicação com hash X existe no banco
 WHEN a captura encontra comunicação com mesmo hash X
-THEN deve ignorar (skip) a comunicação
+THEN MUST ignorar (skip) a comunicação
 ```
 
 ---
 
-### REQ-CNJ-006: Vinculação Comunicação ↔ Expediente
+### Requirement: Vinculação Comunicação ↔ Expediente
 
-O sistema deve vincular comunicações com expedientes existentes.
+The system MUST vincular comunicações com expedientes existentes.
 
 #### Scenario: Match encontrado
 
@@ -161,7 +161,7 @@ AND existe um expediente com:
   - data_criacao_expediente entre '2025-12-01' e '2025-12-04'
   - sem comunicação vinculada
 WHEN a captura processa a comunicação
-THEN deve vincular comunicacao_cnj.expediente_id = expediente.id
+THEN MUST vincular comunicacao_cnj.expediente_id = expediente.id
 ```
 
 #### Scenario: Match não encontrado - criar expediente
@@ -169,7 +169,7 @@ THEN deve vincular comunicacao_cnj.expediente_id = expediente.id
 ```
 GIVEN uma comunicação sem expediente correspondente
 WHEN a captura processa a comunicação
-THEN deve criar um novo expediente com:
+THEN MUST criar um novo expediente com:
   - origem = 'comunica_cnj'
   - numero_processo = (da comunicação)
   - trt = sigla_tribunal
@@ -183,16 +183,16 @@ AND vincular a comunicação ao expediente criado
 
 ---
 
-### REQ-CNJ-007: Inferência de Grau
+### Requirement: Inferência de Grau
 
-O sistema deve inferir o grau de jurisdição a partir do nome do órgão.
+The system MUST inferir o grau de jurisdição a partir do nome do órgão.
 
 #### Scenario: Primeiro grau
 
 ```
 GIVEN nome_orgao contém 'Vara', 'Comarca' ou 'Fórum'
 WHEN o sistema infere o grau
-THEN deve retornar 'primeiro_grau'
+THEN MUST retornar 'primeiro_grau'
 ```
 
 #### Scenario: Segundo grau
@@ -200,7 +200,7 @@ THEN deve retornar 'primeiro_grau'
 ```
 GIVEN nome_orgao contém 'Turma', 'Gabinete' ou 'Segundo Grau'
 WHEN o sistema infere o grau
-THEN deve retornar 'segundo_grau'
+THEN MUST retornar 'segundo_grau'
 ```
 
 #### Scenario: Tribunal superior
@@ -208,14 +208,14 @@ THEN deve retornar 'segundo_grau'
 ```
 GIVEN nome_orgao contém 'Ministro' ou sigla_tribunal = 'TST'
 WHEN o sistema infere o grau
-THEN deve retornar 'tribunal_superior'
+THEN MUST retornar 'tribunal_superior'
 ```
 
 ---
 
-### REQ-CNJ-008: Extração de Partes
+### Requirement: Extração de Partes
 
-O sistema deve extrair informações das partes dos destinatários.
+The system MUST extrair informações das partes dos destinatários.
 
 #### Scenario: Extração de polo ativo e passivo
 
@@ -241,16 +241,16 @@ AND qtde_parte_autora = (total do polo 'A')
 
 ---
 
-### REQ-CNJ-009: API Routes
+### Requirement: API Routes
 
-O sistema deve expor endpoints REST para Comunica CNJ.
+The system MUST expor endpoints REST para Comunica CNJ.
 
 #### Scenario: GET /api/comunica-cnj/consulta
 
 ```
 GIVEN um usuário autenticado
 WHEN faz GET /api/comunica-cnj/consulta com parâmetros válidos
-THEN deve retornar resultados da API CNJ
+THEN MUST retornar resultados da API CNJ
 AND status 200
 ```
 
@@ -259,7 +259,7 @@ AND status 200
 ```
 GIVEN um hash válido
 WHEN faz GET /api/comunica-cnj/certidao/{hash}
-THEN deve retornar PDF da certidão
+THEN MUST retornar PDF da certidão
 AND Content-Type = application/pdf
 ```
 
@@ -268,7 +268,7 @@ AND Content-Type = application/pdf
 ```
 GIVEN um usuário autenticado
 WHEN faz GET /api/comunica-cnj/tribunais
-THEN deve retornar lista de tribunais do banco de dados
+THEN MUST retornar lista de tribunais do banco de dados
 ```
 
 #### Scenario: POST /api/comunica-cnj/captura
@@ -277,79 +277,22 @@ THEN deve retornar lista de tribunais do banco de dados
 GIVEN um usuário com permissão de captura
 AND parâmetros de captura (advogado_id ou OAB)
 WHEN faz POST /api/comunica-cnj/captura
-THEN deve executar captura e persistência
+THEN MUST executar captura e persistência
 AND retornar estatísticas (total, novos, vinculados, criados)
 ```
 
 ---
 
-### REQ-CNJ-010: Agendamento de Captura
+### Requirement: Agendamento de Captura
 
-O sistema deve permitir agendar capturas automáticas do CNJ.
+The system MUST permitir agendar capturas automáticas do CNJ.
 
 #### Scenario: Criar agendamento
 
 ```
 GIVEN um advogado com OAB cadastrada
 WHEN um agendamento é criado com tipo_captura = 'comunica_cnj'
-THEN deve executar diariamente no horário configurado
+THEN MUST executar diariamente no horário configurado
 AND buscar comunicações por OAB do advogado
 ```
 
----
-
-## MODIFIED Requirements
-
-### REQ-EXP-001: Tabela de Expedientes
-
-**Modificação:** Renomear `pendentes_manifestacao` para `expedientes` e adicionar coluna `origem`.
-
-#### Scenario: Nova estrutura
-
-```
-GIVEN a tabela expedientes (anteriormente pendentes_manifestacao)
-THEN deve conter nova coluna:
-  | Coluna | Tipo              | Default   | Descrição                      |
-  |--------|-------------------|-----------|--------------------------------|
-  | origem | origem_expediente | 'captura' | Fonte do expediente            |
-```
-
-#### Scenario: Valores do enum origem_expediente
-
-```
-GIVEN o enum origem_expediente
-THEN deve aceitar os valores:
-  - 'captura' (capturado do PJE)
-  - 'manual' (criado manualmente)
-  - 'comunica_cnj' (criado a partir de comunicação CNJ)
-```
-
----
-
-### REQ-EXP-002: Migração de expedientes_manuais
-
-**Modificação:** Dados migrados para tabela `expedientes`.
-
-#### Scenario: Migração de dados
-
-```
-GIVEN dados existentes em expedientes_manuais
-WHEN a migração é executada
-THEN todos os registros devem ser copiados para expedientes
-AND origem deve ser setada como 'manual'
-AND tabela expedientes_manuais deve ser removida
-```
-
----
-
-### REQ-CAP-001: Tipos de Captura
-
-**Modificação:** Adicionar novo tipo de captura.
-
-#### Scenario: Novo valor no enum
-
-```
-GIVEN o enum tipo_captura
-THEN deve incluir o valor 'comunica_cnj'
-AND permitir agendamentos com este tipo
-```
