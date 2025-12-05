@@ -94,7 +94,13 @@
 - **Comunicações TJ**: Erro esperado - enum `codigo_tribunal` suporta apenas TRTs (sistema trabalhista)
 - **Detecção de duplicatas**: Funcionando via hash
 - **Detecção de expediente vinculado**: "Expediente já tem comunicação vinculada"
-- **Fallback data_autuacao**: Usando `data_disponibilizacao` quando não disponível
+- **data_autuacao**: Busca real na tabela `acervo` por numero_processo/trt/grau, `null` se não encontrado
+
+### Correção: data_autuacao (2025-12-05)
+- **Migração aplicada**: `alter_expedientes_data_autuacao_nullable` - coluna agora aceita null
+- **Nova função**: `buscarDataAutuacaoDoAcervo()` busca data real do acervo
+- **Lógica de fallback**: Tenta grau exato → primeiro_grau → qualquer grau → null
+- **Bônus**: Vincula `processo_id` automaticamente se encontrar no acervo
 
 ## Atualização de Tipos Globais
 

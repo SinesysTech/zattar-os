@@ -59,8 +59,10 @@ export interface TimelineUnificada {
  * Estratégia:
  * - Documentos: usa idUnicoDocumento se disponível, senão combina data + tipo + titulo
  * - Movimentos: combina data + codigoMovimentoCNJ + titulo
+ *
+ * @internal Exportado para testes unitários
  */
-function gerarHashDeduplicacao(item: TimelineItemEnriquecido): string {
+export function gerarHashDeduplicacao(item: TimelineItemEnriquecido): string {
   const dataStr = item.data.substring(0, 10); // Apenas YYYY-MM-DD
 
   if (item.documento) {
@@ -83,8 +85,10 @@ function gerarHashDeduplicacao(item: TimelineItemEnriquecido): string {
  * Quando há duplicatas:
  * - Mantém o item com mais informações (ex: com googleDrive/backblaze)
  * - Prioriza instância de grau superior (2º grau > 1º grau)
+ *
+ * @internal Exportado para testes unitários
  */
-function deduplicarTimeline(items: TimelineItemUnificado[]): TimelineItemUnificado[] {
+export function deduplicarTimeline(items: TimelineItemUnificado[]): TimelineItemUnificado[] {
   const hashMap = new Map<string, TimelineItemUnificado>();
 
   // Ordem de prioridade de graus (maior = mais prioritário)

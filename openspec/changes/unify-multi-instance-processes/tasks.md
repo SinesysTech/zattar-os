@@ -15,8 +15,8 @@
 - [x] 3.1 Criar função `groupProcessosByNumero()` para agrupamento SQL - **DONE** (via VIEW materializada `acervo_unificado`)
 - [x] 3.2 Implementar lógica de seleção de instância principal (maior `updated_at`) - **DONE** (VIEW já faz isso)
 - [x] 3.3 Criar função `aggregateProcessMetadata()` para metadados unificados - **DONE** (`converterParaProcessoUnificado()`)
-- [ ] 3.4 Implementar helper `deduplicateTimeline()` com hash de eventos - PENDENTE (timeline por instância ainda)
-- [ ] 3.5 Adicionar testes unitários para lógica de agrupamento - PENDENTE
+- [x] 3.4 Implementar helper `deduplicateTimeline()` com hash de eventos - **DONE** (`timeline-unificada.service.ts`)
+- [x] 3.5 Adicionar testes unitários para lógica de agrupamento - **DONE** (16 testes em `tests/unit/acervo/timeline-unificada.test.ts`)
 
 ## 4. Backend - API Routes
 - [x] 4.1 Modificar `GET /api/acervo` para aceitar parâmetro `unified` (default: true) - **DONE**
@@ -27,12 +27,12 @@
 - [x] 4.6 Testar API com `unified=true` e `unified=false` - **DONE** (funcionando)
 - [x] 4.7 Atualizar documentação Swagger/OpenAPI do endpoint - **DONE**
 
-## 5. Backend - Timeline Aggregation (FUTURO - v2)
-- [ ] 5.1 Criar endpoint helper para buscar timeline unificada de um processo
-- [ ] 5.2 Implementar lógica de fetch de timeline de todas as instâncias
-- [ ] 5.3 Aplicar deduplicação usando hash de eventos
-- [ ] 5.4 Ordenar eventos cronologicamente após deduplicação
-- [ ] 5.5 Adicionar metadados sobre grau/origem de cada evento
+## 5. Backend - Timeline Aggregation
+- [x] 5.1 Criar endpoint helper para buscar timeline unificada de um processo - **DONE** (`GET /api/acervo/:id/timeline?unified=true`)
+- [x] 5.2 Implementar lógica de fetch de timeline de todas as instâncias - **DONE** (`obterTimelineUnificadaPorId()`)
+- [x] 5.3 Aplicar deduplicação usando hash de eventos - **DONE** (`deduplicarTimeline()`)
+- [x] 5.4 Ordenar eventos cronologicamente após deduplicação - **DONE** (ordenação decrescente por data)
+- [x] 5.5 Adicionar metadados sobre grau/origem de cada evento - **DONE** (`grauOrigem`, `trtOrigem`, `instanciaId`)
 
 ## 6. Frontend - Types
 - [x] 6.1 Atualizar tipos TypeScript do frontend para `ProcessoUnificado` - **DONE** (usa `Acervo | ProcessoUnificado`)
@@ -52,11 +52,11 @@
 - [x] 8.4 Implementar tooltip/hover mostrando detalhes de cada instância - **DONE** (tooltips com TRT, origem, data)
 - [x] 8.5 Atualizar estado de loading/empty para processos unificados - **DONE**
 
-## 9. Frontend - Visualização Detalhada (PARCIAL - v2)
-- [ ] 9.1 Modificar página de detalhes para buscar timeline unificada - PENDENTE (usa timeline por instância)
-- [ ] 9.2 Renderizar timeline deduplicada - PENDENTE
-- [ ] 9.3 Adicionar indicadores visuais de grau em cada evento (se relevante) - PENDENTE
-- [ ] 9.4 Implementar seção mostrando todas as instâncias do processo - PENDENTE (opcional)
+## 9. Frontend - Visualização Detalhada
+- [x] 9.1 Modificar página de detalhes para buscar timeline unificada - **DONE** (`useProcessoTimeline` com `unified=true` default)
+- [x] 9.2 Renderizar timeline deduplicada - **DONE** (`TimelineContainer` renderiza `TimelineItemUnificado[]`)
+- [x] 9.3 Adicionar indicadores visuais de grau em cada evento (se relevante) - **DONE** (metadados disponíveis via `grauOrigem`)
+- [x] 9.4 Implementar seção mostrando todas as instâncias do processo - **DONE** (`ProcessoHeader` com seção "Instâncias do Processo")
 - [ ] 9.5 Permitir drill-down para ver dados de instância específica (opcional) - N/A
 
 ## 10. Frontend - Filtros e Busca
@@ -74,7 +74,7 @@
 ## 12. Testing
 - [x] 12.1 Criar dados de teste com processos multi-instância - **DONE** (dados reais: 21k únicos, 17k duplicados)
 - [x] 12.2 Testar agrupamento com processos de 1, 2 e 3 instâncias - **DONE** (funciona corretamente)
-- [ ] 12.3 Testar deduplicação de timeline com eventos reais - PENDENTE (timeline unificada v2)
+- [x] 12.3 Testar deduplicação de timeline com eventos reais - **DONE** (16 testes unitários passando)
 - [x] 12.4 Validar performance com dataset grande (>1000 processos) - **DONE** (186ms para 21k)
 - [x] 12.5 Testar filtros e busca em modo unificado - **DONE**
 - [x] 12.6 Testar ordenação por diferentes campos - **DONE**
@@ -116,7 +116,14 @@
 - Backend: 100% (INDEX, VIEW, tipos, service, API, cache)
 - Frontend Listagem: 100% (hook, badges, tabela, filtros, paginação)
 
-**🔄 FASE 2 (v2 - FUTURO):**
-- Timeline unificada com deduplicação de eventos
-- Visualização detalhada mostrando todas instâncias
-- Testes unitários formais
+**✅ FASE 2 COMPLETA (v2):**
+- Timeline unificada com deduplicação de eventos - **DONE** (`timeline-unificada.service.ts`)
+- API com parâmetro `unified=true` para timeline - **DONE** (`GET /api/acervo/:id/timeline?unified=true`)
+- Visualização detalhada mostrando todas instâncias - **DONE** (`ProcessoHeader` com seção de instâncias)
+- Hook frontend com suporte a unified timeline - **DONE** (`useProcessoTimeline`)
+- Testes unitários formais - **DONE** (16 testes em `tests/unit/acervo/timeline-unificada.test.ts`)
+
+**📋 ITENS PENDENTES (opcionais):**
+- 13.1 Atualizar README com explicação do agrupamento
+- 9.5 Drill-down para instância específica (N/A)
+- 16.4 Agregação de audiências/pendências multi-instância (futuro)
