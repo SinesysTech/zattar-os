@@ -114,6 +114,13 @@
   - Toggle de visibilidade por widget ✓
   - Indicador de widgets ocultos ✓
 
+- [x] **5.4** Implementar widgets redimensionáveis
+  - Sistema de tamanhos: small (1 col), medium (2 cols), large (3 cols), full (4 cols) ✓
+  - Grid responsivo de 4 colunas em desktop ✓
+  - Menu dropdown por widget para alterar tamanho ✓
+  - Persistência de tamanhos no localStorage ✓
+  - Componente `components/ui/resizable.tsx` adicionado ✓
+
 ## Fase 6: Testes e Refinamentos
 
 - [ ] **6.1** Testar responsividade em diferentes resoluções
@@ -138,7 +145,7 @@
 
 ## Status Atual
 
-**Fases 1-5 e 6.4 concluídas**: Dashboard personalizada completa com drag-and-drop.
+**Fases 1-5 e 6.4 concluídas**: Dashboard personalizada completa com drag-and-drop e widgets redimensionáveis.
 
 **Implementado**:
 - Backend completo (tipos, persistência, serviços, API)
@@ -152,6 +159,11 @@
 - Drag-and-drop para reordenar widgets (Fase 5) ✓
 - Persistência de layout no localStorage ✓
 - Show/hide de widgets com menu ✓
+- **Widgets redimensionáveis** (Fase 5.4) ✓
+  - Tamanhos: small (1 col), medium (2 cols), large (3 cols), full (4 cols)
+  - Grid responsivo de 4 colunas (desktop) / 2 colunas (tablet) / 1 coluna (mobile)
+  - Menu de tamanho por widget com ícones
+  - Persistência no localStorage
 
 **Pendente** (opcional/futuro):
 - Testes de responsividade, performance e acessibilidade (6.1-6.3)

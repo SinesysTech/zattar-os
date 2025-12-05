@@ -21,7 +21,7 @@ interface UserStatusCardsProps {
 
 export function UserStatusCards({ processos, audiencias, expedientes }: UserStatusCardsProps) {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
       <StatCard
         title="Processos Ativos"
         value={processos.ativos}
@@ -79,7 +79,7 @@ export function AdminStatusCards({ metricas, expedientesVencidos }: AdminStatusC
   const comparativo = metricas.comparativoMesAnterior;
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
+    <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
       {/* Card 1: Processos Ativos (contagem única) */}
       <StatCard
         title="Processos Ativos"

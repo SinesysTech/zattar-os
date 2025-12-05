@@ -17,10 +17,22 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
-  verticalListSortingStrategy,
+  rectSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Settings, Eye, EyeOff, RotateCcw } from 'lucide-react';
+import {
+  GripVertical,
+  Settings,
+  Eye,
+  EyeOff,
+  RotateCcw,
+  Maximize2,
+  RectangleHorizontal,
+  Square,
+  Columns2,
+  Columns3,
+  Columns4,
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -63,36 +75,67 @@ type WidgetType =
   | 'links'
   | 'admin-status-cards';
 
+// Tamanhos disponíveis para widgets (spans de coluna em grid de 4)
+type WidgetSize = 'small' | 'medium' | 'large' | 'full';
+
 interface DashboardWidget {
   id: string;
   type: WidgetType;
   title: string;
   visible: boolean;
   section: 'status' | 'detail' | 'personal';
+  size: WidgetSize;
 }
 
+// Mapeamento de tamanhos para classes CSS do grid
+const SIZE_CLASSES: Record<WidgetSize, string> = {
+  small: 'col-span-1', // 1/4 em desktop
+  medium: 'col-span-2', // 2/4 em desktop
+  large: 'col-span-3', // 3/4 em desktop
+  full: 'col-span-4', // Full width
+};
+
+// Labels para o menu de tamanhos
+const SIZE_LABELS: Record<WidgetSize, string> = {
+  small: '1 Coluna',
+  medium: '2 Colunas',
+  large: '3 Colunas',
+  full: 'Largura Total',
+};
+
 const USER_DEFAULT_WIDGETS: DashboardWidget[] = [
-  { id: 'status-cards', type: 'status-cards', title: 'Cards de Status', visible: true, section: 'status' },
-  { id: 'processos-resumo', type: 'processos-resumo', title: 'Resumo de Processos', visible: true, section: 'detail' },
-  { id: 'audiencias-proximas', type: 'audiencias-proximas', title: 'Próximas Audiências', visible: true, section: 'detail' },
-  { id: 'expedientes-urgentes', type: 'expedientes-urgentes', title: 'Expedientes Urgentes', visible: true, section: 'detail' },
-  { id: 'produtividade', type: 'produtividade', title: 'Produtividade', visible: true, section: 'detail' },
-  { id: 'tarefas', type: 'tarefas', title: 'Minhas Tarefas', visible: true, section: 'personal' },
-  { id: 'notas', type: 'notas', title: 'Notas Rápidas', visible: true, section: 'personal' },
-  { id: 'links', type: 'links', title: 'Links Úteis', visible: true, section: 'personal' },
+  { id: 'status-cards', type: 'status-cards', title: 'Cards de Status', visible: true, section: 'status', size: 'full' },
+  { id: 'processos-resumo', type: 'processos-resumo', title: 'Resumo de Processos', visible: true, section: 'detail', size: 'medium' },
+  { id: 'audiencias-proximas', type: 'audiencias-proximas', title: 'Próximas Audiências', visible: true, section: 'detail', size: 'medium' },
+  { id: 'expedientes-urgentes', type: 'expedientes-urgentes', title: 'Expedientes Urgentes', visible: true, section: 'detail', size: 'medium' },
+  { id: 'produtividade', type: 'produtividade', title: 'Produtividade', visible: true, section: 'detail', size: 'medium' },
+  { id: 'tarefas', type: 'tarefas', title: 'Minhas Tarefas', visible: true, section: 'personal', size: 'medium' },
+  { id: 'notas', type: 'notas', title: 'Notas Rápidas', visible: true, section: 'personal', size: 'small' },
+  { id: 'links', type: 'links', title: 'Links Úteis', visible: true, section: 'personal', size: 'small' },
 ];
 
 const ADMIN_DEFAULT_WIDGETS: DashboardWidget[] = [
-  { id: 'admin-status-cards', type: 'admin-status-cards', title: 'Cards de Status', visible: true, section: 'status' },
-  { id: 'audiencias-proximas', type: 'audiencias-proximas', title: 'Próximas Audiências', visible: true, section: 'detail' },
-  { id: 'expedientes-urgentes', type: 'expedientes-urgentes', title: 'Expedientes Urgentes', visible: true, section: 'detail' },
-  { id: 'tarefas', type: 'tarefas', title: 'Minhas Tarefas', visible: true, section: 'personal' },
-  { id: 'notas', type: 'notas', title: 'Notas Rápidas', visible: true, section: 'personal' },
-  { id: 'links', type: 'links', title: 'Links Úteis', visible: true, section: 'personal' },
+  { id: 'admin-status-cards', type: 'admin-status-cards', title: 'Cards de Status', visible: true, section: 'status', size: 'full' },
+  { id: 'audiencias-proximas', type: 'audiencias-proximas', title: 'Próximas Audiências', visible: true, section: 'detail', size: 'medium' },
+  { id: 'expedientes-urgentes', type: 'expedientes-urgentes', title: 'Expedientes Urgentes', visible: true, section: 'detail', size: 'medium' },
+  { id: 'tarefas', type: 'tarefas', title: 'Minhas Tarefas', visible: true, section: 'personal', size: 'medium' },
+  { id: 'notas', type: 'notas', title: 'Notas Rápidas', visible: true, section: 'personal', size: 'small' },
+  { id: 'links', type: 'links', title: 'Links Úteis', visible: true, section: 'personal', size: 'small' },
 ];
 
 const USER_STORAGE_KEY = 'dashboard-user-widgets-order';
 const ADMIN_STORAGE_KEY = 'dashboard-admin-widgets-order';
+
+// ============================================================================
+// Ícones de tamanho
+// ============================================================================
+
+const SIZE_ICONS: Record<WidgetSize, React.ReactNode> = {
+  small: <Square className="h-3 w-3" />,
+  medium: <Columns2 className="h-3 w-3" />,
+  large: <Columns3 className="h-3 w-3" />,
+  full: <Columns4 className="h-3 w-3" />,
+};
 
 // ============================================================================
 // Componente Sortable Item
@@ -101,10 +144,10 @@ const ADMIN_STORAGE_KEY = 'dashboard-admin-widgets-order';
 interface SortableWidgetItemProps {
   widget: DashboardWidget;
   children: ReactNode;
-  gridClass?: string;
+  onSizeChange: (widgetId: string, size: WidgetSize) => void;
 }
 
-function SortableWidgetItem({ widget, children, gridClass }: SortableWidgetItemProps) {
+function SortableWidgetItem({ widget, children, onSizeChange }: SortableWidgetItemProps) {
   const {
     attributes,
     listeners,
@@ -120,16 +163,59 @@ function SortableWidgetItem({ widget, children, gridClass }: SortableWidgetItemP
     opacity: isDragging ? 0.5 : 1,
   };
 
+  // Classes responsivas baseadas no tamanho
+  const sizeClasses = {
+    small: 'col-span-4 md:col-span-2 lg:col-span-1',
+    medium: 'col-span-4 md:col-span-2 lg:col-span-2',
+    large: 'col-span-4 md:col-span-4 lg:col-span-3',
+    full: 'col-span-4',
+  };
+
   return (
-    <div ref={setNodeRef} style={style} className={`relative group ${gridClass || ''}`}>
-      {/* Handle de drag */}
-      <div
-        {...attributes}
-        {...listeners}
-        className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing p-1.5 rounded-md bg-background/80 backdrop-blur-sm border shadow-sm hover:bg-accent"
-        title="Arrastar para reordenar"
-      >
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`relative group ${sizeClasses[widget.size]}`}
+    >
+      {/* Toolbar flutuante */}
+      <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+        {/* Menu de tamanho */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className="p-1.5 rounded-md bg-background/80 backdrop-blur-sm border shadow-sm hover:bg-accent"
+              title="Alterar tamanho"
+            >
+              <Maximize2 className="h-4 w-4 text-muted-foreground" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuLabel className="text-xs">Tamanho</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {(Object.keys(SIZE_LABELS) as WidgetSize[]).map((size) => (
+              <DropdownMenuCheckboxItem
+                key={size}
+                checked={widget.size === size}
+                onCheckedChange={() => onSizeChange(widget.id, size)}
+              >
+                <span className="flex items-center gap-2">
+                  {SIZE_ICONS[size]}
+                  {SIZE_LABELS[size]}
+                </span>
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Handle de drag */}
+        <div
+          {...attributes}
+          {...listeners}
+          className="p-1.5 rounded-md bg-background/80 backdrop-blur-sm border shadow-sm hover:bg-accent cursor-grab active:cursor-grabbing"
+          title="Arrastar para reordenar"
+        >
+          <GripVertical className="h-4 w-4 text-muted-foreground" />
+        </div>
       </div>
       {children}
     </div>
@@ -178,7 +264,9 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
         const parsed = JSON.parse(saved) as DashboardWidget[];
         const merged = USER_DEFAULT_WIDGETS.map((defaultWidget) => {
           const savedWidget = parsed.find((w) => w.id === defaultWidget.id);
-          return savedWidget ? { ...defaultWidget, visible: savedWidget.visible } : defaultWidget;
+          return savedWidget
+            ? { ...defaultWidget, visible: savedWidget.visible, size: savedWidget.size || defaultWidget.size }
+            : defaultWidget;
         });
         const orderedIds = parsed.map((w) => w.id);
         merged.sort((a, b) => {
@@ -231,6 +319,16 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
       return newItems;
     });
   };
+
+  const changeSize = useCallback((widgetId: string, size: WidgetSize) => {
+    setWidgets((items) => {
+      const newItems = items.map((w) =>
+        w.id === widgetId ? { ...w, size } : w
+      );
+      saveOrder(newItems);
+      return newItems;
+    });
+  }, [saveOrder]);
 
   const resetToDefault = () => {
     setWidgets(USER_DEFAULT_WIDGETS);
@@ -335,10 +433,10 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={visibleWidgets.map((w) => w.id)} strategy={verticalListSortingStrategy}>
-          <div className="space-y-6">
+        <SortableContext items={visibleWidgets.map((w) => w.id)} strategy={rectSortingStrategy}>
+          <div className="grid grid-cols-4 gap-4">
             {visibleWidgets.map((widget) => (
-              <SortableWidgetItem key={widget.id} widget={widget}>
+              <SortableWidgetItem key={widget.id} widget={widget} onSizeChange={changeSize}>
                 {renderWidget(widget)}
               </SortableWidgetItem>
             ))}
@@ -378,7 +476,9 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
         const parsed = JSON.parse(saved) as DashboardWidget[];
         const merged = ADMIN_DEFAULT_WIDGETS.map((defaultWidget) => {
           const savedWidget = parsed.find((w) => w.id === defaultWidget.id);
-          return savedWidget ? { ...defaultWidget, visible: savedWidget.visible } : defaultWidget;
+          return savedWidget
+            ? { ...defaultWidget, visible: savedWidget.visible, size: savedWidget.size || defaultWidget.size }
+            : defaultWidget;
         });
         const orderedIds = parsed.map((w) => w.id);
         merged.sort((a, b) => {
@@ -431,6 +531,16 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
       return newItems;
     });
   };
+
+  const changeSize = useCallback((widgetId: string, size: WidgetSize) => {
+    setWidgets((items) => {
+      const newItems = items.map((w) =>
+        w.id === widgetId ? { ...w, size } : w
+      );
+      saveOrder(newItems);
+      return newItems;
+    });
+  }, [saveOrder]);
 
   const resetToDefault = () => {
     setWidgets(ADMIN_DEFAULT_WIDGETS);
@@ -520,10 +630,10 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={visibleWidgets.map((w) => w.id)} strategy={verticalListSortingStrategy}>
-          <div className="space-y-6">
+        <SortableContext items={visibleWidgets.map((w) => w.id)} strategy={rectSortingStrategy}>
+          <div className="grid grid-cols-4 gap-4">
             {visibleWidgets.map((widget) => (
-              <SortableWidgetItem key={widget.id} widget={widget}>
+              <SortableWidgetItem key={widget.id} widget={widget} onSizeChange={changeSize}>
                 {renderWidget(widget)}
               </SortableWidgetItem>
             ))}
