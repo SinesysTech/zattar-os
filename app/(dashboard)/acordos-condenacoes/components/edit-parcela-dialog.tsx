@@ -121,20 +121,48 @@ export function EditParcelaDialog({
         return;
       }
 
-      // Recalcular distribuição
-      const recalcResponse = await fetch(
-        `/api/acordos-condenacoes/${acordoCondenacaoId}/recalcular`,
-        {
-          method: 'POST',
-        }
-      );
-
-      const recalcResult = await recalcResponse.json();
-
-      if (!recalcResponse.ok || !recalcResult.success) {
-        toast.warning(
-          'Parcela atualizada, mas houve erro ao recalcular distribuição'
+      // Recalcular distribuição - se editou crédito principal
+      if (valores.valorBrutoCreditoPrincipal !== parcela.valorBrutoCreditoPrincipal) {
+        const recalcResponse = await fetch(
+          `/api/acordos-condenacoes/${acordoCondenacaoId}/recalcular`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              tipoValor: 'credito_principal'
+            }),
+          }
         );
+
+        const recalcResult = await recalcResponse.json();
+
+        if (!recalcResponse.ok || !recalcResult.success) {
+          console.warn('Erro ao recalcular distribuição do crédito principal:', recalcResult.error);
+        }
+      }
+
+      // Recalcular honorários sucumbenciais - se editou
+      if (valores.honorariosSucumbenciais !== parcela.honorariosSucumbenciais) {
+        const recalcResponse = await fetch(
+          `/api/acordos-condenacoes/${acordoCondenacaoId}/recalcular`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              tipoValor: 'honorarios_sucumbenciais'
+            }),
+          }
+        );
+
+        const recalcResult = await recalcResponse.json();
+
+        if (!recalcResponse.ok || !recalcResult.success) {
+          console.warn('Erro ao recalcular distribuição dos honorários sucumbenciais:', recalcResult.error);
+        }
       }
 
       toast.success('Parcela atualizada com sucesso');
