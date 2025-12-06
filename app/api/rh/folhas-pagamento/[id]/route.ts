@@ -1,260 +1,166 @@
 /**
- * API Routes para Folha de Pagamento Individual
- * GET: Buscar folha por ID
- * PUT: Atualizar folha (apenas rascunho)
- * DELETE: Cancelar ou excluir folha
+ * API Routes para Folha de Pagamento (detalhe)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { requirePermission } from '@/backend/auth/require-permission';
+import { checkPermission } from '@/backend/auth/authorization';
 import {
   buscarFolhaPorId,
   atualizarFolhaPagamento,
   deletarFolhaPagamento,
 } from '@/backend/rh/salarios/services/persistence/folhas-pagamento-persistence.service';
-import { cancelarFolhaPagamento, podeCancelarFolha } from '@/backend/rh/salarios/services/folhas/cancelar-folha.service';
+import { cancelarFolhaPagamento } from '@/backend/rh/salarios/services/folhas/cancelar-folha.service';
+import type { FolhaPagamentoComDetalhes } from '@/backend/types/financeiro/salarios.types';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
-/**
- * @swagger
- * /api/rh/folhas-pagamento/{id}:
- *   get:
- *     summary: Busca folha de pagamento por ID
- *     tags:
- *       - Folhas de Pagamento
- *     security:
- *       - bearerAuth: []
- *       - sessionAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Folha encontrada
- *       404:
- *         description: Folha não encontrada
- *       401:
- *         description: Não autenticado
- *   put:
- *     summary: Atualiza folha de pagamento
- *     description: Atualiza dados de uma folha em rascunho
- *     tags:
- *       - Folhas de Pagamento
- *     security:
- *       - bearerAuth: []
- *       - sessionAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               dataPagamento:
- *                 type: string
- *                 format: date
- *               observacoes:
- *                 type: string
- *     responses:
- *       200:
- *         description: Folha atualizada
- *       400:
- *         description: Folha não está em rascunho
- *       404:
- *         description: Folha não encontrada
- *   delete:
- *     summary: Cancela ou exclui folha de pagamento
- *     tags:
- *       - Folhas de Pagamento
- *     security:
- *       - bearerAuth: []
- *       - sessionAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *       - in: query
- *         name: modo
- *         schema:
- *           type: string
- *           enum: [cancelar, excluir, verificar]
- *           default: cancelar
- *       - in: query
- *         name: motivo
- *         schema:
- *           type: string
- *         description: Motivo do cancelamento
- *     responses:
- *       200:
- *         description: Operação realizada com sucesso
- *       400:
- *         description: Folha não pode ser cancelada/excluída
- *       404:
- *         description: Folha não encontrada
- */
+const filtrarFolhaParaUsuario = (
+  folha: FolhaPagamentoComDetalhes,
+  usuarioId: number
+): FolhaPagamentoComDetalhes | null => {
+  const itens = (folha.itens ?? []).filter((item) => item.usuarioId === usuarioId);
+  if (!itens.length) {
+    return null;
+  }
+  const valorTotal = itens.reduce((total, item) => total + Number(item.valorBruto), 0);
+  return {
+    ...folha,
+    itens,
+    totalFuncionarios: itens.length,
+    valorTotal,
+  };
+};
+
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const authOrError = await requirePermission(request, 'folhas_pagamento', 'visualizar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
-
+    const { usuarioId } = authOrError;
     const { id } = await params;
-    const folhaId = parseInt(id, 10);
-
-    if (isNaN(folhaId)) {
-      return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
-    }
+    const folhaId = Number(id);
 
     const folha = await buscarFolhaPorId(folhaId);
-
     if (!folha) {
-      return NextResponse.json(
-        { error: 'Folha de pagamento não encontrada' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Folha de pagamento não encontrada' }, { status: 404 });
     }
 
-    return NextResponse.json({
-      success: true,
-      data: folha,
-    });
+    const podeVisualizarTodos = await checkPermission(
+      usuarioId,
+      'folhas_pagamento',
+      'visualizar_todos'
+    );
+    if (!podeVisualizarTodos) {
+      const folhaFiltrada = filtrarFolhaParaUsuario(folha, usuarioId);
+      if (!folhaFiltrada) {
+        return NextResponse.json(
+          { error: 'Você não tem permissão para visualizar esta folha' },
+          { status: 403 }
+        );
+      }
+      return NextResponse.json({ success: true, data: folhaFiltrada });
+    }
+
+    return NextResponse.json({ success: true, data: folha });
   } catch (error) {
     console.error('Erro ao buscar folha de pagamento:', error);
-    const erroMsg =
-      error instanceof Error ? error.message : 'Erro interno do servidor';
+    const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
     return NextResponse.json({ error: erroMsg }, { status: 500 });
   }
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const authOrError = await requirePermission(request, 'folhas_pagamento', 'editar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
+    }
+    const { usuarioId } = authOrError;
+    const { id } = await params;
+    const folhaId = Number(id);
+
+    const folhaAtual = await buscarFolhaPorId(folhaId);
+    if (!folhaAtual) {
+      return NextResponse.json({ error: 'Folha de pagamento não encontrada' }, { status: 404 });
     }
 
-    const { id } = await params;
-    const folhaId = parseInt(id, 10);
-
-    if (isNaN(folhaId)) {
-      return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    const podeVisualizarTodos = await checkPermission(
+      usuarioId,
+      'folhas_pagamento',
+      'visualizar_todos'
+    );
+    if (!podeVisualizarTodos) {
+      const folhaFiltrada = filtrarFolhaParaUsuario(folhaAtual, usuarioId);
+      if (!folhaFiltrada) {
+        return NextResponse.json(
+          { error: 'Você não tem permissão para editar esta folha' },
+          { status: 403 }
+        );
+      }
     }
 
     const body = await request.json();
+    const folha = await atualizarFolhaPagamento(folhaId, body);
 
-    const folha = await atualizarFolhaPagamento(folhaId, {
-      dataPagamento: body.dataPagamento,
-      observacoes: body.observacoes,
-    });
-
-    return NextResponse.json({
-      success: true,
-      data: folha,
-    });
+    return NextResponse.json({ success: true, data: folha });
   } catch (error) {
     console.error('Erro ao atualizar folha de pagamento:', error);
-    const erroMsg =
-      error instanceof Error ? error.message : 'Erro interno do servidor';
-
-    if (erroMsg.includes('não encontrad')) {
-      return NextResponse.json({ error: erroMsg }, { status: 404 });
-    }
-
-    if (
-      erroMsg.includes('rascunho') ||
-      erroMsg.includes('não pode') ||
-      erroMsg.includes('Apenas')
-    ) {
-      return NextResponse.json({ error: erroMsg }, { status: 400 });
-    }
-
-    return NextResponse.json({ error: erroMsg }, { status: 500 });
+    const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
+    const status = erroMsg.includes('não encontrado') ? 404 : 400;
+    return NextResponse.json({ error: erroMsg }, { status });
   }
 }
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { id } = await params;
-    const folhaId = parseInt(id, 10);
+    const folhaId = Number(id);
+    const modo = new URL(request.url).searchParams.get('modo') || 'cancelar';
 
-    if (isNaN(folhaId)) {
-      return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    const operacao = modo === 'excluir' ? 'deletar' : 'cancelar';
+    const authOrError = await requirePermission(request, 'folhas_pagamento', operacao);
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
+    }
+    const { usuarioId } = authOrError;
+
+    const folhaAtual = await buscarFolhaPorId(folhaId);
+    if (!folhaAtual) {
+      return NextResponse.json({ error: 'Folha de pagamento não encontrada' }, { status: 404 });
     }
 
-    const { searchParams } = new URL(request.url);
-    const modo = searchParams.get('modo') || 'cancelar';
-    const motivo = searchParams.get('motivo') || undefined;
-
-    // Modo verificar: apenas retorna se pode cancelar
-    if (modo === 'verificar') {
-      const resultado = await podeCancelarFolha(folhaId);
-      return NextResponse.json({
-        success: true,
-        data: resultado,
-      });
+    const podeVisualizarTodos = await checkPermission(
+      usuarioId,
+      'folhas_pagamento',
+      'visualizar_todos'
+    );
+    if (!podeVisualizarTodos) {
+      const folhaFiltrada = filtrarFolhaParaUsuario(folhaAtual, usuarioId);
+      if (!folhaFiltrada) {
+        return NextResponse.json(
+          { error: 'Você não tem permissão para esta folha' },
+          { status: 403 }
+        );
+      }
     }
 
-    // Modo cancelar: cancela a folha (e lançamentos se aprovada)
-    if (modo === 'cancelar') {
-      const folha = await cancelarFolhaPagamento(folhaId, motivo, authResult.usuarioId);
-      return NextResponse.json({
-        success: true,
-        data: folha,
-        message: 'Folha cancelada com sucesso',
-      });
-    }
-
-    // Modo excluir: exclui a folha (apenas rascunho)
     if (modo === 'excluir') {
       await deletarFolhaPagamento(folhaId);
-      return NextResponse.json({
-        success: true,
-        message: 'Folha excluída com sucesso',
-      });
+    } else {
+      const body = await request.json().catch(() => ({}));
+      const motivo = typeof body?.motivo === 'string' ? body.motivo : undefined;
+      await cancelarFolhaPagamento(folhaId, motivo, usuarioId);
     }
 
-    return NextResponse.json(
-      { error: 'Modo inválido. Use: cancelar, excluir ou verificar' },
-      { status: 400 }
-    );
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Erro ao processar folha de pagamento:', error);
-    const erroMsg =
-      error instanceof Error ? error.message : 'Erro interno do servidor';
-
-    if (erroMsg.includes('não encontrad')) {
-      return NextResponse.json({ error: erroMsg }, { status: 404 });
-    }
-
-    if (
-      erroMsg.includes('não pode') ||
-      erroMsg.includes('Não é possível') ||
-      erroMsg.includes('Apenas') ||
-      erroMsg.includes('já está')
-    ) {
-      return NextResponse.json({ error: erroMsg }, { status: 400 });
-    }
-
-    return NextResponse.json({ error: erroMsg }, { status: 500 });
+    console.error('Erro ao cancelar/excluir folha:', error);
+    const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
+    const status = erroMsg.includes('não encontrado') ? 404 : 400;
+    return NextResponse.json({ error: erroMsg }, { status });
   }
 }

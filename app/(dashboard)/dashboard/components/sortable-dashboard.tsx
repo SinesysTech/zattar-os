@@ -54,6 +54,8 @@ import {
   WidgetAudienciasProximas,
   WidgetExpedientesUrgentes,
   WidgetProdutividadePerformance,
+  WidgetFolhaPagamento,
+  WidgetCustoPessoal,
 } from './widgets';
 import { TarefasWidget } from './tarefas-widget';
 import { NotasWidget } from './notas-widget';
@@ -74,7 +76,9 @@ type WidgetType =
   | 'notas'
   | 'links'
   | 'obrigacoes'
-  | 'admin-status-cards';
+  | 'admin-status-cards'
+  | 'folha-pagamento'
+  | 'custo-pessoal';
 
 // Tamanhos disponíveis para widgets (spans de coluna em grid de 4)
 type WidgetSize = 'small' | 'medium' | 'large' | 'full';
@@ -113,9 +117,11 @@ const ADMIN_DEFAULT_WIDGETS: DashboardWidget[] = [
   { id: 'audiencias-proximas', type: 'audiencias-proximas', title: 'Próximas Audiências', visible: true, section: 'detail', size: 'medium' },
   { id: 'expedientes-urgentes', type: 'expedientes-urgentes', title: 'Expedientes Urgentes', visible: true, section: 'detail', size: 'medium' },
   { id: 'obrigacoes', type: 'obrigacoes', title: 'Obrigações Financeiras', visible: true, section: 'detail', size: 'medium' },
+  { id: 'folha-pagamento', type: 'folha-pagamento', title: 'Folha do Mês', visible: true, section: 'detail', size: 'medium' },
+  { id: 'custo-pessoal', type: 'custo-pessoal', title: 'Custo com Pessoal', visible: true, section: 'detail', size: 'medium' },
   { id: 'tarefas', type: 'tarefas', title: 'Minhas Tarefas', visible: true, section: 'personal', size: 'medium' },
   { id: 'notas', type: 'notas', title: 'Notas Rápidas', visible: true, section: 'personal', size: 'small' },
-  { id: 'links', type: 'links', title: 'Links Úteis', visible: true, section: 'personal', size: 'small' },
+  { id: 'links', type: 'links', title: 'Links úteis', visible: true, section: 'personal', size: 'small' },
 ];
 
 const USER_STORAGE_KEY = 'dashboard-user-widgets-order';
@@ -371,6 +377,10 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
         return <LinksWidget />;
       case 'obrigacoes':
         return <ObrigacoesWidget />;
+      case 'folha-pagamento':
+        return <WidgetFolhaPagamento />;
+      case 'custo-pessoal':
+        return <WidgetCustoPessoal />;
       default:
         return null;
     }
@@ -571,6 +581,10 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
         return <LinksWidget />;
       case 'obrigacoes':
         return <ObrigacoesWidget />;
+      case 'folha-pagamento':
+        return <WidgetFolhaPagamento />;
+      case 'custo-pessoal':
+        return <WidgetCustoPessoal />;
       default:
         return null;
     }

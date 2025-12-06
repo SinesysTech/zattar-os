@@ -466,8 +466,10 @@ function criarColunas(
         const trt = row.original.trt;
         const grau = row.original.grau;
         const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
-        const parteAutora = row.original.polo_ativo_nome || '-';
-        const parteRe = row.original.polo_passivo_nome || '-';
+        const parteAutora = row.original.nome_parte_autora || row.original.polo_ativo_nome || '-';
+        const parteRe = row.original.nome_parte_re || row.original.polo_passivo_nome || '-';
+        const poloAtivo = row.original.polo_ativo_nome;
+        const poloPassivo = row.original.polo_passivo_nome;
 
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5">
@@ -478,12 +480,18 @@ function criarColunas(
             <div className="text-sm font-medium whitespace-nowrap">{classeJudicial && `${classeJudicial} `}{numeroProcesso}</div>
             <div className="flex flex-col gap-1 w-full">
               <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
-                <span className="truncate">{parteAutora}</span>
+                <span className="truncate">Parte Autora: {parteAutora}</span>
               </Badge>
               <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
-                <span className="truncate">{parteRe}</span>
+                <span className="truncate">Parte Ré: {parteRe}</span>
               </Badge>
             </div>
+            {(poloAtivo || poloPassivo) && (
+              <div className="text-[11px] text-muted-foreground leading-tight">
+                {poloAtivo && <div>Polo ativo (instância): {poloAtivo}</div>}
+                {poloPassivo && <div>Polo passivo (instância): {poloPassivo}</div>}
+              </div>
+            )}
             <div className="text-xs text-muted-foreground">{orgaoJulgador}</div>
           </div>
         );
@@ -823,4 +831,3 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
     </div>
   );
 }
-

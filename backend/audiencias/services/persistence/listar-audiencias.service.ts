@@ -45,6 +45,8 @@ function converterParaAudiencia(data: Record<string, unknown>): Audiencia {
     designada: (data.designada as boolean) ?? false,
     em_andamento: (data.em_andamento as boolean) ?? false,
     documento_ativo: (data.documento_ativo as boolean) ?? false,
+    nome_parte_autora: (data.nome_parte_autora as string | null) ?? null,
+    nome_parte_re: (data.nome_parte_re as string | null) ?? null,
     polo_ativo_nome: (data.polo_ativo_nome as string | null) ?? null,
     polo_passivo_nome: (data.polo_passivo_nome as string | null) ?? null,
     url_audiencia_virtual: (data.url_audiencia_virtual as string | null) ?? null,
@@ -198,6 +200,27 @@ export async function listarAudiencias(
   }
 
   // Converter dados para formato de retorno
+  // Buscar partes fixas (parte autora/ré) no 1º grau para exibir corretamente
+  const numerosProcesso = Array.from(new Set((data || []).map((row) => row.numero_processo as string)));
+  const partesPrimeiroGrau = new Map<string, { nome_parte_autora: string | null; nome_parte_re: string | null }>();
+
+  if (numerosProcesso.length > 0) {
+    const { data: partesData, error: partesError } = await supabase
+      .from('acervo')
+      .select('numero_processo, nome_parte_autora, nome_parte_re')
+      .in('numero_processo', numerosProcesso)
+      .eq('grau', 'primeiro_grau');
+
+    if (!partesError && partesData) {
+      partesData.forEach((p) => {
+        partesPrimeiroGrau.set(p.numero_processo, {
+          nome_parte_autora: p.nome_parte_autora,
+          nome_parte_re: p.nome_parte_re,
+        });
+      });
+    }
+  }
+
   const audiencias = (data || []).map((row: Record<string, unknown>) => {
     // Extrair dados dos JOINs
     const orgaoJulgador = row.orgao_julgador as Record<string, unknown> | null;
@@ -218,6 +241,13 @@ export async function listarAudiencias(
       tipo_descricao: tipoDescricao,
       tipo_is_virtual: tipoIsVirtual ?? false,
       tipo_codigo: tipoCodigo,
+      // Partes fixas (autor/ré) vindas do 1º grau; fallback para polos se não houver
+      nome_parte_autora:
+        partesPrimeiroGrau.get(row.numero_processo as string)?.nome_parte_autora ??
+        ((row.polo_ativo_nome as string | null) ?? null),
+      nome_parte_re:
+        partesPrimeiroGrau.get(row.numero_processo as string)?.nome_parte_re ??
+        ((row.polo_passivo_nome as string | null) ?? null),
       // sala_audiencia_nome e modalidade já vêm diretamente da tabela audiencias
     };
 

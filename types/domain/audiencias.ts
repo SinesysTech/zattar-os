@@ -51,6 +51,8 @@ export interface Audiencia {
   designada: boolean;
   em_andamento: boolean;
   documento_ativo: boolean;
+  nome_parte_autora: string | null;
+  nome_parte_re: string | null;
   polo_ativo_nome: string | null;
   polo_passivo_nome: string | null;
   url_audiencia_virtual: string | null;

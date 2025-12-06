@@ -12,3 +12,5 @@ export { WidgetExpedientesUrgentes } from './widget-expedientes-urgentes';
 export { WidgetProdutividade } from './widget-produtividade';
 export { UserStatusCards, AdminStatusCards } from './status-cards';
 export { PerformanceCard, WidgetProdutividadePerformance } from './widget-performance';
+export { WidgetFolhaPagamento } from './widget-folha-pagamento';
+export { WidgetCustoPessoal } from './widget-custo-pessoal';

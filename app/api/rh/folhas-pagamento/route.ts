@@ -1,11 +1,10 @@
 /**
  * API Routes para Folhas de Pagamento
- * GET: Listar folhas de pagamento com filtros
- * POST: Gerar nova folha de pagamento
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { requirePermission } from '@/backend/auth/require-permission';
+import { checkPermission } from '@/backend/auth/authorization';
 import {
   listarFolhasPagamento,
   calcularTotaisPorStatus,
@@ -16,115 +15,45 @@ import {
   isStatusFolhaValido,
   type ListarFolhasParams,
   type StatusFolhaPagamento,
+  type FolhaPagamentoComDetalhes,
 } from '@/backend/types/financeiro/salarios.types';
 
-/**
- * @swagger
- * /api/rh/folhas-pagamento:
- *   get:
- *     summary: Lista folhas de pagamento
- *     description: Retorna uma lista paginada de folhas de pagamento com filtros opcionais
- *     tags:
- *       - Folhas de Pagamento
- *     security:
- *       - bearerAuth: []
- *       - sessionAuth: []
- *       - serviceApiKey: []
- *     parameters:
- *       - in: query
- *         name: pagina
- *         schema:
- *           type: integer
- *           default: 1
- *       - in: query
- *         name: limite
- *         schema:
- *           type: integer
- *           default: 50
- *       - in: query
- *         name: mesReferencia
- *         schema:
- *           type: integer
- *           minimum: 1
- *           maximum: 12
- *       - in: query
- *         name: anoReferencia
- *         schema:
- *           type: integer
- *       - in: query
- *         name: status
- *         schema:
- *           type: string
- *           enum: [rascunho, aprovada, paga, cancelada]
- *       - in: query
- *         name: incluirTotais
- *         schema:
- *           type: boolean
- *         description: Incluir totais por status
- *     responses:
- *       200:
- *         description: Lista de folhas retornada com sucesso
- *       401:
- *         description: Não autenticado
- *       500:
- *         description: Erro interno do servidor
- *   post:
- *     summary: Gera uma nova folha de pagamento
- *     description: Cria uma nova folha de pagamento para o período especificado
- *     tags:
- *       - Folhas de Pagamento
- *     security:
- *       - bearerAuth: []
- *       - sessionAuth: []
- *       - serviceApiKey: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - mesReferencia
- *               - anoReferencia
- *             properties:
- *               mesReferencia:
- *                 type: integer
- *                 minimum: 1
- *                 maximum: 12
- *               anoReferencia:
- *                 type: integer
- *               dataPagamento:
- *                 type: string
- *                 format: date
- *               observacoes:
- *                 type: string
- *               preview:
- *                 type: boolean
- *                 description: Se true, retorna apenas preview sem criar a folha
- *     responses:
- *       201:
- *         description: Folha criada com sucesso
- *       200:
- *         description: Preview da folha (quando preview=true)
- *       400:
- *         description: Dados inválidos ou já existe folha para o período
- *       401:
- *         description: Não autenticado
- *       500:
- *         description: Erro interno do servidor
- */
+const filtrarFolhasParaUsuario = (
+  folhas: FolhaPagamentoComDetalhes[],
+  usuarioId: number
+): FolhaPagamentoComDetalhes[] => {
+  return folhas
+    .map((folha) => {
+      const itens = (folha.itens ?? []).filter((item) => item.usuarioId === usuarioId);
+      if (!itens.length) {
+        return null;
+      }
+      const valorTotal = itens.reduce((total, item) => total + Number(item.valorBruto), 0);
+      return {
+        ...folha,
+        itens,
+        totalFuncionarios: itens.length,
+        valorTotal,
+      };
+    })
+    .filter(Boolean) as FolhaPagamentoComDetalhes[];
+};
+
 export async function GET(request: NextRequest) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const authOrError = await requirePermission(request, 'folhas_pagamento', 'listar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
+    const { usuarioId } = authOrError;
+    const podeVisualizarTodos = await checkPermission(
+      usuarioId,
+      'folhas_pagamento',
+      'visualizar_todos'
+    );
 
-    // 2. Obter parâmetros da query string
     const { searchParams } = new URL(request.url);
 
-    // Processar parâmetros de status (suporta múltiplos valores)
     const statusValues = searchParams.getAll('status');
     const validStatusValues = statusValues.filter(isStatusFolhaValido) as StatusFolhaPagamento[];
     let statusParam: StatusFolhaPagamento | StatusFolhaPagamento[] | undefined;
@@ -157,11 +86,14 @@ export async function GET(request: NextRequest) {
       ordem: (searchParams.get('ordem') as 'asc' | 'desc') || undefined,
     };
 
-    // 3. Listar folhas de pagamento
     const resultado = await listarFolhasPagamento(params);
 
-    // 4. Incluir totais se solicitado
-    const incluirTotais = searchParams.get('incluirTotais') === 'true';
+    const folhasFiltradas = podeVisualizarTodos
+      ? resultado.items
+      : filtrarFolhasParaUsuario(resultado.items, usuarioId);
+
+    const incluirTotais =
+      podeVisualizarTodos && searchParams.get('incluirTotais') === 'true';
     let totais;
     if (incluirTotais) {
       totais = await calcularTotaisPorStatus();
@@ -170,7 +102,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: {
-        ...resultado,
+        items: folhasFiltradas,
+        paginacao: podeVisualizarTodos
+          ? resultado.paginacao
+          : {
+              pagina: 1,
+              limite: folhasFiltradas.length,
+              total: folhasFiltradas.length,
+              totalPaginas: 1,
+            },
         totais,
       },
     });
@@ -184,14 +124,11 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const authOrError = await requirePermission(request, 'folhas_pagamento', 'criar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
-
-    // 2. Obter ID do usuário autenticado
-    const usuarioId = authResult.usuarioId;
+    const usuarioId = authOrError.usuarioId;
     if (!usuarioId) {
       return NextResponse.json(
         { error: 'Não foi possível identificar o usuário' },
@@ -199,20 +136,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Obter dados do body
     const body = await request.json();
 
-    // 4. Verificar se é apenas preview
-    if (body.preview === true) {
-      const preview = await previewGerarFolha(body.mesReferencia, body.anoReferencia);
-      return NextResponse.json({
-        success: true,
-        data: preview,
-        preview: true,
-      });
-    }
-
-    // 5. Validar dados
     const validacao = validarGerarFolhaDTO(body);
     if (!validacao.valido) {
       return NextResponse.json(
@@ -223,7 +148,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 6. Gerar folha de pagamento
+    const preview = body.preview === true;
+
+    if (preview) {
+      const resultado = await previewGerarFolha(body);
+      return NextResponse.json({ success: true, data: resultado });
+    }
+
     const folha = await gerarFolhaPagamento(body, usuarioId);
 
     return NextResponse.json(
@@ -238,13 +169,11 @@ export async function POST(request: NextRequest) {
     const erroMsg =
       error instanceof Error ? error.message : 'Erro interno do servidor';
 
-    // Verificar se é erro de validação
     if (
       erroMsg.includes('obrigatório') ||
-      erroMsg.includes('inválid') ||
-      erroMsg.includes('Já existe') ||
-      erroMsg.includes('Não há') ||
-      erroMsg.includes('período futuro')
+      erroMsg.includes('inválido') ||
+      erroMsg.includes('já existe') ||
+      erroMsg.includes('duplicada')
     ) {
       return NextResponse.json({ error: erroMsg }, { status: 400 });
     }

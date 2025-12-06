@@ -315,6 +315,7 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
   // Sal rios (5 permissäes)
   salarios: [
     'listar',
+    'visualizar',
     'criar',
     'editar',
     'deletar',
@@ -324,6 +325,8 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
   // Folhas de Pagamento (7 permissäes)
   folhas_pagamento: [
     'listar',
+    'visualizar',
+    'editar',
     'criar',
     'aprovar',
     'pagar',

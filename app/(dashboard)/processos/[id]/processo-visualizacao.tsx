@@ -8,9 +8,8 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle, RefreshCw } from 'lucide-react';
-
 import { useCopilotReadable } from "@copilotkit/react-core";
-
+import { useCopilotChatSuggestions } from "@copilotkit/react-ui";
 import {
   useProcessoTimeline,
   type TimelineUnificadaMetadata,
@@ -22,11 +21,9 @@ import { TimelineError } from '@/app/(dashboard)/processos/components/timeline-e
 import { TimelineEmpty } from '@/app/(dashboard)/processos/components/timeline-empty';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-
 interface ProcessoVisualizacaoProps {
   id: number;
 }
-
 export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   const router = useRouter();
   const { processo, timeline, isLoading, isCapturing, error, refetch, forceRecapture } =
@@ -59,6 +56,23 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
         sigiloso: item.documentoSigiloso
       })) : "Timeline vazia ou carregando"
     },
+  });
+  useCopilotChatSuggestions({
+    // Instruções para a IA gerar sugestões baseadas no contexto que ela acabou de ler
+    instructions: `
+      Com base nos dados do processo que você está lendo (timeline e metadados),
+      gere 3 perguntas curtas e diretas que ajudariam um advogado a analisar este caso rapidamente.
+      
+      Exemplos de estilo:
+      - "Resumir últimas movimentações"
+      - "Identificar riscos processuais"
+      - "Listar documentos pendentes"
+      
+      Adapte ao status atual do processo: ${processo?.codigo_status_processo || 'desconhecido'}.
+    `,
+    // Opcional: define o mínimo/máximo de sugestões
+    minSuggestions: 2,
+    maxSuggestions: 3,
   });
 
   // Loading inicial

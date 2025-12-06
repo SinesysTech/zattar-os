@@ -800,6 +800,32 @@ export const calcularDuracaoVigencia = (
 };
 
 /**
+ * Retorna o sal rio vigente para um usu rio em uma data de referˆncia a partir de uma lista
+ */
+export const calcularSalarioVigente = (
+  salarios: Salario[],
+  usuarioId: number,
+  dataReferencia: string = new Date().toISOString().split('T')[0]
+): Salario | null => {
+  const vigentes = salarios
+    .filter((salario) => salario.usuarioId === usuarioId && salario.ativo)
+    .filter((salario) =>
+      dataEstaNoPeriodo(
+        dataReferencia,
+        salario.dataInicioVigencia,
+        salario.dataFimVigencia
+      )
+    )
+    .sort(
+      (a, b) =>
+        new Date(b.dataInicioVigencia).getTime() -
+        new Date(a.dataInicioVigencia).getTime()
+    );
+
+  return vigentes[0] ?? null;
+};
+
+/**
  * Cores para badges de status da folha
  */
 export const STATUS_FOLHA_CORES: Record<StatusFolhaPagamento, { bg: string; text: string; border: string }> = {
