@@ -83,6 +83,53 @@ export {
   diasAteVencimento,
 } from '@/backend/types/financeiro/contas-pagar.types';
 
+// ============================================================================
+// Contas a Receber
+// ============================================================================
+
+export type {
+  StatusContaReceber,
+  OrigemContaReceber,
+  FormaRecebimentoContaReceber,
+  CategoriaContaReceber,
+  AnexoContaReceber,
+  ContaReceber,
+  ContaReceberComDetalhes,
+  ContaReceberRecorrente,
+  ClienteResumo,
+  ContratoResumo,
+  CriarContaReceberDTO,
+  AtualizarContaReceberDTO,
+  ReceberContaReceberDTO,
+  CancelarContaReceberDTO,
+  ListarContasReceberParams,
+  ListarContasReceberResponse,
+  OperacaoContaReceberResult,
+  ResumoInadimplencia,
+  ContasReceberFilters,
+} from '@/backend/types/financeiro/contas-receber.types';
+
+export {
+  isContaReceber,
+  validarCriarContaReceberDTO,
+  validarAtualizarContaReceberDTO,
+  validarReceberContaReceberDTO,
+  isOrigemValida as isOrigemContaReceberValida,
+  isFormaRecebimentoValida,
+  isFrequenciaValida as isFrequenciaContaReceberValida,
+  isStatusValido as isStatusContaReceberValido,
+  STATUS_LABELS as STATUS_CONTA_RECEBER_LABELS,
+  ORIGEM_LABELS as ORIGEM_CONTA_RECEBER_LABELS,
+  FORMA_RECEBIMENTO_LABELS,
+  FREQUENCIA_LABELS as FREQUENCIA_CONTA_RECEBER_LABELS,
+  CATEGORIA_LABELS as CATEGORIA_CONTA_RECEBER_LABELS,
+  CATEGORIAS_PADRAO as CATEGORIAS_CONTA_RECEBER_PADRAO,
+  calcularProximoVencimento as calcularProximoVencimentoContaReceber,
+  isContaVencida as isContaReceberVencida,
+  isContaVenceHoje as isContaReceberVenceHoje,
+  diasAteVencimento as diasAteVencimentoContaReceber,
+} from '@/backend/types/financeiro/contas-receber.types';
+
 // Importa tipo para uso nas funções utilitárias
 import type { PlanoContaHierarquico } from '@/backend/types/financeiro/plano-contas.types';
 

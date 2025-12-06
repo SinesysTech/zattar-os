@@ -1,21 +1,21 @@
 /**
- * Serviço de Geração de Contas a Pagar Recorrentes
+ * Serviço de Geração de Contas a Receber Recorrentes
  * Gera automaticamente novas contas baseadas em templates recorrentes
  */
 
 import {
-  buscarContasPagarRecorrentes,
-  criarContaPagar,
+  buscarContasReceberRecorrentes,
+  criarContaReceber,
   buscarUltimaContaGeradaPorTemplate,
   verificarContaExistentePorTemplateEData,
-} from '../persistence/contas-pagar-persistence.service';
+} from '../persistence/contas-receber-persistence.service';
 import {
   calcularProximoVencimento,
-  type ContaPagar,
-  type CriarContaPagarDTO,
+  type ContaReceber,
+  type CriarContaReceberDTO,
   type GerarRecorrentesResult,
   type FrequenciaRecorrencia,
-} from '@/backend/types/financeiro/contas-pagar.types';
+} from '@/backend/types/financeiro/contas-receber.types';
 
 // ============================================================================
 // Constantes
@@ -40,9 +40,9 @@ const USUARIO_SISTEMA_ID = 1;
  * Verifica se deve gerar nova conta para um template
  */
 const deveGerarNovaConta = (
-  template: ContaPagar,
+  template: ContaReceber,
   dataReferencia: Date,
-  ultimaGerada?: ContaPagar
+  ultimaGerada?: ContaReceber
 ): boolean => {
   if (!template.frequenciaRecorrencia || !template.dataVencimento) {
     return false;
@@ -67,7 +67,7 @@ const deveGerarNovaConta = (
  * Busca a última conta gerada a partir de um template
  * Usa consulta otimizada com filtro direto por lancamento_origem_id
  */
-const buscarUltimaContaGerada = async (templateId: number): Promise<ContaPagar | undefined> => {
+const buscarUltimaContaGerada = async (templateId: number): Promise<ContaReceber | undefined> => {
   const resultado = await buscarUltimaContaGeradaPorTemplate(templateId);
   return resultado || undefined;
 };
@@ -76,17 +76,17 @@ const buscarUltimaContaGerada = async (templateId: number): Promise<ContaPagar |
  * Cria uma nova conta a partir de um template recorrente
  */
 const criarContaRecorrente = async (
-  template: ContaPagar,
+  template: ContaReceber,
   novaDataVencimento: string
-): Promise<ContaPagar> => {
-  const dados: CriarContaPagarDTO = {
+): Promise<ContaReceber> => {
+  const dados: CriarContaReceberDTO = {
     descricao: template.descricao,
     valor: template.valor,
     dataVencimento: novaDataVencimento,
     dataCompetencia: novaDataVencimento,
     contaContabilId: template.contaContabilId,
     origem: 'recorrente',
-    formaPagamento: template.formaPagamento || undefined,
+    formaRecebimento: template.formaRecebimento || undefined,
     contaBancariaId: template.contaBancariaId || undefined,
     centroCustoId: template.centroCustoId || undefined,
     categoria: template.categoria || undefined,
@@ -102,7 +102,7 @@ const criarContaRecorrente = async (
     },
   };
 
-  return await criarContaPagar(dados, USUARIO_SISTEMA_ID);
+  return await criarContaReceber(dados, USUARIO_SISTEMA_ID);
 };
 
 // ============================================================================
@@ -110,7 +110,7 @@ const criarContaRecorrente = async (
 // ============================================================================
 
 /**
- * Gera contas a pagar recorrentes baseadas em templates ativos
+ * Gera contas a receber recorrentes baseadas em templates ativos
  *
  * Fluxo:
  * 1. Busca todos os templates recorrentes ativos
@@ -122,16 +122,16 @@ const criarContaRecorrente = async (
  * @param dataReferencia - Data de referência para cálculo (default: hoje)
  * @returns Resultado da geração com lista de contas criadas
  */
-export const gerarContasPagarRecorrentes = async (
+export const gerarContasReceberRecorrentes = async (
   dataReferencia?: Date
 ): Promise<GerarRecorrentesResult> => {
   const dataRef = dataReferencia || new Date();
-  const contasGeradas: ContaPagar[] = [];
+  const contasGeradas: ContaReceber[] = [];
   const erros: Array<{ templateId: number; erro: string }> = [];
 
   try {
     // Buscar templates recorrentes ativos
-    const templates = await buscarContasPagarRecorrentes();
+    const templates = await buscarContasReceberRecorrentes();
 
     if (templates.length === 0) {
       return {
@@ -141,7 +141,7 @@ export const gerarContasPagarRecorrentes = async (
       };
     }
 
-    console.log(`Processando ${templates.length} templates recorrentes...`);
+    console.log(`Processando ${templates.length} templates recorrentes de contas a receber...`);
 
     for (const template of templates) {
       try {
@@ -226,7 +226,7 @@ const verificarContaExistente = async (
 export const previewContasRecorrentes = async (
   dataReferencia?: Date
 ): Promise<{
-  templates: ContaPagar[];
+  templates: ContaReceber[];
   contasAGerar: Array<{
     templateId: number;
     descricao: string;
@@ -235,7 +235,7 @@ export const previewContasRecorrentes = async (
   }>;
 }> => {
   const dataRef = dataReferencia || new Date();
-  const templates = await buscarContasPagarRecorrentes();
+  const templates = await buscarContasReceberRecorrentes();
   const contasAGerar: Array<{
     templateId: number;
     descricao: string;
@@ -284,7 +284,7 @@ export const estatisticasRecorrencia = async (): Promise<{
   porFrequencia: Record<FrequenciaRecorrencia, number>;
   valorMensalEstimado: number;
 }> => {
-  const templates = await buscarContasPagarRecorrentes();
+  const templates = await buscarContasReceberRecorrentes();
 
   const porFrequencia: Record<FrequenciaRecorrencia, number> = {
     semanal: 0,

@@ -8,7 +8,8 @@ import * as React from 'react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { CalendarIcon, CreditCard, Building2, AlertCircle } from 'lucide-react';
+import { CalendarIcon, CreditCard, Building2, AlertCircle, Upload, X, FileText, Loader2 } from 'lucide-react';
+import { createClient } from '@/app/_lib/supabase/client';
 import {
   Dialog,
   DialogContent,
@@ -37,6 +38,7 @@ import { pagarConta } from '@/app/_lib/hooks/use-contas-pagar';
 import type {
   ContaPagarComDetalhes,
   FormaPagamentoContaPagar,
+  AnexoContaPagar,
 } from '@/backend/types/financeiro/contas-pagar.types';
 
 interface PagarContaDialogProps {
@@ -69,6 +71,10 @@ const formatarValor = (valor: number): string => {
   }).format(valor);
 };
 
+// Tipos de arquivo permitidos para comprovante
+const COMPROVANTE_ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+const COMPROVANTE_MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
 export function PagarContaDialog({
   open,
   onOpenChange,
@@ -82,6 +88,11 @@ export function PagarContaDialog({
   const [observacoes, setObservacoes] = React.useState('');
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+  // Estados para comprovante
+  const [comprovanteFile, setComprovanteFile] = React.useState<File | null>(null);
+  const [comprovanteUploading, setComprovanteUploading] = React.useState(false);
+  const [comprovanteError, setComprovanteError] = React.useState<string | null>(null);
+
   // Reset form quando dialog abre
   React.useEffect(() => {
     if (open) {
@@ -89,8 +100,107 @@ export function PagarContaDialog({
       setContaBancariaId('');
       setDataEfetivacao(new Date());
       setObservacoes('');
+      setComprovanteFile(null);
+      setComprovanteError(null);
     }
   }, [open]);
+
+  /**
+   * Valida o arquivo de comprovante
+   */
+  const validateComprovanteFile = (file: File): string | null => {
+    if (!COMPROVANTE_ALLOWED_TYPES.includes(file.type)) {
+      return 'Tipo de arquivo não permitido. Use PDF, JPG, PNG ou WEBP.';
+    }
+    if (file.size > COMPROVANTE_MAX_SIZE) {
+      return 'Arquivo muito grande. Tamanho máximo: 10MB.';
+    }
+    return null;
+  };
+
+  /**
+   * Faz upload do comprovante e retorna o objeto AnexoContaPagar
+   */
+  const uploadComprovante = async (file: File): Promise<AnexoContaPagar | null> => {
+    setComprovanteUploading(true);
+    setComprovanteError(null);
+
+    try {
+      const supabase = createClient();
+
+      // Criar nome único para o arquivo
+      const timestamp = Date.now();
+      const randomId = Math.random().toString(36).substring(7);
+      const extension = file.name.split('.').pop();
+      const uniqueName = `comprovantes/${timestamp}-${randomId}.${extension}`;
+
+      // Upload para Supabase Storage
+      const { error } = await supabase.storage
+        .from('financeiro')
+        .upload(uniqueName, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (error) throw error;
+
+      // Obter URL pública
+      const { data: { publicUrl } } = supabase.storage
+        .from('financeiro')
+        .getPublicUrl(uniqueName);
+
+      return {
+        nome: file.name,
+        url: publicUrl,
+        tipo: file.type,
+        tamanho: file.size,
+        uploadedAt: new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error('Erro ao fazer upload do comprovante:', error);
+      setComprovanteError('Erro ao fazer upload do comprovante');
+      return null;
+    } finally {
+      setComprovanteUploading(false);
+    }
+  };
+
+  /**
+   * Handler para seleção de arquivo
+   */
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validationError = validateComprovanteFile(file);
+    if (validationError) {
+      setComprovanteError(validationError);
+      return;
+    }
+
+    setComprovanteFile(file);
+    setComprovanteError(null);
+    e.target.value = ''; // Reset input
+  };
+
+  /**
+   * Remove o arquivo selecionado
+   */
+  const handleRemoveFile = () => {
+    setComprovanteFile(null);
+    setComprovanteError(null);
+  };
+
+  /**
+   * Formata tamanho de arquivo
+   */
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,11 +213,26 @@ export function PagarContaDialog({
     setIsSubmitting(true);
 
     try {
+      // Upload do comprovante se houver
+      let comprovante: AnexoContaPagar | undefined;
+      if (comprovanteFile) {
+        const uploadedComprovante = await uploadComprovante(comprovanteFile);
+        if (uploadedComprovante) {
+          comprovante = uploadedComprovante;
+        }
+        // Se houver erro no upload, não continua
+        if (comprovanteError) {
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       const resultado = await pagarConta(conta.id, {
         formaPagamento,
         contaBancariaId: parseInt(contaBancariaId, 10),
         dataEfetivacao: dataEfetivacao?.toISOString(),
         observacoes: observacoes.trim() || undefined,
+        comprovante,
       });
 
       if (!resultado.success) {
@@ -267,6 +392,66 @@ export function PagarContaDialog({
                 onChange={(e) => setObservacoes(e.target.value)}
                 rows={2}
               />
+            </div>
+
+            {/* Comprovante de Pagamento */}
+            <div className="space-y-2">
+              <Label>Comprovante de Pagamento</Label>
+
+              {comprovanteFile ? (
+                <div className="flex items-center justify-between rounded-md border bg-muted/50 p-3">
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <div className="overflow-hidden">
+                      <p className="truncate text-sm font-medium">{comprovanteFile.name}</p>
+                      <p className="text-xs text-muted-foreground">{formatFileSize(comprovanteFile.size)}</p>
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 shrink-0"
+                    onClick={handleRemoveFile}
+                    disabled={comprovanteUploading}
+                  >
+                    <X className="h-4 w-4" />
+                    <span className="sr-only">Remover arquivo</span>
+                  </Button>
+                </div>
+              ) : (
+                <div className="relative">
+                  <input
+                    type="file"
+                    id="comprovante"
+                    accept={COMPROVANTE_ALLOWED_TYPES.join(',')}
+                    onChange={handleFileSelect}
+                    className="absolute inset-0 cursor-pointer opacity-0"
+                    disabled={comprovanteUploading}
+                  />
+                  <div className="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+                    {comprovanteUploading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Enviando...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="h-4 w-4" />
+                        <span>Clique para anexar comprovante</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {comprovanteError && (
+                <p className="text-xs text-destructive">{comprovanteError}</p>
+              )}
+
+              <p className="text-xs text-muted-foreground">
+                Formatos aceitos: PDF, JPG, PNG, WEBP. Máximo: 10MB.
+              </p>
             </div>
           </div>
 

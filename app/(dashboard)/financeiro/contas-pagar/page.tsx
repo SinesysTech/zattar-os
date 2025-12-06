@@ -48,6 +48,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useContasPagar, cancelarConta, excluirConta } from '@/app/_lib/hooks/use-contas-pagar';
+import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -350,14 +351,8 @@ export default function ContasPagarPage() {
   // Hook de dados
   const { contasPagar, paginacao, resumoVencimentos, isLoading, error, refetch } = useContasPagar(params);
 
-  // Mock de contas bancárias (em produção, buscar da API)
-  const contasBancarias = React.useMemo(
-    () => [
-      { id: 1, nome: 'Conta Principal', banco: 'Banco do Brasil' },
-      { id: 2, nome: 'Conta Secundária', banco: 'Itaú' },
-    ],
-    []
-  );
+  // Contas bancárias para os selects
+  const { contasBancarias } = useContasBancarias();
 
   // Handlers
   const handleFilterIdsChange = React.useCallback((selectedIds: string[]) => {

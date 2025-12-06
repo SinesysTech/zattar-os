@@ -1,7 +1,7 @@
 /**
- * Serviço de persistência para Contas a Pagar
+ * Serviço de persistência para Contas a Receber
  * Gerencia operações de CRUD na tabela lancamentos_financeiros
- * filtrando por tipo = 'despesa'
+ * filtrando por tipo = 'receita'
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
@@ -9,33 +9,33 @@ import {
   getCached,
   setCached,
   deletePattern,
-  CACHE_PREFIXES,
   generateCacheKey,
 } from '@/backend/utils/redis/cache-utils';
 import type {
-  ContaPagar,
-  ContaPagarComDetalhes,
-  CriarContaPagarDTO,
-  AtualizarContaPagarDTO,
-  ListarContasPagarParams,
-  ListarContasPagarResponse,
-  StatusContaPagar,
-  OrigemContaPagar,
-  FormaPagamentoContaPagar,
+  ContaReceber,
+  ContaReceberComDetalhes,
+  CriarContaReceberDTO,
+  AtualizarContaReceberDTO,
+  ListarContasReceberParams,
+  ListarContasReceberResponse,
+  StatusContaReceber,
+  OrigemContaReceber,
+  FormaRecebimentoContaReceber,
   FrequenciaRecorrencia,
-  AnexoContaPagar,
-  FornecedorResumo,
+  AnexoContaReceber,
+  ClienteResumo,
+  ContratoResumo,
   ContaContabilResumo,
   CentroCustoResumo,
   ContaBancariaResumo,
-  ResumoVencimentos,
-} from '@/backend/types/financeiro/contas-pagar.types';
+  ResumoInadimplencia,
+} from '@/backend/types/financeiro/contas-receber.types';
 
 // ============================================================================
 // Constantes de Cache
 // ============================================================================
 
-const CACHE_PREFIX = 'contas_pagar';
+const CACHE_PREFIX = 'contas_receber';
 const CACHE_TTL = 600; // 10 minutos
 
 // ============================================================================
@@ -44,23 +44,23 @@ const CACHE_TTL = 600; // 10 minutos
 
 interface LancamentoFinanceiroRecord {
   id: number;
-  tipo: 'despesa';
+  tipo: 'receita';
   descricao: string;
   valor: number;
   data_lancamento: string;
   data_competencia: string;
   data_vencimento: string | null;
   data_efetivacao: string | null;
-  status: StatusContaPagar;
-  origem: OrigemContaPagar;
-  forma_pagamento: FormaPagamentoContaPagar | null;
+  status: StatusContaReceber;
+  origem: OrigemContaReceber;
+  forma_pagamento: FormaRecebimentoContaReceber | null;
   conta_bancaria_id: number | null;
   conta_contabil_id: number;
   centro_custo_id: number | null;
   categoria: string | null;
   documento: string | null;
   observacoes: string | null;
-  anexos: AnexoContaPagar[];
+  anexos: AnexoContaReceber[];
   dados_adicionais: Record<string, unknown>;
   cliente_id: number | null;
   contrato_id: number | null;
@@ -78,9 +78,15 @@ interface LancamentoFinanceiroRecord {
 interface LancamentoComRelacionamentos extends LancamentoFinanceiroRecord {
   cliente?: {
     id: number;
-    razao_social: string;
-    nome_fantasia: string | null;
+    nome: string;
+    cpf: string | null;
     cnpj: string | null;
+    tipo_pessoa: 'fisica' | 'juridica';
+  } | null;
+  contrato?: {
+    id: number;
+    area_direito: string | null;
+    tipo_contrato: string | null;
   } | null;
   plano_contas?: {
     id: number;
@@ -106,9 +112,9 @@ interface LancamentoComRelacionamentos extends LancamentoFinanceiroRecord {
 // ============================================================================
 
 /**
- * Converte registro do banco para interface ContaPagar
+ * Converte registro do banco para interface ContaReceber
  */
-const mapearContaPagar = (registro: LancamentoFinanceiroRecord): ContaPagar => {
+const mapearContaReceber = (registro: LancamentoFinanceiroRecord): ContaReceber => {
   return {
     id: registro.id,
     descricao: registro.descricao,
@@ -119,7 +125,7 @@ const mapearContaPagar = (registro: LancamentoFinanceiroRecord): ContaPagar => {
     dataEfetivacao: registro.data_efetivacao,
     status: registro.status,
     origem: registro.origem,
-    formaPagamento: registro.forma_pagamento,
+    formaRecebimento: registro.forma_pagamento,
     contaBancariaId: registro.conta_bancaria_id,
     contaContabilId: registro.conta_contabil_id,
     centroCustoId: registro.centro_custo_id,
@@ -143,17 +149,25 @@ const mapearContaPagar = (registro: LancamentoFinanceiroRecord): ContaPagar => {
 };
 
 /**
- * Converte registro com relacionamentos para ContaPagarComDetalhes
+ * Converte registro com relacionamentos para ContaReceberComDetalhes
  */
-const mapearContaPagarComDetalhes = (registro: LancamentoComRelacionamentos): ContaPagarComDetalhes => {
-  const contaPagar = mapearContaPagar(registro);
+const mapearContaReceberComDetalhes = (registro: LancamentoComRelacionamentos): ContaReceberComDetalhes => {
+  const contaReceber = mapearContaReceber(registro);
 
-  const fornecedor: FornecedorResumo | undefined = registro.cliente
+  const cliente: ClienteResumo | undefined = registro.cliente
     ? {
         id: registro.cliente.id,
-        razaoSocial: registro.cliente.razao_social,
-        nomeFantasia: registro.cliente.nome_fantasia,
-        cnpj: registro.cliente.cnpj,
+        nome: registro.cliente.nome,
+        cpfCnpj: registro.cliente.tipo_pessoa === 'fisica' ? registro.cliente.cpf : registro.cliente.cnpj,
+        tipoPessoa: registro.cliente.tipo_pessoa,
+      }
+    : undefined;
+
+  const contrato: ContratoResumo | undefined = registro.contrato
+    ? {
+        id: registro.contrato.id,
+        areaDireito: registro.contrato.area_direito,
+        tipoContrato: registro.contrato.tipo_contrato,
       }
     : undefined;
 
@@ -184,8 +198,9 @@ const mapearContaPagarComDetalhes = (registro: LancamentoComRelacionamentos): Co
     : undefined;
 
   return {
-    ...contaPagar,
-    fornecedor,
+    ...contaReceber,
+    cliente,
+    contrato,
     contaContabil,
     centroCusto,
     contaBancaria,
@@ -196,11 +211,11 @@ const mapearContaPagarComDetalhes = (registro: LancamentoComRelacionamentos): Co
 // Cache Keys
 // ============================================================================
 
-const getContasPagarListKey = (params: ListarContasPagarParams): string => {
+const getContasReceberListKey = (params: ListarContasReceberParams): string => {
   return generateCacheKey(`${CACHE_PREFIX}:list`, params as Record<string, unknown>);
 };
 
-const getContaPagarByIdKey = (id: number): string => {
+const getContaReceberByIdKey = (id: number): string => {
   return `${CACHE_PREFIX}:id:${id}`;
 };
 
@@ -209,18 +224,18 @@ const getContaPagarByIdKey = (id: number): string => {
 // ============================================================================
 
 /**
- * Listar contas a pagar com filtros e paginação
+ * Listar contas a receber com filtros e paginação
  */
-export const listarContasPagar = async (
-  params: ListarContasPagarParams
-): Promise<ListarContasPagarResponse> => {
-  const cacheKey = getContasPagarListKey(params);
-  const cached = await getCached<ListarContasPagarResponse>(cacheKey);
+export const listarContasReceber = async (
+  params: ListarContasReceberParams
+): Promise<ListarContasReceberResponse> => {
+  const cacheKey = getContasReceberListKey(params);
+  const cached = await getCached<ListarContasReceberResponse>(cacheKey);
   if (cached) {
-    console.debug(`Cache hit for listarContasPagar: ${cacheKey}`);
+    console.debug(`Cache hit for listarContasReceber: ${cacheKey}`);
     return cached;
   }
-  console.debug(`Cache miss for listarContasPagar: ${cacheKey}`);
+  console.debug(`Cache miss for listarContasReceber: ${cacheKey}`);
 
   const {
     pagina = 1,
@@ -231,7 +246,8 @@ export const listarContasPagar = async (
     dataVencimentoFim,
     dataCompetenciaInicio,
     dataCompetenciaFim,
-    fornecedorId,
+    clienteId,
+    contratoId,
     contaContabilId,
     centroCustoId,
     contaBancariaId,
@@ -249,14 +265,15 @@ export const listarContasPagar = async (
     .select(
       `
       *,
-      cliente:clientes(id, razao_social, nome_fantasia, cnpj),
+      cliente:clientes(id, nome, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
     `,
       { count: 'exact' }
     )
-    .eq('tipo', 'despesa'); // Filtrar apenas despesas (contas a pagar)
+    .eq('tipo', 'receita'); // Filtrar apenas receitas (contas a receber)
 
   // Filtro de busca (descrição, documento, categoria)
   if (busca) {
@@ -288,9 +305,14 @@ export const listarContasPagar = async (
     query = query.lte('data_competencia', dataCompetenciaFim);
   }
 
-  // Filtro de fornecedor
-  if (fornecedorId) {
-    query = query.eq('cliente_id', fornecedorId);
+  // Filtro de cliente
+  if (clienteId) {
+    query = query.eq('cliente_id', clienteId);
+  }
+
+  // Filtro de contrato
+  if (contratoId) {
+    query = query.eq('contrato_id', contratoId);
   }
 
   // Filtro de conta contábil
@@ -334,14 +356,14 @@ export const listarContasPagar = async (
   const { data, count, error } = await query;
 
   if (error) {
-    throw new Error(`Erro ao listar contas a pagar: ${error.message}`);
+    throw new Error(`Erro ao listar contas a receber: ${error.message}`);
   }
 
   const total = count || 0;
   const totalPaginas = Math.ceil(total / limite);
 
-  const result: ListarContasPagarResponse = {
-    items: (data || []).map(mapearContaPagarComDetalhes),
+  const result: ListarContasReceberResponse = {
+    items: (data || []).map(mapearContaReceberComDetalhes),
     paginacao: {
       pagina,
       limite,
@@ -355,16 +377,16 @@ export const listarContasPagar = async (
 };
 
 /**
- * Buscar conta a pagar por ID com detalhes
+ * Buscar conta a receber por ID com detalhes
  */
-export const buscarContaPagarPorId = async (id: number): Promise<ContaPagarComDetalhes | null> => {
-  const cacheKey = getContaPagarByIdKey(id);
-  const cached = await getCached<ContaPagarComDetalhes>(cacheKey);
+export const buscarContaReceberPorId = async (id: number): Promise<ContaReceberComDetalhes | null> => {
+  const cacheKey = getContaReceberByIdKey(id);
+  const cached = await getCached<ContaReceberComDetalhes>(cacheKey);
   if (cached) {
-    console.debug(`Cache hit for buscarContaPagarPorId: ${cacheKey}`);
+    console.debug(`Cache hit for buscarContaReceberPorId: ${cacheKey}`);
     return cached;
   }
-  console.debug(`Cache miss for buscarContaPagarPorId: ${cacheKey}`);
+  console.debug(`Cache miss for buscarContaReceberPorId: ${cacheKey}`);
 
   const supabase = createServiceClient();
 
@@ -373,32 +395,33 @@ export const buscarContaPagarPorId = async (id: number): Promise<ContaPagarComDe
     .select(
       `
       *,
-      cliente:clientes(id, razao_social, nome_fantasia, cnpj),
+      cliente:clientes(id, nome, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
     `
     )
     .eq('id', id)
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .single();
 
   if (error) {
     if (error.code === 'PGRST116') {
       return null; // Não encontrado
     }
-    throw new Error(`Erro ao buscar conta a pagar: ${error.message}`);
+    throw new Error(`Erro ao buscar conta a receber: ${error.message}`);
   }
 
-  const result = mapearContaPagarComDetalhes(data);
+  const result = mapearContaReceberComDetalhes(data);
   await setCached(cacheKey, result, CACHE_TTL);
   return result;
 };
 
 /**
- * Buscar contas vencidas (para alertas)
+ * Buscar contas vencidas (para alertas de inadimplência)
  */
-export const buscarContasPagarVencidas = async (): Promise<ContaPagarComDetalhes[]> => {
+export const buscarContasReceberVencidas = async (): Promise<ContaReceberComDetalhes[]> => {
   const supabase = createServiceClient();
   const hoje = new Date().toISOString().split('T')[0];
 
@@ -407,13 +430,14 @@ export const buscarContasPagarVencidas = async (): Promise<ContaPagarComDetalhes
     .select(
       `
       *,
-      cliente:clientes(id, razao_social, nome_fantasia, cnpj),
+      cliente:clientes(id, nome, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
     `
     )
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .eq('status', 'pendente')
     .lt('data_vencimento', hoje)
     .order('data_vencimento', { ascending: true });
@@ -422,15 +446,15 @@ export const buscarContasPagarVencidas = async (): Promise<ContaPagarComDetalhes
     throw new Error(`Erro ao buscar contas vencidas: ${error.message}`);
   }
 
-  return (data || []).map(mapearContaPagarComDetalhes);
+  return (data || []).map(mapearContaReceberComDetalhes);
 };
 
 /**
- * Buscar resumo de vencimentos (para dashboard/alertas)
+ * Buscar resumo de inadimplência (para dashboard/alertas)
  */
-export const buscarResumoVencimentos = async (): Promise<ResumoVencimentos> => {
-  const cacheKey = `${CACHE_PREFIX}:resumo_vencimentos`;
-  const cached = await getCached<ResumoVencimentos>(cacheKey);
+export const buscarResumoInadimplencia = async (): Promise<ResumoInadimplencia> => {
+  const cacheKey = `${CACHE_PREFIX}:resumo_inadimplencia`;
+  const cached = await getCached<ResumoInadimplencia>(cacheKey);
   if (cached) {
     return cached;
   }
@@ -453,23 +477,24 @@ export const buscarResumoVencimentos = async (): Promise<ResumoVencimentos> => {
     .select(
       `
       *,
-      cliente:clientes(id, razao_social, nome_fantasia, cnpj),
+      cliente:clientes(id, nome, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
     `
     )
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .eq('status', 'pendente')
     .not('data_vencimento', 'is', null)
     .lte('data_vencimento', em30DiasStr)
     .order('data_vencimento', { ascending: true });
 
   if (error) {
-    throw new Error(`Erro ao buscar resumo de vencimentos: ${error.message}`);
+    throw new Error(`Erro ao buscar resumo de inadimplência: ${error.message}`);
   }
 
-  const contas = (data || []).map(mapearContaPagarComDetalhes);
+  const contas = (data || []).map(mapearContaReceberComDetalhes);
 
   const vencidas = contas.filter((c) => c.dataVencimento && c.dataVencimento < hojeStr);
   const vencendoHoje = contas.filter((c) => c.dataVencimento === hojeStr);
@@ -480,10 +505,10 @@ export const buscarResumoVencimentos = async (): Promise<ResumoVencimentos> => {
     (c) => c.dataVencimento && c.dataVencimento > em7DiasStr && c.dataVencimento <= em30DiasStr
   );
 
-  const calcularTotal = (lista: ContaPagarComDetalhes[]) =>
+  const calcularTotal = (lista: ContaReceberComDetalhes[]) =>
     lista.reduce((acc, c) => acc + c.valor, 0);
 
-  const result: ResumoVencimentos = {
+  const result: ResumoInadimplencia = {
     vencidas: {
       quantidade: vencidas.length,
       valorTotal: calcularTotal(vencidas),
@@ -514,13 +539,13 @@ export const buscarResumoVencimentos = async (): Promise<ResumoVencimentos> => {
  * Buscar última conta gerada a partir de um template recorrente
  * Otimizado com filtro direto por lancamento_origem_id
  */
-export const buscarUltimaContaGeradaPorTemplate = async (templateId: number): Promise<ContaPagar | null> => {
+export const buscarUltimaContaGeradaPorTemplate = async (templateId: number): Promise<ContaReceber | null> => {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
     .from('lancamentos_financeiros')
     .select('*')
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .eq('lancamento_origem_id', templateId)
     .order('data_vencimento', { ascending: false, nullsFirst: false })
     .limit(1)
@@ -530,7 +555,7 @@ export const buscarUltimaContaGeradaPorTemplate = async (templateId: number): Pr
     throw new Error(`Erro ao buscar última conta gerada: ${error.message}`);
   }
 
-  return data ? mapearContaPagar(data) : null;
+  return data ? mapearContaReceber(data) : null;
 };
 
 /**
@@ -546,7 +571,7 @@ export const verificarContaExistentePorTemplateEData = async (
   const { count, error } = await supabase
     .from('lancamentos_financeiros')
     .select('id', { count: 'exact', head: true })
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .eq('lancamento_origem_id', templateId)
     .eq('data_vencimento', dataVencimento);
 
@@ -560,13 +585,13 @@ export const verificarContaExistentePorTemplateEData = async (
 /**
  * Buscar templates recorrentes ativos
  */
-export const buscarContasPagarRecorrentes = async (): Promise<ContaPagar[]> => {
+export const buscarContasReceberRecorrentes = async (): Promise<ContaReceber[]> => {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
     .from('lancamentos_financeiros')
     .select('*')
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .eq('recorrente', true)
     .neq('status', 'cancelado')
     .order('descricao', { ascending: true });
@@ -575,7 +600,36 @@ export const buscarContasPagarRecorrentes = async (): Promise<ContaPagar[]> => {
     throw new Error(`Erro ao buscar contas recorrentes: ${error.message}`);
   }
 
-  return (data || []).map(mapearContaPagar);
+  return (data || []).map(mapearContaReceber);
+};
+
+/**
+ * Buscar contas a receber por contrato
+ */
+export const buscarContasReceberPorContrato = async (contratoId: number): Promise<ContaReceberComDetalhes[]> => {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('lancamentos_financeiros')
+    .select(
+      `
+      *,
+      cliente:clientes(id, nome, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, area_direito, tipo_contrato),
+      plano_contas(id, codigo, nome),
+      centros_custo(id, codigo, nome),
+      contas_bancarias(id, nome, banco, agencia, conta)
+    `
+    )
+    .eq('tipo', 'receita')
+    .eq('contrato_id', contratoId)
+    .order('data_vencimento', { ascending: true });
+
+  if (error) {
+    throw new Error(`Erro ao buscar contas do contrato: ${error.message}`);
+  }
+
+  return (data || []).map(mapearContaReceberComDetalhes);
 };
 
 // ============================================================================
@@ -583,12 +637,12 @@ export const buscarContasPagarRecorrentes = async (): Promise<ContaPagar[]> => {
 // ============================================================================
 
 /**
- * Criar nova conta a pagar
+ * Criar nova conta a receber
  */
-export const criarContaPagar = async (
-  dados: CriarContaPagarDTO,
+export const criarContaReceber = async (
+  dados: CriarContaReceberDTO,
   usuarioId: number
-): Promise<ContaPagar> => {
+): Promise<ContaReceber> => {
   const supabase = createServiceClient();
 
   // Validar se conta contábil existe e é analítica (aceita lançamentos)
@@ -619,7 +673,7 @@ export const criarContaPagar = async (
   const { data, error } = await supabase
     .from('lancamentos_financeiros')
     .insert({
-      tipo: 'despesa',
+      tipo: 'receita',
       descricao: dados.descricao.trim(),
       valor: dados.valor,
       data_lancamento: hoje,
@@ -627,7 +681,7 @@ export const criarContaPagar = async (
       data_vencimento: dados.dataVencimento,
       status: 'pendente',
       origem: dados.origem || 'manual',
-      forma_pagamento: dados.formaPagamento || null,
+      forma_pagamento: dados.formaRecebimento || null,
       conta_bancaria_id: dados.contaBancariaId || null,
       conta_contabil_id: dados.contaContabilId,
       centro_custo_id: dados.centroCustoId || null,
@@ -649,20 +703,20 @@ export const criarContaPagar = async (
     .single();
 
   if (error) {
-    throw new Error(`Erro ao criar conta a pagar: ${error.message}`);
+    throw new Error(`Erro ao criar conta a receber: ${error.message}`);
   }
 
-  await invalidateContasPagarCache();
-  return mapearContaPagar(data);
+  await invalidateContasReceberCache();
+  return mapearContaReceber(data);
 };
 
 /**
- * Atualizar conta a pagar existente
+ * Atualizar conta a receber existente
  */
-export const atualizarContaPagar = async (
+export const atualizarContaReceber = async (
   id: number,
-  dados: AtualizarContaPagarDTO
-): Promise<ContaPagar> => {
+  dados: AtualizarContaReceberDTO
+): Promise<ContaReceber> => {
   const supabase = createServiceClient();
 
   // Buscar conta atual
@@ -670,16 +724,16 @@ export const atualizarContaPagar = async (
     .from('lancamentos_financeiros')
     .select('*')
     .eq('id', id)
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .single();
 
   if (erroConsulta || !contaAtual) {
-    throw new Error('Conta a pagar não encontrada');
+    throw new Error('Conta a receber não encontrada');
   }
 
   // Não permitir atualizar contas confirmadas ou canceladas
   if (contaAtual.status === 'confirmado') {
-    throw new Error('Não é possível alterar conta já paga');
+    throw new Error('Não é possível alterar conta já recebida');
   }
   if (contaAtual.status === 'cancelado') {
     throw new Error('Não é possível alterar conta cancelada');
@@ -699,8 +753,8 @@ export const atualizarContaPagar = async (
   if (dados.dataCompetencia !== undefined) {
     updateData.data_competencia = dados.dataCompetencia;
   }
-  if (dados.formaPagamento !== undefined) {
-    updateData.forma_pagamento = dados.formaPagamento;
+  if (dados.formaRecebimento !== undefined) {
+    updateData.forma_pagamento = dados.formaRecebimento;
   }
   if (dados.contaBancariaId !== undefined) {
     updateData.conta_bancaria_id = dados.contaBancariaId;
@@ -747,26 +801,26 @@ export const atualizarContaPagar = async (
     .single();
 
   if (error) {
-    throw new Error(`Erro ao atualizar conta a pagar: ${error.message}`);
+    throw new Error(`Erro ao atualizar conta a receber: ${error.message}`);
   }
 
-  await invalidateContasPagarCache();
-  return mapearContaPagar(data);
+  await invalidateContasReceberCache();
+  return mapearContaReceber(data);
 };
 
 /**
- * Confirmar pagamento de conta
+ * Confirmar recebimento de conta
  */
-export const confirmarPagamentoContaPagar = async (
+export const confirmarRecebimentoContaReceber = async (
   id: number,
   dados: {
-    formaPagamento: FormaPagamentoContaPagar;
+    formaRecebimento: FormaRecebimentoContaReceber;
     contaBancariaId: number;
     dataEfetivacao?: string;
     observacoes?: string;
-    comprovante?: AnexoContaPagar;
+    comprovante?: AnexoContaReceber;
   }
-): Promise<ContaPagar> => {
+): Promise<ContaReceber> => {
   const supabase = createServiceClient();
 
   // Buscar conta atual
@@ -774,15 +828,15 @@ export const confirmarPagamentoContaPagar = async (
     .from('lancamentos_financeiros')
     .select('*')
     .eq('id', id)
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .single();
 
   if (erroConsulta || !contaAtual) {
-    throw new Error('Conta a pagar não encontrada');
+    throw new Error('Conta a receber não encontrada');
   }
 
   if (contaAtual.status !== 'pendente') {
-    throw new Error('Apenas contas pendentes podem ser pagas');
+    throw new Error('Apenas contas pendentes podem ser recebidas');
   }
 
   const dataEfetivacao = dados.dataEfetivacao || new Date().toISOString();
@@ -796,14 +850,14 @@ export const confirmarPagamentoContaPagar = async (
   // Mesclar observações
   let observacoes = contaAtual.observacoes || '';
   if (dados.observacoes) {
-    observacoes = observacoes ? `${observacoes}\n\n[Pagamento] ${dados.observacoes}` : dados.observacoes;
+    observacoes = observacoes ? `${observacoes}\n\n[Recebimento] ${dados.observacoes}` : dados.observacoes;
   }
 
   const { data, error } = await supabase
     .from('lancamentos_financeiros')
     .update({
       status: 'confirmado',
-      forma_pagamento: dados.formaPagamento,
+      forma_pagamento: dados.formaRecebimento,
       conta_bancaria_id: dados.contaBancariaId,
       data_efetivacao: dataEfetivacao,
       observacoes: observacoes.trim() || null,
@@ -814,20 +868,20 @@ export const confirmarPagamentoContaPagar = async (
     .single();
 
   if (error) {
-    throw new Error(`Erro ao confirmar pagamento: ${error.message}`);
+    throw new Error(`Erro ao confirmar recebimento: ${error.message}`);
   }
 
-  await invalidateContasPagarCache();
-  return mapearContaPagar(data);
+  await invalidateContasReceberCache();
+  return mapearContaReceber(data);
 };
 
 /**
- * Cancelar conta a pagar
+ * Cancelar conta a receber
  */
-export const cancelarContaPagar = async (
+export const cancelarContaReceber = async (
   id: number,
   motivo?: string
-): Promise<ContaPagar> => {
+): Promise<ContaReceber> => {
   const supabase = createServiceClient();
 
   // Buscar conta atual
@@ -835,15 +889,15 @@ export const cancelarContaPagar = async (
     .from('lancamentos_financeiros')
     .select('*')
     .eq('id', id)
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .single();
 
   if (erroConsulta || !contaAtual) {
-    throw new Error('Conta a pagar não encontrada');
+    throw new Error('Conta a receber não encontrada');
   }
 
   if (contaAtual.status === 'confirmado') {
-    throw new Error('Não é possível cancelar conta já paga');
+    throw new Error('Não é possível cancelar conta já recebida');
   }
   if (contaAtual.status === 'cancelado') {
     throw new Error('Conta já está cancelada');
@@ -871,14 +925,14 @@ export const cancelarContaPagar = async (
     throw new Error(`Erro ao cancelar conta: ${error.message}`);
   }
 
-  await invalidateContasPagarCache();
-  return mapearContaPagar(data);
+  await invalidateContasReceberCache();
+  return mapearContaReceber(data);
 };
 
 /**
- * Deletar conta a pagar (hard delete - apenas se pendente)
+ * Deletar conta a receber (hard delete - apenas se pendente)
  */
-export const deletarContaPagar = async (id: number): Promise<void> => {
+export const deletarContaReceber = async (id: number): Promise<void> => {
   const supabase = createServiceClient();
 
   // Buscar conta atual
@@ -886,11 +940,11 @@ export const deletarContaPagar = async (id: number): Promise<void> => {
     .from('lancamentos_financeiros')
     .select('status')
     .eq('id', id)
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .single();
 
   if (erroConsulta || !contaAtual) {
-    throw new Error('Conta a pagar não encontrada');
+    throw new Error('Conta a receber não encontrada');
   }
 
   if (contaAtual.status !== 'pendente') {
@@ -906,16 +960,16 @@ export const deletarContaPagar = async (id: number): Promise<void> => {
     throw new Error(`Erro ao excluir conta: ${error.message}`);
   }
 
-  await invalidateContasPagarCache();
+  await invalidateContasReceberCache();
 };
 
 /**
  * Adicionar anexo a conta existente
  */
-export const adicionarAnexoContaPagar = async (
+export const adicionarAnexoContaReceber = async (
   id: number,
-  anexo: AnexoContaPagar
-): Promise<ContaPagar> => {
+  anexo: AnexoContaReceber
+): Promise<ContaReceber> => {
   const supabase = createServiceClient();
 
   // Buscar conta atual
@@ -923,11 +977,11 @@ export const adicionarAnexoContaPagar = async (
     .from('lancamentos_financeiros')
     .select('anexos')
     .eq('id', id)
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .single();
 
   if (erroConsulta || !contaAtual) {
-    throw new Error('Conta a pagar não encontrada');
+    throw new Error('Conta a receber não encontrada');
   }
 
   const anexos = contaAtual.anexos || [];
@@ -944,17 +998,17 @@ export const adicionarAnexoContaPagar = async (
     throw new Error(`Erro ao adicionar anexo: ${error.message}`);
   }
 
-  await invalidateContasPagarCache();
-  return mapearContaPagar(data);
+  await invalidateContasReceberCache();
+  return mapearContaReceber(data);
 };
 
 /**
  * Remover anexo de conta existente
  */
-export const removerAnexoContaPagar = async (
+export const removerAnexoContaReceber = async (
   id: number,
   urlAnexo: string
-): Promise<ContaPagar> => {
+): Promise<ContaReceber> => {
   const supabase = createServiceClient();
 
   // Buscar conta atual
@@ -962,15 +1016,15 @@ export const removerAnexoContaPagar = async (
     .from('lancamentos_financeiros')
     .select('anexos')
     .eq('id', id)
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .single();
 
   if (erroConsulta || !contaAtual) {
-    throw new Error('Conta a pagar não encontrada');
+    throw new Error('Conta a receber não encontrada');
   }
 
   const anexos = (contaAtual.anexos || []).filter(
-    (a: AnexoContaPagar) => a.url !== urlAnexo
+    (a: AnexoContaReceber) => a.url !== urlAnexo
   );
 
   const { data, error } = await supabase
@@ -984,8 +1038,8 @@ export const removerAnexoContaPagar = async (
     throw new Error(`Erro ao remover anexo: ${error.message}`);
   }
 
-  await invalidateContasPagarCache();
-  return mapearContaPagar(data);
+  await invalidateContasReceberCache();
+  return mapearContaReceber(data);
 };
 
 // ============================================================================
@@ -993,9 +1047,9 @@ export const removerAnexoContaPagar = async (
 // ============================================================================
 
 /**
- * Invalidar todo o cache de contas a pagar
+ * Invalidar todo o cache de contas a receber
  */
-export const invalidateContasPagarCache = async (): Promise<void> => {
+export const invalidateContasReceberCache = async (): Promise<void> => {
   await deletePattern(`${CACHE_PREFIX}:*`);
 };
 
@@ -1018,7 +1072,7 @@ export const buscarCategoriasUsadas = async (): Promise<string[]> => {
   const { data, error } = await supabase
     .from('lancamentos_financeiros')
     .select('categoria')
-    .eq('tipo', 'despesa')
+    .eq('tipo', 'receita')
     .not('categoria', 'is', null)
     .order('categoria', { ascending: true });
 
@@ -1036,9 +1090,9 @@ export const buscarCategoriasUsadas = async (): Promise<string[]> => {
 /**
  * Calcular totais por status
  */
-export const calcularTotaisPorStatus = async (): Promise<Record<StatusContaPagar, { quantidade: number; valor: number }>> => {
+export const calcularTotaisPorStatus = async (): Promise<Record<StatusContaReceber, { quantidade: number; valor: number }>> => {
   const cacheKey = `${CACHE_PREFIX}:totais_status`;
-  const cached = await getCached<Record<StatusContaPagar, { quantidade: number; valor: number }>>(cacheKey);
+  const cached = await getCached<Record<StatusContaReceber, { quantidade: number; valor: number }>>(cacheKey);
   if (cached) {
     return cached;
   }
@@ -1048,13 +1102,13 @@ export const calcularTotaisPorStatus = async (): Promise<Record<StatusContaPagar
   const { data, error } = await supabase
     .from('lancamentos_financeiros')
     .select('status, valor')
-    .eq('tipo', 'despesa');
+    .eq('tipo', 'receita');
 
   if (error) {
     throw new Error(`Erro ao calcular totais: ${error.message}`);
   }
 
-  const totais: Record<StatusContaPagar, { quantidade: number; valor: number }> = {
+  const totais: Record<StatusContaReceber, { quantidade: number; valor: number }> = {
     pendente: { quantidade: 0, valor: 0 },
     confirmado: { quantidade: 0, valor: 0 },
     cancelado: { quantidade: 0, valor: 0 },
@@ -1062,7 +1116,7 @@ export const calcularTotaisPorStatus = async (): Promise<Record<StatusContaPagar
   };
 
   for (const item of data || []) {
-    const status = item.status as StatusContaPagar;
+    const status = item.status as StatusContaReceber;
     if (totais[status]) {
       totais[status].quantidade++;
       totais[status].valor += Number(item.valor);

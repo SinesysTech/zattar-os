@@ -56,47 +56,58 @@ import {
 // Schema de Validação
 // ============================================================================
 
-const contaPagarFormSchema = z.object({
-  descricao: z
-    .string()
-    .min(1, 'Descrição é obrigatória')
-    .max(500, 'Descrição deve ter no máximo 500 caracteres'),
-  valor: z
-    .number({ invalid_type_error: 'Valor inválido' })
-    .positive('Valor deve ser positivo'),
-  dataVencimento: z.date({
-    required_error: 'Data de vencimento é obrigatória',
-  }),
-  contaBancariaId: z.number().nullable().optional(),
-  contaContabilId: z.number().nullable().optional(),
-  centroCustoId: z.number().nullable().optional(),
-  clienteId: z.number().nullable().optional(), // Fornecedor
-  categoria: z.string().max(100).optional(),
-  formaPagamento: z.enum([
-    'dinheiro',
-    'transferencia_bancaria',
-    'ted',
-    'pix',
-    'boleto',
-    'cartao_credito',
-    'cartao_debito',
-    'cheque',
-    'deposito_judicial',
-  ]).nullable().optional(),
-  recorrente: z.boolean().default(false),
-  frequenciaRecorrencia: z.enum([
-    'semanal',
-    'quinzenal',
-    'mensal',
-    'bimestral',
-    'trimestral',
-    'semestral',
-    'anual',
-  ]).nullable().optional(),
-  documento: z.string().max(50).optional(),
-  observacoes: z.string().max(2000).optional(),
-});
+/**
+ * Cria schema de validação dinâmico baseado na disponibilidade de planos de contas
+ */
+const createContaPagarFormSchema = (hasContasContabeis: boolean) => {
+  const baseSchema = z.object({
+    descricao: z
+      .string()
+      .min(1, 'Descrição é obrigatória')
+      .max(500, 'Descrição deve ter no máximo 500 caracteres'),
+    valor: z
+      .number({ invalid_type_error: 'Valor inválido' })
+      .positive('Valor deve ser positivo'),
+    dataVencimento: z.date({
+      required_error: 'Data de vencimento é obrigatória',
+    }),
+    contaBancariaId: z.number().nullable().optional(),
+    contaContabilId: hasContasContabeis
+      ? z.number({ required_error: 'Conta contábil é obrigatória' }).min(1, 'Conta contábil é obrigatória')
+      : z.number().nullable().optional(),
+    centroCustoId: z.number().nullable().optional(),
+    clienteId: z.number().nullable().optional(), // Fornecedor
+    categoria: z.string().max(100).optional(),
+    formaPagamento: z.enum([
+      'dinheiro',
+      'transferencia_bancaria',
+      'ted',
+      'pix',
+      'boleto',
+      'cartao_credito',
+      'cartao_debito',
+      'cheque',
+      'deposito_judicial',
+    ]).nullable().optional(),
+    recorrente: z.boolean().default(false),
+    frequenciaRecorrencia: z.enum([
+      'semanal',
+      'quinzenal',
+      'mensal',
+      'bimestral',
+      'trimestral',
+      'semestral',
+      'anual',
+    ]).nullable().optional(),
+    documento: z.string().max(50).optional(),
+    observacoes: z.string().max(2000).optional(),
+  });
 
+  return baseSchema;
+};
+
+// Schema padrão para tipagem
+const contaPagarFormSchema = createContaPagarFormSchema(false);
 type ContaPagarFormData = z.infer<typeof contaPagarFormSchema>;
 
 // ============================================================================
@@ -153,9 +164,16 @@ export function ContaPagarFormDialog({
   onSuccess,
 }: ContaPagarFormDialogProps) {
   const isEditMode = !!conta;
+  const hasContasContabeis = planosContas.length > 0;
+
+  // Criar schema dinâmico baseado na disponibilidade de contas contábeis
+  const dynamicSchema = React.useMemo(
+    () => createContaPagarFormSchema(hasContasContabeis),
+    [hasContasContabeis]
+  );
 
   const form = useForm<ContaPagarFormData>({
-    resolver: zodResolver(contaPagarFormSchema),
+    resolver: zodResolver(dynamicSchema),
     defaultValues: {
       descricao: '',
       valor: 0,
@@ -453,7 +471,9 @@ export function ContaPagarFormDialog({
             <div className="grid grid-cols-2 gap-4">
               {/* Plano de Contas */}
               <div className="space-y-2">
-                <Label>Conta Contábil</Label>
+                <Label>
+                  Conta Contábil {hasContasContabeis && <span className="text-destructive">*</span>}
+                </Label>
                 <Select
                   value={watch('contaContabilId')?.toString() || ''}
                   onValueChange={(value) =>
@@ -461,7 +481,7 @@ export function ContaPagarFormDialog({
                   }
                   disabled={isSubmitting || planosContas.length === 0}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className={errors.contaContabilId ? 'border-destructive' : ''}>
                     <SelectValue placeholder={planosContas.length === 0 ? 'Nenhuma conta' : 'Selecione...'} />
                   </SelectTrigger>
                   <SelectContent>
@@ -472,6 +492,9 @@ export function ContaPagarFormDialog({
                     ))}
                   </SelectContent>
                 </Select>
+                {errors.contaContabilId && (
+                  <p className="text-sm text-destructive">{errors.contaContabilId.message}</p>
+                )}
               </div>
 
               {/* Centro de Custo */}

@@ -1,32 +1,32 @@
 /**
- * API Routes para Contas a Pagar
- * GET: Listar contas a pagar com filtros
- * POST: Criar nova conta a pagar
+ * API Routes para Contas a Receber
+ * GET: Listar contas a receber com filtros
+ * POST: Criar nova conta a receber
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
-  listarContasPagar,
-  criarContaPagar,
-  buscarResumoVencimentos,
-} from '@/backend/financeiro/contas-pagar/services/persistence/contas-pagar-persistence.service';
+  listarContasReceber,
+  criarContaReceber,
+  buscarResumoInadimplencia,
+} from '@/backend/financeiro/contas-receber/services/persistence/contas-receber-persistence.service';
 import {
-  validarCriarContaPagarDTO,
+  validarCriarContaReceberDTO,
   isStatusValido,
-  type ListarContasPagarParams,
-  type StatusContaPagar,
-  type OrigemContaPagar,
-} from '@/backend/types/financeiro/contas-pagar.types';
+  type ListarContasReceberParams,
+  type StatusContaReceber,
+  type OrigemContaReceber,
+} from '@/backend/types/financeiro/contas-receber.types';
 
 /**
  * @swagger
- * /api/financeiro/contas-pagar:
+ * /api/financeiro/contas-receber:
  *   get:
- *     summary: Lista contas a pagar
- *     description: Retorna uma lista paginada de contas a pagar com filtros opcionais
+ *     summary: Lista contas a receber
+ *     description: Retorna uma lista paginada de contas a receber com filtros opcionais
  *     tags:
- *       - Contas a Pagar
+ *       - Contas a Receber
  *     security:
  *       - bearerAuth: []
  *       - sessionAuth: []
@@ -63,7 +63,11 @@ import {
  *           type: string
  *           format: date
  *       - in: query
- *         name: fornecedorId
+ *         name: clienteId
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: contratoId
  *         schema:
  *           type: integer
  *       - in: query
@@ -74,19 +78,19 @@ import {
  *         name: incluirResumo
  *         schema:
  *           type: boolean
- *         description: Incluir resumo de vencimentos
+ *         description: Incluir resumo de inadimplência
  *     responses:
  *       200:
- *         description: Lista de contas a pagar retornada com sucesso
+ *         description: Lista de contas a receber retornada com sucesso
  *       401:
  *         description: Não autenticado
  *       500:
  *         description: Erro interno do servidor
  *   post:
- *     summary: Cria uma nova conta a pagar
- *     description: Cadastra uma nova conta a pagar no sistema
+ *     summary: Cria uma nova conta a receber
+ *     description: Cadastra uma nova conta a receber no sistema
  *     tags:
- *       - Contas a Pagar
+ *       - Contas a Receber
  *     security:
  *       - bearerAuth: []
  *       - sessionAuth: []
@@ -112,7 +116,9 @@ import {
  *                 format: date
  *               contaContabilId:
  *                 type: integer
- *               fornecedorId:
+ *               clienteId:
+ *                 type: integer
+ *               contratoId:
  *                 type: integer
  *               categoria:
  *                 type: string
@@ -123,7 +129,7 @@ import {
  *                 enum: [mensal, trimestral, semestral, anual]
  *     responses:
  *       201:
- *         description: Conta a pagar criada com sucesso
+ *         description: Conta a receber criada com sucesso
  *       400:
  *         description: Dados inválidos
  *       401:
@@ -144,15 +150,15 @@ export async function GET(request: NextRequest) {
 
     // Processar parâmetros de status (suporta múltiplos valores)
     const statusValues = searchParams.getAll('status');
-    const validStatusValues = statusValues.filter(isStatusValido) as StatusContaPagar[];
-    let statusParam: StatusContaPagar | StatusContaPagar[] | undefined;
+    const validStatusValues = statusValues.filter(isStatusValido) as StatusContaReceber[];
+    let statusParam: StatusContaReceber | StatusContaReceber[] | undefined;
     if (validStatusValues.length === 1) {
       statusParam = validStatusValues[0];
     } else if (validStatusValues.length > 1) {
       statusParam = validStatusValues;
     }
 
-    const params: ListarContasPagarParams = {
+    const params: ListarContasReceberParams = {
       pagina: searchParams.get('pagina')
         ? parseInt(searchParams.get('pagina')!, 10)
         : undefined,
@@ -165,8 +171,11 @@ export async function GET(request: NextRequest) {
       dataVencimentoFim: searchParams.get('dataVencimentoFim') || undefined,
       dataCompetenciaInicio: searchParams.get('dataCompetenciaInicio') || undefined,
       dataCompetenciaFim: searchParams.get('dataCompetenciaFim') || undefined,
-      fornecedorId: searchParams.get('fornecedorId')
-        ? parseInt(searchParams.get('fornecedorId')!, 10)
+      clienteId: searchParams.get('clienteId')
+        ? parseInt(searchParams.get('clienteId')!, 10)
+        : undefined,
+      contratoId: searchParams.get('contratoId')
+        ? parseInt(searchParams.get('contratoId')!, 10)
         : undefined,
       contaContabilId: searchParams.get('contaContabilId')
         ? parseInt(searchParams.get('contaContabilId')!, 10)
@@ -178,7 +187,7 @@ export async function GET(request: NextRequest) {
         ? parseInt(searchParams.get('contaBancariaId')!, 10)
         : undefined,
       categoria: searchParams.get('categoria') || undefined,
-      origem: (searchParams.get('origem') as OrigemContaPagar) || undefined,
+      origem: (searchParams.get('origem') as OrigemContaReceber) || undefined,
       recorrente:
         searchParams.get('recorrente') !== null
           ? searchParams.get('recorrente') === 'true'
@@ -193,25 +202,25 @@ export async function GET(request: NextRequest) {
       ordem: (searchParams.get('ordem') as 'asc' | 'desc') || undefined,
     };
 
-    // 3. Listar contas a pagar
-    const resultado = await listarContasPagar(params);
+    // 3. Listar contas a receber
+    const resultado = await listarContasReceber(params);
 
-    // 4. Incluir resumo de vencimentos se solicitado
+    // 4. Incluir resumo de inadimplência se solicitado
     const incluirResumo = searchParams.get('incluirResumo') === 'true';
     let resumo;
     if (incluirResumo) {
-      resumo = await buscarResumoVencimentos();
+      resumo = await buscarResumoInadimplencia();
     }
 
     return NextResponse.json({
       success: true,
       data: {
         ...resultado,
-        resumoVencimentos: resumo,
+        resumoInadimplencia: resumo,
       },
     });
   } catch (error) {
-    console.error('Erro ao listar contas a pagar:', error);
+    console.error('Erro ao listar contas a receber:', error);
     const erroMsg =
       error instanceof Error ? error.message : 'Erro interno do servidor';
     return NextResponse.json({ error: erroMsg }, { status: 500 });
@@ -239,7 +248,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // 4. Validar dados
-    if (!validarCriarContaPagarDTO(body)) {
+    if (!validarCriarContaReceberDTO(body)) {
       return NextResponse.json(
         {
           error:
@@ -249,18 +258,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 5. Criar conta a pagar
-    const contaPagar = await criarContaPagar(body, usuarioId);
+    // 5. Criar conta a receber
+    const contaReceber = await criarContaReceber(body, usuarioId);
 
     return NextResponse.json(
       {
         success: true,
-        data: contaPagar,
+        data: contaReceber,
       },
       { status: 201 }
     );
   } catch (error) {
-    console.error('Erro ao criar conta a pagar:', error);
+    console.error('Erro ao criar conta a receber:', error);
     const erroMsg =
       error instanceof Error ? error.message : 'Erro interno do servidor';
 

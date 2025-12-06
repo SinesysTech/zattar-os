@@ -9,6 +9,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useContaPagar, pagarConta, cancelarConta } from '@/app/_lib/hooks/use-contas-pagar';
+import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -31,6 +32,10 @@ import {
   FileText,
   Clock,
   AlertTriangle,
+  Paperclip,
+  ExternalLink,
+  FileImage,
+  File,
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -123,14 +128,8 @@ export default function ContaPagarDetalhesPage() {
   // Buscar dados
   const { contaPagar, isLoading, error, refetch } = useContaPagar(id);
 
-  // Mock de contas bancárias (em produção, buscar da API)
-  const contasBancarias = React.useMemo(
-    () => [
-      { id: 1, nome: 'Conta Principal', banco: 'Banco do Brasil' },
-      { id: 2, nome: 'Conta Secundária', banco: 'Itaú' },
-    ],
-    []
-  );
+  // Contas bancárias para os selects
+  const { contasBancarias } = useContasBancarias();
 
   const handleVoltar = () => {
     router.push('/financeiro/contas-pagar');
@@ -405,6 +404,53 @@ export default function ContaPagarDetalhesPage() {
             </CardHeader>
             <CardContent>
               <p className="whitespace-pre-wrap text-sm">{contaPagar.observacoes}</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Anexos */}
+        {contaPagar.anexos && contaPagar.anexos.length > 0 && (
+          <Card className="md:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Paperclip className="h-5 w-5" />
+                Anexos
+              </CardTitle>
+              <CardDescription>
+                {contaPagar.anexos.length} arquivo{contaPagar.anexos.length !== 1 ? 's' : ''} anexado{contaPagar.anexos.length !== 1 ? 's' : ''}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {contaPagar.anexos.map((anexo, index) => {
+                  const isImage = anexo.tipo?.startsWith('image/');
+                  const isPdf = anexo.tipo === 'application/pdf';
+                  const FileIcon = isImage ? FileImage : isPdf ? FileText : File;
+
+                  return (
+                    <a
+                      key={index}
+                      href={anexo.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50"
+                    >
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">
+                        <FileIcon className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium">{anexo.nome}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {anexo.tamanho
+                            ? `${(anexo.tamanho / 1024).toFixed(1)} KB`
+                            : 'Tamanho desconhecido'}
+                        </p>
+                      </div>
+                      <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </a>
+                  );
+                })}
+              </div>
             </CardContent>
           </Card>
         )}
