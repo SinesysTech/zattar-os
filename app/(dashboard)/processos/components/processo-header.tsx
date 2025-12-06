@@ -48,7 +48,7 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas }: Pr
   const getGrauLabel = (grau: string) => {
     if (grau === 'primeiro_grau') return '1º Grau';
     if (grau === 'segundo_grau') return '2º Grau';
-    if (grau === 'tribunal_superior') return 'TST';
+    if (grau === 'tribunal_superior') return 'Tribunal Superior';
     return grau;
   };
 
