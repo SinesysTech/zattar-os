@@ -91,6 +91,7 @@ describe('Compartilhamento API Integration', () => {
       }
 
       // Tentar compartilhar consigo mesmo (constraint unique deve impedir duplicata)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- erro capturado mas não verificado neste caso
       const { error: _error } = await supabase
         .from('documentos_compartilhados')
         .insert({

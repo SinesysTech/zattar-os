@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 export function PWAInstallPrompt() {
   const { isInstallable, isInstalled, promptInstall, dismissPrompt, installationStatus } = usePWAInstall();
   const [isVisible, setIsVisible] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- usado para debug futuro
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {

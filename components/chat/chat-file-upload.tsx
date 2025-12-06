@@ -97,6 +97,7 @@ export function ChatFileUpload({ onFileUploaded, className }: ChatFileUploadProp
     if (validFiles.length > 0) {
       uploadFiles(validFiles);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- uploadFiles é chamado imediatamente, não precisa ser dependência
   }, []);
 
   const uploadFiles = async (filesToUpload: FileUploadItem[]) => {

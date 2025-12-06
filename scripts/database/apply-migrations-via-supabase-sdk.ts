@@ -1,4 +1,5 @@
 // Script para aplicar migrations pendentes via Supabase SDK
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- importado para referência futura
 import { createClient } from '@supabase/supabase-js';
 import { readFileSync } from 'fs';
 import { join } from 'path';

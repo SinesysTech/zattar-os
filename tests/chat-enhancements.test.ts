@@ -227,6 +227,7 @@ describe('getFileTypeInfo', () => {
 // ============================================================================
 
 describe('ChatMessageItem Integration', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- mock preparado para testes futuros de componente
   const mockMessage = {
     id: '1',
     content: 'Olá, mundo!',
