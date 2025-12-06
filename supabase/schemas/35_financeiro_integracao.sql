@@ -120,7 +120,8 @@ begin
       v_conta_contabil_id,
       new.acordo_condenacao_id,
       new.id,
-      v_acordo.created_by::bigint,
+      -- Busca o usuario.id correspondente ao auth_user_id do criador do acordo
+      (select id from public.usuarios where auth_user_id = v_acordo.created_by),
       jsonb_build_object(
         'numero_parcela', new.numero_parcela,
         'total_parcelas', v_acordo.numero_parcelas,

@@ -245,11 +245,12 @@ create policy "Service role tem acesso total aos salários"
   with check (true);
 
 -- Usuário pode ver apenas seu próprio salário
+-- Nota: Usa subquery para mapear auth.uid() (uuid) para usuarios.id (bigint) via auth_user_id
 create policy "Usuário pode visualizar próprio salário"
   on public.salarios
   for select
   to authenticated
-  using (usuario_id = (select auth.uid())::bigint);
+  using (usuario_id in (select id from public.usuarios where auth_user_id = (select auth.uid())));
 
 -- RLS para folhas_pagamento
 alter table public.folhas_pagamento enable row level security;
@@ -278,8 +279,9 @@ create policy "Service role tem acesso total aos itens da folha"
   with check (true);
 
 -- Usuário pode ver apenas seu próprio item na folha
+-- Nota: Usa subquery para mapear auth.uid() (uuid) para usuarios.id (bigint) via auth_user_id
 create policy "Usuário pode visualizar próprio item da folha"
   on public.itens_folha_pagamento
   for select
   to authenticated
-  using (usuario_id = (select auth.uid())::bigint);
+  using (usuario_id in (select id from public.usuarios where auth_user_id = (select auth.uid())));

@@ -19,6 +19,13 @@
     "files.associations": {
       "*.css": "tailwindcss"
     },
-    "traycer.alwaysAllowPayToRun": true
+    "traycer.alwaysAllowPayToRun": true,
+    "traycer.additionalAgents": [
+      "Claude Code Extension",
+      "Codex Extension",
+      "Export as Markdown"
+    ],
+    "traycer.outputLevel": "trace",
+    "traycer.languagePreference": "Português"
   }
 }
