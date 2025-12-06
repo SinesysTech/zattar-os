@@ -6,9 +6,28 @@ import useSWR from 'swr';
 import type {
   PlanoContaHierarquico,
   PlanoConta,
-} from '@/backend/types/financeiro/plano-contas.types';
+} from '@/types/domain/financeiro';
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+// Re-exporta funções utilitárias do módulo compartilhado para consumidores deste hook
+export {
+  achatarHierarquia,
+  encontrarContaNaHierarquia,
+  obterCaminhoCompleto,
+} from '@/types/domain/financeiro';
+
+// Importa para uso interno
+import { achatarHierarquia } from '@/types/domain/financeiro';
+
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  const body = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(body.error || `Erro ${res.status}: ${res.statusText}`);
+  }
+
+  return body;
+};
 
 /**
  * Hook para obter a estrutura hierárquica completa do plano de contas
@@ -45,27 +64,6 @@ export function usePlanoContasSinteticas() {
 }
 
 /**
- * Achatar hierarquia em lista com indentação
- * Útil para seletores com visualização hierárquica
- */
-export function achatarHierarquia(
-  hierarquia: PlanoContaHierarquico[],
-  nivel: number = 0
-): Array<PlanoContaHierarquico & { nivelIndentacao: number }> {
-  const resultado: Array<PlanoContaHierarquico & { nivelIndentacao: number }> = [];
-
-  for (const conta of hierarquia) {
-    resultado.push({ ...conta, nivelIndentacao: nivel });
-
-    if (conta.filhos && conta.filhos.length > 0) {
-      resultado.push(...achatarHierarquia(conta.filhos, nivel + 1));
-    }
-  }
-
-  return resultado;
-}
-
-/**
  * Hook que retorna hierarquia achatada para uso em selects
  */
 export function usePlanoContasHierarquiaAchatada() {
@@ -79,29 +77,6 @@ export function usePlanoContasHierarquiaAchatada() {
     error,
     mutate,
   };
-}
-
-/**
- * Encontrar conta na hierarquia por ID
- */
-export function encontrarContaNaHierarquia(
-  hierarquia: PlanoContaHierarquico[],
-  id: number
-): PlanoContaHierarquico | null {
-  for (const conta of hierarquia) {
-    if (conta.id === id) {
-      return conta;
-    }
-
-    if (conta.filhos && conta.filhos.length > 0) {
-      const encontrada = encontrarContaNaHierarquia(conta.filhos, id);
-      if (encontrada) {
-        return encontrada;
-      }
-    }
-  }
-
-  return null;
 }
 
 /**

@@ -9,9 +9,18 @@ import type {
   ListarPlanoContasParams,
   TipoContaContabil,
   NivelConta,
-} from '@/backend/types/financeiro/plano-contas.types';
+} from '@/types/domain/financeiro';
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  const body = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(body.error || `Erro ${res.status}: ${res.statusText}`);
+  }
+
+  return body;
+};
 
 interface UsePlanoContasParams {
   pagina?: number;

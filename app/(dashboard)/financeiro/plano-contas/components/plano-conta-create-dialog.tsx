@@ -35,7 +35,7 @@ import {
   type TipoContaContabil,
   type NaturezaConta,
   type NivelConta,
-} from '@/backend/types/financeiro/plano-contas.types';
+} from '@/types/domain/financeiro';
 
 const createPlanoContaSchema = z.object({
   codigo: z

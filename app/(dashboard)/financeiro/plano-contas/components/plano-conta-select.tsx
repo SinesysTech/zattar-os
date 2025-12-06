@@ -12,7 +12,7 @@ import {
   usePlanoContasHierarquiaAchatada,
   gerarLabelParaSeletor,
 } from '@/app/_lib/hooks/use-plano-contas-hierarquia';
-import type { NivelConta, TipoContaContabil } from '@/backend/types/financeiro/plano-contas.types';
+import type { NivelConta, TipoContaContabil } from '@/types/domain/financeiro';
 
 interface PlanoContaSelectProps {
   value?: number | null;

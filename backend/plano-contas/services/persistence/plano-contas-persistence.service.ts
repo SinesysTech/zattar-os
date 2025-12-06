@@ -514,13 +514,18 @@ export const desativarPlanoConta = async (id: number): Promise<void> => {
 
   // TODO: Verificar se conta tem lançamentos associados quando a tabela de lançamentos existir
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('plano_contas')
     .update({ ativo: false })
-    .eq('id', id);
+    .eq('id', id)
+    .select('id');
 
   if (error) {
     throw new Error(`Erro ao desativar conta: ${error.message}`);
+  }
+
+  if (!data || data.length === 0) {
+    throw new Error('Conta não encontrada');
   }
 
   await invalidatePlanoContasCache();
@@ -539,7 +544,14 @@ export const ativarPlanoConta = async (id: number): Promise<void> => {
     .eq('id', id)
     .single();
 
-  if (erroConsulta || !conta) {
+  if (erroConsulta) {
+    if (erroConsulta.code === 'PGRST116') {
+      throw new Error('Conta não encontrada');
+    }
+    throw new Error(`Erro ao buscar conta: ${erroConsulta.message}`);
+  }
+
+  if (!conta) {
     throw new Error('Conta não encontrada');
   }
 
@@ -559,13 +571,18 @@ export const ativarPlanoConta = async (id: number): Promise<void> => {
     }
   }
 
-  const { error } = await supabase
+  const { data: updatedData, error } = await supabase
     .from('plano_contas')
     .update({ ativo: true })
-    .eq('id', id);
+    .eq('id', id)
+    .select('id');
 
   if (error) {
     throw new Error(`Erro ao ativar conta: ${error.message}`);
+  }
+
+  if (!updatedData || updatedData.length === 0) {
+    throw new Error('Conta não encontrada');
   }
 
   await invalidatePlanoContasCache();
@@ -593,13 +610,18 @@ export const deletarPlanoConta = async (id: number): Promise<void> => {
 
   // TODO: Verificar se conta tem lançamentos quando tabela existir
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('plano_contas')
     .delete()
-    .eq('id', id);
+    .eq('id', id)
+    .select('id');
 
   if (error) {
     throw new Error(`Erro ao deletar conta: ${error.message}`);
+  }
+
+  if (!data || data.length === 0) {
+    throw new Error('Conta não encontrada');
   }
 
   await invalidatePlanoContasCache();

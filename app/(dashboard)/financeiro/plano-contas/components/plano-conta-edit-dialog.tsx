@@ -33,7 +33,7 @@ import {
   type PlanoContaComPai,
   type TipoContaContabil,
   type NaturezaConta,
-} from '@/backend/types/financeiro/plano-contas.types';
+} from '@/types/domain/financeiro';
 
 const editPlanoContaSchema = z.object({
   nome: z

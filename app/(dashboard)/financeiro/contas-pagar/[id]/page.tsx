@@ -1,0 +1,484 @@
+'use client';
+
+/**
+ * Página de Detalhes de Conta a Pagar
+ */
+
+import * as React from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { useContaPagar, pagarConta, cancelarConta } from '@/app/_lib/hooks/use-contas-pagar';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  ArrowLeft,
+  CreditCard,
+  XCircle,
+  Pencil,
+  Repeat,
+  Calendar,
+  DollarSign,
+  Building2,
+  FileText,
+  Clock,
+  AlertTriangle,
+} from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { PagarContaDialog } from '../components/pagar-conta-dialog';
+import { ContaPagarFormDialog } from '../components/conta-pagar-form-dialog';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+import type { StatusContaPagar } from '@/backend/types/financeiro/contas-pagar.types';
+
+// ============================================================================
+// Constantes
+// ============================================================================
+
+type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
+
+const STATUS_CONFIG: Record<StatusContaPagar, { label: string; tone: BadgeTone }> = {
+  pendente: { label: 'Pendente', tone: 'warning' },
+  confirmado: { label: 'Pago', tone: 'success' },
+  cancelado: { label: 'Cancelado', tone: 'neutral' },
+  estornado: { label: 'Estornado', tone: 'danger' },
+};
+
+const formatarValor = (valor: number): string => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(valor);
+};
+
+const formatarData = (data: string | null): string => {
+  if (!data) return '-';
+  return format(new Date(data), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+};
+
+const formatarDataHora = (data: string | null): string => {
+  if (!data) return '-';
+  return format(new Date(data), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
+};
+
+// ============================================================================
+// Componente de Item de Detalhe
+// ============================================================================
+
+function DetalheItem({
+  icon: Icon,
+  label,
+  value,
+  className,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn('flex items-start gap-3', className)}>
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted">
+        <Icon className="h-4 w-4 text-muted-foreground" />
+      </div>
+      <div className="space-y-1">
+        <p className="text-sm text-muted-foreground">{label}</p>
+        <div className="font-medium">{value}</div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Componente Principal
+// ============================================================================
+
+export default function ContaPagarDetalhesPage() {
+  const params = useParams();
+  const router = useRouter();
+  const id = params.id ? parseInt(params.id as string, 10) : 0;
+
+  // Estados
+  const [pagarDialogOpen, setPagarDialogOpen] = React.useState(false);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
+  const [cancelarDialogOpen, setCancelarDialogOpen] = React.useState(false);
+
+  // Buscar dados
+  const { contaPagar, isLoading, error, refetch } = useContaPagar(id);
+
+  // Mock de contas bancárias (em produção, buscar da API)
+  const contasBancarias = React.useMemo(
+    () => [
+      { id: 1, nome: 'Conta Principal', banco: 'Banco do Brasil' },
+      { id: 2, nome: 'Conta Secundária', banco: 'Itaú' },
+    ],
+    []
+  );
+
+  const handleVoltar = () => {
+    router.push('/financeiro/contas-pagar');
+  };
+
+  const handleConfirmCancelar = React.useCallback(async () => {
+    try {
+      const resultado = await cancelarConta(id);
+      if (!resultado.success) {
+        throw new Error(resultado.error);
+      }
+      toast.success('Conta cancelada com sucesso');
+      setCancelarDialogOpen(false);
+      refetch();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Erro ao cancelar conta';
+      toast.error(message);
+    }
+  }, [id, refetch]);
+
+  // Verificar se conta está vencida
+  const isVencida = React.useMemo(() => {
+    if (!contaPagar || contaPagar.status !== 'pendente' || !contaPagar.dataVencimento) {
+      return false;
+    }
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    return new Date(contaPagar.dataVencimento) < hoje;
+  }, [contaPagar]);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-10" />
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-40" />
+          </div>
+        </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          <Skeleton className="h-64" />
+          <Skeleton className="h-64" />
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <Button variant="ghost" onClick={handleVoltar}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Voltar
+        </Button>
+        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
+          <p className="font-semibold">Erro ao carregar conta:</p>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Not found state
+  if (!contaPagar) {
+    return (
+      <div className="space-y-4">
+        <Button variant="ghost" onClick={handleVoltar}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Voltar
+        </Button>
+        <div className="rounded-md bg-muted p-8 text-center">
+          <p className="text-lg font-medium">Conta não encontrada</p>
+          <p className="text-sm text-muted-foreground">
+            A conta solicitada não existe ou foi removida.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const statusConfig = STATUS_CONFIG[contaPagar.status];
+  const isPendente = contaPagar.status === 'pendente';
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={handleVoltar}>
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div>
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold tracking-tight">{contaPagar.descricao}</h1>
+              <Badge tone={statusConfig.tone} variant="soft">
+                {statusConfig.label}
+              </Badge>
+              {contaPagar.recorrente && (
+                <Badge variant="outline">
+                  <Repeat className="mr-1 h-3 w-3" />
+                  Recorrente
+                </Badge>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">
+              Código: #{contaPagar.id}
+            </p>
+          </div>
+        </div>
+
+        {/* Actions */}
+        {isPendente && (
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => setEditDialogOpen(true)}>
+              <Pencil className="mr-2 h-4 w-4" />
+              Editar
+            </Button>
+            <Button variant="outline" onClick={() => setCancelarDialogOpen(true)}>
+              <XCircle className="mr-2 h-4 w-4" />
+              Cancelar
+            </Button>
+            <Button onClick={() => setPagarDialogOpen(true)}>
+              <CreditCard className="mr-2 h-4 w-4" />
+              Pagar
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {/* Alert Vencida */}
+      {isVencida && (
+        <div className="flex items-center gap-3 rounded-lg border border-destructive/50 bg-destructive/10 p-4">
+          <AlertTriangle className="h-5 w-5 text-destructive" />
+          <div>
+            <p className="font-medium text-destructive">Conta Vencida</p>
+            <p className="text-sm text-destructive/80">
+              Esta conta venceu em {formatarData(contaPagar.dataVencimento)}. Realize o pagamento o
+              mais rápido possível.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Cards de detalhes */}
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Informações Financeiras */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <DollarSign className="h-5 w-5" />
+              Informações Financeiras
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <DetalheItem
+              icon={DollarSign}
+              label="Valor"
+              value={
+                <span className="text-xl font-bold">
+                  {formatarValor(contaPagar.valor)}
+                </span>
+              }
+            />
+            <DetalheItem
+              icon={Calendar}
+              label="Data de Vencimento"
+              value={
+                <span className={cn(isVencida && 'text-destructive')}>
+                  {formatarData(contaPagar.dataVencimento)}
+                </span>
+              }
+            />
+            {contaPagar.dataEfetivacao && (
+              <DetalheItem
+                icon={Calendar}
+                label="Data de Pagamento"
+                value={formatarData(contaPagar.dataEfetivacao)}
+              />
+            )}
+            {contaPagar.formaPagamento && (
+              <DetalheItem
+                icon={CreditCard}
+                label="Forma de Pagamento"
+                value={contaPagar.formaPagamento}
+              />
+            )}
+            {contaPagar.categoria && (
+              <DetalheItem
+                icon={FileText}
+                label="Categoria"
+                value={
+                  <Badge variant="outline" className="capitalize">
+                    {contaPagar.categoria.replace(/_/g, ' ')}
+                  </Badge>
+                }
+              />
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Informações de Vinculação */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="h-5 w-5" />
+              Vinculações
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {contaPagar.fornecedor ? (
+              <DetalheItem
+                icon={Building2}
+                label="Fornecedor"
+                value={
+                  <div>
+                    <p className="font-medium">
+                      {contaPagar.fornecedor.nomeFantasia || contaPagar.fornecedor.razaoSocial}
+                    </p>
+                    {contaPagar.fornecedor.cnpj && (
+                      <p className="text-sm text-muted-foreground">
+                        CNPJ: {contaPagar.fornecedor.cnpj}
+                      </p>
+                    )}
+                  </div>
+                }
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">Nenhum fornecedor vinculado</p>
+            )}
+            {contaPagar.contaContabil && (
+              <DetalheItem
+                icon={FileText}
+                label="Conta Contábil"
+                value={`${contaPagar.contaContabil.codigo} - ${contaPagar.contaContabil.nome}`}
+              />
+            )}
+            {contaPagar.centroCusto && (
+              <DetalheItem
+                icon={Building2}
+                label="Centro de Custo"
+                value={`${contaPagar.centroCusto.codigo} - ${contaPagar.centroCusto.nome}`}
+              />
+            )}
+            {contaPagar.contaBancaria && (
+              <DetalheItem
+                icon={CreditCard}
+                label="Conta Bancária"
+                value={contaPagar.contaBancaria.nome}
+              />
+            )}
+            {contaPagar.documento && (
+              <DetalheItem
+                icon={FileText}
+                label="Nº do Documento"
+                value={contaPagar.documento}
+              />
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Observações */}
+        {contaPagar.observacoes && (
+          <Card className="md:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Observações
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="whitespace-pre-wrap text-sm">{contaPagar.observacoes}</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Informações de Auditoria */}
+        <Card className="md:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5" />
+              Auditoria
+            </CardTitle>
+            <CardDescription>Informações de criação e atualização</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <DetalheItem
+                icon={Calendar}
+                label="Data de Lançamento"
+                value={formatarData(contaPagar.dataLancamento)}
+              />
+              <DetalheItem
+                icon={Clock}
+                label="Criado em"
+                value={formatarDataHora(contaPagar.createdAt)}
+              />
+              <DetalheItem
+                icon={Clock}
+                label="Atualizado em"
+                value={formatarDataHora(contaPagar.updatedAt)}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Dialogs */}
+      <PagarContaDialog
+        open={pagarDialogOpen}
+        onOpenChange={setPagarDialogOpen}
+        conta={contaPagar}
+        contasBancarias={contasBancarias}
+        onSuccess={refetch}
+      />
+
+      <ContaPagarFormDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        conta={contaPagar}
+        contasBancarias={contasBancarias}
+        onSuccess={refetch}
+      />
+
+      <AlertDialog open={cancelarDialogOpen} onOpenChange={setCancelarDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancelar Conta a Pagar</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja cancelar esta conta?
+              <span className="block mt-2 font-medium text-foreground">
+                {contaPagar.descricao} - {formatarValor(contaPagar.valor)}
+              </span>
+              <span className="block mt-2 text-amber-600">
+                A conta será marcada como cancelada mas permanecerá no histórico.
+              </span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Voltar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmCancelar}>
+              Cancelar Conta
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
