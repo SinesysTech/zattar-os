@@ -72,18 +72,32 @@ create index idx_v_lancamentos_pendentes_situacao on public.v_lancamentos_penden
 -- View: v_fluxo_caixa_mensal
 -- ----------------------------------------------------------------------------
 -- Fluxo de caixa mensal (receitas, despesas, saldo).
+-- Nota: Transferências internas não afetam o saldo líquido global, pois
+-- representam apenas movimentação entre contas do próprio escritório.
+-- A contrapartida gerada automaticamente anula o efeito da transferência.
 
 create or replace view public.v_fluxo_caixa_mensal as
 select
   extract(year from data_competencia)::integer as ano,
   extract(month from data_competencia)::integer as mes,
-  sum(case when tipo = 'receita' then valor else 0 end) as total_receitas,
-  sum(case when tipo = 'despesa' then valor else 0 end) as total_despesas,
-  sum(case when tipo = 'transferencia' then valor else 0 end) as total_transferencias,
+  -- Receitas: exclui contrapartidas de transferência (identificadas via dados_adicionais)
   sum(case
-    when tipo = 'receita' then valor
-    when tipo in ('despesa', 'transferencia', 'aplicacao') then -valor
+    when tipo = 'receita' and coalesce((dados_adicionais->>'eh_contrapartida')::boolean, false) = false
+    then valor
+    else 0
+  end) as total_receitas,
+  sum(case when tipo = 'despesa' then valor else 0 end) as total_despesas,
+  -- Transferências: apenas saídas (tipo = 'transferencia'), entradas são contrapartidas
+  sum(case when tipo = 'transferencia' then valor else 0 end) as total_transferencias,
+  -- Saldo líquido: transferências se anulam (saída + entrada contrapartida = 0)
+  -- Exclui lançamentos que são contrapartida de transferência
+  sum(case
+    when tipo = 'receita' and coalesce((dados_adicionais->>'eh_contrapartida')::boolean, false) = false
+    then valor
+    when tipo = 'despesa' then -valor
+    when tipo = 'aplicacao' then -valor
     when tipo = 'resgate' then valor
+    -- Transferências não afetam saldo líquido global (origem -valor, destino +valor = 0)
     else 0
   end) as saldo_liquido
 from public.lancamentos_financeiros
@@ -91,31 +105,42 @@ where status = 'confirmado'
 group by ano, mes
 order by ano desc, mes desc;
 
-comment on view public.v_fluxo_caixa_mensal is 'Fluxo de caixa mensal consolidado. Mostra total de receitas, despesas, transferências e saldo líquido por mês.';
+comment on view public.v_fluxo_caixa_mensal is 'Fluxo de caixa mensal consolidado. Mostra total de receitas, despesas e saldo líquido por mês. Transferências internas são exibidas separadamente e não afetam o saldo líquido global, pois apenas movimentam valores entre contas do próprio escritório.';
 
 -- ----------------------------------------------------------------------------
 -- View: v_fluxo_caixa_diario
 -- ----------------------------------------------------------------------------
 -- Fluxo de caixa diário para análise detalhada.
+-- Nota: Transferências internas não afetam o saldo líquido global.
 
 create or replace view public.v_fluxo_caixa_diario as
 select
   data_competencia as data,
-  sum(case when tipo = 'receita' then valor else 0 end) as total_receitas,
-  sum(case when tipo = 'despesa' then valor else 0 end) as total_despesas,
+  -- Receitas: exclui contrapartidas de transferência
   sum(case
-    when tipo = 'receita' then valor
-    when tipo in ('despesa', 'transferencia', 'aplicacao') then -valor
+    when tipo = 'receita' and coalesce((dados_adicionais->>'eh_contrapartida')::boolean, false) = false
+    then valor
+    else 0
+  end) as total_receitas,
+  sum(case when tipo = 'despesa' then valor else 0 end) as total_despesas,
+  -- Saldo líquido: transferências não afetam (contrapartidas se anulam)
+  sum(case
+    when tipo = 'receita' and coalesce((dados_adicionais->>'eh_contrapartida')::boolean, false) = false
+    then valor
+    when tipo = 'despesa' then -valor
+    when tipo = 'aplicacao' then -valor
     when tipo = 'resgate' then valor
+    -- Transferências não afetam saldo líquido global
     else 0
   end) as saldo_liquido,
-  count(*) as quantidade_lancamentos
+  -- Quantidade exclui contrapartidas para não duplicar contagem
+  count(*) filter (where coalesce((dados_adicionais->>'eh_contrapartida')::boolean, false) = false) as quantidade_lancamentos
 from public.lancamentos_financeiros
 where status = 'confirmado'
 group by data_competencia
 order by data_competencia desc;
 
-comment on view public.v_fluxo_caixa_diario is 'Fluxo de caixa diário consolidado. Mostra movimentações e saldo líquido por dia.';
+comment on view public.v_fluxo_caixa_diario is 'Fluxo de caixa diário consolidado. Mostra movimentações e saldo líquido por dia. Transferências internas não afetam o saldo líquido global.';
 
 -- ----------------------------------------------------------------------------
 -- View: v_saldo_contas_bancarias

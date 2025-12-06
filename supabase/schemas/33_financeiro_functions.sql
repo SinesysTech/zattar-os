@@ -351,6 +351,97 @@ create trigger trigger_atualizar_valor_total_folha
   execute function public.atualizar_valor_total_folha();
 
 -- ----------------------------------------------------------------------------
+-- Function: gerar_lancamento_contrapartida_transferencia
+-- ----------------------------------------------------------------------------
+-- Cria automaticamente o lançamento de contrapartida quando uma transferência
+-- é inserida, vinculando origem e destino via lancamento_contrapartida_id.
+
+create or replace function public.gerar_lancamento_contrapartida_transferencia()
+returns trigger
+language plpgsql
+security invoker
+as $$
+declare
+  v_lancamento_contrapartida_id bigint;
+begin
+  -- Só processa transferências que ainda não têm contrapartida
+  if new.tipo != 'transferencia' or new.lancamento_contrapartida_id is not null then
+    return new;
+  end if;
+
+  -- Verifica se tem conta destino
+  if new.conta_destino_id is null then
+    raise exception 'Transferência requer conta_destino_id';
+  end if;
+
+  -- Cria o lançamento de contrapartida (entrada na conta destino)
+  insert into public.lancamentos_financeiros (
+    tipo,
+    descricao,
+    valor,
+    data_lancamento,
+    data_competencia,
+    data_vencimento,
+    data_efetivacao,
+    status,
+    origem,
+    forma_pagamento,
+    conta_bancaria_id,
+    conta_contabil_id,
+    centro_custo_id,
+    categoria,
+    documento,
+    observacoes,
+    lancamento_contrapartida_id,
+    created_by,
+    dados_adicionais
+  ) values (
+    'receita', -- Na conta destino, é uma entrada
+    'Contrapartida: ' || new.descricao,
+    new.valor,
+    new.data_lancamento,
+    new.data_competencia,
+    new.data_vencimento,
+    new.data_efetivacao,
+    new.status,
+    new.origem,
+    new.forma_pagamento,
+    new.conta_destino_id, -- Entra na conta destino
+    new.conta_contabil_id,
+    new.centro_custo_id,
+    new.categoria,
+    new.documento,
+    'Lançamento de contrapartida gerado automaticamente para transferência ID ' || new.id,
+    new.id, -- Vincula ao lançamento original
+    new.created_by,
+    jsonb_build_object(
+      'transferencia_origem_id', new.id,
+      'conta_origem_id', new.conta_bancaria_id,
+      'eh_contrapartida', true
+    )
+  )
+  returning id into v_lancamento_contrapartida_id;
+
+  -- Atualiza o lançamento original com a referência à contrapartida
+  -- Nota: Isso é feito diretamente via UPDATE para evitar loop de trigger
+  update public.lancamentos_financeiros
+  set lancamento_contrapartida_id = v_lancamento_contrapartida_id
+  where id = new.id;
+
+  return new;
+end;
+$$;
+
+comment on function public.gerar_lancamento_contrapartida_transferencia() is 'Trigger function que cria automaticamente um lançamento de contrapartida quando uma transferência entre contas é inserida. A contrapartida representa a entrada na conta destino, vinculada ao lançamento de saída original via lancamento_contrapartida_id.';
+
+-- Trigger para gerar contrapartida ao inserir transferência
+create trigger trigger_gerar_lancamento_contrapartida_transferencia
+  after insert on public.lancamentos_financeiros
+  for each row
+  when (new.tipo = 'transferencia' and new.lancamento_contrapartida_id is null)
+  execute function public.gerar_lancamento_contrapartida_transferencia();
+
+-- ----------------------------------------------------------------------------
 -- Function: gerar_hash_transacao
 -- ----------------------------------------------------------------------------
 -- Gera hash para transação bancária importada (detecção de duplicatas).
