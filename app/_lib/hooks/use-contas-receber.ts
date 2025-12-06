@@ -409,6 +409,13 @@ export const receberConta = async (
     contaBancariaId: number;
     dataEfetivacao?: string;
     observacoes?: string;
+    comprovante?: {
+      nome: string;
+      url: string;
+      tipo: string;
+      tamanho: number;
+      uploadedAt: string;
+    };
   }
 ): Promise<MutationResult<ContaReceberComDetalhes>> => {
   try {

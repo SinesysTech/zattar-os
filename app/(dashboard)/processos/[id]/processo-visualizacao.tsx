@@ -8,6 +8,9 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle, RefreshCw } from 'lucide-react';
+
+import { useCopilotReadable } from "@copilotkit/react-core";
+
 import {
   useProcessoTimeline,
   type TimelineUnificadaMetadata,
@@ -28,6 +31,35 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   const router = useRouter();
   const { processo, timeline, isLoading, isCapturing, error, refetch, forceRecapture } =
     useProcessoTimeline(id);
+
+  useCopilotReadable({
+    description: "Contexto completo do processo jurídico aberto na tela. Contém metadados (partes, juízo, status) e a timeline cronológica de movimentações e documentos.",
+    value: {
+      // Enviamos null se ainda estiver carregando, para a IA saber que não tem dados
+      status_carregamento: isLoading ? "Carregando..." : "Dados carregados",
+      
+      // Metadados do Processo (Quem é autor, réu, número, juízo)
+      metadados: processo ? {
+        numero: processo.numero_processo,
+        tribunal: processo.trt,
+        autores: processo.nome_parte_autora,
+        reus: processo.nome_parte_re,
+        status: processo.codigo_status_processo,
+        orgao_julgador: processo.descricao_orgao_julgador,
+        data_autuacao: processo.data_autuacao,
+        segredo_justica: processo.segredo_justica
+      } : "Sem dados do processo",
+
+      // Timeline (O que aconteceu) - Enviamos apenas se existir
+      historico_movimentacoes: timeline?.timeline ? timeline.timeline.map(item => ({
+        data: item.data,
+        titulo: item.titulo,
+        tipo: item.documento ? "Documento" : "Movimentação", // Ajuda a IA a distinguir
+        responsavel: item.nomeResponsavel || item.nomeSignatario,
+        sigiloso: item.documentoSigiloso
+      })) : "Timeline vazia ou carregando"
+    },
+  });
 
   // Loading inicial
   if (isLoading) {

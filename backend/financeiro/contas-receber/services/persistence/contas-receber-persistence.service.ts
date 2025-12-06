@@ -11,6 +11,7 @@ import {
   deletePattern,
   generateCacheKey,
 } from '@/backend/utils/redis/cache-utils';
+import { invalidateObrigacoesCache } from '@/backend/financeiro/obrigacoes/services/persistence/obrigacoes-persistence.service';
 import type {
   ContaReceber,
   ContaReceberComDetalhes,
@@ -29,6 +30,8 @@ import type {
   CentroCustoResumo,
   ContaBancariaResumo,
   ResumoInadimplencia,
+  RecebimentoRegistro,
+  HistoricoRecebimentos,
 } from '@/backend/types/financeiro/contas-receber.types';
 
 // ============================================================================
@@ -79,12 +82,16 @@ interface LancamentoComRelacionamentos extends LancamentoFinanceiroRecord {
   cliente?: {
     id: number;
     nome: string;
+    razao_social: string | null;
+    nome_fantasia: string | null;
     cpf: string | null;
     cnpj: string | null;
     tipo_pessoa: 'fisica' | 'juridica';
   } | null;
   contrato?: {
     id: number;
+    numero: string;
+    descricao: string | null;
     area_direito: string | null;
     tipo_contrato: string | null;
   } | null;
@@ -158,7 +165,10 @@ const mapearContaReceberComDetalhes = (registro: LancamentoComRelacionamentos): 
     ? {
         id: registro.cliente.id,
         nome: registro.cliente.nome,
+        razaoSocial: registro.cliente.razao_social,
+        nomeFantasia: registro.cliente.nome_fantasia,
         cpfCnpj: registro.cliente.tipo_pessoa === 'fisica' ? registro.cliente.cpf : registro.cliente.cnpj,
+        cnpj: registro.cliente.cnpj,
         tipoPessoa: registro.cliente.tipo_pessoa,
       }
     : undefined;
@@ -166,6 +176,8 @@ const mapearContaReceberComDetalhes = (registro: LancamentoComRelacionamentos): 
   const contrato: ContratoResumo | undefined = registro.contrato
     ? {
         id: registro.contrato.id,
+        numero: registro.contrato.numero,
+        descricao: registro.contrato.descricao,
         areaDireito: registro.contrato.area_direito,
         tipoContrato: registro.contrato.tipo_contrato,
       }
@@ -265,8 +277,8 @@ export const listarContasReceber = async (
     .select(
       `
       *,
-      cliente:clientes(id, nome, cpf, cnpj, tipo_pessoa),
-      contrato:contratos(id, area_direito, tipo_contrato),
+      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, numero, descricao, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
@@ -395,8 +407,8 @@ export const buscarContaReceberPorId = async (id: number): Promise<ContaReceberC
     .select(
       `
       *,
-      cliente:clientes(id, nome, cpf, cnpj, tipo_pessoa),
-      contrato:contratos(id, area_direito, tipo_contrato),
+      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, numero, descricao, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
@@ -430,8 +442,8 @@ export const buscarContasReceberVencidas = async (): Promise<ContaReceberComDeta
     .select(
       `
       *,
-      cliente:clientes(id, nome, cpf, cnpj, tipo_pessoa),
-      contrato:contratos(id, area_direito, tipo_contrato),
+      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, numero, descricao, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
@@ -477,8 +489,8 @@ export const buscarResumoInadimplencia = async (): Promise<ResumoInadimplencia> 
     .select(
       `
       *,
-      cliente:clientes(id, nome, cpf, cnpj, tipo_pessoa),
-      contrato:contratos(id, area_direito, tipo_contrato),
+      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, numero, descricao, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
@@ -614,8 +626,8 @@ export const buscarContasReceberPorContrato = async (contratoId: number): Promis
     .select(
       `
       *,
-      cliente:clientes(id, nome, cpf, cnpj, tipo_pessoa),
-      contrato:contratos(id, area_direito, tipo_contrato),
+      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, numero, descricao, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
@@ -809,7 +821,8 @@ export const atualizarContaReceber = async (
 };
 
 /**
- * Confirmar recebimento de conta
+ * Confirmar recebimento de conta (pagamento total)
+ * Atualiza o histórico de recebimentos e muda status para 'confirmado'
  */
 export const confirmarRecebimentoContaReceber = async (
   id: number,
@@ -819,6 +832,7 @@ export const confirmarRecebimentoContaReceber = async (
     dataEfetivacao?: string;
     observacoes?: string;
     comprovante?: AnexoContaReceber;
+    registroRecebimento?: RecebimentoRegistro;
   }
 ): Promise<ContaReceber> => {
   const supabase = createServiceClient();
@@ -853,6 +867,35 @@ export const confirmarRecebimentoContaReceber = async (
     observacoes = observacoes ? `${observacoes}\n\n[Recebimento] ${dados.observacoes}` : dados.observacoes;
   }
 
+  // Atualizar histórico de recebimentos em dados_adicionais
+  const dadosAdicionais = (contaAtual.dados_adicionais || {}) as Record<string, unknown>;
+  const historicoExistente = dadosAdicionais.historicoRecebimentos as HistoricoRecebimentos | undefined;
+
+  // Calcular valores para o histórico
+  const recebimentosAnteriores = historicoExistente?.recebimentos || [];
+  const valorTotalAnterior = historicoExistente?.valorTotalRecebido || 0;
+  const valorRecebidoAgora = dados.registroRecebimento?.valor || (Number(contaAtual.valor) - valorTotalAnterior);
+
+  // Criar registro de recebimento se não fornecido
+  const registroRecebimento: RecebimentoRegistro = dados.registroRecebimento || {
+    id: `rec_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
+    valor: valorRecebidoAgora,
+    dataRecebimento: (dataEfetivacao || new Date().toISOString()).split('T')[0],
+    formaRecebimento: dados.formaRecebimento,
+    contaBancariaId: dados.contaBancariaId,
+    observacoes: dados.observacoes,
+    comprovante: dados.comprovante,
+    registradoEm: new Date().toISOString(),
+  };
+
+  const historicoAtualizado: HistoricoRecebimentos = {
+    recebimentos: [...recebimentosAnteriores, registroRecebimento],
+    valorTotalRecebido: valorTotalAnterior + valorRecebidoAgora,
+    valorPendente: 0, // Confirmado = tudo pago
+  };
+
+  dadosAdicionais.historicoRecebimentos = historicoAtualizado;
+
   const { data, error } = await supabase
     .from('lancamentos_financeiros')
     .update({
@@ -862,6 +905,7 @@ export const confirmarRecebimentoContaReceber = async (
       data_efetivacao: dataEfetivacao,
       observacoes: observacoes.trim() || null,
       anexos,
+      dados_adicionais: dadosAdicionais,
     })
     .eq('id', id)
     .select()
@@ -869,6 +913,85 @@ export const confirmarRecebimentoContaReceber = async (
 
   if (error) {
     throw new Error(`Erro ao confirmar recebimento: ${error.message}`);
+  }
+
+  await invalidateContasReceberCache();
+  return mapearContaReceber(data);
+};
+
+/**
+ * Registrar recebimento parcial de conta
+ * Adiciona o registro ao histórico mas mantém o status 'pendente'
+ */
+export const registrarRecebimentoParcialContaReceber = async (
+  id: number,
+  registro: RecebimentoRegistro
+): Promise<ContaReceber> => {
+  const supabase = createServiceClient();
+
+  // Buscar conta atual
+  const { data: contaAtual, error: erroConsulta } = await supabase
+    .from('lancamentos_financeiros')
+    .select('*')
+    .eq('id', id)
+    .eq('tipo', 'receita')
+    .single();
+
+  if (erroConsulta || !contaAtual) {
+    throw new Error('Conta a receber não encontrada');
+  }
+
+  if (contaAtual.status !== 'pendente') {
+    throw new Error('Apenas contas pendentes podem receber pagamentos parciais');
+  }
+
+  const valorTotal = Number(contaAtual.valor);
+  const anexos = contaAtual.anexos || [];
+
+  // Adicionar comprovante aos anexos se fornecido
+  if (registro.comprovante) {
+    anexos.push(registro.comprovante);
+  }
+
+  // Mesclar observações
+  let observacoes = contaAtual.observacoes || '';
+  if (registro.observacoes) {
+    const dataFormatada = new Date(registro.dataRecebimento).toLocaleDateString('pt-BR');
+    observacoes = observacoes
+      ? `${observacoes}\n\n[Pagamento parcial ${dataFormatada}] R$ ${registro.valor.toFixed(2)} - ${registro.observacoes}`
+      : `[Pagamento parcial ${dataFormatada}] R$ ${registro.valor.toFixed(2)} - ${registro.observacoes}`;
+  }
+
+  // Atualizar histórico de recebimentos em dados_adicionais
+  const dadosAdicionais = (contaAtual.dados_adicionais || {}) as Record<string, unknown>;
+  const historicoExistente = dadosAdicionais.historicoRecebimentos as HistoricoRecebimentos | undefined;
+
+  const recebimentosAnteriores = historicoExistente?.recebimentos || [];
+  const valorTotalAnterior = historicoExistente?.valorTotalRecebido || 0;
+  const novoValorTotalRecebido = valorTotalAnterior + registro.valor;
+  const novoValorPendente = valorTotal - novoValorTotalRecebido;
+
+  const historicoAtualizado: HistoricoRecebimentos = {
+    recebimentos: [...recebimentosAnteriores, registro],
+    valorTotalRecebido: novoValorTotalRecebido,
+    valorPendente: novoValorPendente,
+  };
+
+  dadosAdicionais.historicoRecebimentos = historicoAtualizado;
+
+  const { data, error } = await supabase
+    .from('lancamentos_financeiros')
+    .update({
+      observacoes: observacoes.trim() || null,
+      anexos,
+      dados_adicionais: dadosAdicionais,
+    })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Erro ao registrar recebimento parcial: ${error.message}`);
   }
 
   await invalidateContasReceberCache();
@@ -1048,9 +1171,12 @@ export const removerAnexoContaReceber = async (
 
 /**
  * Invalidar todo o cache de contas a receber
+ * Também invalida o cache de obrigações consolidadas
  */
 export const invalidateContasReceberCache = async (): Promise<void> => {
   await deletePattern(`${CACHE_PREFIX}:*`);
+  // Invalidar cache de obrigações para manter consistência
+  await invalidateObrigacoesCache();
 };
 
 // ============================================================================

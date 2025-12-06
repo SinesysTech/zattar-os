@@ -16,7 +16,10 @@ export default function DashboardLayout({
       
       <SidebarInset>
         {/* O Provider carrega o cérebro da IA */}
-        <CopilotKit runtimeUrl="/api/copilotkit">
+        <CopilotKit runtimeUrl=
+        "/api/copilotkit"
+        publicApiKey="ck_pub_b5b202514d1736f9e6f6675a87238818"
+        >
           
           {/* A UI Sidebar envolve o conteúdo para poder "espremê-lo" */}
           <CopilotSidebar

@@ -79,6 +79,34 @@ export interface AnexoContaReceber {
 }
 
 // ============================================================================
+// Interfaces de Histórico de Recebimentos
+// ============================================================================
+
+/**
+ * Registro individual de recebimento (para suporte a pagamentos parciais)
+ */
+export interface RecebimentoRegistro {
+  id: string; // UUID único para cada recebimento
+  valor: number;
+  dataRecebimento: string;
+  formaRecebimento: FormaRecebimentoContaReceber;
+  contaBancariaId: number;
+  observacoes?: string;
+  comprovante?: AnexoContaReceber;
+  registradoPor?: number;
+  registradoEm: string;
+}
+
+/**
+ * Estrutura do histórico de recebimentos armazenada em dadosAdicionais
+ */
+export interface HistoricoRecebimentos {
+  recebimentos: RecebimentoRegistro[];
+  valorTotalRecebido: number;
+  valorPendente: number;
+}
+
+// ============================================================================
 // Interfaces Principais
 // ============================================================================
 
@@ -142,7 +170,10 @@ export interface ContaReceber {
 export interface ClienteResumo {
   id: number;
   nome: string;
+  razaoSocial: string | null;
+  nomeFantasia: string | null;
   cpfCnpj: string | null;
+  cnpj: string | null;
   tipoPessoa: 'fisica' | 'juridica';
 }
 
@@ -151,6 +182,8 @@ export interface ClienteResumo {
  */
 export interface ContratoResumo {
   id: number;
+  numero: string;
+  descricao: string | null;
   areaDireito: string | null;
   tipoContrato: string | null;
 }
@@ -267,6 +300,8 @@ export interface AtualizarContaReceberDTO {
 
 /**
  * DTO para efetuar recebimento de conta
+ * Suporta pagamento total (quando valorRecebido não é informado)
+ * ou pagamento parcial (quando valorRecebido < valor total da conta)
  */
 export interface ReceberContaReceberDTO {
   formaRecebimento: FormaRecebimentoContaReceber;
@@ -274,6 +309,8 @@ export interface ReceberContaReceberDTO {
   dataEfetivacao?: string;
   observacoes?: string;
   comprovante?: AnexoContaReceber;
+  /** Valor recebido. Se não informado, considera o valor total da conta */
+  valorRecebido?: number;
 }
 
 /**
@@ -718,4 +755,68 @@ export const diasAteVencimento = (conta: ContaReceber): number | null => {
   vencimento.setHours(0, 0, 0, 0);
   const diffTime = vencimento.getTime() - hoje.getTime();
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+};
+
+// ============================================================================
+// Helpers de Histórico de Recebimentos
+// ============================================================================
+
+/**
+ * Extrai o histórico de recebimentos de uma conta
+ * Retorna undefined se não houver histórico
+ */
+export const getHistoricoRecebimentos = (conta: ContaReceber): HistoricoRecebimentos | undefined => {
+  const dados = conta.dadosAdicionais as Record<string, unknown> | undefined;
+  if (!dados?.historicoRecebimentos) {
+    return undefined;
+  }
+  return dados.historicoRecebimentos as HistoricoRecebimentos;
+};
+
+/**
+ * Verifica se uma conta tem pagamentos parciais registrados
+ */
+export const temPagamentosParciais = (conta: ContaReceber): boolean => {
+  const historico = getHistoricoRecebimentos(conta);
+  return !!historico && historico.recebimentos.length > 0;
+};
+
+/**
+ * Calcula o valor total já recebido de uma conta
+ */
+export const calcularValorRecebido = (conta: ContaReceber): number => {
+  const historico = getHistoricoRecebimentos(conta);
+  if (!historico) {
+    return conta.status === 'confirmado' ? conta.valor : 0;
+  }
+  return historico.valorTotalRecebido;
+};
+
+/**
+ * Calcula o valor pendente de recebimento
+ */
+export const calcularValorPendente = (conta: ContaReceber): number => {
+  const historico = getHistoricoRecebimentos(conta);
+  if (!historico) {
+    return conta.status === 'pendente' ? conta.valor : 0;
+  }
+  return historico.valorPendente;
+};
+
+/**
+ * Verifica se uma conta está parcialmente recebida
+ */
+export const isParcialmenteRecebida = (conta: ContaReceber): boolean => {
+  const historico = getHistoricoRecebimentos(conta);
+  if (!historico) {
+    return false;
+  }
+  return historico.valorTotalRecebido > 0 && historico.valorPendente > 0;
+};
+
+/**
+ * Gera um ID único para um recebimento
+ */
+export const gerarIdRecebimento = (): string => {
+  return `rec_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 };

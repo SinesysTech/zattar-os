@@ -437,3 +437,254 @@ end;
 $$;
 
 comment on function public.sugerir_conciliacao_automatica(bigint) is 'Sugere lançamentos financeiros para conciliação automática com uma transação bancária importada. Retorna os 5 melhores candidatos com score de similaridade.';
+
+-- ============================================================================
+-- Sincronização Reversa: Lançamento → Parcela
+-- ============================================================================
+-- Mantém a parcela sincronizada quando o lançamento é alterado.
+-- Casos tratados:
+-- 1. Lançamento cancelado/estornado → Parcela volta para pendente
+-- 2. Lançamento confirmado → Parcela mantém status (já efetivada)
+-- 3. Lançamento deletado → Parcela volta para pendente
+-- ============================================================================
+
+-- ----------------------------------------------------------------------------
+-- Function: sincronizar_parcela_de_lancamento
+-- ----------------------------------------------------------------------------
+-- Sincroniza o status da parcela quando o lançamento vinculado é alterado.
+-- Implementa sincronização bidirecional para manter consistência.
+
+create or replace function public.sincronizar_parcela_de_lancamento()
+returns trigger
+language plpgsql
+security invoker
+as $$
+declare
+  v_parcela_id bigint;
+  v_acordo record;
+  v_novo_status_parcela text;
+begin
+  -- Ignora lançamentos que não vieram de acordo judicial
+  if new.origem != 'acordo_judicial' or new.parcela_id is null then
+    return new;
+  end if;
+
+  -- Ignora se não houve mudança de status relevante
+  if old is not null and new.status = old.status then
+    return new;
+  end if;
+
+  v_parcela_id := new.parcela_id;
+
+  -- Busca dados do acordo para determinar o status correto da parcela
+  select ac.direcao into v_acordo
+  from public.acordos_condenacoes ac
+  join public.parcelas p on p.acordo_condenacao_id = ac.id
+  where p.id = v_parcela_id;
+
+  -- Determina novo status da parcela baseado no status do lançamento
+  case new.status
+    when 'cancelado', 'estornado' then
+      -- Lançamento cancelado/estornado: parcela volta para pendente
+      -- (mantém data_efetivacao e forma_pagamento para histórico)
+      v_novo_status_parcela := 'pendente';
+    when 'confirmado' then
+      -- Lançamento confirmado: parcela deve estar efetivada
+      -- Define status baseado na direção do acordo
+      if v_acordo.direcao = 'recebimento' then
+        v_novo_status_parcela := 'recebida';
+      else
+        v_novo_status_parcela := 'paga';
+      end if;
+    when 'pendente' then
+      -- Lançamento pendente: parcela também pendente
+      v_novo_status_parcela := 'pendente';
+    else
+      -- Outros status: não altera parcela
+      return new;
+  end case;
+
+  -- Atualiza a parcela (desabilita trigger para evitar loop)
+  update public.parcelas
+  set
+    status = v_novo_status_parcela,
+    updated_at = now()
+  where id = v_parcela_id
+    and status != v_novo_status_parcela;  -- Só atualiza se realmente mudou
+
+  raise notice 'Parcela % sincronizada: status atualizado para %', v_parcela_id, v_novo_status_parcela;
+
+  return new;
+end;
+$$;
+
+comment on function public.sincronizar_parcela_de_lancamento() is 'Trigger function que mantém a parcela de acordo sincronizada quando o lançamento financeiro vinculado é alterado. Implementa sincronização bidirecional entre módulos.';
+
+-- Trigger para sincronizar parcela ao atualizar lançamento
+drop trigger if exists trigger_sincronizar_parcela_de_lancamento on public.lancamentos_financeiros;
+
+create trigger trigger_sincronizar_parcela_de_lancamento
+  after update of status on public.lancamentos_financeiros
+  for each row
+  when (
+    new.origem = 'acordo_judicial'
+    and new.parcela_id is not null
+    and old.status is distinct from new.status
+  )
+  execute function public.sincronizar_parcela_de_lancamento();
+
+-- ----------------------------------------------------------------------------
+-- Function: sincronizar_parcela_ao_deletar_lancamento
+-- ----------------------------------------------------------------------------
+-- Volta a parcela para pendente quando o lançamento vinculado é deletado.
+
+create or replace function public.sincronizar_parcela_ao_deletar_lancamento()
+returns trigger
+language plpgsql
+security invoker
+as $$
+begin
+  -- Ignora lançamentos que não vieram de acordo judicial
+  if old.origem != 'acordo_judicial' or old.parcela_id is null then
+    return old;
+  end if;
+
+  -- Volta a parcela para pendente
+  update public.parcelas
+  set
+    status = 'pendente',
+    updated_at = now()
+  where id = old.parcela_id;
+
+  raise notice 'Parcela % voltou para pendente (lançamento % deletado)',
+    old.parcela_id, old.id;
+
+  return old;
+end;
+$$;
+
+comment on function public.sincronizar_parcela_ao_deletar_lancamento() is 'Trigger function que volta a parcela para status pendente quando o lançamento financeiro vinculado é deletado.';
+
+-- Trigger para sincronizar parcela ao deletar lançamento
+drop trigger if exists trigger_sincronizar_parcela_ao_deletar_lancamento on public.lancamentos_financeiros;
+
+create trigger trigger_sincronizar_parcela_ao_deletar_lancamento
+  before delete on public.lancamentos_financeiros
+  for each row
+  when (old.origem = 'acordo_judicial' and old.parcela_id is not null)
+  execute function public.sincronizar_parcela_ao_deletar_lancamento();
+
+-- ----------------------------------------------------------------------------
+-- Function: verificar_consistencia_parcela_lancamento
+-- ----------------------------------------------------------------------------
+-- Função para verificar e reportar inconsistências entre parcelas e lançamentos.
+-- Pode ser chamada manualmente ou via cron para auditoria.
+
+create or replace function public.verificar_consistencia_parcela_lancamento(
+  p_acordo_id bigint default null
+)
+returns table (
+  tipo_inconsistencia text,
+  parcela_id bigint,
+  lancamento_id bigint,
+  parcela_status text,
+  lancamento_status text,
+  parcela_valor numeric(15,2),
+  lancamento_valor numeric(15,2),
+  descricao text
+)
+language plpgsql
+security invoker
+as $$
+begin
+  -- Parcelas efetivadas sem lançamento
+  return query
+  select
+    'parcela_sem_lancamento'::text as tipo_inconsistencia,
+    p.id as parcela_id,
+    null::bigint as lancamento_id,
+    p.status as parcela_status,
+    null::text as lancamento_status,
+    (p.valor_bruto_credito_principal + coalesce(p.honorarios_sucumbenciais, 0))::numeric(15,2) as parcela_valor,
+    null::numeric(15,2) as lancamento_valor,
+    format('Parcela %s efetivada mas sem lançamento financeiro', p.id) as descricao
+  from public.parcelas p
+  join public.acordos_condenacoes ac on ac.id = p.acordo_condenacao_id
+  where p.status in ('recebida', 'paga')
+    and (p_acordo_id is null or ac.id = p_acordo_id)
+    and not exists (
+      select 1 from public.lancamentos_financeiros l
+      where l.parcela_id = p.id
+        and l.status not in ('cancelado', 'estornado')
+    );
+
+  -- Lançamentos ativos sem parcela correspondente efetivada
+  return query
+  select
+    'lancamento_orfao'::text as tipo_inconsistencia,
+    l.parcela_id,
+    l.id as lancamento_id,
+    p.status as parcela_status,
+    l.status as lancamento_status,
+    (p.valor_bruto_credito_principal + coalesce(p.honorarios_sucumbenciais, 0))::numeric(15,2) as parcela_valor,
+    l.valor as lancamento_valor,
+    format('Lançamento %s ativo mas parcela %s não efetivada (status: %s)',
+      l.id, l.parcela_id, p.status) as descricao
+  from public.lancamentos_financeiros l
+  join public.parcelas p on p.id = l.parcela_id
+  join public.acordos_condenacoes ac on ac.id = p.acordo_condenacao_id
+  where l.origem = 'acordo_judicial'
+    and l.status in ('pendente', 'confirmado')
+    and (p_acordo_id is null or ac.id = p_acordo_id)
+    and p.status not in ('recebida', 'paga');
+
+  -- Valores divergentes entre parcela e lançamento
+  return query
+  select
+    'valor_divergente'::text as tipo_inconsistencia,
+    p.id as parcela_id,
+    l.id as lancamento_id,
+    p.status as parcela_status,
+    l.status as lancamento_status,
+    (p.valor_bruto_credito_principal + coalesce(p.honorarios_sucumbenciais, 0))::numeric(15,2) as parcela_valor,
+    l.valor as lancamento_valor,
+    format('Valores divergem: parcela R$ %s, lançamento R$ %s (diferença: R$ %s)',
+      to_char(p.valor_bruto_credito_principal + coalesce(p.honorarios_sucumbenciais, 0), 'FM999G999D00'),
+      to_char(l.valor, 'FM999G999D00'),
+      to_char(abs(l.valor - (p.valor_bruto_credito_principal + coalesce(p.honorarios_sucumbenciais, 0))), 'FM999G999D00')
+    ) as descricao
+  from public.lancamentos_financeiros l
+  join public.parcelas p on p.id = l.parcela_id
+  join public.acordos_condenacoes ac on ac.id = p.acordo_condenacao_id
+  where l.origem = 'acordo_judicial'
+    and l.status not in ('cancelado', 'estornado')
+    and (p_acordo_id is null or ac.id = p_acordo_id)
+    and abs(l.valor - (p.valor_bruto_credito_principal + coalesce(p.honorarios_sucumbenciais, 0))) > 0.01;
+
+  -- Status divergentes entre parcela e lançamento
+  return query
+  select
+    'status_divergente'::text as tipo_inconsistencia,
+    p.id as parcela_id,
+    l.id as lancamento_id,
+    p.status as parcela_status,
+    l.status as lancamento_status,
+    (p.valor_bruto_credito_principal + coalesce(p.honorarios_sucumbenciais, 0))::numeric(15,2) as parcela_valor,
+    l.valor as lancamento_valor,
+    format('Status divergem: parcela "%s", lançamento "%s"', p.status, l.status) as descricao
+  from public.lancamentos_financeiros l
+  join public.parcelas p on p.id = l.parcela_id
+  join public.acordos_condenacoes ac on ac.id = p.acordo_condenacao_id
+  where l.origem = 'acordo_judicial'
+    and (p_acordo_id is null or ac.id = p_acordo_id)
+    and (
+      -- Parcela efetivada mas lançamento não confirmado
+      (p.status in ('recebida', 'paga') and l.status != 'confirmado')
+      or
+      -- Parcela pendente mas lançamento confirmado
+      (p.status not in ('recebida', 'paga') and l.status = 'confirmado')
+    );
+end;
+$$;
+
+comment on function public.verificar_consistencia_parcela_lancamento(bigint) is 'Verifica e reporta inconsistências entre parcelas de acordos e seus lançamentos financeiros vinculados. Útil para auditoria e correção de dados.';

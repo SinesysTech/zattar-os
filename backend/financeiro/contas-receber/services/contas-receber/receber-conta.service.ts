@@ -1,18 +1,32 @@
 /**
  * Serviço de Recebimento de Contas a Receber
  * Gerencia a lógica de negócio para efetivação de recebimentos
+ * Suporta pagamentos totais e parciais com histórico completo
  */
 
 import {
   buscarContaReceberPorId,
   confirmarRecebimentoContaReceber,
+  registrarRecebimentoParcialContaReceber,
 } from '../persistence/contas-receber-persistence.service';
 import type {
   ContaReceber,
   ReceberContaReceberDTO,
   OperacaoContaReceberResult,
   AnexoContaReceber,
+  RecebimentoRegistro,
+  HistoricoRecebimentos,
 } from '@/backend/types/financeiro/contas-receber.types';
+import {
+  getHistoricoRecebimentos,
+  gerarIdRecebimento,
+} from '@/backend/types/financeiro/contas-receber.types';
+import {
+  isValidComprovanteMimeType,
+  isValidComprovanteSize,
+  COMPROVANTE_INVALID_TYPE_MESSAGE,
+  COMPROVANTE_SIZE_EXCEEDED_MESSAGE,
+} from '@/lib/constants/comprovante-validation';
 
 // ============================================================================
 // Tipos de Validação
@@ -26,6 +40,17 @@ interface ValidacaoRecebimentoResult {
 // ============================================================================
 // Validações
 // ============================================================================
+
+/**
+ * Calcula o valor pendente de uma conta considerando o histórico de recebimentos
+ */
+const calcularValorPendenteConta = (conta: ContaReceber): number => {
+  const historico = getHistoricoRecebimentos(conta);
+  if (historico) {
+    return historico.valorPendente;
+  }
+  return conta.valor;
+};
 
 /**
  * Valida se o recebimento pode ser efetuado
@@ -63,6 +88,18 @@ const validarRecebimento = async (
     erros.push('Conta bancária é obrigatória');
   }
 
+  // Validar valor recebido (se for pagamento parcial)
+  if (dados.valorRecebido !== undefined) {
+    if (dados.valorRecebido <= 0) {
+      erros.push('Valor recebido deve ser maior que zero');
+    } else {
+      const valorPendente = calcularValorPendenteConta(conta);
+      if (dados.valorRecebido > valorPendente) {
+        erros.push(`Valor recebido (R$ ${dados.valorRecebido.toFixed(2)}) excede o valor pendente (R$ ${valorPendente.toFixed(2)})`);
+      }
+    }
+  }
+
   // Validar data de efetivação (se fornecida, deve ser <= hoje)
   if (dados.dataEfetivacao) {
     const dataEfetivacao = new Date(dados.dataEfetivacao);
@@ -76,14 +113,12 @@ const validarRecebimento = async (
 
   // Validar comprovante (se fornecido)
   if (dados.comprovante) {
-    const tiposPermitidos = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
-    if (!tiposPermitidos.some((tipo) => dados.comprovante?.tipo.includes(tipo.split('/')[1]))) {
-      erros.push('Tipo de comprovante não permitido. Use PDF, JPG ou PNG');
+    if (!isValidComprovanteMimeType(dados.comprovante.tipo)) {
+      erros.push(COMPROVANTE_INVALID_TYPE_MESSAGE);
     }
 
-    const tamanhoMaximo = 5 * 1024 * 1024; // 5MB
-    if (dados.comprovante.tamanho > tamanhoMaximo) {
-      erros.push('Comprovante excede tamanho máximo de 5MB');
+    if (!isValidComprovanteSize(dados.comprovante.tamanho)) {
+      erros.push(COMPROVANTE_SIZE_EXCEEDED_MESSAGE);
     }
   }
 
@@ -96,13 +131,15 @@ const validarRecebimento = async (
 
 /**
  * Efetua o recebimento de uma conta a receber
+ * Suporta pagamento total ou parcial com histórico completo
  *
  * Fluxo:
  * 1. Busca a conta e valida se pode ser recebida
  * 2. Valida forma de recebimento e conta bancária
- * 3. Atualiza status para 'confirmado' com data de efetivação
- * 4. Adiciona comprovante aos anexos se fornecido
- * 5. Retorna conta atualizada
+ * 3. Se pagamento parcial, registra no histórico e mantém status 'pendente'
+ * 4. Se pagamento total, confirma e atualiza status para 'confirmado'
+ * 5. Adiciona comprovante aos anexos se fornecido
+ * 6. Retorna conta atualizada
  */
 export const receberContaReceber = async (
   contaId: number,
@@ -128,6 +165,13 @@ export const receberContaReceber = async (
       };
     }
 
+    // Calcular valor pendente atual
+    const valorPendente = calcularValorPendenteConta(contaAtual);
+
+    // Determinar valor a receber (total ou parcial)
+    const valorRecebido = dados.valorRecebido !== undefined ? dados.valorRecebido : valorPendente;
+    const isPagamentoParcial = valorRecebido < valorPendente;
+
     // Preparar comprovante com metadados adicionais
     let comprovante: AnexoContaReceber | undefined;
     if (dados.comprovante) {
@@ -138,23 +182,51 @@ export const receberContaReceber = async (
       };
     }
 
-    // Efetuar recebimento
-    const contaRecebida = await confirmarRecebimentoContaReceber(contaId, {
+    // Criar registro de recebimento para o histórico
+    const registroRecebimento: RecebimentoRegistro = {
+      id: gerarIdRecebimento(),
+      valor: valorRecebido,
+      dataRecebimento: dados.dataEfetivacao || new Date().toISOString().split('T')[0],
       formaRecebimento: dados.formaRecebimento,
       contaBancariaId: dados.contaBancariaId,
-      dataEfetivacao: dados.dataEfetivacao,
       observacoes: dados.observacoes,
       comprovante,
-    });
+      registradoPor: usuarioId,
+      registradoEm: new Date().toISOString(),
+    };
+
+    let contaRecebida: ContaReceber;
+
+    if (isPagamentoParcial) {
+      // Pagamento parcial - registra no histórico mas mantém conta pendente
+      contaRecebida = await registrarRecebimentoParcialContaReceber(contaId, registroRecebimento);
+    } else {
+      // Pagamento total - confirma a conta
+      contaRecebida = await confirmarRecebimentoContaReceber(contaId, {
+        formaRecebimento: dados.formaRecebimento,
+        contaBancariaId: dados.contaBancariaId,
+        dataEfetivacao: dados.dataEfetivacao,
+        observacoes: dados.observacoes,
+        comprovante,
+        registroRecebimento,
+      });
+    }
+
+    // Obter histórico atualizado para retornar nos detalhes
+    const historicoAtualizado = getHistoricoRecebimentos(contaRecebida);
 
     return {
       sucesso: true,
       contaReceber: contaRecebida,
       detalhes: {
-        valorRecebido: contaRecebida.valor,
-        dataEfetivacao: contaRecebida.dataEfetivacao,
-        formaRecebimento: contaRecebida.formaRecebimento,
-        contaBancariaId: contaRecebida.contaBancariaId,
+        valorRecebido,
+        valorPendenteAnterior: valorPendente,
+        valorPendenteAtual: historicoAtualizado?.valorPendente ?? 0,
+        isPagamentoParcial,
+        dataEfetivacao: contaRecebida.dataEfetivacao || registroRecebimento.dataRecebimento,
+        formaRecebimento: dados.formaRecebimento,
+        contaBancariaId: dados.contaBancariaId,
+        totalRecebimentos: historicoAtualizado?.recebimentos.length ?? 1,
       },
     };
   } catch (error) {

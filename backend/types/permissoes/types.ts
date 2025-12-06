@@ -28,7 +28,9 @@ export type Recurso =
   | 'tipos_expedientes'
   | 'cargos'
   | 'assinatura_digital'
-  | 'assistentes';
+  | 'assistentes'
+  | 'obrigacoes'
+  | 'lancamentos_financeiros';
 
 /**
  * Operações disponíveis no sistema
@@ -72,6 +74,15 @@ export type Operacao =
   | 'marcar_como_recebida'
   | 'marcar_como_paga'
   | 'anexar_comprovante'
+  // Operações específicas de obrigações financeiras
+  | 'sincronizar'
+  | 'verificar_consistencia'
+  | 'forcar_sincronizacao'
+  // Operações específicas de lançamentos financeiros
+  | 'confirmar'
+  | 'estornar'
+  | 'cancelar'
+  | 'conciliar'
   // Operações específicas de agendamentos
   | 'executar'
   // Operações específicas de captura
@@ -84,7 +95,7 @@ export type Operacao =
 
 /**
  * Matriz de permissões completa do sistema
- * Total: 126 permissões granulares
+ * Total: 145 permissões granulares (126 + 7 obrigações + 12 lançamentos)
  */
 export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
   // Advogados (5 permissões)
@@ -268,6 +279,33 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'editar',
     'deletar',
     'ativar_desativar',
+  ],
+
+  // Obrigações Financeiras - Visão consolidada (7 permissões)
+  obrigacoes: [
+    'listar',
+    'visualizar',
+    'sincronizar',
+    'forcar_sincronizacao',
+    'verificar_consistencia',
+    'editar',
+    'deletar',
+  ],
+
+  // Lançamentos Financeiros (12 permissões)
+  lancamentos_financeiros: [
+    'listar',
+    'visualizar',
+    'criar',
+    'editar',
+    'deletar',
+    'confirmar',
+    'estornar',
+    'cancelar',
+    'conciliar',
+    'atribuir_responsavel',
+    'desatribuir_responsavel',
+    'transferir_responsavel',
   ],
 };
 
