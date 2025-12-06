@@ -242,9 +242,30 @@ export function useProcessoTimeline(
     setTimeline(null);
     setError(null);
 
-    // Acionar captura manualmente
-    await captureTimeline();
-  }, [isCapturing, captureTimeline]);
+    // Acionar recaptura de todas as instâncias do processo (1º, 2º, TST)
+    try {
+      setIsCapturing(true);
+      setPollingAttempts(0);
+
+      const response = await fetch(`/api/acervo/${id}/timeline/recapture`, {
+        method: 'POST',
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Erro ao recapturar timeline');
+      }
+
+      console.log('[useProcessoTimeline] Recaptura enviada para todas as instâncias', result.data);
+      // Polling continuará até timeline retornar
+    } catch (err) {
+      const errorObj = err instanceof Error ? err : new Error('Erro ao recapturar timeline');
+      setError(errorObj);
+      setIsCapturing(false);
+      throw errorObj;
+    }
+  }, [id, isCapturing]);
 
   /**
    * Efeito: Carregar dados iniciais

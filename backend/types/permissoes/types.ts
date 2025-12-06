@@ -30,7 +30,9 @@ export type Recurso =
   | 'assinatura_digital'
   | 'assistentes'
   | 'obrigacoes'
-  | 'lancamentos_financeiros';
+  | 'lancamentos_financeiros'
+  | 'salarios'
+  | 'folhas_pagamento';
 
 /**
  * Operações disponíveis no sistema
@@ -39,6 +41,7 @@ export type Operacao =
   // Operações comuns (CRUD)
   | 'listar'
   | 'visualizar'
+  | 'visualizar_todos'
   | 'criar'
   | 'editar'
   | 'deletar'
@@ -68,6 +71,7 @@ export type Operacao =
   | 'gerenciar_parcelas'
   | 'receber_pagamento'
   | 'pagar'
+  | 'aprovar'
   | 'registrar_repasse'
   // Operações específicas de parcelas
   | 'editar_valores'
@@ -306,6 +310,26 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'atribuir_responsavel',
     'desatribuir_responsavel',
     'transferir_responsavel',
+  ],
+
+  // Sal rios (5 permissäes)
+  salarios: [
+    'listar',
+    'criar',
+    'editar',
+    'deletar',
+    'visualizar_todos',
+  ],
+
+  // Folhas de Pagamento (7 permissäes)
+  folhas_pagamento: [
+    'listar',
+    'criar',
+    'aprovar',
+    'pagar',
+    'cancelar',
+    'deletar',
+    'visualizar_todos',
   ],
 };
 
