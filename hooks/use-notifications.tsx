@@ -47,10 +47,11 @@ interface NotificationProviderProps {
   currentUserName?: string;
 }
 
-export function NotificationProvider({ 
-  children, 
-  currentUserId, 
-  currentUserName 
+export function NotificationProvider({
+  children,
+  currentUserId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetro reservado para uso futuro em notificações
+  currentUserName
 }: NotificationProviderProps) {
   const [notifications, setNotifications] = React.useState<NotificationData[]>([]);
   const [unreadCounts, setUnreadCounts] = React.useState<UnreadCounts>({});
@@ -147,6 +148,7 @@ export function NotificationProvider({
     return () => {
       supabase.removeChannel(channel);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- getRoomInfo é uma função auxiliar que não muda
   }, [supabase, currentUserId]);
 
   const getRoomInfo = async (roomId: string) => {

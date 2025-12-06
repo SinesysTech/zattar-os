@@ -41,8 +41,11 @@ export interface MockPreviewData {
  * @returns Data URI válido para imagem PNG
  */
 export function generateDummyBase64Image(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetros mantidos para futura implementação
   _width: number = 200,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetros mantidos para futura implementação
   _height: number = 100,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetros mantidos para futura implementação
   _text: string = 'PREVIEW'
 ): string {
   // PNG transparente 1x1 mínimo (válido)

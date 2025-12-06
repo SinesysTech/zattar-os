@@ -65,6 +65,7 @@ async function testConsultarPorTribunal(client: ComunicaCNJClient, siglaTribunal
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- função de teste disponível mas comentada no main
 async function testConsultarPorOAB(client: ComunicaCNJClient, numeroOab: string, ufOab: string) {
   console.log(`\n=== Teste 4: Consultar por OAB (${numeroOab}/${ufOab}) ===`);
   try {

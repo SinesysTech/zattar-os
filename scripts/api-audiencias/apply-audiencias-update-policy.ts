@@ -62,6 +62,7 @@ async function applyMigration() {
         .map(s => s.trim())
         .filter(s => s.length > 0 && !s.startsWith('--'));
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- loop iterado para verificar quantidade de statements
       for (const _statement of statements) {
         const { error: execError } = await supabase.from('_migrations').insert({
           name: '20250120000003_add_audiencias_update_policy',

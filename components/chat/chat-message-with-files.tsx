@@ -130,6 +130,7 @@ export function ChatMessageWithFiles({
     return (
       <div className="mt-2">
         <div className="relative group">
+          {/* eslint-disable-next-line @next/next/no-img-element -- URL dinâmica do Supabase Storage */}
           <img
             src={file.url}
             alt={file.name}

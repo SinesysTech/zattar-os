@@ -76,6 +76,7 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
         URL.revokeObjectURL(pdfUrl);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- pdfUrl é gerenciado internamente pelo effect
   }, [hash, open]);
 
   const handleDownload = () => {

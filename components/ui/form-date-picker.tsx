@@ -23,6 +23,7 @@ const formatYYYYMMDD = (d: Date): string => {
   return `${y}-${m}-${da}`
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- id reservado para uso em formulários
 export function FormDatePicker({ id, value, onChange, placeholder, className }: FormDatePickerProps) {
   return (
     <div className={className}>
