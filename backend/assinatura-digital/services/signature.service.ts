@@ -216,6 +216,11 @@ export async function finalizeSignature(payload: FinalizePayload): Promise<Final
 }
 
 export async function listSessoes(params: ListSessoesParams = {}): Promise<ListSessoesResult> {
+  const timer = createTimer();
+  const context = { service: SERVICE, operation: LogOperations.LIST, params };
+
+  logger.debug('Listando sessões de assinatura', context);
+
   const supabase = createServiceClient();
   const page = params.page ?? 1;
   const pageSize = params.pageSize ?? 20;
@@ -245,13 +250,17 @@ export async function listSessoes(params: ListSessoesParams = {}): Promise<ListS
     .range(offset, offset + pageSize - 1);
 
   if (error) {
+    logger.error('Erro ao listar sessões', error, context);
     throw new Error(`Erro ao listar sessões: ${error.message}`);
   }
 
-  return {
+  const result = {
     sessoes: data || [],
     total: count ?? 0,
     page,
     pageSize,
   };
+
+  timer.log('Sessões listadas com sucesso', context, { count: result.total, page, pageSize });
+  return result;
 }

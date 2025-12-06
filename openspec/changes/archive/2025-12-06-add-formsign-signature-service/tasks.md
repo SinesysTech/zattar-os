@@ -4,7 +4,7 @@
 - [x] 1.3 Implementar preview de PDF (gera e retorna URL) usando storage
 - [x] 1.4 Implementar finalizacao de assinatura (gera PDF final, persiste)
 - [x] 1.5 Expor rotas protegidas (preview, finalizar, listar sessoes/assinaturas)
-- [ ] 1.6 Testar fluxos principais (preview, finalizar, listagens) e ajustes
+- [x] 1.6 Testar fluxos principais (preview, finalizar, listagens) e ajustes
 
 ## Notas de Implementacao
 - Storage: backend/assinatura-digital/services/storage.service.ts (Backblaze B2)
