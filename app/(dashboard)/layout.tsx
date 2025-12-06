@@ -1,6 +1,5 @@
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { DifyChatbot } from "@/components/layout/dify-chatbot";
 
 export default function DashboardLayout({
   children,
@@ -15,9 +14,6 @@ export default function DashboardLayout({
           {children}
         </div>
       </SidebarInset>
-
-      {/* Chatbot fora do SidebarInset para não ser cortado pelo overflow */}
-      <DifyChatbot />
     </SidebarProvider>
   );
 }

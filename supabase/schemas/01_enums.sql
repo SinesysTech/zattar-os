@@ -281,3 +281,119 @@ create type public.status_tarefa as enum (
   'concluida'
 );
 comment on type public.status_tarefa is 'Status da tarefa';
+
+-- ----------------------------------------------------------------------------
+-- Enums Financeiros - Sistema de Gestão Financeira (SGF)
+-- ----------------------------------------------------------------------------
+
+-- Tipo de conta contábil no plano de contas
+create type public.tipo_conta_contabil as enum (
+  'ativo',
+  'passivo',
+  'receita',
+  'despesa',
+  'patrimonio_liquido'
+);
+comment on type public.tipo_conta_contabil is 'Tipo de conta no plano de contas: ativo (bens e direitos), passivo (obrigações), receita (entradas), despesa (saídas), patrimonio_liquido (capital próprio)';
+
+-- Natureza da conta contábil (devedora ou credora)
+create type public.natureza_conta as enum (
+  'devedora',
+  'credora'
+);
+comment on type public.natureza_conta is 'Natureza da conta: devedora (aumenta com débito) ou credora (aumenta com crédito)';
+
+-- Nível da conta no plano de contas
+create type public.nivel_conta as enum (
+  'sintetica',
+  'analitica'
+);
+comment on type public.nivel_conta is 'Nível da conta: sintetica (agrupa outras contas) ou analitica (recebe lançamentos diretos)';
+
+-- Tipo de lançamento financeiro
+create type public.tipo_lancamento as enum (
+  'receita',
+  'despesa',
+  'transferencia',
+  'aplicacao',
+  'resgate'
+);
+comment on type public.tipo_lancamento is 'Tipo de lançamento: receita (entrada), despesa (saída), transferencia (entre contas), aplicacao (investimento), resgate (resgate de investimento)';
+
+-- Status do lançamento financeiro
+create type public.status_lancamento as enum (
+  'pendente',
+  'confirmado',
+  'cancelado',
+  'estornado'
+);
+comment on type public.status_lancamento is 'Status do lançamento: pendente (não efetivado), confirmado (efetivado), cancelado (não será efetivado), estornado (revertido após efetivação)';
+
+-- Origem do lançamento financeiro
+create type public.origem_lancamento as enum (
+  'manual',
+  'acordo_judicial',
+  'contrato',
+  'folha_pagamento',
+  'importacao_bancaria',
+  'recorrente'
+);
+comment on type public.origem_lancamento is 'Origem do lançamento: manual (digitado), acordo_judicial (de acordos/condenações), contrato (de contrato), folha_pagamento (de folha), importacao_bancaria (de extrato), recorrente (gerado automaticamente)';
+
+-- Tipo de conta bancária
+create type public.tipo_conta_bancaria as enum (
+  'corrente',
+  'poupanca',
+  'investimento',
+  'caixa'
+);
+comment on type public.tipo_conta_bancaria is 'Tipo de conta: corrente, poupanca, investimento ou caixa (dinheiro em espécie)';
+
+-- Status da conta bancária
+create type public.status_conta_bancaria as enum (
+  'ativa',
+  'inativa',
+  'encerrada'
+);
+comment on type public.status_conta_bancaria is 'Status da conta: ativa (em uso), inativa (pausada temporariamente), encerrada (fechada definitivamente)';
+
+-- Forma de pagamento financeiro
+create type public.forma_pagamento_financeiro as enum (
+  'dinheiro',
+  'transferencia_bancaria',
+  'ted',
+  'pix',
+  'boleto',
+  'cartao_credito',
+  'cartao_debito',
+  'cheque',
+  'deposito_judicial'
+);
+comment on type public.forma_pagamento_financeiro is 'Forma de pagamento: dinheiro, transferencia_bancaria, ted, pix, boleto, cartao_credito, cartao_debito, cheque, deposito_judicial';
+
+-- Status de conciliação bancária
+create type public.status_conciliacao as enum (
+  'pendente',
+  'conciliado',
+  'divergente',
+  'ignorado'
+);
+comment on type public.status_conciliacao is 'Status de conciliação: pendente (não verificado), conciliado (conferido), divergente (com diferenças), ignorado (desconsiderado)';
+
+-- Período do orçamento
+create type public.periodo_orcamento as enum (
+  'mensal',
+  'trimestral',
+  'semestral',
+  'anual'
+);
+comment on type public.periodo_orcamento is 'Período de referência do orçamento: mensal, trimestral, semestral ou anual';
+
+-- Status do orçamento
+create type public.status_orcamento as enum (
+  'rascunho',
+  'aprovado',
+  'em_execucao',
+  'encerrado'
+);
+comment on type public.status_orcamento is 'Status do orçamento: rascunho (em elaboração), aprovado (validado), em_execucao (período corrente), encerrado (período finalizado)';
