@@ -12,6 +12,7 @@ import {
   CACHE_PREFIXES,
   generateCacheKey,
 } from '@/backend/utils/redis/cache-utils';
+import { invalidateObrigacoesCache } from '@/backend/financeiro/obrigacoes/services/persistence/obrigacoes-persistence.service';
 import type {
   ContaPagar,
   ContaPagarComDetalhes,
@@ -994,9 +995,12 @@ export const removerAnexoContaPagar = async (
 
 /**
  * Invalidar todo o cache de contas a pagar
+ * Também invalida o cache de obrigações consolidadas
  */
 export const invalidateContasPagarCache = async (): Promise<void> => {
   await deletePattern(`${CACHE_PREFIX}:*`);
+  // Invalidar cache de obrigações para manter consistência
+  await invalidateObrigacoesCache();
 };
 
 // ============================================================================

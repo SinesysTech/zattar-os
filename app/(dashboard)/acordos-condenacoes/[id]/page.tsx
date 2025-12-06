@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ParcelasTable } from '../components/parcelas-table';
 import { EditParcelaDialog } from '../components/edit-parcela-dialog';
+import { IntegracaoFinanceiraSection } from '../components/integracao-financeira-section';
 import Link from 'next/link';
 import { formatCurrency, formatDate } from '@/app/_lib/utils/utils';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
@@ -358,6 +359,13 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
           onEdit={handleEditParcela}
         />
       </div>
+
+      {/* Integração Financeira */}
+      <IntegracaoFinanceiraSection
+        acordoId={acordo.id}
+        acordoDirecao={acordo.direcao}
+        onSyncComplete={loadAcordo}
+      />
 
       {/* Edit Parcela Dialog */}
       {editDialog.parcela && acordoId && (

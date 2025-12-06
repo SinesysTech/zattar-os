@@ -58,6 +58,7 @@ import {
 import { TarefasWidget } from './tarefas-widget';
 import { NotasWidget } from './notas-widget';
 import { LinksWidget } from './links-widget';
+import { ObrigacoesWidget } from './obrigacoes-widget';
 
 // ============================================================================
 // Tipos
@@ -72,6 +73,7 @@ type WidgetType =
   | 'tarefas'
   | 'notas'
   | 'links'
+  | 'obrigacoes'
   | 'admin-status-cards';
 
 // Tamanhos disponíveis para widgets (spans de coluna em grid de 4)
@@ -100,6 +102,7 @@ const USER_DEFAULT_WIDGETS: DashboardWidget[] = [
   { id: 'audiencias-proximas', type: 'audiencias-proximas', title: 'Próximas Audiências', visible: true, section: 'detail', size: 'medium' },
   { id: 'expedientes-urgentes', type: 'expedientes-urgentes', title: 'Expedientes Urgentes', visible: true, section: 'detail', size: 'medium' },
   { id: 'produtividade', type: 'produtividade', title: 'Produtividade', visible: true, section: 'detail', size: 'medium' },
+  { id: 'obrigacoes', type: 'obrigacoes', title: 'Obrigações Financeiras', visible: true, section: 'detail', size: 'medium' },
   { id: 'tarefas', type: 'tarefas', title: 'Minhas Tarefas', visible: true, section: 'personal', size: 'medium' },
   { id: 'notas', type: 'notas', title: 'Notas Rápidas', visible: true, section: 'personal', size: 'small' },
   { id: 'links', type: 'links', title: 'Links Úteis', visible: true, section: 'personal', size: 'small' },
@@ -109,6 +112,7 @@ const ADMIN_DEFAULT_WIDGETS: DashboardWidget[] = [
   { id: 'admin-status-cards', type: 'admin-status-cards', title: 'Cards de Status', visible: true, section: 'status', size: 'full' },
   { id: 'audiencias-proximas', type: 'audiencias-proximas', title: 'Próximas Audiências', visible: true, section: 'detail', size: 'medium' },
   { id: 'expedientes-urgentes', type: 'expedientes-urgentes', title: 'Expedientes Urgentes', visible: true, section: 'detail', size: 'medium' },
+  { id: 'obrigacoes', type: 'obrigacoes', title: 'Obrigações Financeiras', visible: true, section: 'detail', size: 'medium' },
   { id: 'tarefas', type: 'tarefas', title: 'Minhas Tarefas', visible: true, section: 'personal', size: 'medium' },
   { id: 'notas', type: 'notas', title: 'Notas Rápidas', visible: true, section: 'personal', size: 'small' },
   { id: 'links', type: 'links', title: 'Links Úteis', visible: true, section: 'personal', size: 'small' },
@@ -365,6 +369,8 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
         return <NotasWidget />;
       case 'links':
         return <LinksWidget />;
+      case 'obrigacoes':
+        return <ObrigacoesWidget />;
       default:
         return null;
     }
@@ -563,6 +569,8 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
         return <NotasWidget />;
       case 'links':
         return <LinksWidget />;
+      case 'obrigacoes':
+        return <ObrigacoesWidget />;
       default:
         return null;
     }

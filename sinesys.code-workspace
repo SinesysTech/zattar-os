@@ -2,15 +2,6 @@
   "folders": [
     {
       "path": "."
-    },
-    {
-      "path": "../browser"
-    },
-    {
-      "path": "../mcp"
-    },
-    {
-      "path": "../../Projects/dev/formsign"
     }
   ],
   "settings": {

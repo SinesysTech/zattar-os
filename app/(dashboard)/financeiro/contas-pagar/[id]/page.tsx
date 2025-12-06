@@ -49,6 +49,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { PagarContaDialog } from '../components/pagar-conta-dialog';
 import { ContaPagarFormDialog } from '../components/conta-pagar-form-dialog';
+import { OrigemLancamentoSection } from '../../components/origem-lancamento-section';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { StatusContaPagar } from '@/backend/types/financeiro/contas-pagar.types';
@@ -275,6 +276,13 @@ export default function ContaPagarDetalhesPage() {
           </div>
         </div>
       )}
+
+      {/* Origem do Lançamento (se aplicável) */}
+      <OrigemLancamentoSection
+        lancamentoId={contaPagar.id}
+        dadosAdicionais={contaPagar.dadosAdicionais}
+        className="mb-6"
+      />
 
       {/* Cards de detalhes */}
       <div className="grid gap-6 md:grid-cols-2">
