@@ -2,6 +2,7 @@ import { generateCacheKey, CACHE_PREFIXES } from './cache-utils';
 import type { ListarPendentesParams } from '@/backend/types/expedientes/types';
 import type { ListarAudienciasParams } from '@/backend/types/audiencias/types';
 import type { ListarAcervoParams } from '@/backend/types/acervo/types';
+import type { ListarPlanoContasParams } from '@/backend/types/financeiro/plano-contas.types';
 
 /**
  * Normalizes params by removing undefined values and sorting keys for consistency.
@@ -96,4 +97,19 @@ export function getTiposExpedientesListKey(params: unknown): string {
 export function getCargosListKey(params: Record<string, unknown>): string {
   const normalized = normalizeParams(params);
   return generateCacheKey(CACHE_PREFIXES.cargos, normalized);
+}
+
+/**
+ * Generates cache key for plano de contas list.
+ */
+export function getPlanoContasListKey(params: ListarPlanoContasParams): string {
+  const normalized = normalizeParams(params);
+  return generateCacheKey(CACHE_PREFIXES.planoContas, normalized);
+}
+
+/**
+ * Generates cache key for plano de contas hierarquia.
+ */
+export function getPlanoContasHierarquiaKey(): string {
+  return `${CACHE_PREFIXES.planoContas}:hierarquia`;
 }

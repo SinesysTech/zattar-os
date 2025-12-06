@@ -15,6 +15,7 @@ import {
   Database,
   FileEdit,
   MessageSquare,
+  Wallet,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/nav-main"
@@ -111,6 +112,14 @@ const navPrincipal = [
       { title: "Semana", url: "/acordos-condenacoes/semana" },
       { title: "Mês", url: "/acordos-condenacoes/mes" },
       { title: "Ano", url: "/acordos-condenacoes/ano" },
+    ],
+  },
+  {
+    title: "Financeiro",
+    url: "/financeiro",
+    icon: Wallet,
+    items: [
+      { title: "Plano de Contas", url: "/financeiro/plano-contas" },
     ],
   },
 ]

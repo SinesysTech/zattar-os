@@ -11,12 +11,11 @@ create table if not exists public.representantes (
   cpf text not null unique,
   nome text not null,
   sexo text,
-
-  -- Dados OAB
-  numero_oab text,
-  uf_oab text,
-  situacao_oab text,
   tipo text,
+
+  -- Dados OAB - Array JSONB para múltiplas inscrições
+  -- Formato: [{"numero": "MG128404", "uf": "MG", "situacao": "REGULAR"}, ...]
+  oabs jsonb default '[]'::jsonb,
 
   -- Contato
   emails jsonb,
@@ -40,11 +39,12 @@ create table if not exists public.representantes (
 -- Comentários
 comment on table public.representantes is 'Representantes legais únicos por CPF. Vínculo com processos via processo_partes.';
 comment on column public.representantes.cpf is 'CPF único do representante (constraint UNIQUE).';
+comment on column public.representantes.oabs is 'Array de inscrições na OAB. Formato: [{"numero": "MG128404", "uf": "MG", "situacao": "REGULAR"}]. Um advogado pode ter inscrições em múltiplos estados.';
 comment on column public.representantes.dados_anteriores is 'Dados antigos armazenados para auditoria.';
 
 -- Índices relevantes
 create index if not exists idx_representantes_cpf on public.representantes(cpf);
-create index if not exists idx_representantes_oab on public.representantes(numero_oab);
+create index if not exists idx_representantes_oabs on public.representantes using gin (oabs);
 create index if not exists idx_representantes_endereco on public.representantes(endereco_id);
 
 -- RLS

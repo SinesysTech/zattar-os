@@ -95,6 +95,65 @@ create trigger update_plano_contas_updated_at
   execute function public.update_updated_at_column();
 
 -- ----------------------------------------------------------------------------
+-- Function: validar_hierarquia_plano_contas
+-- ----------------------------------------------------------------------------
+-- Valida que a atribuição de conta_pai_id não cria ciclos na hierarquia.
+-- Um ciclo ocorre quando um ancestral é definido como filho de um descendente.
+
+create or replace function public.validar_hierarquia_plano_contas()
+returns trigger
+language plpgsql
+security invoker
+as $$
+declare
+  v_ancestral_id bigint;
+begin
+  -- Se não há conta pai, não há risco de ciclo
+  if new.conta_pai_id is null then
+    return new;
+  end if;
+
+  -- Verifica se o novo pai é descendente do registro atual (o que criaria um ciclo)
+  -- Percorre a hierarquia a partir do novo pai até encontrar o registro atual ou chegar à raiz
+  with recursive ancestrais as (
+    -- Começa com o novo pai proposto
+    select id, conta_pai_id, 1 as nivel
+    from public.plano_contas
+    where id = new.conta_pai_id
+
+    union all
+
+    -- Sobe na hierarquia
+    select p.id, p.conta_pai_id, a.nivel + 1
+    from public.plano_contas p
+    join ancestrais a on p.id = a.conta_pai_id
+    where a.nivel < 100 -- Limite de segurança para evitar loops infinitos
+  )
+  select id into v_ancestral_id
+  from ancestrais
+  where id = new.id
+  limit 1;
+
+  -- Se encontrou o registro atual na cadeia de ancestrais, temos um ciclo
+  if v_ancestral_id is not null then
+    raise exception 'Operação criaria ciclo na hierarquia do plano de contas. A conta "%" (ID %) não pode ter como pai a conta ID % pois isso criaria uma referência circular.',
+      new.nome, new.id, new.conta_pai_id;
+  end if;
+
+  return new;
+end;
+$$;
+
+comment on function public.validar_hierarquia_plano_contas() is 'Trigger function que valida a hierarquia do plano de contas para evitar ciclos. Um ciclo ocorre quando uma conta é definida como filha de um de seus próprios descendentes, criando uma referência circular infinita.';
+
+-- Trigger para validar hierarquia antes de inserir/atualizar
+create trigger trigger_validar_hierarquia_plano_contas
+  before insert or update of conta_pai_id on public.plano_contas
+  for each row
+  when (new.conta_pai_id is not null)
+  execute function public.validar_hierarquia_plano_contas();
+
+-- ----------------------------------------------------------------------------
 -- Row Level Security (RLS)
 -- ----------------------------------------------------------------------------
 

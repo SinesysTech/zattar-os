@@ -100,7 +100,19 @@ export async function invalidateCacheOnUpdate(entityType: string, id: string): P
       await deletePattern(`${CACHE_PREFIXES.cargos}:*`);
       await deletePattern(`${CACHE_PREFIXES.cargos}:id:${id}`);
       break;
+    case 'planoContas':
+      await invalidatePlanoContasCache();
+      await deletePattern(`${CACHE_PREFIXES.planoContas}:id:${id}`);
+      await deletePattern(`${CACHE_PREFIXES.planoContas}:codigo:*`);
+      break;
     default:
       console.warn(`Unknown entity type for cache invalidation: ${entityType}`);
   }
+}
+
+/**
+ * Invalidates all plano de contas cache entries.
+ */
+export async function invalidatePlanoContasCache(): Promise<void> {
+  await deletePattern(`${CACHE_PREFIXES.planoContas}:*`);
 }

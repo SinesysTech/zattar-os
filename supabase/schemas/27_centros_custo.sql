@@ -80,6 +80,65 @@ create trigger update_centros_custo_updated_at
   execute function public.update_updated_at_column();
 
 -- ----------------------------------------------------------------------------
+-- Function: validar_hierarquia_centros_custo
+-- ----------------------------------------------------------------------------
+-- Valida que a atribuição de centro_pai_id não cria ciclos na hierarquia.
+-- Um ciclo ocorre quando um ancestral é definido como filho de um descendente.
+
+create or replace function public.validar_hierarquia_centros_custo()
+returns trigger
+language plpgsql
+security invoker
+as $$
+declare
+  v_ancestral_id bigint;
+begin
+  -- Se não há centro pai, não há risco de ciclo
+  if new.centro_pai_id is null then
+    return new;
+  end if;
+
+  -- Verifica se o novo pai é descendente do registro atual (o que criaria um ciclo)
+  -- Percorre a hierarquia a partir do novo pai até encontrar o registro atual ou chegar à raiz
+  with recursive ancestrais as (
+    -- Começa com o novo pai proposto
+    select id, centro_pai_id, 1 as nivel
+    from public.centros_custo
+    where id = new.centro_pai_id
+
+    union all
+
+    -- Sobe na hierarquia
+    select c.id, c.centro_pai_id, a.nivel + 1
+    from public.centros_custo c
+    join ancestrais a on c.id = a.centro_pai_id
+    where a.nivel < 100 -- Limite de segurança para evitar loops infinitos
+  )
+  select id into v_ancestral_id
+  from ancestrais
+  where id = new.id
+  limit 1;
+
+  -- Se encontrou o registro atual na cadeia de ancestrais, temos um ciclo
+  if v_ancestral_id is not null then
+    raise exception 'Operação criaria ciclo na hierarquia de centros de custo. O centro "%" (ID %) não pode ter como pai o centro ID % pois isso criaria uma referência circular.',
+      new.nome, new.id, new.centro_pai_id;
+  end if;
+
+  return new;
+end;
+$$;
+
+comment on function public.validar_hierarquia_centros_custo() is 'Trigger function que valida a hierarquia de centros de custo para evitar ciclos. Um ciclo ocorre quando um centro é definido como filho de um de seus próprios descendentes, criando uma referência circular infinita.';
+
+-- Trigger para validar hierarquia antes de inserir/atualizar
+create trigger trigger_validar_hierarquia_centros_custo
+  before insert or update of centro_pai_id on public.centros_custo
+  for each row
+  when (new.centro_pai_id is not null)
+  execute function public.validar_hierarquia_centros_custo();
+
+-- ----------------------------------------------------------------------------
 -- Row Level Security (RLS)
 -- ----------------------------------------------------------------------------
 
