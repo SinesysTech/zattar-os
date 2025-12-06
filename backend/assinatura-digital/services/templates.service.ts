@@ -1,5 +1,6 @@
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { TABLE_TEMPLATES } from './constants';
+import { logger, createTimer, LogServices, LogOperations } from './logger';
 import type {
   AssinaturaDigitalTemplate,
   AssinaturaDigitalTemplateList,
@@ -8,6 +9,7 @@ import type {
 } from '@/backend/types/assinatura-digital/types';
 
 const TEMPLATE_SELECT = '*';
+const SERVICE = LogServices.TEMPLATES;
 
 function parseId(id: string): { column: 'id' | 'template_uuid'; value: string | number } {
   const numericId = Number(id);
@@ -52,6 +54,11 @@ function buildPartialTemplatePayload(input: Partial<UpsertTemplateInput>) {
 }
 
 export async function listTemplates(params: ListTemplatesParams = {}): Promise<AssinaturaDigitalTemplateList> {
+  const timer = createTimer();
+  const context = { service: SERVICE, operation: LogOperations.LIST, params };
+
+  logger.debug('Iniciando listagem de templates', context);
+
   const supabase = createServiceClient();
   let query = supabase.from(TABLE_TEMPLATES).select(TEMPLATE_SELECT, { count: 'exact' });
 
@@ -73,16 +80,25 @@ export async function listTemplates(params: ListTemplatesParams = {}): Promise<A
   const { data, error, count } = await query.order('nome', { ascending: true });
 
   if (error) {
+    logger.error('Erro ao listar templates', error, context);
     throw new Error(`Erro ao listar templates: ${error.message}`);
   }
 
-  return {
+  const result = {
     templates: (data as AssinaturaDigitalTemplate[]) || [],
     total: count ?? 0,
   };
+
+  timer.log('Templates listados com sucesso', context, { count: result.total });
+  return result;
 }
 
 export async function getTemplate(id: string): Promise<AssinaturaDigitalTemplate | null> {
+  const timer = createTimer();
+  const context = { service: SERVICE, operation: LogOperations.GET, id };
+
+  logger.debug('Buscando template', context);
+
   const supabase = createServiceClient();
   const parsed = parseId(id);
 
@@ -94,15 +110,23 @@ export async function getTemplate(id: string): Promise<AssinaturaDigitalTemplate
 
   if (error) {
     if (error.code === 'PGRST116') {
+      logger.debug('Template não encontrado', context);
       return null;
     }
+    logger.error('Erro ao obter template', error, context);
     throw new Error(`Erro ao obter template: ${error.message}`);
   }
 
+  timer.log('Template encontrado', context);
   return data as AssinaturaDigitalTemplate;
 }
 
 export async function createTemplate(input: UpsertTemplateInput): Promise<AssinaturaDigitalTemplate> {
+  const timer = createTimer();
+  const context = { service: SERVICE, operation: LogOperations.CREATE, nome: input.nome };
+
+  logger.info('Criando novo template', context);
+
   const supabase = createServiceClient();
   const payload = buildTemplatePayload(input);
 
@@ -113,13 +137,20 @@ export async function createTemplate(input: UpsertTemplateInput): Promise<Assina
     .single();
 
   if (error) {
+    logger.error('Erro ao criar template', error, context);
     throw new Error(`Erro ao criar template: ${error.message}`);
   }
 
+  timer.log('Template criado com sucesso', { ...context, id: data.id });
   return data as AssinaturaDigitalTemplate;
 }
 
 export async function updateTemplate(id: string, input: Partial<UpsertTemplateInput>): Promise<AssinaturaDigitalTemplate> {
+  const timer = createTimer();
+  const context = { service: SERVICE, operation: LogOperations.UPDATE, id, fields: Object.keys(input) };
+
+  logger.info('Atualizando template', context);
+
   const supabase = createServiceClient();
   const parsed = parseId(id);
   const payload = buildPartialTemplatePayload(input);
@@ -132,13 +163,20 @@ export async function updateTemplate(id: string, input: Partial<UpsertTemplateIn
     .single();
 
   if (error) {
+    logger.error('Erro ao atualizar template', error, context);
     throw new Error(`Erro ao atualizar template: ${error.message}`);
   }
 
+  timer.log('Template atualizado com sucesso', context);
   return data as AssinaturaDigitalTemplate;
 }
 
 export async function deleteTemplate(id: string): Promise<void> {
+  const timer = createTimer();
+  const context = { service: SERVICE, operation: LogOperations.DELETE, id };
+
+  logger.info('Deletando template', context);
+
   const supabase = createServiceClient();
   const parsed = parseId(id);
 
@@ -148,6 +186,9 @@ export async function deleteTemplate(id: string): Promise<void> {
     .eq(parsed.column, parsed.value);
 
   if (error) {
+    logger.error('Erro ao deletar template', error, context);
     throw new Error(`Erro ao deletar template: ${error.message}`);
   }
+
+  timer.log('Template deletado com sucesso', context);
 }

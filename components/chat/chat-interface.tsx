@@ -205,32 +205,32 @@ export function ChatInterface({
   const roomName = getRoomName(tipo, salaId, participanteId, currentUserId);
 
   return (
-    <div className={cn('flex flex-col h-full', className)}>
-      {/* Header */}
-      {showHeader && (
-        <div className={cn('border-b border-border', compact ? 'p-3' : 'p-4')}>
-          <div className={cn('flex items-center justify-between', compact && 'gap-2')}>
-            <h3 className={cn('font-semibold flex items-center gap-2', compact && 'text-sm')}>
-              <MessageSquare className={cn('h-4 w-4', compact && 'h-3 w-3')} />
-              {headerTitle}
-            </h3>
-            <div className="flex items-center gap-2">
-              <NotificationBell className="h-5 w-5" />
-              {headerActions}
+    <NotificationProvider
+      currentUserId={currentUserId}
+      currentUserName={userName}
+    >
+      <div className={cn('flex flex-col h-full', className)}>
+        {/* Header */}
+        {showHeader && (
+          <div className={cn('border-b border-border', compact ? 'p-3' : 'p-4')}>
+            <div className={cn('flex items-center justify-between', compact && 'gap-2')}>
+              <h3 className={cn('font-semibold flex items-center gap-2', compact && 'text-sm')}>
+                <MessageSquare className={cn('h-4 w-4', compact && 'h-3 w-3')} />
+                {headerTitle}
+              </h3>
+              <div className="flex items-center gap-2">
+                <NotificationBell className="h-5 w-5" />
+                {headerActions}
+              </div>
             </div>
+            {headerSubtitle && (
+              <p className="text-xs text-muted-foreground mt-1">{headerSubtitle}</p>
+            )}
           </div>
-          {headerSubtitle && (
-            <p className="text-xs text-muted-foreground mt-1">{headerSubtitle}</p>
-          )}
-        </div>
-      )}
+        )}
 
-      {/* Chat usando componente oficial do Supabase UI */}
-      <div className="flex-1 min-h-0">
-        <NotificationProvider 
-          currentUserId={currentUserId}
-          currentUserName={userName}
-        >
+        {/* Chat usando componente oficial do Supabase UI */}
+        <div className="flex-1 min-h-0">
           <RealtimeChat
             roomName={roomName}
             username={userName}
@@ -239,8 +239,8 @@ export function ChatInterface({
             onMessage={handleMessage}
             tipo={tipo}
           />
-        </NotificationProvider>
+        </div>
       </div>
-    </div>
+    </NotificationProvider>
   );
 }

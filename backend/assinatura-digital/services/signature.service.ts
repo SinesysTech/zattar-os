@@ -8,6 +8,7 @@ import {
   getSegmentoBasico,
   getTemplateBasico,
 } from './data.service';
+import { logger, createTimer, LogServices, LogOperations } from './logger';
 import type {
   FinalizePayload,
   FinalizeResult,
@@ -16,6 +17,8 @@ import type {
   PreviewPayload,
   PreviewResult,
 } from '@/backend/types/assinatura-digital/types';
+
+const SERVICE = LogServices.SIGNATURE;
 
 function buildProtocol(): string {
   const now = new Date();
@@ -67,21 +70,34 @@ async function insertAssinaturaRecord(
 }
 
 export async function generatePreview(payload: PreviewPayload): Promise<PreviewResult> {
+  const timer = createTimer();
+  const context = {
+    service: SERVICE,
+    operation: LogOperations.PREVIEW,
+    cliente_id: payload.cliente_id,
+    template_id: payload.template_id,
+  };
+
+  logger.info('Gerando preview de assinatura', context);
+
   const [cliente, template] = await Promise.all([
     getClienteBasico(payload.cliente_id),
     getTemplateBasico(payload.template_id),
   ]);
 
   if (!cliente) {
+    logger.warn('Cliente não encontrado para preview', context);
     throw new Error('Cliente não encontrado');
   }
   if (!template || !template.ativo) {
+    logger.warn('Template não encontrado ou inativo para preview', { ...context, template_ativo: template?.ativo });
     throw new Error('Template não encontrado ou inativo');
   }
 
   const dummySegmento = { id: 0, nome: 'Preview', slug: 'preview', ativo: true };
   const dummyFormulario = { id: 0, formulario_uuid: 'preview', nome: 'Preview', slug: 'preview', segmento_id: 0, ativo: true };
 
+  logger.debug('Gerando PDF de preview', context);
   const pdfBuffer = await generatePdfFromTemplate(
     template,
     {
@@ -94,15 +110,32 @@ export async function generatePreview(payload: PreviewPayload): Promise<PreviewR
     { fotoBase64: payload.foto_base64 || undefined }
   );
 
+  logger.debug('Armazenando PDF de preview', context);
   const stored = await storePdf(pdfBuffer);
+
+  timer.log('Preview gerado com sucesso', context, { pdf_size: pdfBuffer.length });
   return { pdf_url: stored.url };
 }
 
 export async function finalizeSignature(payload: FinalizePayload): Promise<FinalizeResult> {
+  const timer = createTimer();
+  const context = {
+    service: SERVICE,
+    operation: LogOperations.FINALIZE,
+    cliente_id: payload.cliente_id,
+    template_id: payload.template_id,
+    segmento_id: payload.segmento_id,
+    formulario_id: payload.formulario_id,
+  };
+
+  logger.info('Iniciando finalização de assinatura', context);
+
   if (!payload.assinatura_base64) {
+    logger.warn('Tentativa de finalização sem assinatura', context);
     throw new Error('assinatura_base64 é obrigatória');
   }
 
+  logger.debug('Buscando dados para finalização', context);
   const [cliente, template, formulario, segmento] = await Promise.all([
     getClienteBasico(payload.cliente_id),
     getTemplateBasico(payload.template_id),
@@ -111,23 +144,30 @@ export async function finalizeSignature(payload: FinalizePayload): Promise<Final
   ]);
 
   if (!cliente) {
+    logger.warn('Cliente não encontrado para finalização', context);
     throw new Error('Cliente não encontrado');
   }
   if (!template || !template.ativo) {
+    logger.warn('Template não encontrado ou inativo para finalização', context);
     throw new Error('Template não encontrado ou inativo');
   }
   if (!formulario || !formulario.ativo) {
+    logger.warn('Formulário não encontrado ou inativo para finalização', context);
     throw new Error('Formulário não encontrado ou inativo');
   }
   if (!segmento || !segmento.ativo) {
+    logger.warn('Segmento não encontrado ou inativo para finalização', context);
     throw new Error('Segmento não encontrado ou inativo');
   }
 
+  logger.debug('Armazenando imagens (assinatura/foto)', context);
   const assinaturaStored = await storeSignatureImage(payload.assinatura_base64);
   const fotoStored = payload.foto_base64 ? await storePhotoImage(payload.foto_base64) : undefined;
 
   const protocolo = buildProtocol();
+  logger.debug('Protocolo gerado', { ...context, protocolo });
 
+  logger.debug('Gerando PDF final', context);
   const pdfBuffer = await generatePdfFromTemplate(
     template,
     {
@@ -150,7 +190,10 @@ export async function finalizeSignature(payload: FinalizePayload): Promise<Final
     { assinaturaBase64: payload.assinatura_base64, fotoBase64: payload.foto_base64 || undefined }
   );
 
+  logger.debug('Armazenando PDF final', context);
   const pdfStored = await storePdf(pdfBuffer);
+
+  logger.debug('Registrando assinatura no banco', context);
   const record = await insertAssinaturaRecord(
     payload,
     pdfStored.url,
@@ -158,6 +201,12 @@ export async function finalizeSignature(payload: FinalizePayload): Promise<Final
     assinaturaStored.url,
     fotoStored?.url
   );
+
+  timer.log('Assinatura finalizada com sucesso', {
+    ...context,
+    protocolo,
+    assinatura_id: record.id,
+  }, { pdf_size: pdfBuffer.length });
 
   return {
     assinatura_id: record.id,
