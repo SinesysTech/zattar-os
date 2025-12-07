@@ -76,8 +76,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // 5. Buscar comparativo anual se solicitado
     let comparativoAnual = null;
     if (incluirComparativoAnual) {
-      // Buscar o ano do orçamento atual para comparar com anos anteriores
-      comparativoAnual = await buscarComparativoAnual(new Date().getFullYear());
+      // Buscar o ano do orçamento atual e anos anteriores para comparar
+      const anoAtual = new Date().getFullYear();
+      comparativoAnual = await buscarComparativoAnual([anoAtual - 1, anoAtual]);
     }
 
     return NextResponse.json({

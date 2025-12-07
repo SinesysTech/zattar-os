@@ -247,7 +247,7 @@ export default function OrcamentoDetalhesPage() {
   // Estados
   const [formDialogOpen, setFormDialogOpen] = React.useState(false);
   const [itemDialogOpen, setItemDialogOpen] = React.useState(false);
-  const [selectedItem, setSelectedItem] = React.useState<OrcamentoItem | null>(null);
+  const [selectedItem, setSelectedItem] = React.useState<OrcamentoItemComDetalhes | null>(null);
   const [excluirItemDialogOpen, setExcluirItemDialogOpen] = React.useState(false);
   const [aprovarDialogOpen, setAprovarDialogOpen] = React.useState(false);
   const [iniciarDialogOpen, setIniciarDialogOpen] = React.useState(false);
@@ -280,12 +280,12 @@ export default function OrcamentoDetalhesPage() {
     setItemDialogOpen(true);
   };
 
-  const handleEditarItem = (item: OrcamentoItem) => {
+  const handleEditarItem = (item: OrcamentoItemComDetalhes) => {
     setSelectedItem(item);
     setItemDialogOpen(true);
   };
 
-  const handleExcluirItem = (item: OrcamentoItem) => {
+  const handleExcluirItem = (item: OrcamentoItemComDetalhes) => {
     setSelectedItem(item);
     setExcluirItemDialogOpen(true);
   };
