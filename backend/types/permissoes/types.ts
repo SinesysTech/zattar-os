@@ -94,6 +94,7 @@ export type Operacao =
   | 'estornar'
   | 'cancelar'
   | 'conciliar'
+  | 'desconciliar'
   | 'receber'
   | 'gerar_recorrentes'
   | 'importar'

@@ -56,32 +56,34 @@ export async function GET(request: NextRequest) {
   const { base, cursorY } = await gerarPDFBase('Conciliação Bancária');
   let y = cursorY;
   const { pdfDoc, page, font, boldFont, pageWidth, margin, lineHeight } = base;
+  let currentPage = page;
 
   const headers = ['Data', 'Descrição', 'Valor', 'Status', 'Score'];
   const colX = [margin, margin + 90, margin + 260, margin + 380, margin + 470];
-  page.drawRectangle({
+  currentPage.drawRectangle({
     x: margin,
     y: y - 2,
     width: pageWidth - margin * 2,
     height: lineHeight + 4,
     color: rgb(0.95, 0.95, 0.95),
   });
-  headers.forEach((h, i) => page.drawText(h, { x: colX[i], y, size: 9, font: boldFont }));
+  headers.forEach((h, i) => currentPage.drawText(h, { x: colX[i], y, size: 9, font: boldFont }));
   y -= lineHeight + 6;
 
   for (const t of items.slice(0, 120)) {
     if (y < margin + lineHeight * 2) {
       const nova = pdfDoc.addPage([pageWidth, base.pageHeight]);
       base.page = nova;
+      currentPage = nova;
       y = base.pageHeight - margin;
     }
 
-    page.drawText(formatarData(t.dataTransacao), { x: colX[0], y, size: 9, font });
+    currentPage.drawText(formatarData(t.dataTransacao), { x: colX[0], y, size: 9, font });
     const desc = t.descricao.length > 30 ? `${t.descricao.slice(0, 27)}...` : t.descricao;
-    page.drawText(desc, { x: colX[1], y, size: 9, font });
-    page.drawText(formatarValor(t.valor), { x: colX[2], y, size: 9, font });
-    page.drawText(t.conciliacao?.status || 'pendente', { x: colX[3], y, size: 9, font });
-    page.drawText(
+    currentPage.drawText(desc, { x: colX[1], y, size: 9, font });
+    currentPage.drawText(formatarValor(t.valor), { x: colX[2], y, size: 9, font });
+    currentPage.drawText(t.conciliacao?.status || 'pendente', { x: colX[3], y, size: 9, font });
+    currentPage.drawText(
       t.conciliacao?.scoreSimilaridade != null ? `${t.conciliacao.scoreSimilaridade}%` : '-',
       { x: colX[4], y, size: 9, font }
     );
