@@ -33,7 +33,9 @@
       "Bash(if exist .next rmdir /s /q .next)",
       "Bash(npm run dev:*)",
       "Bash(dir:*)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "mcp__copilotkit-mcp__search-docs",
+      "mcp__copilotkit-mcp__search-code"
     ],
     "deny": [],
     "ask": []

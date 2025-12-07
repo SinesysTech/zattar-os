@@ -61,10 +61,14 @@ import {
 import { toast } from 'sonner';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
-  OrcamentoComItens,
+  OrcamentoComDetalhes,
   StatusOrcamento,
   OrcamentosFilters,
 } from '@/backend/types/financeiro/orcamento.types';
+import {
+  exportarOrcamentoCSV,
+  exportarRelatorioPDF,
+} from '@/app/_lib/orcamentos/export-orcamento';
 
 // ============================================================================
 // Constantes e Helpers
@@ -98,7 +102,7 @@ const formatarData = (data: string | null): string => {
   return format(new Date(data), 'dd/MM/yyyy', { locale: ptBR });
 };
 
-const calcularTotalOrcado = (orcamento: OrcamentoComItens): number => {
+const calcularTotalOrcado = (orcamento: OrcamentoComDetalhes): number => {
   return orcamento.itens?.reduce((sum, item) => sum + item.valorOrcado, 0) || 0;
 };
 
@@ -117,15 +121,15 @@ function OrcamentosActions({
   onVerAnalise,
   onExportar,
 }: {
-  orcamento: OrcamentoComItens;
-  onVerDetalhes: (orc: OrcamentoComItens) => void;
-  onEditar: (orc: OrcamentoComItens) => void;
-  onAprovar: (orc: OrcamentoComItens) => void;
-  onIniciarExecucao: (orc: OrcamentoComItens) => void;
-  onEncerrar: (orc: OrcamentoComItens) => void;
-  onExcluir: (orc: OrcamentoComItens) => void;
-  onVerAnalise: (orc: OrcamentoComItens) => void;
-  onExportar: (orc: OrcamentoComItens) => void;
+  orcamento: OrcamentoComDetalhes;
+  onVerDetalhes: (orc: OrcamentoComDetalhes) => void;
+  onEditar: (orc: OrcamentoComDetalhes) => void;
+  onAprovar: (orc: OrcamentoComDetalhes) => void;
+  onIniciarExecucao: (orc: OrcamentoComDetalhes) => void;
+  onEncerrar: (orc: OrcamentoComDetalhes) => void;
+  onExcluir: (orc: OrcamentoComDetalhes) => void;
+  onVerAnalise: (orc: OrcamentoComDetalhes) => void;
+  onExportar: (orc: OrcamentoComDetalhes) => void;
 }) {
   const isRascunho = orcamento.status === 'rascunho';
   const isAprovado = orcamento.status === 'aprovado';
@@ -200,15 +204,15 @@ function OrcamentosActions({
 // ============================================================================
 
 function criarColunas(
-  onVerDetalhes: (orc: OrcamentoComItens) => void,
-  onEditar: (orc: OrcamentoComItens) => void,
-  onAprovar: (orc: OrcamentoComItens) => void,
-  onIniciarExecucao: (orc: OrcamentoComItens) => void,
-  onEncerrar: (orc: OrcamentoComItens) => void,
-  onExcluir: (orc: OrcamentoComItens) => void,
-  onVerAnalise: (orc: OrcamentoComItens) => void,
-  onExportar: (orc: OrcamentoComItens) => void
-): ColumnDef<OrcamentoComItens>[] {
+  onVerDetalhes: (orc: OrcamentoComDetalhes) => void,
+  onEditar: (orc: OrcamentoComDetalhes) => void,
+  onAprovar: (orc: OrcamentoComDetalhes) => void,
+  onIniciarExecucao: (orc: OrcamentoComDetalhes) => void,
+  onEncerrar: (orc: OrcamentoComDetalhes) => void,
+  onExcluir: (orc: OrcamentoComDetalhes) => void,
+  onVerAnalise: (orc: OrcamentoComDetalhes) => void,
+  onExportar: (orc: OrcamentoComDetalhes) => void
+): ColumnDef<OrcamentoComDetalhes>[] {
   return [
     {
       accessorKey: 'nome',
@@ -387,7 +391,7 @@ export default function OrcamentosPage() {
 
   // Estados de dialogs
   const [formDialogOpen, setFormDialogOpen] = React.useState(false);
-  const [selectedOrcamento, setSelectedOrcamento] = React.useState<OrcamentoComItens | null>(null);
+  const [selectedOrcamento, setSelectedOrcamento] = React.useState<OrcamentoComDetalhes | null>(null);
   const [aprovarDialogOpen, setAprovarDialogOpen] = React.useState(false);
   const [iniciarDialogOpen, setIniciarDialogOpen] = React.useState(false);
   const [encerrarDialogOpen, setEncerrarDialogOpen] = React.useState(false);
@@ -471,47 +475,93 @@ export default function OrcamentosPage() {
 
   // Handlers de ações
   const handleVerDetalhes = React.useCallback(
-    (orcamento: OrcamentoComItens) => {
+    (orcamento: OrcamentoComDetalhes) => {
       router.push(`/financeiro/orcamentos/${orcamento.id}`);
     },
     [router]
   );
 
-  const handleEditar = React.useCallback((orcamento: OrcamentoComItens) => {
+  const handleEditar = React.useCallback((orcamento: OrcamentoComDetalhes) => {
     setSelectedOrcamento(orcamento);
     setFormDialogOpen(true);
   }, []);
 
-  const handleAprovar = React.useCallback((orcamento: OrcamentoComItens) => {
+  const handleAprovar = React.useCallback((orcamento: OrcamentoComDetalhes) => {
     setSelectedOrcamento(orcamento);
     setAprovarDialogOpen(true);
   }, []);
 
-  const handleIniciarExecucao = React.useCallback((orcamento: OrcamentoComItens) => {
+  const handleIniciarExecucao = React.useCallback((orcamento: OrcamentoComDetalhes) => {
     setSelectedOrcamento(orcamento);
     setIniciarDialogOpen(true);
   }, []);
 
-  const handleEncerrar = React.useCallback((orcamento: OrcamentoComItens) => {
+  const handleEncerrar = React.useCallback((orcamento: OrcamentoComDetalhes) => {
     setSelectedOrcamento(orcamento);
     setEncerrarDialogOpen(true);
   }, []);
 
-  const handleExcluir = React.useCallback((orcamento: OrcamentoComItens) => {
+  const handleExcluir = React.useCallback((orcamento: OrcamentoComDetalhes) => {
     setSelectedOrcamento(orcamento);
     setExcluirDialogOpen(true);
   }, []);
 
   const handleVerAnalise = React.useCallback(
-    (orcamento: OrcamentoComItens) => {
+    (orcamento: OrcamentoComDetalhes) => {
       router.push(`/financeiro/orcamentos/${orcamento.id}/analise`);
     },
     [router]
   );
 
-  const handleExportar = React.useCallback((orcamento: OrcamentoComItens) => {
-    toast.info('Funcionalidade de exportação em desenvolvimento');
-  }, []);
+  const [isExporting, setIsExporting] = React.useState(false);
+
+  const handleExportar = React.useCallback(async (orcamento: OrcamentoComDetalhes) => {
+    if (isExporting) return;
+
+    try {
+      setIsExporting(true);
+
+      // Se orçamento está em execução ou encerrado, buscar relatório completo para exportar
+      if (orcamento.status === 'em_execucao' || orcamento.status === 'encerrado') {
+        toast.info('Gerando relatório PDF...');
+
+        const response = await fetch(`/api/financeiro/orcamentos/${orcamento.id}/relatorio?formato=json`);
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+          throw new Error(errorData.error || 'Erro ao buscar relatório');
+        }
+
+        const data = await response.json();
+        if (!data.success || !data.data) {
+          throw new Error('Não foi possível gerar o relatório');
+        }
+
+        // Converter estrutura da API para formato esperado pelo exportador
+        const relatorio = {
+          orcamento: data.data.orcamento,
+          analise: data.data.analise,
+          resumo: data.data.analise?.resumo || null,
+          alertas: data.data.analise?.alertas || [],
+          evolucao: data.data.analise?.evolucao || [],
+          projecao: null,
+          geradoEm: data.data.geradoEm,
+        };
+
+        await exportarRelatorioPDF(relatorio);
+        toast.success('Relatório PDF exportado com sucesso');
+      } else {
+        // Para orçamentos em rascunho ou aprovados, exportar apenas dados básicos
+        exportarOrcamentoCSV(orcamento);
+        toast.success('Orçamento exportado para CSV');
+      }
+    } catch (error) {
+      console.error('Erro ao exportar:', error);
+      toast.error(error instanceof Error ? error.message : 'Erro ao exportar');
+    } finally {
+      setIsExporting(false);
+    }
+  }, [isExporting]);
 
   const handleNovo = React.useCallback(() => {
     setSelectedOrcamento(null);

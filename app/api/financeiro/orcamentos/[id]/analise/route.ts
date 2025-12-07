@@ -7,10 +7,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
   buscarAnaliseOrcamentaria,
-  buscarResumoOrcamentario,
-  buscarAlertasDesvios,
-  buscarEvolucaoMensal,
 } from '@/backend/financeiro/orcamento/services/persistence/analise-orcamentaria-persistence.service';
+import {
+  mapAnaliseToUI,
+} from '@/backend/financeiro/orcamento/services/orcamento/relatorios-orcamento.service';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -84,21 +84,27 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const incluirAlertas = searchParams.get('incluirAlertas') !== 'false';
     const incluirEvolucao = searchParams.get('incluirEvolucao') === 'true';
 
-    // 4. Buscar dados em paralelo
-    const [analise, resumo, alertas, evolucao] = await Promise.all([
-      buscarAnaliseOrcamentaria({ orcamentoId }),
-      incluirResumo ? buscarResumoOrcamentario(orcamentoId) : null,
-      incluirAlertas ? buscarAlertasDesvios(orcamentoId) : null,
-      incluirEvolucao ? buscarEvolucaoMensal(orcamentoId) : null,
-    ]);
+    // 4. Buscar análise completa
+    const analise = await buscarAnaliseOrcamentaria({ orcamentoId });
 
+    if (!analise) {
+      return NextResponse.json(
+        { error: 'Orçamento não encontrado ou sem dados de análise' },
+        { status: 404 }
+      );
+    }
+
+    // 5. Mapear para estrutura da UI
+    const analiseUI = mapAnaliseToUI(analise);
+
+    // 6. Retornar dados conforme parâmetros solicitados
     return NextResponse.json({
       success: true,
       data: {
-        itens: analise,
-        resumo,
-        alertas,
-        evolucao,
+        itens: analiseUI.itens,
+        resumo: incluirResumo ? analiseUI.resumo : null,
+        alertas: incluirAlertas ? analiseUI.alertas : null,
+        evolucao: incluirEvolucao ? analiseUI.evolucao : null,
       },
     });
   } catch (error) {

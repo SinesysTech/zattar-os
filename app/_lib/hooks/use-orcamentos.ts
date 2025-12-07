@@ -40,7 +40,7 @@ interface UseOrcamentosParams {
 }
 
 interface UseOrcamentosResult {
-  orcamentos: OrcamentoComItens[];
+  orcamentos: OrcamentoComDetalhes[];
   paginacao: {
     pagina: number;
     limite: number;
@@ -66,7 +66,7 @@ interface OrcamentosApiResponse {
  * Hook para buscar orçamentos com filtros e paginação
  */
 export const useOrcamentos = (params: UseOrcamentosParams = {}): UseOrcamentosResult => {
-  const [orcamentos, setOrcamentos] = useState<OrcamentoComItens[]>([]);
+  const [orcamentos, setOrcamentos] = useState<OrcamentoComDetalhes[]>([]);
   const [paginacao, setPaginacao] = useState<UseOrcamentosResult['paginacao']>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

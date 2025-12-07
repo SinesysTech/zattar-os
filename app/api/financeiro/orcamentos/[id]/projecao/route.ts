@@ -6,9 +6,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
-  buscarProjecaoOrcamentaria,
+  buscarAnaliseOrcamentaria,
   buscarComparativoAnual,
 } from '@/backend/financeiro/orcamento/services/persistence/analise-orcamentaria-persistence.service';
+import {
+  buscarOrcamentoPorId,
+} from '@/backend/financeiro/orcamento/services/persistence/orcamento-persistence.service';
+import {
+  mapAnaliseToUI,
+} from '@/backend/financeiro/orcamento/services/orcamento/relatorios-orcamento.service';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -70,21 +76,34 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { searchParams } = new URL(request.url);
     const incluirComparativoAnual = searchParams.get('incluirComparativoAnual') === 'true';
 
-    // 4. Buscar projeção
-    const projecao = await buscarProjecaoOrcamentaria(orcamentoId);
+    // 4. Buscar orçamento para obter o ano
+    const orcamento = await buscarOrcamentoPorId(orcamentoId);
+    if (!orcamento) {
+      return NextResponse.json(
+        { error: 'Orçamento não encontrado' },
+        { status: 404 }
+      );
+    }
 
-    // 5. Buscar comparativo anual se solicitado
+    // 5. Buscar análise completa e mapear para UI (gera projeção por conta)
+    const analise = await buscarAnaliseOrcamentaria({ orcamentoId });
+    const analiseUI = mapAnaliseToUI(analise);
+
+    // 6. Buscar comparativo anual se solicitado (usando ano do orçamento)
     let comparativoAnual = null;
     if (incluirComparativoAnual) {
-      // Buscar o ano do orçamento atual e anos anteriores para comparar
-      const anoAtual = new Date().getFullYear();
-      comparativoAnual = await buscarComparativoAnual([anoAtual - 1, anoAtual]);
+      // Usar o ano do orçamento (não o ano atual) para comparativo
+      const anoOrcamento = orcamento.ano;
+      const anoAnterior = anoOrcamento - 1;
+      // Garantir que não buscamos anos muito antigos (limite de 5 anos)
+      const anoMinimo = Math.max(anoAnterior, new Date().getFullYear() - 5);
+      comparativoAnual = await buscarComparativoAnual([anoMinimo, anoOrcamento]);
     }
 
     return NextResponse.json({
       success: true,
       data: {
-        projecao,
+        projecao: analiseUI.projecao, // Retorna ProjecaoItem[] (lista por conta)
         comparativoAnual,
       },
     });

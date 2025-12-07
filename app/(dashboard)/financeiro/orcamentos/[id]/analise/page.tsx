@@ -23,7 +23,15 @@ import {
   CheckCircle2,
   FileDown,
   RefreshCw,
+  FileSpreadsheet,
+  FileText,
 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   useOrcamento,
   useAnaliseOrcamentaria,
@@ -38,6 +46,12 @@ import type {
   StatusOrcamento,
   ResumoOrcamentario,
 } from '@/backend/types/financeiro/orcamento.types';
+import {
+  exportarOrcamentoCSV,
+  exportarAnaliseCSV,
+  exportarEvolucaoCSV,
+  exportarRelatorioPDF,
+} from '@/app/_lib/orcamentos/export-orcamento';
 
 // ============================================================================
 // Constantes e Helpers
@@ -428,8 +442,104 @@ export default function AnaliseOrcamentariaPage() {
     toast.success('Dados atualizados');
   };
 
-  const handleExportar = () => {
-    toast.info('Funcionalidade de exportação em desenvolvimento');
+  const [isExporting, setIsExporting] = React.useState(false);
+
+  const handleExportarCSV = async () => {
+    if (!orcamento) return;
+
+    try {
+      setIsExporting(true);
+      if (itensAnalise.length > 0 && resumo) {
+        // Exportar análise completa
+        const analiseData = {
+          itensPorConta: itensAnalise.map((item) => ({
+            contaContabilCodigo: item.contaContabil?.codigo || '',
+            contaContabilNome: item.contaContabil?.nome || '',
+            tipoConta: 'despesa',
+            centroCustoNome: item.centroCusto?.nome || null,
+            mes: item.mes,
+            valorOrcado: item.valorOrcado,
+            valorRealizado: item.valorRealizado,
+            variacao: item.variacao,
+            variacaoPercentual: item.variacaoPercentual,
+            status: item.status,
+          })),
+          resumo,
+          geradoEm: new Date().toISOString(),
+        };
+        exportarAnaliseCSV(orcamento, analiseData as any);
+        toast.success('Análise exportada para CSV');
+      } else {
+        // Exportar orçamento básico
+        exportarOrcamentoCSV(orcamento);
+        toast.success('Orçamento exportado para CSV');
+      }
+    } catch (error) {
+      console.error('Erro ao exportar CSV:', error);
+      toast.error('Erro ao exportar CSV');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleExportarEvolucaoCSV = async () => {
+    if (!orcamento || evolucao.length === 0) {
+      toast.warning('Dados de evolução não disponíveis');
+      return;
+    }
+
+    try {
+      setIsExporting(true);
+      exportarEvolucaoCSV(orcamento, evolucao);
+      toast.success('Evolução mensal exportada para CSV');
+    } catch (error) {
+      console.error('Erro ao exportar evolução:', error);
+      toast.error('Erro ao exportar evolução');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleExportarPDF = async () => {
+    if (!orcamento) return;
+
+    try {
+      setIsExporting(true);
+      toast.info('Gerando relatório PDF...');
+
+      // Buscar relatório via API HTTP em vez de chamar serviço diretamente
+      const response = await fetch(`/api/financeiro/orcamentos/${orcamentoId}/relatorio?formato=json`);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+        throw new Error(errorData.error || 'Não foi possível gerar o relatório');
+      }
+
+      const data = await response.json();
+      if (!data.success || !data.data) {
+        toast.error('Não foi possível gerar o relatório');
+        return;
+      }
+
+      // Converter estrutura da API para formato esperado pelo exportador
+      const relatorio = {
+        orcamento: data.data.orcamento,
+        analise: data.data.analise,
+        resumo: data.data.analise?.resumo || null,
+        alertas: data.data.analise?.alertas || [],
+        evolucao: data.data.analise?.evolucao || [],
+        projecao: null, // O exportador PDF não usa projeção individual
+        geradoEm: data.data.geradoEm,
+      };
+
+      await exportarRelatorioPDF(relatorio);
+      toast.success('Relatório PDF exportado com sucesso');
+    } catch (error) {
+      console.error('Erro ao exportar PDF:', error);
+      toast.error('Erro ao exportar PDF');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   // Loading
@@ -497,10 +607,28 @@ export default function AnaliseOrcamentariaPage() {
             <RefreshCw className="mr-2 h-4 w-4" />
             Atualizar
           </Button>
-          <Button variant="outline" onClick={handleExportar}>
-            <FileDown className="mr-2 h-4 w-4" />
-            Exportar
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" disabled={isExporting}>
+                <FileDown className="mr-2 h-4 w-4" />
+                {isExporting ? 'Exportando...' : 'Exportar'}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleExportarCSV}>
+                <FileSpreadsheet className="mr-2 h-4 w-4" />
+                Exportar Análise (CSV)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportarEvolucaoCSV}>
+                <FileSpreadsheet className="mr-2 h-4 w-4" />
+                Exportar Evolução Mensal (CSV)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportarPDF}>
+                <FileText className="mr-2 h-4 w-4" />
+                Relatório Completo (PDF)
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

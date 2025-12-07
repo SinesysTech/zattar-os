@@ -8,11 +8,11 @@ import { authenticateRequest } from '@/backend/auth/api-auth';
 import { buscarOrcamentoComDetalhes } from '@/backend/financeiro/orcamento/services/persistence/orcamento-persistence.service';
 import {
   buscarAnaliseOrcamentaria,
-  buscarResumoOrcamentario,
-  buscarAlertasDesvios,
-  buscarEvolucaoMensal,
-  buscarProjecaoOrcamentaria,
 } from '@/backend/financeiro/orcamento/services/persistence/analise-orcamentaria-persistence.service';
+import {
+  mapAnaliseToUI,
+  gerarRelatorioCompleto,
+} from '@/backend/financeiro/orcamento/services/orcamento/relatorios-orcamento.service';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -75,34 +75,30 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { searchParams } = new URL(request.url);
     const formato = searchParams.get('formato') || 'json';
 
-    // 4. Buscar todos os dados necessários em paralelo
-    const [orcamento, analise, resumo, alertas, evolucao, projecao] = await Promise.all([
-      buscarOrcamentoComDetalhes(orcamentoId),
-      buscarAnaliseOrcamentaria({ orcamentoId }),
-      buscarResumoOrcamentario(orcamentoId),
-      buscarAlertasDesvios(orcamentoId),
-      buscarEvolucaoMensal(orcamentoId),
-      buscarProjecaoOrcamentaria(orcamentoId),
-    ]);
+    // 4. Gerar relatório completo usando serviço
+    const relatorioCompleto = await gerarRelatorioCompleto(orcamentoId);
 
-    if (!orcamento) {
+    if (!relatorioCompleto) {
       return NextResponse.json(
         { error: 'Orçamento não encontrado' },
         { status: 404 }
       );
     }
 
-    // 5. Montar dados do relatório
+    // 5. Mapear análise para estrutura da UI
+    const analiseUI = mapAnaliseToUI(relatorioCompleto.analise);
+
+    // 6. Montar dados do relatório com estrutura esperada pelo frontend
     const relatorio = {
-      orcamento,
+      orcamento: relatorioCompleto.orcamento,
       analise: {
-        itens: analise,
-        resumo,
-        alertas,
-        evolucao,
-        projecao,
+        itens: analiseUI.itens,
+        resumo: analiseUI.resumo,
+        alertas: analiseUI.alertas,
+        evolucao: analiseUI.evolucao,
+        projecao: analiseUI.projecao,
       },
-      geradoEm: new Date().toISOString(),
+      geradoEm: relatorioCompleto.geradoEm,
     };
 
     // 6. Retornar conforme formato solicitado
