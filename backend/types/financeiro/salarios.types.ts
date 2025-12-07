@@ -522,14 +522,26 @@ export const validarGerarFolhaDTO = (data: unknown): { valido: boolean; erros: s
     erros.push('Ano de referência deve ser maior ou igual a 2020');
   }
 
-  // Validar período não futuro
+  // Validar período - permite mês atual e próximo mês para planejamento
   if (dto.mesReferencia && dto.anoReferencia) {
     const hoje = new Date();
     const anoAtual = hoje.getFullYear();
     const mesAtual = hoje.getMonth() + 1;
 
-    if (dto.anoReferencia > anoAtual || (dto.anoReferencia === anoAtual && dto.mesReferencia > mesAtual)) {
-      erros.push('Não é possível gerar folha para período futuro');
+    // Calcular limite máximo (próximo mês)
+    let mesLimite = mesAtual + 1;
+    let anoLimite = anoAtual;
+    if (mesLimite > 12) {
+      mesLimite = 1;
+      anoLimite++;
+    }
+
+    // Verificar se está além do próximo mês
+    const periodoReferencia = dto.anoReferencia * 12 + dto.mesReferencia;
+    const periodoLimite = anoLimite * 12 + mesLimite;
+
+    if (periodoReferencia > periodoLimite) {
+      erros.push('Não é possível gerar folha para período muito distante no futuro. Permitido apenas até o próximo mês.');
     }
   }
 
@@ -707,6 +719,7 @@ export const formatarPeriodo = (mes: number, ano: number): string => {
 
 /**
  * Valida se um período é válido
+ * Permite mês atual e próximo mês para planejamento
  */
 export const validarPeriodoFolha = (mes: number, ano: number): { valido: boolean; erro?: string } => {
   if (mes < 1 || mes > 12) {
@@ -720,8 +733,20 @@ export const validarPeriodoFolha = (mes: number, ano: number): { valido: boolean
   const anoAtual = hoje.getFullYear();
   const mesAtual = hoje.getMonth() + 1;
 
-  if (ano > anoAtual || (ano === anoAtual && mes > mesAtual)) {
-    return { valido: false, erro: 'Não é possível gerar folha para período futuro' };
+  // Calcular limite máximo (próximo mês)
+  let mesLimite = mesAtual + 1;
+  let anoLimite = anoAtual;
+  if (mesLimite > 12) {
+    mesLimite = 1;
+    anoLimite++;
+  }
+
+  // Verificar se está além do próximo mês
+  const periodoReferencia = ano * 12 + mes;
+  const periodoLimite = anoLimite * 12 + mesLimite;
+
+  if (periodoReferencia > periodoLimite) {
+    return { valido: false, erro: 'Não é possível gerar folha para período muito distante no futuro. Permitido apenas até o próximo mês.' };
   }
 
   return { valido: true };

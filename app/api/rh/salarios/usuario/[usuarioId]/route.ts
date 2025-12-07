@@ -38,9 +38,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     const { searchParams } = new URL(request.url);
     const somenteVigente = searchParams.get('vigente') === 'true';
+    const dataReferencia = searchParams.get('dataReferencia') || undefined;
 
     if (somenteVigente) {
-      const salarioVigente = await buscarSalarioVigente(alvoId);
+      const salarioVigente = await buscarSalarioVigente(alvoId, dataReferencia);
       if (!salarioVigente) {
         return NextResponse.json({ error: 'Salário não encontrado' }, { status: 404 });
       }
@@ -48,7 +49,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     const salarios = await buscarSalariosDoUsuario(alvoId);
-    return NextResponse.json({ success: true, data: salarios });
+    return NextResponse.json({ success: true, data: { items: salarios } });
   } catch (error) {
     console.error('Erro ao buscar salários do usuário:', error);
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';

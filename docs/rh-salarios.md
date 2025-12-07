@@ -14,10 +14,10 @@
 - **Item da folha**: vínculo salário/usuário na folha, opcionalmente ligado a um lançamento financeiro.
 
 ## Fluxo de Uso
-1) **Cadastrar salário**: informar usuário, cargo, valor bruto e início da vigência.  
-2) **Gerar folha mensal**: escolher mês/ano (sem duplicar período). Sistema inclui todos os salários vigentes.  
-3) **Aprovar folha**: exige conta bancária e conta contábil; cria lançamentos financeiros por item.  
-4) **Pagar folha**: define forma de pagamento, confirma lançamentos e registra `data_pagamento`.  
+1) **Cadastrar salário**: informar usuário, cargo, valor bruto e início da vigência.
+2) **Gerar folha mensal**: escolher mês/ano (sem duplicar período). Sistema inclui todos os salários vigentes. Permite gerar folhas para o mês atual e próximo mês (planejamento).
+3) **Aprovar folha**: exige conta bancária e conta contábil; cria lançamentos financeiros por item.
+4) **Pagar folha**: define forma de pagamento, confirma lançamentos e registra `data_pagamento`.
 5) **Cancelar**: permitido para rascunho/aprovada (cancela lançamentos se existirem).  
 
 ## Endpoints (resumo)
@@ -44,3 +44,4 @@
 - **Erro ao aprovar**: garanta contas contábil/bancária válidas e itens existentes.
 - **Salário sobreposto**: vigências não podem conflitar; encerre vigência anterior antes de criar nova.
 - **Acesso negado**: confirme permissões `visualizar_todos` para ver dados de outros usuários.
+- **Período futuro inválido**: folhas podem ser geradas para o mês atual e próximo mês apenas; períodos mais distantes no futuro são bloqueados.
