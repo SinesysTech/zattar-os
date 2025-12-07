@@ -18,6 +18,31 @@ export interface AuthorizedRequest {
 }
 
 /**
+ * Função interna privada que encapsula a lógica de autenticação
+ * Verifica se o usuário está autenticado e retorna AuthorizedRequest ou NextResponse 401
+ */
+async function ensureAuthenticated(
+  request: NextRequest
+): Promise<AuthorizedRequest | NextResponse> {
+  const authResult = await authenticateRequest(request);
+
+  if (!authResult.authenticated || !authResult.usuarioId) {
+    return NextResponse.json(
+      {
+        error: 'Não autenticado. Faça login para acessar este recurso.',
+      },
+      { status: 401 }
+    );
+  }
+
+  return {
+    usuarioId: authResult.usuarioId,
+    userId: authResult.userId,
+    source: authResult.source || 'session',
+  };
+}
+
+/**
  * Verificar autenticação + autorização em uma única chamada
  *
  * @param request - NextRequest
@@ -45,20 +70,15 @@ export const requirePermission = async (
   operacao: Operacao
 ): Promise<AuthorizedRequest | NextResponse> => {
   // 1. Verificar autenticação
-  const authResult = await authenticateRequest(request);
+  const authOrError = await ensureAuthenticated(request);
 
-  if (!authResult.authenticated || !authResult.usuarioId) {
-    return NextResponse.json(
-      {
-        error: 'Não autenticado. Faça login para acessar este recurso.',
-      },
-      { status: 401 }
-    );
+  if (authOrError instanceof NextResponse) {
+    return authOrError;
   }
 
   // 2. Verificar autorização (permissão)
   const hasPermission = await checkPermission(
-    authResult.usuarioId,
+    authOrError.usuarioId,
     recurso,
     operacao
   );
@@ -76,11 +96,7 @@ export const requirePermission = async (
   }
 
   // 3. Retornar dados do usuário autorizado
-  return {
-    usuarioId: authResult.usuarioId,
-    userId: authResult.userId,
-    source: authResult.source || 'session',
-  };
+  return authOrError;
 };
 
 /**
@@ -90,20 +106,5 @@ export const requirePermission = async (
 export const requireAuthentication = async (
   request: NextRequest
 ): Promise<AuthorizedRequest | NextResponse> => {
-  const authResult = await authenticateRequest(request);
-
-  if (!authResult.authenticated || !authResult.usuarioId) {
-    return NextResponse.json(
-      {
-        error: 'Não autenticado. Faça login para acessar este recurso.',
-      },
-      { status: 401 }
-    );
-  }
-
-  return {
-    usuarioId: authResult.usuarioId,
-    userId: authResult.userId,
-    source: authResult.source || 'session',
-  };
+  return ensureAuthenticated(request);
 };
