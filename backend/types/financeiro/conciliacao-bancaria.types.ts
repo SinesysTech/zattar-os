@@ -125,6 +125,7 @@ export interface LancamentoFinanceiroResumo {
   dataVencimento: string | null;
   tipo: 'receita' | 'despesa';
   status: string;
+  contaBancariaId?: number | null;
   contaContabilNome?: string;
   centroCustoNome?: string;
 }
@@ -176,7 +177,7 @@ export interface ConciliacaoResult {
 export interface ImportarExtratoDTO {
   contaBancariaId: number;
   tipoArquivo: TipoArquivoExtrato;
-  arquivo: Buffer | ArrayBuffer;
+  arquivo: Buffer | ArrayBuffer | File | Blob;
   nomeArquivo: string;
   configCSV?: CSVConfig;
 }

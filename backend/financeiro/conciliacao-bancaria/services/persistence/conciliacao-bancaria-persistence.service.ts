@@ -165,7 +165,8 @@ export const importarTransacoes = async (
   contaBancariaId: number,
   transacoes: TransacaoParsed[],
   arquivoNome: string,
-  usuarioId: number
+  usuarioId: number,
+  tipoArquivo: 'ofx' | 'csv'
 ): Promise<ImportarExtratoResponse> => {
   const supabase = createServiceClient();
 
@@ -255,7 +256,7 @@ export const importarTransacoes = async (
     erros: [],
     detalhes: {
       arquivoNome,
-      tipoArquivo: 'ofx',
+      tipoArquivo,
       contaBancariaId,
       dataImportacao: agora,
     },

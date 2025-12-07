@@ -56,5 +56,5 @@ export const importarExtrato = async (
 
   const transacoes = await parseExtrato(buffer, dto.tipoArquivo, dto.configCSV);
 
-  return importarTransacoes(dto.contaBancariaId, transacoes, dto.nomeArquivo, usuarioId);
+  return importarTransacoes(dto.contaBancariaId, transacoes, dto.nomeArquivo, usuarioId, dto.tipoArquivo);
 };

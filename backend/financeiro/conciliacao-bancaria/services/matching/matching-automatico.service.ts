@@ -152,7 +152,7 @@ export const conciliarAutomaticamente = async (
           transacaoImportadaId: transacao.id,
           lancamentoFinanceiroId: melhor.lancamentoId,
         },
-        params?.usuarioId ?? null
+        undefined
       );
 
       resultados.push({
