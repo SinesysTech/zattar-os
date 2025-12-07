@@ -297,7 +297,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <span className="font-medium">{alerta.contaContabil}</span>
-                <Badge tone={getSeveridadeBadge(alerta.severidade)} variant="soft" size="sm">
+                <Badge tone={getSeveridadeBadge(alerta.severidade)} variant="soft" className="text-xs">
                   {alerta.severidade}
                 </Badge>
               </div>
@@ -514,7 +514,7 @@ export default function AnaliseOrcamentariaPage() {
           <TabsTrigger value="alertas">
             Alertas
             {alertas.length > 0 && (
-              <Badge tone="danger" variant="soft" size="sm" className="ml-2">
+              <Badge tone="danger" variant="soft" className="ml-2 text-xs">
                 {alertas.length}
               </Badge>
             )}

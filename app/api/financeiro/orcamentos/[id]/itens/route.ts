@@ -188,7 +188,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         }
       }
 
-      const itensCriados = await criarItensEmLote(itensParaCriar);
+      const itensCriados = await criarItensEmLote(orcamentoId, itensParaCriar);
 
       return NextResponse.json(
         {
@@ -202,20 +202,19 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       // Criação individual
       const itemData = {
         ...body,
-        orcamentoId,
       };
 
       if (!validarCriarOrcamentoItemDTO(itemData)) {
         return NextResponse.json(
           {
             error:
-              'Dados inválidos. Campos obrigatórios: planoContasId, valorOrcado (maior que 0)',
+              'Dados inválidos. Campos obrigatórios: contaContabilId, valorOrcado (maior que 0)',
           },
           { status: 400 }
         );
       }
 
-      const item = await criarOrcamentoItem(itemData);
+      const item = await criarOrcamentoItem(orcamentoId, itemData);
 
       return NextResponse.json(
         {

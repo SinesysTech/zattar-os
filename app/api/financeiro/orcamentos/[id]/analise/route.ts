@@ -86,7 +86,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     // 4. Buscar dados em paralelo
     const [analise, resumo, alertas, evolucao] = await Promise.all([
-      buscarAnaliseOrcamentaria(orcamentoId),
+      buscarAnaliseOrcamentaria({ orcamentoId }),
       incluirResumo ? buscarResumoOrcamentario(orcamentoId) : null,
       incluirAlertas ? buscarAlertasDesvios(orcamentoId) : null,
       incluirEvolucao ? buscarEvolucaoMensal(orcamentoId) : null,

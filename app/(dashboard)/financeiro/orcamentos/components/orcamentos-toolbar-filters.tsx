@@ -72,25 +72,40 @@ export const buildOrcamentosFilterOptions = (): ComboboxOption[] => {
 };
 
 /**
- * Constrói os grupos de filtros
+ * Constrói os grupos de filtros para exibição agrupada
  */
-export const buildOrcamentosFilterGroups = (): FilterGroup[] => [
-  {
-    group: 'status',
-    label: 'Status',
-    selectionMode: 'multiple',
-  },
-  {
-    group: 'periodo',
-    label: 'Período',
-    selectionMode: 'single',
-  },
-  {
-    group: 'ano',
-    label: 'Ano',
-    selectionMode: 'single',
-  },
-];
+export const buildOrcamentosFilterGroups = (): FilterGroup[] => {
+  const configMap = new Map(ORCAMENTOS_FILTER_CONFIGS.map((c) => [c.id, c]));
+
+  const buildOptionsForConfig = (config: FilterConfig): ComboboxOption[] => {
+    const options: ComboboxOption[] = [];
+    if (config.options) {
+      for (const opt of config.options) {
+        options.push({
+          value: `${config.id}_${opt.value}`,
+          label: opt.label,
+          searchText: config.searchText || opt.searchText,
+        });
+      }
+    }
+    return options;
+  };
+
+  return [
+    {
+      label: 'Status',
+      options: buildOptionsForConfig(configMap.get('status')!),
+    },
+    {
+      label: 'Período',
+      options: buildOptionsForConfig(configMap.get('periodo')!),
+    },
+    {
+      label: 'Ano',
+      options: buildOptionsForConfig(configMap.get('ano')!),
+    },
+  ];
+};
 
 /**
  * Extrai os filtros a partir dos IDs selecionados
