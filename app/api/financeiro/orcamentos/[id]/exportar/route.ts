@@ -45,8 +45,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   const { base, cursorY } = await gerarPDFBase('Orçamento', `${orcamento.nome} (${orcamento.ano})`);
   let y = cursorY;
   const { pdfDoc, page, font, boldFont, pageWidth, margin, lineHeight } = base;
+  let currentPage = page;
 
-  page.drawText(`Período: ${orcamento.periodo || '-'}`, {
+  currentPage.drawText(`Período: ${orcamento.periodo || '-'}`, {
     x: margin,
     y,
     size: 10,
@@ -57,26 +58,27 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
   const headers = ['Conta', 'Mês', 'Valor'];
   const colX = [margin, margin + 240, margin + 360];
-  page.drawRectangle({
+  currentPage.drawRectangle({
     x: margin,
     y: y - 2,
     width: pageWidth - margin * 2,
     height: lineHeight + 4,
     color: rgb(0.95, 0.95, 0.95),
   });
-  headers.forEach((h, i) => page.drawText(h, { x: colX[i], y, size: 9, font: boldFont }));
+  headers.forEach((h, i) => currentPage.drawText(h, { x: colX[i], y, size: 9, font: boldFont }));
   y -= lineHeight + 6;
 
   for (const item of (orcamento.itens || []).slice(0, 120)) {
     if (y < margin + lineHeight * 2) {
       const nova = pdfDoc.addPage([pageWidth, base.pageHeight]);
       base.page = nova;
+      currentPage = nova;
       y = base.pageHeight - margin;
     }
 
-    page.drawText(item.contaContabil?.nome || '-', { x: colX[0], y, size: 9, font });
-    page.drawText(item.mes ? String(item.mes) : 'Todos', { x: colX[1], y, size: 9, font });
-    page.drawText(formatarValor(item.valorOrcado || 0), { x: colX[2], y, size: 9, font });
+    currentPage.drawText(item.contaContabil?.nome || '-', { x: colX[0], y, size: 9, font });
+    currentPage.drawText(item.mes ? String(item.mes) : 'Todos', { x: colX[1], y, size: 9, font });
+    currentPage.drawText(formatarValor(item.valorOrcado || 0), { x: colX[2], y, size: 9, font });
 
     y -= lineHeight;
   }

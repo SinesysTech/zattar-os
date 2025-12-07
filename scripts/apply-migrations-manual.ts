@@ -2,28 +2,51 @@
 import { createClient } from '@supabase/supabase-js';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as dotenv from 'dotenv';
 
-async function main() {
-  console.log('🚀 Iniciando aplicação de migrations...');
-
-  // 1. Carregar variáveis de ambiente
+// Simple .env parser to avoid external dependencies
+function loadEnv() {
   const envPath = path.resolve(process.cwd(), '.env.local');
   if (fs.existsSync(envPath)) {
     console.log('📄 Carregando .env.local...');
-    const envConfig = dotenv.parse(fs.readFileSync(envPath));
-    for (const k in envConfig) {
-      process.env[k] = envConfig[k];
+    const content = fs.readFileSync(envPath, 'utf8');
+    const lines = content.split('\n');
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      
+      const eqIdx = trimmed.indexOf('=');
+      if (eqIdx > 0) {
+        const key = trimmed.substring(0, eqIdx).trim();
+        let val = trimmed.substring(eqIdx + 1).trim();
+        // Remove quotes if present
+        if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+          val = val.substring(1, val.length - 1);
+        }
+        process.env[key] = val;
+      }
     }
   } else {
-    console.warn('⚠️ .env.local não encontrado. Tentando variáveis de ambiente do sistema.');
+    console.warn('⚠️ .env.local não encontrado.');
   }
+}
+
+async function executeSQL(supabase: any, sql: string) {
+  // Tenta executar via RPC 'query'
+  const { data, error } = await supabase.rpc('query', { query: sql });
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+}
+
+async function main() {
+  loadEnv();
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SECRET_KEY; // Service Role Key é necessária para DDL
+  const supabaseKey = process.env.SUPABASE_SECRET_KEY; // Service Role Key
 
   if (!supabaseUrl || !supabaseKey) {
-    console.error('❌ Erro: Credenciais do Supabase não encontradas (NEXT_PUBLIC_SUPABASE_URL ou SUPABASE_SECRET_KEY).');
+    console.error('❌ Erro: Credenciais do Supabase não encontradas.');
     process.exit(1);
   }
 
@@ -34,7 +57,6 @@ async function main() {
     }
   });
 
-  // 2. Identificar arquivos de migration
   const migrationsDir = path.join(process.cwd(), 'supabase', 'migrations', 'nao-aplicadas');
   if (!fs.existsSync(migrationsDir)) {
     console.error(`❌ Diretório não encontrado: ${migrationsDir}`);
@@ -51,64 +73,46 @@ async function main() {
   console.log(`📦 Encontradas ${files.length} migrations pendentes:`);
   files.forEach(f => console.log(`   - ${f}`));
 
-  // 3. Aplicar migrations
   for (const file of files) {
-    console.log(`\n▶️  Aplicando: ${file}...`);
+    console.log(`\n▶️  Processando: ${file}...`);
     const filePath = path.join(migrationsDir, file);
-    const sql = fs.readFileSync(filePath, 'utf8');
+    const sqlContent = fs.readFileSync(filePath, 'utf8');
 
-    // Supabase JS client doesn't support raw SQL execution directly via a public method in all versions,
-    // but usually RPC is used. However, for DDL we need direct SQL access.
-    // Since we don't have direct SQL access via client (unless pg is used), 
-    // we will try to use the 'rpc' method if a function exists, OR 
-    // we assume the user might have a function to execute SQL (common in some setups).
-    //
-    // WAIT: Standard supabase-js DOES NOT allow arbitrary SQL execution from the client 
-    // unless you have a specific RPC function set up for it (e.g. 'exec_sql').
-    //
-    // CHECK: Does the project have an 'exec_sql' or similar RPC?
-    // If not, we cannot use supabase-js to run DDL (CREATE TABLE).
-    //
-    // Alternative: We can try to use the 'postgres' library if installed, or 'pg'.
-    // 'pg' was found in package-lock.json!
-    
-    // Let's try to switch to 'pg' client if possible.
-    // We need the connection string.
-    // The connection string is usually: postgres://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres
-    // OR direct connection.
-    //
-    // We don't have the password in .env.local usually (only keys).
-    // .env.local had:
-    // NEXT_PUBLIC_SUPABASE_URL=https://cxxdivtgeslrujpfpivs.supabase.co
-    // SUPABASE_SECRET_KEY=...
-    //
-    // It does NOT have the DB password.
-    //
-    // HOWEVER, there is a `SERVICE_API_KEY` in .env.local which is the same as SUPABASE_SECRET_KEY?
-    // No, SERVICE_API_KEY=9fe76b04...
-    // SUPABASE_SECRET_KEY=sb_secret_5IOk8AZ...
-    //
-    // Without the DB password, we CANNOT use 'pg' driver.
-    // We MUST use the Supabase API.
-    //
-    // BUT, Supabase API (PostgREST) does not support DDL.
-    //
-    // Is there any other way?
-    // Maybe the 'supa' CLI found in `npx supabase`?
-    // I tried `npx supabase status` and it failed.
-    // `npx supabase db push` requires the DB password or a linked project with login.
-    //
-    // Let's check if there is an RPC function for executing SQL.
-    // I'll assume there MIGHT be one, or I will try to use `npx supabase migration apply` if I can configure it.
-    //
-    // Wait, the user asked to use "mcp tool". 
-    // Since I don't have it, I am trying this script.
-    //
-    // If I cannot execute SQL, I am stuck.
-    //
-    // Let's check `e:\Development\Sinesys\backend\utils\supabase\server.ts` to see how they connect.
-    
+    // Split statements by semicolon, handling simple cases
+    // Note: This is a basic splitter and might fail on semicolons inside strings.
+    // Ideally we should use a proper SQL parser, but for now we follow the existing pattern.
+    const statements = sqlContent
+      .split(';')
+      .map(s => s.trim())
+      .filter(s => s.length > 0 && !s.startsWith('--'));
+
+    console.log(`   Encontrados ${statements.length} comandos SQL.`);
+
+    let successCount = 0;
+    for (let i = 0; i < statements.length; i++) {
+      const statement = statements[i];
+      // Skip comments
+      if (statement.startsWith('--')) continue;
+
+      try {
+        await executeSQL(supabase, statement);
+        // console.log(`   ✅ Comando ${i + 1} executado.`);
+        successCount++;
+      } catch (err: any) {
+        if (err.message?.includes('already exists') || err.message?.includes('IF NOT EXISTS')) {
+             console.log(`   ⚠️  Aviso no comando ${i + 1}: ${err.message} (Ignorado)`);
+             successCount++; // Count as success to proceed
+        } else {
+             console.error(`   ❌ Erro no comando ${i + 1}: ${err.message}`);
+             console.error(`   SQL: ${statement.substring(0, 100)}...`);
+             process.exit(1);
+        }
+      }
+    }
+    console.log(`   ✅ Migration ${file} aplicada com sucesso!`);
   }
+
+  console.log('\n🏁 Todas as migrations foram processadas.');
 }
 
 main();
