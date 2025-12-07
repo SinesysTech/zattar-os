@@ -23,8 +23,8 @@ import type {
   UsuarioResumo,
   Salario,
   LancamentoFinanceiroResumo,
-  isTransicaoStatusValida,
 } from '@/backend/types/financeiro/salarios.types';
+import { isTransicaoStatusValida } from '@/backend/types/financeiro/salarios.types';
 
 // ============================================================================
 // Constantes de Cache
@@ -684,9 +684,6 @@ export const atualizarStatusFolha = async (
     throw new Error('Folha de pagamento não encontrada');
   }
 
-  // Importar função de validação de transição
-  const { isTransicaoStatusValida } = await import('@/backend/types/financeiro/salarios.types');
-
   // Validar transição de status
   if (!isTransicaoStatusValida(folhaAtual.status as StatusFolhaPagamento, novoStatus)) {
     throw new Error(`Transição de status inválida: ${folhaAtual.status} -> ${novoStatus}`);
@@ -929,7 +926,7 @@ export const calcularEvolucaoMensal = async (
 
   const { data, error } = await supabase
     .from('folhas_pagamento')
-    .select('mes_referencia, ano_referencia, valor_total, status')
+    .select('id, mes_referencia, ano_referencia, valor_total, status')
     .gte('ano_referencia', anoInicio)
     .order('ano_referencia', { ascending: true })
     .order('mes_referencia', { ascending: true });
@@ -938,8 +935,8 @@ export const calcularEvolucaoMensal = async (
     throw new Error(`Erro ao calcular evolução: ${error.message}`);
   }
 
-  // Contar funcionários por folha
-  const folhaIds = (data || []).map((f) => f.mes_referencia);
+  // Contar funcionários por folha usando o ID real da folha
+  const folhaIds = (data || []).map((f) => f.id);
   const { data: contagens, error: erroContagens } = await supabase
     .from('itens_folha_pagamento')
     .select('folha_pagamento_id')
@@ -956,7 +953,7 @@ export const calcularEvolucaoMensal = async (
     ano: folha.ano_referencia,
     valorTotal: Number(folha.valor_total),
     status: folha.status as StatusFolhaPagamento,
-    totalFuncionarios: contagensPorFolha.get(folha.mes_referencia) || 0,
+    totalFuncionarios: contagensPorFolha.get(folha.id) || 0,
   }));
 
   await setCached(cacheKey, result, 300); // 5 minutos
