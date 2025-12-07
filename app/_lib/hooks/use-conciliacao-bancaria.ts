@@ -49,6 +49,21 @@ export const useTransacoesImportadas = (
     }
   }
 
+  const { data, error, isLoading, mutate } = useSWR<{ success: boolean; data: ListarTransacoesResponse }>(
+    `/api/financeiro/conciliacao-bancaria/transacoes?${searchParams.toString()}`,
+    fetcher
+  );
+
+  return {
+    transacoes: data?.data.items || [],
+    paginacao: data?.data.paginacao,
+    resumo: data?.data.resumo,
+    isLoading,
+    error: error ? error.message : null,
+    refetch: () => mutate(),
+  };
+};
+
 export const buscarLancamentosManuais = async (params: {
   busca?: string;
   dataInicio?: string;
@@ -65,7 +80,7 @@ export const buscarLancamentosManuais = async (params: {
   if (params.tipo) searchParams.set('tipo', params.tipo);
   if (params.limite) searchParams.set('limite', params.limite.toString());
 
-  const response = await fetch(/api/financeiro/conciliacao-bancaria/lancamentos?);
+  const response = await fetch(`/api/financeiro/conciliacao-bancaria/lancamentos?${searchParams.toString()}`);
   const data = await response.json();
 
   if (!response.ok || !data.success) {
@@ -73,21 +88,6 @@ export const buscarLancamentosManuais = async (params: {
   }
 
   return data.data as LancamentoFinanceiroResumo[];
-};
-
-  const { data, error, isLoading, mutate } = useSWR<{ success: boolean; data: ListarTransacoesResponse }>(
-    `/api/financeiro/conciliacao-bancaria/transacoes?${searchParams.toString()}`,
-    fetcher
-  );
-
-  return {
-    transacoes: data?.data.items || [],
-    paginacao: data?.data.paginacao,
-    resumo: data?.data.resumo,
-    isLoading,
-    error: error ? error.message : null,
-    refetch: () => mutate(),
-  };
 };
 
 export const useTransacaoDetalhes = (id: number | null) => {
@@ -121,7 +121,7 @@ export const useSugestoesConciliacao = (transacaoId: number | null) => {
 };
 
 // ----------------------------------------------------------------------------
-// Muta\u00e7\u00f5es
+// Mutacoes
 // ----------------------------------------------------------------------------
 
 export const importarExtrato = async (

@@ -1,13 +1,15 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { useSugestoesConciliacao, conciliarManual } from '@/app/_lib/hooks/use-conciliacao-bancaria';
-import type { TransacaoComConciliacao, SugestaoConciliacao } from '@/backend/types/financeiro/conciliacao-bancaria.types';
+import { Input } from '@/components/ui/input';
+import { useSugestoesConciliacao, conciliarManual, buscarLancamentosManuais } from '@/app/_lib/hooks/use-conciliacao-bancaria';
+import type { TransacaoComConciliacao, SugestaoConciliacao, LancamentoFinanceiroResumo } from '@/backend/types/financeiro/conciliacao-bancaria.types';
 import { toast } from 'sonner';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 
 interface Props {
   open: boolean;
@@ -22,6 +24,12 @@ const formatarValor = (valor: number) =>
 export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess }: Props) {
   const transacaoId = transacao?.id || null;
   const { sugestoes, isLoading } = useSugestoesConciliacao(transacaoId);
+  const [buscaManual, setBuscaManual] = useState('');
+  const [dataInicio, setDataInicio] = useState('');
+  const [dataFim, setDataFim] = useState('');
+  const [resultadosBusca, setResultadosBusca] = useState<LancamentoFinanceiroResumo[]>([]);
+  const [buscando, setBuscando] = useState(false);
+  const buscaDebounced = useDebounce(buscaManual, 400);
 
   const topSugestoes = useMemo(() => sugestoes || [], [sugestoes]);
 
@@ -31,6 +39,21 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
       await conciliarManual({
         transacaoImportadaId: transacao.id,
         lancamentoFinanceiroId: sugestao.lancamentoId,
+      });
+      toast.success('Transa\u00e7\u00e3o conciliada');
+      onSuccess?.();
+      onOpenChange(false);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Erro ao conciliar');
+    }
+  };
+
+  const handleConciliarBusca = async (lancamentoId: number) => {
+    if (!transacao) return;
+    try {
+      await conciliarManual({
+        transacaoImportadaId: transacao.id,
+        lancamentoFinanceiroId: lancamentoId,
       });
       toast.success('Transa\u00e7\u00e3o conciliada');
       onSuccess?.();
@@ -54,6 +77,25 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
       toast.error(error instanceof Error ? error.message : 'Erro ao ignorar');
     }
   };
+
+  useEffect(() => {
+    if (!transacao) return;
+    const tipo = transacao.tipoTransacao === 'credito' ? 'receita' : 'despesa';
+    setBuscando(true);
+    buscarLancamentosManuais({
+      busca: buscaDebounced || undefined,
+      dataInicio: dataInicio || undefined,
+      dataFim: dataFim || undefined,
+      contaBancariaId: transacao.contaBancariaId,
+      tipo,
+      limite: 20,
+    })
+      .then(setResultadosBusca)
+      .catch((error: unknown) => {
+        toast.error(error instanceof Error ? error.message : 'Erro ao buscar lan\u00e7amentos');
+      })
+      .finally(() => setBuscando(false));
+  }, [buscaDebounced, dataInicio, dataFim, transacao]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -118,6 +160,54 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                         Conciliar com este
                       </Button>
                     </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {transacao && (
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-end gap-3">
+              <div className="space-y-1">
+                <p className="text-sm font-medium">Busca manual</p>
+                <Input
+                  placeholder="Buscar por descri\u00e7\u00e3o ou documento"
+                  value={buscaManual}
+                  onChange={(e) => setBuscaManual(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium">Data inicial</p>
+                <Input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium">Data final</p>
+                <Input type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
+              </div>
+            </div>
+
+            <div className="rounded-md border p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">Resultados da busca</p>
+                {buscando && <p className="text-xs text-muted-foreground">Buscando...</p>}
+              </div>
+              {resultadosBusca.length === 0 && !buscando && (
+                <p className="text-sm text-muted-foreground">Nenhum lan\u00e7amento encontrado.</p>
+              )}
+              <div className="space-y-2">
+                {resultadosBusca.map((lancamento) => (
+                  <div key={lancamento.id} className="flex items-center justify-between rounded-md border p-2">
+                    <div>
+                      <p className="text-sm font-medium">{lancamento.descricao}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {lancamento.dataLancamento} - {formatarValor(lancamento.valor)}
+                      </p>
+                    </div>
+                    <Button size="sm" onClick={() => handleConciliarBusca(lancamento.id)}>
+                      Conciliar
+                    </Button>
                   </div>
                 ))}
               </div>

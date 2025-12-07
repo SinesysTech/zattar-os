@@ -33,7 +33,12 @@ export type Recurso =
   | 'lancamentos_financeiros'
   | 'salarios'
   | 'folhas_pagamento'
-  | 'dre';
+  | 'dre'
+  | 'plano_contas'
+  | 'contas_pagar'
+  | 'contas_receber'
+  | 'orcamentos'
+  | 'conciliacao_bancaria';
 
 /**
  * Operações disponíveis no sistema
@@ -89,6 +94,11 @@ export type Operacao =
   | 'estornar'
   | 'cancelar'
   | 'conciliar'
+  | 'receber'
+  | 'gerar_recorrentes'
+  | 'importar'
+  | 'iniciar_execucao'
+  | 'encerrar'
   // Operações específicas de agendamentos
   | 'executar'
   // Operações específicas de captura
@@ -341,6 +351,64 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
   dre: [
     'listar',
     'visualizar',
+    'exportar',
+  ],
+  // Plano de Contas (6 permissäes)
+  plano_contas: [
+    'listar',
+    'visualizar',
+    'criar',
+    'editar',
+    'deletar',
+    'exportar',
+  ],
+
+  // Contas a Pagar (9 permissäes)
+  contas_pagar: [
+    'listar',
+    'visualizar',
+    'criar',
+    'editar',
+    'deletar',
+    'pagar',
+    'cancelar',
+    'exportar',
+    'gerar_recorrentes',
+  ],
+
+  // Contas a Receber (9 permissäes)
+  contas_receber: [
+    'listar',
+    'visualizar',
+    'criar',
+    'editar',
+    'deletar',
+    'receber',
+    'cancelar',
+    'exportar',
+    'gerar_recorrentes',
+  ],
+
+  // Or‡amentos (9 permissäes)
+  orcamentos: [
+    'listar',
+    'visualizar',
+    'criar',
+    'editar',
+    'deletar',
+    'aprovar',
+    'iniciar_execucao',
+    'encerrar',
+    'exportar',
+  ],
+
+  // Concilia‡Æo Banc ria (6 permissäes)
+  conciliacao_bancaria: [
+    'listar',
+    'visualizar',
+    'importar',
+    'conciliar',
+    'desconciliar',
     'exportar',
   ],
 };

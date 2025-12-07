@@ -277,7 +277,7 @@ export const parseOFXBuffer = async (buffer: Buffer): Promise<TransacaoParsed[]>
   transacoesOFX.forEach((trn, index) => {
     try {
       const valor = parsearValorOFX(trn.TRNAMT);
-      const valorAbsoluto = Math.abs(valor);
+      const valorAbsoluto = Math.abs(valor); // usamos valor absoluto; o sinal fica em tipoTransacao
 
       const transacao: TransacaoParsed = {
         dataTransacao: parsearDataOFX(trn.DTPOSTED),

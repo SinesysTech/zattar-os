@@ -222,3 +222,12 @@ from public.cargos,
      ) as perms(recurso, operacao)
 where nome = 'Gerente'
 on conflict (cargo_id, recurso, operacao) do nothing;
+
+-- ============================================================================
+-- Documenta‡Æo de novas permissÄes financeiras
+-- ============================================================================
+-- plano_contas: listar, visualizar, criar, editar, deletar, exportar
+-- contas_pagar: listar, visualizar, criar, editar, deletar, pagar, cancelar, exportar, gerar_recorrentes
+-- contas_receber: listar, visualizar, criar, editar, deletar, receber, cancelar, exportar, gerar_recorrentes
+-- orcamentos: listar, visualizar, criar, editar, deletar, aprovar, iniciar_execucao, encerrar, exportar
+-- conciliacao_bancaria: listar, visualizar, importar, conciliar, desconciliar, exportar

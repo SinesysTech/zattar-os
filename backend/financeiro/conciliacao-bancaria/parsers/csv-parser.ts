@@ -373,7 +373,7 @@ export const parseCSVBuffer = async (
               }
 
               const valor = parsearValor(valorStr);
-              const valorAbsoluto = Math.abs(valor);
+              const valorAbsoluto = Math.abs(valor); // usamos valor absoluto; sinal fica em tipoTransacao
 
               // Pular transações com valor zero
               if (valorAbsoluto === 0) {

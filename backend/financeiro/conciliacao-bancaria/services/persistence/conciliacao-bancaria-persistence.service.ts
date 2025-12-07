@@ -181,14 +181,20 @@ export const importarTransacoes = async (
 
   const hashesUnicos = Array.from(new Set(hashes));
 
-  const { data: hashesExistentes, error: erroBusca } = await supabase
-    .from('transacoes_bancarias_importadas')
-    .select('hash_transacao')
-    .eq('conta_bancaria_id', contaBancariaId)
-    .in('hash_transacao', hashesUnicos);
+  let hashesExistentes: { hash_transacao: string }[] = [];
 
-  if (erroBusca) {
-    throw new Error(`Erro ao verificar duplicatas: ${erroBusca.message}`);
+  if (hashesUnicos.length > 0) {
+    const { data, error: erroBusca } = await supabase
+      .from('transacoes_bancarias_importadas')
+      .select('hash_transacao')
+      .eq('conta_bancaria_id', contaBancariaId)
+      .in('hash_transacao', hashesUnicos);
+
+    if (erroBusca) {
+      throw new Error(`Erro ao verificar duplicatas: ${erroBusca.message}`);
+    }
+
+    hashesExistentes = data || [];
   }
 
   const hashSet = new Set((hashesExistentes || []).map((h) => h.hash_transacao as string));
