@@ -93,16 +93,19 @@ export async function buscarDadosDRE(
 
       // Filtro por período
       if (anoInicio === anoFim) {
-        // Mesmo ano
+        // Mesmo ano - filtrar por ano e meses
         query = query
           .eq('ano', anoInicio)
           .gte('mes', mesInicio)
           .lte('mes', mesFim);
       } else {
-        // Anos diferentes - usar período completo
-        query = query.or(
-          `and(ano.eq.${anoInicio},mes.gte.${mesInicio}),and(ano.eq.${anoFim},mes.lte.${mesFim})`
-        );
+        // Anos diferentes - usar periodo_completo (formato YYYY-MM) para filtrar
+        // corretamente intervalos multi-ano incluindo todos os anos intermediários
+        const periodoInicio = `${anoInicio}-${mesInicio.toString().padStart(2, '0')}`;
+        const periodoFim = `${anoFim}-${mesFim.toString().padStart(2, '0')}`;
+        query = query
+          .gte('periodo_completo', periodoInicio)
+          .lte('periodo_completo', periodoFim);
       }
 
       const { data, error } = await query.order('conta_codigo');
@@ -292,11 +295,13 @@ export async function buscarDREOrcado(
       const supabase = createServiceClient();
 
       // Buscar na view v_orcamento_vs_realizado
+      // Filtra orçamentos aprovados cujo período se sobrepõe ao período solicitado
       const { data, error } = await supabase
         .from('v_orcamento_vs_realizado')
         .select('*')
-        .gte('orcamento_data_inicio', dataInicio)
-        .lte('orcamento_data_fim', dataFim);
+        .lte('orcamento_data_inicio', dataFim)
+        .gte('orcamento_data_fim', dataInicio)
+        .eq('orcamento_status', 'aprovado');
 
       if (error) {
         console.warn('⚠️ Erro ao buscar DRE orçado:', error.message);
@@ -380,10 +385,18 @@ export async function buscarTotaisDRE(
         .select('tipo_conta, valor_total');
 
       if (anoInicio === anoFim) {
+        // Mesmo ano - filtrar por ano e meses
         query = query
           .eq('ano', anoInicio)
           .gte('mes', mesInicio)
           .lte('mes', mesFim);
+      } else {
+        // Anos diferentes - usar periodo_completo para filtrar corretamente
+        const periodoInicio = `${anoInicio}-${mesInicio.toString().padStart(2, '0')}`;
+        const periodoFim = `${anoFim}-${mesFim.toString().padStart(2, '0')}`;
+        query = query
+          .gte('periodo_completo', periodoInicio)
+          .lte('periodo_completo', periodoFim);
       }
 
       const { data, error } = await query;
@@ -416,6 +429,22 @@ export async function buscarTotaisDRE(
 
 /**
  * Atualiza a view materializada v_dre
+ *
+ * NOTA: Esta função deve ser chamada periodicamente (via scheduler/cron job)
+ * para manter a view v_dre atualizada com os lançamentos mais recentes.
+ *
+ * NÃO é chamada automaticamente a cada lançamento para evitar degradação de
+ * performance. Em vez disso, o cache Redis é invalidado imediatamente quando
+ * um lançamento é confirmado/cancelado (via invalidateDRECacheOnLancamento).
+ *
+ * Fluxo de atualização de dados DRE:
+ * 1. Lançamento confirmado/cancelado -> cache Redis invalidado imediatamente
+ * 2. Job periódico (ex: a cada hora) -> refresh_v_dre() atualiza a view materializada
+ * 3. Próxima consulta DRE -> dados atualizados retornados
+ *
+ * @example
+ * // Chamar via scheduler/cron job
+ * await atualizarViewMaterializada();
  */
 export async function atualizarViewMaterializada(): Promise<void> {
   console.log('🔄 Atualizando view materializada v_dre...');
@@ -467,7 +496,16 @@ export async function invalidateDRECache(
 
 /**
  * Invalida cache do DRE quando um lançamento é confirmado/cancelado
- * @param dataCompetencia Data de competência do lançamento
+ *
+ * Esta função é chamada automaticamente pelos serviços de contas a pagar e
+ * contas a receber quando um lançamento é confirmado ou cancelado:
+ * - pagar-conta.service.ts -> invalidateDRECacheOnLancamento(contaPaga.dataCompetencia)
+ * - receber-conta.service.ts -> invalidateDRECacheOnLancamento(contaRecebida.dataCompetencia)
+ *
+ * A invalidação é inteligente e afeta apenas os caches que podem conter o
+ * período do lançamento afetado, minimizando o impacto no cache geral.
+ *
+ * @param dataCompetencia Data de competência do lançamento (formato ISO YYYY-MM-DD)
  */
 export async function invalidateDRECacheOnLancamento(
   dataCompetencia: string

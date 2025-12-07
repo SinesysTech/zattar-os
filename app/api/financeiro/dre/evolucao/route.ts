@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { requirePermission } from '@/backend/auth/require-permission';
 import { calcularEvolucaoAnual } from '@/backend/financeiro/dre/services/dre/calcular-dre.service';
 
 /**
@@ -74,10 +74,10 @@ import { calcularEvolucaoAnual } from '@/backend/financeiro/dre/services/dre/cal
  */
 export async function GET(request: NextRequest) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // 1. Autenticação e autorização - requer permissão dre:visualizar
+    const authOrError = await requirePermission(request, 'dre', 'visualizar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
     // 2. Obter parâmetro ano

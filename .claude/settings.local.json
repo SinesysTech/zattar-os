@@ -35,7 +35,8 @@
       "Bash(dir:*)",
       "Bash(npm run lint)",
       "mcp__copilotkit-mcp__search-docs",
-      "mcp__copilotkit-mcp__search-code"
+      "mcp__copilotkit-mcp__search-code",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []
