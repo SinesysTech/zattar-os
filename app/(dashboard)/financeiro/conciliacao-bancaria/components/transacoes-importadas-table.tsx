@@ -20,6 +20,7 @@ interface Props {
   transacoes: TransacaoComConciliacao[];
   onConciliar: (transacao: TransacaoComConciliacao) => void;
   onDesconciliar: (transacao: TransacaoComConciliacao) => void;
+  onIgnorar?: (transacao: TransacaoComConciliacao) => void;
   onVerSugestoes?: (transacao: TransacaoComConciliacao) => void;
   onVerDetalhes?: (transacao: TransacaoComConciliacao) => void;
 }
@@ -48,6 +49,7 @@ export function TransacoesImportadasTable({
   transacoes,
   onConciliar,
   onDesconciliar,
+  onIgnorar,
   onVerSugestoes,
   onVerDetalhes,
 }: Props) {
@@ -146,7 +148,7 @@ export function TransacoesImportadasTable({
                     <CheckCircle2 className="mr-2 h-4 w-4" />
                     Conciliar Manualmente
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onConciliar({ ...transacao, conciliacao: { ...(transacao.conciliacao || {}), status: 'ignorado' } as any })}>
+                  <DropdownMenuItem onClick={() => onIgnorar?.(transacao)}>
                     <XCircle className="mr-2 h-4 w-4" />
                     Marcar como Ignorado
                   </DropdownMenuItem>

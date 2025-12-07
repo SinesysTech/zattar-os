@@ -16,6 +16,7 @@ import type {
   ConciliarManualDTO,
   SugestaoConciliacao,
   StatusConciliacao,
+  BuscarLancamentosManuaisParams,
 } from '@/backend/types/financeiro/conciliacao-bancaria.types';
 import type { LancamentoFinanceiroResumo } from '@/backend/types/financeiro/conciliacao-bancaria.types';
 import { calcularHashTransacao } from '../../parsers';
@@ -174,23 +175,30 @@ export const importarTransacoes = async (
   const novasTransacoes: Array<Partial<TransacaoRecord>> = [];
   const agora = new Date().toISOString();
 
-  for (const transacao of transacoes) {
-    const hash = calcularHashTransacao(contaBancariaId, transacao.dataTransacao, transacao.valor, transacao.descricao);
+  const hashes = transacoes.map((transacao) =>
+    calcularHashTransacao(contaBancariaId, transacao.dataTransacao, transacao.valor, transacao.descricao)
+  );
 
-    const { data: existente, error: erroBusca } = await supabase
-      .from('transacoes_bancarias_importadas')
-      .select('id')
-      .eq('conta_bancaria_id', contaBancariaId)
-      .eq('hash_transacao', hash)
-      .maybeSingle();
+  const hashesUnicos = Array.from(new Set(hashes));
 
-    if (erroBusca) {
-      throw new Error(`Erro ao verificar duplicata: ${erroBusca.message}`);
-    }
+  const { data: hashesExistentes, error: erroBusca } = await supabase
+    .from('transacoes_bancarias_importadas')
+    .select('hash_transacao')
+    .eq('conta_bancaria_id', contaBancariaId)
+    .in('hash_transacao', hashesUnicos);
 
-    if (existente) {
+  if (erroBusca) {
+    throw new Error(`Erro ao verificar duplicatas: ${erroBusca.message}`);
+  }
+
+  const hashSet = new Set((hashesExistentes || []).map((h) => h.hash_transacao as string));
+
+  transacoes.forEach((transacao, index) => {
+    const hash = hashes[index];
+
+    if (hashSet.has(hash)) {
       duplicatasIgnoradas++;
-      continue;
+      return;
     }
 
     novasTransacoes.push({
@@ -207,7 +215,7 @@ export const importarTransacoes = async (
       created_by: usuarioId,
       created_at: agora,
     });
-  }
+  });
 
   let transacoesCriadas: TransacaoRecord[] = [];
 
@@ -285,7 +293,20 @@ export const listarTransacoesImportadas = async (
     dataFim,
     statusConciliacao,
     busca,
+    tipoTransacao,
+    ordenarPor = 'data_transacao',
+    ordem = 'desc',
   } = params;
+
+  const campoOrdenacaoMap: Record<string, string> = {
+    data_transacao: 'data_transacao',
+    valor: 'valor',
+    descricao: 'descricao',
+    created_at: 'created_at',
+  };
+
+  const campoOrdenacao = campoOrdenacaoMap[ordenarPor] || 'data_transacao';
+  const crescente = ordem === 'asc';
 
   let query = supabase
     .from('transacoes_bancarias_importadas')
@@ -309,10 +330,14 @@ export const listarTransacoesImportadas = async (
     `,
       { count: 'exact' }
     )
-    .order('data_transacao', { ascending: false });
+    .order(campoOrdenacao, { ascending: crescente });
 
   if (contaBancariaId) {
     query = query.eq('conta_bancaria_id', contaBancariaId);
+  }
+
+  if (tipoTransacao) {
+    query = query.eq('tipo_transacao', tipoTransacao);
   }
 
   if (dataInicio) {
@@ -483,6 +508,49 @@ export const conciliarManualPersistence = async (
   return mapConciliacaoRecord(data as ConciliacaoRecord);
 };
 
+export const conciliarAutomaticamentePersistence = async (
+  transacaoImportadaId: number,
+  lancamentoFinanceiroId: number,
+  score: number
+): Promise<ConciliacaoBancaria> => {
+  const supabase = createServiceClient();
+
+  const { data: transacao, error: erroTransacao } = await supabase
+    .from('transacoes_bancarias_importadas')
+    .select('id')
+    .eq('id', transacaoImportadaId)
+    .maybeSingle();
+
+  if (erroTransacao || !transacao) {
+    throw new Error('Transa\u00e7\u00e3o n\u00e3o encontrada');
+  }
+
+  const updateData: Record<string, unknown> = {
+    status: 'conciliado',
+    tipo_conciliacao: 'automatica',
+    lancamento_financeiro_id: lancamentoFinanceiroId,
+    score_similaridade: score,
+    conciliado_por: null,
+    data_conciliacao: new Date().toISOString(),
+    dados_adicionais: null,
+    observacoes: null,
+  };
+
+  const { data, error } = await supabase
+    .from('conciliacoes_bancarias')
+    .update(updateData)
+    .eq('transacao_importada_id', transacaoImportadaId)
+    .select('*')
+    .single();
+
+  if (error) {
+    throw new Error(`Erro ao conciliar automaticamente: ${error.message}`);
+  }
+
+  await invalidarCacheConciliacao();
+  return mapConciliacaoRecord(data as ConciliacaoRecord);
+};
+
 export const desconciliar = async (transacaoImportadaId: number): Promise<void> => {
   const supabase = createServiceClient();
 
@@ -530,6 +598,63 @@ export const salvarSugestoesConciliacao = async (
 // ----------------------------------------------------------------------------
 // Candidatos
 // ----------------------------------------------------------------------------
+
+export const buscarLancamentosPorFiltro = async (
+  params: BuscarLancamentosManuaisParams
+): Promise<LancamentoFinanceiroResumo[]> => {
+  const supabase = createServiceClient();
+  const {
+    busca,
+    dataInicio,
+    dataFim,
+    contaBancariaId,
+    tipo,
+    limite = 20,
+  } = params;
+
+  let query = supabase
+    .from('lancamentos_financeiros')
+    .select('id, descricao, valor, data_lancamento, data_vencimento, tipo, status, conta_bancaria_id, documento')
+    .order('data_lancamento', { ascending: false })
+    .limit(Math.min(limite, 50));
+
+  if (tipo) {
+    query = query.eq('tipo', tipo);
+  }
+
+  if (contaBancariaId) {
+    query = query.eq('conta_bancaria_id', contaBancariaId);
+  }
+
+  if (dataInicio) {
+    query = query.gte('data_lancamento', dataInicio);
+  }
+
+  if (dataFim) {
+    query = query.lte('data_lancamento', dataFim);
+  }
+
+  if (busca) {
+    query = query.or(`descricao.ilike.%${busca}%,documento.ilike.%${busca}%`);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Erro ao buscar lan\u00e7amentos: ${error.message}`);
+  }
+
+  return (data || []).map((l) => ({
+    id: l.id,
+    descricao: l.descricao,
+    valor: Number(l.valor),
+    dataLancamento: l.data_lancamento,
+    dataVencimento: l.data_vencimento,
+    tipo: l.tipo as 'receita' | 'despesa',
+    status: l.status,
+    contaBancariaId: l.conta_bancaria_id,
+  }));
+};
 
 export const buscarLancamentosCandidatos = async (
   transacao: TransacaoBancariaImportada

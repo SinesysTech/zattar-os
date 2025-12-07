@@ -41,6 +41,8 @@ export default function TransacaoDetalhePage() {
   }
 
   const status = transacao.conciliacao?.status || 'pendente';
+  const tipoConciliacao = transacao.conciliacao?.tipoConciliacao || '-';
+  const score = transacao.conciliacao?.scoreSimilaridade;
 
   return (
     <div className="space-y-4">
@@ -77,9 +79,10 @@ export default function TransacaoDetalhePage() {
           <p className="text-sm font-medium">Concilia\u00e7\u00e3o</p>
           <Separator />
           <p className="text-sm text-muted-foreground">Status: {status}</p>
-          {transacao.conciliacao?.scoreSimilaridade && (
+          <p className="text-sm text-muted-foreground">Tipo: {tipoConciliacao}</p>
+          {score !== null && score !== undefined && (
             <p className="text-sm text-muted-foreground">
-              Score: {transacao.conciliacao.scoreSimilaridade}
+              Score: {score}
             </p>
           )}
           {transacao.conciliacao?.observacoes && (

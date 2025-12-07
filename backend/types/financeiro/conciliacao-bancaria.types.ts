@@ -229,6 +229,18 @@ export interface BuscarLancamentosCandidatosParams {
   limite?: number;
 }
 
+/**
+ * Parâmetros para busca manual de lançamentos
+ */
+export interface BuscarLancamentosManuaisParams {
+  busca?: string;
+  dataInicio?: string;
+  dataFim?: string;
+  contaBancariaId?: number;
+  tipo?: 'receita' | 'despesa';
+  limite?: number;
+}
+
 // ============================================================================
 // Responses
 // ============================================================================

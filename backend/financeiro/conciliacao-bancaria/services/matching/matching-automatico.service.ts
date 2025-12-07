@@ -14,7 +14,7 @@ import {
 } from '@/backend/types/financeiro/conciliacao-bancaria.types';
 import {
   buscarLancamentosCandidatos,
-  conciliarManualPersistence,
+  conciliarAutomaticamentePersistence,
   listarTransacoesImportadas,
   salvarSugestoesConciliacao,
 } from '../persistence/conciliacao-bancaria-persistence.service';
@@ -147,12 +147,10 @@ export const conciliarAutomaticamente = async (
     const melhor = sugestoes[0];
 
     if (melhor && melhor.score >= SCORE_CONCILIACAO_AUTOMATICA) {
-      const conciliacao = await conciliarManualPersistence(
-        {
-          transacaoImportadaId: transacao.id,
-          lancamentoFinanceiroId: melhor.lancamentoId,
-        },
-        undefined
+      const conciliacao = await conciliarAutomaticamentePersistence(
+        transacao.id,
+        melhor.lancamentoId,
+        melhor.score
       );
 
       resultados.push({

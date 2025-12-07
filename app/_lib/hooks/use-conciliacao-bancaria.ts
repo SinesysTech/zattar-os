@@ -12,6 +12,7 @@ import type {
   ListarTransacoesResponse,
   TransacaoComConciliacao,
   SugestaoConciliacao,
+  LancamentoFinanceiroResumo,
 } from '@/backend/types/financeiro/conciliacao-bancaria.types';
 
 const fetcher = async (url: string) => {
@@ -37,6 +38,9 @@ export const useTransacoesImportadas = (
   if (params.dataInicio) searchParams.set('dataInicio', params.dataInicio);
   if (params.dataFim) searchParams.set('dataFim', params.dataFim);
   if (params.busca) searchParams.set('busca', params.busca);
+  if (params.tipoTransacao) searchParams.set('tipoTransacao', params.tipoTransacao);
+  if (params.ordenarPor) searchParams.set('ordenarPor', params.ordenarPor);
+  if (params.ordem) searchParams.set('ordem', params.ordem);
   if (params.statusConciliacao) {
     if (Array.isArray(params.statusConciliacao)) {
       params.statusConciliacao.forEach((s) => searchParams.append('statusConciliacao', s));
@@ -44,6 +48,32 @@ export const useTransacoesImportadas = (
       searchParams.set('statusConciliacao', params.statusConciliacao);
     }
   }
+
+export const buscarLancamentosManuais = async (params: {
+  busca?: string;
+  dataInicio?: string;
+  dataFim?: string;
+  contaBancariaId?: number;
+  tipo?: 'receita' | 'despesa';
+  limite?: number;
+}): Promise<LancamentoFinanceiroResumo[]> => {
+  const searchParams = new URLSearchParams();
+  if (params.busca) searchParams.set('busca', params.busca);
+  if (params.dataInicio) searchParams.set('dataInicio', params.dataInicio);
+  if (params.dataFim) searchParams.set('dataFim', params.dataFim);
+  if (params.contaBancariaId) searchParams.set('contaBancariaId', params.contaBancariaId.toString());
+  if (params.tipo) searchParams.set('tipo', params.tipo);
+  if (params.limite) searchParams.set('limite', params.limite.toString());
+
+  const response = await fetch(/api/financeiro/conciliacao-bancaria/lancamentos?);
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.error || 'Erro ao buscar lancamentos');
+  }
+
+  return data.data as LancamentoFinanceiroResumo[];
+};
 
   const { data, error, isLoading, mutate } = useSWR<{ success: boolean; data: ListarTransacoesResponse }>(
     `/api/financeiro/conciliacao-bancaria/transacoes?${searchParams.toString()}`,

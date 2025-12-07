@@ -53,7 +53,7 @@ comment on column public.transacoes_bancarias_importadas.conta_bancaria_id is 'C
 comment on column public.transacoes_bancarias_importadas.data_transacao is 'Data da transação no extrato bancário';
 comment on column public.transacoes_bancarias_importadas.data_importacao is 'Data e hora em que o extrato foi importado no sistema';
 comment on column public.transacoes_bancarias_importadas.descricao is 'Descrição da transação conforme consta no extrato';
-comment on column public.transacoes_bancarias_importadas.valor is 'Valor da transação. Positivo para crédito, negativo para débito.';
+comment on column public.transacoes_bancarias_importadas.valor is 'Valor da transa‡Æo em valor absoluto; sentido (credito/debito) indicado por tipo_transacao.';
 comment on column public.transacoes_bancarias_importadas.tipo_transacao is 'Tipo da transação: credito (entrada) ou debito (saída)';
 comment on column public.transacoes_bancarias_importadas.documento is 'Número do documento/cheque conforme extrato';
 comment on column public.transacoes_bancarias_importadas.saldo_extrato is 'Saldo após a transação, se disponível no extrato';
@@ -101,6 +101,7 @@ create table public.conciliacoes_bancarias (
 
   -- Informações adicionais
   observacoes text,
+  dados_adicionais jsonb,
 
   -- Quem conciliou
   conciliado_por bigint references public.usuarios(id),
@@ -135,6 +136,7 @@ comment on column public.conciliacoes_bancarias.status is 'Status da conciliaç�
 comment on column public.conciliacoes_bancarias.tipo_conciliacao is 'Tipo de conciliação: automatica (sugestão do sistema) ou manual (usuário)';
 comment on column public.conciliacoes_bancarias.score_similaridade is 'Score de similaridade (0-100) calculado para conciliação automática';
 comment on column public.conciliacoes_bancarias.observacoes is 'Observações sobre a conciliação (motivo de divergência, etc.)';
+comment on column public.conciliacoes_bancarias.dados_adicionais is 'Dados adicionais da conciliacao (ex.: sugestoes salvas para revisao)';
 comment on column public.conciliacoes_bancarias.conciliado_por is 'Usuário que realizou a conciliação manual';
 comment on column public.conciliacoes_bancarias.data_conciliacao is 'Data e hora em que a conciliação foi realizada';
 comment on column public.conciliacoes_bancarias.created_at is 'Data e hora de criação do registro';

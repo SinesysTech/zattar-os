@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -14,6 +15,7 @@ import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
 import {
   useTransacoesImportadas,
   conciliarAutomaticamente as conciliarAutomaticamenteMutation,
+  conciliarManual,
   desconciliar,
 } from '@/app/_lib/hooks/use-conciliacao-bancaria';
 import {
@@ -30,6 +32,7 @@ export default function ConciliacaoBancariaPage() {
   const [selectedFilterIds, setSelectedFilterIds] = useState<string[]>([]);
   const [selectedTransacao, setSelectedTransacao] = useState<TransacaoComConciliacao | null>(null);
   const [autoDialogOpen, setAutoDialogOpen] = useState(false);
+  const router = useRouter();
 
   const buscaDebounced = useDebounce(busca, 400);
   const { contasBancarias } = useContasBancarias();
@@ -60,6 +63,16 @@ export default function ConciliacaoBancariaPage() {
     setConciliarOpen(true);
   }, []);
 
+  const handleIgnorar = useCallback(async (transacao: TransacaoComConciliacao) => {
+    try {
+      await conciliarManual({ transacaoImportadaId: transacao.id, lancamentoFinanceiroId: null });
+      toast.success('Transa\u00e7\u00e3o marcada como ignorada');
+      refetch();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Erro ao ignorar transa\u00e7\u00e3o');
+    }
+  }, [refetch]);
+
   const handleDesconciliar = useCallback(async (transacao: TransacaoComConciliacao) => {
     try {
       await desconciliar(transacao.id);
@@ -82,6 +95,10 @@ export default function ConciliacaoBancariaPage() {
       setAutoDialogOpen(false);
     }
   };
+
+  const handleVerDetalhes = useCallback((transacao: TransacaoComConciliacao) => {
+    router.push(`/financeiro/conciliacao-bancaria/${transacao.id}`);
+  }, [router]);
 
   return (
     <div className="space-y-4">
@@ -127,8 +144,9 @@ export default function ConciliacaoBancariaPage() {
         transacoes={transacoes}
         onConciliar={handleConciliar}
         onDesconciliar={handleDesconciliar}
+        onIgnorar={handleIgnorar}
         onVerSugestoes={handleConciliar}
-        onVerDetalhes={handleConciliar}
+        onVerDetalhes={handleVerDetalhes}
       />
 
       <ImportarExtratoDialog
