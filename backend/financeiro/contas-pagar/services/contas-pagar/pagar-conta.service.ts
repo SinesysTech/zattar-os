@@ -7,6 +7,7 @@ import {
   buscarContaPagarPorId,
   confirmarPagamentoContaPagar,
 } from '../persistence/contas-pagar-persistence.service';
+import { invalidateDRECacheOnLancamento } from '@/backend/financeiro/dre/services/persistence/dre-persistence.service';
 import type {
   ContaPagar,
   PagarContaPagarDTO,
@@ -146,6 +147,11 @@ export const pagarContaPagar = async (
       observacoes: dados.observacoes,
       comprovante,
     });
+
+    // Invalidar cache do DRE para o período afetado
+    if (contaPaga.dataCompetencia) {
+      await invalidateDRECacheOnLancamento(contaPaga.dataCompetencia);
+    }
 
     return {
       sucesso: true,

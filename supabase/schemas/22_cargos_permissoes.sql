@@ -194,3 +194,31 @@ from public.cargos,
      ) as perms(recurso, operacao)
 where nome = 'Funcionário'
 on conflict (cargo_id, recurso, operacao) do nothing;
+
+-- ============================================================================
+-- Seeds de permissões padrão por cargo (DRE - Demonstração de Resultado)
+-- ============================================================================
+
+-- Administrador: acesso completo ao DRE
+insert into public.cargo_permissoes (cargo_id, recurso, operacao)
+select id, recurso, operacao
+from public.cargos,
+     (values
+       ('dre', 'listar'),
+       ('dre', 'visualizar'),
+       ('dre', 'exportar')
+     ) as perms(recurso, operacao)
+where nome = 'Administrador'
+on conflict (cargo_id, recurso, operacao) do nothing;
+
+-- Gerente: acesso completo ao DRE para análises financeiras
+insert into public.cargo_permissoes (cargo_id, recurso, operacao)
+select id, recurso, operacao
+from public.cargos,
+     (values
+       ('dre', 'listar'),
+       ('dre', 'visualizar'),
+       ('dre', 'exportar')
+     ) as perms(recurso, operacao)
+where nome = 'Gerente'
+on conflict (cargo_id, recurso, operacao) do nothing;

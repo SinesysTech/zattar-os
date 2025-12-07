@@ -396,3 +396,74 @@ from hierarquia
 order by caminho;
 
 comment on view public.v_plano_contas_hierarquico is 'Plano de contas com estrutura hierárquica recursiva. Inclui profundidade, caminho completo e nome indentado para exibição.';
+
+-- ----------------------------------------------------------------------------
+-- View Materializada: v_dre
+-- ----------------------------------------------------------------------------
+-- Demonstração de Resultado do Exercício (DRE) agregando receitas e despesas
+-- por período, conta contábil e categoria. Base para relatórios gerenciais.
+-- Atualizar periodicamente via REFRESH MATERIALIZED VIEW ou trigger.
+
+create materialized view public.v_dre as
+select
+  extract(year from l.data_competencia)::integer as ano,
+  extract(month from l.data_competencia)::integer as mes,
+  to_char(l.data_competencia, 'YYYY-MM') as periodo_completo,
+  l.conta_contabil_id,
+  pc.codigo as conta_codigo,
+  pc.nome as conta_nome,
+  pc.tipo_conta,
+  coalesce(l.categoria, 'Sem Categoria') as categoria,
+  sum(l.valor) as valor_total,
+  count(*)::integer as quantidade_lancamentos
+from public.lancamentos_financeiros l
+join public.plano_contas pc on l.conta_contabil_id = pc.id
+where l.status = 'confirmado'
+  and l.tipo in ('receita', 'despesa')
+  -- Exclui contrapartidas de transferências para não duplicar contagem
+  and coalesce((l.dados_adicionais->>'eh_contrapartida')::boolean, false) = false
+group by
+  extract(year from l.data_competencia),
+  extract(month from l.data_competencia),
+  to_char(l.data_competencia, 'YYYY-MM'),
+  l.conta_contabil_id,
+  pc.codigo,
+  pc.nome,
+  pc.tipo_conta,
+  coalesce(l.categoria, 'Sem Categoria')
+order by ano desc, mes desc, pc.codigo;
+
+comment on materialized view public.v_dre is 'View materializada para DRE. Agrega receitas e despesas confirmadas por período, conta contábil e categoria. Atualizar via REFRESH MATERIALIZED VIEW ou trigger após confirmação de lançamentos.';
+
+-- Índices na view materializada v_dre
+create unique index idx_v_dre_unique on public.v_dre (ano, mes, conta_contabil_id, categoria);
+create index idx_v_dre_ano on public.v_dre (ano);
+create index idx_v_dre_mes on public.v_dre (mes);
+create index idx_v_dre_tipo_conta on public.v_dre (tipo_conta);
+create index idx_v_dre_categoria on public.v_dre (categoria);
+create index idx_v_dre_periodo on public.v_dre (periodo_completo);
+
+-- ----------------------------------------------------------------------------
+-- Função: refresh_v_dre
+-- ----------------------------------------------------------------------------
+-- Atualiza a view materializada v_dre. Pode ser chamada manualmente
+-- ou via trigger/scheduler após confirmação de lançamentos.
+
+create or replace function public.refresh_v_dre()
+returns void
+language plpgsql
+security definer
+as $$
+begin
+  refresh materialized view concurrently public.v_dre;
+  raise notice 'View v_dre atualizada com sucesso em %', now();
+exception
+  when others then
+    -- Se refresh concorrente falhar (ex: primeira vez sem índice unique),
+    -- tenta refresh normal
+    refresh materialized view public.v_dre;
+    raise notice 'View v_dre atualizada (modo normal) em %', now();
+end;
+$$;
+
+comment on function public.refresh_v_dre() is 'Atualiza a view materializada v_dre com dados agregados de DRE. Prefere refresh concorrente para não bloquear leituras.';

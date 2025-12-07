@@ -27,6 +27,7 @@ import {
   COMPROVANTE_INVALID_TYPE_MESSAGE,
   COMPROVANTE_SIZE_EXCEEDED_MESSAGE,
 } from '@/lib/constants/comprovante-validation';
+import { invalidateDRECacheOnLancamento } from '@/backend/financeiro/dre/services/persistence/dre-persistence.service';
 
 // ============================================================================
 // Tipos de Validação
@@ -210,6 +211,11 @@ export const receberContaReceber = async (
         comprovante,
         registroRecebimento,
       });
+    }
+
+    // Invalidar cache do DRE para o período afetado
+    if (contaRecebida.dataCompetencia) {
+      await invalidateDRECacheOnLancamento(contaRecebida.dataCompetencia);
     }
 
     // Obter histórico atualizado para retornar nos detalhes
