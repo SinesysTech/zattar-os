@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
-  buscarOrcamentoPorId,
+  buscarOrcamentoComDetalhes,
   criarOrcamentoItem,
   criarItensEmLote,
 } from '@/backend/financeiro/orcamento/services/persistence/orcamento-persistence.service';
@@ -118,7 +118,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     // 3. Buscar orçamento com itens
-    const orcamento = await buscarOrcamentoPorId(orcamentoId, true);
+    const orcamento = await buscarOrcamentoComDetalhes(orcamentoId);
 
     if (!orcamento) {
       return NextResponse.json(
@@ -129,7 +129,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json({
       success: true,
-      data: 'itens' in orcamento ? orcamento.itens : [],
+      data: orcamento.itens,
     });
   } catch (error) {
     console.error('Erro ao listar itens do orçamento:', error);

@@ -119,7 +119,7 @@ const mapearItemAnalise = (registro: ViewOrcamentoVsRealizadoRecord): ItemAnalis
 export const buscarAnaliseOrcamentaria = async (
   params: BuscarAnaliseParams
 ): Promise<AnaliseOrcamentaria | null> => {
-  const cacheKey = generateCacheKey(`${CACHE_PREFIX}:${params.orcamentoId}`, params as Record<string, unknown>);
+  const cacheKey = generateCacheKey(`${CACHE_PREFIX}:${params.orcamentoId}`, params as unknown as Record<string, unknown>);
   const cached = await getCached<AnaliseOrcamentaria>(cacheKey);
   if (cached) {
     console.debug(`Cache hit for buscarAnaliseOrcamentaria: ${cacheKey}`);
