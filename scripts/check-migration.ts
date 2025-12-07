@@ -35,7 +35,7 @@ async function checkColumn() {
   // Supabase-js data api usually doesn't expose information_schema by default.
   // Instead, let's try to infer from common names.
   
-  const tables = ['conciliacoes_bancarias', 'transacoes_bancarias_importadas', 'contas_bancarias'];
+  const tables = ['lancamentos_financeiros'];
   
   for (const t of tables) {
       const { error } = await supabase.from(t).select('id').limit(1);

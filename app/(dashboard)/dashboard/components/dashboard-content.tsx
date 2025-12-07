@@ -93,6 +93,22 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
         </Button>
       </div>
 
+      {/* Widgets Financeiros */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <WidgetSaldoContas />
+        <WidgetContasPagarReceber />
+        <WidgetAlertasFinanceiros />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <WidgetFluxoCaixa />
+        </div>
+        <WidgetDespesasCategoria />
+      </div>
+
+      <WidgetOrcamentoAtual />
+
       {/* Dashboard Sortable */}
       <SortableUserDashboard data={data} />
 
@@ -121,6 +137,20 @@ interface AdminDashboardProps {
 function AdminDashboard({ data }: AdminDashboardProps) {
   return (
     <div className="space-y-6">
+      {/* Widgets Financeiros */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <WidgetSaldoContas />
+        <WidgetContasPagarReceber />
+        <WidgetAlertasFinanceiros />
+      </div>
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <WidgetFluxoCaixa />
+        </div>
+        <WidgetDespesasCategoria />
+      </div>
+      <WidgetOrcamentoAtual />
+
       {/* Dashboard Sortable */}
       <SortableAdminDashboard data={data} />
     </div>
