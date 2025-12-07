@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { requirePermission } from '@/backend/auth/require-permission';
 import { calcularDRE } from '@/backend/financeiro/dre/services/dre/calcular-dre.service';
 import { validarGerarDREDTO, isPeriodoDREValido } from '@/backend/types/financeiro/dre.types';
 import type { PeriodoDRE, DRE } from '@/backend/types/financeiro/dre.types';
@@ -293,19 +293,19 @@ async function gerarDREPDF(dre: DRE): Promise<Uint8Array> {
   // RECEITAS
   drawDRELine('RECEITAS', 0, null, { bold: true });
   drawDRELine('Receita Bruta', resumo.receitaBruta, 100);
-  drawDRELine('(-) Deduções', resumo.deducoes, calcularPercent(resumo.deducoes, resumo.receitaLiquida), { indent: 10, isNegative: true });
+  drawDRELine('(-) Deduções', resumo.deducoes, -calcularPercent(resumo.deducoes, resumo.receitaLiquida), { indent: 10, isNegative: true });
   drawDRELine('= Receita Líquida', resumo.receitaLiquida, 100, { bold: true, highlight: true });
   y -= 5;
 
   // CUSTOS
   drawDRELine('CUSTOS', 0, null, { bold: true });
-  drawDRELine('(-) Custos Diretos', resumo.custosDiretos, calcularPercent(resumo.custosDiretos, resumo.receitaLiquida), { indent: 10, isNegative: true });
+  drawDRELine('(-) Custos Diretos', resumo.custosDiretos, -calcularPercent(resumo.custosDiretos, resumo.receitaLiquida), { indent: 10, isNegative: true });
   drawDRELine('= Lucro Bruto', resumo.lucroBruto, resumo.margemBruta, { bold: true, highlight: true });
   y -= 5;
 
   // DESPESAS OPERACIONAIS
   drawDRELine('DESPESAS OPERACIONAIS', 0, null, { bold: true });
-  drawDRELine('(-) Despesas Operacionais', resumo.despesasOperacionais, calcularPercent(resumo.despesasOperacionais, resumo.receitaLiquida), { indent: 10, isNegative: true });
+  drawDRELine('(-) Despesas Operacionais', resumo.despesasOperacionais, -calcularPercent(resumo.despesasOperacionais, resumo.receitaLiquida), { indent: 10, isNegative: true });
   drawDRELine('= Lucro Operacional', resumo.lucroOperacional, resumo.margemOperacional, { bold: true, highlight: true });
   y -= 5;
 
@@ -317,12 +317,12 @@ async function gerarDREPDF(dre: DRE): Promise<Uint8Array> {
   // RESULTADO FINANCEIRO
   drawDRELine('RESULTADO FINANCEIRO', 0, null, { bold: true });
   drawDRELine('(+) Receitas Financeiras', resumo.receitasFinanceiras, calcularPercent(resumo.receitasFinanceiras, resumo.receitaLiquida), { indent: 10 });
-  drawDRELine('(-) Despesas Financeiras', resumo.despesasFinanceiras, calcularPercent(resumo.despesasFinanceiras, resumo.receitaLiquida), { indent: 10, isNegative: true });
+  drawDRELine('(-) Despesas Financeiras', resumo.despesasFinanceiras, -calcularPercent(resumo.despesasFinanceiras, resumo.receitaLiquida), { indent: 10, isNegative: true });
   y -= 5;
 
   // RESULTADO FINAL
   drawDRELine('= Resultado Antes Impostos', resumo.resultadoAntesImposto, calcularPercent(resumo.resultadoAntesImposto, resumo.receitaLiquida), { bold: true });
-  drawDRELine('(-) Impostos', resumo.impostos, calcularPercent(resumo.impostos, resumo.receitaLiquida), { indent: 10, isNegative: true });
+  drawDRELine('(-) Impostos', resumo.impostos, -calcularPercent(resumo.impostos, resumo.receitaLiquida), { indent: 10, isNegative: true });
   y -= 5;
 
   // LUCRO LÍQUIDO
@@ -479,10 +479,10 @@ async function gerarDREPDF(dre: DRE): Promise<Uint8Array> {
  */
 export async function GET(request: NextRequest) {
   try {
-    // 1. Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // 1. Autenticação e autorização - requer permissão dre:exportar
+    const authOrError = await requirePermission(request, 'dre', 'exportar');
+    if (authOrError instanceof NextResponse) {
+      return authOrError;
     }
 
     // 2. Obter parâmetros

@@ -186,6 +186,8 @@ select
   o.ano,
   o.periodo,
   o.status as orcamento_status,
+  o.data_inicio as orcamento_data_inicio,
+  o.data_fim as orcamento_data_fim,
   oi.id as item_id,
   oi.conta_contabil_id,
   pc.codigo as conta_codigo,
@@ -235,7 +237,7 @@ join public.plano_contas pc on oi.conta_contabil_id = pc.id
 left join public.centros_custo cc on oi.centro_custo_id = cc.id
 order by o.ano desc, o.id, pc.codigo, oi.mes;
 
-comment on view public.v_orcamento_vs_realizado is 'Comparação entre valores orçados e realizados por conta contábil e centro de custo. Inclui variação absoluta e percentual de realização.';
+comment on view public.v_orcamento_vs_realizado is 'Comparação entre valores orçados e realizados por conta contábil e centro de custo. Inclui variação absoluta, percentual de realização e datas do período orçamentário (orcamento_data_inicio, orcamento_data_fim).';
 
 -- ----------------------------------------------------------------------------
 -- View: v_lancamentos_por_centro_custo

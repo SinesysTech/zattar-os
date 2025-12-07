@@ -222,10 +222,14 @@ function PeriodoSelector({
 function ResumoCards({
   resumo,
   variacoes,
+  variacoesOrcado,
+  orcado,
   isLoading,
 }: {
   resumo: ResumoDRE | null;
   variacoes: VariacoesDRE | null;
+  variacoesOrcado: VariacoesDRE | null;
+  orcado: ResumoDRE | null;
   isLoading: boolean;
 }) {
   if (isLoading) {
@@ -259,8 +263,8 @@ function ResumoCards({
             {formatarValor(resumo.receitaLiquida)}
           </CardTitle>
         </CardHeader>
-        {variacoes && (
-          <CardContent className="pt-0">
+        <CardContent className="pt-0 space-y-1">
+          {variacoes && (
             <div className={`flex items-center gap-1 text-sm ${getVariacaoColor(variacoes.receitaLiquida.percentual)}`}>
               {variacoes.receitaLiquida.percentual > 0 ? (
                 <ArrowUpRight className="h-4 w-4" />
@@ -269,10 +273,22 @@ function ResumoCards({
               ) : (
                 <Minus className="h-4 w-4" />
               )}
-              <span>{formatarPercentual(variacoes.receitaLiquida.percentual)} vs período anterior</span>
+              <span>{formatarPercentual(variacoes.receitaLiquida.percentual)} vs anterior</span>
             </div>
-          </CardContent>
-        )}
+          )}
+          {variacoesOrcado && (
+            <div className={`flex items-center gap-1 text-sm ${getVariacaoColor(variacoesOrcado.receitaLiquida.percentual)}`}>
+              {variacoesOrcado.receitaLiquida.percentual > 0 ? (
+                <ArrowUpRight className="h-4 w-4" />
+              ) : variacoesOrcado.receitaLiquida.percentual < 0 ? (
+                <ArrowDownRight className="h-4 w-4" />
+              ) : (
+                <Minus className="h-4 w-4" />
+              )}
+              <span>{formatarPercentual(variacoesOrcado.receitaLiquida.percentual)} vs orçado</span>
+            </div>
+          )}
+        </CardContent>
       </Card>
 
       <Card>
@@ -282,10 +298,22 @@ function ResumoCards({
             {formatarValor(resumo.lucroOperacional)}
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 space-y-1">
           <p className="text-xs text-muted-foreground">
             Margem: {formatarPercentual(resumo.margemOperacional)}
           </p>
+          {variacoesOrcado && (
+            <div className={`flex items-center gap-1 text-xs ${getVariacaoColor(variacoesOrcado.lucroOperacional.percentual)}`}>
+              {variacoesOrcado.lucroOperacional.percentual > 0 ? (
+                <ArrowUpRight className="h-3 w-3" />
+              ) : variacoesOrcado.lucroOperacional.percentual < 0 ? (
+                <ArrowDownRight className="h-3 w-3" />
+              ) : (
+                <Minus className="h-3 w-3" />
+              )}
+              <span>{formatarPercentual(variacoesOrcado.lucroOperacional.percentual)} vs orçado</span>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -296,10 +324,22 @@ function ResumoCards({
             {formatarValor(resumo.ebitda)}
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 space-y-1">
           <p className="text-xs text-muted-foreground">
             Margem EBITDA: {formatarPercentual(resumo.margemEBITDA)}
           </p>
+          {variacoesOrcado && (
+            <div className={`flex items-center gap-1 text-xs ${getVariacaoColor(variacoesOrcado.ebitda.percentual)}`}>
+              {variacoesOrcado.ebitda.percentual > 0 ? (
+                <ArrowUpRight className="h-3 w-3" />
+              ) : variacoesOrcado.ebitda.percentual < 0 ? (
+                <ArrowDownRight className="h-3 w-3" />
+              ) : (
+                <Minus className="h-3 w-3" />
+              )}
+              <span>{formatarPercentual(variacoesOrcado.ebitda.percentual)} vs orçado</span>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -310,7 +350,7 @@ function ResumoCards({
             {formatarValor(resumo.lucroLiquido)}
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 space-y-1">
           <div className="flex items-center gap-2">
             <Badge tone={getLucroBadgeTone(resumo.lucroLiquido)} variant="soft">
               {resumo.lucroLiquido > 0 ? 'Lucro' : resumo.lucroLiquido < 0 ? 'Prejuízo' : 'Neutro'}
@@ -319,6 +359,18 @@ function ResumoCards({
               Margem: {formatarPercentual(resumo.margemLiquida)}
             </span>
           </div>
+          {variacoesOrcado && (
+            <div className={`flex items-center gap-1 text-xs ${getVariacaoColor(variacoesOrcado.lucroLiquido.percentual)}`}>
+              {variacoesOrcado.lucroLiquido.percentual > 0 ? (
+                <ArrowUpRight className="h-3 w-3" />
+              ) : variacoesOrcado.lucroLiquido.percentual < 0 ? (
+                <ArrowDownRight className="h-3 w-3" />
+              ) : (
+                <Minus className="h-3 w-3" />
+              )}
+              <span>{formatarPercentual(variacoesOrcado.lucroLiquido.percentual)} vs orçado</span>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
@@ -542,6 +594,7 @@ export default function DREPage() {
 
   // Estado de opções
   const [incluirComparativo, setIncluirComparativo] = React.useState(false);
+  const [incluirOrcado, setIncluirOrcado] = React.useState(false);
 
   // Dados do DRE
   const { dre, comparativo, isLoading, error, refetch } = useDRE({
@@ -549,6 +602,7 @@ export default function DREPage() {
     dataFim: periodo.dataFim,
     tipo: periodo.tipo,
     incluirComparativo,
+    incluirOrcado,
   });
 
   // Dados de evolução
@@ -640,7 +694,7 @@ export default function DREPage() {
               onChange={handlePeriodoChange}
             />
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               <div className="flex items-center space-x-2">
                 <Switch
                   id="comparativo"
@@ -649,6 +703,16 @@ export default function DREPage() {
                 />
                 <Label htmlFor="comparativo" className="text-sm">
                   Comparar com período anterior
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="orcado"
+                  checked={incluirOrcado}
+                  onCheckedChange={setIncluirOrcado}
+                />
+                <Label htmlFor="orcado" className="text-sm">
+                  Comparar com orçamento
                 </Label>
               </div>
             </div>
@@ -660,6 +724,8 @@ export default function DREPage() {
       <ResumoCards
         resumo={dre?.resumo || null}
         variacoes={comparativo?.variacoes || null}
+        variacoesOrcado={comparativo?.variacoesOrcado || null}
+        orcado={comparativo?.orcado || null}
         isLoading={isLoading}
       />
 

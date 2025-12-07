@@ -32,7 +32,8 @@ export type Recurso =
   | 'obrigacoes'
   | 'lancamentos_financeiros'
   | 'salarios'
-  | 'folhas_pagamento';
+  | 'folhas_pagamento'
+  | 'dre';
 
 /**
  * Operações disponíveis no sistema
@@ -45,6 +46,7 @@ export type Operacao =
   | 'criar'
   | 'editar'
   | 'deletar'
+  | 'exportar'
   // Operações específicas de responsáveis
   | 'atribuir_responsavel'
   | 'desatribuir_responsavel'
@@ -333,6 +335,13 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'cancelar',
     'deletar',
     'visualizar_todos',
+  ],
+
+  // DRE - Demonstração de Resultado do Exercício (3 permissões)
+  dre: [
+    'listar',
+    'visualizar',
+    'exportar',
   ],
 };
 

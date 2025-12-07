@@ -27,6 +27,7 @@ import {
   agruparPorCategoria,
   gerarDescricaoPeriodo,
   classificarCategoria,
+  type GrupoDRE,
 } from '@/backend/types/financeiro/dre.types';
 
 // ============================================================================
@@ -46,22 +47,17 @@ function separarPorTipo(itens: ItemDRE[]): {
 }
 
 /**
- * Calcula soma de itens por grupo de categorias
+ * Calcula soma de itens por grupo DRE usando classificação centralizada
  */
-function somarPorGrupo(
-  itens: ItemDRE[],
-  grupos: readonly string[]
-): number {
+function somarPorGrupo(itens: ItemDRE[], grupo: GrupoDRE): number {
   return itens
-    .filter((item) => {
-      const cat = item.categoria.toLowerCase();
-      return grupos.some((g) => cat.includes(g.toLowerCase()));
-    })
+    .filter((item) => classificarCategoria(item.categoria) === grupo)
     .reduce((sum, item) => sum + item.valor, 0);
 }
 
 /**
  * Calcula o resumo da DRE a partir dos itens
+ * Utiliza a classificação centralizada de categorias em dre.types.ts
  */
 function calcularResumoDRE(itens: ItemDRE[]): ResumoDRE {
   const { receitas, despesas } = separarPorTipo(itens);
@@ -70,67 +66,35 @@ function calcularResumoDRE(itens: ItemDRE[]): ResumoDRE {
   const receitaBruta = receitas.reduce((sum, item) => sum + item.valor, 0);
 
   // Deduções (devoluções, descontos, impostos sobre receita)
-  const gruposDeducao = ['deduções', 'devoluções', 'descontos concedidos', 'impostos sobre receita'];
-  const deducoes = somarPorGrupo(receitas, gruposDeducao);
+  const deducoes = somarPorGrupo(receitas, 'deducao');
 
   const receitaLiquida = receitaBruta - deducoes;
 
   // === CUSTOS DIRETOS ===
-  const gruposCustoDireto = [
-    'custos diretos',
-    'custas processuais',
-    'honorários terceiros',
-    'peritos',
-    'despesas processuais',
-  ];
-  const custosDiretos = somarPorGrupo(despesas, gruposCustoDireto);
+  const custosDiretos = somarPorGrupo(despesas, 'custo_direto');
 
   const lucroBruto = receitaLiquida - custosDiretos;
 
   // === DESPESAS OPERACIONAIS ===
-  const gruposDespesaOperacional = [
-    'salários',
-    'encargos',
-    'benefícios',
-    'aluguel',
-    'condomínio',
-    'energia',
-    'água',
-    'telefone',
-    'internet',
-    'material',
-    'manutenção',
-    'seguros',
-    'marketing',
-    'sistemas',
-    'software',
-    'administrativas',
-    'operacionais',
-  ];
-  const despesasOperacionais = somarPorGrupo(despesas, gruposDespesaOperacional);
+  const despesasOperacionais = somarPorGrupo(despesas, 'despesa_operacional');
 
   const lucroOperacional = lucroBruto - despesasOperacionais;
 
   // === DEPRECIAÇÃO E AMORTIZAÇÃO ===
-  const gruposDepreciacao = ['depreciação', 'amortização'];
-  const depreciacaoAmortizacao = somarPorGrupo(despesas, gruposDepreciacao);
+  const depreciacaoAmortizacao = somarPorGrupo(despesas, 'depreciacacao');
 
   const ebitda = calcularEBITDA(lucroOperacional, depreciacaoAmortizacao);
 
   // === RESULTADO FINANCEIRO ===
-  const gruposDespesaFinanceira = ['juros pagos', 'taxas bancárias', 'iof', 'multas', 'despesas financeiras'];
-  const despesasFinanceiras = somarPorGrupo(despesas, gruposDespesaFinanceira);
-
-  const gruposReceitaFinanceira = ['juros recebidos', 'rendimentos', 'receitas financeiras'];
-  const receitasFinanceiras = somarPorGrupo(receitas, gruposReceitaFinanceira);
+  const despesasFinanceiras = somarPorGrupo(despesas, 'despesa_financeira');
+  const receitasFinanceiras = somarPorGrupo(receitas, 'receita_financeira');
 
   const resultadoFinanceiro = receitasFinanceiras - despesasFinanceiras;
 
   const resultadoAntesImposto = lucroOperacional + resultadoFinanceiro;
 
   // === IMPOSTOS ===
-  const gruposImposto = ['impostos', 'irpj', 'csll', 'pis', 'cofins', 'iss'];
-  const impostos = somarPorGrupo(despesas, gruposImposto);
+  const impostos = somarPorGrupo(despesas, 'imposto');
 
   const lucroLiquido = resultadoAntesImposto - impostos;
 
