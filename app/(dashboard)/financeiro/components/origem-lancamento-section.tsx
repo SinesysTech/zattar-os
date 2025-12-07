@@ -24,7 +24,6 @@ import {
   User,
   Calendar,
   DollarSign,
-  CheckCircle,
   Link as LinkIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -67,7 +66,6 @@ interface OrigemLancamento {
 }
 
 interface OrigemLancamentoSectionProps {
-  lancamentoId: number;
   dadosAdicionais?: Record<string, unknown> | null;
   className?: string;
 }
@@ -119,7 +117,6 @@ function DetalheItem({
 // ============================================================================
 
 export function OrigemLancamentoSection({
-  lancamentoId,
   dadosAdicionais,
   className,
 }: OrigemLancamentoSectionProps) {
@@ -145,34 +142,34 @@ export function OrigemLancamentoSection({
         tipo: 'acordo_judicial',
         acordo: dadosAdicionais.acordo_id
           ? {
-              id: dadosAdicionais.acordo_id as number,
-              tipo: (dadosAdicionais.tipo_acordo as 'acordo' | 'condenacao') || 'acordo',
-              direcao: (dadosAdicionais.direcao as 'recebimento' | 'pagamento') || 'recebimento',
-              valorTotal: (dadosAdicionais.valor_total_acordo as number) || 0,
-              numeroParcelas: (dadosAdicionais.total_parcelas as number) || 1,
-              status: 'ativo',
-            }
+            id: dadosAdicionais.acordo_id as number,
+            tipo: (dadosAdicionais.tipo_acordo as 'acordo' | 'condenacao') || 'acordo',
+            direcao: (dadosAdicionais.direcao as 'recebimento' | 'pagamento') || 'recebimento',
+            valorTotal: (dadosAdicionais.valor_total_acordo as number) || 0,
+            numeroParcelas: (dadosAdicionais.total_parcelas as number) || 1,
+            status: 'ativo',
+          }
           : undefined,
         parcela: dadosAdicionais.parcela_id
           ? {
-              id: dadosAdicionais.parcela_id as number,
-              numeroParcela: (dadosAdicionais.numero_parcela as number) || 1,
-              valorPrincipal: (dadosAdicionais.valor_principal as number) || 0,
-              dataVencimento: (dadosAdicionais.data_vencimento_parcela as string) || '',
-              status: 'sincronizado',
-            }
+            id: dadosAdicionais.parcela_id as number,
+            numeroParcela: (dadosAdicionais.numero_parcela as number) || 1,
+            valorPrincipal: (dadosAdicionais.valor_principal as number) || 0,
+            dataVencimento: (dadosAdicionais.data_vencimento_parcela as string) || '',
+            status: 'sincronizado',
+          }
           : undefined,
         processo: dadosAdicionais.processo_id
           ? {
-              id: dadosAdicionais.processo_id as number,
-              numeroProcesso: (dadosAdicionais.numero_processo as string) || '',
-            }
+            id: dadosAdicionais.processo_id as number,
+            numeroProcesso: (dadosAdicionais.numero_processo as string) || '',
+          }
           : undefined,
         cliente: dadosAdicionais.cliente_id
           ? {
-              id: dadosAdicionais.cliente_id as number,
-              nome: (dadosAdicionais.cliente_nome as string) || '',
-            }
+            id: dadosAdicionais.cliente_id as number,
+            nome: (dadosAdicionais.cliente_nome as string) || '',
+          }
           : undefined,
       });
     } else if (dadosAdicionais.recorrencia_id) {

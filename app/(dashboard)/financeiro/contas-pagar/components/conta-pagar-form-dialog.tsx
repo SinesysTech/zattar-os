@@ -107,8 +107,7 @@ const createContaPagarFormSchema = (hasContasContabeis: boolean) => {
 };
 
 // Schema padrão para tipagem
-const contaPagarFormSchema = createContaPagarFormSchema(false);
-type ContaPagarFormData = z.infer<typeof contaPagarFormSchema>;
+type ContaPagarFormData = z.infer<ReturnType<typeof createContaPagarFormSchema>>;
 
 // ============================================================================
 // Props e Tipos Auxiliares

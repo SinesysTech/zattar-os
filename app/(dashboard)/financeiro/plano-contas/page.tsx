@@ -29,6 +29,7 @@ import { usePlanoContas } from '@/app/_lib/hooks/use-plano-contas';
 import { PlanoContaCreateDialog } from './components/plano-conta-create-dialog';
 import { PlanoContaEditDialog } from './components/plano-conta-edit-dialog';
 import { toast } from 'sonner';
+import { ExportButton } from '@/components/financeiro/export-button';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
   PlanoContaComPai,
@@ -335,6 +336,15 @@ export default function PlanoContasPage() {
         onNewClick={() => setCreateOpen(true)}
         newButtonTooltip="Nova Conta"
       />
+      <div className="flex justify-end">
+        <ExportButton
+          endpoint="/api/financeiro/plano-contas/exportar"
+          opcoes={[
+            { label: 'Exportar PDF', formato: 'pdf' },
+            { label: 'Exportar CSV', formato: 'csv' },
+          ]}
+        />
+      </div>
 
       {/* Mensagem de erro */}
       {error && (

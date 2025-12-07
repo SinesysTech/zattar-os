@@ -81,20 +81,27 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
   useEffect(() => {
     if (!transacao) return;
     const tipo = transacao.tipoTransacao === 'credito' ? 'receita' : 'despesa';
-    setBuscando(true);
-    buscarLancamentosManuais({
-      busca: buscaDebounced || undefined,
-      dataInicio: dataInicio || undefined,
-      dataFim: dataFim || undefined,
-      contaBancariaId: transacao.contaBancariaId,
-      tipo,
-      limite: 20,
-    })
-      .then(setResultadosBusca)
-      .catch((error: unknown) => {
-        toast.error(error instanceof Error ? error.message : 'Erro ao buscar lan\u00e7amentos');
-      })
-      .finally(() => setBuscando(false));
+
+    const fetchData = async () => {
+      setBuscando(true);
+      try {
+        const results = await buscarLancamentosManuais({
+          busca: buscaDebounced || undefined,
+          dataInicio: dataInicio || undefined,
+          dataFim: dataFim || undefined,
+          contaBancariaId: transacao.contaBancariaId,
+          tipo,
+          limite: 20,
+        });
+        setResultadosBusca(results);
+      } catch (error: unknown) {
+        toast.error(error instanceof Error ? error.message : 'Erro ao buscar lançamentos');
+      } finally {
+        setBuscando(false);
+      }
+    };
+
+    void fetchData();
   }, [buscaDebounced, dataInicio, dataFim, transacao]);
 
   return (

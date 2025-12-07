@@ -12,6 +12,7 @@ import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
+import { ExportButton } from '@/components/financeiro/export-button';
 import {
   buildContasPagarFilterOptions,
   buildContasPagarFilterGroups,
@@ -320,7 +321,6 @@ export default function ContasPagarPage() {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
-  const [filtros, setFiltros] = React.useState<ContasPagarFilters>({ status: 'pendente' });
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['status_pendente']);
 
   // Estados de dialogs
@@ -365,7 +365,7 @@ export default function ContasPagarPage() {
     setPagarDialogOpen(true);
   }, []);
 
-  const handleEditar = React.useCallback((conta: ContaPagarComDetalhes) => {
+  const handleEditar = React.useCallback(() => {
     // TODO: Implementar dialog de edição
     toast.info('Funcionalidade de edição em desenvolvimento');
   }, []);
@@ -380,7 +380,7 @@ export default function ContasPagarPage() {
     setExcluirDialogOpen(true);
   }, []);
 
-  const handleVerDetalhes = React.useCallback((conta: ContaPagarComDetalhes) => {
+  const handleVerDetalhes = React.useCallback(() => {
     // TODO: Implementar navegação para página de detalhes
     toast.info('Funcionalidade de detalhes em desenvolvimento');
   }, []);
@@ -460,6 +460,20 @@ export default function ContasPagarPage() {
         onFiltrar7Dias={handleFiltrar7Dias}
         onFiltrar30Dias={handleFiltrar30Dias}
       />
+      <div className="flex justify-end">
+        <ExportButton
+          endpoint="/api/financeiro/contas-pagar/exportar"
+          filtros={{
+            status: filtros.status ? filtros.status.toString() : ',
+            dataInicio: filtros.dataVencimentoInicio || ''
+            dataFim: filtros.dataVencimentoFim || ''
+          }}
+          opcoes={[
+            { label: 'Exportar PDF', formato: 'pdf' },
+            { label: 'Exportar CSV', formato: 'csv' },
+          ]}
+        />
+      </div>
 
       {/* Toolbar */}
       <TableToolbar
@@ -494,13 +508,13 @@ export default function ContasPagarPage() {
         pagination={
           paginacao
             ? {
-                pageIndex: paginacao.pagina - 1,
-                pageSize: paginacao.limite,
-                total: paginacao.total,
-                totalPages: paginacao.totalPaginas,
-                onPageChange: setPagina,
-                onPageSizeChange: setLimite,
-              }
+              pageIndex: paginacao.pagina - 1,
+              pageSize: paginacao.limite,
+              total: paginacao.total,
+              totalPages: paginacao.totalPaginas,
+              onPageChange: setPagina,
+              onPageSizeChange: setLimite,
+            }
             : undefined
         }
         sorting={undefined}

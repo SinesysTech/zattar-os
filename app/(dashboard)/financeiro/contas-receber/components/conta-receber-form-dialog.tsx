@@ -108,8 +108,7 @@ const createContaReceberFormSchema = (hasContasContabeis: boolean) => {
 };
 
 // Schema padrão para tipagem
-const contaReceberFormSchema = createContaReceberFormSchema(false);
-type ContaReceberFormData = z.infer<typeof contaReceberFormSchema>;
+type ContaReceberFormData = z.infer<ReturnType<typeof createContaReceberFormSchema>>;
 
 // ============================================================================
 // Props e Tipos Auxiliares

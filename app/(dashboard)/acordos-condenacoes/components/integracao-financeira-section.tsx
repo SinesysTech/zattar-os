@@ -36,7 +36,6 @@ import {
   verificarConsistenciaAcordo,
 } from '@/app/_lib/hooks/use-obrigacoes';
 import type {
-  VerificarConsistenciaResult,
   InconsistenciaObrigacao,
 } from '@/backend/types/financeiro/obrigacoes.types';
 
@@ -179,10 +178,6 @@ export function IntegracaoFinanceiraSection({
       </div>
     );
   }
-
-  const rotaFinanceira = acordoDirecao === 'recebimento'
-    ? '/financeiro/contas-receber'
-    : '/financeiro/contas-pagar';
 
   const temInconsistencias = inconsistencias.length > 0;
   const statusGeral = !temInconsistencias

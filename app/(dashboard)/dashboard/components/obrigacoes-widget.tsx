@@ -10,7 +10,6 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -20,7 +19,6 @@ import {
   TrendingUp,
   TrendingDown,
   ChevronRight,
-  ExternalLink,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useResumoObrigacoes } from '@/app/_lib/hooks/use-obrigacoes';
@@ -35,10 +33,6 @@ const formatarValor = (valor: number): string => {
     currency: 'BRL',
     notation: valor >= 100000 ? 'compact' : 'standard',
   }).format(valor);
-};
-
-const formatarData = (data: string): string => {
-  return format(new Date(data), 'dd/MM', { locale: ptBR });
 };
 
 // ============================================================================

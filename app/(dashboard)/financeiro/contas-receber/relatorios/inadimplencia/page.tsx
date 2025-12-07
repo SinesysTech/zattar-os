@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { format, subDays, startOfMonth, endOfMonth } from 'date-fns';
+import { format, subDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
@@ -430,9 +430,9 @@ export default function RelatorioInadimplenciaPage() {
                 {relatorio.contasVencidas.map((conta) => {
                   const diasAtraso = conta.dataVencimento
                     ? Math.floor(
-                        (new Date().getTime() - new Date(conta.dataVencimento).getTime()) /
-                          (1000 * 60 * 60 * 24)
-                      )
+                      (new Date().getTime() - new Date(conta.dataVencimento).getTime()) /
+                      (1000 * 60 * 60 * 24)
+                    )
                     : 0;
 
                   return (

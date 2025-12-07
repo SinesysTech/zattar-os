@@ -47,7 +47,7 @@ export default function ConciliacaoBancariaPage() {
     [selectedFilterIds, buscaDebounced]
   );
 
-  const { transacoes, paginacao, resumo, isLoading, error, refetch } = useTransacoesImportadas(filtersParsed);
+  const { transacoes, resumo, isLoading, error, refetch } = useTransacoesImportadas(filtersParsed);
 
   const filterOptions = useMemo(
     () => buildConciliacaoFilterOptions(contasBancarias || []),

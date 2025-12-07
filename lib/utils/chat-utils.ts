@@ -119,13 +119,15 @@ export function parseMessageContent(content: string): {
   hasAttachments: boolean;
   attachments?: ChatAttachment[];
 } {
+  // Extract text content first, regardless of JSON validity
+  const textContent = content.replace(/\[FILES_START\].*?\[FILES_END\]/g, '').trim();
+
   try {
     // Procurar por anexos no formato [FILES_START]...[/FILES_END]
     const filePattern = /\[FILES_START\](.*?)\[FILES_END\]/;
     const match = content.match(filePattern);
     
     if (match && match[1]) {
-      const textContent = content.replace(/\[FILES_START\].*?\[FILES_END\]/g, '').trim();
       const attachments = JSON.parse(match[1]);
       
       return {
@@ -136,12 +138,12 @@ export function parseMessageContent(content: string): {
     }
     
     return {
-      textContent: content.trim(),
+      textContent,
       hasAttachments: false
     };
   } catch {
     return {
-      textContent: content.trim(),
+      textContent,
       hasAttachments: false
     };
   }

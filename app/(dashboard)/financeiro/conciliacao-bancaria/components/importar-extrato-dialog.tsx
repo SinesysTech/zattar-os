@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
@@ -125,9 +124,8 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
 
           <div
             {...getRootProps()}
-            className={`border border-dashed rounded-md p-4 text-center cursor-pointer ${
-              isDragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/30'
-            }`}
+            className={`border border-dashed rounded-md p-4 text-center cursor-pointer ${isDragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/30'
+              }`}
           >
             <input {...getInputProps()} />
             {file ? (

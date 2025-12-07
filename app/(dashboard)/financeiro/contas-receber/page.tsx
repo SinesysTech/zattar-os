@@ -12,6 +12,7 @@ import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
+import { ExportButton } from '@/components/financeiro/export-button';
 import {
   buildContasReceberFilterOptions,
   buildContasReceberFilterGroups,
@@ -333,7 +334,6 @@ export default function ContasReceberPage() {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
-  const [filtros, setFiltros] = React.useState<ContasReceberFilters>({ status: 'pendente' });
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['status_pendente']);
 
   // Estados de dialogs
@@ -519,13 +519,13 @@ export default function ContasReceberPage() {
         pagination={
           paginacao
             ? {
-                pageIndex: paginacao.pagina - 1,
-                pageSize: paginacao.limite,
-                total: paginacao.total,
-                totalPages: paginacao.totalPaginas,
-                onPageChange: setPagina,
-                onPageSizeChange: setLimite,
-              }
+              pageIndex: paginacao.pagina - 1,
+              pageSize: paginacao.limite,
+              total: paginacao.total,
+              totalPages: paginacao.totalPaginas,
+              onPageChange: setPagina,
+              onPageSizeChange: setLimite,
+            }
             : undefined
         }
         sorting={undefined}
