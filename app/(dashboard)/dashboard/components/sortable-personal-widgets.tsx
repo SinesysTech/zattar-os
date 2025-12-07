@@ -34,19 +34,40 @@ import {
 import { TarefasWidget } from './tarefas-widget';
 import { NotasWidget } from './notas-widget';
 import { LinksWidget } from './links-widget';
+import { WidgetSaldoContas } from './widgets/widget-saldo-contas';
+import { WidgetContasPagarReceber } from './widgets/widget-contas-pagar-receber';
+import { WidgetFluxoCaixa } from './widgets/widget-fluxo-caixa';
+import { WidgetDespesasCategoria } from './widgets/widget-despesas-categoria';
+import { WidgetOrcamentoAtual } from './widgets/widget-orcamento-atual';
+import { WidgetAlertasFinanceiros } from './widgets/widget-alertas-financeiros';
 
 // Tipos
 interface PersonalWidget {
   id: string;
-  type: 'tarefas' | 'notas' | 'links';
+  type:
+    | 'tarefas'
+    | 'notas'
+    | 'links'
+    | 'saldo_contas'
+    | 'contas_financeiras'
+    | 'fluxo_caixa'
+    | 'despesas_categoria'
+    | 'orcamento_atual'
+    | 'alertas_financeiros';
   title: string;
   visible: boolean;
 }
 
 const DEFAULT_WIDGETS: PersonalWidget[] = [
   { id: 'tarefas', type: 'tarefas', title: 'Minhas Tarefas', visible: true },
-  { id: 'notas', type: 'notas', title: 'Notas Rápidas', visible: true },
-  { id: 'links', type: 'links', title: 'Links Úteis', visible: true },
+  { id: 'notas', type: 'notas', title: 'Notas Rapidas', visible: true },
+  { id: 'links', type: 'links', title: 'Links Uteis', visible: true },
+  { id: 'saldo', type: 'saldo_contas', title: 'Saldo de Contas', visible: true },
+  { id: 'contas-financeiras', type: 'contas_financeiras', title: 'Contas a Pagar/Receber', visible: true },
+  { id: 'fluxo-caixa', type: 'fluxo_caixa', title: 'Fluxo de Caixa', visible: true },
+  { id: 'despesas-categoria', type: 'despesas_categoria', title: 'Despesas por Categoria', visible: true },
+  { id: 'orcamento', type: 'orcamento_atual', title: 'Orcamento Atual', visible: true },
+  { id: 'alertas-fin', type: 'alertas_financeiros', title: 'Alertas Financeiros', visible: true },
 ];
 
 const STORAGE_KEY = 'dashboard-personal-widgets-order';
@@ -80,6 +101,18 @@ function SortableWidgetItem({ widget }: SortableWidgetItemProps) {
         return <NotasWidget />;
       case 'links':
         return <LinksWidget />;
+      case 'saldo_contas':
+        return <WidgetSaldoContas />;
+      case 'contas_financeiras':
+        return <WidgetContasPagarReceber />;
+      case 'fluxo_caixa':
+        return <WidgetFluxoCaixa />;
+      case 'despesas_categoria':
+        return <WidgetDespesasCategoria />;
+      case 'orcamento_atual':
+        return <WidgetOrcamentoAtual />;
+      case 'alertas_financeiros':
+        return <WidgetAlertasFinanceiros />;
       default:
         return null;
     }

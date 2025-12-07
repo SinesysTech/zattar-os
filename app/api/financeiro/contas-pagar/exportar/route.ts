@@ -59,23 +59,24 @@ export async function GET(request: NextRequest) {
   const { base, cursorY } = await gerarPDFBase('Contas a Pagar');
   let y = cursorY;
   const { pdfDoc, page, font, boldFont, pageWidth, margin, lineHeight } = base;
+  let currentPage = page;
 
   // Resumo rápido de vencimentos
   const resumo = await buscarResumoVencimentos();
   if (resumo) {
-    page.drawText('Resumo de Vencimentos', { x: margin, y, size: 12, font: boldFont });
+    currentPage.drawText('Resumo de Vencimentos', { x: margin, y, size: 12, font: boldFont });
     y -= lineHeight;
-    page.drawText(
+    currentPage.drawText(
       `Vencidas: ${resumo.vencidas.quantidade} (${formatarValor(resumo.vencidas.valorTotal)})`,
       { x: margin, y, size: 10, font }
     );
     y -= lineHeight;
-    page.drawText(
+    currentPage.drawText(
       `Hoje: ${resumo.vencendoHoje.quantidade} (${formatarValor(resumo.vencendoHoje.valorTotal)})`,
       { x: margin, y, size: 10, font }
     );
     y -= lineHeight;
-    page.drawText(
+    currentPage.drawText(
       `Próx. 7 dias: ${resumo.vencendoEm7Dias.quantidade} (${formatarValor(resumo.vencendoEm7Dias.valorTotal)})`,
       { x: margin, y, size: 10, font }
     );
@@ -84,39 +85,40 @@ export async function GET(request: NextRequest) {
 
   const headers = ['Fornecedor', 'Descrição', 'Vencimento', 'Valor', 'Status'];
   const colX = [margin, margin + 120, margin + 320, margin + 410, margin + 480];
-  page.drawRectangle({
+  currentPage.drawRectangle({
     x: margin,
     y: y - 2,
     width: pageWidth - margin * 2,
     height: lineHeight + 4,
     color: rgb(0.95, 0.95, 0.95),
   });
-  headers.forEach((h, i) => page.drawText(h, { x: colX[i], y, size: 9, font: boldFont }));
+  headers.forEach((h, i) => currentPage.drawText(h, { x: colX[i], y, size: 9, font: boldFont }));
   y -= lineHeight + 6;
 
   for (const conta of items.slice(0, 100)) {
     if (y < margin + lineHeight * 2) {
       const nova = pdfDoc.addPage([pageWidth, base.pageHeight]);
       base.page = nova;
+      currentPage = nova;
       y = base.pageHeight - margin;
     }
 
-    page.drawText((conta as any).fornecedor?.nome || (conta as any).fornecedorNome || '-', {
+    currentPage.drawText((conta as any).fornecedor?.nome || (conta as any).fornecedorNome || '-', {
       x: colX[0],
       y,
       size: 9,
       font,
     });
     const desc = conta.descricao?.length > 35 ? `${conta.descricao.slice(0, 32)}...` : conta.descricao;
-    page.drawText(desc, { x: colX[1], y, size: 9, font });
-    page.drawText(conta.dataVencimento ? formatarData(conta.dataVencimento) : '-', {
+    currentPage.drawText(desc, { x: colX[1], y, size: 9, font });
+    currentPage.drawText(conta.dataVencimento ? formatarData(conta.dataVencimento) : '-', {
       x: colX[2],
       y,
       size: 9,
       font,
     });
-    page.drawText(formatarValor(conta.valor), { x: colX[3], y, size: 9, font });
-    page.drawText(conta.status, { x: colX[4], y, size: 9, font });
+    currentPage.drawText(formatarValor(conta.valor), { x: colX[3], y, size: 9, font });
+    currentPage.drawText(conta.status, { x: colX[4], y, size: 9, font });
 
     y -= lineHeight;
   }
