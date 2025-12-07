@@ -17,7 +17,7 @@ import {
 } from './components/plano-contas-toolbar-filters';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Eye, Pencil, Power, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Pencil, Power } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -361,13 +361,13 @@ export default function PlanoContasPage() {
         pagination={
           paginacao
             ? {
-                pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-                pageSize: paginacao.limite,
-                total: paginacao.total,
-                totalPages: paginacao.totalPaginas,
-                onPageChange: setPagina,
-                onPageSizeChange: setLimite,
-              }
+              pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+              pageSize: paginacao.limite,
+              total: paginacao.total,
+              totalPages: paginacao.totalPaginas,
+              onPageChange: setPagina,
+              onPageSizeChange: setLimite,
+            }
             : undefined
         }
         sorting={undefined}

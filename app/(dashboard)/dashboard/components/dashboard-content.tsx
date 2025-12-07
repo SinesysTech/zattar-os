@@ -11,6 +11,12 @@ import type {
 } from '@/backend/types/dashboard/types';
 
 import { SortableUserDashboard, SortableAdminDashboard } from './sortable-dashboard';
+import { WidgetSaldoContas } from './widgets/widget-saldo-contas';
+import { WidgetContasPagarReceber } from './widgets/widget-contas-pagar-receber';
+import { WidgetFluxoCaixa } from './widgets/widget-fluxo-caixa';
+import { WidgetDespesasCategoria } from './widgets/widget-despesas-categoria';
+import { WidgetOrcamentoAtual } from './widgets/widget-orcamento-atual';
+import { WidgetAlertasFinanceiros } from './widgets/widget-alertas-financeiros';
 
 // ============================================================================
 // Loading e Error States

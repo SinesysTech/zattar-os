@@ -134,6 +134,21 @@ export default function ConciliacaoBancariaPage() {
         onFiltersChange={setSelectedFilterIds}
         filterButtonsMode="buttons"
       />
+      <div className="flex justify-end">
+        <ExportButton
+          endpoint="/api/financeiro/conciliacao-bancaria/exportar"
+          filtros={{
+            status: filtersParsed.statusConciliacao || '',
+            contaBancariaId: filtersParsed.contaBancariaId || '',
+            dataInicio: filtersParsed.dataInicio || '',
+            dataFim: filtersParsed.dataFim || '',
+          }}
+          opcoes={[
+            { label: 'Exportar Transa\u00e7\u00f5es (CSV)', formato: 'csv' },
+            { label: 'Relat\u00f3rio de Concilia\u00e7\u00f5es (PDF)', formato: 'pdf' },
+          ]}
+        />
+      </div>
 
       {error && (
         <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">

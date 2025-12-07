@@ -300,8 +300,6 @@ export default function SalariosPage() {
   // Estados de filtros
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(1);
-  const [vigente, setVigente] = React.useState<boolean | undefined>(undefined);
-  const [ativo, setAtivo] = React.useState<boolean | undefined>(true);
 
   const buscaDebounced = useDebounce(busca, 500);
 
@@ -319,8 +317,6 @@ export default function SalariosPage() {
     pagina,
     limite: 50,
     busca: buscaDebounced || undefined,
-    vigente,
-    ativo,
     ordenarPor: 'data_inicio_vigencia',
     ordem: 'desc',
     incluirTotais: true,
