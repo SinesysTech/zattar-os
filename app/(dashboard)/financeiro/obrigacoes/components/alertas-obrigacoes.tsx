@@ -6,12 +6,10 @@
  */
 
 import * as React from 'react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   AlertCircle,
-  AlertTriangle,
   Clock,
   RefreshCw,
   ChevronRight,

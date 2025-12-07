@@ -16,8 +16,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import {
-  TrendingUp,
-  TrendingDown,
   FileDown,
   RefreshCw,
   FileSpreadsheet,
@@ -36,17 +34,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { useDRE, useEvolucaoDRE, useExportarDRE, gerarPeriodoAtual } from '@/app/_lib/hooks/use-dre';
 import { toast } from 'sonner';
 import type {
-  DRE,
   ResumoDRE,
   CategoriaDRE,
   EvolucaoDRE,
@@ -543,15 +533,15 @@ function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
             formatter={(value: number, name: string) => [
               formatarValor(value),
               name === 'receitaLiquida' ? 'Receita Líquida' :
-              name === 'lucroOperacional' ? 'Lucro Operacional' :
-              name === 'lucroLiquido' ? 'Lucro Líquido' : name
+                name === 'lucroOperacional' ? 'Lucro Operacional' :
+                  name === 'lucroLiquido' ? 'Lucro Líquido' : name
             ]}
           />
           <Legend
             formatter={(value) =>
               value === 'receitaLiquida' ? 'Receita Líquida' :
-              value === 'lucroOperacional' ? 'Lucro Operacional' :
-              value === 'lucroLiquido' ? 'Lucro Líquido' : value
+                value === 'lucroOperacional' ? 'Lucro Operacional' :
+                  value === 'lucroLiquido' ? 'Lucro Líquido' : value
             }
           />
           <Line

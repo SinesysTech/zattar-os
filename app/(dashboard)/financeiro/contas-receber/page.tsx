@@ -486,6 +486,20 @@ export default function ContasReceberPage() {
         onFiltrar30Dias={handleFiltrar30Dias}
       />
 
+      <div className="flex justify-end">
+        <ExportButton
+          endpoint="/api/financeiro/contas-receber/exportar"
+          filtros={{
+            status: filtros.status ? filtros.status.toString() : '',
+            dataInicio: filtros.dataVencimentoInicio || '',
+            dataFim: filtros.dataVencimentoFim || '',
+          }}
+          opcoes={[
+            { label: 'Exportar PDF', formato: 'pdf' },
+            { label: 'Exportar CSV', formato: 'csv' },
+          ]}
+        />
+      </div>
       {/* Toolbar */}
       <TableToolbar
         searchValue={busca}

@@ -10,6 +10,7 @@ import { ImportarExtratoDialog } from './components/importar-extrato-dialog';
 import { ConciliarManualDialog } from './components/conciliar-manual-dialog';
 import { TransacoesImportadasTable } from './components/transacoes-importadas-table';
 import { AlertasConciliacao } from './components/alertas-conciliacao';
+import { ExportButton } from '@/components/financeiro/export-button';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
 import {

@@ -63,8 +63,6 @@ export function OrcamentoItemDialog({
   const isEditing = !!item;
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const { contas, isLoading: loadingContas } = usePlanoContasHierarquiaAchatada();
-
   const [formData, setFormData] = React.useState<FormData>({
     contaContabilId: null,
     centroCustoId: null,
@@ -175,7 +173,7 @@ export function OrcamentoItemDialog({
               <PlanoContaSelect
                 value={formData.contaContabilId}
                 onChange={(value) => setFormData({ ...formData, contaContabilId: value })}
-                disabled={isLoading || loadingContas}
+                disabled={isLoading}
                 placeholder="Selecione a conta contábil"
               />
             </div>

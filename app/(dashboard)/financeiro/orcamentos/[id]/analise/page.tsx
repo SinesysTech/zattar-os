@@ -8,7 +8,6 @@
 import * as React from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -41,7 +40,6 @@ import { toast } from 'sonner';
 import type {
   AnaliseOrcamentariaItem,
   AlertaDesvio,
-  EvolucaoMensal,
   ProjecaoItem,
   StatusOrcamento,
   ResumoOrcamentario,
@@ -302,11 +300,10 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
         <Card key={index}>
           <CardContent className="flex items-start gap-4 p-4">
             <AlertTriangle
-              className={`h-5 w-5 mt-0.5 ${
-                alerta.severidade === 'critica' || alerta.severidade === 'alta'
+              className={`h-5 w-5 mt-0.5 ${alerta.severidade === 'critica' || alerta.severidade === 'alta'
                   ? 'text-red-500'
                   : 'text-amber-500'
-              }`}
+                }`}
             />
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
