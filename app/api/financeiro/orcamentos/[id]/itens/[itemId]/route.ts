@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
-  buscarOrcamentoPorId,
+  buscarOrcamentoComDetalhes,
   atualizarOrcamentoItem,
   deletarOrcamentoItem,
 } from '@/backend/financeiro/orcamento/services/persistence/orcamento-persistence.service';
@@ -156,7 +156,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     // 3. Buscar orçamento com itens
-    const orcamento = await buscarOrcamentoPorId(orcamentoId, true);
+    const orcamento = await buscarOrcamentoComDetalhes(orcamentoId);
 
     if (!orcamento) {
       return NextResponse.json(
@@ -166,8 +166,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     // 4. Encontrar o item específico
-    const itens = 'itens' in orcamento ? orcamento.itens : [];
-    const item = itens.find((i) => i.id === itemIdNum);
+    const item = orcamento.itens.find((i) => i.id === itemIdNum);
 
     if (!item) {
       return NextResponse.json(

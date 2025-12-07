@@ -1028,7 +1028,9 @@ export const deletarOrcamentoItem = async (itemId: number): Promise<void> => {
     throw new Error('Item não encontrado');
   }
 
-  if (itemAtual.orcamentos.status !== 'rascunho') {
+  // Supabase retorna o join como objeto, acessar propriedade status
+  const orcamentoStatus = (itemAtual.orcamentos as unknown as { status: string }).status;
+  if (orcamentoStatus !== 'rascunho') {
     throw new Error('Apenas itens de orçamentos em rascunho podem ser excluídos');
   }
 
