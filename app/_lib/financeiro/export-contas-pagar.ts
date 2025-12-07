@@ -21,7 +21,7 @@ export function exportarContasPagarCSV(contas: ContaPagarComDetalhes[]): void {
   const cabecalhos = ['Descrição', 'Fornecedor', 'Vencimento', 'Valor', 'Status'];
   const linhas = contas.map((conta) => [
     conta.descricao,
-    (conta as any).fornecedor?.nome || (conta as any).fornecedorNome || '',
+    (conta as unknown as { fornecedor?: { nome?: string }; fornecedorNome?: string }).fornecedor?.nome || (conta as unknown as { fornecedor?: { nome?: string }; fornecedorNome?: string }).fornecedorNome || '',
     conta.dataVencimento ? formatarData(conta.dataVencimento) : '-',
     conta.valor,
     conta.status,
@@ -76,7 +76,7 @@ export async function exportarContasPagarPDF(
       y = base.pageHeight - margin;
     }
 
-    page.drawText((conta as any).fornecedor?.nome || (conta as any).fornecedorNome || '-', {
+    page.drawText((conta as unknown as { fornecedor?: { nome?: string }; fornecedorNome?: string }).fornecedor?.nome || (conta as unknown as { fornecedor?: { nome?: string }; fornecedorNome?: string }).fornecedorNome || '-', {
       x: colX[0],
       y,
       size: 9,

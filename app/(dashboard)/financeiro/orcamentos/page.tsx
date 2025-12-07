@@ -22,7 +22,6 @@ import { ResumoCards } from './components/resumo-cards';
 import { OrcamentoFormDialog } from './components/orcamento-form-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import {
   MoreHorizontal,
   Eye,
@@ -709,13 +708,13 @@ export default function OrcamentosPage() {
         pagination={
           paginacao
             ? {
-                pageIndex: paginacao.pagina - 1,
-                pageSize: paginacao.limite,
-                total: paginacao.total,
-                totalPages: paginacao.totalPaginas,
-                onPageChange: setPagina,
-                onPageSizeChange: setLimite,
-              }
+              pageIndex: paginacao.pagina - 1,
+              pageSize: paginacao.limite,
+              total: paginacao.total,
+              totalPages: paginacao.totalPaginas,
+              onPageChange: setPagina,
+              onPageSizeChange: setLimite,
+            }
             : undefined
         }
         sorting={undefined}

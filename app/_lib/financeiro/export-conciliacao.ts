@@ -8,7 +8,7 @@ import type {
   TransacaoBancariaImportada,
   ConciliacaoBancaria,
 } from '@/backend/types/financeiro/conciliacao-bancaria.types';
-import { formatarData, formatarValor, gerarCSV, sanitizeFileName, gerarPDFBase } from './export-financeiro';
+import { formatarData, gerarCSV, sanitizeFileName, gerarPDFBase } from './export-financeiro';
 
 export function exportarTransacoesImportadasCSV(
   transacoes: TransacaoBancariaImportada[]

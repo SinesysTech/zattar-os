@@ -15,6 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { ExportButton } from '@/components/financeiro/export-button';
 import {
   ArrowLeft,
   Plus,
@@ -457,6 +458,14 @@ export default function OrcamentoDetalhesPage() {
               Encerrar
             </Button>
           )}
+          <ExportButton
+            endpoint={`/api/financeiro/orcamentos/${orcamento.id}/exportar`}
+            opcoes={[
+              { label: 'Relatório Completo (PDF)', formato: 'pdf' },
+              { label: 'Análise (CSV)', formato: 'csv' },
+              { label: 'Evolução (CSV)', formato: 'excel' },
+            ]}
+          />
         </div>
       </div>
 
