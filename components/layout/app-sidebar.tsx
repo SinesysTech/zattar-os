@@ -86,6 +86,11 @@ const navPrincipal = [
     icon: FolderOpen,
   },
   {
+    title: "ComunicaCNJ",
+    url: "/comunica-cnj",
+    icon: Bell,
+  },
+  {
     title: "Obrigações",
     url: "/acordos-condenacoes/lista",
     icon: Handshake,
@@ -112,11 +117,6 @@ const navPrincipal = [
       { title: "Credenciais", url: "/captura/credenciais" },
       { title: "Tribunais", url: "/captura/tribunais" },
     ],
-  },
-  {
-    title: "ComunicaCNJ",
-    url: "/comunica-cnj",
-    icon: Bell,
   },
 ]
 
