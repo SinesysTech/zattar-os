@@ -165,6 +165,10 @@ function HoraCell({ audiencia }: { audiencia: Audiencia }) {
 
   return (
     <div className="min-h-10 flex flex-col items-center justify-center text-sm font-medium gap-1">
+      {/* Badge de modalidade no topo, centralizado */}
+      <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs`}>
+        {formatarModalidade(audiencia.modalidade)}
+      </Badge>
       {formatarHora(audiencia.data_inicio)}
       {canOpenAta && (
         <button
@@ -245,14 +249,7 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
       {/* Segunda linha: Sala da audiência */}
       <div className="text-xs text-muted-foreground text-left w-full">{sala}</div>
       
-      {/* Terceira linha: Badge com modalidade */}
-      <div className="w-full">
-        <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs`}>
-          {formatarModalidade(audiencia.modalidade)}
-        </Badge>
-      </div>
-      
-      {/* Quarta linha: URL e/ou Endereço */}
+      {/* Terceira linha: URL e/ou Endereço */}
       <div className="relative group h-full w-full min-h-[60px] flex flex-col items-start justify-start gap-1.5 p-2">
         {isHibrida ? (
           <>
@@ -568,6 +565,15 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
             <div className="text-sm font-medium whitespace-nowrap">
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
+            {/* Órgão julgador (vara) */}
+            <div className="text-xs text-muted-foreground">
+              {orgaoJulgador}
+            </div>
+            
+            {/* Espaçamento entre dados do processo e partes */}
+            <div className="h-1" />
+            
+            {/* Partes */}
             <div className="flex flex-col gap-1 w-full">
               <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
                 <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteAutora}</span>
@@ -575,9 +581,6 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
               <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
                 <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteRe}</span>
               </Badge>
-            </div>
-            <div className="text-xs text-muted-foreground">
-              {orgaoJulgador}
             </div>
           </div>
         );

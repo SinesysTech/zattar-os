@@ -32,7 +32,7 @@ import { useAudiencias } from '@/app/_lib/hooks/use-audiencias';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildAudienciasFilterOptions, buildAudienciasFilterGroups, parseAudienciasFilters } from './audiencias-toolbar-filters';
-import type { Audiencia } from '@/backend/types/audiencias/types';
+import type { Audiencia, ModalidadeAudiencia } from '@/backend/types/audiencias/types';
 import type { Row } from '@tanstack/react-table';
 import type { AudienciasFilters } from '@/app/_lib/types/audiencias';
 
@@ -157,6 +157,30 @@ const getParteAutoraColorClass = (): string => {
 
 const getParteReColorClass = (): string => {
   return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800';
+};
+
+/**
+ * Retorna a classe CSS de cor para badge de modalidade
+ */
+const getModalidadeColorClass = (modalidade: ModalidadeAudiencia | null): string => {
+  const modalidadeColors: Record<string, string> = {
+    virtual: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
+    presencial: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
+    hibrida: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+  };
+  return modalidade ? modalidadeColors[modalidade] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800' : 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
+};
+
+/**
+ * Formata modalidade para exibição
+ */
+const formatarModalidade = (modalidade: ModalidadeAudiencia | null): string => {
+  const modalidadeMap: Record<string, string> = {
+    virtual: 'Virtual',
+    presencial: 'Presencial',
+    hibrida: 'Híbrida',
+  };
+  return modalidade ? modalidadeMap[modalidade] || modalidade : '-';
 };
 
 type PlataformaVideo = 'zoom' | 'meet' | 'webex' | null;
@@ -322,6 +346,10 @@ function DataHoraCell({ audiencia }: { audiencia: Audiencia }) {
 
   return (
     <div className="min-h-10 flex flex-col items-center justify-center text-sm gap-1">
+      {/* Badge de modalidade no topo, centralizado */}
+      <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs`}>
+        {formatarModalidade(audiencia.modalidade)}
+      </Badge>
       <div className="font-medium">{formatarData(audiencia.data_inicio)}</div>
       <div className="text-sm font-medium">{formatarHora(audiencia.data_inicio)}h</div>
       {canOpenAta && (
@@ -512,6 +540,13 @@ function criarColunas(
               <Badge variant="outline" className={`${getGrauColorClass(grau)} text-xs shrink-0`}>{formatarGrau(grau)}</Badge>
             </div>
             <div className="text-sm font-medium whitespace-nowrap">{classeJudicial && `${classeJudicial} `}{numeroProcesso}</div>
+            {/* Órgão julgador (vara) */}
+            <div className="text-xs text-muted-foreground">{orgaoJulgador}</div>
+            
+            {/* Espaçamento entre dados do processo e partes */}
+            <div className="h-1" />
+            
+            {/* Partes */}
             <div className="flex flex-col gap-1 w-full">
               <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
                 <span className="truncate">Parte Autora: {parteAutora}</span>
@@ -526,7 +561,6 @@ function criarColunas(
                 {poloPassivo && <div>Polo passivo (instância): {poloPassivo}</div>}
               </div>
             )}
-            <div className="text-xs text-muted-foreground">{orgaoJulgador}</div>
           </div>
         );
       },
