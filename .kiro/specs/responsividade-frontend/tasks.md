@@ -139,7 +139,7 @@
   - Adicionar botão de "Filtros" com badge de contagem em mobile
   - _Requirements: 12.3_
 
-- [x] 7.3 Escrever property tests para Listagens
+- [-] 7.3 Escrever property tests para Listagens
   - **Property 53: List card layout on mobile**
   - **Validates: Requirements 12.1**
   - **Property 54: List item information hierarchy**
@@ -147,7 +147,7 @@
   - **Property 55: List filters collapsible**
   - **Validates: Requirements 12.3**
 
-- [-] 8. Checkpoint - Garantir que todos os testes passem
+- [x] 8. Checkpoint - Garantir que todos os testes passem
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Fase 4: Componentes de Formulário
