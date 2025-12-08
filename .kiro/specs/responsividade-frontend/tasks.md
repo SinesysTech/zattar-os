@@ -147,7 +147,7 @@
   - **Property 55: List filters collapsible**
   - **Validates: Requirements 12.3**
 
-- [ ] 8. Checkpoint - Garantir que todos os testes passem
+- [-] 8. Checkpoint - Garantir que todos os testes passem
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Fase 4: Componentes de Formulário
