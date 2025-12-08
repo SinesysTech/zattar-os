@@ -8,13 +8,14 @@
 import * as React from 'react';
 import { Loader2, Search, MessageSquare, Users, X } from 'lucide-react';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogBody,
+} from '@/components/ui/responsive-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -65,7 +66,7 @@ export function CreateChatDialog({
     if (open && modo === 'privado' && allUsers.length === 0) {
       loadAllUsers();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, modo, allUsers.length]);
 
   // Resetar ao fechar
@@ -182,9 +183,8 @@ export function CreateChatDialog({
             <button
               type="button"
               onClick={() => setModo('privado')}
-              className={`flex flex-col items-center justify-between rounded-md border-2 bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors ${
-                modo === 'privado' ? 'border-primary' : 'border-muted'
-              }`}
+              className={`flex flex-col items-center justify-between rounded-md border-2 bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors ${modo === 'privado' ? 'border-primary' : 'border-muted'
+                }`}
             >
               <Users className="mb-3 h-6 w-6" />
               <span className="text-sm font-medium">Conversa Privada</span>
@@ -192,9 +192,8 @@ export function CreateChatDialog({
             <button
               type="button"
               onClick={() => setModo('grupo')}
-              className={`flex flex-col items-center justify-between rounded-md border-2 bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors ${
-                modo === 'grupo' ? 'border-primary' : 'border-muted'
-              }`}
+              className={`flex flex-col items-center justify-between rounded-md border-2 bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors ${modo === 'grupo' ? 'border-primary' : 'border-muted'
+                }`}
             >
               <MessageSquare className="mb-3 h-6 w-6" />
               <span className="text-sm font-medium">Grupo</span>
