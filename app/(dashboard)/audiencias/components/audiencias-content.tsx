@@ -769,7 +769,7 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
       />
 
       {/* Linha 2: Tabs + Controles de navegação + contador */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-center gap-4 pt-2">
         <ClientOnlyTabs value={visualizacao} onValueChange={(value) => router.push(`/audiencias/${value}`)}>
           <TabsList>
             <TabsTrigger value="semana">Semana</TabsTrigger>
@@ -793,7 +793,7 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
               <ChevronLeft className="h-4 w-4" />
             </Button>
 
-            <ButtonGroupText className="whitespace-nowrap capitalize min-w-32 text-center text-xs font-normal">
+            <ButtonGroupText className="whitespace-nowrap min-w-36 text-center text-sm font-normal flex items-center justify-center">
               {visualizacao === 'semana' && `${formatarDataCabecalho(inicioSemana)} - ${formatarDataCabecalho(fimSemana)}`}
               {visualizacao === 'mes' && formatarMesAno(mesAtual)}
               {visualizacao === 'ano' && (anoAtual ?? '...')}

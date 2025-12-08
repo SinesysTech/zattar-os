@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { ptBR } from 'date-fns/locale';
 import { Calendar } from '@/components/ui/calendar';
 import { AudienciaDetalhesDialog } from './audiencia-detalhes-dialog';
 import type { Audiencia } from '@/backend/types/audiencias/types';
@@ -39,8 +40,9 @@ export function AudienciasVisualizacaoAno({ audiencias, isLoading, anoAtual }: A
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {months.map((month, idx) => (
-          <div key={idx} className="border rounded-lg p-2">
+          <div key={idx} className="border rounded-lg p-3 flex items-center justify-center">
             <Calendar
+              locale={ptBR}
               month={month}
               showOutsideDays={false}
               captionLayout="label"
@@ -53,7 +55,17 @@ export function AudienciasVisualizacaoAno({ audiencias, isLoading, anoAtual }: A
               }}
               modifiers={{ hasAud: hasAudFor }}
               modifiersClassNames={{ hasAud: 'bg-primary text-primary-foreground' }}
-              className="p-1"
+              formatters={{
+                formatCaption: (date) => {
+                  return date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+                },
+              }}
+              className="p-0 w-full"
+              classNames={{
+                months: 'w-full',
+                month: 'w-full',
+                month_caption: 'capitalize',
+              }}
             />
           </div>
         ))}

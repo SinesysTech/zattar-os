@@ -51,6 +51,7 @@ import { ChatInterface } from '@/components/chat/chat-interface';
 import { CreateChatDialog } from '@/components/chat/create-chat-dialog';
 import { createClient } from '@/app/_lib/supabase/client';
 import { useIsMobile } from '@/app/_lib/hooks/use-mobile';
+import { useIsLandscape } from '@/hooks/use-orientation';
 
 interface SalaChat {
   id: number;
@@ -76,6 +77,7 @@ interface ChatUser {
 export default function ChatPage() {
   const supabase = createClient();
   const isMobile = useIsMobile();
+  const isLandscape = useIsLandscape();
 
   const [salas, setSalas] = React.useState<SalaChat[]>([]);
   const [salaAtiva, setSalaAtiva] = React.useState<SalaChat | null>(null);
@@ -316,14 +318,14 @@ export default function ChatPage() {
       {/* Content */}
       <div className={cn('flex flex-1 h-full overflow-hidden rounded-xl border border-border shadow-sm')}>
         {/* Desktop Sidebar - Lista de Salas */}
-        {!isMobile && (
+        {(!isMobile || (isMobile && isLandscape)) && (
           <div className="w-80 border-r flex flex-col h-full">
             <RoomList />
           </div>
         )}
 
         {/* Mobile Sheet - Lista de Salas */}
-        {isMobile && (
+        {isMobile && !isLandscape && (
           <Sheet open={mobileRoomListOpen} onOpenChange={setMobileRoomListOpen}>
             <SheetContent side="left" className="w-[85vw] sm:w-[400px] p-0">
               <SheetHeader className="p-4 border-b">
@@ -341,7 +343,7 @@ export default function ChatPage() {
           {salaAtiva && currentUser ? (
             <>
               {/* Mobile Header com botão de voltar */}
-              {isMobile && (
+              {isMobile && !isLandscape && (
                 <div className="flex items-center gap-2 p-3 border-b bg-background">
                   <Button
                     variant="ghost"
