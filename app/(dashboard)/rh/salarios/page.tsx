@@ -435,8 +435,13 @@ export default function SalariosPage() {
 
       {/* Toolbar */}
       <TableToolbar
+        searchValue={busca}
         onSearchChange={setBusca}
         searchPlaceholder="Buscar por funcionário ou observações..."
+        filterOptions={[]}
+        selectedFilters={[]}
+        onFiltersChange={() => { }}
+        showFilterButton={false}
       />
 
       {/* Tabela */}

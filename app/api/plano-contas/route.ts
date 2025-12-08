@@ -109,7 +109,7 @@ import {
  *             properties:
  *               codigo:
  *                 type: string
- *                 description: Código hierárquico da conta (ex: 1.1.01)
+ *                 description: Código hierárquico da conta (exemplo 1.1.01)
  *               nome:
  *                 type: string
  *                 description: Nome descritivo da conta

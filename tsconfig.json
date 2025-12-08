@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
-    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
@@ -21,17 +21,18 @@
         "name": "next"
       }
     ],
-      "paths": {
-        "@/types/*": ["types/*"],
-        "@/types/domain/*": ["types/domain/*"],
-        "@/types/contracts/*": ["types/contracts/*"],
-        "@/_lib/*": ["app/_lib/*"],
-        "@/app/*": ["app/*"],
-        "@/components/*": ["components/*"],
-        "@/backend/*": ["backend/*"],
-        "@/lib/*": ["lib/*", "app/_lib/*"],
-        "@/*": ["./*"]
-      }  },
+    "paths": {
+      "@/types/*": ["types/*"],
+      "@/types/domain/*": ["types/domain/*"],
+      "@/types/contracts/*": ["types/contracts/*"],
+      "@/_lib/*": ["app/_lib/*"],
+      "@/app/*": ["app/*"],
+      "@/components/*": ["components/*"],
+      "@/backend/*": ["backend/*"],
+      "@/lib/*": ["lib/*", "app/_lib/*"],
+      "@/*": ["./*"]
+    }
+  },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
@@ -40,5 +41,13 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "scripts/**", "tests/**", "**/*.test.ts", "**/*.test.tsx", "dev/comunica-cnj/**", "backend/pendentes/**"]
+  "exclude": [
+    "node_modules",
+    "scripts/**",
+    "tests/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "dev/comunica-cnj/**",
+    "backend/pendentes/**"
+  ]
 }

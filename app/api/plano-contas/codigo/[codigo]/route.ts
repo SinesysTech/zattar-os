@@ -27,7 +27,7 @@ interface RouteParams {
  *         required: true
  *         schema:
  *           type: string
- *         description: Código da conta (ex: 1.1.01)
+ *         description: Código da conta (exemplo 1.1.01)
  *     responses:
  *       200:
  *         description: Conta encontrada com sucesso

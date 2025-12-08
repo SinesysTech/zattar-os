@@ -5,19 +5,63 @@
  * Centraliza todas as chamadas à API e fornece métodos de alto nível.
  */
 
-import {
-  SinesysClientConfig,
-  SinesysProcessoResponse,
-  SinesysAudienciasResponse,
-  SinesysClienteResponse,
-  SinesysContratosResponse,
-  SinesysAcordosResponse,
-  SinesysAPIError,
-  SinesysErrorResponse,
-} from '@/lib/types/meu-processo-types';
+// ============================================================================
+// TIPOS E INTERFACES
+// ============================================================================
 
-// Re-exportar SinesysAPIError para facilitar imports
-export { SinesysAPIError } from '@/lib/types/meu-processo-types';
+export interface SinesysClientConfig {
+  baseUrl: string;
+  apiKey: string;
+  timeout?: number;
+  retries?: number;
+}
+
+export interface SinesysErrorResponse {
+  error: string;
+  details?: string;
+  code?: string;
+}
+
+export class SinesysAPIError extends Error {
+  constructor(
+    message: string,
+    public statusCode?: number,
+    public details?: string,
+    public code?: string
+  ) {
+    super(message);
+    this.name = 'SinesysAPIError';
+  }
+}
+
+export interface SinesysProcessoResponse {
+  success: boolean;
+  data: any[];
+  total: number;
+}
+
+export interface SinesysAudienciasResponse {
+  success: boolean;
+  data: any[];
+  total: number;
+}
+
+export interface SinesysClienteResponse {
+  success: boolean;
+  data: any;
+}
+
+export interface SinesysContratosResponse {
+  success: boolean;
+  data: any[];
+  total: number;
+}
+
+export interface SinesysAcordosResponse {
+  success: boolean;
+  data: any[];
+  total: number;
+}
 
 export class SinesysClient {
   private config: SinesysClientConfig;
@@ -324,7 +368,7 @@ export class SinesysClient {
       // IMPORTANTE: Precisamos do processo_id numérico, não do número do processo
       // Por ora, vamos simular que o campo existe - DEVE SER AJUSTADO conforme API real
       const processoId = (processo as any).id || (processo as any).processo_id;
-      
+
       if (!processoId) {
         return { success: true, data: { acordos: [], total: 0, pagina: 1, limite: 50 } };
       }
