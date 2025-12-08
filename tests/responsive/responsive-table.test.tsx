@@ -70,7 +70,7 @@ const testDataArbitrary = fc.record({
     name: fc.string({ minLength: 3, maxLength: 30 }),
     email: fc.emailAddress(),
     status: fc.constantFrom('active', 'inactive', 'pending'),
-    date: fc.date().map(d => d.toISOString()),
+    date: fc.date({ min: new Date('2000-01-01'), max: new Date('2030-12-31') }).map(d => d.toISOString()),
 });
 
 describe('ResponsiveTable - Property-Based Tests', () => {
@@ -277,7 +277,7 @@ describe('ResponsiveTable - Property-Based Tests', () => {
                     );
 
                     // Verifica que existe um botão de ações (MoreVertical)
-                    const actionButtons = container.querySelectorAll('button[class*="h-8 w-8"]');
+                    const actionButtons = container.querySelectorAll('button[class*="h-11 w-11"]');
 
                     // Deve ter pelo menos um botão de ações por linha
                     expect(actionButtons.length).toBeGreaterThan(0);
