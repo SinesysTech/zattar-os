@@ -8,12 +8,12 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/lib/hooks/use-debounce';
 import { ClientOnlyTabs, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -27,14 +27,13 @@ import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';
 import { NovoExpedienteDialog } from '@/app/(dashboard)/expedientes/components/novo-expediente-dialog';
 import { NovaObrigacaoDialog } from '@/app/(dashboard)/acordos-condenacoes/components/nova-obrigacao-dialog';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { useAudiencias } from '@/app/_lib/hooks/use-audiencias';
-import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
+import { useAudiencias } from '@/lib/hooks/use-audiencias';
+import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildAudienciasFilterOptions, buildAudienciasFilterGroups, parseAudienciasFilters } from './audiencias-toolbar-filters';
 import type { Audiencia, ModalidadeAudiencia } from '@/backend/types/audiencias/types';
 import type { Row } from '@tanstack/react-table';
-import type { AudienciasFilters } from '@/app/_lib/types/audiencias';
+import type { AudienciasFilters } from '@/lib/types/audiencias';
 
 export type VisualizacaoTipo = 'semana' | 'mes' | 'ano' | 'lista';
 
@@ -454,11 +453,11 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
               <div className="flex flex-col items-start gap-1.5 w-full">
                 <div className="flex items-center gap-2 text-xs">
                   {logoPath ? (
-                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity flex items-center justify-center" title={`Acessar audiência virtual - ${plataforma || 'Plataforma'}`}>
                       <Image src={logoPath} alt={plataforma || 'Plataforma'} width={80} height={30} className="object-contain" />
                     </a>
                   ) : (
-                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline max-w-[200px] truncate">
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline max-w-[200px] truncate" title="Acessar audiência virtual">
                       {audiencia.url_audiencia_virtual}
                     </a>
                   )}
@@ -485,12 +484,12 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
           /* Link virtual para modalidade virtual */
           <div className="flex items-center gap-2 text-xs w-full">
             {logoPath ? (
-              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity flex items-center justify-center" title={`Acessar audiência virtual - ${plataforma || 'Plataforma'}`}>
                 <Image src={logoPath} alt={plataforma || 'Plataforma'} width={80} height={30} className="object-contain" />
               </a>
             ) : (
               <>
-                <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline max-w-[200px] truncate">
+                <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline max-w-[200px] truncate" title="Acessar audiência virtual">
                   {audiencia.url_audiencia_virtual}
                 </a>
                 <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(audiencia.url_audiencia_virtual || ''); }} title="Copiar link">

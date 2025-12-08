@@ -44,13 +44,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useOrcamentos } from '@/app/_lib/hooks/use-orcamentos';
+import { useOrcamentos } from '@/lib/hooks/use-orcamentos';
 import { toast } from 'sonner';
 import type { OrcamentoComDetalhes, ComparativoOrcamento } from '@/backend/types/financeiro/orcamento.types';
 import {
   exportarComparativoCSV,
   exportarComparativoPDF,
-} from '@/app/_lib/orcamentos/export-orcamento';
+} from '@/lib/orcamentos/export-orcamento';
 import type { RelatorioComparativo } from '@/backend/financeiro/orcamento/services/orcamento/relatorios-orcamento.service';
 
 // ============================================================================
@@ -319,7 +319,7 @@ function ComparacaoCards({
                   <div className="h-4 w-full bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary transition-all"
-                      style={{ width: `${percentual}%` } as React.CSSProperties}
+                      style={{ width: `${percentual}%` }}
                     />
                   </div>
                 </div>

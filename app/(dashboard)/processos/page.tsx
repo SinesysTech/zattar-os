@@ -3,7 +3,7 @@
 // Página de processos - Lista processos do acervo
 
 import * as React from 'react';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/lib/hooks/use-debounce';
 import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildProcessosFilterOptions, buildProcessosFilterGroups, parseProcessosFilters } from './components/processos-toolbar-filters';
@@ -17,11 +17,11 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { ArrowUpDown, ArrowUp, ArrowDown, Eye, Pencil, Loader2, Copy } from 'lucide-react';
-import { useAcervo } from '@/app/_lib/hooks/use-acervo';
-import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
+import { useAcervo } from '@/lib/hooks/use-acervo';
+import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { GrauBadges } from './components/grau-badges';
 import type { Acervo, ProcessoUnificado } from '@/backend/types/acervo/types';
-import type { ProcessosFilters } from '@/app/_lib/types/acervo';
+import type { ProcessosFilters } from '@/lib/types/acervo';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 /**

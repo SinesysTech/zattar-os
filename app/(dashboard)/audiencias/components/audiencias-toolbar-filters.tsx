@@ -1,7 +1,7 @@
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { AudienciasFilters } from '@/app/_lib/types/audiencias';
-import type { Usuario } from '@/app/_lib/types/usuarios';
+import type { AudienciasFilters } from '@/lib/types/audiencias';
+import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 // Lista de tribunais trabalhistas disponíveis (TRTs + TST)
 const TRIBUNAIS = [
