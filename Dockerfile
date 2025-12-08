@@ -71,7 +71,7 @@ ENV NODE_OPTIONS="--max-old-space-size=4096"
 # ============================================================================
 # CONFIGURAÇÃO DE MEMÓRIA PARA PREVENIR OOM
 # ============================================================================
-# NODE_OPTIONS="--max-old-space-size=2048" limita heap do Node.js a 2GB
+# NODE_OPTIONS="--max-old-space-size=4096" limita heap do Node.js a 4GB
 # 
 # OTIMIZAÇÕES ADICIONAIS (ver next.config.ts):
 # - webpackMemoryOptimizations: true (reduz uso de memória)
@@ -79,19 +79,20 @@ ENV NODE_OPTIONS="--max-old-space-size=4096"
 # - serverSourceMaps: false (reduz memória do servidor)
 # - output: 'standalone' (build otimizado para Docker)
 # 
-# Por que 2GB?
-# - Next.js build consome ~1.5-2GB em projetos médios
-# - Deixa ~1-2GB para sistema operacional e outros processos
-# - Total recomendado no servidor: 4GB RAM (2GB Node + 2GB sistema)
+# Por que 4GB?
+# - Next.js build com muitas dependências consome ~2.5-4GB em projetos grandes
+# - Projeto tem +150 dependências (Plate.js, CopilotKit, Supabase, etc.)
+# - Deixa margem para webpack e outros processos
+# - Total recomendado no servidor: 6-8GB RAM (4GB Node + 2-4GB sistema)
 # 
 # Quando aumentar este valor:
-# - Projeto muito grande (>100 páginas, muitos componentes)
 # - Build falha com "JavaScript heap out of memory"
 # - Servidor tem >8GB RAM disponível
+# - Projeto continua crescendo em complexidade
 # 
 # Valores alternativos:
-# - Projetos pequenos: --max-old-space-size=1024 (1GB)
-# - Projetos grandes: --max-old-space-size=4096 (4GB)
+# - Projetos pequenos: --max-old-space-size=2048 (2GB)
+# - Projetos médios: --max-old-space-size=4096 (4GB) [ATUAL]
 # - Projetos muito grandes: --max-old-space-size=8192 (8GB)
 # 
 # IMPORTANTE: Aumentar este valor requer aumentar memória do CapRover
