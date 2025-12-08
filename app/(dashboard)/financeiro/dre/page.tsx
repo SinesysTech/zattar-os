@@ -674,7 +674,6 @@ export default function DREPage() {
             <PeriodoSelector
               dataInicio={periodo.dataInicio}
               dataFim={periodo.dataFim}
-              tipo={periodo.tipo}
               onChange={handlePeriodoChange}
             />
 
@@ -709,7 +708,6 @@ export default function DREPage() {
         resumo={dre?.resumo || null}
         variacoes={comparativo?.variacoes || null}
         variacoesOrcado={comparativo?.variacoesOrcado || null}
-        orcado={comparativo?.orcado || null}
         isLoading={isLoading}
       />
 
@@ -775,7 +773,6 @@ export default function DREPage() {
                 <div className="grid gap-6 lg:grid-cols-2">
                   <CategoriaPieChart
                     categorias={dre.receitasPorCategoria}
-                    titulo="Receitas"
                   />
                   <div className="space-y-2">
                     <h4 className="font-medium mb-4">Detalhamento</h4>
@@ -822,7 +819,6 @@ export default function DREPage() {
                 <div className="grid gap-6 lg:grid-cols-2">
                   <CategoriaPieChart
                     categorias={dre.despesasPorCategoria}
-                    titulo="Despesas"
                   />
                   <div className="space-y-2">
                     <h4 className="font-medium mb-4">Detalhamento</h4>

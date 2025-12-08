@@ -357,7 +357,7 @@ describe('Breadcrumb Property Tests', () => {
         );
 
         // Desktop: deve mostrar todos os itens
-        let breadcrumbItems = container.querySelectorAll('[data-slot="breadcrumb-item"]');
+        const breadcrumbItems = container.querySelectorAll('[data-slot="breadcrumb-item"]');
         const desktopCount = breadcrumbItems.length;
 
         // Muda para mobile

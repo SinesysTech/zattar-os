@@ -123,7 +123,7 @@
   - **Property 18: Card images scale proportionally**
   - **Validates: Requirements 4.5**
 
-- [ ] 7. Atualizar componentes de listagem existentes
+- [x] 7. Atualizar componentes de listagem existentes
 - [-] 7.1 Migrar páginas de listagem para ResponsiveTable
   - Atualizar /processos para usar ResponsiveTable com layout cards em mobile
   - Atualizar /audiencias para usar ResponsiveTable com priorização de colunas

@@ -85,21 +85,27 @@ export function GerarFolhaDialog({ open, onOpenChange, onSuccess }: GerarFolhaDi
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Mês</Label>
-              <Select
-                value={form.watch('mesReferencia').toString()}
-                onValueChange={(value) => form.setValue('mesReferencia', Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o mês" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(MESES_LABELS).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Controller
+                name="mesReferencia"
+                control={form.control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value.toString()}
+                    onValueChange={(value) => field.onChange(Number(value))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o mês" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(MESES_LABELS).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
 
             <div className="space-y-2">

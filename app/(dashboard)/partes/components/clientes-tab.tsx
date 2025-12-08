@@ -8,7 +8,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/tooltip';
 import { Eye, Pencil, Copy, Check } from 'lucide-react';
 import { useClientes } from '@/app/_lib/hooks/use-clientes';
-import type { ColumnDef } from '@tanstack/react-table';
 import type { Cliente } from '@/app/_lib/types';
 import { ClienteEditDialog } from './cliente-edit-dialog';
 import { ClienteCreateDialog } from './cliente-create-dialog';
@@ -138,7 +137,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 /**
  * Define as colunas da tabela de clientes
  */
-function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): ColumnDef<ClienteComProcessos>[] {
+function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): ResponsiveTableColumn<ClienteComProcessos>[] {
   return [
     {
       id: 'identificacao',
@@ -150,6 +149,9 @@ function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): ColumnDef
       enableSorting: true,
       accessorKey: 'nome',
       size: 320,
+      priority: 1,
+      sticky: true,
+      cardLabel: 'Identificação',
       meta: { align: 'left' },
       cell: ({ row }) => {
         const cliente = row.original;
@@ -196,6 +198,8 @@ function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): ColumnDef
       ),
       enableSorting: false,
       size: 280,
+      priority: 2,
+      cardLabel: 'Contato',
       meta: { align: 'left' },
       cell: ({ row }) => {
         const cliente = row.original;
@@ -261,6 +265,8 @@ function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): ColumnDef
       ),
       enableSorting: false,
       size: 260,
+      priority: 4,
+      cardLabel: 'Endereço',
       meta: { align: 'left' },
       cell: ({ row }) => {
         const cliente = row.original;
@@ -281,6 +287,8 @@ function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): ColumnDef
       ),
       enableSorting: false,
       size: 240,
+      priority: 3,
+      cardLabel: 'Processos',
       cell: ({ row }) => {
         const cliente = row.original;
         return (
@@ -299,6 +307,8 @@ function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): ColumnDef
       ),
       enableSorting: false,
       size: 120,
+      priority: 5,
+      cardLabel: 'Ações',
       cell: ({ row }) => {
         const cliente = row.original;
         return (
@@ -432,25 +442,43 @@ export function ClientesTab() {
       />
 
       {/* Tabela */}
-      <DataTable
+      <ResponsiveTable
         data={clientes}
         columns={colunas}
         pagination={
           paginacao
             ? {
-                pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-                pageSize: paginacao.limite,
-                total: paginacao.total,
-                totalPages: paginacao.totalPaginas,
-                onPageChange: setPagina,
-                onPageSizeChange: setLimite,
-              }
+              pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+              pageSize: paginacao.limite,
+              total: paginacao.total,
+              totalPages: paginacao.totalPaginas,
+              onPageChange: setPagina,
+              onPageSizeChange: setLimite,
+            }
             : undefined
         }
         sorting={undefined}
         isLoading={isLoading}
         error={error}
+        mobileLayout="cards"
+        stickyFirstColumn={true}
         emptyMessage="Nenhum cliente encontrado."
+        rowActions={[
+          {
+            label: 'Visualizar',
+            icon: <Eye className="h-4 w-4" />,
+            onClick: (row) => {
+              window.location.href = `/partes/clientes/${row.id}`;
+            },
+          },
+          {
+            label: 'Editar',
+            icon: <Pencil className="h-4 w-4" />,
+            onClick: (row) => {
+              handleEdit(row);
+            },
+          },
+        ]}
       />
 
       {/* Dialog de Criação (Wizard) */}

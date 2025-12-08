@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildProcessosFilterOptions, buildProcessosFilterGroups, parseProcessosFilters } from './components/processos-toolbar-filters';
@@ -21,10 +21,14 @@ import { ArrowUpDown, ArrowUp, ArrowDown, Eye, Pencil, Loader2, Copy } from 'luc
 import { useAcervo } from '@/app/_lib/hooks/use-acervo';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { GrauBadges } from './components/grau-badges';
-import type { ColumnDef } from '@tanstack/react-table';
 import type { Acervo, ProcessoUnificado } from '@/backend/types/acervo/types';
 import type { ProcessosFilters } from '@/app/_lib/types/acervo';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+
+/**
+ * Type alias para processo com participação
+ */
+type ProcessoComParticipacao = Acervo | ProcessoUnificado;
 
 /**
  * Type guard para verificar se é ProcessoUnificado
@@ -76,7 +80,7 @@ const getTRTColorClass = (trt: string): string => {
     'TRT23': 'bg-blue-200 text-blue-900 border-blue-300 dark:bg-blue-800 dark:text-blue-100 dark:border-blue-700',
     'TRT24': 'bg-green-200 text-green-900 border-green-300 dark:bg-green-800 dark:text-green-100 dark:border-green-700',
   };
-  
+
   return trtColors[trt] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
 };
 
@@ -226,7 +230,7 @@ function ResponsavelCell({
   onSuccess,
   usuarios
 }: {
-  processo: Acervo | ProcessoUnificado;
+  processo: ProcessoComParticipacao;
   onSuccess: () => void;
   usuarios: Usuario[];
 }) {
@@ -450,7 +454,7 @@ function criarColunas(
   onResponsavelSortChange: (columnId: 'responsavel_id' | null, direction: 'asc' | 'desc' | null) => void,
   usuarios: Usuario[],
   onSuccess: () => void,
-): ColumnDef<Acervo | ProcessoUnificado>[] {
+): ResponsiveTableColumn<ProcessoComParticipacao>[] {
   return [
     {
       accessorKey: 'data_autuacao',
@@ -461,6 +465,8 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 120,
+      priority: 3,
+      cardLabel: 'Autuação',
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center text-sm">
           {formatarData(row.getValue('data_autuacao'))}
@@ -476,6 +482,9 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 380,
+      priority: 1,
+      sticky: true,
+      cardLabel: 'Processo',
       cell: ({ row }) => <ProcessoInfoCell processo={row.original} />,
     },
     {
@@ -491,6 +500,8 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 250,
+      priority: 2,
+      cardLabel: 'Partes',
       meta: { align: 'left' },
       cell: ({ row }) => {
         const parteAutora = row.original.nome_parte_autora || '-';
@@ -520,6 +531,8 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 180,
+      priority: 4,
+      cardLabel: 'Responsável',
       cell: ({ row }) => (
         <ResponsavelCell
           processo={row.original}
@@ -537,6 +550,8 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 100,
+      priority: 5,
+      cardLabel: 'Ações',
       cell: ({ row }) => (
         <div className="flex items-center justify-center">
           <a
@@ -568,7 +583,7 @@ export default function ProcessosPage() {
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
   const isSearching = busca !== buscaDebounced;
-  
+
   // Parâmetros para buscar processos
   const params = React.useMemo(() => {
     // Tratar ordenações compostas e simples
@@ -611,7 +626,7 @@ export default function ProcessosPage() {
       ...filtrosComOrdenacao, // Spread dos filtros avançados
     };
   }, [pagina, limite, buscaDebounced, ordenarPor, ordem, filtros]);
-  
+
   const { processos, paginacao, isLoading, error, refetch } = useAcervo(params);
 
   const handleSortingChange = React.useCallback((columnId: string | null, direction: 'asc' | 'desc' | null) => {
@@ -709,7 +724,7 @@ export default function ProcessosPage() {
     setFiltros(newFilters);
     setPagina(0);
   }, []);
-  
+
   return (
     <div className="space-y-4">
       <TableToolbar
@@ -725,23 +740,23 @@ export default function ProcessosPage() {
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
         filterButtonsMode="buttons"
-        // Processos não tem botão de novo
+      // Processos não tem botão de novo
       />
 
       {/* Tabela */}
-      <DataTable
-        data={processosOrdenados}
+      <ResponsiveTable
+        data={processosOrdenados || []}
         columns={colunas}
         pagination={
           paginacao
             ? {
-                pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-                pageSize: paginacao.limite,
-                total: paginacao.total,
-                totalPages: paginacao.totalPaginas,
-                onPageChange: setPagina,
-                onPageSizeChange: setLimite,
-              }
+              pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+              pageSize: paginacao.limite,
+              total: paginacao.total,
+              totalPages: paginacao.totalPaginas,
+              onPageChange: setPagina,
+              onPageSizeChange: setLimite,
+            }
             : undefined
         }
         sorting={{
@@ -751,7 +766,18 @@ export default function ProcessosPage() {
         }}
         isLoading={isLoading}
         error={error}
+        mobileLayout="cards"
+        stickyFirstColumn={true}
         emptyMessage="Nenhum processo encontrado."
+        rowActions={[
+          {
+            label: 'Ver detalhes',
+            icon: <Eye className="h-4 w-4" />,
+            onClick: (row) => {
+              window.location.href = `/processos/${row.id}`;
+            },
+          },
+        ]}
       />
     </div>
   );

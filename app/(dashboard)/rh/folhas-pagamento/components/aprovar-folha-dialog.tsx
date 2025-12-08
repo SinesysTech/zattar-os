@@ -119,21 +119,27 @@ export function AprovarFolhaDialog({
 
           <div className="space-y-2">
             <Label>Conta Contábil</Label>
-            <Select
-              value={form.watch('contaContabilId')?.toString() ?? ''}
-              onValueChange={(value) => form.setValue('contaContabilId', Number(value))}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione a conta contábil" />
-              </SelectTrigger>
-              <SelectContent>
-                {planoContas.map((conta) => (
-                  <SelectItem key={conta.id} value={conta.id.toString()}>
-                    {conta.codigo} - {conta.nome}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Controller
+              name="contaContabilId"
+              control={form.control}
+              render={({ field }) => (
+                <Select
+                  value={field.value?.toString() ?? ''}
+                  onValueChange={(value) => field.onChange(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a conta contábil" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {planoContas.map((conta) => (
+                      <SelectItem key={conta.id} value={conta.id.toString()}>
+                        {conta.codigo} - {conta.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
 
           <div className="space-y-2">

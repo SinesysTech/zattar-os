@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildUsuariosFilterOptions, buildUsuariosFilterGroups, parseUsuariosFilters } from './components/usuarios-toolbar-filters';
@@ -30,7 +30,6 @@ import { UsuarioCreateDialog } from './components/usuario-create-dialog';
 import { UsuarioEditDialog } from './components/usuario-edit-dialog';
 import { CargosManagementDialog } from './components/cargos-management-dialog';
 import { RedefinirSenhaDialog } from './components/redefinir-senha-dialog';
-import type { ColumnDef } from '@tanstack/react-table';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import type { UsuariosFilters, ViewMode } from '@/app/_lib/types/usuarios';
 import {
@@ -47,7 +46,7 @@ const VIEW_MODE_STORAGE_KEY = 'usuarios-view-mode';
  */
 function criarColunas(
   onRedefinirSenha: (usuario: Usuario) => void
-): ColumnDef<Usuario>[] {
+): ResponsiveTableColumn<Usuario>[] {
   return [
     {
       accessorKey: 'nomeExibicao',
@@ -58,6 +57,9 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 250,
+      priority: 1,
+      sticky: true,
+      cardLabel: 'Nome',
       meta: { align: 'left' },
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-start text-sm">
@@ -74,6 +76,8 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 200,
+      priority: 2,
+      cardLabel: 'E-mail',
       meta: { align: 'left' },
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-start text-sm">
@@ -90,6 +94,8 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 150,
+      priority: 5,
+      cardLabel: 'CPF',
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center text-sm">
           {formatarCpf(row.getValue('cpf'))}
@@ -105,6 +111,8 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 120,
+      priority: 6,
+      cardLabel: 'OAB',
       cell: ({ row }) => {
         const usuario = row.original;
         return (
@@ -123,6 +131,8 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 150,
+      priority: 4,
+      cardLabel: 'Telefone',
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center text-sm">
           {formatarTelefone(row.getValue('telefone'))}
@@ -138,6 +148,8 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 100,
+      priority: 3,
+      cardLabel: 'Status',
       cell: ({ row }) => {
         const ativo = row.getValue('ativo') as boolean;
         return (
@@ -158,6 +170,8 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 120,
+      priority: 7,
+      cardLabel: 'Tipo',
       cell: ({ row }) => {
         const isSuperAdmin = row.getValue('isSuperAdmin') as boolean;
         if (!isSuperAdmin) return null;
@@ -179,6 +193,8 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 120,
+      priority: 8,
+      cardLabel: 'Ações',
       cell: ({ row }) => {
         const usuario = row.original;
         return (
@@ -396,25 +412,43 @@ export default function UsuariosPage() {
           onPageSizeChange={setLimite}
         />
       ) : (
-        <DataTable
+        <ResponsiveTable
           data={usuarios}
           columns={colunas}
           pagination={
             paginacao
               ? {
-                  pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-                  pageSize: paginacao.limite,
-                  total: paginacao.total,
-                  totalPages: paginacao.totalPaginas,
-                  onPageChange: setPagina,
-                  onPageSizeChange: setLimite,
-                }
+                pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                pageSize: paginacao.limite,
+                total: paginacao.total,
+                totalPages: paginacao.totalPaginas,
+                onPageChange: setPagina,
+                onPageSizeChange: setLimite,
+              }
               : undefined
           }
           sorting={undefined}
           isLoading={isLoading}
           error={error}
+          mobileLayout="cards"
+          stickyFirstColumn={true}
           emptyMessage="Nenhum usuário encontrado."
+          rowActions={[
+            {
+              label: 'Visualizar',
+              icon: <Eye className="h-4 w-4" />,
+              onClick: (row) => {
+                handleView(row);
+              },
+            },
+            {
+              label: 'Redefinir Senha',
+              icon: <KeyRound className="h-4 w-4" />,
+              onClick: (row) => {
+                handleRedefinirSenha(row);
+              },
+            },
+          ]}
         />
       )}
 
