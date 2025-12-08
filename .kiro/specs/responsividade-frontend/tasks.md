@@ -216,6 +216,7 @@
 
 
 
+
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Fase 5: Componentes de Interação (Dialogs e Modals)
@@ -234,7 +235,8 @@
   - Implementar scroll vertical quando conteúdo excede viewport
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
-- [-] 11.2 Atualizar dialogs críticos para ResponsiveDialog
+- [x] 11.2 Atualizar dialogs críticos para ResponsiveDialog
+
 
   - Atualizar create-document-dialog
   - Atualizar share-document-dialog
@@ -244,6 +246,9 @@
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
 - [ ] 11.3 Escrever property tests para Dialogs
+
+
+
   - **Property 19: Dialog full-screen on mobile**
   - **Validates: Requirements 5.1**
   - **Property 20: Dialog form no horizontal scroll**
@@ -256,6 +261,7 @@
   - **Validates: Requirements 5.5**
 
 ## Fase 6: Componentes Complexos (Editor e Chat)
+
 
 - [ ] 12. Otimizar Editor de Documentos para mobile
 - [ ] 12.1 Implementar toolbar responsiva no Plate Editor
@@ -282,11 +288,14 @@
   - **Validates: Requirements 8.3**
   - **Property 37: Editor condensed toolbar on tablet**
   - **Validates: Requirements 8.4**
+
   - **Property 38: Editor state preservation**
+
   - **Validates: Requirements 8.5**
 
 - [ ] 13. Otimizar Chat para mobile
-- [ ] 13.1 Implementar navegação responsiva no Chat
+- [-] 13.1 Implementar navegação responsiva no Chat
+
   - Criar layout com Sheet para room list em mobile
   - Implementar botão de voltar para room list em mobile
   - Garantir que messages ocupem toda largura em mobile
@@ -308,10 +317,12 @@
   - **Property 46: Chat message bubbles optimized**
   - **Validates: Requirements 10.3**
   - **Property 47: Chat attachments compact**
+
   - **Validates: Requirements 10.5**
 
 - [ ] 14. Checkpoint - Garantir que todos os testes passem
   - Ensure all tests pass, ask the user if questions arise.
+
 
 ## Fase 7: Dashboard e Visualizações
 
@@ -350,6 +361,7 @@
   - **Property 43: Dashboard filters collapsible**
   - **Validates: Requirements 9.5**
 
+
 ## Fase 8: Otimização de Mídia
 
 - [ ] 16. Otimizar componentes de mídia para mobile
@@ -372,6 +384,7 @@
   - **Property 58: Responsive image sizing**
   - **Validates: Requirements 13.1**
   - **Property 59: Media lazy loading**
+
   - **Validates: Requirements 13.2**
   - **Property 60: Responsive video containers**
   - **Validates: Requirements 13.4**
@@ -403,6 +416,7 @@
   - **Property 65: Rotation state preservation**
   - **Validates: Requirements 14.4**
   - **Property 66: Landscape media maximization**
+
   - **Validates: Requirements 14.5**
 
 ## Fase 10: Acessibilidade e Componentes Base
