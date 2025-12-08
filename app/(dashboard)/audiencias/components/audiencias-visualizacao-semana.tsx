@@ -165,10 +165,12 @@ function HoraCell({ audiencia }: { audiencia: Audiencia }) {
 
   return (
     <div className="min-h-10 flex flex-col items-center justify-center text-sm font-medium gap-1">
-      {/* Badge de modalidade no topo, centralizado */}
-      <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs mb-2`}>
-        {formatarModalidade(audiencia.modalidade)}
-      </Badge>
+      {/* Badge de modalidade no topo, centralizado - só renderiza se houver modalidade */}
+      {audiencia.modalidade && (
+        <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs mb-2`}>
+          {formatarModalidade(audiencia.modalidade)}
+        </Badge>
+      )}
       {formatarHora(audiencia.data_inicio)}
       {canOpenAta && (
         <button
@@ -195,13 +197,13 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
   const [isExpedienteDialogOpen, setIsExpedienteDialogOpen] = React.useState(false);
   const [isObrigacaoDialogOpen, setIsObrigacaoDialogOpen] = React.useState(false);
   const [isMarkingRealizada, setIsMarkingRealizada] = React.useState(false);
-  const tipo = audiencia.tipo_descricao || '-';
-  const sala = audiencia.sala_audiencia_nome || '-';
+  const tipo = audiencia.tipo_descricao;
+  const sala = audiencia.sala_audiencia_nome;
   const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
   const logoPath = getLogoPlataforma(plataforma);
 
   const enderecoCompleto = audiencia.endereco_presencial
-    ? [audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'
+    ? [audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || null
     : null;
   const isHibrida = audiencia.modalidade === 'hibrida';
   const isDesignada = audiencia.status === 'M';
@@ -243,59 +245,80 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
 
   const [isMaisPopoverOpen, setIsMaisPopoverOpen] = React.useState(false);
 
-  return (
-    <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[240px]">
-      {/* Primeira linha: Tipo da audiência */}
-      <div className="text-sm text-left w-full">{tipo}</div>
-      
-      {/* Segunda linha: Sala da audiência */}
-      <div className="text-xs text-muted-foreground text-left w-full">{sala}</div>
-      
-      {/* Terceira linha: URL e/ou Endereço */}
-      {isHibrida ? (
-        <>
-          {audiencia.url_audiencia_virtual && (
-            <div className="flex items-center gap-1.5 w-full">
-              {logoPath ? (
-                <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
-                  <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
-                </a>
-              ) : (
-                <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-full">
-                  {audiencia.url_audiencia_virtual}
-                </a>
-              )}
-            </div>
-          )}
-          {enderecoCompleto && (
-            <div className="text-xs text-muted-foreground w-full">
-              <span className="font-medium">Presencial: </span>
-              <span>{enderecoCompleto}</span>
-            </div>
-          )}
-        </>
-      ) : audiencia.url_audiencia_virtual ? (
-        <div className="flex-1 flex items-center justify-start w-full">
-          {logoPath ? (
-            <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
-              <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
-            </a>
-          ) : (
-            <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-full">
-              {audiencia.url_audiencia_virtual}
-            </a>
-          )}
-        </div>
-      ) : enderecoCompleto ? (
-        <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
-          {enderecoCompleto}
-        </span>
-      ) : (
-        <span className="text-sm text-muted-foreground">-</span>
-      )}
+  // Determinar quem comparece presencialmente em audiência híbrida
+  const presencaHibridaTexto = isHibrida && audiencia.presenca_hibrida
+    ? audiencia.presenca_hibrida === 'advogado'
+      ? 'Advogado presencial, Cliente virtual'
+      : 'Cliente presencial, Advogado virtual'
+    : null;
 
-      {/* Botões de ação - apenas ícones */}
-      <div className="flex items-center gap-1.5 mt-1">
+  return (
+    <div className="min-h-10 flex flex-col items-start justify-center h-full max-w-[240px]">
+      {/* Conteúdo principal com flex-grow para empurrar botões para baixo */}
+      <div className="flex-1 flex flex-col items-start justify-start gap-4 w-full">
+        {/* Seção 1: Tipo da audiência e Sala (conjunto) */}
+        {(tipo || sala) && (
+          <div className="flex flex-col items-start gap-1 w-full">
+            {tipo && <div className="text-sm text-left w-full">{tipo}</div>}
+            {sala && <div className="text-xs text-muted-foreground text-left w-full">{sala}</div>}
+          </div>
+        )}
+
+        {/* Seção 2: Link virtual e/ou Endereço presencial */}
+        {isHibrida ? (
+          <>
+            {/* Link virtual para híbrida */}
+            {audiencia.url_audiencia_virtual && (
+              <div className="flex flex-col items-start gap-1.5 w-full">
+                <div className="flex items-center gap-1.5 w-full">
+                  {logoPath ? (
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                      <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
+                    </a>
+                  ) : (
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-full">
+                      {audiencia.url_audiencia_virtual}
+                    </a>
+                  )}
+                </div>
+                {presencaHibridaTexto && (
+                  <div className="text-xs text-muted-foreground italic">{presencaHibridaTexto}</div>
+                )}
+              </div>
+            )}
+            {/* Endereço presencial para híbrida */}
+            {enderecoCompleto && (
+              <div className="flex flex-col items-start gap-1.5 w-full">
+                <div className="text-xs text-muted-foreground w-full">
+                  <span className="font-medium">Presencial: </span>
+                  <span>{enderecoCompleto}</span>
+                </div>
+              </div>
+            )}
+          </>
+        ) : audiencia.url_audiencia_virtual ? (
+          /* Link virtual para modalidade virtual */
+          <div className="flex-1 flex items-center justify-start w-full">
+            {logoPath ? (
+              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
+              </a>
+            ) : (
+              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-full">
+                {audiencia.url_audiencia_virtual}
+              </a>
+            )}
+          </div>
+        ) : enderecoCompleto ? (
+          /* Endereço presencial para modalidade presencial */
+          <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+            {enderecoCompleto}
+          </span>
+        ) : null}
+      </div>
+
+      {/* Botões de ação - alinhados ao bottom */}
+      <div className="flex items-center gap-1.5 mt-auto">
         <TooltipProvider>
           {isDesignada ? (
             <Tooltip>
@@ -416,9 +439,11 @@ function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
   return (
     <>
       <div className="relative group h-full w-full min-h-[60px] flex items-start justify-start p-2">
-        <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
-          {audiencia.observacoes || '-'}
-        </span>
+        {audiencia.observacoes ? (
+          <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+            {audiencia.observacoes}
+          </span>
+        ) : null}
         <Button
           size="sm"
           variant="ghost"
@@ -558,9 +583,9 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
         const numeroProcesso = row.original.numero_processo;
         const trt = row.original.trt;
         const grau = row.original.grau;
-        const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
-        const parteAutora = row.original.polo_ativo_nome || '-';
-        const parteRe = row.original.polo_passivo_nome || '-';
+        const orgaoJulgador = row.original.orgao_julgador_descricao;
+        const parteAutora = row.original.nome_parte_autora;
+        const parteRe = row.original.nome_parte_re;
 
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5">
@@ -576,22 +601,30 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
               {classeJudicial && `${classeJudicial} `}{numeroProcesso}
             </div>
             {/* Órgão julgador (vara) */}
-            <div className="text-xs text-muted-foreground">
-              {orgaoJulgador}
-            </div>
+            {orgaoJulgador && orgaoJulgador !== '-' && (
+              <div className="text-xs text-muted-foreground">
+                {orgaoJulgador}
+              </div>
+            )}
             
             {/* Espaçamento entre dados do processo e partes */}
-            <div className="h-1" />
+            {(parteAutora || parteRe) && <div className="h-1" />}
             
             {/* Partes */}
-            <div className="flex flex-col gap-1 w-full">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteAutora}</span>
-              </Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteRe}</span>
-              </Badge>
-            </div>
+            {(parteAutora || parteRe) && (
+              <div className="flex flex-col gap-1 w-full">
+                {parteAutora && (
+                  <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
+                    <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteAutora}</span>
+                  </Badge>
+                )}
+                {parteRe && (
+                  <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start inline-flex w-fit min-w-0 max-w-full`}>
+                    <span className="whitespace-nowrap overflow-hidden text-ellipsis block">{parteRe}</span>
+                  </Badge>
+                )}
+              </div>
+            )}
           </div>
         );
       },

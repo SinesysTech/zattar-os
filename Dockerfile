@@ -49,8 +49,9 @@ ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 # Copiar arquivos de dependências
 COPY package.json package-lock.json* ./
 
-# Instalar dependências
-RUN npm ci --ignore-scripts
+# Instalar dependências com otimizações de memória
+# --legacy-peer-deps evita conflitos e reduz memória
+RUN npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
 
 # Stage 2: Builder
 # ============================================================================
@@ -67,7 +68,8 @@ WORKDIR /app
 # Memória para Node.js durante build
 # 4GB é necessário para projetos grandes com muitas dependências
 # Reduzido de 8GB para 4GB para CapRover com RAM limitada
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+# --gc-global força coleta de lixo mais agressiva
+ENV NODE_OPTIONS="--max-old-space-size=4096 --gc-global --max-semi-space-size=2"
 # ============================================================================
 # CONFIGURAÇÃO DE MEMÓRIA PARA PREVENIR OOM
 # ============================================================================
@@ -127,7 +129,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Build da aplicação usando Webpack (mais estável para produção)
 # Webpack é production-ready e tem melhor suporte
 # Nota: Turbopack ainda é experimental para builds de produção
-RUN npm run build:prod:webpack
+# --no-lint pula lint durante build para economizar memória
+RUN npm run build:prod:webpack -- --no-lint
 
 # Stage 3: Runner (imagem final leve)
 # ============================================================================

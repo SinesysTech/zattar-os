@@ -40,6 +40,13 @@ const nextConfig: NextConfig = {
   },
   allowedDevOrigins: ['192.168.1.100', '192.168.1.100:3000'],
   webpack: (config, { isServer }) => {
+    // CRITICAL: Optimize webpack for memory efficiency during build
+    config.optimization = config.optimization || {};
+    config.optimization.moduleIds = 'deterministic';
+
+    // Reduce memory usage by limiting parallelism
+    config.parallelism = 1;
+
     // Exclude test files from bundle
     config.module = config.module || {};
     config.module.rules = config.module.rules || [];
