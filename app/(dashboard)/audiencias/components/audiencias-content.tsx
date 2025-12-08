@@ -488,7 +488,7 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
             <Tooltip>
               <TooltipTrigger asChild>
                 <PopoverTrigger asChild>
-                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0" title="Criar expediente ou obrigação">
+                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0">
                     <Plus className="h-3.5 w-3.5" />
                   </Button>
                 </PopoverTrigger>
