@@ -284,7 +284,8 @@
   - Testar com teclado virtual aberto
   - _Requirements: 8.1, 8.5_
 
-- [-] 12.3 Escrever property tests para Editor
+- [ ] 12.3 Escrever property tests para Editor
+
 
   - **Property 34: Editor toolbar hidden on mobile**
   - **Validates: Requirements 8.1**
@@ -334,10 +335,13 @@
   - **Validates: Requirements 10.5**
 
 - [ ] 14. Checkpoint - Garantir que todos os testes passem
+
+
   - Ensure all tests pass, ask the user if questions arise.
 
 
 ## Fase 7: Dashboard e Visualizações
+
 
 - [ ] 15. Otimizar Dashboard para mobile
 - [ ] 15.1 Implementar layout responsivo no Dashboard
@@ -377,8 +381,14 @@
 
 ## Fase 8: Otimização de Mídia
 
+
 - [ ] 16. Otimizar componentes de mídia para mobile
-- [ ] 16.1 Verificar e otimizar media nodes do Plate
+
+
+
+
+- [x] 16.1 Verificar e otimizar media nodes do Plate
+
   - Verificar se media-image-node já é responsivo
   - Garantir que imagens usem max-width: 100% e height: auto
   - Implementar aspect-ratio adequado para vídeos
@@ -386,14 +396,18 @@
   - Testar preview de mídia em mobile
   - _Requirements: 13.1, 13.2, 13.4_
 
-- [ ] 16.2 Otimizar upload de mídia em mobile
+- [x] 16.2 Otimizar upload de mídia em mobile
+
+
   - Verificar se upload-dialog é responsivo
   - Implementar preview adequado de arquivos em mobile
   - Adicionar feedback de progresso visível em mobile
   - Otimizar tamanho de thumbnails para mobile
   - _Requirements: 13.5_
 
-- [ ] 16.3 Escrever property tests para Mídia
+- [x] 16.3 Escrever property tests para Mídia
+
+
   - **Property 58: Responsive image sizing**
   - **Validates: Requirements 13.1**
   - **Property 59: Media lazy loading**

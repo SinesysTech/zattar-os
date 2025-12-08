@@ -48,12 +48,13 @@ export const ImageElement = withHOC(
               <Image
                 ref={handleRef}
                 className={cn(
-                  'block w-full max-w-full cursor-pointer object-cover px-0',
+                  'block w-full max-w-full h-auto cursor-pointer object-cover px-0',
                   'rounded-sm',
                   focused && selected && 'ring-2 ring-ring ring-offset-2',
                   isDragging && 'opacity-50'
                 )}
                 alt={props.attributes.alt as string | undefined}
+                loading="lazy"
               />
               <ResizeHandle
                 className={mediaResizeHandleVariants({
