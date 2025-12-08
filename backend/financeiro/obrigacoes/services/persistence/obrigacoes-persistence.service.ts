@@ -11,25 +11,17 @@ import {
   generateCacheKey,
 } from '@/backend/utils/redis/cache-utils';
 import type {
-  Obrigacao,
   ObrigacaoComDetalhes,
   ListarObrigacoesParams,
   TipoObrigacao,
   StatusObrigacao,
   OrigemObrigacao,
   StatusSincronizacao,
-  ClienteResumoObrigacao,
-  ProcessoResumoObrigacao,
-  AcordoResumoObrigacao,
-  ParcelaResumoObrigacao,
-  LancamentoResumoObrigacao,
-  ContaContabilResumoObrigacao,
   InconsistenciaObrigacao,
 } from '@/backend/types/financeiro/obrigacoes.types';
 import {
   calcularDiasAteVencimento,
   determinarStatusObrigacao,
-  determinarTipoObrigacao,
   isOrigemObrigacaoValida,
 } from '@/backend/types/financeiro/obrigacoes.types';
 
@@ -802,7 +794,7 @@ export const listarObrigacoesConsolidadas = async (
  * Usa a mesma lógica de cutoff que listarObrigacoesVencidas:
  * filtra por status === 'vencida' (calculado quando dataVencimento < hoje)
  */
-export const buscarObrigacoesVencidas = async (dataReferencia?: Date): Promise<ObrigacaoComDetalhes[]> => {
+export const buscarObrigacoesVencidas = async (): Promise<ObrigacaoComDetalhes[]> => {
   // Usa apenasVencidas: true que filtra por status === 'vencida'
   // O status 'vencida' é calculado em determinarStatusObrigacao quando:
   // statusOriginal === 'pendente' && calcularDiasAteVencimento(dataVencimento) < 0

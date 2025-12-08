@@ -240,6 +240,13 @@ function criarColunas(router: ReturnType<typeof useRouter>): ColumnDef<AcordoCon
                   )}
                 </span>
               </div>
+              {/* Terceira linha: Órgão julgador (vara) */}
+              <div className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</div>
+              
+              {/* Espaçamento entre dados do processo e partes */}
+              <div className="h-1" />
+              
+              {/* Partes */}
               <Badge
                 variant="outline"
                 className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}
@@ -252,7 +259,6 @@ function criarColunas(router: ReturnType<typeof useRouter>): ColumnDef<AcordoCon
               >
                 {parteRe}
               </Badge>
-              <div className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</div>
             </div>
           </TooltipProvider>
         );
