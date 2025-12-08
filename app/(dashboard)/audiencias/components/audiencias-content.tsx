@@ -7,7 +7,9 @@
 
 import * as React from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { ClientOnlyTabs, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
@@ -31,6 +33,7 @@ import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildAudienciasFilterOptions, buildAudienciasFilterGroups, parseAudienciasFilters } from './audiencias-toolbar-filters';
 import type { Audiencia } from '@/backend/types/audiencias/types';
+import type { Row } from '@tanstack/react-table';
 import type { AudienciasFilters } from '@/app/_lib/types/audiencias';
 
 export type VisualizacaoTipo = 'semana' | 'mes' | 'ano' | 'lista';
@@ -462,7 +465,7 @@ function criarColunas(
 ): ResponsiveTableColumn<Audiencia>[] {
   return [
     {
-      id: 'data_inicio',
+      accessorKey: 'data_inicio',
       header: () => (
         <div className="flex items-center justify-center">
           <div className="text-sm font-medium">Data/Hora</div>
@@ -474,12 +477,14 @@ function criarColunas(
       sticky: true,
       cardLabel: 'Data/Hora',
       meta: { align: 'left' },
-      sortingFn: (rowA, rowB) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      sortingFn: (rowA: any, rowB: any) => {
         const dataA = normalizarDataParaComparacao(rowA.original.data_inicio);
         const dataB = normalizarDataParaComparacao(rowB.original.data_inicio);
         return dataA - dataB;
       },
-      cell: ({ row }) => <DataHoraCell audiencia={row.original} />,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => <DataHoraCell audiencia={row.original} />,
     },
     {
       id: 'processo',
@@ -488,7 +493,8 @@ function criarColunas(
       priority: 2,
       cardLabel: 'Processo',
       meta: { align: 'left' },
-      cell: ({ row }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => {
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
         const trt = row.original.trt;
@@ -533,7 +539,8 @@ function criarColunas(
       priority: 3,
       cardLabel: 'Detalhes',
       meta: { align: 'left' },
-      cell: ({ row }) => <TipoSalaAcoesCell audiencia={row.original} onSuccess={onSuccess} />,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => <TipoSalaAcoesCell audiencia={row.original} onSuccess={onSuccess} />,
     },
     {
       id: 'observacoes',
@@ -543,21 +550,24 @@ function criarColunas(
       priority: 5,
       cardLabel: 'Observações',
       meta: { align: 'left' },
-      cell: ({ row }) => <div className="h-full w-full"><ObservacoesCell audiencia={row.original} onSuccess={onSuccess} /></div>,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => <div className="h-full w-full"><ObservacoesCell audiencia={row.original} onSuccess={onSuccess} /></div>,
     },
     {
-      id: 'responsavel_id',
+      accessorKey: 'responsavel_id',
       header: () => <ResponsavelColumnHeader onSort={onResponsavelSort} />,
       enableSorting: false,
       priority: 4,
       cardLabel: 'Responsável',
       meta: { align: 'left' },
-      cell: ({ row }) => <div className="min-h-10 flex items-center justify-center"><ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} /></div>,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => <div className="min-h-10 flex items-center justify-center"><ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} /></div>,
     },
   ];
 }
 
 export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
+  const router = useRouter();
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
@@ -758,8 +768,17 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
         newButtonTooltip="Nova audiência"
       />
 
-      {/* Linha 2: Controles de navegação + contador */}
+      {/* Linha 2: Tabs + Controles de navegação + contador */}
       <div className="flex items-center gap-4">
+        <ClientOnlyTabs value={visualizacao} onValueChange={(value) => router.push(`/audiencias/${value}`)}>
+          <TabsList>
+            <TabsTrigger value="semana">Semana</TabsTrigger>
+            <TabsTrigger value="mes">Mês</TabsTrigger>
+            <TabsTrigger value="ano">Ano</TabsTrigger>
+            <TabsTrigger value="lista">Lista</TabsTrigger>
+          </TabsList>
+        </ClientOnlyTabs>
+
         {visualizacao !== 'lista' && (
           <ButtonGroup>
             <Button

@@ -130,7 +130,7 @@ function OrcamentoSelector({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Badge tone={statusConfig.tone} variant="soft">
+            <Badge variant="outline">
               {statusConfig.label}
             </Badge>
           </CardContent>
@@ -277,7 +277,7 @@ function ComparacaoCards({
                       {dados.ano} - {dados.periodo}
                     </TableCell>
                     <TableCell>
-                      <Badge tone={statusConfig.tone} variant="soft">
+                      <Badge variant="outline">
                         {statusConfig.label}
                       </Badge>
                     </TableCell>
@@ -319,7 +319,7 @@ function ComparacaoCards({
                   <div className="h-4 w-full bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary transition-all"
-                      style={{ width: `${percentual}%` }}
+                      style={{ width: `${percentual}%` } as React.CSSProperties}
                     />
                   </div>
                 </div>

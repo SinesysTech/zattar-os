@@ -83,14 +83,8 @@ const navPrincipal = [
   },
   {
     title: "Audiências",
-    url: "/audiencias",
+    url: "/audiencias/semana",
     icon: Calendar,
-    items: [
-      { title: "Semana", url: "/audiencias/semana" },
-      { title: "Mês", url: "/audiencias/mes" },
-      { title: "Ano", url: "/audiencias/ano" },
-      { title: "Lista", url: "/audiencias/lista" },
-    ],
   },
   {
     title: "Expedientes",

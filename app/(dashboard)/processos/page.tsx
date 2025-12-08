@@ -5,7 +5,6 @@
 import * as React from 'react';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildProcessosFilterOptions, buildProcessosFilterGroups, parseProcessosFilters } from './components/processos-toolbar-filters';
 import { Button } from '@/components/ui/button';
@@ -467,6 +466,7 @@ function criarColunas(
       size: 120,
       priority: 3,
       cardLabel: 'Autuação',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: ({ row }: any) => (
         <div className="min-h-10 flex items-center justify-center text-sm">
           {formatarData(row.getValue('data_autuacao'))}
@@ -485,6 +485,7 @@ function criarColunas(
       priority: 1,
       sticky: true,
       cardLabel: 'Processo',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: ({ row }: any) => <ProcessoInfoCell processo={row.original} />,
     },
     {
@@ -503,6 +504,7 @@ function criarColunas(
       priority: 2,
       cardLabel: 'Partes',
       meta: { align: 'left' },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: ({ row }: any) => {
         const parteAutora = row.original.nome_parte_autora || '-';
         const parteRe = row.original.nome_parte_re || '-';
@@ -533,6 +535,7 @@ function criarColunas(
       size: 180,
       priority: 4,
       cardLabel: 'Responsável',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: ({ row }: any) => (
         <ResponsavelCell
           processo={row.original}
@@ -552,6 +555,7 @@ function criarColunas(
       size: 100,
       priority: 5,
       cardLabel: 'Ações',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cell: ({ row }: any) => (
         <div className="flex items-center justify-center">
           <a
