@@ -1,7 +1,10 @@
+"use client";
+
 import { formatDate } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,13 +32,19 @@ const MotionBadge = motion.create(Badge);
 
 export function DateNavigator({ view, events }: IProps) {
 	const { selectedDate, setSelectedDate } = useCalendar();
+	const [mounted, setMounted] = useState(false);
 
-	const month = formatDate(selectedDate, "MMMM");
+	// Evitar hydration mismatch calculando apenas no cliente
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	const month = formatDate(selectedDate, "MMMM", { locale: ptBR });
 	const year = selectedDate.getFullYear();
 
 	const eventCount = useMemo(
-		() => getEventsCount(events, selectedDate, view),
-		[events, selectedDate, view],
+		() => (mounted ? getEventsCount(events, selectedDate, view) : 0),
+		[events, selectedDate, view, mounted],
 	);
 
 	const handlePrevious = () =>
@@ -54,18 +63,20 @@ export function DateNavigator({ view, events }: IProps) {
 				>
 					{month} {year}
 				</motion.span>
-				<AnimatePresence mode="wait">
-					<MotionBadge
-						key={eventCount}
-						variant="secondary"
-						initial={{ scale: 0.8, opacity: 0 }}
-						animate={{ scale: 1, opacity: 1 }}
-						exit={{ scale: 0.8, opacity: 0 }}
-						transition={transition}
-					>
-						{eventCount} events
-					</MotionBadge>
-				</AnimatePresence>
+				{mounted && (
+					<AnimatePresence mode="wait">
+						<MotionBadge
+							key={eventCount}
+							variant="secondary"
+							initial={{ scale: 0.8, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							exit={{ scale: 0.8, opacity: 0 }}
+							transition={transition}
+						>
+							{eventCount} {eventCount === 1 ? 'evento' : 'eventos'}
+						</MotionBadge>
+					</AnimatePresence>
+				)}
 			</div>
 
 			<div className="flex items-center gap-2">

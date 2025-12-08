@@ -193,12 +193,12 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
 							</span>
 
 							<p className="text-sm font-semibold text-t-secondary">
-								Happening now
+								Acontecendo agora
 							</p>
 						</div>
 					) : (
 						<p className="p-4 text-center text-sm italic text-t-tertiary">
-							No appointments or consultations at the moment
+							Nenhum expediente ou consulta no momento
 						</p>
 					)}
 

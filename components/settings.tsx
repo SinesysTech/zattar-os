@@ -51,11 +51,11 @@ export function Settings() {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56">
-				<DropdownMenuLabel>Calendar settings</DropdownMenuLabel>
+				<DropdownMenuLabel>Configurações do Calendário</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
 					<DropdownMenuItem>
-						Use dark mode
+						Usar modo escuro
 						<DropdownMenuShortcut>
 							<Switch
 								icon={
@@ -73,7 +73,7 @@ export function Settings() {
 						</DropdownMenuShortcut>
 					</DropdownMenuItem>
 					<DropdownMenuItem>
-						Show confirmation dialog on event drop
+						Mostrar diálogo de confirmação ao mover evento
 						<DropdownMenuShortcut>
 							<Switch
 								icon={
@@ -89,7 +89,7 @@ export function Settings() {
 						</DropdownMenuShortcut>
 					</DropdownMenuItem>
 					<DropdownMenuItem>
-						Use dot badge
+						Usar badge pontual
 						<DropdownMenuShortcut>
 							<Switch
 								icon={
@@ -107,7 +107,7 @@ export function Settings() {
 						</DropdownMenuShortcut>
 					</DropdownMenuItem>
 					<DropdownMenuItem>
-						Use 24 hour format
+						Usar formato 24 horas
 						<DropdownMenuShortcut>
 							<Switch
 								icon={
@@ -160,15 +160,15 @@ export function Settings() {
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<DropdownMenuLabel>Agenda view group by</DropdownMenuLabel>
+					<DropdownMenuLabel>Agrupar agenda por</DropdownMenuLabel>
 					<DropdownMenuRadioGroup
 						value={agendaModeGroupBy}
 						onValueChange={(value) =>
 							setAgendaModeGroupBy(value as "date" | "color")
 						}
 					>
-						<DropdownMenuRadioItem value="date">Date</DropdownMenuRadioItem>
-						<DropdownMenuRadioItem value="color">Color</DropdownMenuRadioItem>
+						<DropdownMenuRadioItem value="date">Data</DropdownMenuRadioItem>
+						<DropdownMenuRadioItem value="color">Cor</DropdownMenuRadioItem>
 					</DropdownMenuRadioGroup>
 				</DropdownMenuGroup>
 			</DropdownMenuContent>
