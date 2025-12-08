@@ -9,7 +9,6 @@ import type {
   OrcamentoComDetalhes,
   AnaliseOrcamentaria,
   ResumoOrcamentario,
-  AlertaDesvio,
   EvolucaoMensal,
   ProjecaoItem,
 } from '@/backend/types/financeiro/orcamento.types';
@@ -191,9 +190,6 @@ export function exportarComparativoCSV(comparativo: RelatorioComparativo): void 
   ];
 
   const linhas = comparativo.orcamentos.map(o => {
-    const variacaoPercentual = o.totalOrcado > 0
-      ? ((o.variacao / o.totalOrcado) * 100)
-      : 0;
     return [
       o.orcamentoNome,
       o.ano,
@@ -464,7 +460,6 @@ export async function exportarRelatorioPDF(relatorio: RelatorioCompleto | Relato
     y -= 10;
 
     // Cabeçalho da tabela
-    const colWidths = [180, 70, 80, 80, 65, 50];
     const colX = [margin, margin + 180, margin + 250, margin + 330, margin + 410, margin + 475];
 
     checkNewPage(lineHeight * 2);

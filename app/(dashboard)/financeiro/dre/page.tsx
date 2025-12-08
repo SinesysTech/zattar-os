@@ -119,7 +119,6 @@ function PeriodoSelector({
 }: {
   dataInicio: string;
   dataFim: string;
-  tipo: PeriodoDRE;
   onChange: (dataInicio: string, dataFim: string, tipo: PeriodoDRE) => void;
 }) {
   const hoje = new Date();
@@ -217,7 +216,6 @@ function ResumoCards({
   resumo: ResumoDRE | null;
   variacoes: VariacoesDRE | null;
   variacoesOrcado: VariacoesDRE | null;
-  orcado: ResumoDRE | null;
   isLoading: boolean;
 }) {
   if (isLoading) {
@@ -455,7 +453,6 @@ function CategoriaPieChart({
   categorias,
 }: {
   categorias: CategoriaDRE[];
-  titulo: string;
 }) {
   if (categorias.length === 0) {
     return (

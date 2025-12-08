@@ -124,7 +124,7 @@
   - **Validates: Requirements 4.5**
 
 - [ ] 7. Atualizar componentes de listagem existentes
-- [ ] 7.1 Migrar páginas de listagem para ResponsiveTable
+- [-] 7.1 Migrar páginas de listagem para ResponsiveTable
   - Atualizar /processos para usar ResponsiveTable com layout cards em mobile
   - Atualizar /audiencias para usar ResponsiveTable com priorização de colunas
   - Atualizar /contratos para usar ResponsiveTable
@@ -208,27 +208,32 @@
   - **Validates: Requirements 7.2**
   - **Property 31: Select option touch targets**
   - **Validates: Requirements 7.3**
-  - **Propert formulários de cadastro (clientes, processos, etc)
-  - Atualizar formulários de filtros em páginas de listagem
-  - Garantir consistência em todos os formulários
-  - _Requirements: 3.1, 3.3, 3.4, 3.5_
+  - **Property 32: Mobile combobox interface**
+  - **Validates: Requirements 7.4**
 
 - [ ] 12. Checkpoint - Garantir que todos os testes passem
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Fase 5: Componentes de Interação (Dialogs e Modals)
 
-- [ ] 13. Implementar Dialogs responsivos
-- [ ] 13.1 Atualizar componente Dialog
-  - Implementar full-screen/near full-screen para mobile (< 640px)
-  - Adicionar variante bottom-sheet para ações simples
-  - Garantir que formulários em dialogs não tenham scroll horizontal
-  - Posicionar botões no bottom com spacing adequado em mobile
+- [ ] 11. Otimizar Dialogs para mobile
+- [ ] 11.1 Criar variante ResponsiveDialog
+  - Criar wrapper que usa Dialog em desktop e Sheet em mobile
+  - Implementar detecção automática de viewport
+  - Garantir que formulários em dialogs sejam responsivos
+  - Posicionar botões adequadamente em mobile (bottom sticky)
   - Implementar scroll vertical quando conteúdo excede viewport
-  - Prevenir scroll do background quando dialog aberto
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
-- [ ] 13.2 Escrever property tests para Dialogs
+- [ ] 11.2 Atualizar dialogs críticos para ResponsiveDialog
+  - Atualizar create-document-dialog
+  - Atualizar share-document-dialog
+  - Atualizar create-chat-dialog
+  - Atualizar upload-dialog
+  - Atualizar template-library-dialog
+  - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
+
+- [ ] 11.3 Escrever property tests para Dialogs
   - **Property 19: Dialog full-screen on mobile**
   - **Validates: Requirements 5.1**
   - **Property 20: Dialog form no horizontal scroll**
@@ -240,33 +245,25 @@
   - **Property 23: Dialog prevents background scroll**
   - **Validates: Requirements 5.5**
 
-- [ ] 14. Atualizar dialogs existentes
-- [ ] 14.1 Migrar dialogs para layout responsivo
-  - Atualizar create-document-dialog
-  - Atualizar share-document-dialog
-  - Atualizar create-chat-dialog
-  - Atualizar todos os dialogs de confirmação
-  - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
-
 ## Fase 6: Componentes Complexos (Editor e Chat)
 
-- [ ] 15. Implementar Editor de Documentos responsivo
-- [ ] 15.1 Atualizar componente DocumentEditor
-  - Ocultar/colapsar toolbar de formatação em mobile (< 768px)
-  - Implementar floating toolbar compacta ao tocar no editor
-  - Agrupar opções avançadas em overflow menus
-  - Criar toolbar condensada para tablet
-  - Preservar conteúdo e posição do cursor ao mudar viewport
+- [ ] 12. Otimizar Editor de Documentos para mobile
+- [ ] 12.1 Implementar toolbar responsiva no Plate Editor
+  - Verificar se Plate já tem suporte a floating toolbar
+  - Criar versão mobile da fixed-toolbar com ícones essenciais
+  - Implementar overflow menu para opções avançadas em mobile
+  - Garantir que toolbar não ocupe muito espaço vertical em mobile
+  - Testar preservação de conteúdo ao mudar orientação
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
 
-- [ ] 15.2 Otimizar toolbars do editor
-  - Atualizar ToolbarButtons para desktop
-  - Atualizar ToolbarButtonsMobile para mobile
-  - Implementar detecção automática de viewport
-  - Adicionar transições suaves entre modos
-  - _Requirements: 8.1, 8.2, 8.3, 8.4_
+- [ ] 12.2 Otimizar área de edição para mobile
+  - Garantir que editor ocupe altura adequada em mobile
+  - Implementar scroll suave dentro do editor
+  - Otimizar padding e spacing para mobile
+  - Testar com teclado virtual aberto
+  - _Requirements: 8.1, 8.5_
 
-- [ ] 15.3 Escrever property tests para Editor
+- [ ] 12.3 Escrever property tests para Editor
   - **Property 34: Editor toolbar hidden on mobile**
   - **Validates: Requirements 8.1**
   - **Property 35: Editor floating toolbar**
@@ -278,15 +275,22 @@
   - **Property 38: Editor state preservation**
   - **Validates: Requirements 8.5**
 
-- [ ] 16. Implementar Chat responsivo
-- [ ] 16.1 Atualizar componente ChatInterface
-  - Separar room list e messages em views distintas para mobile (< 768px)
-  - Implementar navegação com back button em mobile
-  - Otimizar message bubbles para telas estreitas
-  - Implementar formato compacto e scrollable para attachments
-  - _Requirements: 10.1, 10.2, 10.3, 10.5_
+- [ ] 13. Otimizar Chat para mobile
+- [ ] 13.1 Implementar navegação responsiva no Chat
+  - Criar layout com Sheet para room list em mobile
+  - Implementar botão de voltar para room list em mobile
+  - Garantir que messages ocupem toda largura em mobile
+  - Otimizar input de mensagem para mobile (com teclado virtual)
+  - _Requirements: 10.1, 10.2, 10.3_
 
-- [ ] 16.2 Escrever property tests para Chat
+- [ ] 13.2 Otimizar message bubbles e attachments
+  - Ajustar largura máxima de bubbles para mobile
+  - Implementar layout compacto para attachments em mobile
+  - Garantir que imagens sejam responsivas
+  - Otimizar preview de arquivos para mobile
+  - _Requirements: 10.3, 10.5_
+
+- [ ] 13.3 Escrever property tests para Chat
   - **Property 44: Chat separate views on mobile**
   - **Validates: Requirements 10.1**
   - **Property 45: Chat room navigation**
@@ -296,21 +300,35 @@
   - **Property 47: Chat attachments compact**
   - **Validates: Requirements 10.5**
 
-- [ ] 17. Checkpoint - Garantir que todos os testes passem
+- [ ] 14. Checkpoint - Garantir que todos os testes passem
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Fase 7: Dashboard e Visualizações
 
-- [ ] 18. Implementar Dashboard responsivo
-- [ ] 18.1 Criar componente ResponsiveDashboard
-  - Implementar stacking vertical de widgets em mobile (< 640px)
-  - Criar layout 2-colunas para tablet
-  - Implementar scaling de charts para mobile mantendo legibilidade
-  - Adicionar priorização de métricas com expansão para detalhes
-  - Implementar filtros colapsáveis em panel/bottom sheet
-  - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
+- [ ] 15. Otimizar Dashboard para mobile
+- [ ] 15.1 Implementar layout responsivo no Dashboard
+  - Usar ResponsiveGrid para widgets do dashboard
+  - Configurar grid: 1 coluna mobile, 2 colunas tablet, 3-4 desktop
+  - Garantir que cards de métricas sejam legíveis em mobile
+  - Implementar scroll suave entre seções
+  - _Requirements: 9.1, 9.4_
 
-- [ ] 18.2 Escrever property tests para Dashboard
+- [ ] 15.2 Otimizar charts e gráficos para mobile
+  - Verificar se recharts já é responsivo
+  - Ajustar tamanho de fonte em labels para mobile
+  - Implementar scroll horizontal para charts muito largos
+  - Simplificar legendas em mobile
+  - Garantir que tooltips sejam touch-friendly
+  - _Requirements: 9.2_
+
+- [ ] 15.3 Implementar filtros colapsáveis no Dashboard
+  - Criar Sheet para filtros em mobile
+  - Manter filtros inline em desktop
+  - Adicionar botão "Filtros" com badge de contagem
+  - Implementar aplicação de filtros com feedback visual
+  - _Requirements: 9.5_
+
+- [ ] 15.4 Escrever property tests para Dashboard
   - **Property 39: Dashboard widgets stacked on mobile**
   - **Validates: Requirements 9.1**
   - **Property 40: Charts scale on mobile**
@@ -322,24 +340,25 @@
   - **Property 43: Dashboard filters collapsible**
   - **Validates: Requirements 9.5**
 
-- [ ] 19. Atualizar página de Dashboard
-  - Migrar dashboard principal para layout responsivo
-  - Atualizar widgets de métricas
-  - Atualizar gráficos e charts
-  - Implementar filtros responsivos
-  - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
-
 ## Fase 8: Otimização de Mídia
 
-- [ ] 20. Implementar otimizações de mídia
-- [ ] 20.1 Criar sistema de imagens responsivas
-  - Implementar componente ResponsiveImage com srcset
-  - Adicionar lazy loading para imagens off-screen
-  - Implementar containers responsivos para vídeos com aspect ratio
-  - Adicionar otimização de upload em mobile
-  - _Requirements: 13.1, 13.2, 13.4, 13.5_
+- [ ] 16. Otimizar componentes de mídia para mobile
+- [ ] 16.1 Verificar e otimizar media nodes do Plate
+  - Verificar se media-image-node já é responsivo
+  - Garantir que imagens usem max-width: 100% e height: auto
+  - Implementar aspect-ratio adequado para vídeos
+  - Adicionar loading="lazy" para imagens off-screen
+  - Testar preview de mídia em mobile
+  - _Requirements: 13.1, 13.2, 13.4_
 
-- [ ] 20.2 Escrever property tests para Mídia
+- [ ] 16.2 Otimizar upload de mídia em mobile
+  - Verificar se upload-dialog é responsivo
+  - Implementar preview adequado de arquivos em mobile
+  - Adicionar feedback de progresso visível em mobile
+  - Otimizar tamanho de thumbnails para mobile
+  - _Requirements: 13.5_
+
+- [ ] 16.3 Escrever property tests para Mídia
   - **Property 58: Responsive image sizing**
   - **Validates: Requirements 13.1**
   - **Property 59: Media lazy loading**
@@ -347,25 +366,24 @@
   - **Property 60: Responsive video containers**
   - **Validates: Requirements 13.4**
 
-- [ ] 21. Atualizar componentes de mídia existentes
-  - Atualizar media-image-node para usar ResponsiveImage
-  - Atualizar media-video-node para containers responsivos
-  - Atualizar upload-dialog para otimização mobile
-  - Implementar lazy loading em galerias
-  - _Requirements: 13.1, 13.2, 13.4, 13.5_
-
 ## Fase 9: Suporte a Orientação
 
-- [ ] 22. Implementar suporte a mudanças de orientação
-- [ ] 22.1 Criar handlers de orientação
-  - Implementar detecção de mudança de orientação
-  - Adicionar reflow de conteúdo para landscape
-  - Otimizar layout de formulários para landscape
-  - Preservar scroll position e state durante rotação
-  - Maximizar área de visualização de mídia em landscape
-  - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.5_
+- [ ] 17. Testar e otimizar suporte a orientação
+- [ ] 17.1 Testar mudanças de orientação em componentes críticos
+  - Testar formulários em landscape (devem usar 2 colunas se possível)
+  - Testar editor em landscape (mais espaço para toolbar)
+  - Testar chat em landscape (pode mostrar rooms + messages)
+  - Testar dashboard em landscape (mais colunas)
+  - Verificar preservação de scroll position
+  - _Requirements: 14.1, 14.2, 14.3, 14.4_
 
-- [ ] 22.2 Escrever property tests para Orientação
+- [ ] 17.2 Otimizar visualização de mídia em landscape
+  - Garantir que imagens/vídeos usem mais espaço em landscape
+  - Implementar fullscreen otimizado para landscape
+  - Testar preview de documentos em landscape
+  - _Requirements: 14.5_
+
+- [ ] 17.3 Escrever property tests para Orientação
   - **Property 62: Portrait to landscape reflow**
   - **Validates: Requirements 14.1**
   - **Property 63: Landscape to portrait adjustment**
@@ -379,16 +397,23 @@
 
 ## Fase 10: Acessibilidade e Componentes Base
 
-- [ ] 23. Implementar melhorias de acessibilidade
-- [ ] 23.1 Adicionar suporte a acessibilidade responsiva
-  - Adicionar ARIA labels e roles apropriados em navegação responsiva
-  - Implementar anúncios de mudança de estado para screen readers
-  - Garantir acessibilidade por teclado de touch targets
-  - Adicionar indicadores de foco visíveis
-  - Preservar ordem lógica de tab em layouts responsivos
+- [ ] 18. Auditar e melhorar acessibilidade responsiva
+- [ ] 18.1 Auditar navegação responsiva
+  - Verificar ARIA labels no Sidebar mobile (Sheet)
+  - Verificar anúncios de estado em menus colapsáveis
+  - Testar navegação por teclado em mobile
+  - Garantir indicadores de foco visíveis em todos os breakpoints
+  - Verificar ordem de tab em layouts responsivos
   - _Requirements: 15.1, 15.2, 15.3, 15.4, 15.5_
 
-- [ ] 23.2 Escrever property tests para Acessibilidade
+- [ ] 18.2 Auditar componentes base
+  - Verificar touch targets em Button, Checkbox, Radio (min 44x44px)
+  - Verificar tipografia legível em mobile (min 16px para body)
+  - Verificar que componentes usam unidades responsivas (rem, em, %)
+  - Testar com screen readers em mobile
+  - _Requirements: 11.3, 11.4, 11.5_
+
+- [ ] 18.3 Escrever property tests para Acessibilidade
   - **Property 67: Navigation ARIA labels**
   - **Validates: Requirements 15.1**
   - **Property 68: Menu state announcements**
@@ -399,17 +424,6 @@
   - **Validates: Requirements 15.4**
   - **Property 71: Logical tab order preservation**
   - **Validates: Requirements 15.5**
-
-- [ ] 24. Atualizar componentes UI base
-- [ ] 24.1 Garantir responsividade em todos os componentes base
-  - Atualizar Button para touch targets adequados
-  - Atualizar Input para responsive sizing
-  - Atualizar Card para layouts responsivos
-  - Atualizar Alert para mobile
-  - Atualizar Badge, Avatar, e outros componentes pequenos
-  - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5_
-
-- [ ] 24.2 Escrever property tests para Componentes Base
   - **Property 50: Readable typography on mobile**
   - **Validates: Requirements 11.3**
   - **Property 51: Interactive elements touch targets**
@@ -417,68 +431,91 @@
   - **Property 52: Responsive sizing units**
   - **Validates: Requirements 11.5**
 
-- [ ] 25. Checkpoint Final - Garantir que todos os testes passem
+- [ ] 19. Checkpoint Final - Garantir que todos os testes passem
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Fase 11: Testes de Integração e Performance
 
-- [ ] 26. Implementar testes de integração E2E
-- [ ] 26.1 Criar testes Playwright para fluxos responsivos
-  - Testar jornada completa de usuário em mobile
-  - Testar navegação entre breakpoints
-  - Testar submissão de formulários em diferentes dispositivos
-  - Testar interações de chat em mobile
-  - Testar upload e visualização de mídia
+- [ ] 20. Implementar testes E2E responsivos com Playwright
+- [ ] 20.1 Criar testes E2E para fluxos críticos em mobile
+  - Testar login e navegação em mobile viewport
+  - Testar criação de processo em mobile
+  - Testar visualização de documento em mobile
+  - Testar chat em mobile
+  - Testar upload de arquivo em mobile
   - _Requirements: All_
 
-- [ ] 27. Implementar testes de regressão visual
-- [ ] 27.1 Configurar testes visuais com Playwright
-  - Capturar screenshots de componentes em cada breakpoint
-  - Configurar baseline de comparação
-  - Testar dark mode em todos os breakpoints
-  - Testar estados de hover/focus/active
+- [ ] 20.2 Criar testes E2E para mudanças de viewport
+  - Testar resize de desktop para mobile
+  - Testar mudança de orientação
+  - Verificar preservação de estado
+  - _Requirements: 14.1, 14.2, 14.4_
+
+- [ ] 21. Realizar auditoria de performance mobile
+- [ ] 21.1 Executar Lighthouse em páginas principais
+  - Auditar /dashboard em mobile
+  - Auditar /processos em mobile
+  - Auditar /documentos em mobile
+  - Auditar /chat em mobile
+  - Identificar e corrigir issues de performance
   - _Requirements: All_
 
-- [ ] 28. Realizar auditoria de performance
-- [ ] 28.1 Otimizar performance mobile
-  - Executar Lighthouse em páginas principais
-  - Otimizar FCP, LCP, CLS, TTI
-  - Implementar code splitting para mobile
-  - Otimizar bundle size
-  - Adicionar preload/prefetch estratégico
+- [ ] 21.2 Otimizar métricas Core Web Vitals
+  - Otimizar LCP (Largest Contentful Paint) < 2.5s
+  - Otimizar FID/INP (First Input Delay/Interaction to Next Paint) < 200ms
+  - Otimizar CLS (Cumulative Layout Shift) < 0.1
+  - Implementar lazy loading onde apropriado
+  - Otimizar bundle size para mobile
   - _Requirements: All_
 
-- [ ] 29. Realizar auditoria de acessibilidade
-- [ ] 29.1 Executar testes axe-core
-  - Testar todas as páginas principais
-  - Corrigir issues de acessibilidade encontrados
-  - Validar com screen readers
-  - Testar navegação por teclado
+- [ ] 22. Realizar auditoria de acessibilidade com axe-core
+- [ ] 22.1 Executar testes axe em páginas principais
+  - Testar /dashboard com axe-core
+  - Testar /processos com axe-core
+  - Testar /documentos com axe-core
+  - Corrigir todos os issues críticos encontrados
+  - Validar com screen readers (VoiceOver/TalkBack)
   - _Requirements: 15.1, 15.2, 15.3, 15.4, 15.5_
 
 ## Fase 12: Documentação e Finalização
 
-- [ ] 30. Criar documentação de responsividade
-- [ ] 30.1 Documentar padrões e guidelines
-  - Criar guia de uso de componentes responsivos
-  - Documentar breakpoints e quando usar cada um
+- [ ] 23. Criar documentação de responsividade
+- [ ] 23.1 Documentar componentes e padrões responsivos
+  - Criar guia de uso de ResponsiveTable, ResponsiveGrid, ResponsiveContainer
+  - Documentar hooks: useViewport, useBreakpoint, useOrientation
   - Criar exemplos de código para casos comuns
-  - Documentar best practices de performance
+  - Documentar breakpoints do Tailwind e quando usar cada um
   - Criar checklist de responsividade para novos componentes
   - _Requirements: All_
 
-- [ ] 31. Revisar e refatorar código
-- [ ] 31.1 Code review e refactoring final
-  - Revisar todos os componentes implementados
-  - Refatorar código duplicado
-  - Otimizar performance onde necessário
-  - Garantir consistência de código
-  - Atualizar tipos TypeScript
+- [ ] 23.2 Documentar best practices
+  - Documentar mobile-first approach
+  - Documentar touch target sizes (min 44x44px)
+  - Documentar performance best practices
+  - Documentar acessibilidade em mobile
+  - Criar guia de troubleshooting
   - _Requirements: All_
 
-- [ ] 32. Checkpoint Final - Validação completa
+- [ ] 24. Revisar e refatorar código
+- [ ] 24.1 Code review final
+  - Revisar todos os componentes implementados
+  - Identificar e refatorar código duplicado
+  - Garantir consistência de naming e estrutura
+  - Atualizar tipos TypeScript onde necessário
+  - Remover código não utilizado
+  - _Requirements: All_
+
+- [ ] 24.2 Otimizações finais
+  - Otimizar re-renders desnecessários
+  - Implementar memoization onde apropriado
+  - Otimizar bundle size
+  - Verificar tree-shaking
+  - _Requirements: All_
+
+- [ ] 25. Checkpoint Final - Validação completa
   - Ensure all tests pass, ask the user if questions arise.
   - Validar que todos os requisitos foram atendidos
   - Confirmar que todas as propriedades passam nos testes
-  - Verificar performance em dispositivos reais
+  - Testar em dispositivos reais (iOS e Android)
   - Validar acessibilidade completa
+  - Obter aprovação final do usuário
