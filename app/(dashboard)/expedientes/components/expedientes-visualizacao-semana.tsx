@@ -287,15 +287,7 @@ function TipoDescricaoCell({
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <div
-              role="button"
-              tabIndex={0}
               className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer w-full pr-6"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  setIsOpen(true);
-                }
-              }}
             >
               {/* Badge de tipo seguido do ícone de documento */}
               <div className="flex items-center gap-1.5">
