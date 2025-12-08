@@ -40,7 +40,7 @@
 # Como funciona: Reutiliza node_modules se dependências não mudarem
 # Impacto: ~60s economizados quando deps não mudam
 # ============================================================================
-FROM node:22-slim AS deps
+FROM node:20-slim AS deps
 WORKDIR /app
 
 # Impedir download de browsers do Playwright (browser está em container separado)
@@ -61,12 +61,13 @@ RUN npm ci --ignore-scripts
 # Por que não seletivo: Next.js escaneia todo o projeto
 # .dockerignore reduz contexto: ~1GB → ~100MB
 # ============================================================================
-FROM node:22-slim AS builder
+FROM node:20-slim AS builder
 WORKDIR /app
 
 # Memória para Node.js durante build
-# 2GB é suficiente para Next.js e evita OOM em servidores menores
-ENV NODE_OPTIONS="--max-old-space-size=2048"
+# 4GB é necessário para projetos grandes com muitas dependências
+# Reduzido de 8GB para 4GB para CapRover com RAM limitada
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 # ============================================================================
 # CONFIGURAÇÃO DE MEMÓRIA PARA PREVENIR OOM
 # ============================================================================
@@ -122,10 +123,10 @@ ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHA
 # Desabilitar telemetria durante build
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build da aplicação usando Turbopack (2-5x mais rápido que Webpack)
-# Turbopack é estável e production-ready no Next.js 16
-# Fallback: use 'npm run build:prod:webpack' se houver problemas
-RUN npm run build:prod
+# Build da aplicação usando Webpack (mais estável para produção)
+# Webpack é production-ready e tem melhor suporte
+# Nota: Turbopack ainda é experimental para builds de produção
+RUN npm run build:prod:webpack
 
 # Stage 3: Runner (imagem final leve)
 # ============================================================================
@@ -135,7 +136,7 @@ RUN npm run build:prod
 # Standalone output: Inclui apenas dependências necessárias
 # Tamanho final: ~200-300MB vs ~1GB sem otimização
 # ============================================================================
-FROM node:22-slim AS runner
+FROM node:20-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
