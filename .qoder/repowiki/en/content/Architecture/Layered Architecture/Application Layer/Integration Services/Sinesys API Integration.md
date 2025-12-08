@@ -4,13 +4,20 @@
 **Referenced Files in This Document**   
 - [sinesys-client.ts](file://lib/services/sinesys-client.ts)
 - [meu-processo-types.ts](file://lib/types/meu-processo-types.ts)
-- [processos.ts](file://types/sinesys/processos.ts)
-- [audiencias.ts](file://types/sinesys/audiencias.ts)
-- [common.ts](file://types/sinesys/common.ts)
+- [meu-processo-transformers.ts](file://lib/transformers/meu-processo-transformers.ts)
+- [route.ts](file://app/api/meu-processo/consulta/route.ts)
 - [ANALISE-MIGRACAO-MEU-PROCESSO.md](file://ANALISE-MIGRACAO-MEU-PROCESSO.md)
 - [DEPLOY.md](file://DEPLOY.md)
 - [api-referencia/page.tsx](file://app/ajuda/desenvolvimento/api-referencia/page.tsx)
 </cite>
+
+## Update Summary
+**Changes Made**   
+- Added documentation for the new API endpoint at app/api/meu-processo/consulta/route.ts
+- Updated environment variables section with complete list of required variables
+- Enhanced description of SinesysClient capabilities and methods
+- Added detailed implementation notes for the new API route
+- Updated statistics and integration patterns based on completed implementation
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -135,6 +142,44 @@ The contract data endpoint retrieves all contracts associated with a client. Sin
 The agreement data endpoint retrieves all agreements and judgments associated with a specific case. This requires a process ID, which must be obtained from the process data before fetching agreements.
 
 **Endpoint**: `GET /api/acordos-condenacoes?processoId={id}`
+
+### New API Endpoint: Meu Processo Consulta
+
+A new API endpoint has been implemented at `app/api/meu-processo/consulta/route.ts` to serve as the primary interface for the "Meu Processo" application. This endpoint provides a unified interface that aggregates data from multiple sources and transforms it into the legacy format required by existing integrations.
+
+**Endpoint**: `POST /api/meu-processo/consulta`
+
+**Authentication**: Service API Key via header `x-service-api-key`
+
+**Request Body**:
+```json
+{
+  "cpf": "12345678901"
+}
+```
+
+**Response**:
+```json
+{
+  "contratos": [],
+  "acordos_condenacoes": [],
+  "audiencias": [],
+  "processos": [],
+  "message": "Não foram encontrados dados para este CPF"
+}
+```
+
+The endpoint performs the following operations:
+1. Validates the CPF format
+2. Authenticates the request using the service API key
+3. Retrieves all client data (processes, hearings, contracts) in parallel
+4. Fetches agreements for all client processes
+5. Transforms the aggregated data into the legacy N8N webhook format
+6. Returns the transformed data with appropriate caching headers
+
+**Section sources**
+- [route.ts](file://app/api/meu-processo/consulta/route.ts)
+- [sinesys-client.ts](file://lib/services/sinesys-client.ts)
 
 ```mermaid
 sequenceDiagram
@@ -412,8 +457,11 @@ This pattern handles cases where some process agreement requests might fail indi
 
 The integration supports data transformation to accommodate different consumer requirements. For example, the legacy N8N webhook format can be generated from the standard API responses, ensuring backward compatibility with existing integrations.
 
+The `transformDadosClienteParaLegacy` function in `meu-processo-transformers.ts` handles this transformation, converting the modern API response format into the legacy structure expected by the "Meu Processo" application. This function processes each data type (processes, hearings, contracts, agreements) and maps them to their corresponding legacy format.
+
 **Section sources**
 - [sinesys-client.ts](file://lib/services/sinesys-client.ts)
+- [meu-processo-transformers.ts](file://lib/transformers/meu-processo-transformers.ts)
 
 ## N8N Integration
 
