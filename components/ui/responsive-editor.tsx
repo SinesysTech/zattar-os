@@ -103,9 +103,14 @@ export const ResponsiveEditor = ({
     ref,
     ...props
 }: ResponsiveEditorProps & { ref?: React.RefObject<HTMLDivElement | null> }) => {
-    const isMobile = !useBreakpoint('md');
-    const isTablet = useBreakpoint('md') && !useBreakpoint('lg');
-    const isDesktop = useBreakpoint('lg');
+    // Call all hooks unconditionally to follow Rules of Hooks
+    const isMdOrAbove = useBreakpoint('md');
+    const isLgOrAbove = useBreakpoint('lg');
+
+    // Derive states from hook results
+    const isMobile = !isMdOrAbove;
+    const isTablet = isMdOrAbove && !isLgOrAbove;
+    const isDesktop = isLgOrAbove;
 
     return (
         <PlateContent
