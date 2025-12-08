@@ -91,7 +91,7 @@
   - Adicionar suporte para bulk actions em mobile
   - _Requirements: 2.5, 12.4_
 
-- [ ] 5.3 Escrever property tests para Tabelas
+- [-] 5.3 Escrever property tests para Tabelas
   - **Property 5: Table horizontal scroll on mobile**
   - **Validates: Requirements 2.1**
   - **Property 6: Table column prioritization**
@@ -111,7 +111,7 @@
   - Adicionar configuração customizável de breakpoints
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
-- [-] 6.2 Escrever property tests para Grids
+- [x] 6.2 Escrever property tests para Grids
   - **Property 14: Grid single column on mobile**
   - **Validates: Requirements 4.1**
   - **Property 15: Grid two columns on small screens**
