@@ -42,7 +42,9 @@ export function CopilotProviderWrapper({ children }: CopilotProviderWrapperProps
         labels={COPILOTKIT_CONFIG.labels}
         defaultOpen={COPILOTKIT_CONFIG.sidebar.defaultOpen}
       >
-        {children}
+        <div className="flex flex-1 flex-col gap-4 p-6 overflow-x-hidden">
+          {children}
+        </div>
       </CopilotSidebar>
     </CopilotKit>
   );
