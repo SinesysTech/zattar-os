@@ -17,6 +17,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { sinesysClient } from '@/lib/services/sinesys-client';
 import { transformDadosClienteParaLegacy } from '@/lib/transformers/meu-processo-transformers';
 import { SinesysAPIError } from '@/lib/types/meu-processo-types';
+import {
+  recordRequestMetrics,
+  MeuProcessoLogger,
+  Timer,
+  type APISource,
+} from '@/lib/services/meu-processo-metrics';
 
 // =============================================================================
 // CONFIGURAÇÃO
@@ -108,8 +114,10 @@ function validarCPF(cpf: string): boolean {
 // =============================================================================
 
 export async function POST(request: NextRequest) {
-  const startTime = Date.now();
-  let apiUsed: 'sinesys' | 'n8n' | 'fallback' = USE_SINESYS_API ? 'sinesys' : 'n8n';
+  const timer = new Timer();
+  const logger = new MeuProcessoLogger();
+  let apiUsed: APISource = USE_SINESYS_API ? 'sinesys' : 'n8n';
+  let cpf = '';
 
   try {
     // Verificar autenticação
@@ -134,7 +142,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { cpf } = body;
+    const { cpf: requestCpf } = body;
+    cpf = requestCpf;
 
     // Validações
     if (!cpf) {
@@ -151,7 +160,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(`[Meu Processo] Buscando dados para CPF: ${cpf.replace(/\d(?=\d{4})/g, '*')} via ${USE_SINESYS_API ? 'Sinesys API' : 'N8N Webhook'}`);
+    logger.logRequest(cpf, apiUsed, `Iniciando busca de dados via ${USE_SINESYS_API ? 'Sinesys API' : 'N8N Webhook'}`);
 
     let dadosLegacy;
 
@@ -166,7 +175,7 @@ export async function POST(request: NextRequest) {
           try {
             acordos = await sinesysClient.buscarAcordosDoCliente(cpf);
           } catch (error) {
-            console.warn('[Meu Processo] Erro ao buscar acordos:', error);
+            logger.warn('Erro ao buscar acordos, continuando sem eles', { error });
             acordos = { success: false, error: 'Acordos não disponíveis' };
           }
         }
@@ -178,14 +187,14 @@ export async function POST(request: NextRequest) {
         });
 
       } catch (error) {
-        console.error('[Meu Processo] Erro na API Sinesys, tentando fallback N8N:', error);
+        logger.error(`Erro na API Sinesys, tentando fallback N8N`, { error });
         
         // Fallback para N8N
         try {
           apiUsed = 'fallback';
           dadosLegacy = await buscarDadosN8N(cpf);
         } catch (n8nError) {
-          console.error('[Meu Processo] Fallback N8N também falhou:', n8nError);
+          logger.error('Fallback N8N também falhou', { n8nError });
           throw error; // Retornar erro original da API Sinesys
         }
       }
@@ -194,8 +203,28 @@ export async function POST(request: NextRequest) {
       dadosLegacy = await buscarDadosN8N(cpf);
     }
 
-    const elapsedTime = Date.now() - startTime;
-    console.log(`[Meu Processo] Dados encontrados via ${apiUsed} em ${elapsedTime}ms - Processos: ${dadosLegacy.processos.length}, Audiências: ${dadosLegacy.audiencias.length}`);
+    const elapsedTime = timer.stop();
+    
+    // Registrar métricas de sucesso
+    recordRequestMetrics({
+      cpf_masked: cpf.replace(/\d(?=\d{4})/g, '*'),
+      api_source: apiUsed,
+      duration_ms: elapsedTime,
+      success: true,
+      data_counts: {
+        processos: dadosLegacy.processos?.length || 0,
+        audiencias: dadosLegacy.audiencias?.length || 0,
+        contratos: Array.isArray(dadosLegacy.contratos) ? dadosLegacy.contratos.length : 0,
+        acordos: dadosLegacy.acordos_condenacoes?.length || 0,
+      },
+    });
+
+    logger.info(`Dados encontrados com sucesso`, {
+      api_source: apiUsed,
+      duration_ms: elapsedTime,
+      processos: dadosLegacy.processos?.length || 0,
+      audiencias: dadosLegacy.audiencias?.length || 0,
+    });
 
     return NextResponse.json(dadosLegacy, {
       headers: {
@@ -206,8 +235,30 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    const elapsedTime = Date.now() - startTime;
-    console.error(`[Meu Processo] Erro após ${elapsedTime}ms:`, error);
+    const elapsedTime = timer.stop();
+    
+    // Determinar tipo de erro
+    let errorType = 'unknown_error';
+    if (error instanceof SinesysAPIError) {
+      errorType = error.code || 'sinesys_api_error';
+    } else if ((error as Error).message?.includes('Webhook N8N')) {
+      errorType = 'n8n_webhook_error';
+    }
+
+    // Registrar métricas de erro
+    recordRequestMetrics({
+      cpf_masked: cpf ? cpf.replace(/\d(?=\d{4})/g, '*') : 'unknown',
+      api_source: apiUsed,
+      duration_ms: elapsedTime,
+      success: false,
+      error_type: errorType,
+      error_message: (error as Error).message,
+    });
+
+    logger.logError(error as Error, {
+      api_source: apiUsed,
+      duration_ms: elapsedTime,
+    });
 
     // Tratamento de erros específicos
     if (error instanceof SinesysAPIError) {
@@ -238,7 +289,7 @@ export async function POST(request: NextRequest) {
       { 
         status: 500,
         headers: {
-          'X-Response-Time': `${elapsedTime}ms`,
+          'X-Response-Time': `${timer.elapsed()}ms`,
           'X-API-Source': apiUsed,
         },
       }
