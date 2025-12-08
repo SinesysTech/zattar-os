@@ -76,8 +76,11 @@ export async function POST(
       mongoId?: string;
     }> = [];
 
-    // Recapturar cada instância sequencialmente (menos carga no PJE)
+    // Recapturar cada instância sequencialmente
+    // IMPORTANTE: Fazer isso de forma assíncrona para não travar a requisição HTTP
     for (const inst of instancias as InstanciaAcervo[]) {
+      console.log(`[recapture] Processando instância ${inst.grau} (${inst.trt})...`);
+      
       try {
         const resultado = await capturarTimeline({
           trtCodigo: inst.trt as CodigoTRT,
@@ -93,6 +96,11 @@ export async function POST(
           },
         });
 
+        console.log(`[recapture] ✅ Instância ${inst.grau} capturada:`, {
+          totalItens: resultado.totalItens,
+          totalDocumentos: resultado.totalDocumentos,
+        });
+
         resultados.push({
           instanciaId: inst.id,
           trt: inst.trt,
@@ -104,7 +112,7 @@ export async function POST(
           mongoId: resultado.mongoId,
         });
       } catch (error) {
-        console.error('[recapture-timeline] Erro na instância', inst.id, error);
+        console.error(`[recapture] ❌ Erro na instância ${inst.grau}:`, error);
         resultados.push({
           instanciaId: inst.id,
           trt: inst.trt,
@@ -117,6 +125,8 @@ export async function POST(
 
     const totalSucesso = resultados.filter(r => r.status === 'ok').length;
     const totalErro = resultados.length - totalSucesso;
+
+    console.log(`[recapture] ✅ Recaptura finalizada: ${totalSucesso} sucesso, ${totalErro} erro`);
 
     return NextResponse.json(
       {

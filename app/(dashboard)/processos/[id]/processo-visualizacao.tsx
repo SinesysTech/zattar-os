@@ -173,7 +173,12 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
 
       {/* Estado: Capturando timeline */}
       {isCapturing && (
-        <TimelineLoading message="Capturando timeline do processo... Isso pode levar alguns minutos." />
+        <TimelineLoading 
+          message={timeline === null 
+            ? "Capturando timeline de todas as instâncias do processo (1º grau, 2º grau, TST)... Isso pode levar alguns minutos." 
+            : "Capturando timeline do processo... Isso pode levar alguns minutos."
+          } 
+        />
       )}
 
       {/* Estado: Timeline vazia */}
