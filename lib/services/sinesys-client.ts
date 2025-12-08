@@ -16,6 +16,9 @@ import {
   SinesysErrorResponse,
 } from '@/lib/types/meu-processo-types';
 
+// Re-exportar SinesysAPIError para facilitar imports
+export { SinesysAPIError } from '@/lib/types/meu-processo-types';
+
 export class SinesysClient {
   private config: SinesysClientConfig;
 

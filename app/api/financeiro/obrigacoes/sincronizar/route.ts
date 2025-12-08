@@ -9,8 +9,6 @@ import {
   sincronizarParcelaParaFinanceiro,
   sincronizarAcordoCompleto,
   sincronizarAcordosEmLote,
-  verificarConsistencia,
-  reverterSincronizacao,
 } from '@/backend/financeiro/obrigacoes/services/integracao/obrigacoes-integracao.service';
 
 /**

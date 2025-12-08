@@ -8,6 +8,8 @@ interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
+import type { OrcamentoItemComDetalhes } from '@/backend/types/financeiro/orcamento.types';
+
 export async function GET(request: NextRequest, { params }: RouteParams) {
   const authOrError = await requirePermission(request, 'orcamentos', 'exportar');
   if (authOrError instanceof NextResponse) {
@@ -25,7 +27,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
   if (formato === 'csv' || formato === 'excel') {
     const cabecalhos = ['Conta Contábil', 'Centro de Custo', 'Mês', 'Valor Orçado', 'Observações'];
-    const linhas = (orcamento.itens || []).map((item: any) => [
+    const linhas = (orcamento.itens || []).map((item: OrcamentoItemComDetalhes) => [
       item.contaContabil?.nome || '',
       item.centroCusto?.nome || '-',
       item.mes ? String(item.mes) : 'Todos',

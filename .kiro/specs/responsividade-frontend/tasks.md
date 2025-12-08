@@ -77,7 +77,7 @@
 
 ## Fase 3: Componentes de Dados (Tabelas e Grids)
 
-- [-] 5. Implementar Tabelas responsivas
+- [x] 5. Implementar Tabelas responsivas
 - [x] 5.1 Criar componente ResponsiveTable
   - Implementar horizontal scroll para mobile com indicadores visíveis
   - Adicionar priorização de colunas essenciais
@@ -91,7 +91,7 @@
   - Adicionar suporte para bulk actions em mobile
   - _Requirements: 2.5, 12.4_
 
-- [ ] 5.3 Escrever property tests para Tabelas
+- [x] 5.3 Escrever property tests para Tabelas
   - **Property 5: Table horizontal scroll on mobile**
   - **Validates: Requirements 2.1**
   - **Property 6: Table column prioritization**
@@ -103,7 +103,7 @@
   - **Property 9: Mobile table actions grouped**
   - **Validates: Requirements 2.5**
 
-- [-] 6. Implementar Grids responsivos
+- [x] 6. Implementar Grids responsivos
 - [x] 6.1 Criar componente ResponsiveGrid
   - Implementar sistema de colunas adaptativo (1→2→3→4)
   - Adicionar suporte para gap responsivo
@@ -124,14 +124,22 @@
   - **Validates: Requirements 4.5**
 
 - [ ] 7. Atualizar componentes de listagem existentes
-- [ ] 7.1 Converter páginas de listagem para layout responsivo
-  - Atualizar lista de processos para usar ResponsiveTable
-  - Atualizar lista de audiências para layout card em mobile
-  - Atualizar lista de contratos para grid responsivo
-  - Implementar filtros colapsáveis para mobile
+- [ ] 7.1 Migrar páginas de listagem para ResponsiveTable
+  - Atualizar /processos para usar ResponsiveTable com layout cards em mobile
+  - Atualizar /audiencias para usar ResponsiveTable com priorização de colunas
+  - Atualizar /contratos para usar ResponsiveTable
+  - Atualizar /clientes para usar ResponsiveTable
+  - Atualizar /usuarios para usar ResponsiveTable
   - _Requirements: 12.1, 12.2, 12.3, 12.5_
 
-- [ ] 7.2 Escrever property tests para Listagens
+- [ ] 7.2 Implementar filtros responsivos nas páginas de listagem
+  - Criar componente FilterPanel colapsável para mobile
+  - Implementar Sheet/Drawer para filtros em mobile
+  - Manter filtros inline em desktop
+  - Adicionar botão de "Filtros" com badge de contagem em mobile
+  - _Requirements: 12.3_
+
+- [ ] 7.3 Escrever property tests para Listagens
   - **Property 53: List card layout on mobile**
   - **Validates: Requirements 12.1**
   - **Property 54: List item information hierarchy**
@@ -145,21 +153,30 @@
 ## Fase 4: Componentes de Formulário
 
 - [ ] 9. Implementar Formulários responsivos
-- [ ] 9.1 Criar componente ResponsiveForm
-  - Implementar stacking vertical para mobile (< 640px)
+- [ ] 9.1 Criar wrapper ResponsiveFormLayout
+  - Implementar container que aplica grid responsivo para campos
+  - Adicionar suporte para stacking vertical em mobile (< 640px)
   - Adicionar layout 2-colunas para tablet (768px-1024px)
-  - Garantir touch targets mínimos de 44x44px
   - Implementar botões full-width ou stacked em mobile
   - _Requirements: 3.1, 3.3, 3.4, 3.5_
 
-- [ ] 9.2 Atualizar componentes de input existentes
-  - Adicionar classes responsivas aos inputs de CPF, CNPJ, telefone, CEP
-  - Garantir labels flutuantes em mobile
-  - Implementar feedback visual adequado para touch
-  - Otimizar spacing para diferentes breakpoints
+- [ ] 9.2 Atualizar componentes base de formulário
+  - Garantir que Button tenha touch targets mínimos de 44x44px em mobile
+  - Atualizar Input para ter altura adequada em mobile (min-h-11)
+  - Atualizar Select para ter altura adequada em mobile
+  - Atualizar Checkbox e Radio para ter touch targets de 44x44px
+  - Adicionar classes responsivas de spacing
   - _Requirements: 3.1, 3.3_
 
-- [ ] 9.3 Escrever property tests para Formulários
+- [ ] 9.3 Migrar formulários existentes para layout responsivo
+  - Atualizar formulário de cadastro de clientes
+  - Atualizar formulário de cadastro de processos
+  - Atualizar formulário de cadastro de contratos
+  - Atualizar formulário de assinatura digital (dados pessoais)
+  - Garantir consistência em todos os formulários
+  - _Requirements: 3.1, 3.3, 3.4, 3.5_
+
+- [ ] 9.4 Escrever property tests para Formulários
   - **Property 10: Form fields stacked on mobile**
   - **Validates: Requirements 3.1**
   - **Property 11: Touch target minimum size**
@@ -169,29 +186,29 @@
   - **Property 13: Mobile form buttons layout**
   - **Validates: Requirements 3.5**
 
-- [ ] 10. Implementar Selects e Date Pickers responsivos
-- [ ] 10.1 Criar componentes touch-optimized
-  - Implementar date picker com interface touch-optimized para mobile
-  - Criar select com bottom sheet/full-screen em mobile
-  - Implementar combobox com interface de busca mobile-optimized
-  - Garantir touch targets de 44x44px para opções
-  - Adicionar feedback visual claro para interações
-  - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
+- [ ] 10. Otimizar Selects e Date Pickers para mobile
+- [ ] 10.1 Atualizar DatePicker para mobile
+  - Verificar se react-day-picker já é touch-friendly
+  - Aumentar tamanho dos botões de navegação em mobile
+  - Garantir que células do calendário tenham 44x44px em mobile
+  - Adicionar feedback visual claro para seleção
+  - _Requirements: 7.1, 7.3, 7.5_
 
-- [ ] 10.2 Escrever property tests para Selects e Date Pickers
+- [ ] 10.2 Atualizar Select e Combobox para mobile
+  - Verificar se Radix Select já usa Sheet em mobile
+  - Garantir que opções tenham altura mínima de 44px
+  - Adicionar scroll suave para listas longas
+  - Implementar busca otimizada em Combobox para mobile
+  - _Requirements: 7.2, 7.3, 7.4, 7.5_
+
+- [ ] 10.3 Escrever property tests para Selects e Date Pickers
   - **Property 29: Touch-optimized date picker**
   - **Validates: Requirements 7.1**
   - **Property 30: Mobile select interface**
   - **Validates: Requirements 7.2**
   - **Property 31: Select option touch targets**
   - **Validates: Requirements 7.3**
-  - **Property 32: Mobile combobox interface**
-  - **Validates: Requirements 7.4**
-
-- [ ] 11. Atualizar formulários existentes
-- [ ] 11.1 Migrar formulários para layout responsivo
-  - Atualizar formulário de dados pessoais (assinatura digital)
-  - Atualizar formulários de cadastro (clientes, processos, etc)
+  - **Propert formulários de cadastro (clientes, processos, etc)
   - Atualizar formulários de filtros em páginas de listagem
   - Garantir consistência em todos os formulários
   - _Requirements: 3.1, 3.3, 3.4, 3.5_
