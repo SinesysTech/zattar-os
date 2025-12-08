@@ -20,7 +20,7 @@ import type {
 } from "@/components/interfaces";
 import { EventBullet } from "@/components/event-bullet";
 import { MonthEventBadge } from "@/components/month-event-badge";
-import { AddEditEventDialog } from "../../dialogs/add-edit-event-dialog";
+import { AddEditEventDialog } from "@/components/add-edit-event-dialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 

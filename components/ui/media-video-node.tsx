@@ -97,12 +97,13 @@ export const VideoElement = withHOC(
               )}
 
               {isUpload && isEditorMounted && (
-                <div ref={handleRef}>
+                <div ref={handleRef} className="aspect-video w-full">
                   <ReactPlayer
                     height="100%"
                     src={unsafeUrl}
                     width="100%"
                     controls
+                    className="rounded-sm"
                   />
                 </div>
               )}
