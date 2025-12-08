@@ -20,7 +20,6 @@
       "Export as Markdown"
     ],
     "traycer.outputLevel": "trace",
-    "traycer.languagePreference": "Português",
-    "typescript.autoClosingTags": false
+    "traycer.languagePreference": "Português"
   }
 }
