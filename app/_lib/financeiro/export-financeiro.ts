@@ -61,11 +61,13 @@ export function gerarCSV(cabecalhos: string[], linhas: (string | number | null |
 // PDF base
 // ============================================================================
 
+import { PDFDocument, StandardFonts, rgb, PDFFont, PDFPage } from 'pdf-lib';
+
 interface PDFBase {
   pdfDoc: PDFDocument;
-  page: any;
-  font: any;
-  boldFont: any;
+  page: PDFPage;
+  font: PDFFont;
+  boldFont: PDFFont;
   pageWidth: number;
   pageHeight: number;
   margin: number;

@@ -45,7 +45,6 @@ import type {
 
 interface IntegracaoFinanceiraSectionProps {
   acordoId: number;
-  acordoDirecao: 'recebimento' | 'pagamento';
   onSyncComplete?: () => void;
 }
 
@@ -62,7 +61,6 @@ interface StatusSincronizacao {
 
 export function IntegracaoFinanceiraSection({
   acordoId,
-  acordoDirecao,
   onSyncComplete,
 }: IntegracaoFinanceiraSectionProps) {
   const [isLoading, setIsLoading] = React.useState(true);

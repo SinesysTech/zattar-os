@@ -115,7 +115,6 @@ const getLucroBadgeTone = (valor: number): BadgeTone => {
 function PeriodoSelector({
   dataInicio,
   dataFim,
-  tipo,
   onChange,
 }: {
   dataInicio: string;
@@ -213,7 +212,6 @@ function ResumoCards({
   resumo,
   variacoes,
   variacoesOrcado,
-  orcado,
   isLoading,
 }: {
   resumo: ResumoDRE | null;
@@ -455,7 +453,6 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
 
 function CategoriaPieChart({
   categorias,
-  titulo,
 }: {
   categorias: CategoriaDRE[];
   titulo: string;

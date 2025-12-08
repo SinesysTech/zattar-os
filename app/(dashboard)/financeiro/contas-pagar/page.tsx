@@ -55,7 +55,6 @@ import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
   ContaPagarComDetalhes,
-  ContasPagarFilters,
   StatusContaPagar,
 } from '@/backend/types/financeiro/contas-pagar.types';
 

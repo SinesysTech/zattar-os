@@ -22,7 +22,6 @@ import {
   criarItemOrcamento,
   atualizarItemOrcamento,
 } from '@/app/_lib/hooks/use-orcamentos';
-import { usePlanoContasHierarquiaAchatada } from '@/app/_lib/hooks/use-plano-contas-hierarquia';
 import { PlanoContaSelect } from '@/app/(dashboard)/financeiro/plano-contas/components/plano-conta-select';
 import type {
   OrcamentoItemComDetalhes,

@@ -8,9 +8,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type {
   DRE,
   ResumoDRE,
-  ComparativoDRE,
   EvolucaoDRE,
-  CategoriaDRE,
   PeriodoDRE,
   VariacoesDRE,
 } from '@/backend/types/financeiro/dre.types';

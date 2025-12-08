@@ -21,7 +21,7 @@ export function exportarContasReceberCSV(contas: ContaReceberComDetalhes[]): voi
   const cabecalhos = ['Descrição', 'Cliente', 'Vencimento', 'Valor', 'Status'];
   const linhas = contas.map((conta) => [
     conta.descricao,
-    (conta as any).cliente?.nome || (conta as any).clienteNome || '',
+    (conta.cliente?.nomeFantasia || conta.cliente?.razaoSocial) || '',
     conta.dataVencimento ? formatarData(conta.dataVencimento) : '-',
     conta.valor,
     conta.status,
@@ -71,7 +71,7 @@ export async function exportarContasReceberPDF(
       y = base.pageHeight - margin;
     }
 
-    page.drawText((conta as any).cliente?.nome || (conta as any).clienteNome || '-', {
+    page.drawText((conta.cliente?.nomeFantasia || conta.cliente?.razaoSocial) || '-', {
       x: colX[0],
       y,
       size: 9,

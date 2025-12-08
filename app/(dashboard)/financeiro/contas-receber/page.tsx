@@ -62,7 +62,6 @@ import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
   ContaReceberComDetalhes,
-  ContasReceberFilters,
   StatusContaReceber,
 } from '@/backend/types/financeiro/contas-receber.types';
 

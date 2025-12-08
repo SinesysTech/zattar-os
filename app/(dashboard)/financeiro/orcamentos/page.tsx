@@ -62,7 +62,6 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type {
   OrcamentoComDetalhes,
   StatusOrcamento,
-  OrcamentosFilters,
 } from '@/backend/types/financeiro/orcamento.types';
 import {
   exportarOrcamentoCSV,

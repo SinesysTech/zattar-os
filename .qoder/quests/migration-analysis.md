@@ -44,15 +44,16 @@ O aplicativo Meu Processo atualmente consome dados através de um webhook N8N qu
 - Migração do endpoint de consulta por CPF
 - Substituição de chamadas ao webhook N8N por chamadas à API Sinesys
 - Implementação de camada de abstração para APIs
-- Transformação de dados para manter compatibilidade com UI existente
+- **Atualização completa de schemas TypeScript para estrutura nativa do Sinesys**
+- **Refatoração de componentes UI para consumir dados no formato Sinesys**
+- **Eliminação de toda lógica de transformação e mapeamento legacy**
 - Estratégia de cache e otimização de performance
 - Testes de integração e validação
 
 **Excluído:**
-- Modificações na UI/UX do aplicativo cliente
 - Migração de dados históricos (responsabilidade do Sinesys)
 - Alterações no sistema de autenticação de usuários finais
-- Implementação de novas funcionalidades
+- Implementação de novas funcionalidades além da modernização
 
 ---
 
@@ -106,18 +107,21 @@ Implementar fluxo de resolução de identificadores em duas etapas:
 - Isolado na camada de serviço
 - Permite cache de mapeamentos CPF → ID
 
-### Gap 4: Estrutura de Timeline
+### Gap 4: Atualização de Schemas e Componentes
 
-**Problema:** Estrutura de timeline pode diferir entre N8N e Sinesys.
+**Problema:** App cliente usa estrutura de dados legacy do N8N, diferente da estrutura nativa do Sinesys.
 
 **Decisão Arquitetural:**
 
-Criar transformadores específicos que normalizam a estrutura de timeline do Sinesys para o formato esperado pelo aplicativo cliente.
+**Modernizar completamente o aplicativo** para consumir dados nativamente no formato Sinesys, eliminando toda camada de transformação e mapeamento legacy.
 
 **Justificativa:**
-- Evita alterações na UI
-- Centraliza lógica de transformação
-- Facilita adaptação a mudanças futuras na API
+- Elimina complexidade e overhead de transformações
+- Reduz pontos de falha e bugs de mapeamento
+- Melhora performance (sem processamento de conversão)
+- Alinha app cliente com arquitetura nativa do Sinesys
+- Facilita manutenção futura (uma única fonte de verdade)
+- Permite aproveitar melhorias futuras da API automaticamente
 
 ### Gap 5: Sincronização Assíncrona de Timeline
 
@@ -204,7 +208,7 @@ graph TB
 **Responsabilidades:**
 - Orquestração de chamadas à API Sinesys
 - Agregação de dados de múltiplos endpoints
-- Transformação de dados para formato legacy
+- **Retorno direto dos dados no formato Sinesys (sem transformações)**
 - Gestão de autenticação (Service API Key)
 - Cache de respostas
 - Tratamento de erros
@@ -216,7 +220,6 @@ graph TB
 | **API Route Handler** | Endpoint /api/consulta que recebe CPF |
 | **SinesysClient** | Cliente HTTP para comunicação com Sinesys |
 | **DataAggregator** | Orquestra múltiplas chamadas e agrega resultados |
-| **DataTransformers** | Converte formato Sinesys para formato legacy |
 | **CacheManager** | Gerencia cache de respostas (opcional) |
 | **ErrorHandler** | Tratamento centralizado de erros |
 
@@ -324,7 +327,7 @@ Criar documento de mapeamento campo a campo:
 
 ---
 
-### Fase 2: Desenvolvimento da Camada de Serviço (5 dias)
+### Fase 2: Desenvolvimento da Camada de Serviço (3 dias)
 
 #### Objetivos
 - Criar cliente HTTP para Sinesys
@@ -354,7 +357,7 @@ Responsabilidades:
 - Coordenar múltiplas chamadas à API Sinesys
 - Executar chamadas em paralelo quando possível
 - Resolver dependências entre chamadas (CPF → clienteId → contratos)
-- Consolidar resultados
+- **Consolidar resultados mantendo formato nativo do Sinesys**
 
 Fluxo de Agregação:
 
@@ -377,41 +380,16 @@ graph TD
     H --> K
     J --> K
     
-    K --> L[Retornar Dados Consolidados]
+    K --> L[Retornar Dados Nativos Sinesys]
 ```
 
 Otimizações:
 - Chamadas paralelas sempre que possível
 - Cache de mapeamentos CPF → clienteId
 - Evitar chamadas redundantes
+- **Sem camada de transformação - dados passados diretamente**
 
-**2.3 Data Transformers - Transformação**
-
-Responsabilidades:
-- Converter formato Sinesys para formato legacy N8N
-- Normalizar estruturas de dados
-- Aplicar formatações (datas, valores monetários)
-- Preencher valores padrão para campos ausentes
-
-Transformadores por Entidade:
-
-| Transformador | Entrada | Saída |
-|---------------|---------|-------|
-| `ProcessoTransformer` | `ProcessoSinesys[]` | `ProcessoItem[]` |
-| `AudienciaTransformer` | `AudienciaSinesys[]` | `Audiencia[]` |
-| `ContratoTransformer` | `ContratoSinesys[]` | `Contrato[]` |
-| `PagamentoTransformer` | `AcordoSinesys[]` | `Pagamento[]` |
-
-Estratégias para Campos Ausentes:
-
-| Situação | Estratégia |
-|----------|-----------|
-| Campo não existe no Sinesys | Usar valor padrão (null, "", 0) |
-| Campo existe com nome diferente | Mapear corretamente |
-| Campo calculado no N8N | Replicar cálculo no transformador |
-| Campo descontinuado | Omitir ou deprecar na UI |
-
-**2.4 Error Handler - Gestão de Erros**
+**2.3 Error Handler - Gestão de Erros**
 
 Categorias de Erro:
 
@@ -426,74 +404,88 @@ Categorias de Erro:
 #### Entregáveis
 - [ ] SinesysClient implementado e testado
 - [ ] DataAggregator com orquestração de chamadas
-- [ ] Transformadores para todas as entidades
 - [ ] ErrorHandler com tratamento robusto
 - [ ] Testes unitários com cobertura > 80%
 
 ---
 
-### Fase 3: Integração com API Route (2 dias)
+### Fase 3: Atualização de Schemas TypeScript (3 dias)
 
 #### Objetivos
-- Atualizar endpoint /api/consulta
-- Implementar feature flag
-- Integrar camada de serviço
-- Adicionar logging e métricas
+- **Substituir schemas legacy por schemas nativos do Sinesys**
+- **Atualizar tipos TypeScript em todo o projeto**
+- **Garantir type-safety completo**
+- Documentar novos contratos de dados
 
 #### Atividades
 
-**3.1 Atualização do API Route**
+**3.1 Criação de Schemas Nativos Sinesys**
 
-Fluxo do Endpoint:
+Arquivos a criar/atualizar:
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant APIRoute as /api/consulta
-    participant FeatureFlag
-    participant Aggregator
-    participant Sinesys
-    participant N8N as Webhook N8N (Fallback)
-    
-    Client->>APIRoute: POST {cpf: "12345678901"}
-    APIRoute->>APIRoute: Validar CPF
-    APIRoute->>FeatureFlag: Verificar USE_SINESYS_API
-    
-    alt Sinesys Ativo
-        FeatureFlag->>Aggregator: buscarDadosClientePorCpf(cpf)
-        Aggregator->>Sinesys: Chamadas paralelas
-        Sinesys-->>Aggregator: Dados
-        Aggregator->>Aggregator: Transformar dados
-        Aggregator-->>APIRoute: Dados formato legacy
-    else N8N Ativo
-        FeatureFlag->>N8N: POST webhook
-        N8N-->>APIRoute: Dados
-    end
-    
-    APIRoute->>APIRoute: Log resposta
-    APIRoute-->>Client: JSON response
+| Arquivo | Propósito |
+|---------|----------|
+| `types/sinesys/processos.ts` | Tipos para processos e timeline |
+| `types/sinesys/audiencias.ts` | Tipos para audiências |
+| `types/sinesys/contratos.ts` | Tipos para contratos |
+| `types/sinesys/acordos.ts` | Tipos para acordos e condenações |
+| `types/sinesys/cliente.ts` | Tipos para dados do cliente |
+| `types/sinesys/common.ts` | Tipos compartilhados |
+| `types/sinesys/index.ts` | Barrel export |
+
+Estratégia:
+- **Espelhar exatamente a estrutura de resposta das APIs Sinesys**
+- Usar tipos do TypeScript 5+ (satisfies, const assertions)
+- Documentar cada campo com JSDoc
+- Criar tipos de união para estados (status, modalidade, etc.)
+- Validar com Zod ou similar para runtime safety
+
+**3.2 Remoção de Tipos Legacy**
+
+Arquivos a remover/deprecar:
+
+| Arquivo Legacy | Ação |
+|----------------|------|
+| `types/legal.ts` | Marcar como deprecated |
+| Interfaces N8N (Contrato, Audiencia, etc.) | Remover após migração |
+| Tipos de resposta webhook | Remover completamente |
+
+**3.3 Atualização de Imports**
+
+Substituir em todo o projeto:
+
+```typescript
+// Antes (Legacy)
+import { Contrato, Audiencia, ProcessoItem } from '@/types/legal'
+
+// Depois (Sinesys Nativo)
+import { Contrato, Audiencia, Processo } from '@/types/sinesys'
 ```
 
-Responsabilidades:
-- Validar entrada (CPF)
-- Verificar feature flag
-- Delegar para Aggregator ou N8N
-- Tratar erros e retornar respostas apropriadas
-- Logging de requisições
+**3.4 Validação de Tipos**
 
-**3.2 Implementação de Feature Flag**
+Implementar validação runtime com Zod:
 
-Estratégia de Ativação:
+```typescript
+// Schema Zod para validar respostas da API
+import { z } from 'zod'
 
-| Fase | Configuração | Objetivo |
-|------|--------------|----------|
-| **Desenvolvimento** | `USE_SINESYS=false` | Manter N8N enquanto desenvolve |
-| **Testes Locais** | `USE_SINESYS=true` | Testar integração Sinesys |
-| **Staging** | `USE_SINESYS=true` | Validação completa |
-| **Produção - Canary** | `USE_SINESYS=true` (10% tráfego) | Testes em produção |
-| **Produção - Full** | `USE_SINESYS=true` (100% tráfego) | Migração completa |
+export const ProcessoSinesysSchema = z.object({
+  numero: z.string(),
+  tipo: z.string(),
+  papel_cliente: z.enum(['Reclamante', 'Reclamado', 'Autor', 'Réu']),
+  // ... outros campos
+})
 
-**3.3 Logging e Observabilidade**
+export type ProcessoSinesys = z.infer<typeof ProcessoSinesysSchema>
+```
+
+Benefícios:
+- Type-safety em runtime
+- Detecção precoce de mudanças na API
+- Documentação viva dos contratos
+
+**3.5 Logging e Observabilidade**
 
 Métricas a Coletar:
 
@@ -514,24 +506,126 @@ Logs Estruturados:
 - Decisões de feature flag
 
 #### Entregáveis
-- [ ] API Route atualizado com feature flag
-- [ ] Integração completa com DataAggregator
-- [ ] Logging estruturado implementado
-- [ ] Métricas coletadas
-- [ ] Testes de integração end-to-end
+- [ ] Schemas TypeScript completos para todas as entidades Sinesys
+- [ ] Validação Zod implementada
+- [ ] Tipos legacy removidos/deprecated
+- [ ] Imports atualizados em todo o projeto
+- [ ] Documentação JSDoc completa
 
 ---
 
-### Fase 4: Otimização e Cache (2 dias)
+### Fase 4: Refatoração de Componentes UI (5 dias)
 
 #### Objetivos
-- Implementar estratégia de cache
-- Otimizar performance de chamadas
-- Reduzir latência percebida
+- **Refatorar todos os componentes React para consumir dados Sinesys nativos**
+- **Atualizar lógica de renderização e formatação**
+- **Remover código de adaptação legacy**
+- Melhorar experiência do usuário com novos dados disponíveis
 
 #### Atividades
 
-**4.1 Estratégia de Cache**
+**4.1 Componentes de Processos**
+
+Arquivos a refatorar:
+
+| Componente | Alterações Necessárias |
+|------------|------------------------|
+| `app/dashboard/processos/page.tsx` | Consumir `ProcessoSinesys[]` ao invés de `ProcessoItem[]` |
+| `components/processo-card.tsx` | Atualizar campos exibidos (novo schema) |
+| `components/timeline-view.tsx` | Usar estrutura de timeline nativa do Sinesys |
+| `components/instancia-info.tsx` | Adaptar para `primeiro_grau`, `segundo_grau` |
+
+Mudanças principais:
+- Campo `parteAutora` → `partes.polo_ativo`
+- Campo `parteRe` → `partes.polo_passivo`
+- Campo `jurisdicaoEstado` → extrair de `tribunal`
+- Timeline já vem estruturada (não precisa agrupar)
+
+**4.2 Componentes de Audiências**
+
+Arquivos a refatorar:
+
+| Componente | Alterações Necessárias |
+|------------|------------------------|
+| `app/dashboard/audiencias/page.tsx` | Consumir `AudienciaSinesys[]` |
+| `components/audiencia-card.tsx` | Atualizar campos de local (estrutura nova) |
+| `components/calendario-audiencias.tsx` | Usar `data` + `horario` ao invés de `data_hora` |
+
+Mudanças principais:
+- Campo `data_hora` → `data` + `horario` (separados)
+- Campo `local_link` → `local.url_virtual` (objeto aninhado)
+- Novo campo `local.tipo` para determinar renderização
+- Campo `orgao_julgador` → `vara`
+
+**4.3 Componentes de Contratos**
+
+Arquivos a refatorar:
+
+| Componente | Alterações Necessárias |
+|------------|------------------------|
+| `app/dashboard/contratos/page.tsx` | Consumir `ContratoSinesys[]` |
+| `components/contrato-card.tsx` | Atualizar campos disponíveis |
+
+Mudanças principais:
+- Verificar disponibilidade de campos `data_admissao`, `data_rescisao`
+- Adaptar ou remover campos não disponíveis no Sinesys
+- Usar `data_assinatura` ao invés de `data_assinou_contrato`
+
+**4.4 Componentes de Acordos/Pagamentos**
+
+Arquivos a refatorar:
+
+| Componente | Alterações Necessárias |
+|------------|------------------------|
+| `app/dashboard/pagamentos/page.tsx` | Consumir `AcordoSinesys[]` |
+| `components/acordo-card.tsx` | Renderizar array de parcelas |
+| `components/parcela-item.tsx` | Usar estrutura de parcela nativa |
+
+Mudanças principais:
+- **Estrutura de parcelas:** Array aninhado ao invés de objetos flat
+- Iterar sobre `acordo.parcelas[]` para renderizar cada parcela
+- Campo `repassado_cliente` ('Y'/'N') → `parcela.repasse.concluido` (boolean)
+- Valores numéricos ao invés de strings
+
+**4.5 Utilitários de Formatação**
+
+Criar/atualizar utilitários:
+
+| Função | Propósito |
+|--------|----------|
+| `formatarData(date: string)` | Converter ISO para DD/MM/YYYY |
+| `formatarDataHora(data: string, hora: string)` | Combinar em formato legível |
+| `formatarMoeda(valor: number)` | Converter número para R$ X.XXX,XX |
+| `extrairEstado(tribunal: string)` | Regex para extrair UF |
+| `extrairMunicipio(vara: string)` | Regex para extrair cidade |
+| `formatarModalidade(local: Local)` | Determinar texto de exibição |
+
+**4.6 Context e Estado**
+
+Atualizar `DashboardContext.tsx`:
+
+```typescript
+// Antes (Legacy)
+interface DashboardState {
+  contratos: Contrato[] | string
+  acordos_condenacoes: Pagamento[]
+  audiencias: Audiencia[]
+  processos: ProcessoItem[]
+}
+
+// Depois (Sinesys Nativo)
+interface DashboardState {
+  cliente: ClienteSinesys | null
+  processos: ProcessoSinesys[]
+  audiencias: AudienciaSinesys[]
+  contratos: ContratoSinesys[]
+  acordos: AcordoSinesys[]
+  loading: boolean
+  error: string | null
+}
+```
+
+**4.7 Estratégia de Cache**
 
 Níveis de Cache:
 
@@ -592,33 +686,125 @@ Estratégia:
 - Fallback: retornar dados sem timeline com mensagem clara
 
 #### Entregáveis
+- [ ] Todos os componentes refatorados para schemas Sinesys
+- [ ] Utilitários de formatação implementados
+- [ ] DashboardContext atualizado
+- [ ] UI renderizando corretamente com novos dados
+- [ ] Código legacy removido
 - [ ] Cache em localStorage mantido/otimizado
-- [ ] Cache servidor implementado (Redis opcional)
-- [ ] Otimizações de chamadas paralelas
 - [ ] Polling de timeline implementado
-- [ ] Testes de performance com métricas
 
 ---
 
-### Fase 5: Testes e Validação (4 dias)
+### Fase 5: Integração com API Route (2 dias)
 
 #### Objetivos
-- Garantir qualidade da implementação
-- Validar compatibilidade com UI existente
-- Testar cenários de erro
-- Validar performance
+- Atualizar endpoint /api/consulta
+- Implementar feature flag
+- Integrar camada de serviço
+- Adicionar logging e métricas
 
 #### Atividades
 
-**5.1 Testes Unitários**
+**5.1 Atualização do API Route**
+
+Fluxo do Endpoint:
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant APIRoute as /api/consulta
+    participant FeatureFlag
+    participant Aggregator
+    participant Sinesys
+    participant N8N as Webhook N8N (Fallback)
+    
+    Client->>APIRoute: POST {cpf: "12345678901"}
+    APIRoute->>APIRoute: Validar CPF
+    APIRoute->>FeatureFlag: Verificar USE_SINESYS_API
+    
+    alt Sinesys Ativo
+        FeatureFlag->>Aggregator: buscarDadosClientePorCpf(cpf)
+        Aggregator->>Sinesys: Chamadas paralelas
+        Sinesys-->>Aggregator: Dados nativos
+        Aggregator-->>APIRoute: Dados formato Sinesys
+    else N8N Ativo
+        FeatureFlag->>N8N: POST webhook
+        N8N-->>APIRoute: Dados legacy
+    end
+    
+    APIRoute->>APIRoute: Log resposta
+    APIRoute-->>Client: JSON response
+```
+
+Responsabilidades:
+- Validar entrada (CPF)
+- Verificar feature flag
+- Delegar para Aggregator ou N8N
+- **Retornar dados no formato apropriado (Sinesys ou legacy)**
+- Tratar erros e retornar respostas apropriadas
+- Logging de requisições
+
+**5.2 Implementação de Feature Flag**
+
+Estratégia de Ativação:
+
+| Fase | Configuração | Objetivo |
+|------|--------------|----------|
+| **Desenvolvimento** | `USE_SINESYS=false` | Manter N8N enquanto desenvolve |
+| **Testes Locais** | `USE_SINESYS=true` | Testar integração Sinesys |
+| **Staging** | `USE_SINESYS=true` | Validação completa |
+| **Produção - Canary** | `USE_SINESYS=true` (10% tráfego) | Testes em produção |
+| **Produção - Full** | `USE_SINESYS=true` (100% tráfego) | Migração completa |
+
+**5.3 Logging e Observabilidade**
+
+Métricas a Coletar:
+
+| Métrica | Descrição | Uso |
+|---------|-----------|-----|
+| `consulta_duration_ms` | Tempo total de resposta | Monitorar performance |
+| `consulta_source` | Origem dos dados (sinesys/n8n) | A/B testing |
+| `api_call_count` | Número de chamadas ao Sinesys | Otimização |
+| `error_rate` | Taxa de erros por tipo | Detecção de problemas |
+| `cache_hit_rate` | Taxa de acerto de cache | Eficiência |
+
+Logs Estruturados:
+
+- Request ID único para rastreamento
+- CPF sanitizado (apenas 3 primeiros dígitos para LGPD)
+- Tempo de cada chamada à API
+- Erros com stack trace completo
+- Decisões de feature flag
+
+#### Entregáveis
+- [ ] API Route atualizado com feature flag
+- [ ] Integração completa com DataAggregator
+- [ ] Logging estruturado implementado
+- [ ] Métricas coletadas
+- [ ] Testes de integração end-to-end
+
+---
+
+### Fase 6: Testes e Validação (4 dias)
+
+#### Objetivos
+- Garantir qualidade da implementação
+- Validar nova UI com dados Sinesys
+- Testar cenários de erro
+- Validar performance
+
+**6.1 Testes Unitários**
 
 Cobertura por Componente:
 
 | Componente | Cenários de Teste | Meta Cobertura |
 |------------|-------------------|----------------|
 | **SinesysClient** | Autenticação, timeout, retry, erros HTTP | > 90% |
-| **Transformadores** | Conversão correta, campos ausentes, valores nulos | > 95% |
 | **DataAggregator** | Orquestração, paralelismo, tratamento de erros | > 85% |
+| **Schemas Zod** | Validação de dados, tipos corretos | > 95% |
+| **Componentes UI** | Renderização com dados Sinesys, estados | > 80% |
+| **Utilitários** | Formatação de datas, valores, extrações | > 90% |
 | **API Route** | Validação de CPF, feature flag, responses | > 90% |
 
 Ferramentas:
@@ -626,7 +812,7 @@ Ferramentas:
 - Mock de APIs Sinesys com MSW (Mock Service Worker)
 - Fixtures com dados reais sanitizados
 
-**5.2 Testes de Integração**
+**6.2 Testes de Integração**
 
 Cenários Críticos:
 
@@ -641,18 +827,21 @@ Cenários Críticos:
 | **Feature flag N8N** | Chamada correta ao webhook |
 | **Feature flag Sinesys** | Chamadas corretas à API |
 
-**5.3 Testes de Compatibilidade**
+**6.3 Testes de UI com Dados Sinesys**
 
-Validar que UI existente funciona sem alterações:
+Validar que UI refatorada funciona corretamente:
 
-- Processos renderizam corretamente
-- Audiências exibem todas as informações
-- Contratos listados adequadamente
-- Acordos/parcelas calculados corretamente
+- Processos renderizam com nova estrutura de dados
+- Timeline exibe corretamente (estrutura nativa Sinesys)
+- Audiências mostram local correto (presencial/virtual/híbrido)
+- Contratos exibem campos disponíveis
+- Acordos renderizam parcelas como array aninhado
+- Formatação de datas e valores está correta
 - Estados de loading funcionam
 - Mensagens de erro são exibidas
+- Sincronização de timeline funciona com polling
 
-**5.4 Testes de Performance**
+**6.4 Testes de Performance**
 
 Métricas a Validar:
 
@@ -668,7 +857,7 @@ Ferramentas:
 - Lighthouse para métricas de frontend
 - APM (Application Performance Monitoring) se disponível
 
-**5.5 Testes Manuais (QA)**
+**6.5 Testes Manuais (QA)**
 
 Checklist de Validação:
 
@@ -690,13 +879,13 @@ Checklist de Validação:
 #### Entregáveis
 - [ ] Suite de testes unitários com > 85% cobertura
 - [ ] Testes de integração para cenários críticos
-- [ ] Testes de compatibilidade validados
+- [ ] Testes de UI com dados Sinesys validados
 - [ ] Relatório de performance com métricas
 - [ ] Checklist de QA manual completo
 
 ---
 
-### Fase 6: Deploy e Monitoramento (3 dias)
+### Fase 7: Deploy e Monitoramento (3 dias)
 
 #### Objetivos
 - Deploy gradual em produção
@@ -706,7 +895,7 @@ Checklist de Validação:
 
 #### Atividades
 
-**6.1 Deploy em Staging**
+**7.1 Deploy em Staging**
 
 Checklist Pré-Deploy:
 
@@ -724,7 +913,7 @@ Validação em Staging:
 - [ ] Validação de logs e métricas
 - [ ] Aprovação de stakeholders
 
-**6.2 Deploy Gradual em Produção**
+**7.2 Deploy Gradual em Produção**
 
 Estratégia Canary:
 
@@ -739,7 +928,7 @@ Implementação:
 - Load balancer ou edge function para distribuição de tráfego
 - Capacidade de rollback instantâneo
 
-**6.3 Monitoramento Intensivo**
+**7.3 Monitoramento Intensivo**
 
 Dashboards de Monitoramento:
 
@@ -756,7 +945,7 @@ Ferramentas Sugeridas:
 - APM: New Relic, Datadog APM
 - Erros: Sentry
 
-**6.4 Validação Pós-Deploy**
+**7.4 Validação Pós-Deploy**
 
 Checklist 24h Pós-Deploy:
 
@@ -767,7 +956,7 @@ Checklist 24h Pós-Deploy:
 - [ ] Métricas de negócio estáveis
 - [ ] Cache funcionando adequadamente
 
-**6.5 Desativação do Webhook N8N**
+**7.5 Desativação do Webhook N8N**
 
 Cronograma:
 
@@ -788,126 +977,246 @@ Cronograma:
 
 ---
 
-## Transformação de Dados
+## Schemas TypeScript Nativos do Sinesys
 
-### Mapeamento de Entidades
+### Estrutura de Tipos
 
 #### Processos
 
 **Origem:** `GET /api/acervo/cliente/cpf/{cpf}`
 
-**Transformação:**
+**Schema TypeScript:**
 
-| Campo Sinesys | Campo N8N (Legacy) | Transformação |
-|---------------|-------------------|---------------|
-| `processo.numero` | `processo.numero` | Direto |
-| `processo.partes.polo_ativo` | `processo.parteAutora` | Direto |
-| `processo.partes.polo_passivo` | `processo.parteRe` | Direto |
-| `processo.tribunal` | `processo.tribunal` | Direto |
-| `processo.valor_causa` | `processo.valorDaCausa` | Converter para string |
-| `processo.tribunal` | `processo.jurisdicaoEstado` | Extrair sigla do estado |
-| `processo.vara` | `processo.jurisdicaoMunicipio` | Extrair município |
-| `processo.instancias.primeiro_grau` | `processo.instancias.primeirograu` | Transformar estrutura |
-| `processo.instancias.segundo_grau` | `processo.instancias.segundograu` | Transformar estrutura |
-| `processo.timeline` | `processo.instancias.*.movimentos` | Normalizar estrutura |
+```typescript
+// types/sinesys/processos.ts
 
-**Lógica Especial:**
+export interface ProcessoSinesys {
+  numero: string
+  tipo: string
+  papel_cliente: 'Reclamante' | 'Reclamado' | 'Autor' | 'Réu'
+  parte_contraria: string
+  tribunal: string
+  sigilo: boolean
+  valor_causa?: number
+  vara?: string
+  instancias: {
+    primeiro_grau: InstanciaSinesys | null
+    segundo_grau: InstanciaSinesys | null
+  }
+  timeline: TimelineItem[]
+  timeline_status: 'disponivel' | 'sincronizando' | 'indisponivel'
+  ultima_movimentacao?: {
+    data: string
+    evento: string
+  }
+  partes: {
+    polo_ativo: string
+    polo_passivo: string
+  }
+}
 
-- Extrair estado de string do tribunal (ex: "TRT da 3ª Região (MG)" → "MG")
-- Extrair município da vara (ex: "1ª Vara do Trabalho de Belo Horizonte" → "Belo Horizonte")
-- Converter timeline flat para estrutura agrupada se necessário
+export interface InstanciaSinesys {
+  vara: string
+  data_inicio: string
+  proxima_audiencia?: string
+}
+
+export interface TimelineItem {
+  data: string
+  evento: string
+  descricao: string
+  tem_documento: boolean
+}
+
+export interface ProcessosResponse {
+  success: boolean
+  data: {
+    cliente: {
+      nome: string
+      cpf: string
+    }
+    resumo: {
+      total_processos: number
+      com_audiencia_proxima: number
+    }
+    processos: ProcessoSinesys[]
+  }
+}
+```
+
+**Validação Zod:**
+
+```typescript
+import { z } from 'zod'
+
+export const ProcessoSinesysSchema = z.object({
+  numero: z.string(),
+  tipo: z.string(),
+  papel_cliente: z.enum(['Reclamante', 'Reclamado', 'Autor', 'Réu']),
+  parte_contraria: z.string(),
+  tribunal: z.string(),
+  sigilo: z.boolean(),
+  valor_causa: z.number().optional(),
+  vara: z.string().optional(),
+  instancias: z.object({
+    primeiro_grau: InstanciaSinesysSchema.nullable(),
+    segundo_grau: InstanciaSinesysSchema.nullable(),
+  }),
+  timeline: z.array(TimelineItemSchema),
+  timeline_status: z.enum(['disponivel', 'sincronizando', 'indisponivel']),
+  ultima_movimentacao: z.object({
+    data: z.string(),
+    evento: z.string(),
+  }).optional(),
+  partes: z.object({
+    polo_ativo: z.string(),
+    polo_passivo: z.string(),
+  }),
+})
+```
 
 #### Audiências
 
 **Origem:** `GET /api/audiencias/cliente/cpf/{cpf}`
 
-**Transformação:**
+**Schema TypeScript:**
 
-| Campo Sinesys | Campo N8N (Legacy) | Transformação |
-|---------------|-------------------|---------------|
-| `audiencia.data` | `data_hora` | Combinar data + horário |
-| `audiencia.horario` | `data_hora` | Combinar data + horário |
-| `audiencia.partes.polo_ativo` | `polo_ativo` | Direto |
-| `audiencia.partes.polo_passivo` | `polo_passivo` | Direto |
-| `audiencia.numero_processo` | `numero_processo` | Direto |
-| `audiencia.modalidade` | `modalidade` | Direto |
-| `audiencia.local.url_virtual` | `local_link` | Direto (se virtual) |
-| `audiencia.status` | `status` | Direto |
-| `audiencia.vara` | `orgao_julgador` | Direto |
-| `audiencia.tipo` | `tipo` | Direto |
-| `audiencia.local.sala` | `sala` | Direto (se presencial) |
-| `audiencia.observacoes` | `detalhes` | Direto |
-| `cliente.nome` | `cliente_nome` | Do contexto da resposta |
+```typescript
+// types/sinesys/audiencias.ts
 
-**Lógica Especial:**
+export interface AudienciaSinesys {
+  numero_processo: string
+  tipo: string
+  data: string // ISO date
+  horario: string // "14:00 - 15:00"
+  modalidade: 'Virtual' | 'Presencial' | 'Híbrida'
+  status: 'Designada' | 'Realizada' | 'Cancelada' | 'Adiada'
+  local: LocalAudiencia
+  partes: {
+    polo_ativo: string
+    polo_passivo: string
+  }
+  papel_cliente: 'Reclamante' | 'Reclamado' | 'Autor' | 'Réu'
+  parte_contraria: string
+  tribunal: string
+  vara: string
+  sigilo: boolean
+  observacoes?: string
+}
 
-- Combinar `data` e `horario` em formato esperado (ex: "15/03/2025 às 14:00")
-- Determinar `local_link` baseado em `modalidade` (virtual/presencial)
-- Campo `advogado` pode não estar disponível - usar valor padrão ou omitir
+export interface LocalAudiencia {
+  tipo: 'virtual' | 'presencial' | 'hibrido'
+  url_virtual?: string
+  endereco?: string
+  sala?: string
+  presenca_hibrida?: string
+}
+
+export interface AudienciasResponse {
+  success: boolean
+  data: {
+    cliente: {
+      nome: string
+      cpf: string
+    }
+    resumo: {
+      total_audiencias: number
+      futuras: number
+      realizadas: number
+      canceladas: number
+    }
+    audiencias: AudienciaSinesys[]
+  }
+}
+```
 
 #### Contratos
 
 **Origem:** `GET /api/contratos?clienteId={id}`
 
-**Pré-requisito:** Buscar `clienteId` via `GET /api/clientes/buscar/por-cpf/{cpf}`
+**Schema TypeScript:**
 
-**Transformação:**
+```typescript
+// types/sinesys/contratos.ts
 
-| Campo Sinesys | Campo N8N (Legacy) | Transformação |
-|---------------|-------------------|---------------|
-| `cliente.nome` | `cliente_nome` | Direto |
-| `cliente.cpf` | `cliente_cpf` | Direto |
-| `contrato.parte_contraria` | `parte_contraria` | Direto |
-| `contrato.tipo_processo` | `processo_tipo_nome` | Direto |
-| `contrato.data_assinatura` | `data_assinou_contrato` | Formatar data |
-| `contrato.processo_numero` | `numero_processo` | Direto |
+export interface ContratoSinesys {
+  id: number
+  cliente_id: number
+  cliente_nome: string
+  cliente_cpf: string
+  parte_contraria: string
+  tipo_processo: string
+  data_assinatura: string
+  processo_numero?: string
+  status: 'ativo' | 'encerrado' | 'suspenso'
+  valor_contrato?: number
+  // Campos adicionais se disponíveis
+  data_admissao?: string
+  data_rescisao?: string
+}
 
-**Campos Potencialmente Ausentes:**
-
-- `data_admissao`: Verificar se existe no schema do Sinesys
-- `data_rescisao`: Verificar se existe no schema do Sinesys
-- `estagio`: Verificar se existe ou calcular baseado em status
-- `data_estagio`: Derivado de `estagio`
-
-**Estratégia para Campos Ausentes:**
-- Se campo não existe: usar `null` ou omitir
-- Se UI depende do campo: exibir placeholder (ex: "Não informado")
-- Documentar campos descontinuados
+export interface ContratosResponse {
+  success: boolean
+  data: {
+    contratos: ContratoSinesys[]
+    total: number
+    pagina: number
+    limite: number
+  }
+}
+```
 
 #### Acordos e Condenações
 
 **Origem:** `GET /api/acordos-condenacoes?processoId={id}`
 
-**Pré-requisito:** Obter `processoId` de cada processo do cliente
+**Schema TypeScript:**
 
-**Transformação:**
+```typescript
+// types/sinesys/acordos.ts
 
-| Campo Sinesys | Campo N8N (Legacy) | Transformação |
-|---------------|-------------------|---------------|
-| `acordo.processo_id` → `processo.numero` | `numero_processo` | Resolver via lookup |
-| `acordo.partes.polo_ativo` | `parte_autora` | Do processo relacionado |
-| `acordo.partes.polo_passivo` | `parte_contraria` | Do processo relacionado |
-| `acordo.data_homologacao` | `data_homologacao` | Formatar data |
-| `acordo.tipo` | `tipo_pagamento` | Mapear valores |
-| `acordo.forma_pagamento` | `forma_pagamento` | Direto |
-| `acordo.modalidade` | `modalidade_pagamento` | Direto |
-| `acordo.valor_total` | `valor_bruto` | Converter para string |
-| `acordo.valor_liquido_total` | `valor_liquido` | Converter para string |
-| `acordo.parcelas.length` | `quantidade_parcelas` | Contar array |
-| `parcela.numero` | `parcela_numero` | Para cada parcela |
-| `parcela.data_vencimento` | `data_vencimento` | Para cada parcela |
-| `parcela.valor` | `valor_liquido_parcela` | Para cada parcela |
-| `parcela.repasse.concluido` | `repassado_cliente` | Converter boolean → 'Y'/'N' |
-| `parcela.repasse.data` | `data_repassado_cliente` | Para cada parcela |
+export interface AcordoSinesys {
+  id: number
+  processo_id: number
+  numero_processo?: string // Populado via join
+  tipo: 'acordo' | 'condenacao'
+  direcao: 'recebimento' | 'pagamento'
+  valor_total: number
+  valor_liquido_total?: number
+  data_homologacao: string
+  forma_pagamento: 'unica' | 'parcelada'
+  modalidade: 'judicial' | 'extrajudicial'
+  parcelas: ParcelaAcordo[]
+  partes: {
+    polo_ativo: string
+    polo_passivo: string
+  }
+}
 
-**Lógica Especial:**
+export interface ParcelaAcordo {
+  numero: number
+  valor: number
+  data_vencimento: string
+  status: 'pendente' | 'paga' | 'vencida'
+  repasse?: {
+    concluido: boolean
+    data?: string
+    valor?: number
+  }
+}
 
-- **Normalização de Parcelas:** N8N retorna uma linha por parcela, Sinesys retorna acordo com array de parcelas
-- Transformador deve "achatar" estrutura: 1 acordo com 3 parcelas → 3 objetos separados
-- Mapear `tipo`: "acordo" → "Acordo", "condenacao" → "Condenação"
-- Converter boolean `repasse.concluido` para 'Y'/'N'
+export interface AcordosResponse {
+  success: boolean
+  data: {
+    acordos: AcordoSinesys[]
+    total: number
+    pagina: number
+    limite: number
+  }
+}
+```
 
-### Funções Utilitárias de Transformação
+### Funções Utilitárias (Sem Transformação)
 
 #### Formatação de Datas
 
@@ -926,12 +1235,52 @@ Conversão entre formatos:
 | Number: 10000.50 | String: "10000.50" | Valores N8N |
 | Number: 10000.50 | String: "R$ 10.000,50" | Exibição UI |
 
+### Funções Utilitárias (Sem Transformação)
+
+Funções auxiliares para formatação e extração (não modificam estrutura de dados):
+
+#### Formatação de Datas
+
+```typescript
+// lib/utils/formatters.ts
+
+export function formatarData(isoDate: string): string {
+  const date = new Date(isoDate)
+  return date.toLocaleDateString('pt-BR')
+}
+
+export function formatarDataHora(data: string, horario: string): string {
+  const dataFormatada = formatarData(data)
+  return `${dataFormatada} às ${horario}`
+}
+```
+
+#### Formatação de Valores Monetários
+
+```typescript
+export function formatarMoeda(valor: number): string {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(valor)
+}
+```
+
 #### Extração de Informações Geográficas
 
-Padrões de regex para extrair dados de strings:
+```typescript
+// Extrair UF de tribunal
+export function extrairEstado(tribunal: string): string {
+  const match = tribunal.match(/\((\w{2})\)/)
+  return match ? match[1] : ''
+}
 
-- **Estado:** `TRT da 3ª Região \((\w{2})\)` → "MG"
-- **Município:** `Vara do Trabalho de (.+)` → "Belo Horizonte"
+// Extrair município de vara
+export function extrairMunicipio(vara: string): string {
+  const match = vara.match(/de (.+)$/)
+  return match ? match[1] : ''
+}
+```
 
 ---
 
@@ -966,7 +1315,7 @@ Padrões de regex para extrair dados de strings:
 
 **Implementação:**
 
-Manter lógica existente no DashboardContext, apenas garantir que formato dos dados continua compatível.
+Atualizar lógica existente no DashboardContext para armazenar dados no formato nativo Sinesys (sem transformações).
 
 #### Cache Nível 2: Servidor (Redis - Opcional)
 
@@ -1293,3 +1642,75 @@ graph LR
 ### Negócio
 
 - [ ] Usuários conseguem consultar seus processos
+- [ ] Dados exibidos são precisos e atualizados
+- [ ] Nenhuma reclamação crítica de usuários
+- [ ] Webhook N8N pode ser desativado com segurança
+
+---
+
+## Anexos
+
+### Glossário
+
+| Termo | Definição |
+|-------|-----------|
+| **N8N** | Plataforma de automação de workflows utilizada como proxy atual |
+| **Sinesys** | Sistema de gestão jurídica destino da migração |
+| **Service API Key** | Chave de autenticação para comunicação servidor-servidor |
+| **Feature Flag** | Toggle para ativar/desativar funcionalidades |
+| **Canary Deploy** | Deploy gradual em percentual do tráfego |
+| **TTL** | Time To Live - tempo de validade do cache |
+| **P50/P95** | Percentil 50 e 95 de latência |
+| **Cache-Aside** | Padrão de cache onde app verifica cache antes de buscar dados |
+
+### Referências
+
+#### Documentação Sinesys
+
+- Análise de Migração Original: `/ANALISE-MIGRACAO-MEU-PROCESSO.md`
+- Documentação de APIs: `/app/ajuda/desenvolvimento/api-referencia/page.tsx`
+- README Principal: `/README.md`
+
+#### Endpoints API Sinesys
+
+| Endpoint | Documentação |
+|----------|--------------|
+| `/api/acervo/cliente/cpf/{cpf}` | Buscar processos por CPF |
+| `/api/audiencias/cliente/cpf/{cpf}` | Buscar audiências por CPF |
+| `/api/clientes/buscar/por-cpf/{cpf}` | Buscar cliente por CPF |
+| `/api/contratos` | Listar contratos (requer clienteId) |
+| `/api/acordos-condenacoes` | Listar acordos (requer processoId) |
+
+### Riscos Identificados
+
+| Risco | Probabilidade | Impacto | Mitigação |
+|-------|---------------|---------|-----------|
+| Incompatibilidade de dados | Média | Alto | Mapeamento detalhado, testes extensivos |
+| Performance degradada | Baixa | Médio | Cache, paralelização, otimizações |
+| Erros de autenticação | Baixa | Alto | Proteção de API Key, monitoramento |
+| Timeline indisponível | Média | Médio | Polling, degradação graciosa |
+| Necessidade de rollback | Baixa | Alto | Feature flag, deploy gradual |
+
+### Cronograma Resumido
+
+| Fase | Duração | Entregável Principal |
+|------|---------|---------------------|
+| 1. Preparação | 3 dias | Ambiente configurado, schemas documentados |
+| 2. Camada de Serviço | 3 dias | SinesysClient, Aggregator |
+| 3. Schemas TypeScript | 3 dias | Tipos nativos Sinesys com Zod |
+| 4. Refatoração UI | 5 dias | Componentes usando dados nativos |
+| 5. Integração API Route | 2 dias | Endpoint migrado com feature flag |
+| 6. Testes | 4 dias | Suite completa de testes, QA aprovado |
+| 7. Deploy | 3 dias | Produção 100%, N8N desativado |
+
+**Total:** 23 dias úteis (~4-5 semanas)
+
+---
+
+**Aprovação necessária para iniciar implementação:**
+
+- [ ] Plano revisado e aprovado por stakeholders
+- [ ] Recursos alocados (desenvolvedor, QA, DevOps)
+- [ ] Credenciais obtidas (SERVICE_API_KEY)
+- [ ] Ambientes configurados
+- [ ] Priorização confirmada

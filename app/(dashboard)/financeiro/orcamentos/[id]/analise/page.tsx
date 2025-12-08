@@ -7,7 +7,6 @@
 
 import * as React from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -464,7 +463,19 @@ export default function AnaliseOrcamentariaPage() {
           resumo,
           geradoEm: new Date().toISOString(),
         };
-        exportarAnaliseCSV(orcamento, analiseData as any);
+        exportarAnaliseCSV(orcamento, analiseData as {
+          itens: Array<{
+            contaContabilId: number;
+            contaContabilNome: string;
+            orcado: number;
+            realizado: number;
+            variacao: number;
+            variacaoPercentual: number;
+            status: string;
+          }>;
+          resumo: ResumoOrcamentario;
+          geradoEm: string;
+        });
         toast.success('Análise exportada para CSV');
       } else {
         // Exportar orçamento básico

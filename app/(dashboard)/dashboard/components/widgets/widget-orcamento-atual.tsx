@@ -53,7 +53,7 @@ export function WidgetOrcamentoAtual() {
     );
   }
 
-  const statusVariant =
+  const statusVariant: 'destructive' | 'secondary' | 'default' =
     orcamentoAtual.percentualRealizacao > 100
       ? 'destructive'
       : orcamentoAtual.percentualRealizacao > 90
@@ -76,7 +76,7 @@ export function WidgetOrcamentoAtual() {
               Realizado {orcamentoAtual.percentualRealizacao}% | Status {orcamentoAtual.status}
             </p>
           </div>
-          <Badge variant={statusVariant as any}>{orcamentoAtual.status}</Badge>
+          <Badge variant={statusVariant}>{orcamentoAtual.status}</Badge>
         </div>
         <Progress value={orcamentoAtual.percentualRealizacao} />
         {orcamentoAtual.valorOrcado != null && orcamentoAtual.valorRealizado != null && (

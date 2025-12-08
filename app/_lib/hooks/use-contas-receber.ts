@@ -7,7 +7,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type {
   ContaReceberComDetalhes,
-  ListarContasReceberParams,
   ListarContasReceberResponse,
   ResumoInadimplencia,
   StatusContaReceber,
