@@ -16,12 +16,13 @@ import {
   Star,
 } from 'lucide-react';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogBody,
+} from '@/components/ui/responsive-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -176,149 +177,151 @@ export function TemplateLibraryDialog({
   const hasFilters = busca || categoria || visibilidade;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[80vh]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent className="sm:max-w-4xl">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
             Biblioteca de Templates
-          </DialogTitle>
-          <DialogDescription>
+          </ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Escolha um template para criar um novo documento
-          </DialogDescription>
-        </DialogHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
-        <Tabs value={tab} onValueChange={setTab} className="flex-1">
-          <TabsList className="mb-4">
-            <TabsTrigger value="todos">Todos</TabsTrigger>
-            <TabsTrigger value="mais_usados">
-              <Star className="h-4 w-4 mr-1" />
-              Mais Usados
-            </TabsTrigger>
-          </TabsList>
+        <ResponsiveDialogBody>
+          <Tabs value={tab} onValueChange={setTab} className="flex-1">
+            <TabsList className="mb-4">
+              <TabsTrigger value="todos">Todos</TabsTrigger>
+              <TabsTrigger value="mais_usados">
+                <Star className="h-4 w-4 mr-1" />
+                Mais Usados
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="todos" className="mt-0 space-y-4">
-            {/* Filtros */}
-            <div className="flex flex-wrap gap-2">
-              <div className="relative flex-1 min-w-[200px]">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar templates..."
-                  value={busca}
-                  onChange={(e) => setBusca(e.target.value)}
-                  className="pl-9"
-                />
+            <TabsContent value="todos" className="mt-0 space-y-4">
+              {/* Filtros */}
+              <div className="flex flex-wrap gap-2">
+                <div className="relative flex-1 min-w-[200px]">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar templates..."
+                    value={busca}
+                    onChange={(e) => setBusca(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+
+                <Select value={categoria} onValueChange={setCategoria}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Categoria" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todas</SelectItem>
+                    {categorias.map((cat) => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={visibilidade} onValueChange={setVisibilidade}>
+                  <SelectTrigger className="w-36">
+                    <SelectValue placeholder="Visibilidade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="publico">
+                      <div className="flex items-center gap-2">
+                        <Globe className="h-4 w-4" />
+                        Público
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="privado">
+                      <div className="flex items-center gap-2">
+                        <Lock className="h-4 w-4" />
+                        Privado
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {hasFilters && (
+                  <Button variant="ghost" size="sm" onClick={clearFilters}>
+                    Limpar filtros
+                  </Button>
+                )}
               </div>
 
-              <Select value={categoria} onValueChange={setCategoria}>
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Categoria" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Todas</SelectItem>
-                  {categorias.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* Lista de templates */}
+              <ScrollArea className="h-[400px]">
+                {loading ? (
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                      <Skeleton key={i} className="h-48 w-full" />
+                    ))}
+                  </div>
+                ) : templates.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-64 text-center">
+                    <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+                    <h3 className="font-medium text-lg">Nenhum template encontrado</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {hasFilters
+                        ? 'Tente ajustar os filtros de busca'
+                        : 'Crie seu primeiro template para reutilizar'}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pr-4">
+                    {templates.map((template) => (
+                      <TemplateCard
+                        key={template.id}
+                        template={template}
+                        onUseTemplate={handleUseTemplate}
+                      />
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+            </TabsContent>
 
-              <Select value={visibilidade} onValueChange={setVisibilidade}>
-                <SelectTrigger className="w-36">
-                  <SelectValue placeholder="Visibilidade" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">Todas</SelectItem>
-                  <SelectItem value="publico">
-                    <div className="flex items-center gap-2">
-                      <Globe className="h-4 w-4" />
-                      Público
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="privado">
-                    <div className="flex items-center gap-2">
-                      <Lock className="h-4 w-4" />
-                      Privado
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+            <TabsContent value="mais_usados" className="mt-0">
+              <ScrollArea className="h-[400px]">
+                {maisUsados.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-64 text-center">
+                    <Star className="h-12 w-12 text-muted-foreground mb-4" />
+                    <h3 className="font-medium text-lg">Nenhum template popular ainda</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Templates mais usados aparecerão aqui
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pr-4">
+                    {maisUsados.map((template) => (
+                      <TemplateCard
+                        key={template.id}
+                        template={template}
+                        onUseTemplate={handleUseTemplate}
+                      />
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+            </TabsContent>
+          </Tabs>
 
-              {hasFilters && (
-                <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  Limpar filtros
-                </Button>
-              )}
+          {/* Loading overlay */}
+          {creating && (
+            <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg">
+              <div className="flex flex-col items-center gap-2">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="text-sm text-muted-foreground">Criando documento...</p>
+              </div>
             </div>
-
-            {/* Lista de templates */}
-            <ScrollArea className="h-[400px]">
-              {loading ? (
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <Skeleton key={i} className="h-48 w-full" />
-                  ))}
-                </div>
-              ) : templates.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-64 text-center">
-                  <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-                  <h3 className="font-medium text-lg">Nenhum template encontrado</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {hasFilters
-                      ? 'Tente ajustar os filtros de busca'
-                      : 'Crie seu primeiro template para reutilizar'}
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pr-4">
-                  {templates.map((template) => (
-                    <TemplateCard
-                      key={template.id}
-                      template={template}
-                      onUseTemplate={handleUseTemplate}
-                    />
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
-          </TabsContent>
-
-          <TabsContent value="mais_usados" className="mt-0">
-            <ScrollArea className="h-[400px]">
-              {maisUsados.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-64 text-center">
-                  <Star className="h-12 w-12 text-muted-foreground mb-4" />
-                  <h3 className="font-medium text-lg">Nenhum template popular ainda</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Templates mais usados aparecerão aqui
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 pr-4">
-                  {maisUsados.map((template) => (
-                    <TemplateCard
-                      key={template.id}
-                      template={template}
-                      onUseTemplate={handleUseTemplate}
-                    />
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
-          </TabsContent>
-        </Tabs>
-
-        {/* Loading overlay */}
-        {creating && (
-          <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg">
-            <div className="flex flex-col items-center gap-2">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              <p className="text-sm text-muted-foreground">Criando documento...</p>
-            </div>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+          )}
+        </ResponsiveDialogBody>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }

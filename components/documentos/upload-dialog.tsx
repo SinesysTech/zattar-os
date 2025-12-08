@@ -7,13 +7,14 @@
 import * as React from 'react';
 import { Upload, Loader2, File, X } from 'lucide-react';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogBody,
+} from '@/components/ui/responsive-dialog';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
@@ -112,73 +113,75 @@ export function UploadDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Upload de arquivo</DialogTitle>
-          <DialogDescription>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Upload de arquivo</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Faça upload de imagens, PDFs ou outros arquivos para este documento
-          </DialogDescription>
-        </DialogHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
-        <div className="space-y-4 py-4">
-          {!selectedFile ? (
-            <div
-              className="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:bg-accent transition-colors"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
-              <p className="mt-4 text-sm font-medium">
-                Clique para selecionar um arquivo
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Máximo 50MB • Imagens, PDFs, documentos
-              </p>
-              <input
-                ref={fileInputRef}
-                type="file"
-                className="hidden"
-                onChange={handleFileSelect}
-                accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt"
-                aria-label="Selecionar arquivo para upload"
-              />
-            </div>
-          ) : (
-            <div className="border rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <File className="h-8 w-8 text-primary shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{selectedFile.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatFileSize(selectedFile.size)}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleRemoveFile}
-                  disabled={uploading}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+        <ResponsiveDialogBody>
+          <div className="space-y-4">
+            {!selectedFile ? (
+              <div
+                className="border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:bg-accent transition-colors"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
+                <p className="mt-4 text-sm font-medium">
+                  Clique para selecionar um arquivo
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Máximo 50MB • Imagens, PDFs, documentos
+                </p>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileSelect}
+                  accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt"
+                  aria-label="Selecionar arquivo para upload"
+                />
               </div>
-
-              {uploading && (
-                <div className="mt-4 space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Enviando...</span>
-                    <span className="font-medium">{progress}%</span>
+            ) : (
+              <div className="border rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <File className="h-8 w-8 text-primary shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium truncate">{selectedFile.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatFileSize(selectedFile.size)}
+                      </p>
+                    </div>
                   </div>
-                  <Progress value={progress} />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleRemoveFile}
+                    disabled={uploading}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
                 </div>
-              )}
-            </div>
-          )}
-        </div>
 
-        <DialogFooter>
+                {uploading && (
+                  <div className="mt-4 space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Enviando...</span>
+                      <span className="font-medium">{progress}%</span>
+                    </div>
+                    <Progress value={progress} />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </ResponsiveDialogBody>
+
+        <ResponsiveDialogFooter>
           <Button
             type="button"
             variant="outline"
@@ -203,8 +206,8 @@ export function UploadDialog({
               </>
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }
