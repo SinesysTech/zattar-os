@@ -8,7 +8,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -30,7 +30,6 @@ import { useAudiencias } from '@/app/_lib/hooks/use-audiencias';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildAudienciasFilterOptions, buildAudienciasFilterGroups, parseAudienciasFilters } from './audiencias-toolbar-filters';
-import type { ColumnDef } from '@tanstack/react-table';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 import type { AudienciasFilters } from '@/app/_lib/types/audiencias';
 
@@ -436,7 +435,7 @@ function criarColunas(
   usuarios: Array<{ id: number; nomeExibicao: string }>,
   onProcessoSort: (field: 'trt' | 'grau' | 'orgao_julgador_descricao', direction: 'asc' | 'desc') => void,
   onResponsavelSort: (direction: 'asc' | 'desc') => void
-): ColumnDef<Audiencia>[] {
+): ResponsiveTableColumn<Audiencia>[] {
   return [
     {
       accessorKey: 'data_inicio',
@@ -447,6 +446,9 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 140,
+      priority: 1,
+      sticky: true,
+      cardLabel: 'Data/Hora',
       meta: { align: 'left' },
       sortingFn: (rowA, rowB) => {
         const dataA = normalizarDataParaComparacao(rowA.original.data_inicio);
@@ -459,6 +461,8 @@ function criarColunas(
       id: 'processo',
       header: () => <ProcessoColumnHeader onSort={onProcessoSort} />,
       enableSorting: false,
+      priority: 2,
+      cardLabel: 'Processo',
       meta: { align: 'left' },
       cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
@@ -502,6 +506,8 @@ function criarColunas(
       header: () => <div className="flex items-center justify-center"><div className="text-sm font-medium">Detalhes</div></div>,
       enableSorting: false,
       size: 280,
+      priority: 3,
+      cardLabel: 'Detalhes',
       meta: { align: 'left' },
       cell: ({ row }) => <TipoSalaAcoesCell audiencia={row.original} onSuccess={onSuccess} />,
     },
@@ -510,6 +516,8 @@ function criarColunas(
       header: () => <div className="flex items-center justify-center"><div className="text-sm font-medium">Observações</div></div>,
       enableSorting: false,
       size: 250,
+      priority: 5,
+      cardLabel: 'Observações',
       meta: { align: 'left' },
       cell: ({ row }) => <div className="h-full w-full"><ObservacoesCell audiencia={row.original} onSuccess={onSuccess} /></div>,
     },
@@ -517,6 +525,8 @@ function criarColunas(
       accessorKey: 'responsavel_id',
       header: () => <ResponsavelColumnHeader onSort={onResponsavelSort} />,
       enableSorting: false,
+      priority: 4,
+      cardLabel: 'Responsável',
       meta: { align: 'left' },
       cell: ({ row }) => <div className="min-h-10 flex items-center justify-center"><ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} /></div>,
     },
@@ -789,7 +799,7 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
 
       {/* Conteúdo da visualização */}
       {visualizacao === 'lista' && (
-        <DataTable
+        <ResponsiveTable
           data={audiencias}
           columns={colunas}
           pagination={
@@ -805,6 +815,8 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
           sorting={{ columnId: ordenarPor, direction: ordem, onSortingChange: handleSortingChange }}
           isLoading={isLoading}
           error={error}
+          mobileLayout="cards"
+          stickyFirstColumn={true}
           emptyMessage="Nenhuma audiência encontrada."
         />
       )}

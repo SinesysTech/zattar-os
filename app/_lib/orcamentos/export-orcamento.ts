@@ -30,7 +30,7 @@ export interface RelatorioParaExportacao {
   orcamento: OrcamentoComDetalhes;
   analise: AnaliseParaUI | null;
   resumo?: ResumoOrcamentario | null;
-  alertas?: AlertaDesvio[];
+  alertas?: Array<{ mensagem: string; severidade: string }>;
   evolucao?: EvolucaoMensal[];
   projecao?: ProjecaoItem[] | null;
   geradoEm: string;
