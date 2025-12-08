@@ -88,25 +88,13 @@ const navPrincipal = [
   },
   {
     title: "Expedientes",
-    url: "/expedientes",
+    url: "/expedientes/semana",
     icon: FolderOpen,
-    items: [
-      { title: "Semana", url: "/expedientes/semana" },
-      { title: "Mês", url: "/expedientes/mes" },
-      { title: "Ano", url: "/expedientes/ano" },
-      { title: "Lista", url: "/expedientes/lista" },
-    ],
   },
   {
     title: "Obrigações",
-    url: "/acordos-condenacoes",
+    url: "/acordos-condenacoes/lista",
     icon: Handshake,
-    items: [
-      { title: "Lista", url: "/acordos-condenacoes/lista" },
-      { title: "Semana", url: "/acordos-condenacoes/semana" },
-      { title: "Mês", url: "/acordos-condenacoes/mes" },
-      { title: "Ano", url: "/acordos-condenacoes/ano" },
-    ],
   },
   {
     title: "Financeiro",

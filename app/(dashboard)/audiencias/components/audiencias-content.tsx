@@ -753,23 +753,25 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
 
   return (
     <div className="space-y-4">
-      {/* Linha 1: Busca e Filtros */}
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={(value) => { setBusca(value); setPagina(0); }}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar audiências..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="buttons"
-        onNewClick={() => setNovaAudienciaOpen(true)}
-        newButtonTooltip="Nova audiência"
-      />
+      {/* Linha 1: Busca e Filtros - Centralizada */}
+      <div className="flex justify-center">
+        <TableToolbar
+          searchValue={busca}
+          onSearchChange={(value) => { setBusca(value); setPagina(0); }}
+          isSearching={isSearching}
+          searchPlaceholder="Buscar audiências..."
+          filterOptions={filterOptions}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilterIds}
+          onFiltersChange={handleFilterIdsChange}
+          filterButtonsMode="buttons"
+          onNewClick={() => setNovaAudienciaOpen(true)}
+          newButtonTooltip="Nova audiência"
+        />
+      </div>
 
       {/* Linha 2: Tabs + Controles de navegação + contador */}
-      <div className="flex items-center justify-center gap-4 pt-2">
+      <div className="flex items-center gap-4 pt-2">
         <ClientOnlyTabs value={visualizacao} onValueChange={(value) => router.push(`/audiencias/${value}`)}>
           <TabsList>
             <TabsTrigger value="semana">Semana</TabsTrigger>

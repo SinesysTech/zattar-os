@@ -11,6 +11,8 @@
 - [chat-message.tsx](file://components/chat-message.tsx)
 - [chat-message-with-files.tsx](file://components/chat/chat-message-with-files.tsx)
 - [spec.md](file://openspec/specs/chat-interno/spec.md)
+- [use-orientation.ts](file://hooks/use-orientation.ts)
+- [page.tsx](file://app/(dashboard)/chat/page.tsx)
 </cite>
 
 ## Sumário
@@ -24,6 +26,7 @@
 8. [Tipos de Salas](#tipos-de-salas)
 9. [Edição e Exclusão de Mensagens](#edição-e-exclusão-de-mensagens)
 10. [Reações e Emojis](#reações-e-emojis)
+11. [Detecção de Orientação em Dispositivos Móveis](#detecção-de-orientação-em-dispositivos-móveis)
 
 ## Introdução
 
@@ -362,3 +365,28 @@ Os usuários podem remover suas próprias reações clicando novamente no emoji.
 
 **Fontes da Seção**
 - [spec.md](file://openspec/specs/chat-interno/spec.md)
+
+## Detecção de Orientação em Dispositivos Móveis
+
+A nova funcionalidade de detecção de orientação em dispositivos móveis foi implementada para melhorar a experiência do usuário ao usar o chat em dispositivos móveis. Esta funcionalidade permite que a interface do chat mantenha o layout com barra lateral mesmo em dispositivos móveis quando em orientação horizontal, prevenindo mudanças de layout desnecessárias ao girar o dispositivo.
+
+### Implementação da Detecção de Orientação
+
+A detecção de orientação é realizada através do hook `useIsLandscape` que verifica se o dispositivo está em modo paisagem. Quando em modo paisagem, o layout do chat mantém a barra lateral visível, proporcionando uma experiência de usuário mais consistente.
+
+```mermaid
+graph TD
+A[Dispositivo Móvel] --> B{Orientação}
+B --> |Paisagem| C[Manter Layout com Barra Lateral]
+B --> |Retrato| D[Usar Layout Mobile com Sheet]
+C --> E[Experiência de Usuário Aprimorada]
+D --> F[Interface Adaptada para Tela Menor]
+```
+
+**Fontes do Diagrama**
+- [use-orientation.ts](file://hooks/use-orientation.ts)
+- [page.tsx](file://app/(dashboard)/chat/page.tsx)
+
+**Fontes da Seção**
+- [use-orientation.ts](file://hooks/use-orientation.ts)
+- [page.tsx](file://app/(dashboard)/chat/page.tsx)

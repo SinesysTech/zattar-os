@@ -3,7 +3,9 @@
 // Componente compartilhado de conteúdo de expedientes para diferentes visualizações
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { ClientOnlyTabs, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { DataTable } from '@/components/ui/data-table';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { NovoExpedienteDialog } from './novo-expediente-dialog';
@@ -72,8 +74,10 @@ import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
 import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
+export type ExpedientesVisualizacao = 'lista' | 'semana' | 'mes' | 'ano';
+
 interface ExpedientesContentProps {
-  viewMode: 'tabela' | 'semana' | 'mes' | 'ano';
+  visualizacao: ExpedientesVisualizacao;
 }
 
 /**
@@ -807,7 +811,8 @@ function criarColunas(
   ];
 }
 
-export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
+export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
+  const router = useRouter();
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
@@ -861,33 +866,33 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
 
   const params = React.useMemo(() => {
     const { responsavel_id, ...filtrosSemResponsavel } = filtros;
-    const responsavelIdFinal = viewMode === 'tabela'
+    const responsavelIdFinal = visualizacao === 'lista'
       ? responsavel_id
       : (!isSuperAdmin && currentUserId ? currentUserId : responsavel_id);
 
     return {
       pagina: pagina + 1,
-      limite: viewMode === 'semana' ? 100 : limite,
+      limite: visualizacao === 'semana' ? 100 : limite,
       busca: buscaDebounced || undefined,
       ordenar_por: ordenarPor || undefined,
       ordem,
       baixado: statusBaixa === 'baixado' ? true : statusBaixa === 'pendente' ? false : undefined,
       // Na visualização de semana, não filtrar por prazo_vencido para carregar todos (vencidos, no prazo e sem data)
       // As abas "Vencidos" e "Sem Data" fazem a filtragem local
-      prazo_vencido: viewMode === 'semana' ? undefined : (viewMode === 'tabela' ? undefined : (statusPrazo === 'vencido' ? true : statusPrazo === 'no_prazo' ? false : undefined)),
+      prazo_vencido: visualizacao === 'semana' ? undefined : (visualizacao === 'lista' ? undefined : (statusPrazo === 'vencido' ? true : statusPrazo === 'no_prazo' ? false : undefined)),
       responsavel_id: responsavelIdFinal,
       ...filtrosSemResponsavel,
-      data_prazo_legal_inicio: viewMode === 'semana' ? inicioSemana.toISOString() : filtros.data_prazo_legal_inicio,
-      data_prazo_legal_fim: viewMode === 'semana' ? fimSemana.toISOString() : filtros.data_prazo_legal_fim,
+      data_prazo_legal_inicio: visualizacao === 'semana' ? inicioSemana.toISOString() : filtros.data_prazo_legal_inicio,
+      data_prazo_legal_fim: visualizacao === 'semana' ? fimSemana.toISOString() : filtros.data_prazo_legal_fim,
     };
-  }, [pagina, limite, buscaDebounced, ordenarPor, ordem, statusBaixa, statusPrazo, filtros, isSuperAdmin, currentUserId, viewMode, inicioSemana, fimSemana]);
+  }, [pagina, limite, buscaDebounced, ordenarPor, ordem, statusBaixa, statusPrazo, filtros, isSuperAdmin, currentUserId, visualizacao, inicioSemana, fimSemana]);
 
   const { expedientes, paginacao, isLoading, error, refetch } = usePendentes(params);
 
   // Busca global (sem faixa de data) usada para preencher abas "Vencidos" e "Sem Data" na visão semanal
   const paramsEspeciaisSemana = React.useMemo(() => {
     const { responsavel_id, ...filtrosRestantes } = filtros;
-    const responsavelIdFinal = viewMode === 'tabela'
+    const responsavelIdFinal = visualizacao === 'lista'
       ? responsavel_id
       : (!isSuperAdmin && currentUserId ? currentUserId : responsavel_id);
 
@@ -905,10 +910,10 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
       data_prazo_legal_inicio: undefined,
       data_prazo_legal_fim: undefined,
     };
-  }, [buscaDebounced, ordenarPor, ordem, statusBaixa, filtros, isSuperAdmin, currentUserId, viewMode]);
+  }, [buscaDebounced, ordenarPor, ordem, statusBaixa, filtros, isSuperAdmin, currentUserId, visualizacao]);
 
   const { expedientes: expedientesEspeciais, isLoading: isLoadingEspeciais } = usePendentes(
-    viewMode === 'semana' ? paramsEspeciaisSemana : params
+    visualizacao === 'semana' ? paramsEspeciaisSemana : params
   );
 
   const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 100 });
@@ -1021,7 +1026,7 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
 
   // Contador de expedientes da semana (apenas dias úteis, excluindo vencidos e sem data)
   const contadorExpedientesSemana = React.useMemo(() => {
-    if (viewMode !== 'semana' || !expedientes) return 0;
+    if (visualizacao !== 'semana' || !expedientes) return 0;
     return expedientes.filter((e) => {
       // Apenas expedientes com data de prazo
       if (!e.data_prazo_legal_parte) return false;
@@ -1032,18 +1037,18 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
       const dataLocal = new Date(data.getFullYear(), data.getMonth(), data.getDate());
       return dataLocal >= inicioSemana && dataLocal <= fimSemana;
     }).length;
-  }, [viewMode, expedientes, inicioSemana, fimSemana]);
+  }, [visualizacao, expedientes, inicioSemana, fimSemana]);
 
   const formatarPeriodo = React.useMemo(() => {
-    if (viewMode === 'semana') {
+    if (visualizacao === 'semana') {
       return `${formatarDataCabecalho(inicioSemana)} - ${formatarDataCabecalho(fimSemana)}`;
-    } else if (viewMode === 'mes') {
+    } else if (visualizacao === 'mes') {
       return mesAtual.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }).replace(' De ', ' de ');
-    } else if (viewMode === 'ano') {
+    } else if (visualizacao === 'ano') {
       return anoAtual.getFullYear().toString();
     }
     return '';
-  }, [viewMode, inicioSemana, fimSemana, mesAtual, anoAtual]);
+  }, [visualizacao, inicioSemana, fimSemana, mesAtual, anoAtual]);
 
   const filterOptions = React.useMemo(() => buildExpedientesFilterOptions(usuariosLista, tiposExpedientes), [usuariosLista, tiposExpedientes]);
   const filterGroups = React.useMemo(() => buildExpedientesFilterGroups(usuariosLista, tiposExpedientes), [usuariosLista, tiposExpedientes]);
@@ -1074,16 +1079,16 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
       </div>
 
       {/* Linha 2: Controles de navegação temporal (apenas para visualizações de calendário) */}
-      {viewMode !== 'tabela' && (
+      {visualizacao !== 'tabela' && (
         <div className="flex items-center justify-start gap-4 pt-2">
           <ButtonGroup>
             <Button
               variant="outline"
               size="icon"
               onClick={() => {
-                if (viewMode === 'semana') navegarSemana('anterior');
-                if (viewMode === 'mes') navegarMes('anterior');
-                if (viewMode === 'ano') navegarAno('anterior');
+                if (visualizacao === 'semana') navegarSemana('anterior');
+                if (visualizacao === 'mes') navegarMes('anterior');
+                if (visualizacao === 'ano') navegarAno('anterior');
               }}
             >
               <ChevronLeft className="h-4 w-4" />
@@ -1095,9 +1100,9 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
               variant="outline"
               size="icon"
               onClick={() => {
-                if (viewMode === 'semana') navegarSemana('proxima');
-                if (viewMode === 'mes') navegarMes('proxima');
-                if (viewMode === 'ano') navegarAno('proxima');
+                if (visualizacao === 'semana') navegarSemana('proxima');
+                if (visualizacao === 'mes') navegarMes('proxima');
+                if (visualizacao === 'ano') navegarAno('proxima');
               }}
             >
               <ChevronRight className="h-4 w-4" />
@@ -1108,9 +1113,9 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
                   variant="outline"
                   size="icon"
                   onClick={() => {
-                    if (viewMode === 'semana') voltarSemanaAtual();
-                    if (viewMode === 'mes') voltarMesAtual();
-                    if (viewMode === 'ano') voltarAnoAtual();
+                    if (visualizacao === 'semana') voltarSemanaAtual();
+                    if (visualizacao === 'mes') voltarMesAtual();
+                    if (visualizacao === 'ano') voltarAnoAtual();
                   }}
                   aria-label="Voltar para período atual"
                   className="bg-muted hover:bg-muted/80"
@@ -1119,13 +1124,13 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
                 </Button>
               </TooltipTrigger>
               <TooltipContent className="px-2 py-1 text-xs">
-                {viewMode === 'semana' && 'Semana Atual'}
-                {viewMode === 'mes' && 'Mês Atual'}
-                {viewMode === 'ano' && 'Ano Atual'}
+                {visualizacao === 'semana' && 'Semana Atual'}
+                {visualizacao === 'mes' && 'Mês Atual'}
+                {visualizacao === 'ano' && 'Ano Atual'}
               </TooltipContent>
             </Tooltip>
           </ButtonGroup>
-          {viewMode === 'semana' && (
+          {visualizacao === 'semana' && (
             <div className="inline-flex items-center h-9 rounded-md border border-input bg-primary/10 px-3 text-sm font-medium text-primary shrink-0">
               {contadorExpedientesSemana} expedientes
             </div>
@@ -1134,7 +1139,7 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
       )}
 
       {/* Conteúdo baseado no modo de visualização */}
-      {viewMode === 'tabela' && (
+      {visualizacao === 'lista' && (
         <DataTable
           data={expedientes}
           columns={colunas}
@@ -1161,7 +1166,7 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
         />
       )}
 
-      {viewMode === 'semana' && (
+      {visualizacao === 'semana' && (
         <ExpedientesVisualizacaoSemana
           expedientes={expedientes}
           expedientesEspeciais={expedientesEspeciais}
@@ -1179,7 +1184,7 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
         />
       )}
 
-      {viewMode === 'mes' && (
+      {visualizacao === 'mes' && (
         <ExpedientesVisualizacaoMes
           expedientes={expedientes}
           isLoading={isLoading}
@@ -1188,7 +1193,7 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
         />
       )}
 
-      {viewMode === 'ano' && (
+      {visualizacao === 'ano' && (
         <ExpedientesVisualizacaoAno
           expedientes={expedientes}
           isLoading={isLoading}
@@ -1213,3 +1218,4 @@ export function ExpedientesContent({ viewMode }: ExpedientesContentProps) {
     </div>
   );
 }
+    
