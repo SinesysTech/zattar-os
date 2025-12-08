@@ -15,11 +15,6 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 
 const Form = FormProvider
 
@@ -111,34 +106,8 @@ function FormLabel({
 
 function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
-  const [isMounted, setIsMounted] = React.useState(false)
-  // Initialize hasBlurred based on whether field has a value (handles pre-filled invalid values)
-  const hasInitialValue = 'value' in props && Boolean(props.value)
-  const [hasBlurred, setHasBlurred] = React.useState(hasInitialValue)
-  const [isFocused, setIsFocused] = React.useState(false)
 
-  React.useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
-  const handleBlur = (e: React.FocusEvent<HTMLElement>) => {
-    setHasBlurred(true)
-    setIsFocused(false)
-    // Chamar onBlur original se existir
-    if (props.onBlur) {
-      props.onBlur(e as React.FocusEvent<HTMLInputElement>)
-    }
-  }
-
-  const handleFocus = (e: React.FocusEvent<HTMLElement>) => {
-    setIsFocused(true)
-    // Chamar onFocus original se existir
-    if (props.onFocus) {
-      props.onFocus(e as React.FocusEvent<HTMLInputElement>)
-    }
-  }
-
-  const slotElement = (
+  return (
     <Slot
       data-slot="form-control"
       id={formItemId}
@@ -148,42 +117,9 @@ function FormControl({ ...props }: React.ComponentProps<typeof Slot>) {
           : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
-      onBlur={handleBlur}
-      onFocus={handleFocus}
       {...props}
     />
   )
-
-  // Só renderiza tooltip no cliente após montagem para evitar erros de hidratação
-  // E só mostra tooltip se o usuário já saiu do campo ou o campo não está focado
-  if (error && isMounted && (hasBlurred || !isFocused)) {
-    return (
-      <>
-        <Tooltip
-          open={hasBlurred && !isFocused}
-          onOpenChange={() => {
-            // Não fazer nada - prevenir comportamento padrão
-          }}
-        >
-          <TooltipTrigger asChild>
-            {slotElement}
-          </TooltipTrigger>
-          <TooltipContent
-            side="top"
-            className="bg-destructive text-destructive-foreground"
-          >
-            <p>{error.message}</p>
-          </TooltipContent>
-        </Tooltip>
-        {/* Visually hidden element for aria-describedby accessibility */}
-        <p id={formMessageId} className="sr-only">
-          {error.message}
-        </p>
-      </>
-    )
-  }
-
-  return slotElement
 }
 
 function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
@@ -199,9 +135,24 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
   )
 }
 
-function FormMessage() {
-  // Não renderiza nada - erros são mostrados via tooltip no FormControl
-  return null
+function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
+  const { error, formMessageId } = useFormField()
+  const body = error ? String(error?.message ?? "") : props.children
+
+  if (!body) {
+    return null
+  }
+
+  return (
+    <p
+      data-slot="form-message"
+      id={formMessageId}
+      className={cn("text-destructive text-sm", className)}
+      {...props}
+    >
+      {body}
+    </p>
+  )
 }
 
 export {

@@ -212,6 +212,82 @@ export default function ChatPage() {
     }
   };
 
+  // Componente de lista de salas reutilizável
+  const RoomList = () => (
+    <>
+      {/* Busca e Botão Nova Conversa */}
+      <div className="p-4 border-b">
+        <div className="-mx-4 px-4 pb-3 border-b border-border">
+          <Button
+            className="w-full"
+            onClick={() => {
+              setCreateDialogOpen(true);
+              if (isMobile) setMobileRoomListOpen(false);
+            }}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Nova Conversa
+          </Button>
+        </div>
+        <div className="relative pt-3">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Buscar salas..."
+            value={busca}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBusca(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+      </div>
+
+      {/* Lista de Salas */}
+      <ScrollArea className="flex-1">
+        <div className="p-2 space-y-1">
+          {salasFiltradas.length === 0 ? (
+            <div className="text-center py-8">
+              <MessageSquare className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">
+                {busca ? 'Nenhuma sala encontrada' : 'Nenhuma sala disponível'}
+              </p>
+            </div>
+          ) : (
+            salasFiltradas.map((sala) => (
+              <button
+                type="button"
+                key={sala.id}
+                onClick={() => {
+                  setSalaAtiva(sala);
+                  if (isMobile) setMobileRoomListOpen(false);
+                }}
+                className={cn(
+                  'w-full text-left px-3 py-3 rounded-lg transition-colors',
+                  'hover:bg-muted/50',
+                  salaAtiva?.id === sala.id && 'bg-muted'
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="text-muted-foreground">
+                    {getTipoIcon(sala.tipo)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-sm truncate">
+                        {sala.tipo === 'geral' ? 'Sala Geral' : sala.nome}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      {getTipoBadge(sala.tipo)}
+                    </div>
+                  </div>
+                </div>
+              </button>
+            ))
+          )}
+        </div>
+      </ScrollArea>
+    </>
+  );
+
   if (loading) {
     return (
       <div className="flex h-full flex-col">
@@ -239,85 +315,66 @@ export default function ChatPage() {
     <div className="flex h-full flex-col">
       {/* Content */}
       <div className={cn('flex flex-1 h-full overflow-hidden rounded-xl border border-border shadow-sm')}>
-        {/* Sidebar - Lista de Salas */}
-        <div className="w-80 border-r flex flex-col h-full">
-          {/* Busca e Botão Nova Conversa */}
-          <div className="p-4 border-b">
-            <div className="-mx-4 px-4 pb-3 border-b border-border">
-              <Button
-                className="w-full"
-                onClick={() => setCreateDialogOpen(true)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Nova Conversa
-              </Button>
-            </div>
-            <div className="relative pt-3">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Buscar salas..."
-                value={busca}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBusca(e.target.value)}
-                className="pl-9"
-              />
-            </div>
+        {/* Desktop Sidebar - Lista de Salas */}
+        {!isMobile && (
+          <div className="w-80 border-r flex flex-col h-full">
+            <RoomList />
           </div>
+        )}
 
-          {/* Lista de Salas */}
-          <ScrollArea className="flex-1">
-            <div className="p-2 space-y-1">
-              {salasFiltradas.length === 0 ? (
-                <div className="text-center py-8">
-                  <MessageSquare className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">
-                    {busca ? 'Nenhuma sala encontrada' : 'Nenhuma sala disponível'}
-                  </p>
-                </div>
-              ) : (
-                salasFiltradas.map((sala) => (
-                  <button
-                    type="button"
-                    key={sala.id}
-                    onClick={() => setSalaAtiva(sala)}
-                    className={cn(
-                      'w-full text-left px-3 py-3 rounded-lg transition-colors',
-                      'hover:bg-muted/50',
-                      salaAtiva?.id === sala.id && 'bg-muted'
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="text-muted-foreground">
-                        {getTipoIcon(sala.tipo)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-sm truncate">
-                            {sala.tipo === 'geral' ? 'Sala Geral' : sala.nome}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          {getTipoBadge(sala.tipo)}
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                ))
-              )}
-            </div>
-          </ScrollArea>
-        </div>
+        {/* Mobile Sheet - Lista de Salas */}
+        {isMobile && (
+          <Sheet open={mobileRoomListOpen} onOpenChange={setMobileRoomListOpen}>
+            <SheetContent side="left" className="w-[85vw] sm:w-[400px] p-0">
+              <SheetHeader className="p-4 border-b">
+                <SheetTitle>Conversas</SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col h-[calc(100%-5rem)]">
+                <RoomList />
+              </div>
+            </SheetContent>
+          </Sheet>
+        )}
 
         {/* Chat Principal */}
         <div className="flex-1 flex flex-col min-h-0">
           {salaAtiva && currentUser ? (
             <>
+              {/* Mobile Header com botão de voltar */}
+              {isMobile && (
+                <div className="flex items-center gap-2 p-3 border-b bg-background">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setMobileRoomListOpen(true)}
+                    className="h-9 w-9 p-0"
+                  >
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-sm truncate">
+                      {salaAtiva.tipo === 'geral' ? 'Sala Geral' : salaAtiva.nome}
+                    </h3>
+                    {(salaAtiva.tipo === 'geral' || salaAtiva.tipo === 'documento' || salaAtiva.tipo === 'grupo') && (
+                      <p className="text-xs text-muted-foreground truncate">
+                        {salaAtiva.tipo === 'geral'
+                          ? 'Canal público do escritório'
+                          : salaAtiva.tipo === 'documento'
+                            ? 'Chat vinculado a documento'
+                            : 'Grupo de conversa'}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <ChatInterface
                 salaId={salaAtiva.id}
                 currentUserId={currentUser.id}
                 currentUserName={currentUser.nomeCompleto || currentUser.nomeExibicao || 'Usuário'}
                 tipo={salaAtiva.tipo}
                 participanteId={salaAtiva.participante_id}
-                showHeader={true}
+                showHeader={!isMobile}
                 headerTitle={salaAtiva.tipo === 'geral' ? 'Sala Geral' : salaAtiva.nome}
                 headerSubtitle={
                   salaAtiva.tipo === 'geral'

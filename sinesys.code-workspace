@@ -23,6 +23,7 @@
     "traycer.languagePreference": "Português",
     "kiroAgent.trustedCommands": [
       "*"
-    ]
+    ],
+    "typescript.autoClosingTags": false
   }
 }

@@ -263,8 +263,10 @@
 ## Fase 6: Componentes Complexos (Editor e Chat)
 
 
-- [ ] 12. Otimizar Editor de Documentos para mobile
-- [ ] 12.1 Implementar toolbar responsiva no Plate Editor
+- [-] 12. Otimizar Editor de Documentos para mobile
+
+- [-] 12.1 Implementar toolbar responsiva no Plate Editor
+
   - Verificar se Plate já tem suporte a floating toolbar
   - Criar versão mobile da fixed-toolbar com ícones essenciais
   - Implementar overflow menu para opções avançadas em mobile
@@ -294,7 +296,10 @@
   - **Validates: Requirements 8.5**
 
 - [ ] 13. Otimizar Chat para mobile
-- [-] 13.1 Implementar navegação responsiva no Chat
+
+
+- [x] 13.1 Implementar navegação responsiva no Chat
+
 
   - Criar layout com Sheet para room list em mobile
   - Implementar botão de voltar para room list em mobile
@@ -302,14 +307,18 @@
   - Otimizar input de mensagem para mobile (com teclado virtual)
   - _Requirements: 10.1, 10.2, 10.3_
 
-- [ ] 13.2 Otimizar message bubbles e attachments
+- [x] 13.2 Otimizar message bubbles e attachments
+
+
   - Ajustar largura máxima de bubbles para mobile
   - Implementar layout compacto para attachments em mobile
   - Garantir que imagens sejam responsivas
   - Otimizar preview de arquivos para mobile
   - _Requirements: 10.3, 10.5_
 
-- [ ] 13.3 Escrever property tests para Chat
+- [x] 13.3 Escrever property tests para Chat
+
+
   - **Property 44: Chat separate views on mobile**
   - **Validates: Requirements 10.1**
   - **Property 45: Chat room navigation**
