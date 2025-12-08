@@ -39,6 +39,16 @@ interface AudienciasContentProps {
   visualizacao: VisualizacaoTipo;
 }
 
+// Interface para dados iniciais de expedientes e obrigações
+interface DadosIniciais {
+  processo_id: number;
+  trt: string;
+  grau: string;
+  numero_processo: string;
+  polo_ativo_nome?: string;
+  polo_passivo_nome?: string;
+}
+
 /**
  * Formata apenas data ISO para formato brasileiro (DD/MM/YYYY)
  */
@@ -361,9 +371,23 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
   };
 
   // Dados iniciais para o dialog de expediente
-  const expedienteInicial = {
-    numero_processo_id: audiencia.numero_processo_id,
+  const expedienteInicial: DadosIniciais = {
+    processo_id: audiencia.processo_id,
+    trt: audiencia.trt,
+    grau: audiencia.grau,
     numero_processo: audiencia.numero_processo,
+    polo_ativo_nome: audiencia.polo_ativo_nome || undefined,
+    polo_passivo_nome: audiencia.polo_passivo_nome || undefined,
+  };
+
+  // Dados iniciais para o dialog de obrigação
+  const obrigacaoInicial: DadosIniciais = {
+    processo_id: audiencia.processo_id,
+    trt: audiencia.trt,
+    grau: audiencia.grau,
+    numero_processo: audiencia.numero_processo,
+    polo_ativo_nome: audiencia.polo_ativo_nome || undefined,
+    polo_passivo_nome: audiencia.polo_passivo_nome || undefined,
   };
 
   return (
@@ -425,7 +449,7 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
       {/* Dialogs */}
       <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />
       <NovoExpedienteDialog open={isExpedienteDialogOpen} onOpenChange={setIsExpedienteDialogOpen} onSuccess={onSuccess} dadosIniciais={expedienteInicial} />
-      <NovaObrigacaoDialog open={isObrigacaoDialogOpen} onOpenChange={setIsObrigacaoDialogOpen} onSuccess={onSuccess} processoId={audiencia.numero_processo_id} />
+      <NovaObrigacaoDialog open={isObrigacaoDialogOpen} onOpenChange={setIsObrigacaoDialogOpen} onSuccess={onSuccess} dadosIniciais={obrigacaoInicial} />
     </div>
   );
 }
@@ -438,8 +462,8 @@ function criarColunas(
 ): ResponsiveTableColumn<Audiencia>[] {
   return [
     {
-      accessorKey: 'data_inicio',
-      header: ({ column }) => (
+      key: 'data_inicio',
+      header: ({ column }: { column: any }) => (
         <div className="flex items-center justify-center">
           <DataTableColumnHeader column={column} title="Data/Hora" />
         </div>
@@ -450,21 +474,21 @@ function criarColunas(
       sticky: true,
       cardLabel: 'Data/Hora',
       meta: { align: 'left' },
-      sortingFn: (rowA, rowB) => {
+      sortingFn: (rowA: any, rowB: any) => {
         const dataA = normalizarDataParaComparacao(rowA.original.data_inicio);
         const dataB = normalizarDataParaComparacao(rowB.original.data_inicio);
         return dataA - dataB;
       },
-      cell: ({ row }) => <DataHoraCell audiencia={row.original} />,
+      cell: ({ row }: { row: any }) => <DataHoraCell audiencia={row.original} />,
     },
     {
-      id: 'processo',
+      key: 'processo',
       header: () => <ProcessoColumnHeader onSort={onProcessoSort} />,
       enableSorting: false,
       priority: 2,
       cardLabel: 'Processo',
       meta: { align: 'left' },
-      cell: ({ row }) => {
+      cell: ({ row }: { row: any }) => {
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
         const trt = row.original.trt;
@@ -502,33 +526,33 @@ function criarColunas(
       },
     },
     {
-      id: 'detalhes',
+      key: 'detalhes',
       header: () => <div className="flex items-center justify-center"><div className="text-sm font-medium">Detalhes</div></div>,
       enableSorting: false,
       size: 280,
       priority: 3,
       cardLabel: 'Detalhes',
       meta: { align: 'left' },
-      cell: ({ row }) => <TipoSalaAcoesCell audiencia={row.original} onSuccess={onSuccess} />,
+      cell: ({ row }: { row: any }) => <TipoSalaAcoesCell audiencia={row.original} onSuccess={onSuccess} />,
     },
     {
-      accessorKey: 'observacoes',
+      key: 'observacoes',
       header: () => <div className="flex items-center justify-center"><div className="text-sm font-medium">Observações</div></div>,
       enableSorting: false,
       size: 250,
       priority: 5,
       cardLabel: 'Observações',
       meta: { align: 'left' },
-      cell: ({ row }) => <div className="h-full w-full"><ObservacoesCell audiencia={row.original} onSuccess={onSuccess} /></div>,
+      cell: ({ row }: { row: any }) => <div className="h-full w-full"><ObservacoesCell audiencia={row.original} onSuccess={onSuccess} /></div>,
     },
     {
-      accessorKey: 'responsavel_id',
+      key: 'responsavel_id',
       header: () => <ResponsavelColumnHeader onSort={onResponsavelSort} />,
       enableSorting: false,
       priority: 4,
       cardLabel: 'Responsável',
       meta: { align: 'left' },
-      cell: ({ row }) => <div className="min-h-10 flex items-center justify-center"><ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} /></div>,
+      cell: ({ row }: { row: any }) => <div className="min-h-10 flex items-center justify-center"><ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} /></div>,
     },
   ];
 }
@@ -729,9 +753,7 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="panel"
-        filterPanelTitle="Filtros de Audiências"
-        filterPanelDescription="Filtre audiências por status, tipo e mais"
+        filterButtonsMode="buttons"
         onNewClick={() => setNovaAudienciaOpen(true)}
         newButtonTooltip="Nova audiência"
       />

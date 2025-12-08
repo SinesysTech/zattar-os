@@ -297,9 +297,7 @@ export default function ContratosPage() {
         onFiltersChange={handleFilterIdsChange}
         onNewClick={() => setCreateOpen(true)}
         newButtonTooltip="Novo Contrato"
-        filterButtonsMode="panel"
-        filterPanelTitle="Filtros de Contratos"
-        filterPanelDescription="Filtre contratos por área, tipo, status e mais"
+        filterButtonsMode="buttons"
       />
 
       {/* Tabela */}

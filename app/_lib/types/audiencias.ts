@@ -43,7 +43,6 @@ export interface AudienciasFilters {
   trt?: string;
   grau?: GrauProcesso;
   responsavel_id?: number | 'null';
-  sem_responsavel?: boolean;
   busca?: string;
   numero_processo?: string;
   polo_ativo_nome?: string;
@@ -52,7 +51,6 @@ export interface AudienciasFilters {
   modalidade?: 'virtual' | 'presencial' | 'hibrida';
   tipo_descricao?: string;
   tipo_codigo?: string;
-  tipo_is_virtual?: boolean;
   data_inicio_inicio?: string;
   data_inicio_fim?: string;
   data_fim_inicio?: string;

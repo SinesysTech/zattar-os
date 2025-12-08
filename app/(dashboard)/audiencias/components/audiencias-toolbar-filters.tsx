@@ -53,16 +53,6 @@ export const AUDIENCIAS_FILTER_CONFIGS: FilterConfig[] = [
       { value: 'hibrida', label: 'Híbrida' },
     ],
   },
-  {
-    id: 'tipo_is_virtual',
-    label: 'Apenas Audiências Virtuais (legado)',
-    type: 'boolean',
-  },
-  {
-    id: 'sem_responsavel',
-    label: 'Sem Responsável',
-    type: 'boolean',
-  },
 ];
 
 export function buildAudienciasFilterOptions(usuarios?: Usuario[]): ComboboxOption[] {
@@ -110,7 +100,7 @@ export function buildAudienciasFilterGroups(usuarios?: Usuario[]): FilterGroup[]
   // Helper para construir opções sem prefixo do grupo
   const buildOptionsWithoutPrefix = (configs: FilterConfig[], usuariosList?: Usuario[]): ComboboxOption[] => {
     const options: ComboboxOption[] = [];
-    
+
     for (const config of configs) {
       if (config.type === 'select') {
         if (config.id === 'responsavel_id' && usuariosList) {
@@ -143,7 +133,7 @@ export function buildAudienciasFilterGroups(usuarios?: Usuario[]): FilterGroup[]
         });
       }
     }
-    
+
     return options;
   };
 
@@ -176,13 +166,6 @@ export function buildAudienciasFilterGroups(usuarios?: Usuario[]): FilterGroup[]
       label: 'Modalidade',
       options: buildOptionsWithoutPrefix([
         configMap.get('modalidade')!,
-      ]),
-    },
-    {
-      label: 'Características',
-      options: buildOptionsWithoutPrefix([
-        configMap.get('tipo_is_virtual')!,
-        configMap.get('sem_responsavel')!,
       ]),
     },
   ];
@@ -227,16 +210,8 @@ export function parseAudienciasFilters(selectedFilters: string[]): AudienciasFil
           filters.modalidade = value as 'virtual' | 'presencial' | 'hibrida';
         }
       }
-    } else {
-      const config = configMap.get(selected);
-      if (config && config.type === 'boolean') {
-        if (selected === 'tipo_is_virtual') {
-          filters.tipo_is_virtual = true;
-        } else if (selected === 'sem_responsavel') {
-          filters.sem_responsavel = true;
-        }
-      }
     }
+    // Removido: filtros booleanos obsoletos (tipo_is_virtual, sem_responsavel)
   }
 
   return filters;
