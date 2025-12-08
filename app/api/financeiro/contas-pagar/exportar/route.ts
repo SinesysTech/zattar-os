@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
   const formato = searchParams.get('formato') || 'pdf';
 
   const params: ListarContasPagarParams = {
-    status: searchParams.get('status') as any,
+    status: (searchParams.get('status') as ListarContasPagarParams['status']) || undefined,
     dataVencimentoInicio: searchParams.get('dataInicio') || undefined,
     dataVencimentoFim: searchParams.get('dataFim') || undefined,
     fornecedorId: searchParams.get('fornecedorId')
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     const cabecalhos = ['Descrição', 'Fornecedor', 'Vencimento', 'Valor', 'Status'];
     const linhas = items.map((conta) => [
       conta.descricao,
-      (conta as any).fornecedor?.nome || (conta as any).fornecedorNome || '',
+      (conta.fornecedor?.nomeFantasia || conta.fornecedor?.razaoSocial) || '',
       conta.dataVencimento ? formatarData(conta.dataVencimento) : '-',
       conta.valor,
       conta.status,
@@ -103,7 +103,7 @@ export async function GET(request: NextRequest) {
       y = base.pageHeight - margin;
     }
 
-    currentPage.drawText((conta as any).fornecedor?.nome || (conta as any).fornecedorNome || '-', {
+    currentPage.drawText((conta.fornecedor?.nomeFantasia || conta.fornecedor?.razaoSocial) || '-', {
       x: colX[0],
       y,
       size: 9,

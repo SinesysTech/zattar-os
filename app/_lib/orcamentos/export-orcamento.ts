@@ -9,11 +9,8 @@ import type {
   OrcamentoComDetalhes,
   AnaliseOrcamentaria,
   ResumoOrcamentario,
-  AlertaOrcamentario,
   AlertaDesvio,
   EvolucaoMensal,
-  ComparativoOrcamento,
-  AnaliseOrcamentariaItem,
   ProjecaoItem,
 } from '@/backend/types/financeiro/orcamento.types';
 import type {

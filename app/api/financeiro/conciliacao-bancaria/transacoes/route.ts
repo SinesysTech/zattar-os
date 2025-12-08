@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import { listarTransacoesImportadas } from '@/backend/financeiro/conciliacao-bancaria/services/persistence/conciliacao-bancaria-persistence.service';
-import type { ListarTransacoesImportadasParams } from '@/backend/types/financeiro/conciliacao-bancaria.types';
+import type { ListarTransacoesImportadasParams, StatusConciliacao } from '@/backend/types/financeiro/conciliacao-bancaria.types';
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const statusConciliacaoValues = searchParams.getAll('statusConciliacao');
+    const statusConciliacaoValues = searchParams.getAll('statusConciliacao') as StatusConciliacao[];
 
     const params: ListarTransacoesImportadasParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
@@ -25,8 +25,8 @@ export async function GET(request: NextRequest) {
         statusConciliacaoValues.length === 0
           ? undefined
           : statusConciliacaoValues.length === 1
-            ? (statusConciliacaoValues[0] as any)
-            : (statusConciliacaoValues as any),
+            ? statusConciliacaoValues[0]
+            : statusConciliacaoValues,
       busca: searchParams.get('busca') || undefined,
       tipoTransacao: (searchParams.get('tipoTransacao') as 'credito' | 'debito' | null) || undefined,
       ordenarPor: (searchParams.get('ordenarPor') as ListarTransacoesImportadasParams['ordenarPor']) || undefined,

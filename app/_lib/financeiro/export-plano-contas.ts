@@ -3,7 +3,6 @@
  */
 
 import { saveAs } from 'file-saver';
-import { PDFDocument } from 'pdf-lib';
 import { achatarHierarquia } from '@/types/domain/financeiro';
 import type { PlanoContaHierarquico } from '@/backend/types/financeiro/plano-contas.types';
 import {
@@ -37,7 +36,7 @@ export function exportarPlanoContasCSV(contas: PlanoContaHierarquico[]): void {
 export async function exportarPlanoContasPDF(contas: PlanoContaHierarquico[]): Promise<void> {
   const { base, cursorY } = await gerarPDFBase('Plano de Contas');
   let y = cursorY;
-  const { pdfDoc, page, font, boldFont, margin, lineHeight } = base;
+  const { pdfDoc, font, boldFont, margin, lineHeight } = base;
 
   const desenhar = (lista: PlanoContaHierarquico[], nivel: number = 0) => {
     for (const conta of lista) {
