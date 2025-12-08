@@ -27,10 +27,8 @@ import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
 interface ExpedientesFiltersState {
 	trt?: string;
 	grau?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
-	responsavelId?: number | null;
 	tipoExpedienteId?: number | null;
-	baixado?: boolean;
-	prazoVencido?: boolean;
+	status?: 'pendente' | 'vencido' | 'sem_data' | 'baixados';
 }
 
 interface ExpedientesCalendarHeaderProps {
@@ -77,14 +75,14 @@ export function ExpedientesCalendarHeader({
 				<div className="options flex-wrap flex items-center gap-4 md:gap-2">
 					{onFilterChange && onClearFilters && (
 						<ExpedientesFilters
-							usuarios={usuarios}
 							tiposExpedientes={tiposExpedientes}
 							selectedFilters={filters}
 							onFilterChange={onFilterChange}
 							onClearFilters={onClearFilters}
 						/>
 					)}
-					<Views />
+					{/* Ocultar Views quando estiver em visualização especial (vencidos/sem_data) */}
+					{filters?.status !== 'vencido' && filters?.status !== 'sem_data' && <Views />}
 				</div>
 
 				<div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-1.5">
