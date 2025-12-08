@@ -115,7 +115,7 @@ export function Combobox({
   }
 
   const selectedOptions = options.filter((opt) => selectedValues.includes(opt.value))
-  const allFilteredSelected = multiple && filteredOptions.length > 0 && 
+  const allFilteredSelected = multiple && filteredOptions.length > 0 &&
     filteredOptions.every((opt) => selectedValues.includes(opt.value))
 
   return (
@@ -125,7 +125,7 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-full justify-between", className)}
+          className={cn("w-full justify-between min-h-[44px] touch-manipulation", className)}
           disabled={disabled}
         >
           <div className="flex flex-wrap gap-1 flex-1 min-w-0">
@@ -195,7 +195,8 @@ export function Combobox({
               placeholder={searchPlaceholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-9"
+              className="h-11 min-h-[44px] touch-manipulation"
+              autoFocus
             />
           </div>
 
@@ -226,7 +227,7 @@ export function Combobox({
           )}
 
           {/* Lista de opções */}
-          <div className="max-h-[300px] overflow-auto p-1">
+          <div className="max-h-[300px] md:max-h-[400px] overflow-auto p-1 scroll-smooth">
             {filteredOptions.length === 0 ? (
               <Empty className="border-0 py-4">
                 <EmptyHeader>
@@ -243,7 +244,7 @@ export function Combobox({
                   <div
                     key={option.value}
                     className={cn(
-                      "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground",
+                      "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2.5 min-h-[44px] text-sm outline-none hover:bg-accent hover:text-accent-foreground touch-manipulation active:scale-[0.98] transition-transform",
                       isSelected && "bg-accent"
                     )}
                     onClick={() => handleSelect(option.value)}

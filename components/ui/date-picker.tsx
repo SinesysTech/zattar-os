@@ -32,11 +32,15 @@ export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="justify-start w-[180px]" onClick={() => setOpen(true)}>
+        <Button
+          variant="outline"
+          className="justify-start w-[180px] min-h-[44px] touch-manipulation"
+          onClick={() => setOpen(true)}
+        >
           {label}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="p-0">
+      <PopoverContent align="start" className="p-0 w-auto">
         <Calendar selected={selected} onSelect={handleSelect} mode="single" initialFocus />
       </PopoverContent>
     </Popover>

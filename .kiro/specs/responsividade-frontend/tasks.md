@@ -186,22 +186,22 @@
   - **Property 13: Mobile form buttons layout**
   - **Validates: Requirements 3.5**
 
-- [ ] 10. Otimizar Selects e Date Pickers para mobile
-- [ ] 10.1 Atualizar DatePicker para mobile
+- [-] 10. Otimizar Selects e Date Pickers para mobile
+- [x] 10.1 Atualizar DatePicker para mobile
   - Verificar se react-day-picker já é touch-friendly
   - Aumentar tamanho dos botões de navegação em mobile
   - Garantir que células do calendário tenham 44x44px em mobile
   - Adicionar feedback visual claro para seleção
   - _Requirements: 7.1, 7.3, 7.5_
 
-- [ ] 10.2 Atualizar Select e Combobox para mobile
+- [x] 10.2 Atualizar Select e Combobox para mobile
   - Verificar se Radix Select já usa Sheet em mobile
   - Garantir que opções tenham altura mínima de 44px
   - Adicionar scroll suave para listas longas
   - Implementar busca otimizada em Combobox para mobile
   - _Requirements: 7.2, 7.3, 7.4, 7.5_
 
-- [ ] 10.3 Escrever property tests para Selects e Date Pickers
+- [-] 10.3 Escrever property tests para Selects e Date Pickers
   - **Property 29: Touch-optimized date picker**
   - **Validates: Requirements 7.1**
   - **Property 30: Mobile select interface**
