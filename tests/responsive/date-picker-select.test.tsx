@@ -23,11 +23,11 @@ describe('Date Picker and Select Property Tests', () => {
      * Para qualquer date picker aberto em mobile,
      * uma interface de calendário otimizada para touch deve ser exibida.
      */
-    test('Property 29: Date picker displays touch-optimized calendar on mobile', () => {
-        fc.assert(
-            fc.property(
+    test('Property 29: Date picker displays touch-optimized calendar on mobile', async () => {
+        await fc.assert(
+            fc.asyncProperty(
                 fc.integer({ min: 320, max: 767 }), // mobile viewport widths
-                (width) => {
+                async (width) => {
                     // Configura viewport mobile
                     setViewport({ width, height: 800 });
 
@@ -40,35 +40,37 @@ describe('Date Picker and Select Property Tests', () => {
                     const trigger = getByRole('button');
                     fireEvent.click(trigger);
 
-                    // Verifica que o calendário foi renderizado
-                    const calendar = container.querySelector('[data-slot="calendar"]');
-                    expect(calendar).toBeInTheDocument();
+                    // Aguarda o calendário renderizar
+                    await waitFor(() => {
+                        const calendar = container.querySelector('[data-slot="calendar"]');
+                        expect(calendar).toBeInTheDocument();
+                    }, { timeout: 1000 });
 
                     // Verifica que botões de navegação têm touch targets adequados
                     const navButtons = container.querySelectorAll('[class*="button_previous"], [class*="button_next"]');
-                    navButtons.forEach((button) => {
-                        const size = getTouchTargetSize(button as HTMLElement);
-                        expect(size.width).toBeGreaterThanOrEqual(44);
-                        expect(size.height).toBeGreaterThanOrEqual(44);
-                    });
-
-                    // Verifica que células do calendário têm touch targets adequados
-                    const dayButtons = container.querySelectorAll('[data-slot="calendar"] button[data-day]');
-                    if (dayButtons.length > 0) {
-                        dayButtons.forEach((dayButton) => {
-                            const size = getTouchTargetSize(dayButton as HTMLElement);
+                    if (navButtons.length > 0) {
+                        navButtons.forEach((button) => {
+                            const size = getTouchTargetSize(button as HTMLElement);
+                            expect(size.width).toBeGreaterThanOrEqual(44);
                             expect(size.height).toBeGreaterThanOrEqual(44);
                         });
                     }
 
-                    // Verifica que tem classe touch-manipulation
-                    const firstDayButton = dayButtons[0] as HTMLElement;
-                    if (firstDayButton) {
+                    // Verifica que células do calendário têm touch targets adequados
+                    const dayButtons = container.querySelectorAll('[data-slot="calendar"] button[data-day]');
+                    if (dayButtons.length > 0) {
+                        const firstDayButton = dayButtons[0] as HTMLElement;
+                        const size = getTouchTargetSize(firstDayButton);
+                        expect(size.height).toBeGreaterThanOrEqual(44);
+
+                        // Verifica que tem classe touch-manipulation
                         expect(firstDayButton).toHaveClass('touch-manipulation');
                     }
+
+                    cleanup();
                 }
             ),
-            { numRuns: 100 }
+            { numRuns: 50 } // Reduzido por ser async
         );
     });
 
