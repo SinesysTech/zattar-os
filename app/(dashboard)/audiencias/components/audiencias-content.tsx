@@ -462,10 +462,10 @@ function criarColunas(
 ): ResponsiveTableColumn<Audiencia>[] {
   return [
     {
-      key: 'data_inicio',
-      header: ({ column }: { column: any }) => (
+      id: 'data_inicio',
+      header: () => (
         <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Data/Hora" />
+          <div className="text-sm font-medium">Data/Hora</div>
         </div>
       ),
       enableSorting: true,
@@ -474,21 +474,21 @@ function criarColunas(
       sticky: true,
       cardLabel: 'Data/Hora',
       meta: { align: 'left' },
-      sortingFn: (rowA: any, rowB: any) => {
+      sortingFn: (rowA, rowB) => {
         const dataA = normalizarDataParaComparacao(rowA.original.data_inicio);
         const dataB = normalizarDataParaComparacao(rowB.original.data_inicio);
         return dataA - dataB;
       },
-      cell: ({ row }: { row: any }) => <DataHoraCell audiencia={row.original} />,
+      cell: ({ row }) => <DataHoraCell audiencia={row.original} />,
     },
     {
-      key: 'processo',
+      id: 'processo',
       header: () => <ProcessoColumnHeader onSort={onProcessoSort} />,
       enableSorting: false,
       priority: 2,
       cardLabel: 'Processo',
       meta: { align: 'left' },
-      cell: ({ row }: { row: any }) => {
+      cell: ({ row }) => {
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
         const trt = row.original.trt;
@@ -526,33 +526,33 @@ function criarColunas(
       },
     },
     {
-      key: 'detalhes',
+      id: 'detalhes',
       header: () => <div className="flex items-center justify-center"><div className="text-sm font-medium">Detalhes</div></div>,
       enableSorting: false,
       size: 280,
       priority: 3,
       cardLabel: 'Detalhes',
       meta: { align: 'left' },
-      cell: ({ row }: { row: any }) => <TipoSalaAcoesCell audiencia={row.original} onSuccess={onSuccess} />,
+      cell: ({ row }) => <TipoSalaAcoesCell audiencia={row.original} onSuccess={onSuccess} />,
     },
     {
-      key: 'observacoes',
+      id: 'observacoes',
       header: () => <div className="flex items-center justify-center"><div className="text-sm font-medium">Observações</div></div>,
       enableSorting: false,
       size: 250,
       priority: 5,
       cardLabel: 'Observações',
       meta: { align: 'left' },
-      cell: ({ row }: { row: any }) => <div className="h-full w-full"><ObservacoesCell audiencia={row.original} onSuccess={onSuccess} /></div>,
+      cell: ({ row }) => <div className="h-full w-full"><ObservacoesCell audiencia={row.original} onSuccess={onSuccess} /></div>,
     },
     {
-      key: 'responsavel_id',
+      id: 'responsavel_id',
       header: () => <ResponsavelColumnHeader onSort={onResponsavelSort} />,
       enableSorting: false,
       priority: 4,
       cardLabel: 'Responsável',
       meta: { align: 'left' },
-      cell: ({ row }: { row: any }) => <div className="min-h-10 flex items-center justify-center"><ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} /></div>,
+      cell: ({ row }) => <div className="min-h-10 flex items-center justify-center"><ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} /></div>,
     },
   ];
 }
