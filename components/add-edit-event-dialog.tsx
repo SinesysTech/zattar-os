@@ -121,17 +121,17 @@ export function AddEditEventDialog({
 
 			if (isEditing) {
 				updateEvent(formattedEvent);
-				toast.success("Event updated successfully");
+				toast.success("Evento atualizado com sucesso");
 			} else {
 				addEvent(formattedEvent);
-				toast.success("Event created successfully");
+				toast.success("Evento criado com sucesso");
 			}
 
 			onClose();
 			form.reset();
 		} catch (error) {
-			console.error(`Error ${isEditing ? "editing" : "adding"} event:`, error);
-			toast.error(`Failed to ${isEditing ? "edit" : "add"} event`);
+			console.error(`Erro ao ${isEditing ? "editar" : "adicionar"} evento:`, error);
+			toast.error(`Falha ao ${isEditing ? "editar" : "adicionar"} evento`);
 		}
 	};
 
@@ -140,11 +140,11 @@ export function AddEditEventDialog({
 			<ModalTrigger asChild>{children}</ModalTrigger>
 			<ModalContent>
 				<ModalHeader>
-					<ModalTitle>{isEditing ? "Edit Event" : "Add New Event"}</ModalTitle>
+					<ModalTitle>{isEditing ? "Editar Evento" : "Adicionar Novo Evento"}</ModalTitle>
 					<ModalDescription>
 						{isEditing
-							? "Modify your existing event."
-							: "Create a new event for your calendar."}
+							? "Modifique seu evento existente."
+							: "Crie um novo evento para seu calendário."}
 					</ModalDescription>
 				</ModalHeader>
 
@@ -160,12 +160,12 @@ export function AddEditEventDialog({
 							render={({ field, fieldState }) => (
 								<FormItem>
 									<FormLabel htmlFor="title" className="required">
-										Title
+										Título
 									</FormLabel>
 									<FormControl>
 										<Input
 											id="title"
-											placeholder="Enter a title"
+											placeholder="Digite um título"
 											{...field}
 											className={fieldState.invalid ? "border-red-500" : ""}
 										/>
@@ -193,7 +193,7 @@ export function AddEditEventDialog({
 							name="color"
 							render={({ field, fieldState }) => (
 								<FormItem>
-									<FormLabel className="required">Variant</FormLabel>
+									<FormLabel className="required">Cor</FormLabel>
 									<FormControl>
 										<Select value={field.value} onValueChange={field.onChange}>
 											<SelectTrigger
@@ -201,7 +201,7 @@ export function AddEditEventDialog({
 													fieldState.invalid ? "border-red-500" : ""
 												}`}
 											>
-												<SelectValue placeholder="Select a variant" />
+												<SelectValue placeholder="Selecione uma cor" />
 											</SelectTrigger>
 											<SelectContent>
 												{COLORS.map((color) => (
@@ -226,11 +226,11 @@ export function AddEditEventDialog({
 							name="description"
 							render={({ field, fieldState }) => (
 								<FormItem>
-									<FormLabel className="required">Description</FormLabel>
+									<FormLabel className="required">Descrição</FormLabel>
 									<FormControl>
 										<Textarea
 											{...field}
-											placeholder="Enter a description"
+											placeholder="Digite uma descrição"
 											className={fieldState.invalid ? "border-red-500" : ""}
 										/>
 									</FormControl>
@@ -243,11 +243,11 @@ export function AddEditEventDialog({
 				<ModalFooter className="flex justify-end gap-2">
 					<ModalClose asChild>
 						<Button type="button" variant="outline">
-							Cancel
+							Cancelar
 						</Button>
 					</ModalClose>
 					<Button form="event-form" type="submit">
-						{isEditing ? "Save Changes" : "Create Event"}
+						{isEditing ? "Salvar Alterações" : "Criar Evento"}
 					</Button>
 				</ModalFooter>
 			</ModalContent>

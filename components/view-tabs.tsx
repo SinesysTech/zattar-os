@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ClientOnlyTabs, TabsList, TabsTrigger } from "@/components/ui/client-only-tabs";
 
 import { cn } from "@/lib/utils";
 import { useCalendar } from "@/components/calendar-context";
@@ -21,22 +21,22 @@ const tabs = [
     icon: () => <CalendarRange className="h-4 w-4" />,
   },
   {
-    name: "Day",
+    name: "Dia",
     value: "day",
     icon: () => <List className="h-4 w-4" />,
   },
   {
-    name: "Week",
+    name: "Semana",
     value: "week",
     icon: () => <Columns className="h-4 w-4" />,
   },
   {
-    name: "Month",
+    name: "Mês",
     value: "month",
     icon: () => <Grid3X3 className="h-4 w-4" />,
   },
   {
-    name: "Year",
+    name: "Ano",
     value: "year",
     icon: () => <Grid2X2 className="h-4 w-4" />,
   },
@@ -46,7 +46,7 @@ function Views() {
   const { view, setView } = useCalendar();
 
   return (
-    <Tabs
+    <ClientOnlyTabs
       value={view}
       onValueChange={(value) => setView(value as TCalendarView)}
       className="gap-4 sm:w-auto w-full"
@@ -101,7 +101,7 @@ function Views() {
           );
         })}
       </TabsList>
-    </Tabs>
+    </ClientOnlyTabs>
   );
 }
 

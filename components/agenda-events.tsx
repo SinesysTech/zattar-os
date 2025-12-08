@@ -1,4 +1,5 @@
 import {format, parseISO} from "date-fns";
+import { ptBR } from "date-fns/locale";
 import type {FC} from "react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {
@@ -40,7 +41,7 @@ export const AgendaEvents: FC = () => {
     return (
         <Command className="py-4 h-[80vh] bg-transparent">
             <div className="mb-4 mx-4">
-                <CommandInput placeholder="Type a command or search..."/>
+                <CommandInput placeholder="Digite para buscar..."/>
             </div>
             <CommandList className="max-h-max px-3 border-t">
                 {groupedAndSortedEvents.map(([date, groupedEvents]) => (
@@ -48,7 +49,7 @@ export const AgendaEvents: FC = () => {
                         key={date}
                         heading={
                             agendaModeGroupBy === "date"
-                                ? format(parseISO(date), "EEEE, MMMM d, yyyy")
+                                ? format(parseISO(date), "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })
                                 : toCapitalize(groupedEvents![0].color)
                         }
                     >
@@ -121,7 +122,7 @@ export const AgendaEvents: FC = () => {
                         ))}
                     </CommandGroup>
                 ))}
-                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
             </CommandList>
         </Command>
     );
