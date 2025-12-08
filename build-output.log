@@ -9,3 +9,27 @@
      ✓ webpackMemoryOptimizations
 
    Creating an optimized production build ...
+ ✓ Compiled successfully in 111s
+   Skipping validation of types
+   Collecting page data using 7 workers ...
+(node:30948) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+   Generating static pages using 7 workers (0/214) ...
+   Generating static pages using 7 workers (53/214) 
+Cache miss for pendentes list: pendentes:{"baixado":false,"data_prazo_legal_fim":"2026-03-08T19:15:36.034Z","data_prazo_legal_inicio":"2025-09-08T19:15:36.034Z","limite":1000,"pagina":1}
+Cache miss for tipos expedientes list: tipos_expedientes:{"limite":100}
+   Generating static pages using 7 workers (106/214) 
+Redis Client Connected
+Redis Client Ready
+Cache hit for listarUsuarios: usuarios:{"ativo":true,"limite":100}
+Cache hit for tipos expedientes list: tipos_expedientes:{"limite":100}
+   Generating static pages using 7 workers (160/214) 
+(node:20484) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Error occurred prerendering page "/rh/salarios". Read more: https://nextjs.org/docs/messages/prerender-error
+ReferenceError: Cannot access 'h' before initialization
+    at x (E:\Development\sinesys\.next\server\chunks\ssr\app_(dashboard)_rh_salarios_page_tsx_7e9e258d._.js:1:1104) {
+  digest: '1310839373'
+}
+Export encountered an error on /(dashboard)/rh/salarios/page: /rh/salarios, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null
