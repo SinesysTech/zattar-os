@@ -19,7 +19,7 @@ import {
 
 export function exportarContasReceberCSV(contas: ContaReceberComDetalhes[]): void {
   const cabecalhos = ['Descrição', 'Cliente', 'Vencimento', 'Valor', 'Status'];
-  const linhas = contas.map((conta) => [
+  const linhas: (string | number | null | undefined)[][] = contas.map((conta) => [
     conta.descricao,
     (conta.cliente?.nomeFantasia || conta.cliente?.razaoSocial) || '',
     conta.dataVencimento ? formatarData(conta.dataVencimento) : '-',
@@ -103,7 +103,7 @@ export async function exportarRelatorioInadimplenciaPDF(
   let y = cursorY;
   const { pdfDoc, page, font, boldFont, margin, lineHeight } = base;
 
-  const blocos: Array<{ titulo: string; dado: ResumoInadimplencia['vencidas'] }> = [
+  const blocos: Array<{ titulo: string; dado: { quantidade: number; valorTotal: number } }> = [
     { titulo: 'Vencidas', dado: resumo.vencidas },
     { titulo: 'Vencendo Hoje', dado: resumo.vencendoHoje },
     { titulo: 'Próximos 7 dias', dado: resumo.vencendoEm7Dias },
