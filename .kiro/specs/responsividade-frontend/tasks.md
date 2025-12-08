@@ -139,7 +139,7 @@
   - Adicionar botão de "Filtros" com badge de contagem em mobile
   - _Requirements: 12.3_
 
-- [-] 7.3 Escrever property tests para Listagens
+- [x] 7.3 Escrever property tests para Listagens
   - **Property 53: List card layout on mobile**
   - **Validates: Requirements 12.1**
   - **Property 54: List item information hierarchy**
@@ -152,15 +152,15 @@
 
 ## Fase 4: Componentes de Formulário
 
-- [ ] 9. Implementar Formulários responsivos
-- [ ] 9.1 Criar wrapper ResponsiveFormLayout
+- [-] 9. Implementar Formulários responsivos
+- [x] 9.1 Criar wrapper ResponsiveFormLayout
   - Implementar container que aplica grid responsivo para campos
   - Adicionar suporte para stacking vertical em mobile (< 640px)
   - Adicionar layout 2-colunas para tablet (768px-1024px)
   - Implementar botões full-width ou stacked em mobile
   - _Requirements: 3.1, 3.3, 3.4, 3.5_
 
-- [ ] 9.2 Atualizar componentes base de formulário
+- [x] 9.2 Atualizar componentes base de formulário
   - Garantir que Button tenha touch targets mínimos de 44x44px em mobile
   - Atualizar Input para ter altura adequada em mobile (min-h-11)
   - Atualizar Select para ter altura adequada em mobile
@@ -168,7 +168,7 @@
   - Adicionar classes responsivas de spacing
   - _Requirements: 3.1, 3.3_
 
-- [ ] 9.3 Migrar formulários existentes para layout responsivo
+- [x] 9.3 Migrar formulários existentes para layout responsivo
   - Atualizar formulário de cadastro de clientes
   - Atualizar formulário de cadastro de processos
   - Atualizar formulário de cadastro de contratos
@@ -176,7 +176,7 @@
   - Garantir consistência em todos os formulários
   - _Requirements: 3.1, 3.3, 3.4, 3.5_
 
-- [ ] 9.4 Escrever property tests para Formulários
+- [x] 9.4 Escrever property tests para Formulários
   - **Property 10: Form fields stacked on mobile**
   - **Validates: Requirements 3.1**
   - **Property 11: Touch target minimum size**
