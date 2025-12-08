@@ -3,24 +3,27 @@
 // Componente de conteúdo de obrigações - Compartilhado entre as diferentes visualizações
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import { TableToolbar } from '@/components/ui/table-toolbar';
+import { ClientOnlyTabs, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { buildObrigacoesFilterOptions, buildObrigacoesFilterGroups, parseObrigacoesFilters } from './obrigacoes-toolbar-filters';
 import { NovaObrigacaoDialog } from './nova-obrigacao-dialog';
 import { AcordosCondenacoesList } from './acordos-condenacoes-list';
 import type { ObrigacoesFilters } from './obrigacoes-toolbar-filters';
 
-export type ObrigacoesVisualizacao = 'tabela' | 'semana' | 'mes' | 'ano';
+export type ObrigacoesVisualizacao = 'tabela' | 'semana' | 'mes' | 'ano' | 'lista';
 
 interface ObrigacoesContentProps {
   visualizacao: ObrigacoesVisualizacao;
 }
 
 export function ObrigacoesContent({ visualizacao }: ObrigacoesContentProps) {
+  const router = useRouter();
   const [busca, setBusca] = React.useState('');
   const [filtros, setFiltros] = React.useState<ObrigacoesFilters>({});
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
@@ -144,76 +147,12 @@ export function ObrigacoesContent({ visualizacao }: ObrigacoesContentProps) {
     setRefreshKey(prev => prev + 1);
   }, []);
 
-  // Renderizar controles de navegação (apenas para visualizações de calendário)
-  const renderControlesNavegacao = () => {
-    if (visualizacao === 'tabela') return null;
-
-    return (
-      <ButtonGroup>
-        {/* Botão Anterior */}
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => {
-            if (visualizacao === 'semana') navegarSemana('anterior');
-            if (visualizacao === 'mes') navegarMes('anterior');
-            if (visualizacao === 'ano') navegarAno('anterior');
-          }}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-
-        {/* Indicador de período atual */}
-        <ButtonGroupText className="whitespace-nowrap capitalize min-w-40 text-center text-xs font-normal">
-          {visualizacao === 'semana' && `${formatarDataCabecalho(inicioSemana)} - ${formatarDataCabecalho(fimSemana)}`}
-          {visualizacao === 'mes' && formatarMesAno(mesAtual)}
-          {visualizacao === 'ano' && (anoAtual ?? '...')}
-        </ButtonGroupText>
-
-        {/* Botão Próximo */}
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => {
-            if (visualizacao === 'semana') navegarSemana('proxima');
-            if (visualizacao === 'mes') navegarMes('proximo');
-            if (visualizacao === 'ano') navegarAno('proximo');
-          }}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-
-        {/* Botão Rollback (Voltar para atual) */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => {
-                if (visualizacao === 'semana') voltarSemanaAtual();
-                if (visualizacao === 'mes') voltarMesAtual();
-                if (visualizacao === 'ano') voltarAnoAtual();
-              }}
-              aria-label="Voltar para período atual"
-              className="bg-muted hover:bg-muted/80"
-            >
-              <RotateCcw className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent className="px-2 py-1 text-xs">
-            {visualizacao === 'semana' && 'Semana Atual'}
-            {visualizacao === 'mes' && 'Mês Atual'}
-            {visualizacao === 'ano' && 'Ano Atual'}
-          </TooltipContent>
-        </Tooltip>
-      </ButtonGroup>
-    );
-  };
 
   // Renderizar conteúdo baseado na visualização
   const renderConteudo = () => {
     switch (visualizacao) {
       case 'tabela':
+      case 'lista':
         return (
           <AcordosCondenacoesList
             busca={buscaDebounced}
@@ -244,10 +183,13 @@ export function ObrigacoesContent({ visualizacao }: ObrigacoesContentProps) {
     }
   };
 
+  // Mapear 'tabela' para 'lista' para compatibilidade com rotas
+  const visualizacaoTab = visualizacao === 'tabela' ? 'lista' : visualizacao;
+
   return (
     <div className="space-y-4">
       {/* Linha 1: Barra de busca e filtros */}
-      <div className="flex items-center gap-4">
+      <div className="flex justify-center">
         <TableToolbar
           searchValue={busca}
           onSearchChange={(value) => {
@@ -265,12 +207,74 @@ export function ObrigacoesContent({ visualizacao }: ObrigacoesContentProps) {
         />
       </div>
 
-      {/* Linha 2: Controles de navegação (apenas para visualizações de calendário) */}
-      {visualizacao !== 'tabela' && (
-        <div className="flex items-center gap-4">
-          {renderControlesNavegacao()}
-        </div>
-      )}
+      {/* Linha 2: Tabs + Controles de navegação */}
+      <div className="flex items-center gap-4 pt-2">
+        <ClientOnlyTabs value={visualizacaoTab} onValueChange={(value) => {
+          const route = value === 'lista' ? '/acordos-condenacoes/lista' : `/acordos-condenacoes/${value}`;
+          router.push(route);
+        }}>
+          <TabsList>
+            <TabsTrigger value="semana">Semana</TabsTrigger>
+            <TabsTrigger value="mes">Mês</TabsTrigger>
+            <TabsTrigger value="ano">Ano</TabsTrigger>
+            <TabsTrigger value="lista">Lista</TabsTrigger>
+          </TabsList>
+        </ClientOnlyTabs>
+
+        {visualizacao !== 'tabela' && visualizacao !== 'lista' && (
+          <ButtonGroup>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => {
+                if (visualizacao === 'semana') navegarSemana('anterior');
+                if (visualizacao === 'mes') navegarMes('anterior');
+                if (visualizacao === 'ano') navegarAno('anterior');
+              }}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <ButtonGroupText className="whitespace-nowrap capitalize min-w-40 text-center text-xs font-normal">
+              {visualizacao === 'semana' && `${formatarDataCabecalho(inicioSemana)} - ${formatarDataCabecalho(fimSemana)}`}
+              {visualizacao === 'mes' && formatarMesAno(mesAtual)}
+              {visualizacao === 'ano' && (anoAtual ?? '...')}
+            </ButtonGroupText>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => {
+                if (visualizacao === 'semana') navegarSemana('proxima');
+                if (visualizacao === 'mes') navegarMes('proximo');
+                if (visualizacao === 'ano') navegarAno('proximo');
+              }}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => {
+                    if (visualizacao === 'semana') voltarSemanaAtual();
+                    if (visualizacao === 'mes') voltarMesAtual();
+                    if (visualizacao === 'ano') voltarAnoAtual();
+                  }}
+                  aria-label="Voltar para período atual"
+                  className="bg-muted hover:bg-muted/80"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="px-2 py-1 text-xs">
+                {visualizacao === 'semana' && 'Semana Atual'}
+                {visualizacao === 'mes' && 'Mês Atual'}
+                {visualizacao === 'ano' && 'Ano Atual'}
+              </TooltipContent>
+            </Tooltip>
+          </ButtonGroup>
+        )}
+      </div>
 
       {/* Conteúdo */}
       {renderConteudo()}

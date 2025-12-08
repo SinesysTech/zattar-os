@@ -1061,8 +1061,8 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
 
   return (
     <div className="space-y-4">
-      {/* Linha 1: TableToolbar com botões de filtro individuais */}
-      <div className="flex items-center gap-4">
+      {/* Linha 1: Busca e Filtros - Centralizada */}
+      <div className="flex justify-center">
         <TableToolbar
           searchValue={busca}
           onSearchChange={(value: string) => { setBusca(value); setPagina(0); }}
@@ -1078,9 +1078,18 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
         />
       </div>
 
-      {/* Linha 2: Controles de navegação temporal (apenas para visualizações de calendário) */}
-      {visualizacao !== 'tabela' && (
-        <div className="flex items-center justify-start gap-4 pt-2">
+      {/* Linha 2: Tabs + Controles de navegação + contador */}
+      <div className="flex items-center gap-4 pt-2">
+        <ClientOnlyTabs value={visualizacao} onValueChange={(value) => router.push(`/expedientes/${value}`)}>
+          <TabsList>
+            <TabsTrigger value="semana">Semana</TabsTrigger>
+            <TabsTrigger value="mes">Mês</TabsTrigger>
+            <TabsTrigger value="ano">Ano</TabsTrigger>
+            <TabsTrigger value="lista">Lista</TabsTrigger>
+          </TabsList>
+        </ClientOnlyTabs>
+
+        {visualizacao !== 'lista' && (
           <ButtonGroup>
             <Button
               variant="outline"
@@ -1130,13 +1139,13 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
               </TooltipContent>
             </Tooltip>
           </ButtonGroup>
-          {visualizacao === 'semana' && (
-            <div className="inline-flex items-center h-9 rounded-md border border-input bg-primary/10 px-3 text-sm font-medium text-primary shrink-0">
-              {contadorExpedientesSemana} expedientes
-            </div>
-          )}
-        </div>
-      )}
+        )}
+        {visualizacao === 'semana' && (
+          <div className="inline-flex items-center h-9 rounded-md border border-input bg-primary/10 px-3 text-sm font-medium text-primary shrink-0">
+            {contadorExpedientesSemana} expedientes
+          </div>
+        )}
+      </div>
 
       {/* Conteúdo baseado no modo de visualização */}
       {visualizacao === 'lista' && (
@@ -1218,4 +1227,3 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
     </div>
   );
 }
-    

@@ -20,9 +20,10 @@ interface AcordoCondenacaoDb {
   created_by: string | null;
 }
 
-// Raw data from Supabase with joined parcelas
+// Raw data from Supabase with joined parcelas and processo
 interface AcordoCondenacaoComParcelasDb extends AcordoCondenacaoDb {
   parcelas: { id: number; status: string }[];
+  acervo?: ProcessoInfo | null;
 }
 
 /**
@@ -95,13 +96,28 @@ export interface AcordoCondenacao {
 }
 
 /**
- * Acordo com informações de parcelas
+ * Dados do processo relacionados ao acordo
+ */
+export interface ProcessoInfo {
+  id: number;
+  trt: string;
+  grau: string;
+  numero_processo: string;
+  classe_judicial: string;
+  descricao_orgao_julgador: string;
+  nome_parte_autora: string;
+  nome_parte_re: string;
+}
+
+/**
+ * Acordo com informações de parcelas e processo
  */
 export interface AcordoCondenacaoComParcelas extends AcordoCondenacao {
   parcelas?: Parcela[]; // Será tipado com Parcela do outro service
   totalParcelas: number;
   parcelasPagas: number;
   parcelasPendentes: number;
+  processo?: ProcessoInfo | null;
 }
 
 /**
@@ -210,7 +226,20 @@ export async function listarAcordosCondenacoes(
   try {
     let query = supabase
       .from('acordos_condenacoes')
-      .select('*, parcelas(*)', { count: 'exact' });
+      .select(`
+        *,
+        parcelas(*),
+        acervo!acordos_condenacoes_processo_id_fkey (
+          id,
+          trt,
+          grau,
+          numero_processo,
+          classe_judicial,
+          descricao_orgao_julgador,
+          nome_parte_autora,
+          nome_parte_re
+        )
+      `, { count: 'exact' });
 
     // Aplicar filtros
     if (params.processoId) {
@@ -252,12 +281,25 @@ export async function listarAcordosCondenacoes(
         ['recebida', 'paga'].includes(p.status)
       ).length;
 
+      // Mapear dados do processo se disponíveis
+      const processo = item.acervo ? {
+        id: item.acervo.id,
+        trt: item.acervo.trt,
+        grau: item.acervo.grau,
+        numero_processo: item.acervo.numero_processo,
+        classe_judicial: item.acervo.classe_judicial,
+        descricao_orgao_julgador: item.acervo.descricao_orgao_julgador,
+        nome_parte_autora: item.acervo.nome_parte_autora,
+        nome_parte_re: item.acervo.nome_parte_re,
+      } : null;
+
       return {
         ...acordo,
         parcelas: item.parcelas,
         totalParcelas: parcelas.length,
         parcelasPagas,
         parcelasPendentes: parcelas.length - parcelasPagas,
+        processo,
       };
     });
 

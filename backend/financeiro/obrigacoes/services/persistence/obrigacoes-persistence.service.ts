@@ -461,11 +461,8 @@ export const buscarParcelasComLancamentos = async (
 
   // Filtro de busca textual
   if (filtros.busca) {
-    // Busca na descrição do acordo ou número do processo
-    query = query.or(`
-      acordos_condenacoes.acervo.numero_processo.ilike.%${filtros.busca}%,
-      acordos_condenacoes.clientes.nome.ilike.%${filtros.busca}%
-    `);
+    // Busca apenas no número do processo
+    query = query.ilike('acordos_condenacoes.acervo.numero_processo', `%${filtros.busca}%`);
   }
 
   const { data, error } = await query;
@@ -494,10 +491,8 @@ export const buscarParcelasPorAcordo = async (acordoId: number): Promise<Parcela
         valor_total,
         numero_parcelas,
         status,
-        acervo_id,
-        cliente_id,
-        acervo(id, numero_processo, autor, reu, vara, tribunal),
-        clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa)
+        processo_id,
+        acervo(id, numero_processo, nome_parte_autora, nome_parte_re, classe_judicial, trt)
       ),
       lancamentos_financeiros(
         id,
@@ -539,10 +534,8 @@ export const buscarParcelaPorId = async (parcelaId: number): Promise<ParcelaReco
         valor_total,
         numero_parcelas,
         status,
-        acervo_id,
-        cliente_id,
-        acervo(id, numero_processo, autor, reu, vara, tribunal),
-        clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa)
+        processo_id,
+        acervo(id, numero_processo, nome_parte_autora, nome_parte_re, classe_judicial, trt)
       ),
       lancamentos_financeiros(
         id,
