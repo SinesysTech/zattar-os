@@ -144,153 +144,6 @@ function SalariosActions({
 }
 
 // ============================================================================
-// Definição das Colunas
-// ============================================================================
-
-function criarColunas(
-  onEditar: (salario: SalarioComDetalhes) => void,
-  onEncerrarVigencia: (salario: SalarioComDetalhes) => void,
-  onInativar: (salario: SalarioComDetalhes) => void,
-  onExcluir: (salario: SalarioComDetalhes) => void,
-  onVerHistorico: (salario: SalarioComDetalhes) => void
-): ColumnDef<SalarioComDetalhes>[] {
-  return [
-    {
-      accessorKey: 'usuario',
-      header: ({ column }) => (
-        <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="Funcionário" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 200,
-      cell: ({ row }) => {
-        const salario = row.original;
-        return (
-          <div className="min-h-10 flex flex-col justify-center">
-            <span className="text-sm font-medium">
-              {salario.usuario?.nomeExibicao || `Usuário ${salario.usuarioId}`}
-            </span>
-            {salario.cargo && (
-              <span className="text-xs text-muted-foreground">
-                {salario.cargo.nome}
-              </span>
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: 'salarioBruto',
-      header: ({ column }) => (
-        <div className="flex items-center justify-end">
-          <DataTableColumnHeader column={column} title="Salário Bruto" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 130,
-      cell: ({ row }) => (
-        <div className="text-right font-medium">
-          {formatarValor(row.original.salarioBruto)}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'dataInicioVigencia',
-      header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Início Vigência" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 130,
-      cell: ({ row }) => (
-        <div className="text-center">
-          {formatarData(row.original.dataInicioVigencia)}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'dataFimVigencia',
-      header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Fim Vigência" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 130,
-      cell: ({ row }) => {
-        const salario = row.original;
-        const vigente = isVigente(salario);
-        return (
-          <div className="text-center">
-            {salario.dataFimVigencia ? (
-              formatarData(salario.dataFimVigencia)
-            ) : vigente ? (
-              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                Vigente
-              </Badge>
-            ) : (
-              '-'
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: 'ativo',
-      header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Status" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 100,
-      cell: ({ row }) => {
-        const salario = row.original;
-        const vigente = isVigente(salario);
-        return (
-          <div className="flex justify-center">
-            {salario.ativo ? (
-              vigente ? (
-                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                  Ativo
-                </Badge>
-              ) : (
-                <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
-                  Encerrado
-                </Badge>
-              )
-            ) : (
-              <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
-                Inativo
-              </Badge>
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      id: 'actions',
-      header: () => <div className="text-center">Ações</div>,
-      size: 60,
-      cell: ({ row }) => (
-        <div className="flex justify-center">
-          <SalariosActions
-            salario={row.original}
-            onEditar={onEditar}
-            onEncerrarVigencia={onEncerrarVigencia}
-            onInativar={onInativar}
-            onExcluir={onExcluir}
-            onVerHistorico={onVerHistorico}
-          />
-        </div>
-      ),
-    },
-  ];
-}
-
-// ============================================================================
 // Página Principal
 // ============================================================================
 
@@ -397,9 +250,142 @@ export default function SalariosPage() {
     refetch();
   }, [refetch]);
 
-  // Colunas
-  const colunas = React.useMemo(
-    () => criarColunas(handleEditar, handleEncerrarVigencia, handleInativar, handleExcluir, handleVerHistorico),
+  // Colunas - movidas para dentro do componente para evitar problemas de hoisting
+  const colunas = React.useMemo<ColumnDef<SalarioComDetalhes>[]>(
+    () => [
+      {
+        accessorKey: 'usuario',
+        header: ({ column }) => (
+          <div className="flex items-center justify-start">
+            <DataTableColumnHeader column={column} title="Funcionário" />
+          </div>
+        ),
+        enableSorting: true,
+        size: 200,
+        cell: ({ row }) => {
+          const salario = row.original;
+          return (
+            <div className="min-h-10 flex flex-col justify-center">
+              <span className="text-sm font-medium">
+                {salario.usuario?.nomeExibicao || `Usuário ${salario.usuarioId}`}
+              </span>
+              {salario.cargo && (
+                <span className="text-xs text-muted-foreground">
+                  {salario.cargo.nome}
+                </span>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: 'salarioBruto',
+        header: ({ column }) => (
+          <div className="flex items-center justify-end">
+            <DataTableColumnHeader column={column} title="Salário Bruto" />
+          </div>
+        ),
+        enableSorting: true,
+        size: 130,
+        cell: ({ row }) => (
+          <div className="text-right font-medium">
+            {formatarValor(row.original.salarioBruto)}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'dataInicioVigencia',
+        header: ({ column }) => (
+          <div className="flex items-center justify-center">
+            <DataTableColumnHeader column={column} title="Início Vigência" />
+          </div>
+        ),
+        enableSorting: true,
+        size: 130,
+        cell: ({ row }) => (
+          <div className="text-center">
+            {formatarData(row.original.dataInicioVigencia)}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'dataFimVigencia',
+        header: ({ column }) => (
+          <div className="flex items-center justify-center">
+            <DataTableColumnHeader column={column} title="Fim Vigência" />
+          </div>
+        ),
+        enableSorting: true,
+        size: 130,
+        cell: ({ row }) => {
+          const salario = row.original;
+          const vigente = isVigente(salario);
+          return (
+            <div className="text-center">
+              {salario.dataFimVigencia ? (
+                formatarData(salario.dataFimVigencia)
+              ) : vigente ? (
+                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                  Vigente
+                </Badge>
+              ) : (
+                '-'
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: 'ativo',
+        header: ({ column }) => (
+          <div className="flex items-center justify-center">
+            <DataTableColumnHeader column={column} title="Status" />
+          </div>
+        ),
+        enableSorting: true,
+        size: 100,
+        cell: ({ row }) => {
+          const salario = row.original;
+          const vigente = isVigente(salario);
+          return (
+            <div className="flex justify-center">
+              {salario.ativo ? (
+                vigente ? (
+                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    Ativo
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
+                    Encerrado
+                  </Badge>
+                )
+              ) : (
+                <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                  Inativo
+                </Badge>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        id: 'actions',
+        header: () => <div className="text-center">Ações</div>,
+        size: 60,
+        cell: ({ row }) => (
+          <div className="flex justify-center">
+            <SalariosActions
+              salario={row.original}
+              onEditar={handleEditar}
+              onEncerrarVigencia={handleEncerrarVigencia}
+              onInativar={handleInativar}
+              onExcluir={handleExcluir}
+              onVerHistorico={handleVerHistorico}
+            />
+          </div>
+        ),
+      },
+    ],
     [handleEditar, handleEncerrarVigencia, handleInativar, handleExcluir, handleVerHistorico]
   );
 
