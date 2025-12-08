@@ -8,13 +8,14 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogBody,
+} from '@/components/ui/responsive-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -89,43 +90,45 @@ export function CreateDocumentDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Criar novo documento</DialogTitle>
-          <DialogDescription>
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>Criar novo documento</ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Crie um novo documento jurídico. Você será redirecionado para o editor.
-          </DialogDescription>
-        </DialogHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="titulo">Título *</Label>
-              <Input
-                id="titulo"
-                placeholder="Ex: Petição Inicial - Processo 1234"
-                value={titulo}
-                onChange={(e) => setTitulo(e.target.value)}
-                disabled={loading}
-                autoFocus
-              />
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1">
+          <ResponsiveDialogBody>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="titulo">Título *</Label>
+                <Input
+                  id="titulo"
+                  placeholder="Ex: Petição Inicial - Processo 1234"
+                  value={titulo}
+                  onChange={(e) => setTitulo(e.target.value)}
+                  disabled={loading}
+                  autoFocus
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="descricao">Descrição (opcional)</Label>
+                <Textarea
+                  id="descricao"
+                  placeholder="Breve descrição do documento..."
+                  value={descricao}
+                  onChange={(e) => setDescricao(e.target.value)}
+                  disabled={loading}
+                  rows={3}
+                />
+              </div>
             </div>
+          </ResponsiveDialogBody>
 
-            <div className="space-y-2">
-              <Label htmlFor="descricao">Descrição (opcional)</Label>
-              <Textarea
-                id="descricao"
-                placeholder="Breve descrição do documento..."
-                value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
-                disabled={loading}
-                rows={3}
-              />
-            </div>
-          </div>
-
-          <DialogFooter>
+          <ResponsiveDialogFooter>
             <Button
               type="button"
               variant="outline"
@@ -138,9 +141,9 @@ export function CreateDocumentDialog({
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Criar e Editar
             </Button>
-          </DialogFooter>
+          </ResponsiveDialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }

@@ -201,7 +201,7 @@
   - Implementar busca otimizada em Combobox para mobile
   - _Requirements: 7.2, 7.3, 7.4, 7.5_
 
-- [-] 10.3 Escrever property tests para Selects e Date Pickers
+- [x] 10.3 Escrever property tests para Selects e Date Pickers
   - **Property 29: Touch-optimized date picker**
   - **Validates: Requirements 7.1**
   - **Property 30: Mobile select interface**
@@ -211,13 +211,22 @@
   - **Property 32: Mobile combobox interface**
   - **Validates: Requirements 7.4**
 
+
 - [ ] 12. Checkpoint - Garantir que todos os testes passem
+
+
+
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Fase 5: Componentes de Interação (Dialogs e Modals)
 
-- [ ] 11. Otimizar Dialogs para mobile
-- [ ] 11.1 Criar variante ResponsiveDialog
+
+
+- [-] 11. Otimizar Dialogs para mobile
+
+- [x] 11.1 Criar variante ResponsiveDialog
+
+
   - Criar wrapper que usa Dialog em desktop e Sheet em mobile
   - Implementar detecção automática de viewport
   - Garantir que formulários em dialogs sejam responsivos
@@ -225,7 +234,8 @@
   - Implementar scroll vertical quando conteúdo excede viewport
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
-- [ ] 11.2 Atualizar dialogs críticos para ResponsiveDialog
+- [-] 11.2 Atualizar dialogs críticos para ResponsiveDialog
+
   - Atualizar create-document-dialog
   - Atualizar share-document-dialog
   - Atualizar create-chat-dialog
