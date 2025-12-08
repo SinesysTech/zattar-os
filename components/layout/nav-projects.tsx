@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -58,8 +59,9 @@ export function NavProjects({
   label?: string
   showActions?: boolean
 }) {
-  const { isMobile, setOpenMobile } = useSidebar()
+  const { isMobile, setOpenMobile, state, setOpen } = useSidebar()
   const pathname = usePathname()
+  const [openItems, setOpenItems] = React.useState<Record<string, boolean>>({})
 
   // Close mobile sidebar on navigation
   const handleNavigation = () => {
@@ -68,9 +70,19 @@ export function NavProjects({
     }
   }
 
+  // Handler para quando clicar em item com subitens quando sidebar está colapsada
+  const handleItemClick = (itemName: string, hasSubItems: boolean) => {
+    if (hasSubItems && state === 'collapsed') {
+      // Expandir sidebar
+      setOpen(true)
+      // Expandir o item
+      setOpenItems(prev => ({ ...prev, [itemName]: true }))
+    }
+  }
+
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>{label}</SidebarGroupLabel>
+    <SidebarGroup>
+      <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">{label}</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => {
           const isActive = pathname === item.url
@@ -121,16 +133,27 @@ export function NavProjects({
           // Se houver subitens, renderiza como collapsible com ID estável
           const hasActiveSubItem = item.items.some(subItem => pathname === subItem.url)
           const stableId = `nav-projects-${toSlug(item.name)}`
+          const isOpen = openItems[item.name] ?? (isActive || hasActiveSubItem)
 
           return (
             <Collapsible
               key={item.name}
               asChild
-              defaultOpen={isActive || hasActiveSubItem}
+              open={isOpen}
+              onOpenChange={(open) => {
+                setOpenItems(prev => ({ ...prev, [item.name]: open }))
+                // Se estiver colapsada e tentando abrir, expandir sidebar
+                if (open && state === 'collapsed') {
+                  setOpen(true)
+                }
+              }}
               className="group/collapsible"
             >
               <SidebarMenuItem>
-                <CollapsibleTrigger asChild aria-controls={stableId}>
+                <CollapsibleTrigger 
+                  asChild 
+                  aria-controls={stableId}
+                >
                   <SidebarMenuButton tooltip={item.name} isActive={isActive || hasActiveSubItem}>
                     <item.icon />
                     <span>{item.name}</span>

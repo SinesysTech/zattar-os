@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ChevronRight, type LucideIcon } from "lucide-react"
@@ -40,7 +41,8 @@ export function NavMain({
   }[]
 }) {
   const pathname = usePathname()
-  const { isMobile, setOpenMobile } = useSidebar()
+  const { isMobile, setOpenMobile, state, setOpen } = useSidebar()
+  const [openItems, setOpenItems] = React.useState<Record<string, boolean>>({})
 
   // Close mobile sidebar on navigation
   const handleNavigation = () => {
@@ -48,6 +50,7 @@ export function NavMain({
       setOpenMobile(false)
     }
   }
+
 
   return (
     <SidebarGroup>
@@ -72,16 +75,27 @@ export function NavMain({
           // Se houver subitens, renderiza como collapsible com ID estável
           const hasActiveSubItem = item.items.some(subItem => pathname === subItem.url)
           const stableId = `nav-${toSlug(item.title)}`
+          const isOpen = openItems[item.title] ?? (item.isActive || hasActiveSubItem)
 
           return (
             <Collapsible
               key={item.title}
               asChild
-              defaultOpen={item.isActive || hasActiveSubItem}
+              open={isOpen}
+              onOpenChange={(open) => {
+                setOpenItems(prev => ({ ...prev, [item.title]: open }))
+                // Se estiver colapsada e tentando abrir, expandir sidebar
+                if (open && state === 'collapsed') {
+                  setOpen(true)
+                }
+              }}
               className="group/collapsible"
             >
               <SidebarMenuItem>
-                <CollapsibleTrigger asChild aria-controls={stableId}>
+                <CollapsibleTrigger 
+                  asChild 
+                  aria-controls={stableId}
+                >
                   <SidebarMenuButton tooltip={item.title} isActive={isActive}>
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
