@@ -457,24 +457,24 @@ function criarColunas(
 ): ResponsiveTableColumn<ProcessoComParticipacao>[] {
   return [
     {
-      accessorKey: 'data_autuacao',
-      header: ({ column }) => (
+      accessorKey: 'data_autuacao' as const,
+      header: () => (
         <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Autuação" />
+          <div className="text-sm font-medium">Autuação</div>
         </div>
       ),
       enableSorting: true,
       size: 120,
       priority: 3,
       cardLabel: 'Autuação',
-      cell: ({ row }) => (
+      cell: ({ row }: any) => (
         <div className="min-h-10 flex items-center justify-center text-sm">
           {formatarData(row.getValue('data_autuacao'))}
         </div>
       ),
     },
     {
-      id: 'processo',
+      id: 'processo' as const,
       header: () => (
         <div className="flex items-center justify-start">
           <div className="text-sm font-medium">Processo</div>
@@ -485,10 +485,10 @@ function criarColunas(
       priority: 1,
       sticky: true,
       cardLabel: 'Processo',
-      cell: ({ row }) => <ProcessoInfoCell processo={row.original} />,
+      cell: ({ row }: any) => <ProcessoInfoCell processo={row.original} />,
     },
     {
-      id: 'partes',
+      id: 'partes' as const,
       header: () => (
         <div className="flex items-center justify-start">
           <PartesColumnHeader
@@ -503,7 +503,7 @@ function criarColunas(
       priority: 2,
       cardLabel: 'Partes',
       meta: { align: 'left' },
-      cell: ({ row }) => {
+      cell: ({ row }: any) => {
         const parteAutora = row.original.nome_parte_autora || '-';
         const parteRe = row.original.nome_parte_re || '-';
         return (
@@ -519,7 +519,7 @@ function criarColunas(
       },
     },
     {
-      id: 'responsavel',
+      id: 'responsavel' as const,
       header: () => (
         <div className="flex items-center justify-center">
           <ResponsavelColumnHeader
@@ -533,7 +533,7 @@ function criarColunas(
       size: 180,
       priority: 4,
       cardLabel: 'Responsável',
-      cell: ({ row }) => (
+      cell: ({ row }: any) => (
         <ResponsavelCell
           processo={row.original}
           onSuccess={onSuccess}
@@ -542,7 +542,7 @@ function criarColunas(
       ),
     },
     {
-      id: 'acoes',
+      id: 'acoes' as const,
       header: () => (
         <div className="flex items-center justify-center">
           <div className="text-sm font-medium">Ações</div>
@@ -552,7 +552,7 @@ function criarColunas(
       size: 100,
       priority: 5,
       cardLabel: 'Ações',
-      cell: ({ row }) => (
+      cell: ({ row }: any) => (
         <div className="flex items-center justify-center">
           <a
             href={`/processos/${row.original.id}`}
