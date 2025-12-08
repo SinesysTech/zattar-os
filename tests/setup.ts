@@ -5,6 +5,7 @@
  */
 
 import dotenv from 'dotenv';
+import '@testing-library/jest-dom';
 
 // Carregar variáveis de ambiente do .env.local
 dotenv.config({ path: '.env.local' });
@@ -30,3 +31,32 @@ beforeAll(() => {
 afterAll(() => {
   console.error = originalError;
 });
+
+// Mock de window.matchMedia para testes responsivos
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
+// Mock de window.ResizeObserver
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}));
+
+// Mock de IntersectionObserver
+global.IntersectionObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}));

@@ -58,8 +58,15 @@ export function NavProjects({
   label?: string
   showActions?: boolean
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile, setOpenMobile } = useSidebar()
   const pathname = usePathname()
+
+  // Close mobile sidebar on navigation
+  const handleNavigation = () => {
+    if (isMobile) {
+      setOpenMobile(false)
+    }
+  }
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
@@ -73,7 +80,7 @@ export function NavProjects({
             return (
               <SidebarMenuItem key={item.name}>
                 <SidebarMenuButton asChild tooltip={item.name} isActive={isActive}>
-                  <Link href={item.url}>
+                  <Link href={item.url} onClick={handleNavigation}>
                     <item.icon />
                     <span>{item.name}</span>
                   </Link>
@@ -137,7 +144,7 @@ export function NavProjects({
                       return (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild isActive={isSubItemActive}>
-                            <Link href={subItem.url}>
+                            <Link href={subItem.url} onClick={handleNavigation}>
                               <span>{subItem.title}</span>
                             </Link>
                           </SidebarMenuSubButton>
