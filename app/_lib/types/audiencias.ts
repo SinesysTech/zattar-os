@@ -1,8 +1,9 @@
 // Tipos para integração com API de audiências no frontend
 
-import type { Audiencia, ModalidadeAudiencia } from '@/types/domain/audiencias';
-import type { ListarAudienciasParams } from '@/types/contracts/audiencias';
-import type { GrauProcesso } from '@/types/domain/common';
+import type { Audiencia, ModalidadeAudiencia, GrauAudiencia, ListarAudienciasParams } from '@/backend/types/audiencias/types';
+
+// GrauProcesso é o mesmo que GrauAudiencia (alias)
+type GrauProcesso = GrauAudiencia;
 
 /**
  * Resposta da API de audiências (formato padrão)

@@ -32,10 +32,18 @@ coverage/
 *.test.tsx
 *.spec.ts
 *.spec.tsx
+__tests__/
+__mocks__/
+*.integration.test.ts
 
 # Scripts de desenvolvimento
 scripts/
 dev_data/
+
+# Análise e debug
+analyze/
+*.heapprofile
+*.cpuprofile
 
 # Variáveis de ambiente (serão configuradas no CapRover)
 .env

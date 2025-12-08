@@ -278,7 +278,9 @@ function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
   return (
     <>
       <div className="relative group h-full w-full min-h-[60px] flex items-start justify-start p-2">
-        <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">{audiencia.observacoes || '-'}</span>
+        {audiencia.observacoes ? (
+          <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">{audiencia.observacoes}</span>
+        ) : null}
         <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1" title="Editar observações">
           <Pencil className="h-3 w-3" />
         </Button>
@@ -346,10 +348,12 @@ function DataHoraCell({ audiencia }: { audiencia: Audiencia }) {
 
   return (
     <div className="min-h-10 flex flex-col items-center justify-center text-sm gap-1">
-      {/* Badge de modalidade no topo, centralizado */}
-      <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs mb-2`}>
-        {formatarModalidade(audiencia.modalidade)}
-      </Badge>
+      {/* Badge de modalidade no topo, centralizado - só renderiza se houver modalidade */}
+      {audiencia.modalidade && (
+        <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs mb-2`}>
+          {formatarModalidade(audiencia.modalidade)}
+        </Badge>
+      )}
       <div className="font-medium">{formatarData(audiencia.data_inicio)}</div>
       <div className="text-sm font-medium">{formatarHora(audiencia.data_inicio)}h</div>
       {canOpenAta && (
@@ -369,13 +373,13 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
   const [isObrigacaoDialogOpen, setIsObrigacaoDialogOpen] = React.useState(false);
   const [isMarkingRealizada, setIsMarkingRealizada] = React.useState(false);
 
-  const tipo = audiencia.tipo_descricao || '-';
-  const sala = audiencia.sala_audiencia_nome || '-';
+  const tipo = audiencia.tipo_descricao;
+  const sala = audiencia.sala_audiencia_nome;
   const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
   const logoPath = getLogoPlataforma(plataforma);
 
   const enderecoCompleto = audiencia.endereco_presencial
-    ? [audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'
+    ? [audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || null
     : null;
   const isHibrida = audiencia.modalidade === 'hibrida';
   const isDesignada = audiencia.status === 'M';
@@ -423,44 +427,89 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
 
   const [isMaisPopoverOpen, setIsMaisPopoverOpen] = React.useState(false);
 
+  // Determinar quem comparece presencialmente em audiência híbrida
+  const presencaHibridaTexto = isHibrida && audiencia.presenca_hibrida
+    ? audiencia.presenca_hibrida === 'advogado'
+      ? 'Advogado presencial, Cliente virtual'
+      : 'Cliente presencial, Advogado virtual'
+    : null;
+
   return (
-    <div className="relative group min-h-[60px] flex flex-col items-start justify-start gap-2">
-      <div className="flex items-start gap-2 w-full">
-        <div className="flex-1">
-          <div className="text-sm font-medium">{tipo}</div>
-          <div className="text-xs text-muted-foreground">Sala: {sala}</div>
-        </div>
+    <div className="relative group min-h-[60px] flex flex-col items-start justify-start h-full">
+      {/* Conteúdo principal com flex-grow para empurrar botões para baixo */}
+      <div className="flex-1 flex flex-col items-start justify-start gap-4 w-full">
+        {/* Seção 1: Tipo de audiência e Sala (conjunto) */}
+        {(tipo || sala) && (
+          <div className="flex flex-col items-start gap-1 w-full">
+            {tipo && <div className="text-sm font-medium">{tipo}</div>}
+            {sala && <div className="text-xs text-muted-foreground">Sala: {sala}</div>}
+          </div>
+        )}
+
+        {/* Seção 2: Link virtual e/ou Endereço presencial */}
+        {isHibrida ? (
+          <>
+            {/* Link virtual para híbrida */}
+            {audiencia.url_audiencia_virtual && (
+              <div className="flex flex-col items-start gap-1.5 w-full">
+                <div className="flex items-center gap-2 text-xs">
+                  {logoPath ? (
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                      <Image src={logoPath} alt={plataforma || 'Plataforma'} width={80} height={30} className="object-contain" />
+                    </a>
+                  ) : (
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline max-w-[200px] truncate">
+                      {audiencia.url_audiencia_virtual}
+                    </a>
+                  )}
+                  <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(audiencia.url_audiencia_virtual || ''); }} title="Copiar link">
+                    <Copy className="h-3 w-3 text-muted-foreground hover:text-primary" />
+                  </button>
+                </div>
+                {presencaHibridaTexto && (
+                  <div className="text-xs text-muted-foreground italic">{presencaHibridaTexto}</div>
+                )}
+              </div>
+            )}
+            {/* Endereço presencial para híbrida */}
+            {enderecoCompleto && (
+              <div className="flex flex-col items-start gap-1.5 w-full">
+                <div className="text-xs text-muted-foreground">
+                  <span className="font-medium">Presencial: </span>
+                  <span>{enderecoCompleto}</span>
+                </div>
+              </div>
+            )}
+          </>
+        ) : audiencia.url_audiencia_virtual ? (
+          /* Link virtual para modalidade virtual */
+          <div className="flex items-center gap-2 text-xs w-full">
+            {logoPath ? (
+              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                <Image src={logoPath} alt={plataforma || 'Plataforma'} width={80} height={30} className="object-contain" />
+              </a>
+            ) : (
+              <>
+                <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline max-w-[200px] truncate">
+                  {audiencia.url_audiencia_virtual}
+                </a>
+                <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(audiencia.url_audiencia_virtual || ''); }} title="Copiar link">
+                  <Copy className="h-3 w-3 text-muted-foreground hover:text-primary" />
+                </button>
+              </>
+            )}
+          </div>
+        ) : enderecoCompleto ? (
+          /* Endereço presencial para modalidade presencial */
+          <div className="text-xs text-muted-foreground w-full">
+            <span className="font-medium">Presencial: </span>
+            <span>{enderecoCompleto}</span>
+          </div>
+        ) : null}
       </div>
 
-      {/* URL Audiência Virtual + Logo (quando disponível) */}
-      {audiencia.url_audiencia_virtual && (
-        <div className="flex items-center gap-2 text-xs">
-          <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline max-w-[200px] truncate">
-            {audiencia.url_audiencia_virtual}
-          </a>
-          <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(audiencia.url_audiencia_virtual || ''); }} title="Copiar link">
-            <Copy className="h-3 w-3 text-muted-foreground hover:text-primary" />
-          </button>
-          {logoPath && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Image src={logoPath} alt={plataforma || 'Plataforma'} width={16} height={16} className="rounded" />
-                </TooltipTrigger>
-                <TooltipContent>{plataforma}</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-        </div>
-      )}
-
-      {/* Endereço presencial (modal híbrida ou presencial) */}
-      {enderecoCompleto && (
-        <div className="text-xs text-muted-foreground">{isHibrida ? 'Híbrida: ' : 'Presencial: '}{enderecoCompleto}</div>
-      )}
-
-      {/* Botões de ação - apenas ícones */}
-      <div className="flex items-center gap-1.5 mt-1">
+      {/* Botões de ação - alinhados ao bottom */}
+      <div className="flex items-center gap-1.5 mt-auto">
         <TooltipProvider>
           {isDesignada && (
             <Tooltip>
@@ -579,11 +628,9 @@ function criarColunas(
         const numeroProcesso = row.original.numero_processo;
         const trt = row.original.trt;
         const grau = row.original.grau;
-        const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
-        const parteAutora = row.original.nome_parte_autora || row.original.polo_ativo_nome || '-';
-        const parteRe = row.original.nome_parte_re || row.original.polo_passivo_nome || '-';
-        const poloAtivo = row.original.polo_ativo_nome;
-        const poloPassivo = row.original.polo_passivo_nome;
+        const orgaoJulgador = row.original.orgao_julgador_descricao;
+        const parteAutora = row.original.nome_parte_autora;
+        const parteRe = row.original.nome_parte_re;
 
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5">
@@ -593,24 +640,26 @@ function criarColunas(
             </div>
             <div className="text-sm font-medium whitespace-nowrap">{classeJudicial && `${classeJudicial} `}{numeroProcesso}</div>
             {/* Órgão julgador (vara) */}
-            <div className="text-xs text-muted-foreground">{orgaoJulgador}</div>
+            {orgaoJulgador && orgaoJulgador !== '-' && (
+              <div className="text-xs text-muted-foreground">{orgaoJulgador}</div>
+            )}
             
             {/* Espaçamento entre dados do processo e partes */}
-            <div className="h-1" />
+            {(parteAutora || parteRe) && <div className="h-1" />}
             
             {/* Partes */}
-            <div className="flex flex-col gap-1 w-full">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
-                <span className="truncate">Parte Autora: {parteAutora}</span>
-              </Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
-                <span className="truncate">Parte Ré: {parteRe}</span>
-              </Badge>
-            </div>
-            {(poloAtivo || poloPassivo) && (
-              <div className="text-[11px] text-muted-foreground leading-tight">
-                {poloAtivo && <div>Polo ativo (instância): {poloAtivo}</div>}
-                {poloPassivo && <div>Polo passivo (instância): {poloPassivo}</div>}
+            {(parteAutora || parteRe) && (
+              <div className="flex flex-col gap-1 w-full">
+                {parteAutora && (
+                  <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
+                    <span className="truncate">{parteAutora}</span>
+                  </Badge>
+                )}
+                {parteRe && (
+                  <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
+                    <span className="truncate">{parteRe}</span>
+                  </Badge>
+                )}
               </div>
             )}
           </div>
