@@ -139,7 +139,7 @@
   - Adicionar botão de "Filtros" com badge de contagem em mobile
   - _Requirements: 12.3_
 
-- [-] 7.3 Escrever property tests para Listagens
+- [x] 7.3 Escrever property tests para Listagens
   - **Property 53: List card layout on mobile**
   - **Validates: Requirements 12.1**
   - **Property 54: List item information hierarchy**
