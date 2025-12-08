@@ -91,7 +91,7 @@
   - Adicionar suporte para bulk actions em mobile
   - _Requirements: 2.5, 12.4_
 
-- [x] 5.3 Escrever property tests para Tabelas
+- [ ] 5.3 Escrever property tests para Tabelas
   - **Property 5: Table horizontal scroll on mobile**
   - **Validates: Requirements 2.1**
   - **Property 6: Table column prioritization**
