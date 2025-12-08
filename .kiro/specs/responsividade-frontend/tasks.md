@@ -132,14 +132,14 @@
   - Atualizar /usuarios para usar ResponsiveTable
   - _Requirements: 12.1, 12.2, 12.3, 12.5_
 
-- [-] 7.2 Implementar filtros responsivos nas páginas de listagem
+- [x] 7.2 Implementar filtros responsivos nas páginas de listagem
   - Criar componente FilterPanel colapsável para mobile
   - Implementar Sheet/Drawer para filtros em mobile
   - Manter filtros inline em desktop
   - Adicionar botão de "Filtros" com badge de contagem em mobile
   - _Requirements: 12.3_
 
-- [ ] 7.3 Escrever property tests para Listagens
+- [-] 7.3 Escrever property tests para Listagens
   - **Property 53: List card layout on mobile**
   - **Validates: Requirements 12.1**
   - **Property 54: List item information hierarchy**

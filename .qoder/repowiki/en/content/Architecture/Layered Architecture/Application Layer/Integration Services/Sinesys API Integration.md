@@ -9,15 +9,18 @@
 - [ANALISE-MIGRACAO-MEU-PROCESSO.md](file://ANALISE-MIGRACAO-MEU-PROCESSO.md)
 - [DEPLOY.md](file://DEPLOY.md)
 - [api-referencia/page.tsx](file://app/ajuda/desenvolvimento/api-referencia/page.tsx)
+- [variaveis-ambiente/page.tsx](file://app/ajuda/desenvolvimento/variaveis-ambiente/page.tsx)
+- [meu-processo-metrics.ts](file://lib/services/meu-processo-metrics.ts)
 </cite>
 
 ## Update Summary
 **Changes Made**   
-- Added documentation for the new API endpoint at app/api/meu-processo/consulta/route.ts
-- Updated environment variables section with complete list of required variables
-- Enhanced description of SinesysClient capabilities and methods
-- Added detailed implementation notes for the new API route
-- Updated statistics and integration patterns based on completed implementation
+- Added documentation for the new Meu Processo Consulta endpoint with feature flag support (MEU_PROCESSO_USE_SINESYS_API)
+- Added fallback mechanism to N8N webhook with configurable credentials
+- Documented configurable timeout (MEU_PROCESSO_TIMEOUT), retry attempts (MEU_PROCESSO_RETRIES), and response caching (MEU_PROCESSO_CACHE_TTL)
+- Updated environment variables section with new configuration options
+- Added error logging with X-API-Source and X-Response-Time headers
+- Enhanced implementation details for the new API route
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -74,7 +77,7 @@ SinesysClient --> SinesysClientConfig : "uses"
 **Diagram sources**
 - [sinesys-client.ts](file://lib/services/sinesys-client.ts)
 
-**Section sources**
+**Section sources**   
 - [sinesys-client.ts](file://lib/services/sinesys-client.ts)
 
 ## Authentication and Configuration
@@ -105,7 +108,7 @@ The `SinesysClientConfig` interface defines the configuration options for the cl
 
 The client uses these configuration options to establish a connection with the Sinesys API and handle requests appropriately.
 
-**Section sources**
+**Section sources**   
 - [sinesys-client.ts](file://lib/services/sinesys-client.ts)
 - [ANALISE-MIGRACAO-MEU-PROCESSO.md](file://ANALISE-MIGRACAO-MEU-PROCESSO.md)
 
@@ -151,6 +154,8 @@ A new API endpoint has been implemented at `app/api/meu-processo/consulta/route.
 
 **Authentication**: Service API Key via header `x-service-api-key`
 
+**Feature Flag**: Controlled by environment variable `MEU_PROCESSO_USE_SINESYS_API` (boolean)
+
 **Request Body**:
 ```json
 {
@@ -172,42 +177,61 @@ A new API endpoint has been implemented at `app/api/meu-processo/consulta/route.
 The endpoint performs the following operations:
 1. Validates the CPF format
 2. Authenticates the request using the service API key
-3. Retrieves all client data (processes, hearings, contracts) in parallel
+3. When `MEU_PROCESSO_USE_SINESYS_API=true`, retrieves all client data (processes, hearings, contracts) in parallel from Sinesys API
 4. Fetches agreements for all client processes
 5. Transforms the aggregated data into the legacy N8N webhook format
-6. Returns the transformed data with appropriate caching headers
+6. On Sinesys API failure, automatically falls back to N8N webhook
+7. Returns the transformed data with appropriate caching headers
 
-**Section sources**
+**Configuration Options**:
+- `MEU_PROCESSO_USE_SINESYS_API`: Feature flag to enable/disable Sinesys API (default: false)
+- `MEU_PROCESSO_N8N_WEBHOOK_URL`: Fallback N8N webhook URL
+- `MEU_PROCESSO_N8N_WEBHOOK_USER`: N8N webhook username
+- `MEU_PROCESSO_N8N_WEBHOOK_PASSWORD`: N8N webhook password
+- `MEU_PROCESSO_TIMEOUT`: Configurable timeout in milliseconds (default: 30000)
+- `MEU_PROCESSO_CACHE_TTL`: Response cache TTL in seconds (default: 300)
+
+**Response Headers**:
+- `Cache-Control`: private, max-age=${CACHE_TTL}
+- `X-Response-Time`: Response time in milliseconds
+- `X-API-Source`: Source of data (sinesys, n8n, or fallback)
+
+**Section sources**   
 - [route.ts](file://app/api/meu-processo/consulta/route.ts)
 - [sinesys-client.ts](file://lib/services/sinesys-client.ts)
 
 ```mermaid
 sequenceDiagram
 participant Client as "Client Application"
-participant SinesysClient as "SinesysClient"
-participant API as "Sinesys API"
-Client->>SinesysClient : buscarDadosClientePorCpf(cpf)
-SinesysClient->>API : GET /api/acervo/cliente/cpf/{cpf}
-API-->>SinesysClient : ProcessosResponse
-SinesysClient->>API : GET /api/audiencias/cliente/cpf/{cpf}
-API-->>SinesysClient : AudienciasResponse
-SinesysClient->>API : GET /api/clientes/buscar/por-cpf/{cpf}
-API-->>SinesysClient : ClienteResponse
-SinesysClient->>Client : Return aggregated data
-Client->>SinesysClient : buscarAcordosDoCliente(cpf)
-SinesysClient->>API : GET /api/acervo/cliente/cpf/{cpf}
-API-->>SinesysClient : ProcessosResponse
-loop For each process
-SinesysClient->>API : GET /api/acordos-condenacoes?processoId={id}
-API-->>SinesysClient : AcordosResponse
+participant MeuProcessoAPI as "Meu Processo API"
+participant SinesysAPI as "Sinesys API"
+participant N8NWebhook as "N8N Webhook"
+Client->>MeuProcessoAPI : POST /api/meu-processo/consulta
+Note right of MeuProcessoAPI : Validate CPF and authenticate
+MeuProcessoAPI->>MeuProcessoAPI : Check MEU_PROCESSO_USE_SINESYS_API flag
+alt Sinesys API Enabled
+MeuProcessoAPI->>SinesysAPI : buscarDadosClientePorCpf(cpf)
+SinesysAPI-->>MeuProcessoAPI : ProcessosResponse
+MeuProcessoAPI->>SinesysAPI : buscarAudienciasPorCpf(cpf)
+SinesysAPI-->>MeuProcessoAPI : AudienciasResponse
+MeuProcessoAPI->>SinesysAPI : buscarClientePorCpf(cpf)
+SinesysAPI-->>MeuProcessoAPI : ClienteResponse
+MeuProcessoAPI->>SinesysAPI : buscarAcordosDoCliente(cpf)
+SinesysAPI-->>MeuProcessoAPI : AcordosResponse
+MeuProcessoAPI->>MeuProcessoAPI : transformDadosClienteParaLegacy()
+else Fallback to N8N
+MeuProcessoAPI->>N8NWebhook : POST with Basic Auth
+N8NWebhook-->>MeuProcessoAPI : Legacy Response
 end
-SinesysClient->>Client : Return aggregated agreements
+MeuProcessoAPI->>Client : Return response with X-API-Source and X-Response-Time headers
 ```
 
-**Diagram sources**
+**Diagram sources**   
+- [route.ts](file://app/api/meu-processo/consulta/route.ts)
 - [sinesys-client.ts](file://lib/services/sinesys-client.ts)
 
-**Section sources**
+**Section sources**   
+- [route.ts](file://app/api/meu-processo/consulta/route.ts)
 - [sinesys-client.ts](file://lib/services/sinesys-client.ts)
 
 ## Data Models and Response Structure
@@ -386,12 +410,12 @@ string data_repassado_cliente
 }
 ```
 
-**Diagram sources**
+**Diagram sources**   
 - [processos.ts](file://types/sinesys/processos.ts)
 - [audiencias.ts](file://types/sinesys/audiencias.ts)
 - [meu-processo-types.ts](file://lib/types/meu-processo-types.ts)
 
-**Section sources**
+**Section sources**   
 - [processos.ts](file://types/sinesys/processos.ts)
 - [audiencias.ts](file://types/sinesys/audiencias.ts)
 - [common.ts](file://types/sinesys/common.ts)
@@ -425,9 +449,15 @@ The client implements an automatic retry mechanism for failed requests. By defau
 
 The retry delay follows an exponential backoff pattern, with a maximum delay of 5 seconds between attempts. This prevents overwhelming the server with repeated requests while still providing resilience against transient failures.
 
-**Section sources**
+The Meu Processo Consulta endpoint also implements a fallback mechanism:
+- When `MEU_PROCESSO_USE_SINESYS_API=true`, it attempts to retrieve data from the Sinesys API
+- If the Sinesys API call fails, it automatically falls back to the N8N webhook
+- The `X-API-Source` header indicates which source was used (sinesys, n8n, or fallback)
+
+**Section sources**   
 - [sinesys-client.ts](file://lib/services/sinesys-client.ts)
 - [meu-processo-types.ts](file://lib/types/meu-processo-types.ts)
+- [route.ts](file://app/api/meu-processo/consulta/route.ts)
 
 ## Integration Patterns
 
@@ -459,7 +489,7 @@ The integration supports data transformation to accommodate different consumer r
 
 The `transformDadosClienteParaLegacy` function in `meu-processo-transformers.ts` handles this transformation, converting the modern API response format into the legacy structure expected by the "Meu Processo" application. This function processes each data type (processes, hearings, contracts, agreements) and maps them to their corresponding legacy format.
 
-**Section sources**
+**Section sources**   
 - [sinesys-client.ts](file://lib/services/sinesys-client.ts)
 - [meu-processo-transformers.ts](file://lib/transformers/meu-processo-transformers.ts)
 
@@ -474,6 +504,9 @@ To configure the N8N integration, the following environment variables should be 
 - `SINESYS_BASE_URL`: Base URL of the Sinesys API
 - `SINESYS_API_TOKEN`: Authentication token
 - `SINESYS_SERVICE_KEY`: Service API key
+- `MEU_PROCESSO_N8N_WEBHOOK_URL`: Fallback webhook URL for Meu Processo Consulta endpoint
+- `MEU_PROCESSO_N8N_WEBHOOK_USER`: Username for N8N webhook authentication
+- `MEU_PROCESSO_N8N_WEBHOOK_PASSWORD`: Password for N8N webhook authentication
 
 ### HTTP Request Configuration
 
@@ -494,8 +527,11 @@ The N8N HTTP request node should be configured with the following settings:
 
 Additional headers may be required depending on the specific endpoint, such as the `x-service-api-key` header for service-level authentication.
 
-**Section sources**
+The Meu Processo Consulta endpoint uses Basic Authentication for the N8N webhook fallback, with credentials configured via environment variables.
+
+**Section sources**   
 - [api-referencia/page.tsx](file://app/ajuda/desenvolvimento/api-referencia/page.tsx)
+- [variaveis-ambiente/page.tsx](file://app/ajuda/desenvolvimento/variaveis-ambiente/page.tsx)
 
 ## Best Practices
 
@@ -505,9 +541,13 @@ When integrating with the Sinesys API, several best practices should be followed
 
 Implement client-side caching to reduce the number of API calls and improve response times. The data retrieved from the Sinesys API typically doesn't change frequently, making it well-suited for caching with a reasonable TTL (time-to-live).
 
+The Meu Processo Consulta endpoint supports configurable response caching via the `MEU_PROCESSO_CACHE_TTL` environment variable, with a default of 300 seconds (5 minutes). The `Cache-Control` header is set accordingly in the response.
+
 ### Error Handling
 
 Implement comprehensive error handling to provide a good user experience even when API issues occur. Display meaningful error messages to users and implement retry logic for transient failures.
+
+The Meu Processo Consulta endpoint includes detailed error logging with the `MeuProcessoLogger` class, recording request details, duration, and error information. The `X-API-Source` and `X-Response-Time` headers provide valuable information for monitoring and debugging.
 
 ### Rate Limiting
 
@@ -517,11 +557,17 @@ Respect any rate limits imposed by the API to avoid being blocked. The client's 
 
 Never expose the service API key in client-side code. If the integration is used in a browser-based application, consider implementing a proxy server that handles the API requests on behalf of the client, keeping the API key secure on the server side.
 
+The Meu Processo Consulta endpoint validates the service API key from the `x-service-api-key` header before processing any requests, ensuring that only authorized clients can access the data.
+
 ### Data Privacy
 
 Handle client data with care, following all applicable data protection regulations. The CPF and other personal information should be stored and transmitted securely, with appropriate access controls.
 
-**Section sources**
+The Meu Processo Consulta endpoint masks CPFs in log entries using `cpf.replace(/\d(?=\d{4})/g, '*')`, protecting sensitive information while still allowing for debugging and monitoring.
+
+**Section sources**   
 - [sinesys-client.ts](file://lib/services/sinesys-client.ts)
 - [ANALISE-MIGRACAO-MEU-PROCESSO.md](file://ANALISE-MIGRACAO-MEU-PROCESSO.md)
 - [DEPLOY.md](file://DEPLOY.md)
+- [route.ts](file://app/api/meu-processo/consulta/route.ts)
+- [meu-processo-metrics.ts](file://lib/services/meu-processo-metrics.ts)
