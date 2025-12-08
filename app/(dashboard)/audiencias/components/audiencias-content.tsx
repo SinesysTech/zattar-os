@@ -434,14 +434,14 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
     : null;
 
   return (
-    <div className="relative group min-h-[60px] flex flex-col items-start justify-start h-full">
+    <div className="min-h-10 flex flex-col items-start justify-center h-full max-w-[240px]">
       {/* Conteúdo principal com flex-grow para empurrar botões para baixo */}
       <div className="flex-1 flex flex-col items-start justify-start gap-4 w-full">
-        {/* Seção 1: Tipo de audiência e Sala (conjunto) */}
+        {/* Seção 1: Tipo da audiência e Sala (conjunto) */}
         {(tipo || sala) && (
           <div className="flex flex-col items-start gap-1 w-full">
-            {tipo && <div className="text-sm font-medium">{tipo}</div>}
-            {sala && <div className="text-xs text-muted-foreground">Sala: {sala}</div>}
+            {tipo && <div className="text-sm text-left w-full">{tipo}</div>}
+            {sala && <div className="text-xs text-muted-foreground text-left w-full">{sala}</div>}
           </div>
         )}
 
@@ -451,19 +451,16 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
             {/* Link virtual para híbrida */}
             {audiencia.url_audiencia_virtual && (
               <div className="flex flex-col items-start gap-1.5 w-full">
-                <div className="flex items-center gap-2 text-xs">
+                <div className="flex items-center gap-1.5 w-full">
                   {logoPath ? (
-                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity flex items-center justify-center" title={`Acessar audiência virtual - ${plataforma || 'Plataforma'}`}>
-                      <Image src={logoPath} alt={plataforma || 'Plataforma'} width={80} height={30} className="object-contain" />
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                      <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
                     </a>
                   ) : (
-                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline max-w-[200px] truncate" title="Acessar audiência virtual">
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-full">
                       {audiencia.url_audiencia_virtual}
                     </a>
                   )}
-                  <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(audiencia.url_audiencia_virtual || ''); }} title="Copiar link">
-                    <Copy className="h-3 w-3 text-muted-foreground hover:text-primary" />
-                  </button>
                 </div>
                 {presencaHibridaTexto && (
                   <div className="text-xs text-muted-foreground italic">{presencaHibridaTexto}</div>
@@ -473,7 +470,7 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
             {/* Endereço presencial para híbrida */}
             {enderecoCompleto && (
               <div className="flex flex-col items-start gap-1.5 w-full">
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs text-muted-foreground w-full">
                   <span className="font-medium">Presencial: </span>
                   <span>{enderecoCompleto}</span>
                 </div>
@@ -482,28 +479,22 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
           </>
         ) : audiencia.url_audiencia_virtual ? (
           /* Link virtual para modalidade virtual */
-          <div className="flex items-center gap-2 text-xs w-full">
+          <div className="flex-1 flex items-center justify-start w-full">
             {logoPath ? (
-              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity flex items-center justify-center" title={`Acessar audiência virtual - ${plataforma || 'Plataforma'}`}>
-                <Image src={logoPath} alt={plataforma || 'Plataforma'} width={80} height={30} className="object-contain" />
+              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
               </a>
             ) : (
-              <>
-                <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline max-w-[200px] truncate" title="Acessar audiência virtual">
-                  {audiencia.url_audiencia_virtual}
-                </a>
-                <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(audiencia.url_audiencia_virtual || ''); }} title="Copiar link">
-                  <Copy className="h-3 w-3 text-muted-foreground hover:text-primary" />
-                </button>
-              </>
+              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-full">
+                {audiencia.url_audiencia_virtual}
+              </a>
             )}
           </div>
         ) : enderecoCompleto ? (
           /* Endereço presencial para modalidade presencial */
-          <div className="text-xs text-muted-foreground w-full">
-            <span className="font-medium">Presencial: </span>
-            <span>{enderecoCompleto}</span>
-          </div>
+          <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+            {enderecoCompleto}
+          </span>
         ) : null}
       </div>
 

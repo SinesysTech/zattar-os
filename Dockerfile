@@ -68,8 +68,7 @@ WORKDIR /app
 # Memória para Node.js durante build
 # 4GB é necessário para projetos grandes com muitas dependências
 # Reduzido de 8GB para 4GB para CapRover com RAM limitada
-# --gc-global força coleta de lixo mais agressiva
-ENV NODE_OPTIONS="--max-old-space-size=4096 --gc-global --max-semi-space-size=2"
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 # ============================================================================
 # CONFIGURAÇÃO DE MEMÓRIA PARA PREVENIR OOM
 # ============================================================================
@@ -80,6 +79,7 @@ ENV NODE_OPTIONS="--max-old-space-size=4096 --gc-global --max-semi-space-size=2"
 # - productionBrowserSourceMaps: false (economiza ~500MB)
 # - serverSourceMaps: false (reduz memória do servidor)
 # - output: 'standalone' (build otimizado para Docker)
+# - parallelism: 1 (reduz uso de memória durante build)
 # 
 # Por que 4GB?
 # - Next.js build com muitas dependências consome ~2.5-4GB em projetos grandes
