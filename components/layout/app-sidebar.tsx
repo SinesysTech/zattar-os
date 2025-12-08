@@ -71,17 +71,6 @@ const navPrincipal = [
     icon: FileText,
   },
   {
-    title: "Assinatura Digital",
-    url: "/assinatura-digital/assinatura",
-    icon: PenTool,
-    items: [
-      { title: "Fluxo de Assinatura", url: "/assinatura-digital/assinatura" },
-      { title: "Templates", url: "/assinatura-digital/templates" },
-      { title: "Formulários", url: "/assinatura-digital/formularios" },
-      { title: "Segmentos", url: "/assinatura-digital/segmentos" },
-    ],
-  },
-  {
     title: "Processos",
     url: "/processos",
     icon: Scale,
@@ -133,6 +122,17 @@ const navPrincipal = [
 
 // Nav Serviços - Ferramentas e utilitários
 const navServicos = [
+  {
+    name: "Assinatura Digital",
+    url: "/assinatura-digital/assinatura",
+    icon: PenTool,
+    items: [
+      { title: "Fluxo de Assinatura", url: "/assinatura-digital/assinatura" },
+      { title: "Templates", url: "/assinatura-digital/templates" },
+      { title: "Formulários", url: "/assinatura-digital/formularios" },
+      { title: "Segmentos", url: "/assinatura-digital/segmentos" },
+    ],
+  },
   {
     name: "Documentos",
     url: "/documentos",
