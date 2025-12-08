@@ -729,7 +729,9 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="buttons"
+        filterButtonsMode="panel"
+        filterPanelTitle="Filtros de Audiências"
+        filterPanelDescription="Filtre audiências por status, tipo e mais"
         onNewClick={() => setNovaAudienciaOpen(true)}
         newButtonTooltip="Nova audiência"
       />

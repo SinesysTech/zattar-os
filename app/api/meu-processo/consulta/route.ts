@@ -2,12 +2,7 @@
  * API Route: Consulta de dados do cliente por CPF
  * 
  * Endpoint para o app "Meu Processo" consumir dados do Sinesys.
- * Mantém compatibilidade com o formato legado do webhook N8N.
- * 
- * Suporta:
- * - Feature flag para toggle entre N8N e Sinesys API
- * - Fallback automático em caso de erro
- * - Métricas e logging
+ * Retorna dados nativos da API Sinesys sem transformações.
  * 
  * @endpoint POST /api/meu-processo/consulta
  * @authentication Service API Key (via header x-service-api-key)
@@ -15,13 +10,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { sinesysClient } from '@/lib/services/sinesys-client';
-import { transformDadosClienteParaLegacy } from '@/lib/transformers/meu-processo-transformers';
-import { SinesysAPIError } from '@/lib/types/meu-processo-types';
 import {
-  recordRequestMetrics,
   MeuProcessoLogger,
   Timer,
-  type APISource,
 } from '@/lib/services/meu-processo-metrics';
 
 // =============================================================================
@@ -31,60 +22,11 @@ import {
 // Tempo máximo de execução (30s)
 export const maxDuration = 30;
 
-// Feature flag: usar API Sinesys ou webhook N8N
-const USE_SINESYS_API = process.env.MEU_PROCESSO_USE_SINESYS_API === 'true';
-
-// Configurações do webhook N8N (fallback)
-const N8N_WEBHOOK_URL = process.env.MEU_PROCESSO_N8N_WEBHOOK_URL;
-const N8N_WEBHOOK_USER = process.env.MEU_PROCESSO_N8N_WEBHOOK_USER;
-const N8N_WEBHOOK_PASSWORD = process.env.MEU_PROCESSO_N8N_WEBHOOK_PASSWORD;
-
 // Timeout configurável
 const TIMEOUT_MS = parseInt(process.env.MEU_PROCESSO_TIMEOUT || '30000', 10);
 
-// Cache TTL configurável
+// Cache TTL configurável (5 minutos)
 const CACHE_TTL = parseInt(process.env.MEU_PROCESSO_CACHE_TTL || '300', 10);
-
-// =============================================================================
-// WEBHOOK N8N (FALLBACK)
-// =============================================================================
-
-/**
- * Busca dados usando o webhook N8N (método legado)
- */
-async function buscarDadosN8N(cpf: string): Promise<any> {
-  if (!N8N_WEBHOOK_URL || !N8N_WEBHOOK_USER || !N8N_WEBHOOK_PASSWORD) {
-    throw new Error('Webhook N8N não configurado');
-  }
-
-  const auth = Buffer.from(`${N8N_WEBHOOK_USER}:${N8N_WEBHOOK_PASSWORD}`).toString('base64');
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
-
-  try {
-    const response = await fetch(N8N_WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${auth}`,
-      },
-      body: JSON.stringify({ cpf }),
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`Webhook N8N retornou ${response.status}`);
-    }
-
-    return response.json();
-  } catch (error) {
-    clearTimeout(timeoutId);
-    throw error;
-  }
-}
 
 // =============================================================================
 // VALIDAÇÃO DE CPF
@@ -116,7 +58,6 @@ function validarCPF(cpf: string): boolean {
 export async function POST(request: NextRequest) {
   const timer = new Timer();
   const logger = new MeuProcessoLogger();
-  let apiUsed: APISource = USE_SINESYS_API ? 'sinesys' : 'n8n';
   let cpf = '';
 
   try {
@@ -160,125 +101,50 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    logger.logRequest(cpf, apiUsed, `Iniciando busca de dados via ${USE_SINESYS_API ? 'Sinesys API' : 'N8N Webhook'}`);
+    logger.logRequest(cpf, 'sinesys', 'Iniciando busca de dados via Sinesys API');
 
-    let dadosLegacy;
+    // Buscar dados via API Sinesys
+    const dados = await sinesysClient.buscarDadosClientePorCpf(cpf);
 
-    // Tentar buscar via API Sinesys (se habilitado)
-    if (USE_SINESYS_API) {
+    // Buscar acordos se houver processos
+    let acordos = null;
+    if ('success' in dados.processos && dados.processos.success) {
       try {
-        const dadosSinesys = await sinesysClient.buscarDadosClientePorCpf(cpf);
-
-        // Buscar acordos se houver processos
-        let acordos;
-        if ('success' in dadosSinesys.processos && dadosSinesys.processos.success) {
-          try {
-            acordos = await sinesysClient.buscarAcordosDoCliente(cpf);
-          } catch (error) {
-            logger.warn('Erro ao buscar acordos, continuando sem eles', { error });
-            acordos = { success: false, error: 'Acordos não disponíveis' };
-          }
-        }
-
-        // Transformar para formato legado
-        dadosLegacy = transformDadosClienteParaLegacy({
-          ...dadosSinesys,
-          acordos,
-        });
-
+        acordos = await sinesysClient.buscarAcordosDoCliente(cpf);
       } catch (error) {
-        logger.error(`Erro na API Sinesys, tentando fallback N8N`, { error });
-        
-        // Fallback para N8N
-        try {
-          apiUsed = 'fallback';
-          dadosLegacy = await buscarDadosN8N(cpf);
-        } catch (n8nError) {
-          logger.error('Fallback N8N também falhou', { n8nError });
-          throw error; // Retornar erro original da API Sinesys
-        }
+        logger.warn('Erro ao buscar acordos, continuando sem eles', { error });
       }
-    } else {
-      // Usar N8N diretamente
-      dadosLegacy = await buscarDadosN8N(cpf);
     }
 
     const elapsedTime = timer.stop();
-    
-    // Registrar métricas de sucesso
-    recordRequestMetrics({
+
+    logger.info('Dados encontrados com sucesso', {
       cpf_masked: cpf.replace(/\d(?=\d{4})/g, '*'),
-      api_source: apiUsed,
       duration_ms: elapsedTime,
-      success: true,
-      data_counts: {
-        processos: dadosLegacy.processos?.length || 0,
-        audiencias: dadosLegacy.audiencias?.length || 0,
-        contratos: Array.isArray(dadosLegacy.contratos) ? dadosLegacy.contratos.length : 0,
-        acordos: dadosLegacy.acordos_condenacoes?.length || 0,
-      },
     });
 
-    logger.info(`Dados encontrados com sucesso`, {
-      api_source: apiUsed,
-      duration_ms: elapsedTime,
-      processos: dadosLegacy.processos?.length || 0,
-      audiencias: dadosLegacy.audiencias?.length || 0,
-    });
-
-    return NextResponse.json(dadosLegacy, {
-      headers: {
-        'Cache-Control': `private, max-age=${CACHE_TTL}`,
-        'X-Response-Time': `${elapsedTime}ms`,
-        'X-API-Source': apiUsed,
+    // Retornar dados nativos do Sinesys
+    return NextResponse.json(
+      {
+        ...dados,
+        acordos,
       },
-    });
+      {
+        headers: {
+          'Cache-Control': `private, max-age=${CACHE_TTL}`,
+          'X-Response-Time': `${elapsedTime}ms`,
+          'X-API-Source': 'sinesys',
+        },
+      }
+    );
 
   } catch (error) {
     const elapsedTime = timer.stop();
-    
-    // Determinar tipo de erro
-    let errorType = 'unknown_error';
-    if (error instanceof SinesysAPIError) {
-      errorType = error.code || 'sinesys_api_error';
-    } else if ((error as Error).message?.includes('Webhook N8N')) {
-      errorType = 'n8n_webhook_error';
-    }
-
-    // Registrar métricas de erro
-    recordRequestMetrics({
-      cpf_masked: cpf ? cpf.replace(/\d(?=\d{4})/g, '*') : 'unknown',
-      api_source: apiUsed,
-      duration_ms: elapsedTime,
-      success: false,
-      error_type: errorType,
-      error_message: (error as Error).message,
-    });
 
     logger.logError(error as Error, {
-      api_source: apiUsed,
+      cpf_masked: cpf ? cpf.replace(/\d(?=\d{4})/g, '*') : 'unknown',
       duration_ms: elapsedTime,
     });
-
-    // Tratamento de erros específicos
-    if (error instanceof SinesysAPIError) {
-      const statusCode = error.statusCode || 500;
-      
-      return NextResponse.json(
-        {
-          error: error.message,
-          details: error.details,
-          code: error.code,
-        },
-        { 
-          status: statusCode >= 400 && statusCode < 600 ? statusCode : 500,
-          headers: {
-            'X-Response-Time': `${elapsedTime}ms`,
-            'X-API-Source': apiUsed,
-          },
-        }
-      );
-    }
 
     // Erro genérico
     return NextResponse.json(
@@ -289,8 +155,8 @@ export async function POST(request: NextRequest) {
       { 
         status: 500,
         headers: {
-          'X-Response-Time': `${timer.elapsed()}ms`,
-          'X-API-Source': apiUsed,
+          'X-Response-Time': `${elapsedTime}ms`,
+          'X-API-Source': 'sinesys',
         },
       }
     );
@@ -307,8 +173,7 @@ export async function GET() {
     method: 'POST',
     description: 'Consulta dados do cliente por CPF para o app Meu Processo',
     configuration: {
-      api_source: USE_SINESYS_API ? 'Sinesys API' : 'N8N Webhook',
-      fallback_enabled: USE_SINESYS_API && !!N8N_WEBHOOK_URL,
+      api_source: 'Sinesys API',
       timeout_ms: TIMEOUT_MS,
       cache_ttl_seconds: CACHE_TTL,
     },
@@ -322,15 +187,14 @@ export async function GET() {
       },
     },
     response: {
-      contratos: 'LegacyContrato[] | string',
-      processos: 'LegacyProcessoItem[]',
-      audiencias: 'LegacyAudiencia[]',
-      acordos_condenacoes: 'LegacyPagamento[]',
-      message: 'string (opcional)',
+      processos: 'Resposta nativa da API Sinesys',
+      audiencias: 'Resposta nativa da API Sinesys',
+      contratos: 'Resposta nativa da API Sinesys',
+      acordos: 'Resposta nativa da API Sinesys',
     },
     headers: {
       'X-Response-Time': 'Tempo de resposta em ms',
-      'X-API-Source': 'Fonte dos dados (sinesys | n8n | fallback)',
+      'X-API-Source': 'Sempre "sinesys"',
     },
     example: {
       request: {

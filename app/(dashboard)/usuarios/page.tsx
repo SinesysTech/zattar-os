@@ -368,7 +368,9 @@ export default function UsuariosPage() {
           filterGroups={filterGroups}
           selectedFilters={selectedFilterIds}
           onFiltersChange={handleFilterIdsChange}
-          filterButtonsMode="buttons"
+          filterButtonsMode="panel"
+          filterPanelTitle="Filtros de Usuários"
+          filterPanelDescription="Filtre usuários por status, OAB e mais"
           extraButtons={
             <Tooltip>
               <TooltipTrigger asChild>
