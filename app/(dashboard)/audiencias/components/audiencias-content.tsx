@@ -17,7 +17,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Button } from '@/components/ui/button';
 import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ChevronLeft, ChevronRight, Copy, Pencil, RotateCcw, FileText, CheckCircle2, PlusCircle, Loader2, Scale } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Copy, Pencil, RotateCcw, FileText, CheckCircle2, PlusCircle, Loader2, Scale, Plus } from 'lucide-react';
 import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import { AudienciasVisualizacaoSemana } from './audiencias-visualizacao-semana';
 import { AudienciasVisualizacaoMes } from './audiencias-visualizacao-mes';
@@ -347,7 +347,7 @@ function DataHoraCell({ audiencia }: { audiencia: Audiencia }) {
   return (
     <div className="min-h-10 flex flex-col items-center justify-center text-sm gap-1">
       {/* Badge de modalidade no topo, centralizado */}
-      <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs`}>
+      <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs mb-2`}>
         {formatarModalidade(audiencia.modalidade)}
       </Badge>
       <div className="font-medium">{formatarData(audiencia.data_inicio)}</div>
@@ -421,8 +421,10 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
     polo_passivo_nome: audiencia.polo_passivo_nome || undefined,
   };
 
+  const [isMaisPopoverOpen, setIsMaisPopoverOpen] = React.useState(false);
+
   return (
-    <div className="relative group min-h-[60px] flex flex-col items-start justify-start p-2 gap-2">
+    <div className="relative group min-h-[60px] flex flex-col items-start justify-start gap-2">
       <div className="flex items-start gap-2 w-full">
         <div className="flex-1">
           <div className="text-sm font-medium">{tipo}</div>
@@ -457,25 +459,75 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
         <div className="text-xs text-muted-foreground">{isHibrida ? 'Híbrida: ' : 'Presencial: '}{enderecoCompleto}</div>
       )}
 
-      {/* Botões de ação (aparecem no hover ou sempre visi em mobile) */}
-      <ButtonGroup className="opacity-0 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity absolute bottom-1 right-1">
-        <ButtonGroupText>
+      {/* Botões de ação - apenas ícones */}
+      <div className="flex items-center gap-1.5 mt-1">
+        <TooltipProvider>
           {isDesignada && (
-            <Button size="sm" variant="ghost" onClick={handleMarcarRealizada} disabled={isMarkingRealizada} title="Marcar como realizada">
-              {isMarkingRealizada ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />}
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="sm" variant="ghost" onClick={handleMarcarRealizada} disabled={isMarkingRealizada} className="h-7 w-7 p-0" title="Marcar como realizada">
+                  {isMarkingRealizada ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Marcar como realizada</p>
+              </TooltipContent>
+            </Tooltip>
           )}
-          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setIsDialogOpen(true); }} title="Editar endereço">
-            <Pencil className="h-3.5 w-3.5" />
-          </Button>
-          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setIsExpedienteDialogOpen(true); }} title="Criar expediente">
-            <PlusCircle className="h-3.5 w-3.5" />
-          </Button>
-          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setIsObrigacaoDialogOpen(true); }} title="Criar acordo/condenação">
-            <Scale className="h-3.5 w-3.5" />
-          </Button>
-        </ButtonGroupText>
-      </ButtonGroup>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setIsDialogOpen(true); }} className="h-7 w-7 p-0" title="Editar endereço">
+                <Pencil className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Editar endereço</p>
+            </TooltipContent>
+          </Tooltip>
+          <Popover open={isMaisPopoverOpen} onOpenChange={setIsMaisPopoverOpen}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <PopoverTrigger asChild>
+                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0" title="Criar expediente ou obrigação">
+                    <Plus className="h-3.5 w-3.5" />
+                  </Button>
+                </PopoverTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Criar expediente ou obrigação</p>
+              </TooltipContent>
+            </Tooltip>
+            <PopoverContent className="w-48 p-2" align="start">
+              <div className="space-y-1">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-sm gap-2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMaisPopoverOpen(false);
+                    setIsExpedienteDialogOpen(true);
+                  }}
+                >
+                  <PlusCircle className="h-4 w-4" />
+                  Expediente
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-sm gap-2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMaisPopoverOpen(false);
+                    setIsObrigacaoDialogOpen(true);
+                  }}
+                >
+                  <Scale className="h-4 w-4" />
+                  Obrigação
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </TooltipProvider>
+      </div>
 
       {/* Dialogs */}
       <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />

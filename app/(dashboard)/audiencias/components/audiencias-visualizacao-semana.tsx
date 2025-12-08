@@ -9,7 +9,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Copy, Pencil, FileText, CheckCircle2, PlusCircle, Loader2, Scale } from 'lucide-react';
+import { Copy, Pencil, FileText, CheckCircle2, PlusCircle, Loader2, Scale, Plus } from 'lucide-react';
 import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';
@@ -166,7 +166,7 @@ function HoraCell({ audiencia }: { audiencia: Audiencia }) {
   return (
     <div className="min-h-10 flex flex-col items-center justify-center text-sm font-medium gap-1">
       {/* Badge de modalidade no topo, centralizado */}
-      <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs`}>
+      <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs mb-2`}>
         {formatarModalidade(audiencia.modalidade)}
       </Badge>
       {formatarHora(audiencia.data_inicio)}
