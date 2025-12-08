@@ -12,10 +12,10 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import type {IEvent} from "@/modules/components/calendar/interfaces";
-import {formatTime, getColorClass} from "@/modules/components/calendar/helpers";
+import type {IEvent} from "@/components/interfaces";
+import {formatTime, getColorClass} from "@/components/helpers";
 import {cn} from "@/lib/utils";
-import {useCalendar} from "@/modules/components/calendar/contexts/calendar-context";
+import {useCalendar} from "@/components/calendar-context";
 
 interface EventDropConfirmationDialogProps {
     open: boolean;

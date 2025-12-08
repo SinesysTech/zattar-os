@@ -4,7 +4,7 @@ import { type ReactNode, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { DateTimePicker } from "@/components/ui/date-time-picker";
+import { DateTimePicker } from "@/components/date-time-picker";
 import {
 	Form,
 	FormControl,
@@ -23,7 +23,7 @@ import {
 	ModalHeader,
 	ModalTitle,
 	ModalTrigger,
-} from "@/components/ui/responsive-modal";
+} from "@/components/responsive-modal";
 import {
 	Select,
 	SelectContent,
@@ -32,14 +32,14 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { COLORS } from "@/modules/components/calendar/constants";
-import { useCalendar } from "@/modules/components/calendar/contexts/calendar-context";
-import { useDisclosure } from "@/modules/components/calendar/hooks";
-import type { IEvent } from "@/modules/components/calendar/interfaces";
+import { COLORS } from "@/components/constants";
+import { useCalendar } from "@/components/calendar-context";
+import { useDisclosure } from "@/components/hooks";
+import type { IEvent } from "@/components/interfaces";
 import {
 	eventSchema,
 	type TEventFormData,
-} from "@/modules/components/calendar/schemas";
+} from "@/components/schemas";
 
 interface IProps {
 	children: ReactNode;

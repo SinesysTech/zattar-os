@@ -6,14 +6,14 @@ import {
     ModalHeader,
     ModalTitle,
     ModalTrigger,
-} from "@/components/ui/responsive-modal";
+} from "@/components/responsive-modal";
 import {cn} from "@/lib/utils";
-import {useCalendar} from "@/modules/components/calendar/contexts/calendar-context";
-import {formatTime} from "@/modules/components/calendar/helpers";
-import type {IEvent} from "@/modules/components/calendar/interfaces";
-import {dayCellVariants} from "@/modules/components/calendar/views/month-view/day-cell";
-import {EventBullet} from "@/modules/components/calendar/views/month-view/event-bullet";
-import {EventDetailsDialog} from "@/modules/components/calendar/dialogs/event-details-dialog";
+import {useCalendar} from "@/components/calendar-context";
+import {formatTime} from "@/components/helpers";
+import type {IEvent} from "@/components/interfaces";
+import {dayCellVariants} from "@/components/day-cell";
+import {EventBullet} from "@/components/event-bullet";
+import {EventDetailsDialog} from "@/components/event-details-dialog";
 
 interface EventListDialogProps {
     date: Date;

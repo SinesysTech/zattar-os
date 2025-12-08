@@ -17,14 +17,14 @@ import {
 	slideFromLeft,
 	slideFromRight,
 	transition,
-} from "@/modules/components/calendar/animations";
-import { useCalendar } from "@/modules/components/calendar/contexts/calendar-context";
-import { AddEditEventDialog } from "@/modules/components/calendar/dialogs/add-edit-event-dialog";
-import { DateNavigator } from "@/modules/components/calendar/header/date-navigator";
-import FilterEvents from "@/modules/components/calendar/header/filter";
-import { TodayButton } from "@/modules/components/calendar/header/today-button";
-import { UserSelect } from "@/modules/components/calendar/header/user-select";
-import { Settings } from "@/modules/components/calendar/settings/settings";
+} from "@/components/animations";
+import { useCalendar } from "@/components/calendar-context";
+import { AddEditEventDialog } from "@/components/add-edit-event-dialog";
+import { DateNavigator } from "@/components/date-navigator";
+import FilterEvents from "@/components/filter";
+import { TodayButton } from "@/components/today-button";
+import { UserSelect } from "@/components/user-select";
+import { Settings } from "@/components/settings";
 import Views from "./view-tabs";
 
 export function CalendarHeader() {

@@ -10,9 +10,9 @@ import React, {
 	useMemo,
 } from "react";
 import { toast } from "sonner";
-import { useCalendar } from "@/modules/components/calendar/contexts/calendar-context";
-import type { IEvent } from "@/modules/components/calendar/interfaces";
-import { DndConfirmationDialog } from "@/modules/components/calendar/dialogs/dnd-confirmation-dialog";
+import { useCalendar } from "@/components/calendar-context";
+import type { IEvent } from "@/components/interfaces";
+import { DndConfirmationDialog } from "@/components/dnd-confirmation-dialog";
 
 interface PendingDropData {
 	event: IEvent;

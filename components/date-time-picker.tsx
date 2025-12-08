@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { useCalendar } from "@/modules/components/calendar/contexts/calendar-context";
-import type { TEventFormData } from "@/modules/components/calendar/schemas";
+import { useCalendar } from "@/components/calendar-context";
+import type { TEventFormData } from "@/components/schemas";
 
 interface DatePickerProps {
 	form: UseFormReturn<TEventFormData>;

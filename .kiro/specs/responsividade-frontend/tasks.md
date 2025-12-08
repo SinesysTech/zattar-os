@@ -265,7 +265,8 @@
 
 - [-] 12. Otimizar Editor de Documentos para mobile
 
-- [-] 12.1 Implementar toolbar responsiva no Plate Editor
+- [x] 12.1 Implementar toolbar responsiva no Plate Editor
+
 
   - Verificar se Plate já tem suporte a floating toolbar
   - Criar versão mobile da fixed-toolbar com ícones essenciais
@@ -274,14 +275,17 @@
   - Testar preservação de conteúdo ao mudar orientação
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
 
-- [ ] 12.2 Otimizar área de edição para mobile
+- [x] 12.2 Otimizar área de edição para mobile
+
+
   - Garantir que editor ocupe altura adequada em mobile
   - Implementar scroll suave dentro do editor
   - Otimizar padding e spacing para mobile
   - Testar com teclado virtual aberto
   - _Requirements: 8.1, 8.5_
 
-- [ ] 12.3 Escrever property tests para Editor
+- [-] 12.3 Escrever property tests para Editor
+
   - **Property 34: Editor toolbar hidden on mobile**
   - **Validates: Requirements 8.1**
   - **Property 35: Editor floating toolbar**
