@@ -30,7 +30,7 @@
 
 ## Fase 2: Componentes de Layout Core
 
-- [ ] 2. Implementar Sidebar responsiva
+- [x] 2. Implementar Sidebar responsiva
 - [x] 2.1 Atualizar componente Sidebar para mobile
   - Garantir que sidebar renderiza como Sheet em viewports < 768px
   - Implementar overlay com fechamento ao clicar
@@ -44,7 +44,7 @@
   - Adicionar transições suaves entre estados
   - _Requirements: 1.4_
 
-- [-] 2.3 Escrever property tests para Sidebar
+- [x] 2.3 Escrever property tests para Sidebar
   - **Property 1: Sidebar drawer on mobile**
   - **Validates: Requirements 1.1**
   - **Property 2: Sidebar overlay closes drawer**
@@ -54,15 +54,15 @@
   - **Property 4: Navigation closes mobile sidebar**
   - **Validates: Requirements 1.5**
 
-- [ ] 3. Implementar Breadcrumb responsivo
-- [ ] 3.1 Atualizar componente AppBreadcrumb
+- [x] 3. Implementar Breadcrumb responsivo
+- [x] 3.1 Atualizar componente AppBreadcrumb
   - Implementar truncamento para mobile (apenas current + parent)
   - Adicionar menu collapsed para níveis adicionais
   - Implementar truncamento de texto longo com ellipsis
   - Garantir navegação funcional em todos os breakpoints
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
 
-- [ ] 3.2 Escrever property tests para Breadcrumb
+- [x] 3.2 Escrever property tests para Breadcrumb
   - **Property 24: Breadcrumb truncation on mobile**
   - **Validates: Requirements 6.1**
   - **Property 25: Breadcrumb collapse menu**
@@ -72,20 +72,20 @@
   - **Property 27: Breadcrumb text truncation**
   - **Validates: Requirements 6.4**
 
-- [ ] 4. Checkpoint - Garantir que todos os testes passem
+- [x] 4. Checkpoint - Garantir que todos os testes passem
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Fase 3: Componentes de Dados (Tabelas e Grids)
 
-- [ ] 5. Implementar Tabelas responsivas
-- [ ] 5.1 Criar componente ResponsiveTable
+- [-] 5. Implementar Tabelas responsivas
+- [x] 5.1 Criar componente ResponsiveTable
   - Implementar horizontal scroll para mobile com indicadores visíveis
   - Adicionar priorização de colunas essenciais
   - Implementar sticky first column quando contém identificadores
   - Criar layout de cards como alternativa para mobile
   - _Requirements: 2.1, 2.2, 2.3, 2.4_
 
-- [ ] 5.2 Implementar ações de tabela responsivas
+- [x] 5.2 Implementar ações de tabela responsivas
   - Agrupar ações em dropdown/action sheet no mobile
   - Manter ações inline no desktop
   - Adicionar suporte para bulk actions em mobile
@@ -103,15 +103,15 @@
   - **Property 9: Mobile table actions grouped**
   - **Validates: Requirements 2.5**
 
-- [ ] 6. Implementar Grids responsivos
-- [ ] 6.1 Criar componente ResponsiveGrid
+- [-] 6. Implementar Grids responsivos
+- [x] 6.1 Criar componente ResponsiveGrid
   - Implementar sistema de colunas adaptativo (1→2→3→4)
   - Adicionar suporte para gap responsivo
   - Implementar scaling proporcional de imagens em cards
   - Adicionar configuração customizável de breakpoints
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
-- [ ] 6.2 Escrever property tests para Grids
+- [-] 6.2 Escrever property tests para Grids
   - **Property 14: Grid single column on mobile**
   - **Validates: Requirements 4.1**
   - **Property 15: Grid two columns on small screens**
