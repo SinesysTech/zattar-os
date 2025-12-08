@@ -1,5 +1,8 @@
 'use client';
 
+// Forçar renderização dinâmica para evitar erros de SSG
+export const dynamic = 'force-dynamic';
+
 /**
  * Página de Salários
  * Lista e gerencia salários dos funcionários
