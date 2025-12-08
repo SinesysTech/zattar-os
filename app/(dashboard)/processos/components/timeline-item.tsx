@@ -7,6 +7,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { FileText, Activity, Download, ExternalLink, Lock, CheckCircle, XCircle } from 'lucide-react';
@@ -28,6 +29,8 @@ interface TimelineItemProps {
 }
 
 export function TimelineItem({ item, index }: TimelineItemProps) {
+  const [isLoadingPresignedUrl, setIsLoadingPresignedUrl] = useState(false);
+
   const formatarDataHora = (data: string) => {
     try {
       return format(new Date(data), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
@@ -39,6 +42,34 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
   const isDocumento = item.documento;
   const hasBackblaze = !!item.backblaze;
   const isAssinado = item.idSignatario !== null && item.idSignatario !== undefined;
+
+  /**
+   * Gera presigned URL e abre o documento
+   */
+  const handleOpenDocument = async () => {
+    if (!item.backblaze?.key) return;
+
+    setIsLoadingPresignedUrl(true);
+    try {
+      const response = await fetch('/api/documentos/presigned-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: item.backblaze.key }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao gerar URL de acesso');
+      }
+
+      const { url } = await response.json();
+      window.open(url, '_blank');
+    } catch (error) {
+      console.error('Erro ao abrir documento:', error);
+      alert('Erro ao abrir documento. Tente novamente.');
+    } finally {
+      setIsLoadingPresignedUrl(false);
+    }
+  };
 
   return (
     <motion.div
@@ -149,16 +180,18 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
                   size="sm"
                   variant="default"
                   className="gap-2"
-                  onClick={() => window.open(item.backblaze!.url, '_blank')}
+                  onClick={handleOpenDocument}
+                  disabled={isLoadingPresignedUrl}
                 >
                   <ExternalLink className="h-4 w-4" />
-                  Ver Documento
+                  {isLoadingPresignedUrl ? 'Carregando...' : 'Ver Documento'}
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
                   className="gap-2"
-                  onClick={() => window.open(item.backblaze!.url, '_blank')}
+                  onClick={handleOpenDocument}
+                  disabled={isLoadingPresignedUrl}
                 >
                   <Download className="h-4 w-4" />
                   Download

@@ -7,7 +7,10 @@ import {
 import { NextRequest } from 'next/server';
 
 
-const serviceAdapter = new GoogleGenerativeAIAdapter({ model: 'gemini-3-pro-preview' });
+const serviceAdapter = new GoogleGenerativeAIAdapter({ 
+  model: 'gemini-2.0-flash-exp',
+  apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+});
 const runtime = new CopilotRuntime();
 
 export const POST = async (req: NextRequest) => {
