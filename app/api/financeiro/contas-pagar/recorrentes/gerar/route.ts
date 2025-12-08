@@ -33,7 +33,7 @@ import {
  *               dataReferencia:
  *                 type: string
  *                 format: date
- *                 description: Data de referência para cálculo (default: hoje)
+ *                 description: Data de referência para cálculo (padrão - hoje)
  *     responses:
  *       200:
  *         description: Contas geradas com sucesso
@@ -72,7 +72,7 @@ import {
  *         schema:
  *           type: string
  *           format: date
- *         description: Data de referência para cálculo (default: hoje)
+ *         description: Data de referência para cálculo (padrão - hoje)
  *       - in: query
  *         name: incluirEstatisticas
  *         schema:

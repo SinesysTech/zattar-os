@@ -145,7 +145,7 @@ interface AggregatedData {
  */
 function validarCPF(cpf: string): { valido: boolean; cpfLimpo: string; erro?: string } {
   const cpfLimpo = cpf.replace(/\D/g, '');
-  
+
   // Deve ter 11 dígitos
   if (cpfLimpo.length !== 11) {
     return { valido: false, cpfLimpo, erro: 'CPF deve conter 11 dígitos' };
@@ -193,9 +193,9 @@ async function buscarDadosAgregados(cpf: string): Promise<AggregatedData> {
 
   const cliente = clienteData
     ? {
-        nome: clienteData.nome,
-        cpf: clienteData.cpf,
-      }
+      nome: clienteData.nome,
+      cpf: clienteData.cpf,
+    }
     : null;
 
   // Buscar contratos se cliente foi encontrado
@@ -226,7 +226,7 @@ async function buscarDadosAgregados(cpf: string): Promise<AggregatedData> {
           listarAcordosCondenacoes({ processoId, limite: 100 })
         );
         const acordosResults = await Promise.allSettled(acordosPromises);
-        
+
         acordos = acordosResults
           .filter((result) => result.status === 'fulfilled')
           .flatMap((result) => {
@@ -356,10 +356,6 @@ export async function GET(
         headers: {
           'X-Response-Time': `${elapsedTime}ms`,
         },
-      }
-    );
-  }
-}
       }
     );
   }
