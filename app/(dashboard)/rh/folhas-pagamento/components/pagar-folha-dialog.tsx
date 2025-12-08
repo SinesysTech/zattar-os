@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -54,7 +54,7 @@ export function PagarFolhaDialog({
   folhaId,
   onSuccess,
 }: PagarFolhaDialogProps) {
-  const { contasBancarias } = useContasBancarias({ ativos: true });
+  const { contasBancarias } = useContasBancarias();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -122,21 +122,27 @@ export function PagarFolhaDialog({
 
           <div className="space-y-2">
             <Label>Conta Bancária</Label>
-            <Select
-              value={form.watch('contaBancariaId')?.toString() ?? ''}
-              onValueChange={(value) => form.setValue('contaBancariaId', Number(value))}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione a conta bancária" />
-              </SelectTrigger>
-              <SelectContent>
-                {contasBancarias.map((conta) => (
-                  <SelectItem key={conta.id} value={conta.id.toString()}>
-                    {conta.nome}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Controller
+              name="contaBancariaId"
+              control={form.control}
+              render={({ field }) => (
+                <Select
+                  value={field.value?.toString() ?? ''}
+                  onValueChange={(value) => field.onChange(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a conta bancária" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {contasBancarias.map((conta) => (
+                      <SelectItem key={conta.id} value={conta.id.toString()}>
+                        {conta.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
 
           <div className="space-y-2">

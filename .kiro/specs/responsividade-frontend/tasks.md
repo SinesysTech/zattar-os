@@ -124,7 +124,7 @@
   - **Validates: Requirements 4.5**
 
 - [x] 7. Atualizar componentes de listagem existentes
-- [-] 7.1 Migrar páginas de listagem para ResponsiveTable
+- [x] 7.1 Migrar páginas de listagem para ResponsiveTable
   - Atualizar /processos para usar ResponsiveTable com layout cards em mobile
   - Atualizar /audiencias para usar ResponsiveTable com priorização de colunas
   - Atualizar /contratos para usar ResponsiveTable
@@ -132,7 +132,7 @@
   - Atualizar /usuarios para usar ResponsiveTable
   - _Requirements: 12.1, 12.2, 12.3, 12.5_
 
-- [ ] 7.2 Implementar filtros responsivos nas páginas de listagem
+- [-] 7.2 Implementar filtros responsivos nas páginas de listagem
   - Criar componente FilterPanel colapsável para mobile
   - Implementar Sheet/Drawer para filtros em mobile
   - Manter filtros inline em desktop

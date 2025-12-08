@@ -29,8 +29,14 @@ export async function GET(request: NextRequest) {
             : statusConciliacaoValues,
       busca: searchParams.get('busca') || undefined,
       tipoTransacao: (searchParams.get('tipoTransacao') as 'credito' | 'debito' | null) || undefined,
-      ordenarPor: (searchParams.get('ordenarPor') as ListarTransacoesImportadasParams['ordenarPor']) || undefined,
-      ordem: (searchParams.get('ordem') as ListarTransacoesImportadasParams['ordem']) || undefined,
+      ordenarPor:
+        (searchParams.get('ordenarPor') as
+          | 'data'
+          | 'descricao'
+          | 'valor'
+          | undefined) || undefined,
+      ordem:
+        (searchParams.get('ordem') as 'asc' | 'desc' | undefined) || undefined,
     };
 
     const data = await listarTransacoesImportadas(params);

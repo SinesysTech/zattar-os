@@ -31,6 +31,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { ResponsiveFilterPanel } from "@/components/ui/responsive-filter-panel"
 
 export interface ComboboxOption {
   value: string
@@ -142,8 +143,17 @@ interface TableToolbarProps {
    * Modo de exibição dos filtros:
    * - "single": Um único botão de filtro com dropdown (comportamento antigo)
    * - "buttons": Botões individuais para cada grupo de filtros (novo comportamento)
+   * - "panel": Painel de filtros responsivo (inline no desktop, Sheet no mobile)
    */
-  filterButtonsMode?: "single" | "buttons"
+  filterButtonsMode?: "single" | "buttons" | "panel"
+  /**
+   * Título do painel de filtros (usado quando filterButtonsMode="panel")
+   */
+  filterPanelTitle?: string
+  /**
+   * Descrição do painel de filtros (usado quando filterButtonsMode="panel")
+   */
+  filterPanelDescription?: string
 }
 
 export function TableToolbar({
@@ -161,6 +171,8 @@ export function TableToolbar({
   className,
   showFilterButton = true,
   filterButtonsMode = "single",
+  filterPanelTitle = "Filtros",
+  filterPanelDescription,
 }: TableToolbarProps) {
   const [filterOpen, setFilterOpen] = React.useState(false)
   const [filterSearch, setFilterSearch] = React.useState("")
@@ -199,6 +211,62 @@ export function TableToolbar({
 
   // Determina se deve mostrar botões individuais ou o botão único de filtro
   const useFilterButtons = filterButtonsMode === "buttons" && filterGroups && filterGroups.length > 0
+  const useFilterPanel = filterButtonsMode === "panel" && filterGroups && filterGroups.length > 0
+
+  // Modo: Painel de filtros responsivo (retorna early para layout diferente)
+  if (useFilterPanel) {
+    return (
+      <div className={cn("flex flex-col gap-4 md:flex-row md:items-start", className)}>
+        <div className="flex-1">
+          <ButtonGroup>
+            <InputGroup className="w-full min-w-[min(92vw,37.5rem)]">
+              <InputGroupAddon>
+                <Search className="h-4 w-4" />
+              </InputGroupAddon>
+              <InputGroupInput
+                value={searchValue}
+                onChange={(e) => onSearchChange(e.target.value)}
+                placeholder={searchPlaceholder}
+              />
+              {isSearching && (
+                <InputGroupAddon align="inline-end">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                </InputGroupAddon>
+              )}
+            </InputGroup>
+            {extraButtons && (
+              <>
+                <ButtonGroupSeparator />
+                {extraButtons}
+              </>
+            )}
+            {onNewClick && (
+              <>
+                <ButtonGroupSeparator />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" size="icon" onClick={onNewClick} aria-label="Novo">
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {newButtonTooltip}
+                  </TooltipContent>
+                </Tooltip>
+              </>
+            )}
+          </ButtonGroup>
+        </div>
+        <ResponsiveFilterPanel
+          filterGroups={filterGroups!}
+          selectedFilters={selectedFilters}
+          onFiltersChange={onFiltersChange}
+          title={filterPanelTitle}
+          description={filterPanelDescription}
+        />
+      </div>
+    )
+  }
 
   return (
     <ButtonGroup className={cn("", className)}>
@@ -218,7 +286,7 @@ export function TableToolbar({
         )}
       </InputGroup>
       <ButtonGroupSeparator />
-      
+
       {/* Modo: Botões individuais de filtro */}
       {useFilterButtons &&
         filterGroups!.map((group) => (
@@ -232,160 +300,160 @@ export function TableToolbar({
 
       {/* Modo: Botão único de filtro (comportamento antigo) */}
       {!useFilterButtons && showFilterButton && (
-      <Popover open={filterOpen} onOpenChange={setFilterOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="outline" size="icon" aria-label="Filtros" className="relative bg-black hover:bg-black/90 text-white border-black">
-            <Filter className="h-4 w-4" />
-            {selectedFilters.length > 0 && (
-              <Badge variant="secondary" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center">
-                {selectedFilters.length}
-              </Badge>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent 
-          className="p-0 w-auto max-w-[min(92vw,37.5rem)]" 
-          align="start" 
-          sideOffset={4}
-        >
-          {useGroupedFilters ? (
-            // Renderização hierarquizada com grupos
-            <div className="flex overflow-hidden">
-              {/* Lista de grupos (lado esquerdo) */}
-              <div className="border-r shrink-0 w-max">
-                <div className="p-2 border-b">
-                  <div className="text-sm font-semibold px-2 py-1.5 whitespace-nowrap">Filtros</div>
-                </div>
-                <div className="max-h-[400px] overflow-auto">
-                  {filterGroups!.map((group) => {
-                    const groupSelectedCount = group.options.filter(opt => 
-                      selectedFilters.includes(opt.value)
-                    ).length
-                    const isActive = activeGroup === group.label
-                    
-                    return (
-                      <div
-                        key={group.label}
-                        className={cn(
-                          "relative flex items-center justify-between px-3 py-2 text-sm cursor-pointer hover:bg-accent transition-colors",
-                          isActive && "bg-accent"
-                        )}
-                        onMouseEnter={() => setActiveGroup(group.label)}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="whitespace-nowrap">{group.label}</span>
-                          {groupSelectedCount > 0 && (
-                            <Badge variant="secondary" className="h-5 px-1.5 text-xs shrink-0">
-                              {groupSelectedCount}
-                            </Badge>
-                          )}
-                        </div>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 ml-1" />
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-
-              {/* Submenu com opções (lado direito) */}
-              {activeGroup && (
-                <div className="border-l overflow-hidden w-max max-w-[min(92vw,25rem)]">
+        <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="icon" aria-label="Filtros" className="relative bg-black hover:bg-black/90 text-white border-black">
+              <Filter className="h-4 w-4" />
+              {selectedFilters.length > 0 && (
+                <Badge variant="secondary" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center">
+                  {selectedFilters.length}
+                </Badge>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="p-0 w-auto max-w-[min(92vw,37.5rem)]"
+            align="start"
+            sideOffset={4}
+          >
+            {useGroupedFilters ? (
+              // Renderização hierarquizada com grupos
+              <div className="flex overflow-hidden">
+                {/* Lista de grupos (lado esquerdo) */}
+                <div className="border-r shrink-0 w-max">
                   <div className="p-2 border-b">
-                    <div className="text-sm font-semibold px-2 py-1.5 whitespace-nowrap">{activeGroup}</div>
+                    <div className="text-sm font-semibold px-2 py-1.5 whitespace-nowrap">Filtros</div>
                   </div>
-                  <div className="max-h-[400px] overflow-auto p-1">
-                    {filterGroups!.find(g => g.label === activeGroup)?.options.map((option) => {
-                      const isSelected = selectedFilters.includes(option.value)
+                  <div className="max-h-[400px] overflow-auto">
+                    {filterGroups!.map((group) => {
+                      const groupSelectedCount = group.options.filter(opt =>
+                        selectedFilters.includes(opt.value)
+                      ).length
+                      const isActive = activeGroup === group.label
+
                       return (
                         <div
-                          key={option.value}
+                          key={group.label}
                           className={cn(
-                            "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground",
-                            isSelected && "bg-accent"
+                            "relative flex items-center justify-between px-3 py-2 text-sm cursor-pointer hover:bg-accent transition-colors",
+                            isActive && "bg-accent"
                           )}
-                          onClick={() => handleFilterSelect(option.value)}
+                          onMouseEnter={() => setActiveGroup(group.label)}
                         >
-                          <div
-                            className={cn(
-                              "flex h-4 w-4 items-center justify-center rounded-sm border mr-2 shrink-0",
-                              isSelected && "bg-primary border-primary"
+                          <div className="flex items-center gap-2">
+                            <span className="whitespace-nowrap">{group.label}</span>
+                            {groupSelectedCount > 0 && (
+                              <Badge variant="secondary" className="h-5 px-1.5 text-xs shrink-0">
+                                {groupSelectedCount}
+                              </Badge>
                             )}
-                          >
-                            {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
                           </div>
-                          <span className="whitespace-nowrap">{option.label}</span>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 ml-1" />
                         </div>
                       )
                     })}
                   </div>
                 </div>
-              )}
-            </div>
-          ) : (
-            // Renderização original (lista plana)
-            <Command shouldFilter={true}>
-              <CommandInput
-                placeholder="Buscar filtros..."
-                value={filterSearch}
-                onValueChange={setFilterSearch}
-              />
-              {/* Botões de ação */}
-              {filterOptions.length > 0 && (
-                <div className="flex gap-2 p-2 border-b">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 text-xs"
-                    onClick={handleSelectAllFilters}
-                  >
-                    Selecionar todas
-                  </Button>
-                  {selectedFilters.length > 0 && (
+
+                {/* Submenu com opções (lado direito) */}
+                {activeGroup && (
+                  <div className="border-l overflow-hidden w-max max-w-[min(92vw,25rem)]">
+                    <div className="p-2 border-b">
+                      <div className="text-sm font-semibold px-2 py-1.5 whitespace-nowrap">{activeGroup}</div>
+                    </div>
+                    <div className="max-h-[400px] overflow-auto p-1">
+                      {filterGroups!.find(g => g.label === activeGroup)?.options.map((option) => {
+                        const isSelected = selectedFilters.includes(option.value)
+                        return (
+                          <div
+                            key={option.value}
+                            className={cn(
+                              "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground",
+                              isSelected && "bg-accent"
+                            )}
+                            onClick={() => handleFilterSelect(option.value)}
+                          >
+                            <div
+                              className={cn(
+                                "flex h-4 w-4 items-center justify-center rounded-sm border mr-2 shrink-0",
+                                isSelected && "bg-primary border-primary"
+                              )}
+                            >
+                              {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
+                            </div>
+                            <span className="whitespace-nowrap">{option.label}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              // Renderização original (lista plana)
+              <Command shouldFilter={true}>
+                <CommandInput
+                  placeholder="Buscar filtros..."
+                  value={filterSearch}
+                  onValueChange={setFilterSearch}
+                />
+                {/* Botões de ação */}
+                {filterOptions.length > 0 && (
+                  <div className="flex gap-2 p-2 border-b">
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
                       className="h-8 text-xs"
-                      onClick={handleClearAllFilters}
+                      onClick={handleSelectAllFilters}
                     >
-                      Limpar todas
+                      Selecionar todas
                     </Button>
-                  )}
-                </div>
-              )}
-              <CommandList>
-                <CommandEmpty>
-                  <div className="py-4 text-center text-sm text-muted-foreground">
-                    Nenhum filtro encontrado.
-                  </div>
-                </CommandEmpty>
-                {filterOptions.map((option) => {
-                  const isSelected = selectedFilters.includes(option.value)
-                  return (
-                    <CommandItem
-                      key={option.value}
-                      value={option.value}
-                      keywords={option.searchText ? [option.searchText] : undefined}
-                      onSelect={() => handleFilterSelect(option.value)}
-                    >
-                      <div
-                        className={cn(
-                          "flex h-4 w-4 items-center justify-center rounded-sm border",
-                          isSelected && "bg-primary border-primary"
-                        )}
+                    {selectedFilters.length > 0 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 text-xs"
+                        onClick={handleClearAllFilters}
                       >
-                        {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
-                      </div>
-                      <span className="flex-1">{option.label}</span>
-                    </CommandItem>
-                  )
-                })}
-              </CommandList>
-            </Command>
-          )}
-        </PopoverContent>
-      </Popover>
+                        Limpar todas
+                      </Button>
+                    )}
+                  </div>
+                )}
+                <CommandList>
+                  <CommandEmpty>
+                    <div className="py-4 text-center text-sm text-muted-foreground">
+                      Nenhum filtro encontrado.
+                    </div>
+                  </CommandEmpty>
+                  {filterOptions.map((option) => {
+                    const isSelected = selectedFilters.includes(option.value)
+                    return (
+                      <CommandItem
+                        key={option.value}
+                        value={option.value}
+                        keywords={option.searchText ? [option.searchText] : undefined}
+                        onSelect={() => handleFilterSelect(option.value)}
+                      >
+                        <div
+                          className={cn(
+                            "flex h-4 w-4 items-center justify-center rounded-sm border",
+                            isSelected && "bg-primary border-primary"
+                          )}
+                        >
+                          {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
+                        </div>
+                        <span className="flex-1">{option.label}</span>
+                      </CommandItem>
+                    )
+                  })}
+                </CommandList>
+              </Command>
+            )}
+          </PopoverContent>
+        </Popover>
       )}
       {extraButtons && (
         <>

@@ -23,11 +23,20 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   const formato = searchParams.get('formato') || 'pdf';
 
   const orcamento = await buscarOrcamentoComDetalhes(orcamentoId);
+  
+  if (!orcamento) {
+    return NextResponse.json(
+      { success: false, error: 'Orçamento não encontrado' },
+      { status: 404 }
+    );
+  }
+  
   const fileName = sanitizeFileName(`orcamento_${orcamento.nome}_${orcamento.ano}`);
 
   if (formato === 'csv' || formato === 'excel') {
     const cabecalhos = ['Conta Contábil', 'Centro de Custo', 'Mês', 'Valor Orçado', 'Observações'];
-    const linhas = (orcamento.itens || []).map((item: OrcamentoItemComDetalhes) => [
+    const linhas: (string | number | null | undefined)[][] = (orcamento.itens || []).map(
+      (item: OrcamentoItemComDetalhes) => [
       item.contaContabil?.nome || '',
       item.centroCusto?.nome || '-',
       item.mes ? String(item.mes) : 'Todos',

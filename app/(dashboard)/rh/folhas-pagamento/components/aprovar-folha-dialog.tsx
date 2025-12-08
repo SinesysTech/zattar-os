@@ -144,23 +144,27 @@ export function AprovarFolhaDialog({
 
           <div className="space-y-2">
             <Label>Centro de Custo (opcional)</Label>
-            <Select
-              value={form.watch('centroCustoId')?.toString() ?? ''}
-              onValueChange={(value) =>
-                form.setValue('centroCustoId', value ? Number(value) : undefined)
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione o centro de custo" />
-              </SelectTrigger>
-              <SelectContent>
-                {centrosCusto.map((centro) => (
-                  <SelectItem key={centro.id} value={centro.id.toString()}>
-                    {centro.codigo} - {centro.nome}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Controller
+              name="centroCustoId"
+              control={form.control}
+              render={({ field }) => (
+                <Select
+                  value={field.value?.toString() ?? ''}
+                  onValueChange={(value) => field.onChange(value ? Number(value) : undefined)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o centro de custo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {centrosCusto.map((centro) => (
+                      <SelectItem key={centro.id} value={centro.id.toString()}>
+                        {centro.codigo} - {centro.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
 
           <div className="space-y-2">

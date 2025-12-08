@@ -739,7 +739,9 @@ export default function ProcessosPage() {
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="buttons"
+        filterButtonsMode="panel"
+        filterPanelTitle="Filtros de Processos"
+        filterPanelDescription="Filtre processos por TRT, grau, responsável e mais"
       // Processos não tem botão de novo
       />
 

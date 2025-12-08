@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
 
   if (formato === 'csv') {
     const cabecalhos = ['Descrição', 'Cliente', 'Vencimento', 'Valor', 'Status'];
-    const linhas = items.map((conta) => [
+    const linhas: (string | number | null | undefined)[][] = items.map((conta) => [
       conta.descricao,
       (conta.cliente?.nomeFantasia || conta.cliente?.razaoSocial) || '',
       conta.dataVencimento ? formatarData(conta.dataVencimento) : '-',
@@ -95,12 +95,15 @@ export async function GET(request: NextRequest) {
       y = base.pageHeight - margin;
     }
 
-    currentPage.drawText((conta.cliente?.nomeFantasia || conta.cliente?.razaoSocial) || '-', {
-      x: colX[0],
-      y,
-      size: 9,
-      font,
-    });
+    currentPage.drawText(
+      (conta.cliente?.nomeFantasia ?? conta.cliente?.razaoSocial) ?? '-',
+      {
+        x: colX[0],
+        y,
+        size: 9,
+        font,
+      }
+    );
     const desc = conta.descricao?.length > 35 ? `${conta.descricao.slice(0, 32)}...` : conta.descricao;
     currentPage.drawText(desc, { x: colX[1], y, size: 9, font });
     currentPage.drawText(conta.dataVencimento ? formatarData(conta.dataVencimento) : '-', {

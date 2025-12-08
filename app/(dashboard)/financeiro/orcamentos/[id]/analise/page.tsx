@@ -42,6 +42,9 @@ import type {
   ProjecaoItem,
   StatusOrcamento,
   ResumoOrcamentario,
+  AnaliseOrcamentaria,
+  Orcamento,
+  EvolucaoMensal,
 } from '@/backend/types/financeiro/orcamento.types';
 import {
   exportarOrcamentoCSV,
@@ -446,36 +449,52 @@ export default function AnaliseOrcamentariaPage() {
     try {
       setIsExporting(true);
       if (itensAnalise.length > 0 && resumo) {
-        // Exportar análise completa
-        const analiseData = {
+        // Exportar análise completa - criar estrutura AnaliseOrcamentaria completa
+        const analiseData: AnaliseOrcamentaria = {
+          orcamento: orcamento as Orcamento,
+          periodo: {
+            dataInicio: orcamento.dataInicio || '',
+            dataFim: orcamento.dataFim || '',
+            mesesTotal: 12,
+            mesesDecorridos: 6,
+          },
+          resumo,
           itensPorConta: itensAnalise.map((item) => ({
+            contaContabilId: item.contaContabil?.id || 0,
             contaContabilCodigo: item.contaContabil?.codigo || '',
             contaContabilNome: item.contaContabil?.nome || '',
-            tipoConta: 'despesa',
+            tipoConta: 'despesa' as const,
+            centroCustoId: item.centroCusto?.id,
+            centroCustoCodigo: item.centroCusto?.codigo,
             centroCustoNome: item.centroCusto?.nome || null,
-            mes: item.mes,
+            mes: item.mes || undefined,
             valorOrcado: item.valorOrcado,
             valorRealizado: item.valorRealizado,
             variacao: item.variacao,
             variacaoPercentual: item.variacaoPercentual,
-            status: item.status,
+            percentualRealizacao: item.percentualRealizacao,
+            status: (item.status === 'dentro_orcamento'
+              ? 'dentro'
+              : item.status === 'estourado'
+                ? 'critico'
+                : 'atencao') as 'dentro' | 'atencao' | 'critico',
           })),
-          resumo,
-          geradoEm: new Date().toISOString(),
+          itensPorCentro: [],
+          evolucaoMensal: evolucao as EvolucaoMensal[],
+          alertas: alertas.map((a) => ({
+            severidade: a.severidade as 'baixa' | 'media' | 'alta' | 'critica',
+            mensagem: a.mensagem,
+            contaContabilId: 0,
+            contaContabilNome: a.contaContabil || '',
+            centroCustoId: undefined,
+            centroCustoNome: a.centroCusto,
+            valorOrcado: a.valorOrcado,
+            valorRealizado: a.valorRealizado,
+            variacao: a.variacao,
+          })),
+          projecao: undefined,
         };
-        exportarAnaliseCSV(orcamento, analiseData as {
-          itens: Array<{
-            contaContabilId: number;
-            contaContabilNome: string;
-            orcado: number;
-            realizado: number;
-            variacao: number;
-            variacaoPercentual: number;
-            status: string;
-          }>;
-          resumo: ResumoOrcamentario;
-          geradoEm: string;
-        });
+        exportarAnaliseCSV(orcamento, analiseData);
         toast.success('Análise exportada para CSV');
       } else {
         // Exportar orçamento básico
