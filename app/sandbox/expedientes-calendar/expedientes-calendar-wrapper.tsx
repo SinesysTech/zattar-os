@@ -18,10 +18,8 @@ import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
 interface ExpedientesFilters {
 	trt?: string;
 	grau?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
-	responsavelId?: number | null;
 	tipoExpedienteId?: number | null;
-	baixado?: boolean;
-	prazoVencido?: boolean;
+	status?: 'pendente' | 'vencido' | 'sem_data' | 'baixados';
 }
 
 interface ExpedientesCalendarWrapperProps {
@@ -39,9 +37,10 @@ export function ExpedientesCalendarWrapper({
 }: ExpedientesCalendarWrapperProps) {
 	const [events, setEvents] = useState<IEvent[]>(initialEvents);
 	const [filters, setFilters] = useState<ExpedientesFilters>({
-		baixado: false, // Padrão: apenas pendentes
+		status: 'pendente', // Padrão: apenas pendentes
 	});
 	const [isRefreshing, setIsRefreshing] = useState(false);
+	const [specialView, setSpecialView] = useState<'vencidos' | 'sem_data' | null>(null);
 
 	// Função para atualizar eventos quando filtros mudarem
 	const refreshEvents = useCallback(async () => {
@@ -64,32 +63,41 @@ export function ExpedientesCalendarWrapper({
 				const searchParams = new URLSearchParams();
 				searchParams.set('pagina', pagina.toString());
 				searchParams.set('limite', limite.toString());
-				searchParams.set('data_prazo_legal_inicio', dataInicio.toISOString());
-				searchParams.set('data_prazo_legal_fim', dataFim.toISOString());
 
-				if (filters.baixado !== undefined) {
-					searchParams.set('baixado', filters.baixado.toString());
+				// Mapear status para parâmetros da API
+				if (filters.status === 'baixados') {
+					searchParams.set('baixado', 'true');
+				} else if (filters.status === 'pendente') {
+					searchParams.set('baixado', 'false');
+					searchParams.set('prazo_vencido', 'false');
+					searchParams.set('data_prazo_legal_inicio', dataInicio.toISOString());
+					searchParams.set('data_prazo_legal_fim', dataFim.toISOString());
+				} else if (filters.status === 'vencido') {
+					searchParams.set('baixado', 'false');
+					searchParams.set('prazo_vencido', 'true');
+					// Para vencidos, não limitar por data (buscar todos)
+				} else if (filters.status === 'sem_data') {
+					searchParams.set('baixado', 'false');
+					// Para sem data, buscar todos não baixados e filtrar localmente
+					// Não passamos filtros de data
+				} else {
+					// Padrão: apenas pendentes
+					searchParams.set('baixado', 'false');
+					searchParams.set('data_prazo_legal_inicio', dataInicio.toISOString());
+					searchParams.set('data_prazo_legal_fim', dataFim.toISOString());
 				}
+
 				if (filters.trt) {
 					searchParams.set('trt', filters.trt);
 				}
 				if (filters.grau) {
 					searchParams.set('grau', filters.grau);
 				}
-				if (filters.responsavelId !== undefined) {
-					searchParams.set(
-						'responsavel_id',
-						filters.responsavelId === null ? 'null' : filters.responsavelId.toString()
-					);
-				}
 				if (filters.tipoExpedienteId !== undefined) {
 					searchParams.set(
 						'tipo_expediente_id',
 						filters.tipoExpedienteId === null ? 'null' : filters.tipoExpedienteId.toString()
 					);
-				}
-				if (filters.prazoVencido !== undefined) {
-					searchParams.set('prazo_vencido', filters.prazoVencido.toString());
 				}
 
 				const response = await fetch(
@@ -117,7 +125,24 @@ export function ExpedientesCalendarWrapper({
 					throw new Error('Formato de resposta inválido: expedientes não é um array');
 				}
 
-				allExpedientes = [...allExpedientes, ...expedientes];
+				// Filtrar localmente para "sem_data" e "pendente" se necessário
+				let filteredExpedientes = expedientes;
+				if (filters.status === 'sem_data') {
+					// Expedientes sem data_prazo_legal_parte e não baixados
+					filteredExpedientes = expedientes.filter(
+						(e: any) => !e.data_prazo_legal_parte && !e.baixado_em
+					);
+				} else if (filters.status === 'pendente') {
+					// Pendentes: não baixados, com data, e não vencidos
+					filteredExpedientes = expedientes.filter(
+						(e: any) =>
+							!e.baixado_em &&
+							e.data_prazo_legal_parte &&
+							!e.prazo_vencido
+					);
+				}
+
+				allExpedientes = [...allExpedientes, ...filteredExpedientes];
 
 				// Verificar se há mais páginas
 				const paginacao = data.data?.paginacao;
@@ -163,8 +188,20 @@ export function ExpedientesCalendarWrapper({
 	}, []);
 
 	const handleClearFilters = useCallback(() => {
-		setFilters({ baixado: false });
+		setFilters({ status: 'pendente' });
+		setSpecialView(null);
 	}, []);
+
+	// Detectar quando status muda para vencidos ou sem_data
+	useEffect(() => {
+		if (filters.status === 'vencido') {
+			setSpecialView('vencidos');
+		} else if (filters.status === 'sem_data') {
+			setSpecialView('sem_data');
+		} else {
+			setSpecialView(null);
+		}
+	}, [filters.status]);
 
 	return (
 		<ExpedientesCalendarProvider
@@ -172,7 +209,11 @@ export function ExpedientesCalendarWrapper({
 			tiposExpedientes={tiposExpedientes}
 			onRefresh={refreshEvents}
 		>
-			<CalendarProvider events={events} users={initialUsers} view="month">
+			<CalendarProvider
+				events={events}
+				users={initialUsers}
+				view={specialView ? 'agenda' : 'month'}
+			>
 				<DndProvider showConfirmation={false}>
 					<div className="w-full border rounded-xl">
 						<ExpedientesCalendarHeader
