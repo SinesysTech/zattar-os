@@ -212,7 +212,8 @@
   - **Validates: Requirements 7.4**
 
 
-- [ ] 12. Checkpoint - Garantir que todos os testes passem
+- [-] 12. Checkpoint - Garantir que todos os testes passem
+
 
 
 
@@ -344,14 +345,20 @@
 
 
 - [ ] 15. Otimizar Dashboard para mobile
-- [ ] 15.1 Implementar layout responsivo no Dashboard
+
+
+- [x] 15.1 Implementar layout responsivo no Dashboard
+
+
   - Usar ResponsiveGrid para widgets do dashboard
   - Configurar grid: 1 coluna mobile, 2 colunas tablet, 3-4 desktop
   - Garantir que cards de métricas sejam legíveis em mobile
   - Implementar scroll suave entre seções
   - _Requirements: 9.1, 9.4_
 
-- [ ] 15.2 Otimizar charts e gráficos para mobile
+
+- [x] 15.2 Otimizar charts e gráficos para mobile
+
   - Verificar se recharts já é responsivo
   - Ajustar tamanho de fonte em labels para mobile
   - Implementar scroll horizontal para charts muito largos
@@ -359,14 +366,18 @@
   - Garantir que tooltips sejam touch-friendly
   - _Requirements: 9.2_
 
-- [ ] 15.3 Implementar filtros colapsáveis no Dashboard
+
+- [x] 15.3 Implementar filtros colapsáveis no Dashboard
+
   - Criar Sheet para filtros em mobile
   - Manter filtros inline em desktop
   - Adicionar botão "Filtros" com badge de contagem
   - Implementar aplicação de filtros com feedback visual
   - _Requirements: 9.5_
 
-- [ ] 15.4 Escrever property tests para Dashboard
+
+- [x] 15.4 Escrever property tests para Dashboard
+
   - **Property 39: Dashboard widgets stacked on mobile**
   - **Validates: Requirements 9.1**
   - **Property 40: Charts scale on mobile**

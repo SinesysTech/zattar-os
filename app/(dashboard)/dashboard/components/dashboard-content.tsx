@@ -17,6 +17,8 @@ import { WidgetFluxoCaixa } from './widgets/widget-fluxo-caixa';
 import { WidgetDespesasCategoria } from './widgets/widget-despesas-categoria';
 import { WidgetOrcamentoAtual } from './widgets/widget-orcamento-atual';
 import { WidgetAlertasFinanceiros } from './widgets/widget-alertas-financeiros';
+import { ResponsiveGrid } from '@/components/ui/responsive-grid';
+// import { DashboardFilters, FilterGroup } from './dashboard-filters'; // Disponível para uso futuro
 
 // ============================================================================
 // Loading e Error States
@@ -80,32 +82,39 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
   return (
     <div className="space-y-6">
       {/* Saudação */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <Typography.H3>Olá, {data.usuario.nome}!</Typography.H3>
           <Typography.Muted>
             Acompanhe seus processos, audiências e expedientes
           </Typography.Muted>
         </div>
-        <Button variant="ghost" size="sm" onClick={onRefetch}>
+        <Button variant="ghost" size="sm" onClick={onRefetch} className="w-full sm:w-auto">
           <RefreshCw className="h-4 w-4 mr-2" />
           Atualizar
         </Button>
       </div>
 
-      {/* Widgets Financeiros */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* Widgets Financeiros - Usando ResponsiveGrid */}
+      <ResponsiveGrid
+        columns={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3 }}
+        gap={4}
+      >
         <WidgetSaldoContas />
         <WidgetContasPagarReceber />
         <WidgetAlertasFinanceiros />
-      </div>
+      </ResponsiveGrid>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      {/* Fluxo de Caixa e Despesas - Layout responsivo */}
+      <ResponsiveGrid
+        columns={{ xs: 1, sm: 1, md: 1, lg: 3, xl: 3 }}
+        gap={4}
+      >
         <div className="lg:col-span-2">
           <WidgetFluxoCaixa />
         </div>
         <WidgetDespesasCategoria />
-      </div>
+      </ResponsiveGrid>
 
       <WidgetOrcamentoAtual />
 
@@ -137,18 +146,27 @@ interface AdminDashboardProps {
 function AdminDashboard({ data }: AdminDashboardProps) {
   return (
     <div className="space-y-6">
-      {/* Widgets Financeiros */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* Widgets Financeiros - Usando ResponsiveGrid */}
+      <ResponsiveGrid
+        columns={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3 }}
+        gap={4}
+      >
         <WidgetSaldoContas />
         <WidgetContasPagarReceber />
         <WidgetAlertasFinanceiros />
-      </div>
-      <div className="grid gap-4 lg:grid-cols-3">
+      </ResponsiveGrid>
+
+      {/* Fluxo de Caixa e Despesas - Layout responsivo */}
+      <ResponsiveGrid
+        columns={{ xs: 1, sm: 1, md: 1, lg: 3, xl: 3 }}
+        gap={4}
+      >
         <div className="lg:col-span-2">
           <WidgetFluxoCaixa />
         </div>
         <WidgetDespesasCategoria />
-      </div>
+      </ResponsiveGrid>
+
       <WidgetOrcamentoAtual />
 
       {/* Dashboard Sortable */}
