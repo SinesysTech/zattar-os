@@ -35,8 +35,10 @@ function DayPicker({
 				),
 				nav_button_previous: "absolute left-1",
 				nav_button_next: "absolute right-1",
-				head_row: "flex gap-1",
+				weekdays: "flex gap-2",
+				head_row: "flex gap-2",
 				head_cell: "w-9 font-medium text-sm capitalize",
+				weekday: "w-9 font-medium text-sm capitalize",
 				row: "flex w-full mt-2",
 
 				cell: cn(
