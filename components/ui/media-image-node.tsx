@@ -11,6 +11,7 @@ import { ResizableProvider, useResizableValue } from '@platejs/resizable';
 import { PlateElement, withHOC } from 'platejs/react';
 
 import { cn } from '@/app/_lib/utils/utils';
+import { useOrientation } from '@/hooks/use-orientation';
 
 import { Caption, CaptionTextarea } from './caption';
 import { MediaToolbar } from './media-toolbar';
@@ -25,6 +26,8 @@ export const ImageElement = withHOC(
   function ImageElement(props: PlateElementProps<TImageElement>) {
     const { align = 'center', focused, readOnly, selected } = useMediaState();
     const width = useResizableValue('width');
+    const orientation = useOrientation();
+    const isLandscape = orientation === 'landscape';
 
     const { isDragging, handleRef } = useDraggable({
       element: props.element,
@@ -48,8 +51,9 @@ export const ImageElement = withHOC(
               <Image
                 ref={handleRef}
                 className={cn(
-                  'block w-full max-w-full h-auto cursor-pointer object-cover px-0',
+                  'block w-full h-auto cursor-pointer object-cover px-0',
                   'rounded-sm',
+                  isLandscape ? 'max-w-full' : 'max-w-full',
                   focused && selected && 'ring-2 ring-ring ring-offset-2',
                   isDragging && 'opacity-50'
                 )}
