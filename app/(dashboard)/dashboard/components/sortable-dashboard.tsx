@@ -256,7 +256,7 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
   const [widgets, setWidgets] = useState<DashboardWidget[]>(USER_DEFAULT_WIDGETS);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
-  
+
   // Hook de permissões
   const { isSuperAdmin, temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes();
 
@@ -292,7 +292,7 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
   const saveOrder = useCallback((newWidgets: DashboardWidget[]) => {
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(newWidgets));
   }, []);
-  
+
   // Verificar se tem acesso a qualquer módulo financeiro
   const temAcessoFinanceiro = isSuperAdmin ||
     temPermissao('obrigacoes', 'visualizar') ||
@@ -302,14 +302,14 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
     temPermissao('contas_pagar', 'listar') ||
     temPermissao('contas_receber', 'listar') ||
     temPermissao('dre', 'visualizar');
-  
+
   // Filtrar widgets financeiros baseado em permissões
   const widgetsPermitidos = !isLoadingPermissoes && !temAcessoFinanceiro
-    ? widgets.filter((w) => 
-        w.type !== 'obrigacoes' && 
-        w.type !== 'folha-pagamento' && 
-        w.type !== 'custo-pessoal'
-      )
+    ? widgets.filter((w) =>
+      w.type !== 'obrigacoes' &&
+      w.type !== 'folha-pagamento' &&
+      w.type !== 'custo-pessoal'
+    )
     : widgets;
 
   const sensors = useSensors(
@@ -496,7 +496,7 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
   const [widgets, setWidgets] = useState<DashboardWidget[]>(ADMIN_DEFAULT_WIDGETS);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
-  
+
   // Hook de permissões
   const { isSuperAdmin, temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes();
 
@@ -535,7 +535,7 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
   const saveOrder = useCallback((newWidgets: DashboardWidget[]) => {
     localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(newWidgets));
   }, []);
-  
+
   // Verificar se tem acesso a qualquer módulo financeiro
   const temAcessoFinanceiro = isSuperAdmin ||
     temPermissao('obrigacoes', 'visualizar') ||
@@ -545,14 +545,14 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
     temPermissao('contas_pagar', 'listar') ||
     temPermissao('contas_receber', 'listar') ||
     temPermissao('dre', 'visualizar');
-  
+
   // Filtrar widgets financeiros baseado em permissões
   const widgetsPermitidos = !isLoadingPermissoes && !temAcessoFinanceiro
-    ? widgets.filter((w) => 
-        w.type !== 'obrigacoes' && 
-        w.type !== 'folha-pagamento' && 
-        w.type !== 'custo-pessoal'
-      )
+    ? widgets.filter((w) =>
+      w.type !== 'obrigacoes' &&
+      w.type !== 'folha-pagamento' &&
+      w.type !== 'custo-pessoal'
+    )
     : widgets;
 
   const sensors = useSensors(

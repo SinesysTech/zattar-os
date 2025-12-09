@@ -33,98 +33,68 @@ O Sinesys é composto por **3 serviços independentes**, cada um em seu próprio
 
 ---
 
-## Deploy no CapRover
+## Deploy no CapRover (via Imagem Docker)
+
+O deploy do Sinesys no CapRover é feito utilizando **imagens Docker pré-construídas**, evitando builds no servidor de produção e garantindo deploys mais rápidos e confiáveis.
 
 ### Pré-requisitos
 
 - CapRover instalado e configurado
-- CLI do CapRover (`npm install -g caprover`)
 - Acesso ao dashboard do CapRover
-- Os 3 repositórios clonados localmente
-- **Docker com BuildKit habilitado** (ver seção "Requisito: Docker BuildKit")
+- Docker instalado localmente (para build da imagem)
+- Acesso a um registry Docker (Docker Hub, GitHub Container Registry, etc.)
 
 ### Passo 1: Criar os Apps no CapRover
 
 Acesse o dashboard do CapRover e crie **3 apps**:
 
-| Nome do App | Repositório | HTTP Port | WebSocket |
-|-------------|-------------|-----------|-----------|
-| `sinesys` | Este repo | 3000 | ❌ |
-| `sinesys-mcp` | sinesys-mcp-server | 3001 | ❌ |
-| `sinesys-browser` | sinesys-browser-server | 3000 | ✅ |
+| Nome do App | Descrição | HTTP Port | WebSocket |
+|-------------|-----------|-----------|-----------|
+| `sinesys` | App principal (Next.js) | 3000 | ❌ |
+| `sinesys-mcp` | MCP Server | 3001 | ❌ |
+| `sinesys-browser` | Firefox para scraping | 3000 | ✅ |
 
 > ⚠️ **Importante**: Habilite WebSocket Support apenas para `sinesys-browser`!
 
-### Passo 2: Deploy do Browser Service (Firefox)
+### Passo 2: Build e Push da Imagem Docker
 
-**No repositório sinesys-browser-server:**
-
-```bash
-# Clone o repositório
-git clone https://github.com/seu-org/sinesys-browser-server.git
-cd sinesys-browser-server
-
-# Login no CapRover
-caprover login
-
-# Deploy
-caprover deploy -a sinesys-browser
-```
-
-**Variáveis de ambiente:**
-```env
-PORT=3000
-BROWSER_TOKEN=seu_token_opcional
-```
-
-**Configurações importantes:**
-- Container HTTP Port: `3000`
-- WebSocket Support: ✅ **Habilitar**
-- Memory: 2048MB (mínimo)
-
-### Passo 3: Deploy do MCP Server
-
-**No repositório sinesys-mcp-server:**
+**Build local da imagem:**
 
 ```bash
-cd sinesys-mcp-server
+# Na raiz do repositório Sinesys
+docker build \
+  --build-arg NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co \
+  --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=sua_anon_key \
+  -t sinesys:latest .
 
-# Login no CapRover (se ainda não fez)
-caprover login
+# Tag para o registry
+docker tag sinesys:latest seu-registry/sinesys:latest
 
-# Deploy
-caprover deploy -a sinesys-mcp
+# Push para o registry
+docker push seu-registry/sinesys:latest
 ```
 
-**Variáveis de ambiente:**
-```env
-NODE_ENV=production
-PORT=3001
-SINESYS_API_URL=http://srv-captain--sinesys:3000
-SINESYS_API_KEY=sua_api_key
-```
+**Ou usando GitHub Actions (recomendado):**
 
-### Passo 4: Deploy do App Principal
+O projeto já possui workflow configurado em `.github/workflows/` que automatiza o build e push da imagem.
 
-**Neste repositório (Sinesys):**
+### Passo 3: Deploy via Imagem no CapRover
 
-```bash
-# Login no CapRover
-caprover login
+No dashboard do CapRover:
 
-# Deploy
-caprover deploy -a sinesys
-```
+1. Acesse **Apps → sinesys → Deployment**
+2. Na seção **Deploy via ImageName**, insira:
+   ```
+   seu-registry/sinesys:latest
+   ```
+3. Clique em **Deploy**
 
-> **Importante**: O CapRover pedirá os build args. Informe:
-> - `NEXT_PUBLIC_SUPABASE_URL`
-> - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
-> ⚠️ Importante: Antes de configurar deploy, leia a seção 'Prevenindo Múltiplos Builds Simultâneos' para evitar problemas.
-> 💡 **Dica**: Para entender como otimizar o tempo de build, veja a seção "Otimização de Build e Cache Docker".
-> 💡 **Nota**: O build do Next.js requer pelo menos 4GB de RAM disponível no servidor. Verifique a seção "Proteções Contra Out-Of-Memory (OOM)" para detalhes.
-> 💡 **Nota**: Para entender os scripts de build, veja 'Scripts de Build e Configuração do Next.js'.
+> 💡 **Dica**: Para deploys automáticos, configure o webhook do CapRover para ser chamado após o push da imagem no GitHub Actions.
 
-**Variáveis de ambiente:**
+### Passo 4: Configurar Variáveis de Ambiente
+
+No dashboard do CapRover, vá em **Apps → sinesys → App Configs → Environmental Variables**:
+
 ```env
 NODE_ENV=production
 NEXT_TELEMETRY_DISABLED=1
@@ -149,7 +119,26 @@ MONGODB_URL=mongodb://...
 MONGODB_DATABASE=sinesys
 ```
 
-### Passo 5: Configurar Domínios e HTTPS
+### Passo 5: Deploy dos Outros Serviços
+
+**Browser Service (sinesys-browser):**
+```env
+PORT=3000
+BROWSER_TOKEN=seu_token_opcional
+```
+- Container HTTP Port: `3000`
+- WebSocket Support: ✅ **Habilitar**
+- Memory: 2048MB (mínimo)
+
+**MCP Server (sinesys-mcp):**
+```env
+NODE_ENV=production
+PORT=3001
+SINESYS_API_URL=http://srv-captain--sinesys:3000
+SINESYS_API_KEY=sua_api_key
+```
+
+### Passo 6: Configurar Domínios e HTTPS
 
 No dashboard do CapRover:
 
@@ -158,6 +147,16 @@ No dashboard do CapRover:
 | sinesys | app.seudominio.com.br | ✅ |
 | sinesys-mcp | mcp.seudominio.com.br (opcional) | ✅ |
 | sinesys-browser | (não expor) | — |
+
+### Vantagens do Deploy via Imagem
+
+| Aspecto | Build no CapRover | Deploy via Imagem |
+|---------|-------------------|-------------------|
+| **Tempo de deploy** | ~5-10 min | ~30 seg |
+| **Uso de memória** | 6-8 GB durante build | Apenas runtime (~512MB) |
+| **Risco de OOM** | Alto | Nenhum |
+| **Consistência** | Depende do servidor | Imagem idêntica sempre |
+| **Rollback** | Rebuild necessário | Trocar tag da imagem |
 
 ---
 
@@ -665,75 +664,17 @@ npm run build:prod
 
 ---
 
-## Requisito: Docker BuildKit
-
-O Dockerfile do Sinesys usa recursos do Docker BuildKit para otimização de cache (`--mount=type=cache`). O BuildKit é necessário para builds mais rápidos e eficientes.
-
-### Verificando se BuildKit está habilitado
-
-```bash
-# Verificar versão do Docker (BuildKit é padrão no Docker 23.0+)
-docker version
-
-# Testar se BuildKit está ativo
-DOCKER_BUILDKIT=1 docker build --help | grep -i buildkit
-```
-
-### Habilitando BuildKit
-
-**Opção 1: Variável de ambiente (temporário)**
-```bash
-export DOCKER_BUILDKIT=1
-```
-
-**Opção 2: Configuração do daemon (permanente)**
-```bash
-# Editar /etc/docker/daemon.json
-sudo nano /etc/docker/daemon.json
-
-# Adicionar:
-{
-  "features": {
-    "buildkit": true
-  }
-}
-
-# Reiniciar Docker
-sudo systemctl restart docker
-```
-
-**Opção 3: CapRover (se suportado)**
-- Verifique se a versão do Docker no servidor é 23.0+ (BuildKit padrão)
-- Se não, configure a variável de ambiente no servidor
-
-### Se BuildKit não estiver disponível
-
-Se não for possível habilitar BuildKit, edite o `Dockerfile` e remova o uso de `--mount=type=cache`:
-
-```dockerfile
-# De (com BuildKit):
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
-
-# Para (sem BuildKit):
-RUN npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
-```
-
-> ⚠️ **Nota**: Sem BuildKit, o cache de npm não será preservado entre builds, aumentando o tempo de build.
-
----
-
 ## Build Args vs Environment Variables
 
 ### Build Args (tempo de build)
-Usados apenas durante `docker build`:
+Usados apenas durante `docker build` (na máquina local ou CI):
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
 
 > **Por quê?** Variáveis `NEXT_PUBLIC_*` são "inlined" no código durante o build do Next.js.
 
 ### Environment Variables (runtime)
-Usadas quando o container está rodando:
+Configuradas no CapRover e usadas quando o container está rodando:
 - `SUPABASE_SECRET_KEY`
 - `BROWSER_WS_ENDPOINT`
 - `REDIS_URL`
@@ -743,33 +684,29 @@ Usadas quando o container está rodando:
 
 ## Troubleshooting
 
-### Build falha com OOM (Out of Memory)
+### Build local falha com OOM (Out of Memory)
 
-O Next.js pode consumir muita memória durante o build. Soluções rápidas:
+O Next.js pode consumir muita memória durante o build. Soluções:
 
-1. **Aumentar memória do build no CapRover**:
-   - App Configs > Build Timeout & Memory
-   - Aumente para 4096MB ou mais
+1. **Aumentar memória do Docker Desktop** (Windows/Mac):
+   - Docker Desktop → Settings → Resources → Memory
+   - Aumente para 6-8GB
 
-2. **Usar swap no servidor**:
+2. **Usar script de debug de memória**:
    ```bash
-   sudo fallocate -l 4G /swapfile
-   sudo chmod 600 /swapfile
-   sudo mkswap /swapfile
-   sudo swapon /swapfile
+   npm run build:debug-memory
    ```
 
-3. **Build em máquina externa**:
+3. **Verificar recursos disponíveis**:
    ```bash
-   docker build -t sinesys:latest .
-   docker tag sinesys:latest seu-registry/sinesys:latest
-   docker push seu-registry/sinesys:latest
+   # Linux/Mac
+   free -h
+
+   # Windows PowerShell
+   Get-Process | Sort-Object WorkingSet -Descending | Select-Object -First 10
    ```
-   E no CapRover, use "Deploy via ImageName".
-   💡 Dica: Se o OOM ocorre durante múltiplos builds simultâneos, veja a seção 'Prevenindo Múltiplos Builds Simultâneos'.
-   💡 **Nota**: Builds simultâneos consomem mais memória. Veja "Prevenindo Múltiplos Builds Simultâneos" e "Otimização de Build e Cache Docker".
-   💡 Para proteções abrangentes contra OOM, veja a seção 'Proteções Contra Out-Of-Memory (OOM)'.
-   💡 **Dica**: Use `npm run build:debug-memory` para diagnosticar problemas. Veja 'Scripts de Build e Configuração do Next.js' para detalhes.
+
+> 💡 **Dica**: O build requer ~6GB de RAM. Se sua máquina tem menos, considere usar GitHub Actions para build.
 
 ### Container reinicia constantemente
 
@@ -783,6 +720,19 @@ Verifique os logs no dashboard do CapRover: App > App Logs
    ```bash
    curl http://srv-captain--sinesys-browser:3000/health
    ```
+
+### Deploy via imagem falha
+
+1. **Verifique se a imagem existe no registry**:
+   ```bash
+   docker pull seu-registry/sinesys:latest
+   ```
+
+2. **Verifique credenciais do registry no CapRover**:
+   - Dashboard → Cluster → Docker Registry Configuration
+
+3. **Verifique logs do CapRover**:
+   - App → App Logs ou Build Logs
 
 ## Otimização de Build e Cache Docker
 
@@ -865,273 +815,32 @@ Step 6/12 : COPY --from=deps /app/node_modules ./node_modules
 
 ---
 
-## Proteções Contra Out-Of-Memory (OOM)
+## Requisitos de Memória para Build Local
 
-### Introdução
+> **Nota**: Como o deploy é feito via imagem Docker pré-construída, o build ocorre na máquina local ou no CI (GitHub Actions), não no servidor de produção.
 
-Erros de Out-Of-Memory (OOM) ocorrem quando o Next.js build consome mais memória RAM do que está disponível no servidor. Um build típico do Next.js pode usar ~2-3GB de RAM, especialmente em projetos com muitas páginas ou componentes complexos. Quando múltiplos builds ocorrem simultaneamente (devido a webhooks duplicados), o consumo pode multiplicar, causando falhas.
+| Cenário | RAM Mínima | RAM Recomendada |
+|---------|------------|-----------------|
+| Build local (Docker Desktop) | 6GB | 8GB |
+| Build no CI (GitHub Actions) | Automático | runners-large |
 
-### Requisitos de Memória
+O `NODE_OPTIONS="--max-old-space-size=6144"` no Dockerfile limita o heap do Node.js a 6GB.
 
-| Cenário | RAM Mínima | RAM Recomendada | Notas |
-|---------|------------|-----------------|-------|
-| Build único | 6GB | 8GB | Inclui 6GB para Node.js + 2GB para sistema |
-| Build com cache | 4GB | 6GB | Builds subsequentes consomem menos |
-| Múltiplos builds simultâneos | **Evitar** | **Evitar** | Configure webhook corretamente |
-
-O `NODE_OPTIONS="--max-old-space-size=6144"` no Dockerfile limita o heap do Node.js a 6GB. O sistema operacional precisa de ~2GB adicionais para operações normais.
-
-> ⚠️ **IMPORTANTE**: O projeto tem +150 dependências (Plate.js, CopilotKit, Supabase, etc.) e requer 6GB de heap para builds estáveis.
-
-### Configurações do CapRover
-
-#### Build Memory
-Acesse App Configs → Build Timeout & Memory para ajustar:
-- **Valor mínimo**: 6144MB (6GB) - alinhado com `NODE_OPTIONS` no Dockerfile
-- **Valor recomendado**: 8192MB (8GB) para builds mais rápidos e margem de segurança
-
-> ⚠️ **CRÍTICO**: O valor do Build Memory no CapRover **DEVE** ser igual ou maior que o valor de `NODE_OPTIONS` no Dockerfile e no script `build:caprover` (atualmente 6144MB). Se o CapRover tiver menos memória que o limite do Node.js, o build falhará com OOM.
-
-#### Build Timeout
-Recomendações baseadas no cenário:
-- **Build sem cache**: 600s (10 minutos) - primeira vez ou após mudanças em dependências
-- **Build com dependências novas**: 900s (15 minutos) - quando `package.json` muda
-
-#### Instance Count
-Mantenha em 1 durante o build para evitar múltiplas instâncias consumindo memória extra.
-
-### Configuração de Swap (Servidores com RAM Limitada)
-
-Use swap quando o servidor tiver menos de 8GB RAM física. O swap permite que o sistema use disco como memória adicional, mas torna os builds 2-3x mais lentos.
-
-#### Quando usar swap
-- Servidores com <8GB RAM física
-- Builds esporádicos (não produção contínua)
-
-#### Impacto no desempenho
-- Builds ficam 2-3x mais lentos devido ao acesso ao disco
-- Alto uso de swap (>50%) pode causar travamentos do sistema
-
-#### Comandos para configurar swap
-```bash
-# Criar arquivo de swap de 4GB
-sudo fallocate -l 4G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-
-# Tornar permanente (adicionar ao /etc/fstab)
-echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/sysctl.conf
-```
-
-#### Otimizar uso de swap
-```bash
-# Reduzir swappiness para usar swap apenas quando necessário
-sudo sysctl vm.swappiness=10
-echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
-```
-
-### Script de Verificação Pré-Build
-
-Use o script `scripts/check-build-memory.sh` para verificar memória disponível antes do build:
-
-```bash
-# Verificar memória disponível antes do build
-bash scripts/check-build-memory.sh
-```
-
-O script verifica:
-- Memória RAM disponível
-- Swap disponível
-- Processos que consomem muita memória
-- Recomendações baseadas no estado atual
-
-### Troubleshooting de Erros OOM
-
-#### Sintoma 1: Build falha com "JavaScript heap out of memory"
-- **Causa**: Node.js atingiu o limite de memória (atualmente 6GB)
-- **Solução**: Aumentar `NODE_OPTIONS` no Dockerfile (ex: `--max-old-space-size=8192`) **E** aumentar memória do CapRover para valor igual ou maior
-
-#### Sintoma 2: Container é killed durante build (exit code 137)
-- **Causa**: Sistema operacional matou o processo por falta de memória
-- **Solução**: Adicionar swap ou aumentar RAM física do servidor
-
-#### Sintoma 3: Build demora muito e servidor fica lento
-- **Causa**: Uso excessivo de swap (>50%)
-- **Solução**: Aumentar RAM física ou otimizar build para consumir menos memória
-
-#### Sintoma 4: Múltiplos builds simultâneos causam OOM
-- **Causa**: Webhooks duplicados ou configuração de auto-deploy + webhook
-- **Solução**: Ver seção "Prevenindo Múltiplos Builds Simultâneos"
-
-#### Diagnóstico via logs
-- **CapRover logs**: Procure por "out of memory", "heap", "killed"
-- **Comandos de diagnóstico**:
-  ```bash
-  # Ver uso de memória em tempo real
-  free -h
-  
-  # Ver processos que mais consomem memória
-  ps aux --sort=-%mem | head -n 10
-  
-  # Ver logs do sistema sobre OOM
-  sudo dmesg | grep -i "out of memory"
-  ```
-
-### Alternativas para Servidores com Pouca Memória
-
-#### Opção 1: Build em máquina externa
-Use GitHub Actions ou máquina local para build e push da imagem:
-
-```yaml
-# .github/workflows/build-and-deploy.yml
-name: Build and Deploy to CapRover
-on:
-  push:
-    branches: [main]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build Docker image
-        run: docker build -t sinesys:latest .
-      - name: Push to registry
-        run: |
-          docker tag sinesys:latest registry.example.com/sinesys:latest
-          docker push registry.example.com/sinesys:latest
-      - name: Deploy to CapRover
-        run: |
-          caprover deploy --imageName registry.example.com/sinesys:latest
-```
-
-#### Opção 2: Usar CapRover em servidor maior temporariamente
-Migre temporariamente para um servidor com mais RAM durante builds.
-
-#### Opção 3: Otimizar build para consumir menos memória
-- Desabilitar source maps em produção
-- Usar `experimental.cpus` no `next.config.ts` para limitar paralelismo
-- Considerar build incremental com ferramentas como Turborepo
-
-### Monitoramento de Memória
-
-Configure alertas no CapRover para uso de memória alto. Ferramentas recomendadas:
-- **Netdata**: Monitoramento em tempo real
-- **Prometheus + Grafana**: Dashboards customizados
-
-Métricas importantes:
-- Uso de RAM durante build
-- Uso de swap
-- Tempo de build
-- Número de builds simultâneos
+> ⚠️ **IMPORTANTE**: O projeto tem +150 dependências e requer 6GB de heap para builds estáveis.
 
 ---
 
-## Prevenindo Múltiplos Builds Simultâneos
+## Recursos Recomendados (Servidor de Produção)
 
-Múltiplos builds simultâneos podem causar **Out of Memory (OOM)** no servidor, especialmente quando cada build consome ~2GB de RAM. Isso acontece quando webhooks duplicados ou configurações incorretas no CapRover triggeram builds em paralelo.
+| Serviço | RAM Mínima | RAM Recomendada | CPU |
+|---------|------------|-----------------|-----|
+| sinesys_app | 512MB | 1GB | 1 core |
+| sinesys_mcp | 128MB | 256MB | 0.5 core |
+| sinesys_browser | 1GB | 2GB | 1-2 cores |
 
-### Diagnóstico de Webhooks Duplicados
+**Total recomendado**: VPS com 4GB RAM, 2-4 cores
 
-Para identificar webhooks duplicados no GitHub:
-
-1. Acesse o repositório no GitHub
-2. Vá para **Settings → Webhooks**
-3. Verifique a lista de webhooks ativos
-4. Procure por múltiplos webhooks apontando para a mesma URL do CapRover
-
-**Como identificar duplicados:**
-- Mesmo **Payload URL** (ex: `https://captain.yourdomain.com/api/v2/user/apps/webhooks/trigger`)
-- Mesmo **Content type** e **Secret** (se aplicável)
-- Webhooks com status "Active" para o mesmo app
-
-**Comando para listar webhooks via GitHub CLI:**
-```bash
-gh api repos/{owner}/{repo}/hooks
-```
-
-> ⚠️ **Importante**: Cada app no CapRover deve ter apenas **uma URL de webhook ativa** no GitHub. Múltiplos webhooks para o mesmo app causam builds simultâneos.
-
-### Configuração Correta no CapRover
-
-O CapRover oferece duas opções principais para deploy automático: **"Deploy via GitHub"** e **"Deploy Triggers (Webhook)"**. A diferença é:
-
-- **Deploy via GitHub**: O CapRover monitora o repositório diretamente (requer credenciais Git configuradas)
-- **Deploy Triggers (Webhook)**: Usa webhooks externos (como do GitHub) para triggerar builds
-
-**Opção A (Recomendada): Usar apenas "Deploy Triggers (Webhook)" do CapRover**
-- No dashboard do CapRover: Apps → [seu-app] → Deployment → Desabilitar "Deploy via GitHub"
-- No GitHub: Configure apenas **1 webhook** com a URL fornecida pelo CapRover (Deployment → Deploy Triggers → Copy Webhook URL)
-
-**Opção B: Usar apenas "Deploy via GitHub" (sem webhook externo)**
-- No GitHub: Remova todos os webhooks relacionados ao CapRover
-- No CapRover: Configure credenciais Git (Deployment → Deploy via GitHub) e habilite o monitoramento
-
-> 🚫 **NUNCA use ambos simultaneamente** (Deploy via GitHub + Webhook): Isso causa builds duplicados e simultâneos, levando a OOM.
-
-### Verificação de Configuração Atual
-
-Para verificar a configuração atual no CapRover:
-
-1. Acesse o dashboard: Apps → [seu-app] → Deployment
-2. Verifique se "Deploy via GitHub" está habilitado
-3. Verifique se há webhook configurado em "Deploy Triggers"
-4. Se ambos estiverem ativos, **desabilite um deles** (recomendado: mantenha apenas o webhook)
-
-### Boas Práticas para Deploy
-
-- Faça commits atômicos: Evite múltiplos pushes em sequência rápida
-- Aguarde a conclusão do build anterior antes de fazer push
-- Use `git push --force` com cautela: Pode triggerar múltiplos builds se houver conflitos
-- Considere usar branches de staging para testes antes de deploy em produção
-
-### Checklist de Verificação Pré-Deploy
-
-Antes de cada deploy, verifique:
-
-- [ ] Existe apenas **1 webhook ativo** no GitHub para este app
-- [ ] Apenas **uma opção de deploy** está habilitada no CapRover (webhook OU auto-deploy)
-- [ ] Não há builds em andamento antes de fazer push
-- [ ] O servidor tem memória suficiente (mínimo 4GB disponível)
-
-### Troubleshooting de Múltiplos Builds
-
-**Sintoma**: Logs mostram "A build for [app] was queued, it's now being replaced with a new build..." ou builds simultâneos causando OOM.
-
-**Diagnóstico**:
-- No GitHub: Settings → Webhooks → Recent Deliveries → Procure múltiplas requisições para o mesmo commit SHA
-- No CapRover: Verifique logs do app para identificar origem dos triggers (webhook vs auto-deploy)
-
-**Solução**:
-- Remova webhooks duplicados no GitHub
-- Desabilite auto-deploy se estiver usando webhook manual
-- Aumente memória do servidor ou adicione swap (ver seção "Build falha com OOM")
-
-### Exemplo de Configuração Correta
-
-```
-✅ CONFIGURAÇÃO RECOMENDADA:
-- GitHub: 1 webhook ativo (URL do CapRover)
-- CapRover: Deploy Triggers habilitado
-- CapRover: Deploy via GitHub DESABILITADO
-
-❌ CONFIGURAÇÃO INCORRETA (causa múltiplos builds):
-- GitHub: 2+ webhooks ativos
-- CapRover: Deploy Triggers E Deploy via GitHub ambos habilitados
-```
-
----
-
-## Recursos Recomendados
-
-| Serviço | RAM Mínima (Runtime) | RAM Recomendada (Runtime) | RAM para Build | CPU |
-|---------|----------------------|---------------------------|----------------|-----|
-| sinesys_app | 512MB | 1GB | 6GB (mínimo) | 1 core |
-| sinesys_mcp | 128MB | 256MB | N/A | 0.5 core |
-| sinesys_browser | 1GB | 2GB | N/A | 1-2 cores |
-
-**Total recomendado para runtime**: VPS com 4GB RAM, 2-4 cores
-**Total recomendado para build**: Pelo menos 8GB RAM disponível durante builds (6GB Node.js + 2GB sistema)
+> 💡 **Vantagem**: Como não há builds no servidor, a RAM é usada apenas para runtime, permitindo servidores menores e mais baratos.
 
 ---
 
