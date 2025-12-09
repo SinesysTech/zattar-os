@@ -8,7 +8,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle, Loader2, Save, User, Shield } from 'lucide-react';
+import { ArrowLeft, AlertCircle, Loader2, Save, User, Shield, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +16,16 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-// import { useToast } from '@/hooks/use-toast'; // TODO: Implementar hook de toast
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AvatarUpload } from '@/components/ui/avatar-upload';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { toast } from 'sonner';
 
 // Importar tipos do backend
 import type { GeneroUsuario, Endereco } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
@@ -43,10 +52,27 @@ interface Usuario {
     nome: string;
     descricao: string | null;
   } | null;
+  avatarUrl: string | null;
   isSuperAdmin: boolean;
   ativo: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+function getInitials(name: string): string {
+  if (!name) return 'U';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) {
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function getAvatarUrl(avatarPath: string | null | undefined): string | null {
+  if (!avatarPath) return null;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!supabaseUrl) return null;
+  return `${supabaseUrl}/storage/v1/object/public/avatar/${avatarPath}`;
 }
 
 interface Permissao {
@@ -133,7 +159,6 @@ const OPERACAO_LABELS: Record<string, string> = {
 
 export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   const router = useRouter();
-  // const { toast } = useToast(); // TODO: Implementar hook de toast
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [permissoesData, setPermissoesData] = useState<PermissoesData | null>(null);
   const [permissoesMap, setPermissoesMap] = useState<Map<string, boolean>>(new Map());
@@ -144,6 +169,8 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(null);
   const [isSuperAdminLocal, setIsSuperAdminLocal] = useState(false);
   const [isSavingSuperAdmin, setIsSavingSuperAdmin] = useState(false);
+  const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   useEffect(() => {
     fetchUsuario();
@@ -333,6 +360,62 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
     return false;
   };
 
+  const handleAvatarUpload = async (file: File) => {
+    setIsUploadingAvatar(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(`/api/usuarios/${id}/avatar`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao fazer upload');
+      }
+
+      toast.success('A foto de perfil foi atualizada com sucesso.');
+
+      // Recarregar dados do usuário
+      await fetchUsuario();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao fazer upload';
+      toast.error(errorMessage);
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
+  const handleAvatarRemove = async () => {
+    setIsUploadingAvatar(true);
+
+    try {
+      const response = await fetch(`/api/usuarios/${id}/avatar`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao remover avatar');
+      }
+
+      toast.success('A foto de perfil foi removida.');
+
+      // Recarregar dados do usuário
+      await fetchUsuario();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao remover avatar';
+      toast.error(errorMessage);
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
   // Loading state
   if (isLoading) {
     return (
@@ -453,6 +536,39 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           </div>
         </CardHeader>
         <CardContent>
+          {/* Avatar e informações principais */}
+          <div className="flex items-start gap-6 mb-6">
+            {/* Avatar clicável */}
+            <div
+              className="relative group cursor-pointer shrink-0"
+              onClick={() => setAvatarDialogOpen(true)}
+            >
+              <Avatar className="h-20 w-20 border-2 border-muted">
+                <AvatarImage src={getAvatarUrl(usuario.avatarUrl) || undefined} alt={usuario.nomeExibicao} />
+                <AvatarFallback className="text-xl font-medium">
+                  {getInitials(usuario.nomeExibicao)}
+                </AvatarFallback>
+              </Avatar>
+              {/* Overlay de hover */}
+              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Camera className="h-5 w-5 text-white" />
+              </div>
+            </div>
+
+            {/* Nome e cargo */}
+            <div className="flex-1 min-w-0">
+              <h2 className="text-xl font-semibold truncate">{usuario.nomeCompleto}</h2>
+              <p className="text-sm text-muted-foreground">{usuario.nomeExibicao}</p>
+              {usuario.cargo && (
+                <Badge tone="neutral" variant="soft" className="mt-2">
+                  {usuario.cargo.nome}
+                </Badge>
+              )}
+            </div>
+          </div>
+
+          <Separator className="mb-6" />
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground">Nome Completo</p>
@@ -640,6 +756,29 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Dialog de Avatar */}
+      <Dialog open={avatarDialogOpen} onOpenChange={setAvatarDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Foto de Perfil</DialogTitle>
+            <DialogDescription>
+              Faça upload de uma nova foto ou remova a atual.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex justify-center py-6">
+            <AvatarUpload
+              avatarUrl={getAvatarUrl(usuario.avatarUrl)}
+              fallbackInitials={getInitials(usuario.nomeExibicao)}
+              onFileSelect={handleAvatarUpload}
+              onRemove={handleAvatarRemove}
+              isLoading={isUploadingAvatar}
+              size="lg"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

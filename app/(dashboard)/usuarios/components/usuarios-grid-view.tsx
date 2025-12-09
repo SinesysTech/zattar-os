@@ -18,7 +18,6 @@ interface UsuariosGridViewProps {
     totalPaginas: number;
   } | null;
   onView: (usuario: Usuario) => void;
-  onEdit?: (usuario: Usuario) => void;
   onRedefinirSenha?: (usuario: Usuario) => void;
   onPageChange?: (pageIndex: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
@@ -28,7 +27,6 @@ export function UsuariosGridView({
   usuarios,
   paginacao,
   onView,
-  onEdit,
   onRedefinirSenha,
   onPageChange,
   onPageSizeChange,
@@ -54,12 +52,11 @@ export function UsuariosGridView({
             key={usuario.id}
             usuario={usuario}
             onView={onView}
-            onEdit={onEdit}
             onRedefinirSenha={onRedefinirSenha}
           />
         ))}
       </div>
-      
+
       {paginacao && onPageChange && onPageSizeChange && (
         <UsuariosPagination
           pageIndex={paginacao.pagina - 1}

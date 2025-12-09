@@ -14,7 +14,7 @@ interface ViewToggleProps {
 
 export function ViewToggle({ viewMode, onViewModeChange }: ViewToggleProps) {
   return (
-    <div className="flex items-center gap-0.5 border rounded-md p-0.5 bg-background">
+    <div className="flex items-center gap-0.5 border rounded-md p-0.5 bg-background h-9">
       <Button
         variant={viewMode === 'cards' ? 'default' : 'ghost'}
         size="icon"
@@ -22,7 +22,7 @@ export function ViewToggle({ viewMode, onViewModeChange }: ViewToggleProps) {
         className="h-8 w-8"
         aria-label="Visualização em Cards"
       >
-        <LayoutGrid className="h-4 w-4" />
+        <LayoutGrid className="h-3.5 w-3.5" />
       </Button>
       <Button
         variant={viewMode === 'table' ? 'default' : 'ghost'}
@@ -31,7 +31,7 @@ export function ViewToggle({ viewMode, onViewModeChange }: ViewToggleProps) {
         className="h-8 w-8"
         aria-label="Visualização em Tabela"
       >
-        <Table className="h-4 w-4" />
+        <Table className="h-3.5 w-3.5" />
       </Button>
     </div>
   );

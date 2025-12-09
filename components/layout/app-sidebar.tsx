@@ -150,6 +150,14 @@ const navServicos = [
   },
 ]
 
+// Função para gerar URL pública do avatar
+function getAvatarPublicUrl(avatarPath: string | null | undefined): string {
+  if (!avatarPath) return ""
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  if (!supabaseUrl) return ""
+  return `${supabaseUrl}/storage/v1/object/public/avatar/${avatarPath}`
+}
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [user, setUser] = React.useState<{
     name: string
@@ -198,7 +206,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           setUser({
             name: usuario.nomeExibicao || usuario.nomeCompleto || "Usuário",
             email: usuario.emailCorporativo || usuario.emailPessoal || "",
-            avatar: "",
+            avatar: getAvatarPublicUrl(usuario.avatarUrl),
           })
         }
       } catch (error) {

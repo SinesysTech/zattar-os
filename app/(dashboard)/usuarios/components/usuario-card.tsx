@@ -2,77 +2,81 @@
 
 // Componente Card para exibir usuário
 
-import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
-import { Eye, Pencil, KeyRound } from 'lucide-react';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import { Eye, KeyRound, MoreHorizontal, ShieldAlert } from 'lucide-react';
 import {
-  formatarNomeExibicao,
   formatarOab,
   formatarTelefone,
   formatarCpf,
 } from '@/app/_lib/utils/format-usuarios';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface UsuarioCardProps {
   usuario: Usuario;
   onView: (usuario: Usuario) => void;
-  onEdit?: (usuario: Usuario) => void;
   onRedefinirSenha?: (usuario: Usuario) => void;
 }
 
-export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: UsuarioCardProps) {
+export function UsuarioCard({ usuario, onView, onRedefinirSenha }: UsuarioCardProps) {
   // Verifica se deve exibir OAB (apenas para Advogado e Diretor)
   const cargoNome = usuario.cargo?.nome?.toLowerCase();
   const deveExibirOab = cargoNome === 'advogado' || cargoNome === 'diretor';
 
   return (
     <Card className="relative flex flex-col h-full hover:shadow-md transition-shadow">
-      <CardHeader className="p-2.5 pb-1.5">
-        <div className="flex items-start justify-between gap-2">
+      <CardHeader className="px-4 py-3 pb-2">
+        <div className="flex items-center gap-2">
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-sm leading-tight truncate">
-              {formatarNomeExibicao(usuario.nomeExibicao)}
-            </CardTitle>
-            <Typography.Muted className="text-xs mt-0.5 truncate">
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-base font-semibold leading-tight truncate">
+                {usuario.nomeCompleto}
+              </CardTitle>
+              {usuario.isSuperAdmin && (
+                <ShieldAlert className="h-4 w-4 text-destructive shrink-0" />
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5 truncate">
               {usuario.emailCorporativo}
-            </Typography.Muted>
+            </p>
           </div>
-          {usuario.isSuperAdmin && (
-            <Badge tone="danger" variant="soft" className="text-xs h-5 px-1.5 shrink-0">
-              Super Admin
-            </Badge>
-          )}
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 space-y-0.5 text-xs p-2.5 pt-0 pb-7">
-        <div className="flex items-center gap-1.5">
-          <Typography.Muted as="span">CPF:</Typography.Muted>
+      <CardContent className="flex-1 space-y-1.5 text-sm px-4 py-3 pt-0 pb-12">
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground text-xs">CPF:</span>
           <span className="font-medium">
             {formatarCpf(usuario.cpf)}
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          <Typography.Muted as="span">Telefone:</Typography.Muted>
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground text-xs">Telefone:</span>
           <span className="font-medium">
             {formatarTelefone(usuario.telefone)}
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          <Typography.Muted as="span">Cargo:</Typography.Muted>
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground text-xs">Cargo:</span>
           <span className="font-medium truncate" title={usuario.cargo?.nome || '-'}>
             {usuario.cargo?.nome || '-'}
           </span>
         </div>
 
         {deveExibirOab && (
-          <div className="flex items-center gap-1.5">
-            <Typography.Muted as="span">OAB:</Typography.Muted>
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground text-xs">OAB:</span>
             <span className="font-medium">
               {formatarOab(usuario.oab, usuario.ufOab)}
             </span>
@@ -80,53 +84,37 @@ export function UsuarioCard({ usuario, onView, onEdit, onRedefinirSenha }: Usuar
         )}
       </CardContent>
 
-      {/* Badge de status no canto inferior esquerdo */}
-      <div className="absolute bottom-2 left-2">
-        <Badge
-          tone={usuario.ativo ? 'success' : 'neutral'}
-          variant={usuario.ativo ? 'soft' : 'outline'}
-          className="text-xs h-5 px-1.5"
-        >
-          {usuario.ativo ? 'Ativo' : 'Inativo'}
-        </Badge>
-      </div>
-
-      {/* Botões de ação no canto inferior direito */}
-      <div className="absolute bottom-2 right-2 flex gap-0.5">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8"
-          onClick={() => onView(usuario)}
-          title="Visualizar usuário"
-        >
-          <Eye className="h-4 w-4" />
-          <span className="sr-only">Visualizar usuário</span>
-        </Button>
-        {onEdit && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => onEdit(usuario)}
-            title="Editar usuário"
-          >
-            <Pencil className="h-4 w-4" />
-            <span className="sr-only">Editar usuário</span>
-          </Button>
-        )}
-        {onRedefinirSenha && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => onRedefinirSenha(usuario)}
-            title="Redefinir senha"
-          >
-            <KeyRound className="h-4 w-4" />
-            <span className="sr-only">Redefinir senha</span>
-          </Button>
-        )}
+      {/* Popover de ações no canto inferior direito */}
+      <div className="absolute bottom-3 right-4">
+        <DropdownMenu>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">Ações do usuário</span>
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent>Ações</TooltipContent>
+          </Tooltip>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem onClick={() => onView(usuario)}>
+              <Eye className="h-4 w-4 mr-2" />
+              Visualizar
+            </DropdownMenuItem>
+            {onRedefinirSenha && (
+              <DropdownMenuItem onClick={() => onRedefinirSenha(usuario)}>
+                <KeyRound className="h-4 w-4 mr-2" />
+                Redefinir Senha
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </Card>
   );

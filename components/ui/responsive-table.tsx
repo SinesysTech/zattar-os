@@ -40,8 +40,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2, FileX, MoreVertical, ChevronDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2, FileX, MoreVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { useViewport } from '@/hooks/use-viewport';
@@ -350,16 +349,11 @@ export function ResponsiveTable<TData>({
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <TableRow key={headerGroup.id}>
                                     {headerGroup.headers.map((header, index) => {
-                                        const column = columns.find(col => {
-                                            const id = (col as { id?: string; accessorKey?: string }).id ||
-                                                (col as { accessorKey?: string }).accessorKey;
-                                            return id === header.id;
-                                        });
                                         const isSticky = stickyFirstColumn && index === 0;
                                         const columnSize = header.column.columnDef.size;
                                         const maxWidth = columnSize ? `${columnSize}px` : undefined;
-                                        const align = (header.column.columnDef.meta as { align?: 'left' | 'center' | 'right' })?.align || 'center';
-                                        const alignClass = align === 'left' ? 'text-left' : align === 'right' ? 'text-right' : 'text-center';
+                                        // Sempre centralizar headers
+                                        const alignClass = 'text-center';
 
                                         return (
                                             <TableHead
@@ -367,9 +361,10 @@ export function ResponsiveTable<TData>({
                                                 className={cn(
                                                     alignClass,
                                                     !hideColumnBorders && index < headerGroup.headers.length - 1 && 'border-r border-border',
-                                                    isSticky && 'sticky left-0 z-10 bg-background'
+                                                    // Primeira coluna sem sticky background especial
+                                                    isSticky && 'sticky left-0 z-10 bg-card'
                                                 )}
-                                                style={maxWidth ? { maxWidth, width: maxWidth } : undefined}
+                                                style={maxWidth ? { maxWidth, minWidth: maxWidth } : undefined}
                                             >
                                                 {header.isPlaceholder
                                                     ? null
@@ -393,7 +388,8 @@ export function ResponsiveTable<TData>({
                                         data-state={row.getIsSelected() && 'selected'}
                                         className={cn(
                                             onRowClick ? 'cursor-pointer' : '',
-                                            rowIndex % 2 === 1 ? 'bg-muted/30' : ''
+                                            // Usar bg-muted/50 para linhas ímpares (alternância)
+                                            rowIndex % 2 === 1 ? 'bg-muted/50' : ''
                                         )}
                                         onClick={() => onRowClick?.(row.original)}
                                     >
@@ -410,11 +406,11 @@ export function ResponsiveTable<TData>({
                                                     key={cell.id}
                                                     className={cn(
                                                         alignClass,
-                                                        maxWidth && 'overflow-hidden',
                                                         hasBorder && !hideColumnBorders && 'border-r border-border',
-                                                        isSticky && 'sticky left-0 z-10 bg-background'
+                                                        // Primeira coluna sem sticky background especial
+                                                        isSticky && 'sticky left-0 z-10 bg-inherit'
                                                     )}
-                                                    style={maxWidth ? { maxWidth, width: maxWidth } : undefined}
+                                                    style={maxWidth ? { maxWidth, minWidth: maxWidth } : undefined}
                                                 >
                                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                 </TableCell>
@@ -499,7 +495,7 @@ export function ResponsiveTable<TData>({
                             value={pagination.pageSize.toString()}
                             onValueChange={handlePageSizeChange}
                         >
-                            <SelectTrigger className="h-8 w-[min(22vw,4.375rem)]">
+                            <SelectTrigger className="h-8 w-[min(22vw,4.375rem)] bg-background">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent side="top">
@@ -519,6 +515,7 @@ export function ResponsiveTable<TData>({
                                 size="sm"
                                 onClick={() => handlePageChange(0)}
                                 disabled={pagination.pageIndex === 0 || isLoading}
+                                className="bg-background"
                             >
                                 <ChevronsLeft className="h-4 w-4" />
                             </Button>
@@ -528,6 +525,7 @@ export function ResponsiveTable<TData>({
                             size="sm"
                             onClick={() => handlePageChange(pagination.pageIndex - 1)}
                             disabled={pagination.pageIndex === 0 || isLoading}
+                            className="bg-background"
                         >
                             <ChevronLeft className="h-4 w-4" />
                         </Button>
@@ -543,6 +541,7 @@ export function ResponsiveTable<TData>({
                             size="sm"
                             onClick={() => handlePageChange(pagination.pageIndex + 1)}
                             disabled={pagination.pageIndex >= pagination.totalPages - 1 || isLoading}
+                            className="bg-background"
                         >
                             <ChevronRight className="h-4 w-4" />
                         </Button>
@@ -552,6 +551,7 @@ export function ResponsiveTable<TData>({
                                 size="sm"
                                 onClick={() => handlePageChange(pagination.totalPages - 1)}
                                 disabled={pagination.pageIndex >= pagination.totalPages - 1 || isLoading}
+                                className="bg-background"
                             >
                                 <ChevronsRight className="h-4 w-4" />
                             </Button>

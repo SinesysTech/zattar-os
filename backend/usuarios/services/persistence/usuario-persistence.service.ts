@@ -71,6 +71,7 @@ export interface Usuario {
     nome: string;
     descricao: string | null;
   } | null;
+  avatarUrl: string | null;
   isSuperAdmin: boolean;
   ativo: boolean;
   createdAt: string;
@@ -214,6 +215,7 @@ function converterParaUsuario(data: Record<string, unknown>): Usuario {
       nome: (data.cargos as { id: number; nome: string; descricao?: string }).nome,
       descricao: (data.cargos as { id: number; nome: string; descricao?: string }).descricao || null,
     } : undefined,
+    avatarUrl: (data.avatar_url as string | null) ?? null,
     isSuperAdmin: (data.is_super_admin as boolean) ?? false,
     ativo: data.ativo as boolean,
     createdAt: data.created_at as string,

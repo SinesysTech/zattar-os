@@ -9,20 +9,13 @@ import { TableToolbar } from '@/components/ui/table-toolbar';
 import { TableWithToolbar, type ResponsiveTableColumn } from '@/components/ui/table-with-toolbar';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { buildUsuariosFilterOptions, buildUsuariosFilterGroups, parseUsuariosFilters } from './components/usuarios-toolbar-filters';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Settings, MoreHorizontal, KeyRound } from 'lucide-react';
+import { Eye, Settings, KeyRound, ShieldAlert } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { UsuariosGridView } from './components/usuarios-grid-view';
 import { ViewToggle } from './components/view-toggle';
@@ -36,7 +29,6 @@ import {
   formatarCpf,
   formatarTelefone,
   formatarOab,
-  formatarNomeExibicao,
 } from '@/app/_lib/utils/format-usuarios';
 
 const VIEW_MODE_STORAGE_KEY = 'usuarios-view-mode';
@@ -45,15 +37,14 @@ const VIEW_MODE_STORAGE_KEY = 'usuarios-view-mode';
  * Define as colunas da tabela de usuários
  */
 function criarColunas(
-  onRedefinirSenha: (usuario: Usuario) => void
+  onRedefinirSenha: (usuario: Usuario) => void,
+  router: ReturnType<typeof useRouter>
 ): ResponsiveTableColumn<Usuario>[] {
   return [
     {
-      accessorKey: 'nomeExibicao',
+      accessorKey: 'nomeCompleto',
       header: ({ column }) => (
-        <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="Nome" />
-        </div>
+        <DataTableColumnHeader column={column} title="Nome" />
       ),
       enableSorting: true,
       size: 250,
@@ -61,21 +52,26 @@ function criarColunas(
       sticky: true,
       cardLabel: 'Nome',
       meta: { align: 'left' },
-      cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-start text-sm">
-          {formatarNomeExibicao(row.getValue('nomeExibicao'))}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const usuario = row.original;
+        const isSuperAdmin = usuario.isSuperAdmin;
+        return (
+          <div className="min-h-10 flex items-center justify-start gap-2 text-sm">
+            <span>{usuario.nomeCompleto}</span>
+            {isSuperAdmin && (
+              <ShieldAlert className="h-4 w-4 text-destructive" />
+            )}
+          </div>
+        );
+      },
     },
     {
       accessorKey: 'emailCorporativo',
       header: ({ column }) => (
-        <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="E-mail Corporativo" />
-        </div>
+        <DataTableColumnHeader column={column} title="E-mail Corporativo" />
       ),
       enableSorting: true,
-      size: 200,
+      size: 250,
       priority: 2,
       cardLabel: 'E-mail',
       meta: { align: 'left' },
@@ -88,9 +84,7 @@ function criarColunas(
     {
       accessorKey: 'cpf',
       header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">CPF</div>
-        </div>
+        <div className="text-sm font-medium">CPF</div>
       ),
       enableSorting: false,
       size: 150,
@@ -105,9 +99,7 @@ function criarColunas(
     {
       id: 'oab',
       header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">OAB</div>
-        </div>
+        <div className="text-sm font-medium">OAB</div>
       ),
       enableSorting: false,
       size: 120,
@@ -125,9 +117,7 @@ function criarColunas(
     {
       accessorKey: 'telefone',
       header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Telefone</div>
-        </div>
+        <div className="text-sm font-medium">Telefone</div>
       ),
       enableSorting: false,
       size: 150,
@@ -140,113 +130,55 @@ function criarColunas(
       ),
     },
     {
-      accessorKey: 'ativo',
-      header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Status" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 100,
-      priority: 3,
-      cardLabel: 'Status',
-      cell: ({ row }) => {
-        const ativo = row.getValue('ativo') as boolean;
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            <Badge variant={ativo ? 'default' : 'outline'}>
-              {ativo ? 'Ativo' : 'Inativo'}
-            </Badge>
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: 'isSuperAdmin',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Tipo</div>
-        </div>
-      ),
-      enableSorting: true,
-      size: 120,
-      priority: 7,
-      cardLabel: 'Tipo',
-      cell: ({ row }) => {
-        const isSuperAdmin = row.getValue('isSuperAdmin') as boolean;
-        if (!isSuperAdmin) return null;
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            <Badge variant="destructive">
-              Super Admin
-            </Badge>
-          </div>
-        );
-      },
-    },
-    {
       id: 'acoes',
       header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Ações</div>
-        </div>
+        <div className="text-sm font-medium">Ações</div>
       ),
       enableSorting: false,
-      size: 120,
+      size: 100,
       priority: 8,
       cardLabel: 'Ações',
       cell: ({ row }) => {
         const usuario = row.original;
         return (
-          <div className="min-h-10 flex items-center justify-center gap-2">
-            <UsuarioActions usuario={usuario} onRedefinirSenha={onRedefinirSenha} />
+          <div className="min-h-10 flex items-center justify-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/usuarios/${usuario.id}`);
+                  }}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Visualizar</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onRedefinirSenha(usuario);
+                  }}
+                >
+                  <KeyRound className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Redefinir Senha</TooltipContent>
+            </Tooltip>
           </div>
         );
       },
     },
   ];
-}
-
-/**
- * Componente de ações para cada usuário
- */
-function UsuarioActions({
-  usuario,
-  onRedefinirSenha
-}: {
-  usuario: Usuario;
-  onRedefinirSenha: (usuario: Usuario) => void;
-}) {
-  const router = useRouter();
-
-  const handleViewClick = () => {
-    router.push(`/usuarios/${usuario.id}`);
-  };
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8"
-        >
-          <MoreHorizontal className="h-4 w-4" />
-          <span className="sr-only">Ações do usuário</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleViewClick}>
-          <Eye className="mr-2 h-4 w-4" />
-          Visualizar
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onRedefinirSenha(usuario)}>
-          <KeyRound className="mr-2 h-4 w-4" />
-          Redefinir Senha
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
 }
 
 export default function UsuariosPage() {
@@ -350,7 +282,7 @@ export default function UsuariosPage() {
     // Não precisa refetch pois não afeta dados exibidos na listagem
   }, []);
 
-  const colunas = React.useMemo(() => criarColunas(handleRedefinirSenha), [handleRedefinirSenha]);
+  const colunas = React.useMemo(() => criarColunas(handleRedefinirSenha, router), [handleRedefinirSenha, router]);
 
   return (
     <div className="space-y-3">

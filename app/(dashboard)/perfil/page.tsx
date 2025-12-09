@@ -6,11 +6,13 @@ import * as React from 'react';
 import { usePerfil } from '@/app/_lib/hooks/use-perfil';
 import { PerfilEditSheet } from './components/perfil-edit-sheet';
 import { AlterarSenhaDialog } from './components/alterar-senha-dialog';
+import { AvatarEditDialog } from './components/avatar-edit-dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Edit, Mail, Phone, MapPin, Briefcase, User, Calendar, KeyRound } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Edit, Mail, Phone, MapPin, Briefcase, User, Calendar, KeyRound, Camera } from 'lucide-react';
 import {
   formatarCpf,
   formatarTelefone,
@@ -20,10 +22,27 @@ import {
   formatarGenero,
 } from '@/app/_lib/utils/format-usuarios';
 
+function getInitials(name: string): string {
+  if (!name) return 'U';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) {
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function getAvatarUrl(avatarPath: string | null | undefined): string | null {
+  if (!avatarPath) return null;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!supabaseUrl) return null;
+  return `${supabaseUrl}/storage/v1/object/public/avatar/${avatarPath}`;
+}
+
 export default function PerfilPage() {
   const { usuario, isLoading, error, refetch } = usePerfil();
   const [editSheetOpen, setEditSheetOpen] = React.useState(false);
   const [alterarSenhaDialogOpen, setAlterarSenhaDialogOpen] = React.useState(false);
+  const [avatarDialogOpen, setAvatarDialogOpen] = React.useState(false);
 
   const handleEditSuccess = () => {
     refetch();
@@ -74,21 +93,44 @@ export default function PerfilPage() {
     return null;
   }
 
+  const avatarUrl = getAvatarUrl(usuario.avatarUrl);
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-            {usuario.nomeExibicao}
-            <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'soft' : 'outline'}>
-              {usuario.ativo ? 'Ativo' : 'Inativo'}
-            </Badge>
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Visualize e edite suas informações pessoais
-          </p>
+      {/* Header com Avatar */}
+      <div className="flex items-start justify-between gap-6">
+        <div className="flex items-center gap-6">
+          {/* Avatar */}
+          <div
+            className="relative group cursor-pointer"
+            onClick={() => setAvatarDialogOpen(true)}
+          >
+            <Avatar className="h-24 w-24 border-2 border-muted">
+              <AvatarImage src={avatarUrl || undefined} alt={usuario.nomeExibicao} />
+              <AvatarFallback className="text-2xl font-medium">
+                {getInitials(usuario.nomeExibicao)}
+              </AvatarFallback>
+            </Avatar>
+            {/* Overlay de hover */}
+            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Camera className="h-6 w-6 text-white" />
+            </div>
+          </div>
+
+          {/* Informações */}
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
+              {usuario.nomeExibicao}
+              <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'soft' : 'outline'}>
+                {usuario.ativo ? 'Ativo' : 'Inativo'}
+              </Badge>
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Visualize e edite suas informações pessoais
+            </p>
+          </div>
         </div>
+
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setAlterarSenhaDialogOpen(true)}>
             <KeyRound className="mr-2 h-4 w-4" />
@@ -274,6 +316,16 @@ export default function PerfilPage() {
         open={alterarSenhaDialogOpen}
         onOpenChange={setAlterarSenhaDialogOpen}
         onSuccess={handleAlterarSenhaSuccess}
+      />
+
+      {/* Avatar Edit Dialog */}
+      <AvatarEditDialog
+        open={avatarDialogOpen}
+        onOpenChange={setAvatarDialogOpen}
+        usuarioId={usuario.id}
+        avatarUrl={avatarUrl}
+        nomeExibicao={usuario.nomeExibicao}
+        onSuccess={handleEditSuccess}
       />
     </div>
   );
