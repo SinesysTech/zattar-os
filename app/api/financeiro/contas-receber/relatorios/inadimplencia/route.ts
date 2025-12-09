@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/utils/auth/api-auth';
+import { authenticateRequest } from '@/backend/auth/api-auth';
 import { buscarRelatorioInadimplencia } from '@/backend/financeiro/contas-receber/services/relatorios/inadimplencia.service';
 
 export async function GET(request: NextRequest) {

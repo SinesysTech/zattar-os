@@ -11,25 +11,17 @@ import {
   generateCacheKey,
 } from '@/backend/utils/redis/cache-utils';
 import type {
-  Obrigacao,
   ObrigacaoComDetalhes,
   ListarObrigacoesParams,
   TipoObrigacao,
   StatusObrigacao,
   OrigemObrigacao,
   StatusSincronizacao,
-  ClienteResumoObrigacao,
-  ProcessoResumoObrigacao,
-  AcordoResumoObrigacao,
-  ParcelaResumoObrigacao,
-  LancamentoResumoObrigacao,
-  ContaContabilResumoObrigacao,
   InconsistenciaObrigacao,
 } from '@/backend/types/financeiro/obrigacoes.types';
 import {
   calcularDiasAteVencimento,
   determinarStatusObrigacao,
-  determinarTipoObrigacao,
   isOrigemObrigacaoValida,
 } from '@/backend/types/financeiro/obrigacoes.types';
 
@@ -66,24 +58,14 @@ interface ParcelaRecord {
     valor_total: number;
     numero_parcelas: number;
     status: string;
-    acervo_id: number | null;
-    cliente_id: number | null;
+    processo_id: number | null;
     acervo?: {
       id: number;
       numero_processo: string;
-      autor: string | null;
-      reu: string | null;
-      vara: string | null;
-      tribunal: string | null;
-    } | null;
-    clientes?: {
-      id: number;
-      nome: string;
-      razao_social: string | null;
-      nome_fantasia: string | null;
-      cpf: string | null;
-      cnpj: string | null;
-      tipo_pessoa: 'fisica' | 'juridica';
+      nome_parte_autora: string | null;
+      nome_parte_re: string | null;
+      classe_judicial: string | null;
+      trt: string | null;
     } | null;
   } | null;
   lancamentos_financeiros?: Array<{
@@ -129,8 +111,7 @@ interface LancamentoRecord {
   cliente?: {
     id: number;
     nome: string;
-    razao_social: string | null;
-    nome_fantasia: string | null;
+    nome_social_fantasia: string | null;
     cpf: string | null;
     cnpj: string | null;
     tipo_pessoa: 'fisica' | 'juridica';
@@ -206,8 +187,8 @@ const mapearParcelaParaObrigacao = (parcela: ParcelaRecord): ObrigacaoComDetalhe
     dataCompetencia: parcela.data_vencimento,
     diasAteVencimento: calcularDiasAteVencimento(parcela.data_vencimento),
     percentualHonorarios,
-    clienteId: acordo?.cliente_id || null,
-    processoId: acordo?.acervo_id || null,
+    clienteId: null, // Cliente não é mais diretamente vinculado ao acordo
+    processoId: acordo?.processo_id || null,
     acordoId: parcela.acordo_condenacao_id,
     parcelaId: parcela.id,
     lancamentoId: lancamentoVinculado?.id || null,
@@ -220,27 +201,17 @@ const mapearParcelaParaObrigacao = (parcela: ParcelaRecord): ObrigacaoComDetalhe
   };
 
   // Adicionar dados relacionados se disponíveis
-  if (acordo?.clientes) {
-    obrigacao.cliente = {
-      id: acordo.clientes.id,
-      nome: acordo.clientes.nome,
-      razaoSocial: acordo.clientes.razao_social,
-      nomeFantasia: acordo.clientes.nome_fantasia,
-      cpfCnpj: acordo.clientes.tipo_pessoa === 'fisica'
-        ? acordo.clientes.cpf
-        : acordo.clientes.cnpj,
-      tipoPessoa: acordo.clientes.tipo_pessoa,
-    };
-  }
+  // Nota: Cliente não está mais disponível diretamente via acordo
+  // Seria necessário fazer um JOIN adicional via processo_partes se necessário
 
   if (acordo?.acervo) {
     obrigacao.processo = {
       id: acordo.acervo.id,
       numeroProcesso: acordo.acervo.numero_processo,
-      autor: acordo.acervo.autor,
-      reu: acordo.acervo.reu,
-      vara: acordo.acervo.vara,
-      tribunal: acordo.acervo.tribunal,
+      autor: acordo.acervo.nome_parte_autora,
+      reu: acordo.acervo.nome_parte_re,
+      vara: acordo.acervo.classe_judicial,
+      tribunal: acordo.acervo.trt,
     };
   }
 
@@ -352,8 +323,8 @@ const mapearLancamentoParaObrigacao = (lancamento: LancamentoRecord): ObrigacaoC
     obrigacao.cliente = {
       id: lancamento.cliente.id,
       nome: lancamento.cliente.nome,
-      razaoSocial: lancamento.cliente.razao_social,
-      nomeFantasia: lancamento.cliente.nome_fantasia,
+      razaoSocial: lancamento.cliente.tipo_pessoa === 'juridica' ? lancamento.cliente.nome : null,
+      nomeFantasia: lancamento.cliente.nome_social_fantasia,
       cpfCnpj: lancamento.cliente.tipo_pessoa === 'fisica'
         ? lancamento.cliente.cpf
         : lancamento.cliente.cnpj,
@@ -416,10 +387,15 @@ export const buscarParcelasComLancamentos = async (
         valor_total,
         numero_parcelas,
         status,
-        acervo_id,
-        cliente_id,
-        acervo(id, numero_processo, autor, reu, vara, tribunal),
-        clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa)
+        processo_id,
+        acervo(
+          id,
+          numero_processo,
+          nome_parte_autora,
+          nome_parte_re,
+          classe_judicial,
+          trt
+        )
       ),
       lancamentos_financeiros(
         id,
@@ -444,15 +420,9 @@ export const buscarParcelasComLancamentos = async (
     query = query.lte('data_vencimento', filtros.dataVencimentoFim);
   }
 
-  // Filtro de cliente (via acordo)
-  if (filtros.clienteId) {
-    query = query.eq('acordos_condenacoes.cliente_id', filtros.clienteId);
-  }
-
-  // Filtro de processo (via acordo)
-  if (filtros.processoId) {
-    query = query.eq('acordos_condenacoes.acervo_id', filtros.processoId);
-  }
+  // Nota: Filtros de cliente e processo foram removidos
+  // pois o relacionamento agora é através de processo_partes (N:N)
+  // TODO: Implementar filtros usando JOIN com processo_partes se necessário
 
   // Filtro de acordo específico
   if (filtros.acordoId) {
@@ -461,11 +431,8 @@ export const buscarParcelasComLancamentos = async (
 
   // Filtro de busca textual
   if (filtros.busca) {
-    // Busca na descrição do acordo ou número do processo
-    query = query.or(`
-      acordos_condenacoes.acervo.numero_processo.ilike.%${filtros.busca}%,
-      acordos_condenacoes.clientes.nome.ilike.%${filtros.busca}%
-    `);
+    // Busca apenas no número do processo
+    query = query.ilike('acordos_condenacoes.acervo.numero_processo', `%${filtros.busca}%`);
   }
 
   const { data, error } = await query;
@@ -494,10 +461,15 @@ export const buscarParcelasPorAcordo = async (acordoId: number): Promise<Parcela
         valor_total,
         numero_parcelas,
         status,
-        acervo_id,
-        cliente_id,
-        acervo(id, numero_processo, autor, reu, vara, tribunal),
-        clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa)
+        processo_id,
+        acervo(
+          id,
+          numero_processo,
+          nome_parte_autora,
+          nome_parte_re,
+          classe_judicial,
+          trt
+        )
       ),
       lancamentos_financeiros(
         id,
@@ -539,10 +511,15 @@ export const buscarParcelaPorId = async (parcelaId: number): Promise<ParcelaReco
         valor_total,
         numero_parcelas,
         status,
-        acervo_id,
-        cliente_id,
-        acervo(id, numero_processo, autor, reu, vara, tribunal),
-        clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa)
+        processo_id,
+        acervo(
+          id,
+          numero_processo,
+          nome_parte_autora,
+          nome_parte_re,
+          classe_judicial,
+          trt
+        )
       ),
       lancamentos_financeiros(
         id,
@@ -587,7 +564,7 @@ export const buscarLancamentosAvulsos = async (
     .from('lancamentos_financeiros')
     .select(`
       *,
-      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
+      cliente:clientes(id, nome, nome_social_fantasia, cpf, cnpj, tipo_pessoa),
       plano_contas(id, codigo, nome)
     `)
     .eq('tipo', tipo)
@@ -660,7 +637,7 @@ export const buscarLancamentoPorParcela = async (parcelaId: number): Promise<Lan
     .from('lancamentos_financeiros')
     .select(`
       *,
-      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
+      cliente:clientes(id, nome, nome_social_fantasia, cpf, cnpj, tipo_pessoa),
       plano_contas(id, codigo, nome)
     `)
     .eq('parcela_id', parcelaId)
@@ -686,7 +663,7 @@ export const buscarTodosLancamentosPorParcela = async (parcelaId: number): Promi
     .from('lancamentos_financeiros')
     .select(`
       *,
-      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
+      cliente:clientes(id, nome, nome_social_fantasia, cpf, cnpj, tipo_pessoa),
       plano_contas(id, codigo, nome)
     `)
     .eq('parcela_id', parcelaId)
@@ -809,7 +786,7 @@ export const listarObrigacoesConsolidadas = async (
  * Usa a mesma lógica de cutoff que listarObrigacoesVencidas:
  * filtra por status === 'vencida' (calculado quando dataVencimento < hoje)
  */
-export const buscarObrigacoesVencidas = async (dataReferencia?: Date): Promise<ObrigacaoComDetalhes[]> => {
+export const buscarObrigacoesVencidas = async (): Promise<ObrigacaoComDetalhes[]> => {
   // Usa apenasVencidas: true que filtra por status === 'vencida'
   // O status 'vencida' é calculado em determinarStatusObrigacao quando:
   // statusOriginal === 'pendente' && calcularDiasAteVencimento(dataVencimento) < 0

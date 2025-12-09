@@ -82,16 +82,13 @@ interface LancamentoComRelacionamentos extends LancamentoFinanceiroRecord {
   cliente?: {
     id: number;
     nome: string;
-    razao_social: string | null;
-    nome_fantasia: string | null;
+    nome_social_fantasia: string | null;
     cpf: string | null;
     cnpj: string | null;
     tipo_pessoa: 'fisica' | 'juridica';
   } | null;
   contrato?: {
     id: number;
-    numero: string;
-    descricao: string | null;
     area_direito: string | null;
     tipo_contrato: string | null;
   } | null;
@@ -108,9 +105,9 @@ interface LancamentoComRelacionamentos extends LancamentoFinanceiroRecord {
   contas_bancarias?: {
     id: number;
     nome: string;
-    banco: string | null;
+    banco_nome: string | null;
     agencia: string | null;
-    conta: string | null;
+    numero_conta: string | null;
   } | null;
 }
 
@@ -163,50 +160,48 @@ const mapearContaReceberComDetalhes = (registro: LancamentoComRelacionamentos): 
 
   const cliente: ClienteResumo | undefined = registro.cliente
     ? {
-        id: registro.cliente.id,
-        nome: registro.cliente.nome,
-        razaoSocial: registro.cliente.razao_social,
-        nomeFantasia: registro.cliente.nome_fantasia,
-        cpfCnpj: registro.cliente.tipo_pessoa === 'fisica' ? registro.cliente.cpf : registro.cliente.cnpj,
-        cnpj: registro.cliente.cnpj,
-        tipoPessoa: registro.cliente.tipo_pessoa,
-      }
+      id: registro.cliente.id,
+      nome: registro.cliente.nome,
+      razaoSocial: registro.cliente.tipo_pessoa === 'juridica' ? registro.cliente.nome : null,
+      nomeFantasia: registro.cliente.nome_social_fantasia,
+      cpfCnpj: registro.cliente.tipo_pessoa === 'fisica' ? registro.cliente.cpf : registro.cliente.cnpj,
+      cnpj: registro.cliente.cnpj,
+      tipoPessoa: registro.cliente.tipo_pessoa,
+    }
     : undefined;
 
   const contrato: ContratoResumo | undefined = registro.contrato
     ? {
-        id: registro.contrato.id,
-        numero: registro.contrato.numero,
-        descricao: registro.contrato.descricao,
-        areaDireito: registro.contrato.area_direito,
-        tipoContrato: registro.contrato.tipo_contrato,
-      }
+      id: registro.contrato.id,
+      areaDireito: registro.contrato.area_direito,
+      tipoContrato: registro.contrato.tipo_contrato,
+    }
     : undefined;
 
   const contaContabil: ContaContabilResumo | undefined = registro.plano_contas
     ? {
-        id: registro.plano_contas.id,
-        codigo: registro.plano_contas.codigo,
-        nome: registro.plano_contas.nome,
-      }
+      id: registro.plano_contas.id,
+      codigo: registro.plano_contas.codigo,
+      nome: registro.plano_contas.nome,
+    }
     : undefined;
 
   const centroCusto: CentroCustoResumo | undefined = registro.centros_custo
     ? {
-        id: registro.centros_custo.id,
-        codigo: registro.centros_custo.codigo,
-        nome: registro.centros_custo.nome,
-      }
+      id: registro.centros_custo.id,
+      codigo: registro.centros_custo.codigo,
+      nome: registro.centros_custo.nome,
+    }
     : undefined;
 
   const contaBancaria: ContaBancariaResumo | undefined = registro.contas_bancarias
     ? {
-        id: registro.contas_bancarias.id,
-        nome: registro.contas_bancarias.nome,
-        banco: registro.contas_bancarias.banco,
-        agencia: registro.contas_bancarias.agencia,
-        conta: registro.contas_bancarias.conta,
-      }
+      id: registro.contas_bancarias.id,
+      nome: registro.contas_bancarias.nome,
+      banco: registro.contas_bancarias.banco_nome,
+      agencia: registro.contas_bancarias.agencia,
+      conta: registro.contas_bancarias.numero_conta,
+    }
     : undefined;
 
   return {
@@ -277,11 +272,11 @@ export const listarContasReceber = async (
     .select(
       `
       *,
-      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
-      contrato:contratos(id, numero, descricao, area_direito, tipo_contrato),
+      cliente:clientes(id, nome, nome_social_fantasia, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `,
       { count: 'exact' }
     )
@@ -407,11 +402,11 @@ export const buscarContaReceberPorId = async (id: number): Promise<ContaReceberC
     .select(
       `
       *,
-      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
-      contrato:contratos(id, numero, descricao, area_direito, tipo_contrato),
+      cliente:clientes(id, nome, nome_social_fantasia, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `
     )
     .eq('id', id)
@@ -442,11 +437,11 @@ export const buscarContasReceberVencidas = async (): Promise<ContaReceberComDeta
     .select(
       `
       *,
-      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
-      contrato:contratos(id, numero, descricao, area_direito, tipo_contrato),
+      cliente:clientes(id, nome, nome_social_fantasia, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `
     )
     .eq('tipo', 'receita')
@@ -489,11 +484,11 @@ export const buscarResumoInadimplencia = async (): Promise<ResumoInadimplencia> 
     .select(
       `
       *,
-      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
-      contrato:contratos(id, numero, descricao, area_direito, tipo_contrato),
+      cliente:clientes(id, nome, nome_social_fantasia, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `
     )
     .eq('tipo', 'receita')
@@ -626,11 +621,11 @@ export const buscarContasReceberPorContrato = async (contratoId: number): Promis
     .select(
       `
       *,
-      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
-      contrato:contratos(id, numero, descricao, area_direito, tipo_contrato),
+      cliente:clientes(id, nome, nome_social_fantasia, cpf, cnpj, tipo_pessoa),
+      contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `
     )
     .eq('tipo', 'receita')

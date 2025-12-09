@@ -44,13 +44,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useOrcamentos } from '@/app/_lib/hooks/use-orcamentos';
+import { useOrcamentos } from '@/lib/hooks/use-orcamentos';
 import { toast } from 'sonner';
 import type { OrcamentoComDetalhes, ComparativoOrcamento } from '@/backend/types/financeiro/orcamento.types';
 import {
   exportarComparativoCSV,
   exportarComparativoPDF,
-} from '@/app/_lib/orcamentos/export-orcamento';
+} from '@/lib/orcamentos/export-orcamento';
 import type { RelatorioComparativo } from '@/backend/financeiro/orcamento/services/orcamento/relatorios-orcamento.service';
 
 // ============================================================================
@@ -130,7 +130,7 @@ function OrcamentoSelector({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Badge tone={statusConfig.tone} variant="soft">
+            <Badge variant="outline">
               {statusConfig.label}
             </Badge>
           </CardContent>
@@ -277,7 +277,7 @@ function ComparacaoCards({
                       {dados.ano} - {dados.periodo}
                     </TableCell>
                     <TableCell>
-                      <Badge tone={statusConfig.tone} variant="soft">
+                      <Badge variant="outline">
                         {statusConfig.label}
                       </Badge>
                     </TableCell>
@@ -317,6 +317,7 @@ function ComparacaoCards({
                     <span className="font-mono">{formatarValor(dados.totalOrcado)}</span>
                   </div>
                   <div className="h-4 w-full bg-muted rounded-full overflow-hidden">
+                    {/* eslint-disable-next-line react/forbid-dom-props */}
                     <div
                       className="h-full bg-primary transition-all"
                       style={{ width: `${percentual}%` }}
@@ -333,10 +334,10 @@ function ComparacaoCards({
 }
 
 // ============================================================================
-// Componente Principal
+// Componente Principal com Suspense
 // ============================================================================
 
-export default function CompararOrcamentosPage() {
+function CompararOrcamentosContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -415,9 +416,9 @@ export default function CompararOrcamentosPage() {
     const totalRealizadoGeral = orcamentosComparativo.reduce((sum, o) => sum + o.totalRealizado, 0);
     const variacaoMediaPercentual = orcamentosComparativo.length > 0
       ? orcamentosComparativo.reduce((sum, o) => {
-          const varPct = o.totalOrcado > 0 ? (o.variacao / o.totalOrcado) * 100 : 0;
-          return sum + varPct;
-        }, 0) / orcamentosComparativo.length
+        const varPct = o.totalOrcado > 0 ? (o.variacao / o.totalOrcado) * 100 : 0;
+        return sum + varPct;
+      }, 0) / orcamentosComparativo.length
       : 0;
 
     const ordenadosPorPerformance = [...orcamentosComparativo].sort(
@@ -602,5 +603,33 @@ export default function CompararOrcamentosPage() {
       {/* Comparação */}
       <ComparacaoCards orcamentos={orcamentosSelecionados} />
     </div>
+  );
+}
+
+// ============================================================================
+// Wrapper com Suspense
+// ============================================================================
+
+export default function CompararOrcamentosPage() {
+  return (
+    <React.Suspense fallback={
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-10" />
+          <Skeleton className="h-8 w-64" />
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {[...Array(3)].map((_, i) => (
+            <Card key={i}>
+              <CardContent className="p-6">
+                <Skeleton className="h-20" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    }>
+      <CompararOrcamentosContent />
+    </React.Suspense>
   );
 }

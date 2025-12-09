@@ -51,7 +51,7 @@ interface RouteParams {
  *               dataEfetivacao:
  *                 type: string
  *                 format: date-time
- *                 description: Data e hora da efetivação do pagamento (default: agora)
+ *                 description: Data e hora da efetivação do pagamento (padrão - agora)
  *               observacoes:
  *                 type: string
  *                 description: Observações sobre o pagamento

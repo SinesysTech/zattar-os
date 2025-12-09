@@ -12,11 +12,11 @@ const viewports = [
 const pages = [
   '/',
   '/auth/login',
-  '/(dashboard)/dashboard',
-  '/(dashboard)/processos',
-  '/(dashboard)/audiencias',
-  '/(dashboard)/expedientes',
-  '/(dashboard)/usuarios',
+  '/dashboard/dashboard',
+  '/dashboard/processos',
+  '/dashboard/audiencias',
+  '/dashboard/expedientes',
+  '/dashboard/usuarios',
 ];
 
 for (const vp of viewports) {

@@ -47,7 +47,7 @@ import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empt
 import { useViewport } from '@/hooks/use-viewport';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export interface ResponsiveTableColumn<TData> extends ColumnDef<TData> {
+export type ResponsiveTableColumn<TData> = ColumnDef<TData> & {
     /**
      * Prioridade da coluna (1 = mais importante)
      * Colunas com menor prioridade são ocultadas primeiro em mobile
@@ -68,7 +68,7 @@ export interface ResponsiveTableColumn<TData> extends ColumnDef<TData> {
      * Label para exibir no modo card
      */
     cardLabel?: string;
-}
+};
 
 export interface ResponsiveTableProps<TData> {
     // Dados

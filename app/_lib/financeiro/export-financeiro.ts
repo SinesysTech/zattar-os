@@ -2,7 +2,7 @@
  * Helpers reutilizáveis para exportações financeiras
  */
 
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import { PDFDocument, rgb, StandardFonts, PDFFont, PDFPage } from 'pdf-lib';
 
 // ============================================================================
 // Formatação
@@ -60,8 +60,6 @@ export function gerarCSV(cabecalhos: string[], linhas: (string | number | null |
 // ============================================================================
 // PDF base
 // ============================================================================
-
-import { PDFDocument, StandardFonts, rgb, PDFFont, PDFPage } from 'pdf-lib';
 
 interface PDFBase {
   pdfDoc: PDFDocument;

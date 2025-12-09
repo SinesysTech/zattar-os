@@ -1,10 +1,10 @@
 import { cn } from '@/lib/utils'
 import type { ChatMessage } from '@/hooks/use-realtime-chat'
-import { 
-  formatChatTimestamp, 
-  shouldShowMessageHeader, 
+import {
+  formatChatTimestamp,
+  shouldShowMessageHeader,
   shouldGroupWithPrevious,
-  parseMessageContent 
+  parseMessageContent
 } from '@/lib/utils/chat-utils'
 
 interface ChatMessageItemProps {
@@ -15,26 +15,26 @@ interface ChatMessageItemProps {
   previousMessage?: ChatMessage | null
 }
 
-export const ChatMessageItem = ({ 
-  message, 
-  isOwnMessage, 
-  showHeader, 
+export const ChatMessageItem = ({
+  message,
+  isOwnMessage,
+  showHeader,
   tipo = 'geral',
-  previousMessage 
+  previousMessage
 }: ChatMessageItemProps) => {
   // Determinar se deve mostrar o header baseado no tipo de chat
   const shouldShowHeader = showHeader && shouldShowMessageHeader(tipo);
-  
+
   // Determinar se deve agrupar com a mensagem anterior
   const shouldGroup = shouldGroupWithPrevious(message, previousMessage, tipo);
-  
+
   // Se deve agrupar e não mostrar header, retornar apenas a bolha de mensagem
   if (shouldGroup && !shouldShowHeader) {
     return (
       <div className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
         <div
           className={cn(
-            'max-w-[75%] w-fit',
+            'max-w-[85%] sm:max-w-[75%] w-fit',
             isOwnMessage ? 'items-end' : 'items-start'
           )}
         >
@@ -57,7 +57,7 @@ export const ChatMessageItem = ({
   return (
     <div className={`flex mt-2 ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
       <div
-        className={cn('max-w-[75%] w-fit flex flex-col gap-1', {
+        className={cn('max-w-[85%] sm:max-w-[75%] w-fit flex flex-col gap-1', {
           'items-end': isOwnMessage,
         })}
       >
@@ -74,7 +74,7 @@ export const ChatMessageItem = ({
             </span>
           </div>
         )}
-        
+
         {/* Mensagem */}
         <div
           className={cn(
@@ -84,7 +84,7 @@ export const ChatMessageItem = ({
         >
           {textContent}
         </div>
-        
+
         {/* Timestamp para conversas privadas (abaixo da mensagem) */}
         {!shouldShowHeader && (
           <div

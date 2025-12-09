@@ -3,9 +3,8 @@
 // Página de processos - Lista processos do acervo
 
 import * as React from 'react';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/lib/hooks/use-debounce';
 import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildProcessosFilterOptions, buildProcessosFilterGroups, parseProcessosFilters } from './components/processos-toolbar-filters';
 import { Button } from '@/components/ui/button';
@@ -18,11 +17,11 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { ArrowUpDown, ArrowUp, ArrowDown, Eye, Pencil, Loader2, Copy } from 'lucide-react';
-import { useAcervo } from '@/app/_lib/hooks/use-acervo';
-import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
+import { useAcervo } from '@/lib/hooks/use-acervo';
+import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { GrauBadges } from './components/grau-badges';
 import type { Acervo, ProcessoUnificado } from '@/backend/types/acervo/types';
-import type { ProcessosFilters } from '@/app/_lib/types/acervo';
+import type { ProcessosFilters } from '@/lib/types/acervo';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 /**
@@ -457,24 +456,25 @@ function criarColunas(
 ): ResponsiveTableColumn<ProcessoComParticipacao>[] {
   return [
     {
-      accessorKey: 'data_autuacao',
-      header: ({ column }) => (
+      accessorKey: 'data_autuacao' as const,
+      header: () => (
         <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Autuação" />
+          <div className="text-sm font-medium">Autuação</div>
         </div>
       ),
       enableSorting: true,
       size: 120,
       priority: 3,
       cardLabel: 'Autuação',
-      cell: ({ row }) => (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => (
         <div className="min-h-10 flex items-center justify-center text-sm">
           {formatarData(row.getValue('data_autuacao'))}
         </div>
       ),
     },
     {
-      id: 'processo',
+      id: 'processo' as const,
       header: () => (
         <div className="flex items-center justify-start">
           <div className="text-sm font-medium">Processo</div>
@@ -485,10 +485,11 @@ function criarColunas(
       priority: 1,
       sticky: true,
       cardLabel: 'Processo',
-      cell: ({ row }) => <ProcessoInfoCell processo={row.original} />,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => <ProcessoInfoCell processo={row.original} />,
     },
     {
-      id: 'partes',
+      id: 'partes' as const,
       header: () => (
         <div className="flex items-center justify-start">
           <PartesColumnHeader
@@ -503,7 +504,8 @@ function criarColunas(
       priority: 2,
       cardLabel: 'Partes',
       meta: { align: 'left' },
-      cell: ({ row }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => {
         const parteAutora = row.original.nome_parte_autora || '-';
         const parteRe = row.original.nome_parte_re || '-';
         return (
@@ -519,7 +521,7 @@ function criarColunas(
       },
     },
     {
-      id: 'responsavel',
+      id: 'responsavel' as const,
       header: () => (
         <div className="flex items-center justify-center">
           <ResponsavelColumnHeader
@@ -533,7 +535,8 @@ function criarColunas(
       size: 180,
       priority: 4,
       cardLabel: 'Responsável',
-      cell: ({ row }) => (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => (
         <ResponsavelCell
           processo={row.original}
           onSuccess={onSuccess}
@@ -542,7 +545,7 @@ function criarColunas(
       ),
     },
     {
-      id: 'acoes',
+      id: 'acoes' as const,
       header: () => (
         <div className="flex items-center justify-center">
           <div className="text-sm font-medium">Ações</div>
@@ -552,7 +555,8 @@ function criarColunas(
       size: 100,
       priority: 5,
       cardLabel: 'Ações',
-      cell: ({ row }) => (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => (
         <div className="flex items-center justify-center">
           <a
             href={`/processos/${row.original.id}`}
@@ -739,9 +743,7 @@ export default function ProcessosPage() {
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="panel"
-        filterPanelTitle="Filtros de Processos"
-        filterPanelDescription="Filtre processos por TRT, grau, responsável e mais"
+        filterButtonsMode="buttons"
       // Processos não tem botão de novo
       />
 

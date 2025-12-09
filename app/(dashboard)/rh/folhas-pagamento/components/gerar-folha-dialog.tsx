@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { gerarFolha } from '@/app/_lib/hooks/use-folhas-pagamento';
+import { gerarFolha } from '@/lib/hooks/use-folhas-pagamento';
 import { MESES_LABELS, type GerarFolhaDTO } from '@/backend/types/financeiro/salarios.types';
 import { toast } from 'sonner';
 

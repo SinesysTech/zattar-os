@@ -41,6 +41,7 @@ O Sinesys é composto por **3 serviços independentes**, cada um em seu próprio
 - CLI do CapRover (`npm install -g caprover`)
 - Acesso ao dashboard do CapRover
 - Os 3 repositórios clonados localmente
+- **Docker com BuildKit habilitado** (ver seção "Requisito: Docker BuildKit")
 
 ### Passo 1: Criar os Apps no CapRover
 
@@ -664,6 +665,64 @@ npm run build:prod
 
 ---
 
+## Requisito: Docker BuildKit
+
+O Dockerfile do Sinesys usa recursos do Docker BuildKit para otimização de cache (`--mount=type=cache`). O BuildKit é necessário para builds mais rápidos e eficientes.
+
+### Verificando se BuildKit está habilitado
+
+```bash
+# Verificar versão do Docker (BuildKit é padrão no Docker 23.0+)
+docker version
+
+# Testar se BuildKit está ativo
+DOCKER_BUILDKIT=1 docker build --help | grep -i buildkit
+```
+
+### Habilitando BuildKit
+
+**Opção 1: Variável de ambiente (temporário)**
+```bash
+export DOCKER_BUILDKIT=1
+```
+
+**Opção 2: Configuração do daemon (permanente)**
+```bash
+# Editar /etc/docker/daemon.json
+sudo nano /etc/docker/daemon.json
+
+# Adicionar:
+{
+  "features": {
+    "buildkit": true
+  }
+}
+
+# Reiniciar Docker
+sudo systemctl restart docker
+```
+
+**Opção 3: CapRover (se suportado)**
+- Verifique se a versão do Docker no servidor é 23.0+ (BuildKit padrão)
+- Se não, configure a variável de ambiente no servidor
+
+### Se BuildKit não estiver disponível
+
+Se não for possível habilitar BuildKit, edite o `Dockerfile` e remova o uso de `--mount=type=cache`:
+
+```dockerfile
+# De (com BuildKit):
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
+
+# Para (sem BuildKit):
+RUN npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
+```
+
+> ⚠️ **Nota**: Sem BuildKit, o cache de npm não será preservado entre builds, aumentando o tempo de build.
+
+---
+
 ## Build Args vs Environment Variables
 
 ### Build Args (tempo de build)
@@ -816,18 +875,22 @@ Erros de Out-Of-Memory (OOM) ocorrem quando o Next.js build consome mais memóri
 
 | Cenário | RAM Mínima | RAM Recomendada | Notas |
 |---------|------------|-----------------|-------|
-| Build único | 4GB | 6GB | Inclui 2GB para Node.js + 2GB para sistema |
-| Build com cache | 3GB | 4GB | Builds subsequentes consomem menos |
-| Múltiplos builds simultâneos | 4GB × número de builds | 6GB × número de builds | Evite builds simultâneos |}
+| Build único | 6GB | 8GB | Inclui 6GB para Node.js + 2GB para sistema |
+| Build com cache | 4GB | 6GB | Builds subsequentes consomem menos |
+| Múltiplos builds simultâneos | **Evitar** | **Evitar** | Configure webhook corretamente |
 
-O `NODE_OPTIONS="--max-old-space-size=2048"` no Dockerfile limita o heap do Node.js a 2GB. O sistema operacional precisa de ~1-2GB adicionais para operações normais.
+O `NODE_OPTIONS="--max-old-space-size=6144"` no Dockerfile limita o heap do Node.js a 6GB. O sistema operacional precisa de ~2GB adicionais para operações normais.
+
+> ⚠️ **IMPORTANTE**: O projeto tem +150 dependências (Plate.js, CopilotKit, Supabase, etc.) e requer 6GB de heap para builds estáveis.
 
 ### Configurações do CapRover
 
 #### Build Memory
 Acesse App Configs → Build Timeout & Memory para ajustar:
-- **Valor recomendado**: 4096MB (mínimo para builds estáveis)
-- **Valor ideal**: 6144MB ou 8192MB para builds mais rápidos e projetos grandes
+- **Valor mínimo**: 6144MB (6GB) - alinhado com `NODE_OPTIONS` no Dockerfile
+- **Valor recomendado**: 8192MB (8GB) para builds mais rápidos e margem de segurança
+
+> ⚠️ **CRÍTICO**: O valor do Build Memory no CapRover **DEVE** ser igual ou maior que o valor de `NODE_OPTIONS` no Dockerfile e no script `build:caprover` (atualmente 6144MB). Se o CapRover tiver menos memória que o limite do Node.js, o build falhará com OOM.
 
 #### Build Timeout
 Recomendações baseadas no cenário:
@@ -839,10 +902,10 @@ Mantenha em 1 durante o build para evitar múltiplas instâncias consumindo mem�
 
 ### Configuração de Swap (Servidores com RAM Limitada)
 
-Use swap quando o servidor tiver menos de 4GB RAM física. O swap permite que o sistema use disco como memória adicional, mas torna os builds 2-3x mais lentos.
+Use swap quando o servidor tiver menos de 8GB RAM física. O swap permite que o sistema use disco como memória adicional, mas torna os builds 2-3x mais lentos.
 
 #### Quando usar swap
-- Servidores com <4GB RAM física
+- Servidores com <8GB RAM física
 - Builds esporádicos (não produção contínua)
 
 #### Impacto no desempenho
@@ -886,8 +949,8 @@ O script verifica:
 ### Troubleshooting de Erros OOM
 
 #### Sintoma 1: Build falha com "JavaScript heap out of memory"
-- **Causa**: Node.js atingiu o limite de memória (padrão 2GB)
-- **Solução**: Aumentar `NODE_OPTIONS` no Dockerfile (ex: `--max-old-space-size=4096`) ou memória do CapRover
+- **Causa**: Node.js atingiu o limite de memória (atualmente 6GB)
+- **Solução**: Aumentar `NODE_OPTIONS` no Dockerfile (ex: `--max-old-space-size=8192`) **E** aumentar memória do CapRover para valor igual ou maior
 
 #### Sintoma 2: Container é killed durante build (exit code 137)
 - **Causa**: Sistema operacional matou o processo por falta de memória
@@ -1063,12 +1126,12 @@ Antes de cada deploy, verifique:
 
 | Serviço | RAM Mínima (Runtime) | RAM Recomendada (Runtime) | RAM para Build | CPU |
 |---------|----------------------|---------------------------|----------------|-----|
-| sinesys_app | 512MB | 1GB | 4GB (mínimo) | 1 core |
+| sinesys_app | 512MB | 1GB | 6GB (mínimo) | 1 core |
 | sinesys_mcp | 128MB | 256MB | N/A | 0.5 core |
-| sinesys_browser | 1GB | 2GB | N/A | 1-2 cores |}
+| sinesys_browser | 1GB | 2GB | N/A | 1-2 cores |
 
-**Total recomendado para runtime**: VPS com 4GB RAM, 2-4 cores  
-**Total recomendado para build**: Pelo menos 4GB RAM adicional disponível durante builds
+**Total recomendado para runtime**: VPS com 4GB RAM, 2-4 cores
+**Total recomendado para build**: Pelo menos 8GB RAM disponível durante builds (6GB Node.js + 2GB sistema)
 
 ---
 

@@ -287,15 +287,7 @@ function TipoDescricaoCell({
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <div
-              role="button"
-              tabIndex={0}
               className="flex flex-col gap-1 text-left hover:opacity-80 transition-opacity cursor-pointer w-full pr-6"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  setIsOpen(true);
-                }
-              }}
             >
               {/* Badge de tipo seguido do ícone de documento */}
               <div className="flex items-center gap-1.5">
@@ -1206,15 +1198,21 @@ function criarColunasSemanais(
                 )}
               </span>
             </div>
+            {/* Terceira linha: Órgão julgador (vara) */}
+            <div className="text-xs text-muted-foreground max-w-full truncate">
+              {orgaoJulgador}
+            </div>
+            
+            {/* Espaçamento entre dados do processo e partes */}
+            <div className="h-1" />
+            
+            {/* Partes */}
             <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
               {parteAutora}
             </Badge>
             <Badge variant="outline" className={`${getParteReColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
               {parteRe}
             </Badge>
-            <div className="text-xs text-muted-foreground max-w-full truncate">
-              {orgaoJulgador}
-            </div>
           </div>
         );
       },
