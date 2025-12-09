@@ -260,3 +260,531 @@ export async function generatePdfFromTemplate(
   const result = await pdfDoc.save();
   return Buffer.from(result);
 }
+
+// =============================================================================
+// MANIFESTO DE ASSINATURA ELETRÔNICA - MP 2.200-2/2001
+// =============================================================================
+
+/**
+ * Constantes para página de manifesto
+ */
+export const MANIFEST_PAGE_SIZE = {
+  width: 595.28,  // A4 width in points
+  height: 841.89, // A4 height in points
+} as const;
+
+export const MANIFEST_LEGAL_TEXT =
+  'O signatário reconhece a autenticidade deste documento e a validade da ' +
+  'assinatura eletrônica utilizada, conforme Art. 10, § 2º, da Medida Provisória ' +
+  'nº 2.200-2/2001. Declara que os dados biométricos coletados (foto e assinatura) ' +
+  'são prova de sua autoria e que o hash SHA-256 garante a integridade deste ato.';
+
+/**
+ * Formata data ISO para formato brasileiro (dd/mm/yyyy HH:mm:ss)
+ * @param isoDate - Data em formato ISO 8601
+ * @returns Data formatada em pt-BR ou o valor original se a data for inválida
+ */
+function formatDateTimeBrazil(isoDate: string): string {
+  if (!isoDate) {
+    return 'Data não informada';
+  }
+
+  const date = new Date(isoDate);
+
+  // Validar se a data é válida antes de formatar
+  if (isNaN(date.getTime())) {
+    return isoDate; // Retorna o valor original se inválido
+  }
+
+  return date.toLocaleString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
+
+/**
+ * Embeda imagem no PDF a partir de data URL, detectando tipo automaticamente.
+ *
+ * IMPORTANTE: Apenas formatos PNG e JPEG são suportados pelo pdf-lib.
+ * Enviar outros contentTypes (como WebP, GIF, BMP) causará erro.
+ * O consumidor deve garantir que as imagens estejam em formato compatível
+ * antes de chamar esta função.
+ *
+ * @param pdfDoc - Documento PDF onde a imagem será embedada
+ * @param dataUrl - Data URL da imagem (formato: data:image/png;base64,...)
+ * @param label - Rótulo opcional para identificar a imagem em mensagens de erro (ex: "foto", "assinatura")
+ * @returns Imagem embedada no PDF
+ * @throws {Error} Se o tipo de imagem não for PNG ou JPEG
+ */
+async function embedImageFromDataUrl(
+  pdfDoc: PDFDocument,
+  dataUrl: string,
+  label?: string
+): Promise<PDFImage> {
+  const { buffer, contentType } = decodeDataUrlToBuffer(dataUrl);
+  const imageLabel = label ? ` (${label})` : '';
+
+  if (contentType.includes('png')) {
+    return await pdfDoc.embedPng(buffer);
+  } else if (contentType.includes('jpg') || contentType.includes('jpeg')) {
+    return await pdfDoc.embedJpg(buffer);
+  } else {
+    throw new Error(
+      `Tipo de imagem não suportado${imageLabel}: ${contentType}. ` +
+      `Apenas PNG e JPEG são aceitos.`
+    );
+  }
+}
+
+/**
+ * Adiciona página de manifesto de assinatura eletrônica ao PDF.
+ *
+ * CONFORMIDADE LEGAL - MP 2.200-2/2001
+ *
+ * Esta função implementa a página de evidências exigida para Assinatura Eletrônica
+ * Avançada, incluindo:
+ * - Identificação do documento (protocolo, hashes SHA-256)
+ * - Dados do signatário (nome, CPF, data/hora, IP, geolocalização)
+ * - Evidências biométricas (foto selfie e assinatura manuscrita EMBEDADAS)
+ * - Declaração jurídica com aceite de termos
+ *
+ * As imagens são embedadas diretamente no PDF (não referenciadas) para garantir
+ * integridade forense. Qualquer modificação no PDF após flatten alterará o hash
+ * final, tornando adulteração detectável.
+ *
+ * @param pdfDoc - Documento PDF já carregado (será modificado in-place)
+ * @param manifestData - Dados estruturados do manifesto
+ * @returns PDFDocument modificado com página de manifesto anexada
+ * @throws {Error} Se houver falha ao embedar imagens ou desenhar conteúdo
+ *
+ * @example
+ * const pdfDoc = await PDFDocument.load(pdfBytes);
+ * await appendManifestPage(pdfDoc, {
+ *   protocolo: 'FS-20250101120000-12345',
+ *   nomeArquivo: 'contrato.pdf',
+ *   hashOriginalSha256: 'a3c5f1e2...',
+ *   signatario: { ... },
+ *   evidencias: { fotoBase64: '...', assinaturaBase64: '...' },
+ *   termos: { ... }
+ * });
+ * const finalPdfBytes = await pdfDoc.save();
+ */
+export async function appendManifestPage(
+  pdfDoc: PDFDocument,
+  manifestData: ManifestData
+): Promise<PDFDocument> {
+  const timer = createTimer();
+  const context = { service: LogServices.PDF, operation: 'append_manifest' };
+
+  logger.info('Adicionando página de manifesto ao PDF', context, {
+    protocolo: manifestData.protocolo,
+    arquivo: manifestData.nomeArquivo,
+  });
+
+  try {
+    // Validar dados obrigatórios
+    if (!manifestData.protocolo || !manifestData.hashOriginalSha256) {
+      throw new Error('Protocolo e hash original são obrigatórios para manifesto');
+    }
+
+    if (!manifestData.evidencias.fotoBase64 || !manifestData.evidencias.assinaturaBase64) {
+      throw new Error('Foto e assinatura são obrigatórias para manifesto (conformidade MP 2.200-2)');
+    }
+
+    if (!manifestData.signatario.nomeCompleto || !manifestData.signatario.cpf) {
+      throw new Error('Nome completo e CPF do signatário são obrigatórios');
+    }
+
+    // Criar nova página A4
+    const page = pdfDoc.addPage([MANIFEST_PAGE_SIZE.width, MANIFEST_PAGE_SIZE.height]);
+    const { width, height } = page.getSize();
+
+    // Embedar fontes
+    const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    // Embedar imagens (com labels para mensagens de erro contextualizadas)
+    const fotoImage = await embedImageFromDataUrl(pdfDoc, manifestData.evidencias.fotoBase64, 'foto');
+    const assinaturaImage = await embedImageFromDataUrl(pdfDoc, manifestData.evidencias.assinaturaBase64, 'assinatura');
+
+    // Constantes de layout
+    const marginLeft = 50;
+    const marginRight = 50;
+    const contentWidth = width - marginLeft - marginRight;
+    const lineColor = rgb(0.7, 0.7, 0.7);
+    const textColor = rgb(0, 0, 0);
+    const linkColor = rgb(0, 0, 0.8);
+
+    let currentY = height - 50; // Começar do topo com margem
+
+    // ==========================================================================
+    // CABEÇALHO
+    // ==========================================================================
+    page.drawText('MANIFESTO DE ASSINATURA ELETRÔNICA', {
+      x: marginLeft,
+      y: currentY,
+      size: 16,
+      font: fontBold,
+      color: textColor,
+    });
+    currentY -= 20;
+
+    page.drawText('Conformidade MP 2.200-2/2001', {
+      x: marginLeft,
+      y: currentY,
+      size: 10,
+      font: fontRegular,
+      color: rgb(0.4, 0.4, 0.4),
+    });
+    currentY -= 35;
+
+    // ==========================================================================
+    // IDENTIFICAÇÃO DO DOCUMENTO
+    // ==========================================================================
+    page.drawText('IDENTIFICAÇÃO DO DOCUMENTO', {
+      x: marginLeft,
+      y: currentY,
+      size: 12,
+      font: fontBold,
+      color: textColor,
+    });
+    currentY -= 5;
+
+    page.drawLine({
+      start: { x: marginLeft, y: currentY },
+      end: { x: width - marginRight, y: currentY },
+      thickness: 1,
+      color: lineColor,
+    });
+    currentY -= 15;
+
+    const docFields = [
+      `Nome do Arquivo: ${manifestData.nomeArquivo}`,
+      `Protocolo: ${manifestData.protocolo}`,
+    ];
+
+    for (const field of docFields) {
+      page.drawText(field, {
+        x: marginLeft,
+        y: currentY,
+        size: 10,
+        font: fontRegular,
+        color: textColor,
+      });
+      currentY -= 15;
+    }
+
+    // Hash original (pode ser longo, quebrar se necessário)
+    page.drawText('Hash SHA-256 Original:', {
+      x: marginLeft,
+      y: currentY,
+      size: 10,
+      font: fontRegular,
+      color: textColor,
+    });
+    currentY -= 12;
+
+    const hashOriginal = manifestData.hashOriginalSha256;
+    const hashChunks = hashOriginal.match(/.{1,64}/g) || [hashOriginal];
+    for (const chunk of hashChunks) {
+      page.drawText(chunk, {
+        x: marginLeft + 10,
+        y: currentY,
+        size: 8,
+        font: fontRegular,
+        color: rgb(0.3, 0.3, 0.3),
+      });
+      currentY -= 10;
+    }
+    currentY -= 5;
+
+    // Hash final (se disponível)
+    page.drawText('Hash SHA-256 Final:', {
+      x: marginLeft,
+      y: currentY,
+      size: 10,
+      font: fontRegular,
+      color: textColor,
+    });
+    currentY -= 12;
+
+    const hashFinal = manifestData.hashFinalSha256 || 'Calculado após flatten';
+    if (manifestData.hashFinalSha256) {
+      const finalChunks = hashFinal.match(/.{1,64}/g) || [hashFinal];
+      for (const chunk of finalChunks) {
+        page.drawText(chunk, {
+          x: marginLeft + 10,
+          y: currentY,
+          size: 8,
+          font: fontRegular,
+          color: rgb(0.3, 0.3, 0.3),
+        });
+        currentY -= 10;
+      }
+    } else {
+      page.drawText(hashFinal, {
+        x: marginLeft + 10,
+        y: currentY,
+        size: 8,
+        font: fontRegular,
+        color: rgb(0.5, 0.5, 0.5),
+      });
+      currentY -= 10;
+    }
+    currentY -= 20;
+
+    // ==========================================================================
+    // DADOS DO SIGNATÁRIO
+    // ==========================================================================
+    page.drawText('DADOS DO SIGNATÁRIO', {
+      x: marginLeft,
+      y: currentY,
+      size: 12,
+      font: fontBold,
+      color: textColor,
+    });
+    currentY -= 5;
+
+    page.drawLine({
+      start: { x: marginLeft, y: currentY },
+      end: { x: width - marginRight, y: currentY },
+      thickness: 1,
+      color: lineColor,
+    });
+    currentY -= 15;
+
+    const cpfFormatado = formatValue('cpf', manifestData.signatario.cpf);
+    const signatarioFields = [
+      `Nome Completo: ${manifestData.signatario.nomeCompleto}`,
+      `CPF: ${cpfFormatado}`,
+      `Data/Hora (UTC): ${manifestData.signatario.dataHora}`,
+      `Data/Hora (Local): ${manifestData.signatario.dataHoraLocal || formatDateTimeBrazil(manifestData.signatario.dataHora)}`,
+      `IP de Origem: ${manifestData.signatario.ipOrigem || 'Não disponível'}`,
+    ];
+
+    for (const field of signatarioFields) {
+      page.drawText(field, {
+        x: marginLeft,
+        y: currentY,
+        size: 10,
+        font: fontRegular,
+        color: textColor,
+      });
+      currentY -= 15;
+    }
+
+    // Geolocalização (se disponível)
+    if (manifestData.signatario.geolocalizacao) {
+      const geo = manifestData.signatario.geolocalizacao;
+      const geoText = `Geolocalização: Lat ${geo.latitude.toFixed(6)}, Long ${geo.longitude.toFixed(6)}${geo.accuracy ? ` (±${Math.round(geo.accuracy)}m)` : ''}`;
+      page.drawText(geoText, {
+        x: marginLeft,
+        y: currentY,
+        size: 10,
+        font: fontRegular,
+        color: textColor,
+      });
+      currentY -= 12;
+
+      const mapsLink = `https://maps.google.com/?q=${geo.latitude},${geo.longitude}`;
+      page.drawText(mapsLink, {
+        x: marginLeft,
+        y: currentY,
+        size: 8,
+        font: fontRegular,
+        color: linkColor,
+      });
+      currentY -= 15;
+    }
+
+    // Dispositivo (se disponível)
+    if (manifestData.dispositivo) {
+      const { plataforma, navegador, resolucao } = manifestData.dispositivo;
+      const dispositivoParts: string[] = [];
+
+      if (plataforma) dispositivoParts.push(plataforma);
+      if (navegador) dispositivoParts.push(navegador);
+      if (resolucao) dispositivoParts.push(resolucao);
+
+      if (dispositivoParts.length > 0) {
+        const dispositivoText = `Dispositivo: ${dispositivoParts.join(' • ')}`;
+        page.drawText(dispositivoText, {
+          x: marginLeft,
+          y: currentY,
+          size: 9,
+          font: fontRegular,
+          color: rgb(0.4, 0.4, 0.4),
+        });
+        currentY -= 15;
+      }
+    }
+    currentY -= 15;
+
+    // ==========================================================================
+    // EVIDÊNCIAS BIOMÉTRICAS
+    // ==========================================================================
+    page.drawText('EVIDÊNCIAS BIOMÉTRICAS', {
+      x: marginLeft,
+      y: currentY,
+      size: 12,
+      font: fontBold,
+      color: textColor,
+    });
+    currentY -= 5;
+
+    page.drawLine({
+      start: { x: marginLeft, y: currentY },
+      end: { x: width - marginRight, y: currentY },
+      thickness: 1,
+      color: lineColor,
+    });
+    currentY -= 20;
+
+    // Layout lado a lado: Foto à esquerda, Assinatura à direita
+    const imageY = currentY - 120;
+
+    // Foto (lado esquerdo)
+    page.drawText('Foto (Selfie) no Momento da Assinatura:', {
+      x: marginLeft,
+      y: currentY,
+      size: 10,
+      font: fontRegular,
+      color: textColor,
+    });
+
+    // Calcular dimensões mantendo proporção para foto (max 120x120)
+    const fotoDims = fotoImage.scale(1);
+    const fotoMaxSize = 120;
+    const fotoScale = Math.min(fotoMaxSize / fotoDims.width, fotoMaxSize / fotoDims.height);
+    const fotoWidth = fotoDims.width * fotoScale;
+    const fotoHeight = fotoDims.height * fotoScale;
+
+    page.drawImage(fotoImage, {
+      x: marginLeft,
+      y: imageY,
+      width: fotoWidth,
+      height: fotoHeight,
+    });
+
+    // Assinatura (lado direito)
+    const rightColumnX = marginLeft + 180;
+    page.drawText('Assinatura Manuscrita Eletrônica:', {
+      x: rightColumnX,
+      y: currentY,
+      size: 10,
+      font: fontRegular,
+      color: textColor,
+    });
+
+    // Calcular dimensões mantendo proporção para assinatura (max 200x80)
+    const assDims = assinaturaImage.scale(1);
+    const assMaxWidth = 200;
+    const assMaxHeight = 80;
+    const assScale = Math.min(assMaxWidth / assDims.width, assMaxHeight / assDims.height);
+    const assWidth = assDims.width * assScale;
+    const assHeight = assDims.height * assScale;
+
+    page.drawImage(assinaturaImage, {
+      x: rightColumnX,
+      y: imageY + (120 - assHeight), // Alinhar pelo topo
+      width: assWidth,
+      height: assHeight,
+    });
+
+    currentY = imageY - 25;
+
+    // ==========================================================================
+    // DECLARAÇÃO JURÍDICA
+    // ==========================================================================
+    page.drawText('DECLARAÇÃO JURÍDICA', {
+      x: marginLeft,
+      y: currentY,
+      size: 12,
+      font: fontBold,
+      color: textColor,
+    });
+    currentY -= 5;
+
+    page.drawLine({
+      start: { x: marginLeft, y: currentY },
+      end: { x: width - marginRight, y: currentY },
+      thickness: 1,
+      color: lineColor,
+    });
+    currentY -= 15;
+
+    // Texto da declaração (quebrar em múltiplas linhas)
+    const declaracaoTexto = manifestData.termos.textoDeclaracao || MANIFEST_LEGAL_TEXT;
+    const declaracaoLines = wrapText(fontRegular, declaracaoTexto, 9, contentWidth);
+
+    for (const line of declaracaoLines) {
+      page.drawText(line, {
+        x: marginLeft,
+        y: currentY,
+        size: 9,
+        font: fontRegular,
+        color: textColor,
+      });
+      currentY -= 12;
+    }
+    currentY -= 10;
+
+    // Metadados dos termos
+    page.drawText(`Versão dos Termos: ${manifestData.termos.versao}`, {
+      x: marginLeft,
+      y: currentY,
+      size: 9,
+      font: fontRegular,
+      color: rgb(0.4, 0.4, 0.4),
+    });
+    currentY -= 12;
+
+    const dataAceiteFormatada = formatDateTimeBrazil(manifestData.termos.dataAceite);
+    page.drawText(`Data de Aceite: ${dataAceiteFormatada}`, {
+      x: marginLeft,
+      y: currentY,
+      size: 9,
+      font: fontRegular,
+      color: rgb(0.4, 0.4, 0.4),
+    });
+
+    // ==========================================================================
+    // RODAPÉ
+    // ==========================================================================
+    const footerText = 'Documento gerado eletronicamente. Validade jurídica conforme Art. 10, § 2º, MP 2.200-2/2001.';
+    const footerWidth = fontRegular.widthOfTextAtSize(footerText, 8);
+    page.drawText(footerText, {
+      x: (width - footerWidth) / 2,
+      y: 40,
+      size: 8,
+      font: fontRegular,
+      color: rgb(0.5, 0.5, 0.5),
+    });
+
+    // Número da página
+    const pageCount = pdfDoc.getPageCount();
+    const pageNumText = `Página ${pageCount} de ${pageCount}`;
+    const pageNumWidth = fontRegular.widthOfTextAtSize(pageNumText, 8);
+    page.drawText(pageNumText, {
+      x: width - marginRight - pageNumWidth,
+      y: 25,
+      size: 8,
+      font: fontRegular,
+      color: rgb(0.5, 0.5, 0.5),
+    });
+
+    timer.log('Página de manifesto adicionada com sucesso', context, {
+      page_count: pageCount,
+    });
+
+    return pdfDoc;
+  } catch (error) {
+    logger.error('Erro ao adicionar página de manifesto', error, context);
+    throw new Error(`Falha ao gerar manifesto: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+  }
+}

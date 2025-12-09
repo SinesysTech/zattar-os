@@ -28,3 +28,5 @@
 - [ ] Labels usam `text-muted-foreground`
 - [ ] Inputs têm `border-input` e `ring-ring` no foco
 - [ ] Nenhum valor OKLCH direto no código (apenas variáveis CSS)
+- [ ] Rodar `npm run validate:design-system` não retorna erros (verificar conformidade com regras críticas)
+  - **Nota:** Considerar integrar `npm run validate:design-system` em pipelines de CI/CD para garantir validação contínua.

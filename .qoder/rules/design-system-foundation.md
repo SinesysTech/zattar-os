@@ -26,11 +26,14 @@ Tabela de decisão:
 | Contexto | Token | Classe Tailwind |
 |----------|-------|-----------------|
 | Botão primário | `--primary` | `bg-primary text-primary-foreground` |
-| Badge de ação | `--highlight` | `bg-[oklch(0.68_0.22_45)]` (via custom class) |
+| Badge de ação | `--highlight` | `bg-highlight text-foreground` (verificar contraste) |
 | Texto de label | `--muted-foreground` | `text-muted-foreground` |
 | Borda de input | `--input` | `border-input` |
 | Foco de input | `--ring` | `ring-ring` |
 | Sidebar background | `--sidebar` | `bg-sidebar` |
+
+**Nota Crítica:** O uso direto de `oklch()` (ou qualquer valor de cor literal hexadecimal/RGB) em arquivos `.tsx` é estritamente proibido e será flagrado pelo validador `scripts/validate-design-system.ts`. Todas as cores em componentes devem ser aplicadas via classes Tailwind que utilizam os tokens semânticos definidos em `app/globals.css`.
+
 
 ## Seção 2.5: Regras de Composição
 - **Nunca** misturar `bg-primary` com `text-primary` (usar `text-primary-foreground`)

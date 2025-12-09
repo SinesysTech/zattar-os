@@ -37,6 +37,7 @@
     "populate:tabelas-audiencias": "tsx dev_data/scripts/populate-tabelas-auxiliares-audiencias.ts",
     "populate:classe-judicial-acervo": "tsx dev_data/scripts/populate-classe-judicial-acervo.ts",
     "sincronizar-usuarios": "tsx scripts/sincronizar-usuarios.ts",
+    "validate:design-system": "tsx scripts/validate-design-system.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {

@@ -137,6 +137,7 @@ interface TableToolbarProps {
   onNewClick?: () => void
   newButtonTooltip?: string
   className?: string
+  variant?: "standalone" | "integrated"
   /** @deprecated Use filterButtonsMode="single" instead */
   showFilterButton?: boolean
   /** * Modo de exibição dos filtros:
@@ -168,6 +169,7 @@ export function TableToolbar({
   onNewClick,
   newButtonTooltip = "Novo",
   className,
+  variant = "standalone",
   showFilterButton = true,
   filterButtonsMode = "single",
   filterPanelTitle = "Filtros",
@@ -212,13 +214,18 @@ export function TableToolbar({
   const useFilterButtons = filterButtonsMode === "buttons" && filterGroups && filterGroups.length > 0
   const useFilterPanel = filterButtonsMode === "panel" && filterGroups && filterGroups.length > 0
 
+  const commonClasses = "p-4"
+  const standaloneClasses = "bg-card border border-border rounded-lg shadow-sm"
+  const integratedClasses = "bg-card border-b border-border rounded-t-lg"
+
   // Modo: Painel de filtros responsivo
   if (useFilterPanel) {
     return (
       <div
         className={cn(
           "flex flex-col gap-4 md:flex-row md:items-start",
-          "bg-card border-b border-border rounded-t-lg p-4",
+          commonClasses,
+          variant === 'standalone' ? standaloneClasses : integratedClasses,
           className
         )}
       >
@@ -277,7 +284,9 @@ export function TableToolbar({
   return (
     <ButtonGroup
       className={cn(
-        "bg-background border border-border rounded-t-lg shadow-sm p-4 items-center",
+        "items-center",
+        commonClasses,
+        variant === 'standalone' ? standaloneClasses : integratedClasses,
         className
       )}
     >

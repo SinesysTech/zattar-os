@@ -5,6 +5,8 @@ import path from "path";
 
 // REGEX PATTERNS PARA VALIDAÇÃO
 const oklchPattern = /oklch\s*\(/i;
+// TODO: Futuras versões do validador irão usar estas regex para reforçar regras de tipografia
+// e alinhamento numérico para tabelas, garantindo o uso correto de `font-heading` e `tabular-nums`.
 const tabularNumsPattern = /<[^>]+class="[^\"]*tabular-nums[^\"]*"[^>]+>\s*\{?[\d,.]+\}?<\/[^>]+>/;
 const shadowXlPattern = /shadow-xl/;
 const fontHeadingPattern = /font-heading/;

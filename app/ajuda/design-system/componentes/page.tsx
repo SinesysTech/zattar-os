@@ -96,6 +96,7 @@ export default function ComponentesPage() {
               <Button variant="ghost">Ghost</Button>
               <Button variant="link">Link</Button>
               <Button variant="destructive">Destructive</Button>
+              <Button variant="action">Action</Button>
             </div>
             <div className="flex flex-wrap gap-4">
               <Button size="sm">Small</Button>
@@ -117,6 +118,9 @@ export default function ComponentesPage() {
               <Badge variant="secondary">Secondary</Badge>
               <Badge variant="outline">Outline</Badge>
               <Badge variant="destructive">Destructive</Badge>
+              <Badge variant="success">Success</Badge>
+              <Badge variant="warning">Warning</Badge>
+              <Badge variant="action">Action</Badge>
             </div>
           </CardContent>
         </Card>
