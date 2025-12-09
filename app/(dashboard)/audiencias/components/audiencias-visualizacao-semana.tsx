@@ -381,9 +381,16 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
               </TooltipContent>
             </Tooltip>
           ) : audiencia.status === 'F' ? (
-            <div className="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
-              <Check className="h-4 w-4 text-green-700 dark:text-green-300" />
-            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                  <Check className="h-4 w-4 text-green-700 dark:text-green-300" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Audiência realizada</p>
+              </TooltipContent>
+            </Tooltip>
           ) : null}
           <Popover open={isMaisPopoverOpen} onOpenChange={setIsMaisPopoverOpen}>
             <Tooltip>
@@ -634,10 +641,10 @@ function criarColunasSemanais(onSuccess: () => void, usuarios: Usuario[]): Colum
                 {orgaoJulgador}
               </div>
             )}
-            
+
             {/* Espaçamento entre dados do processo e partes */}
             {(parteAutora || parteRe) && <div className="h-1" />}
-            
+
             {/* Partes */}
             {(parteAutora || parteRe) && (
               <div className="flex flex-col gap-1 w-full">

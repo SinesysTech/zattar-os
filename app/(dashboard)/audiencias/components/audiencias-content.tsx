@@ -668,10 +668,10 @@ function criarColunas(
             {orgaoJulgador && orgaoJulgador !== '-' && (
               <div className="text-xs text-muted-foreground">{orgaoJulgador}</div>
             )}
-            
+
             {/* Espaçamento entre dados do processo e partes */}
             {(parteAutora || parteRe) && <div className="h-1" />}
-            
+
             {/* Partes */}
             {(parteAutora || parteRe) && (
               <div className="flex flex-col gap-1 w-full">
