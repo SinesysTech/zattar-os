@@ -11,6 +11,7 @@ import { ArrowLeft, ArrowRight, Download, Minus, Plus, X } from 'lucide-react';
 import { useEditorRef } from 'platejs/react';
 
 import { cn } from '@/app/_lib/utils/utils';
+import { useOrientation } from '@/hooks/use-orientation';
 
 const buttonVariants = cva('rounded bg-[rgba(0,0,0,0.5)] px-1', {
   defaultVariants: {
@@ -31,6 +32,9 @@ export function MediaPreviewDialog() {
   const isOpen = useImagePreviewValue('isOpen', editor.id);
   const scale = useImagePreviewValue('scale');
   const isEditingScale = useImagePreviewValue('isEditingScale');
+  const orientation = useOrientation();
+  const isLandscape = orientation === 'landscape';
+
   const {
     closeProps,
     currentUrlIndex,
@@ -61,11 +65,17 @@ export function MediaPreviewDialog() {
         <div className="relative flex max-h-screen w-full items-center">
           <PreviewImage
             className={cn(
-              'mx-auto block max-h-[calc(100vh-4rem)] w-auto object-contain transition-transform'
+              'mx-auto block w-auto object-contain transition-transform',
+              isLandscape
+                ? 'max-h-[calc(100vh-3rem)] max-w-[calc(100vw-2rem)]'
+                : 'max-h-[calc(100vh-4rem)] max-w-[calc(100vw-2rem)]'
             )}
           />
           <div
-            className="-translate-x-1/2 absolute bottom-0 left-1/2 z-40 flex w-fit justify-center gap-4 p-2 text-center text-white"
+            className={cn(
+              "-translate-x-1/2 absolute left-1/2 z-40 flex w-fit justify-center text-center text-white",
+              isLandscape ? "bottom-2 gap-2 p-1" : "bottom-0 gap-4 p-2"
+            )}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex gap-1">

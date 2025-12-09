@@ -14,6 +14,7 @@ import { ResizableProvider, useResizableValue } from '@platejs/resizable';
 import { PlateElement, useEditorMounted, withHOC } from 'platejs/react';
 
 import { cn } from '@/app/_lib/utils/utils';
+import { useOrientation } from '@/hooks/use-orientation';
 
 import { Caption, CaptionTextarea } from './caption';
 import {
@@ -38,6 +39,8 @@ export const VideoElement = withHOC(
       urlParsers: [parseTwitterUrl, parseVideoUrl],
     });
     const width = useResizableValue('width');
+    const orientation = useOrientation();
+    const isLandscape = orientation === 'landscape';
 
     const isEditorMounted = useEditorMounted();
 
@@ -55,7 +58,7 @@ export const VideoElement = withHOC(
             align={align}
             options={{
               align,
-              maxWidth: isTweet ? 550 : '100%',
+              maxWidth: isTweet ? 550 : isLandscape ? '90%' : '100%',
               minWidth: isTweet ? 300 : 100,
               readOnly,
             }}
