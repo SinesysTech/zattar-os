@@ -14,24 +14,24 @@ interface ViewToggleProps {
 
 export function ViewToggle({ viewMode, onViewModeChange }: ViewToggleProps) {
   return (
-    <div className="flex items-center gap-1 border rounded-md p-1">
+    <div className="flex items-center gap-0.5 border rounded-md p-0.5 bg-background">
       <Button
         variant={viewMode === 'cards' ? 'default' : 'ghost'}
-        size="sm"
+        size="icon"
         onClick={() => onViewModeChange('cards')}
-        className="h-8"
+        className="h-8 w-8"
+        aria-label="Visualização em Cards"
       >
-        <LayoutGrid className="h-4 w-4 mr-2" />
-        Cards
+        <LayoutGrid className="h-4 w-4" />
       </Button>
       <Button
         variant={viewMode === 'table' ? 'default' : 'ghost'}
-        size="sm"
+        size="icon"
         onClick={() => onViewModeChange('table')}
-        className="h-8"
+        className="h-8 w-8"
+        aria-label="Visualização em Tabela"
       >
-        <Table className="h-4 w-4 mr-2" />
-        Tabela
+        <Table className="h-4 w-4" />
       </Button>
     </div>
   );

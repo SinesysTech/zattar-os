@@ -139,8 +139,7 @@ interface TableToolbarProps {
   className?: string
   /** @deprecated Use filterButtonsMode="single" instead */
   showFilterButton?: boolean
-  /** 
-   * Modo de exibição dos filtros:
+  /** * Modo de exibição dos filtros:
    * - "single": Um único botão de filtro com dropdown (comportamento antigo)
    * - "buttons": Botões individuais para cada grupo de filtros (novo comportamento)
    * - "panel": Painel de filtros responsivo (inline no desktop, Sheet no mobile)
@@ -213,10 +212,16 @@ export function TableToolbar({
   const useFilterButtons = filterButtonsMode === "buttons" && filterGroups && filterGroups.length > 0
   const useFilterPanel = filterButtonsMode === "panel" && filterGroups && filterGroups.length > 0
 
-  // Modo: Painel de filtros responsivo (retorna early para layout diferente)
+  // Modo: Painel de filtros responsivo
   if (useFilterPanel) {
     return (
-      <div className={cn("flex flex-col gap-4 md:flex-row md:items-start", className)}>
+      <div
+        className={cn(
+          "flex flex-col gap-4 md:flex-row md:items-start",
+          "bg-card border-b border-border rounded-t-lg p-4",
+          className
+        )}
+      >
         <div className="flex-1">
           <ButtonGroup>
             <InputGroup className="w-full min-w-[min(92vw,37.5rem)]">
@@ -268,8 +273,14 @@ export function TableToolbar({
     )
   }
 
+  // Modo: Padrão (ButtonGroup)
   return (
-    <ButtonGroup className={cn("", className)}>
+    <ButtonGroup
+      className={cn(
+        "bg-card border-b border-border rounded-t-lg p-4 items-center",
+        className
+      )}
+    >
       <InputGroup className="w-full min-w-[min(92vw,37.5rem)]">
         <InputGroupAddon>
           <Search className="h-4 w-4" />
@@ -302,7 +313,12 @@ export function TableToolbar({
       {!useFilterButtons && showFilterButton && (
         <Popover open={filterOpen} onOpenChange={setFilterOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="icon" aria-label="Filtros" className="relative bg-black hover:bg-black/90 text-white border-black">
+            <Button
+              variant="default" // UPDATED: Usando variante padrão (Primary) ao invés de hardcode
+              size="icon"
+              aria-label="Filtros"
+              className="relative" // removido o bg-black hardcoded
+            >
               <Filter className="h-4 w-4" />
               {selectedFilters.length > 0 && (
                 <Badge variant="secondary" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center">

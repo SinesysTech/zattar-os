@@ -5,9 +5,9 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
-import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
+import { TableWithToolbar, type ResponsiveTableColumn } from '@/components/ui/table-with-toolbar';
+import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { buildUsuariosFilterOptions, buildUsuariosFilterGroups, parseUsuariosFilters } from './components/usuarios-toolbar-filters';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -154,7 +154,7 @@ function criarColunas(
         const ativo = row.getValue('ativo') as boolean;
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge tone={ativo ? 'success' : 'neutral'} variant={ativo ? 'soft' : 'outline'}>
+            <Badge variant={ativo ? 'default' : 'outline'}>
               {ativo ? 'Ativo' : 'Inativo'}
             </Badge>
           </div>
@@ -177,7 +177,7 @@ function criarColunas(
         if (!isSuperAdmin) return null;
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge tone="danger" variant="soft">
+            <Badge variant="destructive">
               Super Admin
             </Badge>
           </div>
@@ -354,9 +354,11 @@ export default function UsuariosPage() {
 
   return (
     <div className="space-y-3">
-      {/* Toolbar com busca, filtros e ações */}
-      <div className="flex items-center gap-3 justify-between">
-        <TableToolbar
+      {viewMode === 'table' ? (
+        // Modo Table: Usa TableWithToolbar (unificado com fundo branco)
+        <TableWithToolbar
+          data={usuarios}
+          columns={colunas}
           searchValue={busca}
           onSearchChange={(value) => {
             setBusca(value);
@@ -386,39 +388,15 @@ export default function UsuariosPage() {
               </TooltipContent>
             </Tooltip>
           }
+          viewToggle={
+            <ViewToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
+          }
           onNewClick={() => setCreateOpen(true)}
           newButtonTooltip="Novo Usuário"
-        />
-        <ViewToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
-      </div>
-
-      {/* Mensagem de erro */}
-      {error && (
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
-          <p className="font-semibold">Erro ao carregar usuários:</p>
-          <p>{error}</p>
-        </div>
-      )}
-
-      {/* Conteúdo baseado na visualização selecionada */}
-      {viewMode === 'cards' ? (
-        <UsuariosGridView
-          usuarios={usuarios}
-          paginacao={paginacao}
-          onView={handleView}
-          onEdit={handleEdit}
-          onRedefinirSenha={handleRedefinirSenha}
-          onPageChange={setPagina}
-          onPageSizeChange={setLimite}
-        />
-      ) : (
-        <ResponsiveTable
-          data={usuarios}
-          columns={colunas}
           pagination={
             paginacao
               ? {
-                pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                pageIndex: paginacao.pagina - 1,
                 pageSize: paginacao.limite,
                 total: paginacao.total,
                 totalPages: paginacao.totalPaginas,
@@ -437,19 +415,65 @@ export default function UsuariosPage() {
             {
               label: 'Visualizar',
               icon: <Eye className="h-4 w-4" />,
-              onClick: (row) => {
-                handleView(row);
-              },
+              onClick: handleView,
             },
             {
               label: 'Redefinir Senha',
               icon: <KeyRound className="h-4 w-4" />,
-              onClick: (row) => {
-                handleRedefinirSenha(row);
-              },
+              onClick: handleRedefinirSenha,
             },
           ]}
         />
+      ) : (
+        // Modo Cards: Toolbar separada (sem fundo branco) + GridView
+        <>
+          <TableToolbar
+            searchValue={busca}
+            onSearchChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar por nome, CPF ou e-mail..."
+            filterOptions={filterOptions}
+            filterGroups={filterGroups}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            filterButtonsMode="buttons"
+            extraButtons={
+              <>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setCargosManagementOpen(true)}
+                      aria-label="Gerenciar Cargos"
+                    >
+                      <Settings className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Gerenciar Cargos
+                  </TooltipContent>
+                </Tooltip>
+                <ViewToggle viewMode={viewMode} onViewModeChange={handleViewModeChange} />
+              </>
+            }
+            onNewClick={() => setCreateOpen(true)}
+            newButtonTooltip="Novo Usuário"
+            className="border-0 bg-transparent p-0"
+          />
+          <UsuariosGridView
+            usuarios={usuarios}
+            paginacao={paginacao}
+            onView={handleView}
+            onEdit={handleEdit}
+            onRedefinirSenha={handleRedefinirSenha}
+            onPageChange={setPagina}
+            onPageSizeChange={setLimite}
+          />
+        </>
       )}
 
       {/* Dialog para gerenciar cargos */}
