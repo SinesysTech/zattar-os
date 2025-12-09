@@ -1,225 +1,58 @@
 # Implementation Plan - Responsividade Frontend Completa
 
-## Fase 1: Infraestrutura e Utilitários Base
+## Fase 1: Infraestrutura e Utilitários Base ✅
 
 - [x] 1. Configurar infraestrutura de testes responsivos
 - [x] 1.1 Configurar fast-check para property-based testing
-  - Instalar fast-check como dependência de desenvolvimento
-  - Criar helpers para testes de viewport (renderWithViewport, getComputedColumns, etc)
-  - Configurar Jest para suportar property-based tests
-  - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5_
-
 - [x] 1.2 Criar utilitários de viewport e breakpoint
-  - Implementar hook useViewport para detecção de viewport atual
-  - Criar hook useBreakpoint para verificação de breakpoints específicos
-  - Implementar hook useOrientation para detecção de orientação do dispositivo
-  - Adicionar tipos TypeScript para ViewportState e ResponsiveConfig
-  - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.5_
-
 - [x] 1.3 Criar componente ResponsiveContainer base
-  - Implementar container que aplica classes responsivas automaticamente
-  - Adicionar suporte para responsive spacing e padding
-  - Implementar detecção de touch device
-  - _Requirements: 11.1, 11.2_
-
 - [x] 1.4 Escrever property tests para utilitários base
-  - **Property 48: Components responsive classes**
-  - **Validates: Requirements 11.1**
-  - **Property 49: Responsive spacing**
-  - **Validates: Requirements 11.2**
 
-## Fase 2: Componentes de Layout Core
+## Fase 2: Componentes de Layout Core ✅
 
 - [x] 2. Implementar Sidebar responsiva
 - [x] 2.1 Atualizar componente Sidebar para mobile
-  - Garantir que sidebar renderiza como Sheet em viewports < 768px
-  - Implementar overlay com fechamento ao clicar
-  - Adicionar animações suaves de abertura/fechamento
-  - Implementar auto-close ao navegar em mobile
-  - _Requirements: 1.1, 1.2, 1.3, 1.5_
-
 - [x] 2.2 Otimizar modo collapsed para desktop
-  - Garantir que apenas ícones são exibidos quando collapsed
-  - Implementar tooltips para ícones
-  - Adicionar transições suaves entre estados
-  - _Requirements: 1.4_
-
 - [x] 2.3 Escrever property tests para Sidebar
-  - **Property 1: Sidebar drawer on mobile**
-  - **Validates: Requirements 1.1**
-  - **Property 2: Sidebar overlay closes drawer**
-  - **Validates: Requirements 1.3**
-  - **Property 3: Collapsed sidebar shows icons**
-  - **Validates: Requirements 1.4**
-  - **Property 4: Navigation closes mobile sidebar**
-  - **Validates: Requirements 1.5**
 
 - [x] 3. Implementar Breadcrumb responsivo
 - [x] 3.1 Atualizar componente AppBreadcrumb
-  - Implementar truncamento para mobile (apenas current + parent)
-  - Adicionar menu collapsed para níveis adicionais
-  - Implementar truncamento de texto longo com ellipsis
-  - Garantir navegação funcional em todos os breakpoints
-  - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
-
 - [x] 3.2 Escrever property tests para Breadcrumb
-  - **Property 24: Breadcrumb truncation on mobile**
-  - **Validates: Requirements 6.1**
-  - **Property 25: Breadcrumb collapse menu**
-  - **Validates: Requirements 6.2**
-  - **Property 26: Breadcrumb full path on desktop**
-  - **Validates: Requirements 6.3**
-  - **Property 27: Breadcrumb text truncation**
-  - **Validates: Requirements 6.4**
 
 - [x] 4. Checkpoint - Garantir que todos os testes passem
-  - Ensure all tests pass, ask the user if questions arise.
 
-## Fase 3: Componentes de Dados (Tabelas e Grids)
+## Fase 3: Componentes de Dados (Tabelas e Grids) ✅
 
 - [x] 5. Implementar Tabelas responsivas
 - [x] 5.1 Criar componente ResponsiveTable
-  - Implementar horizontal scroll para mobile com indicadores visíveis
-  - Adicionar priorização de colunas essenciais
-  - Implementar sticky first column quando contém identificadores
-  - Criar layout de cards como alternativa para mobile
-  - _Requirements: 2.1, 2.2, 2.3, 2.4_
-
 - [x] 5.2 Implementar ações de tabela responsivas
-  - Agrupar ações em dropdown/action sheet no mobile
-  - Manter ações inline no desktop
-  - Adicionar suporte para bulk actions em mobile
-  - _Requirements: 2.5, 12.4_
-
 - [x] 5.3 Escrever property tests para Tabelas
-  - **Property 5: Table horizontal scroll on mobile**
-  - **Validates: Requirements 2.1**
-  - **Property 6: Table column prioritization**
-  - **Validates: Requirements 2.2**
-  - **Property 7: Sticky first column**
-  - **Validates: Requirements 2.3**
-  - **Property 8: Table full display on desktop**
-  - **Validates: Requirements 2.4**
-  - **Property 9: Mobile table actions grouped**
-  - **Validates: Requirements 2.5**
 
 - [x] 6. Implementar Grids responsivos
 - [x] 6.1 Criar componente ResponsiveGrid
-  - Implementar sistema de colunas adaptativo (1→2→3→4)
-  - Adicionar suporte para gap responsivo
-  - Implementar scaling proporcional de imagens em cards
-  - Adicionar configuração customizável de breakpoints
-  - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
-
 - [x] 6.2 Escrever property tests para Grids
-  - **Property 14: Grid single column on mobile**
-  - **Validates: Requirements 4.1**
-  - **Property 15: Grid two columns on small screens**
-  - **Validates: Requirements 4.2**
-  - **Property 16: Grid three columns on tablet**
-  - **Validates: Requirements 4.3**
-  - **Property 17: Grid four+ columns on desktop**
-  - **Validates: Requirements 4.4**
-  - **Property 18: Card images scale proportionally**
-  - **Validates: Requirements 4.5**
 
 - [x] 7. Atualizar componentes de listagem existentes
 - [x] 7.1 Migrar páginas de listagem para ResponsiveTable
-  - Atualizar /processos para usar ResponsiveTable com layout cards em mobile
-  - Atualizar /audiencias para usar ResponsiveTable com priorização de colunas
-  - Atualizar /contratos para usar ResponsiveTable
-  - Atualizar /clientes para usar ResponsiveTable
-  - Atualizar /usuarios para usar ResponsiveTable
-  - _Requirements: 12.1, 12.2, 12.3, 12.5_
-
 - [x] 7.2 Implementar filtros responsivos nas páginas de listagem
-  - Criar componente FilterPanel colapsável para mobile
-  - Implementar Sheet/Drawer para filtros em mobile
-  - Manter filtros inline em desktop
-  - Adicionar botão de "Filtros" com badge de contagem em mobile
-  - _Requirements: 12.3_
-
 - [x] 7.3 Escrever property tests para Listagens
-  - **Property 53: List card layout on mobile**
-  - **Validates: Requirements 12.1**
-  - **Property 54: List item information hierarchy**
-  - **Validates: Requirements 12.2**
-  - **Property 55: List filters collapsible**
-  - **Validates: Requirements 12.3**
 
 - [x] 8. Checkpoint - Garantir que todos os testes passem
-  - Ensure all tests pass, ask the user if questions arise.
 
-## Fase 4: Componentes de Formulário
+## Fase 4: Componentes de Formulário ✅
 
-- [-] 9. Implementar Formulários responsivos
+- [x] 9. Implementar Formulários responsivos
 - [x] 9.1 Criar wrapper ResponsiveFormLayout
-  - Implementar container que aplica grid responsivo para campos
-  - Adicionar suporte para stacking vertical em mobile (< 640px)
-  - Adicionar layout 2-colunas para tablet (768px-1024px)
-  - Implementar botões full-width ou stacked em mobile
-  - _Requirements: 3.1, 3.3, 3.4, 3.5_
-
 - [x] 9.2 Atualizar componentes base de formulário
-  - Garantir que Button tenha touch targets mínimos de 44x44px em mobile
-  - Atualizar Input para ter altura adequada em mobile (min-h-11)
-  - Atualizar Select para ter altura adequada em mobile
-  - Atualizar Checkbox e Radio para ter touch targets de 44x44px
-  - Adicionar classes responsivas de spacing
-  - _Requirements: 3.1, 3.3_
-
 - [x] 9.3 Migrar formulários existentes para layout responsivo
-  - Atualizar formulário de cadastro de clientes
-  - Atualizar formulário de cadastro de processos
-  - Atualizar formulário de cadastro de contratos
-  - Atualizar formulário de assinatura digital (dados pessoais)
-  - Garantir consistência em todos os formulários
-  - _Requirements: 3.1, 3.3, 3.4, 3.5_
-
 - [x] 9.4 Escrever property tests para Formulários
-  - **Property 10: Form fields stacked on mobile**
-  - **Validates: Requirements 3.1**
-  - **Property 11: Touch target minimum size**
-  - **Validates: Requirements 3.3**
-  - **Property 12: Tablet form columns**
-  - **Validates: Requirements 3.4**
-  - **Property 13: Mobile form buttons layout**
-  - **Validates: Requirements 3.5**
 
-- [-] 10. Otimizar Selects e Date Pickers para mobile
+- [x] 10. Otimizar Selects e Date Pickers para mobile
 - [x] 10.1 Atualizar DatePicker para mobile
-  - Verificar se react-day-picker já é touch-friendly
-  - Aumentar tamanho dos botões de navegação em mobile
-  - Garantir que células do calendário tenham 44x44px em mobile
-  - Adicionar feedback visual claro para seleção
-  - _Requirements: 7.1, 7.3, 7.5_
-
 - [x] 10.2 Atualizar Select e Combobox para mobile
-  - Verificar se Radix Select já usa Sheet em mobile
-  - Garantir que opções tenham altura mínima de 44px
-  - Adicionar scroll suave para listas longas
-  - Implementar busca otimizada em Combobox para mobile
-  - _Requirements: 7.2, 7.3, 7.4, 7.5_
-
 - [x] 10.3 Escrever property tests para Selects e Date Pickers
-  - **Property 29: Touch-optimized date picker**
-  - **Validates: Requirements 7.1**
-  - **Property 30: Mobile select interface**
-  - **Validates: Requirements 7.2**
-  - **Property 31: Select option touch targets**
-  - **Validates: Requirements 7.3**
-  - **Property 32: Mobile combobox interface**
-  - **Validates: Requirements 7.4**
 
-
-- [-] 12. Checkpoint - Garantir que todos os testes passem
-
-
-
-
-
-
-  - Ensure all tests pass, ask the user if questions arise.
+- [x] 11. Checkpoint - Garantir que todos os testes passem
 
 ## Fase 5: Componentes de Interação (Dialogs e Modals)
 
