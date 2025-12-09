@@ -57,7 +57,7 @@
 # Como funciona: Reutiliza node_modules se dependências não mudarem
 # Impacto: ~60s economizados quando deps não mudam
 # ============================================================================
-FROM node:20-slim AS deps
+FROM node:22-slim AS deps
 WORKDIR /app
 
 # Impedir download de browsers do Playwright (browser está em container separado)
@@ -84,7 +84,7 @@ RUN --mount=type=cache,target=/root/.npm \
 # Por que não seletivo: Next.js escaneia todo o projeto
 # .dockerignore reduz contexto: ~1GB → ~100MB
 # ============================================================================
-FROM node:20-slim AS builder
+FROM node:22-slim AS builder
 WORKDIR /app
 
 # Memória para Node.js durante build
@@ -164,7 +164,7 @@ RUN npm run build:caprover
 # Standalone output: Inclui apenas dependências necessárias
 # Tamanho final: ~200-300MB vs ~1GB sem otimização
 # ============================================================================
-FROM node:20-slim AS runner
+FROM node:22-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
