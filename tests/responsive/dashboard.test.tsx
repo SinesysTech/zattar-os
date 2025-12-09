@@ -13,24 +13,34 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { setViewport, BREAKPOINTS, getComputedColumns } from '@/tests/helpers/responsive-test-helpers';
 
 // Mock do useViewport hook
-jest.mock('@/hooks/use-viewport', () => ({
-    useViewport: jest.fn(() => ({
-        width: 1024,
-        height: 768,
-        isMobile: false,
-        isTablet: false,
-        isDesktop: true,
-        orientation: 'landscape' as const,
-        breakpoint: 'lg' as const,
-    })),
-}));
+interface MockViewportReturn {
+    width: number;
+    height: number;
+    isMobile: boolean;
+    isTablet: boolean;
+    isDesktop: boolean;
+    orientation: 'portrait' | 'landscape';
+    breakpoint: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+}
 
-const { useViewport } = require('@/hooks/use-viewport');
+const mockUseViewport = jest.fn<MockViewportReturn, []>().mockReturnValue({
+    width: 1024,
+    height: 768,
+    isMobile: false,
+    isTablet: false,
+    isDesktop: true,
+    orientation: 'landscape',
+    breakpoint: 'lg',
+});
+
+jest.mock('@/hooks/use-viewport', () => ({
+    useViewport: mockUseViewport,
+}));
 
 describe('Dashboard Responsive Properties', () => {
     beforeEach(() => {
         // Reset viewport mock antes de cada teste
-        useViewport.mockReturnValue({
+        mockUseViewport.mockReturnValue({
             width: 1024,
             height: 768,
             isMobile: false,
@@ -57,7 +67,7 @@ describe('Dashboard Responsive Properties', () => {
                     (width, widgetTitles) => {
                         // Configurar viewport mobile
                         setViewport(width);
-                        useViewport.mockReturnValue({
+                        mockUseViewport.mockReturnValue({
                             width,
                             height: 800,
                             isMobile: true,
@@ -113,7 +123,7 @@ describe('Dashboard Responsive Properties', () => {
                     (width) => {
                         // Configurar viewport mobile
                         setViewport(width);
-                        useViewport.mockReturnValue({
+                        mockUseViewport.mockReturnValue({
                             width,
                             height: 800,
                             isMobile: true,
@@ -171,7 +181,7 @@ describe('Dashboard Responsive Properties', () => {
                     (width, title, value) => {
                         // Configurar viewport mobile
                         setViewport(width);
-                        useViewport.mockReturnValue({
+                        mockUseViewport.mockReturnValue({
                             width,
                             height: 800,
                             isMobile: true,
@@ -233,7 +243,7 @@ describe('Dashboard Responsive Properties', () => {
                     (width, widgetTitles) => {
                         // Configurar viewport tablet
                         setViewport(width);
-                        useViewport.mockReturnValue({
+                        mockUseViewport.mockReturnValue({
                             width,
                             height: 1024,
                             isMobile: false,
@@ -290,7 +300,7 @@ describe('Dashboard Responsive Properties', () => {
                     (width, activeCount) => {
                         // Configurar viewport mobile
                         setViewport(width);
-                        useViewport.mockReturnValue({
+                        mockUseViewport.mockReturnValue({
                             width,
                             height: 800,
                             isMobile: true,
@@ -341,7 +351,7 @@ describe('Dashboard Responsive Properties', () => {
                     (width, activeCount) => {
                         // Configurar viewport desktop
                         setViewport(width);
-                        useViewport.mockReturnValue({
+                        mockUseViewport.mockReturnValue({
                             width,
                             height: 1080,
                             isMobile: false,

@@ -130,10 +130,10 @@ interface AggregatedData {
     nome: string;
     cpf: string;
   } | null;
-  processos: any[];
-  audiencias: any[];
-  contratos: any[];
-  acordos_condenacoes: any[];
+  processos: unknown[];
+  audiencias: unknown[];
+  contratos: unknown[];
+  acordos_condenacoes: unknown[];
 }
 
 // =============================================================================
@@ -199,7 +199,7 @@ async function buscarDadosAgregados(cpf: string): Promise<AggregatedData> {
     : null;
 
   // Buscar contratos se cliente foi encontrado
-  let contratos: any[] = [];
+  let contratos: unknown[] = [];
   if (clienteData?.id) {
     try {
       const contratosResult = await obterContratos({
@@ -213,12 +213,12 @@ async function buscarDadosAgregados(cpf: string): Promise<AggregatedData> {
   }
 
   // Buscar acordos se houver processos
-  let acordos: any[] = [];
+  let acordos: unknown[] = [];
   if (processos.length > 0) {
     try {
       const processoIds = processos
-        .map((p: any) => p.id || p.processo_id)
-        .filter((id: any) => id != null);
+        .map((p: unknown) => (p as Record<string, unknown>).id || (p as Record<string, unknown>).processo_id)
+        .filter((id: unknown) => id != null) as number[];
 
       if (processoIds.length > 0) {
         // Buscar acordos de cada processo e agregar
@@ -230,7 +230,7 @@ async function buscarDadosAgregados(cpf: string): Promise<AggregatedData> {
         acordos = acordosResults
           .filter((result) => result.status === 'fulfilled')
           .flatMap((result) => {
-            const r = result as PromiseFulfilledResult<any>;
+            const r = result as PromiseFulfilledResult<{ success: boolean; data: { acordos: unknown[] } }>;
             return r.value.success ? r.value.data.acordos : [];
           });
       }

@@ -328,7 +328,7 @@ export const gerarPeriodoAtual = (tipo: PeriodoDRE): { dataInicio: string; dataF
 export const gerarPeriodoAnterior = (
   dataInicio: string,
   dataFim: string,
-  tipo: PeriodoDRE
+  _tipo: PeriodoDRE
 ): { dataInicio: string; dataFim: string } => {
   const inicio = new Date(dataInicio);
   const fim = new Date(dataFim);

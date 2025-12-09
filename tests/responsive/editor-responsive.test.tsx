@@ -11,10 +11,11 @@ import '@testing-library/jest-dom';
 import { ResponsiveEditor, ResponsiveEditorContainer } from '@/components/ui/responsive-editor';
 import { setViewport, BREAKPOINTS } from '@/tests/helpers/responsive-test-helpers';
 import * as React from 'react';
+import * as plateMocks from '../__mocks__/plate-mocks';
 
 // Mock Plate.js modules
-jest.mock('platejs', () => require('../__mocks__/plate-mocks'));
-jest.mock('platejs/react', () => require('../__mocks__/plate-mocks'));
+jest.mock('platejs', () => plateMocks);
+jest.mock('platejs/react', () => plateMocks);
 
 describe('Editor Responsive Property Tests', () => {
     afterEach(() => {

@@ -28,6 +28,7 @@
     "test:coverage": "jest --coverage",
     "test:integration": "jest --testMatch='**/*.integration.test.ts'",
     "test:unit": "jest --testMatch='**/*.test.ts' --testPathIgnorePatterns='integration'",
+    "test:services": "jest backend/assinatura-digital/services/__tests__",
     "test:api-acervo-geral": "tsx dev_data/scripts/test-api-acervo-geral.ts",
     "test:api-arquivados": "tsx dev_data/scripts/test-api-arquivados.ts",
     "test:api-audiencias": "tsx dev_data/scripts/test-api-audiencias.ts",

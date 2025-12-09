@@ -326,14 +326,14 @@ export default function ContratosPage() {
           {
             label: 'Visualizar',
             icon: <Eye className="h-4 w-4" />,
-            onClick: (row) => {
+            onClick: (_row) => {
               // This will be handled by the ContratoActions component in the card
             },
           },
           {
             label: 'Editar',
             icon: <Pencil className="h-4 w-4" />,
-            onClick: (row) => {
+            onClick: (_row) => {
               // This will be handled by the ContratoActions component in the card
             },
           },

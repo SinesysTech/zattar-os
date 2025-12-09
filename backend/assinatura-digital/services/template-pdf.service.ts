@@ -1,8 +1,9 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-import type { PDFFont } from 'pdf-lib';
+import type { PDFFont, PDFImage } from 'pdf-lib';
 import { decodeDataUrlToBuffer } from './base64';
 import type { TemplateCampo, TipoVariavel, EstiloCampo } from '@/backend/types/template.types';
 import type { ClienteBasico, FormularioBasico, SegmentoBasico, TemplateBasico } from './data.service';
+import { logger, createTimer, LogServices } from './logger';
 
 interface PdfDataContext {
   cliente: ClienteBasico;
@@ -15,6 +16,52 @@ interface PdfDataContext {
 
 interface TemplateWithCampos extends TemplateBasico {
   campos_parsed: TemplateCampo[];
+}
+
+/**
+ * Dados estruturados para geração da página de manifesto de assinatura eletrônica.
+ * Contém todas as evidências necessárias para conformidade com MP 2.200-2/2001.
+ */
+export interface ManifestData {
+  // Identificação do documento
+  protocolo: string;
+  nomeArquivo: string;
+  hashOriginalSha256: string;
+  hashFinalSha256?: string; // Opcional pois é calculado após flatten
+
+  // Dados do signatário
+  signatario: {
+    nomeCompleto: string;
+    cpf: string;
+    dataHora: string; // ISO 8601
+    dataHoraLocal: string; // Formatado pt-BR
+    ipOrigem: string | null;
+    geolocalizacao?: {
+      latitude: number;
+      longitude: number;
+      accuracy?: number;
+    } | null;
+  };
+
+  // Evidências biométricas (data URLs)
+  evidencias: {
+    fotoBase64: string; // Selfie obrigatória
+    assinaturaBase64: string; // Rubrica
+  };
+
+  // Conformidade legal
+  termos: {
+    versao: string;
+    dataAceite: string; // ISO 8601
+    textoDeclaracao: string;
+  };
+
+  // Device fingerprint (opcional para exibição resumida)
+  dispositivo?: {
+    plataforma?: string;
+    navegador?: string;
+    resolucao?: string;
+  };
 }
 
 const CANVAS = { width: 540, height: 765 };

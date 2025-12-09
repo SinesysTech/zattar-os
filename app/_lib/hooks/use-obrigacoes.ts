@@ -7,7 +7,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type {
   ObrigacaoComDetalhes,
-  ListarObrigacoesParams,
   ListarObrigacoesResponse,
   ResumoObrigacoes,
   TipoObrigacao,

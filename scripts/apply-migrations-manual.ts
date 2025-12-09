@@ -30,7 +30,7 @@ function loadEnv() {
   }
 }
 
-async function executeSQL(supabase: any, sql: string) {
+async function executeSQL(supabase: ReturnType<typeof createClient>, sql: string) {
   // Tenta executar via RPC 'query'
   const { data, error } = await supabase.rpc('query', { query: sql });
   if (error) {
@@ -98,12 +98,13 @@ async function main() {
         await executeSQL(supabase, statement);
         // console.log(`   ✅ Comando ${i + 1} executado.`);
         successCount++;
-      } catch (err: any) {
-        if (err.message?.includes('already exists') || err.message?.includes('IF NOT EXISTS')) {
-             console.log(`   ⚠️  Aviso no comando ${i + 1}: ${err.message} (Ignorado)`);
-             successCount++; // Count as success to proceed
+      } catch (err: unknown) {
+        const error = err as Error;
+        if (error.message?.includes('already exists') || error.message?.includes('IF NOT EXISTS')) {
+             console.log(`   ⚠️  Aviso no comando ${i + 1}: ${error.message} (Ignorado)`);
+             // Count as success to proceed
         } else {
-             console.error(`   ❌ Erro no comando ${i + 1}: ${err.message}`);
+             console.error(`   ❌ Erro no comando ${i + 1}: ${error.message}`);
              console.error(`   SQL: ${statement.substring(0, 100)}...`);
              process.exit(1);
         }

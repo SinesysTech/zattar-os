@@ -4,7 +4,7 @@ import { formatDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,14 +30,15 @@ interface IProps {
 const MotionButton = motion.create(Button);
 const MotionBadge = motion.create(Badge);
 
+// Usar useSyncExternalStore para evitar hydration mismatch
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export function DateNavigator({ view, events }: IProps) {
 	const { selectedDate, setSelectedDate } = useCalendar();
-	const [mounted, setMounted] = useState(false);
-
-	// Evitar hydration mismatch calculando apenas no cliente
-	useEffect(() => {
-		setMounted(true);
-	}, []);
+	// Usar useSyncExternalStore para detectar cliente vs servidor
+	const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
 	const month = formatDate(selectedDate, "MMMM", { locale: ptBR });
 	const year = selectedDate.getFullYear();

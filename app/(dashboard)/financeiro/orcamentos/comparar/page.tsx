@@ -317,7 +317,6 @@ function ComparacaoCards({
                     <span className="font-mono">{formatarValor(dados.totalOrcado)}</span>
                   </div>
                   <div className="h-4 w-full bg-muted rounded-full overflow-hidden">
-                    {/* eslint-disable-next-line react/forbid-dom-props */}
                     <div
                       className="h-full bg-primary transition-all"
                       style={{ width: `${percentual}%` }}

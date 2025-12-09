@@ -9,7 +9,6 @@ import {
   listarContasReceber,
 } from '../persistence/contas-receber-persistence.service';
 import type {
-  ContaReceber,
   CancelarContaReceberDTO,
   OperacaoContaReceberResult,
 } from '@/backend/types/financeiro/contas-receber.types';

@@ -214,7 +214,7 @@ export const ProcessosResponseDataSchema = z.object({
  * Resposta completa da API de processos por CPF
  * GET /api/acervo/cliente/cpf/{cpf}
  */
-export interface ProcessosResponse extends ApiResponse<ProcessosResponseData> {}
+export type ProcessosResponse = ApiResponse<ProcessosResponseData>;
 
 /**
  * Schema Zod para ProcessosResponse

@@ -7,7 +7,6 @@ import { useMemo, useCallback } from "react";
 
 import { cn } from "@/lib/utils";
 import {
-  staggerContainer,
   transition,
 } from "@/components/animations";
 import { EventListDialog } from "@/components/events-list-dialog";
@@ -193,6 +192,7 @@ export function DayCell({ cell, events, eventPositions }: IProps) {
       showDesktopMore,
       showMoreCount,
       renderEventAtPosition,
+      isMobile,
     ]
   );
 

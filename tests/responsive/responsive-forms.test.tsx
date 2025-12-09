@@ -285,7 +285,7 @@ describe('Responsive Forms Property Tests', () => {
 
                     const { container } = render(
                         <ResponsiveFormLayout>
-                            <ResponsiveFormActions align={align as any}>
+                            <ResponsiveFormActions align={align as 'start' | 'center' | 'end' | 'between'}>
                                 <Button>Cancel</Button>
                                 <Button>Submit</Button>
                             </ResponsiveFormActions>

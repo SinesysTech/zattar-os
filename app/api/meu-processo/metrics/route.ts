@@ -46,7 +46,11 @@ export async function GET(request: NextRequest) {
     const activeAlerts = alerts?.filter(a => a.triggered) || [];
 
     // Response
-    const response: any = {
+    const response: {
+      metrics: typeof stats;
+      alerts: { total: number; items: Array<{ name: string; severity: string; message: string | undefined }> };
+      history?: ReturnType<typeof getRequestHistory>;
+    } = {
       metrics: stats,
       alerts: {
         total: activeAlerts.length,

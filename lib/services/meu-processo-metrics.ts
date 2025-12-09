@@ -139,7 +139,7 @@ export class MeuProcessoLogger {
     this.context = context;
   }
 
-  private log(level: LogLevel, message: string, data?: any) {
+  private log(level: LogLevel, message: string, data?: Record<string, unknown>) {
     const timestamp = new Date().toISOString();
     const logEntry = {
       timestamp,
@@ -172,19 +172,19 @@ export class MeuProcessoLogger {
     return logEntry;
   }
 
-  debug(message: string, data?: any) {
+  debug(message: string, data?: Record<string, unknown>) {
     return this.log('debug', message, data);
   }
 
-  info(message: string, data?: any) {
+  info(message: string, data?: Record<string, unknown>) {
     return this.log('info', message, data);
   }
 
-  warn(message: string, data?: any) {
+  warn(message: string, data?: Record<string, unknown>) {
     return this.log('warn', message, data);
   }
 
-  error(message: string, data?: any) {
+  error(message: string, data?: Record<string, unknown>) {
     return this.log('error', message, data);
   }
 
@@ -199,7 +199,7 @@ export class MeuProcessoLogger {
   /**
    * Log de erro com contexto
    */
-  logError(error: Error, context?: any) {
+  logError(error: Error, context?: Record<string, unknown>) {
     return this.error(error.message, {
       error_name: error.name,
       error_stack: error.stack,

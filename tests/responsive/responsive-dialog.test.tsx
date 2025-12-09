@@ -33,11 +33,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 // Mock do hook useBreakpointBelow
-jest.mock('@/hooks/use-breakpoint', () => ({
-    useBreakpointBelow: jest.fn(),
-}));
+const mockUseBreakpointBelow = jest.fn<boolean, [string]>();
 
-const { useBreakpointBelow } = require('@/hooks/use-breakpoint');
+jest.mock('@/hooks/use-breakpoint', () => ({
+    useBreakpointBelow: mockUseBreakpointBelow,
+}));
 
 describe('ResponsiveDialog Property-Based Tests', () => {
     beforeEach(() => {
@@ -61,7 +61,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     // Setup
                     setViewport({ width, height: 667 });
                     mockMatchMedia(width);
-                    useBreakpointBelow.mockReturnValue(true); // Mobile
+                    mockUseBreakpointBelow.mockReturnValue(true); // Mobile
 
                     // Render
                     const { container } = render(
@@ -105,7 +105,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     // Setup
                     setViewport({ width, height: 667 });
                     mockMatchMedia(width);
-                    useBreakpointBelow.mockReturnValue(true); // Mobile
+                    mockUseBreakpointBelow.mockReturnValue(true); // Mobile
 
                     // Render dialog with form
                     const { container } = render(
@@ -164,7 +164,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     // Setup
                     setViewport({ width, height: 667 });
                     mockMatchMedia(width);
-                    useBreakpointBelow.mockReturnValue(true); // Mobile
+                    mockUseBreakpointBelow.mockReturnValue(true); // Mobile
 
                     // Render
                     const { container } = render(
@@ -217,7 +217,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     // Setup
                     setViewport({ width, height: 667 });
                     mockMatchMedia(width);
-                    useBreakpointBelow.mockReturnValue(true); // Mobile
+                    mockUseBreakpointBelow.mockReturnValue(true); // Mobile
 
                     // Render dialog with long content
                     const { container } = render(
@@ -272,7 +272,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     // Setup
                     setViewport({ width, height: 667 });
                     mockMatchMedia(width);
-                    useBreakpointBelow.mockReturnValue(true); // Mobile
+                    mockUseBreakpointBelow.mockReturnValue(true); // Mobile
 
                     // Render
                     const { container, rerender } = render(
@@ -322,7 +322,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     // Setup
                     setViewport({ width, height: 1080 });
                     mockMatchMedia(width);
-                    useBreakpointBelow.mockReturnValue(false); // Desktop
+                    mockUseBreakpointBelow.mockReturnValue(false); // Desktop
 
                     // Render
                     const { container } = render(

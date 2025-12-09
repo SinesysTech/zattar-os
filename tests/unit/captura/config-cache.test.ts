@@ -426,7 +426,7 @@ describe('Mapeamento tipo_acesso para grau', () => {
       // Usar grau correspondente na chamada
       const grauChamada =
         grauEsperado === 'tribunal_superior' ? 'tribunal_superior' : grauEsperado;
-      const resultado = await getTribunalConfig('TRT1', grauChamada as any);
+      const resultado = await getTribunalConfig('TRT1', grauChamada as 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior');
 
       expect(resultado.grau).toBe(grauEsperado);
       expect(resultado.tipoAcesso).toBe(tipoAcesso);

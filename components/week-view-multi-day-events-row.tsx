@@ -21,9 +21,13 @@ export function WeekViewMultiDayEventsRow({
 	selectedDate,
 	multiDayEvents,
 }: IProps) {
-	const weekStart = startOfWeek(selectedDate);
-	const weekEnd = endOfWeek(selectedDate);
-	const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+	// Memoizar weekStart e weekEnd para evitar que sejam recriados a cada render
+	const weekStart = useMemo(() => startOfWeek(selectedDate), [selectedDate]);
+	const weekEnd = useMemo(() => endOfWeek(selectedDate), [selectedDate]);
+	const weekDays = useMemo(
+		() => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)),
+		[weekStart]
+	);
 
 	const processedEvents = useMemo(() => {
 		return multiDayEvents

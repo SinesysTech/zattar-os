@@ -8,7 +8,18 @@
  * - AssinaturaDigitalTemplate.campos: string (JSON) vs Template.campos: TemplateCampo[]
  * - AssinaturaDigitalFormulario.form_schema: unknown vs FormularioEntity.form_schema: DynamicFormSchema
  * - AssinaturaDigitalSegmento é compatível com Segmento (mesma estrutura)
+ *
+ * Acoplamento com domain types:
+ * - ClienteBase, ClientePessoaFisica de @/types/domain/partes
+ * - ParteContraria para dados de partes contrárias
+ * - acao_id LEGACY -> processo_id (alinhamento com sinesys/processos)
  */
+
+import type {
+  ClienteBase,
+  ClientePessoaFisica,
+  ParteContraria,
+} from '@/types/domain/partes';
 
 export interface AssinaturaDigitalTemplate {
   id: number;
@@ -167,13 +178,32 @@ export interface PreviewPayload {
   request_id?: string | null;
 }
 
+/**
+ * Payload finalização: Acoplado a domain types globais.
+ * - cliente_dados: Cliente completo (nome, CPF, endereço) de domain/partes
+ * - parte_contraria_dados: Partes contrárias para contratos
+ * - acao_id LEGACY → processo_id (alinhado sinesys/processos)
+ * Hashes calculados backend.
+ */
 export interface FinalizePayload {
+  // IDs legados (migrar para processo_id em fases futuras)
   cliente_id: number;
+  /** @deprecated Use processo_id. Mantido para retrocompatibilidade. */
   acao_id: number;
+  /** Novo: ID processo global (preferir sobre acao_id) */
+  processo_id?: number;
+
   template_id: string;
   segmento_id: number;
   segmento_nome?: string;
   formulario_id: number;
+
+  // Dados completos acoplados a domain types (nome, endereço, CPF, partes contrárias)
+  /** Cliente completo para geração de PDF (inclui nome, CPF, endereço) */
+  cliente_dados?: ClienteBase & { endereco?: string };
+  /** Partes contrárias para contratos (nome, CPF/CNPJ) */
+  parte_contraria_dados?: ParteContraria[];
+
   assinatura_base64: string;
   foto_base64?: string | null;
   latitude?: number | null;
@@ -184,6 +214,14 @@ export interface FinalizePayload {
   user_agent?: string | null;
   sessao_id?: string | null;
   request_id?: string | null;
+
+  // Conformidade legal MP 2.200-2
+  /** Aceite obrigatório dos termos (deve ser true) */
+  termos_aceite: boolean;
+  /** Versão dos termos aceitos (ex: "v1.0-MP2200-2") - alinhado com coluna termos_aceite_versao */
+  termos_aceite_versao: string;
+  /** Fingerprint do dispositivo para auditoria */
+  dispositivo_fingerprint_raw?: DeviceFingerprintData | null;
 }
 
 export interface FinalizeResult {
@@ -227,3 +265,103 @@ export interface ListSessoesResult {
   page: number;
   pageSize: number;
 }
+
+// #region Conformidade Legal MP 2.200-2
+
+/**
+ * Dados de fingerprint do dispositivo para auditoria.
+ * Coletados no frontend para identificação única do dispositivo.
+ */
+export interface DeviceFingerprintData {
+  /** Resolução de tela (ex: "1920x1080") */
+  screen_resolution?: string;
+  /** Profundidade de cor (ex: 24) */
+  color_depth?: number;
+  /** Timezone offset em minutos */
+  timezone_offset?: number;
+  /** Nome do timezone (ex: "America/Sao_Paulo") */
+  timezone_name?: string;
+  /** Idioma do navegador */
+  language?: string;
+  /** Plataforma (ex: "Win32", "MacIntel") */
+  platform?: string;
+  /** Número de núcleos de CPU */
+  hardware_concurrency?: number;
+  /** Memória do dispositivo em GB */
+  device_memory?: number;
+  /** Suporte a touch */
+  touch_support?: boolean;
+  /** Nível de bateria (0-1) */
+  battery_level?: number;
+  /** Se está carregando */
+  battery_charging?: boolean;
+  /** Canvas fingerprint hash */
+  canvas_hash?: string;
+  /** WebGL fingerprint hash */
+  webgl_hash?: string;
+  /** Plugins instalados */
+  plugins?: string[];
+  /** Fontes detectadas */
+  fonts?: string[];
+  /** User agent completo */
+  user_agent?: string;
+  /** Dados adicionais */
+  [key: string]: unknown;
+}
+
+/**
+ * Registro completo de assinatura digital no banco de dados.
+ * Inclui todos os campos de conformidade legal MP 2.200-2/2001.
+ */
+export interface AssinaturaDigitalRecord {
+  id: number;
+  cliente_id: number;
+  /** @deprecated Use processo_id quando disponível */
+  acao_id: number;
+  /** ID processo global (preferir sobre acao_id) */
+  processo_id?: number;
+  template_uuid: string;
+  segmento_id: number;
+  formulario_id: number;
+  sessao_uuid: string;
+  assinatura_url: string;
+  foto_url: string | null;
+  pdf_url: string;
+  protocolo: string;
+  ip_address: string | null;
+  user_agent: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  geolocation_accuracy: number | null;
+  geolocation_timestamp: string | null;
+  data_assinatura: string;
+  status: string;
+  enviado_sistema_externo: boolean;
+  data_envio_externo: string | null;
+
+  // Campos conformidade legal MP 2.200-2
+  /** Hash SHA-256 do PDF pré-assinatura */
+  hash_original_sha256: string;
+  /** Hash SHA-256 do PDF final com manifesto */
+  hash_final_sha256: string | null;
+  /** Versão dos termos aceitos */
+  termos_aceite_versao: string;
+  /** Timestamp do aceite dos termos */
+  termos_aceite_data: string;
+  /** Fingerprint do dispositivo */
+  dispositivo_fingerprint_raw: DeviceFingerprintData | null;
+
+  created_at: string;
+  updated_at: string;
+
+  // Dados expandidos via join (opcional)
+  /** Cliente completo populável via join */
+  cliente_dados?: ClienteBase;
+  /** Partes contrárias populável via join */
+  parte_contraria_dados?: ParteContraria[];
+}
+
+// #endregion
+
+// Re-export domain types para conveniência
+export type { ClienteBase, ClientePessoaFisica, ParteContraria } from '@/types/domain/partes';

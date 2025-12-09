@@ -9,7 +9,6 @@ import {
 } from '../persistence/contas-pagar-persistence.service';
 import { invalidateDRECacheOnLancamento } from '@/backend/financeiro/dre/services/persistence/dre-persistence.service';
 import type {
-  ContaPagar,
   PagarContaPagarDTO,
   OperacaoContaPagarResult,
   AnexoContaPagar,

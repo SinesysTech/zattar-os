@@ -4,7 +4,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { uploadAvatar, getAvatarPublicUrl } from '@/backend/usuarios/services/avatar/upload-avatar.service';
+import { uploadAvatar } from '@/backend/usuarios/services/avatar/upload-avatar.service';
 import { removerAvatar } from '@/backend/usuarios/services/avatar/remover-avatar.service';
 import { buscarUsuarioPorId } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 

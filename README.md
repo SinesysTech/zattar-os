@@ -1550,6 +1550,26 @@ Para problemas não listados acima:
 3. Revisar issues conhecidos no repositório
 4. Contatar a equipe de desenvolvimento
 
+## Design System
+
+O Sinesys utiliza um Design System baseado em padrões (Pattern-Based Design) com Tailwind v4 + shadcn/ui.
+
+### Para Agentes de Codificação
+Antes de gerar código, consulte:
+- `.qoder/rules/design-system-foundation.md` - Axiomas visuais e regras de estilo
+- `.qoder/rules/component-structure.md` - Organização de componentes
+- `components/shared/page-template-example.tsx` - Template de referência
+
+### Tokens de Cor
+- **Primary:** Zattar Purple (`--primary`) - CTAs, links, foco
+- **Highlight:** Action Orange (`--highlight`) - Badges de ação
+- **Muted:** Textos secundários (`--muted-foreground`)
+
+### Tipografia
+- **Títulos:** Montserrat (`font-heading`)
+- **Corpo:** Inter (`font-sans`)
+- **Código:** Geist Mono (`font-mono`)
+
 ---
 
 ## 📝 Licença

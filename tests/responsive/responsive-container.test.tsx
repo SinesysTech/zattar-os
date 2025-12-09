@@ -148,7 +148,7 @@ describe('ResponsiveContainer Property Tests', () => {
                 fc.constantFrom('sm', 'md', 'lg', 'xl', '2xl', 'full', 'none'),
                 (maxWidth) => {
                     const { container } = render(
-                        <ResponsiveContainer maxWidth={maxWidth as any}>
+                        <ResponsiveContainer maxWidth={maxWidth as 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'none'}>
                             Test Content
                         </ResponsiveContainer>
                     );

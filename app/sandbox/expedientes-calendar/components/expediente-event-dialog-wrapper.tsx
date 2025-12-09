@@ -8,7 +8,7 @@
 import React from 'react';
 import { EventDetailsDialog } from '@/components/event-details-dialog';
 import { ExpedienteEventDialog } from './expediente-event-dialog';
-import { useExpedientesCalendar } from '../contexts/expedientes-calendar-context';
+import { useExpedientesCalendarSafe } from '../contexts/expedientes-calendar-context';
 import type { IEvent } from '@/components/interfaces';
 import type { ReactNode } from 'react';
 
@@ -21,9 +21,11 @@ export function ExpedienteEventDialogWrapper({
 	event,
 	children,
 }: ExpedienteEventDialogWrapperProps) {
-	// Tentar usar o contexto de expedientes
-	try {
-		const { usuarios, tiposExpedientes, onRefresh } = useExpedientesCalendar();
+	// Usar a versão safe do hook que retorna null quando fora do contexto
+	const contextData = useExpedientesCalendarSafe();
+
+	if (contextData) {
+		const { usuarios, tiposExpedientes, onRefresh } = contextData;
 		return (
 			<ExpedienteEventDialog
 				event={event}
@@ -34,9 +36,9 @@ export function ExpedienteEventDialogWrapper({
 				{children}
 			</ExpedienteEventDialog>
 		);
-	} catch {
-		// Se não estiver no contexto de expedientes, usar o dialog padrão
-		return <EventDetailsDialog event={event}>{children}</EventDetailsDialog>;
 	}
+
+	// Se não estiver no contexto de expedientes, usar o dialog padrão
+	return <EventDetailsDialog event={event}>{children}</EventDetailsDialog>;
 }
 

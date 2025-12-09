@@ -1,5 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
+// Gerar padrão determinístico de skeletons baseado no índice
+const getSkeletonCount = (index: number): number => {
+	// Padrão determinístico: [0, 1, 2, 1, 0, 2, 1...]
+	return [0, 1, 2, 1, 0, 2, 1, 2, 0, 1][index % 10];
+};
+
 export function MonthViewSkeleton() {
 	return (
 		<div className="flex h-full flex-col">
@@ -16,7 +22,7 @@ export function MonthViewSkeleton() {
 					<div key={i} className="border-b border-r p-1">
 						<Skeleton className="mb-1 h-6 w-6 rounded-full" />
 						<div className="mt-1 space-y-1">
-							{Array.from({ length: Math.floor(Math.random() * 3) }).map(
+							{Array.from({ length: getSkeletonCount(i) }).map(
 								(_, j) => (
 									<Skeleton key={j} className="h-5 w-full" />
 								),

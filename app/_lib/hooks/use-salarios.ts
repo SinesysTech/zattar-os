@@ -7,7 +7,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type {
   SalarioComDetalhes,
-  ListarSalariosParams,
   ListarSalariosResponse,
   CriarSalarioDTO,
   AtualizarSalarioDTO,

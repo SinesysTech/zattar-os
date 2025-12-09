@@ -6,9 +6,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CalendarRange, Columns, Grid2X2, Grid3X3, LayoutList, List } from 'lucide-react';
 
-import { ButtonGroup } from '@/components/ui/button-group';
 import {
 	slideFromLeft,
 	slideFromRight,
@@ -45,10 +43,10 @@ export function ExpedientesCalendarHeader({
 	filters = {},
 	onFilterChange,
 	onClearFilters,
-	usuarios = [],
+	usuarios: _usuarios = [],
 	tiposExpedientes = [],
-	onRefresh,
-	isRefreshing = false,
+	onRefresh: _onRefresh,
+	isRefreshing: _isRefreshing = false,
 }: ExpedientesCalendarHeaderProps) {
 	const { view, events } = useCalendar();
 

@@ -1,143 +1,169 @@
+/**
+ * SINESYS DESIGN SYSTEM - FUNDAÇÃO
+ * 
+ * Hierarquia de Tokens:
+ * 1. Brand Tokens (--color-brand-*): Cores da marca Zattar
+ * 2. Semantic Tokens (--color-*): Mapeamento shadcn/ui
+ * 3. Component Tokens: Derivados dos semânticos
+ * 
+ * Regras Críticas para Agentes:
+ * - NUNCA use valores OKLCH diretos no código (use variáveis)
+ * - Sidebar SEMPRE usa tokens --sidebar-* (escura em ambos os temas)
+ * - Primary = Zattar Purple (CTAs, links, foco)
+ * - Highlight = Action Orange (badges de status, alertas de ação)
+ * 
+ * @see .qoder/rules/design-system-foundation.md
+ */
 @import "tailwindcss";
-@import "tw-animate-css";
+
+@plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* --- 1. Mapeamento de Cores Semânticas (Shadcn Standard) --- */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Mapeando as fontes da identidade */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* --- 2. Sidebar (Menu Lateral) --- */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* --- 3. Gráficos (Charts) --- */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* --- 4. Zattar Custom Tokens --- */
+  --color-brand: var(--brand); /* O Roxo Zattar Puro */
+  --color-highlight: var(--highlight); /* O Laranja de Ação */
+
+  /* --- 5. Tipografia & Layout --- */
   --font-sans: var(--font-inter);
-  --font-heading: var(--font-montserrat); /* Nova variável para Títulos */
+  --font-heading: var(--font-montserrat); /* Títulos */
   --font-mono: var(--font-geist-mono);
 
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-brand: var(--brand);
-  --color-highlight: var(--highlight);
-  --breakpoint-sm: 481px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1025px;
-  --breakpoint-xl: 1281px;
-  --breakpoint-2xl: 1536px;
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* Breakpoints Customizados (Opcional, mas útil para mobile-first preciso) */
+  --breakpoint-xs: 480px;
+  /* sm, md, lg, xl, 2xl já são padrão do Tailwind */
 }
 
+/* --- FUNDAÇÃO DE VARIÁVEIS (OKLCH) --- */
 :root {
-  --radius: 0.5rem; /* Ajustado para um visual mais "Tech" e nítido */
+  /* Configuração Global */
+  --radius: 0.5rem; /* 8px -> Visual Tech/Sharp */
 
-  /* Zattar Light Mode */
-
-  /* Background: Off-White #F4F4F8 */
+  /* ZATTAR LIGHT MODE */
+  /* Fundo Off-White para evitar fadiga visual */
   --background: oklch(0.96 0.01 270);
-
-  /* Foreground: Zattar Charcoal #282828 */
+  /* Texto Charcoal (quase preto) para alto contraste */
   --foreground: oklch(0.24 0 0);
 
-  /* Card: Pure White #FFFFFF */
+  /* Cards Brancos Puros */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.24 0 0);
 
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.24 0 0);
 
-  /* Primary: Zattar Purple #5523eb */
+  /* Primary: Zattar Purple */
   --primary: oklch(0.45 0.25 285);
-  --primary-foreground: oklch(1 0 0); /* Texto branco no roxo */
+  --primary-foreground: oklch(1 0 0);
 
-  /* Secondary: Mid Gray suave para fundos secundários */
+  /* Secondary: Cinza muito suave para fundos de apoio */
   --secondary: oklch(0.93 0 0);
   --secondary-foreground: oklch(0.24 0 0);
 
-  /* Muted: Para textos de apoio */
+  /* Muted: Cabeçalhos de tabela e textos de apoio */
   --muted: oklch(0.96 0.01 270);
-  --muted-foreground: oklch(0.55 0.02 270); /* Mid Gray #6E6E78 */
+  --muted-foreground: oklch(0.55 0.02 270); /* Mid Gray */
 
+  /* Accent: Hover states */
   --accent: oklch(0.93 0 0);
   --accent-foreground: oklch(0.24 0 0);
 
-  /* Destructive: Error Red #EA5455 */
+  /* Destructive: Error Red */
   --destructive: oklch(0.6 0.2 25);
   --destructive-foreground: oklch(1 0 0);
 
+  /* Bordas Sutis */
   --border: oklch(0.88 0 0);
   --input: oklch(0.88 0 0);
+  --ring: oklch(0.45 0.25 285 / 0.3); /* Anel de foco Roxo */
 
-  /* Ring: Zattar Purple diluído */
-  --ring: oklch(0.45 0.25 285 / 0.5);
-
-  /* Brand Colors Extras */
-  --brand: oklch(0.45 0.25 285); /* Zattar Purple */
-  --highlight: oklch(0.68 0.22 45); /* Action Orange #FF6B35 */
-
-  /* SIDEBAR (Light Mode) - Definida como Charcoal conforme guidelines */
-  --sidebar: oklch(0.24 0 0); /* #282828 */
-  --sidebar-foreground: oklch(0.98 0 0); /* Branco */
-  --sidebar-primary: oklch(0.45 0.25 285); /* Roxo */
+  /* SIDEBAR FIXA (Sempre Escura - "Charcoal") */
+  /* Mesmo no light mode, a sidebar mantém a identidade premium escura */
+  --sidebar: oklch(0.24 0 0);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.45 0.25 285);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(
-    0.32 0 0
-  ); /* Um cinza um pouco mais claro que o fundo */
+  --sidebar-accent: oklch(0.32 0 0); /* Hover na sidebar */
   --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(0.24 0 0);
+  --sidebar-border: oklch(1 0 0 / 0.1);
   --sidebar-ring: oklch(0.45 0.25 285);
 
-  /* Charts - Ajustados para a paleta */
+  /* CORES DA MARCA & GRÁFICOS */
+  --brand: oklch(0.45 0.25 285);
+  --highlight: oklch(0.68 0.22 45); /* Action Orange */
+
   --chart-1: oklch(0.45 0.25 285); /* Roxo */
   --chart-2: oklch(0.68 0.22 45); /* Laranja */
   --chart-3: oklch(0.24 0 0); /* Charcoal */
-  --chart-4: oklch(0.7 0.18 145); /* Verde sistema */
-  --chart-5: oklch(0.55 0.02 270); /* Cinza */
+  --chart-4: oklch(0.65 0.18 150); /* Verde Complementar */
+  --chart-5: oklch(0.6 0 0); /* Cinza Médio */
 }
 
 .dark {
-  /* Zattar Dark Mode */
-
-  /* Background: Deep Charcoal (quase preto para contraste) */
+  /* ZATTAR DARK MODE */
+  /* Fundo Deep Charcoal */
   --background: oklch(0.18 0 0);
-
-  /* Foreground: White */
   --foreground: oklch(0.98 0 0);
 
-  /* Card: Zattar Charcoal #282828 (original) */
+  /* Cards levemente mais claros que o fundo */
   --card: oklch(0.24 0 0);
   --card-foreground: oklch(0.98 0 0);
 
   --popover: oklch(0.24 0 0);
   --popover-foreground: oklch(0.98 0 0);
 
-  /* Primary: Roxo ligeiramente mais claro para contraste dark mode */
+  /* Primary: Roxo ligeiramente mais claro para contraste */
   --primary: oklch(0.55 0.25 285);
   --primary-foreground: oklch(1 0 0);
 
@@ -151,160 +177,49 @@
   --accent-foreground: oklch(0.98 0 0);
 
   --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(1 0 0);
 
-  --border: oklch(1 0 0 / 15%);
-  --input: oklch(1 0 0 / 15%);
+  --border: oklch(1 0 0 / 0.15);
+  --input: oklch(1 0 0 / 0.15);
   --ring: oklch(0.55 0.25 285 / 0.5);
 
-  --brand: oklch(0.55 0.25 285);
-  --highlight: oklch(0.68 0.22 45);
-
-  /* SIDEBAR (Dark Mode) - Mantém escura, talvez ligeiramente diferenciada */
-  --sidebar: oklch(0.2 0 0);
+  /* Sidebar Dark (Mantém consistência, ajusta apenas bordas/contraste) */
+  --sidebar: oklch(0.18 0 0);
   --sidebar-foreground: oklch(0.98 0 0);
   --sidebar-primary: oklch(0.55 0.25 285);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.3 0 0);
+  --sidebar-accent: oklch(0.28 0 0);
   --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-border: oklch(1 0 0 / 0.1);
   --sidebar-ring: oklch(0.55 0.25 285);
 
-  /* Charts Dark */
+  /* Cores de Marca Dark */
+  --brand: oklch(0.55 0.25 285);
+  --highlight: oklch(0.68 0.22 45);
+
   --chart-1: oklch(0.55 0.25 285);
   --chart-2: oklch(0.68 0.22 45);
   --chart-3: oklch(0.4 0 0);
-  --chart-4: oklch(0.7 0.18 145);
-  --chart-5: oklch(0.6 0 0);
+  --chart-4: oklch(0.65 0.18 150);
+  --chart-5: oklch(0.5 0 0);
 }
 
+/* --- ESTILOS BASE --- */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 
-  /* Adição: Seleção de texto com a cor da marca */
-  ::selection {
-    @apply bg-brand/30 text-foreground;
-  }
-
-  /* ... restante das media queries (reduced motion, etc) ... */
-  @media (prefers-reduced-motion: reduce) {
-    html:focus-within {
-      scroll-behavior: auto;
-    }
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.001ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.001ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
-  @media (pointer: coarse) {
-    button,
-    [role="button"],
-    input[type="button"],
-    input[type="submit"],
-    input[type="reset"] {
-      min-height: 44px;
-      min-width: 44px;
-    }
-  }
-}
-
-@layer base {
-  /* Typography - shadcn/ui styles with Montserrat override */
-
-  .typography-h1 {
-    @apply font-heading scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl text-foreground;
-  }
-
-  .typography-h2 {
-    @apply font-heading scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 text-foreground;
-  }
-
-  .typography-h3 {
-    @apply font-heading scroll-m-20 text-2xl font-semibold tracking-tight text-foreground;
-  }
-
-  .typography-h4 {
-    @apply font-heading scroll-m-20 text-xl font-semibold tracking-tight text-foreground;
-  }
-
-  .typography-p {
-    @apply leading-7 not-first:mt-6 text-foreground/90;
-  }
-
-  .typography-blockquote {
-    @apply mt-6 border-l-2 border-brand pl-6 italic text-muted-foreground;
-  }
-
-  /* ... tabelas e listas mantidas ... */
-  .typography-table-wrapper {
-    @apply my-6 w-full overflow-y-auto;
-  }
-
-  .typography-table {
-    @apply w-full;
-  }
-
-  .typography-table thead tr {
-    @apply border-b;
-  }
-
-  .typography-table thead th {
-    @apply border px-4 py-2 text-left font-bold [[align=center]]:text-center [[align=right]]:text-right;
-  }
-
-  .typography-table tbody tr {
-    @apply border-b;
-  }
-
-  .typography-table tbody td {
-    @apply border px-4 py-2 text-left [[align=center]]:text-center [[align=right]]:text-right;
-  }
-
-  .typography-list {
-    @apply my-6 ml-6 list-disc [&>li]:mt-2;
-  }
-
-  .typography-inline-code {
-    @apply bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold text-brand;
-  }
-
-  .typography-lead {
-    @apply text-muted-foreground text-xl;
-  }
-
-  .typography-large {
-    @apply text-lg font-semibold;
-  }
-
-  .typography-small {
-    @apply text-sm font-medium leading-none;
-  }
-
-  .typography-muted {
-    @apply text-muted-foreground text-sm;
-  }
-}
-
-@layer utilities {
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .content-auto {
-    content-visibility: auto;
-    contain-intrinsic-size: 1px 500px;
+  /* Tipografia Zattar */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading text-foreground;
   }
 }

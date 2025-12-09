@@ -338,7 +338,7 @@ describe('ResponsiveGrid Property Tests', () => {
                 fc.constantFrom('square', 'video', '16/9', '4/3'),
                 (aspectRatio) => {
                     const { container } = render(
-                        <ResponsiveGrid scaleImages imageAspectRatio={aspectRatio as any}>
+                        <ResponsiveGrid scaleImages imageAspectRatio={aspectRatio as 'auto' | 'square' | 'video' | '4/3' | '16/9'}>
                             <Card>
                                 <img src="test.jpg" alt="Test" />
                             </Card>

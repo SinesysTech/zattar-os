@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addMinutes, format, set } from "date-fns";
-import { type ReactNode, useEffect, useMemo } from "react";
+import { type ReactNode, useEffect, useMemo, useId } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -57,6 +57,9 @@ export function AddEditEventDialog({
 	const { isOpen, onClose, onToggle } = useDisclosure();
 	const { addEvent, updateEvent } = useCalendar();
 	const isEditing = !!event;
+	// Usar useId para gerar IDs estáveis em vez de Math.random
+	const generatedEventId = useId();
+	const generatedUserId = useId();
 
 	const initialDates = useMemo(() => {
 		if (!isEditing && !event) {
@@ -108,11 +111,11 @@ export function AddEditEventDialog({
 				...values,
 				startDate: format(values.startDate, "yyyy-MM-dd'T'HH:mm:ss"),
 				endDate: format(values.endDate, "yyyy-MM-dd'T'HH:mm:ss"),
-				id: isEditing ? event.id : Math.floor(Math.random() * 1000000),
+				id: isEditing ? event.id : generatedEventId.replace(/:/g, '').slice(0, 10),
 				user: isEditing
 					? event.user
 					: {
-							id: Math.floor(Math.random() * 1000000).toString(),
+							id: generatedUserId.replace(/:/g, '').slice(0, 10),
 							name: "Jeraidi Yassir",
 							picturePath: null,
 						},

@@ -240,7 +240,7 @@ export const podeSerCancelada = async (contaId: number): Promise<{
  */
 export const reativarContaCancelada = async (
   contaId: number,
-  motivo?: string
+  _motivo?: string
 ): Promise<OperacaoContaPagarResult> => {
   try {
     const conta = await buscarContaPagarPorId(contaId);

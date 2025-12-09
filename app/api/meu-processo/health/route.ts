@@ -8,7 +8,6 @@
  */
 
 import { NextResponse } from 'next/server';
-import { sinesysClient } from '@/lib/services/sinesys-client';
 
 // =============================================================================
 // CONFIGURAÇÃO

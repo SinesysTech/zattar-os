@@ -8,7 +8,7 @@
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Calendar, Clock, Text, User, Pencil, Loader2 } from 'lucide-react';
-import React, { useState, useEffect, type ReactNode } from 'react';
+import React, { useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -52,7 +52,6 @@ export function ExpedienteEventDialog({
 	onUpdate,
 }: ExpedienteEventDialogProps) {
 	const startDate = parseISO(event.startDate);
-	const endDate = parseISO(event.endDate);
 	const { use24HourFormat, updateEvent } = useCalendar();
 
 	const [isEditing, setIsEditing] = useState(false);

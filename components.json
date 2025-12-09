@@ -15,8 +15,10 @@
     "components": "@/components",
     "utils": "@/lib/utils",
     "ui": "@/components/ui",
+    "shared": "@/components/shared",
     "lib": "@/lib",
-    "hooks": "@/hooks"
+    "hooks": "@/hooks",
+    "formatters": "@/lib/formatters"
   },
   "registries": {
     "@supabase": "https://supabase.com/ui/r/{name}.json",

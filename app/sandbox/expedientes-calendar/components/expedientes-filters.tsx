@@ -108,13 +108,18 @@ export function ExpedientesFilters({
 	// Limpar hoveredCategory quando o popover fechar
 	useEffect(() => {
 		if (!isOpen) {
-			setHoveredCategory(null);
+			// Usar requestAnimationFrame para evitar setState síncrono no effect
+			requestAnimationFrame(() => {
+				setHoveredCategory(null);
+			});
 			if (closeTimeout) {
 				clearTimeout(closeTimeout);
-				setCloseTimeout(null);
+				requestAnimationFrame(() => {
+					setCloseTimeout(null);
+				});
 			}
 		}
-	}, [isOpen]);
+	}, [isOpen, closeTimeout]);
 
 	const handleCategoryEnter = (category: FilterCategory) => {
 		// Limpar timeout anterior se existir

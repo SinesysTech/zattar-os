@@ -36,30 +36,30 @@ export class SinesysAPIError extends Error {
 
 export interface SinesysProcessoResponse {
   success: boolean;
-  data: any[];
+  data: { processos: Array<Record<string, unknown>>; [key: string]: unknown };
   total: number;
 }
 
 export interface SinesysAudienciasResponse {
   success: boolean;
-  data: any[];
+  data: Record<string, unknown>[];
   total: number;
 }
 
 export interface SinesysClienteResponse {
   success: boolean;
-  data: any;
+  data: Record<string, unknown>;
 }
 
 export interface SinesysContratosResponse {
   success: boolean;
-  data: any[];
+  data: { contratos: unknown[]; total: number; pagina: number; limite: number };
   total: number;
 }
 
 export interface SinesysAcordosResponse {
   success: boolean;
-  data: any[];
+  data: { acordos: unknown[]; total: number; pagina: number; limite: number };
   total: number;
 }
 
@@ -367,7 +367,7 @@ export class SinesysClient {
     const acordosPromises = processosResponse.data.processos.map(async (processo) => {
       // IMPORTANTE: Precisamos do processo_id numérico, não do número do processo
       // Por ora, vamos simular que o campo existe - DEVE SER AJUSTADO conforme API real
-      const processoId = (processo as any).id || (processo as any).processo_id;
+      const processoId = processo.id || processo.processo_id;
 
       if (!processoId) {
         return { success: true, data: { acordos: [], total: 0, pagina: 1, limite: 50 } };

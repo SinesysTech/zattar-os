@@ -21,9 +21,10 @@ import { Button } from '@/components/ui/button';
  * - Desktop (>= 1024px): Toolbar completa
  */
 export function ResponsiveFixedToolbar(props: React.ComponentProps<typeof Toolbar>) {
-    const isMobile = !useBreakpoint('md'); // < 768px
-    const isTablet = useBreakpoint('md') && !useBreakpoint('lg'); // 768px-1024px
-    const isDesktop = useBreakpoint('lg'); // >= 1024px
+    const isMd = useBreakpoint('md');
+    const isLg = useBreakpoint('lg');
+    const isMobile = !isMd; // < 768px
+    const isTablet = isMd && !isLg; // 768px-1024px
 
     if (isMobile) {
         // Mobile: Toolbar oculta, apenas botão de overflow

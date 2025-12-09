@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore, useState } from "react";
 
 export function useDisclosure({
 	defaultIsOpen = false,
@@ -51,19 +51,22 @@ export const useLocalStorage = <T>(
 };
 
 export function useMediaQuery(query: string): boolean {
-	const [matches, setMatches] = useState(false);
+	const subscribe = useCallback(
+		(callback: () => void) => {
+			const media = window.matchMedia(query);
+			media.addEventListener("change", callback);
+			return () => media.removeEventListener("change", callback);
+		},
+		[query]
+	);
 
-	useEffect(() => {
-		const media = window.matchMedia(query);
-		if (media.matches !== matches) {
-			setMatches(media.matches);
-		}
+	const getSnapshot = useCallback(() => {
+		return window.matchMedia(query).matches;
+	}, [query]);
 
-		const listener = () => setMatches(media.matches);
-		media.addEventListener("change", listener);
+	const getServerSnapshot = useCallback(() => {
+		return false; // Default to false during SSR
+	}, []);
 
-		return () => media.removeEventListener("change", listener);
-	}, [matches, query]);
-
-	return matches;
+	return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

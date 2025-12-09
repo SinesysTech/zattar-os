@@ -165,7 +165,7 @@ export const AudienciasResponseDataSchema = z.object({
  * Resposta completa da API de audiências por CPF
  * GET /api/audiencias/cliente/cpf/{cpf}
  */
-export interface AudienciasResponse extends ApiResponse<AudienciasResponseData> {}
+export type AudienciasResponse = ApiResponse<AudienciasResponseData>;
 
 /**
  * Schema Zod para AudienciasResponse

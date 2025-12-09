@@ -53,7 +53,7 @@ export function ExpedientesCalendarWrapper({
 			dataFim.setMonth(now.getMonth() + 3);
 
 			// Buscar todos os expedientes usando paginação
-			let allExpedientes: any[] = [];
+			let allExpedientes: Record<string, unknown>[] = [];
 			let pagina = 1;
 			const limite = 100; // API aceita máximo 100
 			let hasMore = true;
@@ -130,12 +130,12 @@ export function ExpedientesCalendarWrapper({
 				if (filters.status === 'sem_data') {
 					// Expedientes sem data_prazo_legal_parte e não baixados
 					filteredExpedientes = expedientes.filter(
-						(e: any) => !e.data_prazo_legal_parte && !e.baixado_em
+						(e: Record<string, unknown>) => !e.data_prazo_legal_parte && !e.baixado_em
 					);
 				} else if (filters.status === 'pendente') {
 					// Pendentes: não baixados, com data, e não vencidos
 					filteredExpedientes = expedientes.filter(
-						(e: any) =>
+						(e: Record<string, unknown>) =>
 							!e.baixado_em &&
 							e.data_prazo_legal_parte &&
 							!e.prazo_vencido
@@ -165,7 +165,7 @@ export function ExpedientesCalendarWrapper({
 
 			const newEvents = expedientesToEvents(
 				allExpedientes,
-				COLORS as any,
+				COLORS as ReadonlyArray<string>,
 				usuariosList,
 				tiposList
 			);

@@ -48,3 +48,11 @@ export function useExpedientesCalendar() {
 	return context;
 }
 
+/**
+ * Safe version of useExpedientesCalendar that returns null when outside the provider
+ * instead of throwing an error. Useful for optional context usage.
+ */
+export function useExpedientesCalendarSafe() {
+	return useContext(ExpedientesCalendarContext);
+}
+

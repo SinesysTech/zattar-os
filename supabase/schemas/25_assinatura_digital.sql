@@ -118,11 +118,21 @@ create table if not exists public.assinatura_digital_assinaturas (
   status text default 'concluida',
   enviado_sistema_externo boolean default false,
   data_envio_externo timestamp with time zone,
+  hash_original_sha256 text not null,
+  hash_final_sha256 text,
+  termos_aceite_versao text not null,
+  termos_aceite_data timestamp with time zone not null,
+  dispositivo_fingerprint_raw jsonb,
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now()
 );
 
 comment on table public.assinatura_digital_assinaturas is 'Assinaturas concluídas, com metadados e URLs de artefatos';
+comment on column public.assinatura_digital_assinaturas.hash_original_sha256 is 'Hash SHA-256 PDF original (integridade conteúdo)';
+comment on column public.assinatura_digital_assinaturas.hash_final_sha256 is 'Hash SHA-256 PDF final (com manifesto)';
+comment on column public.assinatura_digital_assinaturas.termos_aceite_versao is 'Versão termos (v1.0-MP2200-2)';
+comment on column public.assinatura_digital_assinaturas.termos_aceite_data is 'Timestamp aceite termos';
+comment on column public.assinatura_digital_assinaturas.dispositivo_fingerprint_raw is 'Fingerprint dispositivo (JSONB: tela, bateria, etc.)';
 
 create index if not exists idx_assinatura_digital_assinaturas_cliente on public.assinatura_digital_assinaturas(cliente_id);
 create index if not exists idx_assinatura_digital_assinaturas_acao on public.assinatura_digital_assinaturas(acao_id);
@@ -130,6 +140,7 @@ create index if not exists idx_assinatura_digital_assinaturas_segmento on public
 create index if not exists idx_assinatura_digital_assinaturas_formulario on public.assinatura_digital_assinaturas(formulario_id);
 create index if not exists idx_assinatura_digital_assinaturas_status on public.assinatura_digital_assinaturas(status);
 create index if not exists idx_assinatura_digital_assinaturas_data on public.assinatura_digital_assinaturas(data_assinatura);
+create index if not exists idx_assinatura_digital_assinaturas_hash_original on public.assinatura_digital_assinaturas(hash_original_sha256);
 
 -- RLS
 alter table public.assinatura_digital_segmentos enable row level security;

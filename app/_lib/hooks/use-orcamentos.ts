@@ -9,7 +9,6 @@ import type {
   OrcamentoComDetalhes,
   OrcamentoComItens,
   OrcamentoItem,
-  ListarOrcamentosParams,
   ListarOrcamentosResponse,
   StatusOrcamento,
   PeriodoOrcamento,

@@ -56,16 +56,13 @@ import type { CapturaCombinAdaParams } from './trt-capture.service';
 import { obterTodasAudiencias } from '@/backend/api/pje-trt';
 import {
     obterTodosProcessosPendentesManifestacao,
-    obterTotalizadoresPendentesManifestacao,
 } from '@/backend/api/pje-trt';
-import type { Audiencia, Processo, PagedResponse } from '@/backend/types/pje-trt/types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import {
     buscarDadosComplementaresProcessos,
-    extrairProcessosUnicos,
 } from './dados-complementares.service';
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';

@@ -190,6 +190,17 @@ export async function finalizeSignature(payload: FinalizePayload): Promise<Final
     { assinaturaBase64: payload.assinatura_base64, fotoBase64: payload.foto_base64 || undefined }
   );
 
+  // TODO (Próxima Fase - Conformidade Legal MP 2.200-2/2001):
+  // Calcular hash_original_sha256 do PDF preenchido ANTES da assinatura visual
+  // const hashOriginal = calculateHash(pdfBufferPreSign);
+  //
+  // TODO (Próxima Fase): Calcular hash_final_sha256 após flatten
+  // const hashFinal = calculateHash(pdfBuffer);
+  //
+  // Ambos os hashes devem ser persistidos na tabela assinatura_digital_assinaturas
+  // nos campos hash_original_sha256 e hash_final_sha256 para auditoria forense.
+  // Referência: calculateHash importado de ./integrity.service
+
   logger.debug('Armazenando PDF final', context);
   const pdfStored = await storePdf(pdfBuffer);
 

@@ -6,7 +6,6 @@ import useSWR from 'swr';
 import type {
   PlanoContaComPai,
   ListarPlanoContasResponse,
-  ListarPlanoContasParams,
   TipoContaContabil,
   NivelConta,
 } from '@/types/domain/financeiro';
