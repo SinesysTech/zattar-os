@@ -9,7 +9,6 @@ import {
   getCached,
   setCached,
   deletePattern,
-  CACHE_PREFIXES,
   generateCacheKey,
 } from '@/backend/utils/redis/cache-utils';
 import { invalidateObrigacoesCache } from '@/backend/financeiro/obrigacoes/services/persistence/obrigacoes-persistence.service';

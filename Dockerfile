@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.4
 # Dockerfile para Sinesys (Next.js App)
 #
 # Este Dockerfile cria uma imagem LEVE do Next.js usando Turbopack.
@@ -46,12 +47,17 @@ WORKDIR /app
 # Impedir download de browsers do Playwright (browser está em container separado)
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
+# Desabilitar telemetria o mais cedo possível para reduzir overhead
+ENV NEXT_TELEMETRY_DISABLED=1
+
 # Copiar arquivos de dependências
 COPY package.json package-lock.json* ./
 
-# Instalar dependências com otimizações de memória
+# Instalar dependências com otimizações de memória e cache
 # --legacy-peer-deps evita conflitos e reduz memória
-RUN npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
+# --mount=type=cache acelera reinstalações via cache npm global
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
 
 # Stage 2: Builder
 # ============================================================================
@@ -66,37 +72,38 @@ FROM node:20-slim AS builder
 WORKDIR /app
 
 # Memória para Node.js durante build
-# 4GB é necessário para projetos grandes com muitas dependências
-# Reduzido de 8GB para 4GB para CapRover com RAM limitada
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+# 6GB é necessário para projetos grandes com muitas dependências (+150 deps)
+# Aumentado de 4GB para 6GB para evitar OOM durante build
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 # ============================================================================
 # CONFIGURAÇÃO DE MEMÓRIA PARA PREVENIR OOM
 # ============================================================================
-# NODE_OPTIONS="--max-old-space-size=4096" limita heap do Node.js a 4GB
-# 
+# NODE_OPTIONS="--max-old-space-size=6144" limita heap do Node.js a 6GB
+#
 # OTIMIZAÇÕES ADICIONAIS (ver next.config.ts):
 # - webpackMemoryOptimizations: true (reduz uso de memória)
 # - productionBrowserSourceMaps: false (economiza ~500MB)
 # - serverSourceMaps: false (reduz memória do servidor)
 # - output: 'standalone' (build otimizado para Docker)
 # - parallelism: 1 (reduz uso de memória durante build)
-# 
-# Por que 4GB?
-# - Next.js build com muitas dependências consome ~2.5-4GB em projetos grandes
+#
+# Por que 6GB?
+# - Next.js build com muitas dependências consome ~4-5GB em projetos grandes
 # - Projeto tem +150 dependências (Plate.js, CopilotKit, Supabase, etc.)
 # - Deixa margem para webpack e outros processos
-# - Total recomendado no servidor: 6-8GB RAM (4GB Node + 2-4GB sistema)
-# 
+# - Total recomendado no servidor: 8-10GB RAM (6GB Node + 2-4GB sistema)
+#
 # Quando aumentar este valor:
 # - Build falha com "JavaScript heap out of memory"
-# - Servidor tem >8GB RAM disponível
+# - Servidor tem >12GB RAM disponível
 # - Projeto continua crescendo em complexidade
-# 
+#
 # Valores alternativos:
 # - Projetos pequenos: --max-old-space-size=2048 (2GB)
-# - Projetos médios: --max-old-space-size=4096 (4GB) [ATUAL]
+# - Projetos médios: --max-old-space-size=4096 (4GB)
+# - Projetos grandes: --max-old-space-size=6144 (6GB) [ATUAL]
 # - Projetos muito grandes: --max-old-space-size=8192 (8GB)
-# 
+#
 # IMPORTANTE: Aumentar este valor requer aumentar memória do CapRover
 # proporcionalmente (ver DEPLOY.md seção "Proteções Contra OOM")
 # ============================================================================
@@ -123,14 +130,11 @@ ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
 
-# Desabilitar telemetria durante build
-ENV NEXT_TELEMETRY_DISABLED=1
-
 # Build da aplicação usando Webpack (mais estável para produção)
 # Webpack é production-ready e tem melhor suporte
 # Nota: Turbopack ainda é experimental para builds de produção
-# --no-lint pula lint durante build para economizar memória
-RUN npm run build:prod:webpack -- --no-lint
+# Script build:caprover inclui NODE_OPTIONS=6144 e ESLINT_NO_DEV_ERRORS=true
+RUN npm run build:caprover
 
 # Stage 3: Runner (imagem final leve)
 # ============================================================================
