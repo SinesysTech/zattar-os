@@ -73,9 +73,9 @@ interface TransacaoJoined extends TransacaoRecord {
   contas_bancarias?: {
     id: number;
     nome: string;
-    banco_nome: string | null;
+    banco: string | null;
     agencia: string | null;
-    numero_conta: string | null;
+    conta: string | null;
   } | null;
   conciliacoes_bancarias?: ConciliacaoRecord | null;
   lancamentos_financeiros?: LancamentoRecord | null;
@@ -125,9 +125,9 @@ export const mapTransacaoComConciliacaoRecord = (
     ? {
       id: record.contas_bancarias.id,
       nome: record.contas_bancarias.nome,
-      banco: record.contas_bancarias.banco_nome,
+      banco: record.contas_bancarias.banco,
       agencia: record.contas_bancarias.agencia,
-      conta: record.contas_bancarias.numero_conta,
+      conta: record.contas_bancarias.conta,
     }
     : undefined;
 
@@ -327,7 +327,7 @@ export const listarTransacoesImportadas = async (
     .select(
       `
       *,
-      contas_bancarias (id, nome, banco_nome, agencia, numero_conta),
+      contas_bancarias (id, nome, banco, agencia, conta),
       conciliacoes_bancarias (*),
       lancamentos_financeiros (
         id,
@@ -444,7 +444,7 @@ export const buscarTransacaoPorId = async (
     .select(
       `
       *,
-      contas_bancarias (id, nome, banco_nome, agencia, numero_conta),
+      contas_bancarias (id, nome, banco, agencia, conta),
       conciliacoes_bancarias (*),
       lancamentos_financeiros (
         id,
