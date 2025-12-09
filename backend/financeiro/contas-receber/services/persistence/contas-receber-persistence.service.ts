@@ -105,9 +105,9 @@ interface LancamentoComRelacionamentos extends LancamentoFinanceiroRecord {
   contas_bancarias?: {
     id: number;
     nome: string;
-    banco: string | null;
+    banco_nome: string | null;
     agencia: string | null;
-    conta: string | null;
+    numero_conta: string | null;
   } | null;
 }
 
@@ -198,9 +198,9 @@ const mapearContaReceberComDetalhes = (registro: LancamentoComRelacionamentos): 
     ? {
       id: registro.contas_bancarias.id,
       nome: registro.contas_bancarias.nome,
-      banco: registro.contas_bancarias.banco,
+      banco: registro.contas_bancarias.banco_nome,
       agencia: registro.contas_bancarias.agencia,
-      conta: registro.contas_bancarias.conta,
+      conta: registro.contas_bancarias.numero_conta,
     }
     : undefined;
 
@@ -276,7 +276,7 @@ export const listarContasReceber = async (
       contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `,
       { count: 'exact' }
     )
@@ -406,7 +406,7 @@ export const buscarContaReceberPorId = async (id: number): Promise<ContaReceberC
       contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `
     )
     .eq('id', id)
@@ -441,7 +441,7 @@ export const buscarContasReceberVencidas = async (): Promise<ContaReceberComDeta
       contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `
     )
     .eq('tipo', 'receita')
@@ -488,7 +488,7 @@ export const buscarResumoInadimplencia = async (): Promise<ResumoInadimplencia> 
       contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `
     )
     .eq('tipo', 'receita')
@@ -625,7 +625,7 @@ export const buscarContasReceberPorContrato = async (contratoId: number): Promis
       contrato:contratos(id, area_direito, tipo_contrato),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `
     )
     .eq('tipo', 'receita')
