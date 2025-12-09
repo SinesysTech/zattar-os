@@ -3,10 +3,6 @@
  * Sandbox para testar integração completa antes de implementar nas páginas reais
  */
 
-// Forçar renderização dinâmica - página faz chamadas ao Supabase que requerem SUPABASE_SECRET_KEY
-// disponível apenas em runtime, não durante build estático
-export const dynamic = 'force-dynamic';
-
 import React, { Suspense } from 'react';
 import { ExpedientesCalendar } from './expedientes-calendar';
 import { CalendarSkeleton } from '@/components/calendar-skeleton';
