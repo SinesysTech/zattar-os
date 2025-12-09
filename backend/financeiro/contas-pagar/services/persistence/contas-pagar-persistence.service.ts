@@ -95,9 +95,9 @@ interface LancamentoComRelacionamentos extends LancamentoFinanceiroRecord {
   contas_bancarias?: {
     id: number;
     nome: string;
-    banco_nome: string | null;
+    banco: string | null;
     agencia: string | null;
-    numero_conta: string | null;
+    conta: string | null;
   } | null;
 }
 
@@ -177,9 +177,9 @@ const mapearContaPagarComDetalhes = (registro: LancamentoComRelacionamentos): Co
     ? {
       id: registro.contas_bancarias.id,
       nome: registro.contas_bancarias.nome,
-      banco: registro.contas_bancarias.banco_nome,
+      banco: registro.contas_bancarias.banco,
       agencia: registro.contas_bancarias.agencia,
-      conta: registro.contas_bancarias.numero_conta,
+      conta: registro.contas_bancarias.conta,
     }
     : undefined;
 
@@ -252,7 +252,7 @@ export const listarContasPagar = async (
       cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
+      contas_bancarias(id, nome, banco, agencia, conta)
     `,
       { count: 'exact' }
     )
@@ -376,7 +376,7 @@ export const buscarContaPagarPorId = async (id: number): Promise<ContaPagarComDe
       cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
+      contas_bancarias(id, nome, banco, agencia, conta)
     `
     )
     .eq('id', id)
@@ -410,7 +410,7 @@ export const buscarContasPagarVencidas = async (): Promise<ContaPagarComDetalhes
       cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
+      contas_bancarias(id, nome, banco, agencia, conta)
     `
     )
     .eq('tipo', 'despesa')
@@ -456,7 +456,7 @@ export const buscarResumoVencimentos = async (): Promise<ResumoVencimentos> => {
       cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
+      contas_bancarias(id, nome, banco, agencia, conta)
     `
     )
     .eq('tipo', 'despesa')

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, ReactNode } from 'react';
+import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
 import {
   DndContext,
   closestCenter,
@@ -179,15 +180,15 @@ function SortableWidgetItem({ widget, children, onSizeChange }: SortableWidgetIt
       className={`relative group ${sizeClasses[widget.size]}`}
     >
       {/* Toolbar flutuante */}
-      <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+      <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
         {/* Menu de tamanho */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="p-1.5 rounded-md bg-background/80 backdrop-blur-sm border shadow-sm hover:bg-accent"
+              className="p-1 hover:bg-accent/50 rounded transition-colors"
               title="Alterar tamanho"
             >
-              <Maximize2 className="h-4 w-4 text-muted-foreground" />
+              <Maximize2 className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">
@@ -212,10 +213,10 @@ function SortableWidgetItem({ widget, children, onSizeChange }: SortableWidgetIt
         <div
           {...attributes}
           {...listeners}
-          className="p-1.5 rounded-md bg-background/80 backdrop-blur-sm border shadow-sm hover:bg-accent cursor-grab active:cursor-grabbing"
+          className="p-1 hover:bg-accent/50 rounded cursor-grab active:cursor-grabbing transition-colors"
           title="Arrastar para reordenar"
         >
-          <GripVertical className="h-4 w-4 text-muted-foreground" />
+          <GripVertical className="h-3.5 w-3.5 text-muted-foreground" />
         </div>
       </div>
       {children}
@@ -255,6 +256,9 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
   const [widgets, setWidgets] = useState<DashboardWidget[]>(USER_DEFAULT_WIDGETS);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  
+  // Hook de permissões
+  const { isSuperAdmin, temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes();
 
   // Carregar ordem salva
   useEffect(() => {
@@ -288,6 +292,25 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
   const saveOrder = useCallback((newWidgets: DashboardWidget[]) => {
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(newWidgets));
   }, []);
+  
+  // Verificar se tem acesso a qualquer módulo financeiro
+  const temAcessoFinanceiro = isSuperAdmin ||
+    temPermissao('obrigacoes', 'visualizar') ||
+    temPermissao('folhas_pagamento', 'visualizar') ||
+    temPermissao('salarios', 'visualizar') ||
+    temPermissao('plano_contas', 'listar') ||
+    temPermissao('contas_pagar', 'listar') ||
+    temPermissao('contas_receber', 'listar') ||
+    temPermissao('dre', 'visualizar');
+  
+  // Filtrar widgets financeiros baseado em permissões
+  const widgetsPermitidos = !isLoadingPermissoes && !temAcessoFinanceiro
+    ? widgets.filter((w) => 
+        w.type !== 'obrigacoes' && 
+        w.type !== 'folha-pagamento' && 
+        w.type !== 'custo-pessoal'
+      )
+    : widgets;
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -337,9 +360,9 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
     localStorage.removeItem(USER_STORAGE_KEY);
   };
 
-  const activeWidget = activeId ? widgets.find((w) => w.id === activeId) : null;
-  const visibleWidgets = widgets.filter((w) => w.visible);
-  const hasHiddenWidgets = widgets.some((w) => !w.visible);
+  const activeWidget = activeId ? widgetsPermitidos.find((w) => w.id === activeId) : null;
+  const visibleWidgets = widgetsPermitidos.filter((w) => w.visible);
+  const hasHiddenWidgets = widgetsPermitidos.some((w) => !w.visible);
 
   const renderWidget = (widget: DashboardWidget) => {
     switch (widget.type) {
@@ -393,18 +416,20 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
   return (
     <div className="space-y-6">
       {/* Menu de configuração */}
-      <div className="flex justify-end">
+      <div className="flex justify-end group/settings">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="h-8 gap-1">
-              <Settings className="h-4 w-4" />
-              <span className="hidden sm:inline">Personalizar Dashboard</span>
-            </Button>
+            <button
+              className="p-2 hover:bg-accent/50 rounded transition-colors opacity-0 group-hover/settings:opacity-100"
+              title="Personalizar Dashboard"
+            >
+              <Settings className="h-4 w-4 text-muted-foreground" />
+            </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-64">
             <DropdownMenuLabel>Widgets Visíveis</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {widgets.map((widget) => (
+            {widgetsPermitidos.map((widget) => (
               <DropdownMenuCheckboxItem
                 key={widget.id}
                 checked={widget.visible}
@@ -431,7 +456,7 @@ export function SortableUserDashboard({ data }: SortableUserDashboardProps) {
 
       {hasHiddenWidgets && (
         <p className="text-xs text-muted-foreground text-center">
-          {widgets.filter((w) => !w.visible).length} widget(s) oculto(s)
+          {widgetsPermitidos.filter((w) => !w.visible).length} widget(s) oculto(s)
         </p>
       )}
 
@@ -471,6 +496,9 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
   const [widgets, setWidgets] = useState<DashboardWidget[]>(ADMIN_DEFAULT_WIDGETS);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  
+  // Hook de permissões
+  const { isSuperAdmin, temPermissao, isLoading: isLoadingPermissoes } = useMinhasPermissoes();
 
   const expedientesVencidos = data.expedientesUrgentes.filter(
     (e) => e.dias_restantes < 0
@@ -507,6 +535,25 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
   const saveOrder = useCallback((newWidgets: DashboardWidget[]) => {
     localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(newWidgets));
   }, []);
+  
+  // Verificar se tem acesso a qualquer módulo financeiro
+  const temAcessoFinanceiro = isSuperAdmin ||
+    temPermissao('obrigacoes', 'visualizar') ||
+    temPermissao('folhas_pagamento', 'visualizar') ||
+    temPermissao('salarios', 'visualizar') ||
+    temPermissao('plano_contas', 'listar') ||
+    temPermissao('contas_pagar', 'listar') ||
+    temPermissao('contas_receber', 'listar') ||
+    temPermissao('dre', 'visualizar');
+  
+  // Filtrar widgets financeiros baseado em permissões
+  const widgetsPermitidos = !isLoadingPermissoes && !temAcessoFinanceiro
+    ? widgets.filter((w) => 
+        w.type !== 'obrigacoes' && 
+        w.type !== 'folha-pagamento' && 
+        w.type !== 'custo-pessoal'
+      )
+    : widgets;
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -556,9 +603,9 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
     localStorage.removeItem(ADMIN_STORAGE_KEY);
   };
 
-  const activeWidget = activeId ? widgets.find((w) => w.id === activeId) : null;
-  const visibleWidgets = widgets.filter((w) => w.visible);
-  const hasHiddenWidgets = widgets.some((w) => !w.visible);
+  const activeWidget = activeId ? widgetsPermitidos.find((w) => w.id === activeId) : null;
+  const visibleWidgets = widgetsPermitidos.filter((w) => w.visible);
+  const hasHiddenWidgets = widgetsPermitidos.some((w) => !w.visible);
 
   const renderWidget = (widget: DashboardWidget) => {
     switch (widget.type) {
@@ -597,18 +644,20 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
   return (
     <div className="space-y-6">
       {/* Menu de configuração */}
-      <div className="flex justify-end">
+      <div className="flex justify-end group/settings">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="h-8 gap-1">
-              <Settings className="h-4 w-4" />
-              <span className="hidden sm:inline">Personalizar Dashboard</span>
-            </Button>
+            <button
+              className="p-2 hover:bg-accent/50 rounded transition-colors opacity-0 group-hover/settings:opacity-100"
+              title="Personalizar Dashboard"
+            >
+              <Settings className="h-4 w-4 text-muted-foreground" />
+            </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-64">
             <DropdownMenuLabel>Widgets Visíveis</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {widgets.map((widget) => (
+            {widgetsPermitidos.map((widget) => (
               <DropdownMenuCheckboxItem
                 key={widget.id}
                 checked={widget.visible}
@@ -635,7 +684,7 @@ export function SortableAdminDashboard({ data }: SortableAdminDashboardProps) {
 
       {hasHiddenWidgets && (
         <p className="text-xs text-muted-foreground text-center">
-          {widgets.filter((w) => !w.visible).length} widget(s) oculto(s)
+          {widgetsPermitidos.filter((w) => !w.visible).length} widget(s) oculto(s)
         </p>
       )}
 

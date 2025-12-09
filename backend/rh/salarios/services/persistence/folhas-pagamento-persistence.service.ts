@@ -251,7 +251,7 @@ export const listarFolhasPagamento = async (
       *,
       itens_folha_pagamento(
         *,
-        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos(nome)),
+        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
         salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
         lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
       )
@@ -335,7 +335,7 @@ export const buscarFolhaPorId = async (id: number): Promise<FolhaPagamentoComDet
       *,
       itens_folha_pagamento(
         *,
-        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos(nome)),
+        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
         salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
         lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
       )
@@ -378,7 +378,7 @@ export const buscarFolhaPorPeriodo = async (
       *,
       itens_folha_pagamento(
         *,
-        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos(nome)),
+        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
         salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
         lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
       )
@@ -440,7 +440,7 @@ export const buscarItensDaFolha = async (folhaId: number): Promise<ItemFolhaComD
     .select(
       `
       *,
-      usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos(nome)),
+      usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
       salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
       lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
     `
@@ -870,7 +870,7 @@ export const buscarFolhasPorAno = async (ano: number): Promise<FolhaPagamentoCom
       *,
       itens_folha_pagamento(
         *,
-        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos(nome)),
+        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
         salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
         lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
       )

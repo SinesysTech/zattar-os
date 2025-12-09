@@ -9,7 +9,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Copy, Pencil, FileText, CheckCircle2, PlusCircle, Loader2, Scale, Plus } from 'lucide-react';
+import { Copy, Pencil, FileText, Check, PlusCircle, Loader2, Scale, Plus } from 'lucide-react';
 import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';
@@ -269,7 +269,7 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
           <>
             {/* Link virtual para híbrida */}
             {audiencia.url_audiencia_virtual && (
-              <div className="flex flex-col items-start gap-1.5 w-full">
+              <div className="flex flex-col items-start gap-1.5 w-full group/url relative">
                 <div className="flex items-center gap-1.5 w-full">
                   {logoPath ? (
                     <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
@@ -280,6 +280,15 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
                       {audiencia.url_audiencia_virtual}
                     </a>
                   )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setIsDialogOpen(true)}
+                    className="h-5 w-5 p-0 opacity-0 group-hover/url:opacity-100 transition-opacity"
+                    title="Editar endereço"
+                  >
+                    <Pencil className="h-3 w-3" />
+                  </Button>
                 </div>
                 {presencaHibridaTexto && (
                   <div className="text-xs text-muted-foreground italic">{presencaHibridaTexto}</div>
@@ -288,17 +297,28 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
             )}
             {/* Endereço presencial para híbrida */}
             {enderecoCompleto && (
-              <div className="flex flex-col items-start gap-1.5 w-full">
-                <div className="text-xs text-muted-foreground w-full">
-                  <span className="font-medium">Presencial: </span>
-                  <span>{enderecoCompleto}</span>
+              <div className="flex flex-col items-start gap-1.5 w-full group/endereco relative">
+                <div className="text-xs text-muted-foreground w-full flex items-start gap-1">
+                  <div className="flex-1">
+                    <span className="font-medium">Presencial: </span>
+                    <span>{enderecoCompleto}</span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setIsDialogOpen(true)}
+                    className="h-5 w-5 p-0 opacity-0 group-hover/endereco:opacity-100 transition-opacity flex-shrink-0"
+                    title="Editar endereço"
+                  >
+                    <Pencil className="h-3 w-3" />
+                  </Button>
                 </div>
               </div>
             )}
           </>
         ) : audiencia.url_audiencia_virtual ? (
           /* Link virtual para modalidade virtual */
-          <div className="flex-1 flex items-center justify-start w-full">
+          <div className="flex-1 flex items-center justify-start w-full group/url relative gap-1">
             {logoPath ? (
               <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
                 <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
@@ -308,62 +328,70 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
                 {audiencia.url_audiencia_virtual}
               </a>
             )}
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setIsDialogOpen(true)}
+              className="h-5 w-5 p-0 opacity-0 group-hover/url:opacity-100 transition-opacity flex-shrink-0"
+              title="Editar endereço"
+            >
+              <Pencil className="h-3 w-3" />
+            </Button>
           </div>
         ) : enderecoCompleto ? (
           /* Endereço presencial para modalidade presencial */
-          <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
-            {enderecoCompleto}
-          </span>
+          <div className="w-full group/endereco relative flex items-start gap-1">
+            <span className="text-sm whitespace-pre-wrap wrap-break-word flex-1">
+              {enderecoCompleto}
+            </span>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setIsDialogOpen(true)}
+              className="h-5 w-5 p-0 opacity-0 group-hover/endereco:opacity-100 transition-opacity flex-shrink-0"
+              title="Editar endereço"
+            >
+              <Pencil className="h-3 w-3" />
+            </Button>
+          </div>
         ) : null}
       </div>
 
-      {/* Botões de ação - alinhados ao bottom */}
-      <div className="flex items-center gap-1.5 mt-auto">
+      {/* Botões de ação - alinhados ao bottom com espaçamento */}
+      <div className="flex items-center gap-2 mt-3 pt-2">
         <TooltipProvider>
           {isDesignada ? (
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="ghost"
+                <button
                   onClick={handleMarcarRealizada}
                   disabled={isMarkingRealizada}
-                  className="h-7 w-7 p-0"
+                  className="h-8 w-8 rounded-full bg-green-100 hover:bg-green-200 dark:bg-green-900 dark:hover:bg-green-800 flex items-center justify-center transition-colors disabled:opacity-50"
                   title="Marcar como realizada"
                 >
                   {isMarkingRealizada ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin text-green-700 dark:text-green-300" />
                   ) : (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
+                    <Check className="h-4 w-4 text-green-700 dark:text-green-300" />
                   )}
-                </Button>
+                </button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Marcar como realizada</p>
               </TooltipContent>
             </Tooltip>
           ) : audiencia.status === 'F' ? (
-            <Badge variant="outline" className="h-7 px-2 text-xs gap-1 bg-green-100 text-green-800 border-green-300">
-              <CheckCircle2 className="h-3 w-3" />
-            </Badge>
+            <div className="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+              <Check className="h-4 w-4 text-green-700 dark:text-green-300" />
+            </div>
           ) : null}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-7 w-7 p-0" title="Editar Endereço">
-                <Pencil className="h-3.5 w-3.5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Editar Endereço</p>
-            </TooltipContent>
-          </Tooltip>
           <Popover open={isMaisPopoverOpen} onOpenChange={setIsMaisPopoverOpen}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <PopoverTrigger asChild>
-                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0">
-                    <Plus className="h-3.5 w-3.5" />
-                  </Button>
+                  <button className="h-8 w-8 rounded-full bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 flex items-center justify-center transition-colors" aria-label="Criar expediente ou obrigação">
+                    <Plus className="h-4 w-4 text-blue-700 dark:text-blue-300" />
+                  </button>
                 </PopoverTrigger>
               </TooltipTrigger>
               <TooltipContent>
