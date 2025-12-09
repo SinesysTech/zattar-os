@@ -1,4 +1,20 @@
 # syntax=docker/dockerfile:1.4
+# ============================================================================
+# REQUISITO: Docker BuildKit
+# ============================================================================
+# Este Dockerfile usa recursos do BuildKit (--mount=type=cache).
+# O BuildKit é ativado automaticamente no Docker 23.0+ ou pode ser habilitado:
+#
+# Opção 1: Variável de ambiente
+#   export DOCKER_BUILDKIT=1
+#
+# Opção 2: Configuração do daemon (/etc/docker/daemon.json)
+#   { "features": { "buildkit": true } }
+#
+# Se BuildKit não estiver disponível, remova o uso de --mount=type=cache
+# na linha do "npm ci" e use: RUN npm ci --legacy-peer-deps --ignore-scripts
+# ============================================================================
+#
 # Dockerfile para Sinesys (Next.js App)
 #
 # Este Dockerfile cria uma imagem LEVE do Next.js usando Turbopack.

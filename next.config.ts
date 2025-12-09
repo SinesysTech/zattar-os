@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
   // Exclude test files from compilation
   excludeDefaultMomentLocales: true,
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'].filter(ext => !ext.includes('test')),
+  // Disables ESLint during build - lint should run separately via "npm run lint"
+  // ESLINT_NO_DEV_ERRORS only affects "next dev", not "next build"
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
     // Disables server source maps to reduce memory usage in the server runtime
     serverSourceMaps: false,
