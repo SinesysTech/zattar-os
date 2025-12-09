@@ -9,7 +9,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Copy, Pencil, FileText, Check, PlusCircle, Loader2, Scale, Plus } from 'lucide-react';
+import { Pencil, FileText, Check, PlusCircle, Loader2, Scale, Plus } from 'lucide-react';
 import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';
@@ -253,7 +253,7 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
     : null;
 
   return (
-    <div className="min-h-10 flex flex-col items-start justify-center h-full max-w-[240px]">
+    <div className="min-h-10 flex flex-col items-start justify-center h-full max-w-60">
       {/* Conteúdo principal com flex-grow para empurrar botões para baixo */}
       <div className="flex-1 flex flex-col items-start justify-start gap-4 w-full">
         {/* Seção 1: Tipo da audiência e Sala (conjunto) */}
@@ -307,7 +307,7 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
                     size="sm"
                     variant="ghost"
                     onClick={() => setIsDialogOpen(true)}
-                    className="h-5 w-5 p-0 opacity-0 group-hover/endereco:opacity-100 transition-opacity flex-shrink-0"
+                    className="h-5 w-5 p-0 opacity-0 group-hover/endereco:opacity-100 transition-opacity shrink-0"
                     title="Editar endereço"
                   >
                     <Pencil className="h-3 w-3" />
@@ -332,7 +332,7 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
               size="sm"
               variant="ghost"
               onClick={() => setIsDialogOpen(true)}
-              className="h-5 w-5 p-0 opacity-0 group-hover/url:opacity-100 transition-opacity flex-shrink-0"
+              className="h-5 w-5 p-0 opacity-0 group-hover/url:opacity-100 transition-opacity shrink-0"
               title="Editar endereço"
             >
               <Pencil className="h-3 w-3" />
@@ -348,7 +348,7 @@ function DetalhesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSucces
               size="sm"
               variant="ghost"
               onClick={() => setIsDialogOpen(true)}
-              className="h-5 w-5 p-0 opacity-0 group-hover/endereco:opacity-100 transition-opacity flex-shrink-0"
+              className="h-5 w-5 p-0 opacity-0 group-hover/endereco:opacity-100 transition-opacity shrink-0"
               title="Editar endereço"
             >
               <Pencil className="h-3 w-3" />

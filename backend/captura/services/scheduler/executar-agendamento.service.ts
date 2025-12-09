@@ -7,6 +7,7 @@ import { acervoGeralCapture, type AcervoGeralResult } from '@/backend/captura/se
 import { arquivadosCapture, type ArquivadosResult } from '@/backend/captura/services/trt/arquivados.service';
 import { audienciasCapture, type AudienciasResult } from '@/backend/captura/services/trt/audiencias.service';
 import { pendentesManifestacaoCapture, type PendentesManifestacaoResult } from '@/backend/captura/services/trt/pendentes-manifestacao.service';
+import { capturaCombinada, type CapturaCombinAdaResult } from '@/backend/captura/services/trt/captura-combinada.service';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
 import { atualizarAgendamento } from '../agendamentos/atualizar-agendamento.service';
 import { recalcularProximaExecucaoAposExecucao } from '../agendamentos/calcular-proxima-execucao.service';
@@ -38,7 +39,7 @@ interface SalvarPayloadsPartesParams {
  */
 async function salvarPayloadsBrutosPartes(params: SalvarPayloadsPartesParams): Promise<number> {
   const { payloadsBrutosPartes, capturaLogId, advogadoId, credencialId, credencialIds, trt, grau, tipoCapturaPai } = params;
-  
+
   if (!payloadsBrutosPartes || payloadsBrutosPartes.length === 0) {
     return 0;
   }
@@ -370,6 +371,52 @@ export async function executarAgendamento(
             }
 
             resultado = { filtros: resultadosPendentes };
+            break;
+          }
+          case 'combinada': {
+            console.log('[Scheduler] Executando captura combinada...');
+            resultado = await capturaCombinada({
+              credential: credCompleta.credenciais,
+              config: tribunalConfig,
+            });
+
+            await registrarCapturaRawLog({
+              captura_log_id: logId ?? -1,
+              tipo_captura: agendamento.tipo_captura,
+              advogado_id: agendamento.advogado_id,
+              credencial_id: credCompleta.credentialId,
+              credencial_ids: agendamento.credencial_ids,
+              trt: credCompleta.tribunal,
+              grau: credCompleta.grau,
+              status: 'success',
+              requisicao: {
+                agendamento_id: agendamento.id,
+                resumo: (resultado as CapturaCombinAdaResult).resumo,
+              },
+              payload_bruto: {
+                capturas: (resultado as CapturaCombinAdaResult).capturas,
+              },
+              resultado_processado: {
+                persistenciaAudiencias: (resultado as CapturaCombinAdaResult).persistenciaAudiencias,
+                persistenciaExpedientes: (resultado as CapturaCombinAdaResult).persistenciaExpedientes,
+                dadosComplementares: (resultado as CapturaCombinAdaResult).dadosComplementares,
+              },
+              logs: (resultado as CapturaCombinAdaResult).logs,
+            });
+
+            // Salvar payloads brutos de partes no MongoDB
+            if ((resultado as CapturaCombinAdaResult).payloadsBrutosPartes) {
+              await salvarPayloadsBrutosPartes({
+                payloadsBrutosPartes: (resultado as CapturaCombinAdaResult).payloadsBrutosPartes!,
+                capturaLogId: logId ?? -1,
+                advogadoId: agendamento.advogado_id,
+                credencialId: credCompleta.credentialId,
+                credencialIds: agendamento.credencial_ids,
+                trt: credCompleta.tribunal,
+                grau: credCompleta.grau,
+                tipoCapturaPai: 'combinada',
+              });
+            }
             break;
           }
           default:

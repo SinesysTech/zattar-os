@@ -33,3 +33,16 @@ export interface CapturaAudienciasParams extends CapturaTRTParams {
   /** Código do status da audiência: 'M' = Designada, 'C' = Cancelada, 'F' = Realizada. Padrão: 'M' */
   codigoSituacao?: 'M' | 'C' | 'F';
 }
+
+/**
+ * Parâmetros para captura combinada
+ * 
+ * Executa múltiplas capturas em uma única sessão:
+ * - Audiências Designadas (hoje → +1 ano)
+ * - Audiências Realizadas (ontem)
+ * - Audiências Canceladas (hoje → +1 ano)
+ * - Expedientes No Prazo
+ * - Expedientes Sem Prazo
+ * - Timeline + Partes de todos os processos únicos
+ */
+export type CapturaCombinAdaParams = CapturaTRTParams;

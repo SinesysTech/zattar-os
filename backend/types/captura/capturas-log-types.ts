@@ -5,7 +5,7 @@
 /**
  * Tipos de captura disponíveis
  */
-export type TipoCaptura = 'acervo_geral' | 'arquivados' | 'audiencias' | 'pendentes' | 'partes';
+export type TipoCaptura = 'acervo_geral' | 'arquivados' | 'audiencias' | 'pendentes' | 'partes' | 'combinada';
 
 /**
  * Status de uma captura
