@@ -201,7 +201,7 @@
   - Implementar busca otimizada em Combobox para mobile
   - _Requirements: 7.2, 7.3, 7.4, 7.5_
 
-- [-] 10.3 Escrever property tests para Selects e Date Pickers
+- [ ] 10.3 Escrever property tests para Selects e Date Pickers
   - **Property 29: Touch-optimized date picker**
   - **Validates: Requirements 7.1**
   - **Property 30: Mobile select interface**
