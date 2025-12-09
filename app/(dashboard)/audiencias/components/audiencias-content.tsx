@@ -434,7 +434,7 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
     : null;
 
   return (
-    <div className="min-h-10 flex flex-col items-start justify-center h-full max-w-[240px]">
+    <div className="min-h-10 flex flex-col items-start justify-center h-full max-w-60">
       {/* Conteúdo principal com flex-grow para empurrar botões para baixo */}
       <div className="flex-1 flex flex-col items-start justify-start gap-4 w-full">
         {/* Seção 1: Tipo da audiência e Sala (conjunto) */}
@@ -488,7 +488,7 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
                     size="sm"
                     variant="ghost"
                     onClick={(e) => { e.stopPropagation(); setIsDialogOpen(true); }}
-                    className="h-5 w-5 p-0 opacity-0 group-hover/endereco:opacity-100 transition-opacity flex-shrink-0"
+                    className="h-5 w-5 p-0 opacity-0 group-hover/endereco:opacity-100 transition-opacity shrink-0"
                     title="Editar endereço"
                   >
                     <Pencil className="h-3 w-3" />
@@ -513,7 +513,7 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
               size="sm"
               variant="ghost"
               onClick={(e) => { e.stopPropagation(); setIsDialogOpen(true); }}
-              className="h-5 w-5 p-0 opacity-0 group-hover/url:opacity-100 transition-opacity flex-shrink-0"
+              className="h-5 w-5 p-0 opacity-0 group-hover/url:opacity-100 transition-opacity shrink-0"
               title="Editar endereço"
             >
               <Pencil className="h-3 w-3" />
@@ -529,7 +529,7 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
               size="sm"
               variant="ghost"
               onClick={(e) => { e.stopPropagation(); setIsDialogOpen(true); }}
-              className="h-5 w-5 p-0 opacity-0 group-hover/endereco:opacity-100 transition-opacity flex-shrink-0"
+              className="h-5 w-5 p-0 opacity-0 group-hover/endereco:opacity-100 transition-opacity shrink-0"
               title="Editar endereço"
             >
               <Pencil className="h-3 w-3" />
