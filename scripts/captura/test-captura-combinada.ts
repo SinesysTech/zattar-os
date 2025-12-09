@@ -9,9 +9,9 @@
  * Tudo em uma única sessão autenticada!
  */
 
-import { capturaCombinada } from '@/backend/captura/services/trt/captura-combinada.service';
-import type { CapturaCombinAdaParams } from '@/backend/captura/services/trt/trt-capture.service';
-import { getTribunalConfig } from '@/backend/captura/services/trt/config';
+import { capturaCombinada } from '../../backend/captura/services/trt/captura-combinada.service';
+import type { CapturaCombinAdaParams } from '../../backend/captura/services/trt/trt-capture.service';
+import { getTribunalConfig } from '../../backend/captura/services/trt/config';
 
 async function testarCapturaCombinada() {
     console.log('🚀 Iniciando teste de Captura Combinada...\n');
