@@ -54,28 +54,28 @@ O **Sinesys** é um sistema completo de gestão jurídica desenvolvido especific
 
 ### 2.1. Frontend
 
-| Tecnologia | Versão | Função |
-|------------|--------|---------|
-| **Next.js** | 16.x | Framework React com App Router e SSR |
-| **React** | 19.2 | Biblioteca de interface do usuário |
-| **TypeScript** | 5.x | Tipagem estática e segurança de tipos |
-| **Tailwind CSS** | 4.x | Framework CSS utility-first |
-| **shadcn/ui** | - | Biblioteca de componentes reutilizáveis |
-| **Radix UI** | - | Primitivos de UI acessíveis |
-| **Framer Motion** | 12.x | Animações e transições |
-| **TanStack Table** | 8.x | Tabelas avançadas com filtros e ordenação |
-| **SWR** | 2.x | Fetching de dados e cache client-side |
+| Tecnologia         | Versão | Função                                    |
+| ------------------ | ------ | ----------------------------------------- |
+| **Next.js**        | 16.x   | Framework React com App Router e SSR      |
+| **React**          | 19.2   | Biblioteca de interface do usuário        |
+| **TypeScript**     | 5.x    | Tipagem estática e segurança de tipos     |
+| **Tailwind CSS**   | 4.x    | Framework CSS utility-first               |
+| **shadcn/ui**      | -      | Biblioteca de componentes reutilizáveis   |
+| **Radix UI**       | -      | Primitivos de UI acessíveis               |
+| **Framer Motion**  | 12.x   | Animações e transições                    |
+| **TanStack Table** | 8.x    | Tabelas avançadas com filtros e ordenação |
+| **SWR**            | 2.x    | Fetching de dados e cache client-side     |
 
 ### 2.2. Backend
 
-| Tecnologia | Versão | Função |
-|------------|--------|---------|
-| **Next.js API Routes** | 16.x | Endpoints HTTP RESTful |
-| **Supabase** | 2.x | Backend-as-a-Service (Auth + DB) |
-| **PostgreSQL** | 15.x | Banco de dados relacional |
-| **Redis** | - | Cache e sessões |
-| **MongoDB** | 7.x | Banco de dados NoSQL auxiliar |
-| **Playwright** | 1.56 | Automação de captura de dados |
+| Tecnologia             | Versão | Função                           |
+| ---------------------- | ------ | -------------------------------- |
+| **Next.js API Routes** | 16.x   | Endpoints HTTP RESTful           |
+| **Supabase**           | 2.x    | Backend-as-a-Service (Auth + DB) |
+| **PostgreSQL**         | 15.x   | Banco de dados relacional        |
+| **Redis**              | -      | Cache e sessões                  |
+| **MongoDB**            | 7.x    | Banco de dados NoSQL auxiliar    |
+| **Playwright**         | 1.56   | Automação de captura de dados    |
 
 ### 2.3. Bibliotecas Especializadas
 
@@ -89,13 +89,13 @@ O **Sinesys** é um sistema completo de gestão jurídica desenvolvido especific
 
 ### 2.4. DevOps e Infraestrutura
 
-| Tecnologia | Função |
-|------------|---------|
-| **Docker** | Containerização |
-| **Docker Swarm** | Orquestração de containers |
-| **Traefik** | Proxy reverso e load balancer |
+| Tecnologia       | Função                                   |
+| ---------------- | ---------------------------------------- |
+| **Docker**       | Containerização                          |
+| **Docker Swarm** | Orquestração de containers               |
+| **Traefik**      | Proxy reverso e load balancer            |
 | **Backblaze B2** | Armazenamento de objetos (S3-compatible) |
-| **Vercel** | Deploy alternativo (desenvolvimento) |
+| **Vercel**       | Deploy alternativo (desenvolvimento)     |
 
 ---
 
@@ -143,11 +143,13 @@ sinesys/
 ### 3.2. Convenções de Nomenclatura
 
 #### Diretórios
+
 - **Backend**: `kebab-case` (ex: `acordos-condenacoes/`)
 - **Componentes**: `kebab-case` (ex: `table-toolbar/`)
 - **Módulos**: Nome do domínio no singular/plural conforme contexto
 
 #### Arquivos
+
 - **Componentes React**: `kebab-case.tsx` (ex: `user-avatar.tsx`)
 - **Serviços**: `{nome}.service.ts` (ex: `cliente.service.ts`)
 - **Persistência**: `{entidade}-persistence.service.ts`
@@ -155,6 +157,7 @@ sinesys/
 - **Testes**: `{nome}.test.ts` ou `{nome}.spec.ts`
 
 #### Código
+
 - **TypeScript**: `camelCase` para variáveis/funções, `PascalCase` para tipos/classes
 - **SQL**: `snake_case` para tabelas e colunas
 - **CSS**: `kebab-case` para classes
@@ -221,18 +224,21 @@ O Sinesys segue uma **arquitetura em camadas** inspirada em **Domain-Driven Desi
 ### 4.2. Responsabilidades por Camada
 
 #### Camada de Apresentação
+
 - Renderizar interface do usuário
 - Capturar interações do usuário
 - Gerenciar estado local da UI
 - Validação de formulários (frontend)
 - Feedback visual (loading, erros, sucesso)
 
-**Exemplos**: 
+**Exemplos**:
+
 - `app/(dashboard)/processos/page.tsx`
 - `components/ui/data-table.tsx`
 - `hooks/use-viewport.ts`
 
 #### Camada de API
+
 - Receber requisições HTTP
 - Validar entrada com schemas Zod
 - Autenticar e autorizar usuários
@@ -240,6 +246,7 @@ O Sinesys segue uma **arquitetura em camadas** inspirada em **Domain-Driven Desi
 - Retornar respostas padronizadas
 
 **Formato de Resposta**:
+
 ```typescript
 // Sucesso
 { success: true, data: T }
@@ -249,10 +256,12 @@ O Sinesys segue uma **arquitetura em camadas** inspirada em **Domain-Driven Desi
 ```
 
 **Exemplos**:
+
 - `app/api/clientes/route.ts`
 - `app/api/acervo/[id]/route.ts`
 
 #### Camada de Aplicação
+
 - Implementar casos de uso
 - Orquestrar múltiplas operações
 - Validar regras de negócio
@@ -260,26 +269,31 @@ O Sinesys segue uma **arquitetura em camadas** inspirada em **Domain-Driven Desi
 - Independente de detalhes de infraestrutura
 
 **Exemplos**:
+
 - `backend/clientes/services/clientes/criar-cliente.service.ts`
 - `backend/acervo/services/acervo/listar-processos.service.ts`
 
 #### Camada de Domínio
+
 - Definir entidades e value objects
 - Encapsular regras de negócio puras
 - Sem dependências externas
 - Reutilizável em qualquer contexto
 
 **Exemplos**:
+
 - `types/domain/cliente.ts`
 - `types/domain/processo.ts`
 
 #### Camada de Infraestrutura
+
 - Acesso ao banco de dados
 - Integração com APIs externas
 - Cache e armazenamento
 - Detalhes técnicos de implementação
 
 **Exemplos**:
+
 - `backend/clientes/services/persistence/cliente-persistence.service.ts`
 - `backend/captura/services/trt/trt-auth.service.ts`
 
@@ -353,6 +367,7 @@ components/ui/
 O sistema possui uma estratégia completa de responsividade:
 
 **Breakpoints**:
+
 ```typescript
 {
   sm: 640,   // Mobile landscape
@@ -364,11 +379,13 @@ O sistema possui uma estratégia completa de responsividade:
 ```
 
 **Hooks de Responsividade**:
+
 - `useViewport()`: Detecta tamanho da tela e breakpoint atual
 - `useOrientation()`: Detecta orientação (portrait/landscape)
 - `useBreakpoint()`: Verifica se está em breakpoint específico
 
 **Componentes Adaptativos**:
+
 - `ResponsiveTable`: Alterna entre tabela e cards em mobile
 - `ResponsiveDialog`: Sheet em mobile, Dialog em desktop
 - `ResponsiveFilterPanel`: Filtros inline (desktop) ou Sheet (mobile)
@@ -392,11 +409,13 @@ app/
 #### Navegação
 
 **Componentes**:
+
 - `AppSidebar`: Navegação lateral com módulos
 - `AppBreadcrumb`: Breadcrumb dinâmico
 - `MobileNav`: Menu mobile (Sheet)
 
 **Configuração**:
+
 ```typescript
 // components/layout/app-sidebar.tsx
 const navItems = [
@@ -418,22 +437,22 @@ const navItems = [
 
 #### Estratégias de Estado
 
-| Tipo de Estado | Solução | Exemplo |
-|----------------|---------|---------|
-| **Estado Local** | `useState`, `useReducer` | Formulários, UI temporária |
-| **Estado do Servidor** | SWR, React Query | Dados de API |
-| **Estado Global** | Context API, Zustand | Tema, usuário autenticado |
-| **URL State** | Next.js Router | Filtros, paginação |
+| Tipo de Estado         | Solução                  | Exemplo                    |
+| ---------------------- | ------------------------ | -------------------------- |
+| **Estado Local**       | `useState`, `useReducer` | Formulários, UI temporária |
+| **Estado do Servidor** | SWR, React Query         | Dados de API               |
+| **Estado Global**      | Context API, Zustand     | Tema, usuário autenticado  |
+| **URL State**          | Next.js Router           | Filtros, paginação         |
 
 #### Fetching de Dados com SWR
 
 ```typescript
 // Exemplo: Listar processos com cache
-import useSWR from 'swr';
+import useSWR from "swr";
 
 function ProcessosPage() {
   const { data, error, isLoading } = useSWR(
-    '/api/acervo?pagina=1&limite=20',
+    "/api/acervo?pagina=1&limite=20",
     fetcher,
     {
       revalidateOnFocus: false,
@@ -443,7 +462,7 @@ function ProcessosPage() {
 
   if (isLoading) return <Spinner />;
   if (error) return <Error />;
-  
+
   return <DataTable data={data.processos} />;
 }
 ```
@@ -453,14 +472,14 @@ function ProcessosPage() {
 #### React Hook Form + Zod
 
 ```typescript
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 const clienteSchema = z.object({
-  nome: z.string().min(3, 'Mínimo 3 caracteres'),
-  cpf: z.string().regex(/^\d{11}$/, 'CPF inválido'),
-  email: z.string().email('E-mail inválido'),
+  nome: z.string().min(3, "Mínimo 3 caracteres"),
+  cpf: z.string().regex(/^\d{11}$/, "CPF inválido"),
+  email: z.string().email("E-mail inválido"),
 });
 
 type ClienteFormData = z.infer<typeof clienteSchema>;
@@ -471,8 +490,8 @@ function ClienteForm() {
   });
 
   const onSubmit = async (data: ClienteFormData) => {
-    const response = await fetch('/api/clientes', {
-      method: 'POST',
+    const response = await fetch("/api/clientes", {
+      method: "POST",
       body: JSON.stringify(data),
     });
     // ...
@@ -556,33 +575,40 @@ backend/
 #### Camada de Aplicação (Business Logic)
 
 **Responsabilidades**:
+
 - Validar regras de negócio
 - Orquestrar múltiplas operações
 - Transformar dados
 - Independente de detalhes de persistência
 
 **Exemplo**:
+
 ```typescript
 // backend/clientes/services/clientes/criar-cliente.service.ts
-import { criarCliente as criarClientePersistence } from '../persistence/cliente-persistence.service';
-import type { CriarClienteParams, Cliente } from '@/backend/types/clientes/types';
+import { criarCliente as criarClientePersistence } from "../persistence/cliente-persistence.service";
+import type {
+  CriarClienteParams,
+  Cliente,
+} from "@/backend/types/clientes/types";
 
-export async function criarCliente(params: CriarClienteParams): Promise<Cliente> {
+export async function criarCliente(
+  params: CriarClienteParams
+): Promise<Cliente> {
   // 1. Validações de negócio
   if (!params.nome || params.nome.trim().length < 3) {
-    throw new Error('Nome deve ter pelo menos 3 caracteres');
+    throw new Error("Nome deve ter pelo menos 3 caracteres");
   }
 
   // 2. Normalização
   const dadosNormalizados = {
     ...params,
     nome: params.nome.trim().toUpperCase(),
-    cpf: params.cpf.replace(/\D/g, ''),
+    cpf: params.cpf.replace(/\D/g, ""),
   };
 
   // 3. Regras de negócio
-  if (params.tipo === 'PF' && !validarCPF(dadosNormalizados.cpf)) {
-    throw new Error('CPF inválido');
+  if (params.tipo === "PF" && !validarCPF(dadosNormalizados.cpf)) {
+    throw new Error("CPF inválido");
   }
 
   // 4. Persistência
@@ -593,22 +619,29 @@ export async function criarCliente(params: CriarClienteParams): Promise<Cliente>
 #### Camada de Persistência (Data Access)
 
 **Responsabilidades**:
+
 - Acesso ao banco de dados
 - Queries e filtros
 - Auditoria e logging
 - Manipulação de relações
 
 **Exemplo**:
+
 ```typescript
 // backend/clientes/services/persistence/cliente-persistence.service.ts
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { Cliente, CriarClienteParams } from '@/backend/types/clientes/types';
+import { createServiceClient } from "@/backend/utils/supabase/service-client";
+import type {
+  Cliente,
+  CriarClienteParams,
+} from "@/backend/types/clientes/types";
 
-export async function criarCliente(params: CriarClienteParams): Promise<Cliente> {
+export async function criarCliente(
+  params: CriarClienteParams
+): Promise<Cliente> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('clientes')
+    .from("clientes")
     .insert({
       nome: params.nome,
       cpf: params.cpf,
@@ -625,24 +658,26 @@ export async function criarCliente(params: CriarClienteParams): Promise<Cliente>
   return data;
 }
 
-export async function listarClientes(filtros: ListarClientesParams): Promise<ClientesPaginados> {
+export async function listarClientes(
+  filtros: ListarClientesParams
+): Promise<ClientesPaginados> {
   const supabase = createServiceClient();
 
-  let query = supabase
-    .from('clientes')
-    .select('*', { count: 'exact' });
+  let query = supabase.from("clientes").select("*", { count: "exact" });
 
   // Filtros
   if (filtros.busca) {
-    query = query.or(`nome.ilike.%${filtros.busca}%,cpf.ilike.%${filtros.busca}%`);
+    query = query.or(
+      `nome.ilike.%${filtros.busca}%,cpf.ilike.%${filtros.busca}%`
+    );
   }
 
   if (filtros.tipo) {
-    query = query.eq('tipo', filtros.tipo);
+    query = query.eq("tipo", filtros.tipo);
   }
 
   // Ordenação
-  query = query.order('nome', { ascending: true });
+  query = query.order("nome", { ascending: true });
 
   // Paginação
   const from = (filtros.pagina - 1) * filtros.limite;
@@ -690,16 +725,19 @@ app/api/
 
 ```typescript
 // app/api/clientes/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
-import { criarCliente, listarClientes } from '@/backend/clientes/services/clientes';
-import { z } from 'zod';
+import { NextRequest, NextResponse } from "next/server";
+import { authenticateRequest } from "@/backend/auth/api-auth";
+import {
+  criarCliente,
+  listarClientes,
+} from "@/backend/clientes/services/clientes";
+import { z } from "zod";
 
 // Schema de validação
 const criarClienteSchema = z.object({
   nome: z.string().min(3),
   cpf: z.string().regex(/^\d{11}$/),
-  tipo: z.enum(['PF', 'PJ']),
+  tipo: z.enum(["PF", "PJ"]),
   email: z.string().email().optional(),
 });
 
@@ -736,7 +774,7 @@ export async function POST(request: NextRequest) {
     const auth = await authenticateRequest(request);
     if (!auth.authenticated) {
       return NextResponse.json(
-        { success: false, error: 'Não autenticado' },
+        { success: false, error: "Não autenticado" },
         { status: 401 }
       );
     }
@@ -760,11 +798,10 @@ export async function POST(request: NextRequest) {
       success: true,
       data: cliente,
     });
-
   } catch (error) {
-    console.error('Erro ao criar cliente:', error);
+    console.error("Erro ao criar cliente:", error);
     return NextResponse.json(
-      { success: false, error: 'Erro interno do servidor' },
+      { success: false, error: "Erro interno do servidor" },
       { status: 500 }
     );
   }
@@ -800,17 +837,17 @@ export async function GET(request: NextRequest) {
     const auth = await authenticateRequest(request);
     if (!auth.authenticated) {
       return NextResponse.json(
-        { success: false, error: 'Não autenticado' },
+        { success: false, error: "Não autenticado" },
         { status: 401 }
       );
     }
 
     const { searchParams } = new URL(request.url);
     const filtros = {
-      pagina: parseInt(searchParams.get('pagina') || '1'),
-      limite: parseInt(searchParams.get('limite') || '20'),
-      busca: searchParams.get('busca') || undefined,
-      tipo: searchParams.get('tipo') as 'PF' | 'PJ' | undefined,
+      pagina: parseInt(searchParams.get("pagina") || "1"),
+      limite: parseInt(searchParams.get("limite") || "20"),
+      busca: searchParams.get("busca") || undefined,
+      tipo: searchParams.get("tipo") as "PF" | "PJ" | undefined,
     };
 
     const resultado = await listarClientes(filtros);
@@ -819,11 +856,10 @@ export async function GET(request: NextRequest) {
       success: true,
       data: resultado,
     });
-
   } catch (error) {
-    console.error('Erro ao listar clientes:', error);
+    console.error("Erro ao listar clientes:", error);
     return NextResponse.json(
-      { success: false, error: 'Erro interno do servidor' },
+      { success: false, error: "Erro interno do servidor" },
       { status: 500 }
     );
   }
@@ -860,7 +896,7 @@ export interface Cliente {
   id: number;
   nome: string;
   cpf: string;
-  tipo: 'PF' | 'PJ';
+  tipo: "PF" | "PJ";
   email: string | null;
   telefone: string | null;
   ativo: boolean;
@@ -872,7 +908,7 @@ export interface Cliente {
 export interface CriarClienteParams {
   nome: string;
   cpf: string;
-  tipo: 'PF' | 'PJ';
+  tipo: "PF" | "PJ";
   email?: string;
   telefone?: string;
 }
@@ -882,7 +918,7 @@ export interface ListarClientesParams {
   pagina: number;
   limite: number;
   busca?: string;
-  tipo?: 'PF' | 'PJ';
+  tipo?: "PF" | "PJ";
 }
 
 export interface ClientesPaginados {
@@ -899,12 +935,12 @@ export interface ClientesPaginados {
 
 ### 7.1. Tecnologias de Persistência
 
-| Tecnologia | Uso |
-|------------|-----|
+| Tecnologia                | Uso                                          |
+| ------------------------- | -------------------------------------------- |
 | **PostgreSQL** (Supabase) | Banco de dados principal (dados relacionais) |
-| **Redis** | Cache, sessões, locks distribuídos |
-| **MongoDB** | Dados não estruturados (logs, capturas) |
-| **Backblaze B2** | Armazenamento de objetos (PDFs, imagens) |
+| **Redis**                 | Cache, sessões, locks distribuídos           |
+| **MongoDB**               | Dados não estruturados (logs, capturas)      |
+| **Backblaze B2**          | Armazenamento de objetos (PDFs, imagens)     |
 
 ### 7.2. Estrutura do Banco de Dados
 
@@ -953,16 +989,16 @@ supabase/schemas/
 
 #### Principais Tabelas
 
-| Tabela | Descrição | Registros Estimados |
-|--------|-----------|---------------------|
-| `acervo_geral` | Processos de 1º grau | ~50.000 |
-| `acervo_segundo_grau` | Processos de 2º grau | ~5.000 |
-| `audiencias` | Audiências agendadas | ~10.000 |
-| `expedientes` | Expedientes/Prazos | ~30.000 |
-| `acordos_condenacoes` | Obrigações financeiras | ~2.000 |
-| `clientes` | Clientes do escritório | ~500 |
-| `usuarios` | Usuários do sistema | ~50 |
-| `capturas` | Logs de captura de dados | ~1.000 |
+| Tabela                | Descrição                | Registros Estimados |
+| --------------------- | ------------------------ | ------------------- |
+| `acervo_geral`        | Processos de 1º grau     | ~50.000             |
+| `acervo_segundo_grau` | Processos de 2º grau     | ~5.000              |
+| `audiencias`          | Audiências agendadas     | ~10.000             |
+| `expedientes`         | Expedientes/Prazos       | ~30.000             |
+| `acordos_condenacoes` | Obrigações financeiras   | ~2.000              |
+| `clientes`            | Clientes do escritório   | ~500                |
+| `usuarios`            | Usuários do sistema      | ~50                 |
+| `capturas`            | Logs de captura de dados | ~1.000              |
 
 ### 7.3. Row Level Security (RLS)
 
@@ -997,6 +1033,7 @@ CREATE POLICY "Usuários autenticados podem inserir clientes"
 ```
 
 **Observações**:
+
 - Políticas RLS são camada adicional de segurança
 - Autorização principal é feita no backend via `checkPermission()`
 - Service role bypassa RLS (usado em serviços backend)
@@ -1015,6 +1052,7 @@ graph LR
 ```
 
 **Comandos**:
+
 ```bash
 # Gerar migration a partir de schemas
 supabase db diff -f nome_da_migration
@@ -1041,7 +1079,7 @@ supabase db reset
 ```sql
 -- View unificada de acervo (1º e 2º grau)
 CREATE OR REPLACE VIEW public.acervo_unificado_view AS
-SELECT 
+SELECT
   id,
   numero_processo,
   tribunal_id,
@@ -1052,7 +1090,7 @@ SELECT
 FROM public.acervo_geral
 WHERE ativo = true
 UNION ALL
-SELECT 
+SELECT
   id,
   numero_processo,
   tribunal_id,
@@ -1073,8 +1111,8 @@ STABLE
 SECURITY DEFINER
 SET search_path = public
 AS $$
-  SELECT id FROM public.usuarios 
-  WHERE auth_user_id = auth.uid() 
+  SELECT id FROM public.usuarios
+  WHERE auth_user_id = auth.uid()
   LIMIT 1;
 $$;
 ```
@@ -1085,12 +1123,15 @@ $$;
 
 ```typescript
 // backend/utils/cache/redis-cache.ts
-import Redis from 'ioredis';
+import Redis from "ioredis";
 
 const redis = new Redis(process.env.REDIS_URL);
 
 // Cache de permissões (5 minutos)
-export async function cachePermissoes(usuarioId: number, permissoes: Permissao[]) {
+export async function cachePermissoes(
+  usuarioId: number,
+  permissoes: Permissao[]
+) {
   await redis.setex(
     `permissoes:${usuarioId}`,
     300, // 5 minutos
@@ -1102,12 +1143,12 @@ export async function cachePermissoes(usuarioId: number, permissoes: Permissao[]
 export async function acquireLock(key: string, ttl: number): Promise<boolean> {
   const result = await redis.set(
     `lock:${key}`,
-    'locked',
-    'EX',
+    "locked",
+    "EX",
     ttl,
-    'NX' // Só cria se não existir
+    "NX" // Só cria se não existir
   );
-  return result === 'OK';
+  return result === "OK";
 }
 ```
 
@@ -1145,25 +1186,25 @@ export async function authenticateRequest(
   request: NextRequest
 ): Promise<AuthResult> {
   // 1. Service API Key (prioridade mais alta)
-  const serviceApiKey = request.headers.get('x-service-api-key');
+  const serviceApiKey = request.headers.get("x-service-api-key");
   if (serviceApiKey === process.env.SERVICE_API_KEY) {
     return {
       authenticated: true,
-      userId: 'system',
-      source: 'service',
+      userId: "system",
+      source: "service",
     };
   }
 
   // 2. Bearer Token (JWT)
-  const authHeader = request.headers.get('authorization');
-  if (authHeader?.startsWith('Bearer ')) {
+  const authHeader = request.headers.get("authorization");
+  if (authHeader?.startsWith("Bearer ")) {
     const token = authHeader.substring(7);
     const { data, error } = await supabase.auth.getUser(token);
     if (!error && data.user) {
       return {
         authenticated: true,
         userId: data.user.id,
-        source: 'bearer',
+        source: "bearer",
       };
     }
   }
@@ -1175,7 +1216,7 @@ export async function authenticateRequest(
     return {
       authenticated: true,
       userId: data.user.id,
-      source: 'session',
+      source: "session",
     };
   }
 
@@ -1201,7 +1242,7 @@ CREATE TABLE public.permissoes (
 );
 
 -- Índice para performance
-CREATE INDEX idx_permissoes_usuario_recurso_operacao 
+CREATE INDEX idx_permissoes_usuario_recurso_operacao
   ON public.permissoes(usuario_id, recurso, operacao);
 ```
 
@@ -1218,28 +1259,28 @@ export async function checkPermission(
   const cacheKey = `permissao:${usuarioId}:${recurso}:${operacao}`;
   const cached = await redis.get(cacheKey);
   if (cached !== null) {
-    return cached === 'true';
+    return cached === "true";
   }
 
   // 2. Verificar se é super admin
   const usuario = await buscarUsuarioPorId(usuarioId);
   if (usuario?.is_super_admin) {
-    await redis.setex(cacheKey, 300, 'true');
+    await redis.setex(cacheKey, 300, "true");
     return true;
   }
 
   // 3. Consultar permissão específica
   const supabase = createServiceClient();
   const { data } = await supabase
-    .from('permissoes')
-    .select('permitido')
-    .eq('usuario_id', usuarioId)
-    .eq('recurso', recurso)
-    .eq('operacao', operacao)
+    .from("permissoes")
+    .select("permitido")
+    .eq("usuario_id", usuarioId)
+    .eq("recurso", recurso)
+    .eq("operacao", operacao)
     .single();
 
   const permitido = data?.permitido ?? false;
-  await redis.setex(cacheKey, 300, permitido ? 'true' : 'false');
+  await redis.setex(cacheKey, 300, permitido ? "true" : "false");
 
   return permitido;
 }
@@ -1252,18 +1293,18 @@ export async function checkPermission(
 export async function POST(request: NextRequest) {
   const auth = await authenticateRequest(request);
   if (!auth.authenticated) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   }
 
   // Verificar permissão
   const temPermissao = await checkPermission(
     auth.usuarioId!,
-    'clientes',
-    'criar'
+    "clientes",
+    "criar"
   );
 
   if (!temPermissao) {
-    return NextResponse.json({ error: 'Sem permissão' }, { status: 403 });
+    return NextResponse.json({ error: "Sem permissão" }, { status: 403 });
   }
 
   // Prosseguir com a criação...
@@ -1280,13 +1321,13 @@ export async function POST(request: NextRequest) {
 
 #### Proteções Implementadas
 
-| Proteção | Implementação |
-|----------|---------------|
-| **CSRF** | Tokens CSRF em formulários |
-| **XSS** | Sanitização de HTML (DOMPurify) |
-| **SQL Injection** | Prepared statements (Supabase) |
-| **Rate Limiting** | Middleware do Next.js |
-| **Audit Log** | Triggers no banco (`logs_alteracao`) |
+| Proteção          | Implementação                        |
+| ----------------- | ------------------------------------ |
+| **CSRF**          | Tokens CSRF em formulários           |
+| **XSS**           | Sanitização de HTML (DOMPurify)      |
+| **SQL Injection** | Prepared statements (Supabase)       |
+| **Rate Limiting** | Middleware do Next.js                |
+| **Audit Log**     | Triggers no banco (`logs_alteracao`) |
 
 ---
 
@@ -1340,6 +1381,7 @@ export async function GET(request: NextRequest) {
 Todas as APIs seguem o mesmo formato:
 
 #### Sucesso
+
 ```json
 {
   "success": true,
@@ -1350,6 +1392,7 @@ Todas as APIs seguem o mesmo formato:
 ```
 
 #### Erro
+
 ```json
 {
   "success": false,
@@ -1412,6 +1455,7 @@ O Sinesys possui um **MCP Server separado** com **52 tools** organizadas em 10 c
 **Repositório**: `sinesys-mcp-server` (separado)
 
 **Categorias**:
+
 1. Health & Info (2 tools)
 2. Acervo/Processos (8 tools)
 3. Audiências (6 tools)
@@ -1459,6 +1503,7 @@ app/(dashboard)/
 ### 10.2. Módulo de Processos (Acervo)
 
 #### Funcionalidades
+
 - Listagem unificada (1º e 2º grau)
 - Visualização de timeline
 - Atribuição de responsável
@@ -1467,6 +1512,7 @@ app/(dashboard)/
 - Busca textual (número, partes, assunto)
 
 #### Arquivos Principais
+
 ```
 app/(dashboard)/processos/
 ├── page.tsx                  # Listagem de processos
@@ -1483,6 +1529,7 @@ app/(dashboard)/processos/
 ### 10.3. Módulo de Audiências
 
 #### Funcionalidades
+
 - Visualizações: Semana, Mês, Lista
 - Calendário interativo
 - Observações e anotações
@@ -1491,6 +1538,7 @@ app/(dashboard)/processos/
 - Notificações de prazo
 
 #### Arquivos Principais
+
 ```
 app/(dashboard)/audiencias/
 ├── semana/
@@ -1508,6 +1556,7 @@ app/(dashboard)/audiencias/
 ### 10.4. Módulo de Expedientes
 
 #### Funcionalidades
+
 - Gerenciamento de prazos
 - Workflow de baixa
 - Status: Pendente, Em Andamento, Concluído
@@ -1515,6 +1564,7 @@ app/(dashboard)/audiencias/
 - Alertas de vencimento
 
 #### Arquivos Principais
+
 ```
 app/(dashboard)/expedientes/
 ├── lista/
@@ -1530,6 +1580,7 @@ app/(dashboard)/expedientes/
 ### 10.5. Módulo de Obrigações Financeiras
 
 #### Funcionalidades
+
 - Acordos e condenações
 - Parcelamento
 - Repasses para clientes
@@ -1537,6 +1588,7 @@ app/(dashboard)/expedientes/
 - Controle de pagamento
 
 #### Arquivos Principais
+
 ```
 app/(dashboard)/acordos-condenacoes/
 ├── lista/
@@ -1553,6 +1605,7 @@ app/(dashboard)/acordos-condenacoes/
 ### 10.6. Módulo Financeiro
 
 #### Funcionalidades Completas
+
 - **Plano de Contas**: Hierárquico com categorias
 - **Lançamentos**: Receitas e despesas
 - **Conciliação Bancária**: Integração OFX
@@ -1561,6 +1614,7 @@ app/(dashboard)/acordos-condenacoes/
 - **Relatórios**: DRE, Fluxo de Caixa, Balancete
 
 #### Estrutura
+
 ```
 app/(dashboard)/financeiro/
 ├── plano-contas/
@@ -1574,6 +1628,7 @@ app/(dashboard)/financeiro/
 ### 10.7. Módulo de Assinatura Digital
 
 #### Funcionalidades
+
 - Criação de formulários dinâmicos
 - Templates PDF com campos mapeados
 - Captura de assinatura manuscrita
@@ -1582,6 +1637,7 @@ app/(dashboard)/financeiro/
 - Protocolo de finalização
 
 #### Fluxo
+
 1. Admin cria segmento e template
 2. Admin mapeia campos no PDF
 3. Admin cria formulário com schema JSON
@@ -1633,7 +1689,7 @@ CMD ["node", "server.js"]
 #### Docker Compose
 
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -1663,7 +1719,7 @@ volumes:
 #### Stack Configuration
 
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   sinesys:
@@ -1742,15 +1798,15 @@ NEXT_PUBLIC_APP_URL=https://app.sinesys.com
 ```typescript
 // next.config.ts
 export default {
-  output: 'standalone',              // Build otimizado para Docker
+  output: "standalone", // Build otimizado para Docker
   productionBrowserSourceMaps: false, // Reduz 500MB no build
   experimental: {
-    serverSourceMaps: false,         // Reduz memória no servidor
+    serverSourceMaps: false, // Reduz memória no servidor
     webpackMemoryOptimizations: true,
     webpackBuildWorker: true,
   },
   webpack: (config) => {
-    config.parallelism = 1;          // Reduz uso de memória
+    config.parallelism = 1; // Reduz uso de memória
     return config;
   },
 };
@@ -1762,11 +1818,573 @@ export default {
 
 ```typescript
 // next.config.ts
-import withPWA from '@ducanh2912/next-pwa';
+import withPWA from "@ducanh2912/next-pwa";
 
 export default withPWA({
-  dest: 'public',
-  disable: process.env.NODE_ENV === 'development',
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
   register: true,
   fallbacks: {
-    document: '/offline',
+    document: "/offline",
+  },
+  workboxOptions: {
+    runtimeCaching: [
+      {
+        urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "google-fonts",
+          expiration: {
+            maxEntries: 4,
+            maxAgeSeconds: 365 * 24 * 60 * 60,
+          },
+        },
+      },
+      {
+        urlPattern: /\/api\/.*/,
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "api-cache",
+          networkTimeoutSeconds: 10,
+        },
+      },
+    ],
+  },
+})(nextConfig);
+```
+
+#### Manifest
+
+```json
+// public/manifest.json
+{
+  "name": "Sinesys - Gestão Jurídica",
+  "short_name": "Sinesys",
+  "description": "Sistema de Gestão Jurídica para Zattar Advogados",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+```
+
+---
+
+## 12. Fluxos de Dados
+
+### 12.1. Fluxo de Autenticação
+
+```mermaid
+sequenceDiagram
+    participant U as Usuário
+    participant F as Frontend
+    participant M as Middleware
+    participant S as Supabase Auth
+    participant DB as PostgreSQL
+
+    U->>F: Acessa /dashboard
+    F->>M: Request interceptado
+    M->>S: Verificar sessão
+    S-->>M: Sessão inválida
+    M->>F: Redirect para /auth/login
+    U->>F: Preenche credenciais
+    F->>S: Login (email, senha)
+    S->>DB: Verificar credenciais
+    DB-->>S: Usuário encontrado
+    S-->>F: Token JWT + Cookie
+    F->>F: Salvar cookie (sb-access-token)
+    F->>M: Request para /dashboard
+    M->>S: Verificar sessão
+    S-->>M: Sessão válida
+    M-->>F: Permitir acesso
+    F-->>U: Renderizar Dashboard
+```
+
+### 12.2. Fluxo de Requisição API
+
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant A as API Route
+    participant Auth as Autenticação
+    participant Perm as Permissões
+    participant Srv as Service
+    participant Pers as Persistence
+    participant DB as PostgreSQL
+
+    C->>A: POST /api/clientes
+    A->>Auth: authenticateRequest()
+    Auth-->>A: { authenticated: true, usuarioId: 1 }
+    A->>Perm: checkPermission(1, 'clientes', 'criar')
+    Perm->>DB: SELECT FROM permissoes
+    DB-->>Perm: { permitido: true }
+    Perm-->>A: true
+    A->>A: Validar entrada (Zod)
+    A->>Srv: criarCliente(params)
+    Srv->>Srv: Validações de negócio
+    Srv->>Pers: criarClientePersistence()
+    Pers->>DB: INSERT INTO clientes
+    DB-->>Pers: Cliente criado
+    Pers-->>Srv: Cliente
+    Srv-->>A: Cliente
+    A-->>C: { success: true, data: cliente }
+```
+
+### 12.3. Fluxo de Captura de Dados
+
+```mermaid
+sequenceDiagram
+    participant Script as Script Agendado
+    participant API as API /captura/start
+    participant Auth as TRT Auth Service
+    participant PJE as Sistema PJE/TRT
+    participant Extr as Extração Service
+    participant Pers as Persistence
+    participant DB as PostgreSQL
+
+    Script->>API: POST (tribunal, grau, credenciais)
+    API->>Auth: autenticarPJE()
+    Auth->>PJE: Login SSO gov.br
+    PJE-->>Auth: Redirecionar 2FA
+    Auth->>2FAuth: Obter código OTP
+    2FAuth-->>Auth: Código
+    Auth->>PJE: Submeter OTP
+    PJE-->>Auth: access_token, xsrf_token
+    Auth-->>API: { page, tokens, advogadoId }
+    API->>Extr: extrairAcervoGeral()
+    Extr->>PJE: GET /api/processos (paginado)
+    PJE-->>Extr: Dados processos
+    Extr->>Pers: salvarAcervo(processos)
+    Pers->>DB: Comparar dados anteriores
+    DB-->>Pers: Registros existentes
+    Pers->>Pers: Detectar alterações
+    Pers->>DB: INSERT/UPDATE com auditoria
+    DB-->>Pers: Sucesso
+    Pers-->>Extr: Resultados
+    Extr-->>API: { processosCapturados, novos, atualizados }
+    API-->>Script: Status da captura
+```
+
+### 12.4. Fluxo de Colaboração em Tempo Real
+
+```mermaid
+sequenceDiagram
+    participant U1 as Usuário 1
+    participant E1 as Editor (Browser 1)
+    participant Yjs as Y.js (CRDT)
+    participant Sup as Supabase Realtime
+    participant E2 as Editor (Browser 2)
+    participant U2 as Usuário 2
+
+    U1->>E1: Digita texto
+    E1->>Yjs: Aplicar operação local
+    Yjs->>Yjs: Gerar delta (CRDT)
+    Yjs->>Sup: Broadcast delta
+    Sup->>E2: Enviar delta
+    E2->>Yjs: Aplicar delta remoto
+    Yjs->>E2: Atualizar documento
+    E2-->>U2: Renderizar mudanças
+```
+
+---
+
+## 13. Padrões e Boas Práticas
+
+### 13.1. Convenções de Código
+
+#### TypeScript
+
+```typescript
+// ✅ BOM: Tipos explícitos
+const calcularTotal = (valores: number[]): number => {
+  return valores.reduce((acc, val) => acc + val, 0);
+};
+
+// ❌ RUIM: Tipos implícitos
+const calcularTotal = (valores) => {
+  return valores.reduce((acc, val) => acc + val, 0);
+};
+
+// ✅ BOM: Interfaces para objetos
+interface Usuario {
+  id: number;
+  nome: string;
+  email: string;
+}
+
+// ❌ RUIM: Usar 'any'
+const buscarUsuario = (id: any): any => {
+  // ...
+};
+```
+
+#### Nomenclatura
+
+```typescript
+// Componentes React: PascalCase
+function UserAvatar({ user }: UserAvatarProps) {}
+
+// Funções e variáveis: camelCase
+const calcularDesconto = (valor: number) => {};
+const isAtivo = true;
+
+// Constantes: UPPER_SNAKE_CASE
+const MAX_TENTATIVAS = 3;
+const API_BASE_URL = "https://api.example.com";
+
+// Handlers de eventos: prefixo 'handle'
+const handleClick = () => {};
+const handleSubmit = (data) => {};
+
+// Tipos/Interfaces: PascalCase
+type ClienteFormData = {};
+interface ApiResponse {}
+```
+
+#### Organização de Imports
+
+```typescript
+// 1. React e bibliotecas externas
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+
+// 2. Componentes
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+
+// 3. Hooks
+import { useViewport } from "@/hooks/use-viewport";
+
+// 4. Utilitários e tipos
+import { cn } from "@/lib/utils";
+import type { Cliente } from "@/types/domain/cliente";
+
+// 5. Estilos (se houver)
+import styles from "./component.module.css";
+```
+
+### 13.2. Padrões de Componentes React
+
+#### Estrutura de Componente
+
+```typescript
+"use client"; // Se necessário
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import type { Cliente } from "@/types/domain/cliente";
+
+// Props interface
+interface ClienteCardProps {
+  cliente: Cliente;
+  onEdit?: (cliente: Cliente) => void;
+  onDelete?: (id: number) => void;
+}
+
+// Componente
+export function ClienteCard({ cliente, onEdit, onDelete }: ClienteCardProps) {
+  // 1. Hooks
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // 2. Handlers
+  const handleEdit = () => {
+    onEdit?.(cliente);
+  };
+
+  const handleDelete = () => {
+    if (confirm("Tem certeza?")) {
+      onDelete?.(cliente.id);
+    }
+  };
+
+  // 3. Render
+  return (
+    <div className="border rounded-lg p-4">
+      <h3>{cliente.nome}</h3>
+      <p>{cliente.cpf}</p>
+
+      <div className="flex gap-2 mt-4">
+        <Button onClick={handleEdit}>Editar</Button>
+        <Button variant="destructive" onClick={handleDelete}>
+          Deletar
+        </Button>
+      </div>
+    </div>
+  );
+}
+```
+
+#### Server Components vs Client Components
+
+```typescript
+// ✅ Server Component (padrão no App Router)
+// Pode fazer fetch de dados diretamente
+async function ProcessosPage() {
+  const processos = await fetch("/api/acervo").then((r) => r.json());
+
+  return <ProcessosTable data={processos} />;
+}
+
+// ✅ Client Component (usa hooks, interatividade)
+("use client");
+
+function ProcessosTable({ data }: { data: Processo[] }) {
+  const [filtro, setFiltro] = useState("");
+  const [ordenacao, setOrdenacao] = useState("nome");
+
+  return <Table>{/* ... */}</Table>;
+}
+```
+
+### 13.3. Padrões de Banco de Dados
+
+#### Nomenclatura de Tabelas
+
+```sql
+-- ✅ BOM: snake_case, plural para coleções
+CREATE TABLE clientes (
+  id BIGSERIAL PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL,
+  cpf VARCHAR(11) UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- ❌ RUIM: CamelCase ou singular
+CREATE TABLE Cliente (
+  Id INT PRIMARY KEY,
+  Nome VARCHAR(255)
+);
+```
+
+#### Políticas RLS
+
+```sql
+-- ✅ BOM: Políticas granulares por operação
+CREATE POLICY "Service role pode ler clientes"
+  ON public.clientes
+  FOR SELECT
+  TO service_role
+  USING (true);
+
+CREATE POLICY "Service role pode inserir clientes"
+  ON public.clientes
+  FOR INSERT
+  TO service_role
+  WITH CHECK (true);
+
+-- ❌ RUIM: Política genérica
+CREATE POLICY "Service role acesso total"
+  ON public.clientes
+  FOR ALL
+  TO service_role
+  USING (true)
+  WITH CHECK (true);
+```
+
+#### Índices
+
+```sql
+-- ✅ BOM: Índices em colunas de busca/filtro
+CREATE INDEX idx_clientes_cpf ON public.clientes(cpf);
+CREATE INDEX idx_clientes_nome_trgm ON public.clientes USING gin(nome gin_trgm_ops);
+CREATE INDEX idx_processos_numero ON public.acervo_geral(numero_processo);
+
+-- Índice composto para queries frequentes
+CREATE INDEX idx_permissoes_lookup
+  ON public.permissoes(usuario_id, recurso, operacao);
+```
+
+### 13.4. Tratamento de Erros
+
+#### API Routes
+
+```typescript
+export async function POST(request: NextRequest) {
+  try {
+    // Lógica...
+    return NextResponse.json({ success: true, data });
+  } catch (error) {
+    // Log estruturado
+    console.error("Erro ao criar cliente:", {
+      error: error instanceof Error ? error.message : "Erro desconhecido",
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString(),
+    });
+
+    // Resposta genérica (não expor detalhes internos)
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Erro ao processar requisição",
+      },
+      { status: 500 }
+    );
+  }
+}
+```
+
+#### Frontend
+
+```typescript
+import { toast } from "sonner";
+
+async function handleSubmit(data: FormData) {
+  try {
+    const response = await fetch("/api/clientes", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      toast.error(result.error || "Erro ao criar cliente");
+      return;
+    }
+
+    toast.success("Cliente criado com sucesso!");
+    router.push("/partes/clientes");
+  } catch (error) {
+    console.error(error);
+    toast.error("Erro de conexão. Tente novamente.");
+  }
+}
+```
+
+### 13.5. Performance
+
+#### Otimizações de Queries
+
+```typescript
+// ✅ BOM: Select específico + paginação
+const { data } = await supabase
+  .from("clientes")
+  .select("id, nome, cpf, email") // Apenas campos necessários
+  .range(0, 19) // Paginação
+  .order("nome");
+
+// ❌ RUIM: Select * sem paginação
+const { data } = await supabase.from("clientes").select("*");
+```
+
+#### Memoização
+
+```typescript
+import { useMemo } from "react";
+
+function ProcessosTable({ processos }: { processos: Processo[] }) {
+  // ✅ BOM: Memoizar cálculos pesados
+  const processosFiltrados = useMemo(() => {
+    return processos
+      .filter((p) => p.ativo)
+      .sort((a, b) => a.numero_processo.localeCompare(b.numero_processo));
+  }, [processos]);
+
+  return <Table data={processosFiltrados} />;
+}
+```
+
+#### Lazy Loading
+
+```typescript
+import { lazy, Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// ✅ BOM: Lazy load de componentes pesados
+const EditorDocumentos = lazy(() => import("@/components/documentos/editor"));
+
+function DocumentosPage() {
+  return (
+    <Suspense fallback={<Skeleton className="h-96" />}>
+      <EditorDocumentos />
+    </Suspense>
+  );
+}
+```
+
+### 13.6. Segurança
+
+#### Validação de Entrada
+
+```typescript
+import { z } from "zod";
+
+// ✅ BOM: Validação com Zod
+const clienteSchema = z.object({
+  nome: z.string().min(3).max(255),
+  cpf: z.string().regex(/^\d{11}$/),
+  email: z.string().email().optional(),
+});
+
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+
+  // Validar entrada
+  const validacao = clienteSchema.safeParse(body);
+  if (!validacao.success) {
+    return NextResponse.json(
+      { error: validacao.error.errors[0].message },
+      { status: 400 }
+    );
+  }
+
+  // Prosseguir...
+}
+```
+
+#### Sanitização de HTML
+
+```typescript
+import DOMPurify from "dompurify";
+
+// ✅ BOM: Sanitizar HTML do usuário
+function DescricaoProcesso({ html }: { html: string }) {
+  const htmlLimpo = DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ["b", "i", "em", "strong", "p", "br"],
+    ALLOWED_ATTR: [],
+  });
+
+  return <div dangerouslySetInnerHTML={{ __html: htmlLimpo }} />;
+}
+```
+
+---
+
+## Conclusão
+
+O **Sinesys** é um sistema robusto e escalável que combina as melhores práticas de desenvolvimento moderno:
+
+✅ **Arquitetura em Camadas**: Separação clara de responsabilidades  
+✅ **Type-Safety**: TypeScript em todo o stack  
+✅ **Segurança**: RLS, autenticação multi-camada, permissões granulares  
+✅ **Performance**: Caching, lazy loading, otimização de queries  
+✅ **Escalabilidade**: Containerização, microserviços, deploy automatizado  
+✅ **UX**: Responsive design, PWA, colaboração em tempo real  
+✅ **DX**: Documentação completa, padrões claros, ferramentas modernas
+
+### Próximos Passos
+
+1. **Monitoramento**: Implementar APM (Application Performance Monitoring)
+2. **Testes**: Ampliar cobertura de testes (unit, integration, e2e)
+3. **CI/CD**: Automatizar pipeline completo de deploy
+4. **Observabilidade**: Logs estruturados, métricas, alertas
+5. **Documentação**: Manter docs atualizadas conforme evolução
+
+---
+
+**Documento mantido por**: Equipe de Desenvolvimento Sinesys  
+**Última atualização**: Dezembro 2025  
+**Versão**: 1.0
