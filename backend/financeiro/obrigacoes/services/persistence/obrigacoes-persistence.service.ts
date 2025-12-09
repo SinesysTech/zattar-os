@@ -111,8 +111,7 @@ interface LancamentoRecord {
   cliente?: {
     id: number;
     nome: string;
-    razao_social: string | null;
-    nome_fantasia: string | null;
+    nome_social_fantasia: string | null;
     cpf: string | null;
     cnpj: string | null;
     tipo_pessoa: 'fisica' | 'juridica';
@@ -324,8 +323,8 @@ const mapearLancamentoParaObrigacao = (lancamento: LancamentoRecord): ObrigacaoC
     obrigacao.cliente = {
       id: lancamento.cliente.id,
       nome: lancamento.cliente.nome,
-      razaoSocial: lancamento.cliente.razao_social,
-      nomeFantasia: lancamento.cliente.nome_fantasia,
+      razaoSocial: lancamento.cliente.tipo_pessoa === 'juridica' ? lancamento.cliente.nome : null,
+      nomeFantasia: lancamento.cliente.nome_social_fantasia,
       cpfCnpj: lancamento.cliente.tipo_pessoa === 'fisica'
         ? lancamento.cliente.cpf
         : lancamento.cliente.cnpj,
@@ -565,7 +564,7 @@ export const buscarLancamentosAvulsos = async (
     .from('lancamentos_financeiros')
     .select(`
       *,
-      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
+      cliente:clientes(id, nome, nome_social_fantasia, cpf, cnpj, tipo_pessoa),
       plano_contas(id, codigo, nome)
     `)
     .eq('tipo', tipo)
@@ -638,7 +637,7 @@ export const buscarLancamentoPorParcela = async (parcelaId: number): Promise<Lan
     .from('lancamentos_financeiros')
     .select(`
       *,
-      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
+      cliente:clientes(id, nome, nome_social_fantasia, cpf, cnpj, tipo_pessoa),
       plano_contas(id, codigo, nome)
     `)
     .eq('parcela_id', parcelaId)
@@ -664,7 +663,7 @@ export const buscarTodosLancamentosPorParcela = async (parcelaId: number): Promi
     .from('lancamentos_financeiros')
     .select(`
       *,
-      cliente:clientes(id, nome, razao_social, nome_fantasia, cpf, cnpj, tipo_pessoa),
+      cliente:clientes(id, nome, nome_social_fantasia, cpf, cnpj, tipo_pessoa),
       plano_contas(id, codigo, nome)
     `)
     .eq('parcela_id', parcelaId)

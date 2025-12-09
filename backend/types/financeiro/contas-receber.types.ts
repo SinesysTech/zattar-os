@@ -182,8 +182,6 @@ export interface ClienteResumo {
  */
 export interface ContratoResumo {
   id: number;
-  numero: string;
-  descricao: string | null;
   areaDireito: string | null;
   tipoContrato: string | null;
 }

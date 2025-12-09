@@ -79,8 +79,8 @@ interface LancamentoFinanceiroRecord {
 interface LancamentoComRelacionamentos extends LancamentoFinanceiroRecord {
   cliente?: {
     id: number;
-    razao_social: string;
-    nome_fantasia: string | null;
+    nome: string;
+    nome_social_fantasia: string | null;
     cnpj: string | null;
   } | null;
   plano_contas?: {
@@ -151,37 +151,37 @@ const mapearContaPagarComDetalhes = (registro: LancamentoComRelacionamentos): Co
 
   const fornecedor: FornecedorResumo | undefined = registro.cliente
     ? {
-        id: registro.cliente.id,
-        razaoSocial: registro.cliente.razao_social,
-        nomeFantasia: registro.cliente.nome_fantasia,
-        cnpj: registro.cliente.cnpj,
-      }
+      id: registro.cliente.id,
+      razaoSocial: registro.cliente.nome, // nome serve como razão social para PJ
+      nomeFantasia: registro.cliente.nome_social_fantasia,
+      cnpj: registro.cliente.cnpj,
+    }
     : undefined;
 
   const contaContabil: ContaContabilResumo | undefined = registro.plano_contas
     ? {
-        id: registro.plano_contas.id,
-        codigo: registro.plano_contas.codigo,
-        nome: registro.plano_contas.nome,
-      }
+      id: registro.plano_contas.id,
+      codigo: registro.plano_contas.codigo,
+      nome: registro.plano_contas.nome,
+    }
     : undefined;
 
   const centroCusto: CentroCustoResumo | undefined = registro.centros_custo
     ? {
-        id: registro.centros_custo.id,
-        codigo: registro.centros_custo.codigo,
-        nome: registro.centros_custo.nome,
-      }
+      id: registro.centros_custo.id,
+      codigo: registro.centros_custo.codigo,
+      nome: registro.centros_custo.nome,
+    }
     : undefined;
 
   const contaBancaria: ContaBancariaResumo | undefined = registro.contas_bancarias
     ? {
-        id: registro.contas_bancarias.id,
-        nome: registro.contas_bancarias.nome,
-        banco: registro.contas_bancarias.banco,
-        agencia: registro.contas_bancarias.agencia,
-        conta: registro.contas_bancarias.conta,
-      }
+      id: registro.contas_bancarias.id,
+      nome: registro.contas_bancarias.nome,
+      banco: registro.contas_bancarias.banco,
+      agencia: registro.contas_bancarias.agencia,
+      conta: registro.contas_bancarias.conta,
+    }
     : undefined;
 
   return {
@@ -250,7 +250,7 @@ export const listarContasPagar = async (
     .select(
       `
       *,
-      cliente:clientes(id, razao_social, nome_fantasia, cnpj),
+      cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
@@ -374,7 +374,7 @@ export const buscarContaPagarPorId = async (id: number): Promise<ContaPagarComDe
     .select(
       `
       *,
-      cliente:clientes(id, razao_social, nome_fantasia, cnpj),
+      cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
@@ -408,7 +408,7 @@ export const buscarContasPagarVencidas = async (): Promise<ContaPagarComDetalhes
     .select(
       `
       *,
-      cliente:clientes(id, razao_social, nome_fantasia, cnpj),
+      cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
@@ -454,7 +454,7 @@ export const buscarResumoVencimentos = async (): Promise<ResumoVencimentos> => {
     .select(
       `
       *,
-      cliente:clientes(id, razao_social, nome_fantasia, cnpj),
+      cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
       contas_bancarias(id, nome, banco, agencia, conta)
