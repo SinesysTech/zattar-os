@@ -98,10 +98,10 @@ export const RealtimeChat = ({
 
       // Construir conteúdo da mensagem com arquivos anexos
       let messageContent = newMessage.trim()
-      
+
       // Separar arquivos de áudio de outros anexos
       const allAttachments = [...attachedFiles, ...audioFiles]
-      
+
       if (allAttachments.length > 0) {
         const filesJson = JSON.stringify(allAttachments)
         messageContent += `\n[FILES_START]${filesJson}[FILES_END]`
@@ -163,7 +163,7 @@ export const RealtimeChat = ({
   return (
     <div className="flex flex-col h-full w-full bg-background text-foreground antialiased">
       {/* Messages */}
-      <div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div ref={containerRef} className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2 sm:space-y-4">
         {allMessages.length === 0 ? (
           <div className="text-center text-sm text-muted-foreground">
             No messages yet. Start the conversation!
@@ -235,7 +235,7 @@ export const RealtimeChat = ({
             onFileUploaded={handleFileUploaded}
             className="mb-3"
           />
-          
+
           {/* Lista de arquivos anexados */}
           {attachedFiles.length > 0 && (
             <div className="space-y-2">
@@ -258,11 +258,11 @@ export const RealtimeChat = ({
         </div>
       )}
 
-      <form onSubmit={handleSendMessage} className="flex w-full gap-2 border-t border-border p-4">
-        <div className="flex flex-1 gap-2">
+      <form onSubmit={handleSendMessage} className="flex w-full gap-2 border-t border-border p-3 sm:p-4">
+        <div className="flex flex-1 gap-1.5 sm:gap-2">
           <Input
             className={cn(
-              'rounded-full bg-background text-sm transition-all duration-300 flex-1',
+              'rounded-full bg-background text-sm transition-all duration-300 flex-1 min-h-[44px]',
               isConnected && (newMessage.trim() || attachedFiles.length > 0 || audioFiles.length > 0) ? '' : ''
             )}
             type="text"
@@ -271,7 +271,7 @@ export const RealtimeChat = ({
             placeholder="Digite uma mensagem..."
             disabled={!isConnected}
           />
-          
+
           {/* Botão de anexar arquivo */}
           <Button
             type="button"
@@ -279,7 +279,7 @@ export const RealtimeChat = ({
             size="sm"
             onClick={() => setShowFileUpload(!showFileUpload)}
             className={cn(
-              'aspect-square rounded-full transition-all duration-300',
+              'aspect-square rounded-full transition-all duration-300 min-h-[44px] min-w-[44px]',
               showFileUpload ? 'bg-primary text-primary-foreground' : ''
             )}
             disabled={!isConnected}
@@ -292,13 +292,13 @@ export const RealtimeChat = ({
             onAudioRecorded={handleAudioRecorded}
             onAudioReady={handleAudioReady}
             disabled={!isConnected}
-            className="aspect-square rounded-full px-3"
+            className="aspect-square rounded-full px-3 min-h-[44px] min-w-[44px]"
           />
         </div>
-        
+
         {isConnected && (newMessage.trim() || attachedFiles.length > 0 || audioFiles.length > 0) && (
           <Button
-            className="aspect-square rounded-full animate-in fade-in slide-in-from-right-4 duration-300"
+            className="aspect-square rounded-full animate-in fade-in slide-in-from-right-4 duration-300 min-h-[44px] min-w-[44px]"
             type="submit"
             disabled={!isConnected}
           >

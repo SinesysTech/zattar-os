@@ -79,16 +79,16 @@ export function StatCard({
 
   const content = (
     <Card className={cn('transition-all hover:shadow-md', href && 'cursor-pointer', className)}>
-      <CardContent className="pt-6">
-        <div className="flex items-start justify-between">
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-3xl font-bold tracking-tight">
+      <CardContent className="pt-4 sm:pt-6">
+        <div className="flex items-start justify-between gap-2">
+          <div className="space-y-1 sm:space-y-2 flex-1 min-w-0">
+            <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <p className="text-2xl sm:text-3xl font-bold tracking-tight break-all">
                 {typeof value === 'number' ? value.toLocaleString('pt-BR') : value}
               </p>
               {change !== undefined && (
-                <div className={cn('flex items-center gap-1 text-sm font-medium', styles.trend[trend])}>
+                <div className={cn('flex items-center gap-1 text-sm font-medium whitespace-nowrap', styles.trend[trend])}>
                   <TrendIcon className="h-4 w-4" />
                   <span>
                     {change > 0 ? '+' : ''}
@@ -98,12 +98,12 @@ export function StatCard({
               )}
             </div>
             {(changeLabel || description) && (
-              <p className="text-xs text-muted-foreground">{changeLabel || description}</p>
+              <p className="text-xs text-muted-foreground line-clamp-2">{changeLabel || description}</p>
             )}
           </div>
           {Icon && (
-            <div className={cn('rounded-lg p-3', styles.icon)}>
-              <Icon className="h-5 w-5" />
+            <div className={cn('rounded-lg p-2 sm:p-3 flex-shrink-0', styles.icon)}>
+              <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
           )}
         </div>

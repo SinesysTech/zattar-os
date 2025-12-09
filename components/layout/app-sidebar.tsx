@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import {
   Bell,
   Bot,
@@ -11,11 +12,12 @@ import {
   LayoutDashboard,
   Scale,
   Users,
-  UserCog,
   Database,
   FileEdit,
   MessageSquare,
   Wallet,
+  PenTool,
+  Settings,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/nav-main"
@@ -28,6 +30,9 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
 } from "@/components/ui/sidebar"
 import { createClient } from "@/app/_lib/supabase/client"
 
@@ -66,53 +71,29 @@ const navPrincipal = [
     icon: FileText,
   },
   {
-    title: "Assinatura Digital",
-    url: "/assinatura-digital/assinatura",
-    icon: FileText,
-    items: [
-      { title: "Fluxo de Assinatura", url: "/assinatura-digital/assinatura" },
-      { title: "Templates", url: "/assinatura-digital/templates" },
-      { title: "Formulários", url: "/assinatura-digital/formularios" },
-      { title: "Segmentos", url: "/assinatura-digital/segmentos" },
-    ],
-  },
-  {
     title: "Processos",
     url: "/processos",
     icon: Scale,
   },
   {
     title: "Audiências",
-    url: "/audiencias",
+    url: "/audiencias/semana",
     icon: Calendar,
-    items: [
-      { title: "Semana", url: "/audiencias/semana" },
-      { title: "Mês", url: "/audiencias/mes" },
-      { title: "Ano", url: "/audiencias/ano" },
-      { title: "Lista", url: "/audiencias/lista" },
-    ],
   },
   {
     title: "Expedientes",
-    url: "/expedientes",
+    url: "/expedientes/semana",
     icon: FolderOpen,
-    items: [
-      { title: "Semana", url: "/expedientes/semana" },
-      { title: "Mês", url: "/expedientes/mes" },
-      { title: "Ano", url: "/expedientes/ano" },
-      { title: "Lista", url: "/expedientes/lista" },
-    ],
+  },
+  {
+    title: "ComunicaCNJ",
+    url: "/comunica-cnj",
+    icon: Bell,
   },
   {
     title: "Obrigações",
-    url: "/acordos-condenacoes",
+    url: "/acordos-condenacoes/lista",
     icon: Handshake,
-    items: [
-      { title: "Lista", url: "/acordos-condenacoes/lista" },
-      { title: "Semana", url: "/acordos-condenacoes/semana" },
-      { title: "Mês", url: "/acordos-condenacoes/mes" },
-      { title: "Ano", url: "/acordos-condenacoes/ano" },
-    ],
   },
   {
     title: "Financeiro",
@@ -126,10 +107,32 @@ const navPrincipal = [
       { title: "Obrigações Financeiras", url: "/financeiro/obrigacoes" },
     ],
   },
+  {
+    title: "Captura",
+    url: "/captura",
+    icon: Database,
+    items: [
+      { title: "Histórico", url: "/captura/historico" },
+      { title: "Agendamentos", url: "/captura/agendamentos" },
+      { title: "Credenciais", url: "/captura/credenciais" },
+      { title: "Tribunais", url: "/captura/tribunais" },
+    ],
+  },
 ]
 
 // Nav Serviços - Ferramentas e utilitários
 const navServicos = [
+  {
+    name: "Assinatura Digital",
+    url: "/assinatura-digital/assinatura",
+    icon: PenTool,
+    items: [
+      { title: "Fluxo de Assinatura", url: "/assinatura-digital/assinatura" },
+      { title: "Templates", url: "/assinatura-digital/templates" },
+      { title: "Formulários", url: "/assinatura-digital/formularios" },
+      { title: "Segmentos", url: "/assinatura-digital/segmentos" },
+    ],
+  },
   {
     name: "Documentos",
     url: "/documentos",
@@ -144,31 +147,6 @@ const navServicos = [
     name: "Assistentes",
     url: "/assistentes",
     icon: Bot,
-  },
-  {
-    name: "Comunica CNJ",
-    url: "/comunica-cnj",
-    icon: Bell,
-  },
-]
-
-// Nav Administração - Configurações e gestão
-const navAdministracao = [
-  {
-    name: "Captura",
-    url: "/captura",
-    icon: Database,
-    items: [
-      { title: "Histórico", url: "/captura/historico" },
-      { title: "Agendamentos", url: "/captura/agendamentos" },
-      { title: "Credenciais", url: "/captura/credenciais" },
-      { title: "Tribunais", url: "/captura/tribunais" },
-    ],
-  },
-  {
-    name: "Usuários",
-    url: "/usuarios",
-    icon: UserCog,
   },
 ]
 
@@ -190,7 +168,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     async function loadUser() {
       try {
         hasLoadedRef.current = true
-        
+
         // Buscar perfil do usuário logado via API
         const response = await fetch('/api/perfil')
 
@@ -199,7 +177,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           try {
             const supabase = createClient()
             const { data: { user: authUser } } = await supabase.auth.getUser()
-            
+
             if (authUser) {
               setUser({
                 name: authUser.user_metadata?.full_name || authUser.email?.split("@")[0] || "Usuário",
@@ -240,9 +218,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={navPrincipal} />
         <NavProjects projects={navServicos} label="Serviços" showActions={false} />
-        <NavProjects projects={navAdministracao} label="Administração" showActions={false} />
       </SidebarContent>
       <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Usuários">
+              <Link href="/usuarios">
+                <Settings />
+                <span>Usuários</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
         {user ? (
           <NavUser user={user} />
         ) : (

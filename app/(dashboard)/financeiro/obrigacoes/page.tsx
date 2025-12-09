@@ -14,7 +14,6 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { TableToolbar, type ComboboxOption, type FilterGroup } from '@/components/ui/table-toolbar';
 import { AlertasObrigacoes } from './components/alertas-obrigacoes';
 import { ResumoCards } from './components/resumo-cards';
-import { ObrigacaoDetalhesDialog } from './components/obrigacao-detalhes-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -401,9 +400,6 @@ export default function ObrigacoesPage() {
   const [limite, setLimite] = React.useState(50);
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['status_pendente']);
 
-  // Estados de dialogs
-  const [detalhesDialogOpen, setDetalhesDialogOpen] = React.useState(false);
-  const [selectedObrigacao, setSelectedObrigacao] = React.useState<ObrigacaoComDetalhes | null>(null);
 
   // Preparar opções de filtros
   const filterOptions = React.useMemo(() => buildFilterOptions(), []);
@@ -438,8 +434,13 @@ export default function ObrigacoesPage() {
   }, []);
 
   const handleVerDetalhes = React.useCallback((obrigacao: ObrigacaoComDetalhes) => {
-    setSelectedObrigacao(obrigacao);
-    setDetalhesDialogOpen(true);
+    // Gerar ID da obrigação para a rota
+    const obrigacaoId = obrigacao.tipoEntidade === 'parcela' && obrigacao.parcelaId
+      ? `${obrigacao.tipoEntidade}_${obrigacao.parcelaId}`
+      : obrigacao.id;
+    
+    // Navegar para a página de detalhes
+    window.location.href = `/financeiro/obrigacoes/${obrigacaoId}`;
   }, []);
 
   const handleSincronizar = React.useCallback(async (obrigacao: ObrigacaoComDetalhes) => {
@@ -559,14 +560,6 @@ export default function ObrigacoesPage() {
         emptyMessage="Nenhuma obrigação encontrada."
       />
 
-      {/* Dialog de Detalhes */}
-      <ObrigacaoDetalhesDialog
-        open={detalhesDialogOpen}
-        onOpenChange={setDetalhesDialogOpen}
-        obrigacao={selectedObrigacao}
-        onSincronizar={handleSincronizar}
-        onVerLancamento={handleVerLancamento}
-      />
     </div>
   );
 }

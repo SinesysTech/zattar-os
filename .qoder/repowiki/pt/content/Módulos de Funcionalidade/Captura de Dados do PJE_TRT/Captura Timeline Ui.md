@@ -9,6 +9,8 @@
 - [captura.ts](file://app/_lib/api/captura.ts)
 - [timeline-capture.service.ts](file://backend/captura/services/timeline/timeline-capture.service.ts)
 - [timeline-persistence.service.ts](file://backend/captura/services/timeline/timeline-persistence.service.ts)
+- [captura-dialog.tsx](file://app/(dashboard)/captura/components/captura-dialog.tsx)
+- [responsive-dialog.tsx](file://components/ui/responsive-dialog.tsx)
 </cite>
 
 ## Sumário

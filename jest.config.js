@@ -18,6 +18,9 @@ const config = {
     '/node_modules/',
     '/.next/',
   ],
+  transformIgnorePatterns: [
+    'node_modules/(?!(platejs|@platejs)/)',
+  ],
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: 'tsconfig.json',

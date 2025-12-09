@@ -7,15 +7,17 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useRouter } from 'next/navigation';
+import { useDebounce } from '@/lib/hooks/use-debounce';
+import { ClientOnlyTabs, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { ChevronLeft, ChevronRight, Copy, Pencil, RotateCcw, FileText, CheckCircle2, PlusCircle, Loader2, Scale } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Copy, Pencil, RotateCcw, FileText, CheckCircle2, PlusCircle, Loader2, Scale, Plus } from 'lucide-react';
 import { PdfViewerDialog } from '@/app/(dashboard)/expedientes/components/pdf-viewer-dialog';
 import { AudienciasVisualizacaoSemana } from './audiencias-visualizacao-semana';
 import { AudienciasVisualizacaoMes } from './audiencias-visualizacao-mes';
@@ -25,18 +27,28 @@ import { EditarEnderecoDialog } from './editar-endereco-dialog';
 import { EditarObservacoesDialog } from './editar-observacoes-dialog';
 import { NovoExpedienteDialog } from '@/app/(dashboard)/expedientes/components/novo-expediente-dialog';
 import { NovaObrigacaoDialog } from '@/app/(dashboard)/acordos-condenacoes/components/nova-obrigacao-dialog';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { useAudiencias } from '@/app/_lib/hooks/use-audiencias';
-import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
+import { useAudiencias } from '@/lib/hooks/use-audiencias';
+import { useUsuarios } from '@/lib/hooks/use-usuarios';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildAudienciasFilterOptions, buildAudienciasFilterGroups, parseAudienciasFilters } from './audiencias-toolbar-filters';
-import type { Audiencia } from '@/backend/types/audiencias/types';
-import type { AudienciasFilters } from '@/app/_lib/types/audiencias';
+import type { Audiencia, ModalidadeAudiencia } from '@/backend/types/audiencias/types';
+import type { Row } from '@tanstack/react-table';
+import type { AudienciasFilters } from '@/lib/types/audiencias';
 
 export type VisualizacaoTipo = 'semana' | 'mes' | 'ano' | 'lista';
 
 interface AudienciasContentProps {
   visualizacao: VisualizacaoTipo;
+}
+
+// Interface para dados iniciais de expedientes e obrigações
+interface DadosIniciais {
+  processo_id: number;
+  trt: string;
+  grau: string;
+  numero_processo: string;
+  polo_ativo_nome?: string;
+  polo_passivo_nome?: string;
 }
 
 /**
@@ -146,6 +158,30 @@ const getParteReColorClass = (): string => {
   return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800';
 };
 
+/**
+ * Retorna a classe CSS de cor para badge de modalidade
+ */
+const getModalidadeColorClass = (modalidade: ModalidadeAudiencia | null): string => {
+  const modalidadeColors: Record<string, string> = {
+    virtual: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
+    presencial: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
+    hibrida: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+  };
+  return modalidade ? modalidadeColors[modalidade] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800' : 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
+};
+
+/**
+ * Formata modalidade para exibição
+ */
+const formatarModalidade = (modalidade: ModalidadeAudiencia | null): string => {
+  const modalidadeMap: Record<string, string> = {
+    virtual: 'Virtual',
+    presencial: 'Presencial',
+    hibrida: 'Híbrida',
+  };
+  return modalidade ? modalidadeMap[modalidade] || modalidade : '-';
+};
+
 type PlataformaVideo = 'zoom' | 'meet' | 'webex' | null;
 
 const detectarPlataforma = (url: string | null): PlataformaVideo => {
@@ -241,7 +277,9 @@ function ObservacoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onSuc
   return (
     <>
       <div className="relative group h-full w-full min-h-[60px] flex items-start justify-start p-2">
-        <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">{audiencia.observacoes || '-'}</span>
+        {audiencia.observacoes ? (
+          <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">{audiencia.observacoes}</span>
+        ) : null}
         <Button size="sm" variant="ghost" onClick={() => setIsDialogOpen(true)} className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-1 right-1" title="Editar observações">
           <Pencil className="h-3 w-3" />
         </Button>
@@ -309,6 +347,12 @@ function DataHoraCell({ audiencia }: { audiencia: Audiencia }) {
 
   return (
     <div className="min-h-10 flex flex-col items-center justify-center text-sm gap-1">
+      {/* Badge de modalidade no topo, centralizado - só renderiza se houver modalidade */}
+      {audiencia.modalidade && (
+        <Badge variant="outline" className={`${getModalidadeColorClass(audiencia.modalidade)} text-xs mb-2`}>
+          {formatarModalidade(audiencia.modalidade)}
+        </Badge>
+      )}
       <div className="font-medium">{formatarData(audiencia.data_inicio)}</div>
       <div className="text-sm font-medium">{formatarHora(audiencia.data_inicio)}h</div>
       {canOpenAta && (
@@ -328,13 +372,13 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
   const [isObrigacaoDialogOpen, setIsObrigacaoDialogOpen] = React.useState(false);
   const [isMarkingRealizada, setIsMarkingRealizada] = React.useState(false);
 
-  const tipo = audiencia.tipo_descricao || '-';
-  const sala = audiencia.sala_audiencia_nome || '-';
+  const tipo = audiencia.tipo_descricao;
+  const sala = audiencia.sala_audiencia_nome;
   const plataforma = detectarPlataforma(audiencia.url_audiencia_virtual);
   const logoPath = getLogoPlataforma(plataforma);
 
   const enderecoCompleto = audiencia.endereco_presencial
-    ? [audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || '-'
+    ? [audiencia.endereco_presencial.logradouro, audiencia.endereco_presencial.numero, audiencia.endereco_presencial.complemento, audiencia.endereco_presencial.bairro, audiencia.endereco_presencial.cidade, audiencia.endereco_presencial.estado, audiencia.endereco_presencial.pais, audiencia.endereco_presencial.cep].filter(Boolean).join(', ') || null
     : null;
   const isHibrida = audiencia.modalidade === 'hibrida';
   const isDesignada = audiencia.status === 'M';
@@ -361,71 +405,173 @@ function TipoSalaAcoesCell({ audiencia, onSuccess }: { audiencia: Audiencia; onS
   };
 
   // Dados iniciais para o dialog de expediente
-  const expedienteInicial = {
-    numero_processo_id: audiencia.numero_processo_id,
+  const expedienteInicial: DadosIniciais = {
+    processo_id: audiencia.processo_id,
+    trt: audiencia.trt,
+    grau: audiencia.grau,
     numero_processo: audiencia.numero_processo,
+    polo_ativo_nome: audiencia.polo_ativo_nome || undefined,
+    polo_passivo_nome: audiencia.polo_passivo_nome || undefined,
   };
 
+  // Dados iniciais para o dialog de obrigação
+  const obrigacaoInicial: DadosIniciais = {
+    processo_id: audiencia.processo_id,
+    trt: audiencia.trt,
+    grau: audiencia.grau,
+    numero_processo: audiencia.numero_processo,
+    polo_ativo_nome: audiencia.polo_ativo_nome || undefined,
+    polo_passivo_nome: audiencia.polo_passivo_nome || undefined,
+  };
+
+  const [isMaisPopoverOpen, setIsMaisPopoverOpen] = React.useState(false);
+
+  // Determinar quem comparece presencialmente em audiência híbrida
+  const presencaHibridaTexto = isHibrida && audiencia.presenca_hibrida
+    ? audiencia.presenca_hibrida === 'advogado'
+      ? 'Advogado presencial, Cliente virtual'
+      : 'Cliente presencial, Advogado virtual'
+    : null;
+
   return (
-    <div className="relative group min-h-[60px] flex flex-col items-start justify-start p-2 gap-2">
-      <div className="flex items-start gap-2 w-full">
-        <div className="flex-1">
-          <div className="text-sm font-medium">{tipo}</div>
-          <div className="text-xs text-muted-foreground">Sala: {sala}</div>
-        </div>
+    <div className="min-h-10 flex flex-col items-start justify-center h-full max-w-[240px]">
+      {/* Conteúdo principal com flex-grow para empurrar botões para baixo */}
+      <div className="flex-1 flex flex-col items-start justify-start gap-4 w-full">
+        {/* Seção 1: Tipo da audiência e Sala (conjunto) */}
+        {(tipo || sala) && (
+          <div className="flex flex-col items-start gap-1 w-full">
+            {tipo && <div className="text-sm text-left w-full">{tipo}</div>}
+            {sala && <div className="text-xs text-muted-foreground text-left w-full">{sala}</div>}
+          </div>
+        )}
+
+        {/* Seção 2: Link virtual e/ou Endereço presencial */}
+        {isHibrida ? (
+          <>
+            {/* Link virtual para híbrida */}
+            {audiencia.url_audiencia_virtual && (
+              <div className="flex flex-col items-start gap-1.5 w-full">
+                <div className="flex items-center gap-1.5 w-full">
+                  {logoPath ? (
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                      <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
+                    </a>
+                  ) : (
+                    <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-full">
+                      {audiencia.url_audiencia_virtual}
+                    </a>
+                  )}
+                </div>
+                {presencaHibridaTexto && (
+                  <div className="text-xs text-muted-foreground italic">{presencaHibridaTexto}</div>
+                )}
+              </div>
+            )}
+            {/* Endereço presencial para híbrida */}
+            {enderecoCompleto && (
+              <div className="flex flex-col items-start gap-1.5 w-full">
+                <div className="text-xs text-muted-foreground w-full">
+                  <span className="font-medium">Presencial: </span>
+                  <span>{enderecoCompleto}</span>
+                </div>
+              </div>
+            )}
+          </>
+        ) : audiencia.url_audiencia_virtual ? (
+          /* Link virtual para modalidade virtual */
+          <div className="flex-1 flex items-center justify-start w-full">
+            {logoPath ? (
+              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="hover:opacity-70 transition-opacity flex items-center justify-center">
+                <Image src={logoPath} alt={plataforma || 'Plataforma de vídeo'} width={80} height={30} className="object-contain" />
+              </a>
+            ) : (
+              <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" aria-label="Acessar audiência virtual" className="text-xs text-blue-600 hover:underline truncate max-w-full">
+                {audiencia.url_audiencia_virtual}
+              </a>
+            )}
+          </div>
+        ) : enderecoCompleto ? (
+          /* Endereço presencial para modalidade presencial */
+          <span className="text-sm whitespace-pre-wrap wrap-break-word w-full">
+            {enderecoCompleto}
+          </span>
+        ) : null}
       </div>
 
-      {/* URL Audiência Virtual + Logo (quando disponível) */}
-      {audiencia.url_audiencia_virtual && (
-        <div className="flex items-center gap-2 text-xs">
-          <a href={audiencia.url_audiencia_virtual} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline max-w-[200px] truncate">
-            {audiencia.url_audiencia_virtual}
-          </a>
-          <button onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(audiencia.url_audiencia_virtual || ''); }} title="Copiar link">
-            <Copy className="h-3 w-3 text-muted-foreground hover:text-primary" />
-          </button>
-          {logoPath && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Image src={logoPath} alt={plataforma || 'Plataforma'} width={16} height={16} className="rounded" />
-                </TooltipTrigger>
-                <TooltipContent>{plataforma}</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-        </div>
-      )}
-
-      {/* Endereço presencial (modal híbrida ou presencial) */}
-      {enderecoCompleto && (
-        <div className="text-xs text-muted-foreground">{isHibrida ? 'Híbrida: ' : 'Presencial: '}{enderecoCompleto}</div>
-      )}
-
-      {/* Botões de ação (aparecem no hover ou sempre visi em mobile) */}
-      <ButtonGroup className="opacity-0 group-hover:opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity absolute bottom-1 right-1">
-        <ButtonGroupText>
+      {/* Botões de ação - alinhados ao bottom */}
+      <div className="flex items-center gap-1.5 mt-auto">
+        <TooltipProvider>
           {isDesignada && (
-            <Button size="sm" variant="ghost" onClick={handleMarcarRealizada} disabled={isMarkingRealizada} title="Marcar como realizada">
-              {isMarkingRealizada ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />}
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="sm" variant="ghost" onClick={handleMarcarRealizada} disabled={isMarkingRealizada} className="h-7 w-7 p-0" title="Marcar como realizada">
+                  {isMarkingRealizada ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Marcar como realizada</p>
+              </TooltipContent>
+            </Tooltip>
           )}
-          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setIsDialogOpen(true); }} title="Editar endereço">
-            <Pencil className="h-3.5 w-3.5" />
-          </Button>
-          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setIsExpedienteDialogOpen(true); }} title="Criar expediente">
-            <PlusCircle className="h-3.5 w-3.5" />
-          </Button>
-          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setIsObrigacaoDialogOpen(true); }} title="Criar acordo/condenação">
-            <Scale className="h-3.5 w-3.5" />
-          </Button>
-        </ButtonGroupText>
-      </ButtonGroup>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); setIsDialogOpen(true); }} className="h-7 w-7 p-0" title="Editar endereço">
+                <Pencil className="h-3.5 w-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Editar endereço</p>
+            </TooltipContent>
+          </Tooltip>
+          <Popover open={isMaisPopoverOpen} onOpenChange={setIsMaisPopoverOpen}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <PopoverTrigger asChild>
+                  <Button size="sm" variant="ghost" className="h-7 w-7 p-0">
+                    <Plus className="h-3.5 w-3.5" />
+                  </Button>
+                </PopoverTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Criar expediente ou obrigação</p>
+              </TooltipContent>
+            </Tooltip>
+            <PopoverContent className="w-48 p-2" align="start">
+              <div className="space-y-1">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-sm gap-2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMaisPopoverOpen(false);
+                    setIsExpedienteDialogOpen(true);
+                  }}
+                >
+                  <PlusCircle className="h-4 w-4" />
+                  Expediente
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start text-sm gap-2"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMaisPopoverOpen(false);
+                    setIsObrigacaoDialogOpen(true);
+                  }}
+                >
+                  <Scale className="h-4 w-4" />
+                  Obrigação
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </TooltipProvider>
+      </div>
 
       {/* Dialogs */}
       <EditarEnderecoDialog audiencia={audiencia} open={isDialogOpen} onOpenChange={setIsDialogOpen} onSuccess={onSuccess} />
       <NovoExpedienteDialog open={isExpedienteDialogOpen} onOpenChange={setIsExpedienteDialogOpen} onSuccess={onSuccess} dadosIniciais={expedienteInicial} />
-      <NovaObrigacaoDialog open={isObrigacaoDialogOpen} onOpenChange={setIsObrigacaoDialogOpen} onSuccess={onSuccess} processoId={audiencia.numero_processo_id} />
+      <NovaObrigacaoDialog open={isObrigacaoDialogOpen} onOpenChange={setIsObrigacaoDialogOpen} onSuccess={onSuccess} dadosIniciais={obrigacaoInicial} />
     </div>
   );
 }
@@ -439,9 +585,9 @@ function criarColunas(
   return [
     {
       accessorKey: 'data_inicio',
-      header: ({ column }) => (
+      header: () => (
         <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Data/Hora" />
+          <div className="text-sm font-medium">Data/Hora</div>
         </div>
       ),
       enableSorting: true,
@@ -450,12 +596,14 @@ function criarColunas(
       sticky: true,
       cardLabel: 'Data/Hora',
       meta: { align: 'left' },
-      sortingFn: (rowA, rowB) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      sortingFn: (rowA: any, rowB: any) => {
         const dataA = normalizarDataParaComparacao(rowA.original.data_inicio);
         const dataB = normalizarDataParaComparacao(rowB.original.data_inicio);
         return dataA - dataB;
       },
-      cell: ({ row }) => <DataHoraCell audiencia={row.original} />,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => <DataHoraCell audiencia={row.original} />,
     },
     {
       id: 'processo',
@@ -464,16 +612,15 @@ function criarColunas(
       priority: 2,
       cardLabel: 'Processo',
       meta: { align: 'left' },
-      cell: ({ row }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => {
         const classeJudicial = row.original.classe_judicial || '';
         const numeroProcesso = row.original.numero_processo;
         const trt = row.original.trt;
         const grau = row.original.grau;
-        const orgaoJulgador = row.original.orgao_julgador_descricao || '-';
-        const parteAutora = row.original.nome_parte_autora || row.original.polo_ativo_nome || '-';
-        const parteRe = row.original.nome_parte_re || row.original.polo_passivo_nome || '-';
-        const poloAtivo = row.original.polo_ativo_nome;
-        const poloPassivo = row.original.polo_passivo_nome;
+        const orgaoJulgador = row.original.orgao_julgador_descricao;
+        const parteAutora = row.original.nome_parte_autora;
+        const parteRe = row.original.nome_parte_re;
 
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5">
@@ -482,21 +629,29 @@ function criarColunas(
               <Badge variant="outline" className={`${getGrauColorClass(grau)} text-xs shrink-0`}>{formatarGrau(grau)}</Badge>
             </div>
             <div className="text-sm font-medium whitespace-nowrap">{classeJudicial && `${classeJudicial} `}{numeroProcesso}</div>
-            <div className="flex flex-col gap-1 w-full">
-              <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
-                <span className="truncate">Parte Autora: {parteAutora}</span>
-              </Badge>
-              <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
-                <span className="truncate">Parte Ré: {parteRe}</span>
-              </Badge>
-            </div>
-            {(poloAtivo || poloPassivo) && (
-              <div className="text-[11px] text-muted-foreground leading-tight">
-                {poloAtivo && <div>Polo ativo (instância): {poloAtivo}</div>}
-                {poloPassivo && <div>Polo passivo (instância): {poloPassivo}</div>}
+            {/* Órgão julgador (vara) */}
+            {orgaoJulgador && orgaoJulgador !== '-' && (
+              <div className="text-xs text-muted-foreground">{orgaoJulgador}</div>
+            )}
+            
+            {/* Espaçamento entre dados do processo e partes */}
+            {(parteAutora || parteRe) && <div className="h-1" />}
+            
+            {/* Partes */}
+            {(parteAutora || parteRe) && (
+              <div className="flex flex-col gap-1 w-full">
+                {parteAutora && (
+                  <Badge variant="outline" className={`${getParteAutoraColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
+                    <span className="truncate">{parteAutora}</span>
+                  </Badge>
+                )}
+                {parteRe && (
+                  <Badge variant="outline" className={`${getParteReColorClass()} text-left justify-start w-fit min-w-0 max-w-full`}>
+                    <span className="truncate">{parteRe}</span>
+                  </Badge>
+                )}
               </div>
             )}
-            <div className="text-xs text-muted-foreground">{orgaoJulgador}</div>
           </div>
         );
       },
@@ -509,17 +664,19 @@ function criarColunas(
       priority: 3,
       cardLabel: 'Detalhes',
       meta: { align: 'left' },
-      cell: ({ row }) => <TipoSalaAcoesCell audiencia={row.original} onSuccess={onSuccess} />,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => <TipoSalaAcoesCell audiencia={row.original} onSuccess={onSuccess} />,
     },
     {
-      accessorKey: 'observacoes',
+      id: 'observacoes',
       header: () => <div className="flex items-center justify-center"><div className="text-sm font-medium">Observações</div></div>,
       enableSorting: false,
       size: 250,
       priority: 5,
       cardLabel: 'Observações',
       meta: { align: 'left' },
-      cell: ({ row }) => <div className="h-full w-full"><ObservacoesCell audiencia={row.original} onSuccess={onSuccess} /></div>,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => <div className="h-full w-full"><ObservacoesCell audiencia={row.original} onSuccess={onSuccess} /></div>,
     },
     {
       accessorKey: 'responsavel_id',
@@ -528,12 +685,14 @@ function criarColunas(
       priority: 4,
       cardLabel: 'Responsável',
       meta: { align: 'left' },
-      cell: ({ row }) => <div className="min-h-10 flex items-center justify-center"><ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} /></div>,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      cell: ({ row }: any) => <div className="min-h-10 flex items-center justify-center"><ResponsavelCell audiencia={row.original} onSuccess={onSuccess} usuarios={usuarios} /></div>,
     },
   ];
 }
 
 export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
+  const router = useRouter();
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
@@ -719,25 +878,34 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
 
   return (
     <div className="space-y-4">
-      {/* Linha 1: Busca e Filtros */}
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={(value) => { setBusca(value); setPagina(0); }}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar audiências..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="panel"
-        filterPanelTitle="Filtros de Audiências"
-        filterPanelDescription="Filtre audiências por status, tipo e mais"
-        onNewClick={() => setNovaAudienciaOpen(true)}
-        newButtonTooltip="Nova audiência"
-      />
+      {/* Linha 1: Busca e Filtros - Centralizada */}
+      <div className="flex justify-center">
+        <TableToolbar
+          searchValue={busca}
+          onSearchChange={(value) => { setBusca(value); setPagina(0); }}
+          isSearching={isSearching}
+          searchPlaceholder="Buscar audiências..."
+          filterOptions={filterOptions}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilterIds}
+          onFiltersChange={handleFilterIdsChange}
+          filterButtonsMode="buttons"
+          onNewClick={() => setNovaAudienciaOpen(true)}
+          newButtonTooltip="Nova audiência"
+        />
+      </div>
 
-      {/* Linha 2: Controles de navegação + contador */}
-      <div className="flex items-center gap-4">
+      {/* Linha 2: Tabs + Controles de navegação + contador */}
+      <div className="flex items-center gap-4 pt-2">
+        <ClientOnlyTabs value={visualizacao} onValueChange={(value) => router.push(`/audiencias/${value}`)}>
+          <TabsList>
+            <TabsTrigger value="semana">Semana</TabsTrigger>
+            <TabsTrigger value="mes">Mês</TabsTrigger>
+            <TabsTrigger value="ano">Ano</TabsTrigger>
+            <TabsTrigger value="lista">Lista</TabsTrigger>
+          </TabsList>
+        </ClientOnlyTabs>
+
         {visualizacao !== 'lista' && (
           <ButtonGroup>
             <Button
@@ -752,7 +920,7 @@ export function AudienciasContent({ visualizacao }: AudienciasContentProps) {
               <ChevronLeft className="h-4 w-4" />
             </Button>
 
-            <ButtonGroupText className="whitespace-nowrap capitalize min-w-32 text-center text-xs font-normal">
+            <ButtonGroupText className="whitespace-nowrap min-w-36 text-center text-sm font-normal flex items-center justify-center">
               {visualizacao === 'semana' && `${formatarDataCabecalho(inicioSemana)} - ${formatarDataCabecalho(fimSemana)}`}
               {visualizacao === 'mes' && formatarMesAno(mesAtual)}
               {visualizacao === 'ano' && (anoAtual ?? '...')}

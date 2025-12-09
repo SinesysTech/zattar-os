@@ -8,13 +8,14 @@
 import * as React from 'react';
 import { Loader2, Search, MessageSquare, Users, X } from 'lucide-react';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogBody,
+} from '@/components/ui/responsive-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -65,7 +66,7 @@ export function CreateChatDialog({
     if (open && modo === 'privado' && allUsers.length === 0) {
       loadAllUsers();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, modo, allUsers.length]);
 
   // Resetar ao fechar
@@ -164,154 +165,154 @@ export function CreateChatDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent className="sm:max-w-md">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5" />
             Nova Conversa
-          </DialogTitle>
-          <DialogDescription>
+          </ResponsiveDialogTitle>
+          <ResponsiveDialogDescription>
             Inicie uma conversa privada ou crie um grupo
-          </DialogDescription>
-        </DialogHeader>
+          </ResponsiveDialogDescription>
+        </ResponsiveDialogHeader>
 
-        <div className="space-y-4 py-4">
-          {/* Seletor de modo */}
-          <div className="grid grid-cols-2 gap-4">
-            <button
-              type="button"
-              onClick={() => setModo('privado')}
-              className={`flex flex-col items-center justify-between rounded-md border-2 bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors ${
-                modo === 'privado' ? 'border-primary' : 'border-muted'
-              }`}
-            >
-              <Users className="mb-3 h-6 w-6" />
-              <span className="text-sm font-medium">Conversa Privada</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setModo('grupo')}
-              className={`flex flex-col items-center justify-between rounded-md border-2 bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors ${
-                modo === 'grupo' ? 'border-primary' : 'border-muted'
-              }`}
-            >
-              <MessageSquare className="mb-3 h-6 w-6" />
-              <span className="text-sm font-medium">Grupo</span>
-            </button>
-          </div>
+        <ResponsiveDialogBody>
+          <div className="space-y-4">
+            {/* Seletor de modo */}
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={() => setModo('privado')}
+                className={`flex flex-col items-center justify-between rounded-md border-2 bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors ${modo === 'privado' ? 'border-primary' : 'border-muted'
+                  }`}
+              >
+                <Users className="mb-3 h-6 w-6" />
+                <span className="text-sm font-medium">Conversa Privada</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setModo('grupo')}
+                className={`flex flex-col items-center justify-between rounded-md border-2 bg-popover p-4 hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors ${modo === 'grupo' ? 'border-primary' : 'border-muted'
+                  }`}
+              >
+                <MessageSquare className="mb-3 h-6 w-6" />
+                <span className="text-sm font-medium">Grupo</span>
+              </button>
+            </div>
 
-          {/* Conteúdo baseado no modo */}
-          {modo === 'privado' ? (
-            <div className="space-y-3">
-              <Label>Selecionar usuário</Label>
+            {/* Conteúdo baseado no modo */}
+            {modo === 'privado' ? (
+              <div className="space-y-3">
+                <Label>Selecionar usuário</Label>
 
-              {/* Usuário selecionado */}
-              {selectedUser ? (
-                <div className="flex items-center justify-between rounded-md border bg-muted/50 p-3">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="text-xs">
-                        {getInitials(selectedUser.nomeCompleto)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-medium">
-                        {selectedUser.nomeExibicao || selectedUser.nomeCompleto}
-                      </p>
-                      {selectedUser.emailCorporativo && (
-                        <p className="text-xs text-muted-foreground">
-                          {selectedUser.emailCorporativo}
+                {/* Usuário selecionado */}
+                {selectedUser ? (
+                  <div className="flex items-center justify-between rounded-md border bg-muted/50 p-3">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="text-xs">
+                          {getInitials(selectedUser.nomeCompleto)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-medium">
+                          {selectedUser.nomeExibicao || selectedUser.nomeCompleto}
                         </p>
+                        {selectedUser.emailCorporativo && (
+                          <p className="text-xs text-muted-foreground">
+                            {selectedUser.emailCorporativo}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setSelectedUser(null);
+                        setSearchQuery('');
+                      }}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <>
+                    {/* Combobox: Search + List */}
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        placeholder="Filtrar por nome ou email..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-9"
+                      />
+                      {usersLoading && (
+                        <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
                       )}
                     </div>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => {
-                      setSelectedUser(null);
-                      setSearchQuery('');
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  {/* Combobox: Search + List */}
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      placeholder="Filtrar por nome ou email..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-9"
-                    />
-                    {usersLoading && (
-                      <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
-                    )}
-                  </div>
 
-                  {/* Lista de usuários (sempre visível) */}
-                  <ScrollArea className="h-48 rounded-md border">
-                    {usersLoading ? (
-                      <div className="flex items-center justify-center h-full py-8">
-                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                      </div>
-                    ) : filteredUsers.length === 0 ? (
-                      <div className="flex flex-col items-center justify-center h-full py-8 text-center">
-                        <Users className="h-8 w-8 text-muted-foreground mb-2" />
-                        <p className="text-sm text-muted-foreground">
-                          {searchQuery ? 'Nenhum usuário encontrado' : 'Nenhum usuário disponível'}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="p-1">
-                        {filteredUsers.map((usuario) => (
-                          <button
-                            key={usuario.id}
-                            type="button"
-                            className="flex w-full items-center gap-3 p-2 rounded-md hover:bg-accent text-left transition-colors"
-                            onClick={() => setSelectedUser(usuario)}
-                          >
-                            <Avatar className="h-8 w-8">
-                              <AvatarFallback className="text-xs">
-                                {getInitials(usuario.nomeCompleto)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium truncate">
-                                {usuario.nomeExibicao || usuario.nomeCompleto}
-                              </p>
-                              {usuario.emailCorporativo && (
-                                <p className="text-xs text-muted-foreground truncate">
-                                  {usuario.emailCorporativo}
+                    {/* Lista de usuários (sempre visível) */}
+                    <ScrollArea className="h-48 rounded-md border">
+                      {usersLoading ? (
+                        <div className="flex items-center justify-center h-full py-8">
+                          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                        </div>
+                      ) : filteredUsers.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center h-full py-8 text-center">
+                          <Users className="h-8 w-8 text-muted-foreground mb-2" />
+                          <p className="text-sm text-muted-foreground">
+                            {searchQuery ? 'Nenhum usuário encontrado' : 'Nenhum usuário disponível'}
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="p-1">
+                          {filteredUsers.map((usuario) => (
+                            <button
+                              key={usuario.id}
+                              type="button"
+                              className="flex w-full items-center gap-3 p-2 rounded-md hover:bg-accent text-left transition-colors"
+                              onClick={() => setSelectedUser(usuario)}
+                            >
+                              <Avatar className="h-8 w-8">
+                                <AvatarFallback className="text-xs">
+                                  {getInitials(usuario.nomeCompleto)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium truncate">
+                                  {usuario.nomeExibicao || usuario.nomeCompleto}
                                 </p>
-                              )}
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </ScrollArea>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <Label htmlFor="nome-grupo">Nome do Grupo</Label>
-              <Input
-                id="nome-grupo"
-                placeholder="Ex: Equipe de Audiências"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-              />
-            </div>
-          )}
-        </div>
+                                {usuario.emailCorporativo && (
+                                  <p className="text-xs text-muted-foreground truncate">
+                                    {usuario.emailCorporativo}
+                                  </p>
+                                )}
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </ScrollArea>
+                  </>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <Label htmlFor="nome-grupo">Nome do Grupo</Label>
+                <Input
+                  id="nome-grupo"
+                  placeholder="Ex: Equipe de Audiências"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
+        </ResponsiveDialogBody>
 
-        <DialogFooter>
+        <ResponsiveDialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancelar
           </Button>
@@ -330,8 +331,8 @@ export function CreateChatDialog({
               'Criar Grupo'
             )}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </ResponsiveDialogFooter>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }

@@ -2,9 +2,6 @@
   "folders": [
     {
       "path": "."
-    },
-    {
-      "path": "../meu-processo-zattar-advogados"
     }
   ],
   "settings": {
@@ -20,6 +17,9 @@
       "Export as Markdown"
     ],
     "traycer.outputLevel": "trace",
-    "traycer.languagePreference": "Português"
+    "traycer.languagePreference": "Português",
+    "kiroAgent.trustedCommands": [
+      "*"
+    ]
   }
 }

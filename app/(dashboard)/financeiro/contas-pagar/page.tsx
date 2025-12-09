@@ -463,9 +463,9 @@ export default function ContasPagarPage() {
         <ExportButton
           endpoint="/api/financeiro/contas-pagar/exportar"
           filtros={{
-            status: filtros.status ? filtros.status.toString() : '',
-            dataInicio: filtros.dataVencimentoInicio || '',
-            dataFim: filtros.dataVencimentoFim || '',
+            status: params.status ? params.status.toString() : '',
+            dataInicio: params.dataVencimentoInicio || '',
+            dataFim: params.dataVencimentoFim || '',
           }}
           opcoes={[
             { label: 'Exportar PDF', formato: 'pdf' },

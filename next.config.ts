@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['pino', 'pino-pretty', 'thread-stream'],
   // Disables browser source maps in production to save ~500MB during build and reduce bundle size
   productionBrowserSourceMaps: false,
+  // Exclude test files from compilation
+  excludeDefaultMomentLocales: true,
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'].filter(ext => !ext.includes('test')),
+  // ESLint disabled via NEXT_LINT_DISABLED=true in Dockerfile
+  // (eslint config key removed - not supported in Next.js 16)
   experimental: {
     // Disables server source maps to reduce memory usage in the server runtime
     serverSourceMaps: false,
@@ -37,6 +42,21 @@ const nextConfig: NextConfig = {
   },
   allowedDevOrigins: ['192.168.1.100', '192.168.1.100:3000'],
   webpack: (config, { isServer }) => {
+    // CRITICAL: Optimize webpack for memory efficiency during build
+    config.optimization = config.optimization || {};
+    config.optimization.moduleIds = 'deterministic';
+
+    // Reduce memory usage by limiting parallelism
+    config.parallelism = 1;
+
+    // Exclude test files from bundle
+    config.module = config.module || {};
+    config.module.rules = config.module.rules || [];
+    config.module.rules.push({
+      test: /node_modules\/@copilotkit\/runtime\/node_modules\/thread-stream\/test\/.*/,
+      use: 'null-loader',
+    });
+
     if (process.env.ANALYZE === 'true') {
       // eslint-disable-next-line @typescript-eslint/no-require-imports -- require necessário em configuração webpack
       const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');

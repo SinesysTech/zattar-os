@@ -2,31 +2,22 @@
 
 <cite>
 **Arquivos Referenciados neste Documento**
-- [app/(dashboard)/audiencias/page.tsx](file://app/(dashboard)/audiencias/page.tsx)
-- [components/audiencias-visualizacao-ano.tsx](file://components/audiencias-visualizacao-ano.tsx)
+- [app/(dashboard)/audiencias/components/audiencias-content.tsx](file://app/(dashboard)/audiencias/components/audiencias-content.tsx)
+- [app/(dashboard)/audiencias/mes/page.tsx](file://app/(dashboard)/audiencias/mes/page.tsx)
+- [app/(dashboard)/audiencias/ano/page.tsx](file://app/(dashboard)/audiencias/ano/page.tsx)
 - [components/audiencias-visualizacao-mes.tsx](file://components/audiencias-visualizacao-mes.tsx)
-- [components/audiencias-visualizacao-semana.tsx](file://components/audiencias-visualizacao-semana.tsx)
-- [components/audiencia-detalhes-dialog.tsx](file://components/audiencia-detalhes-dialog.tsx)
-- [components/audiencias-filtros-avancados.tsx](file://components/audiencias-filtros-avancados.tsx)
-- [lib/hooks/use-audiencias.ts](file://lib/hooks/use-audiencias.ts)
-- [lib/types/audiencias.ts](file://lib/types/audiencias.ts)
-- [backend/types/audiencias/types.ts](file://backend/types/audiencias/types.ts)
-- [app/api/audiencias/route.ts](file://app/api/audiencias/route.ts)
-- [app/api/audiencias/[id]/url-virtual/route.ts](file://app/api/audiencias/[id]/url-virtual/route.ts)
-- [app/api/audiencias/[id]/observacoes/route.ts](file://app/api/audiencias/[id]/observacoes/route.ts)
-- [app/api/audiencias/[id]/responsavel/route.ts](file://app/api/audiencias/[id]/responsavel/route.ts)
-- [backend/audiencias/services/listar-audiencias.service.ts](file://backend/audiencias/services/listar-audiencias.service.ts)
-- [backend/audiencias/services/persistence/listar-audiencias.service.ts](file://backend/audiencias/services/persistence/listar-audiencias.service.ts)
-- [backend/audiencias/services/atualizar-url-virtual.service.ts](file://backend/audiencias/services/atualizar-url-virtual.service.ts)
-- [backend/audiencias/services/atribuir-responsavel.service.ts](file://backend/audiencias/services/atribuir-responsavel.service.ts)
+- [components/audiencias-visualizacao-ano.tsx](file://components/audiencias-visualizacao-ano.tsx)
+- [components/date-navigator.tsx](file://components/date-navigator.tsx)
+- [components/calendar-month-view.tsx](file://components/calendar-month-view.tsx)
+- [components/calendar-year-view.tsx](file://components/calendar-year-view.tsx)
+- [components/day-cell.tsx](file://components/day-cell.tsx)
 </cite>
 
 ## Atualização do Documento
 **Alterações Realizadas**
-- Atualização da interface de edição de observações com textarea redimensionável, foco automático e botões de ação aprimorados
-- Atualização do componente de visualização semanal para refletir as melhorias na interface
-- Adição de detalhes sobre o comportamento do foco automático ao iniciar a edição
-- Atualização das descrições dos botões de ação com ícones visuais
+- Atualização da documentação para refletir as melhorias na visualização mensal de audiências, incluindo a implementação de uma grade CSS personalizada com 7 colunas para representar os dias da semana, exibição de até 3 audiências diretamente na célula do dia com um indicador '+X mais' quando houver audiências adicionais, e suporte apropriadamente ao mês selecionado através de props opcionais. Também inclui melhorias na formatação de datas com locale pt-BR.
+- Atualização da documentação para refletir as melhorias na visualização anual de audiências, incluindo a adição do locale ptBR do date-fns, configuração do componente de calendário para usar português brasileiro, formatação de legendas com 'de' minúsculo entre mês e ano (ex: 'janeiro de 2025'), e layout de grade responsivo que se adapta de uma coluna em mobile a quatro colunas em telas maiores.
+- Atualização da documentação para refletir as melhorias nos controles de navegação da visualização de audiências, incluindo centralização dos elementos de navegação, espaçamento ajustado (pt-2), botões com tamanho mínimo expandido (min-w-36) e tamanho de texto aumentado (text-sm) para melhorar os alvos de toque em dispositivos móveis, além da formatação correta do mês e ano com 'de' minúsculo.
 
 ## Sumário
 - Este documento apresenta a funcionalidade de visualização de audiências com múltiplas perspectivas (tabela, semana, mês e ano), além de recursos de edição direta de URLs virtuais, observações e atribuição de responsável. Ele explica a arquitetura front-end e back-end envolvidas, fluxos de dados, tratamento de erros e boas práticas de uso.
@@ -117,18 +108,28 @@ Principais responsabilidades:
 - Calendário com marcação de dias com audiências.
 - Ao clicar em um dia com audiências, abre um diálogo com todas as audiências daquele dia.
 - Exibe até 3 audiências por dia com “mais”.
+- Implementação de uma grade CSS personalizada com 7 colunas para representar os dias da semana.
+- Suporte apropriado ao mês selecionado através de props opcionais.
+- Melhorias na formatação de datas com locale pt-BR.
 
 **Fontes da Seção**
 - [components/audiencias-visualizacao-mes.tsx](file://components/audiencias-visualizacao-mes.tsx#L1-L195)
 - [components/audiencia-detalhes-dialog.tsx](file://components/audiencia-detalhes-dialog.tsx#L1-L51)
+- [components/calendar-month-view.tsx](file://components/calendar-month-view.tsx#L1-L70)
+- [components/day-cell.tsx](file://components/day-cell.tsx#L1-L209)
 
 ### Visualização Anual
 - Grade de 12 meses com marcação de dias com audiências.
 - Clicar em um dia com audiências abre o diálogo com as audiências daquele dia.
+- Adição do locale ptBR do date-fns.
+- Configuração do componente de calendário para usar português brasileiro.
+- Formatação de legendas com 'de' minúsculo entre mês e ano (ex: 'janeiro de 2025').
+- Layout de grade responsivo que se adapta de uma coluna em mobile a quatro colunas em telas maiores.
 
 **Fontes da Seção**
 - [components/audiencias-visualizacao-ano.tsx](file://components/audiencias-visualizacao-ano.tsx#L1-L184)
 - [components/audiencia-detalhes-dialog.tsx](file://components/audiencia-detalhes-dialog.tsx#L1-L51)
+- [components/calendar-year-view.tsx](file://components/calendar-year-view.tsx#L1-L169)
 
 ### Filtros Avançados
 - Abre um painel lateral com múltiplos filtros (TRT, grau, responsável, datas, status, etc.).
@@ -268,16 +269,26 @@ UI-->>UI : atualiza visualização
 ### Visualização Mensal (calendário)
 - Geração de grade com dias do mês anterior, do mês atual e dias vazios.
 - Agrupamento de audiências por dia e exibição de até 3 com “mais”.
+- Implementação de uma grade CSS personalizada com 7 colunas para representar os dias da semana.
+- Suporte apropriado ao mês selecionado através de props opcionais.
+- Melhorias na formatação de datas com locale pt-BR.
 
 **Fontes da Seção**
 - [components/audiencias-visualizacao-mes.tsx](file://components/audiencias-visualizacao-mes.tsx#L1-L195)
+- [components/calendar-month-view.tsx](file://components/calendar-month-view.tsx#L1-L70)
+- [components/day-cell.tsx](file://components/day-cell.tsx#L1-L209)
 
 ### Visualização Anual (grade de meses)
 - Iteração sobre os 12 meses com marcação de dias com audiências.
 - Diálogo com todas as audiências de um dia ao clicar.
+- Adição do locale ptBR do date-fns.
+- Configuração do componente de calendário para usar português brasileiro.
+- Formatação de legendas com 'de' minúsculo entre mês e ano (ex: 'janeiro de 2025').
+- Layout de grade responsivo que se adapta de uma coluna em mobile a quatro colunas em telas maiores.
 
 **Fontes da Seção**
 - [components/audiencias-visualizacao-ano.tsx](file://components/audiencias-visualizacao-ano.tsx#L1-L184)
+- [components/calendar-year-view.tsx](file://components/calendar-year-view.tsx#L1-L169)
 
 ### Filtros Avançados
 - Filtros de TRT, grau, responsável (com opção “sem responsável”), status, tipo, datas e busca textual.

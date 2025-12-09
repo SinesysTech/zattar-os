@@ -1,8 +1,9 @@
 // Tipos para integração com API de audiências no frontend
 
-import type { Audiencia, ModalidadeAudiencia } from '@/types/domain/audiencias';
-import type { ListarAudienciasParams } from '@/types/contracts/audiencias';
-import type { GrauProcesso } from '@/types/domain/common';
+import type { Audiencia, ModalidadeAudiencia, GrauAudiencia, ListarAudienciasParams } from '@/backend/types/audiencias/types';
+
+// GrauProcesso é o mesmo que GrauAudiencia (alias)
+type GrauProcesso = GrauAudiencia;
 
 /**
  * Resposta da API de audiências (formato padrão)
@@ -43,7 +44,6 @@ export interface AudienciasFilters {
   trt?: string;
   grau?: GrauProcesso;
   responsavel_id?: number | 'null';
-  sem_responsavel?: boolean;
   busca?: string;
   numero_processo?: string;
   polo_ativo_nome?: string;
@@ -52,7 +52,6 @@ export interface AudienciasFilters {
   modalidade?: 'virtual' | 'presencial' | 'hibrida';
   tipo_descricao?: string;
   tipo_codigo?: string;
-  tipo_is_virtual?: boolean;
   data_inicio_inicio?: string;
   data_inicio_fim?: string;
   data_fim_inicio?: string;

@@ -42,7 +42,7 @@ export function ChatMessageWithFiles({
 
   // Determinar se deve mostrar o nome do usuário
   const shouldShowHeader = showHeader && shouldShowMessageHeader(tipo);
-  
+
   // Verificar se deve agrupar com a mensagem anterior (usado para lógica interna)
   shouldGroupWithPrevious(message, previousMessage, tipo);
 
@@ -85,7 +85,7 @@ export function ChatMessageWithFiles({
           audio.pause();
         }
       });
-      
+
       setPlayingAudio(fileUrl);
     }
   };
@@ -112,7 +112,7 @@ export function ChatMessageWithFiles({
             )}
           </Button>
         </div>
-        
+
         <audio
           data-url={file.url}
           src={file.url}
@@ -134,7 +134,7 @@ export function ChatMessageWithFiles({
           <img
             src={file.url}
             alt={file.name}
-            className="max-w-sm max-h-64 rounded-lg border cursor-pointer hover:opacity-90 transition-opacity"
+            className="w-full max-w-full sm:max-w-sm max-h-48 sm:max-h-64 rounded-lg border cursor-pointer hover:opacity-90 transition-opacity object-cover"
             onClick={() => window.open(file.url, '_blank')}
           />
           <div className="absolute top-2 right-2">
@@ -142,9 +142,9 @@ export function ChatMessageWithFiles({
               variant="secondary"
               size="sm"
               onClick={() => window.open(file.url, '_blank')}
-              className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
+              className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 sm:h-6 sm:w-6 p-0"
             >
-              <Eye className="h-3 w-3" />
+              <Eye className="h-4 w-4 sm:h-3 sm:w-3" />
             </Button>
           </div>
         </div>
@@ -159,12 +159,12 @@ export function ChatMessageWithFiles({
         <video
           src={file.url}
           controls
-          className="max-w-sm max-h-64 rounded-lg border"
+          className="w-full max-w-full sm:max-w-sm max-h-48 sm:max-h-64 rounded-lg border"
         >
           Seu navegador não suporta o elemento de vídeo.
         </video>
-        <div className="flex items-center justify-between mt-1">
-          <p className="text-sm font-medium">{file.name}</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mt-1">
+          <p className="text-sm font-medium truncate">{file.name}</p>
           <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
         </div>
       </div>
@@ -174,19 +174,20 @@ export function ChatMessageWithFiles({
   const renderDocumentLink = (file: FileAttachment) => {
     return (
       <div className="mt-2 p-3 bg-muted/50 rounded-lg">
-        <div className="flex items-center gap-3">
-          <span className="text-lg">{getFileIcon(file.category)}</span>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-base sm:text-lg">{getFileIcon(file.category)}</span>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">{file.name}</p>
+            <p className="text-xs sm:text-sm font-medium truncate">{file.name}</p>
             <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={() => window.open(file.url, '_blank')}
+            className="shrink-0"
           >
-            <Download className="h-4 w-4 mr-2" />
-            Baixar
+            <Download className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Baixar</span>
           </Button>
         </div>
       </div>
@@ -236,7 +237,7 @@ export function ChatMessageWithFiles({
     const firstFile = attachments[0];
     return (
       <div className={`flex mt-2 ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
-        <div className={cn('max-w-[75%] w-fit', {
+        <div className={cn('max-w-[85%] sm:max-w-[75%] w-fit', {
           'items-end': isOwnMessage,
         })}>
           {shouldShowHeader && (
@@ -250,7 +251,7 @@ export function ChatMessageWithFiles({
               </span>
             </div>
           )}
-          
+
           <div className={cn(
             'py-2 px-3 rounded-xl text-sm',
             isOwnMessage ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'

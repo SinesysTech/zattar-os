@@ -8,10 +8,11 @@
 - [timeline-loading.tsx](file://components/processos/timeline-loading.tsx) - *Estado de carregamento e captura*
 - [timeline-empty.tsx](file://components/processos/timeline-empty.tsx) - *Estado vazio da timeline*
 - [timeline-error.tsx](file://components/processos/timeline-error.tsx) - *Tratamento de erros na timeline*
-- [page.tsx](file://app/(dashboard)/processos/[id]/page.tsx) - *Página de visualização do processo*
+- [processo-visualizacao.tsx](file://app/(dashboard)/processos/[id]/processo-visualizacao.tsx) - *Página de visualização do processo*
 - [route.ts](file://app/api/acervo/[id]/timeline/route.ts) - *Rota de API para timeline existente*
 - [route.ts](file://app/api/captura/trt/timeline/route.ts) - *Rota de API para captura de timeline*
 - [timeline-persistence.service.ts](file://backend/captura/services/timeline/timeline-persistence.service.ts) - *Serviço de persistência da timeline no MongoDB*
+- [responsive-dialog.tsx](file://components/ui/responsive-dialog.tsx) - *Componente de diálogo responsivo para interface móvel*
 </cite>
 
 ## Sumário
@@ -29,9 +30,12 @@ O sistema de visualização de processo com timeline no Sinesys implementa uma s
 
 A implementação segue o padrão de "lazy loading", onde a timeline é capturada apenas quando o usuário expressa interesse em visualizá-la, otimizando recursos e tempo de processamento. O sistema verifica automaticamente a existência da timeline no MongoDB e, caso não exista, inicia o processo de captura através dos endpoints de integração com o PJE-TRT.
 
-**Fontes da seção**
+**Atualizado** A visualização de timeline foi atualizada para usar o novo componente ResponsiveDialog, melhorando significativamente a responsividade na interface móvel. Esta mudança garante uma experiência de usuário consistente em diferentes dispositivos, utilizando diálogos modais em desktop e sheets em dispositivos móveis.
+
+**Section sources**
 - [use-processo-timeline.ts](file://app/_lib/hooks/use-processo-timeline.ts#L1-L316) - *Hook principal atualizado com lógica completa de captura*
-- [page.tsx](file://app/(dashboard)/processos/[id]/page.tsx#L1-L86) - *Página de processo com integração ao hook*
+- [processo-visualizacao.tsx](file://app/(dashboard)/processos/[id]/processo-visualizacao.tsx#L1-L203) - *Página de processo com integração ao hook*
+- [responsive-dialog.tsx](file://components/ui/responsive-dialog.tsx#L1-L278) - *Implementação do componente responsivo*
 
 ## Estrutura de Componentes
 A visualização de processo com timeline é composta por uma hierarquia de componentes React que trabalham em conjunto para fornecer uma experiência de usuário completa. A estrutura principal é organizada em torno do componente `ProcessoVisualizacao`, que coordena os diferentes estados e componentes da interface.
@@ -144,7 +148,7 @@ O sistema implementa tratamento de erros granular com mensagens específicas par
 
 Cada erro tem uma mensagem de solução específica e, quando aplicável, um botão de tentativa novamente.
 
-**Fontes da seção**
+**Section sources**
 - [timeline-loading.tsx](file://components/processos/timeline-loading.tsx#L1-L92) - *Implementação do estado de carregamento*
 - [timeline-empty.tsx](file://components/processos/timeline-empty.tsx#L1-L46) - *Estado vazio da timeline*
 - [timeline-error.tsx](file://components/processos/timeline-error.tsx#L1-L114) - *Tratamento de erros com mensagens específicas*
@@ -229,7 +233,7 @@ O hook retorna um objeto com as seguintes propriedades:
 
 A implementação utiliza `useEffect` para carregar os dados iniciais e `useCallback` para memoizar funções importantes, garantindo eficiência na renderização.
 
-**Fontes da seção**
+**Section sources**
 - [use-processo-timeline.ts](file://app/_lib/hooks/use-processo-timeline.ts#L1-L316) - *Implementação completa do hook com todas as funcionalidades*
 
 ### Componente TimelineContainer
@@ -242,7 +246,7 @@ O componente exibe um cabeçalho com estatísticas da timeline:
 
 A ordenação é feita pelo campo `data` de cada item, garantindo que os eventos mais recentes apareçam no topo da lista.
 
-**Fontes da seção**
+**Section sources**
 - [timeline-container.tsx](file://components/processos/timeline-container.tsx#L1-L88) - *Implementação do container com ordenação e estatísticas*
 
 ### Componente TimelineItem
@@ -255,8 +259,25 @@ Para documentos, o componente exibe ações específicas:
 
 O componente utiliza animações de entrada com Framer Motion para uma experiência de usuário mais suave, com um pequeno delay entre os itens para criar um efeito de sequência.
 
-**Fontes da seção**
+**Section sources**
 - [timeline-item.tsx](file://components/processos/timeline-item.tsx#L1-L193) - *Implementação completa do item com ações e animações*
+
+### Componente ResponsiveDialog
+O componente `ResponsiveDialog` foi recentemente integrado à visualização de timeline para melhorar a experiência em dispositivos móveis. Ele implementa uma abordagem responsiva que adapta o comportamento da interface com base no tamanho da tela:
+
+- Em desktop (≥640px): Utiliza o componente `Dialog` padrão com modal centralizado
+- Em dispositivos móveis (<640px): Utiliza o componente `Sheet` com comportamento de bottom sheet ou fullscreen
+
+Esta mudança melhora significativamente a usabilidade em dispositivos móveis, garantindo que:
+- Formulários sejam responsivos sem scroll horizontal
+- Botões fiquem posicionados adequadamente (sticky no bottom em mobile)
+- Scroll vertical funcione quando o conteúdo excede a viewport
+- O scroll do background seja prevenido quando o diálogo estiver aberto
+
+O componente fornece uma API consistente com wrappers para todos os elementos do diálogo (Header, Title, Description, Footer, Close), permitindo que os componentes superiores utilizem uma interface única que se adapta automaticamente ao dispositivo.
+
+**Section sources**
+- [responsive-dialog.tsx](file://components/ui/responsive-dialog.tsx#L1-L278) - *Implementação completa do componente responsivo*
 
 ## Considerações de Performance
 O sistema implementa várias otimizações de performance para garantir uma experiência de usuário fluida, mesmo com timelines extensas contendo centenas de itens.
@@ -283,5 +304,7 @@ O sistema é projetado para atender aos seguintes SLAs de performance:
 A implementação da visualização de processo com timeline no Sinesys representa uma solução robusta e eficiente para a gestão jurídica de processos. A arquitetura híbrida que combina PostgreSQL e MongoDB permite um equilíbrio ideal entre dados relacionais estruturados e documentos processuais flexíveis.
 
 O padrão de "lazy loading" com captura sob demanda otimiza recursos e proporciona uma experiência de usuário mais rápida, enquanto a separação clara de responsabilidades entre componentes facilita a manutenção e evolução do sistema.
+
+A recente atualização para o componente `ResponsiveDialog` demonstra o compromisso com a experiência do usuário em diferentes dispositivos, garantindo que a interface seja intuitiva e funcional tanto em desktop quanto em dispositivos móveis. Esta melhoria na responsividade torna a plataforma mais acessível e eficiente para advogados que precisam acessar informações processuais em qualquer lugar.
 
 A solução está bem preparada para escalar, com possibilidades de melhorias futuras como paginação, filtros avançados e cache adicional, mantendo a simplicidade e eficácia da implementação atual.

@@ -55,19 +55,27 @@ interface ConciliacaoRecord {
   updated_at: string;
 }
 
-interface LancamentoRecord extends LancamentoFinanceiroResumo {
-  conta_bancaria_id?: number | null;
+interface LancamentoRecord {
+  id: number;
+  descricao: string;
+  valor: number;
+  dataLancamento: string;
+  dataVencimento: string | null;
+  tipo: 'receita' | 'despesa';
+  status: string;
+  contaBancariaId?: number | null;
   documento?: string | null;
-  status?: string;
+  contaContabilNome?: string;
+  centroCustoNome?: string;
 }
 
 interface TransacaoJoined extends TransacaoRecord {
   contas_bancarias?: {
     id: number;
     nome: string;
-    banco: string | null;
+    banco_nome: string | null;
     agencia: string | null;
-    conta: string | null;
+    numero_conta: string | null;
   } | null;
   conciliacoes_bancarias?: ConciliacaoRecord | null;
   lancamentos_financeiros?: LancamentoRecord | null;
@@ -115,26 +123,26 @@ export const mapTransacaoComConciliacaoRecord = (
 
   const contaBancaria = record.contas_bancarias
     ? {
-        id: record.contas_bancarias.id,
-        nome: record.contas_bancarias.nome,
-        banco: record.contas_bancarias.banco,
-        agencia: record.contas_bancarias.agencia,
-        conta: record.contas_bancarias.conta,
-      }
+      id: record.contas_bancarias.id,
+      nome: record.contas_bancarias.nome,
+      banco: record.contas_bancarias.banco_nome,
+      agencia: record.contas_bancarias.agencia,
+      conta: record.contas_bancarias.numero_conta,
+    }
     : undefined;
 
   const lancamentoVinculado = record.lancamentos_financeiros
     ? {
-        id: record.lancamentos_financeiros.id,
-        descricao: record.lancamentos_financeiros.descricao,
-        valor: Number(record.lancamentos_financeiros.valor),
-        dataLancamento: record.lancamentos_financeiros.data_lancamento,
-        dataVencimento: record.lancamentos_financeiros.data_vencimento || null,
-        tipo: record.lancamentos_financeiros.tipo as 'receita' | 'despesa',
-        status: record.lancamentos_financeiros.status || 'pendente',
-        contaContabilNome: record.lancamentos_financeiros.contaContabilNome,
-        centroCustoNome: record.lancamentos_financeiros.centroCustoNome,
-      }
+      id: record.lancamentos_financeiros.id,
+      descricao: record.lancamentos_financeiros.descricao,
+      valor: Number(record.lancamentos_financeiros.valor),
+      dataLancamento: record.lancamentos_financeiros.dataLancamento,
+      dataVencimento: record.lancamentos_financeiros.dataVencimento || null,
+      tipo: record.lancamentos_financeiros.tipo as 'receita' | 'despesa',
+      status: record.lancamentos_financeiros.status || 'pendente',
+      contaContabilNome: record.lancamentos_financeiros.contaContabilNome,
+      centroCustoNome: record.lancamentos_financeiros.centroCustoNome,
+    }
     : undefined;
 
   const conciliacao = record.conciliacoes_bancarias
@@ -319,7 +327,7 @@ export const listarTransacoesImportadas = async (
     .select(
       `
       *,
-      contas_bancarias (id, nome, banco, agencia, conta),
+      contas_bancarias (id, nome, banco_nome, agencia, numero_conta),
       conciliacoes_bancarias (*),
       lancamentos_financeiros (
         id,
@@ -436,7 +444,7 @@ export const buscarTransacaoPorId = async (
     .select(
       `
       *,
-      contas_bancarias (id, nome, banco, agencia, conta),
+      contas_bancarias (id, nome, banco_nome, agencia, numero_conta),
       conciliacoes_bancarias (*),
       lancamentos_financeiros (
         id,

@@ -67,8 +67,11 @@ interface ItemFolhaComRelacionamentos extends ItemFolhaPagamentoRecord {
   usuarios?: {
     id: number;
     nome_exibicao: string;
-    email: string;
-    cargo?: string;
+    email_corporativo: string;
+    cargo_id?: number;
+    cargos?: {
+      nome: string;
+    } | null;
   } | null;
   salarios?: {
     id: number;
@@ -138,38 +141,38 @@ const mapearItemFolhaComDetalhes = (registro: ItemFolhaComRelacionamentos): Item
 
   const usuario: UsuarioResumo | undefined = registro.usuarios
     ? {
-        id: registro.usuarios.id,
-        nomeExibicao: registro.usuarios.nome_exibicao,
-        email: registro.usuarios.email,
-        cargo: registro.usuarios.cargo,
-      }
+      id: registro.usuarios.id,
+      nomeExibicao: registro.usuarios.nome_exibicao,
+      email: registro.usuarios.email_corporativo,
+      cargo: registro.usuarios.cargos?.nome,
+    }
     : undefined;
 
   const salario: Salario | undefined = registro.salarios
     ? {
-        id: registro.salarios.id,
-        usuarioId: registro.usuario_id,
-        cargoId: null,
-        salarioBruto: Number(registro.salarios.salario_bruto),
-        dataInicioVigencia: registro.salarios.data_inicio_vigencia,
-        dataFimVigencia: registro.salarios.data_fim_vigencia,
-        observacoes: null,
-        ativo: true,
-        createdBy: null,
-        createdAt: '',
-        updatedAt: '',
-      }
+      id: registro.salarios.id,
+      usuarioId: registro.usuario_id,
+      cargoId: null,
+      salarioBruto: Number(registro.salarios.salario_bruto),
+      dataInicioVigencia: registro.salarios.data_inicio_vigencia,
+      dataFimVigencia: registro.salarios.data_fim_vigencia,
+      observacoes: null,
+      ativo: true,
+      createdBy: null,
+      createdAt: '',
+      updatedAt: '',
+    }
     : undefined;
 
   const lancamento: LancamentoFinanceiroResumo | undefined = registro.lancamentos_financeiros
     ? {
-        id: registro.lancamentos_financeiros.id,
-        descricao: registro.lancamentos_financeiros.descricao,
-        valor: Number(registro.lancamentos_financeiros.valor),
-        status: registro.lancamentos_financeiros.status,
-        dataVencimento: registro.lancamentos_financeiros.data_vencimento,
-        dataEfetivacao: registro.lancamentos_financeiros.data_efetivacao,
-      }
+      id: registro.lancamentos_financeiros.id,
+      descricao: registro.lancamentos_financeiros.descricao,
+      valor: Number(registro.lancamentos_financeiros.valor),
+      status: registro.lancamentos_financeiros.status,
+      dataVencimento: registro.lancamentos_financeiros.data_vencimento,
+      dataEfetivacao: registro.lancamentos_financeiros.data_efetivacao,
+    }
     : undefined;
 
   return {
@@ -248,7 +251,7 @@ export const listarFolhasPagamento = async (
       *,
       itens_folha_pagamento(
         *,
-        usuarios(id, nome_exibicao, email, cargo),
+        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos(nome)),
         salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
         lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
       )
@@ -332,7 +335,7 @@ export const buscarFolhaPorId = async (id: number): Promise<FolhaPagamentoComDet
       *,
       itens_folha_pagamento(
         *,
-        usuarios(id, nome_exibicao, email, cargo),
+        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos(nome)),
         salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
         lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
       )
@@ -375,7 +378,7 @@ export const buscarFolhaPorPeriodo = async (
       *,
       itens_folha_pagamento(
         *,
-        usuarios(id, nome_exibicao, email, cargo),
+        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos(nome)),
         salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
         lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
       )
@@ -437,7 +440,7 @@ export const buscarItensDaFolha = async (folhaId: number): Promise<ItemFolhaComD
     .select(
       `
       *,
-      usuarios(id, nome_exibicao, email, cargo),
+      usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos(nome)),
       salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
       lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
     `
@@ -867,7 +870,7 @@ export const buscarFolhasPorAno = async (ano: number): Promise<FolhaPagamentoCom
       *,
       itens_folha_pagamento(
         *,
-        usuarios(id, nome_exibicao, email, cargo),
+        usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos(nome)),
         salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
         lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
       )
