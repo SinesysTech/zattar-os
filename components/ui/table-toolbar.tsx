@@ -277,7 +277,7 @@ export function TableToolbar({
   return (
     <ButtonGroup
       className={cn(
-        "bg-card border border-border rounded-t-lg shadow-sm p-4 items-center",
+        "bg-background border border-border rounded-t-lg shadow-sm p-4 items-center",
         className
       )}
     >

@@ -1,14 +1,9 @@
 'use client';
 
-// Componente Card para exibir usuário
-
+import * as React from 'react';
+import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, KeyRound, MoreHorizontal, ShieldAlert } from 'lucide-react';
-import {
-  formatarOab,
-  formatarTelefone,
-  formatarCpf,
-} from '@/app/_lib/utils/format-usuarios';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +15,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Eye, KeyRound, MoreHorizontal, ShieldAlert } from 'lucide-react';
+import {
+  formatarOab,
+  formatarTelefone,
+  formatarCpf,
+} from '@/app/_lib/utils/format-usuarios';
 
 interface UsuarioCardProps {
   usuario: Usuario;
