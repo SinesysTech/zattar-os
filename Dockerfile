@@ -127,6 +127,10 @@ ENV NODE_OPTIONS="--max-old-space-size=6144"
 # Silenciar warning do baseline-browser-mapping (não afeta funcionalidade)
 ENV BROWSERSLIST_IGNORE_OLD_DATA=true
 
+# Desabilitar lint durante build (ESLint roda separadamente via CI)
+# Esta env var é necessária pois eslint config foi removido do next.config.ts (não suportado no Next.js 16)
+ENV NEXT_LINT_DISABLED=true
+
 # Copiar dependências do stage anterior
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .

@@ -11,11 +11,8 @@ const nextConfig: NextConfig = {
   // Exclude test files from compilation
   excludeDefaultMomentLocales: true,
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'].filter(ext => !ext.includes('test')),
-  // Disables ESLint during build - lint should run separately via "npm run lint"
-  // ESLINT_NO_DEV_ERRORS only affects "next dev", not "next build"
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // ESLint disabled via NEXT_LINT_DISABLED=true in Dockerfile
+  // (eslint config key removed - not supported in Next.js 16)
   experimental: {
     // Disables server source maps to reduce memory usage in the server runtime
     serverSourceMaps: false,
