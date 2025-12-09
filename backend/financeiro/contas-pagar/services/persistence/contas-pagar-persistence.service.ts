@@ -96,9 +96,9 @@ interface LancamentoComRelacionamentos extends LancamentoFinanceiroRecord {
   contas_bancarias?: {
     id: number;
     nome: string;
-    banco: string | null;
+    banco_nome: string | null;
     agencia: string | null;
-    conta: string | null;
+    numero_conta: string | null;
   } | null;
 }
 
@@ -178,9 +178,9 @@ const mapearContaPagarComDetalhes = (registro: LancamentoComRelacionamentos): Co
     ? {
       id: registro.contas_bancarias.id,
       nome: registro.contas_bancarias.nome,
-      banco: registro.contas_bancarias.banco,
+      banco: registro.contas_bancarias.banco_nome,
       agencia: registro.contas_bancarias.agencia,
-      conta: registro.contas_bancarias.conta,
+      conta: registro.contas_bancarias.numero_conta,
     }
     : undefined;
 
