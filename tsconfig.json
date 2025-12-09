@@ -15,6 +15,7 @@
     "incremental": true,
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
+    "ignoreDeprecations": "5.0",
     "plugins": [
       {
         "name": "next"
@@ -29,6 +30,8 @@
       "@/app/*": ["app/*"],
       "@/components/*": ["components/*"],
       "@/backend/*": ["backend/*"],
+      "@/lib/hooks/*": ["app/_lib/hooks/*"],
+      "@/lib/types/*": ["lib/types/*", "app/_lib/types/*"],
       "@/lib/*": ["lib/*", "app/_lib/*"],
       "@/*": ["./*"]
     }
