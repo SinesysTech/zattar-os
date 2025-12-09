@@ -95,19 +95,22 @@ jobs:
     if: |
       github.event_name == 'push' ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.skip_deploy != 'true')
+    env:
+      CAPROVER_SERVER: ${{ secrets.CAPROVER_SERVER }}
+      CAPROVER_APP_TOKEN: ${{ secrets.CAPROVER_APP_TOKEN }}
 
     steps:
       - name: Deploy to CapRover via ImageName
-        if: ${{ secrets.CAPROVER_APP_TOKEN != '' }}
+        if: env.CAPROVER_APP_TOKEN != ''
         run: |
-          curl -X POST "${{ secrets.CAPROVER_SERVER }}/api/v2/user/apps/webhooks/triggerimagename" \
-            -H "x-captain-app-token: ${{ secrets.CAPROVER_APP_TOKEN }}" \
+          curl -X POST "${{ env.CAPROVER_SERVER }}/api/v2/user/apps/webhooks/triggerimagename" \
+            -H "x-captain-app-token: ${{ env.CAPROVER_APP_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d '{"imageName": "${{ env.DOCKER_IMAGE }}:latest"}'
           echo "Deploy triggered for ${{ env.DOCKER_IMAGE }}:latest"
 
       - name: Manual deploy instructions
-        if: ${{ secrets.CAPROVER_APP_TOKEN == '' }}
+        if: env.CAPROVER_APP_TOKEN == ''
         run: |
           echo "=============================================="
           echo "BUILD COMPLETED SUCCESSFULLY!"
