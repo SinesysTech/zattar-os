@@ -1,23 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google"; // 1. Trocamos Geist por Inter e Montserrat
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "sonner";
 import { PWAInstallPrompt } from '@/components/pwa-install-prompt';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// 2. Configuração da Inter (Corpo de texto)
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// 3. Configuração da Montserrat (Títulos e Marca)
+const montserrat = Montserrat({
   subsets: ["latin"],
+  variable: "--font-montserrat",
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
   title: "Zattar Advogados",
-  description: "Zattar Advogados",
+  description: "Gestão Jurídica Inteligente",
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -32,7 +36,7 @@ export const metadata: Metadata = {
       { url: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' }
     ]
   },
-  keywords: ['gestão jurídica', 'processos', 'advogados', 'zattar']
+  keywords: ['gestão jurídica', 'processos', 'advogados', 'zattar', 'legal tech']
 };
 
 export const viewport: Viewport = {
@@ -42,8 +46,9 @@ export const viewport: Viewport = {
   userScalable: true,
   viewportFit: 'cover',
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#000000' }
+    // 4. Ajuste das cores da barra de status para bater com o novo tema
+    { media: '(prefers-color-scheme: light)', color: '#F4F4F8' }, // Cor do Background Light (Off-white)
+    { media: '(prefers-color-scheme: dark)', color: '#282828' }   // Cor do Background Dark (Charcoal)
   ],
 };
 
@@ -54,7 +59,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning className="overflow-x-hidden">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}>
+      {/* 5. Injeção das variáveis das fontes no Body */}
+      <body className={`${inter.variable} ${montserrat.variable} antialiased overflow-x-hidden bg-background text-foreground`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

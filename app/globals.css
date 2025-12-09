@@ -6,8 +6,12 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+
+  /* Mapeando as fontes da identidade */
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-montserrat); /* Nova variável para Títulos */
   --font-mono: var(--font-geist-mono);
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -51,76 +55,126 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.13 0.028 261.692);
+  --radius: 0.5rem; /* Ajustado para um visual mais "Tech" e nítido */
+
+  /* Zattar Light Mode */
+
+  /* Background: Off-White #F4F4F8 */
+  --background: oklch(0.96 0.01 270);
+
+  /* Foreground: Zattar Charcoal #282828 */
+  --foreground: oklch(0.24 0 0);
+
+  /* Card: Pure White #FFFFFF */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.13 0.028 261.692);
+  --card-foreground: oklch(0.24 0 0);
+
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.13 0.028 261.692);
-  --primary: oklch(0.21 0.034 264.665);
-  --primary-foreground: oklch(0.985 0.002 247.839);
-  --secondary: oklch(0.967 0.003 264.542);
-  --secondary-foreground: oklch(0.21 0.034 264.665);
-  --muted: oklch(0.967 0.003 264.542);
-  --muted-foreground: oklch(0.551 0.027 264.364);
-  --accent: oklch(0.967 0.003 264.542);
-  --accent-foreground: oklch(0.21 0.034 264.665);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.928 0.006 264.531);
-  --input: oklch(0.928 0.006 264.531);
-  --ring: oklch(0.707 0.022 261.325);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0.002 247.839);
-  --sidebar-foreground: oklch(0.13 0.028 261.692);
-  --sidebar-primary: oklch(0.21 0.034 264.665);
-  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-accent: oklch(0.967 0.003 264.542);
-  --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
-  --sidebar-border: oklch(0.928 0.006 264.531);
-  --sidebar-ring: oklch(0.707 0.022 261.325);
-  --brand: oklch(0.623 0.214 259.815);
-  --highlight: oklch(0.852 0.199 91.936);
+  --popover-foreground: oklch(0.24 0 0);
+
+  /* Primary: Zattar Purple #5523eb */
+  --primary: oklch(0.45 0.25 285);
+  --primary-foreground: oklch(1 0 0); /* Texto branco no roxo */
+
+  /* Secondary: Mid Gray suave para fundos secundários */
+  --secondary: oklch(0.93 0 0);
+  --secondary-foreground: oklch(0.24 0 0);
+
+  /* Muted: Para textos de apoio */
+  --muted: oklch(0.96 0.01 270);
+  --muted-foreground: oklch(0.55 0.02 270); /* Mid Gray #6E6E78 */
+
+  --accent: oklch(0.93 0 0);
+  --accent-foreground: oklch(0.24 0 0);
+
+  /* Destructive: Error Red #EA5455 */
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(1 0 0);
+
+  --border: oklch(0.88 0 0);
+  --input: oklch(0.88 0 0);
+
+  /* Ring: Zattar Purple diluído */
+  --ring: oklch(0.45 0.25 285 / 0.5);
+
+  /* Brand Colors Extras */
+  --brand: oklch(0.45 0.25 285); /* Zattar Purple */
+  --highlight: oklch(0.68 0.22 45); /* Action Orange #FF6B35 */
+
+  /* SIDEBAR (Light Mode) - Definida como Charcoal conforme guidelines */
+  --sidebar: oklch(0.24 0 0); /* #282828 */
+  --sidebar-foreground: oklch(0.98 0 0); /* Branco */
+  --sidebar-primary: oklch(0.45 0.25 285); /* Roxo */
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(
+    0.32 0 0
+  ); /* Um cinza um pouco mais claro que o fundo */
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(0.24 0 0);
+  --sidebar-ring: oklch(0.45 0.25 285);
+
+  /* Charts - Ajustados para a paleta */
+  --chart-1: oklch(0.45 0.25 285); /* Roxo */
+  --chart-2: oklch(0.68 0.22 45); /* Laranja */
+  --chart-3: oklch(0.24 0 0); /* Charcoal */
+  --chart-4: oklch(0.7 0.18 145); /* Verde sistema */
+  --chart-5: oklch(0.55 0.02 270); /* Cinza */
 }
 
 .dark {
-  --background: oklch(0.13 0.028 261.692);
-  --foreground: oklch(0.985 0.002 247.839);
-  --card: oklch(0.21 0.034 264.665);
-  --card-foreground: oklch(0.985 0.002 247.839);
-  --popover: oklch(0.21 0.034 264.665);
-  --popover-foreground: oklch(0.985 0.002 247.839);
-  --primary: oklch(0.928 0.006 264.531);
-  --primary-foreground: oklch(0.21 0.034 264.665);
-  --secondary: oklch(0.278 0.033 256.848);
-  --secondary-foreground: oklch(0.985 0.002 247.839);
-  --muted: oklch(0.278 0.033 256.848);
-  --muted-foreground: oklch(0.707 0.022 261.325);
-  --accent: oklch(0.278 0.033 256.848);
-  --accent-foreground: oklch(0.985 0.002 247.839);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
+  /* Zattar Dark Mode */
+
+  /* Background: Deep Charcoal (quase preto para contraste) */
+  --background: oklch(0.18 0 0);
+
+  /* Foreground: White */
+  --foreground: oklch(0.98 0 0);
+
+  /* Card: Zattar Charcoal #282828 (original) */
+  --card: oklch(0.24 0 0);
+  --card-foreground: oklch(0.98 0 0);
+
+  --popover: oklch(0.24 0 0);
+  --popover-foreground: oklch(0.98 0 0);
+
+  /* Primary: Roxo ligeiramente mais claro para contraste dark mode */
+  --primary: oklch(0.55 0.25 285);
+  --primary-foreground: oklch(1 0 0);
+
+  --secondary: oklch(0.3 0 0);
+  --secondary-foreground: oklch(0.98 0 0);
+
+  --muted: oklch(0.3 0 0);
+  --muted-foreground: oklch(0.7 0 0);
+
+  --accent: oklch(0.3 0 0);
+  --accent-foreground: oklch(0.98 0 0);
+
+  --destructive: oklch(0.6 0.2 25);
+
+  --border: oklch(1 0 0 / 15%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.034 264.665);
-  --sidebar-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-accent: oklch(0.278 0.033 256.848);
-  --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
+  --ring: oklch(0.55 0.25 285 / 0.5);
+
+  --brand: oklch(0.55 0.25 285);
+  --highlight: oklch(0.68 0.22 45);
+
+  /* SIDEBAR (Dark Mode) - Mantém escura, talvez ligeiramente diferenciada */
+  --sidebar: oklch(0.2 0 0);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.55 0.25 285);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.3 0 0);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
-  --brand: oklch(0.707 0.165 254.624);
-  --highlight: oklch(0.852 0.199 91.936);
+  --sidebar-ring: oklch(0.55 0.25 285);
+
+  /* Charts Dark */
+  --chart-1: oklch(0.55 0.25 285);
+  --chart-2: oklch(0.68 0.22 45);
+  --chart-3: oklch(0.4 0 0);
+  --chart-4: oklch(0.7 0.18 145);
+  --chart-5: oklch(0.6 0 0);
 }
 
 @layer base {
@@ -128,14 +182,22 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
 
+  /* Adição: Seleção de texto com a cor da marca */
+  ::selection {
+    @apply bg-brand/30 text-foreground;
+  }
+
+  /* ... restante das media queries (reduced motion, etc) ... */
   @media (prefers-reduced-motion: reduce) {
     html:focus-within {
       scroll-behavior: auto;
     }
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.001ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important;
@@ -155,31 +217,33 @@
 }
 
 @layer base {
-  /* Typography - shadcn/ui styles */
+  /* Typography - shadcn/ui styles with Montserrat override */
+
   .typography-h1 {
-    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+    @apply font-heading scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl text-foreground;
   }
 
   .typography-h2 {
-    @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
+    @apply font-heading scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 text-foreground;
   }
 
   .typography-h3 {
-    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+    @apply font-heading scroll-m-20 text-2xl font-semibold tracking-tight text-foreground;
   }
 
   .typography-h4 {
-    @apply scroll-m-20 text-xl font-semibold tracking-tight;
+    @apply font-heading scroll-m-20 text-xl font-semibold tracking-tight text-foreground;
   }
 
   .typography-p {
-    @apply leading-7 not-first:mt-6;
+    @apply leading-7 not-first:mt-6 text-foreground/90;
   }
 
   .typography-blockquote {
-    @apply mt-6 border-l-2 pl-6 italic;
+    @apply mt-6 border-l-2 border-brand pl-6 italic text-muted-foreground;
   }
 
+  /* ... tabelas e listas mantidas ... */
   .typography-table-wrapper {
     @apply my-6 w-full overflow-y-auto;
   }
@@ -209,7 +273,7 @@
   }
 
   .typography-inline-code {
-    @apply bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+    @apply bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold text-brand;
   }
 
   .typography-lead {
@@ -230,15 +294,13 @@
 }
 
 @layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
 
-  /* Hide scrollbar for IE, Edge and Firefox */
   .scrollbar-hide {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   .content-auto {
