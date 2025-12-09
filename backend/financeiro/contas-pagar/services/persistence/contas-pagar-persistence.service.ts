@@ -253,7 +253,7 @@ export const listarContasPagar = async (
       cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `,
       { count: 'exact' }
     )
@@ -377,7 +377,7 @@ export const buscarContaPagarPorId = async (id: number): Promise<ContaPagarComDe
       cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `
     )
     .eq('id', id)
@@ -411,7 +411,7 @@ export const buscarContasPagarVencidas = async (): Promise<ContaPagarComDetalhes
       cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `
     )
     .eq('tipo', 'despesa')
@@ -457,7 +457,7 @@ export const buscarResumoVencimentos = async (): Promise<ResumoVencimentos> => {
       cliente:clientes(id, nome, nome_social_fantasia, cnpj),
       plano_contas(id, codigo, nome),
       centros_custo(id, codigo, nome),
-      contas_bancarias(id, nome, banco, agencia, conta)
+      contas_bancarias(id, nome, banco_nome, agencia, numero_conta)
     `
     )
     .eq('tipo', 'despesa')
