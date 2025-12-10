@@ -21,6 +21,251 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 
 # Sinesys - Instruções para Agentes de IA
 
+## 🏗 Arquitetura do Sistema
+
+### Princípios Arquiteturais
+
+O Sinesys segue uma **Arquitetura Orientada a Features (Feature-Sliced Design)** adaptada para Next.js App Router:
+
+1. **Colocação (Colocation)**: Todo código relacionado a uma feature vive junto em `src/features/{modulo}/`
+2. **Isolamento**: Features são independentes e auto-contidas
+3. **Escalabilidade**: Estrutura previsível facilita crescimento
+4. **Manutenibilidade**: Mudanças em uma feature não afetam outras
+
+### Estrutura de Pastas
+
+```
+src/
+├── app/                      # Roteamento (páginas, layouts, API routes)
+│   ├── (dashboard)/          # Rotas do dashboard
+│   │   └── layout.tsx        # Layout com Sidebar fixa
+│   └── api/                  # API REST
+│
+├── features/                 # 🆕 MÓDULOS DE NEGÓCIO
+│   ├── partes/               # ✅ Migrado
+│   ├── processos/            # ✅ Migrado
+│   ├── contratos/            # ✅ Migrado
+│   └── [outros]/             # 📋 Planejado
+│
+├── components/               # UI compartilhada
+│   ├── ui/                   # Primitivos shadcn
+│   ├── layout/               # Layout do sistema
+│   └── shared/               # Padrões reutilizáveis
+│
+├── lib/                      # Infraestrutura
+├── hooks/                    # Hooks globais
+└── types/                    # Tipos compartilhados
+```
+
+### Anatomia de uma Feature
+
+```
+src/features/{modulo}/
+├── components/           # Componentes React específicos
+├── hooks/                # Hooks customizados
+├── actions/              # Server Actions (Next.js 16)
+├── domain.ts             # Entidades e regras de negócio
+├── service.ts            # Casos de uso
+├── repository.ts         # Acesso a dados (Supabase)
+├── types.ts              # Tipagem específica
+├── utils.ts              # Utilitários
+└── index.ts              # Barrel exports
+```
+
+## 📘 Guia de Implementação
+
+### Criar Nova Feature
+
+1. **Criar estrutura**:
+   ```bash
+   mkdir -p src/features/nova-feature/{components,hooks,actions}
+   touch src/features/nova-feature/{domain,service,repository,types,utils,index}.ts
+   ```
+
+2. **Definir domínio** (`domain.ts`):
+   - Schemas Zod para validação
+   - Tipos TypeScript
+   - Constantes e enums
+   - Regras de negócio puras
+
+3. **Implementar repository** (`repository.ts`):
+   - Acesso ao Supabase
+   - CRUD operations
+   - Queries com filtros
+
+4. **Implementar service** (`service.ts`):
+   - Casos de uso
+   - Validação de entrada
+   - Orquestração de lógica
+
+5. **Criar Server Actions** (`actions/`):
+   - Use `'use server'` directive
+   - Retorne `{ success, data?, error? }`
+   - Revalidate cache com `revalidatePath()`
+
+6. **Criar componentes** (`components/`):
+   - Use `'use client'` quando necessário
+   - Importe de `@/features/nova-feature`
+   - Siga padrões shadcn/ui
+
+7. **Criar página** (`app/(dashboard)/nova-feature/page.tsx`):
+   - Server Component por padrão
+   - Use PageShell para layout
+   - Importe componentes da feature
+
+### Migrar Módulo Existente
+
+1. **Identifique o escopo**: Quais arquivos pertencem ao módulo?
+2. **Crie a estrutura** em `features/{modulo}/`
+3. **Mova componentes** para `components/`
+4. **Mova hooks** para `hooks/`
+5. **Consolide tipos** em `types.ts` ou `domain.ts`
+6. **Extraia lógica** para `service.ts` e `repository.ts`
+7. **Atualize imports** nas páginas
+8. **Delete arquivos antigos**
+9. **Teste** a funcionalidade
+
+## ⚙️ Convenções de Código
+
+### Nomenclatura
+
+- **Arquivos**: `kebab-case.ts` (ex: `cliente-form.tsx`)
+- **Componentes**: `PascalCase` (ex: `ClienteForm`)
+- **Funções**: `camelCase` (ex: `criarCliente`)
+- **Tipos**: `PascalCase` (ex: `Cliente`, `CriarClienteParams`)
+- **Constantes**: `UPPER_SNAKE_CASE` (ex: `STATUS_LABELS`)
+
+### Imports
+
+```typescript
+// ✅ Correto - importar de barrel exports
+import { ClientesTable, actionListarClientes } from '@/features/partes';
+
+// ❌ Evitar - imports diretos internos
+import { ClientesTable } from '@/features/partes/components/clientes/clientes-table';
+```
+
+### Tipagem
+
+```typescript
+// ✅ Usar Zod para schemas de validação
+import { z } from 'zod';
+
+const clienteSchema = z.object({
+  nome: z.string().min(3),
+  cpf: z.string().regex(/^\d{11}$/),
+});
+
+type Cliente = z.infer<typeof clienteSchema> & {
+  id: number;
+  created_at: string;
+};
+```
+
+### Padrão de Resposta
+
+```typescript
+// Server Actions e API Routes devem retornar:
+type ActionResponse<T> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};
+```
+
+## 📋 Status da Migração FSD
+
+### Módulos Migrados ✅
+
+- **Partes** - `features/partes/`
+- **Processos** - `features/processos/`
+- **Contratos** - `features/contratos/`
+
+### Módulos Legados 🔄
+
+- **Audiências** - Estrutura antiga em `app/(dashboard)/audiencias/`
+- **Expedientes** - Estrutura antiga
+- **Acordos/Condenações** - Estrutura antiga
+- **Financeiro** - Módulo complexo com estrutura própria
+- **RH** - Estrutura antiga
+
+### Regras de Migração
+
+1. **Módulos novos**: Implementar diretamente em `features/`
+2. **Módulos existentes**: Migrar apenas quando houver necessidade de refatoração significativa
+3. **Módulos legados**: Manter funcional, evitar grandes refatorações desnecessárias
+4. **Não quebrar**: Garantir retrocompatibilidade durante migração
+
+## 🛠️ Componentes e Padrões
+
+### Layout do Dashboard
+
+```tsx
+// app/(dashboard)/layout.tsx
+import { AppSidebar } from '@/components/layout/app-sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+
+export default function DashboardLayout({ children }) {
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset id="main-content">
+        {children}
+      </SidebarInset>
+    </SidebarProvider>
+  );
+}
+```
+
+### PageShell
+
+```tsx
+import { PageShell } from '@/components/shared/page-shell';
+import { Button } from '@/components/ui/button';
+
+export default function MinhaPage() {
+  return (
+    <PageShell
+      title="Título da Página"
+      description="Descrição opcional"
+      actions={<Button>Nova Ação</Button>}
+    >
+      {/* Conteúdo da página */}
+    </PageShell>
+  );
+}
+```
+
+### DataTableShell (Superfície de Dados)
+
+```tsx
+import { DataTableShell } from '@/components/shared/data-table-shell';
+import { TableToolbar } from '@/components/ui/table-toolbar';
+import { ResponsiveTable } from '@/components/ui/responsive-table';
+
+function MinhaTabela() {
+  return (
+    <DataTableShell
+      toolbar={<TableToolbar {...toolbarProps} />}
+      pagination={<TablePagination {...paginationProps} />}
+    >
+      <ResponsiveTable data={data} columns={columns} />
+    </DataTableShell>
+  );
+}
+```
+
+## 📚 Recursos Adicionais
+
+- **README.md**: Visão geral do projeto e instruções de setup
+- **docs/arquitetura-sistema.md**: Documentação completa da arquitetura
+- **openspec/**: Especificações de mudanças e propostas
+- **tests/**: Testes automatizados (unit, integration, e2e)
+
+---
+
+# Sinesys - Instruções para Agentes de IA
+
 ## Arquitetura do Projeto
 
 ### Feature-Sliced Design (FSD)
@@ -57,6 +302,7 @@ src/features/{modulo}/
 #### Módulos Legados (Backend)
 
 Módulos ainda não migrados permanecem em `backend/{modulo}/services/`:
+
 - Audiências
 - Expedientes
 - Acordos/Condenações
@@ -67,18 +313,21 @@ Módulos ainda não migrados permanecem em `backend/{modulo}/services/`:
 ### Quando Criar Novo Código
 
 #### ✅ SEMPRE use Features para:
+
 - Novos módulos de negócio
 - Funcionalidades de domínio específico
 - Componentes com lógica acoplada ao domínio
 - Casos de uso completos (CRUD + regras de negócio)
 
 #### ✅ Use Componentes Compartilhados para:
+
 - Componentes UI primitivos (botões, inputs)
 - Padrões de layout (PageShell, DataTableShell)
 - Componentes sem lógica de negócio
 - Utilitários visuais reutilizáveis
 
 #### ✅ Use Backend (Legado) para:
+
 - Integrações externas (PJE/TRT, 2FAuth)
 - Autenticação e autorização
 - Utilitários de infraestrutura
@@ -88,15 +337,15 @@ Módulos ainda não migrados permanecem em `backend/{modulo}/services/`:
 
 ```typescript
 // ✅ CORRETO - Importar de features
-import { ClientesTableWrapper, actionListarClientes } from '@/features/partes';
-import { listarProcessos, type Processo } from '@/features/processos';
+import { ClientesTableWrapper, actionListarClientes } from "@/features/partes";
+import { listarProcessos, type Processo } from "@/features/processos";
 
 // ✅ CORRETO - Importar componentes compartilhados
-import { PageShell } from '@/components/shared/page-shell';
-import { Button } from '@/components/ui/button';
+import { PageShell } from "@/components/shared/page-shell";
+import { Button } from "@/components/ui/button";
 
 // ❌ EVITAR - Importar diretamente de backend (exceto legado necessário)
-import { criarCliente } from '@/backend/clientes/services/clientes/criar-cliente.service';
+import { criarCliente } from "@/backend/clientes/services/clientes/criar-cliente.service";
 ```
 
 ---
@@ -109,18 +358,15 @@ As páginas devem ser **minimalistas**, apenas compondo features:
 
 ```typescript
 // src/app/(dashboard)/processos/page.tsx
-import { PageShell } from '@/components/shared/page-shell';
-import { ProcessosTableWrapper } from '@/features/processos';
-import { actionListarProcessos } from '@/features/processos/actions/processos-actions';
+import { PageShell } from "@/components/shared/page-shell";
+import { ProcessosTableWrapper } from "@/features/processos";
+import { actionListarProcessos } from "@/features/processos/actions/processos-actions";
 
 export default async function ProcessosPage() {
   const result = await actionListarProcessos({ pagina: 1, limite: 50 });
 
   return (
-    <PageShell 
-      title="Processos" 
-      description="Gerenciamento de processos"
-    >
+    <PageShell title="Processos" description="Gerenciamento de processos">
       {result.success ? (
         <ProcessosTableWrapper initialData={result.data} />
       ) : (
@@ -144,7 +390,7 @@ touch src/features/nova-feature/{domain,service,repository,types,utils,index}.ts
 
 ```typescript
 // src/features/nova-feature/domain.ts
-import { z } from 'zod';
+import { z } from "zod";
 
 // Schema de validação
 export const novaFeatureSchema = z.object({
@@ -161,8 +407,8 @@ export type NovaFeature = z.infer<typeof novaFeatureSchema> & {
 
 // Constantes
 export const STATUS_LABELS = {
-  ativo: 'Ativo',
-  inativo: 'Inativo',
+  ativo: "Ativo",
+  inativo: "Inativo",
 } as const;
 ```
 
@@ -170,15 +416,15 @@ export const STATUS_LABELS = {
 
 ```typescript
 // src/features/nova-feature/repository.ts
-import { createClient } from '@/lib/supabase/server';
-import type { NovaFeature } from './domain';
+import { createClient } from "@/lib/supabase/server";
+import type { NovaFeature } from "./domain";
 
 export async function findAll(): Promise<NovaFeature[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
-    .from('nova_feature')
-    .select('*')
-    .order('nome');
+    .from("nova_feature")
+    .select("*")
+    .order("nome");
 
   if (error) throw new Error(error.message);
   return data || [];
@@ -189,8 +435,8 @@ export async function findAll(): Promise<NovaFeature[]> {
 
 ```typescript
 // src/features/nova-feature/service.ts
-import { novaFeatureSchema } from './domain';
-import * as repo from './repository';
+import { novaFeatureSchema } from "./domain";
+import * as repo from "./repository";
 
 export async function listar() {
   return await repo.findAll();
@@ -212,10 +458,10 @@ export async function criar(params: unknown) {
 
 ```typescript
 // src/features/nova-feature/actions/nova-feature-actions.ts
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import * as service from '../service';
+import { revalidatePath } from "next/cache";
+import * as service from "../service";
 
 export async function actionListar() {
   try {
@@ -229,13 +475,13 @@ export async function actionListar() {
 export async function actionCriar(formData: FormData) {
   try {
     const params = {
-      nome: formData.get('nome'),
-      descricao: formData.get('descricao'),
+      nome: formData.get("nome"),
+      descricao: formData.get("descricao"),
     };
-    
+
     const data = await service.criar(params);
-    revalidatePath('/nova-feature');
-    
+    revalidatePath("/nova-feature");
+
     return { success: true, data };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -247,10 +493,10 @@ export async function actionCriar(formData: FormData) {
 
 ```typescript
 // src/features/nova-feature/index.ts
-export type { NovaFeature } from './domain';
-export { novaFeatureSchema, STATUS_LABELS } from './domain';
-export { listar, criar } from './service';
-export { actionListar, actionCriar } from './actions/nova-feature-actions';
+export type { NovaFeature } from "./domain";
+export { novaFeatureSchema, STATUS_LABELS } from "./domain";
+export { listar, criar } from "./service";
+export { actionListar, actionCriar } from "./actions/nova-feature-actions";
 ```
 
 ---
@@ -258,12 +504,14 @@ export { actionListar, actionCriar } from './actions/nova-feature-actions';
 ## Convenções de Nomenclatura
 
 ### Arquivos
+
 - **Features**: `kebab-case.ts` (ex: `clientes-table-wrapper.tsx`)
 - **Componentes**: `kebab-case.tsx` (ex: `page-shell.tsx`)
 - **Server Actions**: `{entidade}-actions.ts` (ex: `processos-actions.ts`)
 - **Barrel exports**: Sempre `index.ts`
 
 ### Código
+
 - **Variáveis/Funções**: `camelCase`
 - **Tipos/Interfaces**: `PascalCase`
 - **Componentes**: `PascalCase`
@@ -271,6 +519,7 @@ export { actionListar, actionCriar } from './actions/nova-feature-actions';
 - **SQL**: `snake_case`
 
 ### Server Actions
+
 - Prefixo `action` obrigatório
 - Verbo no infinitivo: `actionListar`, `actionCriar`, `actionAtualizar`
 
@@ -308,8 +557,8 @@ if (!result.success) {
 
 ```typescript
 // ✅ Usar componentes responsivos
-import { ResponsiveTable } from '@/components/ui/responsive-table';
-import { useViewport } from '@/hooks/use-viewport';
+import { ResponsiveTable } from "@/components/ui/responsive-table";
+import { useViewport } from "@/hooks/use-viewport";
 
 const { isMobile } = useViewport();
 ```
@@ -318,12 +567,12 @@ const { isMobile } = useViewport();
 
 ```typescript
 // ✅ Usar shadcn/ui quando possível
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 // ✅ Usar padrões Zattar
-import { PageShell } from '@/components/shared/page-shell';
-import { DataTableShell } from '@/components/shared/data-table-shell';
+import { PageShell } from "@/components/shared/page-shell";
+import { DataTableShell } from "@/components/shared/data-table-shell";
 ```
 
 ---

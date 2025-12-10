@@ -1593,11 +1593,11 @@ Este documento descreve como fazer o deploy da stack Sinesys em diferentes ambie
 
 O Sinesys é composto por **3 serviços independentes**, cada um em seu próprio repositório:
 
-| Serviço | Repositório | Descrição | Porta | WebSocket |
-|---------|-------------|-----------|-------|-----------|  
-| **sinesys_app** | Este repo | Frontend Next.js + API | 3000 | ❌ |
-| **sinesys_mcp** | sinesys-mcp-server | MCP Server para agentes IA | 3001 | ❌ |
-| **sinesys_browser** | sinesys-browser-server | Firefox (scraping PJE) | 3000 | ✅ |
+| Serviço             | Repositório            | Descrição                  | Porta | WebSocket |
+| ------------------- | ---------------------- | -------------------------- | ----- | --------- |
+| **sinesys_app**     | Este repo              | Frontend Next.js + API     | 3000  | ❌        |
+| **sinesys_mcp**     | sinesys-mcp-server     | MCP Server para agentes IA | 3001  | ❌        |
+| **sinesys_browser** | sinesys-browser-server | Firefox (scraping PJE)     | 3000  | ✅        |
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1660,11 +1660,11 @@ O deploy do Sinesys no CapRover é feito utilizando **imagens Docker pré-constr
 
 Acesse o dashboard do CapRover e crie **3 apps**:
 
-| Nome do App | Descrição | HTTP Port | WebSocket |
-|-------------|-----------|-----------|-----------|  
-| `sinesys` | App principal (Next.js) | 3000 | ❌ |
-| `sinesys-mcp` | MCP Server | 3001 | ❌ |
-| `sinesys-browser` | Firefox para scraping | 3000 | ✅ |
+| Nome do App       | Descrição               | HTTP Port | WebSocket |
+| ----------------- | ----------------------- | --------- | --------- |
+| `sinesys`         | App principal (Next.js) | 3000      | ❌        |
+| `sinesys-mcp`     | MCP Server              | 3001      | ❌        |
+| `sinesys-browser` | Firefox para scraping   | 3000      | ✅        |
 
 > ⚠️ **Importante**: Habilite WebSocket Support apenas para `sinesys-browser`!
 
@@ -1672,14 +1672,14 @@ Acesse o dashboard do CapRover e crie **3 apps**:
 
 No repositório do GitHub, vá em **Settings → Secrets and variables → Actions** e adicione:
 
-| Secret | Descrição | Exemplo |
-|--------|-----------|------|
-| `DOCKERHUB_USERNAME` | Username do Docker Hub | `sinesystec` |
-| `DOCKERHUB_TOKEN` | Access Token do Docker Hub | `dckr_pat_xxx` |
-| `NEXT_PUBLIC_SUPABASE_URL` | URL do Supabase | `https://xxx.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon Key do Supabase | `eyJ...` |
-| `CAPROVER_SERVER` | URL do CapRover | `https://captain.seudominio.com` |
-| `CAPROVER_APP_TOKEN` | Token do app (opcional) | Ver passo 3 |
+| Secret                          | Descrição                  | Exemplo                          |
+| ------------------------------- | -------------------------- | -------------------------------- |
+| `DOCKERHUB_USERNAME`            | Username do Docker Hub     | `sinesystec`                     |
+| `DOCKERHUB_TOKEN`               | Access Token do Docker Hub | `dckr_pat_xxx`                   |
+| `NEXT_PUBLIC_SUPABASE_URL`      | URL do Supabase            | `https://xxx.supabase.co`        |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon Key do Supabase       | `eyJ...`                         |
+| `CAPROVER_SERVER`               | URL do CapRover            | `https://captain.seudominio.com` |
+| `CAPROVER_APP_TOKEN`            | Token do app (opcional)    | Ver passo 3                      |
 
 > 💡 **Dica**: Para criar um Docker Hub Access Token, acesse Docker Hub → Account Settings → Security → New Access Token
 
@@ -1694,6 +1694,7 @@ No repositório do GitHub, vá em **Settings → Secrets and variables → Actio
 5. Adicione como secret `CAPROVER_APP_TOKEN` no GitHub
 
 **Resultado**: A cada push na branch `master` ou `main`, o GitHub Actions:
+
 - Faz build da imagem
 - Envia para Docker Hub
 - Dispara deploy automático no CapRover
@@ -1741,15 +1742,18 @@ MONGODB_DATABASE=sinesys
 #### Passo 6: Deploy dos Outros Serviços
 
 **Browser Service (sinesys-browser):**
+
 ```env
 PORT=3000
 BROWSER_TOKEN=seu_token_opcional
 ```
+
 - Container HTTP Port: `3000`
 - WebSocket Support: ✅ **Habilitar**
 - Memory: 2048MB (mínimo)
 
 **MCP Server (sinesys-mcp):**
+
 ```env
 NODE_ENV=production
 PORT=3001
@@ -1761,23 +1765,23 @@ SINESYS_API_KEY=sua_api_key
 
 No dashboard do CapRover:
 
-| App | Domínio | HTTPS |
-|-----|---------|-------|
-| sinesys | app.seudominio.com.br | ✅ |
-| sinesys-mcp | mcp.seudominio.com.br (opcional) | ✅ |
-| sinesys-browser | (não expor) | — |
+| App             | Domínio                          | HTTPS |
+| --------------- | -------------------------------- | ----- |
+| sinesys         | app.seudominio.com.br            | ✅    |
+| sinesys-mcp     | mcp.seudominio.com.br (opcional) | ✅    |
+| sinesys-browser | (não expor)                      | —     |
 
 #### Vantagens do Deploy via GitHub Actions + Docker Hub
 
-| Aspecto | Build no CapRover | Deploy via Imagem (GitHub Actions) |
-|---------|-------------------|------------------------------------|  
-| **Tempo de deploy** | ~5-10 min | ~30 seg |
-| **Uso de memória no servidor** | 6-8 GB durante build | Apenas runtime (~512MB) |
-| **Risco de OOM** | Alto | Nenhum |
-| **Consistência** | Depende do servidor | Imagem idêntica sempre |
-| **Rollback** | Rebuild necessário | Trocar tag da imagem |
-| **Build acontece** | No CapRover | No GitHub Actions |
-| **Custo do servidor** | Precisa mais RAM | Servidor menor e mais barato |
+| Aspecto                        | Build no CapRover    | Deploy via Imagem (GitHub Actions) |
+| ------------------------------ | -------------------- | ---------------------------------- |
+| **Tempo de deploy**            | ~5-10 min            | ~30 seg                            |
+| **Uso de memória no servidor** | 6-8 GB durante build | Apenas runtime (~512MB)            |
+| **Risco de OOM**               | Alto                 | Nenhum                             |
+| **Consistência**               | Depende do servidor  | Imagem idêntica sempre             |
+| **Rollback**                   | Rebuild necessário   | Trocar tag da imagem               |
+| **Build acontece**             | No CapRover          | No GitHub Actions                  |
+| **Custo do servidor**          | Precisa mais RAM     | Servidor menor e mais barato       |
 
 ---
 
@@ -1826,6 +1830,57 @@ docker service logs sinesys_zattar_advogados -f
 # Escalar serviço
 docker service scale sinesys_zattar_advogados=3
 ```
+
+---
+
+### Progressive Web App (PWA)
+
+O Sinesys é um **Progressive Web App (PWA)** completo, permitindo instalação como aplicativo nativo em dispositivos móveis e desktop.
+
+**Tecnologias**: `@ducanh2912/next-pwa`, Workbox, Web App Manifest
+
+**Benefícios**: Instalação como app nativo, carregamento instantâneo, funciona offline
+
+Para verificar requisitos do PWA, execute:
+
+```bash
+npm run check:pwa
+```
+
+---
+
+### Comunicação entre Serviços
+
+**No CapRover**: Use `srv-captain--NOME_DO_APP` (ex: `http://srv-captain--sinesys:3000`)
+
+**No Docker Compose**: Use o nome do serviço (ex: `http://sinesys_app:3000`)
+
+---
+
+### Scripts de Build para Produção
+
+| Script           | Uso                       |
+| ---------------- | ------------------------- |
+| `build:caprover` | Produção (GitHub Actions) |
+| `build:prod`     | Build local de produção   |
+| `build`          | Desenvolvimento           |
+| `analyze`        | Análise de bundle         |
+
+**Importante**: O PWA requer Webpack em produção (`@ducanh2912/next-pwa`).
+
+---
+
+### Recursos Recomendados
+
+| Serviço         | RAM         | CPU       |
+| --------------- | ----------- | --------- |
+| sinesys_app     | 512MB-1GB   | 1 core    |
+| sinesys_mcp     | 128MB-256MB | 0.5 core  |
+| sinesys_browser | 1GB-2GB     | 1-2 cores |
+
+**Total recomendado**: VPS com 4GB RAM, 2-4 cores
+
+---
 
 ### Variáveis de Ambiente para Produção
 
@@ -2005,6 +2060,32 @@ Antes de gerar código, consulte:
 - **Títulos:** Montserrat (`font-heading`)
 - **Corpo:** Inter (`font-sans`)
 - **Código:** Geist Mono (`font-mono`)
+
+---
+
+## 📋 Documentação
+
+Este README contém toda a documentação técnica centralizada do repositório Sinesys.
+
+### Documentação Principal (neste arquivo)
+
+- ✅ Visão Geral e Stack Tecnológica
+- ✅ Arquitetura Orientada a Features (FSD)
+- ✅ Instalação e Configuração
+- ✅ Deploy (CapRover, Docker, PWA)
+- ✅ API e Endpoints
+- ✅ Troubleshooting
+
+### Documentação Complementar
+
+Para informações mais detalhadas, consulte:
+
+- **AGENTS.md** - Instruções para agentes de IA trabalhando no projeto
+- **docs/arquitetura-sistema.md** - Documentação técnica completa da arquitetura
+- **docs/PARECER_REFATORACAO_ARQUITETURAL.md** - Análise técnica da refatoração arquitetural
+- **docs/PARECER_DESIGN_SYSTEM_UX.md** - Análise do sistema de design e UX
+- **docs/MIGRACAO_CHAT.md** - Plano de migração do sistema de chat legado
+- **openspec/** - Especificações e propostas de mudanças (OpenSpec)
 
 ---
 
