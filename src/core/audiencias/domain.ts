@@ -79,7 +79,7 @@ export interface Audiencia {
 }
 
 // Zod Schemas
-export const createAudienciaSchema = z.object({
+const baseAudienciaSchema = z.object({
   processoId: z.number({ required_error: 'Processo é obrigatório.' }),
   dataInicio: z.string({ required_error: 'Data de início é obrigatória.' }).datetime('Formato de data inválido.'),
   dataFim: z.string({ required_error: 'Data de fim é obrigatória.' }).datetime('Formato de data inválido.'),
@@ -90,12 +90,17 @@ export const createAudienciaSchema = z.object({
   responsavelId: z.number().optional().nullable(),
   observacoes: z.string().optional().nullable(),
   salaAudienciaNome: z.string().optional().nullable(),
-}).refine(data => new Date(data.dataFim) > new Date(data.dataInicio), {
-  message: 'A data de fim deve ser posterior à data de início.',
-  path: ['dataFim'],
 });
 
-export const updateAudienciaSchema = createAudienciaSchema.partial();
+export const createAudienciaSchema = baseAudienciaSchema.refine(
+  data => new Date(data.dataFim) > new Date(data.dataInicio), 
+  {
+    message: 'A data de fim deve ser posterior à data de início.',
+    path: ['dataFim'],
+  }
+);
+
+export const updateAudienciaSchema = baseAudienciaSchema.partial();
 
 export const atualizarStatusSchema = z.object({
   status: z.nativeEnum(StatusAudiencia),
