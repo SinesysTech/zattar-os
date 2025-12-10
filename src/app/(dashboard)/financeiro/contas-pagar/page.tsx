@@ -17,9 +17,9 @@ import {
   buildContasPagarFilterOptions,
   buildContasPagarFilterGroups,
   parseContasPagarFilters,
-} from './components/contas-pagar-toolbar-filters';
-import { AlertasVencimento } from './components/alertas-vencimento';
-import { PagarContaDialog } from './components/pagar-conta-dialog';
+} from '@/features/financeiro/components/contas-pagar/contas-pagar-toolbar-filters';
+import { AlertasVencimento } from '@/features/financeiro/components/contas-pagar/alertas-vencimento';
+import { PagarContaDialog } from '@/features/financeiro/components/contas-pagar/pagar-conta-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -48,15 +48,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useContasPagar, cancelarConta, excluirConta } from '@/app/_lib/hooks/use-contas-pagar';
+import { useContasPagar, cancelarConta, excluirConta } from '@/features/financeiro/hooks/use-contas-pagar';
 import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
-  ContaPagarComDetalhes,
-  StatusContaPagar,
-} from '@/backend/types/financeiro/contas-pagar.types';
+    Lancamento,
+    StatusLancamento,
+} from '@/features/financeiro/types/lancamentos';
 
 // ============================================================================
 // Constantes e Helpers
@@ -64,7 +64,7 @@ import type {
 
 type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
 
-const STATUS_CONFIG: Record<StatusContaPagar, { label: string; tone: BadgeTone }> = {
+const STATUS_CONFIG: Record<StatusLancamento, { label: string; tone: BadgeTone }> = {
   pendente: { label: 'Pendente', tone: 'warning' },
   confirmado: { label: 'Pago', tone: 'success' },
   cancelado: { label: 'Cancelado', tone: 'neutral' },
@@ -78,12 +78,12 @@ const formatarValor = (valor: number): string => {
   }).format(valor);
 };
 
-const formatarData = (data: string | null): string => {
+const formatarData = (data: string | null | undefined): string => {
   if (!data) return '-';
   return format(new Date(data), 'dd/MM/yyyy', { locale: ptBR });
 };
 
-const isVencida = (conta: ContaPagarComDetalhes): boolean => {
+const isVencida = (conta: Lancamento): boolean => {
   if (conta.status !== 'pendente' || !conta.dataVencimento) return false;
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
@@ -102,12 +102,12 @@ function ContasPagarActions({
   onExcluir,
   onVerDetalhes,
 }: {
-  conta: ContaPagarComDetalhes;
-  onPagar: (conta: ContaPagarComDetalhes) => void;
-  onEditar: (conta: ContaPagarComDetalhes) => void;
-  onCancelar: (conta: ContaPagarComDetalhes) => void;
-  onExcluir: (conta: ContaPagarComDetalhes) => void;
-  onVerDetalhes: (conta: ContaPagarComDetalhes) => void;
+  conta: Lancamento;
+  onPagar: (conta: Lancamento) => void;
+  onEditar: (conta: Lancamento) => void;
+  onCancelar: (conta: Lancamento) => void;
+  onExcluir: (conta: Lancamento) => void;
+  onVerDetalhes: (conta: Lancamento) => void;
 }) {
   const isPendente = conta.status === 'pendente';
 
@@ -155,12 +155,12 @@ function ContasPagarActions({
 // ============================================================================
 
 function criarColunas(
-  onPagar: (conta: ContaPagarComDetalhes) => void,
-  onEditar: (conta: ContaPagarComDetalhes) => void,
-  onCancelar: (conta: ContaPagarComDetalhes) => void,
-  onExcluir: (conta: ContaPagarComDetalhes) => void,
-  onVerDetalhes: (conta: ContaPagarComDetalhes) => void
-): ColumnDef<ContaPagarComDetalhes>[] {
+  onPagar: (conta: Lancamento) => void,
+  onEditar: (conta: Lancamento) => void,
+  onCancelar: (conta: Lancamento) => void,
+  onExcluir: (conta: Lancamento) => void,
+  onVerDetalhes: (conta: Lancamento) => void
+): ColumnDef<Lancamento>[] {
   return [
     {
       accessorKey: 'descricao',
@@ -178,13 +178,13 @@ function criarColunas(
           <div className="min-h-10 flex flex-col justify-center">
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">{conta.descricao}</span>
-              {conta.recorrente && (
+              {conta.recorrencia && (
                 <Repeat className="h-3 w-3 text-muted-foreground" aria-label="Recorrente" />
               )}
             </div>
-            {conta.fornecedor && (
+            {conta.entidade && (
               <span className="text-xs text-muted-foreground">
-                {conta.fornecedor.nomeFantasia || conta.fornecedor.razaoSocial}
+                {conta.entidade.nome}
               </span>
             )}
           </div>
@@ -201,12 +201,12 @@ function criarColunas(
       enableSorting: true,
       size: 120,
       cell: ({ row }) => {
-        const categoria = row.getValue('categoria') as string | null;
+        const categoria = row.original.categoria;
         return (
           <div className="min-h-10 flex items-center justify-center">
             {categoria ? (
               <Badge variant="outline" className="capitalize">
-                {categoria.replace(/_/g, ' ')}
+                {categoria.nome}
               </Badge>
             ) : (
               <span className="text-muted-foreground">-</span>
@@ -272,7 +272,7 @@ function criarColunas(
       enableSorting: true,
       size: 100,
       cell: ({ row }) => {
-        const status = row.getValue('status') as StatusContaPagar;
+        const status = row.getValue('status') as StatusLancamento;
         const config = STATUS_CONFIG[status];
         return (
           <div className="min-h-10 flex items-center justify-center">
@@ -324,7 +324,7 @@ export default function ContasPagarPage() {
 
   // Estados de dialogs
   const [pagarDialogOpen, setPagarDialogOpen] = React.useState(false);
-  const [selectedConta, setSelectedConta] = React.useState<ContaPagarComDetalhes | null>(null);
+  const [selectedConta, setSelectedConta] = React.useState<Lancamento | null>(null);
   const [cancelarDialogOpen, setCancelarDialogOpen] = React.useState(false);
   const [excluirDialogOpen, setExcluirDialogOpen] = React.useState(false);
 
@@ -359,7 +359,7 @@ export default function ContasPagarPage() {
     setPagina(0);
   }, []);
 
-  const handlePagar = React.useCallback((conta: ContaPagarComDetalhes) => {
+  const handlePagar = React.useCallback((conta: Lancamento) => {
     setSelectedConta(conta);
     setPagarDialogOpen(true);
   }, []);
@@ -369,12 +369,12 @@ export default function ContasPagarPage() {
     toast.info('Funcionalidade de edição em desenvolvimento');
   }, []);
 
-  const handleCancelar = React.useCallback((conta: ContaPagarComDetalhes) => {
+  const handleCancelar = React.useCallback((conta: Lancamento) => {
     setSelectedConta(conta);
     setCancelarDialogOpen(true);
   }, []);
 
-  const handleExcluir = React.useCallback((conta: ContaPagarComDetalhes) => {
+  const handleExcluir = React.useCallback((conta: Lancamento) => {
     setSelectedConta(conta);
     setExcluirDialogOpen(true);
   }, []);
@@ -523,13 +523,15 @@ export default function ContasPagarPage() {
       />
 
       {/* Dialog de Pagamento */}
-      <PagarContaDialog
-        open={pagarDialogOpen}
-        onOpenChange={setPagarDialogOpen}
-        conta={selectedConta}
-        contasBancarias={contasBancarias}
-        onSuccess={refetch}
-      />
+      {selectedConta && (
+        <PagarContaDialog
+          open={pagarDialogOpen}
+          onOpenChange={setPagarDialogOpen}
+          conta={selectedConta}
+          contasBancarias={contasBancarias}
+          onSuccess={refetch}
+        />
+      )}
 
       {/* Dialog de Cancelamento */}
       <AlertDialog open={cancelarDialogOpen} onOpenChange={setCancelarDialogOpen}>
