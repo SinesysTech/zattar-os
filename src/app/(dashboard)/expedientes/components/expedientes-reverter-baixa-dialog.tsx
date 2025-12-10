@@ -14,7 +14,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Loader2, AlertTriangle } from 'lucide-react';
-import { actionReverterBaixa } from '@/app/actions/expedientes';
+import { actionReverterBaixa } from '@/core/app/actions/expedientes';
 import { Expediente } from '@/core/expedientes/domain';
 
 interface ExpedientesReverterBaixaDialogProps {

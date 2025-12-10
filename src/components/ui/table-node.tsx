@@ -71,7 +71,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Popover, PopoverContent } from '@/components/ui/popover';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/core/app/_lib/utils/utils';
 
 import { blockSelectionVariants } from './block-selection';
 import {

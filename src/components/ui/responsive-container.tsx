@@ -8,7 +8,7 @@
 'use client';
 
 import { forwardRef, HTMLAttributes, useMemo } from 'react';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/core/app/_lib/utils/utils';
 import { useViewport } from '@/hooks/use-viewport';
 
 /**

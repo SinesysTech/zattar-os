@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -25,7 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { usePlanoContas } from '@/app/_lib/hooks/use-plano-contas';
+import { usePlanoContas } from '@/core/app/_lib/hooks/use-plano-contas';
 import { PlanoContaCreateDialog } from './components/plano-conta-create-dialog';
 import { PlanoContaEditDialog } from './components/plano-conta-edit-dialog';
 import { toast } from 'sonner';

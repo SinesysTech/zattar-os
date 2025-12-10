@@ -14,7 +14,7 @@ import {
   STATUS_FOLHA_LABELS,
   STATUS_FOLHA_CORES,
 } from '@/backend/types/financeiro/salarios.types';
-import { useFolhaPagamento, cancelarFolha } from '@/app/_lib/hooks/use-folhas-pagamento';
+import { useFolhaPagamento, cancelarFolha } from '@/core/app/_lib/hooks/use-folhas-pagamento';
 import { toast } from 'sonner';
 
 interface PageProps {

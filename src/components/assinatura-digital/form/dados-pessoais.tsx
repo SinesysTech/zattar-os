@@ -15,13 +15,13 @@ import InputCPF from '@/components/assinatura-digital/inputs/input-cpf';
 import InputTelefone from '@/components/assinatura-digital/inputs/input-telefone';
 import InputCEP, { type AddressData } from '@/components/assinatura-digital/inputs/input-cep';
 import InputData from '@/components/assinatura-digital/inputs/input-data';
-import { useFormularioStore } from '@/app/_lib/stores/assinatura-digital/formulario-store';
+import { useFormularioStore } from '@/core/app/_lib/stores/assinatura-digital/formulario-store';
 import { toast } from 'sonner';
 import { apiFetch } from '@/lib/api';
-import { formatCPF, parseCPF } from '@/lib/assinatura-digital/formatters/cpf';
-import { formatData } from '@/lib/assinatura-digital/formatters/data';
-import { formatTelefone, parseTelefone } from '@/lib/assinatura-digital/formatters/telefone';
-import { parseCEP } from '@/lib/assinatura-digital/formatters/cep';
+import { formatCPF, parseCPF } from '@/core/app/_lib/assinatura-digital/formatters/cpf';
+import { formatData } from '@/core/app/_lib/assinatura-digital/formatters/data';
+import { formatTelefone, parseTelefone } from '@/core/app/_lib/assinatura-digital/formatters/telefone';
+import { parseCEP } from '@/core/app/_lib/assinatura-digital/formatters/cep';
 import { ESTADOS_CIVIS, GENEROS, ESTADOS_BRASILEIROS } from '@/lib/assinatura-digital/constants/estadosCivis';
 import { NACIONALIDADES } from '@/lib/assinatura-digital/constants/nacionalidades';
 import { API_ROUTES } from '@/lib/assinatura-digital/constants/apiRoutes';
@@ -51,7 +51,7 @@ import {
   validateCPFDigits,
   validateEmail,
   validateTextLength,
-} from '@/lib/assinatura-digital/validations/business.validations';
+} from '@/core/app/_lib/assinatura-digital/validations/business.validations';
 import FormStepLayout from '@/components/assinatura-digital/form/form-step-layout';
 
 export default function DadosPessoais() {

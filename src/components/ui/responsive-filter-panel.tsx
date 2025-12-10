@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Filter, X } from "lucide-react"
-import { cn } from "@/app/_lib/utils/utils"
+import { cn } from "@/core/app/_lib/utils/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -13,7 +13,7 @@ import {
     SheetDescription,
     SheetFooter,
 } from "@/components/ui/sheet"
-import { useIsMobile } from "@/app/_lib/hooks/use-mobile"
+import { useIsMobile } from "@/core/app/_lib/hooks/use-mobile"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 export interface FilterGroup {

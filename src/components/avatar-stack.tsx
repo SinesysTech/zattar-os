@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/utils'
+import { cn } from '@/core/app/_lib/utils/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cva, type VariantProps } from 'class-variance-authority'

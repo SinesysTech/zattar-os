@@ -6,10 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
-import { useSugestoesConciliacao, conciliarManual, buscarLancamentosManuais } from '@/app/_lib/hooks/use-conciliacao-bancaria';
+import { useSugestoesConciliacao, conciliarManual, buscarLancamentosManuais } from '@/core/app/_lib/hooks/use-conciliacao-bancaria';
 import type { TransacaoComConciliacao, SugestaoConciliacao, LancamentoFinanceiroResumo } from '@/backend/types/financeiro/conciliacao-bancaria.types';
 import { toast } from 'sonner';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
 
 interface Props {
   open: boolean;

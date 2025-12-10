@@ -73,7 +73,7 @@ import { type SlateEditor, createSlateEditor, nanoid } from 'platejs';
 import { z } from 'zod';
 
 import { BaseEditorKit } from '@/components/plate/editor-base-kit';
-import { markdownJoinerTransform } from '@/app/_lib/markdown-joiner-transform';
+import { markdownJoinerTransform } from '@/core/app/_lib/markdown-joiner-transform';
 
 import {
   getChooseToolPrompt,

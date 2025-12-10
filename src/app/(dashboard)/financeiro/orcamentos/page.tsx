@@ -9,7 +9,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -56,7 +56,7 @@ import {
   iniciarExecucaoOrcamento,
   encerrarOrcamento,
   excluirOrcamento,
-} from '@/app/_lib/hooks/use-orcamentos';
+} from '@/core/app/_lib/hooks/use-orcamentos';
 import { toast } from 'sonner';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
@@ -66,7 +66,7 @@ import type {
 import {
   exportarOrcamentoCSV,
   exportarRelatorioPDF,
-} from '@/app/_lib/orcamentos/export-orcamento';
+} from '@/core/app/_lib/orcamentos/export-orcamento';
 
 // ============================================================================
 // Constantes e Helpers

@@ -3,7 +3,7 @@
 // Página de perfil do usuário
 
 import * as React from 'react';
-import { usePerfil } from '@/app/_lib/hooks/use-perfil';
+import { usePerfil } from '@/core/app/_lib/hooks/use-perfil';
 import { PerfilEditSheet } from './components/perfil-edit-sheet';
 import { AlterarSenhaDialog } from './components/alterar-senha-dialog';
 import { AvatarEditDialog } from './components/avatar-edit-dialog';
@@ -20,7 +20,7 @@ import {
   formatarData,
   formatarEnderecoCompleto,
   formatarGenero,
-} from '@/app/_lib/utils/format-usuarios';
+} from '@/core/app/_lib/utils/format-usuarios';
 
 function getInitials(name: string): string {
   if (!name) return 'U';

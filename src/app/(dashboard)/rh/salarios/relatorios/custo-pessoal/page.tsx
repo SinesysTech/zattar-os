@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useFolhasPagamento } from '@/app/_lib/hooks/use-folhas-pagamento';
+import { useFolhasPagamento } from '@/core/app/_lib/hooks/use-folhas-pagamento';
 
 const formatCurrency = (valor: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor ?? 0);

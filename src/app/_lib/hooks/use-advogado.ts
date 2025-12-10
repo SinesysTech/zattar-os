@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import type { Advogado } from '@/app/_lib/types/credenciais';
+import type { Advogado } from '@/core/app/_lib/types/credenciais';
 
 interface UseAdvogadoResult {
   advogado: Advogado | null;

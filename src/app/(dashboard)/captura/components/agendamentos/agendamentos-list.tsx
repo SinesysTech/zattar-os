@@ -6,8 +6,8 @@ import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useAgendamentos } from '@/app/_lib/hooks/use-agendamentos';
-import { deletarAgendamento, executarAgendamento } from '@/app/api/captura/agendamentos/agendamentos';
+import { useAgendamentos } from '@/core/app/_lib/hooks/use-agendamentos';
+import { deletarAgendamento, executarAgendamento } from '@/core/app/api/captura/agendamentos/agendamentos';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Agendamento } from '@/backend/types/captura/agendamentos-types';
 import { Play, Pause, Trash2, Edit } from 'lucide-react';
@@ -22,7 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { atualizarAgendamento } from '@/app/api/captura/agendamentos/agendamentos';
+import { atualizarAgendamento } from '@/core/app/api/captura/agendamentos/agendamentos';
 
 /**
  * Formata data e hora ISO para formato brasileiro (DD/MM/YYYY HH:mm)

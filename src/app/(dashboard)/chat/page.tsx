@@ -48,8 +48,8 @@ import {
 import { cn } from '@/lib/utils';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { CreateChatDialog } from '@/components/chat/create-chat-dialog';
-import { createClient } from '@/app/_lib/supabase/client';
-import { useIsMobile } from '@/app/_lib/hooks/use-mobile';
+import { createClient } from '@/core/app/_lib/supabase/client';
+import { useIsMobile } from '@/core/app/_lib/hooks/use-mobile';
 import { useIsLandscape } from '@/hooks/use-orientation';
 
 interface SalaChat {

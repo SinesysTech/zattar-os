@@ -34,7 +34,7 @@ import {
   useOrcamento,
   useAnaliseOrcamentaria,
   useProjecaoOrcamentaria,
-} from '@/app/_lib/hooks/use-orcamentos';
+} from '@/core/app/_lib/hooks/use-orcamentos';
 import { toast } from 'sonner';
 import type {
   AnaliseOrcamentariaItem,
@@ -51,7 +51,7 @@ import {
   exportarAnaliseCSV,
   exportarEvolucaoCSV,
   exportarRelatorioPDF,
-} from '@/app/_lib/orcamentos/export-orcamento';
+} from '@/core/app/_lib/orcamentos/export-orcamento';
 
 // ============================================================================
 // Constantes e Helpers

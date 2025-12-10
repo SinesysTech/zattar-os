@@ -6,7 +6,7 @@ import {
   type AtualizarAssistenteData,
   type OperacaoAssistenteResult,
 } from './assistente-persistence.service';
-import { sanitizarIframeCode } from '@/app/_lib/utils/format-assistentes';
+import { sanitizarIframeCode } from '@/core/app/_lib/utils/format-assistentes';
 
 /**
  * Atualiza um assistente existente

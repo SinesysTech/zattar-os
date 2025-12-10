@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';

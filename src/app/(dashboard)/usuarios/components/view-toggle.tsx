@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { LayoutGrid, Table } from 'lucide-react';
-import type { ViewMode } from '@/app/_lib/types/usuarios';
+import type { ViewMode } from '@/core/app/_lib/types/usuarios';
 
 interface ViewToggleProps {
   viewMode: ViewMode;

@@ -4,6 +4,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import { listarTemplatesAction } from '@/app/actions/assinatura-digital';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
 import { DataTable } from '@/components/ui/data-table';
@@ -23,16 +24,20 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal,
+  DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
-import type { ColumnDef } from '@tanstack/react-table';
-import type { Template as AssinaturaDigitalTemplate } from '@/types/assinatura-digital/template.types';
+import { Plus } from 'lucide-react';
 import {
   formatFileSize,
   formatTemplateStatus,
   getStatusBadgeVariant,
   truncateText,
   getTemplateDisplayName,
-} from '@/lib/assinatura-digital/utils';
+}
+ from '@/lib/assinatura-digital/utils';
 import { TemplateCreateDialog } from './components/template-create-dialog';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
 import { TemplateDeleteDialog } from './components/template-delete-dialog';
@@ -49,10 +54,10 @@ function useTemplates(params: {
   limite: number;
   busca?: string;
   ativo?: boolean;
-  status?: 'ativo' | 'inativo' | 'rascunho';
+  tipo_template?: TipoTemplate;
 }) {
   const [data, setData] = React.useState<{
-    templates: AssinaturaDigitalTemplate[];
+    templates: Template[];
     total: number;
     isLoading: boolean;
     error: string | null;
@@ -66,25 +71,31 @@ function useTemplates(params: {
   const fetchTemplates = React.useCallback(async () => {
     setData(prev => ({ ...prev, isLoading: true, error: null }));
     try {
-      const searchParams = new URLSearchParams({
-        pagina: params.pagina.toString(),
-        limite: params.limite.toString(),
+      const response = await listarTemplatesAction({
+        ativo: params.ativo,
+        tipo_template: params.tipo_template,
       });
-      if (params.busca) searchParams.set('search', params.busca);
-      if (params.ativo !== undefined) searchParams.set('ativo', params.ativo.toString());
-      if (params.status !== undefined) searchParams.set('status', params.status);
 
-      const res = await fetch(`/api/assinatura-digital/templates?${searchParams}`);
-      const json = await res.json();
-      if (!res.ok || json.error) {
-        throw new Error(json.error || 'Erro ao carregar templates');
+      if (!response.success) {
+        throw new Error(response.error || 'Erro ao carregar templates');
       }
-      setData({
-        templates: json.data || [],
-        total: json.total || 0,
-        isLoading: false,
-        error: null,
-      });
+
+      // TODO: Implementar paginação e busca no server action, por enquanto simulando
+      let filteredTemplates = response.data || [];
+      if (params.busca) {
+        const lowerCaseBusca = params.busca.toLowerCase();
+        filteredTemplates = filteredTemplates.filter(t =>
+          t.nome.toLowerCase().includes(lowerCaseBusca) ||
+          (t.descricao && t.descricao.toLowerCase().includes(lowerCaseBusca))
+        );
+      }
+
+      const totalFiltered = filteredTemplates.length;
+      const startIndex = (params.pagina - 1) * params.limite;
+      const endIndex = startIndex + params.limite;
+      const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
+
+      setData({ templates: paginatedTemplates, total: totalFiltered, isLoading: false, error: null });
     } catch (err) {
       setData({
         templates: [],
@@ -93,7 +104,7 @@ function useTemplates(params: {
         error: err instanceof Error ? err.message : 'Erro desconhecido',
       });
     }
-  }, [params]);
+  }, [params.ativo, params.busca, params.limite, params.pagina, params.tipo_template]);
 
   React.useEffect(() => {
     fetchTemplates();

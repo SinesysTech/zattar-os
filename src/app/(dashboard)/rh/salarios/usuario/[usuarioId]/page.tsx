@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useSalariosDoUsuario } from '@/app/_lib/hooks/use-salarios';
+import { useSalariosDoUsuario } from '@/core/app/_lib/hooks/use-salarios';
 import { calcularDuracaoVigencia } from '@/backend/types/financeiro/salarios.types';
 
 interface PageProps {

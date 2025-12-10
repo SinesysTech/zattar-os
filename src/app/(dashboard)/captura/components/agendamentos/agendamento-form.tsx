@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { TipoCapturaSelect, type TipoCaptura as TipoCapturaUI } from '../tipo-captura-select';
-import { criarAgendamento } from '@/app/api/captura/agendamentos/agendamentos';
+import { criarAgendamento } from '@/core/app/api/captura/agendamentos/agendamentos';
 import type { TipoCaptura } from '@/backend/types/captura/capturas-log-types';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, XCircle, Clock } from 'lucide-react';

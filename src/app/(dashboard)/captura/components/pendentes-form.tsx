@@ -3,7 +3,7 @@
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
-import { capturarPendentes, FILTROS_PRAZO } from '@/app/api/captura/captura';
+import { capturarPendentes, FILTROS_PRAZO } from '@/core/app/api/captura/captura';
 import type { FiltroPrazoPendentes } from '@/backend/types/captura/trt-types';
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';

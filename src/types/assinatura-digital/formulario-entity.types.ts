@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { DynamicFormSchema } from '@/types/assinatura-digital/form-schema.types';
-import { SLUG_PATTERN, generateFormularioSlug } from '@/lib/assinatura-digital/slug-helpers';
+import { SLUG_PATTERN, generateFormularioSlug } from '@/core/app/_lib/assinatura-digital/slug-helpers';
 import { MetadadoSeguranca } from '@/types/assinatura-digital/template.types';
 
 /**

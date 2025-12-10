@@ -3,7 +3,7 @@
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
-import { capturarAudiencias } from '@/app/api/captura/captura';
+import { capturarAudiencias } from '@/core/app/api/captura/captura';
 import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { STATUS_AUDIENCIA_OPTIONS } from '@/app/api/audiencias/audiencias';
+import { STATUS_AUDIENCIA_OPTIONS } from '@/core/app/api/audiencias/audiencias';
 
 interface AudienciasFormProps {
   onSuccess?: () => void;

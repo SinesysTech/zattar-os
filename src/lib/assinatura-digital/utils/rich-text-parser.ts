@@ -4,11 +4,11 @@
  */
 
 import { DadosGeracao, TipoVariavel } from '@/types/assinatura-digital/template.types';
-import { formatCPF } from '@/lib/assinatura-digital/formatters/cpf';
-import { formatCNPJ } from '@/lib/assinatura-digital/formatters/cnpj';
-import { formatTelefone } from '@/lib/assinatura-digital/formatters/telefone';
-import { formatCEP } from '@/lib/assinatura-digital/formatters/cep';
-import { formatDataExtenso } from '@/lib/assinatura-digital/formatters/data';
+import { formatCPF } from '@/core/app/_lib/assinatura-digital/formatters/cpf';
+import { formatCNPJ } from '@/core/app/_lib/assinatura-digital/formatters/cnpj';
+import { formatTelefone } from '@/core/app/_lib/assinatura-digital/formatters/telefone';
+import { formatCEP } from '@/core/app/_lib/assinatura-digital/formatters/cep';
+import { formatDataExtenso } from '@/core/app/_lib/assinatura-digital/formatters/data';
 import { format } from 'date-fns';
 import type { PDFFont } from 'pdf-lib';
 

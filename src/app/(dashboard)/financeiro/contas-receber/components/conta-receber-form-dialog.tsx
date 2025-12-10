@@ -42,7 +42,7 @@ import { cn } from '@/lib/utils';
 import {
   criarContaReceber,
   atualizarContaReceber,
-} from '@/app/_lib/hooks/use-contas-receber';
+} from '@/core/app/_lib/hooks/use-contas-receber';
 import {
   FORMA_RECEBIMENTO_LABELS,
   FREQUENCIA_CONTA_RECEBER_LABELS,

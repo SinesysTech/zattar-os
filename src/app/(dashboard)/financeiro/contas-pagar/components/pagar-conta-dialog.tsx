@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CalendarIcon, CreditCard, Building2, AlertCircle, Upload, X, FileText, Loader2 } from 'lucide-react';
-import { createClient } from '@/app/_lib/supabase/client';
+import { createClient } from '@/core/app/_lib/supabase/client';
 import {
   Dialog,
   DialogContent,
@@ -33,7 +33,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { pagarConta } from '@/app/_lib/hooks/use-contas-pagar';
+import { pagarConta } from '@/core/app/_lib/hooks/use-contas-pagar';
 import type {
   ContaPagarComDetalhes,
   FormaPagamentoContaPagar,

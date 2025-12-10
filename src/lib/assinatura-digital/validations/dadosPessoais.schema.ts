@@ -1,9 +1,9 @@
 // Schema Zod para validação de Dados Pessoais
 import { z } from 'zod';
-import { validateCPF } from '@/lib/assinatura-digital/validators/cpf.validator';
-import { validateTelefone } from '@/lib/assinatura-digital/validators/telefone.validator';
-import { parseData } from '@/lib/assinatura-digital/formatters/data';
-import { formatCelularWithCountryCode } from '@/lib/assinatura-digital/formatters/telefone';
+import { validateCPF } from '@/core/app/_lib/assinatura-digital/validators/cpf.validator';
+import { validateTelefone } from '@/core/app/_lib/assinatura-digital/validators/telefone.validator';
+import { parseData } from '@/core/app/_lib/assinatura-digital/formatters/data';
+import { formatCelularWithCountryCode } from '@/core/app/_lib/assinatura-digital/formatters/telefone';
 import { ESTADOS_CIVIS, GENEROS, ESTADOS_BRASILEIROS } from '@/lib/assinatura-digital/constants/estadosCivis';
 import { NACIONALIDADES } from '@/lib/assinatura-digital/constants/nacionalidades';
 

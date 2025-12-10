@@ -39,7 +39,7 @@ import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Expediente, CodigoTribunal, GrauTribunal } from '@/core/expedientes/domain';
-import { actionAtualizarExpediente } from '@/app/actions/expedientes';
+import { actionAtualizarExpediente } from '@/core/app/actions/expedientes';
 
 // Definindo interfaces locais para Usuario e TipoExpediente
 interface Usuario {

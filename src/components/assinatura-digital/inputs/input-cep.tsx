@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IMaskInput } from 'react-imask';
 import { cn } from '@/lib/utils';
-import { buscarEnderecoPorCep } from '@/app/_lib/utils/viacep';
+import { buscarEnderecoPorCep } from '@/core/app/_lib/utils/viacep';
 import { Loader2 } from 'lucide-react';
 
 /**

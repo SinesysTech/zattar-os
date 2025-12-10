@@ -21,8 +21,8 @@ import { toast } from 'sonner';
 import {
   criarItemOrcamento,
   atualizarItemOrcamento,
-} from '@/app/_lib/hooks/use-orcamentos';
-import { PlanoContaSelect } from '@/app/(dashboard)/financeiro/plano-contas/components/plano-conta-select';
+} from '@/core/app/_lib/hooks/use-orcamentos';
+import { PlanoContaSelect } from '@/core/app/(dashboard)/financeiro/plano-contas/components/plano-conta-select';
 import type {
   OrcamentoItemComDetalhes,
   CriarOrcamentoItemDTO,

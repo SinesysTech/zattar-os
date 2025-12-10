@@ -16,7 +16,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Loader2 } from 'lucide-react';
-import { actionBaixarExpediente } from '@/app/actions/expedientes';
+import { actionBaixarExpediente } from '@/core/app/actions/expedientes';
 import { Expediente } from '@/core/expedientes/domain';
 
 interface ExpedientesBaixarDialogProps {

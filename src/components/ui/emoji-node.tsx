@@ -8,7 +8,7 @@ import { EmojiInlineIndexSearch, insertEmoji } from '@platejs/emoji';
 import { EmojiPlugin } from '@platejs/emoji/react';
 import { PlateElement, usePluginOption } from 'platejs/react';
 
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
 
 import {
   InlineCombobox,

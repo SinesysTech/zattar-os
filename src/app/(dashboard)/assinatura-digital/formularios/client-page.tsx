@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
-import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
+import { useMinhasPermissoes } from '@/core/app/_lib/hooks/use-minhas-permissoes';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';

@@ -39,7 +39,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/core/app/_lib/utils/utils';
 
 import { aiChatPlugin } from './ai-kit';
 

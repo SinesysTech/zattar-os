@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Search, Filter, Plus, Check, Loader2, ChevronRight, ChevronDown } from "lucide-react"
-import { cn } from "@/app/_lib/utils/utils"
+import { cn } from "@/core/app/_lib/utils/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {

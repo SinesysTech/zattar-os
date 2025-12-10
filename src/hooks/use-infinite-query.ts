@@ -1,6 +1,6 @@
 'use client'
 
-import { createClient } from '@/app/_lib/supabase/client'
+import { createClient } from '@/core/app/_lib/supabase/client'
 import { PostgrestQueryBuilder, type PostgrestClientOptions } from '@supabase/postgrest-js'
 import { type SupabaseClient } from '@supabase/supabase-js'
 import { useEffect, useMemo, useSyncExternalStore } from 'react'

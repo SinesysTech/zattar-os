@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { User, Edit, Power } from 'lucide-react';
-import type { Credencial } from '@/app/_lib/types/credenciais';
+import type { Credencial } from '@/core/app/_lib/types/credenciais';
 
 /**
  * Formata data ISO para formato brasileiro (DD/MM/YYYY)

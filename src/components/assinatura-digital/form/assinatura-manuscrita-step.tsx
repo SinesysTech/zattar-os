@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
+import { useFormularioStore } from "@/core/app/_lib/stores/assinatura-digital/formulario-store";
 import CanvasAssinatura, { type CanvasAssinaturaRef } from "@/components/assinatura-digital/signature/canvas-assinatura";
 import FormStepLayout from "@/components/assinatura-digital/form/form-step-layout";
 import { toast } from "sonner";
@@ -15,7 +15,7 @@ import {
   validateSignatureQuality,
   validatePhotoQuality,
   validateDataConsistency,
-} from "@/lib/assinatura-digital/validations/business.validations";
+} from "@/core/app/_lib/assinatura-digital/validations/business.validations";
 
 async function getClientIP(): Promise<{ ip: string; source?: string }> {
   try {

@@ -1,7 +1,7 @@
 import type { AssinaturaDigitalFormulario, AssinaturaDigitalTemplate } from '@/backend/types/assinatura-digital/types';
 
 // Re-export generateSlug from the centralized slug-helpers module
-export { generateSlug } from '@/app/_lib/assinatura-digital/slug-helpers';
+export { generateSlug } from '@/core/app/_lib/assinatura-digital/slug-helpers';
 
 /**
  * Returns the display name for a formulario, falling back to a default if nome is not available.

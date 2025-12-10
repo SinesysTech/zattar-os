@@ -8,12 +8,12 @@ import * as React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useContaReceber, cancelarConta } from '@/app/_lib/hooks/use-contas-receber';
-import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
-import { useClientes } from '@/app/_lib/hooks/use-clientes';
-import { useContratos } from '@/app/_lib/hooks/use-contratos';
-import { usePlanoContasAnaliticas } from '@/app/_lib/hooks/use-plano-contas';
-import { useCentrosCustoAtivos } from '@/app/_lib/hooks/use-centros-custo';
+import { useContaReceber, cancelarConta } from '@/core/app/_lib/hooks/use-contas-receber';
+import { useContasBancarias } from '@/core/app/_lib/hooks/use-contas-bancarias';
+import { useClientes } from '@/core/app/_lib/hooks/use-clientes';
+import { useContratos } from '@/core/app/_lib/hooks/use-contratos';
+import { usePlanoContasAnaliticas } from '@/core/app/_lib/hooks/use-plano-contas';
+import { useCentrosCustoAtivos } from '@/core/app/_lib/hooks/use-centros-custo';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {

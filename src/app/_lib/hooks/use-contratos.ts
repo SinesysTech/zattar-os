@@ -3,7 +3,7 @@
 // Hook para buscar contratos
 
 import { useState, useEffect, useCallback } from 'react';
-import type { ContratosApiResponse, BuscarContratosParams } from '@/app/_lib/types/contratos';
+import type { ContratosApiResponse, BuscarContratosParams } from '@/core/app/_lib/types/contratos';
 import type { Contrato } from '@/backend/contratos/services/persistence/contrato-persistence.service';
 
 interface UseContratosResult {

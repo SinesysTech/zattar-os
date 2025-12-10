@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { validateCPF } from '@/lib/assinatura-digital/validators/cpf.validator';
+import { validateCPF } from '@/core/app/_lib/assinatura-digital/validators/cpf.validator';
 
 export const verificarCPFSchema = z.object({
   cpf: z

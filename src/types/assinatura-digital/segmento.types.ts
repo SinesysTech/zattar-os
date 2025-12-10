@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SLUG_PATTERN, generateSlug } from '@/lib/assinatura-digital/slug-helpers';
+import { SLUG_PATTERN, generateSlug } from '@/core/app/_lib/assinatura-digital/slug-helpers';
 
 /**
  * Segmento Types

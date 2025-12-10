@@ -515,7 +515,7 @@ interface MutationResult<T = void> {
 /**
  * Sincronizar parcela com o sistema financeiro
  */
-import { actionSincronizarParcela, actionSincronizarAcordo } from '@/app/actions/financeiro/obrigacoes';
+import { actionSincronizarParcela, actionSincronizarAcordo } from '@/core/app/actions/financeiro/obrigacoes';
 
 export const sincronizarParcela = async (
   parcelaId: number,

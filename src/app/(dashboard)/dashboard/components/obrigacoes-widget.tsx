@@ -19,7 +19,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useResumoObrigacoes } from '@/app/_lib/hooks/use-obrigacoes';
+import { useResumoObrigacoes } from '@/core/app/_lib/hooks/use-obrigacoes';
 
 // ============================================================================
 // Helpers

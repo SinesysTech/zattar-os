@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useRecoveryLogs } from '@/app/_lib/hooks/use-recovery-logs';
+import { useRecoveryLogs } from '@/core/app/_lib/hooks/use-recovery-logs';
 import { RecoveryGapsAnalysis } from './recovery-gaps-analysis';
 
 interface RecoverySectionProps {

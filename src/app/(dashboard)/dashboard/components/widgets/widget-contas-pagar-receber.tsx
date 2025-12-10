@@ -5,7 +5,7 @@ import { ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useContasPagarReceber } from '@/app/_lib/hooks/use-dashboard-financeiro';
+import { useContasPagarReceber } from '@/core/app/_lib/hooks/use-dashboard-financeiro';
 
 const formatarValor = (valor: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);

@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { actionListarProcessos } from '@/app/actions/processos';
+import { actionListarProcessos } from '@/core/app/actions/processos';
 import type { ListarProcessosParams, Processo, ProcessoUnificado } from '@/core/processos/domain';
 
 interface UseProcessosResult {

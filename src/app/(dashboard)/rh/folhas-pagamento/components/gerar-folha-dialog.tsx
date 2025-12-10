@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { gerarFolha } from '@/lib/hooks/use-folhas-pagamento';
+import { gerarFolha } from '@/core/app/_lib/hooks/use-folhas-pagamento';
 import { MESES_LABELS, type GerarFolhaDTO } from '@/backend/types/financeiro/salarios.types';
 import { toast } from 'sonner';
 

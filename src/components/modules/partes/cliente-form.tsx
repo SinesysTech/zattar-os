@@ -45,7 +45,7 @@ import {
 import { toast } from 'sonner';
 import InputCEP, { type InputCepAddress } from '@/components/assinatura-digital/inputs/input-cep';
 import InputTelefone from '@/components/assinatura-digital/inputs/input-telefone';
-import { actionCriarCliente, actionAtualizarCliente, type ActionResult } from '@/app/actions/partes';
+import { actionCriarCliente, actionAtualizarCliente, type ActionResult } from '@/core/app/actions/partes';
 import type { Cliente } from '@/types/domain/partes';
 
 // =============================================================================

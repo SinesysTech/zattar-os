@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useFolhaDoPeriodo } from '@/app/_lib/hooks/use-folhas-pagamento';
+import { useFolhaDoPeriodo } from '@/core/app/_lib/hooks/use-folhas-pagamento';
 import { MESES_LABELS, STATUS_FOLHA_LABELS, STATUS_FOLHA_CORES } from '@/backend/types/financeiro/salarios.types';
 
 const formatCurrency = (valor: number) =>

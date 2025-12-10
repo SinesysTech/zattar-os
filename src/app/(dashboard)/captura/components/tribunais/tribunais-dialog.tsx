@@ -23,7 +23,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
-import type { TribunalConfig } from '@/app/_lib/types/tribunais';
+import type { TribunalConfig } from '@/core/app/_lib/types/tribunais';
 import type { TipoAcessoTribunal } from '@/backend/types/captura/trt-types';
 
 interface TribunaisDialogProps {

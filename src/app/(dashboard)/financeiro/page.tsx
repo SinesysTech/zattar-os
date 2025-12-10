@@ -4,14 +4,14 @@ import Link from 'next/link';
 import { Plus, Upload, FileText } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { WidgetSaldoContas } from '@/app/(dashboard)/dashboard/components/widgets/widget-saldo-contas';
-import { WidgetContasPagarReceber } from '@/app/(dashboard)/dashboard/components/widgets/widget-contas-pagar-receber';
-import { WidgetFluxoCaixa } from '@/app/(dashboard)/dashboard/components/widgets/widget-fluxo-caixa';
-import { WidgetDespesasCategoria } from '@/app/(dashboard)/dashboard/components/widgets/widget-despesas-categoria';
-import { WidgetOrcamentoAtual } from '@/app/(dashboard)/dashboard/components/widgets/widget-orcamento-atual';
-import { WidgetAlertasFinanceiros } from '@/app/(dashboard)/dashboard/components/widgets/widget-alertas-financeiros';
-import { ObrigacoesWidget } from '@/app/(dashboard)/dashboard/components/obrigacoes-widget';
-import { WidgetFolhaPagamento } from '@/app/(dashboard)/dashboard/components/widgets/widget-folha-pagamento';
+import { WidgetSaldoContas } from '@/core/app/(dashboard)/dashboard/components/widgets/widget-saldo-contas';
+import { WidgetContasPagarReceber } from '@/core/app/(dashboard)/dashboard/components/widgets/widget-contas-pagar-receber';
+import { WidgetFluxoCaixa } from '@/core/app/(dashboard)/dashboard/components/widgets/widget-fluxo-caixa';
+import { WidgetDespesasCategoria } from '@/core/app/(dashboard)/dashboard/components/widgets/widget-despesas-categoria';
+import { WidgetOrcamentoAtual } from '@/core/app/(dashboard)/dashboard/components/widgets/widget-orcamento-atual';
+import { WidgetAlertasFinanceiros } from '@/core/app/(dashboard)/dashboard/components/widgets/widget-alertas-financeiros';
+import { ObrigacoesWidget } from '@/core/app/(dashboard)/dashboard/components/obrigacoes-widget';
+import { WidgetFolhaPagamento } from '@/core/app/(dashboard)/dashboard/components/widgets/widget-folha-pagamento';
 
 export default function FinanceiroDashboardPage() {
   return (

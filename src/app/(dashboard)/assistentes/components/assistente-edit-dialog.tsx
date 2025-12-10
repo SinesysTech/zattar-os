@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Loader2, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import type { Assistente } from '@/app/_lib/types/assistentes';
+import type { Assistente } from '@/core/app/_lib/types/assistentes';
 
 interface AssistenteEditDialogProps {
   open: boolean;

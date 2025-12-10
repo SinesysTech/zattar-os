@@ -12,7 +12,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
 import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Button } from '@/components/ui/button';
@@ -27,21 +27,21 @@ import { Eye, Pencil, Copy, Check } from 'lucide-react';
 import type { Cliente } from '@/types/domain/partes';
 import { ClienteFormDialog } from './cliente-form';
 import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
-import { ProcessosRelacionadosCell } from '@/app/(dashboard)/partes/components/processos-relacionados-cell';
+import { ProcessosRelacionadosCell } from '@/core/app/(dashboard)/partes/components/processos-relacionados-cell';
 import {
   formatarCpf,
   formatarCnpj,
   formatarTelefone,
   formatarNome,
   formatarEnderecoCompleto,
-} from '@/app/_lib/utils/format-clientes';
+} from '@/core/app/_lib/utils/format-clientes';
 import {
   buildClientesFilterOptions,
   buildClientesFilterGroups,
   parseClientesFilters,
   type ClientesFilters,
-} from '@/app/(dashboard)/partes/components/clientes-toolbar-filters';
-import { actionListarClientes } from '@/app/actions/partes';
+} from '@/core/app/(dashboard)/partes/components/clientes-toolbar-filters';
+import { actionListarClientes } from '@/core/app/actions/partes';
 
 // =============================================================================
 // TIPOS

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useFormularioStore } from '@/app/_lib/stores/assinatura-digital/formulario-store';
+import { useFormularioStore } from '@/core/app/_lib/stores/assinatura-digital/formulario-store';
 import { toast } from 'sonner';
 import { DynamicFormData, DynamicFormSchema, SalvarAcaoRequest } from '@/types/assinatura-digital';
 import DynamicFormRenderer from './dynamic-form-renderer';

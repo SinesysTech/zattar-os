@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Eye } from 'lucide-react';
-import { formatCurrency, formatDate } from '@/app/_lib/utils/utils';
+import { formatCurrency, formatDate } from '@/core/app/_lib/utils/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { ObrigacoesFilters } from './obrigacoes-toolbar-filters';
 

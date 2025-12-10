@@ -6,7 +6,7 @@ import type { SlateElementProps } from 'platejs/static';
 import { BaseTablePlugin } from '@platejs/table';
 import { SlateElement } from 'platejs/static';
 
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/core/app/_lib/utils/utils';
 
 export function TableElementStatic({
   children,

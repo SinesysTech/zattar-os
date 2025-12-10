@@ -5,11 +5,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { verificarCPFSchema, type VerificarCPFFormData } from '@/lib/assinatura-digital/validations/verificarCPF.schema';
 import InputCPF from '@/components/assinatura-digital/inputs/input-cpf';
-import { useFormularioStore } from '@/app/_lib/stores/assinatura-digital/formulario-store';
+import { useFormularioStore } from '@/core/app/_lib/stores/assinatura-digital/formulario-store';
 import { toast } from 'sonner';
 import { API_ROUTES } from '@/lib/assinatura-digital/constants/apiRoutes';
-import { parseCPF } from '@/lib/assinatura-digital/formatters/cpf';
-import { validateCPF } from '@/lib/assinatura-digital/validators/cpf.validator';
+import { parseCPF } from '@/core/app/_lib/assinatura-digital/formatters/cpf';
+import { validateCPF } from '@/core/app/_lib/assinatura-digital/validators/cpf.validator';
 import {
   Form,
   FormControl,

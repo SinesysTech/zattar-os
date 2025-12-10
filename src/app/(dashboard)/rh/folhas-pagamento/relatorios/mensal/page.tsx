@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useFolhaDoPeriodo } from '@/app/_lib/hooks/use-folhas-pagamento';
+import { useFolhaDoPeriodo } from '@/core/app/_lib/hooks/use-folhas-pagamento';
 import { MESES_LABELS, STATUS_FOLHA_LABELS } from '@/backend/types/financeiro/salarios.types';
 
 const formatCurrency = (valor: number) =>

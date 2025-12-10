@@ -15,7 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Calendar, DollarSign, Clock, AlertTriangle } from 'lucide-react';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
-import { useProcessoDetail } from '@/app/_lib/hooks/use-processo-detail';
+import { useProcessoDetail } from '@/core/app/_lib/hooks/use-processo-detail';
 
 interface ProcessoDetailSheetProps {
   isOpen: boolean;

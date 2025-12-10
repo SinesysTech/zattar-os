@@ -52,7 +52,7 @@ import {
   iniciarExecucaoOrcamento,
   encerrarOrcamento,
   excluirItemOrcamento,
-} from '@/app/_lib/hooks/use-orcamentos';
+} from '@/core/app/_lib/hooks/use-orcamentos';
 import { toast } from 'sonner';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {

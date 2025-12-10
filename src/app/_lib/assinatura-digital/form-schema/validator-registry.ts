@@ -16,9 +16,9 @@
  * ```
  */
 
-import { validateCPF } from '@/lib/assinatura-digital/validators/cpf.validator';
-import { validateCNPJ } from '@/lib/assinatura-digital/validators/cnpj.validator';
-import { validateTelefone } from '@/lib/assinatura-digital/validators/telefone.validator';
+import { validateCPF } from '@/core/app/_lib/assinatura-digital/validators/cpf.validator';
+import { validateCNPJ } from '@/core/app/_lib/assinatura-digital/validators/cnpj.validator';
+import { validateTelefone } from '@/core/app/_lib/assinatura-digital/validators/telefone.validator';
 import {
   validateCEP,
   validateEmail,
@@ -28,7 +28,7 @@ import {
   validateBrazilianPhone,
   validateBusinessDates,
   TEXT_LIMITS
-} from '@/lib/assinatura-digital/validations/business.validations';
+} from '@/core/app/_lib/assinatura-digital/validations/business.validations';
 import {
   parseData,
   parseCPF,
@@ -42,7 +42,7 @@ import {
   formatCEP,
   formatData,
   convertToISO
-} from '@/lib/assinatura-digital/formatters';
+} from '@/core/app/_lib/assinatura-digital/formatters';
 
 /**
  * Tipo para funções validadoras

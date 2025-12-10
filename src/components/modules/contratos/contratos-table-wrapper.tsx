@@ -11,18 +11,18 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { ContratosTable } from './contratos-table';
 import { ContratoForm } from './contrato-form';
 import { ContratoViewSheet } from './contrato-view-sheet';
 import type { Contrato, ListarContratosParams } from '@/core/contratos/domain';
-import { actionListarContratos } from '@/app/actions/contratos';
+import { actionListarContratos } from '@/core/app/actions/contratos';
 import {
   buildContratosFilterOptions,
   buildContratosFilterGroups,
   parseContratosFilters,
-} from '@/app/(dashboard)/contratos/components/contratos-toolbar-filters';
+} from '@/core/app/(dashboard)/contratos/components/contratos-toolbar-filters';
 
 // =============================================================================
 // TIPOS
@@ -42,7 +42,7 @@ interface PaginationInfo {
 }
 
 // Tipo importado via parseContratosFilters
-import type { ContratosFilters } from '@/app/_lib/types/contratos';
+import type { ContratosFilters } from '@/core/app/_lib/types/contratos';
 
 interface ContratosTableWrapperProps {
   initialData: Contrato[];

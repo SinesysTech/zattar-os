@@ -34,7 +34,7 @@ import { cn } from '@/lib/utils';
 import {
   sincronizarAcordo,
   verificarConsistenciaAcordo,
-} from '@/app/_lib/hooks/use-obrigacoes';
+} from '@/core/app/_lib/hooks/use-obrigacoes';
 import type {
   InconsistenciaObrigacao,
 } from '@/backend/types/financeiro/obrigacoes.types';

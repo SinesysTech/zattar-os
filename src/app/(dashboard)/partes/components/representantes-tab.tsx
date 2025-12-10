@@ -10,7 +10,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Button } from '@/components/ui/button';
@@ -22,7 +22,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Eye, Pencil, Phone, Mail, Copy, Check } from 'lucide-react';
-import { useRepresentantes } from '@/app/_lib/hooks/use-representantes';
+import { useRepresentantes } from '@/core/app/_lib/hooks/use-representantes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Representante } from '@/types/domain/representantes';
 import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
@@ -31,7 +31,7 @@ import {
   formatarCpf,
   formatarNome,
   formatarTelefone,
-} from '@/app/_lib/utils/format-clientes';
+} from '@/core/app/_lib/utils/format-clientes';
 
 /**
  * Tipo estendido de representante com processos relacionados
@@ -44,8 +44,8 @@ import {
   buildRepresentantesFilterGroups,
   parseRepresentantesFilters,
 } from './representantes-toolbar-filters';
-import type { RepresentantesFilters } from '@/app/_lib/types/representantes';
-import { cn } from '@/app/_lib/utils/utils';
+import type { RepresentantesFilters } from '@/core/app/_lib/types/representantes';
+import { cn } from '@/core/app/_lib/utils/utils';
 
 /**
  * Componente de botão para copiar texto

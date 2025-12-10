@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DynamicFormSchema } from '@/types/assinatura-digital/form-schema.types';
 import { AssinaturaDigitalFormulario } from '@/backend/types/assinatura-digital/types';
-import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
+import { useMinhasPermissoes } from '@/core/app/_lib/hooks/use-minhas-permissoes';
 
 interface PageProps {
   params: Promise<{ id: string }>;

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/utils'
+import { cn } from '@/core/app/_lib/utils/utils'
 import { MousePointer2 } from 'lucide-react'
 
 export const Cursor = ({

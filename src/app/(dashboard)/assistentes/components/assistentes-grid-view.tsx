@@ -7,7 +7,7 @@ import { Bot } from 'lucide-react';
 import { AssistenteCard } from './assistente-card';
 import { AssistentesPagination } from './assistentes-pagination';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import type { Assistente } from '@/app/_lib/types/assistentes';
+import type { Assistente } from '@/core/app/_lib/types/assistentes';
 
 interface AssistentesGridViewProps {
   assistentes: Assistente[];

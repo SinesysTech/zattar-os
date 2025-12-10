@@ -5,7 +5,7 @@ import type { VariantProps } from 'class-variance-authority';
 import type { PlateContentProps } from 'platejs/react';
 import { cva } from 'class-variance-authority';
 import { PlateContainer, PlateContent } from 'platejs/react';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/core/app/_lib/utils/utils';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 
 const responsiveEditorContainerVariants = cva(

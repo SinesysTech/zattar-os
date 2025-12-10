@@ -11,14 +11,14 @@ import { ConciliarManualDialog } from './components/conciliar-manual-dialog';
 import { TransacoesImportadasTable } from './components/transacoes-importadas-table';
 import { AlertasConciliacao } from './components/alertas-conciliacao';
 import { ExportButton } from '@/components/financeiro/export-button';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
-import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
+import { useContasBancarias } from '@/core/app/_lib/hooks/use-contas-bancarias';
 import {
   useTransacoesImportadas,
   conciliarAutomaticamente as conciliarAutomaticamenteMutation,
   conciliarManual,
   desconciliar,
-} from '@/app/_lib/hooks/use-conciliacao-bancaria';
+} from '@/core/app/_lib/hooks/use-conciliacao-bancaria';
 import {
   buildConciliacaoFilterOptions,
   buildConciliacaoFilterGroups,

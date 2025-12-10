@@ -6,9 +6,9 @@ import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import type { Assistente } from '@/app/_lib/types/assistentes'
-import { sanitizarIframeCode } from '@/app/_lib/utils/format-assistentes'
-import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes'
+import type { Assistente } from '@/core/app/_lib/types/assistentes'
+import { sanitizarIframeCode } from '@/core/app/_lib/utils/format-assistentes'
+import { useMinhasPermissoes } from '@/core/app/_lib/hooks/use-minhas-permissoes'
 
 export default function AssistentePage() {
   const params = useParams()

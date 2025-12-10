@@ -3,7 +3,7 @@
 // Hook para buscar terceiros
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { Terceiro } from '@/app/_lib/types';
+import type { Terceiro } from '@/core/app/_lib/types';
 
 export interface TerceirosApiResponse {
   success: boolean;

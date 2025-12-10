@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
+import { useFormularioStore } from "@/core/app/_lib/stores/assinatura-digital/formulario-store";
 import FormStepLayout from "@/components/assinatura-digital/form/form-step-layout";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Audiencia, ListarAudienciasParams } from '@/core/audiencias/domain';
-import { ActionResult, actionListarAudiencias } from '@/app/actions/audiencias';
+import { ActionResult, actionListarAudiencias } from '@/core/app/actions/audiencias';
 import { PaginatedResponse } from '@/core/types';
 import { useDebounce } from './use-debounce'; // Assuming a useDebounce hook exists
 

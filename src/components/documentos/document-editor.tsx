@@ -46,10 +46,10 @@ import { VersionHistoryDialog } from '@/components/documentos/version-history-di
 import { DocumentChat } from '@/components/documentos/document-chat';
 import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
 import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
-import { createClient } from '@/app/_lib/supabase/client';
+import { createClient } from '@/core/app/_lib/supabase/client';
 import type { DocumentoComUsuario } from '@/backend/types/documentos/types';
-import { exportToDocx } from '@/lib/documentos/export-docx';
-import { exportToPdf, exportTextToPdf } from '@/lib/documentos/export-pdf';
+import { exportToDocx } from '@/core/app/_lib/documentos/export-docx';
+import { exportToPdf, exportTextToPdf } from '@/core/app/_lib/documentos/export-pdf';
 import type { Descendant } from 'platejs';
 
 interface DocumentEditorProps {

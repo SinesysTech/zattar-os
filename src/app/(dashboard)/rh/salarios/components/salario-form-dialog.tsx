@@ -23,9 +23,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
-import { useCargos } from '@/app/_lib/hooks/use-cargos';
-import { criarSalario, atualizarSalario } from '@/app/_lib/hooks/use-salarios';
+import { useUsuarios } from '@/core/app/_lib/hooks/use-usuarios';
+import { useCargos } from '@/core/app/_lib/hooks/use-cargos';
+import { criarSalario, atualizarSalario } from '@/core/app/_lib/hooks/use-salarios';
 import type { SalarioComDetalhes, CriarSalarioDTO } from '@/backend/types/financeiro/salarios.types';
 import { toast } from 'sonner';
 

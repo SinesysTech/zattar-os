@@ -34,7 +34,7 @@ import { cn } from '@/lib/utils';
 import {
   criarOrcamento,
   atualizarOrcamento,
-} from '@/app/_lib/hooks/use-orcamentos';
+} from '@/core/app/_lib/hooks/use-orcamentos';
 import type {
   OrcamentoComItens,
   PeriodoOrcamento,

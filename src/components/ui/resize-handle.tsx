@@ -12,7 +12,7 @@ import {
 } from '@platejs/resizable';
 import { cva } from 'class-variance-authority';
 
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/core/app/_lib/utils/utils';
 
 export const mediaResizeHandleVariants = cva(
   cn(

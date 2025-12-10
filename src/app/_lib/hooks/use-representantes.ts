@@ -11,7 +11,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type {
   RepresentantesApiResponse,
   BuscarRepresentantesParams,
-} from '@/app/_lib/types/representantes';
+} from '@/core/app/_lib/types/representantes';
 import type { Representante } from '@/types/domain/representantes';
 
 interface UseRepresentantesResult<T extends Representante = Representante> {

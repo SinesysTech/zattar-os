@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { addDays, formatISO, startOfWeek, endOfWeek, parseISO, isSameWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { actionListarExpedientes } from '@/app/actions/expedientes';
+import { actionListarExpedientes } from '@/core/app/actions/expedientes';
 import { ListarExpedientesParams, Expediente } from '@/core/expedientes/domain';
 import { ExpedientesVisualizacaoSemana } from '../components/expedientes-visualizacao-semana';
 import { ExpedientesFilters, parseExpedientesFilters } from '../components/expedientes-toolbar-filters';

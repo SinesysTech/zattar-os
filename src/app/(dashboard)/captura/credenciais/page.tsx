@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { DataTable } from '@/components/ui/data-table';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
+import { useCredenciais } from '@/core/app/_lib/hooks/use-credenciais';
 import { criarColunasCredenciais } from '../components/credenciais/credenciais-columns';
 import { AdvogadoViewDialog } from '../components/credenciais/advogado-view-dialog';
 import { CredenciaisDialog } from '../components/credenciais/credenciais-dialog';
@@ -24,7 +24,7 @@ import {
   parseCredenciaisFilters,
 } from '../components/credenciais/credenciais-toolbar-filters';
 import { toast } from 'sonner';
-import type { Credencial } from '@/app/_lib/types/credenciais';
+import type { Credencial } from '@/core/app/_lib/types/credenciais';
 
 export default function CredenciaisPage() {
   const { credenciais, isLoading, error, refetch, toggleStatus } = useCredenciais();

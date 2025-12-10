@@ -5,7 +5,7 @@ import {
   criarAssistente as criarAssistenteDb,
   type Assistente,
 } from './assistente-persistence.service';
-import { sanitizarIframeCode } from '@/app/_lib/utils/format-assistentes';
+import { sanitizarIframeCode } from '@/core/app/_lib/utils/format-assistentes';
 
 // Tipos para a operação de criação
 export interface CriarAssistenteData {

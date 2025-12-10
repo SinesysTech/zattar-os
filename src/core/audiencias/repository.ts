@@ -1,7 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Result, ok, err } from 'neverthrow';
 import { Database } from '@/lib/database.types';
-import { getSupabase } from '@/lib/supabase';
+import { getSupabase } from '@/core/app/_lib/supabase';
 import { fromSnakeToCamel, fromCamelToSnake } from '@/lib/utils';
 import {
   Audiencia,

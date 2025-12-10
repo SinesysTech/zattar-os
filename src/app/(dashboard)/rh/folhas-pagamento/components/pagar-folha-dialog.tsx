@@ -23,8 +23,8 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
-import { pagarFolha } from '@/app/_lib/hooks/use-folhas-pagamento';
+import { useContasBancarias } from '@/core/app/_lib/hooks/use-contas-bancarias';
+import { pagarFolha } from '@/core/app/_lib/hooks/use-folhas-pagamento';
 import {
   FORMA_PAGAMENTO_FOLHA_LABELS,
   type FormaPagamentoFolha,

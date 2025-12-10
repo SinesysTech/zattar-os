@@ -25,16 +25,16 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/core/*": ["./src/core/*"],
-      "@/app/*": ["./src/app/*"],
+      "@/app/*": ["src/core/app/*"],
       "@/components/*": ["./src/components/*"],
-      "@/lib/*": ["./src/lib/*", "./src/app/_lib/*"],
-      "@/lib/hooks/*": ["./src/app/_lib/hooks/*"],
-      "@/lib/types/*": ["./src/lib/types/*", "./src/app/_lib/types/*"],
+      "@/lib/*": ["./src/lib/*", "src/core/app/_lib/*"],
+      "@/lib/hooks/*": ["src/core/app/_lib/hooks/*"],
+      "@/lib/types/*": ["./src/lib/types/*", "src/core/app/_lib/types/*"],
       "@/hooks/*": ["./src/hooks/*"],
       "@/types/*": ["./src/types/*"],
       "@/types/domain/*": ["./src/types/domain/*"],
       "@/types/contracts/*": ["./src/types/contracts/*"],
-      "@/_lib/*": ["./src/app/_lib/*"],
+      "@/_lib/*": ["src/core/app/_lib/*"],
       "@/backend/*": ["./backend/*"]
     }
   },

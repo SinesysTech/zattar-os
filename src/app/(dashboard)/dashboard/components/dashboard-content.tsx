@@ -4,7 +4,7 @@ import { RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Typography } from '@/components/ui/typography';
-import { useDashboard } from '@/app/_lib/hooks/use-dashboard';
+import { useDashboard } from '@/core/app/_lib/hooks/use-dashboard';
 import type {
   DashboardUsuarioData,
   DashboardAdminData,
@@ -15,7 +15,7 @@ import { WidgetFluxoCaixa } from './widgets/widget-fluxo-caixa';
 import { WidgetDespesasCategoria } from './widgets/widget-despesas-categoria';
 import { ObrigacoesRecentesCard } from './obrigacoes-recentes-card';
 
-import { useSaldoContas, useContasPagarReceber, useAlertasFinanceiros } from '@/app/_lib/hooks/use-dashboard-financeiro';
+import { useSaldoContas, useContasPagarReceber, useAlertasFinanceiros } from '@/core/app/_lib/hooks/use-dashboard-financeiro';
 
 // ============================================================================
 // Financial Metrics Component

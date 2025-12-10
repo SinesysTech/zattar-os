@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -17,19 +17,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAssistentes } from '@/app/_lib/hooks/use-assistentes';
-import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
+import { useAssistentes } from '@/core/app/_lib/hooks/use-assistentes';
+import { useMinhasPermissoes } from '@/core/app/_lib/hooks/use-minhas-permissoes';
 import { AssistentesGridView } from './components/assistentes-grid-view';
 import { ViewToggle } from './components/view-toggle';
 import { AssistenteCreateDialog } from './components/assistente-create-dialog';
 import { AssistenteEditDialog } from './components/assistente-edit-dialog';
 import { AssistenteDeleteDialog } from './components/assistente-delete-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Assistente, AssistentesFilters, ViewMode } from '@/app/_lib/types/assistentes';
+import type { Assistente, AssistentesFilters, ViewMode } from '@/core/app/_lib/types/assistentes';
 import {
   formatarDataCriacao,
   truncarDescricao,
-} from '@/app/_lib/utils/format-assistentes';
+} from '@/core/app/_lib/utils/format-assistentes';
 
 const VIEW_MODE_STORAGE_KEY = 'assistentes-view-mode';
 

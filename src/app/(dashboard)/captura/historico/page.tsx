@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, Trash2 } from 'lucide-react';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
@@ -29,13 +29,13 @@ import {
 } from '@/components/ui/alert-dialog';
 import { CapturaDialog } from '../components/captura-dialog';
 import { buildCapturasFilterOptions, buildCapturasFilterGroups, parseCapturasFilters } from './components/capturas-toolbar-filters';
-import { useCapturasLog } from '@/app/_lib/hooks/use-capturas-log';
-import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
-import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
+import { useCapturasLog } from '@/core/app/_lib/hooks/use-capturas-log';
+import { useAdvogados } from '@/core/app/_lib/hooks/use-advogados';
+import { useCredenciais } from '@/core/app/_lib/hooks/use-credenciais';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/backend/types/captura/capturas-log-types';
 import type { CapturasFilters } from './components/capturas-toolbar-filters';
-import type { CodigoTRT } from '@/app/_lib/types/credenciais';
+import type { CodigoTRT } from '@/core/app/_lib/types/credenciais';
 
 /**
  * Formata data e hora ISO para formato brasileiro (DD/MM/YYYY HH:mm)
