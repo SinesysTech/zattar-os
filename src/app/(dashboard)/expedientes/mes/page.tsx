@@ -1,8 +1,23 @@
-'use client';
+import { Metadata } from 'next';
+import { ExpedientesCalendarMonth } from '@/features/expedientes/components/expedientes-calendar-month';
+import { PageShell } from '@/components/shared/page-shell';
 
-import { ExpedientesContent } from '../components/expedientes-page-content';
+export const metadata: Metadata = {
+  title: 'Expedientes | Mês',
+  description: 'Visualização mensal de expedientes',
+};
 
 export default function ExpedientesMesPage() {
-  return <ExpedientesContent visualizacao="mes" />;
+  return (
+    <PageShell
+        title="Expedientes (Mês)"
+        breadcrumb={[
+            { label: 'Dashboard', href: '/dashboard' },
+            { label: 'Expedientes', href: '/expedientes' },
+            { label: 'Mês', href: '/expedientes/mes', active: true },
+        ]}
+    >
+      <ExpedientesCalendarMonth />
+    </PageShell>
+  );
 }
-
