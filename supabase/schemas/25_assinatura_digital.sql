@@ -24,6 +24,9 @@ create table if not exists public.assinatura_digital_templates (
   template_uuid uuid not null default gen_random_uuid() unique,
   nome text not null,
   descricao text,
+  tipo_template text default 'pdf' check (tipo_template in ('pdf', 'markdown')),
+  segmento_id bigint references public.assinatura_digital_segmentos(id),
+  pdf_url text,
   arquivo_original text not null,
   arquivo_nome text not null,
   arquivo_tamanho integer not null,
@@ -39,10 +42,15 @@ create table if not exists public.assinatura_digital_templates (
 
 comment on table public.assinatura_digital_templates is 'Templates de PDF usados na geração de documentos assinados';
 comment on column public.assinatura_digital_templates.template_uuid is 'UUID público do template';
+comment on column public.assinatura_digital_templates.tipo_template is 'Tipo do template: pdf (arquivo PDF) ou markdown (conteúdo gerado)';
+comment on column public.assinatura_digital_templates.segmento_id is 'ID do segmento associado ao template (null = template global)';
+comment on column public.assinatura_digital_templates.pdf_url is 'URL do arquivo PDF no storage (para templates tipo pdf)';
 comment on column public.assinatura_digital_templates.campos is 'Definição de campos do template em JSON serializado';
 
 create index if not exists idx_assinatura_digital_templates_ativo on public.assinatura_digital_templates(ativo);
 create index if not exists idx_assinatura_digital_templates_nome on public.assinatura_digital_templates(nome);
+create index if not exists idx_assinatura_digital_templates_segmento on public.assinatura_digital_templates(segmento_id);
+create index if not exists idx_assinatura_digital_templates_tipo on public.assinatura_digital_templates(tipo_template);
 
 -- Formulários
 create table if not exists public.assinatura_digital_formularios (
