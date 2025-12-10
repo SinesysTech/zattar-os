@@ -4,18 +4,13 @@
 import { revalidatePath } from 'next/cache';
 import { requireAuth } from './utils';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { getCargosListKey, deleteCached, setCached } from '@/backend/utils/redis';
+import { getCargosListKey, deleteCached } from '@/backend/utils/redis';
+import { usuariosService } from '../index';
 
 export async function actionListarCargos() {
   try {
-    await requireAuth(['usuarios:visualizar']); // Basic permission
-    const supabase = createServiceClient();
-    
-    // Attempt cache? repository.listarCargos logic does.
-    // Using repository from index
-    const { usuarioRepository } = await import('../index');
-    const cargos = await usuarioRepository.listarCargos();
-    
+    await requireAuth(['usuarios:visualizar']);
+    const cargos = await usuariosService.listarCargos();
     return { success: true, data: cargos };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : 'Erro ao listar cargos' };

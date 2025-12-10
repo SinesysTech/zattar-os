@@ -35,20 +35,7 @@ export async function actionBuscarUsuario(id: number) {
 export async function actionBuscarPorCpf(cpf: string) {
   try {
     await requireAuth(['usuarios:visualizar']);
-    // Implementar busca específica no service ou usar repository direto?
-    // O ideal é service expor buscarPorCpf? O service não expõe no index.
-    // Vou usar o repository importado via modulo service se exposto ou adicionar ao service
-    // O service.ts não tem buscarPorCpf exportado na interface simples, mas pode ser adicionado.
-    // Vou adicionar ao service.ts se não tiver.
-    // Edit: service.ts tem buscarUsuario(id).
-    // Vou adicionar buscarPorCpf no service.ts depois. Por enquanto uso repository direto via import.
-    // Mas index.ts exporta usuarioRepository.
-    
-    // Melhor: Adicionar ao service na próxima iteração ou usar repository aqui.
-    // Usarei repository direto por brevidade ou ajustarei service.
-    // Mas index.ts exporta usuarioRepository.
-    const { usuarioRepository } = await import('../index');
-    const usuario = await usuarioRepository.findByCpf(cpf);
+    const usuario = await usuariosService.buscarPorCpf(cpf);
     return { success: true, data: usuario };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : 'Erro ao buscar usuário por CPF' };
@@ -58,8 +45,7 @@ export async function actionBuscarPorCpf(cpf: string) {
 export async function actionBuscarPorEmail(email: string) {
   try {
     await requireAuth(['usuarios:visualizar']);
-    const { usuarioRepository } = await import('../index');
-    const usuario = await usuarioRepository.findByEmail(email);
+    const usuario = await usuariosService.buscarPorEmail(email);
     return { success: true, data: usuario };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : 'Erro ao buscar usuário por e-mail' };

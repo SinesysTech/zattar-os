@@ -8,7 +8,8 @@ export async function actionRedefinirSenha(usuarioId: number, novaSenha: string)
   try {
     await requireAuth(['usuarios:editar']); // Admin reset
 
-    if (novaSenha.length < 6) return { success: false, error: 'Senha deve ter no mínimo 6 caracteres' };
+    if (novaSenha.length < 8) return { success: false, error: 'Senha deve ter no mínimo 8 caracteres' };
+    if (novaSenha.length > 72) return { success: false, error: 'Senha deve ter no máximo 72 caracteres' };
 
     const supabase = createServiceClient();
 
