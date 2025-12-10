@@ -1,6 +1,6 @@
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { ObrigacoesRepository } from './repository';
-import { LancamentosRepository } from '../lancamentos/domain'; // Using types from domain, but repo implementation for writes
+import { LancamentosRepository } from '../lancamentos/repository';
 import { SplitPagamento, ParcelaObrigacao, StatusRepasse } from './domain';
 import { Lancamento } from '../lancamentos/domain';
 
@@ -47,6 +47,44 @@ export const ObrigacoesService = {
     },
 
     /**
+     * Sincroniza todas as parcelas de um acordo
+     */
+    async sincronizarAcordo(acordoId: number, forcar: boolean = false): Promise<{ sucesso: boolean; mensagem: string }> {
+        const supabase = createServiceClient();
+
+        try {
+            // 1. Buscar parcelas do acordo
+            const { data: parcelas, error } = await supabase
+                .from('parcelas')
+                .select('id')
+                .eq('acordo_condenacao_id', acordoId);
+
+            if (error) throw new Error(error.message);
+            if (!parcelas || parcelas.length === 0) return { sucesso: true, mensagem: 'Acordo sem parcelas.' };
+
+            // 2. Sincronizar cada parcela
+            let sucessos = 0;
+            let erros = 0;
+
+            // Executar em série para não sobrecarregar disparos se forem muitas
+            for (const p of parcelas) {
+                const res = await this.sincronizarParcela(p.id, forcar);
+                if (res.sucesso) sucessos++;
+                else erros++;
+            }
+
+            if (erros > 0) {
+                return { sucesso: false, mensagem: `Sincronizado com avisos: ${sucessos} sucessos, ${erros} falhas/ignorados.` };
+            }
+
+            return { sucesso: true, mensagem: `Acordo sincronizado. ${sucessos} parcelas processadas.` };
+
+        } catch (e: any) {
+            return { sucesso: false, mensagem: e.message };
+        }
+    },
+
+    /**
      * Sincroniza uma parcela específica para o financeiro
      */
     async sincronizarParcela(parcelaId: number, forcar: boolean = false): Promise<{ sucesso: boolean; mensagem: string }> {
@@ -85,7 +123,10 @@ export const ObrigacoesService = {
 
             // 3. Preparar dados do lançamento
             const valorTotal = parcelaRecord.valor_bruto_credito_principal + (parcelaRecord.honorarios_sucumbenciais || 0);
-            const descricao = `Parcela ${parcelaRecord.numero_parcela}/${acordo.numero_parcelas} - ${acordo.numero_processo || 'Acordo'}`;
+            const numeroParcela = parcelaRecord.numero_parcela || '?';
+            const numeroTotalParcelas = acordo.numero_parcelas || '?';
+            const numeroProcesso = acordo.numero_processo || 'Acordo';
+            const descricao = `Parcela ${numeroParcela}/${numeroTotalParcelas} - ${numeroProcesso}`;
 
             const dadosLancamento = {
                 tipo: acordo.direcao === 'recebimento' ? 'receita' : 'despesa',
@@ -100,7 +141,7 @@ export const ObrigacoesService = {
                 parcela_id: parcelaId,
                 acordo_condenacao_id: acordo.id,
                 conta_contabil_id: 1, // TODO: Buscar conta padrão correta
-                // Mapear outros campos...
+                updated_at: new Date().toISOString()
             };
 
             if (lancamentoExistente && forcar) {
@@ -109,7 +150,8 @@ export const ObrigacoesService = {
                 return { sucesso: true, mensagem: 'Lançamento atualizado.' };
             } else {
                 // Criar
-                await supabase.from('lancamentos_financeiros').insert(dadosLancamento);
+                const dadosCriacao = { ...dadosLancamento, created_at: new Date().toISOString() };
+                await supabase.from('lancamentos_financeiros').insert(dadosCriacao);
                 return { sucesso: true, mensagem: 'Lançamento criado.' };
             }
 
