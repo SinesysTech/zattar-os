@@ -42,7 +42,22 @@ interface AudienciaFormProps {
   onClose?: () => void;
 }
 
-const formSchema = createAudienciaSchema.extend({
+// Schema base sem validação refinada
+const baseAudienciaSchema = z.object({
+  processoId: z.number({ required_error: 'Processo é obrigatório.' }),
+  dataInicio: z.string({ required_error: 'Data de início é obrigatória.' }).datetime('Formato de data inválido.'),
+  dataFim: z.string({ required_error: 'Data de fim é obrigatória.' }).datetime('Formato de data inválido.'),
+  tipoAudienciaId: z.number().optional().nullable(),
+  modalidade: z.nativeEnum(ModalidadeAudiencia).optional().nullable(),
+  urlAudienciaVirtual: z.string().url('URL inválida.').optional().nullable(),
+  enderecoPresencial: z.custom<any>().optional().nullable(),
+  responsavelId: z.number().optional().nullable(),
+  observacoes: z.string().optional().nullable(),
+  salaAudienciaNome: z.string().optional().nullable(),
+});
+
+// Schema com campos adicionais para o formulário (campos de UI)
+const formSchema = baseAudienciaSchema.extend({
   dataInicioDate: z.date().optional(),
   dataFimDate: z.date().optional(),
   horaInicioTime: z.string().optional(),
@@ -53,9 +68,13 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaFormProps) {
   const { pending } = useFormStatus();
+  
+  // Definir valor inicial correto para useFormState
+  const initialState: ActionResult = { success: false, error: '', message: '' };
+  
   const [state, formAction] = useFormState<ActionResult, FormData>(
     initialData ? actionAtualizarAudiencia.bind(null, initialData.id) : actionCriarAudiencia,
-    null
+    initialState
   );
 
   const form = useForm<FormValues>({
@@ -70,7 +89,6 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
         }
       : {
           modalidade: ModalidadeAudiencia.Virtual,
-          status: StatusAudiencia.Marcada,
         },
   });
 
@@ -88,7 +106,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
       toast.error(state.error, { description: state.message });
       if (state.errors) {
         Object.entries(state.errors).forEach(([path, messages]) => {
-          form.setError(path as keyof FormValues, {
+          form.setError(path as string & keyof FormValues, {
             type: 'manual',
             message: messages.join(', '),
           });
@@ -377,7 +395,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                 <SelectContent>
                   {usuarios.map((usuario) => (
                     <SelectItem key={usuario.id} value={usuario.id.toString()}>
-                      {usuario.nome}
+                      {usuario.nomeExibicao || usuario.nomeCompleto}
                     </SelectItem>
                   ))}
                 </SelectContent>

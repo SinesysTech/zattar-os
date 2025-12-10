@@ -47,6 +47,19 @@ function audienciaToICalendarEvent(audiencia: Audiencia): ICalendarEvent {
   };
 }
 
+// Converter ICalendarEvent para IEvent para compatibility com calculateMonthEventPositions
+function toIEvent(event: ICalendarEvent): any {
+  return {
+    id: event.id,
+    startDate: event.startDate,
+    endDate: event.endDate,
+    title: event.title,
+    color: event.color || 'blue',
+    description: '',
+    user: { id: 0, name: '', avatar: '' },
+  };
+}
+
 export function AudienciasCalendarMonthView({
   audiencias,
   currentDate,
@@ -61,7 +74,11 @@ export function AudienciasCalendarMonthView({
   const singleDayEvents = useMemo(() => iEvents.filter(e => isSameDay(parseISO(e.startDate), parseISO(e.endDate))), [iEvents]);
 
   const eventPositions = useMemo(
-    () => calculateMonthEventPositions(multiDayEvents, singleDayEvents, currentDate),
+    () => calculateMonthEventPositions(
+      multiDayEvents.map(toIEvent), 
+      singleDayEvents.map(toIEvent), 
+      currentDate
+    ),
     [multiDayEvents, singleDayEvents, currentDate]
   );
 
@@ -87,7 +104,7 @@ export function AudienciasCalendarMonthView({
             className="flex items-center justify-center border-b border-r py-2"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05, ...transition }}
+            transition={{ delay: index * 0.05, type: 'spring', stiffness: 100, damping: 15 }}
           >
             <span className="text-xs font-medium text-t-quaternary">{day}</span>
           </motion.div>
