@@ -1,8 +1,7 @@
-import { SupabaseClient } from ' @supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { Result, ok, err } from 'neverthrow';
-import { Database } from ' @/lib/database.types';
-import { getSupabase } from ' @/app/_lib/supabase';
-import { fromSnakeToCamel, fromCamelToSnake } from ' @/lib/utils';
+import { getSupabase } from '@/app/_lib/supabase';
+import { fromSnakeToCamel, fromCamelToSnake } from '@/lib/utils';
 import {
   SalaChat,
   MensagemChat,
@@ -10,10 +9,10 @@ import {
   ListarSalasParams,
   ListarMensagensParams,
 } from './domain';
-import { PaginatedResponse } from ' @/core/types';
+import { PaginatedResponse } from '@/core/types';
 
-type SalaChatRow = Database['public']['Tables']['salas_chat']['Row'];
-type MensagemChatRow = Database['public']['Tables']['mensagens_chat']['Row'];
+type SalaChatRow = Record<string, unknown>;
+type MensagemChatRow = Record<string, unknown>;
 
 function converterParaSalaChat(data: SalaChatRow): SalaChat {
   return fromSnakeToCamel(data) as unknown as SalaChat;
@@ -24,9 +23,9 @@ function converterParaMensagemChat(data: MensagemChatRow): MensagemChat {
 }
 
 export class ChatRepository {
-  private supabase: SupabaseClient<Database>;
+  private supabase: SupabaseClient;
 
-  constructor(supabase?: SupabaseClient<Database>) {
+  constructor(supabase?: SupabaseClient) {
     this.supabase = supabase || getSupabase();
   }
 

@@ -96,7 +96,6 @@ function convertProcessoToLegacy(processo: Processo | ProcessoUnificado): Proces
     id: processo.id,
     id_pje: processo.idPje,
     advogado_id: processo.advogadoId,
-    origem: processo.origem,
     trt: processo.trt,
     numero_processo: processo.numeroProcesso,
     numero: processo.numero,
@@ -136,7 +135,9 @@ function convertProcessoToLegacy(processo: Processo | ProcessoUnificado): Proces
       is_grau_atual: inst.isGrauAtual,
     }));
   } else {
-    legacy.grau = (processo as Processo).grau;
+    const proc = processo as Processo;
+    legacy.grau = proc.grau;
+    legacy.origem = proc.origem;
   }
 
   return legacy as unknown as Processo | ProcessoUnificado;

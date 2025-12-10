@@ -1,6 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Result, ok, err } from 'neverthrow';
-import { Database } from '@/lib/database.types';
 import { getSupabase } from '@/app/_lib/supabase';
 import { fromSnakeToCamel, fromCamelToSnake } from '@/lib/utils';
 import {
@@ -9,7 +8,7 @@ import {
 } from './domain';
 import { PaginatedResponse } from '@/core/types';
 
-type AudienciaRow = Database['public']['Tables']['audiencias']['Row'];
+type AudienciaRow = Record<string, unknown>;
 
 function converterParaAudiencia(data: AudienciaRow): Audiencia {
   const converted = fromSnakeToCamel(data) as unknown as Audiencia;
@@ -20,9 +19,9 @@ function converterParaAudiencia(data: AudienciaRow): Audiencia {
 }
 
 export class AudienciasRepository {
-  private supabase: SupabaseClient<Database>;
+  private supabase: SupabaseClient;
 
-  constructor(supabase?: SupabaseClient<Database>) {
+  constructor(supabase?: SupabaseClient) {
     this.supabase = supabase || getSupabase();
   }
 
