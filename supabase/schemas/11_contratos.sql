@@ -5,7 +5,8 @@ create table public.contratos (
   id bigint generated always as identity primary key,
   
   -- Dados do contrato
-  area_direito public.area_direito not null,
+  area_direito public.area_direito not null, -- @deprecated Usar segmento_id
+  segmento_id bigint references public.segmentos(id),
   tipo_contrato public.tipo_contrato not null,
   tipo_cobranca public.tipo_cobranca not null,
   

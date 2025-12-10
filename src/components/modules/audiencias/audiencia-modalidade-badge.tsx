@@ -26,7 +26,7 @@ export function AudienciaModalidadeBadge({ modalidade, className, compact = fals
       Icon = MapPin;
       colorClass = 'bg-orange-100 text-orange-800 hover:bg-orange-200 dark:bg-orange-900 dark:text-orange-100 dark:hover:bg-orange-800';
       break;
-    case ModalidadeAudiidade.Hibrida:
+    case ModalidadeAudiencia.Hibrida:
       Icon = GitCompareArrows;
       colorClass = 'bg-teal-100 text-teal-800 hover:bg-teal-200 dark:bg-teal-900 dark:text-teal-100 dark:hover:bg-teal-800';
       break;

@@ -85,6 +85,8 @@ export interface Lancamento {
     processoId: number | null;
     contratoId: number | null;
     parcelaId: number | null; // Vínculo com obrigação judicial
+    acordoCondenacaoId?: number | null; // Adicionando campo faltante
+
 
     // Recorrência
     recorrente: boolean;

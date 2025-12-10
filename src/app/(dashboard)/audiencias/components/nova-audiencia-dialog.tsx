@@ -271,9 +271,16 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
       return;
     }
 
-    // Converter para ISO timestamps
-    const dataInicioISO = `${dataInicio}T${horaInicio}:00.000Z`;
-    const dataFimISO = `${dataFim}T${horaFim}:00.000Z`;
+    // Converter para ISO timestamps usando Date local e toISOString()
+    const [anoInicio, mesInicio, diaInicio] = dataInicio.split('-').map(Number);
+    const [horaInicioNum, minutoInicio] = horaInicio.split(':').map(Number);
+    const dataInicioLocal = new Date(anoInicio, mesInicio - 1, diaInicio, horaInicioNum, minutoInicio);
+    const dataInicioISO = dataInicioLocal.toISOString();
+
+    const [anoFim, mesFim, diaFim] = dataFim.split('-').map(Number);
+    const [horaFimNum, minutoFim] = horaFim.split(':').map(Number);
+    const dataFimLocal = new Date(anoFim, mesFim - 1, diaFim, horaFimNum, minutoFim);
+    const dataFimISO = dataFimLocal.toISOString();
 
     // Montar endereço presencial se aplicável
     let enderecoPresencial = null;

@@ -1,16 +1,14 @@
 'use server';
 
 import { LancamentosRepository } from '@/core/financeiro/lancamentos/repository';
-import { CriarContaPagarDTO, AtualizarContaPagarDTO } from '@/backend/types/financeiro/contas-pagar.types';
-// Using backend types for DTOs for now as we haven't created consolidated DTOs in core yet, 
-// or should use the types from lancamentos/domain if they cover it.
-// lancamentos/domain.ts has `Lancamento` interface but not explicit DTOs for creation yet, 
-// let's assume we pass partials or define simple inputs here.
-
+import { Lancamento } from '@/core/financeiro/lancamentos/domain';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 
-export async function actionCriarLancamento(dados: any) {
+// Tipos explícitos para entrada das actions (DTOs simplificados baseados em Partial<Lancamento>)
+type CriarLancamentoInput = Partial<Lancamento>;
+type AtualizarLancamentoInput = Partial<Lancamento>;
+
+export async function actionCriarLancamento(dados: CriarLancamentoInput) {
     try {
         const lancamento = await LancamentosRepository.criar(dados);
         revalidatePath('/financeiro');
@@ -20,7 +18,7 @@ export async function actionCriarLancamento(dados: any) {
     }
 }
 
-export async function actionAtualizarLancamento(id: number, dados: any) {
+export async function actionAtualizarLancamento(id: number, dados: AtualizarLancamentoInput) {
     try {
         const lancamento = await LancamentosRepository.atualizar(id, dados);
         revalidatePath('/financeiro');
@@ -31,9 +29,11 @@ export async function actionAtualizarLancamento(id: number, dados: any) {
 }
 
 export async function actionConfirmarLancamento(id: number) {
-    //TODO: Implementar lógica de confirmação (setar status pago/recebido)
     try {
-        const lancamento = await LancamentosRepository.atualizar(id, { status: 'confirmado', dataEfetivacao: new Date().toISOString() });
+        const lancamento = await LancamentosRepository.atualizar(id, {
+            status: 'confirmado',
+            dataEfetivacao: new Date().toISOString()
+        });
         revalidatePath('/financeiro');
         return { sucesso: true, data: lancamento };
     } catch (error: any) {
@@ -60,3 +60,4 @@ export async function actionEstornarLancamento(id: number) {
         return { sucesso: false, erro: error.message };
     }
 }
+

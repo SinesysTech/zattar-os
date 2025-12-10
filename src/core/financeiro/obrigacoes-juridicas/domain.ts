@@ -57,6 +57,7 @@ export interface ParcelaObrigacao {
 
     // Relacionamento Financeiro
     lancamentoId: number | null;
+    formaPagamento?: string | null; // Adicionando campo faltante nas parcelas
     lancamento?: Lancamento; // Dados do lançamento vinculado (se houver)
 
     // Documentos de Repasse
