@@ -5,6 +5,8 @@ import type { ClienteAssinaturaDigital } from '@/types/assinatura-digital/client
 import type { VisualizacaoPdfData, VisualizacaoMarkdownData } from '@/types/assinatura-digital/formulario.types';
 import type { DynamicFormSchema } from '@/types/assinatura-digital/form-schema.types';
 import type { Template, MetadadoSeguranca } from '@/types/assinatura-digital/template.types';
+import type { DeviceFingerprintData } from '@/backend/types/assinatura-digital/types';
+import { DEFAULT_TOTAL_STEPS } from '@/lib/assinatura-digital/constants';
 
 export interface DadosCPF {
   cpf: string;
@@ -59,6 +61,12 @@ export interface DadosAssinaturaStore {
   geolocation_accuracy?: number;
   geolocation_timestamp?: string;
   data_assinatura: string;
+  /**
+   * Dados brutos de fingerprint do dispositivo coletados no momento da assinatura.
+   * Opcional - pode ser null se a coleta falhar ou estiver desabilitada.
+   * Usado para auditoria e conformidade legal (MP 2.200-2/2001).
+   */
+  dispositivo_fingerprint_raw?: DeviceFingerprintData | null;
 }
 
 /**
@@ -122,7 +130,7 @@ interface FormularioState {
    */
   cachedTemplates: Map<string, Template>;
 
-  // Etapa atual (0: CPF, 1: Dados Pessoais, 2: Ação, 3: Foto, 4: Visualização PDF, 5: Assinatura, 6: Sucesso)
+  // Etapa atual (0: CPF, 1: Dados Pessoais, 2: Ação, 3: Termos de Aceite, 4: Foto, 5: Visualização PDF, 6: Assinatura, 7: Sucesso)
   etapaAtual: number;
 
   // Dados das etapas
@@ -159,6 +167,10 @@ interface FormularioState {
   longitude: number | null;
   geolocationAccuracy: number | null;
   geolocationTimestamp: string | null;
+
+  termosAceite: boolean | null;
+  termosVersao: string | null;
+  termosDataAceite: string | null;
 
   // Configuração dinâmica de etapas
   stepConfigs: StepConfig[] | null;
@@ -199,6 +211,8 @@ interface FormularioState {
   setAssinaturaBase64: (assinatura: string) => void;
   setGeolocation: (latitude: number, longitude: number, accuracy: number, timestamp: string) => void;
   clearGeolocation: () => void;
+  setTermosAceite: (aceite: boolean, versao: string, dataAceite: string) => void;
+  clearTermosAceite: () => void;
   setStepConfigs: (configs: StepConfig[]) => void;
   getStepByIndex: (index: number) => StepConfig | undefined;
   getTotalSteps: () => number;
@@ -238,6 +252,9 @@ export const useFormularioStore = create<FormularioState>((set, get) => ({
   longitude: null,
   geolocationAccuracy: null,
   geolocationTimestamp: null,
+  termosAceite: null,
+  termosVersao: null,
+  termosDataAceite: null,
   stepConfigs: null,
   pdfUrlFinal: null,
   isLoading: false,
@@ -268,6 +285,9 @@ export const useFormularioStore = create<FormularioState>((set, get) => ({
       longitude: null,
       geolocationAccuracy: null,
       geolocationTimestamp: null,
+      termosAceite: null,
+      termosVersao: null,
+      termosDataAceite: null,
       stepConfigs: null,
       pdfUrlFinal: null, // Clear PDF URL on context hydration
       isLoading: false,
@@ -356,6 +376,18 @@ export const useFormularioStore = create<FormularioState>((set, get) => ({
     geolocationTimestamp: null,
   }),
 
+  setTermosAceite: (aceite, versao, dataAceite) => set({
+    termosAceite: aceite,
+    termosVersao: versao,
+    termosDataAceite: dataAceite,
+  }),
+
+  clearTermosAceite: () => set({
+    termosAceite: null,
+    termosVersao: null,
+    termosDataAceite: null,
+  }),
+
   setStepConfigs: (configs) => set({ stepConfigs: configs }),
 
   getStepByIndex: (index) => {
@@ -365,7 +397,7 @@ export const useFormularioStore = create<FormularioState>((set, get) => ({
 
   getTotalSteps: () => {
     const { stepConfigs } = get();
-    return stepConfigs?.length || 7; // Fallback para 7 etapas (fluxo completo padrão)
+    return stepConfigs?.length || DEFAULT_TOTAL_STEPS; // Fallback para 8 etapas (fluxo completo padrão com TermosAceiteStep)
   },
 
   getCurrentStepConfig: () => {
@@ -394,6 +426,9 @@ export const useFormularioStore = create<FormularioState>((set, get) => ({
     longitude: null,
     geolocationAccuracy: null,
     geolocationTimestamp: null,
+    termosAceite: null,
+    termosVersao: null,
+    termosDataAceite: null,
     stepConfigs: null,
     sessaoId: null,
     formularioFlowConfig: null,
@@ -429,6 +464,9 @@ export const useFormularioStore = create<FormularioState>((set, get) => ({
     longitude: null,
     geolocationAccuracy: null,
     geolocationTimestamp: null,
+    termosAceite: null,
+    termosVersao: null,
+    termosDataAceite: null,
     stepConfigs: null,
     pdfUrlFinal: null, // Clear final PDF URL on complete reset
     isLoading: false,
@@ -437,7 +475,7 @@ export const useFormularioStore = create<FormularioState>((set, get) => ({
 
   proximaEtapa: () => {
     const { etapaAtual, stepConfigs } = get();
-    const totalSteps = stepConfigs?.length || 7;
+    const totalSteps = stepConfigs?.length || DEFAULT_TOTAL_STEPS;
     if (etapaAtual < totalSteps - 1) {
       set({ etapaAtual: etapaAtual + 1 });
     }

@@ -218,7 +218,14 @@ export interface FinalizePayload {
   // Conformidade legal MP 2.200-2
   /** Aceite obrigatório dos termos (deve ser true) */
   termos_aceite: boolean;
-  /** Versão dos termos aceitos (ex: "v1.0-MP2200-2") - alinhado com coluna termos_aceite_versao */
+  /**
+   * Versão dos termos aceitos (ex: "v1.0-MP2200-2").
+   * IMPORTANTE: Este campo usa nomenclatura `termos_aceite_versao` em todas as camadas:
+   * - Payload API (FinalizePayload)
+   * - Coluna PostgreSQL (assinatura_digital_assinaturas.termos_aceite_versao)
+   * - Record TypeScript (AssinaturaDigitalRecord)
+   * - ManifestData.termos.versao (mapeado internamente)
+   */
   termos_aceite_versao: string;
   /** Fingerprint do dispositivo para auditoria */
   dispositivo_fingerprint_raw?: DeviceFingerprintData | null;

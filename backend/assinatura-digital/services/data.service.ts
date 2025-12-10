@@ -24,6 +24,7 @@ export interface FormularioBasico {
   slug: string;
   segmento_id: number;
   ativo: boolean;
+  foto_necessaria?: boolean;
 }
 
 export interface SegmentoBasico {
@@ -90,7 +91,7 @@ export async function getFormularioBasico(id: string | number): Promise<Formular
   const parsed = parseFormularioId(id);
   const { data, error } = await supabase
     .from('assinatura_digital_formularios')
-    .select('id, formulario_uuid, nome, slug, segmento_id, ativo')
+    .select('id, formulario_uuid, nome, slug, segmento_id, ativo, foto_necessaria')
     .eq(parsed.column, parsed.value)
     .single();
 

@@ -32,7 +32,8 @@ const toolbarFeatures = [
 ];
 
 const keyboardShortcuts = [
-  { shortcut: 'Ctrl+K', action: 'Busca rápida' },
+  { shortcut: 'Ctrl+K', action: 'Busca rápida global' },
+  { shortcut: 'Ctrl+Shift+D', action: 'Busca rápida de documentos' },
   { shortcut: 'Ctrl+S', action: 'Forçar salvamento' },
   { shortcut: 'Ctrl+Z', action: 'Desfazer' },
   { shortcut: 'Ctrl+Shift+Z', action: 'Refazer' },
@@ -53,7 +54,7 @@ const commonProblems = [
   {
     problem: 'Não encontro meu documento',
     solutions: [
-      'Use a busca rápida (Ctrl+K)',
+      'Use a busca rápida global (Ctrl+K) ou de documentos (Ctrl+Shift+D)',
       'Verifique se não está na lixeira',
       'Verifique os filtros de pasta',
     ],
@@ -357,7 +358,10 @@ export default function DocumentosPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Use <Badge variant="secondary">Ctrl+K</Badge> ou <Badge variant="secondary">Cmd+K</Badge> para abrir.
+              Use <Badge variant="secondary">Ctrl+Shift+D</Badge> ou <Badge variant="secondary">Cmd+Shift+D</Badge> para abrir o menu de documentos.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Para busca global do sistema, use <Badge variant="secondary">Ctrl+K</Badge> ou <Badge variant="secondary">Cmd+K</Badge>.
             </p>
             <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
               <li>Buscar documentos pelo nome</li>

@@ -3,6 +3,7 @@ import { Inter, Montserrat, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner"; // Ajuste o import conforme sua estrutura
+import { CommandMenu } from "@/components/command-menu";
 
 // Fonte Sans (Interface/Texto)
 const inter = Inter({
@@ -47,9 +48,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <CommandMenu />
           {children}
           {/* Toaster configurado com richColors para feedback visual (Sucesso=Verde, Erro=Vermelho) */}
-          <Toaster position="top-right" richColors closeButton />
+          <Toaster position="top-right" richColors closeButton theme="system" className="font-sans" />
         </ThemeProvider>
       </body>
     </html>

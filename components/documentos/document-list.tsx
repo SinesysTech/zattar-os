@@ -426,7 +426,7 @@ export function DocumentList() {
         pastaId={pastaAtual}
       />
 
-      {/* Command Menu (Cmd+K) */}
+      {/* Command Menu (Cmd/Ctrl+Shift+D) */}
       <CommandMenu
         onNewDocument={() => setCreateDialogOpen(true)}
         onNewFolder={() => setCreateFolderOpen(true)}

@@ -10,15 +10,53 @@ import type {
   DashboardAdminData,
 } from '@/backend/types/dashboard/types';
 
-import { SortableUserDashboard, SortableAdminDashboard } from './sortable-dashboard';
-import { WidgetSaldoContas } from './widgets/widget-saldo-contas';
-import { WidgetContasPagarReceber } from './widgets/widget-contas-pagar-receber';
+import { MetricCard } from '@/components/modules/dashboard/metric-card';
 import { WidgetFluxoCaixa } from './widgets/widget-fluxo-caixa';
 import { WidgetDespesasCategoria } from './widgets/widget-despesas-categoria';
-import { WidgetOrcamentoAtual } from './widgets/widget-orcamento-atual';
-import { WidgetAlertasFinanceiros } from './widgets/widget-alertas-financeiros';
-import { ResponsiveGrid } from '@/components/ui/responsive-grid';
-// import { DashboardFilters, FilterGroup } from './dashboard-filters'; // Disponível para uso futuro
+import { ObrigacoesRecentesCard } from './obrigacoes-recentes-card';
+
+import { useSaldoContas, useContasPagarReceber, useAlertasFinanceiros } from '@/app/_lib/hooks/use-dashboard-financeiro';
+
+// ============================================================================
+// Financial Metrics Component
+// ============================================================================
+
+function FinancialMetricCards() {
+  const { saldoAtual, isLoading: isLoadingSaldo, error: errorSaldo } = useSaldoContas();
+  const { contasPagar, contasReceber, isLoading: isLoadingContas, error: errorContas } = useContasPagarReceber();
+  const { alertas, isLoading: isLoadingAlertas, error: errorAlertas } = useAlertasFinanceiros();
+
+  const isLoading = isLoadingSaldo || isLoadingContas || isLoadingAlertas;
+
+  if (isLoading) {
+    return (
+      <>
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="rounded-lg border bg-card p-6 space-y-2 animate-pulse">
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="h-8 w-1/3" />
+            <Skeleton className="h-3 w-full" />
+          </div>
+        ))}
+      </>
+    );
+  }
+
+  const saldoTotal = saldoAtual;
+  const totalContasPagar = contasPagar?.valor ?? 0;
+  const totalContasReceber = contasReceber?.valor ?? 0;
+  const alertasCount = alertas?.length ?? 0;
+
+  return (
+    <>
+      <MetricCard title="Saldo Total" value={errorSaldo ? 'Erro' : saldoTotal} />
+      <MetricCard title="Contas a Pagar" value={errorContas ? 'Erro' : totalContasPagar} />
+      <MetricCard title="Contas a Receber" value={errorContas ? 'Erro' : totalContasReceber} />
+      <MetricCard title="Alertas Financeiros" value={errorAlertas ? 'Erro' : alertasCount} />
+    </>
+  );
+}
+
 
 // ============================================================================
 // Loading e Error States
@@ -26,28 +64,32 @@ import { ResponsiveGrid } from '@/components/ui/responsive-grid';
 
 function DashboardSkeleton() {
   return (
-    <div className="space-y-6">
-      {/* Status Cards Skeleton */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="rounded-lg border bg-card p-6">
-            <Skeleton className="h-4 w-24 mb-2" />
-            <Skeleton className="h-8 w-16 mb-2" />
-            <Skeleton className="h-3 w-32" />
-          </div>
-        ))}
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {/* Linha 1: KPIs */}
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="rounded-lg border bg-card p-6 space-y-2">
+          <Skeleton className="h-4 w-2/3" />
+          <Skeleton className="h-8 w-1/3" />
+          <Skeleton className="h-3 w-full" />
+        </div>
+      ))}
+
+      {/* Linha 2: Gráficos */}
+      <div className="lg:col-span-3 rounded-lg border bg-card p-6 space-y-4">
+        <Skeleton className="h-5 w-32" />
+        <Skeleton className="h-48 w-full" />
+      </div>
+      <div className="lg:col-span-1 rounded-lg border bg-card p-6 space-y-4">
+        <Skeleton className="h-5 w-24" />
+        <Skeleton className="h-48 w-full" />
       </div>
 
-      {/* Widgets Skeleton */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="rounded-lg border bg-card p-6">
-            <Skeleton className="h-5 w-32 mb-4" />
-            <Skeleton className="h-24 w-full mb-4" />
-            <Skeleton className="h-4 w-full mb-2" />
-            <Skeleton className="h-4 w-3/4" />
-          </div>
-        ))}
+      {/* Linha 3: Lista */}
+      <div className="md:col-span-2 lg:col-span-4 rounded-lg border bg-card p-6 space-y-4">
+        <Skeleton className="h-5 w-48" />
+        <Skeleton className="h-8 w-full" />
+        <Skeleton className="h-8 w-full" />
+        <Skeleton className="h-8 w-full" />
       </div>
     </div>
   );
@@ -94,32 +136,24 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
           Atualizar
         </Button>
       </div>
+      
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {/* Linha 1: KPIs */}
+        <FinancialMetricCards />
 
-      {/* Widgets Financeiros - Usando ResponsiveGrid */}
-      <ResponsiveGrid
-        columns={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3 }}
-        gap={4}
-      >
-        <WidgetSaldoContas />
-        <WidgetContasPagarReceber />
-        <WidgetAlertasFinanceiros />
-      </ResponsiveGrid>
-
-      {/* Fluxo de Caixa e Despesas - Layout responsivo */}
-      <ResponsiveGrid
-        columns={{ xs: 1, sm: 1, md: 1, lg: 3, xl: 3 }}
-        gap={4}
-      >
-        <div className="lg:col-span-2">
-          <WidgetFluxoCaixa />
+        {/* Linha 2: Gráficos */}
+        <div className="md:col-span-2 lg:col-span-3">
+            <WidgetFluxoCaixa />
         </div>
-        <WidgetDespesasCategoria />
-      </ResponsiveGrid>
+        <div className='lg:col-span-1'>
+            <WidgetDespesasCategoria />
+        </div>
 
-      <WidgetOrcamentoAtual />
-
-      {/* Dashboard Sortable */}
-      <SortableUserDashboard data={data} />
+        {/* Linha 3: Listas Rápidas */}
+        <div className="col-span-1 md:col-span-2 lg:col-span-4">
+          <ObrigacoesRecentesCard />
+        </div>
+      </div>
 
       {/* Última atualização */}
       <div className="text-center pt-4 border-t">
@@ -146,31 +180,41 @@ interface AdminDashboardProps {
 function AdminDashboard({ data }: AdminDashboardProps) {
   return (
     <div className="space-y-6">
-      {/* Widgets Financeiros - Usando ResponsiveGrid */}
-      <ResponsiveGrid
-        columns={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 3 }}
-        gap={4}
-      >
-        <WidgetSaldoContas />
-        <WidgetContasPagarReceber />
-        <WidgetAlertasFinanceiros />
-      </ResponsiveGrid>
-
-      {/* Fluxo de Caixa e Despesas - Layout responsivo */}
-      <ResponsiveGrid
-        columns={{ xs: 1, sm: 1, md: 1, lg: 3, xl: 3 }}
-        gap={4}
-      >
-        <div className="lg:col-span-2">
-          <WidgetFluxoCaixa />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <Typography.H3>Dashboard Administrador</Typography.H3>
+          <Typography.Muted>
+            Visão geral do escritório.
+          </Typography.Muted>
         </div>
-        <WidgetDespesasCategoria />
-      </ResponsiveGrid>
+      </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {/* Linha 1: KPIs */}
+        <FinancialMetricCards />
 
-      <WidgetOrcamentoAtual />
+        {/* Linha 2: Gráficos */}
+        <div className="md:col-span-2 lg:col-span-3">
+            <WidgetFluxoCaixa />
+        </div>
+        <div className='lg:col-span-1'>
+            <WidgetDespesasCategoria />
+        </div>
 
-      {/* Dashboard Sortable */}
-      <SortableAdminDashboard data={data} />
+        {/* Linha 3: Listas Rápidas */}
+        <div className="col-span-1 md:col-span-2 lg:col-span-4">
+          <ObrigacoesRecentesCard />
+        </div>
+      </div>
+      {/* Última atualização */}
+      <div className="text-center pt-4 border-t">
+        <Typography.Muted className="text-xs">
+          Última atualização:{' '}
+          {new Date(data.ultimaAtualizacao).toLocaleString('pt-BR', {
+            dateStyle: 'short',
+            timeStyle: 'short',
+          })}
+        </Typography.Muted>
+      </div>
     </div>
   );
 }

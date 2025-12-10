@@ -184,6 +184,7 @@
     "swr": "^2.3.6",
     "tailwind-merge": "^3.4.0",
     "tailwind-scrollbar-hide": "^4.0.0",
+    "tailwindcss-animate": "^1.0.7",
     "use-file-picker": "^2.1.2",
     "uuid": "^13.0.0",
     "vaul": "^1.1.2",

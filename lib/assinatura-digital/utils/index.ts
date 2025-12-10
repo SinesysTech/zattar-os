@@ -5,30 +5,8 @@ export { generateDummyBase64Image, generateMockDataForPreview } from './mock-dat
 export * from './rich-text-parser';
 export * from './markdown-renderer';
 
+// Device fingerprint for legal compliance
+export { collectDeviceFingerprint } from './device-fingerprint';
+export type { DeviceFingerprintData } from '@/backend/types/assinatura-digital/types';
+
 // Template formatting utilities
-export {
-  formatFileSize,
-  formatTemplateStatus,
-  getStatusBadgeVariant,
-  truncateText,
-  getTemplateDisplayName,
-} from './format-template';
-
-// Formulario utilities
-export {
-  getFormularioDisplayName,
-  formatBooleanBadge,
-  getBooleanBadgeVariant,
-  getAtivoBadgeTone,
-  formatAtivoStatus,
-  getTemplatePreviewText,
-} from './formulario-utils';
-
-// Segmento utilities (generateSlug is the canonical source)
-export {
-  generateSlug,
-  validateSlugFormat,
-  getSegmentoDisplayName,
-  formatAtivoBadge,
-  getAtivoBadgeVariant,
-} from './segmento-utils';

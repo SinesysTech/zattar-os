@@ -8,6 +8,9 @@ import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import { v4 as uuidv4 } from 'uuid'; // Comment 6: Para gerar requestId único
 import { API_ROUTES } from "@/lib/assinatura-digital/constants/apiRoutes";
+import { TERMOS_VERSAO_ATUAL } from "@/lib/assinatura-digital/constants/termos";
+import { collectDeviceFingerprint } from "@/lib/assinatura-digital/utils";
+import type { DeviceFingerprintData } from "@/backend/types/assinatura-digital/types";
 import {
   validateSignatureQuality,
   validatePhotoQuality,
@@ -76,6 +79,9 @@ export default function AssinaturaManuscritaStep() {
   } = useFormularioStore();
 
   const handleContinuar = async () => {
+    // Extrair dados de termos do store
+    const { termosAceite, termosVersao, termosDataAceite } = useFormularioStore.getState();
+
     // Verificar se assinatura foi desenhada
     if (canvasRef.current?.isEmpty()) {
       toast.error("Por favor, assine no campo acima");
@@ -98,6 +104,23 @@ export default function AssinaturaManuscritaStep() {
         return;
       }
 
+      // Validar aceite de termos (obrigatório)
+      if (!termosAceite || termosAceite !== true) {
+        toast.error("Você deve aceitar os termos antes de assinar");
+        setLoading(false);
+        setSubmitting(false);
+        return;
+      }
+
+      if (!termosVersao || !termosDataAceite) {
+        toast.error("Dados de aceite de termos incompletos. Volte à etapa de termos.");
+        setLoading(false);
+        setSubmitting(false);
+        return;
+      }
+
+      // IMPORTANTE: Foto é obrigatória para conformidade MP 2.200-2 quando foto_necessaria=true
+      // Sem foto, não há evidência biométrica suficiente para assinatura eletrônica avançada
       // Validar foto apenas se necessária (baseado em formularioFlowConfig.foto_necessaria)
       const fotoNecessaria = formularioFlowConfig?.foto_necessaria ?? true; // Padrão: true se undefined
 
@@ -116,6 +139,20 @@ export default function AssinaturaManuscritaStep() {
           setSubmitting(false);
           return;
         }
+      }
+
+      // Coletar device fingerprint para auditoria
+      let deviceFingerprint: DeviceFingerprintData | null = null;
+      try {
+        deviceFingerprint = await collectDeviceFingerprint();
+        console.log('📱 Device fingerprint coletado:', {
+          resolution: deviceFingerprint.screen_resolution,
+          platform: deviceFingerprint.platform,
+          hardwareConcurrency: deviceFingerprint.hardware_concurrency,
+        });
+      } catch (error) {
+        console.warn('⚠️ Falha ao coletar device fingerprint (não crítico):', error);
+        // Não bloquear assinatura se fingerprint falhar
       }
 
       // Validar segmentoId
@@ -235,7 +272,17 @@ export default function AssinaturaManuscritaStep() {
           foto: {
             capturada: !!fotoBase64,
             necessaria: fotoNecessaria,
-          }
+          },
+          termos: {
+            aceite: termosAceite,
+            versao: termosVersao,
+            dataAceite: termosDataAceite,
+          },
+          deviceFingerprint: {
+            coletado: !!deviceFingerprint,
+            platform: deviceFingerprint?.platform,
+            resolution: deviceFingerprint?.screen_resolution,
+          },
         });
       } else {
         // Em produção, logar apenas IDs técnicos
@@ -346,7 +393,16 @@ export default function AssinaturaManuscritaStep() {
         segmento_id: segmentoId,
         segmento_nome: segmentoNome,
         sessao_id: validSessaoId, // UUID para agrupar múltiplas assinaturas da mesma sessão
+
+        // Conformidade legal MP 2.200-2
+        termos_aceite: termosAceite,
+        termos_aceite_versao: termosVersao, // Renomeado de termos_versao para alinhar com backend
       };
+
+      // Incluir device fingerprint se coletado
+      if (deviceFingerprint) {
+        basePayload.dispositivo_fingerprint_raw = deviceFingerprint;
+      }
 
       // Incluir IP apenas se for válido (não "unknown")
       // Se metadados de segurança são obrigatórios, já teríamos bloqueado acima
@@ -547,6 +603,7 @@ export default function AssinaturaManuscritaStep() {
       const primeiroResultado = resultados[0];
 
       // Comment 12: Montar objeto de dados de assinatura sem spreads de undefined
+      // Comment 3: Incluir dispositivo_fingerprint_raw no objeto de dados de assinatura
       const dadosAssinatura: {
         assinatura_id: number | null;
         assinatura_base64: string;
@@ -558,6 +615,7 @@ export default function AssinaturaManuscritaStep() {
         longitude?: number;
         geolocation_accuracy?: number;
         geolocation_timestamp?: string;
+        dispositivo_fingerprint_raw?: DeviceFingerprintData | null;
       } = {
         assinatura_id: primeiroResultado.assinatura_id,
         assinatura_base64: assinatura,
@@ -565,6 +623,8 @@ export default function AssinaturaManuscritaStep() {
         ip_address: ip,
         user_agent: userAgent,
         data_assinatura: new Date().toISOString(),
+        // Comment 3: Incluir fingerprint do dispositivo (pode ser null se coleta falhou)
+        dispositivo_fingerprint_raw: deviceFingerprint,
       };
 
       // Comment 12: Incluir geolocalização somente se latitude E longitude válidos

@@ -9,6 +9,7 @@ import CapturaFotoStep from "@/components/assinatura-digital/capture/captura-fot
 import GeolocationStep from "@/components/assinatura-digital/capture/geolocation-step";
 import VisualizacaoPdfStep from "./visualizacao-pdf-step";
 import VisualizacaoMarkdownStep from "./visualizacao-markdown-step";
+import TermosAceiteStep from "./termos-aceite-step";
 import AssinaturaManuscritaStep from "./assinatura-manuscrita-step";
 import Sucesso from "./sucesso";
 import { Loader2, AlertCircle } from "lucide-react";
@@ -72,6 +73,16 @@ export default function FormularioContainer() {
       console.log('⏭️ Etapa de geolocalização ignorada (formulario.geolocation_necessaria não é true)');
     }
 
+    // Etapa de aceite de termos (sempre obrigatória para conformidade legal)
+    configs.push({ 
+      id: 'termos', 
+      index: currentIndex++, 
+      component: 'TermosAceiteStep', 
+      required: true, 
+      enabled: true 
+    });
+    console.log('📋 Etapa de aceite de termos adicionada ao fluxo (índice:', currentIndex - 1, ')');
+
     // Etapas finais sempre presentes
     configs.push({ id: 'assinatura', index: currentIndex++, component: 'AssinaturaManuscritaStep', required: true, enabled: true });
     configs.push({ id: 'sucesso', index: currentIndex++, component: 'Sucesso', required: true, enabled: true });
@@ -81,6 +92,7 @@ export default function FormularioContainer() {
       etapas: configs.map(c => c.component),
       incluiFoto: configs.some(c => c.component === 'CapturaFotoStep'),
       incluiGeolocation: configs.some(c => c.component === 'GeolocationStep'),
+      incluiTermos: configs.some(c => c.component === 'TermosAceiteStep')
     });
 
     return configs;
@@ -311,6 +323,8 @@ export default function FormularioContainer() {
         return <CapturaFotoStep />;
       case 'GeolocationStep':
         return <GeolocationStep />;
+      case 'TermosAceiteStep':
+        return <TermosAceiteStep />;
       case 'AssinaturaManuscritaStep':
         return <AssinaturaManuscritaStep />;
       case 'Sucesso':

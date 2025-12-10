@@ -19,6 +19,7 @@ interface DetailSheetProps {
   children: React.ReactNode;
   footer?: React.ReactNode;
   className?: string;
+  side?: "left" | "right";
 }
 
 export function DetailSheet({
@@ -29,10 +30,12 @@ export function DetailSheet({
   children,
   footer,
   className,
+  side = "right",
 }: DetailSheetProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
+        side={side}
         className={cn(
           'w-[400px] sm:w-[540px] flex flex-col h-full',
           className

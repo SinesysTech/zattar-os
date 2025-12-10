@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Command Menu (Cmd+K) para navegação e ações rápidas
+ * Command Menu (Cmd/Ctrl+Shift+D) para navegação e ações rápidas de documentos
  */
 
 import * as React from 'react';
@@ -48,10 +48,11 @@ export function CommandMenu({
   const [searchResults, setSearchResults] = React.useState<DocumentoComUsuario[]>([]);
   const [loading, setLoading] = React.useState(false);
 
-  // Atalho de teclado global
+  // Atalho de teclado específico para documentos (Cmd/Ctrl+Shift+D)
+  // O atalho Cmd/Ctrl+K é reservado para o CommandMenu global
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+      if (e.key === 'd' && (e.metaKey || e.ctrlKey) && e.shiftKey) {
         e.preventDefault();
         setOpen((open) => !open);
       }

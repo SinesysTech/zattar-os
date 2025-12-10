@@ -222,4 +222,71 @@
   h6 {
     @apply font-heading text-foreground;
   }
+
+  /* Micro-interações: Transições suaves em elementos interativos */
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  [role="button"] {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  /* Melhoria de foco de teclado usando sistema de ring do Tailwind/shadcn */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+/* --- ESTILOS DE IMPRESSÃO --- */
+@media print {
+  /* Ocultar elementos de navegação e interativos */
+  aside,
+  header,
+  .no-print,
+  button[role="combobox"],
+  .fixed,
+  [data-radix-collection-item] {
+    display: none !important;
+  }
+
+  /* Resetar layout para fluxo de documento */
+  body,
+  main,
+  .sidebar-inset {
+    background: white !important;
+    color: black !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Ajustar Cards para impressão */
+  .bg-card {
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  /* Normalizar tabelas */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  th,
+  td {
+    border: 1px solid #e5e7eb !important;
+    color: black !important;
+  }
+
+  /* Mostrar URLs de links (útil para contexto jurídico) */
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
 }

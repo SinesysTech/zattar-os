@@ -45,7 +45,7 @@ export interface ManifestData {
 
   // Evidências biométricas (data URLs)
   evidencias: {
-    fotoBase64: string; // Selfie obrigatória
+    fotoBase64?: string; // Selfie (obrigatória quando formulario.foto_necessaria=true)
     assinaturaBase64: string; // Rubrica
   };
 
@@ -392,8 +392,8 @@ export async function appendManifestPage(
       throw new Error('Protocolo e hash original são obrigatórios para manifesto');
     }
 
-    if (!manifestData.evidencias.fotoBase64 || !manifestData.evidencias.assinaturaBase64) {
-      throw new Error('Foto e assinatura são obrigatórias para manifesto (conformidade MP 2.200-2)');
+    if (!manifestData.evidencias.assinaturaBase64) {
+      throw new Error('Assinatura é obrigatória para manifesto');
     }
 
     if (!manifestData.signatario.nomeCompleto || !manifestData.signatario.cpf) {
@@ -409,7 +409,9 @@ export async function appendManifestPage(
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
     // Embedar imagens (com labels para mensagens de erro contextualizadas)
-    const fotoImage = await embedImageFromDataUrl(pdfDoc, manifestData.evidencias.fotoBase64, 'foto');
+    const fotoImage = manifestData.evidencias.fotoBase64
+      ? await embedImageFromDataUrl(pdfDoc, manifestData.evidencias.fotoBase64, 'foto')
+      : null;
     const assinaturaImage = await embedImageFromDataUrl(pdfDoc, manifestData.evidencias.assinaturaBase64, 'assinatura');
 
     // Constantes de layout
@@ -645,36 +647,38 @@ export async function appendManifestPage(
     });
     currentY -= 20;
 
-    // Layout lado a lado: Foto à esquerda, Assinatura à direita
+    // Layout: Foto à esquerda (se presente), Assinatura à direita
     const imageY = currentY - 120;
 
-    // Foto (lado esquerdo)
-    page.drawText('Foto (Selfie) no Momento da Assinatura:', {
-      x: marginLeft,
-      y: currentY,
-      size: 10,
-      font: fontRegular,
-      color: textColor,
-    });
+    // Foto (lado esquerdo) - opcional
+    if (fotoImage) {
+      page.drawText('Foto (Selfie) no Momento da Assinatura:', {
+        x: marginLeft,
+        y: currentY,
+        size: 10,
+        font: fontRegular,
+        color: textColor,
+      });
 
-    // Calcular dimensões mantendo proporção para foto (max 120x120)
-    const fotoDims = fotoImage.scale(1);
-    const fotoMaxSize = 120;
-    const fotoScale = Math.min(fotoMaxSize / fotoDims.width, fotoMaxSize / fotoDims.height);
-    const fotoWidth = fotoDims.width * fotoScale;
-    const fotoHeight = fotoDims.height * fotoScale;
+      // Calcular dimensões mantendo proporção para foto (max 120x120)
+      const fotoDims = fotoImage.scale(1);
+      const fotoMaxSize = 120;
+      const fotoScale = Math.min(fotoMaxSize / fotoDims.width, fotoMaxSize / fotoDims.height);
+      const fotoWidth = fotoDims.width * fotoScale;
+      const fotoHeight = fotoDims.height * fotoScale;
 
-    page.drawImage(fotoImage, {
-      x: marginLeft,
-      y: imageY,
-      width: fotoWidth,
-      height: fotoHeight,
-    });
+      page.drawImage(fotoImage, {
+        x: marginLeft,
+        y: imageY,
+        width: fotoWidth,
+        height: fotoHeight,
+      });
+    }
 
-    // Assinatura (lado direito)
-    const rightColumnX = marginLeft + 180;
+    // Assinatura (lado direito se houver foto, ou lado esquerdo se não houver)
+    const assColumnX = fotoImage ? marginLeft + 180 : marginLeft;
     page.drawText('Assinatura Manuscrita Eletrônica:', {
-      x: rightColumnX,
+      x: assColumnX,
       y: currentY,
       size: 10,
       font: fontRegular,
@@ -690,7 +694,7 @@ export async function appendManifestPage(
     const assHeight = assDims.height * assScale;
 
     page.drawImage(assinaturaImage, {
-      x: rightColumnX,
+      x: assColumnX,
       y: imageY + (120 - assHeight), // Alinhar pelo topo
       width: assWidth,
       height: assHeight,

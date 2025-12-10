@@ -129,7 +129,7 @@ interface TableToolbarProps {
   onSearchChange: (value: string) => void
   isSearching?: boolean
   searchPlaceholder?: string
-  filterOptions: ComboboxOption[]
+  filterOptions?: ComboboxOption[]
   filterGroups?: FilterGroup[]
   selectedFilters: string[]
   onFiltersChange: (filters: string[]) => void
@@ -199,7 +199,7 @@ export function TableToolbar({
       const allValues = filterGroups.flatMap(group => group.options.map(opt => opt.value))
       onFiltersChange(allValues)
     } else {
-      onFiltersChange(filterOptions.map((opt) => opt.value))
+      onFiltersChange((filterOptions ?? []).map((opt) => opt.value))
     }
   }
 
@@ -423,7 +423,7 @@ export function TableToolbar({
                   onValueChange={setFilterSearch}
                 />
                 {/* Botões de ação */}
-                {filterOptions.length > 0 && (
+                {filterOptions && filterOptions.length > 0 && (
                   <div className="flex gap-2 p-2 border-b">
                     <Button
                       type="button"
@@ -453,7 +453,7 @@ export function TableToolbar({
                       Nenhum filtro encontrado.
                     </div>
                   </CommandEmpty>
-                  {filterOptions.map((option) => {
+                  {(filterOptions ?? []).map((option) => {
                     const isSelected = selectedFilters.includes(option.value)
                     return (
                       <CommandItem
