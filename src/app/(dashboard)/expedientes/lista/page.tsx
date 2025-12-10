@@ -1,8 +1,27 @@
-'use client';
+import { Metadata } from 'next';
+import { ExpedientesList } from '@/features/expedientes/components/expedientes-list';
+import { PageShell } from '@/components/shared/page-shell';
+import { actionListarExpedientes } from '@/features/expedientes/actions';
 
-import { ExpedientesContent } from '../components/expedientes-page-content';
+export const metadata: Metadata = {
+  title: 'Expedientes | Lista',
+  description: 'Lista de expedientes e intimações',
+};
 
-export default function ExpedientesListaPage() {
-  return <ExpedientesContent visualizacao="lista" />;
+export default async function ExpedientesListaPage() {
+  // Pre-fetch data serverside (optional)
+  const initialData = await actionListarExpedientes({ page: 1, limit: 10 }, { pendentes: true });
+
+  return (
+    <PageShell
+        title="Expedientes"
+        breadcrumb={[
+            { label: 'Dashboard', href: '/dashboard' },
+            { label: 'Expedientes', href: '/expedientes' },
+            { label: 'Lista', href: '/expedientes/lista', active: true },
+        ]}
+    >
+      <ExpedientesList initialData={initialData.success ? initialData.data : undefined} />
+    </PageShell>
+  );
 }
-
