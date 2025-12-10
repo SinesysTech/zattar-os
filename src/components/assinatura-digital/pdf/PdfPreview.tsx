@@ -8,10 +8,10 @@ import { PdfPreviewProps, PdfLoadState, DEFAULT_ZOOM_CONFIG } from '@/types/assi
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-// Configurar o worker do PDF.js
+// Configurar o worker do PDF.js (versão 5.x)
 if (typeof window !== 'undefined') {
-  // Usar a mesma configuração do PdfPreviewDynamic que funciona
-  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+  // pdfjs-dist v5 usa um novo caminho para o worker
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 }
 
 /**

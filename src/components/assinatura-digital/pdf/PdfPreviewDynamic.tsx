@@ -18,8 +18,9 @@ const PdfPreview = dynamic(() => import('./PdfPreview'), {
 
 export default function PdfPreviewDynamic(props: PdfPreviewProps) {
   // useEffect garante que a configuração do worker só rode no cliente
+  // pdfjs-dist v5 usa um novo caminho para o worker
   useEffect(() => {
-    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+    pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
   }, []);
 
   return <PdfPreview {...props} />;
