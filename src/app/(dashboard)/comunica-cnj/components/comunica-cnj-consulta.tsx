@@ -6,6 +6,7 @@ import { ComunicaCNJResultsTable } from './comunica-cnj-results-table';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, Info } from 'lucide-react';
 import type { ComunicacaoItem, RateLimitStatus } from '@/core/comunica-cnj';
+import { actionConsultarComunicacoes } from '@/features/captura/actions/comunica-cnj-actions';
 
 interface SearchResult {
   comunicacoes: ComunicacaoItem[];
@@ -32,27 +33,16 @@ export function ComunicaCNJConsulta() {
     setError(null);
 
     try {
-      // Montar query string
-      const params = new URLSearchParams();
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
-          params.append(key, String(value));
-        }
-      });
+      const result = await actionConsultarComunicacoes(filters as any);
 
-      const response = await fetch(`/api/comunica-cnj/consulta?${params.toString()}`);
-      const data = await response.json();
-
-      if (!response.ok) {
-        if (response.status === 429) {
-          setError(`Rate limit atingido. Aguarde ${data.retryAfter || 60} segundos.`);
-        } else {
-          setError(data.error || 'Erro ao consultar comunicações');
-        }
+      if (!result.success) {
+        setError(result.error || 'Erro ao consultar comunicações');
         return;
       }
 
-      setResult(data.data);
+      if (result.data) {
+        setResult(result.data as any);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao consultar comunicações');
     } finally {

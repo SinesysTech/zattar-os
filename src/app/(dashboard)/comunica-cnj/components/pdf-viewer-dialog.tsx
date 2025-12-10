@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Download, Loader2, AlertCircle, ExternalLink } from 'lucide-react';
+import { actionObterCertidao } from '@/features/captura/actions/comunica-cnj-actions';
 
 interface PdfViewerDialogProps {
   hash: string | null;
@@ -38,29 +39,22 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
       setError(null);
 
       try {
-        const response = await fetch(`/api/comunica-cnj/certidao/${hash}`);
+        const result = await actionObterCertidao(hash);
 
-        if (!response.ok) {
-          const data = await response.json().catch(() => ({}));
-          throw new Error(data.error || 'Erro ao carregar certidão');
+        if (!result.success || !result.data) {
+          throw new Error(result.error || 'Erro ao carregar certidão');
         }
 
-        // Verificar se é PDF
-        const contentType = response.headers.get('content-type');
-        if (contentType?.includes('application/json')) {
-          // Se retornou JSON, pode ser a URL do PDF
-          const data = await response.json();
-          if (data.url) {
-            setPdfUrl(data.url);
-          } else {
-            throw new Error('URL do PDF não encontrada');
-          }
-        } else {
-          // Se retornou o próprio PDF, criar blob URL
-          const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-          setPdfUrl(url);
+        // Converter base64 para blob URL
+        const base64 = result.data;
+        const binaryString = atob(base64);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
         }
+        const blob = new Blob([bytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        setPdfUrl(url);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro ao carregar certidão');
       } finally {

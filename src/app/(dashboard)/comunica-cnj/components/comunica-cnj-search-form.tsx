@@ -31,6 +31,7 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Check, ChevronDown, Loader2, Search, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
+import { actionListarTribunaisDisponiveis } from '@/features/captura/actions/comunica-cnj-actions';
 
 // Ordem de prioridade dos grupos de tribunais
 const TRIBUNAL_GROUP_ORDER = ['TRT', 'TRF', 'TRE', 'STJ', 'STF', 'TST', 'TSE', 'STM', 'CNJ', 'TJ', 'TJMM', 'TJMMG'];
@@ -164,11 +165,10 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
   useEffect(() => {
     const fetchTribunais = async () => {
       try {
-        const response = await fetch('/api/comunica-cnj/tribunais');
-        const data = await response.json();
-        if (data.success && data.data?.tribunais) {
+        const result = await actionListarTribunaisDisponiveis();
+        if (result.success && result.data) {
           // Deduplicar tribunais por sigla
-          const uniqueTribunais = data.data.tribunais.reduce((acc: TribunalCNJ[], tribunal: TribunalCNJ) => {
+          const uniqueTribunais = result.data.reduce((acc: TribunalCNJ[], tribunal: TribunalCNJ) => {
             if (!acc.find(t => t.sigla === tribunal.sigla)) {
               acc.push(tribunal);
             }

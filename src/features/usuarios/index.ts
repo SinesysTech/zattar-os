@@ -77,3 +77,4 @@ export { CargosManagementDialog } from './components/cargos/cargos-management-di
 export { RedefinirSenhaDialog } from './components/password/redefinir-senha-dialog';
 export { AvatarEditDialog } from './components/avatar/avatar-edit-dialog';
 export { PermissoesMatriz } from './components/permissions/permissoes-matriz';
+export { UsuariosPageContent } from './components/usuarios-page-content';

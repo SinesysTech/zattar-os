@@ -5,7 +5,7 @@
  * Substitui /api/dashboard/metricas/route.ts
  */
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/backend/utils/supabase/server';
 import * as service from '../service';
 import type { MetricasEscritorio, CargaUsuario, PerformanceAdvogado } from '../types';
 

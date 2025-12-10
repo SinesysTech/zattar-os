@@ -42,6 +42,7 @@ import {
 import { useIsMobile } from '@/app/_lib/hooks/use-mobile';
 import Link from 'next/link';
 import type { ComunicacaoCNJ, ComunicacaoItem } from '@/core/comunica-cnj';
+import { actionListarComunicacoesCapturadas } from '@/features/captura/actions/comunica-cnj-actions';
 
 /**
  * Componente para listar comunicações já capturadas do banco
@@ -64,37 +65,28 @@ export function ComunicaCNJCapturadas() {
     setError(null);
 
     try {
-      // Montar query string com filtros
-      const params = new URLSearchParams();
+      // Montar parâmetros de filtro
+      const params: any = {};
       if (searchTerm) {
-        params.append('numeroProcesso', searchTerm);
+        params.numeroProcesso = searchTerm;
       }
       if (tribunalFilter !== 'all') {
-        params.append('siglaTribunal', tribunalFilter);
+        params.siglaTribunal = tribunalFilter;
       }
       if (vinculacaoFilter === 'nao_vinculadas') {
-        params.append('semExpediente', 'true');
-      } else if (vinculacaoFilter === 'vinculadas') {
-        // Não podemos filtrar por vinculadas diretamente, mas podemos buscar todas
-        // e filtrar no cliente. Alternativamente, poderíamos adicionar um parâmetro
-        // no endpoint, mas por enquanto vamos filtrar no cliente.
+        params.semExpediente = true;
       }
 
-      const response = await fetch(`/api/comunica-cnj/capturadas?${params.toString()}`);
+      const result = await actionListarComunicacoesCapturadas(params);
 
-      if (!response.ok) {
-        if (response.status === 401) {
-          setError('Não autenticado. Faça login para continuar.');
-          setComunicacoes([]);
-          return;
-        }
-        throw new Error('Erro ao buscar comunicações');
+      if (!result.success) {
+        setError(result.error || 'Erro ao buscar comunicações');
+        setComunicacoes([]);
+        return;
       }
 
-      const data = await response.json();
-      
-      if (data.success && data.data) {
-        let comunicacoes = data.data.comunicacoes || [];
+      if (result.data) {
+        let comunicacoes = result.data.data || [];
         
         // Filtrar por vinculação se necessário (já que o endpoint não suporta isso diretamente)
         if (vinculacaoFilter === 'vinculadas') {

@@ -81,12 +81,17 @@ export const service = {
         return { sucesso: false, erro: 'Usuário não encontrado' };
       }
 
-      // Validar schema parcial
-      // Preparamos objeto dummy para validar campos isolados se necessário, 
-      // mas o atualizarUsuarioSchema espera um objeto com id.
-      // Aqui validaremos apenas os campos presentes
+      // Validar schema parcial com Zod
+      // Criar objeto completo para validação (schema parcial com id)
+      const dadosParaValidar = { id, ...dados };
+      const parseResult = atualizarUsuarioSchema.safeParse(dadosParaValidar);
       
-      // Duplicatas
+      if (!parseResult.success) {
+        const erroMsg = parseResult.error.errors.map(e => e.message).join(', ');
+        return { sucesso: false, erro: erroMsg };
+      }
+
+      // Validar duplicatas
       if (dados.cpf) {
         const cpfNormalizado = normalizarCpf(dados.cpf);
         if (cpfNormalizado !== usuarioAtual.cpf) {
@@ -104,6 +109,14 @@ export const service = {
           if (existe && existe.id !== id) {
              return { sucesso: false, erro: 'E-mail corporativo já cadastrado para outro usuário' };
           }
+        }
+      }
+
+      // Validar cargo se informado
+      if (dados.cargoId) {
+        const cargo = await usuarioRepository.getCargoById(dados.cargoId);
+        if (!cargo) {
+          return { sucesso: false, erro: 'Cargo não encontrado' };
         }
       }
 

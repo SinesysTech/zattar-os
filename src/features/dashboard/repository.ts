@@ -9,7 +9,7 @@
  * - backend/dashboard/services/persistence/dashboard-metricas.persistence.ts
  */
 
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/backend/utils/supabase/server';
 import type {
   ProcessoResumo,
   AudienciasResumo,
