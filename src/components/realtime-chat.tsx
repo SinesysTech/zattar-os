@@ -1,3 +1,23 @@
+/**
+ * @deprecated Este componente está DEPRECIADO e será removido na próxima versão.
+ * 
+ * **Plano de Migração**: Consulte /MIGRACAO_CHAT.md para detalhes completos.
+ * 
+ * **Migrar para**: `src/components/modules/chat/chat-window.tsx`
+ * 
+ * **Consumidores Atuais**:
+ * - `src/components/chat/chat-interface.tsx` - Usar `ChatWindow` no lugar
+ * - `src/components/documentos/document-chat.tsx` - Criar novo componente baseado em `ChatWindow`
+ * 
+ * **Diferenças da nova arquitetura**:
+ * - Nova usa Server Actions ao invés de API routes
+ * - Nova usa Repository pattern com Result
+ * - Nova tem melhor separação de responsabilidades
+ * - Nova usa tipos do core (`MensagemComUsuario`)
+ * 
+ * **Não adicione novas dependências neste componente**.
+ */
+
 'use client'
 
 import { cn } from '@/lib/utils'

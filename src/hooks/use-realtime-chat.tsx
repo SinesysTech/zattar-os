@@ -1,6 +1,28 @@
 /**
- * @.qoder/repowiki/en/content/Core Modules/Client Management Module/Partes Deprecated Services.md Este arquivo será removido na próxima versão.
- * Use `src/hooks/modules/chat/use-chat-subscription.ts` em vez disso.
+ * @deprecated Este hook está DEPRECIADO e será removido na próxima versão.
+ * 
+ * **Plano de Migração**: Consulte /MIGRACAO_CHAT.md para detalhes completos.
+ * 
+ * **Migrar para**: `src/core/chat` + Server Actions (`src/app/actions/chat.ts`)
+ * 
+ * **Motivo da Depreciação**:
+ * - Arquitetura legada sem separação de camadas
+ * - Mistura de lógica de UI e dados
+ * - Falta de type safety com Result pattern
+ * - Código duplicado com nova arquitetura
+ * 
+ * **Consumidores Atuais** (apenas tipo `ChatMessage`):
+ * - `src/components/chat/chat-interface.tsx`
+ * - `src/components/chat/chat-message-with-files.tsx`
+ * - `src/components/chat-message.tsx`
+ * - `src/components/documentos/document-chat.tsx`
+ * 
+ * **Ações Necessárias**:
+ * 1. Mover tipo `ChatMessage` para `src/core/chat/domain.ts`
+ * 2. Atualizar todos os imports para usar tipos do core
+ * 3. Remover este arquivo após conclusão da migração
+ * 
+ * **Não adicione novas dependências neste arquivo**.
  */
 
 'use client'

@@ -1,6 +1,29 @@
 /**
- * @.qoder/repowiki/en/content/Core Modules/Client Management Module/Partes Deprecated Services.md Este arquivo será removido na próxima versão.
- * Use `src/core/chat` e `src/app/actions/chat.ts` em vez disso.
+ * @deprecated Esta API route está DEPRECIADA e será removida na próxima versão.
+ * 
+ * **Plano de Migração**: Consulte /MIGRACAO_CHAT.md para detalhes completos.
+ * 
+ * **Migrar para**: Server Actions em `src/app/actions/chat.ts`
+ * - `listarSalasChat` → `actionListarSalas`
+ * - `criarSalaChat` → `actionCriarSala`
+ * - `buscarSalaGeral` → `actionBuscarSalaGeral`
+ * 
+ * **Consumidores Atuais**:
+ * - `src/components/chat/chat-interface.tsx` - API calls diretos
+ * - `src/components/documentos/document-chat.tsx` - API calls diretos
+ * 
+ * **Benefícios da Nova Arquitetura**:
+ * - Type safety com Result pattern
+ * - Validação com Zod schemas
+ * - Melhor tratamento de erros
+ * - Cache automático do Next.js
+ * - Sem necessidade de API routes
+ * 
+ * **Não adicione novos endpoints neste arquivo**.
+ * 
+ * **Mantido temporariamente para**:
+ * - Compatibilidade retroativa com componentes legados
+ * - Migração gradual dos consumidores
  */
 
 /**
