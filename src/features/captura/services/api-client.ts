@@ -319,36 +319,6 @@ export async function buscarCapturaLog(id: number): Promise<CapturaApiResponse> 
 }
 
 /**
- * Deletar registro de captura por ID
- */
-export async function deletarCapturaLog(id: number): Promise<CapturaApiResponse> {
-  try {
-    const response = await fetch(`/api/captura/historico/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return {
-        success: false,
-        error: getApiErrorMessage(data, response),
-      };
-    }
-
-    return data;
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Erro desconhecido ao deletar captura',
-    };
-  }
-}
-
-/**
  * Listar logs de recovery do MongoDB
  */
 export async function listarRecoveryLogs(
