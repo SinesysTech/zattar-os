@@ -10,6 +10,7 @@
 import * as React from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { actionUploadArquivo } from '@/features/documentos/actions/uploads-actions';
 
 /**
  * Arquivo enviado com sucesso
@@ -49,40 +50,45 @@ export function useEditorUpload({
       try {
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('documento_id', String(documentoId));
 
-        // Simular progresso (fetch não suporta progresso de upload nativo)
-        let currentProgress = 0;
+        // Simular progresso (Server Actions não suportam progresso nativo)
         const progressInterval = setInterval(() => {
-          currentProgress = Math.min(currentProgress + 5, 90);
-          setProgress(currentProgress);
-          onUploadProgress?.(currentProgress);
+          setProgress((prev) => {
+            const next = Math.min(prev + 5, 90);
+            onUploadProgress?.(next);
+            return next;
+          });
         }, 100);
 
-        const response = await fetch(`/api/documentos/${documentoId}/upload`, {
-          method: 'POST',
-          body: formData,
-        });
+        const result = await actionUploadArquivo(formData);
 
         clearInterval(progressInterval);
 
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
-          throw new Error(data.error || 'Erro ao fazer upload');
+        if (!result.success || !result.data) {
+          throw new Error(result.error || 'Erro ao fazer upload');
         }
+
+        const data = result.data as unknown as { 
+          b2_key: string; 
+          nome_arquivo: string; 
+          tamanho_bytes: number; 
+          tipo_mime: string; 
+          b2_url: string; 
+        }; // Casting to avoid complex type imports if not available directly or just map properties
 
         setProgress(100);
         onUploadProgress?.(100);
 
-        const result: UploadedFile = {
-          key: data.data.b2_key,
-          name: data.data.nome_arquivo,
-          size: data.data.tamanho_bytes,
-          type: data.data.tipo_mime,
-          url: data.data.b2_url,
+        const uploadedResult: UploadedFile = {
+          key: data.b2_key,
+          name: data.nome_arquivo,
+          size: data.tamanho_bytes,
+          type: data.tipo_mime,
+          url: data.b2_url,
         };
 
-        setUploadedFile(result);
+        setUploadedFile(uploadedResult);
         onUploadComplete?.(result);
 
         return result;

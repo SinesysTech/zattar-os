@@ -29,6 +29,7 @@ import {
   validateFileType,
   validateFileSize,
 } from '@/backend/documentos/services/upload/b2-upload.service'; // Keep as utility
+import { generatePresignedUrl as generatePresignedDownloadUrl } from '@/backend/storage/backblaze-b2.service';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 
 // ============================================================================
@@ -472,6 +473,16 @@ export async function gerarPresignedUrl(
 ): Promise<{ uploadUrl: string; key: string; publicUrl: string }> {
   // TODO: Implementar validação de usuário e limites de upload antes de gerar URL
   return generatePresignedUploadUrl({ fileName: filename, contentType });
+}
+
+export async function gerarUrlDownload(
+  key: string,
+  usuario_id: number
+): Promise<string> {
+  // TODO: Implementar validação de acesso ao documento pelo key?
+  // O ideal seria passar o documento_id, verificar acesso e pegar a key.
+  // Mas por enquanto vamos manter a compatibilidade com a API antiga que recebe key.
+  return generatePresignedDownloadUrl(key);
 }
 
 // ============================================================================

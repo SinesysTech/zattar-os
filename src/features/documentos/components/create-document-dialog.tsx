@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import { actionCriarDocumento } from '../actions/documentos-actions';
 
 interface CreateDocumentDialogProps {
   open: boolean;
@@ -51,21 +52,16 @@ export function CreateDocumentDialog({
     setLoading(true);
 
     try {
-      const response = await fetch('/api/documentos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          titulo: titulo.trim(),
-          descricao: descricao.trim() || null,
-          pasta_id: pastaId,
-          conteudo: [],
-        }),
-      });
+      const formData = new FormData();
+      formData.append('titulo', titulo.trim());
+      if (descricao.trim()) formData.append('descricao', descricao.trim());
+      if (pastaId) formData.append('pasta_id', pastaId.toString());
+      formData.append('conteudo', JSON.stringify([]));
 
-      const data = await response.json();
+      const result = await actionCriarDocumento(formData);
 
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao criar documento');
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Erro ao criar documento');
       }
 
       toast.success('Documento criado', { description: 'Abrindo editor...' });
@@ -76,7 +72,7 @@ export function CreateDocumentDialog({
       onOpenChange(false);
 
       // Redirecionar para editor
-      router.push(`/documentos/${data.data.id}`);
+      router.push(`/documentos/${result.data.id}`);
 
       if (onSuccess) {
         onSuccess();

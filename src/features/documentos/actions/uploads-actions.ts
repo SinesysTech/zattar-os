@@ -52,3 +52,16 @@ export async function actionGerarPresignedUrl(filename: string, contentType: str
     return { success: false, error: String(error) };
   }
 }
+
+export async function actionGerarUrlDownload(key: string) {
+  try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Não autenticado' };
+    }
+    const url = await service.gerarUrlDownload(key, user.id);
+    return { success: true, data: { url } };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
