@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import FieldMappingEditor from '@/components/assinatura-digital/editor/FieldMappingEditor';
+import FieldMappingEditor from '@/features/assinatura-digital/components/editor/FieldMappingEditor';
 import { Template } from '@/types/assinatura-digital/template.types';
 
 /**

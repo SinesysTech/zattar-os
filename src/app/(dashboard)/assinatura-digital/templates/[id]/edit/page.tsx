@@ -15,7 +15,7 @@ import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { AlertCircle, RefreshCw } from 'lucide-react';
-import FieldMappingEditor from '@/components/assinatura-digital/editor/FieldMappingEditor';
+import FieldMappingEditor from '@/features/assinatura-digital/components/editor/FieldMappingEditor';
 import { Button } from '@/components/ui/button';
 import { Template } from '@/types/assinatura-digital/template.types';
 import { Skeleton } from '@/components/ui/skeleton';

@@ -31,7 +31,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import { MarkdownRichTextEditor } from '@/components/assinatura-digital/editor/MarkdownRichTextEditor';
+import { MarkdownRichTextEditor } from '@/features/assinatura-digital/components/editor/MarkdownRichTextEditor';
 
 import {
   createTemplateSchema,
