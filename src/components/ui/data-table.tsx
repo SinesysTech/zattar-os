@@ -21,7 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Loader2, FileX } from 'lucide-react';
-import { cn } from '@/core/app/_lib/utils/utils';
+import { cn } from '@/app/_lib/utils/utils';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { TablePagination } from '@/components/shared/table-pagination';
 

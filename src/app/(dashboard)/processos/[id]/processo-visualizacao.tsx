@@ -14,11 +14,11 @@ import {
   useProcessoTimeline,
   type TimelineUnificadaMetadata,
 } from '@/app/_lib/hooks/use-processo-timeline';
-import { ProcessoHeader } from '@/core/app/(dashboard)/processos/components/processo-header';
-import { TimelineContainer } from '@/core/app/(dashboard)/processos/components/timeline-container';
-import { TimelineLoading } from '@/core/app/(dashboard)/processos/components/timeline-loading';
-import { TimelineError } from '@/core/app/(dashboard)/processos/components/timeline-error';
-import { TimelineEmpty } from '@/core/app/(dashboard)/processos/components/timeline-empty';
+import { ProcessoHeader } from '@/app/(dashboard)/processos/components/processo-header';
+import { TimelineContainer } from '@/app/(dashboard)/processos/components/timeline-container';
+import { TimelineLoading } from '@/app/(dashboard)/processos/components/timeline-loading';
+import { TimelineError } from '@/app/(dashboard)/processos/components/timeline-error';
+import { TimelineEmpty } from '@/app/(dashboard)/processos/components/timeline-empty';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 interface ProcessoVisualizacaoProps {

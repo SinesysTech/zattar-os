@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Mic, Square } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { createClient } from '@/core/app/_lib/supabase/client';
+import { createClient } from '@/app/_lib/supabase/client';
 
 interface AudioRecordButtonProps {
   onAudioRecorded: (audioInfo: {

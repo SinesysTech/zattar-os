@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/core/app/_lib/utils/utils';
+import { cn } from '@/app/_lib/utils/utils';
 
 export function Toolbar({
   className,

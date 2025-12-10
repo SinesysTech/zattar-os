@@ -50,7 +50,7 @@ import type { OrcamentoComDetalhes, ComparativoOrcamento } from '@/backend/types
 import {
   exportarComparativoCSV,
   exportarComparativoPDF,
-} from '@/core/app/_lib/orcamentos/export-orcamento';
+} from '@/app/_lib/orcamentos/export-orcamento';
 import type { RelatorioComparativo } from '@/backend/financeiro/orcamento/services/orcamento/relatorios-orcamento.service';
 
 // ============================================================================

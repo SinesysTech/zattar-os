@@ -6,7 +6,7 @@ import { requirePermission } from '@/backend/auth/require-permission';
 import { buscarAssistentePorId } from '@/backend/assistentes/services/assistente-persistence.service';
 import { atualizarAssistente } from '@/backend/assistentes/services/atualizar-assistente.service';
 import { deletarAssistente } from '@/backend/assistentes/services/deletar-assistente.service';
-import type { AtualizarAssistenteData } from '@/core/app/_lib/types/assistentes';
+import type { AtualizarAssistenteData } from '@/app/_lib/types/assistentes';
 
 /**
  * @swagger

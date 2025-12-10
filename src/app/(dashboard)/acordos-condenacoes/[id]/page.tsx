@@ -9,7 +9,7 @@ import { ParcelasTable } from '../components/parcelas-table';
 import { EditParcelaDialog } from '../components/edit-parcela-dialog';
 import { IntegracaoFinanceiraSection } from '../components/integracao-financeira-section';
 import Link from 'next/link';
-import { formatCurrency, formatDate } from '@/core/app/_lib/utils/utils';
+import { formatCurrency, formatDate } from '@/app/_lib/utils/utils';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
 import {
   AlertDialog,

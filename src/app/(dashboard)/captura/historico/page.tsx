@@ -35,7 +35,7 @@ import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/backend/types/captura/capturas-log-types';
 import type { CapturasFilters } from './components/capturas-toolbar-filters';
-import type { CodigoTRT } from '@/core/app/_lib/types/credenciais';
+import type { CodigoTRT } from '@/app/_lib/types/credenciais';
 
 /**
  * Formata data e hora ISO para formato brasileiro (DD/MM/YYYY HH:mm)

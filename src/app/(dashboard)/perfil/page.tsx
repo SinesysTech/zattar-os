@@ -20,7 +20,7 @@ import {
   formatarData,
   formatarEnderecoCompleto,
   formatarGenero,
-} from '@/core/app/_lib/utils/format-usuarios';
+} from '@/app/_lib/utils/format-usuarios';
 
 function getInitials(name: string): string {
   if (!name) return 'U';

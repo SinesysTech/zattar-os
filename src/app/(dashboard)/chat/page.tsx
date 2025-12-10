@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { chatService } from ' @/core/chat';
-import { getSupabase } from ' @/core/app/_lib/supabase';
+import { getSupabase } from ' @/app/_lib/supabase';
 import { ChatLayout } from ' @/components/modules/chat/chat-layout';
 import { ChatSidebar } from ' @/components/modules/chat/chat-sidebar';
 import { ChatWindow } from ' @/components/modules/chat/chat-window';

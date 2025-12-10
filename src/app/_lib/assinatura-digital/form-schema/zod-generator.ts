@@ -34,11 +34,11 @@ import {
   getTransformer,
   getCrossFieldValidator
 } from './validator-registry';
-import { validateCPF } from '@/core/app/_lib/assinatura-digital/validators/cpf.validator';
-import { validateCNPJ } from '@/core/app/_lib/assinatura-digital/validators/cnpj.validator';
-import { validateTelefone } from '@/core/app/_lib/assinatura-digital/validators/telefone.validator';
-import { TEXT_LIMITS } from '@/core/app/_lib/assinatura-digital/validations/business.validations';
-import { parseCPF, parseCNPJ, parseTelefone, parseCEP, parseData } from '@/core/app/_lib/assinatura-digital/formatters';
+import { validateCPF } from '@/app/_lib/assinatura-digital/validators/cpf.validator';
+import { validateCNPJ } from '@/app/_lib/assinatura-digital/validators/cnpj.validator';
+import { validateTelefone } from '@/app/_lib/assinatura-digital/validators/telefone.validator';
+import { TEXT_LIMITS } from '@/app/_lib/assinatura-digital/validations/business.validations';
+import { parseCPF, parseCNPJ, parseTelefone, parseCEP, parseData } from '@/app/_lib/assinatura-digital/formatters';
 
 /**
  * Gera schema Zod completo a partir de DynamicFormSchema

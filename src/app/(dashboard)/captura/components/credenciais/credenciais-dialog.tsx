@@ -23,7 +23,7 @@ import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
 import { useListarAdvogados } from '@/app/_lib/hooks/use-advogado';
-import type { Credencial, CodigoTRT, GrauTRT } from '@/core/app/_lib/types/credenciais';
+import type { Credencial, CodigoTRT, GrauTRT } from '@/app/_lib/types/credenciais';
 
 interface CredenciaisDialogProps {
   credencial: Credencial | null; // null = criar nova

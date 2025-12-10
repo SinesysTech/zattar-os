@@ -3,7 +3,7 @@
 // Hook para buscar audiências
 
 import { useState, useEffect, useCallback } from 'react';
-import type { AudienciasApiResponse, BuscarAudienciasParams } from '@/core/app/_lib/types/audiencias';
+import type { AudienciasApiResponse, BuscarAudienciasParams } from '@/app/_lib/types/audiencias';
 import type { Audiencia } from '@/backend/types/audiencias/types';
 
 interface UseAudienciasResult {

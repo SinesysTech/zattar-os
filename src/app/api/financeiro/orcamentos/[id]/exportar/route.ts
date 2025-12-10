@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { rgb } from 'pdf-lib';
 import { requirePermission } from '@/backend/auth/require-permission';
 import { buscarOrcamentoComDetalhes } from '@/backend/financeiro/orcamento/services/persistence/orcamento-persistence.service';
-import { gerarCSV, sanitizeFileName, formatarValor, gerarPDFBase } from '@/core/app/_lib/financeiro/export-financeiro';
+import { gerarCSV, sanitizeFileName, formatarValor, gerarPDFBase } from '@/app/_lib/financeiro/export-financeiro';
 
 interface RouteParams {
   params: Promise<{ id: string }>;

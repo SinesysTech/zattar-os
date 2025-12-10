@@ -25,11 +25,11 @@ import { AssistenteCreateDialog } from './components/assistente-create-dialog';
 import { AssistenteEditDialog } from './components/assistente-edit-dialog';
 import { AssistenteDeleteDialog } from './components/assistente-delete-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Assistente, AssistentesFilters, ViewMode } from '@/core/app/_lib/types/assistentes';
+import type { Assistente, AssistentesFilters, ViewMode } from '@/app/_lib/types/assistentes';
 import {
   formatarDataCriacao,
   truncarDescricao,
-} from '@/core/app/_lib/utils/format-assistentes';
+} from '@/app/_lib/utils/format-assistentes';
 
 const VIEW_MODE_STORAGE_KEY = 'assistentes-view-mode';
 

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { z } from 'zod';
 
-import { validateCPF } from '@/core/app/_lib/assinatura-digital/validators/cpf.validator';
-import { validateCNPJ } from '@/core/app/_lib/assinatura-digital/validators/cnpj.validator';
-import { validateTelefone } from '@/core/app/_lib/assinatura-digital/validators/telefone.validator';
+import { validateCPF } from '@/app/_lib/assinatura-digital/validators/cpf.validator';
+import { validateCNPJ } from '@/app/_lib/assinatura-digital/validators/cnpj.validator';
+import { validateTelefone } from '@/app/_lib/assinatura-digital/validators/telefone.validator';
 
 export interface AssinaturaMetrics {
   pontos: number;

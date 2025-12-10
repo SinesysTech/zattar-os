@@ -3,7 +3,7 @@
 // Hook para buscar assistentes do sistema
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { AssistentesParams, Assistente } from '@/core/app/_lib/types/assistentes';
+import type { AssistentesParams, Assistente } from '@/app/_lib/types/assistentes';
 
 interface UseAssistentesResult {
   assistentes: Assistente[];

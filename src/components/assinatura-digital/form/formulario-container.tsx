@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useFormularioStore } from "@/core/app/_lib/stores/assinatura-digital/formulario-store";
+import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
 import VerificarCPF from "./verificar-cpf";
 import DadosPessoais from "./dados-pessoais";
 import DynamicFormStep from "./dynamic-form-step";
@@ -16,7 +16,7 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import type { Template } from "@/types/assinatura-digital/template.types";
-import type { StepConfig } from "@/core/app/_lib/stores/assinatura-digital/formulario-store";
+import type { StepConfig } from "@/app/_lib/stores/assinatura-digital/formulario-store";
 
 export default function FormularioContainer() {
   const etapaAtual = useFormularioStore((state) => state.etapaAtual);

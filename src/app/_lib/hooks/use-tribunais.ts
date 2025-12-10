@@ -6,7 +6,7 @@ import type {
   TribunaisResponse,
   CriarTribunalParams,
   AtualizarTribunalParams,
-} from '@/core/app/_lib/types/tribunais';
+} from '@/app/_lib/types/tribunais';
 
 interface UseTribunaisResult {
   tribunais: TribunalConfig[];

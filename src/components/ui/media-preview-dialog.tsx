@@ -10,7 +10,7 @@ import { cva } from 'class-variance-authority';
 import { ArrowLeft, ArrowRight, Download, Minus, Plus, X } from 'lucide-react';
 import { useEditorRef } from 'platejs/react';
 
-import { cn } from '@/core/app/_lib/utils/utils';
+import { cn } from '@/app/_lib/utils/utils';
 import { useOrientation } from '@/hooks/use-orientation';
 
 const buttonVariants = cva('rounded bg-[rgba(0,0,0,0.5)] px-1', {

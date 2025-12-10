@@ -24,12 +24,12 @@ import { UsuarioEditDialog } from './components/usuario-edit-dialog';
 import { CargosManagementDialog } from './components/cargos-management-dialog';
 import { RedefinirSenhaDialog } from './components/redefinir-senha-dialog';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import type { UsuariosFilters, ViewMode } from '@/core/app/_lib/types/usuarios';
+import type { UsuariosFilters, ViewMode } from '@/app/_lib/types/usuarios';
 import {
   formatarCpf,
   formatarTelefone,
   formatarOab,
-} from '@/core/app/_lib/utils/format-usuarios';
+} from '@/app/_lib/utils/format-usuarios';
 
 const VIEW_MODE_STORAGE_KEY = 'usuarios-view-mode';
 

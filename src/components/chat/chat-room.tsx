@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from 'sonner';
-import { createClient } from '@/core/app/_lib/supabase/client';
+import { createClient } from '@/app/_lib/supabase/client';
 import type { SalaChatComInfo, MensagemChatComUsuario } from '@/backend/types/documentos/types';
 
 // Tipos para indicador de digitação

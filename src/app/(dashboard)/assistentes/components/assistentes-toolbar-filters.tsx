@@ -1,6 +1,6 @@
 import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup, ComboboxOption } from '@/components/ui/table-toolbar';
-import type { AssistentesFilters } from '@/core/app/_lib/types/assistentes';
+import type { AssistentesFilters } from '@/app/_lib/types/assistentes';
 
 export const ASSISTENTES_FILTER_CONFIGS: FilterConfig[] = [
   {

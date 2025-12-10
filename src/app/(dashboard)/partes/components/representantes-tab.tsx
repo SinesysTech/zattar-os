@@ -44,8 +44,8 @@ import {
   buildRepresentantesFilterGroups,
   parseRepresentantesFilters,
 } from './representantes-toolbar-filters';
-import type { RepresentantesFilters } from '@/core/app/_lib/types/representantes';
-import { cn } from '@/core/app/_lib/utils/utils';
+import type { RepresentantesFilters } from '@/app/_lib/types/representantes';
+import { cn } from '@/app/_lib/utils/utils';
 
 /**
  * Componente de botão para copiar texto

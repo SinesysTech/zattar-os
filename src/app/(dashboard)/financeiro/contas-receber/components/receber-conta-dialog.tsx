@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CalendarIcon, CreditCard, Building2, AlertCircle, Upload, X, FileText, Loader2 } from 'lucide-react';
-import { createClient } from '@/core/app/_lib/supabase/client';
+import { createClient } from '@/app/_lib/supabase/client';
 import {
   Dialog,
   DialogContent,

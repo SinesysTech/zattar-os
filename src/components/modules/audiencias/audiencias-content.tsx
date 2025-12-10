@@ -9,7 +9,7 @@ import { TableToolbar } from '@/components/ui/table-toolbar';
 import { DateRange } from 'react-day-picker';
 import { ModalidadeAudiencia, StatusAudiencia, CODIGO_TRIBUNAL, GrauTribunal, type CodigoTribunal } from '@/core/audiencias/domain';
 import { useAudiencias } from '@/app/_lib/hooks/use-audiencias';
-import type { BuscarAudienciasParams } from '@/core/app/_lib/types/audiencias';
+import type { BuscarAudienciasParams } from '@/app/_lib/types/audiencias';
 import { AudienciasListView } from './audiencias-list-view';
 import { AudienciasCalendarWeekView } from './audiencias-calendar-week-view';
 import { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';

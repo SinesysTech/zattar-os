@@ -6,8 +6,8 @@ import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Eye, Pencil, Trash } from 'lucide-react';
-import type { Assistente } from '@/core/app/_lib/types/assistentes';
-import { truncarDescricao } from '@/core/app/_lib/utils/format-assistentes';
+import type { Assistente } from '@/app/_lib/types/assistentes';
+import { truncarDescricao } from '@/app/_lib/utils/format-assistentes';
 
 interface AssistenteCardProps {
   assistente: Assistente;

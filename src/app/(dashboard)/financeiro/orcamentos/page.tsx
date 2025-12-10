@@ -66,7 +66,7 @@ import type {
 import {
   exportarOrcamentoCSV,
   exportarRelatorioPDF,
-} from '@/core/app/_lib/orcamentos/export-orcamento';
+} from '@/app/_lib/orcamentos/export-orcamento';
 
 // ============================================================================
 // Constantes e Helpers

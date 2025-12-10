@@ -9,7 +9,7 @@ import {
   formatarData,
   formatarValor,
   gerarPDFBase,
-} from '@/core/app/_lib/financeiro/export-financeiro';
+} from '@/app/_lib/financeiro/export-financeiro';
 
 export async function GET(request: NextRequest) {
   const authOrError = await requirePermission(request, 'conciliacao_bancaria', 'exportar');

@@ -1,10 +1,10 @@
 import type { AssinaturaDigitalSegmento } from '@/backend/types/assinatura-digital/types';
 
 // Re-export generateSlug from the centralized slug-helpers module
-export { generateSlug } from '@/core/app/_lib/assinatura-digital/slug-helpers';
+export { generateSlug } from '@/app/_lib/assinatura-digital/slug-helpers';
 
 // Re-export validateSlug as validateSlugFormat from the centralized slug-helpers module
-export { validateSlug as validateSlugFormat } from '@/core/app/_lib/assinatura-digital/slug-helpers';
+export { validateSlug as validateSlugFormat } from '@/app/_lib/assinatura-digital/slug-helpers';
 
 /**
  * Returns the display name for a segmento, falling back to slug or 'Sem nome' if nome is not available.

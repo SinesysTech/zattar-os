@@ -8,7 +8,7 @@ import {
   criarMensagemChatSchema,
   ListarSalasParams,
 } from ' @/core/chat/domain';
-import { getSupabase } from ' @/core/app/_lib/supabase';
+import { getSupabase } from ' @/app/_lib/supabase';
 
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }

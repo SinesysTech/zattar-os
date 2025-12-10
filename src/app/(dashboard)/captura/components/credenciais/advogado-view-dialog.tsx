@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { useAdvogado } from '@/app/_lib/hooks/use-advogado';
 import { toast } from 'sonner';
-import type { Credencial } from '@/core/app/_lib/types/credenciais';
+import type { Credencial } from '@/app/_lib/types/credenciais';
 
 interface AdvogadoViewDialogProps {
   credencial: Credencial | null;

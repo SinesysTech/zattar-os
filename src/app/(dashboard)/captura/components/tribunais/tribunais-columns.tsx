@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Edit, Clock, ExternalLink } from 'lucide-react';
-import type { TribunalConfig } from '@/core/app/_lib/types/tribunais';
+import type { TribunalConfig } from '@/app/_lib/types/tribunais';
 
 /**
  * Formata o tipo de acesso do tribunal

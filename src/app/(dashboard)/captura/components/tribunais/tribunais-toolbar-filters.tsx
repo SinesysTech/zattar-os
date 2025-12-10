@@ -1,6 +1,6 @@
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { CodigoTRT } from '@/core/app/_lib/types/credenciais';
+import type { CodigoTRT } from '@/app/_lib/types/credenciais';
 
 // Filtros para tribunais (interface usada na página)
 export interface TribunaisFilters {

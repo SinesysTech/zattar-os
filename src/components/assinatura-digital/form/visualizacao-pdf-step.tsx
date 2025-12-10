@@ -32,7 +32,7 @@
  */
 
 import { useState, useEffect, useRef } from "react";
-import { useFormularioStore } from "@/core/app/_lib/stores/assinatura-digital/formulario-store";
+import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
 import FormStepLayout from "@/components/assinatura-digital/form/form-step-layout";
 import PdfPreviewDynamic from "@/components/assinatura-digital/pdf/PdfPreviewDynamic";
 import { Button } from "@/components/ui/button";

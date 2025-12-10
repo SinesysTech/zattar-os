@@ -3,7 +3,7 @@
 // Hook para buscar usuários do sistema
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { UsuariosParams } from '@/core/app/_lib/types/usuarios';
+import type { UsuariosParams } from '@/app/_lib/types/usuarios';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 interface UseUsuariosResult {

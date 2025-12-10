@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/core/app/_lib/utils/utils'
+import { cn } from '@/app/_lib/utils/utils'
 import { type UseSupabaseUploadReturn } from '@/hooks/use-supabase-upload'
 import { Button } from '@/components/ui/button'
 import { CheckCircle, File, Loader2, Upload, X } from 'lucide-react'

@@ -1,6 +1,6 @@
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { Usuario } from '@/core/app/_lib/types/usuarios';
+import type { Usuario } from '@/app/_lib/types/usuarios';
 import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
 import { CodigoTribunal, GrauTribunal } from '@/core/expedientes/domain';
 

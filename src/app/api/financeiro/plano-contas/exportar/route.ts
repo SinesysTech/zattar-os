@@ -3,7 +3,7 @@ import { requirePermission } from '@/backend/auth/require-permission';
 import { obterHierarquiaPlanoContas } from '@/backend/plano-contas/services/plano-contas/obter-hierarquia.service';
 import { achatarHierarquia } from '@/types/domain/financeiro';
 import { rgb } from 'pdf-lib';
-import { gerarCSV, sanitizeFileName, gerarPDFBase, formatarValor } from '@/core/app/_lib/financeiro/export-financeiro';
+import { gerarCSV, sanitizeFileName, gerarPDFBase, formatarValor } from '@/app/_lib/financeiro/export-financeiro';
 
 export async function GET(request: NextRequest) {
   const authOrError = await requirePermission(request, 'plano_contas', 'exportar');

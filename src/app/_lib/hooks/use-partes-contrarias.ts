@@ -3,7 +3,7 @@
 // Hook para buscar partes contrárias
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { ParteContraria, TipoPessoa, SituacaoPJE } from '@/core/app/_lib/types';
+import type { ParteContraria, TipoPessoa, SituacaoPJE } from '@/app/_lib/types';
 
 export interface PartesContrariasApiResponse {
   success: boolean;

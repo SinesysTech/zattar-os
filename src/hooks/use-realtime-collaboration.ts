@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { createClient } from '@/core/app/_lib/supabase/client';
+import { createClient } from '@/app/_lib/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 export interface CollaboratorPresence {

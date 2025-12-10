@@ -17,7 +17,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import { cn } from '@/core/app/_lib/utils/utils';
+import { cn } from '@/app/_lib/utils/utils';
 
 // Subscribe function that does nothing (client is always mounted after hydration)
 const emptySubscribe = () => () => {};

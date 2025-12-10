@@ -34,7 +34,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Switch } from "@/components/ui/switch"
-import { createClient } from "@/core/app/_lib/supabase/client"
+import { createClient } from "@/app/_lib/supabase/client"
 
 function getInitials(name: string): string {
   if (!name) return "U"

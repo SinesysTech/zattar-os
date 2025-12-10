@@ -20,7 +20,7 @@ import {
   formatarData,
   formatarNome,
 } from '@/app/_lib/utils/format-clientes';
-import { formatarCep } from '@/core/app/_lib/types';
+import { formatarCep } from '@/app/_lib/types';
 import type { RepresentanteComEndereco } from '@/backend/types/representantes/representantes-types';
 
 // Componente auxiliar para exibir campo

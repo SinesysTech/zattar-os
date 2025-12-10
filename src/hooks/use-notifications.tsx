@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { createClient } from '@/core/app/_lib/supabase/client';
+import { createClient } from '@/app/_lib/supabase/client';
 
 export interface NotificationData {
   id: string;

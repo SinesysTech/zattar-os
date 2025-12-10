@@ -6,7 +6,7 @@ import { SuggestionPlugin } from '@platejs/suggestion/react';
 import { PencilLineIcon } from 'lucide-react';
 import { useEditorPlugin, usePluginOption } from 'platejs/react';
 
-import { cn } from '@/core/app/_lib/utils/utils';
+import { cn } from '@/app/_lib/utils/utils';
 
 import { ToolbarButton } from './toolbar';
 

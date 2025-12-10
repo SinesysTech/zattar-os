@@ -12,7 +12,7 @@ import type {
   ComboboxOption,
 } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { RepresentantesFilters } from '@/core/app/_lib/types/representantes';
+import type { RepresentantesFilters } from '@/app/_lib/types/representantes';
 
 // Filtros disponíveis para representantes
 // Por enquanto, não há filtros específicos além da busca por texto

@@ -26,7 +26,7 @@ import {
 import { cva } from 'class-variance-authority';
 import { useComposedRef, useEditorRef } from 'platejs/react';
 
-import { cn } from '@/core/app/_lib/utils/utils';
+import { cn } from '@/app/_lib/utils/utils';
 
 type FilterFn = (
   item: { value: string; group?: string; keywords?: string[]; label?: string },

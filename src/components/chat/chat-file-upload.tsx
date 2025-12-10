@@ -6,7 +6,7 @@ import { Upload, File, Image, Music, Video, X, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
-import { createClient } from '@/core/app/_lib/supabase/client';
+import { createClient } from '@/app/_lib/supabase/client';
 
 // Tipos de arquivo suportados
 const SUPPORTED_FILE_TYPES = {

@@ -36,7 +36,7 @@ import {
     SheetClose,
     SheetFooter,
 } from "@/components/ui/sheet"
-import { cn } from "@/core/app/_lib/utils/utils"
+import { cn } from "@/app/_lib/utils/utils"
 
 interface ResponsiveDialogProps {
     open?: boolean

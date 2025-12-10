@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { DynamicFormSchema, FormFieldSchema, FormSectionSchema, FormFieldType } from '@/types/assinatura-digital/form-schema.types';
-import { validateFormSchema } from '@/core/app/_lib/assinatura-digital/form-schema/schema-validator';
+import { validateFormSchema } from '@/app/_lib/assinatura-digital/form-schema/schema-validator';
 import DynamicFormRenderer from '@/components/assinatura-digital/form/dynamic-form-renderer';
 import FieldPalette from '@/components/assinatura-digital/schema-builder/FieldPalette';
 import SchemaCanvas, { getFieldIcon } from '@/components/assinatura-digital/schema-builder/SchemaCanvas';

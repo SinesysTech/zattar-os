@@ -22,7 +22,7 @@ import {
   buildContratosFilterOptions,
   buildContratosFilterGroups,
   parseContratosFilters,
-} from '@/core/app/(dashboard)/contratos/components/contratos-toolbar-filters';
+} from '@/app/(dashboard)/contratos/components/contratos-toolbar-filters';
 
 // =============================================================================
 // TIPOS
@@ -42,7 +42,7 @@ interface PaginationInfo {
 }
 
 // Tipo importado via parseContratosFilters
-import type { ContratosFilters } from '@/core/app/_lib/types/contratos';
+import type { ContratosFilters } from '@/app/_lib/types/contratos';
 
 interface ContratosTableWrapperProps {
   initialData: Contrato[];

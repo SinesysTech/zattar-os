@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/core/app/_lib/utils/utils';
+import { cn } from '@/app/_lib/utils/utils';
 
 import { Toolbar } from './toolbar';
 

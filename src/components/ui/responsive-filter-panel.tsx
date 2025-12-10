@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Filter, X } from "lucide-react"
-import { cn } from "@/core/app/_lib/utils/utils"
+import { cn } from "@/app/_lib/utils/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {

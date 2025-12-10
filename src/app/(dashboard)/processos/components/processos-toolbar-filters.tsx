@@ -1,6 +1,6 @@
 import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup, ComboboxOption } from '@/components/ui/table-toolbar';
-import type { ProcessosFilters } from '@/core/app/_lib/types/acervo';
+import type { ProcessosFilters } from '@/app/_lib/types/acervo';
 
 // Lista de tribunais trabalhistas disponíveis (TRTs + TST)
 const TRIBUNAIS = [

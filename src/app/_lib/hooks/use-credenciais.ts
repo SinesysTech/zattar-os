@@ -6,7 +6,7 @@ import type {
   CredenciaisResponse,
   CriarCredencialParams,
   AtualizarCredencialParams,
-} from '@/core/app/_lib/types/credenciais';
+} from '@/app/_lib/types/credenciais';
 
 interface UseCredenciaisResult {
   credenciais: Credencial[];

@@ -5,7 +5,7 @@ import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
 import { capturarPartes, type CapturaPartesParams } from '@/core/app/api/captura/captura';
-import type { Credencial } from '@/core/app/_lib/types/credenciais';
+import type { Credencial } from '@/app/_lib/types/credenciais';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';

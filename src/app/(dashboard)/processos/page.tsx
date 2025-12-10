@@ -15,7 +15,7 @@ import { useProcessos } from '@/app/_lib/hooks/use-processos';
 import { GrauBadges } from './components/grau-badges';
 import type { ColumnDef, SortingState } from '@tanstack/react-table';
 import type { Acervo, ProcessoUnificado } from '@/backend/types/acervo/types';
-import type { ProcessosFilters } from '@/core/app/_lib/types/acervo';
+import type { ProcessosFilters } from '@/app/_lib/types/acervo';
 import { ProcessoDetailSheet } from '@/components/modules/processos/processo-detail-sheet';
 import { ProcessosEmptyState } from '@/components/modules/processos/processos-empty-state';
 
