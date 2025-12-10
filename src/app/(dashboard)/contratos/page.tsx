@@ -6,10 +6,9 @@
  */
 
 import { Suspense } from 'react';
-import { listarContratos } from '@/core/contratos/service';
+import { listarContratos, ContratosTableWrapper } from '@/features/contratos';
 import { listarClientes, listarPartesContrarias } from '@/core/partes/service';
 import { PageShell } from '@/components/shared/page-shell';
-import { ContratosTableWrapper } from '@/components/modules/contratos';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function ContratosLoading() {
