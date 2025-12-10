@@ -21,6 +21,8 @@ import type {
   CreateTemplateInput,
   UpdateTemplateInput,
 } from './types';
+import mustache from 'mustache';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 /**
  * Gera um slug URL-friendly a partir de uma string.
  */
@@ -139,6 +141,49 @@ export class AssinaturaDigitalService {
       return true;
     }
     return segmento.escopo === contexto;
+  }
+
+  // ==========================================================================
+  // PROCESSAMENTO DE TEMPLATES (MARKDOWN / PDF)
+  // ==========================================================================
+
+  async processarVariaveisMarkdown(
+    template: Template,
+    data: Record<string, any>
+  ): Promise<string> {
+    if (template.tipo_template !== 'markdown' || !template.conteudo_markdown) {
+      throw new Error(
+        'Template não é do tipo Markdown ou não possui conteúdo Markdown.'
+      );
+    }
+    // Usar Mustache.js para interpolação simples
+    return mustache.render(template.conteudo_markdown, data);
+  }
+
+  async gerarPdfDeMarkdown(
+    markdownContent: string,
+    data: Record<string, any>
+  ): Promise<Buffer> {
+    const renderedMarkdown = mustache.render(markdownContent, data);
+
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage();
+
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    page.drawText(renderedMarkdown, {
+      x: 50,
+      y: page.getHeight() - 50,
+      font,
+      size: 12,
+      color: rgb(0, 0, 0),
+      maxWidth: page.getWidth() - 100,
+      lineHeight: 18,
+    });
+
+    // Retorna Uint8Array, que pode ser convertido para Buffer se necessário pelo caller
+    // No ambiente Node (Actions), Uint8Array geralmente é compatível
+    const pdfBytes = await pdfDoc.save();
+    return Buffer.from(pdfBytes);
   }
 }
 
