@@ -3,11 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { obterPartesContrarias } from '@/backend/partes-contrarias/services/partes-contrarias/listar-partes-contrarias.service';
-import { cadastrarParteContraria } from '@/backend/partes-contrarias/services/partes-contrarias/criar-parte-contraria.service';
-import type {
-  CriarParteContrariaParams,
-} from '@/backend/types/partes';
+import { listarPartesContrarias, criarParteContraria, type CreateParteContrariaInput } from '@/core/partes';
 
 /**
  * @swagger
@@ -180,7 +176,7 @@ export async function GET(request: NextRequest) {
       incluir_processos: searchParams.get('incluir_processos') === 'true',
     };
 
-    const resultado = await obterPartesContrarias(params);
+    const resultado = await listarPartesContrarias(params);
 
     return NextResponse.json({
       success: true,
@@ -204,7 +200,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const dadosParteContraria = body as CriarParteContrariaParams;
+    const dadosParteContraria = body as CreateParteContrariaInput;
 
     if (!dadosParteContraria.tipo_pessoa || !dadosParteContraria.nome) {
       return NextResponse.json(
@@ -213,11 +209,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const resultado = await cadastrarParteContraria(dadosParteContraria);
+    const resultado = await criarParteContraria(dadosParteContraria);
 
-    if (!resultado.sucesso) {
+    if (!resultado.success) {
       return NextResponse.json(
-        { error: resultado.erro || 'Erro ao criar parte contrária' },
+        { error: resultado.error.message || 'Erro ao criar parte contrária' },
         { status: 400 },
       );
     }
@@ -225,7 +221,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        data: resultado.parteContraria,
+        data: resultado.data,
       },
       { status: 201 },
     );
