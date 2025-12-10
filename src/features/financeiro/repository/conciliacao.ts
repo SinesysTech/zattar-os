@@ -3,7 +3,7 @@
  * Camada de acesso a dados (Supabase)
  */
 
-import { createServiceClient } from '@/app/_lib/supabase/service';
+import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import type {
     TransacaoImportada,
     TransacaoComConciliacao,

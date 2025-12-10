@@ -12,7 +12,7 @@ import {
   formatarData,
   formatarValor,
   gerarPDFBase,
-} from '@/app/_lib/financeiro/export-financeiro';
+} from '@/features/financeiro/utils/export/helpers';
 
 export async function GET(request: NextRequest) {
   const authOrError = await requirePermission(request, 'contas_receber', 'exportar');

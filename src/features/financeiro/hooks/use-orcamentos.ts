@@ -261,3 +261,61 @@ export function useOrcamentos(options?: UseOrcamentosOptions): UseOrcamentosRetu
         refetch,
     };
 }
+
+// ============================================================================
+// Funções Standalone para Compatibilidade
+// ============================================================================
+
+interface MutationResult {
+    success: boolean;
+    error?: string;
+}
+
+/**
+ * Aprovar orçamento (função standalone)
+ */
+export async function aprovarOrcamento(id: number): Promise<MutationResult> {
+    try {
+        // Usar usuário atual - em produção isso viria do contexto de auth
+        const result = await actionAprovarOrcamento(id, 'sistema');
+        return { success: result.success, error: result.error };
+    } catch (err) {
+        return { success: false, error: err instanceof Error ? err.message : 'Erro desconhecido' };
+    }
+}
+
+/**
+ * Iniciar execução de orçamento (função standalone)
+ */
+export async function iniciarExecucaoOrcamento(id: number): Promise<MutationResult> {
+    try {
+        const result = await actionIniciarExecucaoOrcamento(id, 'sistema');
+        return { success: result.success, error: result.error };
+    } catch (err) {
+        return { success: false, error: err instanceof Error ? err.message : 'Erro desconhecido' };
+    }
+}
+
+/**
+ * Encerrar orçamento (função standalone)
+ */
+export async function encerrarOrcamento(id: number): Promise<MutationResult> {
+    try {
+        const result = await actionEncerrarOrcamento(id, 'sistema');
+        return { success: result.success, error: result.error };
+    } catch (err) {
+        return { success: false, error: err instanceof Error ? err.message : 'Erro desconhecido' };
+    }
+}
+
+/**
+ * Excluir orçamento (função standalone)
+ */
+export async function excluirOrcamento(id: number): Promise<MutationResult> {
+    try {
+        const result = await actionExcluirOrcamento(id);
+        return { success: result.success, error: result.error };
+    } catch (err) {
+        return { success: false, error: err instanceof Error ? err.message : 'Erro desconhecido' };
+    }
+}

@@ -1,12 +1,31 @@
 'use server';
 
 import { LancamentosService } from '../services/lancamentos';
-import { Lancamento } from '../types/lancamentos';
+import { Lancamento, ListarLancamentosParams } from '../types/lancamentos';
 import { revalidatePath } from 'next/cache';
 
 // Tipos explícitos para entrada das actions (DTOs simplificados baseados em Partial<Lancamento>)
 type CriarLancamentoInput = Partial<Lancamento>;
 type AtualizarLancamentoInput = Partial<Lancamento>;
+
+export async function actionListarLancamentos(params: ListarLancamentosParams) {
+    try {
+        const lancamentos = await LancamentosService.listar(params);
+        return { sucesso: true, data: lancamentos };
+    } catch (error: any) {
+        return { sucesso: false, erro: error.message };
+    }
+}
+
+export async function actionExcluirLancamento(id: number) {
+    try {
+        await LancamentosService.excluir(id);
+        revalidatePath('/financeiro');
+        return { sucesso: true };
+    } catch (error: any) {
+        return { sucesso: false, erro: error.message };
+    }
+}
 
 export async function actionCriarLancamento(dados: CriarLancamentoInput) {
     try {

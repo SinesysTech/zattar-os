@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Clock, FileText, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ParcelaObrigacao, StatusRepasse } from '@/core/financeiro/obrigacoes-juridicas/domain';
+import { ParcelaObrigacao, StatusRepasse } from '@/features/financeiro/domain';
 
 interface RepasseTrackingProps {
     parcela: ParcelaObrigacao;

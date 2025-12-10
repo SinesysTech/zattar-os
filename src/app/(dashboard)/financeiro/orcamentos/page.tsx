@@ -56,17 +56,17 @@ import {
   iniciarExecucaoOrcamento,
   encerrarOrcamento,
   excluirOrcamento,
-} from '@/app/_lib/hooks/use-orcamentos';
+} from '@/features/financeiro/hooks/use-orcamentos';
 import { toast } from 'sonner';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
   OrcamentoComDetalhes,
   StatusOrcamento,
-} from '@/backend/types/financeiro/orcamento.types';
+} from '@/features/financeiro/types/orcamentos';
 import {
   exportarOrcamentoCSV,
   exportarRelatorioPDF,
-} from '@/app/_lib/orcamentos/export-orcamento';
+} from '@/features/financeiro/utils/export/orcamentos';
 
 // ============================================================================
 // Constantes e Helpers

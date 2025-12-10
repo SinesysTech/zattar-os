@@ -27,6 +27,11 @@ export type * from './types/lancamentos';
 export type * from './types/conciliacao';
 export type * from './types/obrigacoes';
 export type * from './types/plano-contas';
+export type * from './types/dre';
+export type * from './types/orcamentos';
+
+// Utils - Re-exportar utilitários de exportação
+export * from './utils/export';
 
 // Hooks - Re-exportar hooks
 export * from './hooks';
