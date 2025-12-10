@@ -2090,31 +2090,52 @@ Este README contém toda a documentação técnica centralizada do repositório 
 
 ### Documentação Técnica Complementar
 
-Para análises técnicas profundas e documentação de módulos específicos:
+Para análises técnicas profundas e documentação de módulos específicos, consulte:
 
-#### Pareceres Técnicos
+#### Arquitetura do Sistema
 
-- **docs/PARECER_REFATORACAO_ARQUITETURAL.md** - Análise completa da refatoração arquitetural (DDD, camadas, migração)
-- **docs/PARECER_DESIGN_SYSTEM_UX.md** - Análise do sistema de design, UX e arquitetura de informação
+- **[docs/arquitetura-sistema.md](./docs/arquitetura-sistema.md)** - Documentação técnica completa da arquitetura (2.500+ linhas)
+  - Visão geral e stack tecnológica
+  - Estrutura de diretórios detalhada
+  - Arquitetura em camadas (DDD)
+  - Módulos funcionais (40+ módulos)
+  - Infraestrutura e deploy
+  - Fluxos de dados e diagramas
+  - Padrões e boas práticas
 
-#### Documentação de Arquitetura
+#### Instruções para IA
 
-- **docs/arquitetura-sistema.md** - Documentação técnica completa da arquitetura do sistema
-- **AGENTS.md** - Instruções para agentes de IA trabalhando no projeto
+- **[AGENTS.md](./AGENTS.md)** - Instruções para agentes de IA trabalhando no projeto
+  - Arquitetura Feature-Sliced Design
+  - Convenções de código
+  - Padrões de implementação
+  - Guias de migração de módulos
 
-#### Planos de Migração
+#### Documentação de Módulos Específicos
 
-- **docs/MIGRACAO_CHAT.md** - Plano de migração do sistema de chat legado para nova arquitetura
+**Assinatura Digital:**
 
-#### Documentação de Módulos
+- **[docs/assinatura-digital/arquitetura-conceitual.md](./docs/assinatura-digital/arquitetura-conceitual.md)** - Arquitetura conceitual completa
+- **[docs/assinatura-digital/CONFORMIDADE_LEGAL.md](./docs/assinatura-digital/CONFORMIDADE_LEGAL.md)** - Conformidade com MP 2.200-2/2001
+  - Fundamentos legais da assinatura eletrônica avançada
+  - Implementação técnica dos 4 requisitos legais
+  - Cadeia de custódia e preservação de evidências
+  - Procedimentos de auditoria forense
+  - Referências legais e jurisprudência
 
-- **docs/assinatura-digital/** - Arquitetura conceitual e conformidade legal do módulo de assinatura digital
-- **docs/financeiro/** - Especificações de dashboard, conciliação bancária e exportações
-- **docs/modulos/audiencias.md** - Arquitetura e fluxo de dados do módulo de audiências
+**Módulo Financeiro:**
+
+- **[docs/financeiro/dashboard.md](./docs/financeiro/dashboard.md)** - Especificação do dashboard financeiro
+- **[docs/financeiro/conciliacao-bancaria.md](./docs/financeiro/conciliacao-bancaria.md)** - Arquitetura de conciliação bancária (OFX/CSV)
+- **[docs/financeiro/exportacoes.md](./docs/financeiro/exportacoes.md)** - Especificação de exportações (PDF/CSV/Excel)
+
+**Módulo de Audiências:**
+
+- **[docs/modulos/audiencias.md](./docs/modulos/audiencias.md)** - Arquitetura e fluxo de dados
 
 #### Especificações e Propostas
 
-- **openspec/** - Especificações OpenSpec e propostas de mudanças
+- **[openspec/](./openspec/)** - Especificações OpenSpec e propostas de mudanças
 
 ---
 
