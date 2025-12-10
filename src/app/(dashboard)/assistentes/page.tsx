@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -17,8 +17,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAssistentes } from '@/core/app/_lib/hooks/use-assistentes';
-import { useMinhasPermissoes } from '@/core/app/_lib/hooks/use-minhas-permissoes';
+import { useAssistentes } from '@/app/_lib/hooks/use-assistentes';
+import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
 import { AssistentesGridView } from './components/assistentes-grid-view';
 import { ViewToggle } from './components/view-toggle';
 import { AssistenteCreateDialog } from './components/assistente-create-dialog';

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { PageShell } from '@/components/shared/page-shell';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableShell } from '@/components/shared/data-table-shell';
@@ -11,7 +11,7 @@ import { buildProcessosFilterOptions, buildProcessosFilterGroups, parseProcessos
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Copy } from 'lucide-react';
-import { useProcessos } from '@/core/app/_lib/hooks/use-processos';
+import { useProcessos } from '@/app/_lib/hooks/use-processos';
 import { GrauBadges } from './components/grau-badges';
 import type { ColumnDef, SortingState } from '@tanstack/react-table';
 import type { Acervo, ProcessoUnificado } from '@/backend/types/acervo/types';

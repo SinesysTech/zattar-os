@@ -6,7 +6,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useAgendamentos } from '@/core/app/_lib/hooks/use-agendamentos';
+import { useAgendamentos } from '@/app/_lib/hooks/use-agendamentos';
 import { deletarAgendamento, executarAgendamento } from '@/core/app/api/captura/agendamentos/agendamentos';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Agendamento } from '@/backend/types/captura/agendamentos-types';

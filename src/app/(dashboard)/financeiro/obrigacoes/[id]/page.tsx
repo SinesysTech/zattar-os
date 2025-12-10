@@ -28,7 +28,7 @@ import {
   Building2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useObrigacoes } from '@/core/app/_lib/hooks/use-obrigacoes';
+import { useObrigacoes } from '@/app/_lib/hooks/use-obrigacoes';
 import type {
   TipoObrigacao,
   StatusObrigacao,

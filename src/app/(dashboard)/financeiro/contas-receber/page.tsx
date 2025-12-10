@@ -8,7 +8,7 @@
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -50,12 +50,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useContasReceber, cancelarConta, excluirConta } from '@/core/app/_lib/hooks/use-contas-receber';
-import { useContasBancarias } from '@/core/app/_lib/hooks/use-contas-bancarias';
-import { useClientes } from '@/core/app/_lib/hooks/use-clientes';
-import { useContratos } from '@/core/app/_lib/hooks/use-contratos';
-import { usePlanoContasAnaliticas } from '@/core/app/_lib/hooks/use-plano-contas';
-import { useCentrosCustoAtivos } from '@/core/app/_lib/hooks/use-centros-custo';
+import { useContasReceber, cancelarConta, excluirConta } from '@/app/_lib/hooks/use-contas-receber';
+import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
+import { useClientes } from '@/app/_lib/hooks/use-clientes';
+import { useContratos } from '@/app/_lib/hooks/use-contratos';
+import { usePlanoContasAnaliticas } from '@/app/_lib/hooks/use-plano-contas';
+import { useCentrosCustoAtivos } from '@/app/_lib/hooks/use-centros-custo';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

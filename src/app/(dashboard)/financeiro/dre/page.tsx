@@ -34,7 +34,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useDRE, useEvolucaoDRE, useExportarDRE, gerarPeriodoAtual } from '@/core/app/_lib/hooks/use-dre';
+import { useDRE, useEvolucaoDRE, useExportarDRE, gerarPeriodoAtual } from '@/app/_lib/hooks/use-dre';
 import { toast } from 'sonner';
 import type {
   ResumoDRE,

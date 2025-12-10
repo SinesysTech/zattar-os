@@ -8,7 +8,7 @@
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -48,8 +48,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useContasPagar, cancelarConta, excluirConta } from '@/core/app/_lib/hooks/use-contas-pagar';
-import { useContasBancarias } from '@/core/app/_lib/hooks/use-contas-bancarias';
+import { useContasPagar, cancelarConta, excluirConta } from '@/app/_lib/hooks/use-contas-pagar';
+import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';

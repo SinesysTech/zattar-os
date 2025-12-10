@@ -17,7 +17,7 @@ import {
   formatarData,
   formatarNome,
   formatarTipoPessoa,
-} from '@/core/app/_lib/utils/format-clientes';
+} from '@/app/_lib/utils/format-clientes';
 import { formatarCep } from '@/core/app/_lib/types';
 import type { Cliente } from '@/core/app/_lib/types';
 import type { Endereco } from '@/backend/types/partes/enderecos-types';

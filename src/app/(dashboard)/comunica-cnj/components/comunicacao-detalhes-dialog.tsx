@@ -18,7 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TribunalBadge } from '@/components/ui/tribunal-badge';
 import { FileText, ExternalLink } from 'lucide-react';
-import { useIsMobile } from '@/core/app/_lib/hooks/use-mobile';
+import { useIsMobile } from '@/app/_lib/hooks/use-mobile';
 import type { ComunicacaoItem } from '@/core/comunica-cnj';
 
 interface ComunicacaoDetalhesDialogProps {

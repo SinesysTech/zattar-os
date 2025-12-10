@@ -34,7 +34,7 @@ import {
   useOrcamento,
   useAnaliseOrcamentaria,
   useProjecaoOrcamentaria,
-} from '@/core/app/_lib/hooks/use-orcamentos';
+} from '@/app/_lib/hooks/use-orcamentos';
 import { toast } from 'sonner';
 import type {
   AnaliseOrcamentariaItem,

@@ -11,7 +11,7 @@ import {
 import {
   usePlanoContasHierarquiaAchatada,
   gerarLabelParaSeletor,
-} from '@/core/app/_lib/hooks/use-plano-contas-hierarquia';
+} from '@/app/_lib/hooks/use-plano-contas-hierarquia';
 import type { NivelConta, TipoContaContabil } from '@/types/domain/financeiro';
 
 interface PlanoContaSelectProps {

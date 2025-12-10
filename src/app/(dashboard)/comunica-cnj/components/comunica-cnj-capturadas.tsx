@@ -39,7 +39,7 @@ import {
   Search,
   FileStack,
 } from 'lucide-react';
-import { useIsMobile } from '@/core/app/_lib/hooks/use-mobile';
+import { useIsMobile } from '@/app/_lib/hooks/use-mobile';
 import Link from 'next/link';
 import type { ComunicacaoCNJ, ComunicacaoItem } from '@/core/comunica-cnj';
 

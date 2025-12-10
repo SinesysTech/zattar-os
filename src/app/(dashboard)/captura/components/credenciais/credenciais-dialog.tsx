@@ -22,7 +22,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Spinner } from '@/components/ui/spinner';
 import { toast } from 'sonner';
-import { useListarAdvogados } from '@/core/app/_lib/hooks/use-advogado';
+import { useListarAdvogados } from '@/app/_lib/hooks/use-advogado';
 import type { Credencial, CodigoTRT, GrauTRT } from '@/core/app/_lib/types/credenciais';
 
 interface CredenciaisDialogProps {

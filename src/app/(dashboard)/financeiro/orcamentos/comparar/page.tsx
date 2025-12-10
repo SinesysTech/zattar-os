@@ -44,7 +44,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useOrcamentos } from '@/core/app/_lib/hooks/use-orcamentos';
+import { useOrcamentos } from '@/app/_lib/hooks/use-orcamentos';
 import { toast } from 'sonner';
 import type { OrcamentoComDetalhes, ComparativoOrcamento } from '@/backend/types/financeiro/orcamento.types';
 import {

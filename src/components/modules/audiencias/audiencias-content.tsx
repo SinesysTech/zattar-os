@@ -8,7 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { DateRange } from 'react-day-picker';
 import { ModalidadeAudiencia, StatusAudiencia, CODIGO_TRIBUNAL, GrauTribunal, type CodigoTribunal } from '@/core/audiencias/domain';
-import { useAudiencias } from '@/core/app/_lib/hooks/use-audiencias';
+import { useAudiencias } from '@/app/_lib/hooks/use-audiencias';
 import type { BuscarAudienciasParams } from '@/core/app/_lib/types/audiencias';
 import { AudienciasListView } from './audiencias-list-view';
 import { AudienciasCalendarWeekView } from './audiencias-calendar-week-view';

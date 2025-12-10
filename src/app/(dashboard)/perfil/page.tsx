@@ -3,7 +3,7 @@
 // Página de perfil do usuário
 
 import * as React from 'react';
-import { usePerfil } from '@/core/app/_lib/hooks/use-perfil';
+import { usePerfil } from '@/app/_lib/hooks/use-perfil';
 import { PerfilEditSheet } from './components/perfil-edit-sheet';
 import { AlterarSenhaDialog } from './components/alterar-senha-dialog';
 import { AvatarEditDialog } from './components/avatar-edit-dialog';

@@ -42,7 +42,7 @@ import { cn } from '@/lib/utils';
 import {
   criarContaPagar,
   atualizarContaPagar,
-} from '@/core/app/_lib/hooks/use-contas-pagar';
+} from '@/app/_lib/hooks/use-contas-pagar';
 import {
   FORMA_PAGAMENTO_LABELS,
   FREQUENCIA_LABELS,

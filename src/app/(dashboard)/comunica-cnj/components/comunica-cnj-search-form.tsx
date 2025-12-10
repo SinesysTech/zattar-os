@@ -30,7 +30,7 @@ import {
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Check, ChevronDown, Loader2, Search, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAdvogados } from '@/core/app/_lib/hooks/use-advogados';
+import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
 
 // Ordem de prioridade dos grupos de tribunais
 const TRIBUNAL_GROUP_ORDER = ['TRT', 'TRF', 'TRE', 'STJ', 'STF', 'TST', 'TSE', 'STM', 'CNJ', 'TJ', 'TJMM', 'TJMMG'];

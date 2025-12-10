@@ -13,7 +13,7 @@ import {
     SheetDescription,
     SheetFooter,
 } from "@/components/ui/sheet"
-import { useIsMobile } from "@/core/app/_lib/hooks/use-mobile"
+import { useIsMobile } from "@/app/_lib/hooks/use-mobile"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 export interface FilterGroup {

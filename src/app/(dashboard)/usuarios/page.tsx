@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { TableWithToolbar, type ResponsiveTableColumn } from '@/components/ui/table-with-toolbar';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
@@ -16,7 +16,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useUsuarios } from '@/core/app/_lib/hooks/use-usuarios';
+import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import { UsuariosGridView } from './components/usuarios-grid-view';
 import { ViewToggle } from './components/view-toggle';
 import { UsuarioCreateDialog } from './components/usuario-create-dialog';

@@ -3,8 +3,8 @@
 import { useEffect } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { useAdvogados } from '@/core/app/_lib/hooks/use-advogados';
-import { useCredenciais } from '@/core/app/_lib/hooks/use-credenciais';
+import { useAdvogados } from '@/app/_lib/hooks/use-advogados';
+import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
 import type { Credencial } from '@/core/app/_lib/types/credenciais';
 import { AdvogadoCombobox } from './advogado-combobox';
 import { CredenciaisCombobox } from './credenciais-combobox';

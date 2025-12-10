@@ -3,8 +3,8 @@
 import { useState, useMemo, useCallback } from 'react';
 import { DataTable } from '@/components/ui/data-table';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
-import { useTribunais } from '@/core/app/_lib/hooks/use-tribunais';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useTribunais } from '@/app/_lib/hooks/use-tribunais';
 import { criarColunasTribunais } from '../components/tribunais/tribunais-columns';
 import { TribunaisDialog } from '../components/tribunais/tribunais-dialog';
 import {

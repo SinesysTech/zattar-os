@@ -38,7 +38,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { useRecoveryElementos, useReprocess } from '@/core/app/_lib/hooks/use-recovery-analysis';
+import { useRecoveryElementos, useReprocess } from '@/app/_lib/hooks/use-recovery-analysis';
 import { RecoveryReprocessDialog } from './recovery-reprocess-dialog';
 import type { TipoEntidadeRecuperavel } from '@/backend/captura/services/recovery/types';
 

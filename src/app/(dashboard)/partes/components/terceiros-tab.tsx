@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -31,10 +31,10 @@ import {
   formatarTelefone,
   formatarNome,
   formatarEnderecoCompleto,
-} from '@/core/app/_lib/utils/format-clientes';
+} from '@/app/_lib/utils/format-clientes';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Terceiro, ProcessoRelacionado } from '@/core/partes';
-import { useTerceiros } from '@/core/app/_lib/hooks/use-terceiros';
+import { useTerceiros } from '@/app/_lib/hooks/use-terceiros';
 import { ProcessosRelacionadosCell } from './processos-relacionados-cell';
 
 /**

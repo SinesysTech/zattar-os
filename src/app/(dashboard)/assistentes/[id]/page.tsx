@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import type { Assistente } from '@/core/app/_lib/types/assistentes'
 import { sanitizarIframeCode } from '@/core/app/_lib/utils/format-assistentes'
-import { useMinhasPermissoes } from '@/core/app/_lib/hooks/use-minhas-permissoes'
+import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes'
 
 export default function AssistentePage() {
   const params = useParams()

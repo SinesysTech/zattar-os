@@ -33,7 +33,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { pagarConta } from '@/core/app/_lib/hooks/use-contas-pagar';
+import { pagarConta } from '@/app/_lib/hooks/use-contas-pagar';
 import type {
   ContaPagarComDetalhes,
   FormaPagamentoContaPagar,

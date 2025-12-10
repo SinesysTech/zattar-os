@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { Loader2, Scale } from 'lucide-react';
-import { useAcervo } from '@/core/app/_lib/hooks/use-acervo';
+import { useAcervo } from '@/app/_lib/hooks/use-acervo';
 
 interface DadosIniciais {
   processo_id: number;

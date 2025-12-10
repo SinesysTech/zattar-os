@@ -8,7 +8,7 @@
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useDebounce } from '@/core/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -44,7 +44,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useSalarios, encerrarVigenciaSalario, inativarSalario, excluirSalario } from '@/core/app/_lib/hooks/use-salarios';
+import { useSalarios, encerrarVigenciaSalario, inativarSalario, excluirSalario } from '@/app/_lib/hooks/use-salarios';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import type { ColumnDef } from '@tanstack/react-table';

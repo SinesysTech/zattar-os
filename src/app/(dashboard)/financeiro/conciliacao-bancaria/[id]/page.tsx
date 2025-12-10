@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { useTransacaoDetalhes, useSugestoesConciliacao, conciliarManual, desconciliar } from '@/core/app/_lib/hooks/use-conciliacao-bancaria';
+import { useTransacaoDetalhes, useSugestoesConciliacao, conciliarManual, desconciliar } from '@/app/_lib/hooks/use-conciliacao-bancaria';
 import { toast } from 'sonner';
 
 export default function TransacaoDetalhePage() {

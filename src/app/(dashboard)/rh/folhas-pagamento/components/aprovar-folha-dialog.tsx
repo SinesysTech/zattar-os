@@ -22,10 +22,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useContasBancarias } from '@/core/app/_lib/hooks/use-contas-bancarias';
-import { usePlanoContas } from '@/core/app/_lib/hooks/use-plano-contas';
-import { useCentrosCusto } from '@/core/app/_lib/hooks/use-centros-custo';
-import { aprovarFolha } from '@/core/app/_lib/hooks/use-folhas-pagamento';
+import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
+import { usePlanoContas } from '@/app/_lib/hooks/use-plano-contas';
+import { useCentrosCusto } from '@/app/_lib/hooks/use-centros-custo';
+import { aprovarFolha } from '@/app/_lib/hooks/use-folhas-pagamento';
 import type { AprovarFolhaDTO } from '@/backend/types/financeiro/salarios.types';
 import { toast } from 'sonner';
 

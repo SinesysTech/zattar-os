@@ -13,7 +13,7 @@ import { useCopilotChatSuggestions } from "@copilotkit/react-ui";
 import {
   useProcessoTimeline,
   type TimelineUnificadaMetadata,
-} from '@/core/app/_lib/hooks/use-processo-timeline';
+} from '@/app/_lib/hooks/use-processo-timeline';
 import { ProcessoHeader } from '@/core/app/(dashboard)/processos/components/processo-header';
 import { TimelineContainer } from '@/core/app/(dashboard)/processos/components/timeline-container';
 import { TimelineLoading } from '@/core/app/(dashboard)/processos/components/timeline-loading';

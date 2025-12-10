@@ -17,7 +17,7 @@ import {
   formatarData,
   formatarNome,
   formatarTipoPessoa,
-} from '@/core/app/_lib/utils/format-clientes';
+} from '@/app/_lib/utils/format-clientes';
 import { formatarCep } from '@/core/app/_lib/types';
 import { getTipoParteLabel, getPoloLabel } from '@/core/app/_lib/types/terceiros';
 import type { Terceiro } from '@/core/app/_lib/types';

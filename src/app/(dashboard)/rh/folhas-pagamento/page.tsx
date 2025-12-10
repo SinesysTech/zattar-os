@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { GerarFolhaDialog } from './components/gerar-folha-dialog';
-import { useFolhasPagamento } from '@/core/app/_lib/hooks/use-folhas-pagamento';
+import { useFolhasPagamento } from '@/app/_lib/hooks/use-folhas-pagamento';
 import { MESES_LABELS, STATUS_FOLHA_LABELS, STATUS_FOLHA_CORES } from '@/backend/types/financeiro/salarios.types';
 
 const statusOptions = [

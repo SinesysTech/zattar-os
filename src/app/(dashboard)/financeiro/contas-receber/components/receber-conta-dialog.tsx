@@ -33,7 +33,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { receberConta } from '@/core/app/_lib/hooks/use-contas-receber';
+import { receberConta } from '@/app/_lib/hooks/use-contas-receber';
 import type {
   ContaReceberComDetalhes,
   FormaRecebimentoContaReceber,

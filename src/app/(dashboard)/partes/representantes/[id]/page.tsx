@@ -19,7 +19,7 @@ import {
   formatarTelefone,
   formatarData,
   formatarNome,
-} from '@/core/app/_lib/utils/format-clientes';
+} from '@/app/_lib/utils/format-clientes';
 import { formatarCep } from '@/core/app/_lib/types';
 import type { RepresentanteComEndereco } from '@/backend/types/representantes/representantes-types';
 
