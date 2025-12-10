@@ -43,8 +43,8 @@ import {
   Check,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import InputCEP, { type InputCepAddress } from '@/components/assinatura-digital/inputs/input-cep';
-import InputTelefone from '@/components/assinatura-digital/inputs/input-telefone';
+import InputCEP, { type InputCepAddress } from '@/features/assinatura-digital/components/inputs/input-cep';
+import InputTelefone from '@/features/assinatura-digital/components/inputs/input-telefone';
 import { actionCriarCliente, actionAtualizarCliente, type ActionResult } from '@/app/actions/partes';
 import type { Cliente } from '@/core/partes';
 

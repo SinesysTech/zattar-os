@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
-import FormStepLayout from "@/components/assinatura-digital/form/form-step-layout";
+import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";

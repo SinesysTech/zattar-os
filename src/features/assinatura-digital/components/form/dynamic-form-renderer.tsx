@@ -33,7 +33,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { InputCPF, InputTelefone, InputCEP, type AddressData, InputData, InputCPFCNPJ } from '@/components/assinatura-digital/inputs';
+import { InputCPF, InputTelefone, InputCEP, type AddressData, InputData, InputCPFCNPJ } from '@/features/assinatura-digital/components/inputs';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

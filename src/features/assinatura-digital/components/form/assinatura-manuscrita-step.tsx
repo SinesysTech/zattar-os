@@ -2,8 +2,8 @@
 
 import { useState, useRef } from "react";
 import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
-import CanvasAssinatura, { type CanvasAssinaturaRef } from "@/components/assinatura-digital/signature/canvas-assinatura";
-import FormStepLayout from "@/components/assinatura-digital/form/form-step-layout";
+import CanvasAssinatura, { type CanvasAssinaturaRef } from "@/features/assinatura-digital/components/signature/canvas-assinatura";
+import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import { v4 as uuidv4 } from 'uuid'; // Comment 6: Para gerar requestId único

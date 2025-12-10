@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import FormularioPage from '@/components/assinatura-digital/form/formulario-page'
+import FormularioPage from '@/features/assinatura-digital/components/form/formulario-page'
 import { getSegmentoBySlug } from '@/backend/assinatura-digital/services/segmentos.service'
 import { getFormularioBySlugAndSegmentoId } from '@/backend/assinatura-digital/services/formularios.service'
 import { getTemplate } from '@/backend/assinatura-digital/services/templates.service'

@@ -12,10 +12,10 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { DynamicFormSchema, FormFieldSchema, FormSectionSchema, FormFieldType } from '@/types/assinatura-digital/form-schema.types';
 import { validateFormSchema } from '@/app/_lib/assinatura-digital/form-schema/schema-validator';
-import DynamicFormRenderer from '@/components/assinatura-digital/form/dynamic-form-renderer';
-import FieldPalette from '@/components/assinatura-digital/schema-builder/FieldPalette';
-import SchemaCanvas, { getFieldIcon } from '@/components/assinatura-digital/schema-builder/SchemaCanvas';
-import FieldPropertiesPanel from '@/components/assinatura-digital/schema-builder/FieldPropertiesPanel';
+import DynamicFormRenderer from '@/features/assinatura-digital/components/form/dynamic-form-renderer';
+import FieldPalette from '@/features/assinatura-digital/components/schema-builder/FieldPalette';
+import SchemaCanvas, { getFieldIcon } from '@/features/assinatura-digital/components/schema-builder/SchemaCanvas';
+import FieldPropertiesPanel from '@/features/assinatura-digital/components/schema-builder/FieldPropertiesPanel';
 import { Eye, Code, Save, X, AlertTriangle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 

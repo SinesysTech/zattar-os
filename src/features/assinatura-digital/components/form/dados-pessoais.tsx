@@ -11,10 +11,10 @@ import {
   getGeneroText,
   getNacionalidadeText,
 } from '@/lib/assinatura-digital/validations/dadosPessoais.schema';
-import InputCPF from '@/components/assinatura-digital/inputs/input-cpf';
-import InputTelefone from '@/components/assinatura-digital/inputs/input-telefone';
-import InputCEP, { type AddressData } from '@/components/assinatura-digital/inputs/input-cep';
-import InputData from '@/components/assinatura-digital/inputs/input-data';
+import InputCPF from '@/features/assinatura-digital/components/inputs/input-cpf';
+import InputTelefone from '@/features/assinatura-digital/components/inputs/input-telefone';
+import InputCEP, { type AddressData } from '@/features/assinatura-digital/components/inputs/input-cep';
+import InputData from '@/features/assinatura-digital/components/inputs/input-data';
 import { useFormularioStore } from '@/app/_lib/stores/assinatura-digital/formulario-store';
 import { toast } from 'sonner';
 import { apiFetch } from '@/lib/api';
@@ -52,7 +52,7 @@ import {
   validateEmail,
   validateTextLength,
 } from '@/app/_lib/assinatura-digital/validations/business.validations';
-import FormStepLayout from '@/components/assinatura-digital/form/form-step-layout';
+import FormStepLayout from '@/features/assinatura-digital/components/form/form-step-layout';
 
 export default function DadosPessoais() {
   const [isSubmitting, setIsSubmitting] = useState(false);

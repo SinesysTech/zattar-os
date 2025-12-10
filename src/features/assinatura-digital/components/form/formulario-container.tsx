@@ -5,8 +5,8 @@ import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formula
 import VerificarCPF from "./verificar-cpf";
 import DadosPessoais from "./dados-pessoais";
 import DynamicFormStep from "./dynamic-form-step";
-import CapturaFotoStep from "@/components/assinatura-digital/capture/captura-foto-step";
-import GeolocationStep from "@/components/assinatura-digital/capture/geolocation-step";
+import CapturaFotoStep from "@/features/assinatura-digital/components/capture/captura-foto-step";
+import GeolocationStep from "@/features/assinatura-digital/components/capture/geolocation-step";
 import VisualizacaoPdfStep from "./visualizacao-pdf-step";
 import VisualizacaoMarkdownStep from "./visualizacao-markdown-step";
 import TermosAceiteStep from "./termos-aceite-step";

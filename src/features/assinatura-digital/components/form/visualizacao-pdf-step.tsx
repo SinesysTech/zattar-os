@@ -33,8 +33,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
-import FormStepLayout from "@/components/assinatura-digital/form/form-step-layout";
-import PdfPreviewDynamic from "@/components/assinatura-digital/pdf/PdfPreviewDynamic";
+import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
+import PdfPreviewDynamic from "@/features/assinatura-digital/components/pdf/PdfPreviewDynamic";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
