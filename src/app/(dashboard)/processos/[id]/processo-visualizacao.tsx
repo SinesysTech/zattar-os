@@ -9,7 +9,6 @@
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle, RefreshCw } from 'lucide-react';
 import { useCopilotReadable } from "@copilotkit/react-core";
-import { useCopilotChatSuggestions } from "@copilotkit/react-ui";
 import {
   useProcessoTimeline,
   type TimelineUnificadaMetadata,
@@ -34,7 +33,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
     value: {
       // Enviamos null se ainda estiver carregando, para a IA saber que não tem dados
       status_carregamento: isLoading ? "Carregando..." : "Dados carregados",
-      
+
       // Metadados do Processo (Quem é autor, réu, número, juízo)
       metadados: processo ? {
         numero: processo.numero_processo,
@@ -57,23 +56,9 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
       })) : "Timeline vazia ou carregando"
     },
   });
-  useCopilotChatSuggestions({
-    // Instruções para a IA gerar sugestões baseadas no contexto que ela acabou de ler
-    instructions: `
-      Com base nos dados do processo que você está lendo (timeline e metadados),
-      gere 3 perguntas curtas e diretas que ajudariam um advogado a analisar este caso rapidamente.
-      
-      Exemplos de estilo:
-      - "Resumir últimas movimentações"
-      - "Identificar riscos processuais"
-      - "Listar documentos pendentes"
-      
-      Adapte ao status atual do processo: ${processo?.codigo_status_processo || 'desconhecido'}.
-    `,
-    // Opcional: define o mínimo/máximo de sugestões
-    minSuggestions: 2,
-    maxSuggestions: 3,
-  });
+
+  // Removido useCopilotChatSuggestions temporariamente devido a incompatibilidade de versão
+  // TODO: Reavaliar quando atualizar @copilotkit/react-ui para versão compatível
 
   // Loading inicial
   if (isLoading) {
@@ -173,11 +158,11 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
 
       {/* Estado: Capturando timeline */}
       {isCapturing && (
-        <TimelineLoading 
-          message={timeline === null 
-            ? "Capturando timeline de todas as instâncias do processo (1º grau, 2º grau, TST)... Isso pode levar alguns minutos." 
+        <TimelineLoading
+          message={timeline === null
+            ? "Capturando timeline de todas as instâncias do processo (1º grau, 2º grau, TST)... Isso pode levar alguns minutos."
             : "Capturando timeline do processo... Isso pode levar alguns minutos."
-          } 
+          }
         />
       )}
 
