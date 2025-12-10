@@ -81,18 +81,23 @@ Scripts para testar e executar capturas de dados dos sistemas PJE/TRT.
 **Principais diretórios:**
 
 - **`acervo-geral/`** - Captura de processos do acervo geral
+- **`arquivados/`** - Captura de processos arquivados
 - **`audiencias/`** - Captura de audiências agendadas
 - **`partes/`** - Captura de partes dos processos
 - **`pendentes/`** - Captura de pendentes de manifestação
 - **`timeline/`** - Captura de timeline e documentos dos processos
+- **`test-captura-oab.ts`** - Teste de captura por OAB (Comunica CNJ)
+- **`test-comunica-cnj-api.ts`** - Teste completo da API Comunica CNJ
 
 **Características comuns:**
+
 - ✅ Testam endpoints da API REST (`/api/captura/trt/*`)
 - ✅ Salvam resultados em `scripts/results/`
 - ✅ Suportam filtros (TRT, grau, limite)
 - ✅ Requerem autenticação (SERVICE_API_KEY)
 
 **Exemplo de uso:**
+
 ```bash
 # Testar captura de audiências do TRT3
 npx tsx scripts/captura/audiencias/test-api-audiencias.ts
@@ -105,6 +110,7 @@ Scripts de gestão e manutenção do banco de dados PostgreSQL (Supabase).
 **Principais scripts:**
 
 - **`migrations/`**
+
   - `apply-migrations-via-supabase-sdk.ts` - Aplica migrations via SDK
   - `check-applied-migrations.ts` - Verifica migrations aplicadas
   - `apply-locks-migration.ts` - Aplica migration de locks
@@ -115,6 +121,7 @@ Scripts de gestão e manutenção do banco de dados PostgreSQL (Supabase).
   - `populate-tabelas-auxiliares-audiencias.ts` - Popula tabelas auxiliares
 
 **Exemplo de uso:**
+
 ```bash
 # Verificar migrations aplicadas
 npx tsx scripts/database/migrations/check-applied-migrations.ts
@@ -130,9 +137,11 @@ Scripts para sincronizar e corrigir dados entre diferentes fontes.
 **Principais scripts:**
 
 - **`usuarios/`**
+
   - `sincronizar-usuarios.ts` - Sincroniza auth.users → public.usuarios
 
 - **`entidades/`**
+
   - `sincronizar-entidades-enderecos.ts` - Sincroniza entidades e endereços do MongoDB
   - `corrigir-entidades-polo.ts` - Corrige polo das entidades
 
@@ -142,12 +151,14 @@ Scripts para sincronizar e corrigir dados entre diferentes fontes.
   - `reprocessar-partes-acervo.ts` - Re-captura partes do acervo
 
 **Características comuns:**
+
 - ✅ Modo `--dry-run` para simulação
 - ✅ Opção `--limit` para processar lotes
 - ✅ Logs detalhados com `--verbose`
 - ✅ Salvam resultados em JSON
 
 **Exemplo de uso:**
+
 ```bash
 # Simular sincronização de 100 processos
 npx tsx scripts/sincronizacao/processos/sincronizar-partes-processos.ts --dry-run --limit 100
@@ -167,6 +178,7 @@ Scripts de configuração e gestão do Backblaze B2.
 - `test-backblaze-connection.ts` - Testa conexão com B2
 
 **Exemplo de uso:**
+
 ```bash
 npx tsx scripts/storage/configure-backblaze-bucket.ts
 ```
@@ -178,6 +190,7 @@ Ferramentas de desenvolvimento, análise e validação.
 **Principais scripts:**
 
 - **`design/`**
+
   - `analyze-typography.ts` - Analisa uso de tipografia
   - `validate-design-system.ts` - Valida conformidade com design system
 
@@ -187,6 +200,7 @@ Ferramentas de desenvolvimento, análise e validação.
   - `run-build-debug-memory.js` - Debug de memória no build
 
 **Exemplo de uso:**
+
 ```bash
 # Validar design system
 npm run validate:design-system
@@ -273,14 +287,14 @@ npx tsx scripts/sincronizacao/processos/sincronizar-partes-processos.ts --verbos
 
 ### Por Funcionalidade
 
-| Funcionalidade | Localização |
-|----------------|-------------|
+| Funcionalidade        | Localização                                 |
+| --------------------- | ------------------------------------------- |
 | Testar API de captura | `scripts/captura/{tipo}/test-api-{tipo}.ts` |
-| Sincronizar dados | `scripts/sincronizacao/{entidade}/` |
-| Aplicar migrations | `scripts/database/migrations/` |
-| Popular banco | `scripts/database/population/` |
-| Configurar storage | `scripts/storage/` |
-| Validar código | `scripts/dev-tools/` |
+| Sincronizar dados     | `scripts/sincronizacao/{entidade}/`         |
+| Aplicar migrations    | `scripts/database/migrations/`              |
+| Popular banco         | `scripts/database/population/`              |
+| Configurar storage    | `scripts/storage/`                          |
+| Validar código        | `scripts/dev-tools/`                        |
 
 ### Por Nome de Script
 
