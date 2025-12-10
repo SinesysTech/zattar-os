@@ -37,7 +37,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import type { DocumentoComUsuario } from '@/backend/types/documentos/types';
+import type { DocumentoComUsuario } from '@/features/documentos/types';
+import { 
+  actionListarLixeira, 
+  actionRestaurarDaLixeira, 
+  actionDeletarPermanentemente 
+} from '@/features/documentos/actions/lixeira-actions';
 
 export default function LixeiraPage() {
   const router = useRouter();
@@ -50,10 +55,9 @@ export default function LixeiraPage() {
   // Buscar documentos na lixeira
   const fetchDocumentos = React.useCallback(async () => {
     try {
-      const response = await fetch('/api/lixeira');
-      const data = await response.json();
-      if (data.success) {
-        setDocumentos(data.data);
+      const result = await actionListarLixeira();
+      if (result.success) {
+        setDocumentos(result.data || []);
       }
     } catch (error) {
       console.error('Erro ao buscar lixeira:', error);
@@ -71,16 +75,13 @@ export default function LixeiraPage() {
   const handleRestaurar = async (documento: DocumentoComUsuario) => {
     setActionLoading(documento.id);
     try {
-      const response = await fetch(`/api/lixeira/${documento.id}/restaurar`, {
-        method: 'POST',
-      });
-      const data = await response.json();
+      const result = await actionRestaurarDaLixeira(documento.id);
 
-      if (data.success) {
+      if (result.success) {
         toast.success('Documento restaurado com sucesso');
         setDocumentos((prev) => prev.filter((d) => d.id !== documento.id));
       } else {
-        toast.error(data.error || 'Erro ao restaurar documento');
+        toast.error(result.error || 'Erro ao restaurar documento');
       }
     } catch (error) {
       console.error('Erro ao restaurar:', error);
@@ -104,16 +105,13 @@ export default function LixeiraPage() {
     setDeleteDialogOpen(false);
 
     try {
-      const response = await fetch(`/api/lixeira/${documentoParaDeletar.id}`, {
-        method: 'DELETE',
-      });
-      const data = await response.json();
+      const result = await actionDeletarPermanentemente(documentoParaDeletar.id);
 
-      if (data.success) {
+      if (result.success) {
         toast.success('Documento deletado permanentemente');
         setDocumentos((prev) => prev.filter((d) => d.id !== documentoParaDeletar.id));
       } else {
-        toast.error(data.error || 'Erro ao deletar documento');
+        toast.error(result.error || 'Erro ao deletar documento');
       }
     } catch (error) {
       console.error('Erro ao deletar:', error);

@@ -37,7 +37,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { TemplateCard } from './template-card';
-import type { TemplateComUsuario } from '@/backend/types/documentos/types';
+import { useTemplates } from '@/features/documentos/hooks/use-templates';
+import { actionListarCategorias, actionListarTemplatesMaisUsados } from '@/features/documentos/actions/templates-actions';
+import type { TemplateComUsuario } from '@/features/documentos/types';
 
 interface TemplateLibraryDialogProps {
   open: boolean;
@@ -51,9 +53,16 @@ export function TemplateLibraryDialog({
   pastaId,
 }: TemplateLibraryDialogProps) {
   const router = useRouter();
-  const [loading, setLoading] = React.useState(true);
+  const { 
+    templates, 
+    loading: templatesLoading, 
+    updateParams, 
+    useTemplate 
+  } = useTemplates({ limit: 50 });
+  
+  const [loadingMaisUsados, setLoadingMaisUsados] = React.useState(true);
+  const [loadingCategorias, setLoadingCategorias] = React.useState(true);
   const [creating, setCreating] = React.useState(false);
-  const [templates, setTemplates] = React.useState<TemplateComUsuario[]>([]);
   const [maisUsados, setMaisUsados] = React.useState<TemplateComUsuario[]>([]);
   const [categorias, setCategorias] = React.useState<string[]>([]);
   const [busca, setBusca] = React.useState('');
@@ -70,96 +79,49 @@ export function TemplateLibraryDialog({
     return () => clearTimeout(timer);
   }, [busca]);
 
-  // Carregar categorias
+  // Carregar dados iniciais
   React.useEffect(() => {
     if (open) {
-      fetch('/api/templates?modo=categorias')
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            setCategorias(data.data);
-          }
+      // Categorias
+      actionListarCategorias()
+        .then(result => {
+          if (result.success && result.data) setCategorias(result.data);
         })
-        .catch(console.error);
+        .finally(() => setLoadingCategorias(false));
+        
+      // Mais usados
+      actionListarTemplatesMaisUsados(4)
+        .then(result => {
+          if (result.success && result.data) setMaisUsados(result.data);
+        })
+        .finally(() => setLoadingMaisUsados(false));
     }
   }, [open]);
 
-  // Carregar templates mais usados
-  React.useEffect(() => {
-    if (open) {
-      fetch('/api/templates?modo=mais_usados&limit=4')
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            setMaisUsados(data.data);
-          }
-        })
-        .catch(console.error);
-    }
-  }, [open]);
-
-  // Carregar templates
+  // Atualizar filtros
   React.useEffect(() => {
     if (!open) return;
-
-    async function fetchTemplates() {
-      setLoading(true);
-      try {
-        const params = new URLSearchParams();
-
-        if (buscaDebounced) {
-          params.set('busca', buscaDebounced);
-        }
-
-        if (categoria) {
-          params.set('categoria', categoria);
-        }
-
-        if (visibilidade) {
-          params.set('visibilidade', visibilidade);
-        }
-
-        params.set('limit', '50');
-
-        const response = await fetch(`/api/templates?${params}`);
-        const data = await response.json();
-
-        if (data.success) {
-          setTemplates(data.data);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar templates:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchTemplates();
-  }, [open, buscaDebounced, categoria, visibilidade]);
+    
+    updateParams({
+      busca: buscaDebounced || undefined,
+      categoria: categoria || undefined,
+      visibilidade: (visibilidade as 'publico' | 'privado') || undefined,
+    });
+  }, [open, buscaDebounced, categoria, visibilidade, updateParams]);
 
   // Usar template
   const handleUseTemplate = async (template: TemplateComUsuario) => {
     setCreating(true);
     try {
-      const response = await fetch(`/api/templates/${template.id}/usar`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pasta_id: pastaId,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao criar documento');
-      }
+      const doc = await useTemplate(template.id, { pasta_id: pastaId });
 
       toast.success(`Documento criado a partir de "${template.titulo}"`);
       onOpenChange(false);
-
-      // Navegar para o novo documento
-      router.push(`/documentos/${data.data.id}`);
+      
+      if (doc) {
+        // Navegar para o novo documento
+        router.push(`/documentos/${doc.id}`);
+      }
     } catch (error) {
       console.error('Erro ao usar template:', error);
       toast.error(error instanceof Error ? error.message : 'Erro ao criar documento');
@@ -256,7 +218,7 @@ export function TemplateLibraryDialog({
 
               {/* Lista de templates */}
               <ScrollArea className="h-[400px]">
-                {loading ? (
+                {templatesLoading ? (
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
                       <Skeleton key={i} className="h-48 w-full" />

@@ -67,3 +67,29 @@ export async function actionDeletarTemplate(id: number) {
     return { success: false, error: String(error) };
   }
 }
+
+export async function actionListarCategorias() {
+  try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Não autenticado' };
+    }
+    const categorias = await service.listarCategoriasTemplates(user.id);
+    return { success: true, data: categorias };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
+export async function actionListarTemplatesMaisUsados(limit: number = 10) {
+  try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Não autenticado' };
+    }
+    const templates = await service.listarTemplatesMaisUsados(limit, user.id);
+    return { success: true, data: templates };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}

@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import type { TemplateComUsuario } from '@/backend/types/documentos/types';
+import type { TemplateComUsuario } from '@/features/documentos/types';
 
 interface TemplateCardProps {
   template: TemplateComUsuario;

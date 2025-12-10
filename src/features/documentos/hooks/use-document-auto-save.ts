@@ -42,6 +42,9 @@ export function useDocumentAutoSave(payload: AutoSavePayload, options: UseDocume
     }
   }, [documentoId, onSave, onError]);
 
+  // Check for deep equality or rely on stringified comparison
+  const payloadString = JSON.stringify(payload);
+
   useEffect(() => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
@@ -59,7 +62,8 @@ export function useDocumentAutoSave(payload: AutoSavePayload, options: UseDocume
         clearTimeout(timerRef.current);
       }
     };
-  }, [payload, debounceTime, saveDocument]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [payloadString, debounceTime, saveDocument]);
 
   return { isSaving, lastSaved, saveError };
 }

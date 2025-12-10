@@ -36,7 +36,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
-import type { DocumentoCompartilhadoComUsuario } from '@/backend/types/documentos/types';
+import { useDocumentSharing } from '@/features/documentos/hooks/use-document-sharing';
+import type { DocumentoCompartilhadoComUsuario } from '@/features/documentos/types';
 
 interface ShareDocumentDialogProps {
   open: boolean;
@@ -60,34 +61,23 @@ export function ShareDocumentDialog({
   documentoId,
   documentoTitulo,
 }: ShareDocumentDialogProps) {
+  const { 
+    shares: compartilhamentos, 
+    loading: sharesLoading, 
+    shareDocument, 
+    updatePermission, 
+    updateDeletePermission, 
+    removeShare 
+  } = useDocumentSharing(documentoId);
+  
   const [loading, setLoading] = React.useState(false);
   const [searchLoading, setSearchLoading] = React.useState(false);
-  const [compartilhamentos, setCompartilhamentos] = React.useState<DocumentoCompartilhadoComUsuario[]>([]);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [searchResults, setSearchResults] = React.useState<Usuario[]>([]);
   const [selectedUser, setSelectedUser] = React.useState<Usuario | null>(null);
   const [permissao, setPermissao] = React.useState<PermissaoTipo>('visualizar');
   const [podeDeletar, setPodeDeletar] = React.useState(false);
   const [actionLoading, setActionLoading] = React.useState<number | null>(null);
-
-  // Buscar compartilhamentos existentes
-  const fetchCompartilhamentos = React.useCallback(async () => {
-    try {
-      const response = await fetch(`/api/documentos/${documentoId}/compartilhamentos`);
-      const data = await response.json();
-      if (data.success) {
-        setCompartilhamentos(data.data);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar compartilhamentos:', error);
-    }
-  }, [documentoId]);
-
-  React.useEffect(() => {
-    if (open) {
-      fetchCompartilhamentos();
-    }
-  }, [open, fetchCompartilhamentos]);
 
   // Buscar usuários para compartilhar
   const searchUsers = React.useCallback(async (query: string) => {
@@ -128,28 +118,18 @@ export function ShareDocumentDialog({
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/documentos/${documentoId}/compartilhamentos`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          usuario_id: selectedUser.id,
-          permissao,
-          pode_deletar: podeDeletar,
-        }),
+      await shareDocument({
+        documento_id: documentoId,
+        usuario_id: selectedUser.id,
+        permissao,
+        pode_deletar: podeDeletar,
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao compartilhar');
-      }
 
       toast.success(`Documento compartilhado com ${selectedUser.nomeCompleto}`);
       setSelectedUser(null);
       setSearchQuery('');
       setSearchResults([]);
       setPodeDeletar(false);
-      fetchCompartilhamentos();
     } catch (error) {
       console.error('Erro ao compartilhar:', error);
       toast.error(error instanceof Error ? error.message : 'Erro ao compartilhar documento');
@@ -162,20 +142,8 @@ export function ShareDocumentDialog({
   const handleUpdatePermissao = async (compartilhamentoId: number, novaPermissao: PermissaoTipo) => {
     setActionLoading(compartilhamentoId);
     try {
-      const response = await fetch(`/api/documentos/${documentoId}/compartilhamentos/${compartilhamentoId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ permissao: novaPermissao }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao atualizar permissão');
-      }
-
+      await updatePermission(compartilhamentoId, novaPermissao);
       toast.success('Permissão atualizada');
-      fetchCompartilhamentos();
     } catch (error) {
       console.error('Erro ao atualizar permissão:', error);
       toast.error(error instanceof Error ? error.message : 'Erro ao atualizar permissão');
@@ -188,20 +156,8 @@ export function ShareDocumentDialog({
   const handleTogglePodeDeletar = async (compartilhamentoId: number, novoPodeDeletar: boolean) => {
     setActionLoading(compartilhamentoId);
     try {
-      const response = await fetch(`/api/documentos/${documentoId}/compartilhamentos/${compartilhamentoId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pode_deletar: novoPodeDeletar }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao atualizar permissão');
-      }
-
+      await updateDeletePermission(compartilhamentoId, novoPodeDeletar);
       toast.success(novoPodeDeletar ? 'Permissão de deleção concedida' : 'Permissão de deleção removida');
-      fetchCompartilhamentos();
     } catch (error) {
       console.error('Erro ao atualizar permissão de deleção:', error);
       toast.error(error instanceof Error ? error.message : 'Erro ao atualizar permissão de deleção');
@@ -214,18 +170,9 @@ export function ShareDocumentDialog({
   const handleRemove = async (compartilhamentoId: number, nomeUsuario: string) => {
     setActionLoading(compartilhamentoId);
     try {
-      const response = await fetch(`/api/documentos/${documentoId}/compartilhamentos/${compartilhamentoId}`, {
-        method: 'DELETE',
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao remover compartilhamento');
-      }
+      await removeShare(compartilhamentoId);
 
       toast.success(`Acesso de ${nomeUsuario} removido`);
-      fetchCompartilhamentos();
     } catch (error) {
       console.error('Erro ao remover compartilhamento:', error);
       toast.error(error instanceof Error ? error.message : 'Erro ao remover compartilhamento');

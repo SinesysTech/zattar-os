@@ -67,15 +67,19 @@ export async function criarDocumento(
 /**
  * Busca um documento por ID
  */
-export async function buscarDocumentoPorId(id: number): Promise<Documento | null> {
+export async function buscarDocumentoPorId(id: number, includeDeleted = false): Promise<Documento | null> {
   const supabase = createServiceClient();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('documentos')
     .select()
-    .eq('id', id)
-    .is('deleted_at', null)
-    .single();
+    .eq('id', id);
+    
+  if (!includeDeleted) {
+    query = query.is('deleted_at', null);
+  }
+
+  const { data, error } = await query.single();
 
   if (error) {
     if (error.code === 'PGRST116') {

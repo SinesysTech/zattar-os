@@ -47,16 +47,50 @@ import { DocumentChat } from '@/features/documentos/components/document-chat';
 import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
 import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
 import { createClient } from '@/app/_lib/supabase/client';
-import type { DocumentoComUsuario } from '../types';
-import { exportToPdf, exportTextToPdf, exportToDocx } from '../utils';
-import type { Value } from '../types';
-import { useDocument } from '../../hooks/use-document';
-import { useDocumentAutoSave } from '../../hooks/use-document-auto-save';
+import type { DocumentoComUsuario } from '@/features/documentos/types';
+import { exportToPdf, exportTextToPdf, exportToDocx } from '@/features/documentos/utils';
+import type { Value } from '@/features/documentos/types';
+import { useDocument } from '@/features/documentos/hooks/use-document';
+import { useDocumentAutoSave } from '@/features/documentos/hooks/use-document-auto-save';
 
 interface DocumentEditorProps {
   documentoId: number;
 }
 
+
+  const { documento, loading, saving: manualSaving, saveDocument } = useDocument(documentoId);
+  
+  const [conteudo, setConteudo] = React.useState<Value[]>([]);
+  const [titulo, setTitulo] = React.useState('');
+  const [chatOpen, setChatOpen] = React.useState(false);
+  const [uploadOpen, setUploadOpen] = React.useState(false);
+  const [shareOpen, setShareOpen] = React.useState(false);
+  const [historyOpen, setHistoryOpen] = React.useState(false);
+  const [initialized, setInitialized] = React.useState(false);
+
+  // Sync document loaded data to local state just once
+  React.useEffect(() => {
+    if (documento && !initialized) {
+      setTitulo(documento.titulo);
+      setConteudo(documento.conteudo || []);
+      setInitialized(true);
+    }
+  }, [documento, initialized]);
+
+  // Auto-save integration
+  const { isSaving: autoSaving } = useDocumentAutoSave(
+    {
+      documento_id: documentoId,
+      conteudo: initialized ? conteudo : undefined, // Only autosave after initialized
+      titulo: initialized ? titulo : undefined,
+    }, 
+    { 
+      documentoId,
+      debounceTime: 2000 
+    }
+  );
+
+  const saving = manualSaving || autoSaving;
 
   const [
     currentUser,
@@ -80,38 +114,14 @@ interface DocumentEditorProps {
     userEmail: currentUser?.emailCorporativo || '',
   });
 
-  // Auto-save timer
-  const autoSaveTimerRef = React.useRef<NodeJS.Timeout | null>(null);
-  const lastSavedRef = React.useRef<string>('');
-
-  // Carregar documento
-  React.useEffect(() => {
-    async function fetchDocumento() {
-      try {
-        const data = await carregarDocumento(documentoId);
-
-        setDocumento(data);
-        setTitulo(data.titulo);
-        setConteudo(data.conteudo || []);
-        lastSavedRef.current = JSON.stringify(data.conteudo);
-      } catch (error) {
-        console.error('Erro ao carregar documento:', error);
-        toast.error(error instanceof Error ? error.message : 'Erro ao carregar documento');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchDocumento();
-  }, [documentoId]);
-
   // Carregar usuário atual
   React.useEffect(() => {
     async function fetchUser() {
       try {
-        const { data: { user: authUser } } = await supabase.auth.getUser();
+        const { data: { user: authUser } } = await createClient().auth.getUser();
 
         if (authUser) {
+          // TODO: Use better profile fetching if available commonly
           const response = await fetch('/api/perfil');
           const data = await response.json();
 
@@ -125,73 +135,21 @@ interface DocumentEditorProps {
     }
 
     fetchUser();
-  }, [supabase]);
-
-  const handleAutoSave = React.useCallback(async () => {
-    if (!documento) return;
-
-    setSaving(true);
-
-    try {
-      await salvarDocumentoAutomatico({
-        documento_id: documentoId,
-        conteudo,
-        titulo,
-      });
-
-      lastSavedRef.current = JSON.stringify(conteudo);
-    } catch (error) {
-      console.error('Erro no auto-save:', error);
-      toast.error('Erro ao salvar', {
-        description: 'Não foi possível salvar automaticamente',
-      });
-    } finally {
-      setSaving(false);
-    }
-  }, [documento, documentoId, conteudo, titulo]);
-
-  // Auto-save quando conteúdo mudar
-  React.useEffect(() => {
-    if (!documento || loading) return;
-
-    const currentContent = JSON.stringify(conteudo);
-    if (currentContent === lastSavedRef.current) return;
-
-    // Debounce de 2 segundos
-    if (autoSaveTimerRef.current) {
-      clearTimeout(autoSaveTimerRef.current);
-    }
-
-    autoSaveTimerRef.current = setTimeout(() => {
-      handleAutoSave();
-    }, 2000);
-
-    return () => {
-      if (autoSaveTimerRef.current) {
-        clearTimeout(autoSaveTimerRef.current);
-      }
-    };
-  }, [conteudo, titulo, documento, loading, handleAutoSave]);
+  }, []);
 
   const handleManualSave = async () => {
     if (!documento) return;
 
-    setSaving(true);
-
     try {
-      await salvarDocumento(documentoId, {
+      await saveDocument({
         titulo,
         conteudo,
       });
-
-      lastSavedRef.current = JSON.stringify(conteudo);
 
       toast.success('Documento salvo', { description: 'Todas as alterações foram salvas' });
     } catch (error) {
       console.error('Erro ao salvar:', error);
       toast.error(error instanceof Error ? error.message : 'Erro ao salvar documento');
-    } finally {
-      setSaving(false);
     }
   };
 
