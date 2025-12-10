@@ -1,12 +1,14 @@
-'use client';
-
 /**
- * Página de Clientes
- * Lista e gerencia clientes do escritório
+ * Página de Clientes (Server Component)
+ *
+ * Lista e gerencia clientes do escritório.
+ * Dados são carregados no servidor para melhor performance e SEO.
  */
 
 import { Suspense } from 'react';
-import { ClientesTab } from '../components/clientes-tab';
+import { listarClientes } from '@/core/partes/service';
+import { PageShell } from '@/components/shared/page-shell';
+import { ClientesTableWrapper } from '@/components/modules/partes/clientes-table-wrapper';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function ClientesLoading() {
@@ -18,13 +20,27 @@ function ClientesLoading() {
   );
 }
 
-export default function ClientesPage() {
+export default async function ClientesPage() {
+  // Fetch inicial no servidor
+  const result = await listarClientes({
+    pagina: 1,
+    limite: 50,
+  });
+
+  const clientes = result.success ? result.data.data : [];
+  const pagination = result.success ? result.data.pagination : null;
+
   return (
-    <div className="space-y-4">
+    <PageShell
+      title="Gestão de Clientes"
+      description="Gerencie seus clientes PF e PJ"
+    >
       <Suspense fallback={<ClientesLoading />}>
-        <ClientesTab />
+        <ClientesTableWrapper
+          initialData={clientes}
+          initialPagination={pagination}
+        />
       </Suspense>
-    </div>
+    </PageShell>
   );
 }
-

@@ -1,3 +1,9 @@
+/**
+ * @deprecated MIGRADO PARA src/core/partes
+ * Este arquivo sera removido em versao futura.
+ * Use: import { listarPartesContrarias } from '@/core/partes'
+ */
+
 // Serviço de listagem de partes contrárias
 // Gerencia a lógica de negócio para listar partes contrárias com filtros e paginação
 

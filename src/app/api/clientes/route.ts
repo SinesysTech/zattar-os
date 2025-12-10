@@ -3,9 +3,15 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { obterClientes } from '@/backend/clientes/services/clientes/listar-clientes.service';
-import { cadastrarCliente } from '@/backend/clientes/services/clientes/criar-cliente.service';
-import type { CriarClienteParams } from '@/backend/types/partes';
+import {
+  listarClientes,
+  criarCliente,
+  type CreateClienteInput,
+  type ListarClientesParams,
+  toAppError,
+  errorCodeToHttpStatus,
+  isPartesError,
+} from '@/core/partes';
 
 /**
  * @swagger
@@ -172,7 +178,7 @@ import type { CriarClienteParams } from '@/backend/types/partes';
  */
 export async function GET(request: NextRequest) {
   try {
-    // 1. Autenticação
+    // 1. Autenticacao
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
       return NextResponse.json(
@@ -181,9 +187,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 2. Obter parâmetros da query string
+    // 2. Obter parametros da query string
     const { searchParams } = new URL(request.url);
-    const params = {
+    const params: ListarClientesParams = {
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
       busca: searchParams.get('busca') || undefined,
@@ -194,18 +200,42 @@ export async function GET(request: NextRequest) {
       incluir_processos: searchParams.get('incluir_processos') === 'true',
     };
 
-    // 3. Listar clientes
-    const resultado = await obterClientes(params);
+    // 3. Listar clientes via core service (Result pattern)
+    const result = await listarClientes(params);
+
+    if (!result.success) {
+      const status = errorCodeToHttpStatus(result.error.code);
+      return NextResponse.json(
+        {
+          error: result.error.message,
+          code: result.error.code,
+          details: result.error.details,
+        },
+        { status }
+      );
+    }
 
     return NextResponse.json({
       success: true,
-      data: resultado,
+      data: result.data.data,
+      pagination: result.data.pagination,
     });
   } catch (error) {
     console.error('Erro ao listar clientes:', error);
+
+    // Converter erros de dominio para AppError
+    if (isPartesError(error)) {
+      const appErr = toAppError(error);
+      const status = errorCodeToHttpStatus(appErr.code);
+      return NextResponse.json(
+        { error: appErr.message, code: appErr.code, details: appErr.details },
+        { status }
+      );
+    }
+
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
     return NextResponse.json(
-      { error: erroMsg },
+      { error: erroMsg, code: 'INTERNAL_ERROR' },
       { status: 500 }
     );
   }
@@ -213,7 +243,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    // 1. Autenticação
+    // 1. Autenticacao
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
       return NextResponse.json(
@@ -222,43 +252,49 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2. Validar e parsear body da requisição
+    // 2. Validar e parsear body da requisicao
     const body = await request.json();
-    const dadosCliente = body as CriarClienteParams;
+    const input = body as CreateClienteInput;
 
-    // Validações básicas
-    if (!dadosCliente.tipo_pessoa || !dadosCliente.nome) {
+    // 3. Criar cliente via core service (Result pattern)
+    // O service faz validacao completa via Zod e retorna Result<Cliente>
+    const result = await criarCliente(input);
+
+    if (!result.success) {
+      const status = errorCodeToHttpStatus(result.error.code);
       return NextResponse.json(
-        { error: 'Missing required fields: tipo_pessoa, nome' },
-        { status: 400 }
-      );
-    }
-
-    // 3. Criar cliente
-    const resultado = await cadastrarCliente({
-      ...dadosCliente,
-      papel_processual: 'CLIENTE' as const,
-    });
-
-    if (!resultado.sucesso) {
-      return NextResponse.json(
-        { error: resultado.erro || 'Erro ao criar cliente' },
-        { status: 400 }
+        {
+          error: result.error.message,
+          code: result.error.code,
+          details: result.error.details,
+        },
+        { status }
       );
     }
 
     return NextResponse.json(
       {
         success: true,
-        data: resultado.cliente,
+        data: result.data,
       },
       { status: 201 }
     );
   } catch (error) {
     console.error('Erro ao criar cliente:', error);
+
+    // Converter erros de dominio para AppError
+    if (isPartesError(error)) {
+      const appErr = toAppError(error);
+      const status = errorCodeToHttpStatus(appErr.code);
+      return NextResponse.json(
+        { error: appErr.message, code: appErr.code, details: appErr.details },
+        { status }
+      );
+    }
+
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
     return NextResponse.json(
-      { error: erroMsg },
+      { error: erroMsg, code: 'INTERNAL_ERROR' },
       { status: 500 }
     );
   }

@@ -1,11 +1,16 @@
-// Rota de API para operações em cliente específico
+// Rota de API para operacoes em cliente especifico
 // GET: Buscar cliente por ID | PATCH: Atualizar cliente
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { obterClientePorId } from '@/backend/clientes/services/clientes/buscar-cliente.service';
-import { atualizarCliente } from '@/backend/clientes/services/clientes/atualizar-cliente.service';
-import type { AtualizarClienteParams } from '@/backend/types/partes';
+import {
+  buscarCliente,
+  atualizarCliente,
+  type UpdateClienteInput,
+  toAppError,
+  errorCodeToHttpStatus,
+  isPartesError,
+} from '@/core/partes';
 
 /**
  * @swagger
@@ -112,7 +117,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Autenticação
+    // 1. Autenticacao
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
       return NextResponse.json(
@@ -121,36 +126,59 @@ export async function GET(
       );
     }
 
-    // 2. Obter ID do parâmetro
+    // 2. Obter ID do parametro
     const { id } = await params;
     const clienteId = parseInt(id, 10);
 
     if (isNaN(clienteId)) {
       return NextResponse.json(
-        { error: 'ID inválido' },
+        { error: 'ID invalido', code: 'VALIDATION_ERROR' },
         { status: 400 }
       );
     }
 
-    // 3. Buscar cliente
-    const cliente = await obterClientePorId(clienteId);
+    // 3. Buscar cliente via core service (Result pattern)
+    const result = await buscarCliente(clienteId);
 
-    if (!cliente) {
+    if (!result.success) {
+      const status = errorCodeToHttpStatus(result.error.code);
       return NextResponse.json(
-        { error: 'Cliente não encontrado' },
+        {
+          error: result.error.message,
+          code: result.error.code,
+          details: result.error.details,
+        },
+        { status }
+      );
+    }
+
+    if (!result.data) {
+      return NextResponse.json(
+        { error: 'Cliente nao encontrado', code: 'NOT_FOUND' },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      data: cliente,
+      data: result.data,
     });
   } catch (error) {
     console.error('Erro ao buscar cliente:', error);
+
+    // Converter erros de dominio para AppError
+    if (isPartesError(error)) {
+      const appErr = toAppError(error);
+      const status = errorCodeToHttpStatus(appErr.code);
+      return NextResponse.json(
+        { error: appErr.message, code: appErr.code, details: appErr.details },
+        { status }
+      );
+    }
+
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
     return NextResponse.json(
-      { error: erroMsg },
+      { error: erroMsg, code: 'INTERNAL_ERROR' },
       { status: 500 }
     );
   }
@@ -161,7 +189,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Autenticação
+    // 1. Autenticacao
     const authResult = await authenticateRequest(request);
     if (!authResult.authenticated) {
       return NextResponse.json(
@@ -170,49 +198,57 @@ export async function PATCH(
       );
     }
 
-    // 2. Obter ID do parâmetro
+    // 2. Obter ID do parametro
     const { id } = await params;
     const clienteId = parseInt(id, 10);
 
     if (isNaN(clienteId)) {
       return NextResponse.json(
-        { error: 'ID inválido' },
+        { error: 'ID invalido', code: 'VALIDATION_ERROR' },
         { status: 400 }
       );
     }
 
-    // 3. Validar e parsear body da requisição
+    // 3. Validar e parsear body da requisicao
     const body = await request.json();
-    const dadosAtualizacao: AtualizarClienteParams = {
-      id: clienteId,
-      ...body,
-    };
+    const input = body as UpdateClienteInput;
 
-    // 4. Atualizar cliente
-    const resultado = await atualizarCliente(dadosAtualizacao);
+    // 4. Atualizar cliente via core service (Result pattern)
+    // O service faz validacao completa via Zod e retorna Result<Cliente>
+    const result = await atualizarCliente(clienteId, input);
 
-    if (!resultado.sucesso) {
-      if (resultado.erro?.includes('não encontrado')) {
-        return NextResponse.json(
-          { error: resultado.erro },
-          { status: 404 }
-        );
-      }
+    if (!result.success) {
+      const status = errorCodeToHttpStatus(result.error.code);
       return NextResponse.json(
-        { error: resultado.erro || 'Erro ao atualizar cliente' },
-        { status: 400 }
+        {
+          error: result.error.message,
+          code: result.error.code,
+          details: result.error.details,
+        },
+        { status }
       );
     }
 
     return NextResponse.json({
       success: true,
-      data: resultado.cliente,
+      data: result.data,
     });
   } catch (error) {
     console.error('Erro ao atualizar cliente:', error);
+
+    // Converter erros de dominio para AppError
+    if (isPartesError(error)) {
+      const appErr = toAppError(error);
+      const status = errorCodeToHttpStatus(appErr.code);
+      return NextResponse.json(
+        { error: appErr.message, code: appErr.code, details: appErr.details },
+        { status }
+      );
+    }
+
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
     return NextResponse.json(
-      { error: erroMsg },
+      { error: erroMsg, code: 'INTERNAL_ERROR' },
       { status: 500 }
     );
   }

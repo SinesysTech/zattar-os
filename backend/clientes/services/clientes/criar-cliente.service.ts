@@ -1,3 +1,9 @@
+/**
+ * @deprecated MIGRADO PARA src/core/partes
+ * Este arquivo sera removido em versao futura.
+ * Use: import { criarCliente } from '@/core/partes'
+ */
+
 // Serviço de criação de cliente
 // Gerencia a lógica de negócio para cadastrar novos clientes
 

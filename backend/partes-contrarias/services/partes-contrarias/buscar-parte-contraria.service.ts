@@ -1,3 +1,9 @@
+/**
+ * @deprecated MIGRADO PARA src/core/partes
+ * Este arquivo sera removido em versao futura.
+ * Use: import { buscarParteContraria, buscarParteContrariaPorDocumento } from '@/core/partes'
+ */
+
 // Serviço de busca de parte contrária
 // Gerencia a lógica de negócio para buscar partes contrárias por diferentes critérios
 

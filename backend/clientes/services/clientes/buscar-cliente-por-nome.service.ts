@@ -1,3 +1,9 @@
+/**
+ * @deprecated MIGRADO PARA src/core/partes
+ * Este arquivo sera removido em versao futura.
+ * Use: import { buscarClientesPorNome } from '@/core/partes'
+ */
+
 // Serviço de busca de clientes por nome
 // Camada de lógica de negócio com validações
 

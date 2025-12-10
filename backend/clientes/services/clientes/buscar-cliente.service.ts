@@ -1,3 +1,9 @@
+/**
+ * @deprecated MIGRADO PARA src/core/partes
+ * Este arquivo sera removido em versao futura.
+ * Use: import { buscarCliente, buscarClientePorDocumento } from '@/core/partes'
+ */
+
 // Serviço de busca de cliente
 // Gerencia a lógica de negócio para buscar clientes por diferentes critérios
 

@@ -1,3 +1,9 @@
+/**
+ * @deprecated MIGRADO PARA src/core/partes
+ * Este arquivo sera removido em versao futura.
+ * Use: import { listarClientes } from '@/core/partes'
+ */
+
 // Serviço de listagem de clientes
 // Gerencia a lógica de negócio para listar clientes com filtros e paginação
 

@@ -1,3 +1,9 @@
+/**
+ * @deprecated MIGRADO PARA src/core/partes
+ * Este arquivo sera removido em versao futura.
+ * Use: import { findParteContrariaById, saveParteContraria, ... } from '@/core/partes'
+ */
+
 // Serviço de persistência de partes contrárias
 // Gerencia operações de CRUD na tabela partes_contrarias (60 campos com discriminated union PF/PJ)
 

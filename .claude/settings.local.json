@@ -41,7 +41,9 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nfix(build): corrigir configuração eslint para Next.js 16\n\n- Remover `eslint.ignoreDuringBuilds` de next.config.ts (não suportado no Next.js 16)\n- Adicionar ENV NEXT_LINT_DISABLED=true ao Dockerfile para manter lint desabilitado durante builds\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(npm run test:services:*)",
       "Bash(npm run test:coverage:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(timeout 30 npm run dev:*)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []

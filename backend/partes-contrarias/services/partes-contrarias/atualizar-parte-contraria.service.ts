@@ -1,3 +1,9 @@
+/**
+ * @deprecated MIGRADO PARA src/core/partes
+ * Este arquivo sera removido em versao futura.
+ * Use: import { atualizarParteContraria } from '@/core/partes'
+ */
+
 // Serviço de atualização de parte contrária
 // Gerencia a lógica de negócio para atualizar partes contrárias existentes
 

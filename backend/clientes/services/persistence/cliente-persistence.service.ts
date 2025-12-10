@@ -1,3 +1,9 @@
+/**
+ * @deprecated MIGRADO PARA src/core/partes
+ * Este arquivo sera removido em versao futura.
+ * Use: import { findClienteById, saveCliente, ... } from '@/core/partes'
+ */
+
 // Serviço de persistência de clientes
 // Gerencia operações de CRUD na tabela clientes (60 campos com discriminated union PF/PJ)
 

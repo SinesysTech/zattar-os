@@ -1,3 +1,9 @@
+/**
+ * @deprecated MIGRADO PARA src/core/partes/domain
+ * Este arquivo sera removido em versao futura.
+ * Use: import { Cliente, CreateClienteInput, ... } from '@/core/partes'
+ */
+
 // Re-exporta tipos de domínio e contratos de clientes
 // Esta camada existe apenas para compatibilidade; novos módulos devem importar diretamente de @/types
 
