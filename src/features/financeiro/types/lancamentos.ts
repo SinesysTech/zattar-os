@@ -135,3 +135,19 @@ export type ContasPagarFilters = ListarLancamentosParams & {
     categoria?: string;
 };
 
+// Aliases for compatibility with Contas Receber components
+export type StatusContaReceber = StatusLancamento;
+export type FormaRecebimentoContaReceber = FormaPagamento;
+export type ContaReceberComDetalhes = Lancamento & {
+    cliente?: { id: number; razaoSocial: string; nomeFantasia?: string };
+    contrato?: { id: number; numero: string; descricao?: string };
+    categoria_nome?: string;
+};
+
+export type ResumoInadimplencia = ResumoVencimentos;
+
+export type ContasReceberFilters = ListarLancamentosParams & {
+    categoria?: string;
+};
+
+

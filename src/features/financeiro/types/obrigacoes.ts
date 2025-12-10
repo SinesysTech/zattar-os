@@ -89,3 +89,94 @@ export interface ObrigacaoJuridica {
     // Lista de Parcelas
     parcelas: ParcelaObrigacao[];
 }
+
+// ============================================================================
+// Tipos de View/Componentes
+// ============================================================================
+
+export type StatusObrigacao = 'pendente' | 'vencida' | 'efetivada' | 'cancelada' | 'estornada';
+export type StatusSincronizacao = 'sincronizado' | 'pendente' | 'inconsistente' | 'nao_aplicavel';
+
+export interface ObrigacaoComDetalhes {
+    id: number;
+    tipo: TipoObrigacao;
+    descricao: string;
+    valor: number;
+    dataVencimento: string;
+    status: StatusObrigacao;
+    statusSincronizacao: StatusSincronizacao;
+    
+    // Auxiliares de UI
+    diasAteVencimento: number | null;
+    tipoEntidade: 'parcela' | 'obrigacao'; // Se é uma parcela individual ou uma obrigação agrupada
+    
+    // Datas
+    dataLancamento?: string | null;
+    dataEfetivacao?: string | null;
+    dataCompetencia?: string | null;
+    
+    // Relacionamentos IDs
+    clienteId?: number | null;
+    processoId?: number | null;
+    acordoId?: number | null;
+    lancamentoId?: number | null;
+    
+    // Relacionamentos Expandidos
+    cliente?: {
+        id: number;
+        nome: string;
+        razaoSocial?: string;
+        cpfCnpj?: string;
+    };
+    processo?: {
+        id: number;
+        numeroProcesso: string;
+        autor?: string;
+        reu?: string;
+        vara?: string;
+        tribunal?: string;
+    };
+    acordo?: {
+        id: number;
+        tipo: 'acordo' | 'condenacao';
+        direcao: 'recebimento' | 'pagamento';
+        valorTotal: number;
+        numeroParcelas: number;
+    };
+    parcela?: {
+        id: number;
+        numeroParcela: number;
+        status: string;
+        valorBrutoCreditoPrincipal: number;
+        honorariosContratuais: number;
+        formaPagamento?: string | null;
+    };
+    lancamento?: {
+        id: number;
+        tipo: 'receita' | 'despesa';
+        status: string;
+        dataLancamento?: string;
+    };
+    contaContabil?: {
+        id: number;
+        codigo: string;
+        nome: string;
+    };
+    
+    percentualHonorarios?: number | null;
+}
+
+export interface ResumoObrigacoes {
+    vencidas: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
+    vencendoHoje: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
+    vencendoEm7Dias: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
+    inconsistentes: { quantidade: number; items: ObrigacaoComDetalhes[] };
+    pendentes: { quantidade: number; valor: number };
+    efetivadas: { quantidade: number; valor: number };
+    porTipo: Array<{
+        tipo: TipoObrigacao | 'conta_receber' | 'conta_pagar';
+        quantidade: number;
+        valorTotal: number;
+        valorTotalPendente: number;
+    }>;
+}
