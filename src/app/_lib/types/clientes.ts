@@ -3,8 +3,7 @@
  * Re-exporta tipos de domínio e contratos para uso em componentes React
  */
 
-import type { Cliente } from '@/types/domain/partes';
-import type { GrauProcesso, TipoPessoa } from '@/types/domain/common';
+import type { Cliente, GrauProcesso, TipoPessoa } from '@/core/partes';
 
 // Alias para compatibilidade
 export type GrauCliente = GrauProcesso;

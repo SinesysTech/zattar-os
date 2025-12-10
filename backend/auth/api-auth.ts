@@ -1,6 +1,7 @@
 // Utilitário de autenticação dual: Supabase Auth (front-end) + Bearer Token (API externa) + Service API Key (jobs do sistema)
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { createServerClient } from '@supabase/ssr';
 import { createClient } from '@/backend/utils/supabase/server';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 
@@ -108,9 +109,37 @@ export async function authenticateRequest(
   }
 
   // 3. Verificar Supabase session (cookies)
+  // IMPORTANTE: Usar getUser() para verificação segura de autenticação
+  // getSession() pode retornar dados não autenticados do storage
+  // getUser() valida os dados contactando o servidor Supabase Auth
   try {
-    const supabase = await createClient();
-    const { data: { user }, error } = await supabase.auth.getUser();
+    // Criar cliente Supabase a partir dos cookies da requisição
+    // Isso é necessário porque em rotas de API não podemos usar cookies() do Next.js
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            // Em rotas de API, não podemos modificar cookies diretamente
+            // Os cookies serão gerenciados pelo middleware
+          },
+        },
+      }
+    );
+
+    // Primeiro atualizar a sessão (atualiza cookies se necessário)
+    await supabase.auth.getSession();
+
+    // Usar getUser() para verificação segura de autenticação
+    // Isso valida os dados contactando o servidor Supabase Auth
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
     
     if (error || !user) {
       return {

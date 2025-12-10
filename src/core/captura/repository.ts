@@ -83,13 +83,6 @@ export async function buscarConfigTribunal(tribunalId: string): Promise<ConfigTr
   };
 }
 
-/**
- * Busca configuração do tribunal (alias para manter compatibilidade)
- * @deprecated Use buscarConfigTribunal diretamente
- */
-export async function buscarConfigTribunalRepo(tribunalId: string): Promise<ConfigTribunal | null> {
-  return buscarConfigTribunal(tribunalId);
-}
 
 /**
  * Salva log de captura (placeholder - implementar conforme necessário)

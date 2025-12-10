@@ -1,6 +1,6 @@
 // Tipos compartilhados de domínio e contratos (importar diretamente quando possível, aqui apenas re-exportando o essencial para conveniência ou para tipos específicos do frontend)
-export type { TipoPessoa, SituacaoPJE, GrauProcesso } from '@/types/domain/common';
-export type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
+export type { TipoPessoa, SituacaoPJE, GrauProcesso } from '@/core/partes';
+export type { ProcessoRelacionado } from '@/core/partes';
 export type {
   ClienteBase,
   Cliente,
@@ -14,17 +14,24 @@ export type {
   ParteContraria,
   ParteContrariaPessoaFisica,
   ParteContrariaPessoaJuridica,
+} from '@/core/partes';
+
+export type {
   EntidadeTipoEndereco,
   SituacaoEndereco,
   ClassificacaoEndereco,
   Endereco,
+} from '@/core/enderecos';
+
+// Tipos que ainda não têm módulo core equivalente
+export type {
   EntidadeTipoProcessoParte,
   PoloProcessoParte,
   TipoParteProcesso,
   ProcessoParte,
   ParteComDadosCompletos,
   ProcessoComParticipacao,
-} from '@/types/domain';
+} from '@/types/domain/processo-partes';
 
 export type {
   CriarClienteParams,

@@ -1,4 +1,4 @@
-import type { GrauProcesso } from '@/core/partes/domain';
+import type { GrauProcesso } from '@/core/partes';
 
 /**
  * Define a que tipo de entidade um endereço está associado.
