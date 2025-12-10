@@ -10,7 +10,6 @@ import {
 import { Audiencia } from '@/core/audiencias/domain';
 import { AudienciasMonthDayCell } from './audiencias-month-day-cell';
 import { AudienciaDetailSheet } from './audiencia-detail-sheet';
-import { useBoolean } from '@/hooks/use-boolean'; // Assuming this hook exists
 
 interface ICalendarEvent {
   id: string;
@@ -66,12 +65,12 @@ export function AudienciasCalendarMonthView({
     [multiDayEvents, singleDayEvents, currentDate]
   );
 
-  const [sheetOpen, setSheetOpen] = useBoolean();
+  const [sheetOpen, setSheetOpen] = useState(false);
   const [selectedAudienciaId, setSelectedAudienciaId] = useState<number | null>(null);
 
   const handleAudienciaClick = (audienciaId: number) => {
     setSelectedAudienciaId(audienciaId);
-    setSheetOpen.on();
+    setSheetOpen(true);
   };
 
   const handleAddAudiencia = (date: Date) => {
@@ -119,8 +118,8 @@ export function AudienciasCalendarMonthView({
       {selectedAudienciaId !== null && (
         <AudienciaDetailSheet
           audienciaId={selectedAudienciaId}
-          open={sheetOpen.value}
-          onOpenChange={setSheetOpen.toggle}
+          open={sheetOpen}
+          onOpenChange={setSheetOpen}
         />
       )}
     </motion.div>

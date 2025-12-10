@@ -14,8 +14,8 @@ import { AudienciasListView } from './audiencias-list-view';
 import { AudienciasCalendarWeekView } from './audiencias-calendar-week-view';
 import { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';
 import { AudienciasCalendarYearView } from './audiencias-calendar-year-view';
-import { useTiposAudiencias } from '@/hooks/use-tipos-audiencias'; // Assuming this hook exists
-import { useUsuarios } from '@/hooks/use-usuarios'; // Assuming this hook exists
+import { useTiposAudiencias } from '@/app/_lib/hooks/use-tipos-audiencias';
+import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 import {
   Select,
   SelectContent,
