@@ -1,0 +1,198 @@
+# Política de Uso da Marca Sinesys
+
+**Versão:** 1.0  
+**Data:** Dezembro 2025
+
+---
+
+## 📋 Sobre Este Documento
+
+O código-fonte do **Sinesys** é licenciado sob **GNU Affero General Public License v3.0 (AGPL v3)**.
+
+A marca "**Sinesys**" e seus logotipos são propriedade da **Sinesys**.
+
+Este documento esclarece como você pode usar o código-fonte e a marca registrada.
+
+---
+
+## ✅ Permissões de Uso do Código
+
+Sob a licença AGPL v3, você tem total liberdade para:
+
+- ✅ **Usar** o código-fonte para qualquer finalidade
+- ✅ **Modificar** o código-fonte conforme suas necessidades
+- ✅ **Distribuir** cópias do código original ou modificado
+- ✅ **Oferecer como serviço** (SaaS) comercialmente
+- ✅ **Cobrar** por serviços baseados neste software
+
+**Requisitos AGPL v3:**
+- ⚠️ Deve manter o código-fonte aberto (incluindo modificações)
+- ⚠️ Deve disponibilizar código-fonte para usuários do serviço web
+- ⚠️ Deve manter avisos de copyright e atribuição
+- ⚠️ Modificações devem ser licenciadas sob AGPL v3
+
+---
+
+## 🚫 Restrições de Uso da Marca
+
+### Você NÃO PODE:
+
+❌ Usar "**Sinesys**" como nome do seu produto ou serviço derivado  
+❌ Usar "**Sinesys**" de forma que sugira endosso oficial da Sinesys  
+❌ Registrar domínios contendo "Sinesys" (ex: sinesys-pro.com)  
+❌ Criar produtos chamados "Sinesys Pro", "Sinesys Cloud", "Sinesys Plus", etc.  
+❌ Usar logotipos ou elementos visuais da marca Sinesys
+
+### Você PODE:
+
+✅ Dizer que seu serviço é "**Baseado em Sinesys**"  
+✅ Dizer que seu serviço é "**Powered by Sinesys**"  
+✅ Indicar que usa "**tecnologia Sinesys**" ou "**código Sinesys**"  
+✅ Referenciar Sinesys em documentação técnica
+
+---
+
+## 📝 Exemplos de Uso Permitido
+
+### ✅ Nomes de Serviços PERMITIDOS
+
+| Nome do Serviço | Descrição Permitida |
+|-----------------|---------------------|
+| **JurídicoXYZ** | "Sistema de gestão baseado em Sinesys" |
+| **AdvocaciaCloud** | "Powered by Sinesys" |
+| **LegalTech Pro** | "Plataforma construída com tecnologia Sinesys" |
+| **EscritorioApp** | "Baseado no projeto open source Sinesys" |
+
+### ❌ Nomes de Serviços NÃO PERMITIDOS
+
+| Nome PROIBIDO | Por quê? |
+|---------------|----------|
+| **Sinesys Pro** | Usa a marca "Sinesys" diretamente |
+| **Sinesys Cloud** | Sugere ser produto oficial |
+| **Sinesys by EmpresaX** | Confunde com produto oficial |
+| **Sinesys Premium** | Uso direto da marca registrada |
+| **Sinesys Plus** | Uso direto da marca registrada |
+
+---
+
+## 📢 Atribuição Obrigatória
+
+Ao distribuir o software ou oferecer como serviço, você DEVE:
+
+### 1. Manter Avisos de Copyright
+
+Todos os avisos de copyright do código original devem ser preservados:
+
+```
+Sinesys - Sistema de Gestão Jurídica
+Copyright (C) 2024-2025 Sinesys
+Desenvolvido para Zattar Advogados
+Licensed under AGPL v3
+```
+
+### 2. Indicar Modificações
+
+Se você modificou o código, deve indicar claramente:
+
+```
+Este software é baseado em Sinesys (https://github.com/sinesys)
+Modificações feitas por [Seu Nome/Empresa]
+```
+
+### 3. Link para o Código-Fonte
+
+Se oferecer como serviço web, deve disponibilizar link visível para o código-fonte completo (incluindo suas modificações).
+
+---
+
+## ⚖️ Isenção de Responsabilidade
+
+### A Sinesys NÃO é responsável por:
+
+❌ Serviços de terceiros baseados neste software  
+❌ Bugs, falhas ou perda de dados em implementações derivadas  
+❌ Danos causados pelo uso do software  
+❌ Suporte técnico para versões modificadas  
+❌ Conformidade legal de serviços derivados
+
+### Aviso Legal Obrigatório
+
+Serviços derivados devem incluir aviso claro:
+
+```
+Este serviço é baseado em Sinesys, mas NÃO é desenvolvido, 
+mantido ou endossado pela Sinesys. Sinesys não se responsabiliza 
+por este serviço, seus dados ou funcionamento.
+```
+
+---
+
+## 🔍 Casos de Uso Comuns
+
+### Caso 1: Escritório quer usar internamente
+**Situação:** Escritório X baixa Sinesys e usa internamente sem modificações
+
+✅ **Permitido:** Sim, sem restrições  
+📋 **Requisitos:** Nenhum (uso interno)  
+🏷️ **Nome:** Pode manter "Sinesys"
+
+---
+
+### Caso 2: Empresa oferece SaaS baseado em Sinesys
+**Situação:** Empresa Y modifica Sinesys e oferece como serviço pago "AdvocaciaCloud"
+
+✅ **Permitido:** Sim, sob AGPL v3  
+📋 **Requisitos:**
+- Disponibilizar código-fonte completo (incluindo modificações)
+- Manter atribuição à Sinesys
+- Incluir aviso de isenção de responsabilidade
+- Não usar nome "Sinesys" no serviço
+
+🏷️ **Nome:** "AdvocaciaCloud - Powered by Sinesys" ✅  
+❌ **Proibido:** "Sinesys Pro by Empresa Y"
+
+---
+
+### Caso 3: Desenvolvedor cria módulo adicional
+**Situação:** Dev Z cria módulo de IA para Sinesys e vende separadamente
+
+✅ **Permitido:** Sim  
+📋 **Requisitos:**
+- Módulo deve ser AGPL v3 (copyleft viral)
+- Código do módulo deve ser aberto
+- Pode cobrar pelo desenvolvimento/suporte
+
+🏷️ **Nome:** "Módulo IA para Sinesys" ✅
+
+---
+
+## 📞 Contato e Exceções
+
+Para solicitar exceções ou esclarecer dúvidas sobre uso da marca:
+
+**Email:** contato@sinesys.com.br _(atualizar com email real)_
+
+### Exceções Possíveis
+
+Podemos conceder permissões especiais para:
+- Uso da marca em contextos educacionais
+- Parceiros oficiais certificados
+- Projetos comunitários sem fins lucrativos
+
+---
+
+## 📜 Fundamento Legal
+
+- **Licença do Software:** AGPL v3 (veja arquivo LICENSE)
+- **Marca Registrada:** Sinesys™ (registro em andamento)
+- **Lei de Propriedade Industrial:** Lei 9.279/96 (Brasil)
+- **Lei de Software:** Lei 9.609/98 (Brasil)
+
+---
+
+## 🔄 Atualizações Desta Política
+
+Esta política pode ser atualizada periodicamente. A versão mais recente estará sempre disponível no repositório oficial.
+
+**Última atualização:** Dezembro 2025  
+**Versão:** 1.0
