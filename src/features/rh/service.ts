@@ -41,7 +41,8 @@ export {
   buscarFolhaPorId,
   buscarFolhaPorPeriodo,
   listarFolhasPagamento,
-  deletarFolhaPagamento
+  deletarFolhaPagamento,
+  calcularTotaisPorStatus
 } from './repository';
 
 // ============================================================================

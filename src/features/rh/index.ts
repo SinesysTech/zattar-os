@@ -105,4 +105,11 @@ export {
 
 // Hooks
 export * from './hooks';
-export * from './components';
+export { SalariosList } from './components/salarios/salarios-list';
+export { SalarioFormDialog } from './components/salarios/salario-form-dialog';
+export { FolhasPagamentoList } from './components/folhas-pagamento/folhas-list';
+export { FolhaDetalhes } from './components/folhas-pagamento/folha-detalhes';
+export { GerarFolhaDialog } from './components/folhas-pagamento/gerar-folha-dialog';
+export { AprovarFolhaDialog } from './components/folhas-pagamento/aprovar-folha-dialog';
+export { PagarFolhaDialog } from './components/folhas-pagamento/pagar-folha-dialog';
+export { HistoricoSalarios } from './components/shared/historico-salarios';

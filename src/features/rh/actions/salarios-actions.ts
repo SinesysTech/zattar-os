@@ -3,6 +3,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { requireAuth } from './utils';
+import { checkPermission } from '@/backend/auth/authorization';
 import * as service from '../service';
 import { 
   criarSalarioSchema, 
@@ -19,7 +20,14 @@ interface ListarSalariosActionParams extends ListarParamsType {
 
 export async function actionListarSalarios(params: ListarSalariosActionParams) {
   try {
-    await requireAuth(['salarios:listar']);
+    const { userId } = await requireAuth(['salarios:listar']);
+    
+    const podeVisualizarTodos = await checkPermission(userId, 'salarios', 'visualizar_todos');
+    
+    if (!podeVisualizarTodos) {
+      params.usuarioId = userId;
+    }
+
     const result = await service.listarSalarios(params);
     
     let totais;
