@@ -11,7 +11,7 @@ import {
   EscopoSegmento,
 } from './domain';
 import { generateSlug } from '@/lib/utils'; // Já presente
-import { render } from 'mustache'; // Biblioteca para template, se não tiver, instalar ou usar alternativa
+import mustache from 'mustache'; // Biblioteca para template, se não tiver, instalar ou usar alternativa
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'; // Para geração de PDF, se não tiver, instalar
 
 export class AssinaturaDigitalService {
@@ -82,11 +82,11 @@ export class AssinaturaDigitalService {
       throw new Error('Template não é do tipo Markdown ou não possui conteúdo Markdown.');
     }
     // Usar Mustache.js para interpolação simples
-    return render(template.conteudo_markdown, data);
+    return mustache.render(template.conteudo_markdown, data);
   }
 
   async gerarPdfDeMarkdown(markdownContent: string, data: Record<string, any>): Promise<Buffer> {
-    const renderedMarkdown = render(markdownContent, data);
+    const renderedMarkdown = mustache.render(markdownContent, data);
 
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();

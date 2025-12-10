@@ -35,7 +35,8 @@ import { Loader2, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionCriarContrato, actionAtualizarContrato, type ActionResult } from '@/core/app/actions/contratos';
 import type { Contrato, TipoContrato, TipoCobranca, StatusContrato, PoloProcessual } from '@/core/contratos/domain';
-import { listarSegmentosAction, Segmento } from '@/core/assinatura-digital';
+import { listarSegmentosAction } from '@/app/actions/assinatura-digital';
+import type { Segmento } from '@/core/assinatura-digital';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,

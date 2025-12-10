@@ -110,6 +110,7 @@ export async function POST(req: NextRequest) {
   const apiKey = process.env.AI_GATEWAY_API_KEY;
 
   if (!apiKey) {
+    console.warn('[Plate AI] API key não configurada. Configure AI_GATEWAY_API_KEY para habilitar recursos de IA.');
     return NextResponse.json(
       {
         error: 'AI Gateway API key não configurada no servidor. Configure a variável de ambiente AI_GATEWAY_API_KEY.',
@@ -213,8 +214,17 @@ export async function POST(req: NextRequest) {
     return createUIMessageStreamResponse({ stream });
   } catch (error) {
     console.error('[Plate AI] Erro ao processar requisição:', error);
+    
+    // Extrair mensagem de erro segura (sem expor detalhes internos)
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : 'Falha ao processar requisição AI';
+    
     return NextResponse.json(
-      { error: 'Falha ao processar requisição AI' },
+      { 
+        error: 'Falha ao processar requisição AI. Tente novamente em alguns instantes.',
+        code: 'PROCESSING_ERROR'
+      },
       { status: 500 }
     );
   }
