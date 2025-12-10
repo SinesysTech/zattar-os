@@ -72,68 +72,100 @@ O **Sinesys** é um sistema completo de gestão jurídica desenvolvido para escr
 
 ## 🏗 Arquitetura
 
-### Padrão de Camadas
+### Arquitetura Orientada a Features (Feature-Sliced Design)
 
-O Sinesys segue uma arquitetura em três camadas que promove separação de responsabilidades e facilita manutenção:
+O Sinesys adota uma **Arquitetura Orientada a Features** inspirada no **Feature-Sliced Design (FSD)**, otimizada para o Next.js App Router. Esta estrutura modular abandona a arquitetura simples de "páginas" e organiza o código por funcionalidades completas de negócio.
+
+**Princípios da Arquitetura:**
+
+- **Colocação (Colocation)**: Todo código relacionado a uma funcionalidade vive junto
+- **Isolamento**: Features são independentes e auto-contidas
+- **Escalabilidade**: Estrutura previsível facilita crescimento do sistema
+- **Manutenibilidade**: Mudanças em uma feature não afetam outras
 
 ```
 ┌─────────────────────────────────────────────┐
-│         Camada de API (app/api/)            │
-│  - Autenticação e autorização               │
-│  - Validação de entrada                     │
-│  - Formatação de resposta                   │
+│       Camada de Apresentação (app/)         │
+│  - Páginas Next.js (apenas roteamento)     │
+│  - Layouts e shells                         │
+│  - Data fetching server-side                │
 └──────────────────┬──────────────────────────┘
                    │
                    ▼
 ┌─────────────────────────────────────────────┐
-│  Camada de Serviço (backend/*/services/)    │
-│  - Lógica de negócio pura                   │
-│  - Regras de validação                      │
-│  - Orquestração de operações                │
+│      Features (src/features/{modulo}/)      │
+│  - components/  → UI específica             │
+│  - hooks/       → Lógica de estado          │
+│  - actions/     → Server Actions            │
+│  - service.ts   → Casos de uso              │
+│  - repository.ts → Acesso a dados           │
+│  - domain.ts    → Regras de negócio         │
+│  - types.ts     → Tipagem específica        │
+│  - utils.ts     → Utilitários               │
 └──────────────────┬──────────────────────────┘
                    │
                    ▼
 ┌─────────────────────────────────────────────┐
-│  Camada de Persistência (*/persistence/)    │
-│  - Acesso ao banco de dados                 │
-│  - Queries e filtros                        │
-│  - Auditoria e logging                      │
+│     Camadas Compartilhadas (Shared)         │
+│  components/ui/      → Componentes base     │
+│  components/shared/  → Padrões reutilizáveis│
+│  lib/                → Bibliotecas          │
+│  hooks/              → Hooks globais        │
 └─────────────────────────────────────────────┘
 ```
 
 #### Responsabilidades por Camada
 
-**Camada de API** (`app/api/`)
+**Camada de Apresentação** (`app/(dashboard)/`)
 
-- Recebe requisições HTTP
-- Autentica usuários via `authenticateRequest()`
-- Valida parâmetros de entrada
-- Invoca serviços de negócio
-- Retorna respostas padronizadas: `{ success: boolean, data?: T, error?: string }`
+- Define rotas e navegação
+- Realiza data fetching server-side (quando necessário)
+- Renderiza layouts e shells de página
+- **NÃO contém lógica de negócio** - apenas composição
 
-**Camada de Serviço** (`backend/[feature]/services/[feature]/`)
+**Feature Modules** (`src/features/{modulo}/`)
 
-- Contém lógica de negócio pura
-- Valida regras de negócio
-- Orquestra múltiplas operações de persistência
-- Independente de detalhes de infraestrutura
+- **components/**: Componentes React específicos da feature
+- **hooks/**: Hooks customizados para gerenciar estado da feature
+- **actions.ts**: Server Actions do Next.js 16
+- **service.ts**: Casos de uso e lógica de negócio
+- **repository.ts**: Acesso ao banco de dados (Supabase)
+- **domain.ts**: Entidades, Value Objects e regras puras
+- **types.ts**: Tipagem TypeScript específica
+- **utils.ts**: Funções auxiliares (formatação, validação)
+- **index.ts**: Barrel export para facilitar imports
 
-**Camada de Persistência** (`backend/[feature]/services/persistence/`)
+**Camada Compartilhada** (`components/`, `lib/`, `hooks/`)
 
-- Acesso direto ao banco de dados
-- Executa queries com filtros e paginação
-- Implementa auditoria e comparação de dados
-- Usa `createServiceClient()` do Supabase
+- Componentes UI reutilizáveis (shadcn/ui)
+- Padrões de design (DataTableShell, PageShell)
+- Hooks globais (useViewport, useDebounce)
+- Utilitários gerais (formatação de datas, números)
+- Clientes de infraestrutura (Supabase, Redis, MongoDB)
 
 ### Fluxo de Dados
 
 ```mermaid
-graph LR
-    A[Cliente] --> B[API Route]
-    B --> C[Serviço de Negócio]
-    C --> D[Persistência]
-    D --> E[Supabase/MongoDB]
-    D --> F[Redis Cache]
+graph TB
+    A[Usuário] --> B[Componente React]
+    B --> C{Tipo de Ação}
+    C -->|Client-Side| D[Hook]
+    C -->|Server-Side| E[Server Action]
+    D --> F[API Route]
+    E --> G[Service Layer]
+    F --> G
+    G --> H[Repository Layer]
+    H --> I[(PostgreSQL)]
+    H --> J[(Redis Cache)]
+    I --> H
+    J --> H
+    H --> G
+    G --> E
+    G --> F
+    F --> D
+    E --> B
+    D --> B
+    B --> A
 ```
 
 # Organização de Tipos no Sinesys
@@ -143,10 +175,11 @@ graph LR
 A organização dos tipos no projeto Sinesys segue princípios de Domain-Driven Design (DDD) para garantir clareza, coesão e baixo acoplamento entre as diferentes camadas da aplicação (frontend, backend, domínio). O objetivo é centralizar os tipos de domínio e contratos de aplicação em um local compartilhado, enquanto mantém tipos específicos de infraestrutura e interface em suas respectivas camadas.
 
 Essa estrutura promove:
--   **Reutilização**: Tipos de domínio e contratos podem ser usados em todo o projeto sem duplicação.
--   **Coerência**: Uma única fonte de verdade para a definição das estruturas de dados do negócio.
--   **Separação de Preocupações**: Claramente distingue entre o que é o "negócio" (domínio), o "como o negócio é usado" (contratos/aplicação) e o "como o negócio é implementado" (infraestrutura/interface).
--   **Manutenção Simplificada**: Alterações em tipos centrais refletem-se de forma controlada nas camadas dependentes.
+
+- **Reutilização**: Tipos de domínio e contratos podem ser usados em todo o projeto sem duplicação.
+- **Coerência**: Uma única fonte de verdade para a definição das estruturas de dados do negócio.
+- **Separação de Preocupações**: Claramente distingue entre o que é o "negócio" (domínio), o "como o negócio é usado" (contratos/aplicação) e o "como o negócio é implementado" (infraestrutura/interface).
+- **Manutenção Simplificada**: Alterações em tipos centrais refletem-se de forma controlada nas camadas dependentes.
 
 ## 2. Estrutura de Pastas
 
@@ -175,71 +208,76 @@ A nova estrutura de tipos compartilhados reside na pasta `/types` na raiz do pro
 
 ### Detalhamento das Subpastas:
 
--   **`/types/domain`**:
-    -   Contém as definições mais puras do modelo de domínio.
-    -   Inclui Entidades, Value Objects, e Enums que representam conceitos centrais do negócio.
-    -   São agnósticos a qualquer tecnologia (banco de dados, framework web, etc.).
-    -   *Exemplos*: `Acervo`, `Cliente`, `Endereco`, `TipoPessoa`, `GrauProcesso`.
+- **`/types/domain`**:
 
--   **`/types/contracts`**:
-    -   Contém os Data Transfer Objects (DTOs) e interfaces de comunicação entre camadas ou serviços.
-    -   Define a "linguagem" pela qual a camada de aplicação interage com o domínio ou com outros serviços.
-    -   Inclui parâmetros de entrada para operações (e.g., `CriarClienteParams`), resultados de operações (e.g., `ListarClientesResult`), e estruturas para ordenação e filtragem.
-    -   *Exemplos*: `ListarAcervoParams`, `CriarAudienciaParams`.
+  - Contém as definições mais puras do modelo de domínio.
+  - Inclui Entidades, Value Objects, e Enums que representam conceitos centrais do negócio.
+  - São agnósticos a qualquer tecnologia (banco de dados, framework web, etc.).
+  - _Exemplos_: `Acervo`, `Cliente`, `Endereco`, `TipoPessoa`, `GrauProcesso`.
+
+- **`/types/contracts`**:
+  - Contém os Data Transfer Objects (DTOs) e interfaces de comunicação entre camadas ou serviços.
+  - Define a "linguagem" pela qual a camada de aplicação interage com o domínio ou com outros serviços.
+  - Inclui parâmetros de entrada para operações (e.g., `CriarClienteParams`), resultados de operações (e.g., `ListarClientesResult`), e estruturas para ordenação e filtragem.
+  - _Exemplos_: `ListarAcervoParams`, `CriarAudienciaParams`.
 
 ### Outras Camadas de Tipos:
 
--   **`backend/types/`**:
-    -   Após a refatoração, esta pasta deve conter apenas tipos que são estritamente específicos da infraestrutura ou de integrações de baixo nível do backend.
-    -   *Exemplos*: Tipos de integração com APIs externas (PJE-TRT), tipos de esquemas de banco de dados (MongoDB), configurações de ambiente específicas do servidor.
+- **`backend/types/`**:
 
--   **`app/_lib/types/`**:
-    -   Contém tipos específicos da camada de apresentação (frontend/UI).
-    -   Inclui:
-        -   `*ApiResponse`: Respostas padronizadas de APIs para o frontend.
-        -   `*Filters`: Interfaces para o estado de filtros da UI.
-        -   `*FormData`: Tipos para dados de formulários na UI.
-        -   Funções utilitárias de formatação e validação específicas da UI.
-    -   Estes tipos importam e utilizam os tipos de `/types/domain` e `/types/contracts`, adaptando-os para as necessidades da interface do usuário.
+  - Após a refatoração, esta pasta deve conter apenas tipos que são estritamente específicos da infraestrutura ou de integrações de baixo nível do backend.
+  - _Exemplos_: Tipos de integração com APIs externas (PJE-TRT), tipos de esquemas de banco de dados (MongoDB), configurações de ambiente específicas do servidor.
+
+- **`app/_lib/types/`**:
+  - Contém tipos específicos da camada de apresentação (frontend/UI).
+  - Inclui:
+    - `*ApiResponse`: Respostas padronizadas de APIs para o frontend.
+    - `*Filters`: Interfaces para o estado de filtros da UI.
+    - `*FormData`: Tipos para dados de formulários na UI.
+    - Funções utilitárias de formatação e validação específicas da UI.
+  - Estes tipos importam e utilizam os tipos de `/types/domain` e `/types/contracts`, adaptando-os para as necessidades da interface do usuário.
 
 ## 3. Convenções de Nomenclatura
 
--   **Arquivos de Domínio**: Nome do conceito em `kebab-case.ts` (e.g., `acervo.ts`, `processo-partes.ts`).
--   **Arquivos de Contratos**: Nome do conceito em `kebab-case.ts` (e.g., `acervo.ts`, `partes.ts`).
--   **Interfaces/Tipos de Domínio**: `PascalCase` para entidades e value objects (e.g., `Cliente`, `Endereco`).
--   **Interfaces/Tipos de Contratos**:
-    -   Parâmetros de entrada: `AcaoConceitoParams` (e.g., `CriarClienteParams`, `ListarAcervoParams`).
-    -   Resultados: `AcaoConceitoResult` (e.g., `ListarClientesResult`).
-    -   Ordenação: `OrdenarPorConceito`, `OrdemConceito`.
--   **Interfaces/Tipos de Frontend**:
-    -   Respostas de API: `ConceitoApiResponse` (e.g., `ClientesApiResponse`).
-    -   Filtros: `ConceitoFilters` (e.g., `ProcessosFilters`).
-    -   Dados de formulário: `ConceitoFormData` (e.g., `ClienteFormData`).
+- **Arquivos de Domínio**: Nome do conceito em `kebab-case.ts` (e.g., `acervo.ts`, `processo-partes.ts`).
+- **Arquivos de Contratos**: Nome do conceito em `kebab-case.ts` (e.g., `acervo.ts`, `partes.ts`).
+- **Interfaces/Tipos de Domínio**: `PascalCase` para entidades e value objects (e.g., `Cliente`, `Endereco`).
+- **Interfaces/Tipos de Contratos**:
+  - Parâmetros de entrada: `AcaoConceitoParams` (e.g., `CriarClienteParams`, `ListarAcervoParams`).
+  - Resultados: `AcaoConceitoResult` (e.g., `ListarClientesResult`).
+  - Ordenação: `OrdenarPorConceito`, `OrdemConceito`.
+- **Interfaces/Tipos de Frontend**:
+  - Respostas de API: `ConceitoApiResponse` (e.g., `ClientesApiResponse`).
+  - Filtros: `ConceitoFilters` (e.g., `ProcessosFilters`).
+  - Dados de formulário: `ConceitoFormData` (e.g., `ClienteFormData`).
 
 ## 4. Guia de Uso
 
--   **Importar Tipos de Domínio**: Use `@/types/domain` para importar entidades, VOs e enums que representam o coração do seu negócio.
-    ```typescript
-    import type { Cliente, GrauProcesso } from '@/types/domain';
-    // ou mais específico
-    import type { Cliente } from '@/types/domain/partes';
-    import type { GrauProcesso } from '@/types/domain/common';
-    ```
--   **Importar Contratos/DTOs**: Use `@/types/contracts` para interagir com as interfaces de serviço.
-    ```typescript
-    import type { ListarClientesParams, CriarAudienciaParams } from '@/types/contracts';
-    // ou mais específico
-    import type { ListarClientesParams } from '@/types/contracts/partes';
-    ```
--   **Frontend-specific Types**: Use `app/_lib/types` apenas para tipos que são exclusivos da camada de apresentação e que não fariam sentido existirem no backend.
--   **Evitar Ciclagem**: Garanta que as camadas superiores (Application/UI) importem de camadas inferiores (Domain), mas nunca o contrário.
+- **Importar Tipos de Domínio**: Use `@/types/domain` para importar entidades, VOs e enums que representam o coração do seu negócio.
+  ```typescript
+  import type { Cliente, GrauProcesso } from "@/types/domain";
+  // ou mais específico
+  import type { Cliente } from "@/types/domain/partes";
+  import type { GrauProcesso } from "@/types/domain/common";
+  ```
+- **Importar Contratos/DTOs**: Use `@/types/contracts` para interagir com as interfaces de serviço.
+  ```typescript
+  import type {
+    ListarClientesParams,
+    CriarAudienciaParams,
+  } from "@/types/contracts";
+  // ou mais específico
+  import type { ListarClientesParams } from "@/types/contracts/partes";
+  ```
+- **Frontend-specific Types**: Use `app/_lib/types` apenas para tipos que são exclusivos da camada de apresentação e que não fariam sentido existirem no backend.
+- **Evitar Ciclagem**: Garanta que as camadas superiores (Application/UI) importem de camadas inferiores (Domain), mas nunca o contrário.
 
 ## 5. Migração
 
--   Todos os tipos que eram compartilhados entre frontend e backend, ou que representavam o domínio puro, foram movidos de `backend/types` para a nova estrutura `/types`.
--   As pastas `backend/types/acervo`, `backend/types/audiencias`, `backend/types/partes` (e seus subarquivos) e `backend/types/global.ts` foram removidas ou esvaziadas.
--   Módulos que referenciavam os tipos antigos devem atualizar seus imports para `@{/types/domain}` ou `@{/types/contracts}`.
--   O `tsconfig.json` foi atualizado com aliases de caminho (`paths`) para facilitar esses imports.
+- Todos os tipos que eram compartilhados entre frontend e backend, ou que representavam o domínio puro, foram movidos de `backend/types` para a nova estrutura `/types`.
+- As pastas `backend/types/acervo`, `backend/types/audiencias`, `backend/types/partes` (e seus subarquivos) e `backend/types/global.ts` foram removidas ou esvaziadas.
+- Módulos que referenciavam os tipos antigos devem atualizar seus imports para `@{/types/domain}` ou `@{/types/contracts}`.
+- O `tsconfig.json` foi atualizado com aliases de caminho (`paths`) para facilitar esses imports.
 
 # Princípios de Domain-Driven Design (DDD) no Sinesys
 
@@ -248,11 +286,12 @@ A nova estrutura de tipos compartilhados reside na pasta `/types` na raiz do pro
 Domain-Driven Design (DDD) é uma abordagem de desenvolvimento de software que foca na modelagem de um domínio de negócio complexo, conectando a implementação à um modelo em constante evolução. No Sinesys, a aplicação dos princípios de DDD visa criar um sistema que reflita de forma clara e precisa a lógica de negócio do escritório de advocacia Zattar Advogados, facilitando a comunicação entre especialistas de domínio e desenvolvedores, e promovendo uma arquitetura flexível e manutenível.
 
 ### Conceitos Fundamentais de DDD:
--   **Domínio (Domain)**: A esfera de conhecimento, influência ou atividade para a qual a aplicação está sendo desenvolvida.
--   **Modelo de Domínio (Domain Model)**: Uma representação abstrata do conhecimento do domínio, encapsulando dados e comportamento.
--   **Linguagem Ubíqua (Ubiquitous Language)**: Uma linguagem comum e precisa, construída em conjunto por especialistas de domínio e desenvolvedores, e usada consistentemente em todo o projeto (código, documentação, conversas).
--   **Contextos Delimitados (Bounded Contexts)**: Limites explícitos dentro dos quais um modelo de domínio específico é definido e aplicável. Cada contexto pode ter sua própria Linguagem Ubíqua e seu próprio modelo.
--   **Camadas (Layers)**: A arquitetura do sistema é dividida em camadas, cada uma com responsabilidades específicas.
+
+- **Domínio (Domain)**: A esfera de conhecimento, influência ou atividade para a qual a aplicação está sendo desenvolvida.
+- **Modelo de Domínio (Domain Model)**: Uma representação abstrata do conhecimento do domínio, encapsulando dados e comportamento.
+- **Linguagem Ubíqua (Ubiquitous Language)**: Uma linguagem comum e precisa, construída em conjunto por especialistas de domínio e desenvolvedores, e usada consistentemente em todo o projeto (código, documentação, conversas).
+- **Contextos Delimitados (Bounded Contexts)**: Limites explícitos dentro dos quais um modelo de domínio específico é definido e aplicável. Cada contexto pode ter sua própria Linguagem Ubíqua e seu próprio modelo.
+- **Camadas (Layers)**: A arquitetura do sistema é dividida em camadas, cada uma com responsabilidades específicas.
 
 ## 2. Camadas da Arquitetura e Aplicação no Sinesys
 
@@ -262,84 +301,91 @@ O Sinesys adota uma arquitetura em camadas para organizar o código, separando r
 
 Esta é a camada central, que contém a lógica de negócio e o modelo de domínio puro. É o coração da aplicação, independente das tecnologias de banco de dados, frameworks UI ou detalhes de infraestrutura.
 
--   **Responsabilidades**:
-    -   Representar conceitos de negócio, regras e comportamentos.
-    -   Ser a "verdade" sobre o negócio.
-    -   Validar regras de negócio intrínsecas ao domínio.
+- **Responsabilidades**:
 
--   **Componentes Principais**:
-    -   **Entidades (Entities)**: Objetos que possuem uma identidade e um ciclo de vida. São mutáveis e identificados por um ID.
-        -   *Exemplos no Sinesys*: `Cliente`, `Acervo`, `Audiencia`, `Usuario`.
-    -   **Value Objects**: Objetos que descrevem aspectos do domínio, mas não possuem identidade própria. São imutáveis e comparados por seus valores.
-        -   *Exemplos no Sinesys*: `Endereco` (quando tratado como um bloco de valores, embora possa ser entidade em outros contextos), `NumeroProcesso`, `CpfCnpj`.
-    -   **Agregados (Aggregates)**: Agrupamento de Entidades e Value Objects tratados como uma única unidade transacional. Um Aggregate Root (Raiz do Agregado) garante a consistência do agregado.
-        -   *Exemplos no Sinesys*: Um `Processo` (Acervo) pode ser um Aggregate Root, com `Partes` e `Documentos` como parte do seu agregado.
-    -   **Serviços de Domínio (Domain Services)**: Operações de negócio que não se encaixam naturalmente em uma Entidade ou Value Object. Orquestram Entidades e Value Objects.
-        -   *Exemplos no Sinesys*: `GerenciamentoDePartesEmProcesso`, `CalculoDePrazos`.
-    -   **Eventos de Domínio (Domain Events)**: Notificações de algo significativo que aconteceu no domínio.
-        -   *Exemplos no Sinesys*: `ProcessoCapturado`, `AudienciaDesignada`.
+  - Representar conceitos de negócio, regras e comportamentos.
+  - Ser a "verdade" sobre o negócio.
+  - Validar regras de negócio intrínsecas ao domínio.
 
--   **Localização no Projeto**: `types/domain/` para as definições de tipos, e `backend/{modulo}/domain/` para as implementações da lógica de domínio quando aplicável.
+- **Componentes Principais**:
+
+  - **Entidades (Entities)**: Objetos que possuem uma identidade e um ciclo de vida. São mutáveis e identificados por um ID.
+    - _Exemplos no Sinesys_: `Cliente`, `Acervo`, `Audiencia`, `Usuario`.
+  - **Value Objects**: Objetos que descrevem aspectos do domínio, mas não possuem identidade própria. São imutáveis e comparados por seus valores.
+    - _Exemplos no Sinesys_: `Endereco` (quando tratado como um bloco de valores, embora possa ser entidade em outros contextos), `NumeroProcesso`, `CpfCnpj`.
+  - **Agregados (Aggregates)**: Agrupamento de Entidades e Value Objects tratados como uma única unidade transacional. Um Aggregate Root (Raiz do Agregado) garante a consistência do agregado.
+    - _Exemplos no Sinesys_: Um `Processo` (Acervo) pode ser um Aggregate Root, com `Partes` e `Documentos` como parte do seu agregado.
+  - **Serviços de Domínio (Domain Services)**: Operações de negócio que não se encaixam naturalmente em uma Entidade ou Value Object. Orquestram Entidades e Value Objects.
+    - _Exemplos no Sinesys_: `GerenciamentoDePartesEmProcesso`, `CalculoDePrazos`.
+  - **Eventos de Domínio (Domain Events)**: Notificações de algo significativo que aconteceu no domínio.
+    - _Exemplos no Sinesys_: `ProcessoCapturado`, `AudienciaDesignada`.
+
+- **Localização no Projeto**: `types/domain/` para as definições de tipos, e `backend/{modulo}/domain/` para as implementações da lógica de domínio quando aplicável.
 
 ### 2.2. Camada de Aplicação (Application Layer)
 
 Orquestra a camada de domínio para realizar casos de uso específicos da aplicação. Não contém lógica de negócio diretamente, mas coordena Entidades e Serviços de Domínio para executar tarefas.
 
--   **Responsabilidades**:
-    -   Definir os casos de uso da aplicação.
-    -   Transações e segurança.
-    -   Transformar DTOs em objetos de domínio e vice-versa.
-    -   Gerenciar o ciclo de vida dos objetos de domínio.
+- **Responsabilidades**:
 
--   **Componentes Principais**:
-    -   **Serviços de Aplicação (Application Services)**: Classes que implementam os casos de uso. Recebem DTOs como entrada, utilizam Repositórios para carregar Entidades, invocam a lógica de domínio e retornam DTOs.
-        -   *Exemplos no Sinesys*: `CriarClienteService`, `ListarAcervoService`, `AgendarCapturaService`.
-    -   **DTOs (Data Transfer Objects)**: Objetos simples, sem comportamento, usados para transferir dados entre as camadas de apresentação, aplicação e domínio.
-        -   *Exemplos no Sinesys*: `CriarClienteParams`, `ListarAcervoResult`.
+  - Definir os casos de uso da aplicação.
+  - Transações e segurança.
+  - Transformar DTOs em objetos de domínio e vice-versa.
+  - Gerenciar o ciclo de vida dos objetos de domínio.
 
--   **Localização no Projeto**: `types/contracts/` para as definições de tipos (DTOs), e `backend/{modulo}/services/` para as implementações dos Application Services.
+- **Componentes Principais**:
+
+  - **Serviços de Aplicação (Application Services)**: Classes que implementam os casos de uso. Recebem DTOs como entrada, utilizam Repositórios para carregar Entidades, invocam a lógica de domínio e retornam DTOs.
+    - _Exemplos no Sinesys_: `CriarClienteService`, `ListarAcervoService`, `AgendarCapturaService`.
+  - **DTOs (Data Transfer Objects)**: Objetos simples, sem comportamento, usados para transferir dados entre as camadas de apresentação, aplicação e domínio.
+    - _Exemplos no Sinesys_: `CriarClienteParams`, `ListarAcervoResult`.
+
+- **Localização no Projeto**: `types/contracts/` para as definições de tipos (DTOs), e `backend/{modulo}/services/` para as implementações dos Application Services.
 
 ### 2.3. Camada de Infraestrutura (Infrastructure Layer)
 
 Fornece a base técnica para a aplicação, lidando com aspectos como persistência de dados, comunicação externa, logging, etc. É a camada mais externa, dependendo das camadas de Domínio e Aplicação.
 
--   **Responsabilidades**:
-    -   Implementar repositórios (acesso a dados).
-    -   Interagir com sistemas externos (APIs, serviços de terceiros).
-    -   Configuração e inicialização da aplicação.
-    -   Detalhes técnicos como ORMs, bibliotecas HTTP, etc.
+- **Responsabilidades**:
 
--   **Componentes Principais**:
-    -   **Repositórios (Repositories)**: Abstraem os detalhes de persistência de dados. A interface do Repositório (contrato) reside na camada de Domínio ou Aplicação, enquanto a implementação está na Infraestrutura.
-        -   *Exemplos no Sinesys*: `ClientePersistenceService` (implementa a interface `IClienteRepository`), `AcervoPersistenceService`.
-    -   **Serviços de Integração**: Implementam a comunicação com APIs externas ou outros microsserviços.
-        -   *Exemplos no Sinesys*: `PjeTrtApiService`, `SupabaseAuthService`.
+  - Implementar repositórios (acesso a dados).
+  - Interagir com sistemas externos (APIs, serviços de terceiros).
+  - Configuração e inicialização da aplicação.
+  - Detalhes técnicos como ORMs, bibliotecas HTTP, etc.
 
--   **Localização no Projeto**: `backend/persistence/`, `backend/api/`, `backend/utils/` e a camada de API do Next.js (`app/api/`).
+- **Componentes Principais**:
+
+  - **Repositórios (Repositories)**: Abstraem os detalhes de persistência de dados. A interface do Repositório (contrato) reside na camada de Domínio ou Aplicação, enquanto a implementação está na Infraestrutura.
+    - _Exemplos no Sinesys_: `ClientePersistenceService` (implementa a interface `IClienteRepository`), `AcervoPersistenceService`.
+  - **Serviços de Integração**: Implementam a comunicação com APIs externas ou outros microsserviços.
+    - _Exemplos no Sinesys_: `PjeTrtApiService`, `SupabaseAuthService`.
+
+- **Localização no Projeto**: `backend/persistence/`, `backend/api/`, `backend/utils/` e a camada de API do Next.js (`app/api/`).
 
 ### 2.4. Camada de Apresentação (Presentation Layer) / Interface do Usuário
 
 A camada mais externa, responsável por exibir informações ao usuário e interpretar seus comandos. No Sinesys, esta é a interface web construída com Next.js e React.
 
--   **Responsabilidades**:
-    -   Converter DTOs em um formato exibível para o usuário.
-    -   Capturar entradas do usuário e traduzi-las em comandos para a camada de Aplicação.
-    -   Gerenciar o estado da UI.
+- **Responsabilidades**:
 
--   **Componentes Principais**:
-    -   **Controladores/Rotas de API (Next.js API Routes)**: Atuam como interfaces entre o frontend e a camada de aplicação do backend.
-        -   *Exemplos no Sinesys*: `app/api/clientes/route.ts` que utiliza `CriarClienteService`.
-    -   **Componentes de UI (React Components)**: Renderizam a interface.
-        -   *Exemplos no Sinesys*: Componentes em `app/(dashboard)/` e `components/`.
-    -   **Tipos de UI/Forms**: Tipos específicos para gerenciar o estado e os dados de formulários na interface.
-        -   *Exemplos no Sinesys*: `ClienteFormData`, `ProcessosFilters` em `app/_lib/types/`.
+  - Converter DTOs em um formato exibível para o usuário.
+  - Capturar entradas do usuário e traduzi-las em comandos para a camada de Aplicação.
+  - Gerenciar o estado da UI.
+
+- **Componentes Principais**:
+  - **Controladores/Rotas de API (Next.js API Routes)**: Atuam como interfaces entre o frontend e a camada de aplicação do backend.
+    - _Exemplos no Sinesys_: `app/api/clientes/route.ts` que utiliza `CriarClienteService`.
+  - **Componentes de UI (React Components)**: Renderizam a interface.
+    - _Exemplos no Sinesys_: Componentes em `app/(dashboard)/` e `components/`.
+  - **Tipos de UI/Forms**: Tipos específicos para gerenciar o estado e os dados de formulários na interface.
+    - _Exemplos no Sinesys_: `ClienteFormData`, `ProcessosFilters` em `app/_lib/types/`.
 
 ## 3. Boas Práticas e Padrões Adotados
 
--   **Injeção de Dependência**: Serviços e Repositórios são gerenciados e injetados, promovendo baixo acoplamento.
--   **Validações**: Regras de validação são aplicadas na camada apropriada (domínio para regras de negócio intrínsecas, aplicação para DTOs e requisitos de caso de uso, apresentação para formatação de entrada).
--   **Testes**: A arquitetura em camadas facilita o teste unitário de cada camada isoladamente, especialmente a camada de Domínio e Aplicação.
--   **Linguagem Ubíqua Consistente**: Esforço contínuo para garantir que os nomes de tipos, variáveis, funções e nomes de arquivos reflitam a Linguagem Ubíqua do domínio, conforme definido com os especialistas jurídicos.
+- **Injeção de Dependência**: Serviços e Repositórios são gerenciados e injetados, promovendo baixo acoplamento.
+- **Validações**: Regras de validação são aplicadas na camada apropriada (domínio para regras de negócio intrínsecas, aplicação para DTOs e requisitos de caso de uso, apresentação para formatação de entrada).
+- **Testes**: A arquitetura em camadas facilita o teste unitário de cada camada isoladamente, especialmente a camada de Domínio e Aplicação.
+- **Linguagem Ubíqua Consistente**: Esforço contínuo para garantir que os nomes de tipos, variáveis, funções e nomes de arquivos reflitam a Linguagem Ubíqua do domínio, conforme definido com os especialistas jurídicos.
 
 Ao seguir esses princípios e padrões, o projeto Sinesys busca ser robusto, escalável e alinhado com as necessidades de negócio da Zattar Advogados.
 
@@ -447,6 +493,7 @@ GOOGLE_DRIVE_WEBHOOK_URL=https://webhook.sinesys.app/webhook/drive
 O Sinesys é um Progressive Web App que pode ser instalado em dispositivos móveis e desktop.
 
 ### Funcionalidades PWA
+
 - ✅ Instalável em dispositivos móveis e desktop
 - ✅ Funciona offline com página de fallback
 - ✅ Cache inteligente de recursos estáticos
@@ -455,20 +502,25 @@ O Sinesys é um Progressive Web App que pode ser instalado em dispositivos móve
 - ✅ Atualizações automáticas do service worker
 
 ### Instalação
+
 Os usuários podem instalar o app:
+
 - **Android/Chrome**: Clique no banner de instalação ou menu > "Instalar app"
 - **iOS/Safari**: Toque em Compartilhar > "Adicionar à Tela de Início"
 - **Desktop**: Clique no ícone de instalação na barra de endereços
 
 ### Desenvolvimento
+
 Em modo de desenvolvimento, o PWA está desabilitado para facilitar debugging.
 Para testar PWA localmente:
+
 ```bash
 npm run build
 npm start
 ```
 
 ### Arquivos PWA
+
 - `public/manifest.json` - Web App Manifest
 - `public/sw.js` - Service Worker (gerado automaticamente)
 - `app/offline/page.tsx` - Página offline
@@ -534,53 +586,94 @@ docker-compose up -d
 
 ### Criando Novos Módulos
 
-#### 1. Criar Estrutura de Diretórios
+#### 1. Estrutura de Feature Module
 
 ```bash
-backend/
+src/features/
   nova-feature/
-    services/
-      nova-feature/          # Lógica de negócio
-        criar-item.service.ts
-        listar-items.service.ts
-        atualizar-item.service.ts
-        deletar-item.service.ts
-      persistence/           # Acesso ao banco
-        item-persistence.service.ts
-    types/
-      types.ts              # Interfaces TypeScript
+    components/              # Componentes React específicos
+      nova-feature-table.tsx
+      nova-feature-form.tsx
+    hooks/                   # Hooks customizados
+      use-nova-feature.ts
+    actions/                 # Server Actions (Next.js 16)
+      nova-feature-actions.ts
+    domain.ts                # Entidades e regras de negócio
+    service.ts               # Casos de uso
+    repository.ts            # Acesso a dados
+    types.ts                 # Tipagem específica
+    utils.ts                 # Utilitários
+    index.ts                 # Barrel exports
 ```
 
-#### 2. Definir Tipos
+#### 2. Definir Domínio
 
 ```typescript
-// backend/types/nova-feature/types.ts
-export interface CriarItemParams {
-  nome: string;
-  descricao?: string;
-}
+// src/features/nova-feature/domain.ts
+import { z } from "zod";
 
-export interface Item {
-  id: number;
-  nome: string;
-  descricao: string | null;
+// Tipos base
+export type NovaFeatureId = number;
+
+// Schema Zod (validação)
+export const novaFeatureSchema = z.object({
+  nome: z.string().min(3, "Mínimo 3 caracteres"),
+  descricao: z.string().optional(),
+});
+
+// Tipo inferido do schema
+export type NovaFeature = z.infer<typeof novaFeatureSchema> & {
+  id: NovaFeatureId;
   created_at: string;
   updated_at: string;
-}
+};
+
+// Constantes
+export const STATUS_LABELS = {
+  ativo: "Ativo",
+  inativo: "Inativo",
+} as const;
 ```
 
-#### 3. Implementar Persistência
+#### 3. Implementar Repository (Acesso a Dados)
 
 ```typescript
-// backend/nova-feature/services/persistence/item-persistence.service.ts
-import { createServiceClient } from "@/backend/utils/supabase/service-client";
-import type { Item, CriarItemParams } from "@/backend/types/nova-feature/types";
+// src/features/nova-feature/repository.ts
+import { createClient } from "@/lib/supabase/server";
+import type { NovaFeature } from "./domain";
 
-export async function criarItem(params: CriarItemParams): Promise<Item> {
-  const supabase = createServiceClient();
+export async function findAll(): Promise<NovaFeature[]> {
+  const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("items")
+    .from("nova_feature")
+    .select("*")
+    .order("nome");
+
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+
+export async function findById(id: number): Promise<NovaFeature | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("nova_feature")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) return null;
+  return data;
+}
+
+export async function create(
+  params: Omit<NovaFeature, "id" | "created_at" | "updated_at">
+): Promise<NovaFeature> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("nova_feature")
     .insert(params)
     .select()
     .single();
@@ -590,56 +683,173 @@ export async function criarItem(params: CriarItemParams): Promise<Item> {
 }
 ```
 
-#### 4. Implementar Serviço de Negócio
+#### 4. Implementar Service (Lógica de Negócio)
 
 ```typescript
-// backend/nova-feature/services/nova-feature/criar-item.service.ts
-import { criarItem as criarItemPersistence } from "../persistence/item-persistence.service";
-import type { CriarItemParams, Item } from "@/backend/types/nova-feature/types";
+// src/features/nova-feature/service.ts
+import { novaFeatureSchema, type NovaFeature } from "./domain";
+import * as repo from "./repository";
 
-export async function criarItem(params: CriarItemParams): Promise<Item> {
-  // Validações de negócio
-  if (!params.nome || params.nome.trim().length === 0) {
-    throw new Error("Nome é obrigatório");
+export async function listar(): Promise<NovaFeature[]> {
+  return await repo.findAll();
+}
+
+export async function buscar(id: number): Promise<NovaFeature | null> {
+  return await repo.findById(id);
+}
+
+export async function criar(params: unknown): Promise<NovaFeature> {
+  // 1. Validar entrada
+  const validacao = novaFeatureSchema.safeParse(params);
+  if (!validacao.success) {
+    throw new Error(validacao.error.errors[0].message);
   }
 
-  // Chama persistência
-  return await criarItemPersistence(params);
+  // 2. Regras de negócio
+  const dados = {
+    ...validacao.data,
+    nome: validacao.data.nome.trim().toUpperCase(),
+  };
+
+  // 3. Persistir
+  return await repo.create(dados);
 }
 ```
 
-#### 5. Criar Rota de API
+#### 5. Criar Server Actions
 
 ```typescript
-// app/api/nova-feature/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/backend/utils/auth/api-auth";
-import { criarItem } from "@/backend/nova-feature/services/nova-feature/criar-item.service";
+// src/features/nova-feature/actions/nova-feature-actions.ts
+"use server";
 
-export async function POST(request: NextRequest) {
+import { revalidatePath } from "next/cache";
+import * as service from "../service";
+import type { NovaFeature } from "../domain";
+
+export async function actionListar(): Promise<{
+  success: boolean;
+  data?: NovaFeature[];
+  error?: string;
+}> {
   try {
-    // Autenticação
-    const authResult = await authenticateRequest(request);
-    if (!authResult.authenticated) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Parse do body
-    const body = await request.json();
-
-    // Chama serviço
-    const item = await criarItem(body);
-
-    // Retorna sucesso
-    return NextResponse.json({ success: true, data: item });
+    const data = await service.listar();
+    return { success: true, data };
   } catch (error) {
-    console.error("Erro ao criar item:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Erro interno" },
-      { status: 500 }
-    );
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro ao listar",
+    };
   }
 }
+
+export async function actionCriar(formData: FormData): Promise<{
+  success: boolean;
+  data?: NovaFeature;
+  error?: string;
+}> {
+  try {
+    const params = {
+      nome: formData.get("nome") as string,
+      descricao: formData.get("descricao") as string,
+    };
+
+    const data = await service.criar(params);
+
+    // Revalidar cache
+    revalidatePath("/nova-feature");
+
+    return { success: true, data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro ao criar",
+    };
+  }
+}
+```
+
+#### 6. Criar Componentes
+
+```typescript
+// src/features/nova-feature/components/nova-feature-table.tsx
+"use client";
+
+import { ResponsiveTable } from "@/components/ui/responsive-table";
+import type { NovaFeature } from "../domain";
+import type { ResponsiveTableColumn } from "@/components/ui/responsive-table";
+
+interface NovaFeatureTableProps {
+  data: NovaFeature[];
+}
+
+export function NovaFeatureTable({ data }: NovaFeatureTableProps) {
+  const columns: ResponsiveTableColumn<NovaFeature>[] = [
+    {
+      id: "nome",
+      header: "Nome",
+      accessor: "nome",
+      priority: 1,
+    },
+    {
+      id: "descricao",
+      header: "Descrição",
+      accessor: "descricao",
+      priority: 2,
+    },
+  ];
+
+  return <ResponsiveTable data={data} columns={columns} />;
+}
+```
+
+#### 7. Criar Página (App Router)
+
+```typescript
+// src/app/(dashboard)/nova-feature/page.tsx
+import { PageShell } from "@/components/shared/page-shell";
+import { NovaFeatureTable } from "@/features/nova-feature/components/nova-feature-table";
+import { actionListar } from "@/features/nova-feature/actions/nova-feature-actions";
+import { Button } from "@/components/ui/button";
+
+export default async function NovaFeaturePage() {
+  const result = await actionListar();
+
+  if (!result.success) {
+    return (
+      <PageShell title="Nova Feature">
+        <div>Erro: {result.error}</div>
+      </PageShell>
+    );
+  }
+
+  return (
+    <PageShell
+      title="Nova Feature"
+      description="Gerenciamento de nova feature"
+      actions={<Button>Nova Feature</Button>}
+    >
+      <NovaFeatureTable data={result.data || []} />
+    </PageShell>
+  );
+}
+```
+
+#### 8. Exportar Módulo
+
+```typescript
+// src/features/nova-feature/index.ts
+// Domain
+export type { NovaFeature, NovaFeatureId } from "./domain";
+export { novaFeatureSchema, STATUS_LABELS } from "./domain";
+
+// Service
+export { listar, buscar, criar } from "./service";
+
+// Components
+export { NovaFeatureTable } from "./components/nova-feature-table";
+
+// Actions
+export { actionListar, actionCriar } from "./actions/nova-feature-actions";
 ```
 
 ### Usando Cache Redis
@@ -686,74 +896,89 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 
 ## 📁 Estrutura de Diretórios
 
+### Visão Geral da Nova Arquitetura
+
 ```
 sinesys/
-├── app/                      # Next.js App Router
-│   ├── (dashboard)/          # Rotas protegidas do dashboard
-│   │   ├── acervo/
-│   │   ├── audiencias/
-│   │   ├── captura/
-│   │   ├── clientes/
-│   │   ├── contratos/
-│   │   ├── expedientes/
-│   │   ├── processos/
-│   │   ├── usuarios/
+├── src/
+│   ├── app/                      # Next.js App Router (apenas roteamento)
+│   │   ├── (dashboard)/          # Rotas protegidas do dashboard
+│   │   │   ├── processos/        # → usa features/processos/
+│   │   │   ├── audiencias/       # → usa features/audiencias/
+│   │   │   ├── partes/           # → usa features/partes/
+│   │   │   ├── contratos/        # → usa features/contratos/
+│   │   │   └── layout.tsx        # Layout com Sidebar fixa
+│   │   ├── api/                  # API Routes (REST endpoints)
+│   │   ├── auth/                 # Páginas de autenticação
+│   │   ├── globals.css
 │   │   └── layout.tsx
-│   ├── api/                  # API Routes (REST endpoints)
-│   │   ├── acervo/
-│   │   ├── audiencias/
-│   │   ├── cache/
-│   │   ├── captura/
-│   │   ├── clientes/
-│   │   ├── contratos/
+│   │
+│   ├── features/                 # 🆕 FEATURE MODULES (FSD)
+│   │   ├── partes/               # ✅ Migrado
+│   │   │   ├── components/
+│   │   │   │   ├── clientes/
+│   │   │   │   ├── partes-contrarias/
+│   │   │   │   ├── terceiros/
+│   │   │   │   ├── representantes/
+│   │   │   │   └── shared/
+│   │   │   ├── hooks/
+│   │   │   ├── utils/
+│   │   │   ├── types/
+│   │   │   └── index.ts
+│   │   ├── processos/            # ✅ Migrado
+│   │   │   ├── components/
+│   │   │   ├── actions/
+│   │   │   ├── hooks/
+│   │   │   ├── domain.ts
+│   │   │   ├── service.ts
+│   │   │   ├── repository.ts
+│   │   │   ├── types.ts
+│   │   │   └── index.ts
+│   │   ├── contratos/            # ✅ Migrado
+│   │   ├── assinatura-digital/   # 🔄 Parcial
+│   │   └── [outros módulos]/     # 📋 Planejado
+│   │
+│   ├── components/               # Componentes Compartilhados
+│   │   ├── ui/                   # shadcn/ui base (170+ componentes)
+│   │   │   ├── button.tsx
+│   │   │   ├── data-table.tsx
+│   │   │   ├── responsive-table.tsx
+│   │   │   ├── table-toolbar.tsx
+│   │   │   └── ...
+│   │   ├── layout/               # Layout e navegação
+│   │   │   ├── app-sidebar.tsx
+│   │   │   ├── app-header.tsx
+│   │   │   └── page-shell.tsx
+│   │   └── shared/               # Padrões Zattar
+│   │       ├── data-table-shell.tsx  # Superfície de dados
+│   │       ├── table-pagination.tsx
+│   │       └── ...
+│   │
+│   ├── lib/                      # Bibliotecas e Infraestrutura
+│   │   ├── supabase/             # Cliente Supabase
+│   │   ├── redis/                # Cache Redis
+│   │   ├── mongodb/              # MongoDB (logs, auditoria)
+│   │   └── utils/                # Utilitários gerais
+│   │
+│   ├── hooks/                    # Hooks Globais
+│   │   ├── use-viewport.ts
+│   │   ├── use-debounce.ts
 │   │   └── ...
-│   ├── auth/                 # Páginas de autenticação
-│   ├── globals.css
-│   └── layout.tsx
+│   │
+│   ├── types/                    # Tipos Compartilhados
+│   │   ├── domain/               # Entidades de domínio
+│   │   └── contracts/            # DTOs e contratos
+│   │
+│   └── core/                     # 🔄 Legado (em migração)
+│       └── partes/               # → movendo para features/partes/
 │
-├── backend/                  # Lógica de negócio e serviços
-│   ├── acervo/
-│   │   └── services/
-│   │       ├── acervo/           # Serviços de negócio
-│   │       └── persistence/      # Camada de persistência
-│   ├── api/
-│   │   └── pje-trt/          # APIs do PJE/TRT
-│   │       ├── acervo-geral/
-│   │       ├── audiencias/
-│   │       ├── pendentes-manifestacao/
-│   │       ├── arquivados/
-│   │       ├── timeline/
-│   │       └── shared/           # Utilitários compartilhados
-│   ├── audiencias/
-│   ├── captura/
-│   ├── clientes/
-│   ├── contratos/
-│   ├── types/                # Tipos TypeScript específicos do backend (infraestrutura e integrações)
-│   └── utils/                # Utilitários compartilhados
-│       ├── auth/
-│       ├── supabase/
-│       └── logs/
-│
-├── components/              # Componentes React reutilizáveis
-│   ├── ui/                  # Componentes shadcn/ui
-│   ├── layout/              # Componentes de layout (sidebar, navbar)
-│   └── examples/            # Exemplos de uso de componentes
-│
-├── lib/                     # Bibliotecas e utilitários
-│   ├── api/                 # Cliente API
-│   ├── hooks/               # Hooks personalizados
-│   ├── mongodb/             # Cliente MongoDB
-│   ├── redis/               # Cliente e utilitários Redis
-│   │   ├── client.ts
-│   │   ├── cache-utils.ts
-│   │   ├── cache-keys.ts
-│   │   ├── invalidation.ts
-│   │   └── index.ts
-│   └── utils/               # Utilitários gerais
-│
-├── types/                   # Tipos TypeScript compartilhados (Domínio e Contratos)
-│   ├── domain/              # Definições do modelo de domínio (agnósticas a tecnologia)
-│   └── contracts/           # DTOs e interfaces de serviço (comunicação entre camadas)
+├── backend/                      # 🔄 Legado (em migração para features/)
+│   ├── {modulo}/services/        # → movendo para features/{modulo}/
+│   ├── auth/                     # Autenticação (permanece)
+│   ├── api/pje-trt/              # Integração PJE/TRT (permanece)
+│   └── utils/                    # Utilitários (permanece)
+
+
 │
 ├── supabase/                # Configuração do Supabase
 │   ├── migrations/          # Migrações do banco de dados
@@ -1362,9 +1587,216 @@ npm run debug:credentials
 
 ## 🚀 Deploy
 
-### Docker
+Este documento descreve como fazer o deploy da stack Sinesys em diferentes ambientes.
 
-O projeto está configurado para deploy com Docker e Docker Swarm.
+### Arquitetura de Serviços
+
+O Sinesys é composto por **3 serviços independentes**, cada um em seu próprio repositório:
+
+| Serviço | Repositório | Descrição | Porta | WebSocket |
+|---------|-------------|-----------|-------|-----------|  
+| **sinesys_app** | Este repo | Frontend Next.js + API | 3000 | ❌ |
+| **sinesys_mcp** | sinesys-mcp-server | MCP Server para agentes IA | 3001 | ❌ |
+| **sinesys_browser** | sinesys-browser-server | Firefox (scraping PJE) | 3000 | ✅ |
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        Servidor                              │
+├─────────────────────────────────────────────────────────────┤
+│   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐   │
+│   │  sinesys_app │   │ sinesys_mcp  │   │sinesys_browser│   │
+│   │  (Next.js)   │   │  (Node.js)   │   │   (Firefox)   │   │
+│   │  :3000       │   │  :3001       │   │  :3000 (WS)   │   │
+│   └──────┬───────┘   └──────┬───────┘   └───────┬───────┘   │
+│          │                  │                    │           │
+│          └──────────────────┼────────────────────┘           │
+│                             │                                │
+│                     ┌───────▼───────┐                       │
+│                     │   Supabase    │                       │
+│                     │ Redis MongoDB │                       │
+│                     └───────────────┘                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Deploy no CapRover (via Imagem Docker)
+
+O deploy do Sinesys no CapRover é feito utilizando **imagens Docker pré-construídas via GitHub Actions**, evitando builds no servidor de produção e garantindo deploys mais rápidos e confiáveis.
+
+#### Arquitetura de Deploy
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    GitHub Actions                            │
+│  1. Push na branch master/main                              │
+│  2. Build da imagem Docker                                  │
+│  3. Push para Docker Hub                                    │
+│  4. Trigger deploy no CapRover (webhook)                    │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      Docker Hub                              │
+│  sinesystec/sinesys:latest                                  │
+│  sinesystec/sinesys:abc1234 (SHA)                           │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      CapRover                                │
+│  Pull imagem → Deploy → Restart container                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+#### Pré-requisitos
+
+- CapRover instalado e configurado
+- Acesso ao dashboard do CapRover
+- Conta no Docker Hub (para armazenar imagens)
+- GitHub Actions configurado (já incluído no repositório)
+
+#### Passo 1: Criar os Apps no CapRover
+
+Acesse o dashboard do CapRover e crie **3 apps**:
+
+| Nome do App | Descrição | HTTP Port | WebSocket |
+|-------------|-----------|-----------|-----------|  
+| `sinesys` | App principal (Next.js) | 3000 | ❌ |
+| `sinesys-mcp` | MCP Server | 3001 | ❌ |
+| `sinesys-browser` | Firefox para scraping | 3000 | ✅ |
+
+> ⚠️ **Importante**: Habilite WebSocket Support apenas para `sinesys-browser`!
+
+#### Passo 2: Configurar GitHub Secrets
+
+No repositório do GitHub, vá em **Settings → Secrets and variables → Actions** e adicione:
+
+| Secret | Descrição | Exemplo |
+|--------|-----------|------|
+| `DOCKERHUB_USERNAME` | Username do Docker Hub | `sinesystec` |
+| `DOCKERHUB_TOKEN` | Access Token do Docker Hub | `dckr_pat_xxx` |
+| `NEXT_PUBLIC_SUPABASE_URL` | URL do Supabase | `https://xxx.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon Key do Supabase | `eyJ...` |
+| `CAPROVER_SERVER` | URL do CapRover | `https://captain.seudominio.com` |
+| `CAPROVER_APP_TOKEN` | Token do app (opcional) | Ver passo 3 |
+
+> 💡 **Dica**: Para criar um Docker Hub Access Token, acesse Docker Hub → Account Settings → Security → New Access Token
+
+#### Passo 3: Deploy Automático (Recomendado)
+
+**No CapRover:**
+
+1. Acesse **Apps → sinesys → Deployment**
+2. Role até **App Webhooks**
+3. Habilite **Enable App Token**
+4. Copie o token gerado
+5. Adicione como secret `CAPROVER_APP_TOKEN` no GitHub
+
+**Resultado**: A cada push na branch `master` ou `main`, o GitHub Actions:
+- Faz build da imagem
+- Envia para Docker Hub
+- Dispara deploy automático no CapRover
+
+#### Passo 4: Deploy Manual (Alternativa)
+
+Se não configurou o deploy automático:
+
+1. Aguarde o GitHub Actions completar (veja na aba **Actions** do repositório)
+2. No CapRover, acesse **Apps → sinesys → Deployment**
+3. Na seção **Deploy via ImageName**, insira:
+   ```
+   sinesystec/sinesys:latest
+   ```
+4. Clique em **Deploy**
+
+#### Passo 5: Configurar Variáveis de Ambiente
+
+No dashboard do CapRover, vá em **Apps → sinesys → App Configs → Environmental Variables**:
+
+```env
+NODE_ENV=production
+NEXT_TELEMETRY_DISABLED=1
+PORT=3000
+HOSTNAME=0.0.0.0
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=sua_anon_key
+SUPABASE_SECRET_KEY=sua_secret_key
+
+# Browser Service (comunicação interna CapRover)
+BROWSER_WS_ENDPOINT=ws://srv-captain--sinesys-browser:3000
+BROWSER_SERVICE_URL=http://srv-captain--sinesys-browser:3000
+
+# Redis (opcional)
+ENABLE_REDIS_CACHE=true
+REDIS_URL=redis://host:port
+
+# MongoDB (opcional)
+MONGODB_URL=mongodb://...
+MONGODB_DATABASE=sinesys
+```
+
+#### Passo 6: Deploy dos Outros Serviços
+
+**Browser Service (sinesys-browser):**
+```env
+PORT=3000
+BROWSER_TOKEN=seu_token_opcional
+```
+- Container HTTP Port: `3000`
+- WebSocket Support: ✅ **Habilitar**
+- Memory: 2048MB (mínimo)
+
+**MCP Server (sinesys-mcp):**
+```env
+NODE_ENV=production
+PORT=3001
+SINESYS_API_URL=http://srv-captain--sinesys:3000
+SINESYS_API_KEY=sua_api_key
+```
+
+#### Passo 7: Configurar Domínios e HTTPS
+
+No dashboard do CapRover:
+
+| App | Domínio | HTTPS |
+|-----|---------|-------|
+| sinesys | app.seudominio.com.br | ✅ |
+| sinesys-mcp | mcp.seudominio.com.br (opcional) | ✅ |
+| sinesys-browser | (não expor) | — |
+
+#### Vantagens do Deploy via GitHub Actions + Docker Hub
+
+| Aspecto | Build no CapRover | Deploy via Imagem (GitHub Actions) |
+|---------|-------------------|------------------------------------|  
+| **Tempo de deploy** | ~5-10 min | ~30 seg |
+| **Uso de memória no servidor** | 6-8 GB durante build | Apenas runtime (~512MB) |
+| **Risco de OOM** | Alto | Nenhum |
+| **Consistência** | Depende do servidor | Imagem idêntica sempre |
+| **Rollback** | Rebuild necessário | Trocar tag da imagem |
+| **Build acontece** | No CapRover | No GitHub Actions |
+| **Custo do servidor** | Precisa mais RAM | Servidor menor e mais barato |
+
+---
+
+### Deploy com Docker Compose (Local)
+
+Para desenvolvimento local, você pode usar o `docker-compose.yml` simplificado:
+
+```bash
+# Subir apenas o app (sem mcp e browser)
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f
+
+# Parar
+docker-compose down
+```
+
+> **Nota**: Para desenvolvimento completo com os 3 serviços, clone os outros repositórios e suba-os separadamente.
 
 #### 1. Build da Imagem
 
@@ -1555,17 +1987,21 @@ Para problemas não listados acima:
 O Sinesys utiliza um Design System baseado em padrões (Pattern-Based Design) com Tailwind v4 + shadcn/ui.
 
 ### Para Agentes de Codificação
+
 Antes de gerar código, consulte:
+
 - `.qoder/rules/design-system-foundation.md` - Axiomas visuais e regras de estilo
 - `.qoder/rules/component-structure.md` - Organização de componentes
 - `components/shared/page-template-example.tsx` - Template de referência
 
 ### Tokens de Cor
+
 - **Primary:** Zattar Purple (`--primary`) - CTAs, links, foco
 - **Highlight:** Action Orange (`--highlight`) - Badges de ação
 - **Muted:** Textos secundários (`--muted-foreground`)
 
 ### Tipografia
+
 - **Títulos:** Montserrat (`font-heading`)
 - **Corpo:** Inter (`font-sans`)
 - **Código:** Geist Mono (`font-mono`)

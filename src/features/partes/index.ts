@@ -74,6 +74,9 @@ export {
   formatarCep,
   formatarNome,
   formatarEnderecoCompleto,
+  formatarData,
+  formatarTipoPessoa,
+  calcularIdade,
 } from './utils';
 
 // ============================================================================

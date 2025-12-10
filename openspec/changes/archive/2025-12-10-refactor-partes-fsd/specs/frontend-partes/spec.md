@@ -1,4 +1,4 @@
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Arquitetura de Componentes de Partes
 
@@ -53,17 +53,17 @@ As pages em `src/app/(dashboard)/partes/` MUST ser entrypoints simples que:
 
 #### Scenario: Page de listagem de partes contrarias
 - **WHEN** usuario acessa `/partes/partes-contrarias`
-- **THEN** a page MUST importar `PartesContrariasTab` de `@/features/partes`
+- **THEN** a page MUST importar `PartesContrariasTableWrapper` de `@/features/partes`
 - **AND** MUST renderizar com Suspense para loading state
 
 #### Scenario: Page de listagem de terceiros
 - **WHEN** usuario acessa `/partes/terceiros`
-- **THEN** a page MUST importar `TerceirosTab` de `@/features/partes`
+- **THEN** a page MUST importar `TerceirosTableWrapper` de `@/features/partes`
 - **AND** MUST renderizar com Suspense para loading state
 
 #### Scenario: Page de listagem de representantes
 - **WHEN** usuario acessa `/partes/representantes`
-- **THEN** a page MUST importar `RepresentantesTab` de `@/features/partes`
+- **THEN** a page MUST importar `RepresentantesTableWrapper` de `@/features/partes`
 - **AND** MUST renderizar com Suspense para loading state
 
 ### Requirement: Barrel Exports

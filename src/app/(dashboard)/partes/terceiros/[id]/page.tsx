@@ -17,10 +17,10 @@ import {
   formatarData,
   formatarNome,
   formatarTipoPessoa,
-} from '@/app/_lib/utils/format-clientes';
-import { formatarCep } from '@/app/_lib/types';
+  formatarCep,
+} from '@/features/partes';
 import { getTipoParteLabel, getPoloLabel } from '@/app/_lib/types/terceiros';
-import type { Terceiro } from '@/app/_lib/types';
+import type { Terceiro } from '@/features/partes';
 import type { Endereco } from '@/backend/types/partes/enderecos-types';
 
 // Extend Terceiro to include all optional fields from database

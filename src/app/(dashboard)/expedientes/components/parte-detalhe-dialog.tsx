@@ -23,7 +23,7 @@ import {
   formatarCnpj,
   formatarTelefone,
   formatarTipoPessoa,
-} from '@/app/_lib/utils/format-clientes';
+} from '@/features/partes';
 import type { ParteComDadosCompletos } from '@/backend/types/partes/processo-partes-types';
 
 interface ParteDetalheDialogProps {

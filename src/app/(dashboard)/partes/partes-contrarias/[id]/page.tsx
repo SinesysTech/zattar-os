@@ -17,9 +17,9 @@ import {
   formatarData,
   formatarNome,
   formatarTipoPessoa,
-} from '@/app/_lib/utils/format-clientes';
-import { formatarCep } from '@/app/_lib/types';
-import type { ParteContraria } from '@/app/_lib/types';
+  formatarCep,
+} from '@/features/partes';
+import type { ParteContraria } from '@/features/partes';
 import type { Endereco } from '@/backend/types/partes/enderecos-types';
 
 // Extend ParteContraria to include all optional fields from database

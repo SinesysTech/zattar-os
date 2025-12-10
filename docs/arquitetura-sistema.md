@@ -320,28 +320,156 @@ graph LR
 
 ## 5. Arquitetura Frontend
 
-### 5.1. Estrutura do Frontend
+### 5.1. Arquitetura Orientada a Features (Feature-Sliced Design)
+
+O Sinesys adota uma **Arquitetura Orientada a Features** simplificada, inspirada no Feature-Sliced Design (FSD), otimizada para o Next.js App Router.
+
+#### Estrutura do Frontend
 
 ```
-app/
-├── (dashboard)/              # Grupo de rotas protegidas
-│   ├── layout.tsx            # Layout do dashboard (sidebar + header)
-│   ├── processos/            # Módulo de processos
-│   │   ├── page.tsx          # Página principal
-│   │   └── [id]/             # Detalhes do processo
-│   ├── audiencias/           # Módulo de audiências
-│   ├── expedientes/          # Módulo de expedientes
-│   └── ...                   # Outros módulos
-├── _lib/                     # Bibliotecas internas do app
-│   ├── hooks/                # Hooks React customizados
-│   ├── types/                # Tipos específicos do app
-│   └── utils/                # Utilitários do app
-├── auth/                     # Páginas de autenticação
-│   ├── login/
-│   └── callback/
-└── api/                      # API Routes
-    └── ...
+src/
+├── app/                      # CAMADA DE ROTEAMENTO (Apenas Entrypoints)
+│   ├── (auth)/                 # Rotas de Autenticação (Login, Recuperar senha)
+│   │   └── layout.tsx          # Layout limpo (sem sidebar)
+│   │
+│   ├── (dashboard)/            # O "Zattar Shell" (A aplicação principal)
+│   │   ├── layout.tsx          # ⚠️ AQUI vive o Layout Grid (Sidebar + Main)
+│   │   ├── loading.tsx         # Skeleton global do dashboard
+│   │   │
+│   │   ├── page.tsx            # Dashboard Home (Resumo)
+│   │   │
+│   │   ├── processos/          # Rota de Processos
+│   │   │   ├── page.tsx        # Lista (usa features/processos/)
+│   │   │   └── [id]/           # Detalhe do Processo
+│   │   │
+│   │   └── partes/             # Rota de Partes
+│   │       └── ...             # (usa features/partes/)
+│   │
+│   ├── api/                    # Route Handlers (Webhooks, Uploads)
+│   ├── globals.css             # O CSS com suas variáveis OKLCH e Fontes
+│   └── layout.tsx              # Root Layout (Fontes Inter/Montserrat, Providers)
+│
+├── features/                 # CAMADA DE NEGÓCIO (Domain Logic)
+│   ├── partes/                 # Tudo sobre "Partes" vive aqui
+│   │   ├── components/         # Componentes específicos (ClientesTable, etc)
+│   │   │   ├── clientes/
+│   │   │   ├── partes-contrarias/
+│   │   │   ├── terceiros/
+│   │   │   ├── representantes/
+│   │   │   └── shared/
+│   │   ├── hooks/              # Hooks do módulo (use-clientes, use-terceiros)
+│   │   ├── utils/              # Utilitários (formatação, validação)
+│   │   ├── types/              # Tipagem Zod/TS específica
+│   │   └── index.ts            # Barrel exports
+│   │
+│   ├── processos/
+│   │   ├── components/
+│   │   ├── actions/            # Server Actions
+│   │   ├── hooks/
+│   │   ├── domain.ts           # Entidades e Value Objects
+│   │   ├── service.ts          # Casos de uso
+│   │   ├── repository.ts       # Acesso a dados
+│   │   ├── types.ts
+│   │   └── index.ts
+│   │
+│   └── contratos/
+│       └── ...
+│
+├── components/               # CAMADA DE APRESENTAÇÃO (UI Pura)
+│   ├── ui/                     # Primitivos shadcn (Button, Input, Card...)
+│   │
+│   ├── layout/                 # Blocos Estruturais do Shell
+│   │   ├── app-sidebar.tsx     # A Sidebar "Charcoal"
+│   │   ├── app-header.tsx      # Topbar com Breadcrumbs
+│   │   └── page-shell.tsx      # Wrapper padrão para páginas
+│   │
+│   └── shared/                 # Padrões Zattar Reutilizáveis
+│       ├── data-table-shell.tsx # Superfície de Dados (Toolbar + Table + Footer)
+│       └── table-toolbar.tsx    # Componente de busca e filtros
+│
+├── lib/                      # CAMADA DE INFRAESTRUTURA
+│   ├── supabase/               # Conexão Supabase
+│   ├── utils.ts                # Helpers (cn(), etc)
+│   └── constants.ts            # Menus, Configurações estáticas
+│
+└── hooks/                    # Hooks Globais (use-media-query, use-store)
 ```
+
+#### Os 3 Pilares da Implementação FSD
+
+**Pilar 1: O "Feature Module"**
+
+Ao invés de espalhar código, **colocamos a lógica onde ela pertence**.
+
+- *Errado:* Colocar um componente `ProcessCard` dentro de `components/ui`.
+- *Certo:* Colocar em `src/features/processos/components/process-card.tsx`.
+- *Por que:* Quando você precisar alterar algo sobre processos, você vai em uma única pasta. Isso facilita a manutenção mental.
+
+**Pilar 2: O Padrão "Data Surface" (Superfície de Dados)**
+
+Para garantir aquele visual "colado" (Toolbar + Table) que definimos, usamos o componente `DataTableShell` em `components/shared/data-table-shell.tsx`.
+
+Ele aceita a `Toolbar`, a `Table` e o `Pagination` como children ou props, e garante que as bordas e fundos estejam corretos (Toolbar `rounded-t`, Table sem borda top/bottom, Footer `rounded-b`).
+
+**Pilar 3: O "Shell Layout" (Sidebar Fixa)**
+
+O código crucial para `src/app/(dashboard)/layout.tsx`. Ele implementa o fundo Off-White e a Sidebar Charcoal fixa.
+
+```tsx
+import { AppSidebar } from "@/components/layout/app-sidebar"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider>
+      {/* 1. Sidebar (Fixo, Charcoal) */}
+      <AppSidebar />
+
+      {/* 2. Área Principal (Scrollável, Off-White) */}
+      <SidebarInset id="main-content">
+        {/* O Palco (Onde as páginas são renderizadas) */}
+        {/* O scroll acontece AQUI DENTRO, não na janela inteira */}
+        {children}
+      </SidebarInset>
+    </SidebarProvider>
+  )
+}
+```
+
+#### Migração Progressiva para FSD
+
+**Módulos Migrados (✅ Completo)**
+
+1. **Partes** (`features/partes/`)
+   - Clientes
+   - Partes Contrárias
+   - Terceiros
+   - Representantes
+
+2. **Processos** (`features/processos/`)
+   - Domain, Service, Repository pattern
+   - Server Actions implementados
+   - Componentes específicos isolados
+
+3. **Contratos** (`features/contratos/`)
+   - Estrutura completa de feature
+   - Hooks customizados
+   - Utils e tipos
+
+**Módulos Legados (🔄 Em Migração)**
+
+- **Audiências** - Mantém estrutura antiga em `app/(dashboard)/audiencias/`
+- **Expedientes** - Mantém estrutura antiga em `app/(dashboard)/expedientes/`
+- **Acordos/Condenações** - Mantém estrutura antiga
+- **Financeiro** - Módulo complexo com estrutura própria
+- **RH** - Mantém estrutura antiga
+- **Assinatura Digital** - Parcialmente migrado para `features/assinatura-digital/`
+
+**Estratégia de Migração**:
+
+1. Módulos novos: implementar diretamente em `features/`
+2. Módulos existentes: migrar incrementalmente conforme necessidade
+3. Módulos legados: manter funcional, sem grandes refatorações
 
 ### 5.2. Componentes UI
 
