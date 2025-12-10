@@ -1,0 +1,263 @@
+'use client';
+
+/**
+ * Hook para Orçamentos
+ * Usa Server Actions de features/financeiro/actions/orcamentos
+ */
+
+import { useState, useCallback, useEffect } from 'react';
+import {
+    actionListarOrcamentos,
+    actionBuscarOrcamento,
+    actionCriarOrcamento,
+    actionAtualizarOrcamento,
+    actionExcluirOrcamento,
+    actionAprovarOrcamento,
+    actionIniciarExecucaoOrcamento,
+    actionEncerrarOrcamento,
+    actionObterAnaliseOrcamentaria,
+    type ListarOrcamentosFilters,
+} from '../actions/orcamentos';
+import type {
+    OrcamentoComItens,
+    CriarOrcamentoDTO,
+    AtualizarOrcamentoDTO,
+} from '@/backend/types/financeiro/orcamento.types';
+
+interface UseOrcamentosOptions {
+    autoFetch?: boolean;
+    filters?: ListarOrcamentosFilters;
+}
+
+interface UseOrcamentosReturn {
+    orcamentos: OrcamentoComItens[];
+    orcamentoSelecionado: OrcamentoComItens | null;
+    analise: any | null;
+    isLoading: boolean;
+    error: string | null;
+    total: number;
+    listar: (filters?: ListarOrcamentosFilters) => Promise<void>;
+    buscar: (id: number) => Promise<void>;
+    criar: (dto: CriarOrcamentoDTO, usuarioId: string) => Promise<boolean>;
+    atualizar: (id: number, dto: AtualizarOrcamentoDTO) => Promise<boolean>;
+    excluir: (id: number) => Promise<boolean>;
+    aprovar: (id: number, usuarioId: string, observacoes?: string) => Promise<boolean>;
+    iniciarExecucao: (id: number, usuarioId: string) => Promise<boolean>;
+    encerrar: (id: number, usuarioId: string, observacoes?: string) => Promise<boolean>;
+    obterAnalise: (orcamentoId: number) => Promise<void>;
+    refetch: () => Promise<void>;
+}
+
+export function useOrcamentos(options?: UseOrcamentosOptions): UseOrcamentosReturn {
+    const [orcamentos, setOrcamentos] = useState<OrcamentoComItens[]>([]);
+    const [orcamentoSelecionado, setOrcamentoSelecionado] = useState<OrcamentoComItens | null>(null);
+    const [analise, setAnalise] = useState<any | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [total, setTotal] = useState(0);
+    const [currentFilters, setCurrentFilters] = useState<ListarOrcamentosFilters | undefined>(options?.filters);
+
+    const listar = useCallback(async (filters?: ListarOrcamentosFilters) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const filtersToUse = filters || currentFilters;
+            setCurrentFilters(filtersToUse);
+            const result = await actionListarOrcamentos(filtersToUse);
+            if (result.success && result.data) {
+                setOrcamentos(result.data.items || result.data.dados || []);
+                setTotal(result.data.total || result.data.meta?.total || 0);
+            } else {
+                setError(result.error || 'Erro ao listar orçamentos');
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Erro desconhecido');
+        } finally {
+            setIsLoading(false);
+        }
+    }, [currentFilters]);
+
+    const buscar = useCallback(async (id: number) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await actionBuscarOrcamento(id);
+            if (result.success && result.data) {
+                setOrcamentoSelecionado(result.data);
+            } else {
+                setError(result.error || 'Erro ao buscar orçamento');
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Erro desconhecido');
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    const criar = useCallback(async (dto: CriarOrcamentoDTO, usuarioId: string): Promise<boolean> => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await actionCriarOrcamento(dto, usuarioId);
+            if (result.success) {
+                await listar();
+                return true;
+            } else {
+                setError(result.error || 'Erro ao criar orçamento');
+                return false;
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Erro desconhecido');
+            return false;
+        } finally {
+            setIsLoading(false);
+        }
+    }, [listar]);
+
+    const atualizar = useCallback(async (id: number, dto: AtualizarOrcamentoDTO): Promise<boolean> => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await actionAtualizarOrcamento(id, dto);
+            if (result.success) {
+                await listar();
+                return true;
+            } else {
+                setError(result.error || 'Erro ao atualizar orçamento');
+                return false;
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Erro desconhecido');
+            return false;
+        } finally {
+            setIsLoading(false);
+        }
+    }, [listar]);
+
+    const excluir = useCallback(async (id: number): Promise<boolean> => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await actionExcluirOrcamento(id);
+            if (result.success) {
+                await listar();
+                return true;
+            } else {
+                setError(result.error || 'Erro ao excluir orçamento');
+                return false;
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Erro desconhecido');
+            return false;
+        } finally {
+            setIsLoading(false);
+        }
+    }, [listar]);
+
+    const aprovar = useCallback(async (id: number, usuarioId: string, observacoes?: string): Promise<boolean> => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await actionAprovarOrcamento(id, usuarioId, observacoes);
+            if (result.success) {
+                await listar();
+                return true;
+            } else {
+                setError(result.error || 'Erro ao aprovar orçamento');
+                return false;
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Erro desconhecido');
+            return false;
+        } finally {
+            setIsLoading(false);
+        }
+    }, [listar]);
+
+    const iniciarExecucao = useCallback(async (id: number, usuarioId: string): Promise<boolean> => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await actionIniciarExecucaoOrcamento(id, usuarioId);
+            if (result.success) {
+                await listar();
+                return true;
+            } else {
+                setError(result.error || 'Erro ao iniciar execução');
+                return false;
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Erro desconhecido');
+            return false;
+        } finally {
+            setIsLoading(false);
+        }
+    }, [listar]);
+
+    const encerrar = useCallback(async (id: number, usuarioId: string, observacoes?: string): Promise<boolean> => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await actionEncerrarOrcamento(id, usuarioId, observacoes);
+            if (result.success) {
+                await listar();
+                return true;
+            } else {
+                setError(result.error || 'Erro ao encerrar orçamento');
+                return false;
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Erro desconhecido');
+            return false;
+        } finally {
+            setIsLoading(false);
+        }
+    }, [listar]);
+
+    const obterAnalise = useCallback(async (orcamentoId: number) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const result = await actionObterAnaliseOrcamentaria(orcamentoId);
+            if (result.success && result.data) {
+                setAnalise(result.data);
+            } else {
+                setError(result.error || 'Erro ao obter análise');
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Erro desconhecido');
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    const refetch = useCallback(async () => {
+        await listar(currentFilters);
+    }, [listar, currentFilters]);
+
+    // Auto-fetch na montagem se configurado
+    useEffect(() => {
+        if (options?.autoFetch) {
+            listar(options.filters);
+        }
+    }, []);
+
+    return {
+        orcamentos,
+        orcamentoSelecionado,
+        analise,
+        isLoading,
+        error,
+        total,
+        listar,
+        buscar,
+        criar,
+        atualizar,
+        excluir,
+        aprovar,
+        iniciarExecucao,
+        encerrar,
+        obterAnalise,
+        refetch,
+    };
+}
