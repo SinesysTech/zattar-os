@@ -876,7 +876,45 @@ Retorna URL pública do PDF
 
 ---
 
-## Validações e Regras de Negócio
+## VALIDAÇÕES E REGRAS DE NEGÓCIO
+
+## AUDITORIA E CONFORMIDADE LEGAL
+
+### Procedimentos de Auditoria
+
+O módulo implementa auditoria forense completa via `signature.service.auditSignatureIntegrity()`.
+
+**Casos de uso:**
+- Contestação judicial de assinatura
+- Auditoria de compliance mensal
+- Perícia técnica em processos judiciais
+- Verificação de integridade em migrações de sistema
+
+**Verificações realizadas:**
+1. Integridade do hash (crítico): Recalcula SHA-256 e compara com banco
+2. Entropia do device fingerprint (recomendado): Valida >= 6 campos
+3. Embedding da foto (heurístico): Verifica que foto está no PDF
+
+**Exemplo de uso:**
+```typescript
+import { auditSignatureIntegrity } from '@/backend/assinatura-digital/services/signature.service';
+
+const result = await auditSignatureIntegrity('123e4567-e89b-12d3-a456-426614174000');
+console.log(result.status); // "valido" | "invalido" | "erro"
+console.log(result.verificacoes); // Detalhes de cada verificação
+```
+
+### Conformidade com MP 2.200-2/2001
+
+O sistema implementa Assinatura Eletrônica Avançada (Art. 10, § 2º) sem certificado ICP-Brasil.
+
+**Mapeamento das alíneas:**
+- **(a) Associação unívoca:** Device fingerprint + IP + geolocalização + timestamp
+- **(b) Identificação inequívoca:** Foto selfie (biometria) + CPF + dados pessoais
+- **(c) Controle exclusivo:** Captura em tempo real (webcam/canvas) + aceite explícito de termos
+- **(d) Detecção de modificações:** Dual hashing SHA-256 + flatten do PDF
+
+**Documentação completa:** Ver `docs/assinatura-digital/CONFORMIDADE_LEGAL.md`
 
 ### Validações de Frontend
 
