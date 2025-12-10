@@ -9,7 +9,7 @@ import {
   ListarSalasParams,
   ListarMensagensParams,
 } from './domain';
-import { PaginatedResponse } from '@/core/types';
+import { PaginatedResponse } from '@/core/common/types';
 
 type SalaChatRow = Record<string, unknown>;
 type MensagemChatRow = Record<string, unknown>;

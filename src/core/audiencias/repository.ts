@@ -6,7 +6,7 @@ import {
   Audiencia,
   ListarAudienciasParams,
 } from './domain';
-import { PaginatedResponse } from '@/core/types';
+import { PaginatedResponse } from '@/core/common/types';
 
 type AudienciaRow = Record<string, unknown>;
 

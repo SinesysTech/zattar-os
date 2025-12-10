@@ -1,5 +1,4 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '@/types/supabase'; // Assumindo que você tem um tipo Supabase gerado
 import {
   Segmento,
   createSegmentoSchema,
@@ -16,11 +15,12 @@ import {
   EscopoSegmento,
 } from './domain';
 import { generateSlug } from '@/lib/utils'; // Assumindo que você tem um util de slug
+import { z } from 'zod';
 
 export class AssinaturaDigitalRepository {
-  private supabase: SupabaseClient<Database>;
+  private supabase: SupabaseClient;
 
-  constructor(supabase: SupabaseClient<Database>) {
+  constructor(supabase: SupabaseClient) {
     this.supabase = supabase;
   }
 
