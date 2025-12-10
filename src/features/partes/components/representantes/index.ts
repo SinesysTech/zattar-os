@@ -7,3 +7,5 @@ export {
   buildRepresentantesFilterGroups,
   parseRepresentantesFilters,
 } from './representantes-toolbar-filters';
+
+export { RepresentantesTableWrapper } from './representantes-table-wrapper';

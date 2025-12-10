@@ -6,7 +6,7 @@
  */
 
 import { Suspense } from 'react';
-import { PartesContrariasTab } from '../components/partes-contrarias-tab';
+import { PartesContrariasTableWrapper } from '@/features/partes';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function PartesContrariasLoading() {
@@ -22,7 +22,7 @@ export default function PartesContrariasPage() {
   return (
     <div className="space-y-4">
       <Suspense fallback={<PartesContrariasLoading />}>
-        <PartesContrariasTab />
+        <PartesContrariasTableWrapper />
       </Suspense>
     </div>
   );

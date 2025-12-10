@@ -7,7 +7,7 @@
 
 import { listarClientes } from '@/core/partes/service';
 import { PageShell } from '@/components/shared/page-shell';
-import { ClientesTableWrapper } from '@/components/modules/partes/clientes-table-wrapper';
+import { ClientesTableWrapper } from '@/features/partes';
 
 export default async function ClientesPage() {
   // Fetch inicial no servidor

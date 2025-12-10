@@ -127,3 +127,13 @@ export interface TerceirosFilters {
 export interface RepresentantesFilters {
   // Reservado para futura extensao
 }
+
+// Re-exportar tipos de representantes do backend
+export type {
+  Representante,
+  InscricaoOAB,
+  SituacaoOAB,
+  TipoRepresentante,
+  RepresentanteComEndereco,
+  ListarRepresentantesResult,
+} from '@/backend/types/representantes/representantes-types';

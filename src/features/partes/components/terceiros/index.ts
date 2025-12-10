@@ -7,3 +7,5 @@ export {
   buildTerceirosFilterGroups,
   parseTerceirosFilters,
 } from './terceiros-toolbar-filters';
+
+export { TerceirosTableWrapper } from './terceiros-table-wrapper';

@@ -6,7 +6,7 @@
  */
 
 import { Suspense } from 'react';
-import { RepresentantesTab } from '../components/representantes-tab';
+import { RepresentantesTableWrapper } from '@/features/partes';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function RepresentantesLoading() {
@@ -22,7 +22,7 @@ export default function RepresentantesPage() {
   return (
     <div className="space-y-4">
       <Suspense fallback={<RepresentantesLoading />}>
-        <RepresentantesTab />
+        <RepresentantesTableWrapper />
       </Suspense>
     </div>
   );

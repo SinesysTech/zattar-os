@@ -9,7 +9,7 @@
 
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ProcessoVisualizacao } from './processo-visualizacao';
+import { ProcessoVisualizacao } from '@/features/processos/components';
 
 interface ProcessoPageProps {
   params: Promise<{

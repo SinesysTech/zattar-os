@@ -6,7 +6,7 @@
  */
 
 import { Suspense } from 'react';
-import { TerceirosTab } from '../components/terceiros-tab';
+import { TerceirosTableWrapper } from '@/features/partes';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function TerceirosLoading() {
@@ -22,7 +22,7 @@ export default function TerceirosPage() {
   return (
     <div className="space-y-4">
       <Suspense fallback={<TerceirosLoading />}>
-        <TerceirosTab />
+        <TerceirosTableWrapper />
       </Suspense>
     </div>
   );

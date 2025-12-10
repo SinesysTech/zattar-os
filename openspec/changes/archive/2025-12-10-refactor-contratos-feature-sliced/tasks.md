@@ -18,18 +18,18 @@
 - [x] 2.1 Verificar compilação TypeScript sem erros relacionados a contratos
 - [x] 2.2 Verificar que a página de contratos carrega corretamente
 
-## 3. Limpeza (Pendente - Após Aprovação)
+## 3. Limpeza (Concluída)
 
-- [ ] 3.1 Remover `src/core/contratos/` (domain.ts, service.ts, repository.ts, index.ts)
-- [ ] 3.2 Remover `src/components/modules/contratos/` (todos os arquivos)
-- [ ] 3.3 Remover `src/app/_lib/types/contratos.ts`
-- [ ] 3.4 Remover `src/app/_lib/utils/format-contratos.ts`
-- [ ] 3.5 Remover `src/app/_lib/hooks/use-contratos.ts`
-- [ ] 3.6 Remover `src/app/actions/contratos.ts`
-- [ ] 3.7 Remover `src/app/(dashboard)/contratos/components/contratos-toolbar-filters.tsx`
-- [ ] 3.8 Verificar se há outros arquivos referenciando os arquivos removidos
-- [ ] 3.9 Executar build final para confirmar que tudo funciona
+- [x] 3.1 Remover `src/core/contratos/` (domain.ts, service.ts, repository.ts, index.ts)
+- [x] 3.2 Remover `src/components/modules/contratos/` (todos os arquivos)
+- [x] 3.3 Remover `src/app/_lib/types/contratos.ts`
+- [x] 3.4 Remover `src/app/_lib/utils/format-contratos.ts`
+- [x] 3.5 Remover `src/app/_lib/hooks/use-contratos.ts`
+- [x] 3.6 Remover `src/app/actions/contratos.ts`
+- [x] 3.7 Remover `src/app/(dashboard)/contratos/components/` (diretório completo)
+- [x] 3.8 Verificar e corrigir referências em financeiro/contas-receber
+- [x] 3.9 Executar type-check - sem erros relacionados a contratos
 
 ## 4. Documentação
 
-- [ ] 4.1 Atualizar CLAUDE.md se necessário com nova estrutura de features
+- [x] 4.1 Nova estrutura de features já documentada na spec OpenSpec

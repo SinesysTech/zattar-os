@@ -53,7 +53,7 @@ import {
 import { useContasReceber, cancelarConta, excluirConta } from '@/app/_lib/hooks/use-contas-receber';
 import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
 import { useClientes } from '@/app/_lib/hooks/use-clientes';
-import { useContratos } from '@/app/_lib/hooks/use-contratos';
+import { useContratos } from '@/features/contratos';
 import { usePlanoContasAnaliticas } from '@/app/_lib/hooks/use-plano-contas';
 import { useCentrosCustoAtivos } from '@/app/_lib/hooks/use-centros-custo';
 import { useRouter } from 'next/navigation';
