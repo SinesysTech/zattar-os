@@ -54,23 +54,24 @@ export class PjeTrtDriver implements JudicialDriver {
    * Mapeia ConfigTribunal genérica para ConfigTRT específica
    */
   private mapConfigToTRT(config: ConfigTribunal): ConfigTRT {
-    // Determinar grau baseado no tipoAcesso
+    // Determinar grau baseado no tipoAcesso (seguindo lógica do config.ts)
     let grau: GrauProcesso = 'primeiro_grau';
     if (config.tipoAcesso === 'segundo_grau') {
       grau = 'segundo_grau';
-    } else if (config.tipoAcesso === 'unificado' || config.tipoAcesso === 'unico') {
-      // Para unificado/unico, usar primeiro_grau como padrão
+    } else if (config.tipoAcesso === 'unificado') {
+      // Para unificado, usar primeiro_grau como padrão
       // O sistema PJE permite navegar entre graus após autenticação
       grau = 'primeiro_grau';
+    } else if (config.tipoAcesso === 'unico') {
+      grau = 'tribunal_superior';
     }
 
-    // Extrair código do tribunal do tribunalId (assumindo formato 'TRT3', etc)
-    // Ou buscar do banco se necessário
-    const codigo = this.extractCodigoTribunal(config.tribunalId);
+    // Usar código do tribunal da config (preenchido pela factory) ou fallback
+    const codigo = config.tribunalCodigo || this.extractCodigoTribunal(config.tribunalId);
 
     return {
       codigo: codigo as any, // CodigoTRT
-      nome: '', // Será preenchido se necessário
+      nome: config.tribunalNome || '', // Nome do tribunal
       grau: grau as any, // GrauTRT
       tipoAcesso: config.tipoAcesso as TipoAcessoTribunal,
       loginUrl: config.loginUrl,
@@ -81,12 +82,11 @@ export class PjeTrtDriver implements JudicialDriver {
   }
 
   /**
-   * Extrai código do tribunal do tribunalId
-   * TODO: Melhorar usando busca no banco se necessário
+   * Extrai código do tribunal do tribunalId (fallback)
+   * A factory já preenche tribunalCodigo, mas este método serve como fallback
    */
   private extractCodigoTribunal(tribunalId: string): string {
     // Por enquanto, assumir que tribunalId pode ser o próprio código
-    // Ou fazer lookup no banco se necessário
     return tribunalId.toUpperCase();
   }
 
