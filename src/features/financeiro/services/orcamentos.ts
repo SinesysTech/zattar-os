@@ -6,7 +6,6 @@
 import { OrcamentosRepository } from '../repository/orcamentos';
 import type {
     Orcamento,
-    OrcamentoComItens,
     OrcamentoComDetalhes,
     ListarOrcamentosParams,
     ListarOrcamentosResponse,
@@ -17,6 +16,15 @@ import type {
     ResumoOrcamentario,
     AlertaDesvio
 } from '../types/orcamentos';
+import {
+    validarCriarOrcamentoDTO,
+    validarAtualizarOrcamentoDTO,
+    podeEditarOrcamento,
+    podeExcluirOrcamento,
+    podeAprovarOrcamento,
+    podeIniciarExecucao,
+    podeEncerrarOrcamento
+} from '../domain/orcamentos';
 
 // ============================================================================
 // Service Implementation
@@ -41,9 +49,10 @@ export const OrcamentosService = {
      * Cria novo orçamento
      */
     async criar(dto: CriarOrcamentoDTO, usuarioId: string): Promise<Orcamento> {
-        // Validar datas
-        if (new Date(dto.dataInicio) > new Date(dto.dataFim)) {
-            throw new Error('Data de início deve ser anterior à data de fim');
+        // Validar DTO usando regras do domain
+        const validacao = validarCriarOrcamentoDTO(dto);
+        if (!validacao.valido) {
+            throw new Error(`Dados inválidos: ${validacao.erros.join(', ')}`);
         }
 
         return OrcamentosRepository.criar(dto, usuarioId);
@@ -58,9 +67,16 @@ export const OrcamentosService = {
             throw new Error('Orçamento não encontrado');
         }
 
-        // Só pode atualizar rascunhos
-        if (existente.status !== 'rascunho') {
-            throw new Error('Apenas orçamentos em rascunho podem ser editados');
+        // Validar se pode editar usando regras do domain
+        const podeEditar = podeEditarOrcamento(existente);
+        if (!podeEditar.pode) {
+            throw new Error(podeEditar.motivo);
+        }
+
+        // Validar DTO usando regras do domain
+        const validacao = validarAtualizarOrcamentoDTO(dto);
+        if (!validacao.valido) {
+            throw new Error(`Dados inválidos: ${validacao.erros.join(', ')}`);
         }
 
         return OrcamentosRepository.atualizar(id, dto);
@@ -75,8 +91,10 @@ export const OrcamentosService = {
             throw new Error('Orçamento não encontrado');
         }
 
-        if (existente.status !== 'rascunho') {
-            throw new Error('Apenas orçamentos em rascunho podem ser excluídos');
+        // Validar se pode excluir usando regras do domain
+        const podeExcluir = podeExcluirOrcamento(existente);
+        if (!podeExcluir.pode) {
+            throw new Error(podeExcluir.motivo);
         }
 
         return OrcamentosRepository.excluir(id);
@@ -91,8 +109,10 @@ export const OrcamentosService = {
             throw new Error('Orçamento não encontrado');
         }
 
-        if (existente.status !== 'rascunho') {
-            throw new Error('Apenas orçamentos em rascunho podem ser aprovados');
+        // Validar se pode aprovar usando regras do domain
+        const podeAprovar = podeAprovarOrcamento(existente);
+        if (!podeAprovar.pode) {
+            throw new Error(podeAprovar.motivo);
         }
 
         return OrcamentosRepository.atualizarStatus(id, 'aprovado', usuarioId, observacoes);
@@ -107,8 +127,10 @@ export const OrcamentosService = {
             throw new Error('Orçamento não encontrado');
         }
 
-        if (existente.status !== 'aprovado') {
-            throw new Error('Apenas orçamentos aprovados podem iniciar execução');
+        // Validar se pode iniciar usando regras do domain
+        const podeIniciar = podeIniciarExecucao(existente);
+        if (!podeIniciar.pode) {
+            throw new Error(podeIniciar.motivo);
         }
 
         return OrcamentosRepository.atualizarStatus(id, 'em_execucao', usuarioId);
@@ -123,8 +145,10 @@ export const OrcamentosService = {
             throw new Error('Orçamento não encontrado');
         }
 
-        if (existente.status !== 'em_execucao') {
-            throw new Error('Apenas orçamentos em execução podem ser encerrados');
+        // Validar se pode encerrar usando regras do domain
+        const podeEncerrar = podeEncerrarOrcamento(existente);
+        if (!podeEncerrar.pode) {
+            throw new Error(podeEncerrar.motivo);
         }
 
         return OrcamentosRepository.atualizarStatus(id, 'encerrado', usuarioId, observacoes);

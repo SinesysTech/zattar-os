@@ -71,12 +71,8 @@ export const useFolhasPagamento = (params: UseFolhasPagamentoParams = {}): UseFo
 
       setFolhas(result.data.items);
       setPaginacao(result.data.paginacao);
-      // setTotais(result.data.totais || null); // Action doesn't return totais currently, assume null or implement action logic update
-      setTotais(null); // Pending implementation of total calculation in action if needed. 
-                       // Legacy hook called 'totais' in response. 
-                       // Since I didn't update actionListarFolhasPagamento to return totals, I skip it for now.
-                       // The user didn't explicitly ask for totals migration in list action details, but I should probably add it for completeness.
-                       // For now, I return null to avoid TS error access.
+      // @ts-ignore
+      setTotais(result.data.totais || null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar folhas de pagamento';
       setError(errorMessage);

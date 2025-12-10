@@ -1,5 +1,6 @@
 
-import { StatusFolhaPagamento, Salario, MESES_LABELS } from './types'; // Assumes types.ts is in same dir
+import { StatusFolhaPagamento, Salario } from './types'; // Assumes types.ts is in same dir
+import { MESES_LABELS } from './domain';
 
 /**
  * Formata o período como string (ex: "Janeiro/2025")

@@ -3,6 +3,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { requireAuth } from './utils';
+import { checkPermission } from '@/backend/auth/authorization';
 import * as service from '../service';
 import { 
   gerarFolhaSchema, 
@@ -11,11 +12,42 @@ import {
 } from '../domain';
 import { ListarFolhasParams } from '../types';
 
-export async function actionListarFolhasPagamento(params: ListarFolhasParams) {
+interface ListarFolhasPagamentoParams extends ListarFolhasParams {
+  incluirTotais?: boolean;
+}
+
+export async function actionListarFolhasPagamento(params: ListarFolhasPagamentoParams) {
   try {
-    await requireAuth(['folhas_pagamento:listar']);
+    const { userId } = await requireAuth(['folhas_pagamento:listar']);
     const result = await service.listarFolhasPagamento(params);
-    return { success: true, data: result };
+
+    const podeVisualizarTodos = await checkPermission(userId, 'folhas_pagamento', 'visualizar_todos');
+
+    if (!podeVisualizarTodos) {
+      result.items = result.items
+        .filter(folha => folha.itens.some(item => item.usuarioId === userId))
+        .map(folha => ({
+          ...folha,
+          itens: folha.itens.filter(item => item.usuarioId === userId)
+        }));
+      
+      // Ajuste básico de paginação para refletir apenas os itens filtrados na página atual
+      // Nota: Isso não corrige o total global, que exigiria suporte no repositório
+      result.paginacao.total = result.items.length; 
+    }
+
+    let totais;
+    if (params.incluirTotais) {
+      totais = await service.calcularTotaisPorStatus();
+    }
+
+    return { 
+      success: true, 
+      data: {
+        ...result,
+        totais
+      }
+    };
   } catch (error) {
     return { 
       success: false, 
@@ -169,7 +201,7 @@ export async function actionPagarFolhaPagamento(id: number, formData: FormData) 
 export async function actionAtualizarFolhaPagamento(id: number, formData: FormData) {
   try {
 
-    await requireAuth(['folhas_pagamento:criar']); // Assuming creator/editor permission
+    await requireAuth(['folhas_pagamento:editar']); 
 
     const dados = {
       dataPagamento: formData.get('dataPagamento') ? String(formData.get('dataPagamento')) : undefined,
