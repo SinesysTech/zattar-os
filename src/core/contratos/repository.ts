@@ -401,6 +401,9 @@ export async function updateContrato(
     if (input.areaDireito !== undefined) {
       dadosAtualizacao.area_direito = input.areaDireito;
     }
+    if (input.segmentoId !== undefined) {
+      dadosAtualizacao.segmento_id = input.segmentoId;
+    }
     if (input.tipoContrato !== undefined) {
       dadosAtualizacao.tipo_contrato = input.tipoContrato;
     }
@@ -466,12 +469,13 @@ export async function updateContrato(
       id: contratoExistente.id,
       status: contratoExistente.status,
       clienteId: contratoExistente.clienteId,
-      areaDireito: contratoExistente.areaDireito,
+      segmentoId: contratoExistente.segmentoId, // Usar o novo campo
+      //areaDireito: contratoExistente.areaDireito, // Remover para evitar redundancia com segmentoId
       tipoContrato: contratoExistente.tipoContrato,
       dataContratacao: contratoExistente.dataContratacao,
       responsavelId: contratoExistente.responsavelId,
       updated_at_previous: contratoExistente.updatedAt,
-      // Não copiar dadosAnteriores anterior para evitar crescimento em cascata
+      // Nao copiar dadosAnteriores anterior para evitar crescimento em cascata
     };
 
     const { data, error } = await db

@@ -168,9 +168,9 @@ export const ObrigacoesService = {
         if (error) throw new Error(`Erro ao calcular total repassado: ${error.message}`);
 
         return (data || []).reduce((acc: number, curr: any) => acc + (curr.valor_repasse_cliente || 0), 0);
-    }
+    },
 
-    , async registrarDeclaracao(parcelaId: number, urlArquivo: string): Promise<void> {
+    async registrarDeclaracao(parcelaId: number, urlArquivo: string): Promise<void> {
         const supabase = createServiceClient();
 
         const { error } = await supabase

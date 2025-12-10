@@ -10,3 +10,10 @@ export { collectDeviceFingerprint } from './device-fingerprint';
 export type { DeviceFingerprintData } from '@/backend/types/assinatura-digital/types';
 
 // Template formatting utilities
+export {
+  formatFileSize,
+  formatTemplateStatus,
+  getStatusBadgeVariant,
+  truncateText,
+  getTemplateDisplayName,
+} from './format-template';

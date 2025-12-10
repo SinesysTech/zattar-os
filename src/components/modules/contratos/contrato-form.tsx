@@ -34,9 +34,9 @@ import { cn } from '@/lib/utils';
 import { Loader2, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionCriarContrato, actionAtualizarContrato, type ActionResult } from '@/core/app/actions/contratos';
-import type { Contrato, AreaDireito, TipoContrato, TipoCobranca, StatusContrato, PoloProcessual } from '@/core/contratos/domain';
+import type { Contrato, TipoContrato, TipoCobranca, StatusContrato, PoloProcessual } from '@/core/contratos/domain';
+import { listarSegmentosAction, Segmento } from '@/core/assinatura-digital';
 import {
-  AREA_DIREITO_LABELS,
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
@@ -64,7 +64,7 @@ interface ContratoFormProps {
 }
 
 const INITIAL_FORM_STATE = {
-  areaDireito: '' as AreaDireito | '',
+  segmentoId: '' as string,
   tipoContrato: '' as TipoContrato | '',
   tipoCobranca: '' as TipoCobranca | '',
   clienteId: '' as string,
@@ -95,6 +95,7 @@ export function ContratoForm({
 }: ContratoFormProps) {
   const isEditMode = mode === 'edit' && contrato;
   const [formData, setFormData] = React.useState(INITIAL_FORM_STATE);
+  const [segments, setSegments] = React.useState<Segmento[]>([]);
   const [fieldErrors, setFieldErrors] = React.useState<Record<string, string[]>>({});
   const formRef = React.useRef<HTMLFormElement>(null);
 
@@ -103,10 +104,16 @@ export function ContratoForm({
 
   const boundAction = React.useCallback(
     async (prevState: ActionResult | null, formData: FormData) => {
+      // Convert segmentoId back to number if not empty
+      const dataToSubmit = {
+        ...formData,
+        segmentoId: formData.segmentoId ? Number(formData.segmentoId) : undefined,
+      };
+
       if (isEditMode && contrato) {
-        return actionAtualizarContrato(contrato.id, prevState, formData);
+        return actionAtualizarContrato(contrato.id, prevState, dataToSubmit);
       }
-      return actionCriarContrato(prevState, formData);
+      return actionCriarContrato(prevState, dataToSubmit);
     },
     [isEditMode, contrato]
   );
@@ -129,6 +136,20 @@ export function ContratoForm({
     }
   }, [state, onOpenChange, onSuccess]);
 
+  // Fetch segments
+  React.useEffect(() => {
+    async function fetchSegments() {
+      const response = await listarSegmentosAction({ escopo: 'global' });
+      if (response.success) {
+        // Filter segments to include only 'global' or 'contratos'
+        setSegments(response.data?.filter(s => s.escopo === 'global' || s.escopo === 'contratos') || []);
+      } else {
+        toast.error('Erro ao carregar segmentos: ' + response.error);
+      }
+    }
+    fetchSegments();
+  }, []);
+
   // Reset ao fechar ou inicializar com dados do contrato
   React.useEffect(() => {
     if (!open) {
@@ -136,7 +157,7 @@ export function ContratoForm({
       setFieldErrors({});
     } else if (isEditMode && contrato) {
       setFormData({
-        areaDireito: contrato.areaDireito,
+        segmentoId: contrato.segmentoId ? String(contrato.segmentoId) : '',
         tipoContrato: contrato.tipoContrato,
         tipoCobranca: contrato.tipoCobranca,
         clienteId: String(contrato.clienteId),
