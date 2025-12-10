@@ -11,7 +11,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Eye } from 'lucide-react';
-import { formatCurrency, formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/formatters';
+import { formatCurrency } from '@/features/obrigacoes/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import { AcordoComParcelas, ListarAcordosParams } from '../../types';
 import { useAcordos } from '../../hooks/use-acordos';
@@ -166,6 +167,7 @@ export function AcordosList({ busca, filtros, refreshKey }: AcordosListProps) {
   const params: ListarAcordosParams = {
     pagina: pagina + 1,
     limite,
+    busca: busca || undefined,
     ...filtros
   };
   

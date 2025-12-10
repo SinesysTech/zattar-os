@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { AcordoCondenacaoForm } from '../components/acordo-condenacao-form';
+import { AcordoForm } from '@/features/obrigacoes';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -9,9 +9,12 @@ import Link from 'next/link';
 export default function NovoAcordoCondenacaoPage() {
   const router = useRouter();
 
-  const handleSuccess = (data: { id: number }) => {
+  const handleSuccess = (data: { acordo?: { id: number }; id?: number }) => {
     // Redirecionar para detalhes do acordo criado
-    router.push(`/acordos-condenacoes/${data.id}`);
+    const id = data.acordo?.id || data.id;
+    if (id) {
+      router.push(`/acordos-condenacoes/${id}`);
+    }
   };
 
   const handleCancel = () => {
@@ -37,7 +40,7 @@ export default function NovoAcordoCondenacaoPage() {
 
       {/* Formulário */}
       <div className="rounded-lg border bg-card p-6">
-        <AcordoCondenacaoForm
+        <AcordoForm
           onSuccess={handleSuccess}
           onCancel={handleCancel}
         />

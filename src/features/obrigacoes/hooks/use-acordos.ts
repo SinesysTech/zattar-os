@@ -25,7 +25,7 @@ export function useAcordos(filtros: ListarAcordosParams) {
 
   useEffect(() => {
     load();
-  }, [filtros.processoId, filtros.tipo, filtros.direcao, filtros.status, filtros.pagina, filtros.limite, filtros.dataInicio, filtros.dataFim]);
+  }, [filtros.processoId, filtros.tipo, filtros.direcao, filtros.status, filtros.pagina, filtros.limite, filtros.dataInicio, filtros.dataFim, filtros.busca]);
 
   return { data, total, totalPaginas, isLoading, error, refetch: load };
 }
