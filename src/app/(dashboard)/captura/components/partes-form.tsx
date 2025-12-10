@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
-import { capturarPartes, type CapturaPartesParams } from '@/core/app/api/captura/captura';
+import { capturarPartes, type CapturaPartesParams } from '@/app/api/captura/captura';
 import type { Credencial } from '@/app/_lib/types/credenciais';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';

@@ -23,64 +23,9 @@ export type {
   Endereco,
 } from '@/core/enderecos';
 
-// Tipos que ainda não têm módulo core equivalente
-export type {
-  EntidadeTipoProcessoParte,
-  PoloProcessoParte,
-  TipoParteProcesso,
-  ProcessoParte,
-  ParteComDadosCompletos,
-  ProcessoComParticipacao,
-} from '@/types/domain/processo-partes';
-
-export type {
-  CriarClienteParams,
-  AtualizarClienteParams,
-  ListarClientesParams,
-  ListarClientesResult,
-  UpsertClientePorCPFParams,
-  UpsertClientePorCNPJParams,
-  UpsertClientePorDocumentoParams,
-  OrdenarPorCliente,
-  OrdemCliente,
-  CriarParteContrariaParams,
-  AtualizarParteContrariaParams,
-  ListarPartesContrariasParams,
-  ListarPartesContrariasResult,
-  UpsertParteContrariaPorCPFParams,
-  UpsertParteContrariaPorCNPJParams,
-  UpsertParteContrariaPorDocumentoParams,
-  OrdenarPorParteContraria,
-  OrdemParteContraria,
-  CriarTerceiroParams,
-  AtualizarTerceiroParams,
-  ListarTerceirosParams,
-  ListarTerceirosResult,
-  UpsertTerceiroPorCPFParams,
-  UpsertTerceiroPorCNPJParams,
-  UpsertTerceiroPorDocumentoParams,
-  UpsertTerceiroPorIdPessoaParams,
-  OrdenarPorTerceiro,
-  OrdemTerceiro,
-  CriarEnderecoParams,
-  AtualizarEnderecoParams,
-  ListarEnderecosParams,
-  ListarEnderecosResult,
-  BuscarEnderecosPorEntidadeParams,
-  DefinirEnderecoPrincipalParams,
-  OrdenarPorEndereco,
-  OrdemEndereco,
-  CriarProcessoParteParams,
-  AtualizarProcessoParteParams,
-  ListarProcessoPartesParams,
-  ListarProcessoPartesResult,
-  BuscarPartesPorProcessoParams,
-  BuscarProcessosPorEntidadeParams,
-  VincularParteProcessoParams,
-  DesvincularParteProcessoParams,
-  OrdenarPorProcessoParte,
-  OrdemProcessoParte,
-} from '@/types/contracts';
+// Nota: Tipos de domínio (como CriarClienteParams, ListarClientesParams, etc.) devem ser importados diretamente de @/core/{modulo}
+// Exemplo: import type { ListarClientesParams } from '@/core/partes'
+// Os tipos de processo-partes devem ser importados de @/backend/types/partes/processo-partes-types ou de um módulo core equivalente quando criado
 
 // Tipos específicos do frontend (UI, Formulários, APIs)
 export type { AcervoApiResponse, BuscarProcessosParams, ProcessosFilters } from './acervo';

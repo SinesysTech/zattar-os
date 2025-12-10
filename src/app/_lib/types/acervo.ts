@@ -1,8 +1,90 @@
 // Tipos para integração com API de acervo no frontend
 
-import type { Processo, ProcessoUnificado } from '@/core/processos';
-import type { ListarAcervoParams } from '@/types/contracts/acervo';
+import type { Processo, ProcessoUnificado, OrigemAcervo, Ordem, ProcessoSortBy } from '@/core/processos';
 import type { GrauProcesso } from '@/core/partes';
+
+/**
+ * Campos disponíveis para ordenação de acervo
+ */
+export type OrdenarPorAcervo =
+  | 'data_autuacao'
+  | 'numero_processo'
+  | 'nome_parte_autora'
+  | 'nome_parte_re'
+  | 'data_arquivamento'
+  | 'data_proxima_audiencia'
+  | 'prioridade_processual'
+  | 'created_at'
+  | 'updated_at';
+
+/**
+ * Campos disponíveis para agrupamento de acervo
+ */
+export type AgruparPorAcervo =
+  | 'trt'
+  | 'grau'
+  | 'origem'
+  | 'responsavel_id'
+  | 'classe_judicial'
+  | 'codigo_status_processo'
+  | 'orgao_julgador'
+  | 'mes_autuacao'
+  | 'ano_autuacao';
+
+/**
+ * Ordem de ordenação (re-export de @/core/processos)
+ */
+export type OrdemAcervo = Ordem;
+
+/**
+ * Parâmetros para listar acervo com filtros, paginação, ordenação e agrupamento
+ */
+export interface ListarAcervoParams {
+  // Paginação
+  pagina?: number;
+  limite?: number;
+
+  // Unificação de processos multi-instância
+  unified?: boolean; // default: true
+
+  // Filtros básicos
+  origem?: OrigemAcervo;
+  trt?: string;
+  grau?: GrauProcesso;
+  responsavel_id?: number | 'null';
+  sem_responsavel?: boolean;
+
+  // Busca textual (busca em múltiplos campos)
+  busca?: string;
+
+  // Filtros específicos por campo
+  numero_processo?: string;
+  nome_parte_autora?: string;
+  nome_parte_re?: string;
+  descricao_orgao_julgador?: string;
+  classe_judicial?: string;
+  codigo_status_processo?: string;
+  segredo_justica?: boolean;
+  juizo_digital?: boolean;
+  tem_associacao?: boolean;
+
+  // Filtros de data (ranges)
+  data_autuacao_inicio?: string;
+  data_autuacao_fim?: string;
+  data_arquivamento_inicio?: string;
+  data_arquivamento_fim?: string;
+  data_proxima_audiencia_inicio?: string;
+  data_proxima_audiencia_fim?: string;
+  tem_proxima_audiencia?: boolean;
+
+  // Ordenação
+  ordenar_por?: OrdenarPorAcervo;
+  ordem?: OrdemAcervo;
+
+  // Agrupamento
+  agrupar_por?: AgruparPorAcervo;
+  incluir_contagem?: boolean; // default: true
+}
 
 /**
  * Resposta da API de acervo (formato padrão ou unificado)

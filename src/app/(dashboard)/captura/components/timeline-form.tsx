@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
 import { CapturaResult } from './captura-result';
-import { capturarTimeline, type TimelineParams, type FiltroDocumentosTimeline } from '@/core/app/api/captura/captura';
+import { capturarTimeline, type TimelineParams, type FiltroDocumentosTimeline } from '@/app/api/captura/captura';
 import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
