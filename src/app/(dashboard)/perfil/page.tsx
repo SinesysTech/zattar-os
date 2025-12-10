@@ -1,11 +1,7 @@
 'use client';
 
-// Página de perfil do usuário
-
 import * as React from 'react';
-import { usePerfil } from '@/app/_lib/hooks/use-perfil';
-import { PerfilEditSheet } from './components/perfil-edit-sheet';
-import { AlterarSenhaDialog } from './components/alterar-senha-dialog';
+import { usePerfil, PerfilEditSheet, AlterarSenhaDialog } from '@/features/perfil';
 import { AvatarEditDialog } from '@/features/usuarios';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,7 +16,8 @@ import {
   formatarData,
   formatarEnderecoCompleto,
   formatarGenero,
-} from '@/app/_lib/utils/format-usuarios';
+  getAvatarUrl,
+} from '@/features/usuarios/utils';
 
 function getInitials(name: string): string {
   if (!name) return 'U';
@@ -29,13 +26,6 @@ function getInitials(name: string): string {
     return parts[0].substring(0, 2).toUpperCase();
   }
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
-function getAvatarUrl(avatarPath: string | null | undefined): string | null {
-  if (!avatarPath) return null;
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!supabaseUrl) return null;
-  return `${supabaseUrl}/storage/v1/object/public/avatar/${avatarPath}`;
 }
 
 export default function PerfilPage() {

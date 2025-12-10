@@ -1,7 +1,5 @@
 'use client';
 
-// Componente Dialog para alteração de senha do usuário logado
-
 import * as React from 'react';
 import {
   Dialog,
@@ -15,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { actionAlterarSenha } from '@/features/usuarios/actions/senha-actions';
 
 interface AlterarSenhaDialogProps {
   open: boolean;
@@ -32,26 +31,33 @@ export function AlterarSenhaDialog({
   const [successMessage, setSuccessMessage] = React.useState<string | null>(null);
 
   // Form state
+  const [senhaAtual, setSenhaAtual] = React.useState('');
   const [novaSenha, setNovaSenha] = React.useState('');
   const [confirmarSenha, setConfirmarSenha] = React.useState('');
 
   // Show/hide password
+  const [showSenhaAtual, setShowSenhaAtual] = React.useState(false);
   const [showNovaSenha, setShowNovaSenha] = React.useState(false);
   const [showConfirmarSenha, setShowConfirmarSenha] = React.useState(false);
 
   // Reset form when dialog closes
   React.useEffect(() => {
     if (!open) {
+      setSenhaAtual('');
       setNovaSenha('');
       setConfirmarSenha('');
       setError(null);
       setSuccessMessage(null);
+      setShowSenhaAtual(false);
       setShowNovaSenha(false);
       setShowConfirmarSenha(false);
     }
   }, [open]);
 
   const validateForm = (): string | null => {
+    if (!senhaAtual) {
+      return 'Senha atual é obrigatória';
+    }
     if (!novaSenha) {
       return 'Nova senha é obrigatória';
     }
@@ -86,26 +92,10 @@ export function AlterarSenhaDialog({
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/perfil/senha', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ novaSenha }),
-      });
+      const result = await actionAlterarSenha(senhaAtual, novaSenha);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({
-          error: 'Erro desconhecido',
-        }));
-        throw new Error(
-          errorData.error || `Erro ${response.status}: ${response.statusText}`
-        );
-      }
-
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error(data.error || 'Resposta da API indicou falha');
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao alterar senha');
       }
 
       setSuccessMessage('Senha alterada com sucesso!');
@@ -147,6 +137,34 @@ export function AlterarSenhaDialog({
                 {successMessage}
               </div>
             )}
+
+            <div className="space-y-2">
+              <Label htmlFor="senhaAtual">Senha Atual *</Label>
+              <div className="relative">
+                <Input
+                  id="senhaAtual"
+                  type={showSenhaAtual ? 'text' : 'password'}
+                  value={senhaAtual}
+                  onChange={(e) => setSenhaAtual(e.target.value)}
+                  placeholder="Digite sua senha atual"
+                  required
+                  disabled={isLoading || !!successMessage}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowSenhaAtual(!showSenhaAtual)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  disabled={isLoading || !!successMessage}
+                >
+                  {showSenhaAtual ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            </div>
 
             <div className="space-y-2">
               <Label htmlFor="novaSenha">Nova Senha *</Label>

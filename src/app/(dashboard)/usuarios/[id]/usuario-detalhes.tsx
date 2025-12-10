@@ -23,6 +23,7 @@ import {
   formatarTelefone,
   formatarData,
   formatarGenero,
+  getAvatarUrl,
   type Usuario
 } from '@/features/usuarios';
 import { actionAtualizarUsuario } from '@/features/usuarios/actions/usuarios-actions';
@@ -39,13 +40,6 @@ function getInitials(name: string): string {
     return parts[0].substring(0, 2).toUpperCase();
   }
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
-function getAvatarUrl(avatarPath: string | null | undefined): string | null {
-  if (!avatarPath) return null;
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!supabaseUrl) return null;
-  return `${supabaseUrl}/storage/v1/object/public/avatar/${avatarPath}`;
 }
 
 export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
@@ -345,7 +339,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
          hasChanges={hasChanges}
          isSaving={isSavingPermissoes}
          isLoading={isLoadingPermissoes}
-         canEdit={!usuario.isSuperAdmin && (usuarioLogado?.isSuperAdmin || true)} /* Assuming logged user can edit if they see this page? */
+         canEdit={!usuario.isSuperAdmin && (usuarioLogado?.podeGerenciarPermissoes || usuarioLogado?.isSuperAdmin || false)}
          onTogglePermissao={togglePermissao}
          onSalvar={handleSavePermissoes}
          onResetar={resetar}

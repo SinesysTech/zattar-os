@@ -25,6 +25,15 @@ export async function actionObterPerfil() {
        return { success: false, error: 'Perfil não encontrado' };
     }
     
+    // Buscar permissões do usuário
+    const { data: permissoes } = await supabase
+      .from('permissoes_usuarios')
+      .select('permissao')
+      .eq('usuario_id', usuarioDb.id);
+    
+    const permissoesArray = permissoes?.map(p => p.permissao) || [];
+    const podeGerenciarPermissoes = permissoesArray.includes('usuarios:gerenciar_permissoes');
+    
     // Converter para formato Usuario
     const usuario = {
       id: usuarioDb.id,
@@ -53,6 +62,7 @@ export async function actionObterPerfil() {
       ativo: usuarioDb.ativo,
       createdAt: usuarioDb.created_at,
       updatedAt: usuarioDb.updated_at,
+      podeGerenciarPermissoes, // Incluir permissão
     };
     
     return { success: true, data: usuario };

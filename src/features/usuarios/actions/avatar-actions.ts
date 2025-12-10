@@ -21,40 +21,26 @@ export async function actionUploadAvatar(usuarioId: number, formData: FormData) 
 
     const supabase = createServiceClient();
 
-    // 1. Upload file
+    // 1. Upload file to avatars bucket
     const fileExt = file.name.split('.').pop();
     const fileName = `${usuarioId}-${Date.now()}.${fileExt}`;
-    const filePath = `avatars/${fileName}`;
+    const filePath = fileName; // Usar apenas nome do arquivo sem subdiretório
 
     const { error: uploadError } = await supabase.storage
-      .from('public-files') // Verify bucket name. Usually 'avatars' or 'public-files'?
+      .from('avatars')
       .upload(filePath, file, {
         contentType: file.type,
         upsert: true
       });
 
-    // Check bucket name. 'avatars' is common. Legacy might use something else.
-    // I will assume 'avatars' bucket exists or similar. If not I might need to check.
-    // The legacy code uses `avatar_url` in DB.
-    
     if (uploadError) {
-       // If bucket not found, try 'avatars'
-       const { error: retryError } = await supabase.storage
-         .from('avatars')
-         .upload(filePath, file, { contentType: file.type, upsert: true });
-
-       if (retryError) return { success: false, error: `Erro upload: ${uploadError.message}` };
+      return { success: false, error: `Erro no upload: ${uploadError.message}` };
     }
 
-    // 2. Get Public URL
-    // We don't know which bucket suceeded if we tried two. 
-    // Assuming 'avatars' for now as standard.
-    // Or 'public-files' if that's the project standard.
-    // I'll stick to 'avatars' as likely default for avatars.
-    
+    // 2. Get Public URL (armazenar apenas o path relativo)
     const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath);
 
-    // 3. Update User
+    // 3. Update User (armazenar URL completa para compatibilidade)
     const { error: updateError } = await supabase
       .from('usuarios')
       .update({ avatar_url: publicUrl })
@@ -64,6 +50,7 @@ export async function actionUploadAvatar(usuarioId: number, formData: FormData) 
 
     await invalidateUsuariosCache();
     revalidatePath(`/usuarios/${usuarioId}`);
+    revalidatePath('/perfil');
     
     return { success: true, data: publicUrl };
   } catch (error) {

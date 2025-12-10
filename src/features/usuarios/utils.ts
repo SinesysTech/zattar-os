@@ -123,3 +123,19 @@ export function formatarGenero(genero: string | null | undefined): string {
   if (!genero) return '-';
   return GENERO_LABELS[genero as keyof typeof GENERO_LABELS] || genero;
 }
+
+/**
+ * Obtém URL pública do avatar do usuário
+ * Assume que avatar_url já contém a URL completa
+ */
+export function getAvatarUrl(avatarUrl: string | null | undefined): string | null {
+  if (!avatarUrl) return null;
+  // Se já é uma URL completa, retornar diretamente
+  if (avatarUrl.startsWith('http://') || avatarUrl.startsWith('https://')) {
+    return avatarUrl;
+  }
+  // Caso contrário, construir URL (retrocompatibilidade)
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!supabaseUrl) return null;
+  return `${supabaseUrl}/storage/v1/object/public/avatars/${avatarUrl}`;
+}

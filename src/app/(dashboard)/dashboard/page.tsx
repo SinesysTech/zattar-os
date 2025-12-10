@@ -1,5 +1,5 @@
 import { PageShell } from '@/components/shared/page-shell';
-import { DashboardContent } from './components/dashboard-content';
+import { DashboardContent } from '@/features/dashboard';
 
 export default function DashboardPage() {
   return (
