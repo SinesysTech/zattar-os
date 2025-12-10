@@ -1,4 +1,5 @@
-import { ObrigacoesContent } from '../components/obrigacoes-content';
+
+import { ObrigacoesContent } from '@/features/obrigacoes/components/shared/obrigacoes-content';
 
 /**
  * Página de Visualização Semanal de Obrigações
@@ -6,4 +7,3 @@ import { ObrigacoesContent } from '../components/obrigacoes-content';
 export default function ObrigacoesSemanaPage() {
   return <ObrigacoesContent visualizacao="semana" />;
 }
-
