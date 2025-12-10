@@ -44,6 +44,15 @@ export type PoloTerceiro = 'ATIVO' | 'PASSIVO' | 'NEUTRO' | 'TERCEIRO';
  */
 export type GrauProcesso = 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
 
+/**
+ * Situação do registro no sistema PJE (Processo Judicial Eletrônico).
+ * A: Ativo
+ * I: Inativo
+ * E: Excluído
+ * H: Histórico
+ */
+export type SituacaoPJE = 'A' | 'I' | 'E' | 'H';
+
 // =============================================================================
 // VALIDADORES CUSTOMIZADOS
 // =============================================================================
@@ -989,7 +998,7 @@ export interface ListarTerceirosParams {
 // TIPOS COM RELACIONAMENTOS (JOINs)
 // =============================================================================
 
-import type { Endereco } from '@/types/domain/enderecos';
+import type { Endereco } from '@/core/enderecos';
 
 /**
  * Processo relacionado a uma parte (resumo)

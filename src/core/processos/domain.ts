@@ -12,8 +12,7 @@
  */
 
 import { z } from 'zod';
-import type { GrauProcesso } from '@/types/domain/common';
-import { StatusProcesso } from '@/types/domain/common';
+import type { GrauProcesso } from '@/core/partes';
 
 // =============================================================================
 // TIPOS BASE (ENUMS)
@@ -47,9 +46,22 @@ export type ProcessoSortBy =
   | 'created_at'
   | 'updated_at';
 
+/**
+ * Status de um processo judicial.
+ */
+export enum StatusProcesso {
+  ATIVO = 'ATIVO',
+  SUSPENSO = 'SUSPENSO',
+  ARQUIVADO = 'ARQUIVADO',
+  EXTINTO = 'EXTINTO',
+  BAIXADO = 'BAIXADO',
+  PENDENTE = 'PENDENTE',
+  EM_RECURSO = 'EM_RECURSO',
+  OUTRO = 'OUTRO',
+}
+
 // Re-exportar tipos compartilhados
 export type { GrauProcesso };
-export { StatusProcesso };
 
 // =============================================================================
 // ENTIDADE PRINCIPAL: Processo

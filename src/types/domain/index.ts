@@ -1,10 +1,4 @@
-export * from './common';
-export * from './acervo';
-export * from './audiencias';
-export * from './partes';
-export * from './enderecos';
-export * from './processo-partes';
-export * from './processo-relacionado';
-export * from './representantes';
+// Tipos de domínio migrados para src/core/*
+// Este arquivo mantém apenas exports de tipos que ainda não têm módulo core equivalente
+
 export * from './value-objects';
-export * from './pessoa';

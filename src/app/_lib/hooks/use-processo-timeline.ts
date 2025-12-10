@@ -16,7 +16,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Acervo } from '@/backend/types/acervo/types';
 import type { TimelineDocument } from '@/backend/types/mongodb/timeline';
 import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
-import type { GrauProcesso } from '@/types/domain/common';
+import type { GrauProcesso } from '@/core/partes';
 
 /**
  * Item da timeline com metadados de origem (para modo unificado)

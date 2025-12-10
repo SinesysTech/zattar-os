@@ -1,5 +1,5 @@
 import type { Representante } from '@/types/domain/representantes';
-import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
+import type { ProcessoRelacionado } from '@/core/partes';
 import type { ListarRepresentantesResult, OrdenarPorRepresentante, OrdemRepresentante } from '@/types/contracts/representantes';
 
 /**

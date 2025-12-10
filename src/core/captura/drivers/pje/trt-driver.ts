@@ -31,7 +31,7 @@ import type {
   AudienciaCapturada,
   ProcessoCapturado,
 } from '../../domain';
-import type { GrauProcesso } from '@/types/domain/common';
+import type { GrauProcesso } from '@/core/partes';
 import { mapearTipoAcessoParaGrau } from '../../domain';
 
 /**

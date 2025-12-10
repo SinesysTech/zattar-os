@@ -1,8 +1,8 @@
 // Tipos para integração com API de acervo no frontend
 
-import type { Acervo, ProcessoUnificado } from '@/types/domain/acervo';
+import type { Processo, ProcessoUnificado } from '@/core/processos';
 import type { ListarAcervoParams } from '@/types/contracts/acervo';
-import type { GrauProcesso } from '@/types/domain/common';
+import type { GrauProcesso } from '@/core/partes';
 
 /**
  * Resposta da API de acervo (formato padrão ou unificado)
@@ -10,7 +10,7 @@ import type { GrauProcesso } from '@/types/domain/common';
 export interface AcervoApiResponse {
   success: boolean;
   data: {
-    processos: (Acervo | ProcessoUnificado)[];
+    processos: (Processo | ProcessoUnificado)[];
     paginacao: {
       pagina: number;
       limite: number;

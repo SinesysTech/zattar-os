@@ -1589,7 +1589,7 @@ export async function updateTerceiro(
 // REPOSITORY - CLIENTE COM RELACIONAMENTOS (JOINs)
 // =============================================================================
 
-import type { Endereco } from '@/types/domain/enderecos';
+import type { Endereco } from '@/core/enderecos';
 import type {
   ClienteComEndereco,
   ClienteComEnderecoEProcessos,

@@ -7,7 +7,7 @@
 
 import { Result, ok, err, appError } from '@/core/common/types';
 import { getDriver } from './drivers/factory';
-import { buscarCredencial, buscarConfigTribunalRepo, salvarLogCaptura } from './repository';
+import { buscarCredencial, buscarConfigTribunal, salvarLogCaptura } from './repository';
 import { criarProcesso } from '../processos/service';
 import { getAdvogadoByCredentialId } from '@/backend/captura/credentials/credential.service';
 import type { JudicialDriver } from './drivers/judicial-driver.interface';
@@ -59,7 +59,7 @@ export async function executarCaptura(
     }
 
     // 2. Buscar configuração do tribunal
-    const config = await buscarConfigTribunalRepo(params.tribunalId);
+    const config = await buscarConfigTribunal(params.tribunalId);
     if (!config) {
       return err(appError('NOT_FOUND', 'Configuração do tribunal não encontrada'));
     }

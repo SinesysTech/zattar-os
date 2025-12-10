@@ -56,7 +56,12 @@ export const useDashboard = (): UseDashboardResult => {
     setError(null);
 
     try {
-      const response = await fetch('/api/dashboard');
+      const response = await fetch('/api/dashboard', {
+        credentials: 'include', // Inclui cookies para autenticação
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (!response.ok) {
         const errorData = await response

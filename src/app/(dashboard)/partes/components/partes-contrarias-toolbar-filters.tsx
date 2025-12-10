@@ -1,6 +1,6 @@
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { TipoPessoa, SituacaoPJE } from '@/types/domain/common';
+import type { TipoPessoa, SituacaoPJE } from '@/core/partes';
 
 export interface PartesContrariasFilters {
   tipo_pessoa?: TipoPessoa;

@@ -23,7 +23,7 @@ export type {
 } from './domain';
 
 // Repository (acesso a dados)
-export { buscarCredencial, buscarConfigTribunal, buscarConfigTribunalRepo } from './repository';
+export { buscarCredencial, buscarConfigTribunal } from './repository';
 
 // Drivers (implementações específicas)
 export { PjeTrtDriver } from './drivers/pje/trt-driver';

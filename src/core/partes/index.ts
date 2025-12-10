@@ -18,6 +18,7 @@ export type {
   TipoParteTerceiro,
   PoloTerceiro,
   GrauProcesso,
+  SituacaoPJE,
 } from './domain';
 
 // Entidades - Cliente
