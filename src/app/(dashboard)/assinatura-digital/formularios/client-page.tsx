@@ -15,7 +15,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { AssinaturaDigitalFormulario, AssinaturaDigitalSegmento, AssinaturaDigitalTemplate } from '@/backend/types/assinatura-digital/types';
-import { getFormularioDisplayName, formatBooleanBadge, getBooleanBadgeVariant, getAtivoBadgeTone, formatAtivoStatus, getTemplatePreviewText } from '@/lib/assinatura-digital/utils/formulario-utils';
+import { getFormularioDisplayName, formatBooleanBadge, getBooleanBadgeVariant, getAtivoBadgeTone, formatAtivoStatus, getTemplatePreviewText } from '@/features/assinatura-digital';
 import { FormularioCreateDialog } from './components/formulario-create-dialog';
 import { FormularioDuplicateDialog } from './components/formulario-duplicate-dialog';
 import { FormularioDeleteDialog } from './components/formulario-delete-dialog';

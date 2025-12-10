@@ -1,38 +1,61 @@
-# Project Context
 
-## Purpose
-Sinesys é um sistema de gestão jurídica desenvolvido para escritórios de advocacia, com foco em:
-- Gestão de clientes (pessoas físicas e jurídicas)
-- Gestão de contratos e processos jurídicos
-- Captura automatizada de dados do PJE-TRT (Processo Judicial Eletrônico dos Tribunais Regionais do Trabalho)
-- Gestão de acervo processual, audiências e pendências de manifestação
-- Atribuição de responsáveis e auditoria de alterações
+
+# Project Specification: Sinesys
+
+## 1. Project Overview
+
+### 1.1. Introduction
+Sinesys is a legal management system developed for law firms, focusing on client management (individuals and legal entities), contract and legal process management, automated data capture from PJE-TRT (Electronic Judicial Process of Regional Labor Courts), management of case files, hearings, and pending actions, assignment of responsibilities, and audit of changes.
+
+### 1.2. Key Features
+*   Client Management (Physical and Legal Persons)
+*   Contract and Legal Process Management
+*   Automated Data Capture from PJE-TRT
+*   Management of Case Files, Hearings, and Pending Actions
+*   Assignment of Responsibilities and Audit of Changes
+*   Integration with PJE-TRT for data capture (General archives, archived processes, hearings, pending manifestations)
+*   Authentication via SSO with 2FA (OTP) for PJE
+*   API documentation with Swagger/OpenAPI
 
 ## Tech Stack
 
-### Frontend
-- **Next.js 16**: App Router, Server Components, Server Actions
-- **React 19**: React Server Components, useActionState, useOptimistic
-- **TypeScript**: Strict mode habilitado
-- **shadcn/ui**: Componentes UI baseados em Radix UI
-- **Tailwind CSS v4**: Estilização utility-first
-- **Framer Motion**: Animações e micro-interações
-- **Lucide React**: Ícones
+### 2.1. Frontend
+*   **Framework:** Next.js (React)
+*   **Language:** TypeScript
+*   **UI Library:** Radix UI, Tailwind CSS for styling
+*   **Rich Text Editor:** Plate.js / Tiptap
+*   **AI Integration:** AI SDK, CopilotKit
+*   **Other Libraries:** Framer Motion, Dnd Kit, Date-fns, Lodash, Zod
 
-### Backend
-- **Next.js API Routes**: Endpoints REST no App Router
-- **Supabase**: Banco de dados PostgreSQL com Row Level Security (RLS)
-- **Supabase Auth**: Autenticação e autorização
-- **Puppeteer/Playwright**: Automação web para captura de dados do PJE
+### 2.2. Backend
+*   **Framework:** Next.js API Routes (TypeScript)
+*   **Database Interaction:** Supabase client libraries (for PostgreSQL)
+*   **Additional Data Storage:** MongoDB (potentially for specific use cases or legacy components)
+*   **Utilities:** Axios, Pino (logging), ioredis (Redis client)
+
+### 2.3. Database
+*   **Primary Database:** PostgreSQL (managed by Supabase)
+*   **Secondary/Specific Use Case Database:** MongoDB
+
+### 2.4. Other Technologies
+*   **CI/CD:** Not explicitly defined in `package.json`, but `build:caprover` suggests CapRover as a potential deployment target. Vercel is also suggested by `vercel.json`.
+*   **Testing Frameworks:** Jest (Unit/Integration), Playwright (E2E)
+*   **Logging:** Pino
 
 ### Ferramentas de Desenvolvimento
 - **ESLint**: Configuração Next.js (core-web-vitals + TypeScript)
 - **Swagger/OpenAPI**: Documentação de APIs REST
 - **tsx**: Execução de scripts TypeScript
 
-## Project Conventions
+## 3. Architecture
 
-### Code Style
+### 3.1. High-Level Architecture
+The project follows a Next.js full-stack architecture. The application leverages Next.js App Router for routing, with protected routes for the dashboard. API Routes handle REST endpoints, while the `backend/` directory encapsulates business logic and services, organized modularly by feature. Supabase manages database schemas and migrations.
+
+
+## 4. Development Guidelines
+
+### 4.1. Code Style and Linting
 
 #### TypeScript
 - Strict mode habilitado (`strict: true`)
@@ -59,56 +82,25 @@ Sinesys é um sistema de gestão jurídica desenvolvido para escritórios de adv
 - Ponto e vírgula no final de statements
 - Quebras de linha após imports e antes de exports
 
-### Architecture Patterns
-
-#### Estrutura de Diretórios
-```
-app/                    # Next.js App Router
-  (dashboard)/          # Rotas protegidas do dashboard
-  api/                  # API Routes (REST endpoints)
-backend/                # Lógica de negócio e serviços
-  [feature]/            # Módulos por funcionalidade
-    services/           # Serviços de negócio
-      [feature]/        # Serviços específicos
-      persistence/      # Camada de persistência (Supabase)
-components/             # Componentes React reutilizáveis
-  ui/                   # Componentes shadcn/ui
-supabase/
-  schemas/              # Schemas declarativos do banco
-  migrations/           # Migrações geradas automaticamente
-```
-
-#### Separação de Responsabilidades
-- **API Routes** (`app/api/`): Validação de entrada, autenticação, formatação de resposta
-- **Serviços de Negócio** (`backend/[feature]/services/[feature]/`): Lógica de negócio pura
-- **Persistência** (`backend/[feature]/services/persistence/`): Acesso ao banco de dados via Supabase
-- **Componentes**: UI pura, sem lógica de negócio
-
-#### Padrões de API
-- RESTful com métodos HTTP apropriados (GET, POST, PUT, DELETE)
-- Documentação Swagger/OpenAPI com anotações JSDoc
-- Respostas padronizadas: `{ success: boolean, data?: T, error?: string }`
-- Autenticação obrigatória via `authenticateRequest()` helper
-- Tratamento de erros consistente com try/catch
-
-#### Banco de Dados
-- **Schemas Declarativos**: Definir estado final em `supabase/schemas/`
-- **Migrações**: Geradas automaticamente via `supabase db diff`
-- **RLS**: Sempre habilitado, políticas granulares por operação (SELECT, INSERT, UPDATE, DELETE)
-- **Auditoria**: Triggers para log de alterações e atribuições
-- **Nomenclatura**: snake_case, comentários em todas as tabelas e colunas importantes
-
-### Testing Strategy
+### 4.2. Testing Strategy
 - Scripts de teste para APIs externas em `dev_data/scripts/`
 - Testes manuais via scripts TypeScript executáveis com `tsx`
 - Foco em testes de integração para captura de dados do PJE
 - Validação de credenciais e fluxos de autenticação
+- **Frameworks:** Jest (Unit/Integration), Playwright (E2E)
 
-### Git Workflow
+### 4.3. Deployment
+The application is a Next.js project, built using `next build` (with `turbopack` or `webpack`). Deployment is supported on platforms compatible with Node.js applications. `build:caprover` script suggests CapRover as a potential target, and `vercel.json` indicates Vercel is also an option.
+
+### 4.4. Git Workflow
 - Branch principal: `main` (assumido)
 - Commits descritivos em português
 - Estrutura de commits: `tipo: descrição breve`
 - Usar OpenSpec para gerenciar mudanças significativas
+
+## Project Conventions
+
+
 
 ## Domain Context
 

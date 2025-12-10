@@ -144,6 +144,21 @@ export {
   validateCpfCnpj,
   // Device fingerprint
   collectDeviceFingerprint,
+  // Display utils (badges, formatting, truncate)
+  formatFileSize,
+  formatTemplateStatus,
+  getStatusBadgeVariant,
+  getTemplateDisplayName,
+  getSegmentoDisplayName,
+  getFormularioDisplayName,
+  getTemplatePreviewText,
+  truncateText,
+  formatAtivoBadge,
+  formatAtivoStatus,
+  getAtivoBadgeVariant,
+  getAtivoBadgeTone,
+  formatBooleanBadge,
+  getBooleanBadgeVariant,
 } from './utils';
 
 // =============================================================================

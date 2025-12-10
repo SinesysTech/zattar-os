@@ -6,6 +6,10 @@
 ![Redis](https://img.shields.io/badge/Redis-Cache-red?style=flat&logo=redis)
 ![MongoDB](https://img.shields.io/badge/MongoDB-NoSQL-green?style=flat&logo=mongodb)
 
+**Desenvolvido por:** Sinesys  
+**Cliente:** Zattar Advogados  
+**Licença:** Em definição (será publicado como Open Source)
+
 ## 📋 Sumário
 
 - [Visão Geral](#-visão-geral)
@@ -2071,31 +2075,171 @@ Este README contém toda a documentação técnica centralizada do repositório 
 
 - ✅ Visão Geral e Stack Tecnológica
 - ✅ Arquitetura Orientada a Features (FSD)
+- ✅ Organização de Tipos (Domain/Contracts)
+- ✅ Princípios de DDD
 - ✅ Instalação e Configuração
-- ✅ Deploy (CapRover, Docker, PWA)
+- ✅ Sistema de Cache Redis
+- ✅ Componentes Reutilizáveis
 - ✅ API e Endpoints
+- ✅ MCP Server (Model Context Protocol)
+- ✅ Scripts Úteis
+- ✅ Deploy (CapRover, Docker, PWA)
 - ✅ Troubleshooting
+- ✅ Design System
 
-### Documentação Complementar
+### Documentação Técnica Complementar
 
-Para informações mais detalhadas, consulte:
+Para análises técnicas profundas e documentação de módulos específicos:
 
+#### Pareceres Técnicos
+
+- **docs/PARECER_REFATORACAO_ARQUITETURAL.md** - Análise completa da refatoração arquitetural (DDD, camadas, migração)
+- **docs/PARECER_DESIGN_SYSTEM_UX.md** - Análise do sistema de design, UX e arquitetura de informação
+
+#### Documentação de Arquitetura
+
+- **docs/arquitetura-sistema.md** - Documentação técnica completa da arquitetura do sistema
 - **AGENTS.md** - Instruções para agentes de IA trabalhando no projeto
-- **docs/arquitetura-sistema.md** - Documentação técnica completa da arquitetura
-- **docs/PARECER_REFATORACAO_ARQUITETURAL.md** - Análise técnica da refatoração arquitetural
-- **docs/PARECER_DESIGN_SYSTEM_UX.md** - Análise do sistema de design e UX
-- **docs/MIGRACAO_CHAT.md** - Plano de migração do sistema de chat legado
-- **openspec/** - Especificações e propostas de mudanças (OpenSpec)
+
+#### Planos de Migração
+
+- **docs/MIGRACAO_CHAT.md** - Plano de migração do sistema de chat legado para nova arquitetura
+
+#### Documentação de Módulos
+
+- **docs/assinatura-digital/** - Arquitetura conceitual e conformidade legal do módulo de assinatura digital
+- **docs/financeiro/** - Especificações de dashboard, conciliação bancária e exportações
+- **docs/modulos/audiencias.md** - Arquitetura e fluxo de dados do módulo de audiências
+
+#### Especificações e Propostas
+
+- **openspec/** - Especificações OpenSpec e propostas de mudanças
 
 ---
 
 ## 📝 Licença
 
-Proprietary - Zattar Advogados
+**Status:** Em definição - Será publicado como Open Source
 
-## 👥 Equipe
+### Opções de Licenças Open Source
 
-Desenvolvido por Zattar Advogados
+Existem diversos tipos de licenças open source, cada uma com diferentes níveis de permissividade:
+
+#### 1. Licenças Permissivas (Mais Livres)
+
+**MIT License** ⭐ Mais Popular
+
+- ✅ Uso comercial permitido
+- ✅ Modificação permitida
+- ✅ Distribuição permitida
+- ✅ Uso privado permitido
+- ⚠️ Sem garantia
+- 📋 Requer apenas: Incluir aviso de copyright
+- **Ideal para**: Máxima adoção e liberdade
+
+**Apache 2.0**
+
+- ✅ Tudo da MIT, mais:
+- ✅ Proteção contra patentes
+- ✅ Exige documentar mudanças
+- 📋 Requer: Copyright + NOTICE file
+- **Ideal para**: Projetos empresariais que precisam proteção de patentes
+
+**BSD 3-Clause**
+
+- ✅ Similar à MIT
+- ✅ Proíbe uso do nome do projeto para endosso
+- **Ideal para**: Projetos acadêmicos
+
+#### 2. Licenças Copyleft Fraco
+
+**LGPL (Lesser GPL)**
+
+- ✅ Uso comercial permitido
+- ✅ Pode ser linkado em software proprietário
+- ⚠️ Modificações devem ser open source
+- **Ideal para**: Bibliotecas que podem ser usadas em software proprietário
+
+**MPL 2.0 (Mozilla Public License)**
+
+- ✅ Copyleft aplicado apenas aos arquivos modificados
+- ✅ Pode combinar com código proprietário
+- **Ideal para**: Projetos que querem proteger o código mas permitir integração
+
+#### 3. Licenças Copyleft Forte (Mais Restritivas)
+
+**GPL v3 (GNU General Public License)**
+
+- ✅ Uso comercial permitido
+- ❌ Qualquer software derivado DEVE ser GPL
+- ❌ Não pode ser incorporado em software proprietário
+- ✅ Proteção contra "tivoização" (hardware que bloqueia modificações)
+- **Ideal para**: Garantir que TODO código derivado seja open source
+
+**AGPL v3**
+
+- ✅ Tudo da GPL v3, mais:
+- ✅ Copyleft se aplica mesmo para uso em rede (SaaS)
+- **Ideal para**: Aplicações web/SaaS que devem permanecer abertas
+
+#### 4. Licenças Especializadas
+
+**Creative Commons (CC BY 4.0)**
+
+- Apenas para documentação/conteúdo (não código)
+
+**Unlicense / Public Domain**
+
+- Domínio público total
+- Sem restrições
+
+### Comparação Rápida
+
+| Licença    | Comercial | Link Proprietário | Derivados Abertos | Patentes |
+| ---------- | --------- | ----------------- | ----------------- | -------- |
+| MIT        | ✅        | ✅                | ❌ Opcional       | ❌       |
+| Apache 2.0 | ✅        | ✅                | ❌ Opcional       | ✅       |
+| LGPL       | ✅        | ✅                | ✅ Obrigatório    | ❌       |
+| GPL v3     | ✅        | ❌                | ✅ Obrigatório    | ✅       |
+| AGPL v3    | ✅        | ❌                | ✅ + SaaS         | ✅       |
+
+### Recomendação para o Sinesys
+
+Considerando que é um sistema de gestão jurídica:
+
+**Opção 1: MIT License** 🌟 Recomendada
+
+- Máxima adoção pela comunidade
+- Outros escritórios podem usar e adaptar livremente
+- Permite uso comercial por terceiros
+- Simples e bem compreendida
+
+**Opção 2: Apache 2.0**
+
+- Se houver preocupação com patentes de software
+- Proteção legal mais robusta
+
+**Opção 3: AGPL v3**
+
+- Se quiser garantir que modificações em versões SaaS sejam compartilhadas
+- Impede que empresas peguem o código e "fechem" um serviço derivado
+
+**Não recomendado: GPL v3**
+
+- Muito restritiva para software de gestão
+- Dificulta integração com ferramentas proprietárias
+
+### Próximo Passo
+
+Após escolher a licença, adicionar o arquivo `LICENSE` na raiz do projeto e atualizar esta seção com a licença escolhida.
+
+---
+
+## 👥 Sobre
+
+**Desenvolvido por:** Sinesys  
+**Cliente:** Zattar Advogados  
+**Repositório:** [GitHub](https://github.com/seu-usuario/sinesys) _(atualizar após publicação)_
 
 ---
 

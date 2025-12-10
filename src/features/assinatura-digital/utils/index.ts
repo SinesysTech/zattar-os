@@ -54,3 +54,12 @@ export {
   formatBooleanBadge,
   getBooleanBadgeVariant,
 } from './display';
+
+// Slug Helpers
+export {
+  SLUG_PATTERN,
+  normalizeString,
+  generateSlug,
+  generateFormularioSlug,
+  validateSlug,
+} from './slug-helpers';
