@@ -4,7 +4,7 @@
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { Lancamento, ListarLancamentosParams } from '../types/lancamentos';
+import type { Lancamento, ListarLancamentosParams, ResumoVencimentos } from '../types/lancamentos';
 
 // ============================================================================
 // Repository Implementation
@@ -197,9 +197,9 @@ export const LancamentosRepository = {
     },
 
     /**
-     * Busca resumo de vencimentos
+     * Busca resumo de vencimentos (tipado corretamente)
      */
-    async buscarResumoVencimentos(tipo?: 'receita' | 'despesa') {
+    async buscarResumoVencimentos(tipo?: 'receita' | 'despesa'): Promise<ResumoVencimentos> {
         const supabase = createServiceClient();
         const hoje = new Date().toISOString().split('T')[0];
         const em7Dias = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];

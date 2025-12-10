@@ -1,7 +1,16 @@
 import useSWR from 'swr';
-import { actionListarObrigacoes, actionObterResumoObrigacoes } from '../actions/obrigacoes';
+import {
+    actionListarObrigacoes,
+    actionObterResumoObrigacoes,
+    actionSincronizarAcordo,
+    actionSincronizarParcela,
+    ObterResumoObrigacoesResult
+} from '../actions/obrigacoes';
 import { ObrigacoesFilters } from '../types/obrigacoes';
 
+/**
+ * Hook para listar obrigações com paginação e resumo
+ */
 export function useObrigacoes(params: Partial<ObrigacoesFilters> & { pagina?: number; limite?: number; busca?: string }) {
     const key = ['obrigacoes', JSON.stringify(params)];
 
@@ -23,31 +32,50 @@ export function useObrigacoes(params: Partial<ObrigacoesFilters> & { pagina?: nu
     };
 }
 
+/**
+ * Hook para obter resumo de obrigações com alertas
+ */
 export function useResumoObrigacoes(params?: any) {
     const key = ['obrigacoes-resumo', JSON.stringify(params)];
-    
-    const fetcher = async () => {
-        const result = await actionObterResumoObrigacoes(); // Assuming this action exists or similar
+
+    const fetcher = async (): Promise<ObterResumoObrigacoesResult> => {
+        const result = await actionObterResumoObrigacoes();
         if (!result.success) throw new Error(result.error);
         return result.data;
     };
 
-    const { data, error, isLoading } = useSWR(key, fetcher);
+    const { data, error, isLoading, mutate } = useSWR(key, fetcher);
 
     return {
         alertas: data?.alertas || [],
-        resumo: data?.resumo || {},
+        resumo: data?.resumo || {
+            totalVencidas: 0,
+            valorTotalVencido: 0,
+            totalPendentes: 0,
+            valorTotalPendente: 0,
+            totalRepassesPendentes: 0,
+            valorRepassesPendentes: 0
+        },
         isLoading,
-        error
+        error: error ? (error instanceof Error ? error.message : 'Erro ao carregar') : null,
+        refetch: mutate
     };
 }
 
+/**
+ * Sincroniza todas as parcelas de um acordo
+ */
 export async function sincronizarAcordo(acordoId: number, forcar: boolean = false) {
-    // This probably needs an action too, or use the service if running on server?
-    // Actions are for server logic.
-    // I should create an action for synchronization if not exists.
-    // Assuming actionSincronizarAcordo exists or I need to create it.
-    // It seems missing from my view of `actions/obrigacoes.ts`.
-    // I will check `actions/obrigacoes.ts` content.
-    return { success: true }; // Placeholder
+    const result = await actionSincronizarAcordo(acordoId, forcar);
+    if (!result.success) throw new Error(result.error);
+    return result;
+}
+
+/**
+ * Sincroniza uma parcela específica
+ */
+export async function sincronizarParcela(parcelaId: number, forcar: boolean = false) {
+    const result = await actionSincronizarParcela(parcelaId, forcar);
+    if (!result.success) throw new Error(result.error);
+    return result;
 }

@@ -1,4 +1,5 @@
-import { ObrigacoesContent } from '../components/obrigacoes-content';
+
+import { ObrigacoesContent } from '@/features/obrigacoes/components/shared/obrigacoes-content';
 
 /**
  * Página de Lista de Obrigações
@@ -6,4 +7,3 @@ import { ObrigacoesContent } from '../components/obrigacoes-content';
 export default function ObrigacoesListaPage() {
   return <ObrigacoesContent visualizacao="lista" />;
 }
-

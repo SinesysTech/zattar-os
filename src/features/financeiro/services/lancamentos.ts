@@ -186,9 +186,9 @@ export const LancamentosService = {
     },
 
     /**
-     * Busca resumo de vencimentos
+     * Busca resumo de vencimentos no formato ResumoVencimentos
      */
-    async buscarResumoVencimentos(tipo?: 'receita' | 'despesa') {
+    async buscarResumoVencimentos(tipo?: 'receita' | 'despesa'): Promise<import('../types/lancamentos').ResumoVencimentos> {
         return LancamentosRepository.buscarResumoVencimentos(tipo);
     },
 
