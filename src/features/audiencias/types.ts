@@ -1,6 +1,6 @@
 /**
  * Tipos para o módulo de audiências
- *
+ * 
  * Re-exporta tipos de domínio e define tipos específicos de frontend
  */
 

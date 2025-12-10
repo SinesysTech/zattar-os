@@ -705,4 +705,3 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     </Dialog>
   );
 }
-

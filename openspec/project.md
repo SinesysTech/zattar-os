@@ -98,74 +98,22 @@ The application is a Next.js project, built using `next build` (with `turbopack`
 - Estrutura de commits: `tipo: descrição breve`
 - Usar OpenSpec para gerenciar mudanças significativas
 
-## Project Conventions
+## 5. Future Considerations
 
+### 5.1. Scalability
+*   **PJE Data Capture:** Ensure efficiency and avoid blocking other operations during PJE data capture.
+*   **Database Queries:** Utilize appropriate indexes for database queries.
+*   **Pagination:** Implement mandatory pagination for large listings.
 
+### 5.2. Maintainability
+*   **Code Quality:** Adhere to strict TypeScript types, clear naming conventions, and comprehensive comments (JSDoc for public APIs, explanatory comments for complex logic).
+*   **Modular Architecture:** Maintain separation of concerns (API Routes, Business Services, Persistence, UI Components) to facilitate independent development and updates.
+*   **Documentation:** Continue using Swagger/OpenAPI for API documentation.
 
-## Domain Context
+### 5.3. Security
+*   **Data Protection:** Safeguard personal data in compliance with LGPD (General Data Protection Law).
+*   **Confidentiality:** Maintain professional secrecy for legal information.
+*   **Auditing:** Implement auditing for all significant changes and assignments.
+*   **Authentication:** Ensure robust authentication, especially for PJE integration (SSO with 2FA/OTP).
+*   **Supabase RLS:** Respect and enforce Row Level Security policies in Supabase
 
-### Domínio Jurídico
-- **Clientes**: Podem ser pessoas físicas (PF) ou jurídicas (PJ)
-- **Contratos**: Tipos incluem ajuizamento, defesa, ato processual, assessoria, consultoria, extrajudicial, parecer
-- **Processos**: Vinculados a contratos, com status e grau (primeiro ou segundo grau)
-- **Tribunais**: Sistema focado em TRT (Tribunais Regionais do Trabalho), códigos TRT1 a TRT24
-- **Audiências**: Eventos processuais com data, hora e responsável
-- **Pendências de Manifestação**: Ações pendentes que requerem resposta do advogado
-
-### Integração PJE-TRT
-- Sistema de captura automatizada de dados do Processo Judicial Eletrônico
-- Autenticação via SSO com suporte a 2FA (OTP)
-- Captura de: acervo geral, processos arquivados, audiências, pendências de manifestação
-- Cache de credenciais com renovação automática
-- Suporte a múltiplos tribunais TRT
-
-### Entidades Principais
-- **Advogados**: Usuários do sistema com credenciais PJE
-- **Usuários**: Usuários internos do sistema
-- **Clientes**: Pessoas físicas ou jurídicas representadas
-- **Partes Contrárias**: Oponentes nos processos
-- **Contratos**: Acordos de prestação de serviços jurídicos
-- **Processos**: Vinculados a contratos e clientes
-- **Acervo**: Processos capturados do PJE
-- **Audiências**: Eventos processuais agendados
-- **Pendências**: Ações que requerem manifestação
-
-## Important Constraints
-
-### Técnicos
-- **Supabase**: Limitações de RLS e políticas de segurança devem ser respeitadas
-- **PJE**: Rate limiting e necessidade de autenticação SSO com 2FA
-- **Next.js 16**: App Router obrigatório, Server Components por padrão
-- **TypeScript Strict**: Tipos devem ser explícitos e corretos
-
-### Regulatórios e de Negócio
-- **LGPD**: Dados pessoais de clientes devem ser protegidos
-- **Sigilo Profissional**: Informações jurídicas são confidenciais
-- **Auditoria**: Todas as alterações importantes devem ser registradas
-- **Atribuição de Responsáveis**: Processos e pendências devem ter responsáveis atribuídos
-
-### Performance
-- Captura de dados do PJE deve ser eficiente e não bloquear outras operações
-- Queries ao banco devem usar índices apropriados
-- Paginação obrigatória para listagens grandes
-
-## External Dependencies
-
-### Supabase
-- **Banco de Dados**: PostgreSQL gerenciado
-- **Autenticação**: Supabase Auth com sessões
-- **Row Level Security**: Políticas de segurança no banco
-- **Storage**: Disponível para documentos (se necessário)
-
-### PJE-TRT
-- **URL Base**: `https://pje.trt3.jus.br` (exemplo TRT3, varia por tribunal)
-- **SSO**: `https://sso.cloud.pje.jus.br`
-- **Autenticação**: SSO com suporte a 2FA via OTP
-- **APIs**: Não documentadas oficialmente, captura via web scraping
-
-### Bibliotecas Principais
-- **@supabase/supabase-js**: Cliente Supabase
-- **@supabase/ssr**: Integração SSR com Next.js
-- **puppeteer/playwright**: Automação de navegador
-- **swagger-jsdoc**: Geração de documentação OpenAPI
-- **swagger-ui-react**: Interface de documentação Swagger

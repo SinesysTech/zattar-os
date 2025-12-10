@@ -8,7 +8,8 @@
 
 **Desenvolvido por:** Sinesys  
 **Cliente:** Zattar Advogados  
-**Licença:** Em definição (será publicado como Open Source)
+**Licença:** GNU Affero General Public License v3.0 (AGPL-3.0)  
+**Status:** Open Source
 
 ## 📋 Sumário
 
@@ -2119,119 +2120,109 @@ Para análises técnicas profundas e documentação de módulos específicos:
 
 ## 📝 Licença
 
-**Status:** Em definição - Será publicado como Open Source
+![AGPL-3.0](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
 
-### Opções de Licenças Open Source
+Este projeto é licenciado sob a **GNU Affero General Public License v3.0 (AGPL-3.0)**.
 
-Existem diversos tipos de licenças open source, cada uma com diferentes níveis de permissividade:
+### O que significa AGPL v3?
 
-#### 1. Licenças Permissivas (Mais Livres)
+A AGPL v3 é uma licença de software livre com **copyleft forte** que garante que:
 
-**MIT License** ⭐ Mais Popular
+- O código-fonte sempre permanecerá aberto
+- Modificações devem ser compartilhadas sob a mesma licença
+- **Usuários de serviços web (SaaS)** também têm direito ao código-fonte
 
-- ✅ Uso comercial permitido
-- ✅ Modificação permitida
-- ✅ Distribuição permitida
-- ✅ Uso privado permitido
-- ⚠️ Sem garantia
-- 📋 Requer apenas: Incluir aviso de copyright
-- **Ideal para**: Máxima adoção e liberdade
+Esta licença fecha a "brecha de SaaS" da GPL, garantindo que mesmo se você oferecer o Sinesys como serviço na nuvem, deve disponibilizar o código-fonte completo (incluindo modificações).
 
-**Apache 2.0**
+### ✅ Você PODE:
 
-- ✅ Tudo da MIT, mais:
-- ✅ Proteção contra patentes
-- ✅ Exige documentar mudanças
-- 📋 Requer: Copyright + NOTICE file
-- **Ideal para**: Projetos empresariais que precisam proteção de patentes
+- ✅ **Usar comercialmente** - Oferecer como serviço pago (SaaS)
+- ✅ **Modificar** - Adaptar o código às suas necessidades
+- ✅ **Distribuir** - Compartilhar cópias do software
+- ✅ **Uso privado** - Usar internamente em sua organização
+- ✅ **Usar a tecnologia Sinesys** - Mencionar "Powered by Sinesys" ou "Baseado em Sinesys"
 
-**BSD 3-Clause**
+### 📋 Você DEVE:
 
-- ✅ Similar à MIT
-- ✅ Proíbe uso do nome do projeto para endosso
-- **Ideal para**: Projetos acadêmicos
+- 📋 **Disponibilizar o código-fonte** - Incluindo todas as modificações
+- 📋 **Manter a licença AGPL v3** - Não pode mudar para licença proprietária
+- 📋 **Incluir avisos de copyright** - Manter créditos à Sinesys
+- 📋 **Documentar mudanças** - Indicar quais modificações foram feitas
+- 📋 **Fornecer acesso ao código** - Mesmo se oferecer apenas como serviço web (SaaS)
+- 📋 **Referenciar a Sinesys** - Se modificar e alterar o nome do projeto
 
-#### 2. Licenças Copyleft Fraco
+### ❌ Você NÃO PODE:
 
-**LGPL (Lesser GPL)**
+- ❌ **Fechar o código** - Não pode criar versão proprietária
+- ❌ **Usar "Sinesys" como nome do seu serviço** - Veja política de marca registrada
+- ❌ **Remover atribuições** - Deve manter créditos originais
+- ❌ **Sublicenciar** - Não pode mudar os termos da licença
 
-- ✅ Uso comercial permitido
-- ✅ Pode ser linkado em software proprietário
-- ⚠️ Modificações devem ser open source
-- **Ideal para**: Bibliotecas que podem ser usadas em software proprietário
+### 🏷️ Marca Registrada
 
-**MPL 2.0 (Mozilla Public License)**
+⚠️ **IMPORTANTE**: A licença AGPL v3 concede direitos sobre o **código-fonte**, mas **NÃO** sobre a marca "Sinesys".
 
-- ✅ Copyleft aplicado apenas aos arquivos modificados
-- ✅ Pode combinar com código proprietário
-- **Ideal para**: Projetos que querem proteger o código mas permitir integração
+**Você NÃO pode:**
 
-#### 3. Licenças Copyleft Forte (Mais Restritivas)
+- ❌ Nomear seu serviço como "Sinesys", "Sinesys Pro", "Sinesys Cloud", etc.
+- ❌ Usar a marca "Sinesys" de forma que sugira endosso oficial
+- ❌ Registrar domínios contendo "Sinesys"
 
-**GPL v3 (GNU General Public License)**
+**Você PODE:**
 
-- ✅ Uso comercial permitido
-- ❌ Qualquer software derivado DEVE ser GPL
-- ❌ Não pode ser incorporado em software proprietário
-- ✅ Proteção contra "tivoização" (hardware que bloqueia modificações)
-- **Ideal para**: Garantir que TODO código derivado seja open source
+- ✅ Dizer que é "Baseado em Sinesys"
+- ✅ Dizer que é "Powered by Sinesys"
+- ✅ Indicar que usa "tecnologia Sinesys"
 
-**AGPL v3**
+Para detalhes completos, consulte o arquivo **[TRADEMARK](./TRADEMARK)**.
 
-- ✅ Tudo da GPL v3, mais:
-- ✅ Copyleft se aplica mesmo para uso em rede (SaaS)
-- **Ideal para**: Aplicações web/SaaS que devem permanecer abertas
+### ⚖️ Isenção de Responsabilidade
 
-#### 4. Licenças Especializadas
+Este software é fornecido "como está", sem garantias de qualquer tipo.
 
-**Creative Commons (CC BY 4.0)**
+**A Sinesys NÃO é responsável por:**
 
-- Apenas para documentação/conteúdo (não código)
+- ❌ Serviços de terceiros baseados neste software
+- ❌ Bugs, falhas ou perda de dados em implementações derivadas
+- ❌ Danos causados pelo uso do software
+- ❌ Conformidade legal ou regulatória de implementações derivadas
 
-**Unlicense / Public Domain**
+**Serviços derivados devem incluir aviso claro:**
 
-- Domínio público total
-- Sem restrições
+```
+Este serviço é baseado em Sinesys, mas NÃO é desenvolvido,
+mantido ou endossado pela Sinesys. Sinesys não se responsabiliza
+por este serviço, seus dados ou funcionamento.
+```
 
-### Comparação Rápida
+### 📄 Documentos Legais
 
-| Licença    | Comercial | Link Proprietário | Derivados Abertos | Patentes |
-| ---------- | --------- | ----------------- | ----------------- | -------- |
-| MIT        | ✅        | ✅                | ❌ Opcional       | ❌       |
-| Apache 2.0 | ✅        | ✅                | ❌ Opcional       | ✅       |
-| LGPL       | ✅        | ✅                | ✅ Obrigatório    | ❌       |
-| GPL v3     | ✅        | ❌                | ✅ Obrigatório    | ✅       |
-| AGPL v3    | ✅        | ❌                | ✅ + SaaS         | ✅       |
+- **[LICENSE](./LICENSE)** - Texto completo da AGPL v3
+- **[TRADEMARK](./TRADEMARK)** - Política de uso da marca Sinesys
+- **[NOTICE](./NOTICE)** - Avisos de copyright e atribuições obrigatórias
 
-### Recomendação para o Sinesys
+### 🤔 Por que escolhemos AGPL v3?
 
-Considerando que é um sistema de gestão jurídica:
+Escolhemos a AGPL v3 porque:
 
-**Opção 1: MIT License** 🌟 Recomendada
+1. **Garante liberdade permanente** - O código sempre será open source
+2. **Protege contra apropriação** - Ninguém pode "fechar" o código
+3. **Inclui SaaS** - Mesmo serviços web devem compartilhar melhorias
+4. **Promove colaboração** - Todos se beneficiam das melhorias
+5. **Proteção de patentes** - Protege contra reivindicações de patentes
 
-- Máxima adoção pela comunidade
-- Outros escritórios podem usar e adaptar livremente
-- Permite uso comercial por terceiros
-- Simples e bem compreendida
+### 📊 Comparação com Outras Licenças
 
-**Opção 2: Apache 2.0**
-
-- Se houver preocupação com patentes de software
-- Proteção legal mais robusta
-
-**Opção 3: AGPL v3**
-
-- Se quiser garantir que modificações em versões SaaS sejam compartilhadas
-- Impede que empresas peguem o código e "fechem" um serviço derivado
-
-**Não recomendado: GPL v3**
-
-- Muito restritiva para software de gestão
-- Dificulta integração com ferramentas proprietárias
-
-### Próximo Passo
-
-Após escolher a licença, adicionar o arquivo `LICENSE` na raiz do projeto e atualizar esta seção com a licença escolhida.
+| Característica               | MIT | GPL v3 | AGPL v3 |
+| ---------------------------- | --- | ------ | ------- |
+| Uso comercial                | ✅  | ✅     | ✅      |
+| Modificação                  | ✅  | ✅     | ✅      |
+| Distribuição                 | ✅  | ✅     | ✅      |
+| Copyleft (código aberto)     | ❌  | ✅     | ✅      |
+| Copyleft para SaaS           | ❌  | ❌     | ✅      |
+| Pode fechar código derivado  | ✅  | ❌     | ❌      |
+| Proteção de patentes         | ❌  | ✅     | ✅      |
+| Link com código proprietário | ✅  | ❌     | ❌      |
 
 ---
 
@@ -2243,4 +2234,4 @@ Após escolher a licença, adicionar o arquivo `LICENSE` na raiz do projeto e at
 
 ---
 
-**Última atualização:** Novembro 2025
+**Última atualização:** Dezembro 2025

@@ -1,9 +1,5 @@
 'use server';
 
-/**
- * Server Actions para audiências
- */
-
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { audienciasService } from '@/core/audiencias';
@@ -159,7 +155,7 @@ export async function actionAtualizarStatusAudiencia(
 
 export async function actionListarAudiencias(
   params: ListarAudienciasParams
-): Promise<ActionResult<unknown>> {
+): Promise<ActionResult<any>> {
   const result = await audienciasService.listarAudiencias(params);
 
   if (result.isErr()) {
