@@ -878,7 +878,6 @@ export function NovoExpedienteDialog({
       </DialogContent>
     </Dialog>
   );
-  }
 
   // Layout padrão quando não há dados iniciais (seleção manual de processo)
   return (

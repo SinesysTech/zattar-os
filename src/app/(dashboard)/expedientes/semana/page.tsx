@@ -66,15 +66,14 @@ export default async function ExpedientesSemanaPage({ searchParams }: Expediente
     console.error('Erro ao buscar tipos de expediente:', tiposExpedienteResult.error);
   }
 
-  const usuarios = usuariosResult.success ? usuariosResult.data.usuarios.map(u => ({ id: u.id, nomeExibicao: u.nome_exibicao })) : [];
-  const tiposExpediente = tiposExpedienteResult.success ? tiposExpedienteResult.data.tipos_expedientes.map(t => ({ id: t.id, tipoExpediente: t.tipo_expediente })) : [];
+  const tiposExpediente = tiposExpedienteResult.success ? tiposExpedienteResult.tipos_expedientes.map(t => ({ id: t.id, tipoExpediente: t.tipo_expediente })) : [];
 
   return (
     <ExpedientesVisualizacaoSemana
       expedientes={expedientesResult.data.data}
       isLoading={false}
       usuarios={usuarios}
-      tiposExpediente={tiposExpediente}
+      tiposExpedientes={tiposExpediente}
       semanaAtual={currentWeekStart}
     />
   );

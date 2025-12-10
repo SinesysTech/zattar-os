@@ -56,6 +56,16 @@ export type StatusSincronizacao =
   | 'inconsistente'      // Divergência entre parcela e lançamento
   | 'nao_aplicavel';     // Não requer sincronização (ex: conta avulsa)
 
+/**
+ * Status do repasse ao cliente (Split de Pagamento)
+ */
+export type StatusRepasse =
+  | 'pendente_transferencia'  // Recebido no escritório, aguardando repasse
+  | 'repassado'               // Transferido para o cliente
+  | 'nao_aplicavel'           // Não é acordo de recebimento ou sem valor cliente
+  | 'aguardando_recebimento'; // Ainda não recebido do devedor (status parcela != recebida/paga)
+
+
 // ============================================================================
 // Interfaces de Resumo (Relacionamentos)
 // ============================================================================
@@ -109,6 +119,11 @@ export interface ParcelaResumoObrigacao {
   dataEfetivacao: string | null;
   status: string;
   formaPagamento: string | null;
+  statusRepasse: StatusRepasse;
+  valorRepasseCliente: number | null;
+  declaracaoPrestacaoContasUrl: string | null;
+  comprovanteRepasseUrl: string | null;
+  dataRepasse: string | null;
 }
 
 /**
