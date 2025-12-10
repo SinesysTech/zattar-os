@@ -1,5 +1,4 @@
-
-import { SalariosList } from '@/features/rh/components/salarios/salarios-list';
+import { SalariosList } from '@/features/rh';
 
 export default function SalariosPage() {
   return <SalariosList />;

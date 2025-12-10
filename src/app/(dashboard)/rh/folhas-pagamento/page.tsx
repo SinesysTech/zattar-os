@@ -1,5 +1,5 @@
 
-import { FolhasPagamentoList } from '@/features/rh/components/folhas-pagamento/folhas-list';
+import { FolhasPagamentoList } from '@/features/rh';
 
 export default function FolhasPagamentoPage() {
   return <FolhasPagamentoList />;
