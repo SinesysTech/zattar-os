@@ -19,12 +19,16 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
-import { segmentoSchema } from '@/types/assinatura-digital/segmento.types';
-import { generateSlug } from '@/app/_lib/assinatura-digital/slug-helpers';
+import { createSegmentoSchema, EscopoSegmento } from '@/core/assinatura-digital/domain';
+import { criarSegmentoAction, listarSegmentosAction } from '@/app/actions/assinatura-digital';
 
-const createSegmentoSchema = segmentoSchema.extend({
-  ativo: z.boolean().default(true),
-});
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type CreateSegmentoFormData = z.infer<typeof createSegmentoSchema>;
 
@@ -47,22 +51,21 @@ export function SegmentoCreateDialog({
     resolver: zodResolver(createSegmentoSchema),
     defaultValues: {
       nome: '',
-      slug: '',
       descricao: '',
+      escopo: 'global', // Default value
       ativo: true,
     },
   });
 
-  const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting }, reset, setError } = form;
-
-  // Auto-generate slug on nome blur if slug is empty
-  const handleNomeBlur = () => {
-    const nome = watch('nome');
-    const slug = watch('slug');
-    if (nome && !slug) {
-      setValue('slug', generateSlug(nome));
-    }
-  };
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+    reset,
+    setError,
+  } = form;
 
   // Reset form when dialog closes
   React.useEffect(() => {
@@ -73,29 +76,13 @@ export function SegmentoCreateDialog({
 
   const onSubmit = async (data: CreateSegmentoFormData) => {
     try {
-      // Check slug uniqueness using exact-match lookup
-      const checkResponse = await fetch(`/api/assinatura-digital/segmentos?slug=${encodeURIComponent(data.slug)}`);
-      if (!checkResponse.ok) {
-        throw new Error('Erro ao verificar unicidade do slug');
-      }
-      const checkData = await checkResponse.json();
-      if (checkData.exists) {
-        setError('slug', { message: 'Slug já existe. Escolha um slug diferente.' });
-        return;
-      }
+      const result = await criarSegmentoAction(data);
 
-      // Proceed with creation
-      const response = await fetch('/api/assinatura-digital/segmentos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
+      if (!result.success) {
+        if (result.error.includes('slug')) {
+          setError('slug', { message: result.error });
+        }
+        throw new Error(result.error);
       }
 
       toast.success('Segmento criado com sucesso!');
@@ -131,9 +118,7 @@ export function SegmentoCreateDialog({
               </Label>
               <Input
                 id="nome"
-                {...register('nome', {
-                  onBlur: handleNomeBlur,
-                })}
+                {...register('nome')}
                 placeholder="Nome do segmento"
                 disabled={isSubmitting}
               />
@@ -143,17 +128,31 @@ export function SegmentoCreateDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="slug">
-                Slug <span className="text-destructive">*</span>
+              <Label htmlFor="escopo">
+                Escopo <span className="text-destructive">*</span>
               </Label>
-              <Input
-                id="slug"
-                {...register('slug')}
-                placeholder="Slug gerado automaticamente"
+              <Select
+                onValueChange={(value: EscopoSegmento) =>
+                  setValue('escopo', value)
+                }
+                defaultValue={watch('escopo')}
                 disabled={isSubmitting}
-              />
-              {errors.slug && (
-                <p className="text-sm text-destructive">{errors.slug.message}</p>
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione o escopo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="global">
+                    Global (Contratos e Assinatura)
+                  </SelectItem>
+                  <SelectItem value="contratos">Apenas Contratos</SelectItem>
+                  <SelectItem value="assinatura">
+                    Apenas Assinatura Digital
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.escopo && (
+                <p className="text-sm text-destructive">{errors.escopo.message}</p>
               )}
             </div>
 

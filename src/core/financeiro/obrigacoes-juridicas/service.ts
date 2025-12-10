@@ -1,6 +1,6 @@
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { ObrigacoesRepository } from './repository';
-import { LancamentosRepository } from '../lancamentos/repository';
+// import { LancamentosRepository } from '../lancamentos/repository';
 import { SplitPagamento, ParcelaObrigacao, StatusRepasse } from './domain';
 import { Lancamento } from '../lancamentos/domain';
 
@@ -84,76 +84,26 @@ export const ObrigacoesService = {
         }
     },
 
+
     /**
      * Sincroniza uma parcela específica para o financeiro
+     * Atua como orquestrador chamando o serviço de integração do backend
      */
     async sincronizarParcela(parcelaId: number, forcar: boolean = false): Promise<{ sucesso: boolean; mensagem: string }> {
-        const supabase = createServiceClient();
-
         try {
-            // 1. Buscar dados completos da parcela
-            const { data: parcelaRecord, error: erroParcela } = await supabase
-                .from('parcelas')
-                .select(`*, acordos_condenacoes (*)`)
-                .eq('id', parcelaId)
-                .single();
+            // Import dinâmico ou direto do serviço de backend para evitar ciclo se houver, 
+            // mas aqui estamos no core, dependendo do backend service.
+            // O comentário sugere reutilizar a lógica existente.
 
-            if (erroParcela || !parcelaRecord) throw new Error('Parcela não encontrada');
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const { sincronizarParcelaParaFinanceiro } = require('@/backend/financeiro/obrigacoes/services/integracao/obrigacoes-integracao.service');
 
-            const acordo = parcelaRecord.acordos_condenacoes;
-            const parcelaEfetivada = ['recebida', 'paga'].includes(parcelaRecord.status);
+            const resultado = await sincronizarParcelaParaFinanceiro(parcelaId, forcar);
 
-            if (!parcelaEfetivada && !forcar) {
-                return { sucesso: true, mensagem: 'Parcela não efetivada, ignorada.' };
-            }
-
-            // 2. Verificar lançamento existente
-            const { data: lancamentos } = await supabase
-                .from('lancamentos_financeiros')
-                .select('id, status')
-                .eq('parcela_id', parcelaId)
-                .not('status', 'in', '("cancelado","estornado")') // Ignora cancelados
-                .order('id'); // Pegar o mais antigo ou mais novo? Geralmente deve ter só 1.
-
-            const lancamentoExistente = lancamentos?.[0];
-
-            if (lancamentoExistente && !forcar) {
-                return { sucesso: true, mensagem: `Lançamento já existe (ID: ${lancamentoExistente.id})` };
-            }
-
-            // 3. Preparar dados do lançamento
-            const valorTotal = parcelaRecord.valor_bruto_credito_principal + (parcelaRecord.honorarios_sucumbenciais || 0);
-            const numeroParcela = parcelaRecord.numero_parcela || '?';
-            const numeroTotalParcelas = acordo.numero_parcelas || '?';
-            const numeroProcesso = acordo.numero_processo || 'Acordo';
-            const descricao = `Parcela ${numeroParcela}/${numeroTotalParcelas} - ${numeroProcesso}`;
-
-            const dadosLancamento = {
-                tipo: acordo.direcao === 'recebimento' ? 'receita' : 'despesa',
-                descricao,
-                valor: valorTotal,
-                data_lancamento: new Date().toISOString().split('T')[0],
-                data_vencimento: parcelaRecord.data_vencimento,
-                data_competencia: parcelaRecord.data_vencimento,
-                data_efetivacao: parcelaRecord.data_efetivacao,
-                status: parcelaEfetivada ? 'confirmado' : 'pendente',
-                origem: 'acordo_judicial',
-                parcela_id: parcelaId,
-                acordo_condenacao_id: acordo.id,
-                conta_contabil_id: 1, // TODO: Buscar conta padrão correta
-                updated_at: new Date().toISOString()
+            return {
+                sucesso: resultado.sucesso,
+                mensagem: resultado.mensagem
             };
-
-            if (lancamentoExistente && forcar) {
-                // Atualizar
-                await supabase.from('lancamentos_financeiros').update(dadosLancamento).eq('id', lancamentoExistente.id);
-                return { sucesso: true, mensagem: 'Lançamento atualizado.' };
-            } else {
-                // Criar
-                const dadosCriacao = { ...dadosLancamento, created_at: new Date().toISOString() };
-                await supabase.from('lancamentos_financeiros').insert(dadosCriacao);
-                return { sucesso: true, mensagem: 'Lançamento criado.' };
-            }
 
         } catch (e: any) {
             console.error(e);
@@ -161,10 +111,66 @@ export const ObrigacoesService = {
         }
     },
 
+
+
+    // ... (existing methods above)
+
     /**
-     * Registra a declaração de prestação de contas (Passo 1 do Repasse)
+     * Busca repasses pendentes de transferência
      */
-    async registrarDeclaracao(parcelaId: number, urlArquivo: string): Promise<void> {
+    async listarRepassesPendentes(): Promise<ParcelaObrigacao[]> {
+        const supabase = createServiceClient();
+
+        const { data, error } = await supabase
+            .from('parcelas')
+            .select('*')
+            .eq('status_repasse', 'pendente_transferencia')
+            .gt('valor_repasse_cliente', 0)
+            .order('data_vencimento');
+
+        if (error) throw new Error(`Erro ao listar repasses: ${error.message}`);
+
+        // Mapear para domínio (simplificado, idealmente usaria mapper)
+        return (data || []).map((p: any) => ({
+            id: p.id,
+            acordoId: p.acordo_condenacao_id,
+            numeroParcela: p.numero_parcela,
+            valor: p.valor_bruto_credito_principal + (p.honorarios_sucumbenciais || 0),
+            valorBrutoCreditoPrincipal: p.valor_bruto_credito_principal,
+            honorariosContratuais: p.honorarios_contratuais,
+            honorariosSucumbenciais: p.honorarios_sucumbenciais,
+            valorRepasseCliente: p.valor_repasse_cliente,
+            dataVencimento: p.data_vencimento,
+            dataPagamento: p.data_efetivacao,
+            status: p.status,
+            statusRepasse: p.status_repasse,
+            lancamentoId: null, // Não vem direto
+            declaracaoPrestacaoContasUrl: p.declaracao_prestacao_contas_url,
+            comprovanteRepasseUrl: p.comprovante_repasse_url,
+            dataRepasse: p.data_repasse
+        }));
+    },
+
+    /**
+     * Calcula totais repassados por cliente
+     */
+    async calcularTotalRepassadoPorCliente(clienteId: number): Promise<number> {
+        const supabase = createServiceClient();
+
+        // Isso idealmente seria uma RPC ou query complexa
+        // Fazendo via JS por simplicidade inicial
+        const { data, error } = await supabase
+            .from('parcelas')
+            .select('valor_repasse_cliente, acordos_condenacoes!inner(cliente_id)')
+            .eq('acordos_condenacoes.cliente_id', clienteId)
+            .eq('status_repasse', 'repassado');
+
+        if (error) throw new Error(`Erro ao calcular total repassado: ${error.message}`);
+
+        return (data || []).reduce((acc: number, curr: any) => acc + (curr.valor_repasse_cliente || 0), 0);
+    }
+
+    , async registrarDeclaracao(parcelaId: number, urlArquivo: string): Promise<void> {
         const supabase = createServiceClient();
 
         const { error } = await supabase
@@ -208,18 +214,23 @@ export const ObrigacoesService = {
     validarIntegridade(parcela: ParcelaObrigacao, direcao: 'recebimento' | 'pagamento'): { valido: boolean; erros: string[] } {
         const erros: string[] = [];
 
-        // 1. Parcela só pode ser recebida com forma de pagamento
-        if (['recebida', 'paga'].includes(parcela.status) && !parcela.lancamento?.formaPagamento && !parcela.dataPagamento) {
-            // Note: formaPagamento check might depend on lancamento or parcela field depending on sync
-            // Checking simplified version
+        // 1. Parcela recebida/paga deve ter forma de pagamento (na parcela ou lançamento)
+        if (['recebida', 'paga'].includes(parcela.status)) {
+            // Verifica na própria parcela primeiro
+            const temFormaPagamento = !!parcela.formaPagamento || !!parcela.lancamento?.formaPagamento;
+            if (!temFormaPagamento) {
+                erros.push(`Parcela ${parcela.numeroParcela} (ID: ${parcela.id}) está ${parcela.status} mas não possui forma de pagamento.`);
+            }
         }
 
-        // 2. Se há repasse ao cliente, status deve ser gerenciado
+        // 2. Regra de Repasse: Se há repasse cliente, verificar status
         if (direcao === 'recebimento' && parcela.valorRepasseCliente > 0) {
-            if (parcela.status === 'recebida' && parcela.statusRepasse === 'nao_aplicavel') {
-                // Isso seria um erro de estado, pois deveria ter entrado no fluxo de repasse
-                // Mas talvez 'nao_aplicavel' seja o default do banco antes do trigger?
-                // Deixando validação soft por enquanto.
+            // Ex: Se recebida, status repasse não pode ser 'nao_aplicavel' se houver valor > 0 (assumindo logica)
+            // Ou apenas garantir que statusRepasse é válido
+            const statusValidosRepasse = ['pendente', 'pendente_transferencia', 'repassado'];
+            // Se o valorRepasseCliente > 0, deve haver um status de repasse que faça sentido
+            if (parcela.status === 'recebida' && !statusValidosRepasse.includes(parcela.statusRepasse)) {
+                erros.push(`Parcela ${parcela.numeroParcela} (ID: ${parcela.id}) tem valor de repasse mas status de repasse inválido (${parcela.statusRepasse}).`);
             }
         }
 

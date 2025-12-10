@@ -7,8 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { DateRange } from 'react-day-picker';
-import { ListarAudienciasParams, ModalidadeAudiencia, StatusAudiencia, CODIGO_TRIBUNAL, GrauTribunal } from '@/core/audiencias/domain';
-import { useAudiencias } from '@/hooks/use-audiencias';
+import { ModalidadeAudiencia, StatusAudiencia, CODIGO_TRIBUNAL, GrauTribunal, type CodigoTribunal } from '@/core/audiencias/domain';
+import { useAudiencias } from '@/app/_lib/hooks/use-audiencias';
+import type { BuscarAudienciasParams } from '@/app/_lib/types/audiencias';
 import { AudienciasListView } from './audiencias-list-view';
 import { AudienciasCalendarWeekView } from './audiencias-calendar-week-view';
 import { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';
@@ -72,12 +73,20 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
 
 
     return {
-      dataInicioInicio: start.toISOString(),
-      dataInicioFim: end.toISOString(),
+      data_inicio_inicio: start.toISOString(),
+      data_inicio_fim: end.toISOString(),
     };
   }, [visualizacao, currentDate, dataRange]);
 
-  const listarAudienciasParams: ListarAudienciasParams = {
+  const { tiposAudiencia } = useTiposAudiencias();
+  const { usuarios } = useUsuarios();
+
+  // Mapear tipo de audiência ID para descrição
+  const tipoDescricaoFiltro = tipoAudienciaFiltro === 'todos' 
+    ? undefined 
+    : tiposAudiencia.find(t => t.id === tipoAudienciaFiltro)?.descricao;
+
+  const buscarAudienciasParams: BuscarAudienciasParams = {
     pagina: 1, // Will be managed by list view for pagination
     limite: 1000, // Large limit for calendar views
     busca: busca || undefined,
@@ -85,14 +94,12 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
     modalidade: modalidadeFiltro === 'todas' ? undefined : modalidadeFiltro,
     trt: trtFiltro === 'todas' ? undefined : trtFiltro,
     grau: grauFiltro === 'todas' ? undefined : grauFiltro,
-    responsavelId: responsavelFiltro === 'todos' ? undefined : responsavelFiltro === 'null' ? 'null' : Number(responsavelFiltro),
-    tipoAudienciaId: tipoAudienciaFiltro === 'todos' ? undefined : Number(tipoAudienciaFiltro),
+    responsavel_id: responsavelFiltro === 'todos' ? undefined : responsavelFiltro === 'null' ? 'null' : Number(responsavelFiltro),
+    tipo_descricao: tipoDescricaoFiltro,
     ...calculateDateRange(),
   };
 
-  const { audiencias, isLoading, error, refetch } = useAudiencias(listarAudienciasParams);
-  const { tiposAudiencia } = useTiposAudiencias();
-  const { usuarios } = useUsuarios();
+  const { audiencias, isLoading, error, refetch } = useAudiencias(buscarAudienciasParams);
 
 
   const handlePrevious = () => {

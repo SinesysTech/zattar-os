@@ -536,7 +536,9 @@ export const sincronizarAcordo = async (
   acordoId: number,
   forcar: boolean = false
 ): Promise<MutationResult<SincronizarObrigacoesResult>> => {
-  const result = await actionSincronizarAcordo(acordoId, forcar); // Assuming I create this action or similar
+  // Utilizing the actual action which is now exported
+  const result = await actionSincronizarAcordo(acordoId, forcar);
+
   // I created actionSincronizarParcela, need to export actionSincronizarAcordo in obrigacoes.ts if not present.
   // I recall I only created actionSincronizarParcela. I should add actionSincronizarAcordo to actions if needed.
   // For now I will mock or error if not available, OR I will go back and add it.

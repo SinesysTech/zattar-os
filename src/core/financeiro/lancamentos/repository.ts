@@ -90,17 +90,32 @@ function mapRecordToLancamento(record: any): Lancamento {
 }
 
 function mapLancamentoToRecord(domain: Partial<Lancamento>): any {
-    const record: any = { ...domain };
-    // Map camelCase to snake_case if necessary, or assume Supabase JS client handles basic mapping if configured, 
-    // but usually raw queries need snake_case.
-    // For brevity, assuming direct mapping or matching column names for now.
-    // Ideally, manual mapping:
-    if (domain.dataLancamento) record.data_lancamento = domain.dataLancamento;
-    if (domain.dataVencimento) record.data_vencimento = domain.dataVencimento;
-    if (domain.dataEfetivacao) record.data_efetivacao = domain.dataEfetivacao;
-    if (domain.dataCompetencia) record.data_competencia = domain.dataCompetencia;
-    if (domain.contaBancariaId) record.conta_bancaria_id = domain.contaBancariaId;
-    if (domain.contaContabilId) record.conta_contabil_id = domain.contaContabilId;
-    // ... others
+    const record: any = {};
+
+    // Mapeamento explícito de camelCase para snake_case
+    if (domain.descricao !== undefined) record.descricao = domain.descricao;
+    if (domain.valor !== undefined) record.valor = domain.valor;
+    if (domain.dataLancamento !== undefined) record.data_lancamento = domain.dataLancamento;
+    if (domain.dataVencimento !== undefined) record.data_vencimento = domain.dataVencimento;
+    if (domain.dataCompetencia !== undefined) record.data_competencia = domain.dataCompetencia;
+    if (domain.dataEfetivacao !== undefined) record.data_efetivacao = domain.dataEfetivacao;
+    if (domain.status !== undefined) record.status = domain.status;
+    if (domain.tipo !== undefined) record.tipo = domain.tipo;
+    if (domain.categoria !== undefined) record.categoria = domain.categoria;
+    if (domain.formaPagamento !== undefined) record.forma_pagamento = domain.formaPagamento;
+    if (domain.origem !== undefined) record.origem = domain.origem;
+    if (domain.documento !== undefined) record.documento = domain.documento;
+    if (domain.observacoes !== undefined) record.observacoes = domain.observacoes;
+    if (domain.recorrente !== undefined) record.recorrente = domain.recorrente;
+    if (domain.frequenciaRecorrencia !== undefined) record.frequencia_recorrencia = domain.frequenciaRecorrencia;
+
+    // Foreign Keys
+    if (domain.contaBancariaId !== undefined) record.conta_bancaria_id = domain.contaBancariaId;
+    if (domain.contaContabilId !== undefined) record.conta_contabil_id = domain.contaContabilId;
+    if (domain.centroCustoId !== undefined) record.centro_custo_id = domain.centroCustoId;
+    if (domain.clienteId !== undefined) record.cliente_id = domain.clienteId;
+    if (domain.parcelaId !== undefined) record.parcela_id = domain.parcelaId;
+    if (domain.acordoCondenacaoId !== undefined) record.acordo_condenacao_id = domain.acordoCondenacaoId;
+
     return record;
 }

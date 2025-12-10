@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, isSameDay, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { staggerContainer, transition } from '@/components/animations';
@@ -67,7 +67,7 @@ export function AudienciasCalendarMonthView({
   );
 
   const [sheetOpen, setSheetOpen] = useBoolean();
-  const [selectedAudienciaId, setSelectedAudienciaId] = useMemo(() => [0,0], []);
+  const [selectedAudienciaId, setSelectedAudienciaId] = useState<number | null>(null);
 
   const handleAudienciaClick = (audienciaId: number) => {
     setSelectedAudienciaId(audienciaId);
@@ -116,7 +116,7 @@ export function AudienciasCalendarMonthView({
           );
         })}
       </div>
-      {selectedAudienciaId && (
+      {selectedAudienciaId !== null && (
         <AudienciaDetailSheet
           audienciaId={selectedAudienciaId}
           open={sheetOpen.value}
