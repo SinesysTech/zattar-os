@@ -1,12 +1,6 @@
-'use client';
 
-import dynamic from 'next/dynamic';
-
-const SalariosContent = dynamic(
-  () => import('./salarios-content').then(mod => ({ default: mod.SalariosContent })),
-  { ssr: false }
-);
+import { SalariosList } from '@/features/rh/components/salarios/salarios-list';
 
 export default function SalariosPage() {
-  return <SalariosContent />;
+  return <SalariosList />;
 }

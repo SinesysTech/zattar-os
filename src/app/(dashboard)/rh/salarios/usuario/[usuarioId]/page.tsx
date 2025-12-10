@@ -1,10 +1,11 @@
 'use client';
 
 import * as React from 'react';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useSalariosDoUsuario } from '@/app/_lib/hooks/use-salarios';
-import { calcularDuracaoVigencia } from '@/backend/types/financeiro/salarios.types';
+import { useSalariosDoUsuario } from '@/features/rh/hooks';
+import { calcularDuracaoVigencia } from '@/features/rh/utils';
 
 interface PageProps {
   params: Promise<{ usuarioId: string }>;

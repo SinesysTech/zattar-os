@@ -1,9 +1,11 @@
 /**
  * Service de Obrigações Jurídicas
  * Casos de uso e orquestração de regras de negócio
+ * Reutiliza serviços de domínio da feature obrigacoes
  */
 
 import { ObrigacoesRepository } from '../repository/obrigacoes';
+import * as ObrigacoesServiceBase from '@/features/obrigacoes/service';
 import {
     calcularSplitPagamento,
     validarIntegridadeParcela,

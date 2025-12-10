@@ -7,3 +7,5 @@ export * from './conciliacao';
 export * from './obrigacoes';
 export * from './plano-contas';
 export * from './fluxo-caixa';
+export * from './dre';
+export * from './orcamentos';

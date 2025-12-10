@@ -10,60 +10,30 @@ import type {
     ComparativoDRE,
     EvolucaoDRE,
     GerarDREDTO,
-    PeriodoDRE,
     CategoriaDRE
 } from '../types/dre';
+import {
+    validarGerarDREDTO,
+    gerarDescricaoPeriodo,
+    calcularPeriodoAnterior,
+    calcularMargem,
+    calcularEBITDA,
+    calcularReceitaLiquida,
+    calcularLucroBruto,
+    calcularLucroOperacional,
+    calcularResultadoFinanceiro,
+    calcularLucroLiquido
+} from '../domain/dre';
 
 // ============================================================================
 // Helpers
 // ============================================================================
 
-const MESES_NOMES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-
-function gerarDescricaoPeriodo(dataInicio: string, dataFim: string, tipo?: PeriodoDRE): string {
-    const inicio = new Date(dataInicio);
-    const fim = new Date(dataFim);
-
-    if (tipo === 'mensal') {
-        return `${MESES_NOMES[inicio.getMonth()]} ${inicio.getFullYear()}`;
-    } else if (tipo === 'trimestral') {
-        const trimestre = Math.floor(inicio.getMonth() / 3) + 1;
-        return `${trimestre}º Trimestre ${inicio.getFullYear()}`;
-    } else if (tipo === 'semestral') {
-        const semestre = inicio.getMonth() < 6 ? '1º' : '2º';
-        return `${semestre} Semestre ${inicio.getFullYear()}`;
-    } else {
-        return `${inicio.getFullYear()}`;
-    }
-}
-
 function calcularPercentuais(categorias: CategoriaDRE[], total: number): CategoriaDRE[] {
     return categorias.map(c => ({
         ...c,
-        percentualReceita: total > 0 ? (c.valor / total) * 100 : 0
+        percentualReceita: calcularMargem(c.valor, total)
     }));
-}
-
-function calcularPeriodoAnterior(dataInicio: string, dataFim: string): { dataInicio: string; dataFim: string } {
-    const inicio = new Date(dataInicio);
-    const fim = new Date(dataFim);
-
-    // Calcular diferença em meses
-    const mesesDiff = (fim.getFullYear() - inicio.getFullYear()) * 12 +
-        (fim.getMonth() - inicio.getMonth()) + 1;
-
-    // Subtrair mesma quantidade de meses
-    const novoInicio = new Date(inicio);
-    novoInicio.setMonth(novoInicio.getMonth() - mesesDiff);
-
-    const novoFim = new Date(inicio);
-    novoFim.setDate(novoFim.getDate() - 1);
-
-    return {
-        dataInicio: novoInicio.toISOString().split('T')[0],
-        dataFim: novoFim.toISOString().split('T')[0]
-    };
 }
 
 // ============================================================================
@@ -75,6 +45,12 @@ export const DREService = {
      * Calcula DRE para um período
      */
     async calcularDRE(dto: GerarDREDTO): Promise<DRE> {
+        // Validar DTO usando regras do domain
+        const validacao = validarGerarDREDTO(dto);
+        if (!validacao.valido) {
+            throw new Error(`DTO inválido: ${validacao.erros.join(', ')}`);
+        }
+
         const { dataInicio, dataFim, tipo } = dto;
 
         // Buscar dados em paralelo
@@ -86,21 +62,21 @@ export const DREService = {
 
         const { receitaBruta, despesasOperacionais, custosDiretos } = totais;
 
-        // Calcular valores do DRE
+        // Calcular valores do DRE usando funções do domain
         const deducoes = 0; // TODO: Implementar deduções quando houver categorias específicas
-        const receitaLiquida = receitaBruta - deducoes;
-        const lucroBruto = receitaLiquida - custosDiretos;
-        const lucroOperacional = lucroBruto - despesasOperacionais;
+        const receitaLiquida = calcularReceitaLiquida(receitaBruta, deducoes);
+        const lucroBruto = calcularLucroBruto(receitaLiquida, custosDiretos);
+        const lucroOperacional = calcularLucroOperacional(lucroBruto, despesasOperacionais);
 
         // Para simplificar, valores financeiros e impostos são zero por enquanto
         const depreciacaoAmortizacao = 0;
-        const ebitda = lucroOperacional + depreciacaoAmortizacao;
+        const ebitda = calcularEBITDA(lucroOperacional, depreciacaoAmortizacao);
         const receitasFinanceiras = 0;
         const despesasFinanceiras = 0;
-        const resultadoFinanceiro = receitasFinanceiras - despesasFinanceiras;
+        const resultadoFinanceiro = calcularResultadoFinanceiro(receitasFinanceiras, despesasFinanceiras);
         const resultadoAntesImposto = lucroOperacional + resultadoFinanceiro;
         const impostos = 0;
-        const lucroLiquido = resultadoAntesImposto - impostos;
+        const lucroLiquido = calcularLucroLiquido(resultadoAntesImposto, impostos);
 
         const resumo: ResumoDRE = {
             receitaBruta,
@@ -108,20 +84,20 @@ export const DREService = {
             receitaLiquida,
             custosDiretos,
             lucroBruto,
-            margemBruta: receitaLiquida > 0 ? (lucroBruto / receitaLiquida) * 100 : 0,
+            margemBruta: calcularMargem(lucroBruto, receitaLiquida),
             despesasOperacionais,
             lucroOperacional,
-            margemOperacional: receitaLiquida > 0 ? (lucroOperacional / receitaLiquida) * 100 : 0,
+            margemOperacional: calcularMargem(lucroOperacional, receitaLiquida),
             depreciacaoAmortizacao,
             ebitda,
-            margemEBITDA: receitaLiquida > 0 ? (ebitda / receitaLiquida) * 100 : 0,
+            margemEBITDA: calcularMargem(ebitda, receitaLiquida),
             receitasFinanceiras,
             despesasFinanceiras,
             resultadoFinanceiro,
             resultadoAntesImposto,
             impostos,
             lucroLiquido,
-            margemLiquida: receitaLiquida > 0 ? (lucroLiquido / receitaLiquida) * 100 : 0
+            margemLiquida: calcularMargem(lucroLiquido, receitaLiquida)
         };
 
         return {

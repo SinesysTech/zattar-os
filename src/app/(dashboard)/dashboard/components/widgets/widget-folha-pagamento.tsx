@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useFolhaDoPeriodo } from '@/app/_lib/hooks/use-folhas-pagamento';
-import { MESES_LABELS, STATUS_FOLHA_LABELS, STATUS_FOLHA_CORES } from '@/backend/types/financeiro/salarios.types';
+
+import { useFolhaDoPeriodo } from '@/features/rh/hooks';
+
+import { MESES_LABELS, STATUS_FOLHA_LABELS, STATUS_FOLHA_CORES } from '@/features/rh';
 
 const formatCurrency = (valor: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor ?? 0);
