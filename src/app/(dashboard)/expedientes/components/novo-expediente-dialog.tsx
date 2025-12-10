@@ -1201,8 +1201,9 @@ export function NovoExpedienteDialog({
               Criar Expediente
             </Button>
           </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
-}
+                  </form>
+                </DialogContent>
+              </Dialog>
+            );
+          } else {
+        
