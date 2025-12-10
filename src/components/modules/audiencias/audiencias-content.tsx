@@ -90,7 +90,6 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
     pagina: 1, // Will be managed by list view for pagination
     limite: 1000, // Large limit for calendar views
     busca: busca || undefined,
-    status: statusFiltro === 'todas' ? undefined : statusFiltro,
     modalidade: modalidadeFiltro === 'todas' ? undefined : modalidadeFiltro,
     trt: trtFiltro === 'todas' ? undefined : trtFiltro,
     grau: grauFiltro === 'todas' ? undefined : grauFiltro,
@@ -152,7 +151,15 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
 
   return (
     <div className="flex flex-col h-full">
-      <TableToolbar title="Audiências" createButtonLabel="Nova Audiência">
+      <TableToolbar 
+        title="Audiências" 
+        createButtonLabel="Nova Audiência"
+        searchValue={busca}
+        onSearchChange={setBusca}
+        searchPlaceholder="Buscar audiências..."
+        selectedFilters={[]}
+        onFiltersChange={() => {}}
+      >
         <div className="flex items-center space-x-2">
           {visualizacao !== 'lista' && (
             <>
@@ -237,8 +244,12 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
           </Select>
 
           <Select
-            value={responsavelFiltro}
-            onValueChange={(value: number | 'null' | 'todos') => setResponsavelFiltro(value)}
+            value={responsavelFiltro.toString()}
+            onValueChange={(value: string) => {
+              if (value === 'todos') setResponsavelFiltro('todos');
+              else if (value === 'null') setResponsavelFiltro('null');
+              else setResponsavelFiltro(Number(value));
+            }}
           >
             <SelectTrigger className="h-8 w-[180px]">
               <SelectValue placeholder="Responsável" />
@@ -247,14 +258,17 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
               <SelectItem value="todos">Todos os Responsáveis</SelectItem>
               <SelectItem value="null">Sem Responsável</SelectItem>
               {usuarios.map(user => (
-                <SelectItem key={user.id} value={user.id.toString()}>{user.nome}</SelectItem>
+                <SelectItem key={user.id} value={user.id.toString()}>{user.nomeExibicao || user.nomeCompleto}</SelectItem>
               ))}
             </SelectContent>
           </Select>
 
           <Select
-            value={tipoAudienciaFiltro}
-            onValueChange={(value: number | 'todos') => setTipoAudienciaFiltro(value)}
+            value={tipoAudienciaFiltro.toString()}
+            onValueChange={(value: string) => {
+              if (value === 'todos') setTipoAudienciaFiltro('todos');
+              else setTipoAudienciaFiltro(Number(value));
+            }}
           >
             <SelectTrigger className="h-8 w-[180px]">
               <SelectValue placeholder="Tipo de Audiência" />
