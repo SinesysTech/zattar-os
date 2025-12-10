@@ -1,3 +1,4 @@
+
 'use client';
 
 // Dialog para edição de avatar do perfil do usuário
@@ -12,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { AvatarUpload } from '@/components/ui/avatar-upload';
 import { toast } from 'sonner';
+import { actionUploadAvatar, actionRemoverAvatar } from '../../actions/avatar-actions';
 
 interface AvatarEditDialogProps {
   open: boolean;
@@ -54,19 +56,14 @@ export function AvatarEditDialog({
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch(`/api/usuarios/${usuarioId}/avatar`, {
-        method: 'POST',
-        body: formData,
-      });
+      const result = await actionUploadAvatar(usuarioId, formData);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao fazer upload');
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao fazer upload');
       }
 
       // Atualizar URL local
-      setCurrentAvatarUrl(data.data.avatarUrl);
+      setCurrentAvatarUrl(result.data as string);
 
       toast.success('Sua foto de perfil foi atualizada com sucesso.');
 
@@ -83,14 +80,10 @@ export function AvatarEditDialog({
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/usuarios/${usuarioId}/avatar`, {
-        method: 'DELETE',
-      });
+      const result = await actionRemoverAvatar(usuarioId);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao remover avatar');
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao remover avatar');
       }
 
       // Limpar URL local

@@ -1,6 +1,5 @@
-'use client';
 
-// Componente Dialog para criação de novo usuário
+'use client';
 
 import * as React from 'react';
 import {
@@ -17,10 +16,9 @@ import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2 } from 'lucide-react';
-import type {
-  UsuarioDados,
-  GeneroUsuario,
-} from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import { toast } from 'sonner';
+import { actionCriarUsuario } from '../../actions/usuarios-actions';
+import type { UsuarioDados, GeneroUsuario } from '../../types';
 
 interface UsuarioCreateDialogProps {
   open: boolean;
@@ -37,15 +35,15 @@ export function UsuarioCreateDialog({
   const [error, setError] = React.useState<string | null>(null);
 
   // Form state
+  // Nota: senha é obrigatória na criação pela interface
   const [formData, setFormData] = React.useState<
-    Partial<UsuarioDados & { senha: string }>
+    Partial<UsuarioDados & { senha?: string }>
   >({
     ativo: true,
   });
 
   React.useEffect(() => {
     if (!open) {
-      // Resetar formulário quando fechar
       setFormData({ ativo: true });
       setError(null);
     }
@@ -58,7 +56,6 @@ export function UsuarioCreateDialog({
     setError(null);
 
     try {
-      // Validar campos obrigatórios
       if (
         !formData.nomeCompleto ||
         !formData.nomeExibicao ||
@@ -69,31 +66,31 @@ export function UsuarioCreateDialog({
         throw new Error('Preencha todos os campos obrigatórios');
       }
 
-      const response = await fetch('/api/usuarios', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          senha: formData.senha,
-        }),
-      });
+      // Casting para passar os dados requeridos, omitindo authUserId que vem do action se necessário
+      const payload = {
+         nomeCompleto: formData.nomeCompleto,
+         nomeExibicao: formData.nomeExibicao,
+         cpf: formData.cpf,
+         emailCorporativo: formData.emailCorporativo,
+         senha: formData.senha,
+         rg: formData.rg,
+         dataNascimento: formData.dataNascimento,
+         genero: formData.genero,
+         oab: formData.oab,
+         ufOab: formData.ufOab,
+         emailPessoal: formData.emailPessoal,
+         telefone: formData.telefone,
+         ramal: formData.ramal,
+         ativo: formData.ativo,
+      };
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({
-          error: 'Erro desconhecido',
-        }));
-        throw new Error(
-          errorData.error || `Erro ${response.status}: ${response.statusText}`
-        );
+      const result = await actionCriarUsuario(payload);
+
+      if (!result.sucesso) {
+        throw new Error(result.erro || 'Erro ao criar usuário');
       }
 
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error('Resposta da API indicou falha');
-      }
-
+      toast.success('Usuário criado com sucesso!');
       onSuccess();
       onOpenChange(false);
     } catch (err) {
@@ -127,7 +124,6 @@ export function UsuarioCreateDialog({
               </div>
             )}
 
-            {/* Campos obrigatórios em grid 2 colunas */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="nomeCompleto">
@@ -311,7 +307,6 @@ export function UsuarioCreateDialog({
               />
             </div>
 
-            {/* Status do usuário */}
             <div className="border-t pt-4">
               <div className="flex items-center space-x-2">
                 <Checkbox

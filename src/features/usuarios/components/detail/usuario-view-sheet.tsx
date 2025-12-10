@@ -1,6 +1,5 @@
-'use client';
 
-// Componente Sheet para visualização de usuário
+'use client';
 
 import * as React from 'react';
 import {
@@ -21,8 +20,8 @@ import {
   formatarData,
   formatarEnderecoCompleto,
   formatarGenero,
-} from '@/app/_lib/utils/format-usuarios';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+} from '../../utils';
+import type { Usuario } from '../../types';
 
 interface UsuarioViewSheetProps {
   open: boolean;
@@ -53,7 +52,6 @@ export function UsuarioViewSheet({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Informações Básicas */}
           <div className="space-y-4">
             <Typography.H4>Informações Básicas</Typography.H4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -110,7 +108,6 @@ export function UsuarioViewSheet({
 
           <Separator />
 
-          {/* Informações Profissionais */}
           {(usuario.oab || usuario.ufOab) && (
             <>
               <div className="space-y-4">
@@ -132,7 +129,6 @@ export function UsuarioViewSheet({
             </>
           )}
 
-          {/* Contato */}
           <div className="space-y-4">
             <Typography.H4>Contato</Typography.H4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -166,7 +162,6 @@ export function UsuarioViewSheet({
             </div>
           </div>
 
-          {/* Endereço */}
           {usuario.endereco && (
             <>
               <Separator />
@@ -181,7 +176,6 @@ export function UsuarioViewSheet({
             </>
           )}
 
-          {/* Informações do Sistema */}
           <Separator />
           <div className="space-y-4">
             <Typography.H4>Informações do Sistema</Typography.H4>
@@ -209,4 +203,3 @@ export function UsuarioViewSheet({
     </Dialog>
   );
 }
-

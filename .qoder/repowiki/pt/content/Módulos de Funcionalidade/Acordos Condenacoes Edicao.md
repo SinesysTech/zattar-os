@@ -2,224 +2,96 @@
 
 <cite>
 **Arquivos Referenciados neste Documento**   
-- [app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx](file://app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx)
-- [app/(dashboard)/acordos-condenacoes/[id]/page.tsx](file://app/(dashboard)/acordos-condenacoes/[id]/page.tsx)
-- [app/(dashboard)/acordos-condenacoes/novo/page.tsx](file://app/(dashboard)/acordos-condenacoes/novo/page.tsx)
-- [app/(dashboard)/acordos-condenacoes/page.tsx](file://app/(dashboard)/acordos-condenacoes/page.tsx)
-- [components/acordos-condenacoes/acordo-condenacao-form.tsx](file://components/acordos-condenacoes/acordo-condenacao-form.tsx)
-- [components/acordos-condenacoes/parcelas-table.tsx](file://components/acordos-condenacoes/parcelas-table.tsx)
-- [components/acordos-condenacoes/edit-parcela-dialog.tsx](file://components/acordos-condenacoes/edit-parcela-dialog.tsx)
-- [backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts](file://backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts)
-- [backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service.ts](file://backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service.ts)
-- [backend/acordos-condenacoes/services/persistence/parcela-persistence.service.ts](file://backend/acordos-condenacoes/services/persistence/parcela-persistence.service.ts)
-- [backend/acordos-condenacoes/services/parcelas/marcar-como-recebida.service.ts](file://backend/acordos-condenacoes/services/parcelas/marcar-como-recebida.service.ts)
-- [backend/acordos-condenacoes/services/parcelas/recalcular-distribuicao.service.ts](file://backend/acordos-condenacoes/services/parcelas/recalcular-distribuicao.service.ts)
+- [supabase/schemas/20_acordos_condenacoes.sql](file://supabase/schemas/20_acordos_condenacoes.sql)
+- [openspec/changes/archive/2025-11-22-add-acordos-condenacoes-pagamentos/specs/acordos-condenacoes/spec.md](file://openspec/changes/archive/2025-11-22-add-acordos-condenacoes-pagamentos/specs/acordos-condenacoes/spec.md)
 </cite>
 
 ## Sumário
 1. [Introdução](#introdução)
-2. [Estrutura do Projeto](#estrutura-do-projeto)
-3. [Componentes Principais](#componentes-principais)
-4. [Visão Geral da Arquitetura](#visão-geral-da-arquitetura)
-5. [Análise Detalhada dos Componentes](#análise-detalhada-dos-componentes)
-6. [Análise de Dependências](#análise-de-dependências)
-7. [Considerações de Desempenho](#considerações-de-desempenho)
-8. [Guia de Solução de Problemas](#guia-de-solução-de-problemas)
-9. [Conclusão](#conclusão)
+2. [Status da Funcionalidade](#status-da-funcionalidade)
+3. [Histórico do Módulo](#histórico-do-módulo)
+4. [Estrutura de Dados Original](#estrutura-de-dados-original)
+5. [Especificações Técnicas](#especificações-técnicas)
 
 ## Introdução
-Este documento fornece uma análise detalhada do módulo de edição de acordos e condenações no sistema Sinesys, utilizado pelo escritório Zattar Advogados. O sistema permite o gerenciamento completo de acordos, condenações e custas processuais, com foco em controle de parcelas, distribuição de valores e repasses. A documentação abrange desde a estrutura de diretórios até os serviços de backend que implementam a lógica de negócio, com ênfase no fluxo de edição de acordos existentes.
+Este documento fornece informações sobre o módulo de acordos e condenações no sistema Sinesys, que foi removido do sistema. O módulo anteriormente permitia o gerenciamento completo de acordos, condenações e custas processuais, com foco em controle de parcelas, distribuição de valores e repasses. Esta documentação agora serve como registro histórico da funcionalidade que não está mais disponível no sistema.
 
-## Estrutura do Projeto
-O módulo de acordos e condenações está organizado dentro da estrutura de diretórios do Next.js, com separação clara entre componentes frontend, páginas de rota e serviços de backend. A estrutura reflete um padrão de organização por recursos (feature-based), facilitando a manutenção e escalabilidade do código.
+## Status da Funcionalidade
+A funcionalidade de acordos e condenações **foi removida do sistema** e não está mais disponível para uso. Todos os arquivos de frontend e backend relacionados a este módulo foram excluídos do código base. Qualquer referência a esta funcionalidade em documentos ou processos deve ser atualizada para refletir que esta funcionalidade não existe mais no sistema.
 
-```mermaid
-graph TB
-subgraph "Frontend"
-A[app/(dashboard)/acordos-condenacoes]
-A --> B[[page.tsx]]
-A --> C[[novo/page.tsx]]
-A --> D[[[id]/page.tsx]]
-A --> E[[[id]/editar/page.tsx]]
-end
-subgraph "Componentes"
-F[components/acordos-condenacoes]
-F --> G[acordo-condenacao-form.tsx]
-F --> H[parcelas-table.tsx]
-F --> I[edit-parcela-dialog.tsx]
-end
-subgraph "Backend"
-J[backend/acordos-condenacoes/services]
-J --> K[acordos-condenacoes]
-J --> L[persistence]
-J --> M[parcelas]
-end
-A --> F
-D --> G
-K --> L
-M --> L
-```
-
-**Fontes do Diagrama**
-- [app/(dashboard)/acordos-condenacoes](file://app/(dashboard)/acordos-condenacoes)
-- [components/acordos-condenacoes](file://components/acordos-condenacoes)
-- [backend/acordos-condenacoes/services](file://backend/acordos-condenacoes/services)
+## Histórico do Módulo
+O módulo de acordos e condenações foi implementado como parte da funcionalidade de gestão financeira do sistema, conforme documentado no arquivo de especificações `add-acordos-condenacoes-pagamentos`. A funcionalidade foi projetada para permitir o gerenciamento completo de acordos, condenações e custas processuais vinculados a processos jurídicos.
 
 **Fontes da Seção**
-- [app/(dashboard)/acordos-condenacoes](file://app/(dashboard)/acordos-condenacoes)
+- [openspec/changes/archive/2025-11-22-add-acordos-condenacoes-pagamentos/specs/acordos-condenacoes/spec.md](file://openspec/changes/archive/2025-11-22-add-acordos-condenacoes-pagamentos/specs/acordos-condenacoes/spec.md)
 
-## Componentes Principais
-Os componentes principais do módulo de acordos e condenações são responsáveis pela interface de usuário e pela lógica de interação com o backend. O componente principal é o formulário de acordo/condenação, que é reutilizado tanto para criação quanto para edição, recebendo dados iniciais quando em modo de edição.
-
-**Fontes da Seção**
-- [components/acordos-condenacoes/acordo-condenacao-form.tsx](file://components/acordos-condenacoes/acordo-condenacao-form.tsx)
-- [components/acordos-condenacoes/parcelas-table.tsx](file://components/acordos-condenacoes/parcelas-table.tsx)
-- [components/acordos-condenacoes/edit-parcela-dialog.tsx](file://components/acordos-condenacoes/edit-parcela-dialog.tsx)
-
-## Visão Geral da Arquitetura
-A arquitetura do módulo segue um padrão de camadas bem definido, com separação entre apresentação, lógica de negócio e persistência. O frontend utiliza React com Next.js, enquanto o backend implementa serviços em TypeScript que se comunicam com um banco de dados Supabase.
+## Estrutura de Dados Original
+A estrutura de dados do módulo era composta por duas tabelas principais no banco de dados Supabase: `acordos_condenacoes` e `parcelas`. Essas tabelas armazenavam informações sobre acordos, condenações e custas processuais, bem como suas parcelas individuais.
 
 ```mermaid
 graph TD
-A[Frontend] --> B[API Routes]
-B --> C[Services]
-C --> D[Persistence]
-D --> E[Supabase]
-A --> |Exibe| F[AcordoCondenacaoForm]
-F --> |Envia dados| B
-B --> |Chama| C
-C --> |Valida e processa| D
-D --> |Consulta/Atualiza| E
+A[acordos_condenacoes] --> B[parcelas]
+A --> C[acervo]
+B --> D[usuarios]
+subgraph "Tabela: acordos_condenacoes"
+A
+A1[id]
+A2[processo_id]
+A3[tipo]
+A4[direcao]
+A5[valor_total]
+A6[data_vencimento_primeira_parcela]
+A7[status]
+A8[numero_parcelas]
+A9[forma_distribuicao]
+A10[percentual_escritorio]
+A11[percentual_cliente]
+A12[honorarios_sucumbenciais_total]
+end
+subgraph "Tabela: parcelas"
+B
+B1[id]
+B2[acordo_condenacao_id]
+B3[numero_parcela]
+B4[valor_bruto_credito_principal]
+B5[honorarios_sucumbenciais]
+B6[honorarios_contratuais]
+B7[data_vencimento]
+B8[status]
+B9[data_efetivacao]
+B10[forma_pagamento]
+B11[dados_pagamento]
+B12[editado_manualmente]
+B13[valor_repasse_cliente]
+B14[status_repasse]
+B15[arquivo_declaracao_prestacao_contas]
+B16[arquivo_comprovante_repasse]
+B17[data_repasse]
+B18[usuario_repasse_id]
+end
 ```
 
-**Fontes do Diagrama**
-- [app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx](file://app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx)
-- [backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts](file://backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts)
-- [backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service.ts](file://backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service.ts)
+**Diagram sources**
+- [supabase/schemas/20_acordos_condenacoes.sql](file://supabase/schemas/20_acordos_condenacoes.sql)
 
-## Análise Detalhada dos Componentes
+## Especificações Técnicas
+As especificações técnicas originais do módulo definiam os requisitos funcionais e não funcionais para o gerenciamento de acordos e condenações. A funcionalidade incluía operações completas de CRUD, suporte a diferentes tipos de registros financeiros e cálculos automáticos de honorários.
 
-### Análise do Componente de Edição
-O componente de edição de acordos/condenações permite a atualização de informações existentes, mantendo a integridade dos dados e a consistência com as regras de negócio definidas.
+### Tipos de Registro
+O sistema suportava três tipos distintos de registros financeiros:
+- **Acordo**: Registro de acordos entre partes
+- **Condenação**: Registro de condenações judiciais
+- **Custas Processuais**: Custas e despesas processuais
 
-#### Para Componentes Baseados em Objetos:
-```mermaid
-classDiagram
-class EditarAcordoCondenacaoPage {
-+useRouter() Router
-+loadAcordo() Promise~void~
-+handleSuccess() void
-+handleCancel() void
--acordo : AcordoCondenacao
--isLoading : boolean
--error : string
-}
-class AcordoCondenacaoForm {
-+handleSubmit(e : FormEvent) void
-+handleCancel() void
--tipo : string
--direcao : string
--valorTotal : string
--dataVencimento : string
--numeroParcelas : number
-}
-EditarAcordoCondenacaoPage --> AcordoCondenacaoForm : "usa"
-```
+### Formas de Distribuição
+O sistema permitia duas formas de distribuição de valores recebidos:
+- **Distribuição Integral**: O escritório recebe o valor total e realiza o repasse ao cliente
+- **Distribuição Dividida**: Cada parte recebe diretamente seu valor
 
-**Fontes do Diagrama**
-- [app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx](file://app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx)
-- [components/acordos-condenacoes/acordo-condenacao-form.tsx](file://components/acordos-condenacoes/acordo-condenacao-form.tsx)
+### Cálculo de Honorários
+O sistema calculava automaticamente:
+- **Honorários Contratuais**: Calculados com base no percentual definido (padrão 30%)
+- **Honorários Sucumbenciais**: Valor total distribuído entre as parcelas
 
-#### Para Componentes de API/Serviço:
-```mermaid
-sequenceDiagram
-participant Frontend as "Frontend"
-participant API as "API Route"
-participant Service as "criarAcordoComParcelas"
-participant Persistence as "acordo-condenacao-persistence"
-Frontend->>API : PUT /api/acordos-condenacoes/{id}
-API->>Service : atualizarAcordoCondenacao(dados)
-Service->>Persistence : validarDadosAcordo()
-Persistence-->>Service : validação
-Service->>Persistence : atualizarAcordoCondenacao()
-Persistence-->>Service : acordo atualizado
-Service-->>API : sucesso
-API-->>Frontend : 200 OK
-```
-
-**Fontes do Diagrama**
-- [backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts](file://backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts)
-- [backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service.ts](file://backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service.ts)
-
-#### Para Componentes de Lógica Complexa:
-```mermaid
-flowchart TD
-A[Iniciar Edição] --> B{Validar Dados}
-B --> |Válidos| C[Atualizar Acordo]
-B --> |Inválidos| D[Exibir Erros]
-C --> E[Recalcular Parcelas]
-E --> F{Forma Distribuição}
-F --> |Integral| G[Definir Repasse Pendente]
-F --> |Dividido| H[Atualizar Status Parcelas]
-G --> I[Atualizar Status Acordo]
-H --> I
-I --> J[Retornar Sucesso]
-```
-
-**Fontes do Diagrama**
-- [backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts](file://backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts)
-- [backend/acordos-condenacoes/services/parcelas/recalcular-distribuicao.service.ts](file://backend/acordos-condenacoes/services/parcelas/recalcular-distribuicao.service.ts)
-
-**Fontes da Seção**
-- [app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx](file://app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx)
-- [backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts](file://backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts)
-
-### Visão Conceitual
-A funcionalidade de edição de acordos/condenações é parte integrante do sistema de gestão financeira do escritório, permitindo ajustes precisos em acordos já estabelecidos. O sistema garante que todas as alterações mantenham a consistência dos dados financeiros e respeitem as regras de negócio definidas.
-
-```mermaid
-flowchart LR
-A[Usuário] --> B[Interface de Edição]
-B --> C[Validação de Dados]
-C --> D[Atualização no Banco]
-D --> E[Recálculo Automático]
-E --> F[Atualização de Status]
-F --> G[Notificação de Sucesso]
-```
-
-## Análise de Dependências
-O módulo de acordos e condenações possui dependências bem definidas entre seus componentes, garantindo baixo acoplamento e alta coesão. As dependências principais são entre os componentes de interface, os serviços de backend e o sistema de persistência.
-
-```mermaid
-graph TD
-A[EditarAcordoCondenacaoPage] --> B[AcordoCondenacaoForm]
-B --> C[API Routes]
-C --> D[criarAcordoComParcelas]
-D --> E[acordo-condenacao-persistence]
-D --> F[parcela-persistence]
-E --> G[Supabase]
-F --> G
-```
-
-**Fontes do Diagrama**
-- [app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx](file://app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx)
-- [backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts](file://backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts)
-- [backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service.ts](file://backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service.ts)
-- [backend/acordos-condenacoes/services/persistence/parcela-persistence.service.ts](file://backend/acordos-condenacoes/services/persistence/parcela-persistence.service.ts)
-
-**Fontes da Seção**
-- [backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts](file://backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts)
-- [backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service.ts](file://backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service.ts)
-
-## Considerações de Desempenho
-O sistema implementa várias otimizações para garantir bom desempenho, especialmente na manipulação de grandes volumes de dados financeiros. O uso de paginação na listagem de acordos e o carregamento sob demanda de dados específicos minimizam o tráfego de rede e o consumo de memória.
-
-## Guia de Solução de Problemas
-O sistema inclui mecanismos robustos de tratamento de erros, com mensagens claras para o usuário e logs detalhados no backend. Problemas comuns incluem validações de dados, conflitos de concorrência e erros de conexão com o banco de dados.
-
-**Fontes da Seção**
-- [app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx](file://app/(dashboard)/acordos-condenacoes/[id]/editar/page.tsx)
-- [backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts](file://backend/acordos-condenacoes/services/acordos-condenacoes/criar-acordo-condenacao.service.ts)
-
-## Conclusão
-O módulo de edição de acordos e condenações no sistema Sinesys é uma implementação robusta e bem estruturada que atende às necessidades complexas de gestão financeira de um escritório de advocacia. A arquitetura em camadas, a separação clara de responsabilidades e a implementação cuidadosa das regras de negócio garantem a integridade dos dados e a usabilidade do sistema. A documentação detalhada dos componentes e fluxos permite fácil manutenção e futuras extensões.
+**Section sources**
+- [openspec/changes/archive/2025-11-22-add-acordos-condenacoes-pagamentos/specs/acordos-condenacoes/spec.md](file://openspec/changes/archive/2025-11-22-add-acordos-condenacoes-pagamentos/specs/acordos-condenacoes/spec.md)

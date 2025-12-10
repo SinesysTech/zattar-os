@@ -1,6 +1,3 @@
-/**
- * Componente de matriz de permissões
- */
 
 'use client';
 
@@ -19,9 +16,8 @@ import {
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Shield, Save, RotateCcw, Info, Loader2, AlertCircle } from 'lucide-react';
-import type { PermissaoMatriz } from '@/app/_lib/types/usuarios';
-import { formatarNomeRecurso, formatarNomeOperacao, contarPermissoesAtivas } from '@/app/_lib/utils/permissoes-utils';
-import { obterTotalPermissoes } from '@/backend/types/permissoes/types';
+import type { PermissaoMatriz } from '../../types';
+import { formatarNomeRecurso, formatarNomeOperacao, contarPermissoesAtivas, obterTotalPermissoes } from '../../permissions-utils';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
 
@@ -199,7 +195,6 @@ export function PermissoesMatriz({
         </CardContent>
       </Card>
 
-      {/* Dialog de confirmação */}
       <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
         <DialogContent>
           <DialogHeader>

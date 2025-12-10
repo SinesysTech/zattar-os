@@ -1,3 +1,4 @@
+
 'use client';
 
 // Componente de paginação para visualização em cards
@@ -96,4 +97,3 @@ export function UsuariosPagination({
     </div>
   );
 }
-
