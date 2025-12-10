@@ -28,19 +28,13 @@
 # - Memória limitada para evitar OOM no CapRover
 #
 # ============================================================================
-# TROUBLESHOOTING DE MEMÓRIA
+# TROUBLESHOOTING
 # ============================================================================
-# Se o build falhar com OOM:
-# 1. Verifique memória disponível no servidor: free -h
-# 2. Aumente memória do build no CapRover (App Configs → Build Memory)
-# 3. Considere adicionar swap: sudo fallocate -l 4G /swapfile
-# 4. Execute script de verificação: bash scripts/check-build-memory.sh
-# 5. Veja documentação completa em DEPLOY.md seção "Proteções Contra OOM"
-# 
-# Sintomas comuns de OOM:
-# - "JavaScript heap out of memory" → Aumentar NODE_OPTIONS
-# - "Killed" ou exit code 137 → Sistema matou processo, adicionar swap
-# - Build muito lento → Usando swap, aumentar RAM física
+# Build acontece no GitHub Actions, não no servidor de produção.
+# Se houver problemas:
+# 1. Verifique logs do GitHub Actions
+# 2. Verifique se secrets estão configurados (NEXT_PUBLIC_SUPABASE_*)
+# 3. Veja documentação completa em DEPLOY.md
 # ============================================================================
 # ESTRATÉGIA GERAL DE CACHE DOCKER
 # ============================================================================
@@ -88,40 +82,23 @@ FROM node:22-slim AS builder
 WORKDIR /app
 
 # Memória para Node.js durante build
-# 6GB é necessário para projetos grandes com muitas dependências (+150 deps)
-# Aumentado de 4GB para 6GB para evitar OOM durante build
-ENV NODE_OPTIONS="--max-old-space-size=6144"
+# Build acontece no GitHub Actions, não no CapRover
+# Valor padrão do Node.js é suficiente (não precisa de otimizações agressivas)
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 # ============================================================================
-# CONFIGURAÇÃO DE MEMÓRIA PARA PREVENIR OOM
+# CONFIGURAÇÃO DE MEMÓRIA
 # ============================================================================
-# NODE_OPTIONS="--max-old-space-size=6144" limita heap do Node.js a 6GB
+# NODE_OPTIONS="--max-old-space-size=4096" limita heap do Node.js a 4GB
+#
+# Build acontece no GitHub Actions (não no CapRover), então:
+# - Não precisa de otimizações agressivas de memória
+# - GitHub Actions tem recursos suficientes
+# - Builds são mais rápidos sem parallelism=1
 #
 # OTIMIZAÇÕES ADICIONAIS (ver next.config.ts):
-# - webpackMemoryOptimizations: true (reduz uso de memória)
 # - productionBrowserSourceMaps: false (economiza ~500MB)
-# - serverSourceMaps: false (reduz memória do servidor)
+# - serverSourceMaps: false (reduz tamanho da imagem)
 # - output: 'standalone' (build otimizado para Docker)
-# - parallelism: 1 (reduz uso de memória durante build)
-#
-# Por que 6GB?
-# - Next.js build com muitas dependências consome ~4-5GB em projetos grandes
-# - Projeto tem +150 dependências (Plate.js, CopilotKit, Supabase, etc.)
-# - Deixa margem para webpack e outros processos
-# - Total recomendado no servidor: 8-10GB RAM (6GB Node + 2-4GB sistema)
-#
-# Quando aumentar este valor:
-# - Build falha com "JavaScript heap out of memory"
-# - Servidor tem >12GB RAM disponível
-# - Projeto continua crescendo em complexidade
-#
-# Valores alternativos:
-# - Projetos pequenos: --max-old-space-size=2048 (2GB)
-# - Projetos médios: --max-old-space-size=4096 (4GB)
-# - Projetos grandes: --max-old-space-size=6144 (6GB) [ATUAL]
-# - Projetos muito grandes: --max-old-space-size=8192 (8GB)
-#
-# IMPORTANTE: Aumentar este valor requer aumentar memória do CapRover
-# proporcionalmente (ver DEPLOY.md seção "Proteções Contra OOM")
 # ============================================================================
 
 # Silenciar warning do baseline-browser-mapping (não afeta funcionalidade)
@@ -150,10 +127,8 @@ ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
 
-# Build da aplicação usando Webpack (mais estável para produção)
-# Webpack é production-ready e tem melhor suporte
-# Nota: Turbopack ainda é experimental para builds de produção
-# Script build:caprover inclui NODE_OPTIONS=6144 e ESLINT_NO_DEV_ERRORS=true
+# Build da aplicação usando o script específico para GitHub Actions/Docker
+# Este script usa Webpack (mais estável que Turbopack para produção)
 RUN npm run build:caprover
 
 # Stage 3: Runner (imagem final leve)

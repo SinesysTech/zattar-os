@@ -35,14 +35,39 @@ O Sinesys é composto por **3 serviços independentes**, cada um em seu próprio
 
 ## Deploy no CapRover (via Imagem Docker)
 
-O deploy do Sinesys no CapRover é feito utilizando **imagens Docker pré-construídas**, evitando builds no servidor de produção e garantindo deploys mais rápidos e confiáveis.
+O deploy do Sinesys no CapRover é feito utilizando **imagens Docker pré-construídas via GitHub Actions**, evitando builds no servidor de produção e garantindo deploys mais rápidos e confiáveis.
+
+### Arquitetura de Deploy
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    GitHub Actions                            │
+│  1. Push na branch master/main                              │
+│  2. Build da imagem Docker                                  │
+│  3. Push para Docker Hub                                    │
+│  4. Trigger deploy no CapRover (webhook)                    │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      Docker Hub                              │
+│  sinesystec/sinesys:latest                                  │
+│  sinesystec/sinesys:abc1234 (SHA)                           │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      CapRover                                │
+│  Pull imagem → Deploy → Restart container                   │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ### Pré-requisitos
 
 - CapRover instalado e configurado
 - Acesso ao dashboard do CapRover
-- Docker instalado localmente (para build da imagem)
-- Acesso a um registry Docker (Docker Hub, GitHub Container Registry, etc.)
+- Conta no Docker Hub (para armazenar imagens)
+- GitHub Actions configurado (já incluído no repositório)
 
 ### Passo 1: Criar os Apps no CapRover
 
@@ -56,42 +81,49 @@ Acesse o dashboard do CapRover e crie **3 apps**:
 
 > ⚠️ **Importante**: Habilite WebSocket Support apenas para `sinesys-browser`!
 
-### Passo 2: Build e Push da Imagem Docker
+### Passo 2: Configurar GitHub Secrets
 
-**Build local da imagem:**
+No repositório do GitHub, vá em **Settings → Secrets and variables → Actions** e adicione:
 
-```bash
-# Na raiz do repositório Sinesys
-docker build \
-  --build-arg NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co \
-  --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=sua_anon_key \
-  -t sinesys:latest .
+| Secret | Descrição | Exemplo |
+|--------|-----------|------|
+| `DOCKERHUB_USERNAME` | Username do Docker Hub | `sinesystec` |
+| `DOCKERHUB_TOKEN` | Access Token do Docker Hub | `dckr_pat_xxx` |
+| `NEXT_PUBLIC_SUPABASE_URL` | URL do Supabase | `https://xxx.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon Key do Supabase | `eyJ...` |
+| `CAPROVER_SERVER` | URL do CapRover | `https://captain.seudominio.com` |
+| `CAPROVER_APP_TOKEN` | Token do app (opcional) | Ver passo 3 |
 
-# Tag para o registry
-docker tag sinesys:latest seu-registry/sinesys:latest
+> 💡 **Dica**: Para criar um Docker Hub Access Token, acesse Docker Hub → Account Settings → Security → New Access Token
 
-# Push para o registry
-docker push seu-registry/sinesys:latest
-```
+### Passo 3: Deploy Automático (Recomendado)
 
-**Ou usando GitHub Actions (recomendado):**
-
-O projeto já possui workflow configurado em `.github/workflows/` que automatiza o build e push da imagem.
-
-### Passo 3: Deploy via Imagem no CapRover
-
-No dashboard do CapRover:
+**No CapRover:**
 
 1. Acesse **Apps → sinesys → Deployment**
-2. Na seção **Deploy via ImageName**, insira:
-   ```
-   seu-registry/sinesys:latest
-   ```
-3. Clique em **Deploy**
+2. Role até **App Webhooks**
+3. Habilite **Enable App Token**
+4. Copie o token gerado
+5. Adicione como secret `CAPROVER_APP_TOKEN` no GitHub
 
-> 💡 **Dica**: Para deploys automáticos, configure o webhook do CapRover para ser chamado após o push da imagem no GitHub Actions.
+**Resultado**: A cada push na branch `master` ou `main`, o GitHub Actions:
+- Faz build da imagem
+- Envia para Docker Hub
+- Dispara deploy automático no CapRover
 
-### Passo 4: Configurar Variáveis de Ambiente
+### Passo 4: Deploy Manual (Alternativa)
+
+Se não configurou o deploy automático:
+
+1. Aguarde o GitHub Actions completar (veja na aba **Actions** do repositório)
+2. No CapRover, acesse **Apps → sinesys → Deployment**
+3. Na seção **Deploy via ImageName**, insira:
+   ```
+   sinesystec/sinesys:latest
+   ```
+4. Clique em **Deploy**
+
+### Passo 5: Configurar Variáveis de Ambiente
 
 No dashboard do CapRover, vá em **Apps → sinesys → App Configs → Environmental Variables**:
 
@@ -119,7 +151,7 @@ MONGODB_URL=mongodb://...
 MONGODB_DATABASE=sinesys
 ```
 
-### Passo 5: Deploy dos Outros Serviços
+### Passo 6: Deploy dos Outros Serviços
 
 **Browser Service (sinesys-browser):**
 ```env
@@ -138,7 +170,7 @@ SINESYS_API_URL=http://srv-captain--sinesys:3000
 SINESYS_API_KEY=sua_api_key
 ```
 
-### Passo 6: Configurar Domínios e HTTPS
+### Passo 7: Configurar Domínios e HTTPS
 
 No dashboard do CapRover:
 
@@ -148,15 +180,17 @@ No dashboard do CapRover:
 | sinesys-mcp | mcp.seudominio.com.br (opcional) | ✅ |
 | sinesys-browser | (não expor) | — |
 
-### Vantagens do Deploy via Imagem
+### Vantagens do Deploy via GitHub Actions + Docker Hub
 
-| Aspecto | Build no CapRover | Deploy via Imagem |
-|---------|-------------------|-------------------|
+| Aspecto | Build no CapRover | Deploy via Imagem (GitHub Actions) |
+|---------|-------------------|------------------------------------|
 | **Tempo de deploy** | ~5-10 min | ~30 seg |
-| **Uso de memória** | 6-8 GB durante build | Apenas runtime (~512MB) |
+| **Uso de memória no servidor** | 6-8 GB durante build | Apenas runtime (~512MB) |
 | **Risco de OOM** | Alto | Nenhum |
 | **Consistência** | Depende do servidor | Imagem idêntica sempre |
 | **Rollback** | Rebuild necessário | Trocar tag da imagem |
+| **Build acontece** | No CapRover | No GitHub Actions |
+| **Custo do servidor** | Precisa mais RAM | Servidor menor e mais barato |
 
 ---
 
@@ -199,58 +233,44 @@ http://sinesys_app:3000
 
 ---
 
-## Scripts de Build e Configuração do Next.js
+## Scripts de Build
 
-#### Diferença entre Scripts de Build
+> ⚠️ **IMPORTANTE**: O build é feito automaticamente pelo **GitHub Actions**, não no CapRover.
+
+### Scripts Disponíveis
 
 O projeto possui diferentes scripts de build para diferentes cenários:
 
-| Script | Comando | Uso | Turbopack | Otimizações |
-|--------|---------|-----|-----------|-------------|
-| `build:prod` | `next build --webpack` | **Produção (CapRover)** | ❌ Não | Máximas |
-| `build` | `next build --turbopack` + filtros | Desenvolvimento local | ✅ Sim | Warnings filtrados |
-| `build:prod:webpack` | `next build --webpack` | Fallback se Turbopack falhar | ❌ Não | Máximas |
-| `build:prod:turbopack` | `next build --turbopack` | Produção (experimental) | ✅ Sim | Experimental |
-| `build:debug-memory` | `node scripts/run-build-debug-memory.js` | Debug de OOM | ✅ Sim | + GC trace |
-| `analyze` | `node scripts/run-analyze.js` | Análise de bundle | ✅ Sim | + Analyzer |
+| Script | Comando | Uso | Onde executa |
+|--------|---------|-----|-------------|
+| `build:caprover` | `next build --webpack` | **Produção (GitHub Actions)** | GitHub Actions |
+| `build:prod` | `next build --webpack` | Build local de produção | Local/CI |
+| `build` | `next build --turbopack` | Desenvolvimento local | Local |
+| `analyze` | `node scripts/run-analyze.js` | Análise de bundle | Local |
 
 **Por que Webpack em produção?**
 - O plugin PWA `@ducanh2912/next-pwa` requer Webpack para gerar corretamente o service worker e assets offline.
 - Garante compatibilidade total com a configuração `withPWA(...)` em `next.config.ts`.
-- Turbopack permanece disponível para desenvolvimento local e experimentos, mas não é usado no caminho principal de produção.
+- Turbopack permanece disponível para desenvolvimento local.
 
-**Quando usar Webpack?**
-- Se houver problemas de compatibilidade com Turbopack
-- Se usar plugins Webpack customizados não suportados
-- Use o script `build:prod:webpack` como fallback
+### Configurações de Build
 
-#### Otimizações de Memória no next.config.ts
-
-O `next.config.ts` inclui várias otimizações para reduzir consumo de memória:
+O `next.config.ts` inclui otimizações para redução de tamanho da imagem:
 
 **1. Source Maps desabilitados:**
 ```typescript
-productionBrowserSourceMaps: false,  // Economiza ~500MB durante build
+productionBrowserSourceMaps: false,  // Economiza ~500MB
 experimental: {
-  serverSourceMaps: false,           // Reduz memória do servidor
+  serverSourceMaps: false,           // Reduz tamanho da imagem
 }
 ```
 
-**2. Otimizações de Webpack:**
-```typescript
-experimental: {
-  webpackMemoryOptimizations: true,  // Reduz uso de memória durante build
-  webpackBuildWorker: true,          // Usa worker separado para build
-}
-```
-
-**3. Output Standalone:**
+**2. Output Standalone:**
 ```typescript
 output: 'standalone',  // Gera build otimizado para Docker (~200-300MB)
 ```
 
 **Trade-offs:**
-- `webpackMemoryOptimizations: true` pode aumentar tempo de build em ~10-20%
 - Source maps desabilitados dificultam debug em produção (use logs estruturados)
 - `typescript.ignoreBuildErrors: true` **esconde erros de tipo** - use com cautela
 

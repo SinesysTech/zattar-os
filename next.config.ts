@@ -14,13 +14,8 @@ const nextConfig: NextConfig = {
   // ESLint disabled via NEXT_LINT_DISABLED=true in Dockerfile
   // (eslint config key removed - not supported in Next.js 16)
   experimental: {
-    // Disables server source maps to reduce memory usage in the server runtime
+    // Server source maps desabilitados para reduzir tamanho da imagem Docker
     serverSourceMaps: false,
-    // Reduces memory usage during build by optimizing webpack's memory management
-    webpackMemoryOptimizations: true,
-    // Uses a separate worker for building, which can improve performance and stability
-    webpackBuildWorker: true,
-    // preloadEntriesOnStart: false, // Reduces initial memory usage but may affect performance
   },
   turbopack: {
     resolveAlias: {
@@ -42,12 +37,9 @@ const nextConfig: NextConfig = {
   },
   allowedDevOrigins: ['192.168.1.100', '192.168.1.100:3000'],
   webpack: (config, { isServer }) => {
-    // CRITICAL: Optimize webpack for memory efficiency during build
+    // Otimizar webpack para builds determinísticos
     config.optimization = config.optimization || {};
     config.optimization.moduleIds = 'deterministic';
-
-    // Reduce memory usage by limiting parallelism
-    config.parallelism = 1;
 
     // Exclude test files from bundle
     config.module = config.module || {};

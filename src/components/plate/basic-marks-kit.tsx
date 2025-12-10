@@ -13,8 +13,8 @@ import {
 } from '@platejs/basic-nodes/react';
 
 import { CodeLeaf } from '@/components/plate-ui/code-node';
-import { HighlightLeaf } from '@/components/ui/highlight-node';
-import { KbdLeaf } from '@/components/ui/kbd-node';
+import { HighlightLeaf } from '@/components/plate-ui/highlight-node';
+import { KbdLeaf } from '@/components/plate-ui/kbd-node';
 
 export const BasicMarksKit = [
   BoldPlugin,

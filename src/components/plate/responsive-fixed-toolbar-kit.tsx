@@ -1,7 +1,7 @@
 'use client';
 
 import { createPlatePlugin } from 'platejs/react';
-import { ResponsiveFixedToolbar } from '@/components/ui/responsive-fixed-toolbar';
+import { ResponsiveFixedToolbar } from '@/components/plate-ui/responsive-fixed-toolbar';
 
 /**
  * Kit de toolbar responsiva para Plate Editor

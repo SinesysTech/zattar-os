@@ -38,7 +38,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/core/app/_lib/utils/utils';
-import { ToolbarButton } from '@/components/ui/toolbar';
+import { ToolbarButton } from '@/components/plate-ui/toolbar';
 
 export function EmojiToolbarButton({
   options,

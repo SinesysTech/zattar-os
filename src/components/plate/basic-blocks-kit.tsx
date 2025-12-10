@@ -20,9 +20,9 @@ import {
   H4Element,
   H5Element,
   H6Element,
-} from '@/components/ui/heading-node';
-import { HrElement } from '@/components/ui/hr-node';
-import { ParagraphElement } from '@/components/ui/paragraph-node';
+} from '@/components/plate-ui/heading-node';
+import { HrElement } from '@/components/plate-ui/hr-node';
+import { ParagraphElement } from '@/components/plate-ui/paragraph-node';
 
 export const BasicBlocksKit = [
   ParagraphPlugin.withComponent(ParagraphElement),

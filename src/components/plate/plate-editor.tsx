@@ -7,7 +7,7 @@ import { Plate, usePlateEditor } from 'platejs/react';
 
 import { EditorKit } from '@/components/plate/editor-kit';
 import { SettingsDialog } from '@/components/plate/settings-dialog';
-import { Editor, EditorContainer } from '@/components/ui/editor';
+import { Editor, EditorContainer } from '@/components/plate-ui/editor';
 
 interface PlateEditorProps {
   initialValue?: Descendant[];
