@@ -1,3 +1,8 @@
+/**
+ * @.qoder/repowiki/en/content/Core Modules/Client Management Module/Partes Deprecated Services.md Este arquivo será removido na próxima versão.
+ * Use `src/hooks/modules/chat/use-chat-subscription.ts` em vez disso.
+ */
+
 'use client'
 
 import { createClient } from '@/lib/supabase/client'

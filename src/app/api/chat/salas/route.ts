@@ -1,4 +1,9 @@
 /**
+ * @.qoder/repowiki/en/content/Core Modules/Client Management Module/Partes Deprecated Services.md Este arquivo será removido na próxima versão.
+ * Use `src/core/chat` e `src/app/actions/chat.ts` em vez disso.
+ */
+
+/**
  * API Routes para salas de chat
  *
  * GET /api/chat/salas - Lista salas de chat

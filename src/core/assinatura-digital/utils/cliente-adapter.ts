@@ -1,5 +1,5 @@
-import type { ClientePessoaFisica } from '@/types/domain/partes';
-import type { Endereco } from '@/types/domain/enderecos';
+import type { ClientePessoaFisica } from '@/core/partes/domain';
+import type { Endereco } from '@/core/enderecos/domain';
 
 /**
  * Adaptador de tipos para Cliente - Compatibiliza estrutura da Assinatura Digital com Sinesys
