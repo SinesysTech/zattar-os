@@ -4,6 +4,7 @@ export * from './utils';
 
 // Components
 export { DocumentList } from './components/document-list';
+export { DocumentListSkeleton } from './components/document-list-skeleton';
 export { DocumentEditor } from './components/document-editor';
 export { FolderTree } from './components/folder-tree';
 export { ShareDocumentDialog } from './components/share-document-dialog';

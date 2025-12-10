@@ -22,6 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { actionGerarUrlDownload } from '@/features/documentos/actions/uploads-actions';
 
 interface TimelineItemProps {
   item: TimelineItemEnriquecido;
@@ -51,18 +52,13 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
 
     setIsLoadingPresignedUrl(true);
     try {
-      const response = await fetch('/api/documentos/presigned-url', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: item.backblaze.key }),
-      });
+      const result = await actionGerarUrlDownload(item.backblaze.key);
 
-      if (!response.ok) {
-        throw new Error('Erro ao gerar URL de acesso');
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Erro ao gerar URL de acesso');
       }
 
-      const { url } = await response.json();
-      window.open(url, '_blank');
+      window.open(result.data.url, '_blank');
     } catch (error) {
       console.error('Erro ao abrir documento:', error);
       alert('Erro ao abrir documento. Tente novamente.');

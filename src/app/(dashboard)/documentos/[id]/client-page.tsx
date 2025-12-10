@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useParams } from 'next/navigation';
-import { DocumentEditor } from '@/features/documentos/components/document-editor';
+import { DocumentEditor } from '@/features/documentos';
 
 export function DocumentoEditorClient() {
   const params = useParams<{ id: string }>();

@@ -9,6 +9,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Loader2, FileText } from 'lucide-react';
+import { actionGerarUrlDownload } from '@/features/documentos/actions/uploads-actions';
 
 interface PdfViewerDialogProps {
     open: boolean;
@@ -36,25 +37,19 @@ export function PdfViewerDialog({
             setPresignedUrl(null);
 
             // Buscar URL assinada
-            fetch('/api/documentos/presigned-url', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ key: fileKey }),
-            })
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao gerar URL de acesso ao documento');
+            actionGerarUrlDownload(fileKey)
+                .then((result) => {
+                    if (result.success && result.data) {
+                        setPresignedUrl(result.data.url);
+                    } else {
+                        throw new Error(result.error || 'Erro ao gerar URL de acesso ao documento');
                     }
-                    return response.json();
-                })
-                .then((data) => {
-                    setPresignedUrl(data.url);
                 })
                 .catch((err) => {
                     console.error('Erro ao buscar URL assinada:', err);
                     setError('Erro ao gerar acesso ao documento. Tente novamente.');
+                })
+                .finally(() => {
                     setIsLoading(false);
                 });
         } else if (open && !fileKey) {

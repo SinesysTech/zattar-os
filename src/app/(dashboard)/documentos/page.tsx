@@ -5,8 +5,7 @@
 
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { DocumentList } from '@/features/documentos/components/document-list';
-import { DocumentListSkeleton } from '@/features/documentos/components/document-list-skeleton';
+import { DocumentList, DocumentListSkeleton } from '@/features/documentos';
 
 export const metadata: Metadata = {
   title: 'Documentos | Sinesys',

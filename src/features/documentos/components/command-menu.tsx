@@ -27,6 +27,7 @@ import {
   CommandShortcut,
 } from '@/components/ui/command';
 import type { DocumentoComUsuario } from '@/features/documentos/types';
+import { actionListarDocumentos } from '@/features/documentos/actions/documentos-actions';
 
 interface CommandMenuProps {
   onNewDocument?: () => void;
@@ -65,11 +66,14 @@ export function CommandMenu({
   // Carregar documentos recentes quando abrir
   React.useEffect(() => {
     if (open && recentDocuments.length === 0) {
-      fetch('/api/documentos?limit=5&ordenar_por=updated_at&ordem=desc')
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            setRecentDocuments(data.data);
+      actionListarDocumentos({
+        limit: 5,
+        ordenar_por: 'updated_at',
+        ordem: 'desc',
+      })
+        .then((result) => {
+          if (result.success) {
+            setRecentDocuments(result.data || []);
           }
         })
         .catch(console.error);
@@ -86,12 +90,12 @@ export function CommandMenu({
     const timer = setTimeout(async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-          `/api/documentos?busca=${encodeURIComponent(search)}&limit=10`
-        );
-        const data = await response.json();
-        if (data.success) {
-          setSearchResults(data.data);
+        const result = await actionListarDocumentos({
+          busca: search,
+          limit: 10,
+        });
+        if (result.success) {
+          setSearchResults(result.data || []);
         }
       } catch (error) {
         console.error('Erro ao buscar:', error);
