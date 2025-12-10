@@ -4,6 +4,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import type { ColumnDef } from '@tanstack/react-table';
 import { listarTemplatesAction } from '@/app/actions/assinatura-digital';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
@@ -36,8 +37,9 @@ import {
   getStatusBadgeVariant,
   truncateText,
   getTemplateDisplayName,
-}
- from '@/lib/assinatura-digital/utils';
+} from '@/lib/assinatura-digital/utils';
+import type { Template } from '@/types/assinatura-digital/template.types';
+import type { TipoTemplate } from '@/core/assinatura-digital/domain';
 import { TemplateCreateDialog } from './components/template-create-dialog';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
 import { TemplateDeleteDialog } from './components/template-delete-dialog';
