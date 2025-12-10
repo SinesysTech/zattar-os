@@ -33,7 +33,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Loader2, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { actionCriarContrato, actionAtualizarContrato, type ActionResult } from '@/core/app/actions/contratos';
+import { actionCriarContrato, actionAtualizarContrato, type ActionResult } from '@/app/actions/contratos';
 import type { Contrato, TipoContrato, TipoCobranca, StatusContrato, PoloProcessual } from '@/core/contratos/domain';
 import { listarSegmentosAction } from '@/app/actions/assinatura-digital';
 import type { Segmento } from '@/core/assinatura-digital';

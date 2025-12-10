@@ -1,26 +1,64 @@
 /**
  * Tipos frontend para Partes Contrárias
- * Re-exporta tipos do backend para uso em componentes React
+ * Re-exporta tipos do core para uso em componentes React
  */
 
-// Re-exporta todos os tipos de partes contrárias do backend
-export type {
+// Importar tipos necessários do core
+import type {
   TipoPessoa,
-  GrauParteContraria,
+  GrauProcesso,
   SituacaoPJE,
   ParteContraria,
   ParteContrariaPessoaFisica,
   ParteContrariaPessoaJuridica,
-  CriarParteContrariaParams,
-  AtualizarParteContrariaParams,
+  CreateParteContrariaInput,
+  UpdateParteContrariaInput,
   ListarPartesContrariasParams,
-  ListarPartesContrariasResult,
-  UpsertParteContrariaPorCPFParams,
-  UpsertParteContrariaPorCNPJParams,
-  UpsertParteContrariaPorDocumentoParams,
-  OrdenarPorParteContraria,
-  OrdemParteContraria,
-} from '@/backend/types/partes/partes-contrarias-types';
+  OrdenarPorParte,
+  Ordem,
+} from '@/core/partes';
+
+// Re-exporta tipos de domínio do core
+export type {
+  TipoPessoa,
+  SituacaoPJE,
+  ParteContraria,
+  ParteContrariaPessoaFisica,
+  ParteContrariaPessoaJuridica,
+  ListarPartesContrariasParams,
+};
+
+// Aliases para compatibilidade com código existente
+export type GrauParteContraria = GrauProcesso;
+export type CriarParteContrariaParams = CreateParteContrariaInput;
+export type AtualizarParteContrariaParams = UpdateParteContrariaInput;
+export type OrdenarPorParteContraria = OrdenarPorParte;
+export type OrdemParteContraria = Ordem;
+
+// Tipos que não existem no core - criar aliases temporários ou remover se não forem necessários
+// Nota: UpsertParteContrariaPorCPFParams, UpsertParteContrariaPorCNPJParams, UpsertParteContrariaPorDocumentoParams,
+// e ListarPartesContrariasResult podem precisar ser criados em @/core/partes se ainda forem necessários
+export type UpsertParteContrariaPorCPFParams = {
+  cpf: string;
+  dados: Omit<CreateParteContrariaInput, 'cpf' | 'tipo_pessoa'> & { tipo_pessoa: 'pf' };
+};
+
+export type UpsertParteContrariaPorCNPJParams = {
+  cnpj: string;
+  dados: Omit<CreateParteContrariaInput, 'cnpj' | 'tipo_pessoa'> & { tipo_pessoa: 'pj' };
+};
+
+export type UpsertParteContrariaPorDocumentoParams =
+  | UpsertParteContrariaPorCPFParams
+  | UpsertParteContrariaPorCNPJParams;
+
+export interface ListarPartesContrariasResult {
+  partes: ParteContraria[];
+  total: number;
+  pagina: number;
+  limite: number;
+  totalPaginas: number;
+}
 
 // Tipos auxiliares para formulários
 export interface ParteContrariaFormData {

@@ -17,7 +17,7 @@ import { ContratosTable } from './contratos-table';
 import { ContratoForm } from './contrato-form';
 import { ContratoViewSheet } from './contrato-view-sheet';
 import type { Contrato, ListarContratosParams } from '@/core/contratos/domain';
-import { actionListarContratos } from '@/core/app/actions/contratos';
+import { actionListarContratos } from '@/app/actions/contratos';
 import {
   buildContratosFilterOptions,
   buildContratosFilterGroups,
