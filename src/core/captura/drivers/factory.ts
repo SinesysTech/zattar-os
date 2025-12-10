@@ -3,76 +3,43 @@
  *
  * Consulta tribunais_config.sistema para determinar qual driver instanciar.
  * Esta factory permite adicionar novos tribunais sem modificar o orquestrador.
+ * 
+ * IMPORTANTE: A função de acesso a dados buscarConfigTribunal foi movida para
+ * o repositório (src/core/captura/repository.ts) para manter clareza de responsabilidades.
  */
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { PjeTrtDriver } from './pje/trt-driver';
+import { buscarConfigTribunal } from '../repository';
 import type { JudicialDriver } from './judicial-driver.interface';
-import type { ConfigTribunal, SistemaJudicialSuportado } from '../domain';
+import type { SistemaJudicialSuportado } from '../domain';
 
 /**
- * Busca configuração do tribunal no banco de dados
+ * Verifica se um código de tribunal é um TRT (Tribunal Regional do Trabalho)
+ * 
+ * TRTs são identificados por códigos que começam com "TRT" seguido de número (TRT1-TRT24)
+ * 
+ * @param codigo - Código do tribunal (ex: 'TRT1', 'TJSP', 'TST')
+ * @returns true se for um TRT
  */
-export async function buscarConfigTribunal(tribunalId: string): Promise<ConfigTribunal | null> {
-  const supabase = createServiceClient();
-
-  const { data, error } = await supabase
-    .from('tribunais_config')
-    .select(`
-      id,
-      sistema,
-      tipo_acesso,
-      url_base,
-      url_login_seam,
-      url_api,
-      custom_timeouts,
-      tribunal_id,
-      tribunais (
-        codigo,
-        nome
-      )
-    `)
-    .eq('tribunal_id', tribunalId)
-    .single();
-
-  if (error || !data) {
-    console.error('Erro ao buscar configuração do tribunal:', error);
-    return null;
-  }
-
-  // tribunais pode ser um objeto único ou array
-  const tribunalRaw = data.tribunais;
-  const tribunal = Array.isArray(tribunalRaw)
-    ? tribunalRaw[0]
-    : tribunalRaw;
-
-  if (!tribunal) {
-    console.error('Tribunal não encontrado na configuração');
-    return null;
-  }
-
-  return {
-    tribunalId: data.tribunal_id,
-    sistema: data.sistema,
-    tipoAcesso: data.tipo_acesso as any, // TipoAcessoTribunal
-    loginUrl: data.url_login_seam,
-    baseUrl: data.url_base,
-    apiUrl: data.url_api || '',
-    customTimeouts: data.custom_timeouts as any, // CustomTimeouts
-    // Metadados adicionais do tribunal
-    tribunalCodigo: tribunal.codigo,
-    tribunalNome: tribunal.nome,
-  };
+function isTRT(codigo: string): boolean {
+  const codigoUpper = codigo.toUpperCase();
+  // Verificar se começa com "TRT" seguido de 1-2 dígitos
+  return /^TRT\d{1,2}$/.test(codigoUpper);
 }
 
 /**
  * Obtém o driver apropriado para um tribunal
  *
  * Consulta tribunais_config.sistema e retorna a instância do driver correto.
+ * Para sistemas PJE, verifica se o tribunal é um TRT antes de retornar PjeTrtDriver.
+ *
+ * IMPORTANTE: PjeTrtDriver é específico para TRTs. Outros tribunais PJE (TJ, TRF, etc)
+ * ainda não são suportados e retornarão erro explícito.
  *
  * @param tribunalId - ID do tribunal na tabela tribunais
  * @returns Instância do driver correspondente ao sistema do tribunal
- * @throws Error se o tribunal não for encontrado ou sistema não for suportado
+ * @throws Error se o tribunal não for encontrado, sistema não for suportado, ou
+ *         se for um tribunal PJE não-TRT (ainda não implementado)
  */
 export async function getDriver(tribunalId: string): Promise<JudicialDriver> {
   // 1. Buscar configuração do tribunal no banco
@@ -94,7 +61,20 @@ export async function getDriver(tribunalId: string): Promise<JudicialDriver> {
   // 3. Instanciar driver baseado no sistema
   switch (sistema) {
     case 'PJE':
-      return new PjeTrtDriver();
+      // Verificar se é um TRT antes de retornar PjeTrtDriver
+      // PjeTrtDriver é específico para TRTs (TRT1-TRT24)
+      const tribunalCodigo = config.tribunalCodigo || tribunalId;
+      
+      if (isTRT(tribunalCodigo)) {
+        return new PjeTrtDriver();
+      } else {
+        // Para outros tribunais PJE (TJ, TRF, etc), lançar erro explícito
+        throw new Error(
+          `Driver PJE para tribunal ${tribunalCodigo} ainda não implementado. ` +
+          `PjeTrtDriver é específico para TRTs. Para adicionar suporte a outros tribunais PJE, ` +
+          `é necessário implementar um driver específico.`
+        );
+      }
 
     case 'ESAJ':
       throw new Error('Driver ESAJ ainda não implementado');

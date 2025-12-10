@@ -9,6 +9,7 @@ import { Result, ok, err, appError } from '@/core/common/types';
 import { getDriver } from './drivers/factory';
 import { buscarCredencial, buscarConfigTribunalRepo, salvarLogCaptura } from './repository';
 import { criarProcesso } from '../processos/service';
+import { getAdvogadoByCredentialId } from '@/backend/captura/credentials/credential.service';
 import type { JudicialDriver } from './drivers/judicial-driver.interface';
 import type {
   Credencial,
@@ -17,6 +18,7 @@ import type {
   ResultadoCaptura,
   TipoCaptura,
 } from './domain';
+import { mapearTipoAcessoParaGrau, mapearTipoCapturaParaOrigem } from './domain';
 import type { CreateProcessoInput } from '../processos/domain';
 
 /**
@@ -79,14 +81,24 @@ export async function executarCaptura(
 
     // 6. Preencher metadados faltantes
     resultado.metadados.tribunal = params.tribunalId;
-    resultado.metadados.grau = config.tipoAcesso === 'primeiro_grau' ? 'primeiro_grau' : 
-                                config.tipoAcesso === 'segundo_grau' ? 'segundo_grau' : 
-                                'primeiro_grau'; // Default para unificado/unico
+    resultado.metadados.grau = mapearTipoAcessoParaGrau(config.tipoAcesso);
 
-    // 7. Persistir resultados
-    await persistirResultado(resultado, params.tribunalId);
+    // 7. Buscar advogadoId da credencial
+    const advogado = await getAdvogadoByCredentialId(params.credencialId);
+    if (!advogado) {
+      return err(appError('NOT_FOUND', 'Advogado não encontrado para a credencial fornecida'));
+    }
 
-    // 8. Salvar log
+    // 8. Persistir resultados
+    await persistirResultado(
+      resultado,
+      params.tribunalId,
+      config,
+      advogado.id,
+      params.tipoCaptura
+    );
+
+    // 9. Salvar log
     await salvarLogCaptura({
       tribunalId: params.tribunalId,
       credencialId: params.credencialId,
@@ -113,7 +125,7 @@ export async function executarCaptura(
 
     return err(appError('CAPTURE_ERROR', errorMessage, { params }));
   } finally {
-    // 9. Sempre fechar driver
+    // 10. Sempre fechar driver
     if (driver) {
       try {
         await driver.encerrar();
@@ -128,18 +140,28 @@ export async function executarCaptura(
 /**
  * Persiste resultados da captura no banco de dados
  */
-async function persistirResultado(resultado: ResultadoCaptura, tribunalId: string): Promise<void> {
-  // TODO: Buscar advogadoId baseado na credencial
-  // Por enquanto, vamos precisar passar advogadoId como parâmetro adicional
+async function persistirResultado(
+  resultado: ResultadoCaptura,
+  tribunalId: string,
+  config: ConfigTribunal,
+  advogadoId: number,
+  tipoCaptura: TipoCaptura
+): Promise<void> {
+  // Mapear origem a partir do tipo de captura
+  const origem = mapearTipoCapturaParaOrigem(tipoCaptura);
+
+  // Usar código do tribunal (tribunalCodigo) em vez de tribunalId
+  // O código é compatível com o que o domínio de processos espera
+  const trtCodigo = config.tribunalCodigo || tribunalId;
 
   for (const processo of resultado.processos) {
     try {
       // Mapear ProcessoCapturado para CreateProcessoInput
       const input: CreateProcessoInput = {
         idPje: processo.idPje,
-        advogadoId: 0, // TODO: Obter do contexto
-        origem: 'acervo_geral', // TODO: Determinar origem correta
-        trt: tribunalId,
+        advogadoId: advogadoId,
+        origem: origem,
+        trt: trtCodigo,
         grau: resultado.metadados.grau,
         numeroProcesso: processo.numeroProcesso,
         numero: parseInt(processo.numeroProcesso.split('-')[0], 10) || 0,

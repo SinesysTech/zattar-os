@@ -134,3 +134,61 @@ export interface ResultadoCaptura {
  * Sistema judicial suportado
  */
 export type SistemaJudicialSuportado = 'PJE' | 'ESAJ' | 'EPROC' | 'PROJUDI';
+
+// =============================================================================
+// FUNÇÕES UTILITÁRIAS
+// =============================================================================
+
+/**
+ * Mapeia tipoAcesso para GrauProcesso
+ * 
+ * Centraliza a lógica de conversão entre tipo_acesso_tribunal e grau_processo
+ * para manter consistência entre níveis lógicos.
+ * 
+ * @param tipoAcesso - Tipo de acesso ao tribunal
+ * @returns Grau do processo correspondente
+ */
+export function mapearTipoAcessoParaGrau(tipoAcesso: TipoAcessoTribunal): GrauProcesso {
+  switch (tipoAcesso) {
+    case 'primeiro_grau':
+      return 'primeiro_grau';
+    case 'segundo_grau':
+      return 'segundo_grau';
+    case 'unificado':
+      // Para acesso unificado, usar primeiro_grau como padrão
+      // O sistema PJE permite navegar entre graus após autenticação
+      return 'primeiro_grau';
+    case 'unico':
+      // Para acesso único (tribunais superiores), usar tribunal_superior
+      return 'tribunal_superior';
+    default:
+      // Fallback seguro
+      return 'primeiro_grau';
+  }
+}
+
+/**
+ * Mapeia tipoCaptura para origem do processo
+ * 
+ * Determina a origem do processo no acervo baseado no tipo de captura.
+ * 
+ * @param tipoCaptura - Tipo de captura executada
+ * @returns Origem do processo no acervo
+ */
+export function mapearTipoCapturaParaOrigem(tipoCaptura: TipoCaptura): 'acervo_geral' | 'arquivado' {
+  switch (tipoCaptura) {
+    case 'acervo_geral':
+      return 'acervo_geral';
+    case 'arquivados':
+      return 'arquivado';
+    case 'audiencias_designadas':
+    case 'audiencias_realizadas':
+    case 'audiencias_canceladas':
+    case 'expedientes_no_prazo':
+    case 'expedientes_sem_prazo':
+      // Todos os outros tipos de captura são considerados acervo geral
+      return 'acervo_geral';
+    default:
+      return 'acervo_geral';
+  }
+}

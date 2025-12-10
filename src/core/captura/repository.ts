@@ -7,9 +7,7 @@
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 import { getCredential } from '@/backend/captura/credentials/credential.service';
-import type { Credencial } from './domain';
-import type { ConfigTribunal } from './domain';
-import { buscarConfigTribunal } from './drivers/factory';
+import type { Credencial, ConfigTribunal } from './domain';
 
 /**
  * Busca credencial por ID
@@ -28,7 +26,66 @@ export async function buscarCredencial(credentialId: number): Promise<Credencial
 }
 
 /**
- * Busca configuração do tribunal
+ * Busca configuração do tribunal no banco de dados
+ * 
+ * Esta é a função única de acesso a dados para tribunais_config.
+ * Centraliza a leitura de configurações de tribunais no repositório.
+ */
+export async function buscarConfigTribunal(tribunalId: string): Promise<ConfigTribunal | null> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('tribunais_config')
+    .select(`
+      id,
+      sistema,
+      tipo_acesso,
+      url_base,
+      url_login_seam,
+      url_api,
+      custom_timeouts,
+      tribunal_id,
+      tribunais (
+        codigo,
+        nome
+      )
+    `)
+    .eq('tribunal_id', tribunalId)
+    .single();
+
+  if (error || !data) {
+    console.error('Erro ao buscar configuração do tribunal:', error);
+    return null;
+  }
+
+  // tribunais pode ser um objeto único ou array
+  const tribunalRaw = data.tribunais;
+  const tribunal = Array.isArray(tribunalRaw)
+    ? tribunalRaw[0]
+    : tribunalRaw;
+
+  if (!tribunal) {
+    console.error('Tribunal não encontrado na configuração');
+    return null;
+  }
+
+  return {
+    tribunalId: data.tribunal_id,
+    sistema: data.sistema,
+    tipoAcesso: data.tipo_acesso as any, // TipoAcessoTribunal
+    loginUrl: data.url_login_seam,
+    baseUrl: data.url_base,
+    apiUrl: data.url_api || '',
+    customTimeouts: data.custom_timeouts as any, // CustomTimeouts
+    // Metadados adicionais do tribunal
+    tribunalCodigo: tribunal.codigo,
+    tribunalNome: tribunal.nome,
+  };
+}
+
+/**
+ * Busca configuração do tribunal (alias para manter compatibilidade)
+ * @deprecated Use buscarConfigTribunal diretamente
  */
 export async function buscarConfigTribunalRepo(tribunalId: string): Promise<ConfigTribunal | null> {
   return buscarConfigTribunal(tribunalId);

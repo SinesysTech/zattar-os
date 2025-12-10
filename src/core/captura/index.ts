@@ -23,11 +23,11 @@ export type {
 } from './domain';
 
 // Repository (acesso a dados)
-export { buscarCredencial, buscarConfigTribunalRepo } from './repository';
+export { buscarCredencial, buscarConfigTribunal, buscarConfigTribunalRepo } from './repository';
 
 // Drivers (implementações específicas)
 export { PjeTrtDriver } from './drivers/pje/trt-driver';
 export type { JudicialDriver, SessaoAutenticada } from './drivers/judicial-driver.interface';
 
 // Factory
-export { getDriver, buscarConfigTribunal } from './drivers/factory';
+export { getDriver } from './drivers/factory';

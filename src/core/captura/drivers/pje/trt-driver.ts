@@ -32,6 +32,7 @@ import type {
   ProcessoCapturado,
 } from '../../domain';
 import type { GrauProcesso } from '@/types/domain/common';
+import { mapearTipoAcessoParaGrau } from '../../domain';
 
 /**
  * Driver PJE para TRTs
@@ -54,17 +55,9 @@ export class PjeTrtDriver implements JudicialDriver {
    * Mapeia ConfigTribunal genérica para ConfigTRT específica
    */
   private mapConfigToTRT(config: ConfigTribunal): ConfigTRT {
-    // Determinar grau baseado no tipoAcesso (seguindo lógica do config.ts)
-    let grau: GrauProcesso = 'primeiro_grau';
-    if (config.tipoAcesso === 'segundo_grau') {
-      grau = 'segundo_grau';
-    } else if (config.tipoAcesso === 'unificado') {
-      // Para unificado, usar primeiro_grau como padrão
-      // O sistema PJE permite navegar entre graus após autenticação
-      grau = 'primeiro_grau';
-    } else if (config.tipoAcesso === 'unico') {
-      grau = 'tribunal_superior';
-    }
+    // Usar função utilitária centralizada para mapear tipoAcesso para grau
+    // Isso mantém consistência com a lógica usada em tribunal-config-persistence.service.ts
+    const grau = mapearTipoAcessoParaGrau(config.tipoAcesso);
 
     // Usar código do tribunal da config (preenchido pela factory) ou fallback
     const codigo = config.tribunalCodigo || this.extractCodigoTribunal(config.tribunalId);
