@@ -69,11 +69,7 @@ export async function actionCriarAssistente(formData: FormData): Promise<ActionR
 
 export async function actionAtualizarAssistente(id: number, formData: FormData): Promise<ActionResponse<Assistente>> {
   try {
-    await requireAuth(['assistentes:criar']); // Assuming 'criar' implies edit or there is no specific edit permission. Plan mentioned 'assistentes:editar' usually but here I see 'assistentes.criar' in legacy route. 
-    // Wait, typically it's 'assistentes:editar'. 
-    // Checking legacy `backend/assistentes/services/assistente-persistence.service.ts` doesn't enforce perm, `route.ts` did `requirePermission(request, 'assistentes', 'criar')` for POST.
-    // Is there an Update route?
-    // I need to check if there was a PUT or PATCH route.
+    await requireAuth(['assistentes:editar']);
     
     const data: Record<string, any> = {};
     if (formData.has('nome')) data.nome = formData.get('nome');
@@ -95,7 +91,7 @@ export async function actionAtualizarAssistente(id: number, formData: FormData):
 
 export async function actionDeletarAssistente(id: number): Promise<ActionResponse<boolean>> {
   try {
-    await requireAuth(['assistentes:criar']); // Assuming admin permission
+    await requireAuth(['assistentes:deletar']);
     await service.deletarAssistente(id);
     revalidatePath('/assistentes');
     return { success: true, data: true };
