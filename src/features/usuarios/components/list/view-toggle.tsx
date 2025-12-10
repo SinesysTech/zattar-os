@@ -1,3 +1,4 @@
+
 'use client';
 
 // Componente para alternar entre visualização em cards e tabela
@@ -5,7 +6,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { LayoutGrid, Table } from 'lucide-react';
-import type { ViewMode } from '@/app/_lib/types/usuarios';
+import type { ViewMode } from '../../types';
 
 interface ViewToggleProps {
   viewMode: ViewMode;
@@ -36,4 +37,3 @@ export function ViewToggle({ viewMode, onViewModeChange }: ViewToggleProps) {
     </div>
   );
 }
-

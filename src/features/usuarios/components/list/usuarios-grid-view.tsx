@@ -1,13 +1,12 @@
-'use client';
 
-// Componente Grid para exibir usuários em cards
+'use client';
 
 import * as React from 'react';
 import { Users } from 'lucide-react';
-import { UsuarioCard } from './usuario-card';
+import { UsuarioCard } from '../shared/usuario-card';
 import { UsuariosPagination } from './usuarios-pagination';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import type { Usuario } from '../../types';
 
 interface UsuariosGridViewProps {
   usuarios: Usuario[];
@@ -70,4 +69,3 @@ export function UsuariosGridView({
     </div>
   );
 }
-

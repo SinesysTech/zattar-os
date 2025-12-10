@@ -1,7 +1,8 @@
+
 'use client';
 
 import * as React from 'react';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import type { Usuario } from '../../types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,7 +21,7 @@ import {
   formatarOab,
   formatarTelefone,
   formatarCpf,
-} from '@/app/_lib/utils/format-usuarios';
+} from '../../utils';
 
 interface UsuarioCardProps {
   usuario: Usuario;
@@ -85,7 +86,6 @@ export function UsuarioCard({ usuario, onView, onRedefinirSenha }: UsuarioCardPr
         )}
       </CardContent>
 
-      {/* Popover de ações no canto inferior direito */}
       <div className="absolute bottom-3 right-4">
         <DropdownMenu>
           <Tooltip>
@@ -120,4 +120,3 @@ export function UsuarioCard({ usuario, onView, onRedefinirSenha }: UsuarioCardPr
     </Card>
   );
 }
-

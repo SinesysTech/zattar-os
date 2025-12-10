@@ -1,6 +1,7 @@
+
 import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup, ComboboxOption } from '@/components/ui/table-toolbar';
-import type { UsuariosFilters } from '@/app/_lib/types/usuarios';
+import type { ListarUsuariosParams } from '../../types';
 
 // UFs do Brasil
 const UFS = [
@@ -99,6 +100,6 @@ export function buildUsuariosFilterGroups(): FilterGroup[] {
   ];
 }
 
-export function parseUsuariosFilters(selectedFilters: string[]): UsuariosFilters {
-  return parseFilterValues(selectedFilters, USUARIOS_FILTER_CONFIGS) as UsuariosFilters;
+export function parseUsuariosFilters(selectedFilters: string[]): ListarUsuariosParams {
+  return parseFilterValues(selectedFilters, USUARIOS_FILTER_CONFIGS) as ListarUsuariosParams;
 }

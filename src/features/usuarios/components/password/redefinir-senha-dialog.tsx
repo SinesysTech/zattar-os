@@ -1,6 +1,5 @@
-'use client';
 
-// Componente Dialog para redefinição de senha de usuário (admin)
+'use client';
 
 import * as React from 'react';
 import {
@@ -15,7 +14,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import { actionRedefinirSenha } from '../../actions/senha-actions';
+import type { Usuario } from '../../types';
 
 interface RedefinirSenhaDialogProps {
   open: boolean;
@@ -95,26 +95,10 @@ export function RedefinirSenhaDialog({
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/usuarios/${usuario.id}/senha`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ novaSenha }),
-      });
+      const result = await actionRedefinirSenha(usuario.id, novaSenha);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({
-          error: 'Erro desconhecido',
-        }));
-        throw new Error(
-          errorData.error || `Erro ${response.status}: ${response.statusText}`
-        );
-      }
-
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error(data.error || 'Resposta da API indicou falha');
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao redefinir senha');
       }
 
       setSuccessMessage('Senha redefinida com sucesso!');

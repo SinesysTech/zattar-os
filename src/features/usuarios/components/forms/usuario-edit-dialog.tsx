@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -24,8 +25,9 @@ import {
 } from '@/components/ui/select';
 import { Loader2, Save, Search, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import type { Usuario, Endereco } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import { useCargosAtivos } from '@/app/_lib/hooks/use-cargos';
+import { useCargos } from '../../hooks/use-cargos';
+import { actionAtualizarUsuario } from '../../actions/usuarios-actions';
+import type { Usuario, Endereco, GeneroUsuario } from '../../types';
 import { buscarEnderecoPorCep, limparCep } from '@/app/_lib/utils/viacep';
 import { Typography } from '@/components/ui/typography';
 
@@ -50,7 +52,7 @@ export function UsuarioEditDialog({
     cpf: '',
     rg: '',
     dataNascimento: '',
-    genero: '',
+    genero: '' as GeneroUsuario | '',
     oab: '',
     ufOab: '',
     cargoId: null as number | null,
@@ -71,7 +73,7 @@ export function UsuarioEditDialog({
   });
 
   // Buscar lista de cargos
-  const { cargos, isLoading: isLoadingCargos } = useCargosAtivos();
+  const { cargos, isLoading: isLoadingCargos } = useCargos();
 
   // Preencher formulário quando usuário mudar
   useEffect(() => {
@@ -85,7 +87,7 @@ export function UsuarioEditDialog({
         genero: usuario.genero || '',
         oab: usuario.oab || '',
         ufOab: usuario.ufOab || '',
-        cargoId: usuario.cargo?.id || null,
+        cargoId: usuario.cargoId || null,
         emailPessoal: usuario.emailPessoal || '',
         emailCorporativo: usuario.emailCorporativo || '',
         telefone: usuario.telefone || '',
@@ -128,7 +130,6 @@ export function UsuarioEditDialog({
         return;
       }
 
-      // Preencher campos do endereço
       setFormData({
         ...formData,
         endereco: {
@@ -138,7 +139,7 @@ export function UsuarioEditDialog({
           bairro: endereco.bairro,
           cidade: endereco.cidade,
           estado: endereco.estado,
-          complemento: endereco.complemento || formData.endereco.complemento,
+          complemento: endereco.complemento || formData.endereco.complemento || '',
         },
       });
 
@@ -159,25 +160,20 @@ export function UsuarioEditDialog({
     setIsSaving(true);
 
     try {
-      const response = await fetch(`/api/usuarios/${usuario.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          cargoId: formData.cargoId || null,
-          // Remover campos vazios do endereço
-          endereco: Object.values(formData.endereco).some((v) => v)
-            ? formData.endereco
-            : null,
-        }),
-      });
+      const payload = {
+        ...formData,
+        genero: formData.genero || null,
+        cargoId: formData.cargoId || null,
+        endereco: Object.values(formData.endereco).some((v) => v)
+          ? formData.endereco
+          : null,
+      };
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Erro ao atualizar usuário');
+      const result = await actionAtualizarUsuario(usuario.id, payload);
+
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao atualizar usuário');
       }
-
-      const result = await response.json();
 
       // Detectar desativação e mostrar feedback detalhado
       if (result.itensDesatribuidos) {
@@ -232,7 +228,6 @@ export function UsuarioEditDialog({
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
-            {/* Nome Completo e Nome de Exibição */}
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="nomeCompleto">
@@ -263,7 +258,6 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            {/* Data de Nascimento e Gênero */}
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="dataNascimento">Data de Nascimento</Label>
@@ -278,9 +272,9 @@ export function UsuarioEditDialog({
               <div className="grid gap-2">
                 <Label htmlFor="genero">Gênero</Label>
                 <Select
-                  value={formData.genero}
+                  value={formData.genero || ''}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, genero: value })
+                    setFormData({ ...formData, genero: value as GeneroUsuario })
                   }
                 >
                   <SelectTrigger id="genero">
@@ -298,7 +292,6 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            {/* CPF e RG */}
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="cpf">CPF</Label>
@@ -323,7 +316,6 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            {/* Telefone e Ramal */}
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="telefone">Telefone</Label>
@@ -348,7 +340,6 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            {/* Email Corporativo e Email Pessoal */}
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="emailCorporativo">
@@ -378,7 +369,6 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            {/* Cargo, OAB e UF OAB */}
             <div className="grid grid-cols-3 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="cargo">Cargo</Label>
@@ -433,12 +423,10 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            {/* Endereço */}
             <div className="border-t pt-4 mt-2">
               <Typography.Small className="font-medium mb-3 block">Endereço</Typography.Small>
 
               <div className="grid gap-4">
-                {/* CEP */}
                 <div className="grid gap-2">
                   <Label htmlFor="cep">CEP</Label>
                   <div className="flex gap-2">
@@ -471,7 +459,6 @@ export function UsuarioEditDialog({
                   </div>
                 </div>
 
-                {/* Logradouro, Número e Complemento */}
                 <div className="grid grid-cols-3 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="logradouro">Logradouro</Label>
@@ -522,7 +509,6 @@ export function UsuarioEditDialog({
                   </div>
                 </div>
 
-                {/* Bairro, Cidade e Estado */}
                 <div className="grid grid-cols-3 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="bairro">Bairro</Label>
@@ -573,7 +559,6 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            {/* Status do Usuário */}
             <div className="border-t pt-4 mt-2">
               <Typography.Small className="font-medium mb-3 block">Status do Usuário</Typography.Small>
               <div className="space-y-3">
@@ -590,7 +575,6 @@ export function UsuarioEditDialog({
                   </Label>
                 </div>
 
-                {/* Warning quando desativar */}
                 {!formData.ativo && usuario.ativo && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
@@ -603,7 +587,6 @@ export function UsuarioEditDialog({
                   </Alert>
                 )}
 
-                {/* Info quando reativar */}
                 {formData.ativo && !usuario.ativo && (
                   <Alert>
                     <AlertCircle className="h-4 w-4" />

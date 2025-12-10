@@ -1,3 +1,4 @@
+
 'use client';
 
 // Componente de filtros avançados para usuários
@@ -7,11 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { Typography } from '@/components/ui/typography';
-import type { UsuariosFilters } from '@/app/_lib/types/usuarios';
+import type { ListarUsuariosParams } from '../../types';
 
 interface UsuariosFiltrosAvancadosProps {
-  filters: UsuariosFilters;
-  onFiltersChange: (filters: UsuariosFilters) => void;
+  filters: ListarUsuariosParams;
+  onFiltersChange: (filters: ListarUsuariosParams) => void;
   onReset: () => void;
 }
 
@@ -138,4 +139,3 @@ export function UsuariosFiltrosAvancados({
     </Popover>
   );
 }
-

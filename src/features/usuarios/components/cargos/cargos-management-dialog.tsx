@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -26,8 +27,8 @@ import {
   FileX,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCargos } from '@/app/_lib/hooks/use-cargos';
-import type { Cargo } from '@/backend/types/cargos/types';
+import { useCargos } from '../../hooks/use-cargos';
+import { actionCriarCargo, actionAtualizarCargo, actionDeletarCargo } from '../../actions/cargos-actions';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
 import {
@@ -52,11 +53,19 @@ interface CargoFormData {
   ativo: boolean;
 }
 
+// Tipo local para simplificar, já que Cargo vem do hook
+interface Cargo {
+  id: number;
+  nome: string;
+  descricao?: string | null;
+  ativo: boolean;
+}
+
 export function CargosManagementDialog({
   open,
   onOpenChange,
 }: CargosManagementDialogProps) {
-  const { cargos, isLoading, mutate } = useCargos({ limite: 100, ordenarPor: 'nome' });
+  const { cargos, isLoading, refetch } = useCargos();
 
   const [isCreating, setIsCreating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -84,24 +93,18 @@ export function CargosManagementDialog({
     setIsSaving(true);
 
     try {
-      const response = await fetch('/api/cargos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const response = await actionCriarCargo({
           nome: formData.nome.trim(),
           descricao: formData.descricao.trim() || undefined,
-          ativo: formData.ativo,
-        }),
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Erro ao criar cargo');
+      if (!response.success) {
+        throw new Error(response.error || 'Erro ao criar cargo');
       }
 
       toast.success('Cargo criado com sucesso!');
       resetForm();
-      mutate();
+      refetch();
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : 'Erro ao criar cargo'
@@ -130,24 +133,19 @@ export function CargosManagementDialog({
     setIsSaving(true);
 
     try {
-      const response = await fetch(`/api/cargos/${editingId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const response = await actionAtualizarCargo(editingId, {
           nome: formData.nome.trim(),
           descricao: formData.descricao.trim() || undefined,
           ativo: formData.ativo,
-        }),
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Erro ao atualizar cargo');
+      if (!response.success) {
+        throw new Error(response.error || 'Erro ao atualizar cargo');
       }
 
       toast.success('Cargo atualizado com sucesso!');
       resetForm();
-      mutate();
+      refetch();
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : 'Erro ao atualizar cargo'
@@ -161,18 +159,15 @@ export function CargosManagementDialog({
     if (!deletingCargo) return;
 
     try {
-      const response = await fetch(`/api/cargos/${deletingCargo.id}`, {
-        method: 'DELETE',
-      });
+      const response = await actionDeletarCargo(deletingCargo.id);
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Erro ao deletar cargo');
+      if (!response.success) {
+        throw new Error(response.error || 'Erro ao deletar cargo');
       }
 
       toast.success('Cargo deletado com sucesso!');
       setDeletingCargo(null);
-      mutate();
+      refetch();
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : 'Erro ao deletar cargo'

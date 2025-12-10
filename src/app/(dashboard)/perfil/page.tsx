@@ -6,7 +6,7 @@ import * as React from 'react';
 import { usePerfil } from '@/app/_lib/hooks/use-perfil';
 import { PerfilEditSheet } from './components/perfil-edit-sheet';
 import { AlterarSenhaDialog } from './components/alterar-senha-dialog';
-import { AvatarEditDialog } from './components/avatar-edit-dialog';
+import { AvatarEditDialog } from '@/features/usuarios';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

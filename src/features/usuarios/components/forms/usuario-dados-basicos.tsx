@@ -1,17 +1,14 @@
-/**
- * Componente para exibir dados básicos do usuário
- */
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Typography } from '@/components/ui/typography';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import type { Usuario } from '../../types';
 import {
   formatarCpf,
   formatarTelefone,
   formatarNomeExibicao,
-} from '@/app/_lib/utils/format-usuarios';
+} from '../../utils';
 import { User, Mail, Phone, FileText, Shield, MapPin, Calendar, UserCircle, Briefcase } from 'lucide-react';
 
 interface UsuarioDadosBasicosProps {
@@ -41,13 +38,11 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* SEÇÃO 1: IDENTIFICAÇÃO */}
         <div className="space-y-4">
           <Typography.Small className="text-muted-foreground uppercase tracking-wide">
             Identificação
           </Typography.Small>
 
-          {/* Linha 1: Nome Completo | Nome de Exibição */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Typography.Muted className="font-medium mb-1">
@@ -65,7 +60,6 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
             </div>
           </div>
 
-          {/* Linha 2: Data Nascimento | Gênero | CPF | RG */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {usuario.dataNascimento && (
               <div>
@@ -113,13 +107,11 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
 
         <Separator />
 
-        {/* SEÇÃO 2: CONTATO */}
         <div className="space-y-4">
           <Typography.Small className="text-muted-foreground uppercase tracking-wide">
             Contato
           </Typography.Small>
 
-          {/* Linha 1: Telefone | Ramal */}
           {(usuario.telefone || usuario.ramal) && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {usuario.telefone && (
@@ -144,7 +136,6 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
             </div>
           )}
 
-          {/* Linha 2: Email Corporativo | Email Pessoal */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Typography.Muted className="font-medium mb-1 flex items-center gap-1.5">
@@ -168,7 +159,6 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
 
         <Separator />
 
-        {/* SEÇÃO 3: INFORMAÇÕES PROFISSIONAIS */}
         <div className="space-y-4">
           <Typography.Small className="text-muted-foreground uppercase tracking-wide">
             Informações Profissionais
@@ -215,7 +205,6 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
           </div>
         </div>
 
-        {/* SEÇÃO 4: ENDEREÇO */}
         {usuario.endereco && Object.values(usuario.endereco).some((v) => v) && (
           <>
             <Separator />

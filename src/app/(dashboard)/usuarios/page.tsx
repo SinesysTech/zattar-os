@@ -1,3 +1,4 @@
+
 'use client';
 
 // Página de usuários - Lista usuários do sistema
@@ -8,7 +9,6 @@ import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { TableWithToolbar, type ResponsiveTableColumn } from '@/components/ui/table-with-toolbar';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
-import { buildUsuariosFilterOptions, buildUsuariosFilterGroups, parseUsuariosFilters } from './components/usuarios-toolbar-filters';
 import { Button } from '@/components/ui/button';
 import { Eye, Settings, KeyRound, ShieldAlert } from 'lucide-react';
 import {
@@ -16,20 +16,26 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
-import { UsuariosGridView } from './components/usuarios-grid-view';
-import { ViewToggle } from './components/view-toggle';
-import { UsuarioCreateDialog } from './components/usuario-create-dialog';
-import { UsuarioEditDialog } from './components/usuario-edit-dialog';
-import { CargosManagementDialog } from './components/cargos-management-dialog';
-import { RedefinirSenhaDialog } from './components/redefinir-senha-dialog';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import type { UsuariosFilters, ViewMode } from '@/app/_lib/types/usuarios';
+
+// Importar do Feature
 import {
+  useUsuarios,
+  UsuariosGridView,
+  ViewToggle,
+  UsuarioCreateDialog,
+  UsuarioEditDialog,
+  CargosManagementDialog,
+  RedefinirSenhaDialog,
+  buildUsuariosFilterOptions,
+  buildUsuariosFilterGroups,
+  parseUsuariosFilters,
   formatarCpf,
   formatarTelefone,
   formatarOab,
-} from '@/app/_lib/utils/format-usuarios';
+  type Usuario,
+  type UsuariosFilters,
+  type ViewMode
+} from '@/features/usuarios';
 
 const VIEW_MODE_STORAGE_KEY = 'usuarios-view-mode';
 
