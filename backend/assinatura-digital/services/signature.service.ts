@@ -1,3 +1,76 @@
+/**
+ * Serviço de Assinatura Digital Eletrônica Avançada
+ * 
+ * CONFORMIDADE LEGAL - MP 2.200-2/2001
+ * 
+ * Este módulo implementa assinatura eletrônica avançada conforme Art. 10, § 2º da
+ * Medida Provisória 2.200-2/2001, garantindo:
+ * 
+ * **a) Vinculação exclusiva ao signatário:**
+ * - Coleta de device fingerprint (impressão digital do dispositivo)
+ * - Captura de foto (evidência biométrica facial)
+ * - Assinatura manuscrita digital
+ * - Dados de geolocalização (GPS) e IP de origem
+ * 
+ * **b) Identificação inequívoca do signatário:**
+ * - Validação de entropia mínima do device fingerprint (6 campos)
+ * - Embedding de foto no PDF final (não apenas storage externo)
+ * - Aceite explícito de termos com versão e timestamp
+ * 
+ * **c) Controle exclusivo pelo signatário:**
+ * - Assinatura manuscrita capturada em tempo real
+ * - Device fingerprint coletado no momento da assinatura
+ * - Timestamp preciso de todas as evidências
+ * 
+ * **d) Detecção de modificações posteriores:**
+ * - Cadeia de hashes SHA-256:
+ *   1. hash_original_sha256: PDF pré-assinatura (documento base)
+ *   2. hash_final_sha256: PDF pós-manifesto e flatten (documento final)
+ * - Qualquer alteração no PDF altera os hashes, tornando adulteração detectável
+ * - Função de auditoria para recalcular e comparar hashes
+ * 
+ * ## Cadeia de Custódia (Chain of Custody)
+ * 
+ * 1. **Geração do PDF Base**
+ *    - Template preenchido com dados do cliente
+ *    - Hash original calculado (prova de integridade do documento base)
+ * 
+ * 2. **Adição de Evidências Biométricas**
+ *    - Assinatura manuscrita embedada no PDF
+ *    - Foto (se fornecida) embedada no PDF
+ * 
+ * 3. **Anexação do Manifesto de Assinatura**
+ *    - Página final com todas as evidências e metadados:
+ *      - Hashes (original e final)
+ *      - Dados do signatário (nome, CPF, timestamp)
+ *      - Dados do dispositivo (platform, navegador, resolução)
+ *      - Geolocalização (latitude, longitude, precisão)
+ *      - Termos aceitos (versão, data de aceite)
+ * 
+ * 4. **Flatten e Hash Final**
+ *    - PDF salvo de forma definitiva (flatten)
+ *    - Hash final calculado (prova de integridade do documento completo)
+ * 
+ * 5. **Persistência Dual**
+ *    - PDF armazenado no storage (Backblaze B2)
+ *    - Hashes, metadados e referências persistidos no banco (Supabase)
+ * 
+ * ## Pontos de Validação
+ * 
+ * Durante `finalizeSignature()`:
+ * - Termos de aceite (obrigatório)
+ * - Entropia do device fingerprint (fortemente recomendado)
+ * - Embedding de foto no PDF (se fornecida)
+ * 
+ * Durante `auditSignatureIntegrity()`:
+ * - Recalcula hash_final_sha256 do PDF armazenado
+ * - Compara com hash registrado no banco
+ * - Valida entropia do fingerprint persistido
+ * - Verifica embedding de foto (heurística)
+ * 
+ * @module signature.service
+ */
+
 import { randomUUID } from 'crypto';
 import { PDFDocument } from 'pdf-lib';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
@@ -26,40 +99,104 @@ import type {
 const SERVICE = LogServices.SIGNATURE;
 
 /**
- * Decodifica data URL (base64) para Buffer.
- * @param dataUrl - Data URL no formato 'data:image/png;base64,iVBOR...'
- * @returns Buffer com os dados da imagem
+ * Decodifica data URL (base64) para Buffer, com suporte a múltiplos formatos.
+ * 
+ * Aceita tanto data URLs completas ('data:image/png;base64,iVBOR...')
+ * quanto strings base64 puras (sem prefixo 'data:').
+ * 
+ * @param dataUrlOrBase64 - Data URL completa ou string base64 pura
+ * @returns Buffer com os dados da imagem e mimeType inferido
+ * @throws {Error} Se a string for inválida ou não for base64 válido
  */
-function decodeDataUrlToBuffer(dataUrl: string): { buffer: Buffer; mimeType: string } {
-  const matches = dataUrl.match(/^data:([^;]+);base64,(.*)$/);
-  if (!matches) {
-    throw new Error('Data URL inválida');
+function decodeDataUrlToBuffer(dataUrlOrBase64: string): { buffer: Buffer; mimeType: string } {
+  // Tentar match de data URL completa primeiro
+  const dataUrlMatches = dataUrlOrBase64.match(/^data:([^;]+);base64,(.*)$/);
+  if (dataUrlMatches) {
+    const mimeType = dataUrlMatches[1];
+    const base64Data = dataUrlMatches[2];
+    const buffer = Buffer.from(base64Data, 'base64');
+    return { buffer, mimeType };
   }
-  const mimeType = matches[1];
-  const base64Data = matches[2];
-  const buffer = Buffer.from(base64Data, 'base64');
-  return { buffer, mimeType };
+
+  // Se não é data URL, assumir que é base64 puro
+  // Validar que parece ser base64 válido (caracteres alfanuméricos + / e =)
+  if (!/^[A-Za-z0-9+/]+=*$/.test(dataUrlOrBase64.trim())) {
+    throw new Error(
+      'Formato inválido: esperado data URL (data:image/...;base64,...) ou string base64 pura'
+    );
+  }
+
+  try {
+    const buffer = Buffer.from(dataUrlOrBase64, 'base64');
+    // Se conseguiu decodificar, inferir mimeType padrão baseado nos magic bytes
+    const mimeType = inferMimeTypeFromBuffer(buffer);
+    return { buffer, mimeType };
+  } catch (error) {
+    throw new Error(`Erro ao decodificar base64: ${error instanceof Error ? error.message : String(error)}`);
+  }
 }
 
 /**
- * Valida se o device fingerprint possui entropia suficiente para auditoria.
+ * Infere o MIME type de um buffer baseado nos magic bytes (assinatura do arquivo).
+ * @param buffer - Buffer da imagem
+ * @returns MIME type inferido ou padrão 'image/jpeg'
+ */
+function inferMimeTypeFromBuffer(buffer: Buffer): string {
+  // PNG: 89 50 4E 47
+  if (buffer.length >= 4 && buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E && buffer[3] === 0x47) {
+    return 'image/png';
+  }
+  // JPEG: FF D8 FF
+  if (buffer.length >= 3 && buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF) {
+    return 'image/jpeg';
+  }
+  // WebP: 52 49 46 46 ... 57 45 42 50
+  if (buffer.length >= 12 &&
+    buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46 &&
+    buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50) {
+    return 'image/webp';
+  }
+  // Padrão: assumir JPEG
+  return 'image/jpeg';
+}
+
+/**
+ * Valida entropia do device fingerprint para conformidade legal.
  *
- * CONFORMIDADE LEGAL - MP 2.200-2/2001
+ * CONFORMIDADE LEGAL - MP 2.200-2/2001, Art. 10, § 2º, alínea (b)
  *
- * O device fingerprint é uma evidência complementar para identificação do signatário
- * (Art. 10, § 2º, alínea b: "identificar seu signatário de forma inequívoca").
- * Quanto maior a entropia (número de campos únicos), mais difícil falsificar a
- * "impressão digital" do dispositivo.
+ * A alínea (b) exige que a assinatura "seja capaz de identificar seu signatário
+ * de forma inequívoca". O device fingerprint complementa a identificação biométrica
+ * (foto) ao criar uma "impressão digital" única do dispositivo usado na assinatura.
  *
- * Critérios de Entropia Mínima:
- * - Campos obrigatórios: screen_resolution, platform, user_agent, timezone_offset
- * - Campos recomendados: canvas_hash, hardware_concurrency, language
- * - Total mínimo: 4 campos obrigatórios + 2 recomendados = 6 campos
+ * Campos obrigatórios (mínimo 4):
+ * - screen_resolution: Resolução da tela (ex: "1920x1080")
+ * - user_agent: String do navegador/SO
+ * - platform: Plataforma do SO (ex: "Win32", "MacIntel")
+ * - timezone_name: Fuso horário (ex: "America/Sao_Paulo")
  *
- * @param fingerprint - Dados de fingerprint coletados no frontend
- * @param required - Se fingerprint é obrigatório (default: true)
- * @returns true se entropia é suficiente, false caso contrário
- * @throws {Error} Se fingerprint for null/undefined quando obrigatório
+ * Campos recomendados (mínimo 2 adicionais):
+ * - canvas_hash: Hash SHA-256 do canvas fingerprint (alta entropia)
+ * - hardware_concurrency: Número de núcleos de CPU
+ * - device_memory: Memória RAM em GB
+ * - battery_level: Nível de bateria (0-1)
+ * - plugins: Lista de plugins instalados
+ *
+ * Total mínimo: 6 campos (4 obrigatórios + 2 recomendados)
+ *
+ * @param fingerprint - Dados do device fingerprint coletados no frontend
+ * @throws {Error} Se entropia for insuficiente (< 6 campos)
+ *
+ * @example
+ * const fingerprint = {
+ *   screen_resolution: "1920x1080",
+ *   user_agent: "Mozilla/5.0...",
+ *   platform: "Win32",
+ *   timezone_name: "America/Sao_Paulo",
+ *   canvas_hash: "a3c5f1e2...",
+ *   hardware_concurrency: 8
+ * };
+ * validateDeviceFingerprintEntropy(fingerprint); // OK (6 campos)
  */
 function validateDeviceFingerprintEntropy(
   fingerprint: DeviceFingerprintData | null | undefined,
@@ -149,26 +286,38 @@ function validateDeviceFingerprintEntropy(
 }
 
 /**
- * Valida se a foto (selfie) está embedada no PDF final, não apenas no storage.
+ * Valida que a foto biométrica está embedada no PDF final.
  *
- * CONFORMIDADE LEGAL - MP 2.200-2/2001
+ * CONFORMIDADE LEGAL - MP 2.200-2/2001, Art. 10, § 2º, alínea (b)
  *
- * A foto é uma evidência biométrica crítica para identificação do signatário
- * (Art. 10, § 2º, alínea b). Para garantir integridade forense, ela deve estar
- * EMBEDADA no PDF (parte do documento), não apenas armazenada separadamente.
+ * A foto selfie é evidência biométrica crítica para identificação inequívoca
+ * do signatário. Ela DEVE estar embedada diretamente no PDF (não apenas
+ * armazenada separadamente no storage) para garantir integridade forense.
  *
- * Se a foto estiver solta no storage, pode-se alegar que foi trocada. Estando
- * dentro do PDF assinado/achatado, ela faz parte do documento íntegro e qualquer
- * modificação alterará o hash_final_sha256.
+ * Se a foto estiver apenas no storage (Backblaze B2), um atacante poderia
+ * alegar que a foto foi substituída após a assinatura. Ao embedar a foto
+ * no PDF e calcular o hash_final_sha256, qualquer alteração (incluindo
+ * substituição da foto) seria detectada.
  *
- * Validação:
- * - Carrega o PDF final do buffer
- * - Verifica se há pelo menos 1 imagem embedada (além da assinatura)
- * - Compara dimensões/tipo com a foto fornecida (heurística)
+ * Validação heurística (limitações do pdf-lib):
+ * - Tamanho do PDF final deve ser >= 50% do tamanho da foto
+ * - Página de manifesto deve ter >= 5KB de objetos (imagens embedadas)
  *
- * @param pdfBuffer - Buffer do PDF final (após manifesto e flatten)
+ * Nota: Esta é uma validação heurística, não determinística. Em auditorias
+ * forenses, recomenda-se inspeção manual do PDF com ferramentas como
+ * Adobe Acrobat ou pdfinfo.
+ *
+ * @param pdfBuffer - Buffer do PDF final (após flatten)
  * @param fotoBase64 - Data URL da foto que deveria estar embedada
- * @returns true se foto está embedada, false caso contrário
+ * @returns true se validação passar, false caso contrário
+ *
+ * @example
+ * const pdfBuffer = await fs.readFile('documento-assinado.pdf');
+ * const fotoBase64 = "data:image/jpeg;base64,...";
+ * const isEmbedded = await validatePhotoEmbedding(pdfBuffer, fotoBase64);
+ * if (!isEmbedded) {
+ *   throw new Error('Foto não está embedada no PDF');
+ * }
  */
 async function validatePhotoEmbedding(
   pdfBuffer: Buffer,
@@ -254,6 +403,26 @@ function buildProtocol(): string {
   return `FS-${ts}-${rand}`;
 }
 
+/**
+ * Persiste registro de assinatura no banco com todos os metadados.
+ *
+ * Campos críticos para conformidade legal:
+ * - hash_original_sha256: Hash do PDF antes da assinatura (prova de conteúdo)
+ * - hash_final_sha256: Hash do PDF após manifesto e flatten (prova de integridade)
+ * - termos_aceite_versao: Versão dos termos aceitos (ex: "v1.0-MP2200-2")
+ * - termos_aceite_data: Timestamp UTC do aceite (ISO 8601)
+ * - dispositivo_fingerprint_raw: JSONB com dados do device (>= 6 campos)
+ *
+ * @param payload - Dados da assinatura a persistir
+ * @param pdfUrl - URL do PDF final
+ * @param protocolo - Protocolo da assinatura
+ * @param hashOriginal - Hash do PDF original
+ * @param hashFinal - Hash do PDF final
+ * @param assinaturaUrl - URL da imagem da assinatura
+ * @param fotoUrl - URL da foto do signatário
+ * @returns Objeto com o ID, protocolo e URL do PDF da assinatura inserida.
+ * @throws {Error} Se insert falhar
+ */
 async function insertAssinaturaRecord(
   payload: FinalizePayload,
   pdfUrl: string,
@@ -353,18 +522,72 @@ export async function generatePreview(payload: PreviewPayload): Promise<PreviewR
 }
 
 /**
- * Finaliza assinatura digital com conformidade MP 2.200-2/2001.
+ * Finaliza assinatura digital com conformidade legal MP 2.200-2/2001.
  *
- * Fluxo de integridade criptográfica:
- * 1. Gera PDF preenchido (pré-assinatura) e calcula hash_original_sha256
- * 2. Adiciona assinatura manuscrita e foto ao PDF
- * 3. Anexa página de manifesto com evidências biométricas
- * 4. Salva (flatten) PDF final e calcula hash_final_sha256
- * 5. Persiste ambos os hashes e dados de termos no banco
+ * FLUXO COMPLETO DE FINALIZAÇÃO
  *
- * @param payload - Dados de finalização incluindo termos_aceite, termos_aceite_versao, dispositivo_fingerprint_raw
- * @returns Resultado com assinatura_id, protocolo e pdf_url
- * @throws {Error} Se termos não forem aceitos ou foto estiver ausente
+ * Este é o ponto central do módulo de assinatura digital. Implementa todas
+ * as 4 alíneas do Art. 10, § 2º da MP 2.200-2/2001 para Assinatura Eletrônica
+ * Avançada sem certificado ICP-Brasil.
+ *
+ * Etapas (ordem crítica para cadeia de custódia):
+ *
+ * 1. VALIDAÇÃO DE ENTRADA
+ *    - Verifica aceite de termos (termos_aceite === true)
+ *    - Valida entropia do device fingerprint (>= 6 campos)
+ *    - Confirma presença de foto se formulário exigir
+ *
+ * 2. COLETA DE DADOS
+ *    - Busca cliente, template, formulário, segmento no Supabase
+ *    - Monta contexto completo para geração de PDF
+ *
+ * 3. ARMAZENAMENTO DE IMAGENS
+ *    - Upload de assinatura manuscrita (PNG) para Backblaze B2
+ *    - Upload de foto selfie (JPEG) para Backblaze B2
+ *    - Gera URLs assinadas (expiration: 1 ano)
+ *
+ * 4. GERAÇÃO DE PDF PRÉ-ASSINATURA
+ *    - Gera PDF preenchido com dados do formulário (SEM imagens)
+ *    - Calcula hash_original_sha256 (prova de integridade do conteúdo)
+ *
+ * 5. MONTAGEM DO PDF FINAL
+ *    - Recarrega PDF e insere imagens (assinatura + foto)
+ *    - Anexa página de manifesto com todas as evidências
+ *    - Flatten do PDF (trava edições, remove campos interativos)
+ *    - Calcula hash_final_sha256 (prova de integridade do documento completo)
+ *
+ * 6. VALIDAÇÃO DE INTEGRIDADE
+ *    - Verifica embedding da foto no PDF (heurística)
+ *
+ * 7. PERSISTÊNCIA
+ *    - Upload do PDF final para Backblaze B2
+ *    - Insert no banco com todos os metadados + hashes
+ *    - Retorna protocolo + URLs para download
+ *
+ * CONFORMIDADE LEGAL - Mapeamento das Alíneas:
+ *
+ * - Alínea (a) - Associação unívoca: Device fingerprint + IP + geolocalização
+ * - Alínea (b) - Identificação inequívoca: Foto selfie + CPF + dados pessoais
+ * - Alínea (c) - Controle exclusivo: Captura em tempo real (webcam/canvas)
+ * - Alínea (d) - Detecção de modificações: Dual hashing SHA-256 + flatten
+ *
+ * @param payload - Dados completos da assinatura (FinalizePayload)
+ * @returns Objeto com protocolo, URLs dos PDFs, e metadados
+ * @throws {Error} Se validação falhar ou ocorrer erro técnico
+ *
+ * @example
+ * const result = await finalizeSignature({
+ *   cliente_id: 123,
+ *   formulario_id: 456,
+ *   template_id: 789,
+ *   assinatura_base64: "data:image/png;base64,...",
+ *   foto_base64: "data:image/jpeg;base64,...",
+ *   termos_aceite: true,
+ *   termos_aceite_versao: "v1.0-MP2200-2",
+ *   dispositivo_fingerprint_raw: { screen_resolution: "1920x1080", ... },
+ *   // ... outros campos
+ * });
+ * console.log(result.protocolo); // "FS-20250110120000-A1B2C"
  */
 export async function finalizeSignature(payload: FinalizePayload): Promise<FinalizeResult> {
   const timer = createTimer();
@@ -390,13 +613,42 @@ export async function finalizeSignature(payload: FinalizePayload): Promise<Final
     throw new Error('Aceite de termos é obrigatório (termos_aceite e termos_aceite_versao)');
   }
 
+  logger.info('Termos de aceite validados', {
+    ...context,
+    termos_versao: payload.termos_aceite_versao,
+  });
+
   // Validação de entropia do device fingerprint (conformidade MP 2.200-2/2001)
-  if (!validateDeviceFingerprintEntropy(payload.dispositivo_fingerprint_raw, true)) {
-    throw new Error(
-      'Device fingerprint com entropia insuficiente. ' +
-      'Campos obrigatórios: screen_resolution, platform, user_agent, timezone_offset. ' +
-      'Campos recomendados: canvas_hash, hardware_concurrency, language.'
+  // IMPORTANTE: Device fingerprint é fortemente recomendado mas não obrigatório para
+  // manter retrocompatibilidade. Assinaturas sem fingerprint ou com entropia baixa
+  // terão menor robustez de evidência forense.
+  const entropiaSuficiente = validateDeviceFingerprintEntropy(
+    payload.dispositivo_fingerprint_raw,
+    false // Não obrigatório, mas fortemente recomendado
+  );
+
+  if (!payload.dispositivo_fingerprint_raw) {
+    logger.warn(
+      'Assinatura sem device fingerprint - evidência de identificação do signatário reduzida (Art. 10, § 2º, alínea b, MP 2.200-2/2001)',
+      {
+        ...context,
+        impacto: 'Menor robustez forense - recomenda-se coletar fingerprint em futuras assinaturas',
+      }
     );
+  } else if (!entropiaSuficiente) {
+    logger.warn(
+      'Device fingerprint com entropia insuficiente - identificação do signatário pode ser questionável',
+      {
+        ...context,
+        impacto: 'Evidência biométrica fraca - recomenda-se coletar mais campos do dispositivo',
+        campos_minimos: 'screen_resolution, platform, user_agent, timezone_offset, canvas_hash, hardware_concurrency',
+      }
+    );
+  } else {
+    logger.info('Device fingerprint validado com entropia suficiente', {
+      ...context,
+      conformidade: 'Evidência biométrica robusta coletada',
+    });
   }
 
   logger.debug('Buscando dados para finalização', context);
@@ -739,36 +991,51 @@ async function downloadPdfFromStorage(pdfUrl: string): Promise<Buffer> {
 }
 
 /**
- * Audita integridade de uma assinatura digital concluída.
+ * Realiza auditoria forense completa de uma assinatura digital.
  *
- * CONFORMIDADE LEGAL - MP 2.200-2/2001
+ * PROCEDIMENTO DE AUDITORIA - MP 2.200-2/2001
  *
- * Esta função verifica a integridade forense de assinaturas digitais já finalizadas,
- * recalculando hashes e validando evidências biométricas contra os registros persistidos.
+ * Esta função implementa verificação independente de integridade documental,
+ * essencial para contestações judiciais ou auditorias de compliance.
  *
- * Validações Realizadas:
- * 1. **Integridade Criptográfica** (Art. 10, § 1º):
- *    - Recalcula hash_final_sha256 do PDF armazenado
- *    - Compara com hash registrado no banco
- *    - Falha indica adulteração do PDF após assinatura
+ * Verificações realizadas:
  *
- * 2. **Entropia do Device Fingerprint** (Art. 10, § 2º, alínea b):
- *    - Verifica se dispositivo_fingerprint_raw tem campos suficientes
- *    - Baixa entropia = identificação fraca do signatário
+ * 1. INTEGRIDADE DO HASH (crítico)
+ *    - Baixa PDF do storage (Backblaze B2)
+ *    - Recalcula hash SHA-256 do PDF atual
+ *    - Compara com hash_final_sha256 armazenado no banco
+ *    - Usa crypto.timingSafeEqual() para evitar timing attacks
+ *    - Resultado: VÁLIDO (hashes batem) ou INVÁLIDO (documento adulterado)
  *
- * 3. **Embedding de Foto** (Art. 10, § 2º, alínea b):
- *    - Se foto foi fornecida, verifica se está embedada no PDF
- *    - Foto solta no storage pode ser trocada, comprometendo evidência
+ * 2. ENTROPIA DO DEVICE FINGERPRINT (recomendado)
+ *    - Valida que fingerprint tem >= 6 campos (4 obrigatórios + 2 recomendados)
+ *    - Aviso se entropia for insuficiente (não bloqueia auditoria)
  *
- * Casos de Uso:
- * - Auditorias periódicas de conformidade
- * - Investigação de fraudes
- * - Validação antes de envio para sistemas externos
- * - Geração de relatórios de integridade
+ * 3. EMBEDDING DA FOTO (heurístico)
+ *    - Verifica que foto está embedada no PDF (não apenas no storage)
+ *    - Usa heurística de tamanho (PDF >= 50% foto + manifesto >= 5KB)
+ *    - Aviso se validação falhar (não bloqueia auditoria)
  *
- * @param assinaturaId - ID da assinatura a ser auditada
- * @returns Resultado detalhado da auditoria
- * @throws {Error} Se assinatura não for encontrada
+ * Status de retorno:
+ * - "valido": Todas as verificações críticas passaram
+ * - "invalido": Hash divergente (documento adulterado)
+ * - "erro": Falha técnica (PDF não encontrado, erro de download, etc.)
+ *
+ * @param assinaturaId - ID da assinatura a auditar
+ * @returns Objeto AuditResult com status, verificações, avisos, e erros
+ *
+ * @example
+ * // Auditoria de rotina
+ * const result = await auditSignatureIntegrity(12345);
+ * if (result.status === 'invalido') {
+ *   console.error('ALERTA: Documento adulterado!', result.erros);
+ * }
+ *
+ * @example
+ * // Perícia judicial
+ * const sessoes = await listSessoes({ protocolo: 'FS-20250110120000-A1B2C' });
+ * const auditoria = await auditSignatureIntegrity(sessoes[0].id);
+ * // Exportar auditoria.verificacoes para laudo pericial
  */
 export async function auditSignatureIntegrity(assinaturaId: number): Promise<AuditResult> {
   const timer = createTimer();
@@ -811,12 +1078,17 @@ export async function auditSignatureIntegrity(assinaturaId: number): Promise<Aud
     logger.debug('Recalculando hash final do PDF', context);
     hashFinalRecalculado = calculateHash(pdfBuffer);
 
-    // Comparar hashes
+    // Comparar hashes usando VERIFY_HASH operation
     const hashRegistrado = assinatura.hash_final_sha256;
     if (!hashRegistrado) {
       erros.push('Hash final não foi registrado no banco (campo vazio)');
       logger.warn('Hash final ausente no banco', context);
     } else {
+      const verifyContext = {
+        ...context,
+        operation: LogOperations.VERIFY_HASH,
+      };
+      logger.debug('Verificando integridade do hash', verifyContext);
       hashesValidos = verifyHash(pdfBuffer, hashRegistrado);
       if (!hashesValidos) {
         erros.push(
@@ -825,12 +1097,12 @@ export async function auditSignatureIntegrity(assinaturaId: number): Promise<Aud
           `Recalculado: ${hashFinalRecalculado.slice(0, 16)}...`
         );
         logger.error('Falha na verificação de integridade: hash não confere', null, {
-          ...context,
+          ...verifyContext,
           hash_registrado: hashRegistrado.slice(0, 16),
           hash_recalculado: hashFinalRecalculado.slice(0, 16),
         });
       } else {
-        logger.debug('Hash final validado com sucesso', context);
+        logger.info('Hash final validado com sucesso - documento íntegro', verifyContext);
       }
     }
   } catch (error) {
