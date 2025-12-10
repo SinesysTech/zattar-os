@@ -14,7 +14,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Segmento, EscopoSegmento } from '@/core/assinatura-digital/domain';
-import { listarSegmentosAction } from '@/core/app/actions/assinatura-digital';
+import { listarSegmentosAction } from '@/app/actions/assinatura-digital';
 import { getSegmentoDisplayName, formatAtivoBadge, getAtivoBadgeVariant, truncateText } from '@/lib/assinatura-digital/utils';
 import { useMinhasPermissoes } from '@/core/app/_lib/hooks/use-minhas-permissoes';
 import { SegmentoCreateDialog, SegmentoEditDialog, SegmentoDuplicateDialog, SegmentoDeleteDialog } from './components';

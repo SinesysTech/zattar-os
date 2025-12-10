@@ -43,7 +43,19 @@
       "Bash(npm run test:coverage:*)",
       "Bash(mkdir:*)",
       "Bash(timeout 30 npm run dev:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(equation-node-static.tsx media-image-node-static.tsx suggestion-node-static.tsx )",
+      "Bash(mention-node-static.tsx table-node-static.tsx ai-node.tsx suggestion-node.tsx )",
+      "Bash(hr-node.tsx paragraph-node.tsx callout-node.tsx code-block-node.tsx date-node.tsx )",
+      "Bash(column-node.tsx emoji-node.tsx link-node.tsx equation-node.tsx media-embed-node.tsx )",
+      "Bash(media-image-node.tsx media-placeholder-node.tsx mention-node.tsx table-node.tsx )",
+      "Bash(media-video-node.tsx )",
+      "Bash(block-list-static.tsx block-context-menu.tsx block-draggable.tsx block-list.tsx )",
+      "Bash(toolbar.tsx emoji-toolbar-button.tsx font-size-toolbar-button.tsx fixed-toolbar.tsx )",
+      "Bash(font-color-toolbar-button.tsx table-toolbar-button.tsx floating-toolbar.tsx )",
+      "Bash(suggestion-toolbar-button.tsx responsive-fixed-toolbar.tsx )",
+      "Bash(editor-static.tsx editor.tsx )",
+      "Bash(../plate-ui/)"
     ],
     "deny": [],
     "ask": []
