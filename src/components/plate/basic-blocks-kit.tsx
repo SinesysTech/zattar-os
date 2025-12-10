@@ -12,7 +12,7 @@ import {
 } from '@platejs/basic-nodes/react';
 import { ParagraphPlugin } from 'platejs/react';
 
-import { BlockquoteElement } from '@/components/ui/blockquote-node';
+import { BlockquoteElement } from '@/components/plate-ui/blockquote-node';
 import {
   H1Element,
   H2Element,

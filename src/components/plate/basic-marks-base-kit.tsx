@@ -10,7 +10,7 @@ import {
   BaseUnderlinePlugin,
 } from '@platejs/basic-nodes';
 
-import { CodeLeafStatic } from '@/components/ui/code-node-static';
+import { CodeLeafStatic } from '@/components/plate-ui/code-node-static';
 import { HighlightLeafStatic } from '@/components/ui/highlight-node-static';
 import { KbdLeafStatic } from '@/components/ui/kbd-node-static';
 
