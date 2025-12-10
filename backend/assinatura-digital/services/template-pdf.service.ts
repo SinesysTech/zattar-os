@@ -373,6 +373,18 @@ async function embedImageFromDataUrl(
  *   termos: { ... }
  * });
  * const finalPdfBytes = await pdfDoc.save();
+ *
+ * AUDITORIA E PERÍCIA TÉCNICA
+ *
+ * O manifesto serve como "página de rosto" forense do documento assinado.
+ * Em auditorias ou perícias judiciais, o perito pode:
+ * 1. Extrair o manifesto do PDF (última página)
+ * 2. Verificar que todos os campos obrigatórios estão presentes
+ * 3. Recalcular o hash_final_sha256 do PDF completo
+ * 4. Comparar com o hash exibido no manifesto
+ * 5. Validar que foto e assinatura estão embedadas (não apenas referenciadas)
+ *
+ * Qualquer divergência indica adulteração pós-assinatura.
  */
 export async function appendManifestPage(
   pdfDoc: PDFDocument,
