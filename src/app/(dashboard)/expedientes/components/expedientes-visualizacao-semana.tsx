@@ -3,6 +3,7 @@
 // Componente de visualização de expedientes por semana com tabs de dias
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation'; // Adicionado para router.refresh()
 import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { DataTable } from '@/components/ui/data-table';
@@ -35,8 +36,19 @@ import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dia
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import { Expediente, CodigoTribunal, GrauTribunal } from '@/core/expedientes/domain';
+import { actionAtualizarExpediente } from '@/app/actions/expedientes'; // Adicionado para update de tipo/descrição e prazo
+
+// Definindo interfaces locais para Usuario e TipoExpediente
+interface Usuario {
+  id: number;
+  nomeExibicao: string;
+}
+
+interface TipoExpediente {
+  id: number;
+  tipoExpediente: string;
+}
 
 /**
  * Formata data ISO para formato brasileiro (DD/MM/YYYY)
@@ -68,37 +80,49 @@ const getParteReColorClass = (): string => {
 /**
  * Retorna a classe CSS de cor para badge do TRT
  */
-const getTRTColorClass = (trt: string): string => {
-  const trtColors: Record<string, string> = {
+const getTRTColorClass = (trt: CodigoTribunal): string => {
+  const trtColors: Record<CodigoTribunal, string> = {
     'TRT1': 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
     'TRT2': 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
     'TRT3': 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
     'TRT4': 'bg-pink-100 text-pink-800 border-pink-200 dark:bg-pink-900 dark:text-pink-200 dark:border-pink-800',
     'TRT5': 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-800',
     'TRT6': 'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-200 dark:border-indigo-800',
+    'TRT7': 'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900 dark:text-cyan-200 dark:border-cyan-800',
+    'TRT8': 'bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900 dark:text-rose-200 dark:border-rose-800',
+    'TRT9': 'bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900 dark:text-teal-200 dark:border-teal-800',
+    'TRT10': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
+    'TRT11': 'bg-lime-100 text-lime-800 border-lime-200 dark:bg-lime-900 dark:text-lime-200 dark:border-lime-800',
+    'TRT12': 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200 dark:bg-fuchsia-900 dark:text-fuchsia-200 dark:border-fuchsia-800',
+    'TRT13': 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800',
+    'TRT14': 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-200 dark:border-orange-800',
+    'TRT15': 'bg-violet-100 text-violet-800 border-violet-200 dark:bg-violet-900 dark:text-violet-200 dark:border-violet-800',
+    'TRT16': 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800',
+    'TRT17': 'bg-blue-200 text-blue-900 border-blue-300 dark:bg-blue-800 dark:text-blue-100 dark:border-blue-700',
+    'TRT18': 'bg-green-200 text-green-900 border-green-300 dark:bg-green-800 dark:text-green-100 dark:border-green-700',
+    'TRT19': 'bg-purple-200 text-purple-900 border-purple-300 dark:bg-purple-800 dark:text-purple-100 dark:border-purple-700',
+    'TRT20': 'bg-pink-200 text-pink-900 border-pink-300 dark:bg-pink-800 dark:text-pink-100 dark:border-pink-700',
+    'TRT21': 'bg-yellow-200 text-yellow-900 border-yellow-300 dark:bg-yellow-800 dark:text-yellow-100 dark:border-yellow-700',
+    'TRT22': 'bg-indigo-200 text-indigo-900 border-indigo-300 dark:bg-indigo-800 dark:text-indigo-100 dark:border-indigo-700',
+    'TRT23': 'bg-teal-200 text-teal-900 border-teal-300 dark:bg-teal-800 dark:text-teal-100 dark:border-teal-700',
+    'TRT24': 'bg-orange-200 text-orange-900 border-orange-300 dark:bg-orange-800 dark:text-orange-100 dark:border-orange-700',
   };
   return trtColors[trt] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
 };
 
-/**
- * Retorna a classe CSS de cor para badge do grau
- */
-const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior'): string => {
-  const grauColors: Record<string, string> = {
-    'primeiro_grau': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
-    'tribunal_superior': 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
-    'segundo_grau': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+const getGrauColorClass = (grau: GrauTribunal): string => {
+  const grauColors: Record<GrauTribunal, string> = {
+    [GrauTribunal.PRIMEIRO_GRAU]: 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
+    [GrauTribunal.TRIBUNAL_SUPERIOR]: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
+    [GrauTribunal.SEGUNDO_GRAU]: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
   };
   return grauColors[grau] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
 };
 
-/**
- * Formata o grau para exibição
- */
-const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior'): string => {
-  if (grau === 'primeiro_grau') return '1º Grau';
-  if (grau === 'segundo_grau') return '2º Grau';
-  if (grau === 'tribunal_superior') return 'Tribunal Superior';
+const formatarGrau = (grau: GrauTribunal): string => {
+  if (grau === GrauTribunal.PRIMEIRO_GRAU) return '1º Grau';
+  if (grau === GrauTribunal.SEGUNDO_GRAU) return '2º Grau';
+  if (grau === GrauTribunal.TRIBUNAL_SUPERIOR) return 'Tribunal Superior';
   return grau;
 };
 
@@ -222,27 +246,28 @@ function TipoDescricaoCell({
   onSuccess,
   tiposExpedientes
 }: {
-  expediente: PendenteManifestacao;
+  expediente: Expediente;
   onSuccess: () => void;
-  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+  tiposExpedientes: TipoExpediente[];
 }) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isPdfViewerOpen, setIsPdfViewerOpen] = React.useState(false);
   const [tipoSelecionado, setTipoSelecionado] = React.useState<string>(
-    expediente.tipo_expediente_id?.toString() || 'null'
+    expediente.tipoExpedienteId?.toString() || 'null'
   );
   const [descricao, setDescricao] = React.useState<string>(
-    expediente.descricao_arquivos || ''
+    expediente.descricaoArquivos || ''
   );
 
   // Sincronizar estado quando expediente mudar
   React.useEffect(() => {
-    setTipoSelecionado(expediente.tipo_expediente_id?.toString() || 'null');
-    setDescricao(expediente.descricao_arquivos || '');
-  }, [expediente.tipo_expediente_id, expediente.descricao_arquivos]);
+    setTipoSelecionado(expediente.tipoExpedienteId?.toString() || 'null');
+    setDescricao(expediente.descricaoArquivos || '');
+  }, [expediente.tipoExpedienteId, expediente.descricaoArquivos]);
 
-  const temDocumento = !!expediente.arquivo_key;
+  const temDocumento = !!expediente.arquivoKey;
 
   const handleSave = async () => {
     setIsLoading(true);
@@ -250,36 +275,29 @@ function TipoDescricaoCell({
       const tipoExpedienteId = tipoSelecionado === 'null' ? null : parseInt(tipoSelecionado, 10);
       const descricaoArquivos = descricao.trim() || null;
 
-      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/tipo-descricao`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tipoExpedienteId,
-          descricaoArquivos,
-        }),
-      });
+      const formData = new FormData();
+      if (tipoExpedienteId !== null) formData.append('tipoExpedienteId', tipoExpedienteId.toString());
+      if (descricaoArquivos !== null) formData.append('descricaoArquivos', descricaoArquivos);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || 'Erro ao atualizar tipo e descrição');
+      const result = await actionAtualizarExpediente(expediente.id, null, formData);
+
+      if (!result.success) {
+        throw new Error(result.message || 'Erro ao atualizar tipo e descrição');
       }
 
       setIsOpen(false);
-      onSuccess();
+      onSuccess(); // Triggers router.refresh()
     } catch (error) {
       console.error('Erro ao atualizar tipo e descrição:', error);
-      setIsOpen(false);
-      onSuccess();
+      // Aqui você pode adicionar um estado de erro local para exibir na UI
     } finally {
       setIsLoading(false);
     }
   };
 
-  const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipo_expediente_id);
-  const tipoNome = tipoExpediente ? tipoExpediente.tipo_expediente : 'Sem tipo';
-  const descricaoExibicao = expediente.descricao_arquivos || '-';
+  const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipoExpedienteId);
+  const tipoNome = tipoExpediente ? tipoExpediente.tipoExpediente : 'Sem tipo';
+  const descricaoExibicao = expediente.descricaoArquivos || '-';
 
   return (
     <>
@@ -293,7 +311,7 @@ function TipoDescricaoCell({
               <div className="flex items-center gap-1.5">
                 <Badge
                   variant="outline"
-                  className={`text-xs w-fit ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
+                  className={`text-xs w-fit ${expediente.tipoExpedienteId ? getTipoExpedienteColorClass(expediente.tipoExpedienteId) : ''}`}
                 >
                   {tipoNome}
                 </Badge>
@@ -329,7 +347,7 @@ function TipoDescricaoCell({
                     <SelectValue placeholder="Selecione o tipo">
                       {tipoSelecionado === 'null'
                         ? 'Sem tipo'
-                        : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipo_expediente || 'Selecione o tipo'}
+                        : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipoExpediente || 'Selecione o tipo'}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px]">
@@ -337,7 +355,7 @@ function TipoDescricaoCell({
                     {tiposExpedientes.length > 0 ? (
                       tiposExpedientes.map((tipo) => (
                         <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                          {tipo.tipo_expediente}
+                          {tipo.tipoExpediente}
                         </SelectItem>
                       ))
                     ) : (
@@ -385,8 +403,8 @@ function TipoDescricaoCell({
       <PdfViewerDialog
         open={isPdfViewerOpen}
         onOpenChange={setIsPdfViewerOpen}
-        fileKey={expediente.arquivo_key}
-        documentTitle={`Documento - ${expediente.numero_processo}`}
+        fileKey={expediente.arquivoKey}
+        documentTitle={`Documento - ${expediente.numeroProcesso}`}
       />
     </>
   );
@@ -400,10 +418,11 @@ function ResponsavelCell({
   onSuccess,
   usuarios
 }: {
-  expediente: PendenteManifestacao;
+  expediente: Expediente;
   onSuccess: () => void;
   usuarios: Usuario[];
 }) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -412,30 +431,27 @@ function ResponsavelCell({
     try {
       const responsavelId = value === 'null' || value === '' ? null : parseInt(value, 10);
 
-      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/responsavel`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ responsavelId }),
-      });
+      const formData = new FormData();
+      if (responsavelId !== null) formData.append('responsavelId', responsavelId.toString());
+      else formData.append('responsavelId', 'null'); // Explicitly send 'null' to clear
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || 'Erro ao atribuir responsável');
+      const result = await actionAtualizarExpediente(expediente.id, null, formData);
+
+      if (!result.success) {
+        throw new Error(result.message || 'Erro ao atribuir responsável');
       }
 
       setIsOpen(false);
-      onSuccess();
+      onSuccess(); // Triggers router.refresh()
     } catch (error) {
       console.error('Erro ao atribuir responsável:', error);
-      // Não chamar onSuccess em caso de falha para evitar refresh indevido
+      // TODO: Adicionar tratamento de erro na UI
     } finally {
       setIsLoading(false);
     }
   };
 
-  const responsavelAtual = usuarios.find(u => u.id === expediente.responsavel_id);
+  const responsavelAtual = usuarios.find(u => u.id === expediente.responsavelId);
 
   return (
     <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
@@ -491,16 +507,16 @@ function AcoesExpediente({
   tiposExpedientes,
   onSuccess,
 }: {
-  expediente: PendenteManifestacao;
+  expediente: Expediente;
   usuarios: Usuario[];
-  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+  tiposExpedientes: TipoExpediente[];
   onSuccess: () => void;
 }) {
   const [baixarDialogOpen, setBaixarDialogOpen] = React.useState(false);
   const [reverterDialogOpen, setReverterDialogOpen] = React.useState(false);
   const [visualizarDialogOpen, setVisualizarDialogOpen] = React.useState(false);
 
-  const estaBaixado = !!expediente.baixado_em;
+  const estaBaixado = !!expediente.baixadoEm;
 
   return (
     <TooltipProvider>
@@ -631,7 +647,7 @@ function TipoExpedienteColumnHeader({
 function PrazoColumnHeader({
   onSort,
 }: {
-  onSort: (field: 'data_ciencia_parte' | 'data_prazo_legal_parte', direction: 'asc' | 'desc') => void;
+  onSort: (field: 'dataCienciaParte' | 'dataPrazoLegalParte', direction: 'asc' | 'desc') => void;
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -671,7 +687,7 @@ function PrazoColumnHeader({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onSort('data_ciencia_parte', 'asc');
+                onSort('dataCienciaParte', 'asc');
                 setIsOpen(false);
               }}
             >
@@ -681,7 +697,7 @@ function PrazoColumnHeader({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onSort('data_ciencia_parte', 'desc');
+                onSort('dataCienciaParte', 'desc');
                 setIsOpen(false);
               }}
             >
@@ -694,7 +710,7 @@ function PrazoColumnHeader({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onSort('data_prazo_legal_parte', 'asc');
+                onSort('dataPrazoLegalParte', 'asc');
                 setIsOpen(false);
               }}
             >
@@ -704,7 +720,7 @@ function PrazoColumnHeader({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onSort('data_prazo_legal_parte', 'desc');
+                onSort('dataPrazoLegalParte', 'desc');
                 setIsOpen(false);
               }}
             >
@@ -724,8 +740,8 @@ function ProcessoColumnHeaderSemanal({
   onSort,
   onPartesSort,
 }: {
-  onSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void;
-  onPartesSort: (field: 'nome_parte_autora' | 'nome_parte_re', direction: 'asc' | 'desc') => void;
+  onSort: (field: 'trt' | 'grau' | 'descricaoOrgaoJulgador' | 'classeJudicial', direction: 'asc' | 'desc') => void;
+  onPartesSort: (field: 'nomeParteAutora' | 'nomeParteRe', direction: 'asc' | 'desc') => void;
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -811,7 +827,7 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onSort('descricao_orgao_julgador', 'asc');
+                onSort('descricaoOrgaoJulgador', 'asc');
                 setIsOpen(false);
               }}
             >
@@ -821,7 +837,7 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onSort('descricao_orgao_julgador', 'desc');
+                onSort('descricaoOrgaoJulgador', 'desc');
                 setIsOpen(false);
               }}
             >
@@ -834,7 +850,7 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onSort('classe_judicial', 'asc');
+                onSort('classeJudicial', 'asc');
                 setIsOpen(false);
               }}
             >
@@ -844,7 +860,7 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onSort('classe_judicial', 'desc');
+                onSort('classeJudicial', 'desc');
                 setIsOpen(false);
               }}
             >
@@ -855,7 +871,7 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onPartesSort('nome_parte_autora', 'asc');
+                onPartesSort('nomeParteAutora', 'asc');
                 setIsOpen(false);
               }}
             >
@@ -865,7 +881,7 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onPartesSort('nome_parte_autora', 'desc');
+                onPartesSort('nomeParteAutora', 'desc');
                 setIsOpen(false);
               }}
             >
@@ -875,7 +891,7 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onPartesSort('nome_parte_re', 'asc');
+                onPartesSort('nomeParteRe', 'asc');
                 setIsOpen(false);
               }}
             >
@@ -885,7 +901,7 @@ function ProcessoColumnHeaderSemanal({
               variant="ghost"
               className="w-full justify-start text-sm"
               onClick={() => {
-                onPartesSort('nome_parte_re', 'desc');
+                onPartesSort('nomeParteRe', 'desc');
                 setIsOpen(false);
               }}
             >
@@ -950,12 +966,10 @@ function PrazoCell({
   expediente,
   onSuccess,
 }: {
-  expediente: PendenteManifestacao;
+  expediente: Expediente;
   onSuccess: () => void;
 }) {
-  const dataInicio = expediente.data_ciencia_parte;
-  const dataFim = expediente.data_prazo_legal_parte;
-  const diasUteis = calcularDiasUteis(dataInicio, dataFim);
+  const router = useRouter();
   const [openPrazo, setOpenPrazo] = React.useState(false);
   const [isSavingPrazo, setIsSavingPrazo] = React.useState(false);
   const [dataPrazoStr, setDataPrazoStr] = React.useState<string>('');
@@ -963,19 +977,26 @@ function PrazoCell({
   const handleSalvarPrazo = async () => {
     setIsSavingPrazo(true);
     try {
-      const iso = dataPrazoStr ? new Date(dataPrazoStr).toISOString() : '';
-      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/prazo-legal`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dataPrazoLegal: iso }),
-      });
-      if (!response.ok) {
-        const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(ed.error || 'Erro ao atualizar prazo legal');
+      const formData = new FormData();
+      if (dataPrazoStr) {
+        const isoDate = new Date(dataPrazoStr).toISOString();
+        formData.append('dataPrazoLegalParte', isoDate);
+      } else {
+        formData.append('dataPrazoLegalParte', ''); // Clear if empty
       }
+      
+      const result = await actionAtualizarExpediente(expediente.id, null, formData);
+
+      if (!result.success) {
+        throw new Error(result.message || 'Erro ao atualizar prazo legal');
+      }
+
       setOpenPrazo(false);
       setDataPrazoStr('');
-      onSuccess();
+      onSuccess(); // Triggers router.refresh()
+    } catch (error) {
+      console.error('Erro ao atualizar prazo legal:', error);
+      // TODO: Adicionar tratamento de erro na UI
     } finally {
       setIsSavingPrazo(false);
     }
@@ -984,17 +1005,17 @@ function PrazoCell({
   return (
     <div className="min-h-10 flex flex-col items-center justify-center gap-2 py-2">
       <div className="text-sm">
-        <span className="font-semibold">Início:</span> {formatarData(dataInicio)}
+        <span className="font-semibold">Início:</span> {formatarData(expediente.dataCienciaParte)}
       </div>
       <div className="text-sm">
-        <span className="font-semibold">Fim:</span> {formatarData(dataFim)}
+        <span className="font-semibold">Fim:</span> {formatarData(expediente.dataPrazoLegalParte)}
       </div>
-      {diasUteis !== null && (
-        <Badge className={`${getCorBadgeDias(diasUteis)} text-sm font-medium mt-1 px-3 py-1`}>
-          {diasUteis} {diasUteis === 1 ? 'dia' : 'dias'}
+      {expediente.dataCienciaParte && expediente.dataPrazoLegalParte && (
+        <Badge className={`${getCorBadgeDias(calcularDiasUteis(expediente.dataCienciaParte, expediente.dataPrazoLegalParte) || 0)} text-sm font-medium mt-1 px-3 py-1`}>
+          {calcularDiasUteis(expediente.dataCienciaParte, expediente.dataPrazoLegalParte)} {calcularDiasUteis(expediente.dataCienciaParte, expediente.dataPrazoLegalParte) === 1 ? 'dia' : 'dias'}
         </Badge>
       )}
-      {!expediente.baixado_em && !dataFim && (
+      {!expediente.baixadoEm && !expediente.dataPrazoLegalParte && (
         <Button size="sm" variant="outline" onClick={() => setOpenPrazo(true)}>
           Definir Data
         </Button>
@@ -1011,7 +1032,7 @@ function PrazoCell({
               <input
                 id="prazo-inicio"
                 type="text"
-                value={expediente.created_at ? formatarData(expediente.created_at) : '-'}
+                value={expediente.createdAt ? formatarData(expediente.createdAt) : '-'}
                 disabled
                 className="border rounded p-2 w-full bg-muted text-muted-foreground"
               />
@@ -1039,9 +1060,10 @@ function ObservacoesCell({
   expediente,
   onSuccess,
 }: {
-  expediente: PendenteManifestacao;
+  expediente: Expediente;
   onSuccess: () => void;
 }) {
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [valor, setValor] = React.useState<string>(expediente.observacoes || '');
@@ -1054,17 +1076,21 @@ function ObservacoesCell({
     setIsLoading(true);
     try {
       const observacoes = valor.trim() || null;
-      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/observacoes`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ observacoes }),
-      });
-      if (!response.ok) {
-        const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(ed.error || 'Erro ao atualizar observações');
+      const formData = new FormData();
+      if (observacoes !== null) formData.append('observacoes', observacoes);
+      else formData.append('observacoes', 'null'); // Explicitly send 'null' to clear
+
+      const result = await actionAtualizarExpediente(expediente.id, null, formData);
+
+      if (!result.success) {
+        throw new Error(result.message || 'Erro ao atualizar observações');
       }
+
       setOpen(false);
-      onSuccess();
+      onSuccess(); // Triggers router.refresh()
+    } catch (error) {
+      console.error('Erro ao atualizar observações:', error);
+      // TODO: Adicionar tratamento de erro na UI
     } finally {
       setIsLoading(false);
     }
@@ -1097,8 +1123,8 @@ function ObservacoesCell({
               <Textarea value={valor} onChange={(e) => setValor(e.target.value)} disabled={isLoading} rows={3} />
             </div>
             <div className="flex justify-end gap-2">
-              <Button variant="outline" size="sm" onClick={() => setOpen(false)} disabled={isLoading}>Cancelar</Button>
-              <Button size="sm" onClick={handleSave} disabled={isLoading}>
+              <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isLoading}>Cancelar</Button>
+              <Button type="button" onClick={handleSave} disabled={isLoading}>
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                 Salvar
               </Button>
@@ -1116,14 +1142,14 @@ function ObservacoesCell({
 function criarColunasSemanais(
   onSuccess: () => void,
   usuarios: Usuario[],
-  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>,
-  onTipoExpedienteSort: (direction: 'asc' | 'desc') => void,
-  onPrazoSort: (field: 'data_ciencia_parte' | 'data_prazo_legal_parte', direction: 'asc' | 'desc') => void,
-  onProcessoSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void,
-  onPartesSort: (field: 'nome_parte_autora' | 'nome_parte_re', direction: 'asc' | 'desc') => void,
-  onResponsavelSort: (direction: 'asc' | 'desc') => void
-): ColumnDef<PendenteManifestacao>[] {
-  const handleAcoes = (expediente: PendenteManifestacao) => (
+  tiposExpedientes: TipoExpediente[],
+  // onTipoExpedienteSort: (direction: 'asc' | 'desc') => void, // Removed sorting props
+  // onPrazoSort: (field: 'dataCienciaParte' | 'dataPrazoLegalParte', direction: 'asc' | 'desc') => void, // Removed sorting props
+  // onProcessoSort: (field: 'trt' | 'grau' | 'descricaoOrgaoJulgador' | 'classeJudicial', direction: 'asc' | 'desc') => void, // Removed sorting props
+  // onPartesSort: (field: 'nomeParteAutora' | 'nomeParteRe', direction: 'asc' | 'desc') => void, // Removed sorting props
+  // onResponsavelSort: (direction: 'asc' | 'desc') => void // Removed sorting props
+): ColumnDef<Expediente>[] {
+  const handleAcoes = (expediente: Expediente) => (
     <AcoesExpediente
       expediente={expediente}
       usuarios={usuarios}
@@ -1134,7 +1160,7 @@ function criarColunasSemanais(
   return [
     {
       id: 'tipo_descricao',
-      header: () => <TipoExpedienteColumnHeader onSort={onTipoExpedienteSort} />,
+      header: 'Tipo e Descrição', // Simplified header
       enableSorting: false,
       size: 300,
       cell: ({ row }) => (
@@ -1149,25 +1175,25 @@ function criarColunasSemanais(
     },
     {
       id: 'prazo',
-      header: () => <PrazoColumnHeader onSort={onPrazoSort} />,
+      header: 'Prazo', // Simplified header
       enableSorting: false,
       size: 170,
       cell: ({ row }) => <PrazoCell expediente={row.original} onSuccess={onSuccess} />,
     },
     {
       id: 'processo_partes',
-      header: () => <ProcessoColumnHeaderSemanal onSort={onProcessoSort} onPartesSort={onPartesSort} />,
+      header: 'Processo e Partes', // Simplified header
       enableSorting: false,
       size: 520,
       cell: ({ row }) => {
         const trt = row.original.trt;
         const grau = row.original.grau;
-        const classeJudicial = row.original.classe_judicial || '';
-        const numeroProcesso = row.original.numero_processo;
-        const processoId = row.original.processo_id;
-        const parteAutora = row.original.nome_parte_autora || '-';
-        const parteRe = row.original.nome_parte_re || '-';
-        const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
+        const classeJudicial = row.original.classeJudicial || '';
+        const numeroProcesso = row.original.numeroProcesso;
+        const processoId = row.original.processoId;
+        const parteAutora = row.original.nomeParteAutora || '-';
+        const parteRe = row.original.nomeParteRe || '-';
+        const orgaoJulgador = row.original.descricaoOrgaoJulgador || '-';
 
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[520px]">
@@ -1219,18 +1245,14 @@ function criarColunasSemanais(
     },
     {
       id: 'observacoes',
-      header: () => (
-        <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-          <div className="text-sm font-medium">Observações</div>
-        </div>
-      ),
+      header: 'Observações', // Simplified header
       enableSorting: false,
       size: 300,
       cell: ({ row }) => <ObservacoesCell expediente={row.original} onSuccess={onSuccess} />,
     },
     {
-      accessorKey: 'responsavel_id',
-      header: () => <ResponsavelColumnHeaderSemanal onSort={onResponsavelSort} />,
+      accessorKey: 'responsavelId', // Changed to camelCase
+      header: 'Responsável', // Simplified header
       size: 160,
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center">
@@ -1240,11 +1262,7 @@ function criarColunasSemanais(
     },
     {
       id: 'acoes',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Ações</div>
-        </div>
-      ),
+      header: 'Ações', // Simplified header
       cell: ({ row }) => {
         const expediente = row.original;
         return (
@@ -1258,19 +1276,11 @@ function criarColunasSemanais(
 }
 
 interface ExpedientesVisualizacaoSemanaProps {
-  expedientes: PendenteManifestacao[];
-  expedientesEspeciais?: PendenteManifestacao[];
+  expedientes: Expediente[];
   isLoading: boolean;
-  isLoadingEspeciais?: boolean;
-  onRefresh?: () => void;
   usuarios: Usuario[];
-  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+  tiposExpedientes: TipoExpediente[];
   semanaAtual: Date;
-  onTipoExpedienteSort: (direction: 'asc' | 'desc') => void;
-  onPrazoSort: (field: 'data_ciencia_parte' | 'data_prazo_legal_parte', direction: 'asc' | 'desc') => void;
-  onProcessoSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void;
-  onPartesSort: (field: 'nome_parte_autora' | 'nome_parte_re', direction: 'asc' | 'desc') => void;
-  onResponsavelSort: (direction: 'asc' | 'desc') => void;
 }
 
 export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciais, isLoading, isLoadingEspeciais, onRefresh, usuarios, tiposExpedientes, semanaAtual, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort }: ExpedientesVisualizacaoSemanaProps) {

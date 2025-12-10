@@ -1,0 +1,409 @@
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useEffect, useState } from 'react';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Audiencia, createAudienciaSchema, ModalidadeAudiencia, StatusAudiencia } from '@/core/audiencias/domain';
+import { actionCriarAudiencia, actionAtualizarAudiencia, ActionResult } from '@/app/actions/audiencias';
+import { toast } from 'sonner';
+import { useFormState, useFormStatus } from 'react-dom';
+import { CalendarIcon } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
+import { ptBR } from 'date-fns/locale';
+import { useTiposAudiencias } from '@/hooks/use-tipos-audiencias'; // Assuming this hook exists
+import { useUsuarios } from '@/hooks/use-usuarios'; // Assuming this hook exists
+import { TimePicker } from '@/components/ui/time-picker'; // Assuming a time picker component
+
+interface AudienciaFormProps {
+  initialData?: Audiencia;
+  onSuccess?: (audiencia: Audiencia) => void;
+  onClose?: () => void;
+}
+
+const formSchema = createAudienciaSchema.extend({
+  dataInicioDate: z.date().optional(),
+  dataFimDate: z.date().optional(),
+  horaInicioTime: z.string().optional(),
+  horaFimTime: z.string().optional(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaFormProps) {
+  const { pending } = useFormStatus();
+  const [state, formAction] = useFormState<ActionResult, FormData>(
+    initialData ? actionAtualizarAudiencia.bind(null, initialData.id) : actionCriarAudiencia,
+    null
+  );
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: initialData
+      ? {
+          ...initialData,
+          dataInicioDate: new Date(initialData.dataInicio),
+          dataFimDate: new Date(initialData.dataFim),
+          horaInicioTime: format(new Date(initialData.dataInicio), 'HH:mm'),
+          horaFimTime: format(new Date(initialData.dataFim), 'HH:mm'),
+        }
+      : {
+          modalidade: ModalidadeAudiencia.Virtual,
+          status: StatusAudiencia.Marcada,
+        },
+  });
+
+  const { tiposAudiencia } = useTiposAudiencias();
+  const { usuarios } = useUsuarios();
+
+  const modalidade = form.watch('modalidade');
+
+  useEffect(() => {
+    if (state && state.success) {
+      toast.success(state.message);
+      onSuccess?.(state.data as Audiencia);
+      onClose?.();
+    } else if (state && !state.success) {
+      toast.error(state.error, { description: state.message });
+      if (state.errors) {
+        Object.entries(state.errors).forEach(([path, messages]) => {
+          form.setError(path as keyof FormValues, {
+            type: 'manual',
+            message: messages.join(', '),
+          });
+        });
+      }
+    }
+  }, [state, onSuccess, onClose, form]);
+
+  const onSubmit = (values: FormValues) => {
+    const formData = new FormData();
+    Object.entries(values).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        if (key === 'dataInicioDate' || key === 'dataFimDate') {
+          // Combine date and time
+          const dateValue = value as Date;
+          const timeKey = key === 'dataInicioDate' ? 'horaInicioTime' : 'horaFimTime';
+          const timeValue = form.getValues(timeKey);
+          if (timeValue) {
+            const [hours, minutes] = timeValue.split(':').map(Number);
+            dateValue.setHours(hours, minutes, 0, 0);
+          }
+          formData.append(key.replace('Date', ''), dateValue.toISOString());
+        } else if (key === 'horaInicioTime' || key === 'horaFimTime') {
+          // Skip, already handled by date combination
+        } else if (typeof value === 'object' && value !== null) {
+          // Handle complex objects like enderecoPresencial
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, String(value));
+        }
+      }
+    });
+
+    formAction(formData);
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="processoId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Processo ID</FormLabel>
+              <FormControl>
+                <Input placeholder="ID do Processo" type="number" {...field} onChange={e => field.onChange(Number(e.target.value))} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="dataInicioDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="text-left">Data de Início</FormLabel>
+                <Popover>
+                  <FormControl>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          'w-full justify-start text-left font-normal',
+                          !field.value && 'text-muted-foreground'
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {field.value ? (
+                          format(field.value, 'dd/MM/yyyy', { locale: ptBR })
+                        ) : (
+                          <span>Escolha uma data</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                  </FormControl>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      locale={ptBR}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="horaInicioTime"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="text-left">Hora de Início</FormLabel>
+                <FormControl>
+                  <TimePicker
+                    value={field.value || '00:00'}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="dataFimDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="text-left">Data de Fim</FormLabel>
+                <Popover>
+                  <FormControl>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          'w-full justify-start text-left font-normal',
+                          !field.value && 'text-muted-foreground'
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {field.value ? (
+                          format(field.value, 'dd/MM/yyyy', { locale: ptBR })
+                        ) : (
+                          <span>Escolha uma data</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                  </FormControl>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      locale={ptBR}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="horaFimTime"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="text-left">Hora de Fim</FormLabel>
+                <FormControl>
+                  <TimePicker
+                    value={field.value || '00:00'}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+
+        <FormField
+          control={form.control}
+          name="tipoAudienciaId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tipo de Audiência</FormLabel>
+              <Select onValueChange={value => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o tipo de audiência" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {tiposAudiencia.map((tipo) => (
+                    <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                      {tipo.descricao}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="modalidade"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>Modalidade</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-col space-y-1"
+                >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value={ModalidadeAudiencia.Virtual} />
+                    </FormControl>
+                    <FormLabel className="font-normal">Virtual</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value={ModalidadeAudiencia.Presencial} />
+                    </FormControl>
+                    <FormLabel className="font-normal">Presencial</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value={ModalidadeAudiencia.Hibrida} />
+                    </FormControl>
+                    <FormLabel className="font-normal">Híbrida</FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {(modalidade === ModalidadeAudiencia.Virtual || modalidade === ModalidadeAudiencia.Hibrida) && (
+          <FormField
+            control={form.control}
+            name="urlAudienciaVirtual"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>URL da Audiência Virtual</FormLabel>
+                <FormControl>
+                  <Input placeholder="https://zoom.us/j/..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
+        {(modalidade === ModalidadeAudiencia.Presencial || modalidade === ModalidadeAudiencia.Hibrida) && (
+          <>
+            <FormLabel>Endereço Presencial</FormLabel>
+            {/* These fields would ideally be a custom component for address */}
+            <FormField
+              control={form.control}
+              name="enderecoPresencial.cep"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CEP</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Add more enderecoPresencial fields as needed */}
+          </>
+        )}
+
+        <FormField
+          control={form.control}
+          name="responsavelId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Responsável</FormLabel>
+              <Select onValueChange={value => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o responsável" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {usuarios.map((usuario) => (
+                    <SelectItem key={usuario.id} value={usuario.id.toString()}>
+                      {usuario.nome}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="observacoes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Observações</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Observações adicionais..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" disabled={pending}>
+          {pending ? 'Salvando...' : initialData ? 'Atualizar Audiência' : 'Criar Audiência'}
+        </Button>
+      </form>
+    </Form>
+  );
+}

@@ -12,18 +12,17 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
-import { TableToolbar, type ComboboxOption, type FilterGroup } from '@/components/ui/table-toolbar';
+import { TableToolbar } from '@/components/ui/table-toolbar';
 import { ContratosTable } from './contratos-table';
 import { ContratoForm } from './contrato-form';
 import { ContratoViewSheet } from './contrato-view-sheet';
-import type { Contrato, AreaDireito, TipoContrato, TipoCobranca, StatusContrato, ListarContratosParams } from '@/core/contratos/domain';
+import type { Contrato, ListarContratosParams } from '@/core/contratos/domain';
 import { actionListarContratos } from '@/app/actions/contratos';
 import {
-  AREA_DIREITO_LABELS,
-  TIPO_CONTRATO_LABELS,
-  TIPO_COBRANCA_LABELS,
-  STATUS_CONTRATO_LABELS,
-} from '@/core/contratos/domain';
+  buildContratosFilterOptions,
+  buildContratosFilterGroups,
+  parseContratosFilters,
+} from '@/app/(dashboard)/contratos/components/contratos-toolbar-filters';
 
 // =============================================================================
 // TIPOS
@@ -42,12 +41,8 @@ interface PaginationInfo {
   hasMore: boolean;
 }
 
-interface ContratosFilters {
-  areaDireito?: AreaDireito;
-  tipoContrato?: TipoContrato;
-  tipoCobranca?: TipoCobranca;
-  status?: StatusContrato;
-}
+// Tipo importado via parseContratosFilters
+import type { ContratosFilters } from '@/app/_lib/types/contratos';
 
 interface ContratosTableWrapperProps {
   initialData: Contrato[];
@@ -57,92 +52,7 @@ interface ContratosTableWrapperProps {
   usuariosOptions?: ClienteInfo[];
 }
 
-// =============================================================================
-// FILTROS DA TOOLBAR
-// =============================================================================
-
-function buildContratosFilterOptions(): ComboboxOption[] {
-  const options: ComboboxOption[] = [];
-
-  // Áreas de direito
-  Object.entries(AREA_DIREITO_LABELS).forEach(([value, label]) => {
-    options.push({ value: `area:${value}`, label });
-  });
-
-  // Tipos de contrato
-  Object.entries(TIPO_CONTRATO_LABELS).forEach(([value, label]) => {
-    options.push({ value: `tipo:${value}`, label });
-  });
-
-  // Tipos de cobrança
-  Object.entries(TIPO_COBRANCA_LABELS).forEach(([value, label]) => {
-    options.push({ value: `cobranca:${value}`, label });
-  });
-
-  // Status
-  Object.entries(STATUS_CONTRATO_LABELS).forEach(([value, label]) => {
-    options.push({ value: `status:${value}`, label });
-  });
-
-  return options;
-}
-
-function buildContratosFilterGroups(): FilterGroup[] {
-  return [
-    {
-      label: 'Área de Direito',
-      options: Object.entries(AREA_DIREITO_LABELS).map(([value, label]) => ({
-        value: `area:${value}`,
-        label,
-      })),
-    },
-    {
-      label: 'Tipo de Contrato',
-      options: Object.entries(TIPO_CONTRATO_LABELS).map(([value, label]) => ({
-        value: `tipo:${value}`,
-        label,
-      })),
-    },
-    {
-      label: 'Tipo de Cobrança',
-      options: Object.entries(TIPO_COBRANCA_LABELS).map(([value, label]) => ({
-        value: `cobranca:${value}`,
-        label,
-      })),
-    },
-    {
-      label: 'Status',
-      options: Object.entries(STATUS_CONTRATO_LABELS).map(([value, label]) => ({
-        value: `status:${value}`,
-        label,
-      })),
-    },
-  ];
-}
-
-function parseContratosFilters(selectedIds: string[]): ContratosFilters {
-  const filters: ContratosFilters = {};
-
-  for (const id of selectedIds) {
-    const [group, value] = id.split(':');
-    switch (group) {
-      case 'area':
-        filters.areaDireito = value as AreaDireito;
-        break;
-      case 'tipo':
-        filters.tipoContrato = value as TipoContrato;
-        break;
-      case 'cobranca':
-        filters.tipoCobranca = value as TipoCobranca;
-        break;
-      case 'status':
-        filters.status = value as StatusContrato;
-        break;
-    }
-  }
-
-  return filters;
-}
+// Filtros agora importados de contratos-toolbar-filters.tsx (fonte canônica)
 
 // =============================================================================
 // COMPONENTE PRINCIPAL

@@ -9,6 +9,7 @@
 - [next.config.ts](file://next.config.ts)
 - [DEPLOY.md](file://DEPLOY.md)
 - [package.json](file://package.json)
+- [captain-definition](file://captain-definition)
 - [backend/storage/MIGRACAO_BACKBLAZE_B2.md](file://backend/storage/MIGRACAO_BACKBLAZE_B2.md)
 - [backend/storage/backblaze-b2.service.ts](file://backend/storage/backblaze-b2.service.ts)
 </cite>
@@ -328,21 +329,28 @@ services:
 
 #### CapRover Deployment
 
-For on-premise deployments, CapRover is recommended as a PaaS solution. The application is deployed using **pre-built Docker images** instead of building on the server, which provides faster deploys and avoids memory issues.
+For on-premise deployments, CapRover is recommended as a PaaS solution. The `captain-definition` file configures the application for CapRover:
+
+```json
+{
+  "schemaVersion": 2,
+  "dockerfilePath": "./Dockerfile"
+}
+```
 
 To deploy on CapRover:
 
 1. Install CapRover on your server
 2. Create three applications: `sinesys`, `sinesys-mcp`, and `sinesys-browser`
-3. Build and push Docker images to a registry (Docker Hub, GHCR, etc.)
-4. Deploy via "Deploy via ImageName" in the CapRover dashboard
-5. Configure environment variables for each service
-6. Set up domain names and HTTPS certificates
+3. Deploy each application from its respective repository
+4. Configure environment variables for each service
+5. Set up domain names and HTTPS certificates
 
 The browser service requires WebSocket support to be enabled, while the other services do not.
 
 **Section sources**
 - [docker-compose.yml](file://docker-compose.yml#L1-L79)
+- [captain-definition](file://captain-definition#L1-L6)
 - [DEPLOY.md](file://DEPLOY.md#L36-L160)
 
 ## Infrastructure Requirements
@@ -504,7 +512,7 @@ The infrastructure requirements vary depending on the deployment option and expe
 
 ### On-Premise Deployment Steps
 
-#### CapRover Deployment (via Docker Image)
+#### CapRover Deployment
 
 1. **Install CapRover**
    - Follow official CapRover installation guide for your platform
@@ -517,32 +525,42 @@ The infrastructure requirements vary depending on the deployment option and expe
      - `sinesys-browser` (browser service)
    - For `sinesys-browser`, enable WebSocket support
 
-3. **Build and Push Docker Image (on local machine or CI)**
+3. **Deploy Browser Service**
    ```bash
-   # Build with required build args
-   docker build \
-     --build-arg NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co" \
-     --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY="your-anon-key" \
-     -t your-registry/sinesys:latest .
-
-   # Push to registry
-   docker push your-registry/sinesys:latest
+   cd sinesys-browser-server
+   caprover deploy -a sinesys-browser
    ```
+   - Set environment variables:
+     ```
+     PORT=3000
+     BROWSER_TOKEN=your_optional_token
+     ```
+   - Configure 2048MB memory in App Configs
 
-4. **Deploy via ImageName in CapRover**
-   - In CapRover dashboard: Apps → sinesys → Deployment
-   - Under "Deploy via ImageName", enter: `your-registry/sinesys:latest`
-   - Click Deploy
+4. **Deploy MCP Server**
+   ```bash
+   cd sinesys-mcp-server
+   caprover deploy -a sinesys-mcp
+   ```
+   - Set environment variables:
+     ```
+     NODE_ENV=production
+     PORT=3001
+     SINESYS_API_URL=http://srv-captain--sinesys:3000
+     SINESYS_API_KEY=your_api_key
+     ```
 
-5. **Configure Environment Variables**
-   - In CapRover dashboard: Apps → sinesys → App Configs
-   - Set all required runtime variables (SUPABASE_SECRET_KEY, REDIS_URL, etc.)
+5. **Deploy Main Application**
+   ```bash
+   cd sinesys
+   caprover deploy -a sinesys
+   ```
+   - Provide build arguments when prompted:
+     - `NEXT_PUBLIC_SUPABASE_URL`
+     - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
+   - Set environment variables as specified in `.env.example`
 
-6. **Deploy Other Services**
-   - Browser Service: Set `PORT=3000`, `BROWSER_TOKEN=your_optional_token`
-   - MCP Server: Set `PORT=3001`, `SINESYS_API_URL`, `SINESYS_API_KEY`
-
-7. **Configure Domains and HTTPS**
+6. **Configure Domains and HTTPS**
    - In CapRover dashboard, navigate to Apps > sinesys > App Settings
    - Add domain: `app.yourdomain.com`
    - Enable HTTPS and redirect HTTP to HTTPS

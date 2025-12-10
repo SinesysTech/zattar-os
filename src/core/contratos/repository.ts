@@ -444,10 +444,18 @@ export async function updateContrato(
       dadosAtualizacao.observacoes = input.observacoes?.trim() ?? null;
     }
 
-    // Preservar estado anterior para auditoria
+    // Preservar apenas campos críticos no snapshot de auditoria
+    // Evita crescimento recursivo de dados_anteriores
     dadosAtualizacao.dados_anteriores = {
-      ...contratoExistente,
+      id: contratoExistente.id,
+      status: contratoExistente.status,
+      clienteId: contratoExistente.clienteId,
+      areaDireito: contratoExistente.areaDireito,
+      tipoContrato: contratoExistente.tipoContrato,
+      dataContratacao: contratoExistente.dataContratacao,
+      responsavelId: contratoExistente.responsavelId,
       updated_at_previous: contratoExistente.updatedAt,
+      // Não copiar dadosAnteriores anterior para evitar crescimento em cascata
     };
 
     const { data, error } = await db

@@ -25,8 +25,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Eye, Pencil, Copy, Check } from 'lucide-react';
 import type { Cliente } from '@/types/domain/partes';
-import { ClienteEditDialog } from '@/app/(dashboard)/partes/components/cliente-edit-dialog';
-import { ClienteCreateDialog } from '@/app/(dashboard)/partes/components/cliente-create-dialog';
+import { ClienteFormDialog } from './cliente-form';
 import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
 import { ProcessosRelacionadosCell } from '@/app/(dashboard)/partes/components/processos-relacionados-cell';
 import {
@@ -435,12 +434,18 @@ export function ClientesTableWrapper({
     }
   }, [pagina, limite, buscaDebounced, filtros]);
 
+  // Ref para controlar primeira renderização
+  const isFirstRender = React.useRef(true);
+
   // Recarregar quando parâmetros mudam
   React.useEffect(() => {
-    // Não recarregar na montagem inicial se já temos dados
-    if (pagina > 0 || buscaDebounced || Object.keys(filtros).length > 0) {
-      refetch();
+    // Evitar execução na montagem inicial
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
     }
+
+    refetch();
   }, [pagina, buscaDebounced, filtros, refetch]);
 
   const handleEdit = React.useCallback((cliente: ClienteComProcessos) => {
@@ -530,14 +535,15 @@ export function ClientesTableWrapper({
         ]}
       />
 
-      <ClienteCreateDialog
+      <ClienteFormDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
         onSuccess={handleCreateSuccess}
+        mode="create"
       />
 
       {clienteParaEditar && (
-        <ClienteEditDialog
+        <ClienteFormDialog
           open={editOpen}
           onOpenChange={(open) => {
             setEditOpen(open);
@@ -545,6 +551,7 @@ export function ClientesTableWrapper({
           }}
           cliente={clienteParaEditar}
           onSuccess={handleEditSuccess}
+          mode="edit"
         />
       )}
     </div>

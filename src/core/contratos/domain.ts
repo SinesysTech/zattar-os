@@ -228,7 +228,7 @@ export const updateContratoSchema = z.object({
   qtdeParteAutora: z.number().int().positive('Quantidade deve ser positiva').optional(),
   qtdeParteRe: z.number().int().positive('Quantidade deve ser positiva').optional(),
   status: statusContratoSchema.optional(),
-  dataContratacao: z.string().optional(),
+  dataContratacao: z.string().nullable().optional(),
   dataAssinatura: z.string().nullable().optional(),
   dataDistribuicao: z.string().nullable().optional(),
   dataDesistencia: z.string().nullable().optional(),

@@ -186,7 +186,6 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
     'tipoCobranca',
     'poloCliente',
     'status',
-    'dataContratacao',
     'dataAssinatura',
     'dataDistribuicao',
     'dataDesistencia',
@@ -202,6 +201,15 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
         data[field] = null;
       }
     }
+  }
+
+  // Tratamento especial para dataContratacao: não enviar null, apenas omitir se vazio
+  if (formData.has('dataContratacao')) {
+    const value = formData.get('dataContratacao')?.toString();
+    if (value) {
+      data.dataContratacao = value.trim();
+    }
+    // Se vazio, não adiciona a chave (undefined no schema)
   }
 
   // IDs numéricos

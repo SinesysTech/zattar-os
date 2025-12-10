@@ -108,67 +108,8 @@ const GENEROS = [
 ];
 
 // =============================================================================
-// VALIDAÇÃO E FORMATAÇÃO
+// FORMATAÇÃO (apenas UI/masking)
 // =============================================================================
-
-function validarCPF(cpf: string): boolean {
-  const cpfLimpo = cpf.replace(/\D/g, '');
-  if (cpfLimpo.length !== 11) return false;
-  if (/^(\d)\1{10}$/.test(cpfLimpo)) return false;
-
-  let soma = 0;
-  for (let i = 0; i < 9; i++) {
-    soma += parseInt(cpfLimpo.charAt(i)) * (10 - i);
-  }
-  let resto = (soma * 10) % 11;
-  if (resto === 10 || resto === 11) resto = 0;
-  if (resto !== parseInt(cpfLimpo.charAt(9))) return false;
-
-  soma = 0;
-  for (let i = 0; i < 10; i++) {
-    soma += parseInt(cpfLimpo.charAt(i)) * (11 - i);
-  }
-  resto = (soma * 10) % 11;
-  if (resto === 10 || resto === 11) resto = 0;
-  if (resto !== parseInt(cpfLimpo.charAt(10))) return false;
-
-  return true;
-}
-
-function validarCNPJ(cnpj: string): boolean {
-  const cnpjLimpo = cnpj.replace(/\D/g, '');
-  if (cnpjLimpo.length !== 14) return false;
-  if (/^(\d)\1{13}$/.test(cnpjLimpo)) return false;
-
-  let tamanho = cnpjLimpo.length - 2;
-  let numeros = cnpjLimpo.substring(0, tamanho);
-  const digitos = cnpjLimpo.substring(tamanho);
-  let soma = 0;
-  let pos = tamanho - 7;
-
-  for (let i = tamanho; i >= 1; i--) {
-    soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
-    if (pos < 2) pos = 9;
-  }
-
-  let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
-  if (resultado !== parseInt(digitos.charAt(0))) return false;
-
-  tamanho = tamanho + 1;
-  numeros = cnpjLimpo.substring(0, tamanho);
-  soma = 0;
-  pos = tamanho - 7;
-
-  for (let i = tamanho; i >= 1; i--) {
-    soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
-    if (pos < 2) pos = 9;
-  }
-
-  resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
-  if (resultado !== parseInt(digitos.charAt(1))) return false;
-
-  return true;
-}
 
 function formatarCPF(value: string): string {
   const numeros = value.replace(/\D/g, '').slice(0, 11);
@@ -374,17 +315,19 @@ export function ClienteFormDialog({
           errors.push('Nome é obrigatório');
         }
         if (isPF) {
-          if (!formData.cpf.trim()) {
+          const cpfLimpo = formData.cpf.replace(/\D/g, '');
+          if (!cpfLimpo) {
             errors.push('CPF é obrigatório');
-          } else if (!validarCPF(formData.cpf)) {
-            errors.push('CPF inválido');
+          } else if (cpfLimpo.length !== 11 || !/^\d{11}$/.test(cpfLimpo)) {
+            errors.push('CPF deve ter 11 dígitos');
           }
         }
         if (isPJ) {
-          if (!formData.cnpj.trim()) {
+          const cnpjLimpo = formData.cnpj.replace(/\D/g, '');
+          if (!cnpjLimpo) {
             errors.push('CNPJ é obrigatório');
-          } else if (!validarCNPJ(formData.cnpj)) {
-            errors.push('CNPJ inválido');
+          } else if (cnpjLimpo.length !== 14 || !/^\d{14}$/.test(cnpjLimpo)) {
+            errors.push('CNPJ deve ter 14 dígitos');
           }
         }
         break;

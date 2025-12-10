@@ -45,7 +45,20 @@
     "20251125000002_add_partes_to_tipo_captura_enum.sql",
     "20251125173046_add_partes_to_tipo_captura_enum.sql",
     "20251128000000_remove_mongodb_id_from_capturas_log.sql",
-    "add_dados_anteriores_auditoria.sql"
+    "add_dados_anteriores_auditoria.sql",
+    {
+      "modulo": "audiencias",
+      "status": "concluído",
+      "data": "2025-12-10",
+      "arquivos": [
+        "src/core/audiencias/domain.ts",
+        "src/core/audiencias/repository.ts",
+        "src/core/audiencias/service.ts",
+        "src/app/actions/audiencias.ts",
+        "src/components/modules/audiencias/*",
+        "src/app/(dashboard)/audiencias/*"
+      ]
+    }
   ],
   "notApplied": [
     "20251125000000_create_locks_table.sql",
@@ -86,5 +99,5 @@
     "20251128000000_remove_mongodb_id_from_capturas_log.sql",
     "add_dados_anteriores_auditoria.sql"
   ],
-  "total": 48
+  "total": 49
 }

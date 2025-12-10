@@ -2,27 +2,34 @@ import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar
 import type { FilterGroup } from '@/components/ui/table-toolbar';
 import type { Usuario } from '@/app/_lib/types/usuarios';
 import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
+import { CodigoTribunal, GrauTribunal } from '@/core/expedientes/domain';
 
 // Filtros para expedientes (interface usada na página)
 export interface ExpedientesFilters {
-  trt?: string;
-  grau?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
-  responsavel_id?: number | 'null';
+  trt?: CodigoTribunal;
+  grau?: GrauTribunal;
+  responsavelId?: number | 'null';
   baixado?: boolean;
-  prazo_vencido?: boolean;
-  tipo_expediente_id?: number;
-  sem_tipo?: boolean;
-  segredo_justica?: boolean;
-  juizo_digital?: boolean;
-  sem_responsavel?: boolean;
+  prazoVencido?: boolean;
+  tipoExpedienteId?: number;
+  semTipo?: boolean;
+  segredoJustica?: boolean;
+  juizoDigital?: boolean;
+  semResponsavel?: boolean;
 }
 
-// Lista de tribunais trabalhistas disponíveis (TRTs + TST)
-const TRIBUNAIS = [
-  'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
-  'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20',
-  'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST',
-] as const;
+interface Usuario {
+  id: number;
+  nomeExibicao: string;
+}
+
+interface TipoExpediente {
+  id: number;
+  tipoExpediente: string;
+}
+
+// Lista de tribunais trabalhistas disponíveis (TRTs)
+const TRIBUNAIS: CodigoTribunal[] = CodigoTribunal;
 
 export const EXPEDIENTES_FILTER_CONFIGS: FilterConfig[] = [
   {
@@ -37,25 +44,25 @@ export const EXPEDIENTES_FILTER_CONFIGS: FilterConfig[] = [
     type: 'select',
     options: [
       { value: 'all', label: 'Todos' },
-      { value: 'primeiro_grau', label: 'Primeiro Grau' },
-      { value: 'segundo_grau', label: 'Segundo Grau' },
-      { value: 'tribunal_superior', label: 'Tribunal Superior' },
+      { value: GrauTribunal.PRIMEIRO_GRAU, label: 'Primeiro Grau' },
+      { value: GrauTribunal.SEGUNDO_GRAU, label: 'Segundo Grau' },
+      { value: GrauTribunal.TRIBUNAL_SUPERIOR, label: 'Tribunal Superior' },
     ],
   },
   {
-    id: 'responsavel_id',
+    id: 'responsavelId',
     label: 'Responsável',
     type: 'select',
     options: [], // Populated in buildExpedientesFilterOptions
   },
   {
-    id: 'tipo_expediente_id',
+    id: 'tipoExpedienteId',
     label: 'Tipo',
     type: 'select',
     options: [], // Populated in buildExpedientesFilterOptions
   },
   {
-    id: 'sem_tipo',
+    id: 'semTipo',
     label: 'Sem Tipo',
     type: 'boolean',
   },
@@ -70,7 +77,7 @@ export const EXPEDIENTES_FILTER_CONFIGS: FilterConfig[] = [
     ],
   },
   {
-    id: 'prazo_vencido',
+    id: 'prazoVencido',
     label: 'Status de Prazo',
     type: 'select',
     options: [
@@ -80,17 +87,17 @@ export const EXPEDIENTES_FILTER_CONFIGS: FilterConfig[] = [
     ],
   },
   {
-    id: 'segredo_justica',
+    id: 'segredoJustica',
     label: 'Segredo de Justiça',
     type: 'boolean',
   },
   {
-    id: 'juizo_digital',
+    id: 'juizoDigital',
     label: 'Juízo Digital',
     type: 'boolean',
   },
   {
-    id: 'sem_responsavel',
+    id: 'semResponsavel',
     label: 'Sem Responsável',
     type: 'boolean',
   },
@@ -104,7 +111,7 @@ export function buildExpedientesFilterOptions(
 
   for (const config of EXPEDIENTES_FILTER_CONFIGS) {
     if (config.type === 'select') {
-      if (config.id === 'responsavel_id' && usuarios) {
+      if (config.id === 'responsavelId' && usuarios) {
         // Build options for Responsável
         const responsavelOptions: ComboboxOption[] = [
           { value: 'all', label: 'Todos os responsáveis' },
@@ -118,13 +125,13 @@ export function buildExpedientesFilterOptions(
             searchText: config.searchText || opt.searchText,
           });
         }
-      } else if (config.id === 'tipo_expediente_id' && tiposExpedientes) {
+      } else if (config.id === 'tipoExpedienteId' && tiposExpedientes) {
         // Build options for Tipo de Expediente
         for (const tipo of tiposExpedientes) {
           options.push({
             value: `${config.id}_${tipo.id}`,
-            label: `${config.label}: ${tipo.tipo_expediente}`,
-            searchText: tipo.tipo_expediente,
+            label: `${config.label}: ${tipo.tipoExpediente}`,
+            searchText: tipo.tipoExpediente,
           });
         }
       } else if (config.options) {
@@ -164,7 +171,7 @@ export function buildExpedientesFilterGroups(
 
     for (const config of configs) {
       if (config.type === 'select') {
-        if (config.id === 'responsavel_id' && usuariosList) {
+        if (config.id === 'responsavelId' && usuariosList) {
           // Build options for Responsável sem prefixo
           const responsavelOptions: ComboboxOption[] = [
             { value: 'null', label: 'Sem responsável' },
@@ -177,12 +184,12 @@ export function buildExpedientesFilterGroups(
               searchText: config.searchText || opt.searchText,
             });
           }
-        } else if (config.id === 'tipo_expediente_id' && tiposList) {
+        } else if (config.id === 'tipoExpedienteId' && tiposList) {
           for (const tipo of tiposList) {
             options.push({
               value: `${config.id}_${tipo.id}`,
-              label: tipo.tipo_expediente, // Sem prefixo
-              searchText: tipo.tipo_expediente,
+              label: tipo.tipoExpediente, // Sem prefixo
+              searchText: tipo.tipoExpediente,
             });
           }
         } else if (config.options) {
@@ -219,17 +226,17 @@ export function buildExpedientesFilterGroups(
       label: 'Status',
       options: buildOptionsWithoutPrefix([
         configMap.get('baixado')!,
-        configMap.get('prazo_vencido')!,
+        configMap.get('prazoVencido')!,
       ]),
     },
     {
       label: 'Responsável',
-      options: buildOptionsWithoutPrefix([configMap.get('responsavel_id')!], usuarios),
+      options: buildOptionsWithoutPrefix([configMap.get('responsavelId')!], usuarios),
     },
     {
       label: 'Tipo',
       options: buildOptionsWithoutPrefix(
-        [configMap.get('tipo_expediente_id')!, configMap.get('sem_tipo')!],
+        [configMap.get('tipoExpedienteId')!, configMap.get('semTipo')!],
         undefined,
         tiposExpedientes
       ),
@@ -237,9 +244,9 @@ export function buildExpedientesFilterGroups(
     {
       label: 'Características',
       options: buildOptionsWithoutPrefix([
-        configMap.get('segredo_justica')!,
-        configMap.get('juizo_digital')!,
-        configMap.get('sem_responsavel')!,
+        configMap.get('segredoJustica')!,
+        configMap.get('juizoDigital')!,
+        configMap.get('semResponsavel')!,
       ]),
     },
   ];
@@ -251,8 +258,6 @@ export function parseExpedientesFilters(selectedFilters: string[]): ExpedientesF
 
   for (const selected of selectedFilters) {
     if (selected.includes('_')) {
-      // Encontrar o config ID correto verificando quais IDs conhecidos são prefixo do filtro
-      // Isso suporta tanto IDs com underscore (responsavel_id, tipo_expediente_id) quanto valores com underscore (primeiro_grau)
       let id: string | null = null;
       let value: string | null = null;
       for (const configId of configMap.keys()) {
@@ -267,27 +272,27 @@ export function parseExpedientesFilters(selectedFilters: string[]): ExpedientesF
       if (config && config.type === 'select') {
         if (id === 'trt') {
           if (value !== 'all') {
-            filters.trt = value;
+            filters.trt = value as CodigoTribunal;
           }
         } else if (id === 'grau') {
           if (value !== 'all') {
-            filters.grau = value as 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
+            filters.grau = value as GrauTribunal;
           }
-        } else if (id === 'responsavel_id') {
+        } else if (id === 'responsavelId') {
           if (value === 'all') {
             // ignore
           } else if (value === 'null') {
-            filters.responsavel_id = 'null';
+            filters.responsavelId = 'null';
           } else {
             const num = parseInt(value, 10);
             if (!isNaN(num)) {
-              filters.responsavel_id = num;
+              filters.responsavelId = num;
             }
           }
-        } else if (id === 'tipo_expediente_id') {
+        } else if (id === 'tipoExpedienteId') {
           const num = parseInt(value, 10);
           if (!isNaN(num)) {
-            filters.tipo_expediente_id = num;
+            filters.tipoExpedienteId = num;
           }
         } else if (id === 'baixado') {
           if (value === 'all') {
@@ -295,25 +300,25 @@ export function parseExpedientesFilters(selectedFilters: string[]): ExpedientesF
           } else {
             filters.baixado = value === 'true';
           }
-        } else if (id === 'prazo_vencido') {
+        } else if (id === 'prazoVencido') {
           if (value === 'all') {
             // ignore
           } else {
-            filters.prazo_vencido = value === 'true';
+            filters.prazoVencido = value === 'true';
           }
         }
       }
     } else {
       const config = configMap.get(selected);
       if (config && config.type === 'boolean') {
-        if (selected === 'segredo_justica') {
-          filters.segredo_justica = true;
-        } else if (selected === 'juizo_digital') {
-          filters.juizo_digital = true;
-        } else if (selected === 'sem_responsavel') {
-          filters.sem_responsavel = true;
-        } else if (selected === 'sem_tipo') {
-          filters.sem_tipo = true;
+        if (selected === 'segredoJustica') {
+          filters.segredoJustica = true;
+        } else if (selected === 'juizoDigital') {
+          filters.juizoDigital = true;
+        } else if (selected === 'semResponsavel') {
+          filters.semResponsavel = true;
+        } else if (selected === 'semTipo') {
+          filters.semTipo = true;
         }
       }
     }

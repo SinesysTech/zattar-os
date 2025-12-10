@@ -3,10 +3,10 @@
 // Componente de diálogo para baixar expediente
 
 import * as React from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-// Textarea será criado como componente simples
 import {
   Dialog,
   DialogContent,
@@ -16,14 +16,22 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Loader2 } from 'lucide-react';
-import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
+import { actionBaixarExpediente } from '@/app/actions/expedientes';
+import { Expediente } from '@/core/expedientes/domain';
 
 interface ExpedientesBaixarDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  expediente: PendenteManifestacao | null;
+  expediente: Expediente | null;
   onSuccess: () => void;
 }
+
+const initialState = {
+  success: false,
+  message: '',
+  error: '',
+  errors: undefined,
+};
 
 export function ExpedientesBaixarDialog({
   open,
@@ -31,81 +39,35 @@ export function ExpedientesBaixarDialog({
   expediente,
   onSuccess,
 }: ExpedientesBaixarDialogProps) {
-  const [protocoloId, setProtocoloId] = React.useState<string>('');
-  const [justificativa, setJustificativa] = React.useState<string>('');
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
   const [modo, setModo] = React.useState<'protocolo' | 'justificativa'>('protocolo');
+  const [formState, formAction] = useFormState(
+    actionBaixarExpediente.bind(null, expediente?.id || 0),
+    initialState
+  );
+  const { pending } = useFormStatus();
 
-  // Resetar formulário quando abrir/fechar
   React.useEffect(() => {
     if (!open) {
-      setProtocoloId('');
-      setJustificativa('');
-      setError(null);
       setModo('protocolo');
+      formState.success = false; // Reset form state on close
+      formState.error = '';
+      formState.message = '';
+      formState.errors = undefined;
     }
-  }, [open]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    if (!expediente) {
-      setError('Expediente não encontrado');
-      return;
-    }
-
-    // Validação: protocoloId OU justificativa deve estar preenchido
-    // (protocolo aceita letras e números)
-    if (modo === 'protocolo' && !protocoloId.trim()) {
-      setError('É necessário informar o ID do protocolo');
-      return;
-    }
-
-    if (modo === 'justificativa' && !justificativa.trim()) {
-      setError('É necessário informar a justificativa da baixa');
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/baixa`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          protocolo_id: modo === 'protocolo' ? protocoloId.trim() : null,
-          justificativa: modo === 'justificativa' ? justificativa.trim() : null,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error(data.error || 'Erro ao baixar expediente');
-      }
-
-      // Sucesso
+    if (formState.success) {
       onSuccess();
       onOpenChange(false);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro ao baixar expediente';
-      setError(errorMessage);
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+  }, [open, formState, onOpenChange, onSuccess]);
 
   if (!expediente) {
     return null;
   }
+
+  // Determine if there's a general error message or a specific field error
+  const generalError = formState.error || (formState.message && formState.success === false ? formState.message : null);
+  const protocoloIdError = formState.errors?.protocoloId?.[0];
+  const justificativaBaixaError = formState.errors?.justificativaBaixa?.[0];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -117,7 +79,7 @@ export function ExpedientesBaixarDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+        <form action={formAction} className="mt-6 space-y-6">
           {/* Informações do expediente */}
           <div className="space-y-2 rounded-lg border p-4 bg-muted/50">
             <div className="text-sm font-medium">Expediente</div>
@@ -166,16 +128,18 @@ export function ExpedientesBaixarDialog({
           {/* Campo de protocolo */}
           {modo === 'protocolo' && (
             <div className="space-y-2">
-              <Label htmlFor="protocolo_id">ID do Protocolo *</Label>
+              <Label htmlFor="protocoloId">ID do Protocolo *</Label>
               <Input
-                id="protocolo_id"
+                id="protocoloId"
+                name="protocoloId"
                 type="text"
                 placeholder="Ex: ABC12345"
-                value={protocoloId}
-                onChange={(e) => setProtocoloId(e.target.value)}
-                disabled={isSubmitting}
-                required
+                disabled={pending}
+                required={modo === 'protocolo'}
               />
+              {protocoloIdError && (
+                <p className="text-sm font-medium text-destructive">{protocoloIdError}</p>
+              )}
               <p className="text-xs text-muted-foreground">
                 Informe o ID do protocolo da peça protocolada em resposta ao expediente (pode conter números e letras).
               </p>
@@ -185,17 +149,19 @@ export function ExpedientesBaixarDialog({
           {/* Campo de justificativa */}
           {modo === 'justificativa' && (
             <div className="space-y-2">
-              <Label htmlFor="justificativa">Justificativa da Baixa *</Label>
+              <Label htmlFor="justificativaBaixa">Justificativa da Baixa *</Label>
               <textarea
-                id="justificativa"
+                id="justificativaBaixa"
+                name="justificativaBaixa"
                 placeholder="Ex: Expediente resolvido extrajudicialmente..."
-                value={justificativa}
-                onChange={(e) => setJustificativa(e.target.value)}
-                disabled={isSubmitting}
+                disabled={pending}
                 rows={4}
-                required
+                required={modo === 'justificativa'}
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
+              {justificativaBaixaError && (
+                <p className="text-sm font-medium text-destructive">{justificativaBaixaError}</p>
+              )}
               <p className="text-xs text-muted-foreground">
                 Informe o motivo pelo qual o expediente está sendo baixado sem protocolo de peça.
               </p>
@@ -203,9 +169,9 @@ export function ExpedientesBaixarDialog({
           )}
 
           {/* Mensagem de erro */}
-          {error && (
+          {generalError && (
             <div className="rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive">
-              {error}
+              {generalError}
             </div>
           )}
 
@@ -214,12 +180,12 @@ export function ExpedientesBaixarDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={isSubmitting}
+              disabled={pending}
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" disabled={pending}>
+              {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Baixar Expediente
             </Button>
           </DialogFooter>

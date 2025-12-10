@@ -11,11 +11,11 @@ import { buildProcessosFilterOptions, buildProcessosFilterGroups, parseProcessos
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Copy } from 'lucide-react';
-import { useAcervo } from '@/lib/hooks/use-acervo';
+import { useProcessos } from '@/app/_lib/hooks/use-processos';
 import { GrauBadges } from './components/grau-badges';
 import type { ColumnDef, SortingState } from '@tanstack/react-table';
 import type { Acervo, ProcessoUnificado } from '@/backend/types/acervo/types';
-import type { ProcessosFilters } from '@/lib/types/acervo';
+import type { ProcessosFilters } from '@/app/_lib/types/acervo';
 import { ProcessoDetailSheet } from '@/components/modules/processos/processo-detail-sheet';
 import { ProcessosEmptyState } from '@/components/modules/processos/processos-empty-state';
 
@@ -201,7 +201,7 @@ export default function ProcessosPage() {
     };
   }, [pagination, buscaDebounced, sorting, filtros]);
 
-  const { processos, paginacao, isLoading, error } = useAcervo(params);
+  const { processos, paginacao, isLoading, error } = useProcessos(params);
 
   const filterOptions = React.useMemo(() => buildProcessosFilterOptions(), []);
   const filterGroups = React.useMemo(() => buildProcessosFilterGroups(), []);

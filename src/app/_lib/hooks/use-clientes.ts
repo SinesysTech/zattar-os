@@ -21,13 +21,14 @@ interface UseClientesResult {
 
 /**
  * Hook para buscar clientes
+ * @deprecated Este hook utiliza a rota de API legada. Prefira usar Server Actions e ClientesTableWrapper.
  */
 export const useClientes = (params: BuscarClientesParams = {}): UseClientesResult => {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [paginacao, setPaginacao] = useState<UseClientesResult['paginacao']>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Extrair valores primitivos para usar no callback
   const pagina = params.pagina ?? 1;
   const limite = params.limite ?? 50;
@@ -49,7 +50,7 @@ export const useClientes = (params: BuscarClientesParams = {}): UseClientesResul
       incluirProcessos,
     });
   }, [pagina, limite, busca, tipoPessoa, ativo, incluirEndereco, incluirProcessos]);
-  
+
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
 
@@ -60,10 +61,10 @@ export const useClientes = (params: BuscarClientesParams = {}): UseClientesResul
     try {
       // Construir query string
       const searchParams = new URLSearchParams();
-      
+
       searchParams.set('pagina', pagina.toString());
       searchParams.set('limite', limite.toString());
-      
+
       if (busca) {
         searchParams.set('busca', busca);
       }
@@ -81,14 +82,14 @@ export const useClientes = (params: BuscarClientesParams = {}): UseClientesResul
       }
 
       const response = await fetch(`/api/clientes?${searchParams.toString()}`);
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
         throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
       }
 
       const data: ClientesApiResponse = await response.json();
-      
+
       if (!data.success) {
         throw new Error('Resposta da API indicou falha');
       }

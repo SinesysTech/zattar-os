@@ -25,14 +25,11 @@ import {
 } from '@/components/ui/dialog';
 import { Filter, X } from 'lucide-react';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
-import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
+import { useTiposExpedientes } from '@/app/_lib/hooks/use-tipos-expedientes';
+import { ExpedientesFilters } from './expedientes-toolbar-filters';
+import { CodigoTribunal, GrauTribunal } from '@/core/expedientes/domain';
 
-// Lista de tribunais trabalhistas disponíveis (TRTs + TST)
-const TRIBUNAIS = [
-  'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
-  'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20',
-  'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST',
-] as const;
+const TRIBUNAIS: CodigoTribunal[] = CodigoTribunal;
 
 interface ExpedientesFiltrosAvancadosProps {
   filters: ExpedientesFilters;
@@ -47,7 +44,8 @@ export function ExpedientesFiltrosAvancados({
 }: ExpedientesFiltrosAvancadosProps) {
   const [open, setOpen] = React.useState(false);
   const [localFilters, setLocalFilters] = React.useState<ExpedientesFilters>(filters);
-  const { usuarios, isLoading: isLoadingUsuarios } = useUsuarios({ ativo: true, limite: 100 }); // Apenas usuários ativos
+  const { usuarios, isLoading: isLoadingUsuarios } = useUsuarios({ ativo: true, limite: 100 });
+  const { tiposExpediente, isLoading: isLoadingTiposExpediente } = useTiposExpedientes({ limite: 100 });
 
   // Sincronizar filtros locais com props quando abrir o sheet
   React.useEffect(() => {
@@ -109,7 +107,7 @@ export function ExpedientesFiltrosAvancados({
             <Label htmlFor="trt">Tribunal</Label>
             <Select
               value={localFilters.trt || 'all'}
-              onValueChange={(value) => handleFilterChange('trt', value === 'all' ? undefined : value)}
+              onValueChange={(value) => handleFilterChange('trt', value === 'all' ? undefined : value as CodigoTribunal)}
             >
               <SelectTrigger id="trt">
                 <SelectValue placeholder="Todos os tribunais" />
@@ -131,7 +129,7 @@ export function ExpedientesFiltrosAvancados({
             <Select
               value={localFilters.grau || 'all'}
               onValueChange={(value) =>
-                handleFilterChange('grau', value === 'all' ? undefined : value as 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior' | undefined)
+                handleFilterChange('grau', value === 'all' ? undefined : value as GrauTribunal)
               }
             >
               <SelectTrigger id="grau">
@@ -139,37 +137,37 @@ export function ExpedientesFiltrosAvancados({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os graus</SelectItem>
-                <SelectItem value="primeiro_grau">Primeiro Grau</SelectItem>
-                <SelectItem value="segundo_grau">Segundo Grau</SelectItem>
-                <SelectItem value="tribunal_superior">Tribunal Superior</SelectItem>
+                <SelectItem value={GrauTribunal.PRIMEIRO_GRAU}>Primeiro Grau</SelectItem>
+                <SelectItem value={GrauTribunal.SEGUNDO_GRAU}>Segundo Grau</SelectItem>
+                <SelectItem value={GrauTribunal.TRIBUNAL_SUPERIOR}>Tribunal Superior</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Responsável */}
           <div className="space-y-2">
-            <Label htmlFor="responsavel_id">Responsável</Label>
+            <Label htmlFor="responsavelId">Responsável</Label>
             <Select
               value={
-                localFilters.responsavel_id === 'null'
+                localFilters.responsavelId === 'null'
                   ? 'null'
-                  : localFilters.responsavel_id?.toString() || 'all'
+                  : localFilters.responsavelId?.toString() || 'all'
               }
               onValueChange={(value) => {
                 if (value === 'null') {
-                  handleFilterChange('responsavel_id', 'null');
+                  handleFilterChange('responsavelId', 'null');
                 } else if (value === 'all') {
-                  handleFilterChange('responsavel_id', undefined);
+                  handleFilterChange('responsavelId', undefined);
                 } else {
                   const num = parseInt(value, 10);
                   if (!isNaN(num)) {
-                    handleFilterChange('responsavel_id', num);
+                    handleFilterChange('responsavelId', num);
                   }
                 }
               }}
               disabled={isLoadingUsuarios}
             >
-              <SelectTrigger id="responsavel_id">
+              <SelectTrigger id="responsavelId">
                 <SelectValue placeholder={isLoadingUsuarios ? 'Carregando...' : 'Todos os responsáveis'} />
               </SelectTrigger>
               <SelectContent>
@@ -184,26 +182,57 @@ export function ExpedientesFiltrosAvancados({
             </Select>
           </div>
 
+          {/* Tipo de Expediente */}
+          <div className="space-y-2">
+            <Label htmlFor="tipoExpedienteId">Tipo de Expediente</Label>
+            <Select
+              value={localFilters.tipoExpedienteId?.toString() || 'all'}
+              onValueChange={(value) => {
+                if (value === 'all') {
+                  handleFilterChange('tipoExpedienteId', undefined);
+                } else {
+                  const num = parseInt(value, 10);
+                  if (!isNaN(num)) {
+                    handleFilterChange('tipoExpedienteId', num);
+                  }
+                }
+              }}
+              disabled={isLoadingTiposExpediente}
+            >
+              <SelectTrigger id="tipoExpedienteId">
+                <SelectValue placeholder={isLoadingTiposExpediente ? 'Carregando...' : 'Todos os tipos'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os tipos</SelectItem>
+                {tiposExpediente.map((tipo) => (
+                  <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                    {tipo.tipoExpediente}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Classe Judicial */}
           <div className="space-y-2">
-            <Label htmlFor="classe_judicial">Classe Judicial</Label>
+            <Label htmlFor="classeJudicial">Classe Judicial</Label>
             <Input
-              id="classe_judicial"
+              id="classeJudicial"
               placeholder="Ex: ATOrd, ATSum"
-              value={localFilters.classe_judicial || ''}
-              onChange={(e) => handleFilterChange('classe_judicial', e.target.value || undefined)}
+              value={localFilters.classeJudicial || ''}
+              onChange={(e) => handleFilterChange('classeJudicial', e.target.value || undefined)}
             />
           </div>
 
           {/* Status do Processo */}
           <div className="space-y-2">
-            <Label htmlFor="codigo_status_processo">Status do Processo</Label>
+            <Label htmlFor="codigoStatusProcesso">Status do Processo</Label>
             <Input
-              id="codigo_status_processo"
+              id="codigoStatusProcesso"
               placeholder="Ex: DISTRIBUIDO"
-              value={localFilters.codigo_status_processo || ''}
+              value={localFilters.codigoStatusProcesso || ''}
               onChange={(e) =>
-                handleFilterChange('codigo_status_processo', e.target.value || undefined)
+                handleFilterChange('codigoStatusProcesso', e.target.value || undefined)
               }
             />
           </div>
@@ -246,50 +275,62 @@ export function ExpedientesFiltrosAvancados({
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
                 <Checkbox
-                  id="prazo_vencido"
-                  checked={localFilters.prazo_vencido === true}
+                  id="prazoVencido"
+                  checked={localFilters.prazoVencido === true}
                   onCheckedChange={(checked) =>
-                    handleFilterChange('prazo_vencido', checked === true ? true : undefined)
+                    handleFilterChange('prazoVencido', checked === true ? true : undefined)
                   }
                 />
-                <Label htmlFor="prazo_vencido" className="cursor-pointer font-normal">
+                <Label htmlFor="prazoVencido" className="cursor-pointer font-normal">
                   Prazo Vencido
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <Checkbox
-                  id="segredo_justica"
-                  checked={localFilters.segredo_justica === true}
+                  id="segredoJustica"
+                  checked={localFilters.segredoJustica === true}
                   onCheckedChange={(checked) =>
-                    handleFilterChange('segredo_justica', checked === true ? true : undefined)
+                    handleFilterChange('segredoJustica', checked === true ? true : undefined)
                   }
                 />
-                <Label htmlFor="segredo_justica" className="cursor-pointer font-normal">
+                <Label htmlFor="segredoJustica" className="cursor-pointer font-normal">
                   Segredo de Justiça
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <Checkbox
-                  id="juizo_digital"
-                  checked={localFilters.juizo_digital === true}
+                  id="juizoDigital"
+                  checked={localFilters.juizoDigital === true}
                   onCheckedChange={(checked) =>
-                    handleFilterChange('juizo_digital', checked === true ? true : undefined)
+                    handleFilterChange('juizoDigital', checked === true ? true : undefined)
                   }
                 />
-                <Label htmlFor="juizo_digital" className="cursor-pointer font-normal">
+                <Label htmlFor="juizoDigital" className="cursor-pointer font-normal">
                   Juízo Digital
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <Checkbox
-                  id="sem_responsavel"
-                  checked={localFilters.sem_responsavel === true}
+                  id="semResponsavel"
+                  checked={localFilters.semResponsavel === true}
                   onCheckedChange={(checked) =>
-                    handleFilterChange('sem_responsavel', checked === true ? true : undefined)
+                    handleFilterChange('semResponsavel', checked === true ? true : undefined)
                   }
                 />
-                <Label htmlFor="sem_responsavel" className="cursor-pointer font-normal">
+                <Label htmlFor="semResponsavel" className="cursor-pointer font-normal">
                   Sem Responsável
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="semTipo"
+                  checked={localFilters.semTipo === true}
+                  onCheckedChange={(checked) =>
+                    handleFilterChange('semTipo', checked === true ? true : undefined)
+                  }
+                />
+                <Label htmlFor="semTipo" className="cursor-pointer font-normal">
+                  Sem Tipo
                 </Label>
               </div>
             </div>
@@ -300,63 +341,63 @@ export function ExpedientesFiltrosAvancados({
             <Label>Datas de Expedientes</Label>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="data_prazo_legal_inicio" className="text-xs">
+                <Label htmlFor="dataPrazoLegalInicio" className="text-xs">
                   Prazo Legal (Início)
                 </Label>
                 <FormDatePicker
-                  id="data_prazo_legal_inicio"
-                  value={localFilters.data_prazo_legal_inicio || undefined}
-                  onChange={(v) => handleFilterChange('data_prazo_legal_inicio', v || undefined)}
+                  id="dataPrazoLegalInicio"
+                  value={localFilters.dataPrazoLegalInicio || undefined}
+                  onChange={(v) => handleFilterChange('dataPrazoLegalInicio', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="data_prazo_legal_fim" className="text-xs">
+                <Label htmlFor="dataPrazoLegalFim" className="text-xs">
                   Prazo Legal (Fim)
                 </Label>
                 <FormDatePicker
-                  id="data_prazo_legal_fim"
-                  value={localFilters.data_prazo_legal_fim || undefined}
-                  onChange={(v) => handleFilterChange('data_prazo_legal_fim', v || undefined)}
+                  id="dataPrazoLegalFim"
+                  value={localFilters.dataPrazoLegalFim || undefined}
+                  onChange={(v) => handleFilterChange('dataPrazoLegalFim', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="data_ciencia_inicio" className="text-xs">
+                <Label htmlFor="dataCienciaInicio" className="text-xs">
                   Data Ciência (Início)
                 </Label>
                 <FormDatePicker
-                  id="data_ciencia_inicio"
-                  value={localFilters.data_ciencia_inicio || undefined}
-                  onChange={(v) => handleFilterChange('data_ciencia_inicio', v || undefined)}
+                  id="dataCienciaInicio"
+                  value={localFilters.dataCienciaInicio || undefined}
+                  onChange={(v) => handleFilterChange('dataCienciaInicio', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="data_ciencia_fim" className="text-xs">
+                <Label htmlFor="dataCienciaFim" className="text-xs">
                   Data Ciência (Fim)
                 </Label>
                 <FormDatePicker
-                  id="data_ciencia_fim"
-                  value={localFilters.data_ciencia_fim || undefined}
-                  onChange={(v) => handleFilterChange('data_ciencia_fim', v || undefined)}
+                  id="dataCienciaFim"
+                  value={localFilters.dataCienciaFim || undefined}
+                  onChange={(v) => handleFilterChange('dataCienciaFim', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="data_criacao_expediente_inicio" className="text-xs">
+                <Label htmlFor="dataCriacaoExpedienteInicio" className="text-xs">
                   Criação Expediente (Início)
                 </Label>
                 <FormDatePicker
-                  id="data_criacao_expediente_inicio"
-                  value={localFilters.data_criacao_expediente_inicio || undefined}
-                  onChange={(v) => handleFilterChange('data_criacao_expediente_inicio', v || undefined)}
+                  id="dataCriacaoExpedienteInicio"
+                  value={localFilters.dataCriacaoExpedienteInicio || undefined}
+                  onChange={(v) => handleFilterChange('dataCriacaoExpedienteInicio', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="data_criacao_expediente_fim" className="text-xs">
+                <Label htmlFor="dataCriacaoExpedienteFim" className="text-xs">
                   Criação Expediente (Fim)
                 </Label>
                 <FormDatePicker
-                  id="data_criacao_expediente_fim"
-                  value={localFilters.data_criacao_expediente_fim || undefined}
-                  onChange={(v) => handleFilterChange('data_criacao_expediente_fim', v || undefined)}
+                  id="dataCriacaoExpedienteFim"
+                  value={localFilters.dataCriacaoExpedienteFim || undefined}
+                  onChange={(v) => handleFilterChange('dataCriacaoExpedienteFim', v || undefined)}
                 />
               </div>
             </div>
@@ -367,43 +408,43 @@ export function ExpedientesFiltrosAvancados({
             <Label>Datas do Processo</Label>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="data_autuacao_inicio" className="text-xs">
+                <Label htmlFor="dataAutuacaoInicio" className="text-xs">
                   Data Autuação (Início)
                 </Label>
                 <FormDatePicker
-                  id="data_autuacao_inicio"
-                  value={localFilters.data_autuacao_inicio || undefined}
-                  onChange={(v) => handleFilterChange('data_autuacao_inicio', v || undefined)}
+                  id="dataAutuacaoInicio"
+                  value={localFilters.dataAutuacaoInicio || undefined}
+                  onChange={(v) => handleFilterChange('dataAutuacaoInicio', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="data_autuacao_fim" className="text-xs">
+                <Label htmlFor="dataAutuacaoFim" className="text-xs">
                   Data Autuação (Fim)
                 </Label>
                 <FormDatePicker
-                  id="data_autuacao_fim"
-                  value={localFilters.data_autuacao_fim || undefined}
-                  onChange={(v) => handleFilterChange('data_autuacao_fim', v || undefined)}
+                  id="dataAutuacaoFim"
+                  value={localFilters.dataAutuacaoFim || undefined}
+                  onChange={(v) => handleFilterChange('dataAutuacaoFim', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="data_arquivamento_inicio" className="text-xs">
+                <Label htmlFor="dataArquivamentoInicio" className="text-xs">
                   Data Arquivamento (Início)
                 </Label>
                 <FormDatePicker
-                  id="data_arquivamento_inicio"
-                  value={localFilters.data_arquivamento_inicio || undefined}
-                  onChange={(v) => handleFilterChange('data_arquivamento_inicio', v || undefined)}
+                  id="dataArquivamentoInicio"
+                  value={localFilters.dataArquivamentoInicio || undefined}
+                  onChange={(v) => handleFilterChange('dataArquivamentoInicio', v || undefined)}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="data_arquivamento_fim" className="text-xs">
+                <Label htmlFor="dataArquivamentoFim" className="text-xs">
                   Data Arquivamento (Fim)
                 </Label>
                 <FormDatePicker
-                  id="data_arquivamento_fim"
-                  value={localFilters.data_arquivamento_fim || undefined}
-                  onChange={(v) => handleFilterChange('data_arquivamento_fim', v || undefined)}
+                  id="dataArquivamentoFim"
+                  value={localFilters.dataArquivamentoFim || undefined}
+                  onChange={(v) => handleFilterChange('dataArquivamentoFim', v || undefined)}
                 />
               </div>
             </div>
