@@ -44,6 +44,7 @@ function converterParaContrato(data: Record<string, unknown>): Contrato {
   return {
     id: data.id as number,
     areaDireito: data.area_direito as AreaDireito,
+    segmentoId: (data.segmento_id as number | null) ?? null,
     tipoContrato: data.tipo_contrato as TipoContrato,
     tipoCobranca: data.tipo_cobranca as TipoCobranca,
     clienteId: data.cliente_id as number,
@@ -176,6 +177,10 @@ export async function findAllContratos(
       query = query.eq('area_direito', params.areaDireito);
     }
 
+    if (params.segmentoId) {
+      query = query.eq('segmento_id', params.segmentoId);
+    }
+
     if (params.tipoContrato) {
       query = query.eq('tipo_contrato', params.tipoContrato);
     }
@@ -203,7 +208,12 @@ export async function findAllContratos(
     // Ordenacao
     const ordenarPor = params.ordenarPor ?? 'created_at';
     const ordem = params.ordem ?? 'desc';
-    query = query.order(ordenarPor, { ascending: ordem === 'asc' });
+    // Mapear area_direito para slug se vier como enum
+    if (ordenarPor === 'area_direito' || ordenarPor === 'segmento_id') {
+      query = query.order(ordenarPor === 'area_direito' ? 'area_direito' : 'segmento_id', { ascending: ordem === 'asc' });
+    } else {
+      query = query.order(ordenarPor, { ascending: ordem === 'asc' });
+    }
 
     // Paginacao
     query = query.range(offset, offset + limite - 1);
@@ -323,7 +333,6 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
 
     // Preparar dados para insercao (snake_case)
     const dadosInsercao: Record<string, unknown> = {
-      area_direito: input.areaDireito,
       tipo_contrato: input.tipoContrato,
       tipo_cobranca: input.tipoCobranca,
       cliente_id: input.clienteId,
@@ -344,6 +353,13 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
       created_by: input.createdBy ?? null,
       observacoes: input.observacoes?.trim() ?? null,
     };
+
+    if (input.segmentoId) {
+      dadosInsercao.segmento_id = input.segmentoId;
+    } else if (input.areaDireito) {
+      // Manter area_direito por compatibilidade se segmentoId nao for fornecido
+      dadosInsercao.area_direito = input.areaDireito;
+    }
 
     const { data, error } = await db
       .from(TABLE_CONTRATOS)

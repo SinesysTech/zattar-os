@@ -96,7 +96,9 @@ export interface ParteContrato {
  */
 export interface Contrato {
   id: number;
+  /** @deprecated Usar segmentoId */
   areaDireito: AreaDireito;
+  segmentoId: number | null;
   tipoContrato: TipoContrato;
   tipoCobranca: TipoCobranca;
   clienteId: number;
@@ -190,7 +192,8 @@ export const poloProcessualSchema = z.enum(['autor', 're']);
  */
 export const createContratoSchema = z.object({
   // Campos obrigatorios
-  areaDireito: areaDireitoSchema,
+  areaDireito: areaDireitoSchema.optional(), // Temporariamente opcional para transicao
+  segmentoId: z.number().int().positive('ID do segmento deve ser positivo').nullable().optional(),
   tipoContrato: tipoContratoSchema,
   tipoCobranca: tipoCobrancaSchema,
   clienteId: z.number().int().positive('ID do cliente deve ser positivo'),
@@ -218,6 +221,7 @@ export const createContratoSchema = z.object({
  */
 export const updateContratoSchema = z.object({
   areaDireito: areaDireitoSchema.optional(),
+  segmentoId: z.number().int().positive('ID do segmento deve ser positivo').nullable().optional(),
   tipoContrato: tipoContratoSchema.optional(),
   tipoCobranca: tipoCobrancaSchema.optional(),
   clienteId: z.number().int().positive('ID do cliente deve ser positivo').optional(),
@@ -255,6 +259,7 @@ export type ContratoSortBy =
   | 'data_contratacao'
   | 'status'
   | 'area_direito'
+  | 'segmento_id'
   | 'tipo_contrato'
   | 'created_at'
   | 'updated_at';
@@ -272,6 +277,7 @@ export interface ListarContratosParams {
   limite?: number;
   busca?: string; // Busca em observacoes
   areaDireito?: AreaDireito;
+  segmentoId?: number;
   tipoContrato?: TipoContrato;
   tipoCobranca?: TipoCobranca;
   status?: StatusContrato;
