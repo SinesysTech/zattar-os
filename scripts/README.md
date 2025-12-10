@@ -112,9 +112,11 @@ Scripts de gestão e manutenção do banco de dados PostgreSQL (Supabase).
 - **`migrations/`**
 
   - `apply-migrations-via-supabase-sdk.ts` - Aplica migrations via SDK
+  - `apply-migrations-manual.ts` - Aplica migrations manualmente
   - `check-applied-migrations.ts` - Verifica migrations aplicadas
   - `apply-locks-migration.ts` - Aplica migration de locks
   - `apply-rls-simple.ts` - Aplica Row Level Security
+  - `organize-migrations.ts` - Organiza migrations em aplicadas/não-aplicadas
 
 - **`population/`**
   - `populate-database.ts` - Popula banco com resultados de capturas
@@ -193,11 +195,14 @@ Ferramentas de desenvolvimento, análise e validação.
 
   - `analyze-typography.ts` - Analisa uso de tipografia
   - `validate-design-system.ts` - Valida conformidade com design system
+  - `check-terceiros.ts` - Debug de terceiros no MongoDB
 
 - **`build/`**
   - `check-build-memory.sh` - Verifica memória durante build
   - `run-analyze.js` - Analisa bundle do build
   - `run-build-debug-memory.js` - Debug de memória no build
+  - `check-mcp-fetch.sh` - Verifica configuração MCP
+  - `setup-mcp-fetch.sh` - Configura integração MCP
 
 **Exemplo de uso:**
 
