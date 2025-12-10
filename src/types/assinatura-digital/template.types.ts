@@ -23,10 +23,7 @@ export type {
  */
 export type StatusTemplate = 'ativo' | 'inativo' | 'rascunho';
 
-/**
- * Tipos de metadados de segurança que podem ser capturados
- */
-export type MetadadoSeguranca = 'ip' | 'user_agent' | 'geolocation' | 'timestamp';
+
 
 /**
  * Interface Template para frontend

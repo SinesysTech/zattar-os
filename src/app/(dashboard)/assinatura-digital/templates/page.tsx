@@ -37,7 +37,7 @@ import {
   getStatusBadgeVariant,
   truncateText,
   getTemplateDisplayName,
-} from '@/lib/assinatura-digital/utils';
+} from '@/core/assinatura-digital/utils/utils';
 import type { Template } from '@/types/assinatura-digital/template.types';
 import type { TipoTemplate } from '@/core/assinatura-digital/domain';
 import { TemplateCreateDialog } from './components/template-create-dialog';

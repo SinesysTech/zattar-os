@@ -29,7 +29,11 @@ import {
   consultarComunicacoesSchema,
   sincronizarComunicacoesSchema,
   vincularExpedienteSchema,
+  listarComunicacoesCapturadasSchema,
+  ListarComunicacoesParams,
+  ComunicacaoCNJ,
 } from './domain';
+import type { PaginatedResponse } from '@/core/common/types';
 
 // =============================================================================
 // UTILITÁRIOS
@@ -188,6 +192,43 @@ export function obterStatusRateLimit(): RateLimitStatus {
 }
 
 /**
+ * Obtém certidão (PDF) de uma comunicação
+ * @param hash - Hash único da comunicação
+ * @returns Result com Buffer do PDF
+ */
+export async function obterCertidao(hash: string): Promise<Result<Buffer>> {
+  if (!hash || typeof hash !== 'string' || hash.trim().length === 0) {
+    return err(
+      appError('VALIDATION_ERROR', 'Hash inválido.')
+    );
+  }
+
+  try {
+    const client = getComunicaCNJClient();
+    const pdfBuffer = await client.obterCertidao(hash);
+    return ok(pdfBuffer);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Erro ao obter certidão.';
+    
+    // Verifica se é erro de certidão não encontrada
+    if (errorMessage.includes('não encontrada') || errorMessage.includes('404')) {
+      return err(
+        appError('NOT_FOUND', 'Certidão não encontrada.')
+      );
+    }
+
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        errorMessage,
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
  * Lista tribunais disponíveis na API do CNJ
  */
 export async function listarTribunaisDisponiveis(): Promise<Result<TribunalInfo[]>> {
@@ -200,6 +241,56 @@ export async function listarTribunaisDisponiveis(): Promise<Result<TribunalInfo[
       appError(
         'EXTERNAL_SERVICE_ERROR',
         error instanceof Error ? error.message : 'Erro ao listar tribunais.',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+// =============================================================================
+// SERVIÇOS DE LISTAGEM (com persistência)
+// =============================================================================
+
+/**
+ * Lista comunicações capturadas do banco de dados
+ * Valida parâmetros, chama repositório e trata erros
+ */
+export async function listarComunicacoesCapturadas(
+  params: ListarComunicacoesParams
+): Promise<Result<PaginatedResponse<ComunicacaoCNJ>>> {
+  // Validação com Zod
+  const validation = listarComunicacoesCapturadasSchema.safeParse(params);
+  if (!validation.success) {
+    return err(
+      appError(
+        'VALIDATION_ERROR',
+        'Parâmetros de listagem inválidos.',
+        validation.error.flatten().fieldErrors
+      )
+    );
+  }
+
+  try {
+    const result = await repository.findAllComunicacoes(validation.data);
+    
+    // Converte erros de banco em appError caso o repositório não retorne Result
+    if (!result.success) {
+      return err(
+        appError(
+          'DATABASE_ERROR',
+          result.error.message || 'Erro ao listar comunicações capturadas.',
+          result.error.metadata
+        )
+      );
+    }
+
+    return ok(result.data);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        error instanceof Error ? error.message : 'Erro ao listar comunicações capturadas.',
         undefined,
         error instanceof Error ? error : undefined
       )

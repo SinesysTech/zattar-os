@@ -42,7 +42,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/core/app/_lib/hooks/use-mobile';
-import type { ComunicacaoItem } from '@/backend/comunica-cnj/types/types';
+import type { ComunicacaoItem } from '@/core/comunica-cnj';
 
 // Configuração de tipos de comunicação (cores + ícones para acessibilidade)
 const TIPO_COMUNICACAO_CONFIG: Record<string, { color: string; icon: typeof AlertCircle }> = {

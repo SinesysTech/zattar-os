@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { obterCertidao } from '@/backend/comunica-cnj';
+import { obterCertidao } from '@/core/comunica-cnj';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -71,10 +71,24 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // 3. Obter certidão
     console.log('[GET /api/comunica-cnj/certidao] Obtendo certidão:', hash);
 
-    const pdfBuffer = await obterCertidao(hash);
+    const result = await obterCertidao(hash);
+
+    if (!result.success) {
+      if (result.error.code === 'NOT_FOUND') {
+        return NextResponse.json(
+          { error: result.error.message },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json(
+        { error: result.error.message },
+        { status: 500 }
+      );
+    }
 
     // 4. Retornar PDF (criar novo Uint8Array para compatibilidade com BodyInit)
     // Usamos Uint8Array porque Buffer.buffer pode ser SharedArrayBuffer
+    const pdfBuffer = result.data;
     const uint8Array = new Uint8Array(pdfBuffer);
     return new NextResponse(uint8Array, {
       status: 200,
@@ -87,17 +101,6 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     });
   } catch (error) {
     console.error('[GET /api/comunica-cnj/certidao] Error:', error);
-
-    if (error instanceof Error) {
-      if (error.message.includes('não encontrada')) {
-        return NextResponse.json(
-          { error: 'Certidão não encontrada' },
-          { status: 404 }
-        );
-      }
-
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
 
     return NextResponse.json(
       { error: 'Erro ao obter certidão' },

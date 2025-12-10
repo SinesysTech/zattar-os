@@ -70,7 +70,8 @@ import { ParteDetalheDialog } from './parte-detalhe-dialog';
 import { CheckCircle2, Undo2, Eye } from 'lucide-react';
 import Link from 'next/link';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
+import { Expediente, GrauTribunal, CodigoTribunal, GRAU_TRIBUNAL_LABELS } from '@/core/expedientes/domain';
+import { actionAtualizarExpediente } from '@/core/app/actions/expedientes';
 import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
@@ -110,14 +111,32 @@ const getParteReColorClass = (): string => {
 /**
  * Retorna a classe CSS de cor para badge do TRT
  */
-const getTRTColorClass = (trt: string): string => {
-  const trtColors: Record<string, string> = {
+const getTRTColorClass = (trt: CodigoTribunal): string => {
+  const trtColors: Record<CodigoTribunal, string> = {
     'TRT1': 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
     'TRT2': 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
     'TRT3': 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
     'TRT4': 'bg-pink-100 text-pink-800 border-pink-200 dark:bg-pink-900 dark:text-pink-200 dark:border-pink-800',
     'TRT5': 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-800',
     'TRT6': 'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-200 dark:border-indigo-800',
+    'TRT7': 'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900 dark:text-cyan-200 dark:border-cyan-800',
+    'TRT8': 'bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900 dark:text-rose-200 dark:border-rose-800',
+    'TRT9': 'bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900 dark:text-teal-200 dark:border-teal-800',
+    'TRT10': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
+    'TRT11': 'bg-lime-100 text-lime-800 border-lime-200 dark:bg-lime-900 dark:text-lime-200 dark:border-lime-800',
+    'TRT12': 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200 dark:bg-fuchsia-900 dark:text-fuchsia-200 dark:border-fuchsia-800',
+    'TRT13': 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800',
+    'TRT14': 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-200 dark:border-orange-800',
+    'TRT15': 'bg-violet-100 text-violet-800 border-violet-200 dark:bg-violet-900 dark:text-violet-200 dark:border-violet-800',
+    'TRT16': 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800',
+    'TRT17': 'bg-blue-200 text-blue-900 border-blue-300 dark:bg-blue-800 dark:text-blue-100 dark:border-blue-700',
+    'TRT18': 'bg-green-200 text-green-900 border-green-300 dark:bg-green-800 dark:text-green-100 dark:border-green-700',
+    'TRT19': 'bg-purple-200 text-purple-900 border-purple-300 dark:bg-purple-800 dark:text-purple-100 dark:border-purple-700',
+    'TRT20': 'bg-pink-200 text-pink-900 border-pink-300 dark:bg-pink-800 dark:text-pink-100 dark:border-pink-700',
+    'TRT21': 'bg-yellow-200 text-yellow-900 border-yellow-300 dark:bg-yellow-800 dark:text-yellow-100 dark:border-yellow-700',
+    'TRT22': 'bg-indigo-200 text-indigo-900 border-indigo-300 dark:bg-indigo-800 dark:text-indigo-100 dark:border-indigo-700',
+    'TRT23': 'bg-teal-200 text-teal-900 border-teal-300 dark:bg-teal-800 dark:text-teal-100 dark:border-teal-700',
+    'TRT24': 'bg-orange-200 text-orange-900 border-orange-300 dark:bg-orange-800 dark:text-orange-100 dark:border-orange-700',
   };
   return trtColors[trt] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
 };
@@ -125,11 +144,11 @@ const getTRTColorClass = (trt: string): string => {
 /**
  * Retorna a classe CSS de cor para badge do grau
  */
-const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior'): string => {
-  const grauColors: Record<string, string> = {
-    'primeiro_grau': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
-    'tribunal_superior': 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
-    'segundo_grau': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+const getGrauColorClass = (grau: GrauTribunal): string => {
+  const grauColors: Record<GrauTribunal, string> = {
+    [GrauTribunal.PRIMEIRO_GRAU]: 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
+    [GrauTribunal.TRIBUNAL_SUPERIOR]: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
+    [GrauTribunal.SEGUNDO_GRAU]: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
   };
   return grauColors[grau] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
 };
@@ -137,11 +156,8 @@ const getGrauColorClass = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_su
 /**
  * Formata o grau para exibição
  */
-const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior'): string => {
-  if (grau === 'primeiro_grau') return '1º Grau';
-  if (grau === 'segundo_grau') return '2º Grau';
-  if (grau === 'tribunal_superior') return 'Tribunal Superior';
-  return grau;
+const formatarGrau = (grau: GrauTribunal): string => {
+  return GRAU_TRIBUNAL_LABELS[grau] || grau;
 };
 
 /**

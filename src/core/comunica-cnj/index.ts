@@ -28,7 +28,9 @@ export type { ComunicacaoCNJ } from './repository';
 export {
   buscarComunicacoes,
   sincronizarComunicacoes,
+  listarComunicacoesCapturadas,
   listarTribunaisDisponiveis,
   vincularComunicacaoAExpediente,
   obterStatusRateLimit,
+  obterCertidao,
 } from './service';

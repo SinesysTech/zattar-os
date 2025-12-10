@@ -41,14 +41,14 @@ import {
 } from 'lucide-react';
 import { useIsMobile } from '@/core/app/_lib/hooks/use-mobile';
 import Link from 'next/link';
-import type { ComunicaCNJ, ComunicacaoItem } from '@/backend/comunica-cnj/types/types';
+import type { ComunicacaoCNJ, ComunicacaoItem } from '@/core/comunica-cnj';
 
 /**
  * Componente para listar comunicações já capturadas do banco
  */
 export function ComunicaCNJCapturadas() {
   const isMobile = useIsMobile();
-  const [comunicacoes, setComunicacoes] = useState<ComunicaCNJ[]>([]);
+  const [comunicacoes, setComunicacoes] = useState<ComunicacaoCNJ[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
   const [tribunalFilter, setTribunalFilter] = useState<string>('all');
@@ -64,13 +64,27 @@ export function ComunicaCNJCapturadas() {
     setError(null);
 
     try {
-      // TODO: Criar endpoint /api/comunica-cnj/capturadas
-      // Por enquanto, usar dados mockados
-      const response = await fetch('/api/comunica-cnj/capturadas');
+      // Montar query string com filtros
+      const params = new URLSearchParams();
+      if (searchTerm) {
+        params.append('numeroProcesso', searchTerm);
+      }
+      if (tribunalFilter !== 'all') {
+        params.append('siglaTribunal', tribunalFilter);
+      }
+      if (vinculacaoFilter === 'nao_vinculadas') {
+        params.append('semExpediente', 'true');
+      } else if (vinculacaoFilter === 'vinculadas') {
+        // Não podemos filtrar por vinculadas diretamente, mas podemos buscar todas
+        // e filtrar no cliente. Alternativamente, poderíamos adicionar um parâmetro
+        // no endpoint, mas por enquanto vamos filtrar no cliente.
+      }
+
+      const response = await fetch(`/api/comunica-cnj/capturadas?${params.toString()}`);
 
       if (!response.ok) {
-        // Se o endpoint não existir, usar array vazio
-        if (response.status === 404) {
+        if (response.status === 401) {
+          setError('Não autenticado. Faça login para continuar.');
           setComunicacoes([]);
           return;
         }
@@ -78,10 +92,22 @@ export function ComunicaCNJCapturadas() {
       }
 
       const data = await response.json();
-      setComunicacoes(data.data || []);
-    } catch {
-      // Se o endpoint não existir, apenas mostrar estado vazio
-      console.warn('Endpoint /api/comunica-cnj/capturadas ainda não implementado');
+      
+      if (data.success && data.data) {
+        let comunicacoes = data.data.comunicacoes || [];
+        
+        // Filtrar por vinculação se necessário (já que o endpoint não suporta isso diretamente)
+        if (vinculacaoFilter === 'vinculadas') {
+          comunicacoes = comunicacoes.filter((c: ComunicacaoCNJ) => c.expedienteId !== null);
+        }
+        
+        setComunicacoes(comunicacoes);
+      } else {
+        setComunicacoes([]);
+      }
+    } catch (err) {
+      console.error('Erro ao buscar comunicações:', err);
+      setError(err instanceof Error ? err.message : 'Erro ao buscar comunicações');
       setComunicacoes([]);
     } finally {
       setIsLoading(false);
@@ -90,11 +116,11 @@ export function ComunicaCNJCapturadas() {
 
   useEffect(() => {
     fetchComunicacoes();
-  }, []);
+  }, [searchTerm, tribunalFilter, vinculacaoFilter]);
 
   // Extrair valores únicos para filtros
   const uniqueTribunais = useMemo(() => {
-    const tribunais = new Set(comunicacoes.map((c) => c.sigla_tribunal).filter(Boolean));
+    const tribunais = new Set(comunicacoes.map((c) => c.siglaTribunal).filter(Boolean));
     return Array.from(tribunais).sort();
   }, [comunicacoes]);
 
@@ -104,14 +130,14 @@ export function ComunicaCNJCapturadas() {
 
     // Filtro por tribunal
     if (tribunalFilter !== 'all') {
-      result = result.filter((c) => c.sigla_tribunal === tribunalFilter);
+      result = result.filter((c) => c.siglaTribunal === tribunalFilter);
     }
 
     // Filtro por vinculação
     if (vinculacaoFilter === 'vinculadas') {
-      result = result.filter((c) => c.expediente_id !== null);
+      result = result.filter((c) => c.expedienteId !== null);
     } else if (vinculacaoFilter === 'nao_vinculadas') {
-      result = result.filter((c) => c.expediente_id === null);
+      result = result.filter((c) => c.expedienteId === null);
     }
 
     // Filtro por texto (número do processo)
@@ -119,49 +145,49 @@ export function ComunicaCNJCapturadas() {
       const search = searchTerm.toLowerCase();
       result = result.filter(
         (c) =>
-          c.numero_processo.toLowerCase().includes(search) ||
-          c.numero_processo_mascara?.toLowerCase().includes(search)
+          c.numeroProcesso.toLowerCase().includes(search) ||
+          c.numeroProcessoMascara?.toLowerCase().includes(search)
       );
     }
 
     // Ordenar por data mais recente
     result.sort((a, b) => {
-      const dateA = new Date(a.data_disponibilizacao);
-      const dateB = new Date(b.data_disponibilizacao);
+      const dateA = new Date(a.dataDisponibilizacao);
+      const dateB = new Date(b.dataDisponibilizacao);
       return dateB.getTime() - dateA.getTime();
     });
 
     return result;
   }, [comunicacoes, tribunalFilter, vinculacaoFilter, searchTerm]);
 
-  // Converter ComunicaCNJ para ComunicacaoItem para o dialog
-  const convertToItem = (c: ComunicaCNJ): ComunicacaoItem => ({
-    id: c.id_cnj,
+  // Converter ComunicacaoCNJ para ComunicacaoItem para o dialog
+  const convertToItem = (c: ComunicacaoCNJ): ComunicacaoItem => ({
+    id: c.idCnj,
     hash: c.hash,
-    numeroProcesso: c.numero_processo,
-    numeroProcessoComMascara: c.numero_processo_mascara || c.numero_processo,
-    siglaTribunal: c.sigla_tribunal,
-    nomeClasse: c.nome_classe || '',
-    codigoClasse: c.codigo_classe || '',
-    tipoComunicacao: c.tipo_comunicacao || '',
-    tipoDocumento: c.tipo_documento || '',
-    numeroComunicacao: c.numero_comunicacao || 0,
+    numeroProcesso: c.numeroProcesso,
+    numeroProcessoComMascara: c.numeroProcessoMascara || c.numeroProcesso,
+    siglaTribunal: c.siglaTribunal,
+    nomeClasse: c.nomeClasse || '',
+    codigoClasse: c.codigoClasse || '',
+    tipoComunicacao: c.tipoComunicacao || '',
+    tipoDocumento: c.tipoDocumento || '',
+    numeroComunicacao: c.numeroComunicacao || 0,
     texto: c.texto || '',
     link: c.link || '',
-    nomeOrgao: c.nome_orgao || '',
-    idOrgao: c.orgao_id || 0,
-    dataDisponibilizacao: c.data_disponibilizacao,
-    dataDisponibilizacaoFormatada: new Date(c.data_disponibilizacao).toLocaleDateString('pt-BR'),
+    nomeOrgao: c.nomeOrgao || '',
+    idOrgao: c.orgaoId || 0,
+    dataDisponibilizacao: c.dataDisponibilizacao,
+    dataDisponibilizacaoFormatada: new Date(c.dataDisponibilizacao).toLocaleDateString('pt-BR'),
     meio: c.meio,
-    meioCompleto: c.meio_completo || '',
+    meioCompleto: c.meioCompleto || '',
     ativo: c.ativo,
     status: c.status || '',
     destinatarios: c.destinatarios || [],
-    destinatarioAdvogados: c.destinatarios_advogados || [],
+    destinatarioAdvogados: c.destinatariosAdvogados || [],
     partesAutoras: c.destinatarios?.filter((d) => d.polo === 'A').map((d) => d.nome) || [],
     partesReus: c.destinatarios?.filter((d) => d.polo === 'P').map((d) => d.nome) || [],
-    advogados: c.destinatarios_advogados?.map((d) => d.advogado.nome) || [],
-    advogadosOab: c.destinatarios_advogados?.map((d) => `${d.advogado.numero_oab}/${d.advogado.uf_oab}`) || [],
+    advogados: c.destinatariosAdvogados?.map((d) => d.advogado.nome) || [],
+    advogadosOab: c.destinatariosAdvogados?.map((d) => `${d.advogado.numero_oab}/${d.advogado.uf_oab}`) || [],
   });
 
   // Formatar data
@@ -249,7 +275,7 @@ export function ComunicaCNJCapturadas() {
   }
 
   // Botões de ação reutilizáveis
-  const ActionButtons = ({ comunicacao }: { comunicacao: ComunicaCNJ }) => (
+  const ActionButtons = ({ comunicacao }: { comunicacao: ComunicacaoCNJ }) => (
     <div className="flex items-center gap-1">
       <TooltipProvider>
         <Tooltip>
@@ -326,37 +352,37 @@ export function ComunicaCNJCapturadas() {
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1 min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <TribunalBadge codigo={comunicacao.sigla_tribunal} className="text-xs" />
+                  <TribunalBadge codigo={comunicacao.siglaTribunal} className="text-xs" />
                   <span className="text-xs text-muted-foreground">
-                    {formatDate(comunicacao.data_disponibilizacao)}
+                    {formatDate(comunicacao.dataDisponibilizacao)}
                   </span>
                 </div>
                 <p className="font-mono text-sm font-medium truncate">
-                  {comunicacao.numero_processo_mascara || comunicacao.numero_processo}
+                  {comunicacao.numeroProcessoMascara || comunicacao.numeroProcesso}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  {comunicacao.nome_classe}
+                  {comunicacao.nomeClasse}
                 </p>
               </div>
               <ActionButtons comunicacao={comunicacao} />
             </div>
             <div className="flex flex-wrap items-center gap-2 text-xs">
               <Badge variant="outline">
-                {comunicacao.tipo_comunicacao || '-'}
+                {comunicacao.tipoComunicacao || '-'}
               </Badge>
-              {comunicacao.expediente_id ? (
+              {comunicacao.expedienteId ? (
                 <Link
-                  href={`/expedientes/lista?id=${comunicacao.expediente_id}`}
+                  href={`/expedientes/lista?id=${comunicacao.expedienteId}`}
                   className="flex items-center gap-1 text-primary hover:underline"
                 >
                   <Link2 className="h-3 w-3" />
-                  #{comunicacao.expediente_id}
+                  #{comunicacao.expedienteId}
                 </Link>
               ) : (
                 <span className="text-muted-foreground">Sem expediente</span>
               )}
               <span className="text-muted-foreground ml-auto">
-                Capturado: {formatDate(comunicacao.created_at)}
+                Capturado: {formatDate(comunicacao.createdAt)}
               </span>
             </div>
           </div>
@@ -391,41 +417,41 @@ export function ComunicaCNJCapturadas() {
             filteredComunicacoes.map((comunicacao) => (
               <TableRow key={comunicacao.id}>
                 <TableCell className="text-xs">
-                  {formatDate(comunicacao.data_disponibilizacao)}
+                  {formatDate(comunicacao.dataDisponibilizacao)}
                 </TableCell>
                 <TableCell>
-                  <TribunalBadge codigo={comunicacao.sigla_tribunal} className="text-xs" />
+                  <TribunalBadge codigo={comunicacao.siglaTribunal} className="text-xs" />
                 </TableCell>
                 <TableCell className="font-mono text-xs">
                   <div className="flex flex-col gap-0.5">
                     <span className="font-medium">
-                      {comunicacao.numero_processo_mascara || comunicacao.numero_processo}
+                      {comunicacao.numeroProcessoMascara || comunicacao.numeroProcesso}
                     </span>
                     <span className="text-muted-foreground text-[10px] truncate max-w-[180px]">
-                      {comunicacao.nome_classe}
+                      {comunicacao.nomeClasse}
                     </span>
                   </div>
                 </TableCell>
                 <TableCell>
                   <Badge variant="outline" className="text-xs">
-                    {comunicacao.tipo_comunicacao || '-'}
+                    {comunicacao.tipoComunicacao || '-'}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  {comunicacao.expediente_id ? (
+                  {comunicacao.expedienteId ? (
                     <Link
-                      href={`/expedientes/lista?id=${comunicacao.expediente_id}`}
+                      href={`/expedientes/lista?id=${comunicacao.expedienteId}`}
                       className="flex items-center gap-1 text-xs text-primary hover:underline"
                     >
                       <Link2 className="h-3 w-3" />
-                      #{comunicacao.expediente_id}
+                      #{comunicacao.expedienteId}
                     </Link>
                   ) : (
                     <span className="text-xs text-muted-foreground">-</span>
                   )}
                 </TableCell>
                 <TableCell className="text-xs text-muted-foreground">
-                  {formatDate(comunicacao.created_at)}
+                  {formatDate(comunicacao.createdAt)}
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center justify-center">

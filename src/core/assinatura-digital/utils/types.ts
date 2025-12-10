@@ -1,11 +1,6 @@
-import type { ClienteAssinaturaDigital } from './cliente-adapter.types';
+// Data Transfer Objects (DTOs) and helper interfaces for Assinatura Digital module
 
-// Types para formulário multi-step
-export interface FormularioContext {
-  segmentoId: number;
-  formularioId: string;
-  templateIds?: string[];
-}
+import type { ClienteAssinaturaDigital } from './cliente-adapter'; // Assuming cliente-adapter.ts is in the same utils folder
 
 export interface VerificarCPFResponse {
   exists: boolean;

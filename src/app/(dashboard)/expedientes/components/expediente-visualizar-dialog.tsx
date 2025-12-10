@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { ExternalLink, Calendar, FileText, Users, Building2, Scale, AlertCircle } from 'lucide-react';
-import { Expediente, GrauTribunal } from '@/core/expedientes/domain';
+import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '@/core/expedientes/domain';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 interface TipoExpediente {
@@ -31,6 +31,61 @@ interface ExpedienteVisualizarDialogProps {
   tiposExpedientes?: TipoExpediente[];
 }
 
+/**
+ * Formata data ISO para formato brasileiro (DD/MM/YYYY)
+ */
+const formatarData = (dataISO: string | null): string => {
+  if (!dataISO) return '-';
+  try {
+    const data = new Date(dataISO);
+    return data.toLocaleDateString('pt-BR');
+  } catch {
+    return '-';
+  }
+};
+
+/**
+ * Formata data ISO para formato brasileiro com hora (DD/MM/YYYY HH:mm)
+ */
+const formatarDataHora = (dataISO: string | null): string => {
+  if (!dataISO) return '-';
+  try {
+    const data = new Date(dataISO);
+    return data.toLocaleString('pt-BR');
+  } catch {
+    return '-';
+  }
+};
+
+/**
+ * Formata o grau para exibição
+ */
+const formatarGrau = (grau: GrauTribunal): string => {
+  return GRAU_TRIBUNAL_LABELS[grau] || grau;
+};
+
+/**
+ * Retorna a classe CSS de cor para badge do tipo de expediente
+ */
+const getTipoExpedienteColorClass = (tipoId: number): string => {
+  const colors = [
+    'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
+    'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
+    'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
+    'bg-pink-100 text-pink-800 border-pink-200 dark:bg-pink-900 dark:text-pink-200 dark:border-pink-800',
+    'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-800',
+    'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-200 dark:border-indigo-800',
+    'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-200 dark:border-orange-800',
+    'bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900 dark:text-teal-200 dark:border-teal-800',
+    'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900 dark:text-cyan-200 dark:border-cyan-800',
+    'bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900 dark:text-rose-200 dark:border-rose-800',
+    'bg-violet-100 text-violet-800 border-violet-200 dark:bg-violet-900 dark:text-violet-200 dark:border-violet-800',
+    'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200 dark:bg-fuchsia-900 dark:text-fuchsia-200 dark:border-fuchsia-800',
+  ];
+  const index = (tipoId - 1) % colors.length;
+  return colors[index];
+};
+
 export function ExpedienteVisualizarDialog({
   expediente,
   open,
@@ -38,8 +93,8 @@ export function ExpedienteVisualizarDialog({
   usuarios = [],
   tiposExpedientes = [],
 }: ExpedienteVisualizarDialogProps) {
-  const responsavel = usuarios.find(u => u.id === expediente.responsavel_id);
-  const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipo_expediente_id);
+  const responsavel = usuarios.find(u => u.id === expediente.responsavelId);
+  const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipoExpedienteId);
 
   const handleAbrirPagina = () => {
     // Por enquanto, apenas fecha o diálogo
@@ -83,11 +138,11 @@ export function ExpedienteVisualizarDialog({
               <div className="grid grid-cols-2 gap-4 pl-6">
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Número do Processo</div>
-                  <div className="font-medium">{expediente.numero_processo}</div>
+                  <div className="font-medium">{expediente.numeroProcesso}</div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Classe Judicial</div>
-                  <div className="font-medium">{expediente.classe_judicial || '-'}</div>
+                  <div className="font-medium">{expediente.classeJudicial || '-'}</div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">TRT</div>
@@ -103,7 +158,9 @@ export function ExpedienteVisualizarDialog({
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Prioridade</div>
-                  <div className="font-medium">{expediente.prioridadeProcessual || 0}</div>
+                  <Badge variant={expediente.prioridadeProcessual ? 'default' : 'secondary'}>
+                    {expediente.prioridadeProcessual ? 'Sim' : 'Não'}
+                  </Badge>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Segredo de Justiça</div>
@@ -141,9 +198,9 @@ export function ExpedienteVisualizarDialog({
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Parte Ré</div>
                   <div className="font-medium">{expediente.nomeParteRe || '-'}</div>
-                  {expediente.qtde_parte_re > 1 && (
+                  {expediente.qtdeParteRe && expediente.qtdeParteRe > 1 && (
                     <div className="text-xs text-muted-foreground mt-1">
-                      {expediente.qtde_parte_re} parte(s)
+                      {expediente.qtdeParteRe} parte(s)
                     </div>
                   )}
                 </div>
@@ -161,12 +218,12 @@ export function ExpedienteVisualizarDialog({
               <div className="grid grid-cols-2 gap-4 pl-6">
                 <div className="col-span-2">
                   <div className="text-xs text-muted-foreground mb-1">Descrição</div>
-                  <div className="font-medium">{expediente.descricao_orgao_julgador || '-'}</div>
+                  <div className="font-medium">{expediente.descricaoOrgaoJulgador || '-'}</div>
                 </div>
-                {expediente.sigla_orgao_julgador && (
+                {expediente.siglaOrgaoJulgador && (
                   <div>
                     <div className="text-xs text-muted-foreground mb-1">Sigla</div>
-                    <Badge variant="outline">{expediente.sigla_orgao_julgador}</Badge>
+                    <Badge variant="outline">{expediente.siglaOrgaoJulgador}</Badge>
                   </div>
                 )}
               </div>
@@ -183,32 +240,32 @@ export function ExpedienteVisualizarDialog({
               <div className="grid grid-cols-2 gap-4 pl-6">
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Data de Autuação</div>
-                  <div className="font-medium">{formatarData(expediente.data_autuacao)}</div>
+                  <div className="font-medium">{formatarData(expediente.dataAutuacao)}</div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Data de Ciência</div>
-                  <div className="font-medium">{formatarData(expediente.data_ciencia_parte)}</div>
+                  <div className="font-medium">{formatarData(expediente.dataCienciaParte)}</div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Prazo Legal</div>
-                  <div className={`font-medium ${expediente.prazo_vencido ? 'text-destructive' : ''}`}>
-                    {formatarData(expediente.data_prazo_legal_parte)}
+                  <div className={`font-medium ${expediente.prazoVencido ? 'text-destructive' : ''}`}>
+                    {formatarData(expediente.dataPrazoLegalParte)}
                   </div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Criação do Expediente</div>
-                  <div className="font-medium">{formatarData(expediente.data_criacao_expediente)}</div>
+                  <div className="font-medium">{formatarData(expediente.dataCriacaoExpediente)}</div>
                 </div>
-                {expediente.data_arquivamento && (
+                {expediente.dataArquivamento && (
                   <div>
                     <div className="text-xs text-muted-foreground mb-1">Data de Arquivamento</div>
-                    <div className="font-medium">{formatarData(expediente.data_arquivamento)}</div>
+                    <div className="font-medium">{formatarData(expediente.dataArquivamento)}</div>
                   </div>
                 )}
-                {expediente.baixado_em && (
+                {expediente.baixadoEm && (
                   <div>
                     <div className="text-xs text-muted-foreground mb-1">Data de Baixa</div>
-                    <div className="font-medium">{formatarDataHora(expediente.baixado_em)}</div>
+                    <div className="font-medium">{formatarDataHora(expediente.baixadoEm)}</div>
                   </div>
                 )}
               </div>
@@ -217,7 +274,7 @@ export function ExpedienteVisualizarDialog({
             <Separator />
 
             {/* Tipo e Descrição */}
-            {(tipoExpediente || expediente.descricao_arquivos) && (
+            {(tipoExpediente || expediente.descricaoArquivos) && (
               <>
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
@@ -232,14 +289,14 @@ export function ExpedienteVisualizarDialog({
                           variant="outline"
                           className={getTipoExpedienteColorClass(tipoExpediente.id)}
                         >
-                          {tipoExpediente.tipo_expediente}
+                          {tipoExpediente.tipoExpediente}
                         </Badge>
                       </div>
                     )}
-                    {expediente.descricao_arquivos && (
+                    {expediente.descricaoArquivos && (
                       <div>
                         <div className="text-xs text-muted-foreground mb-1">Descrição / Arquivos</div>
-                        <div className="text-sm">{expediente.descricao_arquivos}</div>
+                        <div className="text-sm">{expediente.descricaoArquivos}</div>
                       </div>
                     )}
                   </div>
@@ -249,7 +306,7 @@ export function ExpedienteVisualizarDialog({
             )}
 
             {/* Baixa do Expediente */}
-            {expediente.baixado_em && (
+            {expediente.baixadoEm && (
               <>
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
@@ -257,16 +314,16 @@ export function ExpedienteVisualizarDialog({
                     Informações de Baixa
                   </div>
                   <div className="grid grid-cols-1 gap-4 pl-6">
-                    {expediente.protocolo_id && (
+                    {expediente.protocoloId && (
                       <div>
                         <div className="text-xs text-muted-foreground mb-1">Protocolo ID</div>
-                        <div className="font-medium font-mono">{expediente.protocolo_id}</div>
+                        <div className="font-medium font-mono">{expediente.protocoloId}</div>
                       </div>
                     )}
-                    {expediente.justificativa_baixa && (
+                    {expediente.justificativaBaixa && (
                       <div>
                         <div className="text-xs text-muted-foreground mb-1">Justificativa</div>
-                        <div className="text-sm">{expediente.justificativa_baixa}</div>
+                        <div className="text-sm">{expediente.justificativaBaixa}</div>
                       </div>
                     )}
                   </div>
@@ -298,21 +355,21 @@ export function ExpedienteVisualizarDialog({
               <div className="grid grid-cols-2 gap-4 pl-6">
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">ID PJE</div>
-                  <div className="font-medium font-mono">{expediente.id_pje}</div>
+                  <div className="font-medium font-mono">{expediente.idPje || '-'}</div>
                 </div>
-                {expediente.id_documento && (
+                {expediente.idDocumento && (
                   <div>
                     <div className="text-xs text-muted-foreground mb-1">ID Documento</div>
-                    <div className="font-medium font-mono">{expediente.id_documento}</div>
+                    <div className="font-medium font-mono">{expediente.idDocumento}</div>
                   </div>
                 )}
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Criado em</div>
-                  <div className="font-medium">{formatarDataHora(expediente.created_at)}</div>
+                  <div className="font-medium">{formatarDataHora(expediente.createdAt)}</div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Atualizado em</div>
-                  <div className="font-medium">{formatarDataHora(expediente.updated_at)}</div>
+                  <div className="font-medium">{formatarDataHora(expediente.updatedAt)}</div>
                 </div>
               </div>
             </div>

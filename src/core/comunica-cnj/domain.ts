@@ -575,3 +575,29 @@ export const vincularExpedienteSchema = z.object({
   comunicacaoId: z.number().int().positive(),
   expedienteId: z.number().int().positive(),
 });
+
+/**
+ * Schema de validação para listar comunicações capturadas
+ */
+export const listarComunicacoesCapturadasSchema = z.object({
+  numeroProcesso: z.string().optional(),
+  siglaTribunal: z.string().optional(),
+  dataInicio: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  dataFim: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  advogadoId: z.number().int().positive().optional(),
+  expedienteId: z.number().int().positive().optional(),
+  semExpediente: z.boolean().optional(),
+  page: z.number().int().positive().default(1),
+  limit: z.number().int().positive().max(100).default(50),
+}).refine(
+  (data) => {
+    // Se ambas as datas estão presentes, dataInicio deve ser anterior a dataFim
+    if (data.dataInicio && data.dataFim) {
+      return new Date(data.dataInicio) <= new Date(data.dataFim);
+    }
+    return true;
+  },
+  {
+    message: 'dataInicio deve ser anterior a dataFim',
+  }
+);

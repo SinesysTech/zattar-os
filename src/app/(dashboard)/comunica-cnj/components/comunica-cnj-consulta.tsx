@@ -5,7 +5,7 @@ import { ComunicaCNJSearchForm } from './comunica-cnj-search-form';
 import { ComunicaCNJResultsTable } from './comunica-cnj-results-table';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, Info } from 'lucide-react';
-import type { ComunicacaoItem, RateLimitStatus } from '@/backend/comunica-cnj/types/types';
+import type { ComunicacaoItem, RateLimitStatus } from '@/core/comunica-cnj';
 
 interface SearchResult {
   comunicacoes: ComunicacaoItem[];
