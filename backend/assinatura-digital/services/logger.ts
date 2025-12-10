@@ -129,7 +129,13 @@ export const LogServices = {
 } as const;
 
 /**
- * Operações comuns
+ * Operações comuns e de auditoria
+ * 
+ * Operações de auditoria e validação para conformidade legal (MP 2.200-2/2001):
+ * - AUDIT: Verificação de integridade de assinaturas concluídas
+ * - VALIDATE_ENTROPY: Validação de entropia de device fingerprint (Art. 10, § 2º, alínea b)
+ * - VALIDATE_EMBEDDING: Validação de embedding de evidências biométricas no PDF
+ * - VERIFY_HASH: Verificação de hashes SHA-256 contra PDFs armazenados
  */
 export const LogOperations = {
   LIST: 'list',
@@ -141,4 +147,8 @@ export const LogOperations = {
   FINALIZE: 'finalize',
   UPLOAD: 'upload',
   DOWNLOAD: 'download',
+  AUDIT: 'audit',
+  VALIDATE_ENTROPY: 'validate_entropy',
+  VALIDATE_EMBEDDING: 'validate_embedding',
+  VERIFY_HASH: 'verify_hash',
 } as const;

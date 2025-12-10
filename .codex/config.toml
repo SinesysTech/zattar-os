@@ -1,4 +1,0 @@
-# MCP servers converted to Codex TOML config.
-# Copy or symlink this file to `$CODEX_HOME/config.toml` (default `~/.codex/config.toml`)
-# so Codex CLI can load these servers.
-
