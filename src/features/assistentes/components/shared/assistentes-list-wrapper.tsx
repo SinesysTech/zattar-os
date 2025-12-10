@@ -27,6 +27,8 @@ export function AssistentesListWrapper({ initialData, permissions }: Assistentes
   const router = useRouter();
   const [viewMode, setViewMode] = React.useState<ViewMode>('cards');
   
+  const { data, ...initialPagination } = initialData;
+  
   const { 
     assistentes, 
     paginacao, 
@@ -37,27 +39,13 @@ export function AssistentesListWrapper({ initialData, permissions }: Assistentes
     setFiltros, 
     refetch 
   } = useAssistentes({
-    pagina: initialData.pagina,
-    limite: initialData.limite,
+    initialParams: {
+      pagina: initialData.pagina,
+      limite: initialData.limite,
+    },
+    initialData: data,
+    initialPagination,
   });
-
-  // Keep local data in sync if initialData updates (optional)
-  // For now relying on hooks useAssistentes internal state which starts empty? 
-  // No, I should initialize hook with data.
-  // The hook defined previously didn't accept initial data for state, just params.
-  // I should update hook to accept initialData or just rely on useEffect fetching if params change.
-  // However, for RSC we want to show initialData immediately.
-  // I'll update the hook or just handle it here. 
-  // Since I can't easily change the hook now without another write, I'll pass initialData prop to GridView if assistentes is empty and not loading.
-  // Actually, better to modify the hook to accept `initialData`.
-  
-  const displayAssistentes = assistentes.length > 0 ? assistentes : (isLoading ? [] : initialData.data);
-  const displayPaginacao = paginacao.total > 0 ? paginacao : {
-     pagina: initialData.pagina,
-     limite: initialData.limite,
-     total: initialData.total,
-     totalPaginas: initialData.totalPaginas,
-  };
 
   // Dialog states
   const [createOpen, setCreateOpen] = React.useState(false);
@@ -102,8 +90,8 @@ export function AssistentesListWrapper({ initialData, permissions }: Assistentes
 
       {viewMode === 'cards' ? (
         <GridView 
-          assistentes={displayAssistentes}
-          paginacao={displayPaginacao}
+          assistentes={assistentes}
+          paginacao={paginacao}
           onView={handleView}
           onEdit={handleEdit}
           onDelete={handleDelete}

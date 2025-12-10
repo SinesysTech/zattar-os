@@ -71,7 +71,7 @@ export async function actionAtualizarAssistente(id: number, formData: FormData):
   try {
     await requireAuth(['assistentes:editar']);
     
-    const data: Record<string, any> = {};
+    const data: Record<string, unknown> = {};
     if (formData.has('nome')) data.nome = formData.get('nome');
     if (formData.has('descricao')) data.descricao = formData.get('descricao');
     if (formData.has('iframe_code')) data.iframe_code = formData.get('iframe_code');

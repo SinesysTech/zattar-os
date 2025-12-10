@@ -27,3 +27,7 @@ export interface PaginacaoResult<T> {
   limite: number;
   totalPaginas: number;
 }
+
+// Helper type for pagination metadata without data
+export type PaginacaoMetadata = Omit<PaginacaoResult<any>, 'data'>;
+
