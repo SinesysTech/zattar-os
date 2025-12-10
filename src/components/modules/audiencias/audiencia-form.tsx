@@ -33,9 +33,8 @@ import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { ptBR } from 'date-fns/locale';
-import { useTiposAudiencias } from '@/hooks/use-tipos-audiencias'; // Assuming this hook exists
-import { useUsuarios } from '@/hooks/use-usuarios'; // Assuming this hook exists
-import { TimePicker } from '@/components/ui/time-picker'; // Assuming a time picker component
+import { useTiposAudiencias } from '@/app/_lib/hooks/use-tipos-audiencias';
+import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 
 interface AudienciaFormProps {
   initialData?: Audiencia;
@@ -191,7 +190,8 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               <FormItem className="flex flex-col">
                 <FormLabel className="text-left">Hora de Início</FormLabel>
                 <FormControl>
-                  <TimePicker
+                  <Input
+                    type="time"
                     value={field.value || '00:00'}
                     onChange={field.onChange}
                   />
@@ -250,7 +250,8 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               <FormItem className="flex flex-col">
                 <FormLabel className="text-left">Hora de Fim</FormLabel>
                 <FormControl>
-                  <TimePicker
+                  <Input
+                    type="time"
                     value={field.value || '00:00'}
                     onChange={field.onChange}
                   />
