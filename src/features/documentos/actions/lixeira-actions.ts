@@ -47,3 +47,17 @@ export async function actionLimparLixeira() {
     return { success: false, error: String(error) };
   }
 }
+
+export async function actionDeletarPermanentemente(documento_id: number) {
+  try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Não autenticado' };
+    }
+    await service.deletarDocumentoPermanentemente(documento_id, user.id);
+    revalidatePath('/documentos/lixeira');
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}

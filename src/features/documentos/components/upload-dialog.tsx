@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
+import { actionUploadArquivo } from '@/features/documentos/actions/uploads-actions';
 
 interface UploadDialogProps {
   open: boolean;
@@ -72,24 +73,20 @@ export function UploadDialog({
     try {
       const formData = new FormData();
       formData.append('file', selectedFile);
+      formData.append('documento_id', String(documentoId));
 
       // Simular progresso (já que não temos progresso real do fetch)
       const progressInterval = setInterval(() => {
         setProgress((prev) => Math.min(prev + 10, 90));
       }, 200);
 
-      const response = await fetch(`/api/documentos/${documentoId}/upload`, {
-        method: 'POST',
-        body: formData,
-      });
+      const result = await actionUploadArquivo(formData);
 
       clearInterval(progressInterval);
       setProgress(100);
 
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao fazer upload');
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao fazer upload');
       }
 
       toast.success('Arquivo enviado com sucesso');
@@ -99,8 +96,8 @@ export function UploadDialog({
       setProgress(0);
       onOpenChange(false);
 
-      if (onSuccess && data.data.b2_url) {
-        onSuccess(data.data.b2_url);
+      if (onSuccess && result.data?.b2_url) {
+        onSuccess(result.data.b2_url);
       }
     } catch (error) {
       console.error('Erro no upload:', error);

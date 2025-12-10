@@ -37,7 +37,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import type { DocumentoVersaoComUsuario } from '@/backend/types/documentos/types';
+import { useDocumentVersions } from '@/features/documentos/hooks/use-document-versions';
+import type { DocumentoVersaoComUsuario } from '@/features/documentos/types';
 
 interface VersionHistoryDialogProps {
   open: boolean;
@@ -52,35 +53,12 @@ export function VersionHistoryDialog({
   documentoId,
   onVersionRestored,
 }: VersionHistoryDialogProps) {
-  const [loading, setLoading] = React.useState(true);
-  const [versions, setVersions] = React.useState<DocumentoVersaoComUsuario[]>([]);
+  const { versions, loading, restoreVersion } = useDocumentVersions(documentoId);
   const [selectedVersion, setSelectedVersion] = React.useState<DocumentoVersaoComUsuario | null>(null);
   const [restoreDialogOpen, setRestoreDialogOpen] = React.useState(false);
   const [restoring, setRestoring] = React.useState(false);
 
-  // Carregar versões
-  const fetchVersions = React.useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/documentos/${documentoId}/versoes`);
-      const data = await response.json();
-      if (data.success) {
-        setVersions(data.data);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar versões:', error);
-      toast.error('Erro ao carregar histórico de versões');
-    } finally {
-      setLoading(false);
-    }
-  }, [documentoId]);
-
-  React.useEffect(() => {
-    if (open) {
-      fetchVersions();
-    }
-  }, [open, fetchVersions]);
-
+  // Restaurar versão
   // Restaurar versão
   const handleRestore = async () => {
     if (!selectedVersion) return;
@@ -89,16 +67,7 @@ export function VersionHistoryDialog({
     setRestoreDialogOpen(false);
 
     try {
-      const response = await fetch(
-        `/api/documentos/${documentoId}/versoes/${selectedVersion.id}/restaurar`,
-        { method: 'POST' }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao restaurar versão');
-      }
+      await restoreVersion(selectedVersion.id);
 
       toast.success(`Versão ${selectedVersion.versao} restaurada com sucesso`);
       onOpenChange(false);

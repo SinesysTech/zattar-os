@@ -261,6 +261,14 @@ export async function deletarTemplate(id: number, usuario_id: number): Promise<v
   await repository.deletarTemplate(id);
 }
 
+export async function listarCategoriasTemplates(usuario_id: number): Promise<string[]> {
+  return repository.listarCategoriasTemplates(usuario_id);
+}
+
+export async function listarTemplatesMaisUsados(limit: number, usuario_id: number): Promise<TemplateComUsuario[]> {
+  return repository.listarTemplatesMaisUsados(limit, usuario_id);
+}
+
 // ============================================================================
 // COMPARTILHAMENTO
 // ============================================================================
@@ -475,7 +483,7 @@ export async function listarLixeira(usuario_id: number): Promise<DocumentoComUsu
 }
 
 export async function restaurarDaLixeira(documento_id: number, usuario_id: number): Promise<DocumentoComUsuario> {
-  const documento = await repository.buscarDocumentoPorId(documento_id); // Inclui deletados
+  const documento = await repository.buscarDocumentoPorId(documento_id, true); // Inclui deletados
   if (!documento || documento.criado_por !== usuario_id) {
     throw new Error('Acesso negado: apenas o proprietário pode restaurar o documento.');
   }
@@ -540,4 +548,18 @@ export async function limparLixeira(usuario_id: number): Promise<{ documentosDel
   // que verificasse o criador.
 
   return { documentosDeletados, pastasDeletadas: 0 };
+}
+
+export async function deletarDocumentoPermanentemente(documento_id: number, usuario_id: number): Promise<void> {
+  const documento = await repository.buscarDocumentoPorId(documento_id, true);
+  
+  if (!documento) {
+    throw new Error('Documento não encontrado.');
+  }
+  
+  if (documento.criado_por !== usuario_id) {
+    throw new Error('Acesso negado: apenas o proprietário pode excluir permanentemente.');
+  }
+
+  return repository.deletarDocumentoPermanentemente(documento_id);
 }

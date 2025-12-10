@@ -9,7 +9,8 @@ import * as React from 'react';
 import { ChevronRight, Folder, FolderOpen, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import type { PastaHierarquia } from '@/backend/types/documentos/types';
+import { useFolders } from '@/features/documentos/hooks/use-folders';
+import type { PastaHierarquia, PastaComContadores } from '@/features/documentos/types';
 
 interface FolderTreeProps {
   onFolderSelect: (folderId: number | null) => void;
@@ -17,28 +18,38 @@ interface FolderTreeProps {
 }
 
 export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps) {
+  const { folders, loading } = useFolders();
   const [pastas, setPastas] = React.useState<PastaHierarquia[]>([]);
   const [expandedIds, setExpandedIds] = React.useState<Set<number>>(new Set());
-  const [loading, setLoading] = React.useState(true);
+
+  // Helper to build hierarchy from flat list
+  const buildHierarchy = React.useCallback((allFolders: PastaComContadores[]): PastaHierarquia[] => {
+    const map = new Map<number, PastaHierarquia>();
+    // Initialize map with empty subpastas
+    allFolders.forEach(f => {
+      // Cast to PastaHierarquia (subpastas is mandatory in type, but assuming we fill it)
+      map.set(f.id, { ...f, subpastas: [] } as unknown as PastaHierarquia);
+    });
+
+    const roots: PastaHierarquia[] = [];
+    
+    allFolders.forEach(f => {
+      const node = map.get(f.id)!;
+      if (f.pasta_pai_id && map.has(f.pasta_pai_id)) {
+        map.get(f.pasta_pai_id)!.subpastas.push(node);
+      } else {
+        roots.push(node);
+      }
+    });
+
+    return roots;
+  }, []);
 
   React.useEffect(() => {
-    async function fetchPastas() {
-      try {
-        const response = await fetch('/api/pastas?modo=hierarquia');
-        const data = await response.json();
-
-        if (data.success) {
-          setPastas(data.data);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar pastas:', error);
-      } finally {
-        setLoading(false);
-      }
+    if (folders) {
+      setPastas(buildHierarchy(folders));
     }
-
-    fetchPastas();
-  }, []);
+  }, [folders, buildHierarchy]);
 
   const toggleExpand = (id: number) => {
     setExpandedIds((prev) => {

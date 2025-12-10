@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import type { DocumentoComUsuario } from '@/backend/types/documentos/types';
+import type { DocumentoComUsuario } from '@/features/documentos/types';
 
 interface DocumentCardProps {
   documento: DocumentoComUsuario;

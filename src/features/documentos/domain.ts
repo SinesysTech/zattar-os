@@ -153,7 +153,7 @@ export const criarUploadSchema = z.object({
 
 export const autoSavePayloadSchema = z.object({
   documento_id: z.number(),
-  conteudo: z.custom<Value>(),
+  conteudo: z.custom<Value>().optional(),
   titulo: z.string().optional(),
 });
 
