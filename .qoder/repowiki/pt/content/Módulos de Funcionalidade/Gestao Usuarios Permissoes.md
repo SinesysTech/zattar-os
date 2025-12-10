@@ -2,32 +2,30 @@
 
 <cite>
 **Arquivos Referenciados neste Documento**   
-- [route.ts](file://app/api/permissoes/recursos/route.ts)
-- [route.ts](file://app/api/permissoes/usuarios/[id]/route.ts)
-- [permissao-persistence.service.ts](file://backend/permissoes/services/persistence/permissao-persistence.service.ts)
-- [permissoes-matriz.tsx](file://components/usuarios/permissoes-matriz.tsx)
-- [use-permissoes-matriz.ts](file://lib/hooks/use-permissoes-matriz.ts)
-- [permissoes-utils.ts](file://lib/utils/permissoes-utils.ts)
+- [criar-usuario-completo.service.ts](file://backend/usuarios/services/usuarios/criar-usuario-completo.service.ts)
+- [atualizar-usuario.service.ts](file://backend/usuarios/services/usuarios/atualizar-usuario.service.ts)
+- [desativar-usuario.service.ts](file://backend/usuarios/services/usuarios/desativar-usuario.service.ts)
+- [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
+- [criar-usuario.service.ts](file://backend/usuarios/services/usuarios/criar-usuario.service.ts)
+- [listar-usuarios.service.ts](file://backend/usuarios/services/usuarios/listar-usuarios.service.ts)
 - [08_usuarios.sql](file://supabase/schemas/08_usuarios.sql)
-- [20250118120100_create_permissoes.sql](file://supabase/migrations/20250118120100_create_permissoes.sql)
-- [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts) - *Atualizado para incluir dados do cargo na consulta por e-mail*
-- [route.ts](file://app/api/usuarios/buscar/por-email/[email]/route.ts) - *Consulta por e-mail corporativo atualizada*
 </cite>
 
 ## Atualização do Sumário
 **Alterações Realizadas**   
-- Atualização da seção "Introdução" para refletir a inclusão de dados do cargo na consulta por e-mail
-- Atualização da seção "Estrutura do Projeto" com novos arquivos afetados
-- Atualização da seção "Componentes Principais" com informações sobre a consulta por e-mail
-- Atualização da seção "Visão Geral da Arquitetura" com novo diagrama de sequência
-- Atualização da seção "Análise Detalhada dos Componentes" com análise do serviço de persistência de usuário
+- Atualização da seção "Introdução" para refletir a refatoração completa do módulo de gestão de usuários com nova arquitetura feature-sliced
+- Atualização da seção "Estrutura do Projeto" com nova organização de serviços e camadas
+- Adição da seção "Visão Geral da Arquitetura Feature-Sliced" para documentar a nova arquitetura
+- Adição da seção "Análise Detalhada dos Componentes" com análise dos novos serviços de criação, atualização e desativação
+- Atualização da seção "Análise de Dependências" com novas dependências de cache Redis e validação
+- Atualização da seção "Considerações de Desempenho" com estratégias de cache e invalidação
 - Sistema de rastreamento de fontes atualizado com novos arquivos analisados
 
 ## Sumário
 1. [Introdução](#introdução)
 2. [Estrutura do Projeto](#estrutura-do-projeto)
 3. [Componentes Principais](#componentes-principais)
-4. [Visão Geral da Arquitetura](#visão-geral-da-arquitetura)
+4. [Visão Geral da Arquitetura Feature-Sliced](#visão-geral-da-arquitetura-feature-sliced)
 5. [Análise Detalhada dos Componentes](#análise-detalhada-dos-componentes)
 6. [Análise de Dependências](#análise-de-dependências)
 7. [Considerações de Desempenho](#considerações-de-desempenho)
@@ -35,116 +33,187 @@
 9. [Conclusão](#conclusão)
 
 ## Introdução
-Este documento fornece uma análise detalhada do sistema de gestão de permissões para usuários no sistema Sinesys, utilizado pelo escritório de advocacia Zattar Advogados. O sistema implementa um modelo de controle de acesso baseado em permissões granulares, permitindo atribuir direitos específicos por recurso e operação, sem depender de papéis ou cargos fixos. A arquitetura combina camadas frontend e backend com persistência em banco de dados PostgreSQL via Supabase, garantindo segurança, auditoria e escalabilidade. Recentemente, o serviço de persistência de usuário foi atualizado para incluir dados do cargo na consulta por e-mail corporativo, trazendo informações do cargo em uma única consulta.
+Este documento fornece uma análise detalhada do sistema de gestão de usuários no sistema Sinesys, que passou por uma refatoração completa com nova arquitetura feature-sliced. O sistema implementa um modelo robusto de gestão de usuários com validação Zod, padrão repository, server actions e utilitários de formatação. A arquitetura combina camadas frontend e backend com persistência em banco de dados PostgreSQL via Supabase, garantindo segurança, auditoria e escalabilidade. A implementação inclui lógica robusta para criação, atualização e desativação de usuários com verificação de duplicatas e cache Redis.
 
 ## Estrutura do Projeto
-A estrutura do projeto organiza os componentes relacionados a permissões em diretórios específicos, separando claramente as camadas de frontend, backend e banco de dados. Os principais diretórios envolvidos são:
+A estrutura do projeto foi refatorada para seguir o padrão feature-sliced, organizando os componentes relacionados a usuários em diretórios específicos que separam claramente as camadas de serviço, persistência e utilitários. Os principais diretórios envolvidos são:
 
-- `app/api/permissoes`: Rotas da API para gerenciamento de permissões
-- `backend/permissoes`: Serviços de persistência e lógica de negócios
-- `components/usuarios`: Componentes React para interface de gestão de permissões
-- `lib/hooks`: Hooks personalizados para gerenciamento de estado
-- `lib/utils`: Utilitários para manipulação de permissões
+- `backend/usuarios/services/usuarios`: Serviços de aplicação para operações de usuário
+- `backend/usuarios/services/persistence`: Serviços de persistência para operações no banco de dados
+- `backend/usuarios/services/avatar`: Serviços específicos para manipulação de avatar
+- `backend/utils/redis`: Utilitários para cache e invalidação de cache
 - `supabase/schemas`: Definições de esquema do banco de dados
 - `supabase/migrations`: Migrações do banco de dados
 
 ```mermaid
 graph TD
 A[Frontend] --> B[API Routes]
-B --> C[Backend Services]
-C --> D[Banco de Dados]
+B --> C[Serviços de Aplicação]
+C --> D[Serviços de Persistência]
+D --> E[Banco de Dados]
+E --> D
 D --> C
 C --> B
 B --> A
+F[Cache Redis] --> D
+D --> F
 ```
 
 **Fontes do Diagrama**
-- [route.ts](file://app/api/permissoes/usuarios/[id]/route.ts)
-- [permissao-persistence.service.ts](file://backend/permissoes/services/persistence/permissao-persistence.service.ts)
-- [20250118120100_create_permissoes.sql](file://supabase/migrations/20250118120100_create_permissoes.sql)
+- [criar-usuario-completo.service.ts](file://backend/usuarios/services/usuarios/criar-usuario-completo.service.ts)
+- [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
+- [08_usuarios.sql](file://supabase/schemas/08_usuarios.sql)
 
 **Fontes da Seção**
-- [app/api/permissoes](file://app/api/permissoes)
-- [backend/permissoes](file://backend/permissoes)
-- [components/usuarios](file://components/usuarios)
-- [backend/usuarios/services/persistence/usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
-- [app/api/usuarios/buscar/por-email/[email]/route.ts](file://app/api/usuarios/buscar/por-email/[email]/route.ts)
+- [backend/usuarios/services/usuarios](file://backend/usuarios/services/usuarios)
+- [backend/usuarios/services/persistence](file://backend/usuarios/services/persistence)
+- [backend/utils/redis](file://backend/utils/redis)
+- [supabase/schemas](file://supabase/schemas)
 
 ## Componentes Principais
-Os componentes principais do sistema de permissões incluem rotas API para listagem e manipulação de permissões, serviços de persistência para operações no banco de dados, componentes de interface para visualização e edição, e utilitários para transformação de dados. O sistema permite listar todas as permissões disponíveis, visualizar e modificar permissões por usuário, com suporte a operações em lote e substituição completa. Recentemente, foi implementada uma atualização no serviço de persistência de usuário para incluir dados do cargo na consulta por e-mail corporativo, permitindo que informações do cargo sejam retornadas em uma única consulta.
+Os componentes principais do sistema de gestão de usuários incluem serviços de aplicação para criação, atualização e desativação de usuários, serviços de persistência para operações no banco de dados, e utilitários para cache e formatação. O sistema implementa uma arquitetura feature-sliced com separação clara entre camadas de serviço e persistência. Os serviços de aplicação contêm a lógica de negócio e validação, enquanto os serviços de persistência gerenciam diretamente as operações no banco de dados.
 
 **Fontes da Seção**
-- [route.ts](file://app/api/permissoes/recursos/route.ts)
-- [route.ts](file://app/api/permissoes/usuarios/[id]/route.ts)
-- [permissao-persistence.service.ts](file://backend/permissoes/services/persistence/permissao-persistence.service.ts)
-- [permissoes-matriz.tsx](file://components/usuarios/permissoes-matriz.tsx)
+- [criar-usuario-completo.service.ts](file://backend/usuarios/services/usuarios/criar-usuario-completo.service.ts)
+- [atualizar-usuario.service.ts](file://backend/usuarios/services/usuarios/atualizar-usuario.service.ts)
+- [desativar-usuario.service.ts](file://backend/usuarios/services/usuarios/desativar-usuario.service.ts)
 - [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
-- [route.ts](file://app/api/usuarios/buscar/por-email/[email]/route.ts)
 
-## Visão Geral da Arquitetura
-A arquitetura do sistema de permissões segue um padrão de camadas bem definido, com comunicação entre frontend, API, serviços backend e banco de dados. O frontend consome APIs RESTful que validam permissões de acesso antes de delegar para serviços de persistência. Esses serviços interagem com o banco de dados PostgreSQL, aplicando regras de segurança em nível de linha (RLS) e registrando auditorias. A atualização recente permite que a consulta por e-mail corporativo retorne também os dados do cargo do usuário.
+## Visão Geral da Arquitetura Feature-Sliced
+A arquitetura do sistema de gestão de usuários segue um padrão feature-sliced bem definido, com comunicação entre frontend, API, serviços de aplicação, serviços de persistência e banco de dados. O frontend consome APIs RESTful que delegam para serviços de aplicação, que por sua vez utilizam serviços de persistência para interagir com o banco de dados PostgreSQL. A arquitetura implementa o padrão repository e utiliza cache Redis para melhorar o desempenho.
 
 ```mermaid
 sequenceDiagram
 participant Frontend as Frontend
 participant API as API Routes
-participant Service as UsuarioPersistenceService
+participant AppService as Serviço de Aplicação
+participant Persistence as Serviço de Persistência
 participant DB as Banco de Dados
-Frontend->>API : GET /api/usuarios/buscar/por-email/{email}
-API->>API : authenticateRequest()
-API->>Service : buscarUsuarioPorEmail(email)
-Service->>DB : SELECT * FROM usuarios JOIN cargos ON usuarios.cargo_id = cargos.id WHERE email_corporativo = ?
-DB-->>Service : Dados do usuário com cargo
-Service-->>API : Usuário com dados do cargo
-API-->>Frontend : Resposta JSON com dados do usuário e cargo
+participant Redis as Cache Redis
+Frontend->>API : Requisição de criação de usuário
+API->>AppService : criarUsuarioCompleto(params)
+AppService->>AppService : Validação de dados
+AppService->>Persistence : criarUsuario(params)
+Persistence->>DB : Inserir usuário em auth.users
+DB-->>Persistence : Retornar authUserId
+Persistence->>DB : Inserir usuário em public.usuarios
+DB-->>Persistence : Retornar usuário criado
+Persistence-->>AppService : Retornar resultado
+AppService->>Redis : Invalidar cache de usuários
+Redis-->>AppService : Cache invalidado
+AppService-->>API : Retornar resultado
+API-->>Frontend : Resposta JSON com resultado
 ```
 
 **Fontes do Diagrama**
-- [route.ts](file://app/api/usuarios/buscar/por-email/[email]/route.ts)
+- [criar-usuario-completo.service.ts](file://backend/usuarios/services/usuarios/criar-usuario-completo.service.ts)
 - [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
 
 ## Análise Detalhada dos Componentes
 
-### Análise do Componente de Matriz de Permissões
-O componente `PermissoesMatriz` é responsável por exibir e permitir a edição das permissões de um usuário em formato de matriz, agrupando por recurso e operação. Ele utiliza um layout responsivo com checkboxes para cada permissão, mostrando contadores de permissões ativas e fornecendo confirmação antes de salvar alterações.
+### Análise do Serviço de Criação de Usuário Completo
+O serviço `criarUsuarioCompleto` implementa a lógica para criar um usuário completo no sistema, incluindo a criação em ambos `auth.users` e `public.usuarios`. O serviço segue um fluxo transacional onde primeiro cria o usuário em `auth.users` e depois em `public.usuarios`, com tratamento de erro para remover o usuário de `auth.users` caso a criação em `public.usuarios` falhe.
 
 ```mermaid
 flowchart TD
-Start([Iniciar]) --> VerificarSuperAdmin["Verificar se é Super Admin"]
-VerificarSuperAdmin --> |Sim| MostrarAlerta["Mostrar alerta de acesso total"]
-VerificarSuperAdmin --> |Não| RenderizarMatriz["Renderizar matriz de permissões"]
-RenderizarMatriz --> MapearRecursos["Mapear recursos e operações"]
-MapearRecursos --> CriarCheckboxes["Criar checkboxes para cada operação"]
-CriarCheckboxes --> AdicionarEventos["Adicionar eventos de clique"]
-AdicionarEventos --> VerificarEdicao["Verificar permissão de edição"]
-VerificarEdicao --> |Pode editar| HabilitarInteracao["Habilitar interação"]
-VerificarEdicao --> |Somente visualização| DesabilitarInteracao["Desabilitar interação"]
-HabilitarInteracao --> MostrarBotoes["Mostrar botões Salvar e Resetar"]
-DesabilitarInteracao --> MostrarApenasVisualizacao["Mostrar apenas visualização"]
-MostrarBotoes --> End([Finalizar])
-MostrarApenasVisualizacao --> End
+Start([Iniciar]) --> ValidarDados["Validar dados de entrada"]
+ValidarDados --> CriarAuth["Criar usuário em auth.users"]
+CriarAuth --> |Sucesso| CriarPublic["Criar usuário em public.usuarios"]
+CriarAuth --> |Falha| RetornarErro["Retornar erro de criação em auth.users"]
+CriarPublic --> |Sucesso| InvalidarCache["Invalidar cache de usuários"]
+CriarPublic --> |Falha| RemoverAuth["Remover usuário de auth.users"]
+RemoverAuth --> |Sucesso| RetornarErroPublic["Retornar erro de criação em public.usuarios"]
+RemoverAuth --> |Falha| LogErro["Registrar erro de remoção"]
+LogErro --> RetornarErroPublic
+InvalidarCache --> RetornarSucesso["Retornar sucesso"]
+RetornarSucesso --> End([Finalizar])
+RetornarErro --> End
+RetornarErroPublic --> End
 ```
 
 **Fontes do Diagrama**
-- [permissoes-matriz.tsx](file://components/usuarios/permissoes-matriz.tsx)
-- [permissoes-utils.ts](file://lib/utils/permissoes-utils.ts)
+- [criar-usuario-completo.service.ts](file://backend/usuarios/services/usuarios/criar-usuario-completo.service.ts)
 
 **Fontes da Seção**
-- [permissoes-matriz.tsx](file://components/usuarios/permissoes-matriz.tsx)
-- [use-permissoes-matriz.ts](file://lib/hooks/use-permissoes-matriz.ts)
+- [criar-usuario-completo.service.ts](file://backend/usuarios/services/usuarios/criar-usuario-completo.service.ts)
+- [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
+
+### Análise do Serviço de Atualização de Usuário
+O serviço `atualizarUsuario` implementa a lógica para atualizar um usuário existente, com validações robustas para prevenir duplicatas em campos únicos como CPF e e-mail corporativo. O serviço verifica a existência do usuário, valida os dados de entrada, verifica duplicidades e atualiza o registro no banco de dados.
+
+```mermaid
+classDiagram
+class AtualizarUsuarioService {
++atualizarUsuario(id : number, params : Partial<UsuarioDados>) Promise~OperacaoUsuarioResult~
+}
+class UsuarioPersistenceService {
++atualizarUsuario(id : number, params : Partial<UsuarioDados>) Promise~OperacaoUsuarioResult~
++buscarUsuarioPorId(id : number) Promise~Usuario~
++buscarUsuarioPorCpf(cpf : string) Promise~Usuario~
++buscarUsuarioPorEmail(email : string) Promise~Usuario~
+}
+class RedisCache {
++deleteCached(key : string) Promise~void~
++invalidateUsuariosCache() Promise~void~
+}
+AtualizarUsuarioService --> UsuarioPersistenceService : "usa"
+AtualizarUsuarioService --> RedisCache : "usa"
+```
+
+**Fontes do Diagrama**
+- [atualizar-usuario.service.ts](file://backend/usuarios/services/usuarios/atualizar-usuario.service.ts)
+- [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
+
+**Fontes da Seção**
+- [atualizar-usuario.service.ts](file://backend/usuarios/services/usuarios/atualizar-usuario.service.ts)
+- [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
+
+### Análise do Serviço de Desativação de Usuário
+O serviço `desativarUsuarioComDesatribuicao` implementa a lógica para desativar um usuário e desatribuir automaticamente todos os itens atribuídos a ele. O serviço conta os itens atribuídos antes da desativação, define o contexto do usuário que está executando a operação, desatribui os itens usando funções RPC e finalmente desativa o usuário.
+
+```mermaid
+sequenceDiagram
+participant Service as desativarUsuarioComDesatribuicao
+participant Supabase as Supabase Client
+participant RPC as Funções RPC
+Service->>Supabase : Contar itens atribuídos
+Supabase-->>Service : Retornar contagens
+Service->>Supabase : Definir contexto de usuário
+Supabase-->>Service : Contexto definido
+Service->>RPC : desatribuir_todos_processos_usuario()
+RPC-->>Service : Processos desatribuídos
+Service->>RPC : desatribuir_todas_audiencias_usuario()
+RPC-->>Service : Audiências desatribuídas
+Service->>RPC : desatribuir_todos_pendentes_usuario()
+RPC-->>Service : Pendentes desatribuídos
+Service->>RPC : desatribuir_todos_expedientes_usuario()
+RPC-->>Service : Expedientes desatribuídos
+Service->>RPC : desatribuir_todos_contratos_usuario()
+RPC-->>Service : Contratos desatribuídos
+Service->>Supabase : Atualizar usuário com ativo=false
+Supabase-->>Service : Usuário desativado
+Service-->>Frontend : Retornar resultado com contagens
+```
+
+**Fontes do Diagrama**
+- [desativar-usuario.service.ts](file://backend/usuarios/services/usuarios/desativar-usuario.service.ts)
+
+**Fontes da Seção**
+- [desativar-usuario.service.ts](file://backend/usuarios/services/usuarios/desativar-usuario.service.ts)
+- [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
 
 ### Análise do Serviço de Persistência
-O serviço `usuario-persistence.service` implementa operações CRUD para usuários, incluindo busca por e-mail corporativo com dados do cargo. A consulta foi atualizada para incluir um JOIN com a tabela de cargos, permitindo retornar informações do cargo em uma única consulta. Cada operação inclui tratamento de erros e formatação adequada dos dados.
+O serviço `usuario-persistence.service` implementa operações CRUD para usuários com validações robustas, verificação de duplicatas e gerenciamento de cache. O serviço utiliza cache Redis para melhorar o desempenho das operações de leitura e implementa invalidação de cache após operações de escrita.
 
 ```mermaid
 classDiagram
 class UsuarioPersistenceService {
-+buscarUsuarioPorId(usuarioId : number) Promise~Usuario~
++criarUsuario(params : UsuarioDados) Promise~OperacaoUsuarioResult~
++atualizarUsuario(id : number, params : Partial<UsuarioDados>) Promise~OperacaoUsuarioResult~
++buscarUsuarioPorId(id : number) Promise~Usuario~
 +buscarUsuarioPorCpf(cpf : string) Promise~Usuario~
 +buscarUsuarioPorEmail(email : string) Promise~Usuario~
 +listarUsuarios(params : ListarUsuariosParams) Promise~ListarUsuariosResult~
-+criarUsuario(params : UsuarioDados) Promise~OperacaoUsuarioResult~
-+atualizarUsuario(id : number, params : Partial<UsuarioDados>) Promise~OperacaoUsuarioResult~
 }
 class SupabaseClient {
 +from(table : string) QueryBuilder
@@ -154,8 +223,17 @@ class SupabaseClient {
 +order(column : string, options : OrderOptions) QueryBuilder
 +range(start : number, end : number) QueryBuilder
 +single() Promise~{data : T, error : Error}~
++insert(data : object) QueryBuilder
++update(data : object) QueryBuilder
+}
+class RedisCache {
++getCached(key : string) Promise~T~
++setCached(key : string, value : T) Promise~void~
++deleteCached(key : string) Promise~void~
++invalidateUsuariosCache() Promise~void~
 }
 UsuarioPersistenceService --> SupabaseClient : "usa"
+UsuarioPersistenceService --> RedisCache : "usa"
 ```
 
 **Fontes do Diagrama**
@@ -163,57 +241,53 @@ UsuarioPersistenceService --> SupabaseClient : "usa"
 
 **Fontes da Seção**
 - [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
-- [route.ts](file://app/api/usuarios/buscar/por-email/[email]/route.ts)
-- [types.ts](file://backend/types/usuarios/types.ts)
+- [criar-usuario.service.ts](file://backend/usuarios/services/usuarios/criar-usuario.service.ts)
+- [listar-usuarios.service.ts](file://backend/usuarios/services/usuarios/listar-usuarios.service.ts)
 
 ## Análise de Dependências
-O sistema de permissões depende de vários componentes internos e serviços externos. As principais dependências incluem o cliente Supabase para acesso ao banco de dados, funções de autenticação e autorização, e utilitários de auditoria. O frontend depende de hooks personalizados e componentes UI para construção da interface. A atualização recente adicionou uma dependência implícita entre o serviço de persistência de usuários e a tabela de cargos.
+O sistema de gestão de usuários depende de vários componentes internos e serviços externos. As principais dependências incluem o cliente Supabase para acesso ao banco de dados, funções de autenticação e autorização, utilitários de auditoria e cache Redis. Os serviços de aplicação dependem dos serviços de persistência para operações no banco de dados, e ambos dependem dos utilitários de cache para gerenciamento de desempenho.
 
 ```mermaid
 graph TD
-A[PermissoesMatriz] --> B[usePermissoesMatriz]
-B --> C[permissoes-utils]
-C --> D[MATRIZ_PERMISSOES]
-A --> E[UI Components]
-F[API Routes] --> G[requirePermission]
-F --> H[permissao-persistence.service]
-H --> I[Supabase Client]
-H --> J[invalidarCacheUsuario]
-H --> K[registrarAtribuicaoPermissao]
-I --> L[Banco de Dados]
-M[buscar-usuario.service] --> N[usuario-persistence.service]
-N --> O[Tabela Cargos]
+A[CriarUsuarioCompleto] --> B[criarUsuario]
+B --> C[Supabase Client]
+B --> D[Redis Cache]
+E[AtualizarUsuario] --> F[atualizarUsuario]
+F --> C
+F --> D
+G[DesativarUsuario] --> H[Supabase RPC]
+H --> C
+I[BuscarUsuario] --> J[Redis Cache]
+J --> K[Supabase Client]
 ```
 
 **Fontes do Diagrama**
-- [permissoes-matriz.tsx](file://components/usuarios/permissoes-matriz.tsx)
-- [use-permissoes-matriz.ts](file://lib/hooks/use-permissoes-matriz.ts)
-- [permissao-persistence.service.ts](file://backend/permissoes/services/persistence/permissao-persistence.service.ts)
+- [criar-usuario-completo.service.ts](file://backend/usuarios/services/usuarios/criar-usuario-completo.service.ts)
+- [atualizar-usuario.service.ts](file://backend/usuarios/services/usuarios/atualizar-usuario.service.ts)
+- [desativar-usuario.service.ts](file://backend/usuarios/services/usuarios/desativar-usuario.service.ts)
 - [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
 
 **Fontes da Seção**
 - [package.json](file://package.json)
 - [backend/utils](file://backend/utils)
-- [components/ui](file://components/ui)
 - [backend/usuarios/services/persistence/usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
 
 ## Considerações de Desempenho
-O sistema implementa várias otimizações de desempenho, incluindo cache de permissões, índices de banco de dados para consultas frequentes, e operações em lote para minimizar round trips. A invalidação de cache após alterações garante consistência, enquanto os índices no banco de dados aceleram consultas de verificação de permissões. A atualização recente para incluir dados do cargo na consulta por e-mail pode impactar o desempenho, mas o uso de índices adequados na tabela de cargos minimiza esse impacto.
+O sistema implementa várias otimizações de desempenho, incluindo cache de usuários em Redis, índices de banco de dados para consultas frequentes, e invalidação de cache após alterações para garantir consistência. O cache utiliza chaves específicas para diferentes tipos de consultas (por ID, CPF, e-mail) e implementa invalidação em cascata para manter a consistência dos dados.
 
 **Fontes da Seção**
-- [permissao-persistence.service.ts](file://backend/permissoes/services/persistence/permissao-persistence.service.ts)
-- [20250118120100_create_permissoes.sql](file://supabase/migrations/20250118120100_create_permissoes.sql)
-- [authorization.ts](file://backend/utils/auth/authorization.ts)
 - [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
+- [08_usuarios.sql](file://supabase/schemas/08_usuarios.sql)
+- [redis](file://backend/utils/redis)
 
 ## Guia de Solução de Problemas
-Problemas comuns no sistema de permissões incluem falhas de autenticação, erros de autorização, problemas de sincronização entre frontend e backend, e inconsistências no banco de dados. O sistema inclui logs de auditoria detalhados e mensagens de erro específicas para facilitar a depuração. Para problemas relacionados à consulta por e-mail corporativo, verifique se o usuário existe e se o cargo associado está ativo.
+Problemas comuns no sistema de gestão de usuários incluem falhas na criação de usuários devido a duplicatas, erros de autenticação, problemas de sincronização entre `auth.users` e `public.usuarios`, e inconsistências no cache. O sistema inclui logs detalhados para facilitar a depuração, com mensagens específicas para cada tipo de erro.
 
 **Fontes da Seção**
-- [route.ts](file://app/api/permissoes/usuarios/[id]/route.ts)
-- [permissao-persistence.service.ts](file://backend/permissoes/services/persistence/permissao-persistence.service.ts)
-- [auditoria-permissoes.ts](file://backend/utils/logs/auditoria-permissoes.ts)
-- [route.ts](file://app/api/usuarios/buscar/por-email/[email]/route.ts)
+- [criar-usuario-completo.service.ts](file://backend/usuarios/services/usuarios/criar-usuario-completo.service.ts)
+- [atualizar-usuario.service.ts](file://backend/usuarios/services/usuarios/atualizar-usuario.service.ts)
+- [desativar-usuario.service.ts](file://backend/usuarios/services/usuarios/desativar-usuario.service.ts)
+- [usuario-persistence.service.ts](file://backend/usuarios/services/persistence/usuario-persistence.service.ts)
 
 ## Conclusão
-O sistema de gestão de permissões para usuários no Sinesys é uma implementação robusta e flexível de controle de acesso baseado em permissões granulares. Sua arquitetura modular separa claramente as camadas de apresentação, lógica de negócios e persistência, facilitando manutenção e escalabilidade. A combinação de segurança, auditoria e interface intuitiva torna o sistema adequado para ambientes corporativos complexos como escritórios de advocacia. A atualização recente para incluir dados do cargo na consulta por e-mail corporativo melhora a eficiência do sistema, permitindo obter informações completas do usuário em uma única chamada.
+O sistema de gestão de usuários no Sinesys é uma implementação robusta e escalável que segue os princípios de arquitetura feature-sliced. Sua arquitetura modular separa claramente as camadas de aplicação, persistência e cache, facilitando manutenção e escalabilidade. A combinação de validações robustas, verificação de duplicatas, cache Redis e integração com Supabase Auth torna o sistema adequado para ambientes corporativos complexos como escritórios de advocacia. A refatoração completa com nova arquitetura melhora significativamente a manutenibilidade e a confiabilidade do sistema.

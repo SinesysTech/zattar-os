@@ -13,7 +13,21 @@
 - [widget-alertas-financeiros](file://app/(dashboard)/dashboard/components/widgets/widget-alertas-financeiros)
 - [obrigacoes-widget](file://app/(dashboard)/dashboard/components/obrigacoes-widget)
 - [widget-folha-pagamento](file://app/(dashboard)/dashboard/components/widgets/widget-folha-pagamento)
+- [route.ts](file://src/app/api/dashboard/metricas/route.ts)
+- [route.ts](file://src/app/api/dashboard/capturas/route.ts)
+- [dashboard-metricas.persistence.ts](file://backend/dashboard/services/persistence/dashboard-metricas.persistence.ts)
+- [types.ts](file://backend/types/dashboard/types.ts)
+- [metricas-actions.ts](file://src/features/dashboard/actions/metricas-actions.ts)
+- [service.ts](file://src/features/dashboard/service.ts)
 </cite>
+
+## Resumo das Atualizações
+**Alterações Realizadas**  
+- Atualização da seção **API e Cache** para incluir novos endpoints e configurações de cache
+- Adição da seção **Métricas de Escritório** com detalhes sobre agregação de dados
+- Adição da seção **Status de Capturas** com informações sobre monitoramento de integrações
+- Atualização do diagrama de estrutura para refletir a nova camada de serviço
+- Revisão geral para refletir operações em paralelo e otimizações de desempenho
 
 ## Sumário
 1. [Introdução](#introdução)
@@ -23,6 +37,8 @@
 5. [Widgets Disponíveis](#widgets-disponíveis)
 6. [API e Cache](#api-e-cache)
 7. [Alertas Financeiros](#alertas-financeiros)
+8. [Métricas de Escritório](#métricas-de-escritório)
+9. [Status de Capturas](#status-de-capturas)
 
 ## Introdução
 
@@ -54,6 +70,8 @@ K --> P[Orçamento Atual]
 K --> Q[Alertas Financeiros]
 K --> R[Obrigações]
 K --> S[Folha de Pagamento]
+K --> T[Métricas de Escritório]
+K --> U[Status de Capturas]
 ```
 
 **Fontes do Diagrama**  
@@ -131,8 +149,13 @@ O dashboard consome dados de uma API RESTful, com endpoints específicos para fo
 
 Para otimizar o desempenho e reduzir a carga no banco de dados, o sistema utiliza o Redis como camada de cache. As métricas e alertas do dashboard são armazenados em cache com um TTL (Time To Live) de 5 minutos, conforme especificado na documentação. Isso garante que os dados sejam atualizados com frequência suficiente para serem úteis, sem sobrecarregar os serviços de backend.
 
+A nova arquitetura implementa uma camada de serviço para agregação de dados que executa operações em paralelo, melhorando significativamente o desempenho. Os endpoints `/api/dashboard/metricas` e `/api/dashboard/capturas` foram adicionados para fornecer dados específicos com cache otimizado.
+
 **Fontes da Seção**  
 - [dashboard.md](file://docs/financeiro/dashboard.md)
+- [route.ts](file://src/app/api/dashboard/metricas/route.ts)
+- [route.ts](file://src/app/api/dashboard/capturas/route.ts)
+- [service.ts](file://src/features/dashboard/service.ts)
 
 ## Alertas Financeiros
 
@@ -149,3 +172,41 @@ Esses alertas são exibidos de forma destacada no widget de alertas financeiros,
 **Fontes da Seção**  
 - [dashboard.md](file://docs/financeiro/dashboard.md)
 - [widget-alertas-financeiros](file://app/(dashboard)/dashboard/components/widgets/widget-alertas-financeiros)
+
+## Métricas de Escritório
+
+O endpoint `GET /api/dashboard/metricas` fornece métricas consolidadas do escritório para superadmins, incluindo indicadores de desempenho e comparações com períodos anteriores. Este endpoint executa múltiplas consultas em paralelo para otimizar o tempo de resposta.
+
+As métricas incluem:
+- **Total de Processos**: Contagem total de processos no acervo.
+- **Processos Ativos**: Processos ativos únicos por número de processo.
+- **Audiências do Mês**: Número de audiências agendadas no mês corrente.
+- **Expedientes Pendentes e Vencidos**: Total de expedientes não baixados e vencidos.
+- **Taxa de Resolução**: Percentual de expedientes resolvidos dentro do prazo.
+- **Comparativos Mensais**: Variação percentual em relação ao mês anterior para processos, audiências e expedientes.
+
+O cache para este endpoint tem um TTL de 10 minutos, definido pela chave `dashboard:metricas` no Redis.
+
+**Fontes da Seção**  
+- [route.ts](file://src/app/api/dashboard/metricas/route.ts)
+- [dashboard-metricas.persistence.ts](file://backend/dashboard/services/persistence/dashboard-metricas.persistence.ts)
+- [types.ts](file://backend/types/dashboard/types.ts)
+- [metricas-actions.ts](file://src/features/dashboard/actions/metricas-actions.ts)
+
+## Status de Capturas
+
+O endpoint `GET /api/dashboard/capturas` fornece o status das últimas execuções de captura de dados do PJE-TRT, permitindo monitorar a integridade e disponibilidade dos dados. Este endpoint é especialmente útil para administradores técnicos que precisam garantir a continuidade das operações de captura.
+
+Os dados incluem:
+- **Tribunal e Grau**: Identificação do TRT e grau (primeiro ou segundo) da captura.
+- **Última Execução**: Data e hora da última execução bem-sucedida.
+- **Status**: Indicador de status (sucesso, erro, pendente, executando).
+- **Mensagem de Erro**: Detalhes do erro em caso de falha.
+- **Contagem de Registros**: Número de processos, audiências e expedientes capturados.
+
+Devido à natureza volátil desses dados, o cache tem um TTL reduzido de 2 minutos, definido pela chave `dashboard:capturas` no Redis.
+
+**Fontes da Seção**  
+- [route.ts](file://src/app/api/dashboard/capturas/route.ts)
+- [dashboard-metricas.persistence.ts](file://backend/dashboard/services/persistence/dashboard-metricas.persistence.ts)
+- [types.ts](file://backend/types/dashboard/types.ts)
