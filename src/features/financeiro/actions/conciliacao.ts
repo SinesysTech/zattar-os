@@ -78,3 +78,30 @@ export async function actionConciliarAutomaticamente(dto: ConciliarAutomaticaDTO
         return { success: false, error: 'Falha ao executar conciliação automática.' };
     }
 }
+export async function actionListarTransacoes(params: any) {
+    try {
+        const resultado = await conciliacaoService.listarTransacoes(params);
+        return { 
+            success: true, 
+            data: {
+                dados: resultado.items,
+                meta: resultado.paginacao,
+                resumo: resultado.resumo 
+            }
+        };
+    } catch (error) {
+        console.error('Erro ao listar transações:', error);
+        return { success: false, error: 'Falha ao listar transações.' };
+    }
+}
+
+export async function actionDesconciliar(transacaoId: number) {
+    try {
+        await conciliacaoService.desconciliar(transacaoId);
+        revalidatePath('/financeiro/conciliacao-bancaria');
+        return { success: true };
+    } catch (error) {
+        console.error('Erro ao desconciliar:', error);
+        return { success: false, error: 'Falha ao desconciliar.' };
+    }
+}

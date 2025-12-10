@@ -12,8 +12,8 @@ import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar, type ComboboxOption, type FilterGroup } from '@/components/ui/table-toolbar';
-import { AlertasObrigacoes } from './components/alertas-obrigacoes';
-import { ResumoCards } from './components/resumo-cards';
+import { AlertasObrigacoes } from '@/features/financeiro/components/obrigacoes/alertas-obrigacoes';
+import { ResumoCards } from '@/features/financeiro/components/obrigacoes/resumo-cards';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -36,7 +36,7 @@ import {
   useObrigacoes,
   useResumoObrigacoes,
   sincronizarAcordo,
-} from '@/app/_lib/hooks/use-obrigacoes';
+} from '@/features/financeiro/hooks/use-obrigacoes';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -45,7 +45,7 @@ import type {
   TipoObrigacao,
   StatusObrigacao,
   StatusSincronizacao,
-} from '@/backend/types/financeiro/obrigacoes.types';
+} from '@/features/financeiro/types/obrigacoes';
 
 // ============================================================================
 // Constantes e Helpers
@@ -82,7 +82,7 @@ const formatarValor = (valor: number): string => {
   }).format(valor);
 };
 
-const formatarData = (data: string | null): string => {
+const formatarData = (data: string | null | undefined): string => {
   if (!data) return '-';
   return format(new Date(data), 'dd/MM/yyyy', { locale: ptBR });
 };
@@ -472,7 +472,7 @@ export default function ObrigacoesPage() {
       ? `/financeiro/contas-pagar/${obrigacao.lancamentoId}`
       : `/financeiro/contas-receber/${obrigacao.lancamentoId}`;
 
-    window.location.href = rota;
+    window.location.href = rota; // Or router.push
   }, []);
 
   // Handlers para alertas

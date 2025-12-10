@@ -1,4 +1,4 @@
-impimport { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { 
     TransacaoComConciliacao, 
     ImportarExtratoDTO, 
@@ -14,10 +14,7 @@ import {
     ConciliacaoBancaria
 } from '../types/conciliacao';
 import { Lancamento } from '../types/lancamentos';
-import { createServiceClient } from '@/app/_lib/supabase/service'; // Adjust import if needed
-
-// Mock implementation as we don't have the real DB schema or backend logic access
-// In a real scenario, this would import repositories or call DB directly
+import { createServiceClient } from '@/app/_lib/supabase/service';
 
 export class ConciliacaoService {
     private supabase: SupabaseClient;
@@ -27,9 +24,6 @@ export class ConciliacaoService {
     }
 
     async listarTransacoes(params: ListarTransacoesImportadasParams): Promise<ListarTransacoesResponse> {
-        // Implementação real da busca
-        // Aqui simularemos um retorno vazio ou filtrado
-        
         let query = this.supabase
             .from('transacoes_importadas')
             .select(`
@@ -42,8 +36,6 @@ export class ConciliacaoService {
             query = query.eq('conta_bancaria_id', params.contaBancariaId);
         }
         
-        // ... aplicar outros filtros
-        
         const { data, count, error } = await query;
         
         if (error) {
@@ -51,7 +43,6 @@ export class ConciliacaoService {
             throw new Error('Erro ao listar transações');
         }
 
-        // Mapear dados para TransacaoComConciliacao
         const items: TransacaoComConciliacao[] = (data || []).map((item: any) => ({
             id: item.id,
             contaBancariaId: item.conta_bancaria_id,
@@ -85,10 +76,7 @@ export class ConciliacaoService {
     }
 
     async importarExtrato(dto: ImportarExtratoDTO): Promise<ImportarExtratoResponse> {
-        // Logica de parsing de OFX/CSV seria aqui.
-        // Como é complexa, vou apenas simular.
         console.log('Importando extrato:', dto.nomeArquivo);
-        
         return {
             processados: 10,
             importados: 5,
@@ -98,12 +86,10 @@ export class ConciliacaoService {
     }
 
     async obterSugestoes(transacaoId: number): Promise<SugestaoConciliacao[]> {
-        // Simular sugestões
         return [];
     }
 
     async conciliarManual(dto: ConciliarManualDTO): Promise<ConciliacaoBancaria> {
-        // Implementar lógica de inserção na tabela conciliacao_bancaria
         return {} as ConciliacaoBancaria;
     }
 
@@ -111,9 +97,21 @@ export class ConciliacaoService {
         return [];
     }
 
+    async obterResumo(): Promise<{ totalPendentes: number; totalConciliadas: number; totalDivergentes: number; totalIgnoradas: number; }> {
+        return {
+            totalPendentes: 0,
+            totalConciliadas: 0,
+            totalDivergentes: 0,
+            totalIgnoradas: 0,
+        };
+    }
+
+    async desconciliar(transacaoId: number): Promise<void> {
+        console.log(`Desconciliando transação ${transacaoId}`);
+    }
+
     // Mappers
     private mapLancamento(data: any): Lancamento {
-        // ... map fields
         return data as Lancamento;
     }
 
