@@ -239,55 +239,57 @@ function TipoDescricaoCell({
   tiposExpedientes,
   isLoadingTipos
 }: {
-  expediente: PendenteManifestacao;
+  expediente: Expediente;
   onSuccess: () => void;
-  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+  tiposExpedientes: Array<{ id: number; tipoExpediente: string }>;
   isLoadingTipos?: boolean;
 }) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isPdfViewerOpen, setIsPdfViewerOpen] = React.useState(false);
   const [tipoSelecionado, setTipoSelecionado] = React.useState<string>(
-    expediente.tipo_expediente_id?.toString() || 'null'
+    expediente.tipoExpedienteId?.toString() || 'null'
   );
   const [descricao, setDescricao] = React.useState<string>(
-    expediente.descricao_arquivos || ''
+    expediente.descricaoArquivos || ''
   );
 
   React.useEffect(() => {
-    setTipoSelecionado(expediente.tipo_expediente_id?.toString() || 'null');
-    setDescricao(expediente.descricao_arquivos || '');
-  }, [expediente.tipo_expediente_id, expediente.descricao_arquivos]);
+    setTipoSelecionado(expediente.tipoExpedienteId?.toString() || 'null');
+    setDescricao(expediente.descricaoArquivos || '');
+  }, [expediente.tipoExpedienteId, expediente.descricaoArquivos]);
 
   const handleSave = async () => {
     setIsLoading(true);
     try {
       const tipoExpedienteId = tipoSelecionado === 'null' ? null : parseInt(tipoSelecionado, 10);
       const descricaoArquivos = descricao.trim() || null;
-      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/tipo-descricao`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tipoExpedienteId, descricaoArquivos }),
-      });
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || 'Erro ao atualizar tipo e descrição');
+
+      const formData = new FormData();
+      if (tipoExpedienteId !== null) formData.append('tipoExpedienteId', tipoExpedienteId.toString());
+      if (descricaoArquivos !== null) formData.append('descricaoArquivos', descricaoArquivos);
+
+      const result = await actionAtualizarExpediente(expediente.id, null, formData);
+
+      if (!result.success) {
+        throw new Error(result.message || 'Erro ao atualizar tipo e descrição');
       }
+
       setIsOpen(false);
-      onSuccess();
+      onSuccess(); // Triggers router.refresh()
     } catch (error) {
       console.error('Erro ao atualizar tipo e descrição:', error);
-      setIsOpen(false);
-      onSuccess();
+      // TODO: Adicionar tratamento de erro na UI
     } finally {
       setIsLoading(false);
     }
   };
 
-  const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipo_expediente_id);
-  const tipoNome = tipoExpediente ? tipoExpediente.tipo_expediente : 'Sem tipo';
-  const descricaoExibicao = expediente.descricao_arquivos || '-';
-  const temDocumento = !!expediente.arquivo_key;
+  const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipoExpedienteId);
+  const tipoNome = tipoExpediente ? tipoExpediente.tipoExpediente : 'Sem tipo';
+  const descricaoExibicao = expediente.descricaoArquivos || '-';
+  const temDocumento = !!expediente.arquivoKey;
 
   return (
     <>
@@ -298,7 +300,7 @@ function TipoDescricaoCell({
             <div className="flex items-center gap-1.5">
               <Badge
                 variant="outline"
-                className={`w-fit text-xs shrink-0 ${expediente.tipo_expediente_id ? getTipoExpedienteColorClass(expediente.tipo_expediente_id) : ''}`}
+                className={`w-fit text-xs shrink-0 ${expediente.tipoExpedienteId ? getTipoExpedienteColorClass(expediente.tipoExpedienteId) : ''}`}
               >
                 {tipoNome}
               </Badge>
@@ -340,14 +342,14 @@ function TipoDescricaoCell({
               <Select value={tipoSelecionado} onValueChange={setTipoSelecionado} disabled={isLoading || tiposExpedientes.length === 0}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Selecione o tipo">
-                    {tipoSelecionado === 'null' ? 'Sem tipo' : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipo_expediente || 'Selecione o tipo'}
+                    {tipoSelecionado === 'null' ? 'Sem tipo' : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipoExpediente || 'Selecione o tipo'}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent className="max-h-[300px]">
                   <SelectItem value="null">Sem tipo</SelectItem>
                   {tiposExpedientes.length > 0 ? (
                     tiposExpedientes.map((tipo) => (
-                      <SelectItem key={tipo.id} value={tipo.id.toString()}>{tipo.tipo_expediente}</SelectItem>
+                      <SelectItem key={tipo.id} value={tipo.id.toString()}>{tipo.tipoExpediente}</SelectItem>
                     ))
                   ) : (
                     <div className="px-2 py-1.5 text-sm text-muted-foreground">
@@ -381,15 +383,15 @@ function TipoDescricaoCell({
       <PdfViewerDialog
         open={isPdfViewerOpen}
         onOpenChange={setIsPdfViewerOpen}
-        fileKey={expediente.arquivo_key}
-        documentTitle={`Documento - ${expediente.numero_processo}`}
+        fileKey={expediente.arquivoKey}
+        documentTitle={`Documento - ${expediente.numeroProcesso}`}
       />
     </>
   );
 }
 
 // Componente PrazoColumnHeader
-function PrazoColumnHeader({ onSort }: { onSort: (field: 'data_ciencia_parte' | 'data_prazo_legal_parte', direction: 'asc' | 'desc') => void }) {
+function PrazoColumnHeader({ onSort }: { onSort: (field: 'dataCienciaParte' | 'dataPrazoLegalParte', direction: 'asc' | 'desc') => void }) {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <div className="flex items-center justify-center">
@@ -405,11 +407,11 @@ function PrazoColumnHeader({ onSort }: { onSort: (field: 'data_ciencia_parte' | 
         <PopoverContent className="w-[min(92vw,12.5rem)] p-2" align="center">
           <div className="space-y-1">
             <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Ordenar por Data de Início</div>
-            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('data_ciencia_parte', 'asc'); setIsOpen(false); }}>↑ Crescente</Button>
-            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('data_ciencia_parte', 'desc'); setIsOpen(false); }}>↓ Decrescente</Button>
+            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('dataCienciaParte', 'asc'); setIsOpen(false); }}>↑ Crescente</Button>
+            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('dataCienciaParte', 'desc'); setIsOpen(false); }}>↓ Decrescente</Button>
             <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Ordenar por Data de Fim</div>
-            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('data_prazo_legal_parte', 'asc'); setIsOpen(false); }}>↑ Crescente</Button>
-            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('data_prazo_legal_parte', 'desc'); setIsOpen(false); }}>↓ Decrescente</Button>
+            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('dataPrazoLegalParte', 'asc'); setIsOpen(false); }}>↑ Crescente</Button>
+            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('dataPrazoLegalParte', 'desc'); setIsOpen(false); }}>↓ Decrescente</Button>
           </div>
         </PopoverContent>
       </Popover>
@@ -418,7 +420,7 @@ function PrazoColumnHeader({ onSort }: { onSort: (field: 'data_ciencia_parte' | 
 }
 
 // Componente ProcessoColumnHeader
-function ProcessoColumnHeader({ onSort }: { onSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void }) {
+function ProcessoColumnHeader({ onSort }: { onSort: (field: 'trt' | 'grau' | 'descricaoOrgaoJulgador' | 'classeJudicial', direction: 'asc' | 'desc') => void }) {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <div className="flex items-center justify-center">
@@ -440,11 +442,11 @@ function ProcessoColumnHeader({ onSort }: { onSort: (field: 'trt' | 'grau' | 'de
             <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('grau', 'asc'); setIsOpen(false); }}>↑ Crescente</Button>
             <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('grau', 'desc'); setIsOpen(false); }}>↓ Decrescente</Button>
             <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Ordenar por Órgão Julgador</div>
-            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('descricao_orgao_julgador', 'asc'); setIsOpen(false); }}>↑ Crescente</Button>
-            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('descricao_orgao_julgador', 'desc'); setIsOpen(false); }}>↓ Decrescente</Button>
+            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('descricaoOrgaoJulgador', 'asc'); setIsOpen(false); }}>↑ Crescente</Button>
+            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('descricaoOrgaoJulgador', 'desc'); setIsOpen(false); }}>↓ Decrescente</Button>
             <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Ordenar por Classe Judicial</div>
-            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('classe_judicial', 'asc'); setIsOpen(false); }}>↑ Crescente</Button>
-            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('classe_judicial', 'desc'); setIsOpen(false); }}>↓ Decrescente</Button>
+            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('classeJudicial', 'asc'); setIsOpen(false); }}>↑ Crescente</Button>
+            <Button variant="ghost" className="w-full justify-start text-sm" onClick={() => { onSort('classeJudicial', 'desc'); setIsOpen(false); }}>↓ Decrescente</Button>
           </div>
         </PopoverContent>
       </Popover>
@@ -473,7 +475,8 @@ function ResponsavelColumnHeader({ onSort }: { onSort: (direction: 'asc' | 'desc
 }
 
 // Componente ResponsavelCell
-function ResponsavelCell({ expediente, onSuccess, usuarios }: { expediente: PendenteManifestacao; onSuccess: () => void; usuarios: Usuario[] }) {
+function ResponsavelCell({ expediente, onSuccess, usuarios }: { expediente: Expediente; onSuccess: () => void; usuarios: Usuario[] }) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -481,25 +484,28 @@ function ResponsavelCell({ expediente, onSuccess, usuarios }: { expediente: Pend
     setIsLoading(true);
     try {
       const responsavelId = value === 'null' || value === '' ? null : parseInt(value, 10);
-      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/responsavel`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ responsavelId }),
-      });
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || 'Erro ao atribuir responsável');
+
+      const formData = new FormData();
+      if (responsavelId !== null) formData.append('responsavelId', responsavelId.toString());
+      else formData.append('responsavelId', 'null'); // Explicitly send 'null' to clear
+
+      const result = await actionAtualizarExpediente(expediente.id, null, formData);
+
+      if (!result.success) {
+        throw new Error(result.message || 'Erro ao atribuir responsável');
       }
+
       setIsOpen(false);
-      onSuccess();
+      onSuccess(); // Triggers router.refresh()
     } catch (error) {
       console.error('Erro ao atribuir responsável:', error);
+      // TODO: Adicionar tratamento de erro na UI
     } finally {
       setIsLoading(false);
     }
   };
 
-  const responsavelAtual = usuarios.find(u => u.id === expediente.responsavel_id);
+  const responsavelAtual = usuarios.find(u => u.id === expediente.responsavelId);
 
   return (
     <div className="relative group h-full w-full min-h-[60px] flex items-center justify-center p-2">
@@ -530,16 +536,16 @@ function AcoesExpediente({
   tiposExpedientes,
   onSuccess,
 }: {
-  expediente: PendenteManifestacao;
+  expediente: Expediente;
   usuarios: Usuario[];
-  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>;
+  tiposExpedientes: Array<{ id: number; tipoExpediente: string }>;
   onSuccess: () => void;
 }) {
   const [baixarDialogOpen, setBaixarDialogOpen] = React.useState(false);
   const [reverterDialogOpen, setReverterDialogOpen] = React.useState(false);
   const [visualizarDialogOpen, setVisualizarDialogOpen] = React.useState(false);
 
-  const estaBaixado = !!expediente.baixado_em;
+  const estaBaixado = !!expediente.baixadoEm;
 
   return (
     <TooltipProvider>
@@ -584,11 +590,12 @@ function PrazoCell({
   expediente,
   onSuccess
 }: {
-  expediente: PendenteManifestacao;
+  expediente: Expediente;
   onSuccess: () => void;
 }) {
-  const dataInicio = expediente.data_ciencia_parte;
-  const dataFim = expediente.data_prazo_legal_parte;
+  const router = useRouter();
+  const dataInicio = expediente.dataCienciaParte;
+  const dataFim = expediente.dataPrazoLegalParte;
   const diasUteis = calcularDiasUteis(dataInicio, dataFim);
   const [openPrazo, setOpenPrazo] = React.useState(false);
   const [isSavingPrazo, setIsSavingPrazo] = React.useState(false);
@@ -597,19 +604,26 @@ function PrazoCell({
   const handleSalvarPrazo = async () => {
     setIsSavingPrazo(true);
     try {
-      const iso = dataPrazoStr ? new Date(dataPrazoStr).toISOString() : '';
-      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/prazo-legal`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dataPrazoLegal: iso }),
-      });
-      if (!response.ok) {
-        const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(ed.error || 'Erro ao atualizar prazo legal');
+      const formData = new FormData();
+      if (dataPrazoStr) {
+        const isoDate = new Date(dataPrazoStr).toISOString();
+        formData.append('dataPrazoLegalParte', isoDate);
+      } else {
+        formData.append('dataPrazoLegalParte', ''); // Clear if empty
       }
+      
+      const result = await actionAtualizarExpediente(expediente.id, null, formData);
+
+      if (!result.success) {
+        throw new Error(result.message || 'Erro ao atualizar prazo legal');
+      }
+
       setOpenPrazo(false);
       setDataPrazoStr('');
-      onSuccess();
+      onSuccess(); // Triggers router.refresh()
+    } catch (error) {
+      console.error('Erro ao atualizar prazo legal:', error);
+      // TODO: Adicionar tratamento de erro na UI
     } finally {
       setIsSavingPrazo(false);
     }
@@ -624,7 +638,7 @@ function PrazoCell({
           {diasUteis} {diasUteis === 1 ? 'dia' : 'dias'}
         </Badge>
       )}
-      {!expediente.baixado_em && !dataFim && (
+      {!expediente.baixadoEm && !dataFim && (
         <Button size="sm" variant="outline" onClick={() => setOpenPrazo(true)}>Definir Data</Button>
       )}
       <Dialog open={openPrazo} onOpenChange={setOpenPrazo}>
@@ -638,7 +652,7 @@ function PrazoCell({
               <Label className="text-sm font-medium">Data de Início (automática)</Label>
               <Input
                 type="text"
-                value={expediente.created_at ? formatarData(expediente.created_at) : '-'}
+                value={expediente.createdAt ? formatarData(expediente.createdAt) : '-'}
                 disabled
                 className="bg-muted"
               />
@@ -664,9 +678,10 @@ function ObservacoesCell({
   expediente,
   onSuccess
 }: {
-  expediente: PendenteManifestacao;
+  expediente: Expediente;
   onSuccess: () => void;
 }) {
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [valor, setValor] = React.useState<string>(expediente.observacoes || '');
@@ -677,13 +692,21 @@ function ObservacoesCell({
     setIsLoading(true);
     try {
       const observacoes = valor.trim() || null;
-      const response = await fetch(`/api/pendentes-manifestacao/${expediente.id}/observacoes`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ observacoes }) });
-      if (!response.ok) {
-        const ed = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(ed.error || 'Erro ao atualizar observações');
+      const formData = new FormData();
+      if (observacoes !== null) formData.append('observacoes', observacoes);
+      else formData.append('observacoes', 'null'); // Explicitly send 'null' to clear
+
+      const result = await actionAtualizarExpediente(expediente.id, null, formData);
+
+      if (!result.success) {
+        throw new Error(result.message || 'Erro ao atualizar observações');
       }
+
       setOpen(false);
-      onSuccess();
+      onSuccess(); // Triggers router.refresh()
+    } catch (error) {
+      console.error('Erro ao atualizar observações:', error);
+      // TODO: Adicionar tratamento de erro na UI
     } finally { setIsLoading(false); }
   };
 
@@ -724,13 +747,13 @@ function ObservacoesCell({
 function criarColunas(
   onSuccess: () => void,
   usuarios: Usuario[],
-  tiposExpedientes: Array<{ id: number; tipo_expediente: string }>,
-  onPrazoSort: (field: 'data_ciencia_parte' | 'data_prazo_legal_parte', direction: 'asc' | 'desc') => void,
-  onProcessoSort: (field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => void,
+  tiposExpedientes: Array<{ id: number; tipoExpediente: string }>,
+  onPrazoSort: (field: 'dataCienciaParte' | 'dataPrazoLegalParte', direction: 'asc' | 'desc') => void,
+  onProcessoSort: (field: 'trt' | 'grau' | 'descricaoOrgaoJulgador' | 'classeJudicial', direction: 'asc' | 'desc') => void,
   onResponsavelSort: (direction: 'asc' | 'desc') => void,
   onParteClick: (processoId: number | null, polo: 'ATIVO' | 'PASSIVO', nome: string) => void,
   isLoadingTipos?: boolean
-): ColumnDef<PendenteManifestacao>[] {
+): ColumnDef<Expediente>[] {
   return [
     {
       id: 'tipo_descricao',
@@ -754,12 +777,12 @@ function criarColunas(
       cell: ({ row }) => {
         const trt = row.original.trt;
         const grau = row.original.grau;
-        const classeJudicial = row.original.classe_judicial || '';
-        const numeroProcesso = row.original.numero_processo;
-        const processoId = row.original.processo_id;
-        const parteAutora = row.original.nome_parte_autora || '-';
-        const parteRe = row.original.nome_parte_re || '-';
-        const orgaoJulgador = row.original.descricao_orgao_julgador || '-';
+        const classeJudicial = row.original.classeJudicial || '';
+        const numeroProcesso = row.original.numeroProcesso;
+        const processoId = row.original.processoId;
+        const parteAutora = row.original.nomeParteAutora || '-';
+        const parteRe = row.original.nomeParteRe || '-';
+        const orgaoJulgador = row.original.descricaoOrgaoJulgador || '-';
 
         return (
           <TooltipProvider>
@@ -820,7 +843,7 @@ function criarColunas(
       cell: ({ row }) => <ObservacoesCell expediente={row.original} onSuccess={onSuccess} />,
     },
     {
-      accessorKey: 'responsavel_id',
+      accessorKey: 'responsavelId',
       header: () => <ResponsavelColumnHeader onSort={onResponsavelSort} />,
       size: 160,
       cell: ({ row }) => <div className="min-h-10 flex items-center justify-center"><ResponsavelCell expediente={row.original} onSuccess={onSuccess} usuarios={usuarios} /></div>,
@@ -956,8 +979,10 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
     }
   }, []);
 
-  const handlePrazoSort = React.useCallback((field: 'data_ciencia_parte' | 'data_prazo_legal_parte', direction: 'asc' | 'desc') => {
-    handleSortingChange(field, direction);
+  const handlePrazoSort = React.useCallback((field: 'dataCienciaParte' | 'dataPrazoLegalParte', direction: 'asc' | 'desc') => {
+    // Mapear para snake_case para compatibilidade com backend/API atual
+    const mappedField = field === 'dataCienciaParte' ? 'data_ciencia_parte' : 'data_prazo_legal_parte';
+    handleSortingChange(mappedField, direction);
   }, [handleSortingChange]);
 
   const handleTipoExpedienteSort = React.useCallback((direction: 'asc' | 'desc') => {
@@ -965,8 +990,10 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
     setOrdem(direction);
   }, []);
 
-  const handleProcessoSort = React.useCallback((field: 'trt' | 'grau' | 'descricao_orgao_julgador' | 'classe_judicial', direction: 'asc' | 'desc') => {
-    handleSortingChange(field, direction);
+  const handleProcessoSort = React.useCallback((field: 'trt' | 'grau' | 'descricaoOrgaoJulgador' | 'classeJudicial', direction: 'asc' | 'desc') => {
+    // Mapear para snake_case para compatibilidade com backend/API atual
+    const mappedField = field === 'descricaoOrgaoJulgador' ? 'descricao_orgao_julgador' : field === 'classeJudicial' ? 'classe_judicial' : field;
+    handleSortingChange(mappedField, direction);
   }, [handleSortingChange]);
 
   const handlePartesSort = React.useCallback((field: 'nome_parte_autora' | 'nome_parte_re', direction: 'asc' | 'desc') => {
@@ -1051,11 +1078,11 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
     if (visualizacao !== 'semana' || !expedientes) return 0;
     return expedientes.filter((e) => {
       // Apenas expedientes com data de prazo
-      if (!e.data_prazo_legal_parte) return false;
+      if (!e.dataPrazoLegalParte) return false;
       // Excluir vencidos
-      if (e.prazo_vencido === true) return false;
+      if (e.prazoVencido === true) return false;
       // Verificar se está dentro da semana atual
-      const data = new Date(e.data_prazo_legal_parte);
+      const data = new Date(e.dataPrazoLegalParte);
       const dataLocal = new Date(data.getFullYear(), data.getMonth(), data.getDate());
       return dataLocal >= inicioSemana && dataLocal <= fimSemana;
     }).length;

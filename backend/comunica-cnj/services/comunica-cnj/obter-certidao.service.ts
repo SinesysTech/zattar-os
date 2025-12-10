@@ -1,5 +1,15 @@
 /**
  * Serviço para obtenção de certidão (PDF) de comunicação CNJ
+ * 
+ * ⚠️ SERVIÇO LEGADO - DEPRECATED ⚠️
+ * 
+ * Este serviço está sendo substituído por `src/core/comunica-cnj/service.ts`.
+ * 
+ * **MIGRE PARA:**
+ * - `obterCertidao()` em `@/core/comunica-cnj`
+ * - `listarTribunaisDisponiveis()` em `@/core/comunica-cnj`
+ * 
+ * @deprecated Use `src/core/comunica-cnj` para novas integrações
  */
 
 import { getComunicaCNJClient } from '../../client/comunica-cnj-client';

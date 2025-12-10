@@ -1,6 +1,16 @@
 /**
  * Serviço de persistência para comunicações CNJ
  * Operações CRUD na tabela comunica_cnj
+ * 
+ * ⚠️ SERVIÇO LEGADO - DEPRECATED ⚠️
+ * 
+ * Este serviço está sendo substituído por `src/core/comunica-cnj/repository.ts`.
+ * 
+ * **MIGRE PARA:**
+ * - Funções do repositório em `@/core/comunica-cnj/repository`
+ * - Use serviços de orquestração em `@/core/comunica-cnj/service` quando possível
+ * 
+ * @deprecated Use `src/core/comunica-cnj` para novas integrações
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';

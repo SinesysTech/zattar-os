@@ -1,6 +1,15 @@
 /**
  * Serviço de busca de comunicações CNJ
  * Busca direta na API (sem persistência)
+ * 
+ * ⚠️ SERVIÇO LEGADO - DEPRECATED ⚠️
+ * 
+ * Este serviço está sendo substituído por `src/core/comunica-cnj/service.ts`.
+ * 
+ * **MIGRE PARA:**
+ * - `buscarComunicacoes()` em `@/core/comunica-cnj`
+ * 
+ * @deprecated Use `src/core/comunica-cnj` para novas integrações
  */
 
 import { getComunicaCNJClient } from '../../client/comunica-cnj-client';

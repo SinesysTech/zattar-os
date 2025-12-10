@@ -1,6 +1,15 @@
 /**
  * Serviço de captura de comunicações CNJ
  * Busca comunicações na API, persiste no banco e vincula com expedientes
+ * 
+ * ⚠️ SERVIÇO LEGADO - DEPRECATED ⚠️
+ * 
+ * Este serviço está sendo substituído por `src/core/comunica-cnj/service.ts`.
+ * 
+ * **MIGRE PARA:**
+ * - `sincronizarComunicacoes()` em `@/core/comunica-cnj`
+ * 
+ * @deprecated Use `src/core/comunica-cnj` para novas integrações
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';

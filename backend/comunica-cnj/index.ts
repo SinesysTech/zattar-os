@@ -1,6 +1,20 @@
 /**
  * Comunica CNJ Module
  * Integração com API pública do CNJ para captura de comunicações processuais
+ * 
+ * ⚠️ MÓDULO LEGADO - DEPRECATED ⚠️
+ * 
+ * Este módulo está sendo gradualmente substituído por `src/core/comunica-cnj`.
+ * 
+ * **NOVAS INTEGRAÇÕES DEVEM USAR `src/core/comunica-cnj`:**
+ * - Use `@/core/comunica-cnj` para novas funcionalidades
+ * - Este módulo será removido assim que todas as referências forem migradas
+ * 
+ * **Migração em andamento:**
+ * - Verifique scripts e jobs que ainda usam este módulo
+ * - Migre para os serviços equivalentes em `src/core/comunica-cnj`
+ * 
+ * @deprecated Use `src/core/comunica-cnj` para novas integrações
  */
 
 // =============================================================================

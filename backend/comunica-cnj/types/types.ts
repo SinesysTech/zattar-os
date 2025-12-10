@@ -2,6 +2,15 @@
  * Comunica CNJ Types
  * Tipos para integração com a API pública do Comunica CNJ
  * https://comunicaapi.pje.jus.br/
+ * 
+ * ⚠️ TIPOS LEGADOS - DEPRECATED ⚠️
+ * 
+ * Estes tipos estão sendo substituídos por `src/core/comunica-cnj/domain.ts`.
+ * 
+ * **MIGRE PARA:**
+ * - Tipos em `@/core/comunica-cnj/domain`
+ * 
+ * @deprecated Use `src/core/comunica-cnj` para novas integrações
  */
 
 // =============================================================================
