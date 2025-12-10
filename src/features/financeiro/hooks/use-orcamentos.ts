@@ -22,7 +22,7 @@ import type {
     OrcamentoComItens,
     CriarOrcamentoDTO,
     AtualizarOrcamentoDTO,
-} from '@/backend/types/financeiro/orcamento.types';
+} from '../types/orcamentos';
 
 interface UseOrcamentosOptions {
     autoFetch?: boolean;

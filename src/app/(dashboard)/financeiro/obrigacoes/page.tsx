@@ -35,8 +35,8 @@ import {
 import {
   useObrigacoes,
   useResumoObrigacoes,
-  sincronizarAcordo,
 } from '@/features/financeiro/hooks/use-obrigacoes';
+import { actionSincronizarAcordo } from '@/features/obrigacoes';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -450,7 +450,7 @@ export default function ObrigacoesPage() {
     }
 
     try {
-      const resultado = await sincronizarAcordo(obrigacao.acordoId, false);
+      const resultado = await actionSincronizarAcordo(obrigacao.acordoId, false);
       if (!resultado.success) {
         throw new Error(resultado.error);
       }

@@ -60,12 +60,15 @@ export {
   actionCriarAcordoComParcelas,
   actionAtualizarAcordo,
   actionDeletarAcordo,
+  actionSincronizarAcordo,
+  actionVerificarConsistencia,
 } from './actions/acordos';
 
 export {
   actionMarcarParcelaRecebida,
   actionAtualizarParcela,
   actionRecalcularDistribuicao,
+  actionSincronizarParcela,
 } from './actions/parcelas';
 
 export {
@@ -83,7 +86,7 @@ export { AcordosList } from './components/acordos/acordos-list';
 export { AcordoForm } from './components/acordos/acordo-form';
 export { NovaObrigacaoDialog } from './components/acordos/nova-obrigacao-dialog';
 export { ObrigacoesContent } from './components/shared/obrigacoes-content';
-export { ObrigacoesFilters } from './components/shared/obrigacoes-toolbar-filters';
+export type { ObrigacoesFilters } from './components/shared/obrigacoes-toolbar-filters';
 
 export { ParcelasTable } from './components/parcelas/parcelas-table';
 export { EditParcelaDialog } from './components/parcelas/edit-parcela-dialog';

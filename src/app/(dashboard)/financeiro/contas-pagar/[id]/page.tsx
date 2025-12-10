@@ -49,7 +49,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { PagarContaDialog } from '../components/pagar-conta-dialog';
 import { ContaPagarFormDialog } from '../components/conta-pagar-form-dialog';
-import { OrigemLancamentoSection } from '../../components/origem-lancamento-section';
+import { OrigemLancamentoSection } from '@/features/financeiro/components/shared';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { StatusContaPagar } from '@/backend/types/financeiro/contas-pagar.types';

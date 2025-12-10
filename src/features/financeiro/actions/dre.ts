@@ -2,7 +2,7 @@
 
 /**
  * Server Actions para DRE (Demonstração de Resultado do Exercício)
- * Consolida as rotas REST de /api/financeiro/dre/*
+ * Usa services locais da feature financeiro
  */
 
 import { revalidatePath } from 'next/cache';
@@ -10,9 +10,9 @@ import {
     calcularDRE,
     calcularComparativoDRE,
     calcularEvolucaoAnual,
-} from '@/backend/financeiro/dre/services/dre/calcular-dre.service';
-import { validarGerarDREDTO, isPeriodoDREValido } from '@/backend/types/financeiro/dre.types';
-import type { PeriodoDRE, DRE } from '@/backend/types/financeiro/dre.types';
+} from '../services/dre';
+import { validarGerarDREDTO, isPeriodoDREValido } from '../types/dre';
+import type { PeriodoDRE, DRE } from '../types/dre';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
 // ============================================================================

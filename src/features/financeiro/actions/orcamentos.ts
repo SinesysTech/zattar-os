@@ -2,7 +2,7 @@
 
 /**
  * Server Actions para Orçamentos
- * Consolida as rotas REST de /api/financeiro/orcamentos/*
+ * Usa services locais da feature financeiro
  */
 
 import { revalidatePath } from 'next/cache';
@@ -15,13 +15,9 @@ import {
     aprovarOrcamento,
     iniciarExecucaoOrcamento,
     encerrarOrcamento,
-} from '@/backend/financeiro/orcamento/services/persistence/orcamento-persistence.service';
-import {
     buscarAnaliseOrcamentaria,
-} from '@/backend/financeiro/orcamento/services/persistence/analise-orcamentaria-persistence.service';
-import {
     mapAnaliseToUI,
-} from '@/backend/financeiro/orcamento/services/orcamento/relatorios-orcamento.service';
+} from '../services/orcamentos';
 import {
     validarCriarOrcamentoDTO,
     validarAtualizarOrcamentoDTO,
@@ -32,7 +28,7 @@ import {
     type PeriodoOrcamento,
     type CriarOrcamentoDTO,
     type AtualizarOrcamentoDTO,
-} from '@/backend/types/financeiro/orcamento.types';
+} from '../types/orcamentos';
 
 // ============================================================================
 // Types

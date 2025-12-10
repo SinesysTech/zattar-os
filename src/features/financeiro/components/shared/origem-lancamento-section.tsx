@@ -3,6 +3,8 @@
 /**
  * Seção de Origem do Lançamento
  * Mostra se o lançamento financeiro foi gerado a partir de um acordo/condenação
+ *
+ * @migrated from src/app/(dashboard)/financeiro/components/origem-lancamento-section.tsx
  */
 
 import * as React from 'react';
@@ -66,6 +68,7 @@ interface OrigemLancamento {
 }
 
 interface OrigemLancamentoSectionProps {
+  lancamentoId?: number;
   dadosAdicionais?: Record<string, unknown> | null;
   className?: string;
 }
@@ -117,6 +120,7 @@ function DetalheItem({
 // ============================================================================
 
 export function OrigemLancamentoSection({
+  lancamentoId,
   dadosAdicionais,
   className,
 }: OrigemLancamentoSectionProps) {

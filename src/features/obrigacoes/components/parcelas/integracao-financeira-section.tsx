@@ -19,29 +19,41 @@ import { RefreshCw, CheckCircle, AlertCircle, Clock, ExternalLink, ShieldCheck, 
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-// Keeping use-obrigacoes hook as is for now as it handles complex logic.
-// If the hook is moving or deprecated, we would need to migrate its login into actions.
-import { sincronizarAcordo, verificarConsistenciaAcordo } from '@/app/_lib/hooks/use-obrigacoes';
+import { actionSincronizarAcordo, actionVerificarConsistencia } from '../../actions/acordos';
 
 interface IntegracaoFinanceiraSectionProps {
   acordoId: number;
+  acordoDirecao?: string; // Optional if needed for links or display
   onSyncComplete?: () => void;
 }
 
+interface Inconsistencia {
+  tipo: string;
+  descricao: string;
+  parcelaId?: number;
+  lancamentoId?: number;
+  sugestao?: string;
+}
+
+interface StatusSync {
+  totalParcelas: number;
+  parcelasSincronizadas: number;
+  parcelasPendentes: number;
+  parcelasInconsistentes: number;
+}
+
 export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: IntegracaoFinanceiraSectionProps) {
-  // Logic remains largely the same, just relocated. 
-  // Any internal paths or types should work if use-obrigacoes is available.
   const [isLoading, setIsLoading] = React.useState(true);
   const [isSyncing, setIsSyncing] = React.useState(false);
   const [isVerifying, setIsVerifying] = React.useState(false);
   const [syncDialogOpen, setSyncDialogOpen] = React.useState(false);
-  const [statusSync, setStatusSync] = React.useState<any>(null); // Type 'StatusSincronizacao' used to be local or imported
-  const [inconsistencias, setInconsistencias] = React.useState<any[]>([]);
+  const [statusSync, setStatusSync] = React.useState<StatusSync | null>(null);
+  const [inconsistencias, setInconsistencias] = React.useState<Inconsistencia[]>([]);
 
   const loadSyncStatus = React.useCallback(async () => {
     try {
       setIsLoading(true);
-      const result = await verificarConsistenciaAcordo(acordoId);
+      const result = await actionVerificarConsistencia(acordoId);
       if (result.success && result.data) {
         const data = result.data;
         setInconsistencias(data.inconsistencias);
@@ -65,7 +77,7 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
     try {
       setIsSyncing(true);
       setSyncDialogOpen(false);
-      const result = await sincronizarAcordo(acordoId, forcar);
+      const result = await actionSincronizarAcordo(acordoId, forcar);
       if (result.success && result.data) {
         toast.success(`Sincronização concluída: ${result.data.totalSucessos} processados.`);
         await loadSyncStatus();
@@ -94,7 +106,10 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
   if (isLoading) return <Skeleton className="h-40 w-full" />;
 
   const temInconsistencias = inconsistencias.length > 0;
-  const statusGeral = !temInconsistencias ? 'sincronizado' : inconsistencias.some(i => i.tipo === 'parcela_sem_lancamento') ? 'pendente' : 'inconsistente';
+  // If no detailed status available, default.
+  // Note: logic simplified from original but maintains intent
+  const pendentes = statusSync?.parcelasPendentes || 0;
+  const statusGeral = temInconsistencias ? 'inconsistente' : (pendentes > 0 ? 'pendente' : 'sincronizado');
 
   return (
     <div className="rounded-lg border bg-card p-6">
