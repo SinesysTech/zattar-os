@@ -55,7 +55,6 @@ export default async function ExpedientesSemanaPage({ searchParams }: Expediente
 
   const usuariosParams: ListarUsuariosParams = { limite: 100, ativo: true };
   const usuariosResult = await obterUsuarios(usuariosParams);
-  const usuarios = usuariosResult.success ? usuariosResult.usuarios : [];
 
   const tiposExpedienteParams: ListarTiposExpedientesParams = { limite: 100 };
   const tiposExpedienteResult = await listarTiposExpedientes(tiposExpedienteParams);

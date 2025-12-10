@@ -15,82 +15,20 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { ExternalLink, Calendar, FileText, Users, Building2, Scale, AlertCircle } from 'lucide-react';
-import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
+import { Expediente, GrauTribunal } from '@/core/expedientes/domain';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
-/**
- * Formata data ISO para formato brasileiro completo
- */
-const formatarDataHora = (dataISO: string | null): string => {
-  if (!dataISO) return '-';
-  try {
-    const data = new Date(dataISO);
-    return data.toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return '-';
-  }
-};
-
-/**
- * Formata data ISO para formato brasileiro (apenas data)
- */
-const formatarData = (dataISO: string | null): string => {
-  if (!dataISO) return '-';
-  try {
-    const data = new Date(dataISO);
-    return data.toLocaleDateString('pt-BR');
-  } catch {
-    return '-';
-  }
-};
-
-/**
- * Formata grau para exibição
- */
-const formatarGrau = (grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior'): string => {
-  if (grau === 'primeiro_grau') return '1º Grau';
-  if (grau === 'segundo_grau') return '2º Grau';
-  if (grau === 'tribunal_superior') return 'Tribunal Superior';
-  return grau;
-};
-
-/**
- * Retorna a classe CSS de cor para badge do tipo de expediente
- * Rotaciona entre cores disponíveis baseado no ID do tipo
- */
-const getTipoExpedienteColorClass = (tipoId: number): string => {
-  const colors = [
-    'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
-    'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
-    'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
-    'bg-pink-100 text-pink-800 border-pink-200 dark:bg-pink-900 dark:text-pink-200 dark:border-pink-800',
-    'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-800',
-    'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-200 dark:border-indigo-800',
-    'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-200 dark:border-orange-800',
-    'bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900 dark:text-teal-200 dark:border-teal-800',
-    'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900 dark:text-cyan-200 dark:border-cyan-800',
-    'bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900 dark:text-rose-200 dark:border-rose-800',
-    'bg-violet-100 text-violet-800 border-violet-200 dark:bg-violet-900 dark:text-violet-200 dark:border-violet-800',
-    'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200 dark:bg-fuchsia-900 dark:text-fuchsia-200 dark:border-fuchsia-800',
-  ];
-
-  // Rotacionar cores baseado no ID
-  const index = (tipoId - 1) % colors.length;
-  return colors[index];
-};
+interface TipoExpediente {
+  id: number;
+  tipoExpediente: string;
+}
 
 interface ExpedienteVisualizarDialogProps {
-  expediente: PendenteManifestacao;
+  expediente: Expediente;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   usuarios?: Usuario[];
-  tiposExpedientes?: Array<{ id: number; tipo_expediente: string }>;
+  tiposExpedientes?: TipoExpediente[];
 }
 
 export function ExpedienteVisualizarDialog({
@@ -117,18 +55,17 @@ export function ExpedienteVisualizarDialog({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div>
-              <DialogTitle className="text-xl">
-                {expediente.classe_judicial} {expediente.numero_processo}
-              </DialogTitle>
-              <DialogDescription className="mt-1">
+                              <DialogTitle className="text-xl">
+                                {expediente.classeJudicial} {expediente.numeroProcesso}
+                              </DialogTitle>              <DialogDescription className="mt-1">
                 Detalhes completos do expediente
               </DialogDescription>
             </div>
             <div className="flex gap-2">
-              <Badge variant={expediente.baixado_em ? 'secondary' : 'default'}>
-                {expediente.baixado_em ? 'Baixado' : 'Pendente'}
+              <Badge variant={expediente.baixadoEm ? 'secondary' : 'default'}>
+                {expediente.baixadoEm ? 'Baixado' : 'Pendente'}
               </Badge>
-              {expediente.prazo_vencido && (
+              {expediente.prazoVencido && (
                 <Badge tone="danger" variant="solid">Prazo Vencido</Badge>
               )}
             </div>
@@ -162,22 +99,22 @@ export function ExpedienteVisualizarDialog({
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Status do Processo</div>
-                  <div className="font-medium">{expediente.codigo_status_processo || '-'}</div>
+                  <div className="font-medium">{expediente.codigoStatusProcesso || '-'}</div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Prioridade</div>
-                  <div className="font-medium">{expediente.prioridade_processual || 0}</div>
+                  <div className="font-medium">{expediente.prioridadeProcessual || 0}</div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Segredo de Justiça</div>
-                  <Badge variant={expediente.segredo_justica ? 'destructive' : 'secondary'}>
-                    {expediente.segredo_justica ? 'Sim' : 'Não'}
+                  <Badge variant={expediente.segredoJustica ? 'destructive' : 'secondary'}>
+                    {expediente.segredoJustica ? 'Sim' : 'Não'}
                   </Badge>
                 </div>
                   <div>
                     <div className="text-xs text-muted-foreground mb-1">Juízo Digital</div>
-                    <Badge tone={expediente.juizo_digital ? 'success' : 'neutral'} variant={expediente.juizo_digital ? 'soft' : 'outline'}>
-                      {expediente.juizo_digital ? 'Sim' : 'Não'}
+                    <Badge tone={expediente.juizoDigital ? 'success' : 'neutral'} variant={expediente.juizoDigital ? 'soft' : 'outline'}>
+                      {expediente.juizoDigital ? 'Sim' : 'Não'}
                     </Badge>
                   </div>
               </div>
@@ -194,16 +131,16 @@ export function ExpedienteVisualizarDialog({
               <div className="grid grid-cols-2 gap-4 pl-6">
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Parte Autora</div>
-                  <div className="font-medium">{expediente.nome_parte_autora || '-'}</div>
-                  {expediente.qtde_parte_autora > 1 && (
+                  <div className="font-medium">{expediente.nomeParteAutora || '-'}</div>
+                  {expediente.qtdeParteAutora > 1 && (
                     <div className="text-xs text-muted-foreground mt-1">
-                      {expediente.qtde_parte_autora} parte(s)
+                      {expediente.qtdeParteAutora} parte(s)
                     </div>
                   )}
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Parte Ré</div>
-                  <div className="font-medium">{expediente.nome_parte_re || '-'}</div>
+                  <div className="font-medium">{expediente.nomeParteRe || '-'}</div>
                   {expediente.qtde_parte_re > 1 && (
                     <div className="text-xs text-muted-foreground mt-1">
                       {expediente.qtde_parte_re} parte(s)
