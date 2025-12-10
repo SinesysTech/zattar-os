@@ -6,7 +6,6 @@ import { normalizeNodeId, type Descendant } from 'platejs';
 import { Plate, usePlateEditor } from 'platejs/react';
 
 import { EditorKit } from '@/components/plate/editor-kit';
-import { SettingsDialog } from '@/components/plate/settings-dialog';
 import { Editor, EditorContainer } from '@/components/plate-ui/editor';
 
 interface PlateEditorProps {
@@ -35,8 +34,6 @@ export function PlateEditor({ initialValue, onChange }: PlateEditorProps) {
       <EditorContainer variant="default" className="h-full">
         <Editor variant="demo" />
       </EditorContainer>
-
-      <SettingsDialog />
     </Plate>
   );
 }

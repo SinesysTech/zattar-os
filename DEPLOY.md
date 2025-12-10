@@ -649,29 +649,20 @@ Configuradas no CapRover e usadas quando o container está rodando:
 
 ## Troubleshooting
 
-### Build local falha com OOM (Out of Memory)
+### GitHub Actions build falha
 
-O Next.js pode consumir muita memória durante o build. Soluções:
+1. **Verifique os logs do GitHub Actions**:
+   - Vá na aba **Actions** do repositório
+   - Clique no workflow que falhou
+   - Verifique os logs de cada step
 
-1. **Aumentar memória do Docker Desktop** (Windows/Mac):
-   - Docker Desktop → Settings → Resources → Memory
-   - Aumente para 6-8GB
+2. **Verifique secrets**:
+   - Settings → Secrets and variables → Actions
+   - Confirme que todos os secrets estão configurados
 
-2. **Usar script de debug de memória**:
-   ```bash
-   npm run build:debug-memory
-   ```
-
-3. **Verificar recursos disponíveis**:
-   ```bash
-   # Linux/Mac
-   free -h
-
-   # Windows PowerShell
-   Get-Process | Sort-Object WorkingSet -Descending | Select-Object -First 10
-   ```
-
-> 💡 **Dica**: O build requer ~6GB de RAM. Se sua máquina tem menos, considere usar GitHub Actions para build.
+3. **Problemas comuns**:
+   - `NEXT_PUBLIC_SUPABASE_URL` ou `NEXT_PUBLIC_SUPABASE_ANON_KEY` inválidos
+   - Falha ao fazer push para Docker Hub (verifique credenciais)
 
 ### Container reinicia constantemente
 
@@ -686,114 +677,51 @@ Verifique os logs no dashboard do CapRover: App > App Logs
    curl http://srv-captain--sinesys-browser:3000/health
    ```
 
-### Deploy via imagem falha
+### Deploy via imagem falha no CapRover
 
-1. **Verifique se a imagem existe no registry**:
+1. **Verifique se a imagem existe no Docker Hub**:
    ```bash
-   docker pull seu-registry/sinesys:latest
+   docker pull sinesystec/sinesys:latest
    ```
 
-2. **Verifique credenciais do registry no CapRover**:
+2. **Verifique logs do CapRover**:
+   - App → App Logs
+   - Procure por erros de pull da imagem
+
+3. **Imagem privada?**
+   - Se a imagem for privada, configure credenciais no CapRover:
    - Dashboard → Cluster → Docker Registry Configuration
 
-3. **Verifique logs do CapRover**:
-   - App → App Logs ou Build Logs
+## Cache Docker (GitHub Actions)
 
-## Otimização de Build e Cache Docker
+### Como Funciona
 
-### Como o Cache Docker Funciona
+O GitHub Actions usa **GitHub Actions Cache** para acelerar builds:
 
-Docker cria **layers** para cada comando no Dockerfile. Cada layer é uma imagem intermediária que é armazenada em cache. Quando você executa um build, o Docker verifica se o comando e o contexto (arquivos copiados) mudaram desde o último build. Se não mudaram, a layer é reutilizada, economizando tempo.
-
-Mudanças em arquivos invalidam o cache de comandos subsequentes. Por exemplo, se você muda um arquivo no `COPY . .`, todas as layers depois dessa serão recriadas.
-
-**Exemplo visual de otimização de cache:**
-```
-# Sem otimização (ruim):
-COPY . .          # Copia tudo primeiro
-RUN npm ci        # Sempre roda se qualquer arquivo mudar
-
-# Com otimização (bom):
-COPY package.json .  # Copia apenas package.json
-RUN npm ci           # Só roda se package.json mudar
-COPY . .             # Copia resto dos arquivos
+```yaml
+cache-from: type=gha
+cache-to: type=gha,mode=max
 ```
 
-### Estratégia de Cache no Sinesys
+### Estratégia de Cache
 
-O Dockerfile do Sinesys usa uma estrutura **multi-stage** (deps → builder → runner) para otimizar o cache:
+O Dockerfile usa **multi-stage build** (deps → builder → runner):
 
 - **Stage `deps`**: Cache de dependências (reutilizado se `package.json` não mudar)
 - **Stage `builder`**: Cache de build (invalidado se código mudar)
 - **Stage `runner`**: Imagem final leve (~200-300MB)
 
-O `.dockerignore` reduz o contexto de build de ~1.2GB para ~100MB, evitando que arquivos desnecessários invalidem o cache.
+O `.dockerignore` reduz o contexto de ~1.2GB para ~100MB.
 
-### Impacto de Mudanças no Cache
+### Impacto de Mudanças
 
-| Mudança | Layers invalidadas | Tempo estimado |
-|---------|-------------------|----------------|
+| Mudança | Layers invalidadas | Tempo no GitHub Actions |
+|---------|-------------------|-------------------------|
 | `package.json` | deps + builder + runner | ~3-5min |
 | Código-fonte | builder + runner | ~2-3min |
-| Build args | builder + runner | ~2-3min |
-| `.dockerignore` | tudo | ~3-5min |}
+| Build args (secrets) | builder + runner | ~2-3min |
 
-**Dica**: Evite mudar `package.json` e código no mesmo commit se possível.
 
-### Otimizando Tempo de Build
-
-- **Dica 1**: Faça commits atômicos (uma mudança por vez)
-- **Dica 2**: Evite mudar arquivos desnecessários (use `.dockerignore`)
-- **Dica 3**: Agrupe mudanças em `package.json` em commits separados
-- **Dica 4**: Use build local para testar antes de push (evita builds desnecessários no servidor)
-- **Dica 5**: Considere usar Docker BuildKit para cache distribuído
-
-### Verificando Uso de Cache
-
-Para identificar se o cache está sendo usado, leia os logs do Docker:
-
-- **Cache hit**: `---> Using cache`
-- **Cache miss**: `---> Running in ...`}
-
-**Exemplo de log com cache:**
-```
-Step 4/12 : COPY package.json package-lock.json* ./
- ---> Using cache
-Step 5/12 : RUN npm ci --ignore-scripts
- ---> Using cache
-Step 6/12 : COPY --from=deps /app/node_modules ./node_modules
- ---> Using cache
-```
-
-**Calculando tempo economizado**: Compare o tempo total do build com/sem cache. Tipicamente, builds com cache completo levam ~1-2min vs ~4-6min sem cache.
-
-### Troubleshooting de Cache
-
-**Problema**: Build sempre demora mesmo sem mudanças
-- **Causa**: `.dockerignore` pode estar incorreto, incluindo arquivos temporários que mudam sempre
-- **Solução**: Verificar se arquivos como `.next`, `node_modules` ou logs estão sendo excluídos
-
-**Problema**: Cache não é reutilizado após mudança pequena
-- **Causa**: Mudança em arquivo que afeta uma layer anterior (ex: mudar `README.md` invalida `COPY . .`)
-- **Solução**: Revisar ordem de comandos no Dockerfile ou mover arquivos não-essenciais para fora do contexto
-💡 **Nota**: Para otimizações do Next.js, veja 'Scripts de Build e Configuração do Next.js'.
-
----
-
-## Requisitos de Memória para Build Local
-
-> **Nota**: Como o deploy é feito via imagem Docker pré-construída, o build ocorre na máquina local ou no CI (GitHub Actions), não no servidor de produção.
-
-| Cenário | RAM Mínima | RAM Recomendada |
-|---------|------------|-----------------|
-| Build local (Docker Desktop) | 6GB | 8GB |
-| Build no CI (GitHub Actions) | Automático | runners-large |
-
-O `NODE_OPTIONS="--max-old-space-size=6144"` no Dockerfile limita o heap do Node.js a 6GB.
-
-> ⚠️ **IMPORTANTE**: O projeto tem +150 dependências e requer 6GB de heap para builds estáveis.
-
----
 
 ## Recursos Recomendados (Servidor de Produção)
 

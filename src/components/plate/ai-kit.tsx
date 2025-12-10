@@ -21,7 +21,8 @@ import { MarkdownKit } from './markdown-kit';
 export const aiChatPlugin = AIChatPlugin.extend({
   options: {
     chatOptions: {
-      api: '/api/ai/command',
+      // Rota segura com API key gerenciada no servidor e prompts jurídicos brasileiros
+      api: '/api/plate/ai',
       body: {},
     },
   },
