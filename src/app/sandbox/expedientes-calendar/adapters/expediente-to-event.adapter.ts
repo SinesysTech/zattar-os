@@ -3,8 +3,8 @@
  */
 
 import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
-import type { IEvent, IUser } from '@/components/interfaces';
-import type { TEventColor } from '@/components/types';
+import type { IEvent, IUser } from '@/components/calendar/interfaces';
+import type { TEventColor } from '@/components/calendar/types';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
 

@@ -10,7 +10,7 @@ import type {
   DashboardAdminData,
 } from '@/backend/types/dashboard/types';
 
-import { MetricCard } from '@/components/modules/dashboard/metric-card';
+import { MetricCard } from '@/features/dashboard/components/metric-card';
 import { WidgetFluxoCaixa } from './widgets/widget-fluxo-caixa';
 import { WidgetDespesasCategoria } from './widgets/widget-despesas-categoria';
 import { ObrigacoesRecentesCard } from './obrigacoes-recentes-card';

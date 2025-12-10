@@ -1,5 +1,5 @@
 export * from './domain';
-export * from './contracts';
+export * from '@/features/contratos/types';
 
 // Assinatura Digital Types
 export * from './assinatura-digital';

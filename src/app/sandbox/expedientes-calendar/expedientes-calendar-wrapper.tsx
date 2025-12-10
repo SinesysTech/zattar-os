@@ -6,12 +6,12 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { CalendarBody } from '@/components/calendar-body';
-import { CalendarProvider } from '@/components/calendar-context';
-import { DndProvider } from '@/components/dnd-context';
+import { CalendarBody } from '@/components/calendar/calendar-body';
+import { CalendarProvider } from '@/components/calendar/calendar-context';
+import { DndProvider } from '@/components/calendar/dnd-context';
 import { ExpedientesCalendarHeader } from './expedientes-calendar-header';
 import { ExpedientesCalendarProvider } from './contexts/expedientes-calendar-context';
-import type { IEvent, IUser } from '@/components/interfaces';
+import type { IEvent, IUser } from '@/components/calendar/interfaces';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
 
@@ -161,7 +161,7 @@ export function ExpedientesCalendarWrapper({
 			const { expedientesToEvents } = await import(
 				'./adapters/expediente-to-event.adapter'
 			);
-			const { COLORS } = await import('@/components/constants');
+			const { COLORS } = await import('@/components/calendar/constants');
 
 			const newEvents = expedientesToEvents(
 				allExpedientes,

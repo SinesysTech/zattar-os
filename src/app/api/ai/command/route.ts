@@ -54,7 +54,7 @@
 import type {
   ChatMessage,
   ToolName,
-} from '@/components/use-chat';
+} from '@/components/chat/use-chat';
 import type { NextRequest } from 'next/server';
 
 import { createGateway } from '@ai-sdk/gateway';
@@ -72,7 +72,7 @@ import { NextResponse } from 'next/server';
 import { type SlateEditor, createSlateEditor, nanoid } from 'platejs';
 import { z } from 'zod';
 
-import { BaseEditorKit } from '@/components/plate/editor-base-kit';
+import { BaseEditorKit } from '@/components/editor/plate/editor-base-kit';
 import { markdownJoinerTransform } from '@/app/_lib/markdown-joiner-transform';
 
 import {

@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Form,
   FormControl,
@@ -23,13 +23,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import type { Audiencia } from '@/core/audiencias/domain';
-import { ModalidadeAudiencia } from '@/core/audiencias/domain';
-import {
-  actionCriarAudiencia,
-  actionAtualizarAudiencia,
-  ActionResult,
-} from '../actions/audiencias';
+import { Audiencia, createAudienciaSchema, ModalidadeAudiencia, StatusAudiencia } from '@/core/audiencias/domain';
+import { actionCriarAudiencia, actionAtualizarAudiencia, ActionResult } from '@/app/actions/audiencias';
 import { toast } from 'sonner';
 import { useFormState, useFormStatus } from 'react-dom';
 import { CalendarIcon } from 'lucide-react';
@@ -38,7 +33,7 @@ import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { ptBR } from 'date-fns/locale';
-import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
+import { useTiposAudiencias } from '@/app/_lib/hooks/use-tipos-audiencias';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
 
 interface AudienciaFormProps {
@@ -47,21 +42,22 @@ interface AudienciaFormProps {
   onClose?: () => void;
 }
 
-const formSchema = z.object({
+// Schema base sem validação refinada
+const baseAudienciaSchema = z.object({
   processoId: z.number({ required_error: 'Processo é obrigatório.' }),
-  dataInicio: z
-    .string({ required_error: 'Data de início é obrigatória.' })
-    .datetime('Formato de data inválido.'),
-  dataFim: z
-    .string({ required_error: 'Data de fim é obrigatória.' })
-    .datetime('Formato de data inválido.'),
+  dataInicio: z.string({ required_error: 'Data de início é obrigatória.' }).datetime('Formato de data inválido.'),
+  dataFim: z.string({ required_error: 'Data de fim é obrigatória.' }).datetime('Formato de data inválido.'),
   tipoAudienciaId: z.number().optional().nullable(),
   modalidade: z.nativeEnum(ModalidadeAudiencia).optional().nullable(),
   urlAudienciaVirtual: z.string().url('URL inválida.').optional().nullable(),
-  enderecoPresencial: z.custom<Record<string, unknown>>().optional().nullable(),
+  enderecoPresencial: z.custom<any>().optional().nullable(),
   responsavelId: z.number().optional().nullable(),
   observacoes: z.string().optional().nullable(),
   salaAudienciaNome: z.string().optional().nullable(),
+});
+
+// Schema com campos adicionais para o formulário (campos de UI)
+const formSchema = baseAudienciaSchema.extend({
   dataInicioDate: z.date().optional(),
   dataFimDate: z.date().optional(),
   horaInicioTime: z.string().optional(),
@@ -72,9 +68,10 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaFormProps) {
   const { pending } = useFormStatus();
-
+  
+  // Definir valor inicial correto para useFormState
   const initialState: ActionResult = { success: false, error: '', message: '' };
-
+  
   const [state, formAction] = useFormState<ActionResult, FormData>(
     initialData ? actionAtualizarAudiencia.bind(null, initialData.id) : actionCriarAudiencia,
     initialState
@@ -105,11 +102,11 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
       toast.success(state.message);
       onSuccess?.(state.data as Audiencia);
       onClose?.();
-    } else if (state && !state.success && state.error) {
+    } else if (state && !state.success) {
       toast.error(state.error, { description: state.message });
       if (state.errors) {
         Object.entries(state.errors).forEach(([path, messages]) => {
-          form.setError(path as keyof FormValues, {
+          form.setError(path as string & keyof FormValues, {
             type: 'manual',
             message: messages.join(', '),
           });
@@ -123,6 +120,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
     Object.entries(values).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         if (key === 'dataInicioDate' || key === 'dataFimDate') {
+          // Combine date and time
           const dateValue = value as Date;
           const timeKey = key === 'dataInicioDate' ? 'horaInicioTime' : 'horaFimTime';
           const timeValue = form.getValues(timeKey);
@@ -134,6 +132,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
         } else if (key === 'horaInicioTime' || key === 'horaFimTime') {
           // Skip, already handled by date combination
         } else if (typeof value === 'object' && value !== null) {
+          // Handle complex objects like enderecoPresencial
           formData.append(key, JSON.stringify(value));
         } else {
           formData.append(key, String(value));
@@ -154,12 +153,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
             <FormItem>
               <FormLabel>Processo ID</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="ID do Processo"
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                />
+                <Input placeholder="ID do Processo" type="number" {...field} onChange={e => field.onChange(Number(e.target.value))} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -214,7 +208,11 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               <FormItem className="flex flex-col">
                 <FormLabel className="text-left">Hora de Início</FormLabel>
                 <FormControl>
-                  <Input type="time" value={field.value || '00:00'} onChange={field.onChange} />
+                  <Input
+                    type="time"
+                    value={field.value || '00:00'}
+                    onChange={field.onChange}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -270,7 +268,11 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               <FormItem className="flex flex-col">
                 <FormLabel className="text-left">Hora de Fim</FormLabel>
                 <FormControl>
-                  <Input type="time" value={field.value || '00:00'} onChange={field.onChange} />
+                  <Input
+                    type="time"
+                    value={field.value || '00:00'}
+                    onChange={field.onChange}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -278,16 +280,14 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
           />
         </div>
 
+
         <FormField
           control={form.control}
           name="tipoAudienciaId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Tipo de Audiência</FormLabel>
-              <Select
-                onValueChange={(value) => field.onChange(Number(value))}
-                defaultValue={field.value?.toString()}
-              >
+              <Select onValueChange={value => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o tipo de audiência" />
@@ -315,7 +315,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
-                  defaultValue={field.value || undefined}
+                  defaultValue={field.value}
                   className="flex flex-col space-y-1"
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
@@ -343,8 +343,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
           )}
         />
 
-        {(modalidade === ModalidadeAudiencia.Virtual ||
-          modalidade === ModalidadeAudiencia.Hibrida) && (
+        {(modalidade === ModalidadeAudiencia.Virtual || modalidade === ModalidadeAudiencia.Hibrida) && (
           <FormField
             control={form.control}
             name="urlAudienciaVirtual"
@@ -352,16 +351,33 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               <FormItem>
                 <FormLabel>URL da Audiência Virtual</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="https://zoom.us/j/..."
-                    {...field}
-                    value={field.value || ''}
-                  />
+                  <Input placeholder="https://zoom.us/j/..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+        )}
+
+        {(modalidade === ModalidadeAudiencia.Presencial || modalidade === ModalidadeAudiencia.Hibrida) && (
+          <>
+            <FormLabel>Endereço Presencial</FormLabel>
+            {/* These fields would ideally be a custom component for address */}
+            <FormField
+              control={form.control}
+              name="enderecoPresencial.cep"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CEP</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Add more enderecoPresencial fields as needed */}
+          </>
         )}
 
         <FormField
@@ -370,10 +386,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
           render={({ field }) => (
             <FormItem>
               <FormLabel>Responsável</FormLabel>
-              <Select
-                onValueChange={(value) => field.onChange(Number(value))}
-                defaultValue={field.value?.toString()}
-              >
+              <Select onValueChange={value => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o responsável" />
@@ -399,11 +412,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
             <FormItem>
               <FormLabel>Observações</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder="Observações adicionais..."
-                  {...field}
-                  value={field.value || ''}
-                />
+                <Textarea placeholder="Observações adicionais..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

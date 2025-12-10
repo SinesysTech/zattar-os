@@ -1,11 +1,13 @@
-'use client';
-
-import { getYear, isSameDay, isSameMonth } from 'date-fns';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import { staggerContainer, transition } from '@/components/animations';
-import { getCalendarCells } from '@/components/helpers';
-import type { Audiencia } from '@/core/audiencias/domain';
+import { getYear, isSameDay, isSameMonth, startOfMonth } from "date-fns";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import {
+  staggerContainer,
+  transition,
+} from "@/components/ui/animations";
+import { getCalendarCells } from "@/components/calendar/helpers";
+import { Audiencia } from '@/core/audiencias/domain';
+import { ptBR } from 'date-fns/locale';
 
 interface AudienciasCalendarYearViewProps {
   audiencias: Audiencia[];
@@ -15,21 +17,11 @@ interface AudienciasCalendarYearViewProps {
 }
 
 const MONTHS = [
-  'Janeiro',
-  'Fevereiro',
-  'Março',
-  'Abril',
-  'Maio',
-  'Junho',
-  'Julho',
-  'Agosto',
-  'Setembro',
-  'Outubro',
-  'Novembro',
-  'Dezembro',
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
-const WEEKDAYS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+const WEEKDAYS = ["D", "S", "T", "Q", "Q", "S", "S"]; // Abbreviated Portuguese weekdays
 
 export function AudienciasCalendarYearView({
   audiencias,
@@ -60,6 +52,7 @@ export function AudienciasCalendarYearView({
               role="region"
               aria-label={`Calendário de ${month} de ${currentYear}`}
             >
+              {/* Month header */}
               <div
                 className="cursor-pointer px-3 py-2 text-center text-sm font-semibold transition-colors hover:bg-primary/20 sm:text-base"
                 onClick={() => onDateChange(new Date(currentYear, monthIndex, 1))}
@@ -96,18 +89,18 @@ export function AudienciasCalendarYearView({
                     <div
                       key={cell.date.toISOString()}
                       className={cn(
-                        'relative flex min-h-[2rem] flex-col items-center justify-start p-1',
-                        !isCurrentMonth && 'text-muted-foreground/40',
+                        "relative flex min-h-[2rem] flex-col items-center justify-start p-1",
+                        !isCurrentMonth && "text-muted-foreground/40",
                         hasAudiencias && isCurrentMonth
-                          ? 'cursor-pointer hover:bg-accent/20 hover:rounded-md'
-                          : 'cursor-default'
+                          ? "cursor-pointer hover:bg-accent/20 hover:rounded-md"
+                          : "cursor-default",
                       )}
-                      onClick={() => onDateChange(cell.date)}
+                      onClick={() => onDateChange(cell.date)} // Navigate to day/month view on click
                     >
                       <span
                         className={cn(
-                          'flex size-5 items-center justify-center font-medium',
-                          isTodayCell && 'rounded-full bg-primary text-primary-foreground'
+                          "flex size-5 items-center justify-center font-medium",
+                          isTodayCell && "rounded-full bg-primary text-primary-foreground",
                         )}
                       >
                         {cell.day}

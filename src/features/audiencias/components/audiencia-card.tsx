@@ -1,10 +1,11 @@
-'use client';
-
-import type { Audiencia } from '@/core/audiencias/domain';
+import { Audiencia, MODALIDADE_AUDIENCIA_LABELS, STATUS_AUDIENCIA_LABELS } from '@/core/audiencias/domain';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { EyeIcon } from 'lucide-react';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 
@@ -29,15 +30,14 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
       className={cn(
         'group relative z-10 my-0.5 w-full cursor-pointer overflow-hidden rounded-md border',
         'transition-all duration-200 ease-in-out hover:shadow-lg',
-        compact ? 'h-auto py-1' : 'py-2'
+        compact ? 'h-auto py-1' : 'py-2',
       )}
       onClick={handleCardClick}
     >
       <CardContent className={cn('flex flex-col gap-1', compact ? 'p-2 text-xs' : 'p-3 text-sm')}>
         <div className="flex items-center justify-between">
           <span className={cn('font-semibold', compact ? 'text-xs' : 'text-sm')}>
-            {format(dataInicio, 'HH:mm', { locale: ptBR })} -{' '}
-            {format(dataFim, 'HH:mm', { locale: ptBR })}
+            {format(dataInicio, 'HH:mm', { locale: ptBR })} - {format(dataFim, 'HH:mm', { locale: ptBR })}
           </span>
           <AudienciaStatusBadge status={audiencia.status} />
         </div>
@@ -50,12 +50,12 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
               {audiencia.tipoDescricao}
             </span>
           )}
-          {audiencia.modalidade && (
-            <AudienciaModalidadeBadge modalidade={audiencia.modalidade} compact={compact} />
-          )}
+          {audiencia.modalidade && <AudienciaModalidadeBadge modalidade={audiencia.modalidade} compact={compact} />}
         </div>
         {!compact && audiencia.observacoes && (
-          <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{audiencia.observacoes}</p>
+          <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+            {audiencia.observacoes}
+          </p>
         )}
       </CardContent>
     </Card>

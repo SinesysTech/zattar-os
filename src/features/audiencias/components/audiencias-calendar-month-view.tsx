@@ -1,11 +1,13 @@
-'use client';
-
 import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
-import { isSameDay, parseISO } from 'date-fns';
-import { staggerContainer, transition } from '@/components/animations';
-import { getCalendarCells, calculateMonthEventPositions } from '@/components/helpers';
-import type { Audiencia } from '@/core/audiencias/domain';
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, isSameDay, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { staggerContainer, transition } from '@/components/ui/animations';
+import {
+  getCalendarCells,
+  calculateMonthEventPositions,
+} from '@/components/calendar/helpers'; // Reusing helper functions
+import { Audiencia } from '@/core/audiencias/domain';
 import { AudienciasMonthDayCell } from './audiencias-month-day-cell';
 import { AudienciaDetailSheet } from './audiencia-detail-sheet';
 
@@ -26,7 +28,7 @@ interface AudienciasCalendarMonthViewProps {
   refetch: () => void;
 }
 
-const WEEK_DAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+const WEEK_DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]; // Changed to Portuguese
 
 function audienciaToICalendarEvent(audiencia: Audiencia): ICalendarEvent {
   return {
@@ -36,19 +38,17 @@ function audienciaToICalendarEvent(audiencia: Audiencia): ICalendarEvent {
     endDate: audiencia.dataFim,
     allDay: false,
     originalAudiencia: audiencia,
-    color: audiencia.status === 'M' ? 'blue' : audiencia.status === 'F' ? 'green' : 'red',
+    color:
+      audiencia.status === 'M'
+        ? 'blue'
+        : audiencia.status === 'F'
+        ? 'green'
+        : 'red',
   };
 }
 
-function toIEvent(event: ICalendarEvent): {
-  id: string;
-  startDate: string;
-  endDate: string;
-  title: string;
-  color: string;
-  description: string;
-  user: { id: number; name: string; avatar: string };
-} {
+// Converter ICalendarEvent para IEvent para compatibility com calculateMonthEventPositions
+function toIEvent(event: ICalendarEvent): any {
   return {
     id: event.id,
     startDate: event.startDate,
@@ -69,22 +69,16 @@ export function AudienciasCalendarMonthView({
   const cells = useMemo(() => getCalendarCells(currentDate), [currentDate]);
   const iEvents = useMemo(() => audiencias.map(audienciaToICalendarEvent), [audiencias]);
 
-  const multiDayEvents = useMemo(
-    () => iEvents.filter((e) => !isSameDay(parseISO(e.startDate), parseISO(e.endDate))),
-    [iEvents]
-  );
-  const singleDayEvents = useMemo(
-    () => iEvents.filter((e) => isSameDay(parseISO(e.startDate), parseISO(e.endDate))),
-    [iEvents]
-  );
+  // We need to split iEvents into multi-day and single-day for calculateMonthEventPositions
+  const multiDayEvents = useMemo(() => iEvents.filter(e => !isSameDay(parseISO(e.startDate), parseISO(e.endDate))), [iEvents]);
+  const singleDayEvents = useMemo(() => iEvents.filter(e => isSameDay(parseISO(e.startDate), parseISO(e.endDate))), [iEvents]);
 
   const eventPositions = useMemo(
-    () =>
-      calculateMonthEventPositions(
-        multiDayEvents.map(toIEvent),
-        singleDayEvents.map(toIEvent),
-        currentDate
-      ),
+    () => calculateMonthEventPositions(
+      multiDayEvents.map(toIEvent), 
+      singleDayEvents.map(toIEvent), 
+      currentDate
+    ),
     [multiDayEvents, singleDayEvents, currentDate]
   );
 
@@ -97,7 +91,8 @@ export function AudienciasCalendarMonthView({
   };
 
   const handleAddAudiencia = (date: Date) => {
-    console.log('Add Audiencia for date:', date);
+    console.log("Add Audiencia for date:", date);
+    // Open a form for creating new audiencia
   };
 
   return (
@@ -118,11 +113,11 @@ export function AudienciasCalendarMonthView({
 
       <div className="grid grid-cols-7">
         {cells.map((cell, index) => {
-          const audienciasForCell = audiencias.filter(
-            (aud) =>
-              isSameDay(parseISO(aud.dataInicio), cell.date) ||
-              isSameDay(parseISO(aud.dataFim), cell.date) ||
-              (parseISO(aud.dataInicio) < cell.date && parseISO(aud.dataFim) > cell.date)
+          // Filter audiencias relevant for this specific cell's day
+          const audienciasForCell = audiencias.filter(aud =>
+            isSameDay(parseISO(aud.dataInicio), cell.date) ||
+            isSameDay(parseISO(aud.dataFim), cell.date) ||
+            (parseISO(aud.dataInicio) < cell.date && parseISO(aud.dataFim) > cell.date)
           );
 
           return (

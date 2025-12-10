@@ -12,7 +12,7 @@ import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { ExportButton } from '@/components/financeiro/export-button';
+import { ExportButton } from '@/features/financeiro/components/export-button';
 import {
   buildContasReceberFilterOptions,
   buildContasReceberFilterGroups,

@@ -30,7 +30,7 @@ import { actionAtualizarConta } from '@/features/financeiro/actions/plano-contas
 import { PlanoContaCreateDialog } from '@/features/financeiro/components/plano-contas/plano-conta-create-dialog';
 import { PlanoContaEditDialog } from '@/features/financeiro/components/plano-contas/plano-conta-edit-dialog';
 import { toast } from 'sonner';
-import { ExportButton } from '@/components/financeiro/export-button';
+import { ExportButton } from '@/features/financeiro/components/export-button';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
   PlanoContaComPai,

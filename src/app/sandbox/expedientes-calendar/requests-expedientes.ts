@@ -4,9 +4,9 @@
  */
 
 import { expedientesToEvents } from './adapters/expediente-to-event.adapter';
-import type { IEvent, IUser } from '@/components/interfaces';
-import type { TEventColor } from '@/components/types';
-import { COLORS } from '@/components/constants';
+import type { IEvent, IUser } from '@/components/calendar/interfaces';
+import type { TEventColor } from '@/components/calendar/types';
+import { COLORS } from '@/components/calendar/constants';
 import type { ListarPendentesParams } from '@/backend/types/expedientes/types';
 import { obterPendentes } from '@/backend/expedientes/services/listar-pendentes.service';
 import { obterUsuarios } from '@/backend/usuarios/services/usuarios/listar-usuarios.service';

@@ -11,13 +11,13 @@ import {
 	slideFromLeft,
 	slideFromRight,
 	transition,
-} from '@/components/animations';
-import { useCalendar } from '@/components/calendar-context';
-import { DateNavigator } from '@/components/date-navigator';
-import { TodayButton } from '@/components/today-button';
-import { UserSelect } from '@/components/user-select';
-import { Settings } from '@/components/settings';
-import Views from '@/components/view-tabs';
+} from '@/components/ui/animations';
+import { useCalendar } from '@/components/calendar/calendar-context';
+import { DateNavigator } from '@/components/calendar/date-navigator';
+import { TodayButton } from '@/components/calendar/today-button';
+import { UserSelect } from '@/components/shared/user-select';
+import { Settings } from '@/components/calendar/settings';
+import Views from '@/components/calendar/view-tabs';
 import { ExpedientesFilters } from './components/expedientes-filters';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';

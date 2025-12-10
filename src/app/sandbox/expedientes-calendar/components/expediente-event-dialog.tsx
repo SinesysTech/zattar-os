@@ -30,9 +30,9 @@ import {
 } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { useCalendar } from '@/components/calendar-context';
-import { formatTime } from '@/components/helpers';
-import type { IEvent } from '@/components/interfaces';
+import { useCalendar } from '@/components/calendar/calendar-context';
+import { formatTime } from '@/components/calendar/helpers';
+import type { IEvent } from '@/components/calendar/interfaces';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
 

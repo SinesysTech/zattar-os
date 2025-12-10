@@ -15,7 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
-import { ExportButton } from '@/components/financeiro/export-button';
+import { ExportButton } from '@/features/financeiro/components/export-button';
 import {
   ArrowLeft,
   Plus,

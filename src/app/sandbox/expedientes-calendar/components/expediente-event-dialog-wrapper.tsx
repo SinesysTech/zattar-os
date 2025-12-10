@@ -6,10 +6,10 @@
 'use client';
 
 import React from 'react';
-import { EventDetailsDialog } from '@/components/event-details-dialog';
+import { EventDetailsDialog } from '@/components/calendar/event-details-dialog';
 import { ExpedienteEventDialog } from './expediente-event-dialog';
 import { useExpedientesCalendarSafe } from '../contexts/expedientes-calendar-context';
-import type { IEvent } from '@/components/interfaces';
+import type { IEvent } from '@/components/calendar/interfaces';
 import type { ReactNode } from 'react';
 
 interface ExpedienteEventDialogWrapperProps {

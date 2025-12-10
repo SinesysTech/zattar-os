@@ -5,7 +5,7 @@
 
 import React, { Suspense } from 'react';
 import { ExpedientesCalendar } from './expedientes-calendar';
-import { CalendarSkeleton } from '@/components/calendar-skeleton';
+import { CalendarSkeleton } from '@/components/calendar/calendar-skeleton';
 
 export default function ExpedientesCalendarSandboxPage() {
 	return (

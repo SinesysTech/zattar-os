@@ -1,6 +1,6 @@
 import { Toaster } from 'sonner';
 
-import { PlateEditor } from '@/components/plate/plate-editor';
+import { PlateEditor } from '@/components/editor/plate/plate-editor';
 
 export default function Page() {
   return (

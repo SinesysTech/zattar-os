@@ -3,7 +3,7 @@ import { Inter, Montserrat, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner"; // Ajuste o import conforme sua estrutura
-import { CommandMenu } from "@/components/command-menu";
+import { CommandMenu } from "@/components/layout/command-menu";
 
 // Fonte Sans (Interface/Texto)
 const inter = Inter({

@@ -1,5 +1,5 @@
-import { DocsHeader } from '@/components/docs/docs-header';
-import { DocsSidebar } from '@/components/docs/docs-sidebar';
+import { DocsHeader } from '@/components/layout/docs/docs-header';
+import { DocsSidebar } from '@/components/layout/docs/docs-sidebar';
 
 export const metadata = {
   title: 'Documentação - Sinesys',

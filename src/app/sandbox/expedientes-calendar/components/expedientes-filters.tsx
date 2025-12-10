@@ -10,7 +10,7 @@ import { CheckIcon, Filter, RefreshCcw, ChevronRight } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Toggle } from '@/components/ui/toggle';
 import { Separator } from '@/components/ui/separator';
-import { useCalendar } from '@/components/calendar-context';
+import { useCalendar } from '@/components/calendar/calendar-context';
 import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
 
 interface ExpedientesFiltersProps {
