@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createSegmentoSchema } from '@/core/assinatura-digital/domain';
+import { createSegmentoSchema } from '@/features/assinatura-digital';
 
 /**
  * Schema para segmento de assinatura digital

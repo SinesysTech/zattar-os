@@ -20,7 +20,7 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import { createSegmentoSchema, type EscopoSegmento } from '@/features/assinatura-digital';
-import { criarSegmentoAction } from '@/app/actions/assinatura-digital';
+import { criarSegmentoAction } from '@/features/assinatura-digital/actions';
 
 import {
   Select,

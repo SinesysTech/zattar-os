@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { ColumnDef } from '@tanstack/react-table';
-import { listarTemplatesAction } from '@/app/actions/assinatura-digital';
+import { listarTemplatesAction } from '@/features/assinatura-digital/actions';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
 import { DataTable } from '@/components/ui/data-table';
@@ -39,6 +39,8 @@ import {
   getTemplateDisplayName,
 } from '@/features/assinatura-digital';
 import type { Template, TipoTemplate } from '@/features/assinatura-digital';
+import { DataSurface } from '@/components/shared/data-surface';
+import { TablePagination } from '@/components/shared/table-pagination';
 import { TemplateCreateDialog } from './components/template-create-dialog';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
 import { TemplateDeleteDialog } from './components/template-delete-dialog';
@@ -554,31 +556,10 @@ export default function TemplatesPage() {
   }, [bulkActions, canCreate, router]);
 
   return (
-    <div className="space-y-3">
-      {/* Toolbar com busca, filtros e ações */}
-      <div className="flex items-center gap-3 justify-between">
-        <TableToolbar
-          searchValue={busca}
-          onSearchChange={(value) => {
-            setBusca(value);
-            setPagina(0);
-          }}
-          isSearching={isSearching}
-          searchPlaceholder="Buscar por nome, UUID ou descrição..."
-          filterOptions={filterOptions}
-          filterGroups={filterGroups}
-          selectedFilters={selectedFilterIds}
-          onFiltersChange={handleFilterIdsChange}
-          filterButtonsMode="buttons"
-          extraButtons={toolbarButtons}
-          onNewClick={undefined}
-          newButtonTooltip="Novo Template"
-        />
-      </div>
-
+    <div className="space-y-3 h-full flex flex-col">
       {/* Mensagem de erro */}
       {error && (
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
+        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive flex-none">
           <p className="font-semibold">Erro ao carregar templates:</p>
           <p>{error}</p>
           <Button variant="outline" size="sm" onClick={refetch} className="mt-2">
@@ -587,29 +568,65 @@ export default function TemplatesPage() {
         </div>
       )}
 
-      {/* Tabela */}
-      <DataTable
-        data={templates}
-        columns={colunas}
-        pagination={{
-          pageIndex: pagina,
-          pageSize: limite,
-          total,
-          totalPages: Math.ceil(total / limite),
-          onPageChange: setPagina,
-          onPageSizeChange: setLimite,
-        }}
-        sorting={undefined}
-        rowSelection={{
-          state: rowSelection,
-          onRowSelectionChange: setRowSelection,
-          getRowId: (row) => row.id.toString(),
-        }}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhum template encontrado."
-        onRowClick={(row) => handleEdit(row)}
-      />
+      {/* Tabela com DataSurface */}
+      <DataSurface
+        className="flex-1"
+        header={
+          <TableToolbar
+            searchValue={busca}
+            onSearchChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar por nome, UUID ou descrição..."
+            filterOptions={filterOptions}
+            filterGroups={filterGroups}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            filterButtonsMode="buttons"
+            extraButtons={toolbarButtons}
+            onNewClick={undefined}
+            newButtonTooltip="Novo Template"
+          />
+        }
+        footer={
+          <TablePagination
+            pageIndex={pagina}
+            pageSize={limite}
+            total={total}
+            totalPages={Math.ceil(total / limite)}
+            onPageChange={setPagina}
+            onPageSizeChange={setLimite}
+            isLoading={isLoading}
+          />
+        }
+      >
+        <DataTable
+          data={templates}
+          columns={colunas}
+          pagination={{
+            pageIndex: pagina,
+            pageSize: limite,
+            total,
+            totalPages: Math.ceil(total / limite),
+            onPageChange: setPagina,
+            onPageSizeChange: setLimite,
+          }}
+          sorting={undefined}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => row.id.toString(),
+          }}
+          isLoading={isLoading}
+          error={null} // Erro tratado fora
+          emptyMessage="Nenhum template encontrado."
+          onRowClick={(row) => handleEdit(row)}
+          hidePagination
+          hideTableBorder
+        />
+      </DataSurface>
 
       {/* Dialog para criação de novo template (manter para compatibilidade se houver fluxo PDF direto) */}
       <TemplateCreateDialog

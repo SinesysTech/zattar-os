@@ -39,7 +39,7 @@ import {
   Segmento,
   criarTemplateAction,
   TipoTemplate,
-} from '@/core/assinatura-digital';
+} from '@/features/assinatura-digital';
 
 const formSchema = createTemplateSchema.extend({
   // Adicionar campos específicos da UI, se necessário, ou remover os do schema principal se forem apenas de backend
@@ -54,7 +54,6 @@ export default function CreateMarkdownTemplatePage() {
   // Aceitar tipo via searchParams ou default para markdown
   const tipoInicial = (searchParams?.get('tipo') as TipoTemplate) || 'markdown';
   const [tipoTemplate, setTipoTemplate] = React.useState<TipoTemplate>(tipoInicial);
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [isUploading, setIsUploading] = React.useState(false);
   const [uploadError, setUploadError] = React.useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -122,7 +121,6 @@ export default function CreateMarkdownTemplatePage() {
       return;
     }
 
-    setSelectedFile(file);
     setUploadError(null);
     setIsUploading(true);
 
@@ -150,14 +148,12 @@ export default function CreateMarkdownTemplatePage() {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro ao fazer upload';
       setUploadError(message);
-      setSelectedFile(null);
     } finally {
       setIsUploading(false);
     }
   };
 
   const handleRemoveFile = () => {
-    setSelectedFile(null);
     setValue('pdf_url', null);
     setValue('arquivo_original', null);
     setValue('arquivo_nome', null);
@@ -411,18 +407,18 @@ export default function CreateMarkdownTemplatePage() {
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <h4 className="font-medium">Cliente:</h4>
-                      <ul>
-                        <li>`{{cliente.nome}}`</li>
-                        <li>`{{cliente.cpf_cnpj}}`</li>
-                        <li>`{{cliente.endereco}}`</li>
+                      <ul className="list-disc pl-5 font-mono text-xs">
+                        <li>{'{{cliente.nome}}'}</li>
+                        <li>{'{{cliente.cpf_cnpj}}'}</li>
+                        <li>{'{{cliente.endereco}}'}</li>
                       </ul>
                     </div>
                     <div>
                       <h4 className="font-medium">Processo:</h4>
-                      <ul>
-                        <li>`{{processo.numero}}`</li>
-                        <li>`{{processo.vara}}`</li>
-                        <li>`{{processo.data}}`</li>
+                      <ul className="list-disc pl-5 font-mono text-xs">
+                        <li>{'{{processo.numero}}'}</li>
+                        <li>{'{{processo.vara}}'}</li>
+                        <li>{'{{processo.data}}'}</li>
                       </ul>
                     </div>
                   </div>

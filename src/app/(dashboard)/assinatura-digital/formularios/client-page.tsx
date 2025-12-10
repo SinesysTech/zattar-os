@@ -16,6 +16,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import type { ColumnDef } from '@tanstack/react-table';
 import type { AssinaturaDigitalFormulario, AssinaturaDigitalSegmento, AssinaturaDigitalTemplate } from '@/backend/types/assinatura-digital/types';
 import { getFormularioDisplayName, formatBooleanBadge, getBooleanBadgeVariant, getAtivoBadgeTone, formatAtivoStatus, getTemplatePreviewText } from '@/features/assinatura-digital';
+import { DataSurface } from '@/components/shared/data-surface';
+import { TablePagination } from '@/components/shared/table-pagination';
 import { FormularioCreateDialog } from './components/formulario-create-dialog';
 import { FormularioDuplicateDialog } from './components/formulario-duplicate-dialog';
 import { FormularioDeleteDialog } from './components/formulario-delete-dialog';
@@ -344,20 +346,70 @@ export function FormulariosClient() {
   }, [rowSelection, handleExportCSV, handleBulkDelete, canDelete]);
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-3 justify-between">
-        <TableToolbar searchValue={busca} onSearchChange={(value) => { setBusca(value); setPagina(0); }} isSearching={isSearching} searchPlaceholder="Buscar por nome, slug ou descrição..." filterOptions={filterOptions} filterGroups={filterGroups} selectedFilters={selectedFilterIds} onFiltersChange={handleFilterIdsChange} filterButtonsMode="buttons" extraButtons={bulkActions} onNewClick={canCreate ? () => setCreateOpen(true) : undefined} newButtonTooltip="Novo Formulário" />
-      </div>
-
+    <div className="space-y-3 h-full flex flex-col">
       {error && (
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
+        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive flex-none">
           <p className="font-semibold">Erro ao carregar formulários:</p>
           <p>{error}</p>
           <Button variant="outline" size="sm" onClick={refetch} className="mt-2">Tentar novamente</Button>
         </div>
       )}
 
-      <DataTable data={formularios} columns={colunas} pagination={{ pageIndex: pagina, pageSize: limite, total, totalPages: Math.ceil(total / limite), onPageChange: setPagina, onPageSizeChange: setLimite }} sorting={undefined} rowSelection={{ state: rowSelection, onRowSelectionChange: setRowSelection, getRowId: (row) => row.id.toString() }} isLoading={isLoading} error={error} emptyMessage="Nenhum formulário encontrado." onRowClick={(row) => handleEditSchema(row)} />
+      <DataSurface
+        className="flex-1"
+        header={
+          <TableToolbar
+            searchValue={busca}
+            onSearchChange={(value) => { setBusca(value); setPagina(0); }}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar por nome, slug ou descrição..."
+            filterOptions={filterOptions}
+            filterGroups={filterGroups}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            filterButtonsMode="buttons"
+            extraButtons={bulkActions}
+            onNewClick={canCreate ? () => setCreateOpen(true) : undefined}
+            newButtonTooltip="Novo Formulário"
+          />
+        }
+        footer={
+          <TablePagination
+            pageIndex={pagina}
+            pageSize={limite}
+            total={total}
+            totalPages={Math.ceil(total / limite)}
+            onPageChange={setPagina}
+            onPageSizeChange={setLimite}
+            isLoading={isLoading}
+          />
+        }
+      >
+        <DataTable
+          data={formularios}
+          columns={colunas}
+          pagination={{
+            pageIndex: pagina,
+            pageSize: limite,
+            total,
+            totalPages: Math.ceil(total / limite),
+            onPageChange: setPagina,
+            onPageSizeChange: setLimite,
+          }}
+          sorting={undefined}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => row.id.toString(),
+          }}
+          isLoading={isLoading}
+          error={null} // Erro tratado fora
+          emptyMessage="Nenhum formulário encontrado."
+          onRowClick={(row) => handleEditSchema(row)}
+          hidePagination
+          hideTableBorder
+        />
+      </DataSurface>
 
       <FormularioCreateDialog open={createOpen} onOpenChange={setCreateOpen} onSuccess={handleCreateSuccess} segmentos={segmentos} templates={templates} />
 

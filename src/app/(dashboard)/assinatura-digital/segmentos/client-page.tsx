@@ -14,9 +14,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Segmento, EscopoSegmento } from '@/features/assinatura-digital';
-import { listarSegmentosAction } from '@/app/actions/assinatura-digital';
+import { listarSegmentosAction } from '@/features/assinatura-digital/actions';
 import { getSegmentoDisplayName, formatAtivoBadge, getAtivoBadgeVariant, truncateText } from '@/features/assinatura-digital';
 import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
+import { DataSurface } from '@/components/shared/data-surface';
+import { TablePagination } from '@/components/shared/table-pagination';
 import { SegmentoCreateDialog, SegmentoEditDialog, SegmentoDuplicateDialog, SegmentoDeleteDialog } from './components';
 
 interface SegmentosFilters {
@@ -181,22 +183,106 @@ export function SegmentosClient() {
   }, [rowSelection, handleExportCSV, handleBulkDelete, canDelete]);
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-3 justify-between">
-        <TableToolbar searchValue={busca} onSearchChange={(value) => { setBusca(value); setPagina(0); }} isSearching={isSearching} searchPlaceholder="Buscar por nome, slug ou descrição..." filterOptions={buildSegmentosFilterOptions()} filterGroups={buildSegmentosFilterGroups()} selectedFilters={selectedFilterIds} onFiltersChange={handleFilterIdsChange} filterButtonsMode="buttons" extraButtons={bulkActions} onNewClick={canCreate ? () => setCreateOpen(true) : undefined} newButtonTooltip="Novo Segmento" />
-      </div>
+    <div className="space-y-3 h-full flex flex-col">
+      {error && (
+        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive flex-none">
+          <p className="font-semibold">Erro ao carregar segmentos:</p>
+          <p>{error}</p>
+          <Button variant="outline" size="sm" onClick={refetch} className="mt-2">
+            Tentar novamente
+          </Button>
+        </div>
+      )}
 
-      {error && (<div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive"><p className="font-semibold">Erro ao carregar segmentos:</p><p>{error}</p><Button variant="outline" size="sm" onClick={refetch} className="mt-2">Tentar novamente</Button></div>)}
+      <DataSurface
+        className="flex-1"
+        header={
+          <TableToolbar
+            searchValue={busca}
+            onSearchChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar por nome, slug ou descrição..."
+            filterOptions={buildSegmentosFilterOptions()}
+            filterGroups={buildSegmentosFilterGroups()}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            filterButtonsMode="buttons"
+            extraButtons={bulkActions}
+            onNewClick={canCreate ? () => setCreateOpen(true) : undefined}
+            newButtonTooltip="Novo Segmento"
+          />
+        }
+        footer={
+          <TablePagination
+            pageIndex={pagina}
+            pageSize={limite}
+            total={total}
+            totalPages={Math.ceil(total / limite)}
+            onPageChange={setPagina}
+            onPageSizeChange={setLimite}
+            isLoading={isLoading}
+          />
+        }
+      >
+        <DataTable
+          data={segmentos}
+          columns={colunas}
+          pagination={{
+            pageIndex: pagina,
+            pageSize: limite,
+            total,
+            totalPages: Math.ceil(total / limite),
+            onPageChange: setPagina,
+            onPageSizeChange: setLimite,
+          }}
+          sorting={undefined}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => row.id.toString(),
+          }}
+          isLoading={isLoading}
+          error={null} // Error handled outside
+          emptyMessage="Nenhum segmento encontrado."
+          onRowClick={(row) => handleEdit(row)}
+          hidePagination
+          hideTableBorder
+        />
+      </DataSurface>
 
-      <DataTable data={segmentos} columns={colunas} pagination={{ pageIndex: pagina, pageSize: limite, total, totalPages: Math.ceil(total / limite), onPageChange: setPagina, onPageSizeChange: setLimite }} sorting={undefined} rowSelection={{ state: rowSelection, onRowSelectionChange: setRowSelection, getRowId: (row) => row.id.toString() }} isLoading={isLoading} error={error} emptyMessage="Nenhum segmento encontrado." onRowClick={(row) => handleEdit(row)} />
+      <SegmentoCreateDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onSuccess={handleCreateSuccess}
+      />
 
-      <SegmentoCreateDialog open={createOpen} onOpenChange={setCreateOpen} onSuccess={handleCreateSuccess} />
+      {selectedSegmento && (
+        <SegmentoEditDialog
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          segmento={selectedSegmento}
+          onSuccess={handleEditSuccess}
+        />
+      )}
 
-      {selectedSegmento && (<SegmentoEditDialog open={editOpen} onOpenChange={setEditOpen} segmento={selectedSegmento} onSuccess={handleEditSuccess} />)}
+      {selectedSegmento && (
+        <SegmentoDuplicateDialog
+          open={duplicateOpen}
+          onOpenChange={setDuplicateOpen}
+          segmento={selectedSegmento}
+          onSuccess={handleDuplicateSuccess}
+        />
+      )}
 
-      {selectedSegmento && (<SegmentoDuplicateDialog open={duplicateOpen} onOpenChange={setDuplicateOpen} segmento={selectedSegmento} onSuccess={handleDuplicateSuccess} />)}
-
-      <SegmentoDeleteDialog open={deleteOpen} onOpenChange={setDeleteOpen} segmentos={selectedSegmentos} onSuccess={handleDeleteSuccess} />
+      <SegmentoDeleteDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        segmentos={selectedSegmentos}
+        onSuccess={handleDeleteSuccess}
+      />
     </div>
   );
 }

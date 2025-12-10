@@ -40,8 +40,8 @@ import {
   STATUS_CONTRATO_LABELS,
   POLO_PROCESSUAL_LABELS,
 } from '../types';
-import { listarSegmentosAction } from '@/app/actions/assinatura-digital';
-import type { Segmento } from '@/core/assinatura-digital';
+import { listarSegmentosAction } from '@/features/assinatura-digital/actions';
+import type { Segmento } from '@/features/assinatura-digital';
 
 // =============================================================================
 // TIPOS E CONSTANTES
