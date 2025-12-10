@@ -1,9 +1,11 @@
 import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup, ComboboxOption } from '@/components/ui/table-toolbar';
+import type { TipoTemplate } from '@/core/assinatura-digital/domain';
 
 export interface TemplatesFilters {
   status?: 'ativo' | 'inativo' | 'rascunho';
   ativo?: boolean;
+  tipo_template?: TipoTemplate;
 }
 
 export const TEMPLATES_FILTER_CONFIGS: FilterConfig[] = [
@@ -23,6 +25,16 @@ export const TEMPLATES_FILTER_CONFIGS: FilterConfig[] = [
     label: 'Disponível',
     type: 'boolean',
     searchText: 'disponivel ativo inativo',
+  },
+  {
+    id: 'tipo_template',
+    label: 'Tipo de Template',
+    type: 'select',
+    options: [
+      { value: 'pdf', label: 'PDF' },
+      { value: 'markdown', label: 'Markdown' },
+    ],
+    searchText: 'tipo template',
   },
 ];
 
@@ -72,6 +84,12 @@ export function buildTemplatesFilterGroups(): FilterGroup[] {
       label: 'Disponibilidade',
       options: buildOptionsWithoutPrefix([
         configMap.get('ativo')!,
+      ]),
+    },
+    {
+      label: 'Tipo de Template',
+      options: buildOptionsWithoutPrefix([
+        configMap.get('tipo_template')!,
       ]),
     },
   ];

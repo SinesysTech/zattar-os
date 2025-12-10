@@ -115,13 +115,13 @@ function useTemplates(params: {
 
 // Define as colunas da tabela
 function criarColunas(
-  onEdit: (template: AssinaturaDigitalTemplate) => void,
-  onDuplicate: (template: AssinaturaDigitalTemplate) => void,
-  onDelete: (template: AssinaturaDigitalTemplate) => void,
+  onEdit: (template: Template) => void,
+  onDuplicate: (template: Template) => void,
+  onDelete: (template: Template) => void,
   canEdit: boolean,
   canCreate: boolean,
   canDelete: boolean
-): ColumnDef<AssinaturaDigitalTemplate>[] {
+): ColumnDef<Template>[] {
   return [
     {
       id: 'select',
@@ -164,7 +164,6 @@ function criarColunas(
       cell: ({ row }) => {
         const template = row.original;
         const displayName = getTemplateDisplayName(template);
-        const hasPdf = !!template.arquivo_original;
         return (
           <div className="min-h-10 flex items-center justify-start text-sm gap-2">
             <Tooltip>
@@ -175,9 +174,14 @@ function criarColunas(
                 {displayName}
               </TooltipContent>
             </Tooltip>
-            {!hasPdf && (
+            {template.tipo_template === 'pdf' && !template.pdf_url && (
               <Badge variant="outline" className="text-xs">
                 Sem PDF
+              </Badge>
+            )}
+            {template.tipo_template === 'markdown' && (
+              <Badge variant="secondary" className="text-xs">
+                Markdown
               </Badge>
             )}
           </div>
@@ -211,6 +215,24 @@ function criarColunas(
             ) : (
               <span className="text-muted-foreground">-</span>
             )}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'tipo_template',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="Tipo" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 100,
+      cell: ({ row }) => {
+        const tipo = row.getValue('tipo_template') as TipoTemplate;
+        return (
+          <div className="min-h-10 flex items-center justify-center text-sm capitalize">
+            {tipo === 'pdf' ? 'PDF' : 'Markdown'}
           </div>
         );
       },
@@ -260,7 +282,7 @@ function criarColunas(
       enableSorting: true,
       size: 120,
       cell: ({ row }) => {
-        const tamanho = row.getValue('arquivo_tamanho') as number;
+        const tamanho = (row.original as any).arquivo_tamanho as number; // Ajustado para tipo correto
         return (
           <div className="min-h-10 flex items-center justify-center text-sm">
             {formatFileSize(tamanho)}
@@ -307,10 +329,10 @@ function TemplateActions({
   canCreate,
   canDelete,
 }: {
-  template: AssinaturaDigitalTemplate;
-  onEdit: (template: AssinaturaDigitalTemplate) => void;
-  onDuplicate: (template: AssinaturaDigitalTemplate) => void;
-  onDelete: (template: AssinaturaDigitalTemplate) => void;
+  template: Template;
+  onEdit: (template: Template) => void;
+  onDuplicate: (template: Template) => void;
+  onDelete: (template: Template) => void;
   canEdit: boolean;
   canCreate: boolean;
   canDelete: boolean;
@@ -362,11 +384,11 @@ export default function TemplatesPage() {
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<TemplatesFilters>({});
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
-  const [createOpen, setCreateOpen] = React.useState(false);
+  const [createOpen, setCreateOpen] = React.useState(false); // Used only for PDF creation flow
   const [duplicateOpen, setDuplicateOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
-  const [selectedTemplate, setSelectedTemplate] = React.useState<AssinaturaDigitalTemplate | null>(null);
-  const [selectedTemplates, setSelectedTemplates] = React.useState<AssinaturaDigitalTemplate[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = React.useState<Template | null>(null);
+  const [selectedTemplates, setSelectedTemplates] = React.useState<Template[]>([]);
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
 
   const { temPermissao } = useMinhasPermissoes('assinatura_digital');
@@ -388,9 +410,9 @@ export default function TemplatesPage() {
       limite,
       busca: buscaDebounced || undefined,
       ativo: filtros.ativo,
-      status: filtros.status,
+      tipo_template: filtros.tipo_template, // Usar tipo_template
     };
-  }, [pagina, limite, buscaDebounced, filtros.ativo, filtros.status]);
+  }, [pagina, limite, buscaDebounced, filtros.ativo, filtros.tipo_template]);
 
   const { templates, total, isLoading, error, refetch } = useTemplates(params);
 
@@ -400,7 +422,7 @@ export default function TemplatesPage() {
   // Função para atualizar após criação
   const handleCreateSuccess = React.useCallback(() => {
     refetch();
-    setCreateOpen(false);
+    setCreateOpen(false); // For PDF flow, if still used
   }, [refetch]);
 
   // Função para atualizar filtros
@@ -412,40 +434,45 @@ export default function TemplatesPage() {
   }, []);
 
   // Handlers para ações
-  const handleEdit = React.useCallback((template: AssinaturaDigitalTemplate) => {
-    router.push(`/assinatura-digital/templates/${template.template_uuid}/edit`);
+  const handleEdit = React.useCallback((template: Template) => {
+    if (template.tipo_template === 'markdown') {
+      router.push(`/assinatura-digital/templates/${template.id}/edit/markdown`);
+    } else {
+      router.push(`/assinatura-digital/templates/${template.id}/edit`);
+    }
   }, [router]);
 
-  const handleDuplicate = React.useCallback((template: AssinaturaDigitalTemplate) => {
+  const handleDuplicate = React.useCallback((template: Template) => {
     setSelectedTemplate(template);
     setDuplicateOpen(true);
   }, []);
 
-  const handleDelete = React.useCallback((template: AssinaturaDigitalTemplate) => {
+  const handleDelete = React.useCallback((template: Template) => {
     setSelectedTemplates([template]);
     setDeleteOpen(true);
   }, []);
 
   const handleBulkDelete = React.useCallback(() => {
-    const selected = Object.keys(rowSelection).map(id => templates.find(t => t.id.toString() === id)).filter(Boolean) as AssinaturaDigitalTemplate[];
+    const selected = Object.keys(rowSelection).map(id => templates.find(t => t.id.toString() === id)).filter(Boolean) as Template[];
     setSelectedTemplates(selected);
     setDeleteOpen(true);
   }, [rowSelection, templates]);
 
   const handleExportCSV = React.useCallback(() => {
     const selected = Object.keys(rowSelection).length > 0
-      ? Object.keys(rowSelection).map(id => templates.find(t => t.id.toString() === id)).filter(Boolean) as AssinaturaDigitalTemplate[]
+      ? Object.keys(rowSelection).map(id => templates.find(t => t.id.toString() === id)).filter(Boolean) as Template[]
       : templates;
 
     const csv = [
-      ['Nome', 'Descrição', 'Status', 'Versão', 'Tamanho', 'UUID'].join(','),
+      ['Nome', 'Descrição', 'Tipo', 'Status', 'Versão', 'Tamanho', 'UUID'].join(','),
       ...selected.map(t => [
         `"${t.nome}"`,
         `"${t.descricao || ''}"`,
+        t.tipo_template,
         t.status,
         t.versao,
         t.arquivo_tamanho,
-        t.template_uuid,
+        (t as any).template_uuid, // Ensure template_uuid is present if needed
       ].join(',')),
     ].join('\n');
 
@@ -515,9 +542,28 @@ export default function TemplatesPage() {
           onFiltersChange={handleFilterIdsChange}
           filterButtonsMode="buttons"
           extraButtons={bulkActions}
-          onNewClick={canCreate ? () => setCreateOpen(true) : undefined}
+          onNewClick={undefined} // Remove direct onNewClick
           newButtonTooltip="Novo Template"
-        />
+        >
+          {canCreate && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="default">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Novo Template
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => router.push('/assinatura-digital/templates/new/pdf')}>
+                  Template PDF
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push('/assinatura-digital/templates/new/markdown')}>
+                  Template Markdown
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </TableToolbar>
       </div>
 
       {/* Mensagem de erro */}
@@ -555,7 +601,7 @@ export default function TemplatesPage() {
         onRowClick={(row) => handleEdit(row)}
       />
 
-      {/* Dialog para criação de novo template */}
+      {/* Dialog para criação de novo template (manter para compatibilidade se houver fluxo PDF direto) */}
       <TemplateCreateDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
