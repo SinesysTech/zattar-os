@@ -24,6 +24,7 @@ export type ErrorCode =
   | 'UNAUTHORIZED'
   | 'FORBIDDEN'
   | 'CONFLICT'
+  | 'BAD_REQUEST'
   | 'INTERNAL_ERROR'
   | 'EXTERNAL_SERVICE_ERROR'
   | 'DATABASE_ERROR';

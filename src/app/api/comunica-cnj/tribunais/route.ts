@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { listarTribunais } from '@/backend/comunica-cnj';
+import { listarTribunaisDisponiveis } from '@/core/comunica-cnj';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -68,11 +68,18 @@ export async function GET(request: NextRequest) {
     // 2. Listar tribunais
     console.log('[GET /api/comunica-cnj/tribunais] Listando tribunais...');
 
-    const tribunais = await listarTribunais();
+    const result = await listarTribunaisDisponiveis();
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error.message },
+        { status: 500 }
+      );
+    }
 
     console.log(
       '[GET /api/comunica-cnj/tribunais] Tribunais obtidos:',
-      tribunais.length
+      result.data.length
     );
 
     // 3. Retornar resposta
@@ -80,7 +87,7 @@ export async function GET(request: NextRequest) {
       {
         success: true,
         data: {
-          tribunais,
+          tribunais: result.data,
         },
       },
       {

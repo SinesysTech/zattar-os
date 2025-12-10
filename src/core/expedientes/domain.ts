@@ -51,7 +51,7 @@ export interface Expediente {
   dadosAnteriores: any | null;
   responsavelId: number | null;
   baixadoEm: string | null;
-  protocoloId: number | null;
+  protocoloId: string | null;
   justificativaBaixa: string | null;
   tipoExpedienteId: number | null;
   descricaoArquivos: string | null;
@@ -98,7 +98,7 @@ export const updateExpedienteSchema = createExpedienteSchema.partial();
 
 export const baixaExpedienteSchema = z.object({
   expedienteId: z.number().min(1),
-  protocoloId: z.number().optional(),
+  protocoloId: z.string().trim().min(1).optional(),
   justificativaBaixa: z.string().optional(),
   dataBaixa: z.string().optional().refine(val => !val || new Date(val) <= new Date(), {
     message: 'A data da baixa não pode ser futura.',
@@ -141,7 +141,7 @@ export type ListarExpedientesParams = {
   dataCriacaoExpedienteFim?: string;
   classeJudicial?: string;
   codigoStatusProcesso?: string;
-  segretoJustica?: boolean;
+  segredoJustica?: boolean;
   juizoDigital?: boolean;
   dataAutuacaoInicio?: string;
   dataAutuacaoFim?: string;

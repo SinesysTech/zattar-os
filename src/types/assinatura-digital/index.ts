@@ -32,7 +32,7 @@ export * from './pdf-preview.types';
 
 // Adapter Types
 export * from './cliente-adapter.types';
-export * from './acao-adapter.types';
+
 
 // Formulario Types (support types for multi-step form flow)
 export * from './formulario.types';

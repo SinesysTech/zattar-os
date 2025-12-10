@@ -241,7 +241,7 @@ export async function actionBaixarExpediente(
     // Monta objeto com tipagem superficial - validação será feita no service
     const rawData = {
       expedienteId: id,
-      protocoloId: formData.get('protocoloId') ? parseInt(formData.get('protocoloId') as string, 10) : undefined,
+      protocoloId: formData.get('protocoloId') ? (formData.get('protocoloId') as string).trim() : undefined,
       justificativaBaixa: (formData.get('justificativaBaixa') as string | null) || undefined,
       dataBaixa: (formData.get('dataBaixa') as string | null) || undefined,
     };

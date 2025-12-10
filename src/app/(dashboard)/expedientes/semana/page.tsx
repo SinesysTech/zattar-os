@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { addDays, formatISO, startOfWeek, endOfWeek, parseISO, isSameWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { actionListarExpedientes } from '@/core/app/actions/expedientes';
+import { actionListarExpedientes } from '@/app/actions/expedientes';
 import { ListarExpedientesParams, Expediente } from '@/core/expedientes/domain';
 import { ExpedientesVisualizacaoSemana } from '../components/expedientes-visualizacao-semana';
 import { ExpedientesFilters, parseExpedientesFilters } from '../components/expedientes-toolbar-filters';
@@ -55,18 +55,13 @@ export default async function ExpedientesSemanaPage({ searchParams }: Expediente
 
   const usuariosParams: ListarUsuariosParams = { limite: 100, ativo: true };
   const usuariosResult = await obterUsuarios(usuariosParams);
+  const usuarios = usuariosResult.success ? usuariosResult.usuarios : [];
 
   const tiposExpedienteParams: ListarTiposExpedientesParams = { limite: 100 };
   const tiposExpedienteResult = await listarTiposExpedientes(tiposExpedienteParams);
 
-  if (!usuariosResult.success) {
-    console.error('Erro ao buscar usuários:', usuariosResult.error);
-  }
-  if (!tiposExpedienteResult.success) {
-    console.error('Erro ao buscar tipos de expediente:', tiposExpedienteResult.error);
-  }
-
-  const tiposExpediente = tiposExpedienteResult.success ? tiposExpedienteResult.tipos_expedientes.map(t => ({ id: t.id, tipoExpediente: t.tipo_expediente })) : [];
+  const usuarios = usuariosResult.usuarios || [];
+  const tiposExpediente = tiposExpedienteResult.tipos_expedientes ? tiposExpedienteResult.tipos_expedientes.map(t => ({ id: t.id, tipoExpediente: t.tipo_expediente })) : [];
 
   return (
     <ExpedientesVisualizacaoSemana

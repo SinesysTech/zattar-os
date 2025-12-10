@@ -85,13 +85,13 @@ export function ExpedientesBaixarDialog({
             <div className="text-sm font-medium">Expediente</div>
             <div className="text-sm space-y-1">
               <div>
-                <span className="font-medium">Processo:</span> {expediente.numero_processo}
+                <span className="font-medium">Processo:</span> {expediente.numeroProcesso}
               </div>
               <div>
-                <span className="font-medium">Parte Autora:</span> {expediente.nome_parte_autora}
+                <span className="font-medium">Parte Autora:</span> {expediente.nomeParteAutora}
               </div>
               <div>
-                <span className="font-medium">Parte Ré:</span> {expediente.nome_parte_re}
+                <span className="font-medium">Parte Ré:</span> {expediente.nomeParteRe}
               </div>
             </div>
           </div>

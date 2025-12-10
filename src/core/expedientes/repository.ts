@@ -122,7 +122,7 @@ export async function findAllExpedientes(params: ListarExpedientesParams = {}): 
     if (params.semResponsavel) query = query.is('responsavel_id', null);
     if (params.baixado === true) query = query.not('baixado_em', 'is', null);
     if (params.baixado === false) query = query.is('baixado_em', null);
-    if (params.prazoVencido) query = query.eq('prazo_vencido', true);
+    if (params.prazoVencido !== undefined) query = query.eq('prazo_vencido', params.prazoVencido);
     if (params.dataPrazoLegalInicio) query = query.gte('data_prazo_legal_parte', params.dataPrazoLegalInicio);
     if (params.dataPrazoLegalFim) query = query.lte('data_prazo_legal_parte', params.dataPrazoLegalFim);
     if (params.dataCienciaInicio) query = query.gte('data_ciencia_parte', params.dataCienciaInicio);
@@ -131,8 +131,8 @@ export async function findAllExpedientes(params: ListarExpedientesParams = {}): 
     if (params.dataCriacaoExpedienteFim) query = query.lte('data_criacao_expediente', params.dataCriacaoExpedienteFim);
     if (params.classeJudicial) query = query.ilike('classe_judicial', `%${params.classeJudicial}%`);
     if (params.codigoStatusProcesso) query = query.eq('codigo_status_processo', params.codigoStatusProcesso);
-    if (params.segretoJustica) query = query.eq('segredo_justica', params.segretoJustica);
-    if (params.juizoDigital) query = query.eq('juizo_digital', params.juizoDigital);
+    if (params.segredoJustica !== undefined) query = query.eq('segredo_justica', params.segredoJustica);
+    if (params.juizoDigital !== undefined) query = query.eq('juizo_digital', params.juizoDigital);
     if (params.dataAutuacaoInicio) query = query.gte('data_autuacao', params.dataAutuacaoInicio);
     if (params.dataAutuacaoFim) query = query.lte('data_autuacao', params.dataAutuacaoFim);
     if (params.dataArquivamentoInicio) query = query.gte('data_arquivamento', params.dataArquivamentoInicio);
@@ -230,7 +230,7 @@ export async function updateExpediente(id: number, input: any, expedienteExisten
   }
 }
 
-export async function baixarExpediente(id: number, dados: { protocoloId?: number; justificativaBaixa?: string; baixadoEm?: string }): Promise<Result<Expediente>> {
+export async function baixarExpediente(id: number, dados: { protocoloId?: string; justificativaBaixa?: string; baixadoEm?: string }): Promise<Result<Expediente>> {
   try {
     const db = createDbClient();
     const dadosUpdate = {

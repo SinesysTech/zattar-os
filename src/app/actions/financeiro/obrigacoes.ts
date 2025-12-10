@@ -24,7 +24,7 @@ export async function actionRegistrarDeclaracao(parcelaId: number, urlArquivo: s
     }
 }
 
-export async function actionRegistrarRepasse(parcelaId: number, urlArquivo: string, dataRepasse: string) {
+export async function actionGerarRepasse(parcelaId: number, urlArquivo: string, dataRepasse: string) {
     try {
         await ObrigacoesService.registrarComprovanteRepasse(parcelaId, urlArquivo, dataRepasse);
         revalidatePath('/financeiro');

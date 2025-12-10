@@ -31,6 +31,7 @@ export type MetadadoSeguranca = 'ip' | 'user_agent' | 'geolocation' | 'timestamp
 /**
  * Interface Template para frontend
  * Versão com campos parseados (TemplateCampo[]) ao invés de JSON string
+ * Combina dados do backend domain (tipo_template, pdf_url) com dados completos
  */
 export interface Template {
   id: number;
@@ -43,10 +44,16 @@ export interface Template {
   status: StatusTemplate;
   versao: number;
   ativo: boolean;
+  /** Tipo do template: PDF ou Markdown */
+  tipo_template?: 'pdf' | 'markdown';
+  /** URL do PDF no storage (para templates PDF) */
+  pdf_url?: string | null;
   /** Campos parseados do template (array de TemplateCampo) */
   campos: import('@/backend/types/template.types').TemplateCampo[];
   /** Conteúdo Markdown para renderização responsiva (alternativa ao PDF) */
   conteudo_markdown?: string | null;
+  /** ID do segmento (opcional, pode ser global) */
+  segmento_id?: number | null;
   criado_por?: string | null;
   created_at?: string;
   updated_at?: string;

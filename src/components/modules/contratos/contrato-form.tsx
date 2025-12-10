@@ -178,8 +178,8 @@ export function ContratoForm({
     // Validação básica client-side
     const errors: Record<string, string[]> = {};
 
-    if (!formData.areaDireito) {
-      errors.areaDireito = ['Área de direito é obrigatória'];
+    if (!formData.segmentoId) {
+      errors.segmentoId = ['Segmento é obrigatório'];
     }
     if (!formData.tipoContrato) {
       errors.tipoContrato = ['Tipo de contrato é obrigatório'];
@@ -222,31 +222,31 @@ export function ContratoForm({
 
         <ScrollArea className="flex-1">
           <form ref={formRef} action={formAction} className="px-6 py-4 space-y-4">
-            {/* Área de Direito */}
+            {/* Segmento */}
             <div className="grid gap-2">
-              <Label htmlFor="areaDireito">
-                Área de Direito <span className="text-destructive">*</span>
+              <Label htmlFor="segmentoId">
+                Segmento <span className="text-destructive">*</span>
               </Label>
               <Select
-                value={formData.areaDireito}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, areaDireito: value as AreaDireito }))}
+                value={formData.segmentoId}
+                onValueChange={(value) => setFormData(prev => ({ ...prev, segmentoId: value }))}
               >
-                <SelectTrigger id="areaDireito" className={cn(getFieldError('areaDireito') && 'border-destructive')}>
-                  <SelectValue placeholder="Selecione a área..." />
+                <SelectTrigger id="segmentoId" className={cn(getFieldError('segmentoId') && 'border-destructive')}>
+                  <SelectValue placeholder="Selecione o segmento..." />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(AREA_DIREITO_LABELS).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
+                  {segments.map((segmento) => (
+                    <SelectItem key={segmento.id} value={String(segmento.id)}>
+                      {segmento.nome}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <input type="hidden" name="areaDireito" value={formData.areaDireito} />
-              {getFieldError('areaDireito') && (
+              <input type="hidden" name="segmentoId" value={formData.segmentoId} />
+              {getFieldError('segmentoId') && (
                 <p className="text-xs text-destructive flex items-center gap-1">
                   <AlertCircle className="h-3 w-3" />
-                  {getFieldError('areaDireito')}
+                  {getFieldError('segmentoId')}
                 </p>
               )}
             </div>

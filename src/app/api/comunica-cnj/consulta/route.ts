@@ -9,8 +9,8 @@ import { authenticateRequest } from '@/backend/auth/api-auth';
 import {
   buscarComunicacoes,
   obterStatusRateLimit,
-} from '@/backend/comunica-cnj';
-import type { MeioComunicacao } from '@/backend/comunica-cnj';
+} from '@/core/comunica-cnj';
+import type { MeioComunicacao } from '@/core/comunica-cnj';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -221,27 +221,7 @@ export async function GET(request: NextRequest) {
 
     const validatedParams = validationResult.data;
 
-    // 4. Verificar rate limit antes de fazer chamada
-    const rateLimitStatus = obterStatusRateLimit();
-    if (rateLimitStatus.remaining === 0 && rateLimitStatus.resetAt) {
-      const waitTime = rateLimitStatus.resetAt.getTime() - Date.now();
-      if (waitTime > 0) {
-        return NextResponse.json(
-          {
-            error: 'Rate limit atingido',
-            retryAfter: Math.ceil(waitTime / 1000),
-          },
-          {
-            status: 429,
-            headers: {
-              'Retry-After': Math.ceil(waitTime / 1000).toString(),
-            },
-          }
-        );
-      }
-    }
-
-    // 5. Consultar comunicações
+    // 4. Consultar comunicações (validação e rate limit são tratados no service)
     const result = await buscarComunicacoes({
       siglaTribunal: validatedParams.siglaTribunal,
       texto: validatedParams.texto,
@@ -259,11 +239,41 @@ export async function GET(request: NextRequest) {
       itensPorPagina: validatedParams.itensPorPagina,
     });
 
+    // 5. Tratar erro
+    if (!result.success) {
+      if (result.error.code === 'VALIDATION_ERROR') {
+        return NextResponse.json(
+          {
+            error: result.error.message,
+            details: result.error.details,
+          },
+          { status: 400 }
+        );
+      }
+      if (result.error.code === 'EXTERNAL_SERVICE_ERROR') {
+        const isRateLimit = result.error.message.includes('Rate limit');
+        return NextResponse.json(
+          {
+            error: result.error.message,
+            retryAfter: isRateLimit ? 60 : undefined,
+          },
+          {
+            status: isRateLimit ? 429 : 502,
+            headers: isRateLimit ? { 'Retry-After': '60' } : undefined,
+          }
+        );
+      }
+      return NextResponse.json(
+        { error: result.error.message },
+        { status: 500 }
+      );
+    }
+
     // 6. Log de consulta
     console.log('[GET /api/comunica-cnj/consulta] Consulta realizada:', {
       params: validatedParams,
       total: result.data.paginacao.total,
-      rateLimit: result.rateLimit,
+      rateLimit: result.data.rateLimit,
     });
 
     // 7. Retornar resposta
@@ -273,7 +283,7 @@ export async function GET(request: NextRequest) {
         data: {
           comunicacoes: result.data.comunicacoes,
           paginacao: result.data.paginacao,
-          rateLimit: result.rateLimit,
+          rateLimit: result.data.rateLimit,
         },
       },
       {

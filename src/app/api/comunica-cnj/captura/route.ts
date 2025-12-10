@@ -6,10 +6,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import {
-  executarCaptura,
-  executarCapturaPorAdvogado,
-} from '@/backend/comunica-cnj';
+import { sincronizarComunicacoes } from '@/core/comunica-cnj';
+import { createDbClient } from '@/core/common/db';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -163,49 +161,77 @@ export async function POST(request: NextRequest) {
 
     const params = validationResult.data;
 
-    // 3. Verificar se tem pelo menos um filtro
-    if (
-      !params.advogado_id &&
-      !params.numero_oab &&
-      !params.sigla_tribunal
-    ) {
+    // 3. Se tem advogado_id mas não tem OAB, buscar OAB do cadastro
+    let numeroOab = params.numero_oab;
+    let ufOab = params.uf_oab;
+
+    if (params.advogado_id && !numeroOab) {
+      const db = createDbClient();
+      const { data: advogado, error } = await db
+        .from('advogados')
+        .select('numero_oab, uf_oab')
+        .eq('id', params.advogado_id)
+        .single();
+
+      if (error || !advogado) {
+        return NextResponse.json(
+          { error: 'Advogado não encontrado' },
+          { status: 404 }
+        );
+      }
+
+      if (!advogado.numero_oab || !advogado.uf_oab) {
+        return NextResponse.json(
+          { error: 'Advogado sem OAB cadastrada' },
+          { status: 400 }
+        );
+      }
+
+      numeroOab = advogado.numero_oab;
+      ufOab = advogado.uf_oab;
+    }
+
+    // 4. Executar sincronização
+    console.log('[POST /api/comunica-cnj/captura] Iniciando sincronização:', {
+      ...params,
+      numeroOab,
+      ufOab,
+    });
+
+    const result = await sincronizarComunicacoes({
+      advogadoId: params.advogado_id,
+      numeroOab,
+      ufOab,
+      siglaTribunal: params.sigla_tribunal,
+      dataInicio: params.data_inicio,
+      dataFim: params.data_fim,
+    });
+
+    if (!result.success) {
+      // Tratar erro
+      if (result.error.code === 'VALIDATION_ERROR') {
+        return NextResponse.json(
+          {
+            error: result.error.message,
+            details: result.error.details,
+          },
+          { status: 400 }
+        );
+      }
       return NextResponse.json(
-        {
-          error:
-            'Informe pelo menos um filtro: advogado_id, numero_oab ou sigla_tribunal',
-        },
-        { status: 400 }
+        { error: result.error.message },
+        { status: 500 }
       );
     }
 
-    // 4. Executar captura
-    console.log('[POST /api/comunica-cnj/captura] Iniciando captura:', params);
-
-    let result;
-
-    if (params.advogado_id && !params.numero_oab) {
-      // Captura por advogado (busca OAB do cadastro)
-      result = await executarCapturaPorAdvogado(params.advogado_id);
-    } else {
-      // Captura por parâmetros
-      result = await executarCaptura({
-        advogado_id: params.advogado_id,
-        numero_oab: params.numero_oab,
-        uf_oab: params.uf_oab,
-        sigla_tribunal: params.sigla_tribunal,
-        data_inicio: params.data_inicio,
-        data_fim: params.data_fim,
-      });
-    }
-
-    console.log('[POST /api/comunica-cnj/captura] Captura finalizada:', result);
+    console.log('[POST /api/comunica-cnj/captura] Sincronização finalizada:', result.data);
 
     // 5. Retornar resposta
     return NextResponse.json({
-      success: result.success,
+      success: result.data.success,
       data: {
-        stats: result.stats,
-        errors: result.errors,
+        stats: result.data.stats,
+        errors: result.data.errors,
       },
     });
   } catch (error) {

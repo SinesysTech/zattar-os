@@ -86,7 +86,7 @@ function useTemplates(params: {
       let filteredTemplates = response.data || [];
       if (params.busca) {
         const lowerCaseBusca = params.busca.toLowerCase();
-        filteredTemplates = filteredTemplates.filter(t =>
+        filteredTemplates = filteredTemplates.filter((t: Template) =>
           t.nome.toLowerCase().includes(lowerCaseBusca) ||
           (t.descricao && t.descricao.toLowerCase().includes(lowerCaseBusca))
         );
@@ -526,6 +526,34 @@ export default function TemplatesPage() {
     );
   }, [rowSelection, handleExportCSV, handleBulkDelete, canDelete]);
 
+  const toolbarButtons = React.useMemo(() => {
+    const buttons = [];
+    if (bulkActions) {
+      buttons.push(bulkActions);
+    }
+    if (canCreate) {
+      buttons.push(
+        <DropdownMenu key="new-template">
+          <DropdownMenuTrigger asChild>
+            <Button variant="default">
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Template
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => router.push('/assinatura-digital/templates/new/pdf')}>
+              Template PDF
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push('/assinatura-digital/templates/new/markdown')}>
+              Template Markdown
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+    return <>{buttons}</>;
+  }, [bulkActions, canCreate, router]);
+
   return (
     <div className="space-y-3">
       {/* Toolbar com busca, filtros e ações */}
@@ -543,29 +571,10 @@ export default function TemplatesPage() {
           selectedFilters={selectedFilterIds}
           onFiltersChange={handleFilterIdsChange}
           filterButtonsMode="buttons"
-          extraButtons={bulkActions}
-          onNewClick={undefined} // Remove direct onNewClick
+          extraButtons={toolbarButtons}
+          onNewClick={undefined}
           newButtonTooltip="Novo Template"
-        >
-          {canCreate && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="default">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Novo Template
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => router.push('/assinatura-digital/templates/new/pdf')}>
-                  Template PDF
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/assinatura-digital/templates/new/markdown')}>
-                  Template Markdown
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </TableToolbar>
+        />
       </div>
 
       {/* Mensagem de erro */}

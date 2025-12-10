@@ -49,14 +49,14 @@ export async function criarExpediente(input: z.infer<typeof createExpedienteSche
 
   if (processoId) {
     const processoExistsResult = await repository.processoExists(processoId);
-    if (processoExistsResult.isErr() || !processoExistsResult.value) {
+    if (!processoExistsResult.success || !processoExistsResult.data) {
       return err(appError('NOT_FOUND', 'Processo não encontrado.'));
     }
   }
 
   if (tipoExpedienteId) {
     const tipoExistsResult = await repository.tipoExpedienteExists(tipoExpedienteId);
-    if (tipoExistsResult.isErr() || !tipoExistsResult.value) {
+    if (!tipoExistsResult.success || !tipoExistsResult.data) {
       return err(appError('NOT_FOUND', 'Tipo de expediente não encontrado.'));
     }
   }
@@ -94,19 +94,19 @@ export async function atualizarExpediente(id: number, input: z.infer<typeof upda
   }
 
   const expedienteResult = await repository.findExpedienteById(id);
-  if (expedienteResult.isErr()) return expedienteResult;
-  if (!expedienteResult.value) return err(appError('NOT_FOUND', 'Expediente não encontrado.'));
+  if (!expedienteResult.success) return expedienteResult as Result<Expediente>;
+  if (!expedienteResult.data) return err(appError('NOT_FOUND', 'Expediente não encontrado.'));
 
   const { processoId, tipoExpedienteId } = validation.data;
   if (processoId) {
     const processoExistsResult = await repository.processoExists(processoId);
-    if (processoExistsResult.isErr() || !processoExistsResult.value) {
+    if (!processoExistsResult.success || !processoExistsResult.data) {
       return err(appError('NOT_FOUND', 'Processo não encontrado.'));
     }
   }
   if (tipoExpedienteId) {
     const tipoExistsResult = await repository.tipoExpedienteExists(tipoExpedienteId);
-    if (tipoExistsResult.isErr() || !tipoExistsResult.value) {
+    if (!tipoExistsResult.success || !tipoExistsResult.data) {
       return err(appError('NOT_FOUND', 'Tipo de expediente não encontrado.'));
     }
   }
@@ -114,7 +114,7 @@ export async function atualizarExpediente(id: number, input: z.infer<typeof upda
   const dataForRepo = camelToSnake(validation.data);
 
 
-  return repository.updateExpediente(id, dataForRepo, expedienteResult.value);
+  return repository.updateExpediente(id, dataForRepo, expedienteResult.data);
 }
 
 export async function realizarBaixa(id: number, input: z.infer<typeof baixaExpedienteSchema>, userId: number): Promise<Result<Expediente>> {
@@ -124,8 +124,8 @@ export async function realizarBaixa(id: number, input: z.infer<typeof baixaExped
     }
 
     const expedienteResult = await repository.findExpedienteById(id);
-    if (expedienteResult.isErr()) return expedienteResult;
-    const expediente = expedienteResult.value;
+    if (!expedienteResult.success) return expedienteResult as Result<Expediente>;
+    const expediente = expedienteResult.data;
     if (!expediente) return err(appError('NOT_FOUND', 'Expediente não encontrado.'));
     if (expediente.baixadoEm) return err(appError('BAD_REQUEST', 'Expediente já está baixado.'));
 
@@ -136,13 +136,13 @@ export async function realizarBaixa(id: number, input: z.infer<typeof baixaExped
         baixadoEm: dataBaixa,
     });
 
-    if (baixaResult.isOk()) {
+    if (baixaResult.success) {
         const db = createDbClient();
         const { error: rpcError } = await db.rpc('registrar_baixa_expediente', {
             p_expediente_id: id,
             p_usuario_id: userId,
-            p_protocolo_id: protocoloId,
-            p_justificativa: justificativaBaixa,
+            p_protocolo_id: protocoloId || null,
+            p_justificativa: justificativaBaixa || null,
         });
         if (rpcError) {
             // TODO: O que fazer se o log falhar? Por enquanto, apenas logamos o erro no servidor.
@@ -159,8 +159,8 @@ export async function reverterBaixa(id: number, userId: number): Promise<Result<
     }
 
     const expedienteResult = await repository.findExpedienteById(id);
-    if (expedienteResult.isErr()) return expedienteResult;
-    const expediente = expedienteResult.value;
+    if (!expedienteResult.success) return expedienteResult as Result<Expediente>;
+    const expediente = expedienteResult.data;
     if (!expediente) return err(appError('NOT_FOUND', 'Expediente não encontrado.'));
     if (!expediente.baixadoEm) return err(appError('BAD_REQUEST', 'Expediente não está baixado.'));
     
@@ -168,7 +168,7 @@ export async function reverterBaixa(id: number, userId: number): Promise<Result<
 
     const reversaoResult = await repository.reverterBaixaExpediente(id);
 
-    if (reversaoResult.isOk()) {
+    if (reversaoResult.success) {
         const db = createDbClient();
         const { error: rpcError } = await db.rpc('registrar_reversao_baixa_expediente', {
             p_expediente_id: id,

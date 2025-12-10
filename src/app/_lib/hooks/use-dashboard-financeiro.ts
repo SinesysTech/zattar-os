@@ -1,6 +1,8 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import useSWR from 'swr';
+import { actionObterFluxoCaixaUnificado } from '../../actions/financeiro/dashboard/actionObterFluxoCaixaUnificado';
 
 const fetcher = async (url: string) => {
   const res = await fetch(url);
@@ -43,20 +45,49 @@ export const useContasPagarReceber = () => {
 };
 
 export const useFluxoCaixa = (meses: number = 6) => {
-  const { data, error, isValidating, mutate } = useSWR(
-    `/api/financeiro/dashboard/fluxo-caixa?meses=${meses}`,
-    fetcher,
-    { refreshInterval: 30000 }
-  );
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<any>(null);
+
+  useEffect(() => {
+    const hoje = new Date();
+    // Inicio: 6 meses atras
+    const inicio = new Date(hoje.getFullYear(), hoje.getMonth() - meses, 1);
+    // Fim: 6 meses no futuro
+    const fim = new Date(hoje.getFullYear(), hoje.getMonth() + 6, 0);
+
+    actionObterFluxoCaixaUnificado(inicio.toISOString(), fim.toISOString())
+      .then((res: any) => {
+        if (res.sucesso) {
+          const dadosGrafico = transformToChartData(res.data);
+          setData(dadosGrafico);
+        } else {
+          setError(res.erro);
+        }
+      })
+      .catch((err: any) => setError(err))
+      .finally(() => setLoading(false));
+  }, [meses]);
 
   return {
-    data: data?.data || [],
-    isLoading: !data && !error,
+    data,
+    isLoading: loading,
     error,
-    isValidating,
-    mutate,
+    isValidating: loading,
+    mutate: () => { },
   };
 };
+
+function transformToChartData(fluxoUnificado: any): any[] {
+  // Mock ou adaptação real dos dados
+  // Se fluxoUnificado vier zerado ou nulo, evitar erro
+  if (!fluxoUnificado) return [];
+
+  return [
+    { mes: 'Atual', receitas: fluxoUnificado.realizado?.receitas || 0, despesas: fluxoUnificado.realizado?.despesas || 0 },
+    { mes: 'Projetado', receitas: fluxoUnificado.projetado?.receitas || 0, despesas: fluxoUnificado.projetado?.despesas || 0 }
+  ];
+}
 
 export const useDespesasPorCategoria = () => {
   const dash = useDashboardFinanceiro();
