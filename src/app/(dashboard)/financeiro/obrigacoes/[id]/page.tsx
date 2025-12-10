@@ -32,7 +32,9 @@ import { useObrigacoes } from '@/app/_lib/hooks/use-obrigacoes';
 import type {
   TipoObrigacao,
   StatusObrigacao,
+  StatusObrigacao,
 } from '@/backend/types/financeiro/obrigacoes.types';
+import { RepasseTracking } from '../components/repasse-tracking';
 
 // ============================================================================
 // Constantes
@@ -145,7 +147,7 @@ export default function ObrigacaoDetalhesPage() {
   // Encontrar a obrigação específica
   const obrigacao = React.useMemo(() => {
     if (!obrigacoes || obrigacoes.length === 0) return null;
-    
+
     return obrigacoes.find(
       (o) =>
         o.tipoEntidade === tipoEntidade &&
@@ -400,6 +402,26 @@ export default function ObrigacaoDetalhesPage() {
                     value={`${obrigacao.acordo.numeroParcelas} parcela${obrigacao.acordo.numeroParcelas > 1 ? 's' : ''}`}
                   />
                 </div>
+              </div>
+            </>
+          )}
+
+          {/* Tracking de Repasse (apenas para recebimentos com cliente) */}
+          {obrigacao.tipo === 'acordo_recebimento' && obrigacao.parcela && (
+            <>
+              <Separator />
+              <div className="mb-6">
+                <RepasseTracking
+                  parcela={obrigacao.parcela as any} // Cast because of type mismatch between Core and Backend types, but fields match now
+                  onRegistrarDeclaracao={() => {
+                    // TODO: Implement dialog or action call
+                    console.log('Registrar declaração');
+                  }}
+                  onRegistrarComprovante={() => {
+                    // TODO: Implement dialog or action call
+                    console.log('Registrar comprovante');
+                  }}
+                />
               </div>
             </>
           )}

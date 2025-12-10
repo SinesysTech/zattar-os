@@ -3,7 +3,9 @@
 // Componente de visualização de expedientes por semana com tabs de dias
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation'; // Adicionado para router.refresh()
+import { useRouter } from 'next/navigation';
+import { format, addWeeks, subWeeks } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { DataTable } from '@/components/ui/data-table';
@@ -37,7 +39,7 @@ import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Expediente, CodigoTribunal, GrauTribunal } from '@/core/expedientes/domain';
-import { actionAtualizarExpediente } from '@/app/actions/expedientes'; // Adicionado para update de tipo/descrição e prazo
+import { actionAtualizarExpediente } from '@/app/actions/expedientes';
 
 // Definindo interfaces locais para Usuario e TipoExpediente
 interface Usuario {
@@ -110,15 +112,21 @@ const getTRTColorClass = (trt: CodigoTribunal): string => {
   return trtColors[trt] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
 };
 
+/**
+ * Retorna a classe CSS de cor para badge do grau
+ */
 const getGrauColorClass = (grau: GrauTribunal): string => {
   const grauColors: Record<GrauTribunal, string> = {
     [GrauTribunal.PRIMEIRO_GRAU]: 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
-    [GrauTribunal.TRIBUNAL_SUPERIOR]: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
     [GrauTribunal.SEGUNDO_GRAU]: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
+    [GrauTribunal.TRIBUNAL_SUPERIOR]: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
   };
   return grauColors[grau] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
 };
 
+/**
+ * Formata o grau para exibição
+ */
 const formatarGrau = (grau: GrauTribunal): string => {
   if (grau === GrauTribunal.PRIMEIRO_GRAU) return '1º Grau';
   if (grau === GrauTribunal.SEGUNDO_GRAU) return '2º Grau';
@@ -599,44 +607,11 @@ function AcoesExpediente({
 /**
  * Componente de header para a coluna Tipo e Descrição com ordenação direta
  */
-function TipoExpedienteColumnHeader({
-  onSort,
-}: {
-  onSort: (direction: 'asc' | 'desc') => void;
-}) {
-  const [currentDirection, setCurrentDirection] = React.useState<'asc' | 'desc'>('asc');
-
-  const handleClick = () => {
-    const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
-    setCurrentDirection(newDirection);
-    onSort(newDirection);
-  };
-
+function TipoExpedienteColumnHeader() {
+  // Sorting will be handled by parent (search params)
   return (
     <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="-ml-3 h-8 hover:bg-accent"
-        onClick={handleClick}
-      >
-        <span className="text-sm font-medium">Tipo e Descrição</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="ml-1 h-4 w-4"
-        >
-          <path d="m7 15 5 5 5-5" />
-          <path d="m7 9 5-5 5 5" />
-        </svg>
-      </Button>
+      <div className="text-sm font-medium">Tipo e Descrição</div>
     </div>
   );
 }
@@ -644,91 +619,11 @@ function TipoExpedienteColumnHeader({
 /**
  * Componente de header para a coluna Prazo com opções de ordenação
  */
-function PrazoColumnHeader({
-  onSort,
-}: {
-  onSort: (field: 'dataCienciaParte' | 'dataPrazoLegalParte', direction: 'asc' | 'desc') => void;
-}) {
-  const [isOpen, setIsOpen] = React.useState(false);
-
+function PrazoColumnHeader() {
+  // Sorting will be handled by parent (search params)
   return (
     <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
-          >
-            <span className="text-sm font-medium">Prazo</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="ml-1 h-4 w-4"
-            >
-              <path d="m7 15 5 5 5-5" />
-              <path d="m7 9 5-5 5 5" />
-            </svg>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-2" align="center">
-          <div className="space-y-1">
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
-              Ordenar por Data de Início
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('dataCienciaParte', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('dataCienciaParte', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
-            </Button>
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
-              Ordenar por Data de Fim
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('dataPrazoLegalParte', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('dataPrazoLegalParte', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
-            </Button>
-          </div>
-        </PopoverContent>
-      </Popover>
+      <div className="text-sm font-medium">Prazo</div>
     </div>
   );
 }
@@ -736,180 +631,11 @@ function PrazoColumnHeader({
 /**
  * Componente de header para a coluna Processo com opções de ordenação
  */
-function ProcessoColumnHeaderSemanal({
-  onSort,
-  onPartesSort,
-}: {
-  onSort: (field: 'trt' | 'grau' | 'descricaoOrgaoJulgador' | 'classeJudicial', direction: 'asc' | 'desc') => void;
-  onPartesSort: (field: 'nomeParteAutora' | 'nomeParteRe', direction: 'asc' | 'desc') => void;
-}) {
-  const [isOpen, setIsOpen] = React.useState(false);
-
+function ProcessoColumnHeaderSemanal() {
+  // Sorting will be handled by parent (search params)
   return (
     <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
-          >
-            <span className="text-sm font-medium">Processo</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="ml-1 h-4 w-4"
-            >
-              <path d="m7 15 5 5 5-5" />
-              <path d="m7 9 5-5 5 5" />
-            </svg>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[220px] p-2" align="center">
-          <div className="space-y-1">
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">
-              Ordenar por Tribunal
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('trt', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('trt', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
-            </Button>
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
-              Ordenar por Grau
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('grau', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('grau', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
-            </Button>
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
-              Ordenar por Órgão Julgador
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('descricaoOrgaoJulgador', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('descricaoOrgaoJulgador', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
-            </Button>
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">
-              Ordenar por Classe Judicial
-            </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('classeJudicial', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              ↑ Crescente
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onSort('classeJudicial', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              ↓ Decrescente
-            </Button>
-            <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Ordenar por Partes</div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onPartesSort('nomeParteAutora', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              Parte Autora ↑
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onPartesSort('nomeParteAutora', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              Parte Autora ↓
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onPartesSort('nomeParteRe', 'asc');
-                setIsOpen(false);
-              }}
-            >
-              Parte Ré ↑
-            </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-sm"
-              onClick={() => {
-                onPartesSort('nomeParteRe', 'desc');
-                setIsOpen(false);
-              }}
-            >
-              Parte Ré ↓
-            </Button>
-          </div>
-        </PopoverContent>
-      </Popover>
+      <div className="text-sm font-medium">Processo</div>
     </div>
   );
 }
@@ -917,44 +643,11 @@ function ProcessoColumnHeaderSemanal({
 /**
  * Componente de header para a coluna Responsável com ordenação direta
  */
-function ResponsavelColumnHeaderSemanal({
-  onSort,
-}: {
-  onSort: (direction: 'asc' | 'desc') => void;
-}) {
-  const [currentDirection, setCurrentDirection] = React.useState<'asc' | 'desc'>('asc');
-
-  const handleClick = () => {
-    const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
-    setCurrentDirection(newDirection);
-    onSort(newDirection);
-  };
-
+function ResponsavelColumnHeaderSemanal() {
+  // Sorting will be handled by parent (search params)
   return (
     <div className="relative flex items-center justify-center w-full after:absolute after:-right-3 after:top-[20%] after:h-[60%] after:w-px after:bg-border">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="-ml-3 h-8 hover:bg-accent"
-        onClick={handleClick}
-      >
-        <span className="text-sm font-medium">Responsável</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="ml-1 h-4 w-4"
-        >
-          <path d="m7 15 5 5 5-5" />
-          <path d="m7 9 5-5 5 5" />
-        </svg>
-      </Button>
+      <div className="text-sm font-medium">Responsável</div>
     </div>
   );
 }
@@ -1123,7 +816,7 @@ function ObservacoesCell({
               <Textarea value={valor} onChange={(e) => setValor(e.target.value)} disabled={isLoading} rows={3} />
             </div>
             <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isLoading}>Cancelar</Button>
+              <Button variant="outline" size="sm" onClick={() => setOpen(false)} disabled={isLoading}>Cancelar</Button>
               <Button type="button" onClick={handleSave} disabled={isLoading}>
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                 Salvar
@@ -1143,11 +836,6 @@ function criarColunasSemanais(
   onSuccess: () => void,
   usuarios: Usuario[],
   tiposExpedientes: TipoExpediente[],
-  // onTipoExpedienteSort: (direction: 'asc' | 'desc') => void, // Removed sorting props
-  // onPrazoSort: (field: 'dataCienciaParte' | 'dataPrazoLegalParte', direction: 'asc' | 'desc') => void, // Removed sorting props
-  // onProcessoSort: (field: 'trt' | 'grau' | 'descricaoOrgaoJulgador' | 'classeJudicial', direction: 'asc' | 'desc') => void, // Removed sorting props
-  // onPartesSort: (field: 'nomeParteAutora' | 'nomeParteRe', direction: 'asc' | 'desc') => void, // Removed sorting props
-  // onResponsavelSort: (direction: 'asc' | 'desc') => void // Removed sorting props
 ): ColumnDef<Expediente>[] {
   const handleAcoes = (expediente: Expediente) => (
     <AcoesExpediente
@@ -1283,14 +971,12 @@ interface ExpedientesVisualizacaoSemanaProps {
   semanaAtual: Date;
 }
 
-export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciais, isLoading, isLoadingEspeciais, onRefresh, usuarios, tiposExpedientes, semanaAtual, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort }: ExpedientesVisualizacaoSemanaProps) {
+export function ExpedientesVisualizacaoSemana({ expedientes, isLoading, usuarios, tiposExpedientes, semanaAtual }: ExpedientesVisualizacaoSemanaProps) {
+  const router = useRouter();
   const [diaAtivo, setDiaAtivo] = React.useState<string>('vencidos');
-  const isLoadingTabs = isLoading || !!isLoadingEspeciais;
   const handleSuccess = React.useCallback(() => {
-    if (onRefresh) {
-      onRefresh();
-    }
-  }, [onRefresh]);
+    router.refresh(); // Triggers server-side revalidation
+  }, [router]);
 
   // Calcular início e fim da semana (normalizando para meia-noite)
   const inicioSemana = React.useMemo(() => {
@@ -1312,7 +998,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciai
   // Filtrar expedientes por dia da semana (usando data de vencimento - prazo legal)
   const expedientesPorDia = React.useMemo(() => {
     type DiaSemana = 'vencidos' | 'semData' | 'segunda' | 'terca' | 'quarta' | 'quinta' | 'sexta';
-    const dias: Record<DiaSemana, PendenteManifestacao[]> = {
+    const dias: Record<DiaSemana, Expediente[]> = {
       vencidos: [],
       semData: [],
       segunda: [],
@@ -1325,18 +1011,17 @@ export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciai
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
-    const baseEspecial = expedientesEspeciais ?? expedientes;
-
-    dias.vencidos = baseEspecial.filter((e) => {
-      if (e.baixado_em) return false;
-      if (!e.data_prazo_legal_parte) return false;
-      const prazoDate = new Date(e.data_prazo_legal_parte);
+    // Filtrar vencidos e sem data de toda a lista recebida
+    dias.vencidos = expedientes.filter((e) => {
+      if (e.baixadoEm) return false;
+      if (!e.dataPrazoLegalParte) return false;
+      const prazoDate = new Date(e.dataPrazoLegalParte);
       prazoDate.setHours(0, 0, 0, 0);
       return prazoDate < hoje;
     });
 
-    dias.semData = baseEspecial.filter(
-      (e) => !e.baixado_em && !e.data_prazo_legal_parte
+    dias.semData = expedientes.filter(
+      (e) => !e.baixadoEm && !e.dataPrazoLegalParte
     );
 
     const idsEspeciais = new Set<number>([
@@ -1345,9 +1030,9 @@ export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciai
     ]);
 
     expedientes.forEach((expediente) => {
-      if (!expediente.data_prazo_legal_parte || idsEspeciais.has(expediente.id)) return;
+      if (!expediente.dataPrazoLegalParte || idsEspeciais.has(expediente.id)) return;
 
-      const data = new Date(expediente.data_prazo_legal_parte);
+      const data = new Date(expediente.dataPrazoLegalParte);
       const dataLocal = new Date(data.getFullYear(), data.getMonth(), data.getDate());
 
       if (dataLocal >= inicioSemana && dataLocal <= fimSemana) {
@@ -1363,16 +1048,16 @@ export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciai
 
     ['segunda', 'terca', 'quarta', 'quinta', 'sexta'].forEach((dia) => {
       dias[dia as DiaSemana].sort((a, b) => {
-        const dataA = a.data_prazo_legal_parte ? new Date(a.data_prazo_legal_parte).getTime() : 0;
-        const dataB = b.data_prazo_legal_parte ? new Date(b.data_prazo_legal_parte).getTime() : 0;
+        const dataA = a.dataPrazoLegalParte ? new Date(a.dataPrazoLegalParte).getTime() : 0;
+        const dataB = b.dataPrazoLegalParte ? new Date(b.dataPrazoLegalParte).getTime() : 0;
         return dataA - dataB;
       });
     });
 
     return dias;
-  }, [expedientes, expedientesEspeciais, inicioSemana, fimSemana]);
+  }, [expedientes, inicioSemana, fimSemana]);
 
-  const colunas = React.useMemo(() => criarColunasSemanais(handleSuccess, usuarios, tiposExpedientes, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort), [handleSuccess, usuarios, tiposExpedientes, onTipoExpedienteSort, onPrazoSort, onProcessoSort, onPartesSort, onResponsavelSort]);
+  const colunas = React.useMemo(() => criarColunasSemanais(handleSuccess, usuarios, tiposExpedientes), [handleSuccess, usuarios, tiposExpedientes]);
 
   // Calcular datas de cada dia da semana
   const datasDiasSemana = React.useMemo(() => {
@@ -1413,15 +1098,16 @@ export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciai
     ) > 0;
   }, [expedientesPorDia]);
 
-  if (!isLoadingTabs && !temExpedientesNaSemana) {
+  if (!isLoading && !temExpedientesNaSemana) {
     return (
       <div className="mt-0">
         <DataTable
-          data={expedientes}
+          data={[]}
           columns={colunas}
-          isLoading={isLoadingTabs}
-          error={null}
+          isLoading={isLoading}
           emptyMessage="Nenhum expediente encontrado."
+          hideTableBorder={true}
+          hideColumnBorders={true}
         />
       </div>
     );
@@ -1501,7 +1187,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciai
           <DataTable
             data={expedientesPorDia.vencidos}
             columns={colunas}
-            isLoading={isLoadingTabs}
+            isLoading={isLoading}
             emptyMessage="Nenhum expediente vencido."
             hideTableBorder={true}
             hideColumnBorders={true}
@@ -1515,7 +1201,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciai
           <DataTable
             data={expedientesPorDia.semData}
             columns={colunas}
-            isLoading={isLoadingTabs}
+            isLoading={isLoading}
             emptyMessage="Nenhum expediente sem data de prazo."
             hideTableBorder={true}
             hideColumnBorders={true}
@@ -1540,7 +1226,7 @@ export function ExpedientesVisualizacaoSemana({ expedientes, expedientesEspeciai
               <DataTable
                 data={expedientesPorDia[dia]}
                 columns={colunas}
-                isLoading={isLoadingTabs}
+                isLoading={isLoading}
                 emptyMessage={`Nenhum expediente com prazo para ${nomeDiaCompleto}, ${formatarDataCompleta(dataDia)}.`}
                 hideTableBorder={true}
                 hideColumnBorders={true}

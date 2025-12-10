@@ -48,6 +48,10 @@ interface ParcelaRecord {
   status: string;
   forma_pagamento: string | null;
   status_repasse: string | null;
+  valor_repasse_cliente: number | null;
+  declaracao_prestacao_contas_url: string | null;
+  comprovante_repasse_url: string | null;
+  data_repasse: string | null;
   created_at: string;
   updated_at: string;
   created_by: string | null;
@@ -236,6 +240,11 @@ const mapearParcelaParaObrigacao = (parcela: ParcelaRecord): ObrigacaoComDetalhe
     dataEfetivacao: parcela.data_efetivacao,
     status: parcela.status,
     formaPagamento: parcela.forma_pagamento,
+    statusRepasse: parcela.status_repasse as any || 'nao_aplicavel', // Cast or default
+    valorRepasseCliente: parcela.valor_repasse_cliente,
+    declaracaoPrestacaoContasUrl: parcela.declaracao_prestacao_contas_url,
+    comprovanteRepasseUrl: parcela.comprovante_repasse_url,
+    dataRepasse: parcela.data_repasse,
   };
 
   if (lancamentoVinculado) {
