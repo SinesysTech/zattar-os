@@ -11,7 +11,8 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card';
-import { Toaster, toast } from '@/components/ui/sonner';
+import { Toaster } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { DollarSign, Users, TrendingUp, TrendingDown, FileText } from 'lucide-react';
 
@@ -102,24 +103,21 @@ export default function DesignSystemPage() {
             <MetricCard
                 title="Valor em Acordos"
                 value="R$ 45.230,00"
-                icon={<DollarSign />}
-                description="Total do mês de Maio"
+                icon={DollarSign}
             />
             <MetricCard
                 title="Novos Clientes"
                 value="+5"
-                icon={<Users />}
-                trendValue="+15%"
-                trend="up"
-                description="Em relação ao mês passado"
+                icon={Users}
+                trend="+15%"
+                trendDirection="up"
             />
             <MetricCard
                 title="Processos Finalizados"
                 value="8"
-                icon={<FileText />}
-                trendValue="-2"
-                trend="down"
-                description="Em relação ao mês passado"
+                icon={FileText}
+                trend="-2"
+                trendDirection="down"
             />
         </div>
       </section>

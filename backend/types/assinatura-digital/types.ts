@@ -368,6 +368,47 @@ export interface AssinaturaDigitalRecord {
   parte_contraria_dados?: ParteContraria[];
 }
 
+/**
+ * Resultado de auditoria de integridade de assinatura digital.
+ * 
+ * Usado pela função auditSignatureIntegrity para retornar análise detalhada
+ * de conformidade legal (MP 2.200-2/2001) de assinaturas concluídas.
+ */
+export interface AuditResult {
+  /** ID da assinatura auditada */
+  assinatura_id: number;
+  /** Protocolo da assinatura */
+  protocolo: string;
+  /** Status da auditoria */
+  status: 'valido' | 'invalido' | 'erro';
+  /** Se os hashes conferem */
+  hashes_validos: boolean;
+  /** Hash original registrado no banco */
+  hash_original_registrado: string;
+  /** Hash original recalculado (se disponível) */
+  hash_original_recalculado?: string;
+  /** Hash final registrado no banco */
+  hash_final_registrado: string;
+  /** Hash final recalculado do PDF armazenado */
+  hash_final_recalculado: string;
+  /** Se a entropia do fingerprint é suficiente */
+  entropia_suficiente: boolean;
+  /** Detalhes da entropia */
+  entropia_detalhes?: {
+    campos_presentes: number;
+    campos_obrigatorios: number;
+    campos_recomendados: number;
+  };
+  /** Se a foto está embedada (se aplicável) */
+  foto_embedada?: boolean;
+  /** Mensagens de aviso */
+  avisos: string[];
+  /** Mensagens de erro */
+  erros: string[];
+  /** Timestamp da auditoria */
+  auditado_em: string;
+}
+
 // #endregion
 
 // Re-export domain types para conveniência
