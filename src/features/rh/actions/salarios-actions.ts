@@ -7,11 +7,12 @@ import { checkPermission } from '@/backend/auth/authorization';
 import * as service from '../service';
 import { 
   criarSalarioSchema, 
-  atualizarSalarioSchema, 
-  ListarSalariosParams 
-} from '../domain'; // wait, ListarSalariosParams is in types
-import { ListarSalariosParams as ListarParamsType } from '../types';
-
+  atualizarSalarioSchema 
+} from '../domain';
+import { 
+  ListarSalariosParams as ListarParamsType,
+  AtualizarSalarioDTO
+} from '../types';
 
 interface ListarSalariosActionParams extends ListarParamsType {
   incluirTotais?: boolean;
@@ -122,7 +123,7 @@ export async function actionAtualizarSalario(id: number, formData: FormData) {
     await requireAuth(['salarios:editar']);
     
     // Parse fields manually because some might be missing
-    const dados: Record<string, any> = {};
+    const dados: AtualizarSalarioDTO = {};
     
     if (formData.has('salarioBruto')) dados.salarioBruto = Number(formData.get('salarioBruto'));
     if (formData.has('cargoId')) dados.cargoId = formData.get('cargoId') ? Number(formData.get('cargoId')) : null;

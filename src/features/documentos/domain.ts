@@ -29,6 +29,8 @@ export const VISIBILIDADE_TEMPLATE = {
   privado: 'privado',
 } as const;
 
+export const PERMISSAO_VALUES = ['visualizar', 'editar'] as const;
+
 // ============================================================================
 // SCHEMAS
 // ============================================================================
@@ -86,19 +88,19 @@ export const atualizarPastaSchema = z.object({
 export const compartilhamentoSchema = z.object({
   documento_id: z.number(),
   usuario_id: z.number(),
-  permissao: z.enum([PERMISSOES.visualizar, PERMISSOES.editar]),
+  permissao: z.enum(PERMISSAO_VALUES),
   pode_deletar: z.boolean().optional(),
 });
 
 export const criarCompartilhamentoSchema = z.object({
   documento_id: z.number(),
   usuario_id: z.number(),
-  permissao: z.enum(['visualizar', 'editar']),
+  permissao: z.enum(PERMISSAO_VALUES),
   pode_deletar: z.boolean().optional().default(false),
 });
 
 export const atualizarPermissaoCompartilhamentoSchema = z.object({
-  permissao: z.enum(['visualizar', 'editar', 'proprietario']), // Added proprietario for completeness in schema, though actual update might only allow visualizar/editar
+  permissao: z.enum(PERMISSAO_VALUES),
 });
 
 export const templateSchema = z.object({

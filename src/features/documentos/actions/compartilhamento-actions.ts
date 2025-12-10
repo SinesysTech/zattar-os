@@ -72,19 +72,14 @@ export async function actionRemoverCompartilhamento(compartilhamento_id: number)
   }
 }
 
-// NOTE: Ação para listar documentos COMPARTILHADOS com o usuário.
-// Não existe um serviço dedicado para isso no service.ts ainda,
-// mas a função `repository.listarDocumentosCompartilhadosComUsuario` pode ser usada.
 export async function actionListarDocumentosCompartilhados() {
   try {
     const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: 'Não autenticado' };
     }
-    const documentos = await service.listarDocumentos({ incluir_deletados: false, criado_por: user.id }, user.id); // Placeholder, deve ser substituído por algo que lista documentos onde o usuário é o destinatário de compartilhamento
-    // TODO: Criar um método no service que liste documentos compartilhados COM o usuário.
-    // Por enquanto, esta ação é um placeholder.
-    return { success: true, data: documentos.documentos };
+    const documentos = await service.listarDocumentosCompartilhadosComUsuario(user.id);
+    return { success: true, data: documentos };
   } catch (error) {
     return { success: false, error: String(error) };
   }

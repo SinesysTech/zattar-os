@@ -81,13 +81,13 @@ export async function atualizarDocumento(
   }
 
   const documentoAtualizado = await repository.atualizarDocumento(id, parsedParams as AtualizarDocumentoParams, usuario_id);
-  if (documentoAtualizado.conteudo !== parsedParams.conteudo) {
-    // Apenas cria nova versão se o conteúdo mudar significativamente
+  if (parsedParams.conteudo !== undefined && documentoAtualizado.conteudo !== parsedParams.conteudo) {
+    // Apenas cria nova versão se o conteúdo for fornecido e mudar significativamente
     await repository.criarVersao(
       {
         documento_id: id,
         versao: documentoAtualizado.versao, // será incrementado na persistência
-        conteudo: parsedParams.conteudo as Value,
+        conteudo: parsedParams.conteudo,
         titulo: parsedParams.titulo || documentoAtualizado.titulo,
       },
       usuario_id
@@ -293,6 +293,12 @@ export async function listarCompartilhamentos(
     throw new Error('Acesso negado ao documento.');
   }
   return repository.listarCompartilhamentos({ documento_id });
+}
+
+export async function listarDocumentosCompartilhadosComUsuario(
+  usuario_id: number
+): Promise<DocumentoComUsuario[]> {
+  return repository.listarDocumentosCompartilhadosComUsuario(usuario_id);
 }
 
 export async function atualizarPermissao(

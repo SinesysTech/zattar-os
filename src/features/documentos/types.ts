@@ -1,4 +1,5 @@
 import type { Value } from '@udecode/plate-common';
+export type { Value };
  *
  * Este arquivo contém todos os tipos relacionados ao editor de documentos,
  * pastas, compartilhamento, templates, uploads, versões e chat.

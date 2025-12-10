@@ -12,6 +12,7 @@ import type {
     StatusRepasse
 } from '../types/obrigacoes';
 import type { ListarLancamentosParams, Lancamento, StatusLancamento } from '../types/lancamentos';
+import type { TipoObrigacao } from '@/features/obrigacoes/types';
 
 // ============================================================================
 // Types Internos (Mapeamento do Banco)
@@ -38,7 +39,7 @@ interface ParcelaRecord {
 
     acordos_condenacoes?: {
         id: number;
-        tipo: 'acordo' | 'condenacao';
+        tipo: TipoObrigacao;
         direcao: 'recebimento' | 'pagamento';
         valor_total: number;
         numero_parcelas: number;
@@ -167,7 +168,7 @@ export const ObrigacoesRepository = {
         // Filtrar em memória as que não tem lançamentos
         return (data || [])
             .filter(p => !p.lancamentos_financeiros || p.lancamentos_financeiros.length === 0)
-            .map(p => mapRecordToParcela(p as any));
+            .map(p => mapRecordToParcela(p as ParcelaRecord));
     },
 
     /**
@@ -205,7 +206,7 @@ export const ObrigacoesRepository = {
     ): Promise<void> {
         const supabase = createServiceClient();
 
-        const record: Record<string, any> = {
+        const record: Record<string, string | null> = {
             updated_at: new Date().toISOString()
         };
 
@@ -256,7 +257,7 @@ export const ObrigacoesRepository = {
 
         if (error) throw new Error(`Erro ao calcular total repassado: ${error.message}`);
 
-        return (data || []).reduce((acc: number, curr: any) => acc + (curr.valor_repasse_cliente || 0), 0);
+        return (data || []).reduce((acc: number, curr: { valor_repasse_cliente: number | null }) => acc + (curr.valor_repasse_cliente || 0), 0);
     },
 
     /**
@@ -287,7 +288,55 @@ export const ObrigacoesRepository = {
 /**
  * Converte Parcela do domínio de obrigações para formato financeiro
  */
-function mapParcelaToFinanceiro(parcela: any, lancamento?: any): ParcelaObrigacao {
+function mapParcelaToFinanceiro(
+    parcela: {
+        id: number;
+        acordoCondenacaoId: number;
+        numeroParcela: number;
+        valorBrutoCreditoPrincipal: number;
+        honorariosContratuais: number | null;
+        honorariosSucumbenciais: number | null;
+        valorRepasseCliente: number | null;
+        dataVencimento: string;
+        dataEfetivacao: string | null;
+        status: 'pendente' | 'recebida' | 'paga' | 'atrasada' | 'cancelada';
+        statusRepasse: StatusRepasse | null;
+        formaPagamento: string | null;
+        declaracaoPrestacaoContasUrl?: string | null;
+        comprovanteRepasseUrl?: string | null;
+        dataRepasse?: string | null;
+    },
+    lancamento?: {
+        id: number;
+        tipo: 'receita' | 'despesa';
+        descricao: string;
+        valor: number;
+        data_lancamento: string;
+        data_vencimento: string | null;
+        data_efetivacao: string | null;
+        data_competencia?: string | null;
+        status: string;
+        forma_pagamento: string | null;
+        conta_bancaria_id?: number | null;
+        conta_contabil_id?: number | null;
+        centro_custo_id?: number | null;
+        documento?: string | null;
+        observacoes?: string | null;
+        categoria?: string | null;
+        cliente_id?: number | null;
+        processo_id?: number | null;
+        contrato_id?: number | null;
+        parcela_id?: number | null;
+        acordo_condenacao_id?: number | null;
+        recorrente?: boolean;
+        frequencia_recorrencia?: string | null;
+        lancamento_origem_id?: number | null;
+        anexos?: unknown[];
+        created_at?: string;
+        updated_at?: string;
+        created_by?: string | null;
+    }
+): ParcelaObrigacao {
     return {
         id: parcela.id,
         acordoId: parcela.acordoCondenacaoId,
@@ -335,7 +384,36 @@ function mapRecordToParcela(record: ParcelaRecord): ParcelaObrigacao {
     };
 }
 
-function mapRecordToLancamento(record: any): Lancamento {
+function mapRecordToLancamento(record: {
+    id: number;
+    tipo: 'receita' | 'despesa';
+    descricao: string;
+    valor: number;
+    data_lancamento: string;
+    data_vencimento: string | null;
+    data_efetivacao: string | null;
+    data_competencia?: string | null;
+    status: string;
+    forma_pagamento: string | null;
+    conta_bancaria_id?: number | null;
+    conta_contabil_id?: number | null;
+    centro_custo_id?: number | null;
+    documento?: string | null;
+    observacoes?: string | null;
+    categoria?: string | null;
+    cliente_id?: number | null;
+    processo_id?: number | null;
+    contrato_id?: number | null;
+    parcela_id?: number | null;
+    acordo_condenacao_id?: number | null;
+    recorrente?: boolean;
+    frequencia_recorrencia?: string | null;
+    lancamento_origem_id?: number | null;
+    anexos?: unknown[];
+    created_at?: string;
+    updated_at?: string;
+    created_by?: string | null;
+}): Lancamento {
     return {
         id: record.id,
         tipo: record.tipo,

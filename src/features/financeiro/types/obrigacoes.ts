@@ -1,4 +1,5 @@
 import { Lancamento, StatusLancamento } from './lancamentos';
+import type { TipoObrigacao as TipoObrigacaoBase } from '@/features/obrigacoes/types';
 
 /**
  * Domínio de Obrigações Jurídicas
@@ -71,7 +72,7 @@ export interface ParcelaObrigacao {
  */
 export interface ObrigacaoJuridica {
     id: number; // ID do Acordo/Condenação
-    tipo: 'acordo' | 'condenacao';
+    tipo: TipoObrigacaoBase;
     direcao: 'recebimento' | 'pagamento';
 
     // Contexto
@@ -138,7 +139,7 @@ export interface ObrigacaoComDetalhes {
     };
     acordo?: {
         id: number;
-        tipo: 'acordo' | 'condenacao';
+        tipo: TipoObrigacaoBase;
         direcao: 'recebimento' | 'pagamento';
         valorTotal: number;
         numeroParcelas: number;

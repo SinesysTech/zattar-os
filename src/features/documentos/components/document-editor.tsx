@@ -49,7 +49,7 @@ import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
 import { createClient } from '@/app/_lib/supabase/client';
 import type { DocumentoComUsuario } from '../types';
 import { exportToPdf, exportTextToPdf, exportToDocx } from '../utils';
-import type { Descendant } from 'platejs';
+import type { Value } from '../types';
 import { useDocument } from '../../hooks/use-document';
 import { useDocumentAutoSave } from '../../hooks/use-document-auto-save';
 
