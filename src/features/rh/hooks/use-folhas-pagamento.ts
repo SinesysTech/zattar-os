@@ -1,17 +1,28 @@
-
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { 
   actionListarFolhasPagamento, 
   actionBuscarFolhaPagamento,
-  actionBuscarFolhaPorPeriodo
+  actionBuscarFolhaPorPeriodo,
+  actionGerarFolhaPagamento,
+  actionPreviewGerarFolha,
+  actionAtualizarFolhaPagamento,
+  actionAprovarFolhaPagamento,
+  actionPagarFolhaPagamento,
+  actionVerificarCancelamentoFolha,
+  actionCancelarFolhaPagamento,
+  actionExcluirFolhaPagamento,
+  actionObterResumoPagamento
 } from '../actions/folhas-pagamento-actions';
 import {
   FolhaPagamentoComDetalhes,
   ListarFolhasParams,
   StatusFolhaPagamento,
-  TotaisFolhasPorStatus
+  TotaisFolhasPorStatus,
+  GerarFolhaDTO,
+  AprovarFolhaDTO,
+  PagarFolhaDTO
 } from '../types';
 
 // ============================================================================
@@ -214,4 +225,153 @@ export const useFolhaDoPeriodo = (params: UseFolhaDoPeriodoParams): UseFolhaPaga
     error,
     refetch: buscarFolhaDoPeriodo,
   };
+};
+
+// ============================================================================
+// Mutation Functions
+// ============================================================================
+
+interface MutationResult<T = unknown> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
+export const previewGerarFolha = async (
+  mesReferencia: number,
+  anoReferencia: number
+): Promise<MutationResult<{
+  salariosVigentes: Array<{
+    usuarioId: number;
+    nomeExibicao: string;
+    cargo?: string;
+    salarioBruto: number;
+  }>;
+  valorTotal: number;
+  totalFuncionarios: number;
+  periodoLabel: string;
+}>> => {
+  try {
+    const result = await actionPreviewGerarFolha(mesReferencia, anoReferencia);
+    return result as any; 
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Erro ao gerar preview' };
+  }
+};
+
+export const gerarFolha = async (dados: GerarFolhaDTO): Promise<MutationResult<FolhaPagamentoComDetalhes>> => {
+  try {
+    const formData = new FormData();
+    formData.append('mesReferencia', dados.mesReferencia.toString());
+    formData.append('anoReferencia', dados.anoReferencia.toString());
+    if (dados.dataPagamento) formData.append('dataPagamento', dados.dataPagamento);
+    if (dados.observacoes) formData.append('observacoes', dados.observacoes);
+
+    const result = await actionGerarFolhaPagamento(formData);
+    return result as MutationResult<FolhaPagamentoComDetalhes>;
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Erro ao gerar folha' };
+  }
+};
+
+export const atualizarFolha = async (
+  id: number,
+  dados: { dataPagamento?: string | null; observacoes?: string | null }
+): Promise<MutationResult<FolhaPagamentoComDetalhes>> => {
+  try {
+    const formData = new FormData();
+    if (dados.dataPagamento !== undefined) formData.append('dataPagamento', dados.dataPagamento || '');
+    if (dados.observacoes !== undefined) formData.append('observacoes', dados.observacoes || '');
+
+    const result = await actionAtualizarFolhaPagamento(id, formData);
+    return result as MutationResult<FolhaPagamentoComDetalhes>;
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Erro ao atualizar folha' };
+  }
+};
+
+export const aprovarFolha = async (
+  id: number,
+  dados: AprovarFolhaDTO
+): Promise<MutationResult<FolhaPagamentoComDetalhes>> => {
+  try {
+    const formData = new FormData();
+    formData.append('contaBancariaId', dados.contaBancariaId.toString());
+    formData.append('contaContabilId', dados.contaContabilId.toString());
+    if (dados.centroCustoId) formData.append('centroCustoId', dados.centroCustoId.toString());
+    if (dados.observacoes) formData.append('observacoes', dados.observacoes);
+
+    const result = await actionAprovarFolhaPagamento(id, formData);
+    return result as MutationResult<FolhaPagamentoComDetalhes>;
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Erro ao aprovar folha' };
+  }
+};
+
+export const pagarFolha = async (
+  id: number,
+  dados: PagarFolhaDTO
+): Promise<MutationResult<FolhaPagamentoComDetalhes>> => {
+  try {
+    const formData = new FormData();
+    formData.append('formaPagamento', dados.formaPagamento);
+    formData.append('contaBancariaId', dados.contaBancariaId.toString());
+    if (dados.dataEfetivacao) formData.append('dataEfetivacao', dados.dataEfetivacao);
+    if (dados.observacoes) formData.append('observacoes', dados.observacoes);
+
+    const result = await actionPagarFolhaPagamento(id, formData);
+    return result as MutationResult<FolhaPagamentoComDetalhes>;
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Erro ao pagar folha' };
+  }
+};
+
+export const verificarCancelamentoFolha = async (id: number): Promise<MutationResult<{
+  podeCancelar: boolean;
+  motivo?: string;
+  status: string;
+  temLancamentosPagos: boolean;
+}>> => {
+  try {
+    const result = await actionVerificarCancelamentoFolha(id);
+    return result as any;
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Erro ao verificar cancelamento' };
+  }
+};
+
+export const cancelarFolha = async (
+  id: number,
+  motivo?: string
+): Promise<MutationResult<FolhaPagamentoComDetalhes>> => {
+  try {
+    const result = await actionCancelarFolhaPagamento(id, motivo);
+    return result as MutationResult<FolhaPagamentoComDetalhes>;
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Erro ao cancelar folha' };
+  }
+};
+
+export const excluirFolha = async (id: number): Promise<MutationResult> => {
+  try {
+    const result = await actionExcluirFolhaPagamento(id);
+    return result;
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Erro ao excluir folha' };
+  }
+};
+
+export const obterResumoParaPagamento = async (id: number): Promise<MutationResult<{
+  totalBruto: number;
+  totalItens: number;
+  itensPendentes: number;
+  itensConfirmados: number;
+}>> => {
+  try {
+    const result = await actionObterResumoPagamento(id);
+    return result as any;
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Erro ao obter resumo' };
+  }
 };

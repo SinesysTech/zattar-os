@@ -15,11 +15,15 @@ import {
 import {
   GerarFolhaDTO,
   FolhaPagamentoComDetalhes,
+
   AprovarFolhaDTO,
-  PagarFolhaDTO,
-  MESES_LABELS
+  PagarFolhaDTO
 } from './types';
-import { validarPeriodoFolha, ultimoDiaDoMes } from './utils';
+import {
+  validarPeriodoFolha,
+  ultimoDiaDoMes
+} from './utils';
+import { MESES_LABELS } from './domain';
 
 // Re-export Salary functions from repository as they contain the business logic
 export {

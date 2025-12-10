@@ -1,15 +1,15 @@
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { 
-  AcordoComParcelas, 
-  AcordoCondenacao, 
-  AcordosCondenacoesPaginado, 
-  AtualizarAcordoParams, 
-  AtualizarParcelaParams, 
-  CriarAcordoComParcelasParams, 
-  FiltrosRepasses, 
-  ListarAcordosParams, 
-  Parcela, 
+import {
+  AcordoComParcelas,
+  AcordoCondenacao,
+  AcordosCondenacoesPaginado,
+  AtualizarAcordoParams,
+  AtualizarParcelaParams,
+  CriarAcordoComParcelasParams,
+  FiltrosRepasses,
+  ListarAcordosParams,
+  Parcela,
   RepassePendente,
   StatusRepasse
 } from './types';
@@ -86,7 +86,7 @@ function mapRepassePendente(db: any): RepassePendente {
 
 export async function criarAcordo(params: Omit<CriarAcordoComParcelasParams, 'formaPagamentoPadrao' | 'intervaloEntreParcelas'> & { createdBy?: string }) {
   const supabase = createServiceClient();
-  
+
   const { data, error } = await supabase
     .from('acordos_condenacoes')
     .insert({
@@ -131,7 +131,7 @@ export async function listarAcordos(params: ListarAcordosParams): Promise<Acordo
   if (params.status) query = query.eq('status', params.status);
   if (params.dataInicio) query = query.gte('data_vencimento_primeira_parcela', params.dataInicio);
   if (params.dataFim) query = query.lte('data_vencimento_primeira_parcela', params.dataFim);
-  
+
   // Busca textual em número do processo e nomes de partes
   if (params.busca) {
     query = query.or(`acervo.numero_processo.ilike.%${params.busca}%,acervo.nome_parte_autora.ilike.%${params.busca}%,acervo.nome_parte_re.ilike.%${params.busca}%`);
@@ -146,7 +146,7 @@ export async function listarAcordos(params: ListarAcordosParams): Promise<Acordo
     const acordo = mapAcordo(item);
     const parcelas = (item.parcelas || []).map(mapParcela);
     const parcelasPagas = parcelas.filter((p: Parcela) => ['recebida', 'paga'].includes(p.status)).length;
-    
+
     // Processo mapping
     const processo = item.acervo ? {
       id: item.acervo.id,
@@ -180,7 +180,7 @@ export async function listarAcordos(params: ListarAcordosParams): Promise<Acordo
 
 export async function buscarAcordoPorId(id: number): Promise<AcordoComParcelas | null> {
   const supabase = createServiceClient();
-  
+
   const { data, error } = await supabase
     .from('acordos_condenacoes')
     .select(`
@@ -200,7 +200,7 @@ export async function buscarAcordoPorId(id: number): Promise<AcordoComParcelas |
   const parcelas = (data.parcelas || []).map(mapParcela);
   // Sort parcelas by number
   parcelas.sort((a: Parcela, b: Parcela) => a.numeroParcela - b.numeroParcela);
-  
+
   const parcelasPagas = parcelas.filter((p: Parcela) => ['recebida', 'paga'].includes(p.status)).length;
 
   return {
@@ -245,7 +245,7 @@ export async function atualizarAcordo(id: number, dados: AtualizarAcordoParams) 
 
 export async function deletarAcordo(id: number) {
   const supabase = createServiceClient();
-  
+
   // Check for paid parcels
   const { data: parcelas } = await supabase
     .from('parcelas')
@@ -264,7 +264,7 @@ export async function deletarAcordo(id: number) {
 
 export async function criarParcelas(parcelas: Partial<Parcela>[]) {
   const supabase = createServiceClient();
-  
+
   const parcelasInsert = parcelas.map(p => ({
     acordo_condenacao_id: p.acordoCondenacaoId,
     numero_parcela: p.numeroParcela,
@@ -283,7 +283,7 @@ export async function criarParcelas(parcelas: Partial<Parcela>[]) {
 export async function buscarParcelaPorId(id: number): Promise<Parcela | null> {
   const supabase = createServiceClient();
   const { data, error } = await supabase.from('parcelas').select('*').eq('id', id).single();
-  
+
   if (error) {
     if (error.code === 'PGRST116') return null;
     throw error;
@@ -294,7 +294,7 @@ export async function buscarParcelaPorId(id: number): Promise<Parcela | null> {
 export async function atualizarParcela(id: number, dados: AtualizarParcelaParams) {
   const supabase = createServiceClient();
   const updateData: any = {};
-  
+
   if (dados.valorBrutoCreditoPrincipal !== undefined) updateData.valor_bruto_credito_principal = dados.valorBrutoCreditoPrincipal;
   if (dados.honorariosSucumbenciais !== undefined) updateData.honorarios_sucumbenciais = dados.honorariosSucumbenciais;
   if (dados.dataVencimento) updateData.data_vencimento = dados.dataVencimento;
@@ -318,17 +318,17 @@ export async function marcarParcelaComoRecebida(id: number, dados: { dataEfetiva
     status: 'recebida',
     data_efetivacao: dados.dataEfetivacao,
   };
-  
+
   // Note: logic for updating values if they differ might handle 'valor_bruto_credito_principal' implicitly or require separate update
   // Here we only update status and dates for now as per minimal requirement, but if value changed it should've been updated before or here
-  
+
   const { data, error } = await supabase
     .from('parcelas')
     .update(updateData)
     .eq('id', id)
     .select()
     .single();
-    
+
   if (error) throw error;
   return mapParcela(data);
 }
@@ -346,7 +346,7 @@ export async function buscarParcelasPorAcordo(acordoId: number): Promise<Parcela
     .select('*')
     .eq('acordo_condenacao_id', acordoId)
     .order('numero_parcela');
-    
+
   if (error) throw error;
   return (data || []).map(mapParcela);
 }
@@ -366,7 +366,7 @@ export async function listarRepassesPendentes(filtros: FiltrosRepasses = {}): Pr
 
   const { data, error } = await query;
   if (error) throw error;
-  
+
   return (data || []).map(mapRepassePendente);
 }
 
@@ -380,7 +380,7 @@ export async function anexarDeclaracaoPrestacaoContas(parcelaId: number, url: st
       status_repasse: 'pendente_transferencia'
     })
     .eq('id', parcelaId);
-    
+
   if (error) throw error;
 }
 
@@ -395,7 +395,7 @@ export async function registrarRepasse(parcelaId: number, dados: { arquivoCompro
       status_repasse: 'repassado'
     })
     .eq('id', parcelaId);
-    
+
   if (error) throw error;
 }
 
