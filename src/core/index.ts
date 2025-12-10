@@ -30,7 +30,7 @@
 export * from './common';
 
 // Não exportar _template - é apenas referência para desenvolvedores
-// Módulos reais serão adicionados aqui conforme migração:
-// export * as processos from './processos';
-// export * as audiencias from './audiencias';
-// export * as acordos from './acordos';
+
+// Módulos migrados para a nova arquitetura:
+export * as partes from './partes';
+export * as contratos from './contratos';

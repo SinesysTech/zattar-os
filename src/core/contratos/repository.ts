@@ -84,9 +84,18 @@ function parseDate(dateString: string | null | undefined): string | null {
 }
 
 /**
+ * Tipo de entrada para validarPartes (aceita campos opcionais do Zod)
+ */
+type ParteInput = {
+  tipo?: 'cliente' | 'parte_contraria';
+  id?: number;
+  nome?: string;
+};
+
+/**
  * Valida e normaliza array de partes JSONB
  */
-function validarPartes(partes: ParteContrato[] | null | undefined): ParteContrato[] | null {
+function validarPartes(partes: ParteInput[] | ParteContrato[] | null | undefined): ParteContrato[] | null {
   if (!partes || partes.length === 0) return null;
 
   const partesValidas: ParteContrato[] = [];

@@ -12,7 +12,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
-import { TableToolbar } from '@/components/ui/table-toolbar';
+import { TableToolbar, type ComboboxOption, type FilterGroup } from '@/components/ui/table-toolbar';
 import { ContratosTable } from './contratos-table';
 import { ContratoForm } from './contrato-form';
 import { ContratoViewSheet } from './contrato-view-sheet';
@@ -61,37 +61,27 @@ interface ContratosTableWrapperProps {
 // FILTROS DA TOOLBAR
 // =============================================================================
 
-interface FilterOption {
-  id: string;
-  label: string;
-}
-
-interface FilterGroup {
-  id: string;
-  label: string;
-}
-
-function buildContratosFilterOptions(): FilterOption[] {
-  const options: FilterOption[] = [];
+function buildContratosFilterOptions(): ComboboxOption[] {
+  const options: ComboboxOption[] = [];
 
   // Áreas de direito
   Object.entries(AREA_DIREITO_LABELS).forEach(([value, label]) => {
-    options.push({ id: `area:${value}`, label });
+    options.push({ value: `area:${value}`, label });
   });
 
   // Tipos de contrato
   Object.entries(TIPO_CONTRATO_LABELS).forEach(([value, label]) => {
-    options.push({ id: `tipo:${value}`, label });
+    options.push({ value: `tipo:${value}`, label });
   });
 
   // Tipos de cobrança
   Object.entries(TIPO_COBRANCA_LABELS).forEach(([value, label]) => {
-    options.push({ id: `cobranca:${value}`, label });
+    options.push({ value: `cobranca:${value}`, label });
   });
 
   // Status
   Object.entries(STATUS_CONTRATO_LABELS).forEach(([value, label]) => {
-    options.push({ id: `status:${value}`, label });
+    options.push({ value: `status:${value}`, label });
   });
 
   return options;
@@ -99,10 +89,34 @@ function buildContratosFilterOptions(): FilterOption[] {
 
 function buildContratosFilterGroups(): FilterGroup[] {
   return [
-    { id: 'area', label: 'Área de Direito' },
-    { id: 'tipo', label: 'Tipo de Contrato' },
-    { id: 'cobranca', label: 'Tipo de Cobrança' },
-    { id: 'status', label: 'Status' },
+    {
+      label: 'Área de Direito',
+      options: Object.entries(AREA_DIREITO_LABELS).map(([value, label]) => ({
+        value: `area:${value}`,
+        label,
+      })),
+    },
+    {
+      label: 'Tipo de Contrato',
+      options: Object.entries(TIPO_CONTRATO_LABELS).map(([value, label]) => ({
+        value: `tipo:${value}`,
+        label,
+      })),
+    },
+    {
+      label: 'Tipo de Cobrança',
+      options: Object.entries(TIPO_COBRANCA_LABELS).map(([value, label]) => ({
+        value: `cobranca:${value}`,
+        label,
+      })),
+    },
+    {
+      label: 'Status',
+      options: Object.entries(STATUS_CONTRATO_LABELS).map(([value, label]) => ({
+        value: `status:${value}`,
+        label,
+      })),
+    },
   ];
 }
 
