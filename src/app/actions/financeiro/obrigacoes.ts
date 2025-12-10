@@ -34,4 +34,12 @@ export async function actionRegistrarRepasse(parcelaId: number, urlArquivo: stri
     }
 }
 
-// TODO: Implementar outras actions conforme necessidade e serviço
+export async function actionSincronizarAcordo(acordoId: number, forcar: boolean = false) {
+    try {
+        const result = await ObrigacoesService.sincronizarAcordo(acordoId, forcar);
+        revalidatePath('/financeiro');
+        return result;
+    } catch (error: any) {
+        return { sucesso: false, mensagem: error.message };
+    }
+}
