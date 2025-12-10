@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { chatService } from ' @/core/chat';
 import { getSupabase } from ' @/core/app/_lib/supabase';
 import { ChatLayout } from ' @/components/modules/chat/chat-layout';
-import { RoomList } from ' @/components/modules/chat/room-list';
+import { ChatSidebar } from ' @/components/modules/chat/chat-sidebar';
 import { ChatWindow } from ' @/components/modules/chat/chat-window';
 import { Skeleton } from ' @/components/ui/skeleton';
 
@@ -74,13 +74,7 @@ export default async function ChatPage({
       <ChatLayout
         sidebar={
           <Suspense fallback={<Skeleton className="h-full w-full" />}>
-            <RoomList
-              salas={salas}
-              salaAtiva={salaAtiva}
-              onSelectSala={(sala) => {
-                window.location.href = `/chat?channelId=${sala.id}`;
-              }}
-            />
+            <ChatSidebar salas={salas} salaAtiva={salaAtiva} />
           </Suspense>
         }
         main={

@@ -57,6 +57,7 @@ export class ChatRepository {
         .from('salas_chat')
         .select('*')
         .eq('tipo', 'geral')
+        .eq('nome', 'Sala Geral')
         .single();
 
       if (error) {
@@ -150,6 +151,31 @@ export class ChatRepository {
       return ok(undefined);
     } catch (e) {
       return err(new Error('Erro inesperado ao deletar sala.'));
+    }
+  }
+
+  async findPrivateSalaBetweenUsers(
+    criadorId: number,
+    participanteId: number
+  ): Promise<Result<SalaChat | null, Error>> {
+    try {
+      const { data, error } = await this.supabase
+        .from('salas_chat')
+        .select('*')
+        .eq('tipo', 'privado')
+        .or(
+          `and(criado_por.eq.${criadorId},participante_id.eq.${participanteId}),` +
+          `and(criado_por.eq.${participanteId},participante_id.eq.${criadorId})`
+        )
+        .maybeSingle();
+
+      if (error) {
+        return err(new Error('Erro ao buscar sala privada existente.'));
+      }
+
+      return ok(data ? converterParaSalaChat(data) : null);
+    } catch (e) {
+      return err(new Error('Erro inesperado ao buscar sala privada.'));
     }
   }
 

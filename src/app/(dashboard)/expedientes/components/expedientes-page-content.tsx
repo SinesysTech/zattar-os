@@ -71,8 +71,8 @@ import { CheckCircle2, Undo2, Eye } from 'lucide-react';
 import Link from 'next/link';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Expediente, GrauTribunal, CodigoTribunal, GRAU_TRIBUNAL_LABELS } from '@/core/expedientes/domain';
-import { actionAtualizarExpediente } from '@/core/app/actions/expedientes';
-import type { ExpedientesFilters } from '@/app/_lib/types/expedientes';
+import { actionAtualizarExpediente } from '@/app/actions/expedientes';
+import type { ExpedientesFilters } from './expedientes-toolbar-filters';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
 
 export type ExpedientesVisualizacao = 'lista' | 'semana' | 'mes' | 'ano';
@@ -910,12 +910,13 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
   }, [semanaAtual]);
 
   const params = React.useMemo(() => {
-    const { responsavel_id, ...filtrosSemResponsavel } = filtros;
+    const { responsavelId, ...filtrosSemResponsavel } = filtros;
     const responsavelIdFinal = visualizacao === 'lista'
-      ? responsavel_id
-      : (!isSuperAdmin && currentUserId ? currentUserId : responsavel_id);
+      ? responsavelId
+      : (!isSuperAdmin && currentUserId ? currentUserId : responsavelId);
 
-    return {
+    // Converter filtros camelCase para snake_case para compatibilidade com usePendentes
+    const paramsParaAPI: any = {
       pagina: pagina + 1,
       limite: visualizacao === 'semana' ? 100 : limite,
       busca: buscaDebounced || undefined,
@@ -925,23 +926,33 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
       // Na visualização de semana, não filtrar por prazo_vencido para carregar todos (vencidos, no prazo e sem data)
       // As abas "Vencidos" e "Sem Data" fazem a filtragem local
       prazo_vencido: visualizacao === 'semana' ? undefined : (visualizacao === 'lista' ? undefined : (statusPrazo === 'vencido' ? true : statusPrazo === 'no_prazo' ? false : undefined)),
-      responsavel_id: responsavelIdFinal,
-      ...filtrosSemResponsavel,
-      data_prazo_legal_inicio: visualizacao === 'semana' ? inicioSemana.toISOString() : filtros.data_prazo_legal_inicio,
-      data_prazo_legal_fim: visualizacao === 'semana' ? fimSemana.toISOString() : filtros.data_prazo_legal_fim,
+      responsavel_id: responsavelIdFinal === 'null' ? 'null' : responsavelIdFinal,
+      data_prazo_legal_inicio: visualizacao === 'semana' ? inicioSemana.toISOString() : undefined,
+      data_prazo_legal_fim: visualizacao === 'semana' ? fimSemana.toISOString() : undefined,
     };
+
+    // Converter filtros camelCase para snake_case
+    if (filtrosSemResponsavel.trt) paramsParaAPI.trt = filtrosSemResponsavel.trt;
+    if (filtrosSemResponsavel.grau) paramsParaAPI.grau = filtrosSemResponsavel.grau;
+    if (filtrosSemResponsavel.tipoExpedienteId) paramsParaAPI.tipo_expediente_id = filtrosSemResponsavel.tipoExpedienteId;
+    if (filtrosSemResponsavel.semTipo) paramsParaAPI.sem_tipo = filtrosSemResponsavel.semTipo;
+    if (filtrosSemResponsavel.segredoJustica !== undefined) paramsParaAPI.segredo_justica = filtrosSemResponsavel.segredoJustica;
+    if (filtrosSemResponsavel.juizoDigital !== undefined) paramsParaAPI.juizo_digital = filtrosSemResponsavel.juizoDigital;
+    if (filtrosSemResponsavel.semResponsavel) paramsParaAPI.sem_responsavel = filtrosSemResponsavel.semResponsavel;
+
+    return paramsParaAPI;
   }, [pagina, limite, buscaDebounced, ordenarPor, ordem, statusBaixa, statusPrazo, filtros, isSuperAdmin, currentUserId, visualizacao, inicioSemana, fimSemana]);
 
   const { expedientes, paginacao, isLoading, error, refetch } = usePendentes(params);
 
   // Busca global (sem faixa de data) usada para preencher abas "Vencidos" e "Sem Data" na visão semanal
   const paramsEspeciaisSemana = React.useMemo(() => {
-    const { responsavel_id, ...filtrosRestantes } = filtros;
+    const { responsavelId, ...filtrosRestantes } = filtros;
     const responsavelIdFinal = visualizacao === 'lista'
-      ? responsavel_id
-      : (!isSuperAdmin && currentUserId ? currentUserId : responsavel_id);
+      ? responsavelId
+      : (!isSuperAdmin && currentUserId ? currentUserId : responsavelId);
 
-    return {
+    const paramsParaAPI: any = {
       pagina: 1,
       limite: 100,
       busca: buscaDebounced || undefined,
@@ -950,11 +961,21 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
       baixado: statusBaixa === 'baixado' ? true : statusBaixa === 'pendente' ? false : undefined,
       // Não aplicamos filtro de prazo_vencido aqui para trazer tudo e filtrar localmente
       prazo_vencido: undefined,
-      responsavel_id: responsavelIdFinal,
-      ...filtrosRestantes,
+      responsavel_id: responsavelIdFinal === 'null' ? 'null' : responsavelIdFinal,
       data_prazo_legal_inicio: undefined,
       data_prazo_legal_fim: undefined,
     };
+
+    // Converter filtros camelCase para snake_case
+    if (filtrosRestantes.trt) paramsParaAPI.trt = filtrosRestantes.trt;
+    if (filtrosRestantes.grau) paramsParaAPI.grau = filtrosRestantes.grau;
+    if (filtrosRestantes.tipoExpedienteId) paramsParaAPI.tipo_expediente_id = filtrosRestantes.tipoExpedienteId;
+    if (filtrosRestantes.semTipo) paramsParaAPI.sem_tipo = filtrosRestantes.semTipo;
+    if (filtrosRestantes.segredoJustica !== undefined) paramsParaAPI.segredo_justica = filtrosRestantes.segredoJustica;
+    if (filtrosRestantes.juizoDigital !== undefined) paramsParaAPI.juizo_digital = filtrosRestantes.juizoDigital;
+    if (filtrosRestantes.semResponsavel) paramsParaAPI.sem_responsavel = filtrosRestantes.semResponsavel;
+
+    return paramsParaAPI;
   }, [buscaDebounced, ordenarPor, ordem, statusBaixa, filtros, isSuperAdmin, currentUserId, visualizacao]);
 
   const { expedientes: expedientesEspeciais, isLoading: isLoadingEspeciais } = usePendentes(
@@ -962,7 +983,11 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
   );
 
   const { usuarios: usuariosLista } = useUsuarios({ ativo: true, limite: 100 });
-  const { tiposExpedientes, isLoading: isLoadingTipos } = useTiposExpedientes({ limite: 100 });
+  const { tiposExpedientes: tiposExpedientesRaw, isLoading: isLoadingTipos } = useTiposExpedientes({ limite: 100 });
+  // Mapear tipos de expedientes para o formato esperado
+  const tiposExpedientes = React.useMemo(() => {
+    return tiposExpedientesRaw.map(t => ({ id: t.id, tipoExpediente: t.tipo_expediente }));
+  }, [tiposExpedientesRaw]);
 
   const handleSuccess = React.useCallback(() => { refetch(); }, [refetch]);
 
@@ -1049,8 +1074,8 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
 
     // Atualizar status de prazo baseado nos filtros selecionados
     const hasPrazoFilter = ids.some(id => id.startsWith('prazo_vencido_'));
-    if (hasPrazoFilter && parsed.prazo_vencido !== undefined) {
-      setStatusPrazo(parsed.prazo_vencido ? 'vencido' : 'no_prazo');
+    if (hasPrazoFilter && parsed.prazoVencido !== undefined) {
+      setStatusPrazo(parsed.prazoVencido ? 'vencido' : 'no_prazo');
     } else {
       // Nenhum filtro de prazo selecionado ou "Todos" selecionado - mostrar todos
       setStatusPrazo('todos');
@@ -1059,12 +1084,12 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
     const newFiltros: ExpedientesFilters = {};
     if (parsed.trt) newFiltros.trt = parsed.trt;
     if (parsed.grau) newFiltros.grau = parsed.grau;
-    if (parsed.responsavel_id) newFiltros.responsavel_id = parsed.responsavel_id;
-    if (parsed.tipo_expediente_id) newFiltros.tipo_expediente_id = parsed.tipo_expediente_id;
-    if (parsed.sem_tipo) newFiltros.sem_tipo = parsed.sem_tipo;
-    if (parsed.segredo_justica) newFiltros.segredo_justica = parsed.segredo_justica;
-    if (parsed.juizo_digital) newFiltros.juizo_digital = parsed.juizo_digital;
-    if (parsed.sem_responsavel) newFiltros.sem_responsavel = parsed.sem_responsavel;
+    if (parsed.responsavelId) newFiltros.responsavelId = parsed.responsavelId;
+    if (parsed.tipoExpedienteId) newFiltros.tipoExpedienteId = parsed.tipoExpedienteId;
+    if (parsed.semTipo) newFiltros.semTipo = parsed.semTipo;
+    if (parsed.segredoJustica !== undefined) newFiltros.segredoJustica = parsed.segredoJustica;
+    if (parsed.juizoDigital !== undefined) newFiltros.juizoDigital = parsed.juizoDigital;
+    if (parsed.semResponsavel) newFiltros.semResponsavel = parsed.semResponsavel;
     setFiltros(newFiltros);
     setPagina(0);
   }, []);
@@ -1197,9 +1222,10 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
       </div>
 
       {/* Conteúdo baseado no modo de visualização */}
+      {/* TODO: Migrar completamente para Expediente quando usePendentes for substituído por actionListarExpedientes */}
       {visualizacao === 'lista' && (
         <DataTable
-          data={expedientes}
+          data={expedientes as any}
           columns={colunas}
           pagination={
             paginacao
@@ -1226,8 +1252,8 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
 
       {visualizacao === 'semana' && (
         <ExpedientesVisualizacaoSemana
-          expedientes={expedientes}
-          expedientesEspeciais={expedientesEspeciais}
+          expedientes={expedientes as any}
+          expedientesEspeciais={expedientesEspeciais as any}
           isLoading={isLoading}
           isLoadingEspeciais={isLoadingEspeciais}
           onRefresh={refetch}
@@ -1244,19 +1270,17 @@ export function ExpedientesContent({ visualizacao }: ExpedientesContentProps) {
 
       {visualizacao === 'mes' && (
         <ExpedientesVisualizacaoMes
-          expedientes={expedientes}
+          expedientes={expedientes as any}
           isLoading={isLoading}
           mesAtual={mesAtual}
-          onMesAtualChange={setMesAtual}
         />
       )}
 
       {visualizacao === 'ano' && (
         <ExpedientesVisualizacaoAno
-          expedientes={expedientes}
+          expedientes={expedientes as any}
           isLoading={isLoading}
           anoAtual={anoAtual}
-          onAnoAtualChange={setAnoAtual}
         />
       )}
 

@@ -16,6 +16,16 @@ import { PaginatedResponse } from ' @/core/types';
 export class ChatService {
   constructor(private repository: ChatRepository) {}
 
+  /**
+   * Cria uma nova sala de chat.
+   * 
+   * INVARIANTE: Salas do tipo TipoSalaChat.Geral não podem ser criadas através
+   * desta função. A Sala Geral deve ser criada apenas via seed/migração e deve
+   * ter o nome canônico 'Sala Geral'. Existe apenas uma Sala Geral por sistema.
+   * 
+   * Para salas privadas, verifica se já existe uma conversa 1-para-1 entre os
+   * dois usuários antes de criar uma nova, evitando duplicidade.
+   */
   async criarSala(
     input: z.infer<typeof criarSalaChatSchema>,
     usuarioId: number
@@ -24,13 +34,26 @@ export class ChatService {
     if (!validation.success) return err(validation.error);
 
     // Validação: não permitir criar sala geral
+    // A Sala Geral já existe e é criada apenas via seed/migração
     if (validation.data.tipo === TipoSalaChat.Geral) {
-      return err(new Error('Sala Geral já existe.'));
+      return err(new Error('Sala Geral não pode ser criada. Use buscarSalaGeral().'));
     }
 
     // Para conversas privadas, verificar se já existe sala entre os dois usuários
     if (validation.data.tipo === TipoSalaChat.Privado && validation.data.participanteId) {
-      // TODO: Implementar verificação de sala privada existente
+      const salaExistenteResult = await this.repository.findPrivateSalaBetweenUsers(
+        usuarioId,
+        validation.data.participanteId
+      );
+
+      if (salaExistenteResult.isErr()) {
+        return err(salaExistenteResult.error);
+      }
+
+      if (salaExistenteResult.value) {
+        // Sala privada já existe, retornar a existente ao invés de criar nova
+        return ok(salaExistenteResult.value);
+      }
     }
 
     return this.repository.saveSala({
