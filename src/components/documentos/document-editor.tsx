@@ -51,6 +51,11 @@ import type { DocumentoComUsuario } from '@/backend/types/documentos/types';
 import { exportToDocx } from '@/core/app/_lib/documentos/export-docx';
 import { exportToPdf, exportTextToPdf } from '@/core/app/_lib/documentos/export-pdf';
 import type { Descendant } from 'platejs';
+import {
+  carregarDocumento,
+  salvarDocumentoAutomatico,
+  salvarDocumento,
+} from '@/core/documentos/repository';
 
 interface DocumentEditorProps {
   documentoId: number;
@@ -100,17 +105,12 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
   React.useEffect(() => {
     async function fetchDocumento() {
       try {
-        const response = await fetch(`/api/documentos/${documentoId}`);
-        const data = await response.json();
+        const data = await carregarDocumento(documentoId);
 
-        if (!response.ok || !data.success) {
-          throw new Error(data.error || 'Erro ao carregar documento');
-        }
-
-        setDocumento(data.data);
-        setTitulo(data.data.titulo);
-        setConteudo(data.data.conteudo || []);
-        lastSavedRef.current = JSON.stringify(data.data.conteudo);
+        setDocumento(data);
+        setTitulo(data.titulo);
+        setConteudo(data.conteudo || []);
+        lastSavedRef.current = JSON.stringify(data.conteudo);
       } catch (error) {
         console.error('Erro ao carregar documento:', error);
         toast.error(error instanceof Error ? error.message : 'Erro ao carregar documento');
@@ -150,21 +150,11 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
     setSaving(true);
 
     try {
-      const response = await fetch(`/api/documentos/${documentoId}/auto-save`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          documento_id: documentoId,
-          conteudo,
-          titulo,
-        }),
+      await salvarDocumentoAutomatico({
+        documento_id: documentoId,
+        conteudo,
+        titulo,
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao salvar');
-      }
 
       lastSavedRef.current = JSON.stringify(conteudo);
     } catch (error) {
@@ -206,20 +196,10 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
     setSaving(true);
 
     try {
-      const response = await fetch(`/api/documentos/${documentoId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          titulo,
-          conteudo,
-        }),
+      await salvarDocumento(documentoId, {
+        titulo,
+        conteudo,
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Erro ao salvar');
-      }
 
       lastSavedRef.current = JSON.stringify(conteudo);
 
