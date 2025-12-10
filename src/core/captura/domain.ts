@@ -41,6 +41,9 @@ export interface ConfigTribunal {
   baseUrl: string;
   apiUrl: string;
   customTimeouts?: CustomTimeouts;
+  // Metadados adicionais (opcionais, preenchidos pela factory)
+  tribunalCodigo?: string;
+  tribunalNome?: string;
 }
 
 /**

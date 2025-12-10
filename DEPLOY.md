@@ -274,12 +274,12 @@ output: 'standalone',  // Gera build otimizado para Docker (~200-300MB)
 - Source maps desabilitados dificultam debug em produção (use logs estruturados)
 - `typescript.ignoreBuildErrors: true` **esconde erros de tipo** - use com cautela
 
-#### Análise de Bundle
+### Análise de Bundle
 
-Para identificar dependências grandes que consomem memória:
+Para identificar dependências grandes:
 
 ```bash
-# Gerar relatório de análise
+# Gerar relatório de análise (local)
 npm run analyze
 
 # Abrir relatórios gerados
@@ -291,61 +291,6 @@ open analyze/server.html
 - Dependências >500KB que podem ser otimizadas
 - Bibliotecas duplicadas (diferentes versões)
 - Código não usado (tree-shaking incompleto)
-
-**Ações comuns:**
-- Substituir bibliotecas grandes por alternativas menores
-- Usar imports dinâmicos para código não-crítico
-- Atualizar dependências para versões mais leves
-
-#### Debug de Memória
-
-Se o build falhar com OOM, use o script de debug:
-
-```bash
-npm run build:debug-memory
-```
-
-Este script:
-- Define `NODE_OPTIONS` com `--max-old-space-size=2048` e `--trace-gc`
-- Mostra eventos de garbage collection durante o build
-- Ajuda a identificar picos de memória e possíveis vazamentos
-
-**Analisando heap snapshots:**
-```bash
-# Gerar heap profile
-node --heap-prof node_modules/next/dist/bin/next build
-
-# Abrir no Chrome DevTools
-# 1. Abra chrome://inspect
-# 2. Clique em "Open dedicated DevTools for Node"
-# 3. Vá para Memory tab
-# 4. Load o arquivo .heapprofile gerado
-```
-
-#### TypeScript Build Errors
-
-O projeto usa `typescript.ignoreBuildErrors: true` no `next.config.ts`.
-
-**Por quê?**
-- [DOCUMENTAR RAZÃO ESPECÍFICA DO PROJETO]
-- Permite builds mesmo com erros de tipo
-- Útil durante desenvolvimento rápido
-
-**Riscos:**
-- Erros de tipo podem causar bugs em produção
-- Dificulta manutenção do código
-- Pode esconder problemas sérios
-
-**Alternativas mais seguras:**
-```bash
-# Verificar tipos antes do build (recomendado)
-npm run type-check
-
-# Build com verificação de tipos
-# Remover temporariamente ignoreBuildErrors do next.config.ts
-```
-
-**Recomendação**: Considere remover `ignoreBuildErrors` e corrigir erros de tipo gradualmente.
 
 ---
 
