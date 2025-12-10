@@ -1,9 +1,11 @@
 /**
  * Repository de Obrigações Jurídicas
  * Camada de acesso a dados (Supabase)
+ * Reutiliza repositório base da feature obrigacoes
  */
 
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import * as ObrigacoesRepoBase from '@/features/obrigacoes/repository';
 import type {
     ObrigacaoJuridica,
     ParcelaObrigacao,
@@ -65,50 +67,46 @@ interface ParcelaRecord {
 export const ObrigacoesRepository = {
     /**
      * Busca parcelas de um acordo com os lançamentos vinculados
+     * Reutiliza repositório base e adiciona lógica de lançamentos
      */
     async buscarParcelasPorAcordo(acordoId: number): Promise<ParcelaObrigacao[]> {
+        // Busca parcelas do repositório base
+        const parcelasBase = await ObrigacoesRepoBase.buscarParcelasPorAcordo(acordoId);
+
+        // Busca lançamentos para cada parcela
         const supabase = createServiceClient();
+        const { data: lancamentos } = await supabase
+            .from('lancamentos_financeiros')
+            .select('*')
+            .eq('acordo_condenacao_id', acordoId);
 
-        const { data, error } = await supabase
-            .from('parcelas')
-            .select(`
-                *,
-                lancamentos_financeiros (*)
-            `)
-            .eq('acordo_condenacao_id', acordoId)
-            .order('numero_parcela');
-
-        if (error) throw new Error(`Erro ao buscar parcelas: ${error.message}`);
-
-        return (data || []).map(mapRecordToParcela);
+        // Mapeia parcelas para o formato financeiro
+        return parcelasBase.map(p => {
+            const lancamento = lancamentos?.find(l => l.parcela_id === p.id);
+            return mapParcelaToFinanceiro(p, lancamento);
+        });
     },
 
     /**
      * Busca uma obrigação jurídica completa (Acordo/Condenação) e suas parcelas
+     * Reutiliza repositório base
      */
     async buscarObrigacaoJuridica(acordoId: number): Promise<ObrigacaoJuridica | null> {
-        const supabase = createServiceClient();
-
-        const { data: acordo, error } = await supabase
-            .from('acordos_condenacoes')
-            .select('*')
-            .eq('id', acordoId)
-            .single();
-
-        if (error || !acordo) return null;
+        const acordoBase = await ObrigacoesRepoBase.buscarAcordoPorId(acordoId);
+        if (!acordoBase) return null;
 
         const parcelas = await this.buscarParcelasPorAcordo(acordoId);
 
         return {
-            id: acordo.id,
-            tipo: acordo.tipo,
-            direcao: acordo.direcao,
-            processoId: acordo.processo_id,
+            id: acordoBase.id,
+            tipo: acordoBase.tipo,
+            direcao: acordoBase.direcao,
+            processoId: acordoBase.processoId,
             clienteId: null, // TODO: Buscar via processo_partes se necessário
             parteContrariaId: null,
-            valorTotal: acordo.valor_total,
+            valorTotal: acordoBase.valorTotal,
             saldoDevedor: 0, // TODO: Calcular
-            percentualHonorarios: 30, // Default, deveria vir do contrato
+            percentualHonorarios: acordoBase.percentualEscritorio || 30,
             parcelas
         };
     },
@@ -285,6 +283,32 @@ export const ObrigacoesRepository = {
 // ============================================================================
 // Mappers
 // ============================================================================
+
+/**
+ * Converte Parcela do domínio de obrigações para formato financeiro
+ */
+function mapParcelaToFinanceiro(parcela: any, lancamento?: any): ParcelaObrigacao {
+    return {
+        id: parcela.id,
+        acordoId: parcela.acordoCondenacaoId,
+        numeroParcela: parcela.numeroParcela,
+        valor: parcela.valorBrutoCreditoPrincipal + (parcela.honorariosSucumbenciais || 0),
+        valorBrutoCreditoPrincipal: parcela.valorBrutoCreditoPrincipal,
+        honorariosContratuais: parcela.honorariosContratuais || 0,
+        honorariosSucumbenciais: parcela.honorariosSucumbenciais || 0,
+        valorRepasseCliente: parcela.valorRepasseCliente || 0,
+        dataVencimento: parcela.dataVencimento,
+        dataPagamento: parcela.dataEfetivacao,
+        status: parcela.status,
+        statusRepasse: parcela.statusRepasse || 'nao_aplicavel',
+        lancamentoId: lancamento?.id || null,
+        formaPagamento: parcela.formaPagamento,
+        lancamento: lancamento ? mapRecordToLancamento(lancamento) : undefined,
+        declaracaoPrestacaoContasUrl: parcela.declaracaoPrestacaoContasUrl || null,
+        comprovanteRepasseUrl: parcela.comprovanteRepasseUrl || null,
+        dataRepasse: parcela.dataRepasse || null
+    };
+}
 
 function mapRecordToParcela(record: ParcelaRecord): ParcelaObrigacao {
     const lancamento = record.lancamentos_financeiros?.[0];

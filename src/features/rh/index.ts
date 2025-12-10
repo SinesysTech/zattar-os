@@ -102,5 +102,7 @@ export {
   actionBuscarFolhaPorPeriodo
 } from './actions/folhas-pagamento-actions';
 
+
 // Hooks
 export * from './hooks';
+export * from './components';

@@ -168,7 +168,8 @@ export async function actionPagarFolhaPagamento(id: number, formData: FormData) 
 
 export async function actionAtualizarFolhaPagamento(id: number, formData: FormData) {
   try {
-    const { userId } = await requireAuth(['folhas_pagamento:criar']); // Assuming creator/editor permission
+
+    await requireAuth(['folhas_pagamento:criar']); // Assuming creator/editor permission
 
     const dados = {
       dataPagamento: formData.get('dataPagamento') ? String(formData.get('dataPagamento')) : undefined,

@@ -1,14 +1,17 @@
 <!-- OPENSPEC:START -->
+
 # OpenSpec Instructions
 
 These instructions are for AI assistants working in this project.
 
 Always open `@/openspec/AGENTS.md` when the request:
+
 - Mentions planning or proposals (words like proposal, spec, change, plan)
 - Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
 - Sounds ambiguous and you need the authoritative spec before coding
 
 Use `@/openspec/AGENTS.md` to learn:
+
 - How to create and apply change proposals
 - Spec format and conventions
 - Project structure and guidelines
@@ -77,33 +80,39 @@ src/features/{modulo}/
 ### Criar Nova Feature
 
 1. **Criar estrutura**:
+
    ```bash
    mkdir -p src/features/nova-feature/{components,hooks,actions}
    touch src/features/nova-feature/{domain,service,repository,types,utils,index}.ts
    ```
 
 2. **Definir domínio** (`domain.ts`):
+
    - Schemas Zod para validação
    - Tipos TypeScript
    - Constantes e enums
    - Regras de negócio puras
 
 3. **Implementar repository** (`repository.ts`):
+
    - Acesso ao Supabase
    - CRUD operations
    - Queries com filtros
 
 4. **Implementar service** (`service.ts`):
+
    - Casos de uso
    - Validação de entrada
    - Orquestração de lógica
 
 5. **Criar Server Actions** (`actions/`):
+
    - Use `'use server'` directive
    - Retorne `{ success, data?, error? }`
    - Revalidate cache com `revalidatePath()`
 
 6. **Criar componentes** (`components/`):
+
    - Use `'use client'` quando necessário
    - Importe de `@/features/nova-feature`
    - Siga padrões shadcn/ui
@@ -139,17 +148,17 @@ src/features/{modulo}/
 
 ```typescript
 // ✅ Correto - importar de barrel exports
-import { ClientesTable, actionListarClientes } from '@/features/partes';
+import { ClientesTable, actionListarClientes } from "@/features/partes";
 
 // ❌ Evitar - imports diretos internos
-import { ClientesTable } from '@/features/partes/components/clientes/clientes-table';
+import { ClientesTable } from "@/features/partes/components/clientes/clientes-table";
 ```
 
 ### Tipagem
 
 ```typescript
 // ✅ Usar Zod para schemas de validação
-import { z } from 'zod';
+import { z } from "zod";
 
 const clienteSchema = z.object({
   nome: z.string().min(3),
@@ -179,7 +188,9 @@ type ActionResponse<T> = {
 
 - **Partes** - `features/partes/`
 - **Processos** - `features/processos/`
+
 - **Contratos** - `features/contratos/`
+- **RH** - `features/rh/`
 
 ### Módulos Legados 🔄
 
@@ -187,7 +198,7 @@ type ActionResponse<T> = {
 - **Expedientes** - Estrutura antiga
 - **Acordos/Condenações** - Estrutura antiga
 - **Financeiro** - Módulo complexo com estrutura própria
-- **RH** - Estrutura antiga
+- **Captura de dados PJE/TRT**
 
 ### Regras de Migração
 
@@ -202,16 +213,14 @@ type ActionResponse<T> = {
 
 ```tsx
 // app/(dashboard)/layout.tsx
-import { AppSidebar } from '@/components/layout/app-sidebar';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default function DashboardLayout({ children }) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset id="main-content">
-        {children}
-      </SidebarInset>
+      <SidebarInset id="main-content">{children}</SidebarInset>
     </SidebarProvider>
   );
 }
@@ -220,8 +229,8 @@ export default function DashboardLayout({ children }) {
 ### PageShell
 
 ```tsx
-import { PageShell } from '@/components/shared/page-shell';
-import { Button } from '@/components/ui/button';
+import { PageShell } from "@/components/shared/page-shell";
+import { Button } from "@/components/ui/button";
 
 export default function MinhaPage() {
   return (
@@ -239,9 +248,9 @@ export default function MinhaPage() {
 ### DataTableShell (Superfície de Dados)
 
 ```tsx
-import { DataTableShell } from '@/components/shared/data-table-shell';
-import { TableToolbar } from '@/components/ui/table-toolbar';
-import { ResponsiveTable } from '@/components/ui/responsive-table';
+import { DataTableShell } from "@/components/shared/data-table-shell";
+import { TableToolbar } from "@/components/ui/table-toolbar";
+import { ResponsiveTable } from "@/components/ui/responsive-table";
 
 function MinhaTabela() {
   return (
@@ -294,9 +303,13 @@ src/features/{modulo}/
 - ✅ **Partes** (`features/partes/`) - Completo
   - Clientes, Partes Contrárias, Terceiros, Representantes
 - ✅ **Processos** (`features/processos/`) - Completo
+
   - Domain, Service, Repository pattern
+
 - ✅ **Contratos** (`features/contratos/`) - Completo
   - Estrutura completa de feature
+- ✅ **RH** (`features/rh/`) - Completo
+  - Salários, Folhas de Pagamento, Integração Financeira
 - 🔄 **Outros módulos** - Em migração progressiva
 
 #### Módulos Legados (Backend)
@@ -307,7 +320,6 @@ Módulos ainda não migrados permanecem em `backend/{modulo}/services/`:
 - Expedientes
 - Acordos/Condenações
 - Financeiro
-- RH
 - Captura de dados PJE/TRT
 
 ### Quando Criar Novo Código

@@ -1,19 +1,19 @@
 
-import { 
-  CriarAcordoComParcelasParams, 
-  ListarAcordosParams, 
-  AtualizarAcordoParams, 
-  MarcarParcelaRecebidaParams, 
+import {
+  CriarAcordoComParcelasParams,
+  ListarAcordosParams,
+  AtualizarAcordoParams,
+  MarcarParcelaRecebidaParams,
   AtualizarParcelaParams,
   FiltrosRepasses,
   RegistrarRepasseParams,
   Parcela
 } from "./types";
 import { ObrigacoesRepository } from "./repository";
-import { 
-  criarAcordoComParcelasSchema, 
-  atualizarAcordoSchema, 
-  marcarParcelaRecebidaSchema, 
+import {
+  criarAcordoComParcelasSchema,
+  atualizarAcordoSchema,
+  marcarParcelaRecebidaSchema,
   parcelaSchema
 } from "./domain";
 import { calcularDataVencimento, calcularValorParcela } from "./utils";
@@ -44,7 +44,12 @@ export async function criarAcordoComParcelas(params: CriarAcordoComParcelasParam
   // 4. Create Parcels
   const parcelas = await ObrigacoesRepository.criarParcelas(parcelasData);
 
-  return { acordo, parcelas };
+  // Retornar com id na raiz para facilitar navegação
+  return {
+    id: acordo.id,
+    acordo,
+    parcelas
+  };
 }
 
 export async function listarAcordos(params: ListarAcordosParams) {
@@ -75,7 +80,7 @@ export async function marcarParcelaRecebida(parcelaId: number, dados: MarcarParc
 
   // Logic: update status and date
   // In future: Create 'Lancamento Financeiro' here.
-  
+
   return await ObrigacoesRepository.marcarParcelaComoRecebida(parcelaId, {
     dataEfetivacao: dados.dataRecebimento,
     valor: dados.valorRecebido
@@ -93,10 +98,10 @@ export async function recalcularDistribuicao(acordoId: number) {
   // Get current parcels
   // This logic reconstructs parcels based on CURRENT agreement values
   // Only for unpaid parcels
-  
+
   const parcelas = await ObrigacoesRepository.buscarParcelasPorAcordo(acordoId);
   const parcelasPagas = parcelas.filter(p => ['recebida', 'paga'].includes(p.status));
-  
+
   if (parcelasPagas.length > 0) {
     throw new Error("Não é possível recalcular distribuição com parcelas pagas.");
   }
@@ -109,7 +114,7 @@ export async function recalcularDistribuicao(acordoId: number) {
     ...acordo,
     formaPagamentoPadrao: 'transferencia_direta', // Default or fetch from somewhere? Assuming default for recalc
     intervaloEntreParcelas: 30 // Default
-  } as any; 
+  } as any;
   // Note: We might be missing original parameters like 'formaPagamentoPadrao' if not stored in Acordo.
   // Ideally, we should check the first old parcel to guess the payment method.
   if (parcelas.length > 0) {
@@ -156,16 +161,16 @@ function calcularParcelasDoAcordo(acordo: any, params: CriarAcordoComParcelasPar
 
   for (let i = 0; i < numeroParcelas; i++) {
     const isLast = i === numeroParcelas - 1;
-    
+
     // Values
-    const valorParcela = isLast 
+    const valorParcela = isLast
       ? acordo.valorTotal - (parseFloat(valorPorParcelaBase.toFixed(2)) * (numeroParcelas - 1))
       : parseFloat(valorPorParcelaBase.toFixed(2));
-      
+
     const honorariosParcela = isLast
       ? acordo.honorariosSucumbenciaisTotal - (parseFloat(honorariosPorParcelaBase.toFixed(2)) * (numeroParcelas - 1))
       : parseFloat(honorariosPorParcelaBase.toFixed(2));
-      
+
     // Date
     const dataVencimento = calcularDataVencimento(acordo.dataVencimentoPrimeiraParcela, i + 1, intervalo);
 

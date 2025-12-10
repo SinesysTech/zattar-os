@@ -25,21 +25,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
-// Assuming useCargos is available there or I might need to find it. 
-// If useCargos was in app/_lib/hooks, I'll use it.
 import { useCargos } from '@/app/_lib/hooks/use-cargos';
 import { actionCriarSalario, actionAtualizarSalario } from '../../actions/salarios-actions';
-import { criarSalarioSchema, atualizarSalarioSchema } from '../../domain';
 import type { SalarioComDetalhes } from '../../types';
 import { toast } from 'sonner';
-
-// Reusing domain schema if possible, or defining form-specific one
-// The domain schema expects primitives. The form uses strings/numbers.
-// I will adapt the form schema to match what the actions expect (FormData).
-// Actually, `actionCriarSalario` expects `FormData`!
-// But `SalarioFormDialog` previously called `criarSalario` which took a DTO.
-// My new `actionCriarSalario` takes `FormData`.
-// So I should convert the form data to FormData.
 
 const schema = z.object({
   usuarioId: z.coerce.number().positive('Selecione um funcionário'),
@@ -64,8 +53,8 @@ export function SalarioFormDialog({
   salario,
   onSuccess,
 }: SalarioFormDialogProps) {
-  const { usuarios } = useUsuarios({ limite: 200, apenasAtivos: true });
-  const { cargos } = useCargos({ ativos: true });
+  const { usuarios } = useUsuarios({ limite: 200, ativo: true });
+  const { cargos } = useCargos({ ativo: true });
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -95,10 +84,6 @@ export function SalarioFormDialog({
 
     let result;
     if (salario) {
-        // Validation for Update doesn't follow strict Create schema but we pass fields
-        // Update Action also uses FormData
-        // We need to append other fields for update if needed (e.g. status)
-        // But here we only edit basic info.
         result = await actionAtualizarSalario(salario.id, formData);
     } else {
         result = await actionCriarSalario(formData);
@@ -137,7 +122,7 @@ export function SalarioFormDialog({
               <SelectContent>
                 {usuarios.map((usuario) => (
                   <SelectItem key={usuario.id} value={usuario.id.toString()}>
-                    {usuario.nome_exibicao || usuario.nome_completo || usuario.email}
+                    {usuario.nomeExibicao || usuario.nomeCompleto || usuario.email}
                   </SelectItem>
                 ))}
               </SelectContent>

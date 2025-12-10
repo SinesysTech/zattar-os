@@ -319,8 +319,10 @@ export async function marcarParcelaComoRecebida(id: number, dados: { dataEfetiva
     data_efetivacao: dados.dataEfetivacao,
   };
 
-  // Note: logic for updating values if they differ might handle 'valor_bruto_credito_principal' implicitly or require separate update
-  // Here we only update status and dates for now as per minimal requirement, but if value changed it should've been updated before or here
+  // Se um valorRecebido foi fornecido e difere do previsto, atualizar valor_bruto_credito_principal
+  if (dados.valor !== undefined) {
+    updateData.valor_bruto_credito_principal = dados.valor;
+  }
 
   const { data, error } = await supabase
     .from('parcelas')

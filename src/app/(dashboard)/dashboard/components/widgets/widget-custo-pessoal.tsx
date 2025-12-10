@@ -3,8 +3,10 @@
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useFolhasPagamento } from '@/app/_lib/hooks/use-folhas-pagamento';
-import { MESES_LABELS } from '@/backend/types/financeiro/salarios.types';
+
+import { useFolhasPagamento } from '@/features/rh/hooks';
+
+import { MESES_LABELS } from '@/features/rh';
 
 const formatCurrency = (valor: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor ?? 0);
