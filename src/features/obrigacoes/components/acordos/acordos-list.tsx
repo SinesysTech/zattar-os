@@ -16,13 +16,13 @@ import { formatCurrency } from '@/features/obrigacoes/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import { AcordoComParcelas, ListarAcordosParams } from '../../types';
 import { useAcordos } from '../../hooks/use-acordos';
-import { 
-  formatarDirecao, 
-  formatarStatus, 
-  formatarTipo, 
-  getDirecaoColorClass, 
-  getStatusColorClass, 
-  getTipoColorClass 
+import {
+  formatarDirecao,
+  formatarStatus,
+  formatarTipo,
+  getDirecaoColorClass,
+  getStatusColorClass,
+  getTipoColorClass
 } from '../../utils';
 
 interface AcordosListProps {
@@ -51,10 +51,10 @@ const getGrauColorClass = (grau: string): string => {
 };
 
 const formatarGrau = (grau: string): string => {
-    if (grau === 'primeiro_grau') return '1º Grau';
-    if (grau === 'segundo_grau') return '2º Grau';
-    if (grau === 'tribunal_superior') return 'TST';
-    return grau;
+  if (grau === 'primeiro_grau') return '1º Grau';
+  if (grau === 'segundo_grau') return '2º Grau';
+  if (grau === 'tribunal_superior') return 'TST';
+  return grau;
 };
 
 function criarColunas(router: ReturnType<typeof useRouter>): ColumnDef<AcordoComParcelas>[] {
@@ -116,7 +116,7 @@ function criarColunas(router: ReturnType<typeof useRouter>): ColumnDef<AcordoCom
       header: ({ column }) => <DataTableColumnHeader column={column} title="Direção" />,
       cell: ({ row }) => (
         <Badge variant="outline" className={getDirecaoColorClass(row.original.direcao)}>
-            {formatarDirecao(row.original.direcao)}
+          {formatarDirecao(row.original.direcao)}
         </Badge>
       ),
     },
@@ -140,7 +140,7 @@ function criarColunas(router: ReturnType<typeof useRouter>): ColumnDef<AcordoCom
       header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
       cell: ({ row }) => (
         <Badge variant="outline" className={getStatusColorClass(row.original.status)}>
-            {formatarStatus(row.original.status)}
+          {formatarStatus(row.original.status)}
         </Badge>
       ),
     },
@@ -149,9 +149,9 @@ function criarColunas(router: ReturnType<typeof useRouter>): ColumnDef<AcordoCom
       header: () => <div className="text-right">Ações</div>,
       cell: ({ row }) => (
         <div className="flex justify-end">
-            <Button variant="ghost" size="sm" onClick={() => router.push(`/acordos-condenacoes/${row.original.id}`)}>
-                <Eye className="h-4 w-4 mr-1"/> Detalhes
-            </Button>
+          <Button variant="ghost" size="sm" onClick={() => router.push(`/acordos-condenacoes/${row.original.id}`)}>
+            <Eye className="h-4 w-4 mr-1" /> Detalhes
+          </Button>
         </div>
       ),
     },
@@ -162,7 +162,7 @@ export function AcordosList({ busca, filtros, refreshKey }: AcordosListProps) {
   const router = useRouter();
   const [pagina, setPagina] = useState(0);
   const [limite, setLimite] = useState(50);
-  
+
   // Combine all params
   const params: ListarAcordosParams = {
     pagina: pagina + 1,
@@ -170,7 +170,7 @@ export function AcordosList({ busca, filtros, refreshKey }: AcordosListProps) {
     busca: busca || undefined,
     ...filtros
   };
-  
+
   // Note: 'busca' is not directly supported in 'listarAcordos' service logic in Phase 2 unless we added it?
   // Checking service.ts: 'listarAcordos' in service.ts does NOT have 'busca'.
   // We might need to implement it in repo/service or accept that search is limted for now.
@@ -183,7 +183,7 @@ export function AcordosList({ busca, filtros, refreshKey }: AcordosListProps) {
   // Actually, I should probably check if I can just add it. The repo used `query = query.or(...)` probably.
   // Since I strictly followed the plan, and the plan didn't mention 'busca' in `ListarAcordosParams` in Phase 2.1, 
   // I will skip it in the hook call but keep strict to the plan.
-  
+
   const { data, total, totalPaginas, isLoading, error, refetch } = useAcordos(params);
 
   useEffect(() => {

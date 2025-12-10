@@ -4,10 +4,10 @@ export type DirecaoPagamento = 'recebimento' | 'pagamento';
 export type FormaDistribuicao = 'integral' | 'dividido';
 export type StatusAcordo = 'pendente' | 'pago_parcial' | 'pago_total' | 'atrasado';
 export type StatusParcela = 'pendente' | 'recebida' | 'paga' | 'atrasada' | 'cancelada';
-export type StatusRepasse = 
-  | 'nao_aplicavel' 
-  | 'pendente_declaracao' 
-  | 'pendente_transferencia' 
+export type StatusRepasse =
+  | 'nao_aplicavel'
+  | 'pendente_declaracao'
+  | 'pendente_transferencia'
   | 'repassado';
 export type FormaPagamento = 'transferencia_direta' | 'deposito_judicial' | 'deposito_recursal';
 
