@@ -100,7 +100,8 @@ export const criarCompartilhamentoSchema = z.object({
 });
 
 export const atualizarPermissaoCompartilhamentoSchema = z.object({
-  permissao: z.enum(PERMISSAO_VALUES),
+  permissao: z.enum(PERMISSAO_VALUES).optional(), // Optional now
+  pode_deletar: z.boolean().optional(),
 });
 
 export const templateSchema = z.object({

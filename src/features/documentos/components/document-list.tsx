@@ -37,7 +37,10 @@ import { CreateDocumentDialog } from '@/features/documentos/components/create-do
 import { CreateFolderDialog } from '@/features/documentos/components/create-folder-dialog';
 import { TemplateLibraryDialog } from '@/features/documentos/components/template-library-dialog';
 import { CommandMenu } from '@/features/documentos/components/command-menu';
-import type { DocumentoComUsuario } from '@/backend/types/documentos/types';
+import { useDocumentsList } from '@/features/documentos/hooks/use-documents-list';
+import { actionListarDocumentos } from '@/features/documentos/actions/documentos-actions';
+import { actionListarDocumentosCompartilhados } from '@/features/documentos/actions/compartilhamento-actions';
+import type { DocumentoComUsuario, ListarDocumentosParams } from '@/features/documentos/types';
 
 type FiltroTipo = 'todos' | 'meus' | 'compartilhados' | 'recentes';
 
@@ -52,98 +55,53 @@ const ITEMS_PER_PAGE = 20;
 
 export function DocumentList() {
   const router = useRouter();
-  const [documentos, setDocumentos] = React.useState<DocumentoComUsuario[]>([]);
-  const [loading, setLoading] = React.useState(true);
-  const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('list');
-  const [busca, setBusca] = React.useState('');
-  const [buscaDebounced, setBuscaDebounced] = React.useState('');
-  const [pastaAtual, setPastaAtual] = React.useState<number | null>(null);
-  const [filtroTipo, setFiltroTipo] = React.useState<FiltroTipo>('todos');
-  const [tagsAtivas, setTagsAtivas] = React.useState<string[]>([]);
-  const [pagination, setPagination] = React.useState<PaginationInfo>({
-    total: 0,
+  // Determine fetcher based on filter
+  const fetcher = filtroTipo === 'compartilhados' 
+    ? actionListarDocumentosCompartilhados 
+    : actionListarDocumentos;
+    
+  const { documents: documentos, total, loading, params, updateParams, refetch } = useDocumentsList({
     limit: ITEMS_PER_PAGE,
     offset: 0,
-    hasMore: false,
-  });
-  const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
-  const [createFolderOpen, setCreateFolderOpen] = React.useState(false);
-  const [templateDialogOpen, setTemplateDialogOpen] = React.useState(false);
-  const [refreshKey, setRefreshKey] = React.useState(0);
-
-  // Debounce para busca
+  }, fetcher);
+  
+  // Sync filters to hook params
   React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setBuscaDebounced(busca);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [busca]);
+    const newParams: Partial<ListarDocumentosParams> = {
+      offset: 0, // Reset page on filter change
+    };
 
-  // Reset offset quando filtros mudam
-  React.useEffect(() => {
-    setPagination((prev) => ({ ...prev, offset: 0 }));
-  }, [pastaAtual, buscaDebounced, tagsAtivas, filtroTipo]);
-
-  // Buscar documentos
-  React.useEffect(() => {
-    async function fetchDocumentos() {
-      setLoading(true);
-      try {
-        // Para filtro "compartilhados", usar endpoint específico
-        if (filtroTipo === 'compartilhados') {
-          const response = await fetch('/api/documentos/compartilhados');
-          const data = await response.json();
-          if (data.success) {
-            setDocumentos(data.data);
-            setPagination({
-              total: data.data.length,
-              limit: ITEMS_PER_PAGE,
-              offset: 0,
-              hasMore: false,
-            });
-          }
-          return;
-        }
-
-        const params = new URLSearchParams();
-
-        // Pasta
+    if (filtroTipo === 'compartilhados') {
+       // Shared logic handles itself or ignores params for now
+    } else {
         if (pastaAtual !== null) {
-          params.set('pasta_id', pastaAtual.toString());
+          newParams.pasta_id = pastaAtual;
         } else if (filtroTipo !== 'recentes') {
-          params.set('pasta_id', 'null');
+          newParams.pasta_id = null; // Root
+        } else {
+          newParams.pasta_id = undefined; // Recentes (all folders)
         }
 
-        // Busca
-        if (buscaDebounced) {
-          params.set('busca', buscaDebounced);
-        }
-
-        // Tags
-        if (tagsAtivas.length > 0) {
-          params.set('tags', tagsAtivas.join(','));
-        }
-
-        // Paginação
-        params.set('limit', ITEMS_PER_PAGE.toString());
-        params.set('offset', pagination.offset.toString());
-
-        const response = await fetch(`/api/documentos?${params}`);
-        const data = await response.json();
-
-        if (data.success) {
-          setDocumentos(data.data);
-          setPagination(data.pagination);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar documentos:', error);
-      } finally {
-        setLoading(false);
-      }
+        newParams.busca = buscaDebounced;
+        newParams.tags = tagsAtivas;
     }
+    
+    updateParams(newParams);
+  }, [pastaAtual, buscaDebounced, tagsAtivas, filtroTipo, updateParams]);
 
-    fetchDocumentos();
-  }, [pastaAtual, buscaDebounced, tagsAtivas, pagination.offset, filtroTipo, refreshKey]);
+  // Handle pagination changes
+  const handlePreviousPage = () => {
+    updateParams({ offset: Math.max(0, (params.offset || 0) - ITEMS_PER_PAGE) });
+  };
+
+  const handleNextPage = () => {
+    updateParams({ offset: (params.offset || 0) + ITEMS_PER_PAGE });
+  };
+  
+  // Refresh when needed
+  React.useEffect(() => {
+     if (refreshKey > 0) refetch();
+  }, [refreshKey, refetch]);
 
   const handleDocumentoClick = (id: number) => {
     router.push(`/documentos/${id}`);
@@ -165,22 +123,9 @@ export function DocumentList() {
     setTagsAtivas((prev) => prev.filter((t) => t !== tag));
   };
 
-  const handlePreviousPage = () => {
-    setPagination((prev) => ({
-      ...prev,
-      offset: Math.max(0, prev.offset - ITEMS_PER_PAGE),
-    }));
-  };
 
-  const handleNextPage = () => {
-    setPagination((prev) => ({
-      ...prev,
-      offset: prev.offset + ITEMS_PER_PAGE,
-    }));
-  };
-
-  const currentPage = Math.floor(pagination.offset / ITEMS_PER_PAGE) + 1;
-  const totalPages = Math.ceil(pagination.total / ITEMS_PER_PAGE);
+  const currentPage = Math.floor((params.offset || 0) / ITEMS_PER_PAGE) + 1;
+  const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
 
   return (
     <div className="flex flex-1 overflow-hidden">
@@ -366,20 +311,20 @@ export function DocumentList() {
         </div>
 
         {/* Paginação */}
-        {!loading && documentos.length > 0 && pagination.total > ITEMS_PER_PAGE && (
+        {!loading && documentos.length > 0 && total > ITEMS_PER_PAGE && (
           <div className="border-t px-4 py-3">
             <div className="flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
-                Mostrando {pagination.offset + 1} -{' '}
-                {Math.min(pagination.offset + documentos.length, pagination.total)} de{' '}
-                {pagination.total} documentos
+                Mostrando {(params.offset || 0) + 1} -{' '}
+                {Math.min((params.offset || 0) + documentos.length, total)} de{' '}
+                {total} documentos
               </p>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handlePreviousPage}
-                  disabled={pagination.offset === 0}
+                  disabled={(params.offset || 0) === 0}
                 >
                   <ChevronLeft className="mr-1 h-4 w-4" />
                   Anterior
@@ -391,7 +336,7 @@ export function DocumentList() {
                   variant="outline"
                   size="sm"
                   onClick={handleNextPage}
-                  disabled={!pagination.hasMore}
+                  disabled={!((params.offset || 0) + documentos.length < total)}
                 >
                   Próxima
                   <ChevronRight className="ml-1 h-4 w-4" />

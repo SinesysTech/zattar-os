@@ -2,7 +2,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { actionListarDocumentos } from '../actions/documentos-actions';
 import type { DocumentoComUsuario, ListarDocumentosParams } from '../types';
 
-export function useDocumentsList(initialParams?: ListarDocumentosParams) {
+export type DocumentFetcher = (params: any) => Promise<{ success: boolean; data?: any[]; total?: number; error?: string }>;
+
+export function useDocumentsList(
+  initialParams?: ListarDocumentosParams,
+  fetcher: DocumentFetcher = actionListarDocumentos
+) {
   const [documents, setDocuments] = useState<DocumentoComUsuario[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -12,15 +17,15 @@ export function useDocumentsList(initialParams?: ListarDocumentosParams) {
   const fetchDocuments = useCallback(async () => {
     setLoading(true);
     setError(null);
-    const result = await actionListarDocumentos(params);
+    const result = await fetcher(params);
     if (result.success) {
       setDocuments(result.data || []);
       setTotal(result.total || 0);
     } else {
-      setError(result.error);
+      setError(result.error || 'Erro desconhecido');
     }
     setLoading(false);
-  }, [params]);
+  }, [params, fetcher]);
 
   useEffect(() => {
     fetchDocuments();

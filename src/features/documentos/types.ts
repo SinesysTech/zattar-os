@@ -291,7 +291,7 @@ export interface DocumentoUpload {
  * Parâmetros para registrar upload de arquivo
  */
 export interface UploadArquivoParams {
-  documento_id: number;
+  documento_id: number | null;
   nome_arquivo: string;
   tipo_mime: string;
   tamanho_bytes: number;

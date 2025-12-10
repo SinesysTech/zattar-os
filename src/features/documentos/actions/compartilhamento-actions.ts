@@ -40,7 +40,7 @@ export async function actionListarCompartilhamentos(documento_id: number) {
   }
 }
 
-export async function actionAtualizarPermissao(compartilhamento_id: number, permissao: string) {
+export async function actionAtualizarPermissao(compartilhamento_id: number, permissao?: string, pode_deletar?: boolean) {
   try {
     const user = await authenticateRequest();
     if (!user) {
@@ -48,7 +48,7 @@ export async function actionAtualizarPermissao(compartilhamento_id: number, perm
     }
     const updatedCompartilhamento = await service.atualizarPermissao(
       compartilhamento_id,
-      permissao,
+      { permissao, pode_deletar },
       user.id
     );
     revalidatePath(`/documentos/${updatedCompartilhamento.documento_id}`);
@@ -72,7 +72,7 @@ export async function actionRemoverCompartilhamento(compartilhamento_id: number)
   }
 }
 
-export async function actionListarDocumentosCompartilhados() {
+export async function actionListarDocumentosCompartilhados(_params?: any) {
   try {
     const user = await authenticateRequest();
     if (!user) {

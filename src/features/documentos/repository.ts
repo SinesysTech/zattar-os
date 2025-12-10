@@ -1484,14 +1484,16 @@ export async function buscarCompartilhamentoPorId(
  */
 export async function atualizarPermissaoCompartilhamentoPorId(
   id: number,
-  permissao: 'visualizar' | 'editar',
+  permissao?: 'visualizar' | 'editar',
   pode_deletar?: boolean
 ): Promise<DocumentoCompartilhado> {
   const supabase = createServiceClient();
 
-  const updateData: { permissao: 'visualizar' | 'editar'; pode_deletar?: boolean } = {
-    permissao,
-  };
+  const updateData: Record<string, any> = {};
+
+  if (permissao) {
+    updateData.permissao = permissao;
+  }
 
   if (pode_deletar !== undefined) {
     updateData.pode_deletar = pode_deletar;

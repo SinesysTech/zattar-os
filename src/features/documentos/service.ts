@@ -9,6 +9,7 @@ import {
   PastaComContadores,
   Template,
   ListarTemplatesParams,
+  CriarTemplateParams,
   TemplateComUsuario,
   DocumentoCompartilhado,
   DocumentoCompartilhadoComUsuario,
@@ -303,10 +304,10 @@ export async function listarDocumentosCompartilhadosComUsuario(
 
 export async function atualizarPermissao(
   compartilhamento_id: number,
-  permissao: string,
+  updates: { permissao?: string; pode_deletar?: boolean },
   usuario_id: number
 ): Promise<DocumentoCompartilhado> {
-  const parsedPermissao = domain.atualizarPermissaoCompartilhamentoSchema.parse({ permissao }).permissao;
+  const parsed = domain.atualizarPermissaoCompartilhamentoSchema.parse(updates);
 
   const compartilhamento = await repository.buscarCompartilhamentoPorId(compartilhamento_id);
   if (!compartilhamento) {
@@ -322,7 +323,11 @@ export async function atualizarPermissao(
     throw new Error('Não é possível alterar sua própria permissão.');
   }
 
-  return repository.atualizarPermissaoCompartilhamentoPorId(compartilhamento_id, parsedPermissao);
+  return repository.atualizarPermissaoCompartilhamentoPorId(
+    compartilhamento_id, 
+    parsed.permissao as 'visualizar' | 'editar' | undefined, 
+    parsed.pode_deletar
+  );
 }
 
 export async function removerCompartilhamento(

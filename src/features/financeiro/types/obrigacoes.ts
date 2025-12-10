@@ -106,22 +106,22 @@ export interface ObrigacaoComDetalhes {
     dataVencimento: string;
     status: StatusObrigacao;
     statusSincronizacao: StatusSincronizacao;
-    
+
     // Auxiliares de UI
     diasAteVencimento: number | null;
     tipoEntidade: 'parcela' | 'obrigacao'; // Se é uma parcela individual ou uma obrigação agrupada
-    
+
     // Datas
     dataLancamento?: string | null;
     dataEfetivacao?: string | null;
     dataCompetencia?: string | null;
-    
+
     // Relacionamentos IDs
     clienteId?: number | null;
     processoId?: number | null;
     acordoId?: number | null;
     lancamentoId?: number | null;
-    
+
     // Relacionamentos Expandidos
     cliente?: {
         id: number;
@@ -163,7 +163,7 @@ export interface ObrigacaoComDetalhes {
         codigo: string;
         nome: string;
     };
-    
+
     percentualHonorarios?: number | null;
 }
 

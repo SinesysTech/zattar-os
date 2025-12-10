@@ -53,6 +53,18 @@ export function useDocumentSharing(documentoId: number) {
     }
   }, [fetchShares]);
 
+  const updateDeletePermission = useCallback(async (compartilhamentoId: number, podeDeletar: boolean) => {
+    setError(null);
+    const result = await actionAtualizarPermissao(compartilhamentoId, undefined, podeDeletar);
+    if (result.success) {
+      fetchShares();
+      return result.data;
+    } else {
+      setError(result.error);
+      throw new Error(result.error);
+    }
+  }, [fetchShares]);
+
   const removeShare = useCallback(async (compartilhamentoId: number) => {
     setError(null);
     const result = await actionRemoverCompartilhamento(compartilhamentoId);
@@ -71,6 +83,7 @@ export function useDocumentSharing(documentoId: number) {
     fetchShares,
     shareDocument,
     updatePermission,
+    updateDeletePermission,
     removeShare,
   };
 }

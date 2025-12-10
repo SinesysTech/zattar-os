@@ -21,7 +21,9 @@ import {
   TipoObrigacao,
   DirecaoPagamento,
   FormaDistribuicao,
-  FormaPagamento
+  FormaPagamento,
+  AcordoCondenacao,
+  Parcela
 } from '../../types';
 
 interface AcordoFormProps {
@@ -35,7 +37,7 @@ interface AcordoFormProps {
    *               - acordo: Objeto completo do acordo
    *               - parcelas: Array de parcelas (apenas na criação)
    */
-  onSuccess?: (data: { id: number; acordo?: any; parcelas?: any[] }) => void;
+  onSuccess?: (data?: { id: number; acordo?: AcordoCondenacao; parcelas?: Parcela[] }) => void;
   onCancel?: () => void;
 }
 
@@ -109,9 +111,9 @@ export function AcordoForm({
         });
       }
 
-      if (response.success) {
+      if (response.success && response.data) {
         setResult({ success: true });
-        if (onSuccess) setTimeout(() => onSuccess(response.data), 1500);
+        if (onSuccess) setTimeout(() => onSuccess(response.data!), 1500);
       } else {
         setResult({ success: false, error: response.error });
       }
@@ -166,7 +168,10 @@ export function AcordoForm({
         </div>
         <div className="space-y-2">
           <Label>Data Vencimento (1ª) *</Label>
-          <FormDatePicker value={dataVencimento ? new Date(dataVencimento) : undefined} onChange={d => setDataVencimento(d?.toISOString().split('T')[0] || '')} />
+          <FormDatePicker
+            value={dataVencimento}
+            onChange={d => setDataVencimento(d || '')}
+          />
         </div>
       </div>
 
