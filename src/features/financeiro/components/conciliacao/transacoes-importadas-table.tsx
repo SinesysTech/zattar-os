@@ -33,16 +33,16 @@ const formatarValor = (valor: number, tipo: 'credito' | 'debito') =>
     currency: 'BRL',
   }).format(tipo === 'debito' ? -valor : valor);
 
-const STATUS_TONES: Record<string, { label: string; tone: 'warning' | 'success' | 'danger' | 'neutral' }> = {
-  pendente: { label: 'Pendente', tone: 'warning' },
-  conciliado: { label: 'Conciliado', tone: 'success' },
-  divergente: { label: 'Divergente', tone: 'danger' },
-  ignorado: { label: 'Ignorado', tone: 'neutral' },
+const STATUS_VARIANTS: Record<string, { label: string; variant: 'warning' | 'success' | 'destructive' | 'outline' }> = {
+  pendente: { label: 'Pendente', variant: 'warning' },
+  conciliado: { label: 'Conciliado', variant: 'success' },
+  divergente: { label: 'Divergente', variant: 'destructive' },
+  ignorado: { label: 'Ignorado', variant: 'outline' },
 };
 
-const TIPO_TONES: Record<'credito' | 'debito', { label: string; tone: 'success' | 'danger' }> = {
-  credito: { label: 'Cr\u00e9dito', tone: 'success' },
-  debito: { label: 'D\u00e9bito', tone: 'danger' },
+const TIPO_VARIANTS: Record<'credito' | 'debito', { label: string; variant: 'success' | 'destructive' }> = {
+  credito: { label: 'Crédito', variant: 'success' },
+  debito: { label: 'Débito', variant: 'destructive' },
 };
 
 export function TransacoesImportadasTable({
@@ -81,15 +81,14 @@ export function TransacoesImportadasTable({
       ),
       size: 120,
       enableSorting: true,
-      size: 120,
     },
     {
       accessorKey: 'tipoTransacao',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Tipo" />,
       cell: ({ row }) => {
-        const config = TIPO_TONES[row.original.tipoTransacao];
+        const config = TIPO_VARIANTS[row.original.tipoTransacao];
         return (
-          <Badge tone={config.tone} variant="soft">
+          <Badge variant={config.variant}>
             {config.label}
           </Badge>
         );
@@ -98,12 +97,12 @@ export function TransacoesImportadasTable({
     },
     {
       id: 'status',
-      header: () => <div className="text-sm font-medium">Concilia\u00e7\u00e3o</div>,
+      header: () => <div className="text-sm font-medium">Conciliação</div>,
       cell: ({ row }) => {
         const status = row.original.conciliacao?.status || 'pendente';
-        const config = STATUS_TONES[status] || STATUS_TONES.pendente;
+        const config = STATUS_VARIANTS[status] || STATUS_VARIANTS.pendente;
         return (
-          <Badge tone={config.tone} variant="soft">
+          <Badge variant={config.variant}>
             {config.label}
           </Badge>
         );

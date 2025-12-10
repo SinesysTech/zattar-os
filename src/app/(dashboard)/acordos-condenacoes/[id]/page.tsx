@@ -7,7 +7,8 @@ import { ArrowLeft, Edit, Trash2, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { formatCurrency, formatDate, formatarTipo, formatarDirecao } from '@/features/obrigacoes/utils';
+import { formatCurrency, formatarTipo, formatarDirecao } from '@/features/obrigacoes/utils';
+import { formatDate } from '@/lib/formatters';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
 import {
   AlertDialog,
@@ -97,10 +98,10 @@ export default function AcordoDetalhesPage({ params }: AcordoDetalhesPageProps) 
   };
 
   const statusConfigs = {
-      pendente: { label: 'Pendente', variant: 'secondary' as const },
-      pago_parcial: { label: 'Pago Parcial', variant: 'default' as const },
-      pago_total: { label: 'Pago Total', variant: 'default' as const },
-      atrasado: { label: 'Atrasado', variant: 'destructive' as const },
+    pendente: { label: 'Pendente', variant: 'secondary' as const },
+    pago_parcial: { label: 'Pago Parcial', variant: 'default' as const },
+    pago_total: { label: 'Pago Total', variant: 'default' as const },
+    atrasado: { label: 'Atrasado', variant: 'destructive' as const },
   };
 
   if (isLoading) {

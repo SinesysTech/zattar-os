@@ -136,6 +136,7 @@ export interface ListarAcordosParams {
   status?: StatusAcordo;
   dataInicio?: string;
   dataFim?: string;
+  busca?: string;
 }
 
 export interface AcordosCondenacoesPaginado {

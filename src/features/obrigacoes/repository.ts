@@ -131,6 +131,11 @@ export async function listarAcordos(params: ListarAcordosParams): Promise<Acordo
   if (params.status) query = query.eq('status', params.status);
   if (params.dataInicio) query = query.gte('data_vencimento_primeira_parcela', params.dataInicio);
   if (params.dataFim) query = query.lte('data_vencimento_primeira_parcela', params.dataFim);
+  
+  // Busca textual em número do processo e nomes de partes
+  if (params.busca) {
+    query = query.or(`acervo.numero_processo.ilike.%${params.busca}%,acervo.nome_parte_autora.ilike.%${params.busca}%,acervo.nome_parte_re.ilike.%${params.busca}%`);
+  }
 
   query = query.order('created_at', { ascending: false }).range(offset, offset + limite - 1);
 

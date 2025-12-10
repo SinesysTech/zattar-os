@@ -251,27 +251,27 @@ function ResumoCards({
         </CardHeader>
         <CardContent className="pt-0 space-y-1">
           {variacoes && (
-            <div className={`flex items-center gap-1 text-sm ${getVariacaoColor(variacoes.receitaLiquida.percentual)}`}>
-              {variacoes.receitaLiquida.percentual > 0 ? (
+            <div className={`flex items-center gap-1 text-sm ${getVariacaoColor(variacoes.receitaLiquida.variacaoPercentual)}`}>
+              {variacoes.receitaLiquida.variacaoPercentual > 0 ? (
                 <ArrowUpRight className="h-4 w-4" />
-              ) : variacoes.receitaLiquida.percentual < 0 ? (
+              ) : variacoes.receitaLiquida.variacaoPercentual < 0 ? (
                 <ArrowDownRight className="h-4 w-4" />
               ) : (
                 <Minus className="h-4 w-4" />
               )}
-              <span>{formatarPercentual(variacoes.receitaLiquida.percentual)} vs anterior</span>
+              <span>{formatarPercentual(variacoes.receitaLiquida.variacaoPercentual)} vs anterior</span>
             </div>
           )}
           {variacoesOrcado && (
-            <div className={`flex items-center gap-1 text-sm ${getVariacaoColor(variacoesOrcado.receitaLiquida.percentual)}`}>
-              {variacoesOrcado.receitaLiquida.percentual > 0 ? (
+            <div className={`flex items-center gap-1 text-sm ${getVariacaoColor(variacoesOrcado.receitaLiquida.variacaoPercentual)}`}>
+              {variacoesOrcado.receitaLiquida.variacaoPercentual > 0 ? (
                 <ArrowUpRight className="h-4 w-4" />
-              ) : variacoesOrcado.receitaLiquida.percentual < 0 ? (
+              ) : variacoesOrcado.receitaLiquida.variacaoPercentual < 0 ? (
                 <ArrowDownRight className="h-4 w-4" />
               ) : (
                 <Minus className="h-4 w-4" />
               )}
-              <span>{formatarPercentual(variacoesOrcado.receitaLiquida.percentual)} vs orçado</span>
+              <span>{formatarPercentual(variacoesOrcado.receitaLiquida.variacaoPercentual)} vs orçado</span>
             </div>
           )}
         </CardContent>
@@ -289,15 +289,15 @@ function ResumoCards({
             Margem: {formatarPercentual(resumo.margemOperacional)}
           </p>
           {variacoesOrcado && (
-            <div className={`flex items-center gap-1 text-xs ${getVariacaoColor(variacoesOrcado.lucroOperacional.percentual)}`}>
-              {variacoesOrcado.lucroOperacional.percentual > 0 ? (
+            <div className={`flex items-center gap-1 text-xs ${getVariacaoColor(variacoesOrcado.lucroOperacional.variacaoPercentual)}`}>
+              {variacoesOrcado.lucroOperacional.variacaoPercentual > 0 ? (
                 <ArrowUpRight className="h-3 w-3" />
-              ) : variacoesOrcado.lucroOperacional.percentual < 0 ? (
+              ) : variacoesOrcado.lucroOperacional.variacaoPercentual < 0 ? (
                 <ArrowDownRight className="h-3 w-3" />
               ) : (
                 <Minus className="h-3 w-3" />
               )}
-              <span>{formatarPercentual(variacoesOrcado.lucroOperacional.percentual)} vs orçado</span>
+              <span>{formatarPercentual(variacoesOrcado.lucroOperacional.variacaoPercentual)} vs orçado</span>
             </div>
           )}
         </CardContent>
@@ -315,15 +315,15 @@ function ResumoCards({
             Margem EBITDA: {formatarPercentual(resumo.margemEBITDA)}
           </p>
           {variacoesOrcado && (
-            <div className={`flex items-center gap-1 text-xs ${getVariacaoColor(variacoesOrcado.ebitda.percentual)}`}>
-              {variacoesOrcado.ebitda.percentual > 0 ? (
+            <div className={`flex items-center gap-1 text-xs ${getVariacaoColor(variacoesOrcado.ebitda.variacaoPercentual)}`}>
+              {variacoesOrcado.ebitda.variacaoPercentual > 0 ? (
                 <ArrowUpRight className="h-3 w-3" />
-              ) : variacoesOrcado.ebitda.percentual < 0 ? (
+              ) : variacoesOrcado.ebitda.variacaoPercentual < 0 ? (
                 <ArrowDownRight className="h-3 w-3" />
               ) : (
                 <Minus className="h-3 w-3" />
               )}
-              <span>{formatarPercentual(variacoesOrcado.ebitda.percentual)} vs orçado</span>
+              <span>{formatarPercentual(variacoesOrcado.ebitda.variacaoPercentual)} vs orçado</span>
             </div>
           )}
         </CardContent>
@@ -338,7 +338,7 @@ function ResumoCards({
         </CardHeader>
         <CardContent className="pt-0 space-y-1">
           <div className="flex items-center gap-2">
-            <Badge tone={getLucroBadgeTone(resumo.lucroLiquido)} variant="soft">
+            <Badge className={getLucroBadgeTone(resumo.lucroLiquido) === 'neutral' ? 'bg-gray-500' : getLucroBadgeTone(resumo.lucroLiquido) === 'success' ? 'bg-green-600' : 'bg-red-600'} variant="default">
               {resumo.lucroLiquido > 0 ? 'Lucro' : resumo.lucroLiquido < 0 ? 'Prejuízo' : 'Neutro'}
             </Badge>
             <span className="text-xs text-muted-foreground">
@@ -346,15 +346,15 @@ function ResumoCards({
             </span>
           </div>
           {variacoesOrcado && (
-            <div className={`flex items-center gap-1 text-xs ${getVariacaoColor(variacoesOrcado.lucroLiquido.percentual)}`}>
-              {variacoesOrcado.lucroLiquido.percentual > 0 ? (
+            <div className={`flex items-center gap-1 text-xs ${getVariacaoColor(variacoesOrcado.lucroLiquido.variacaoPercentual)}`}>
+              {variacoesOrcado.lucroLiquido.variacaoPercentual > 0 ? (
                 <ArrowUpRight className="h-3 w-3" />
-              ) : variacoesOrcado.lucroLiquido.percentual < 0 ? (
+              ) : variacoesOrcado.lucroLiquido.variacaoPercentual < 0 ? (
                 <ArrowDownRight className="h-3 w-3" />
               ) : (
                 <Minus className="h-3 w-3" />
               )}
-              <span>{formatarPercentual(variacoesOrcado.lucroLiquido.percentual)} vs orçado</span>
+              <span>{formatarPercentual(variacoesOrcado.lucroLiquido.variacaoPercentual)} vs orçado</span>
             </div>
           )}
         </CardContent>
@@ -425,8 +425,9 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
                 className={`border-b ${linha.destaque ? 'bg-muted/30' : ''} ${linha.final ? (resumo.lucroLiquido >= 0 ? 'bg-green-50' : 'bg-red-50') : ''}`}
               >
                 <td
-                  className={`p-3 ${linha.bold ? 'font-semibold' : ''}`}
-                  style={{ paddingLeft: `${(linha.indent || 0) * 20 + 12}px` }}
+                  className={`p-3 ${linha.bold ? 'font-semibold' : ''} ${
+                    (linha.indent || 0) === 1 ? 'pl-8' : 'pl-3'
+                  }`}
                 >
                   {linha.descricao}
                 </td>
@@ -477,7 +478,7 @@ function CategoriaPieChart({
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percentual }) => `${name.slice(0, 15)}${name.length > 15 ? '...' : ''} (${percentual.toFixed(1)}%)`}
+            label={({ name, percentual }: { name: string; percentual: number }) => `${name.slice(0, 15)}${name.length > 15 ? '...' : ''} (${percentual.toFixed(1)}%)`}
             outerRadius={100}
             fill="#8884d8"
             dataKey="value"
@@ -780,8 +781,8 @@ export default function DREPage() {
                       <div key={cat.categoria} className="flex items-center justify-between p-2 border rounded">
                         <div className="flex items-center gap-2">
                           <div
-                            className="w-3 h-3 rounded-full"
-                            style={{ backgroundColor: CORES_CATEGORIAS[i % CORES_CATEGORIAS.length] }}
+                            className="w-3 h-3 rounded-full bg-[var(--category-color)]"
+                            style={{ '--category-color': CORES_CATEGORIAS[i % CORES_CATEGORIAS.length] } as React.CSSProperties}
                           />
                           <span className="text-sm">{cat.categoria}</span>
                         </div>
@@ -826,8 +827,8 @@ export default function DREPage() {
                       <div key={cat.categoria} className="flex items-center justify-between p-2 border rounded">
                         <div className="flex items-center gap-2">
                           <div
-                            className="w-3 h-3 rounded-full"
-                            style={{ backgroundColor: CORES_CATEGORIAS[i % CORES_CATEGORIAS.length] }}
+                            className="w-3 h-3 rounded-full bg-[var(--category-color)]"
+                            style={{ '--category-color': CORES_CATEGORIAS[i % CORES_CATEGORIAS.length] } as React.CSSProperties}
                           />
                           <span className="text-sm">{cat.categoria}</span>
                         </div>
