@@ -45,13 +45,13 @@ import type {
   AnaliseOrcamentaria,
   Orcamento,
   EvolucaoMensal,
-} from '@/backend/types/financeiro/orcamento.types';
+} from '@/features/financeiro/types/orcamentos';
 import {
   exportarOrcamentoCSV,
   exportarAnaliseCSV,
   exportarEvolucaoCSV,
   exportarRelatorioPDF,
-} from '@/app/_lib/orcamentos/export-orcamento';
+} from '@/features/financeiro/utils/export/orcamentos';
 
 // ============================================================================
 // Constantes e Helpers

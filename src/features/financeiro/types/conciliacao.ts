@@ -126,3 +126,12 @@ export interface ListarTransacoesResponse {
         totalIgnoradas: number;
     };
 }
+
+export interface ConciliacaoFilters {
+    contaBancariaId?: number;
+    dataInicio?: string;
+    dataFim?: string;
+    statusConciliacao?: StatusConciliacao | StatusConciliacao[];
+    tipoTransacao?: TipoTransacao;
+    busca?: string;
+}

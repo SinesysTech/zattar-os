@@ -180,3 +180,14 @@ export interface ResumoObrigacoes {
         valorTotalPendente: number;
     }>;
 }
+
+export interface ObrigacoesFilters {
+    tipo?: TipoObrigacao;
+    status?: StatusObrigacao;
+    statusSincronizacao?: StatusSincronizacao;
+    dataVencimentoInicio?: string;
+    dataVencimentoFim?: string;
+    clienteId?: number;
+    processoId?: number;
+    busca?: string;
+}

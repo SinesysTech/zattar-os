@@ -44,13 +44,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useOrcamentos } from '@/app/_lib/hooks/use-orcamentos';
+import { useOrcamentos } from '@/features/financeiro/hooks/use-orcamentos';
 import { toast } from 'sonner';
-import type { OrcamentoComDetalhes, ComparativoOrcamento } from '@/backend/types/financeiro/orcamento.types';
+import type { OrcamentoComDetalhes, ComparativoOrcamento } from '@/features/financeiro/types/orcamentos';
 import {
   exportarComparativoCSV,
   exportarComparativoPDF,
-} from '@/app/_lib/orcamentos/export-orcamento';
+} from '@/features/financeiro/utils/export/orcamentos';
 import type { RelatorioComparativo } from '@/backend/financeiro/orcamento/services/orcamento/relatorios-orcamento.service';
 
 // ============================================================================
