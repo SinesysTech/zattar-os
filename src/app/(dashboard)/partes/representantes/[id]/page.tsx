@@ -19,9 +19,9 @@ import {
   formatarTelefone,
   formatarData,
   formatarNome,
-} from '@/app/_lib/utils/format-clientes';
-import { formatarCep } from '@/app/_lib/types';
-import type { RepresentanteComEndereco } from '@/backend/types/representantes/representantes-types';
+  formatarCep,
+} from '@/features/partes';
+import type { RepresentanteComEndereco } from '@/features/partes';
 
 // Componente auxiliar para exibir campo
 function Campo({ label, value }: { label: string; value: React.ReactNode }) {

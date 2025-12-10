@@ -1,15 +1,20 @@
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
-import { chatService } from ' @/core/chat';
-import { getSupabase } from ' @/app/_lib/supabase';
-import { ChatLayout } from ' @/components/modules/chat/chat-layout';
-import { ChatSidebar } from ' @/components/modules/chat/chat-sidebar';
-import { ChatWindow } from ' @/components/modules/chat/chat-window';
-import { Skeleton } from ' @/components/ui/skeleton';
+import { getSupabase } from '@/app/_lib/supabase';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  chatService,
+  ChatLayout,
+  ChatSidebar,
+  ChatWindow,
+  type MensagemComUsuario,
+} from '@/features/chat';
 
 async function getCurrentUserId(): Promise<number | null> {
   const { supabase } = getSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return null;
 
   const { data } = await supabase
@@ -24,7 +29,7 @@ async function getCurrentUserId(): Promise<number | null> {
 export default async function ChatPage({
   searchParams,
 }: {
-  searchParams: { channelId?: string };
+  searchParams: Promise<{ channelId?: string }>;
 }) {
   const usuarioId = await getCurrentUserId();
   if (!usuarioId) redirect('/login');
@@ -38,7 +43,8 @@ export default async function ChatPage({
   const salas = salasResult.value.data;
 
   // Determinar sala ativa (via URL ou Sala Geral)
-  const channelId = searchParams.channelId ? parseInt(searchParams.channelId) : null;
+  const params = await searchParams;
+  const channelId = params.channelId ? parseInt(params.channelId) : null;
   let salaAtiva = channelId ? salas.find((s) => s.id === channelId) : null;
 
   if (!salaAtiva) {
@@ -51,7 +57,7 @@ export default async function ChatPage({
   }
 
   // Buscar histórico inicial da sala ativa
-  let initialMessages: any[] = [];
+  let initialMessages: MensagemComUsuario[] = [];
   if (salaAtiva) {
     const historicoResult = await chatService.buscarUltimasMensagens(salaAtiva.id, 100);
     if (historicoResult.isOk()) {

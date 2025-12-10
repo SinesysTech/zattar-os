@@ -1,0 +1,91 @@
+/**
+ * CHAT FEATURE - Public API
+ *
+ * Re-exporta todos os módulos públicos da feature chat.
+ * Este é o ponto de entrada principal para importar funcionalidades de chat.
+ *
+ * @example
+ * ```tsx
+ * import {
+ *   ChatLayout,
+ *   ChatWindow,
+ *   chatService,
+ *   useChatSubscription,
+ *   actionEnviarMensagem,
+ *   SalaChat,
+ *   TipoSalaChat
+ * } from '@/features/chat';
+ * ```
+ */
+
+// =============================================================================
+// TYPES
+// =============================================================================
+export type {
+  SalaChat,
+  MensagemChat,
+  MensagemComUsuario,
+  UsuarioChat,
+  TypingUser,
+  CriarSalaChatInput,
+  CriarMensagemChatInput,
+  ListarSalasParams,
+  ListarMensagensParams,
+  PaginationInfo,
+  PaginatedResponse,
+  ActionResult,
+} from './types';
+
+export {
+  TipoSalaChat,
+  TipoMensagemChat,
+  criarSalaChatSchema,
+  criarMensagemChatSchema,
+} from './types';
+
+// =============================================================================
+// REPOSITORY
+// =============================================================================
+export { ChatRepository, chatRepository } from './repository';
+
+// =============================================================================
+// SERVICE
+// =============================================================================
+export {
+  ChatService,
+  chatService,
+  // Standalone functions
+  criarSala,
+  buscarSala,
+  buscarSalaGeral,
+  listarSalasDoUsuario,
+  atualizarNomeSala,
+  deletarSala,
+  enviarMensagem,
+  buscarHistoricoMensagens,
+  buscarUltimasMensagens,
+  deletarMensagem,
+} from './service';
+
+// =============================================================================
+// ACTIONS (Server Actions)
+// =============================================================================
+export {
+  actionCriarSala,
+  actionListarSalas,
+  actionDeletarSala,
+  actionAtualizarNomeSala,
+  actionEnviarMensagem,
+  actionBuscarHistorico,
+} from './actions';
+
+// =============================================================================
+// HOOKS
+// =============================================================================
+export { useChatSubscription } from './hooks/use-chat-subscription';
+export { useTypingIndicator } from './hooks/use-typing-indicator';
+
+// =============================================================================
+// COMPONENTS
+// =============================================================================
+export { ChatLayout, ChatSidebar, ChatWindow, RoomList } from './components';

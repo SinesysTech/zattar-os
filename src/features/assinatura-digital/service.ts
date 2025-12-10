@@ -1,0 +1,156 @@
+/**
+ * ASSINATURA DIGITAL - Service
+ *
+ * Camada de serviço com lógica de negócio para o módulo de assinatura digital.
+ */
+
+import { SupabaseClient } from '@supabase/supabase-js';
+import { AssinaturaDigitalRepository } from './repository';
+import {
+  createSegmentoSchema,
+  updateSegmentoSchema,
+  createTemplateSchema,
+  updateTemplateSchema,
+} from './types';
+import type {
+  Segmento,
+  Template,
+  EscopoSegmento,
+  CreateSegmentoInput,
+  UpdateSegmentoInput,
+  CreateTemplateInput,
+  UpdateTemplateInput,
+} from './types';
+/**
+ * Gera um slug URL-friendly a partir de uma string.
+ */
+function generateSlug(text: string): string {
+  return text
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-');
+}
+
+export class AssinaturaDigitalService {
+  private repository: AssinaturaDigitalRepository;
+
+  constructor(supabase: SupabaseClient) {
+    this.repository = new AssinaturaDigitalRepository(supabase);
+  }
+
+  // ==========================================================================
+  // SEGMENTOS
+  // ==========================================================================
+
+  async listarSegmentos(filtros?: {
+    escopo?: EscopoSegmento;
+    ativo?: boolean;
+  }): Promise<Segmento[]> {
+    return this.repository.listarSegmentos(filtros);
+  }
+
+  async criarSegmento(input: CreateSegmentoInput): Promise<Segmento> {
+    const validated = createSegmentoSchema.parse(input);
+    const slug = generateSlug(validated.nome);
+
+    const existingSegmento = await this.repository.buscarSegmentoPorSlug(slug);
+    if (existingSegmento) {
+      throw new Error('Já existe um segmento com este nome ou slug.');
+    }
+
+    return this.repository.criarSegmento({ ...validated, slug });
+  }
+
+  async atualizarSegmento(
+    id: number,
+    input: UpdateSegmentoInput
+  ): Promise<Segmento> {
+    const validated = updateSegmentoSchema.parse(input);
+
+    if (validated.nome) {
+      const slug = generateSlug(validated.nome);
+      const existingSegmento = await this.repository.buscarSegmentoPorSlug(slug);
+      if (existingSegmento && existingSegmento.id !== id) {
+        throw new Error('Já existe outro segmento com este nome ou slug.');
+      }
+      return this.repository.atualizarSegmento(id, { ...validated, slug });
+    }
+
+    return this.repository.atualizarSegmento(id, validated);
+  }
+
+  // ==========================================================================
+  // TEMPLATES
+  // ==========================================================================
+
+  async listarTemplates(filtros?: {
+    segmento_id?: number;
+    tipo_template?: 'pdf' | 'markdown';
+    ativo?: boolean;
+    status?: string;
+  }): Promise<Template[]> {
+    return this.repository.listarTemplates(filtros);
+  }
+
+  async buscarTemplate(id: number): Promise<Template | null> {
+    return this.repository.buscarTemplatePorId(id);
+  }
+
+  async buscarTemplatePorUuid(uuid: string): Promise<Template | null> {
+    return this.repository.buscarTemplatePorUuid(uuid);
+  }
+
+  async criarTemplate(input: CreateTemplateInput): Promise<Template> {
+    const validated = createTemplateSchema.parse(input);
+
+    // Validações específicas por tipo
+    if (validated.tipo_template === 'pdf' && !validated.pdf_url) {
+      throw new Error('URL do PDF é obrigatória para templates PDF.');
+    }
+    if (validated.tipo_template === 'markdown' && !validated.conteudo_markdown) {
+      throw new Error('Conteúdo Markdown é obrigatório para templates Markdown.');
+    }
+
+    return this.repository.criarTemplate(validated);
+  }
+
+  async atualizarTemplate(
+    id: number,
+    input: UpdateTemplateInput
+  ): Promise<Template> {
+    const validated = updateTemplateSchema.parse(input);
+    return this.repository.atualizarTemplate(id, validated);
+  }
+
+  // ==========================================================================
+  // VALIDAÇÃO DE ESCOPO
+  // ==========================================================================
+
+  validarEscopoSegmento(
+    segmento: Segmento,
+    contexto: 'contratos' | 'assinatura'
+  ): boolean {
+    if (segmento.escopo === 'global') {
+      return true;
+    }
+    return segmento.escopo === contexto;
+  }
+}
+
+// ==========================================================================
+// FUNÇÕES STANDALONE (para uso sem instância)
+// ==========================================================================
+
+/**
+ * Cria uma instância do service com o cliente Supabase fornecido.
+ */
+export function createAssinaturaDigitalService(
+  supabase: SupabaseClient
+): AssinaturaDigitalService {
+  return new AssinaturaDigitalService(supabase);
+}
