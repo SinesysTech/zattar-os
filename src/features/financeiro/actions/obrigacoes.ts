@@ -79,3 +79,22 @@ export async function actionObterAlertasFinanceiros() {
         return { sucesso: false, erro: error.message };
     }
 }
+export async function actionListarObrigacoes(params: any) {
+    try {
+        const dados = await ObrigacoesService.listarParcelasComLancamentos(params);
+        return {
+            success: true,
+            data: {
+                dados,
+                meta: {
+                    total: dados.length, // TODO: Implement proper pagination
+                    pagina: params.pagina || 1,
+                    limite: params.limite || 50
+                },
+                resumo: {} // TODO: Populate summary
+            }
+        };
+    } catch (error: any) {
+        return { success: false, error: error.message };
+    }
+}

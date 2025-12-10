@@ -14,7 +14,7 @@ import {
   buildPlanoContasFilterOptions,
   buildPlanoContasFilterGroups,
   parsePlanoContasFilters,
-} from './components/plano-contas-toolbar-filters';
+} from '@/features/financeiro/components/plano-contas/plano-contas-toolbar-filters';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Power } from 'lucide-react';
@@ -25,9 +25,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { usePlanoContas } from '@/app/_lib/hooks/use-plano-contas';
-import { PlanoContaCreateDialog } from './components/plano-conta-create-dialog';
-import { PlanoContaEditDialog } from './components/plano-conta-edit-dialog';
+import { usePlanoContas } from '@/features/financeiro/hooks/use-plano-contas';
+import { actionAtualizarConta } from '@/features/financeiro/actions/plano-contas';
+import { PlanoContaCreateDialog } from '@/features/financeiro/components/plano-contas/plano-conta-create-dialog';
+import { PlanoContaEditDialog } from '@/features/financeiro/components/plano-contas/plano-conta-edit-dialog';
 import { toast } from 'sonner';
 import { ExportButton } from '@/components/financeiro/export-button';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -36,7 +37,7 @@ import type {
   PlanoContasFilters,
   TipoContaContabil,
   NivelConta,
-} from '@/types/domain/financeiro';
+} from '@/features/financeiro/types/plano-contas';
 
 // Tons do Badge para tipos de conta
 type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
@@ -289,17 +290,10 @@ export default function PlanoContasPage() {
   const handleToggleStatus = React.useCallback(
     async (conta: PlanoContaComPai) => {
       try {
-        const response = await fetch(`/api/plano-contas/${conta.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ ativo: !conta.ativo }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-          throw new Error(errorData.error || `Erro ${response.status}`);
+        const result = await actionAtualizarConta({ id: conta.id, ativo: !conta.ativo });
+        
+        if (!result.success) {
+            throw new Error(result.error || 'Erro ao alterar status');
         }
 
         toast.success(conta.ativo ? 'Conta desativada com sucesso!' : 'Conta ativada com sucesso!');
@@ -388,8 +382,8 @@ export default function PlanoContasPage() {
         <PlanoContaEditDialog
           open={editOpen}
           onOpenChange={setEditOpen}
-          conta={selectedConta}
           onSuccess={handleCreateSuccess}
+          conta={selectedConta}
         />
       )}
     </div>

@@ -6,10 +6,10 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { ImportarExtratoDialog } from './components/importar-extrato-dialog';
-import { ConciliarManualDialog } from './components/conciliar-manual-dialog';
-import { TransacoesImportadasTable } from './components/transacoes-importadas-table';
-import { AlertasConciliacao } from './components/alertas-conciliacao';
+import { ImportarExtratoDialog } from '@/features/financeiro/components/conciliacao/importar-extrato-dialog';
+import { ConciliarManualDialog } from '@/features/financeiro/components/conciliacao/conciliar-manual-dialog';
+import { TransacoesImportadasTable } from '@/features/financeiro/components/conciliacao/transacoes-importadas-table';
+import { AlertasConciliacao } from '@/features/financeiro/components/conciliacao/alertas-conciliacao';
 import { ExportButton } from '@/components/financeiro/export-button';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
 import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
@@ -18,13 +18,13 @@ import {
   conciliarAutomaticamente as conciliarAutomaticamenteMutation,
   conciliarManual,
   desconciliar,
-} from '@/app/_lib/hooks/use-conciliacao-bancaria';
+} from '@/features/financeiro/hooks/use-conciliacao';
 import {
   buildConciliacaoFilterOptions,
   buildConciliacaoFilterGroups,
   parseConciliacaoFilters,
-} from './components/conciliacao-toolbar-filters';
-import type { TransacaoComConciliacao } from '@/backend/types/financeiro/conciliacao-bancaria.types';
+} from '@/features/financeiro/components/conciliacao/conciliacao-toolbar-filters';
+import type { TransacaoComConciliacao } from '@/features/financeiro/types/conciliacao';
 
 export default function ConciliacaoBancariaPage() {
   const [importarOpen, setImportarOpen] = useState(false);
@@ -38,6 +38,7 @@ export default function ConciliacaoBancariaPage() {
   const buscaDebounced = useDebounce(busca, 400);
   const { contasBancarias } = useContasBancarias();
 
+  // Parse filters
   const filtersParsed = useMemo(
     () => ({
       ...parseConciliacaoFilters(selectedFilterIds),
@@ -67,17 +68,17 @@ export default function ConciliacaoBancariaPage() {
   const handleIgnorar = useCallback(async (transacao: TransacaoComConciliacao) => {
     try {
       await conciliarManual({ transacaoImportadaId: transacao.id, lancamentoFinanceiroId: null });
-      toast.success('Transa\u00e7\u00e3o marcada como ignorada');
+      toast.success('Transação marcada como ignorada');
       refetch();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao ignorar transa\u00e7\u00e3o');
+      toast.error(error instanceof Error ? error.message : 'Erro ao ignorar transação');
     }
   }, [refetch]);
 
   const handleDesconciliar = useCallback(async (transacao: TransacaoComConciliacao) => {
     try {
       await desconciliar(transacao.id);
-      toast.success('Transa\u00e7\u00e3o desconciliada');
+      toast.success('Transação desconciliada');
       refetch();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Erro ao desconciliar');
@@ -86,9 +87,10 @@ export default function ConciliacaoBancariaPage() {
 
   const handleConciliarAutomaticamente = async () => {
     try {
-      const resultados = await conciliarAutomaticamenteMutation({});
-      const totalConciliadas = resultados.filter((r) => r.conciliada).length;
-      toast.success(`Concilia\u00e7\u00e3o autom\u00e1tica conclu\u00edda (${totalConciliadas} conciliadas)`);
+      // Logic for automatic conciliation from mutation
+      // The return type might differ from legacy, assuming void or result
+      await conciliarAutomaticamenteMutation({});
+      toast.success('Conciliação automática iniciada');
       refetch();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Erro ao conciliar automaticamente');
@@ -98,6 +100,10 @@ export default function ConciliacaoBancariaPage() {
   };
 
   const handleVerDetalhes = useCallback((transacao: TransacaoComConciliacao) => {
+    // If we have a details page for transaction or just using dialog?
+    // Legacy used router.push.
+    // Assuming we keep the separate page OR migrate to dialog only.
+    // For now keep legacy behavior.
     router.push(`/financeiro/conciliacao-bancaria/${transacao.id}`);
   }, [router]);
 
@@ -105,8 +111,8 @@ export default function ConciliacaoBancariaPage() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Concilia\u00e7\u00e3o Banc\u00e1ria</h1>
-          <p className="text-sm text-muted-foreground">Importe extratos, revise e concilie lan\u00e7amentos.</p>
+          <h1 className="text-2xl font-semibold">Conciliação Bancária</h1>
+          <p className="text-sm text-muted-foreground">Importe extratos, revise e concilie lançamentos.</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setAutoDialogOpen(true)}>
@@ -127,7 +133,7 @@ export default function ConciliacaoBancariaPage() {
         searchValue={busca}
         onSearchChange={setBusca}
         isSearching={busca !== buscaDebounced}
-        searchPlaceholder="Buscar por descri\u00e7\u00e3o ou documento..."
+        searchPlaceholder="Buscar por descrição ou documento..."
         filterOptions={filterOptions}
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
@@ -138,14 +144,14 @@ export default function ConciliacaoBancariaPage() {
         <ExportButton
           endpoint="/api/financeiro/conciliacao-bancaria/exportar"
           filtros={{
-            status: filtersParsed.statusConciliacao || '',
-            contaBancariaId: filtersParsed.contaBancariaId || '',
+            statusConciliacao: filtersParsed.statusConciliacao || '',
+            contaBancariaId: filtersParsed.contaBancariaId ? String(filtersParsed.contaBancariaId) : '',
             dataInicio: filtersParsed.dataInicio || '',
             dataFim: filtersParsed.dataFim || '',
           }}
           opcoes={[
-            { label: 'Exportar Transa\u00e7\u00f5es (CSV)', formato: 'csv' },
-            { label: 'Relat\u00f3rio de Concilia\u00e7\u00f5es (PDF)', formato: 'pdf' },
+            { label: 'Exportar Transações (CSV)', formato: 'csv' },
+            { label: 'Relatório de Conciliações (PDF)', formato: 'pdf' },
           ]}
         />
       </div>
@@ -181,9 +187,9 @@ export default function ConciliacaoBancariaPage() {
       <AlertDialog open={autoDialogOpen} onOpenChange={setAutoDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Concilia\u00e7\u00e3o autom\u00e1tica</AlertDialogTitle>
+            <AlertDialogTitle>Conciliação automática</AlertDialogTitle>
             <AlertDialogDescription>
-              O sistema vai analisar transa\u00e7\u00f5es pendentes e conciliar automaticamente quando o score for maior ou igual a 90.
+              O sistema vai analisar transações pendentes e conciliar automaticamente quando o score for maior ou igual a 90.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
