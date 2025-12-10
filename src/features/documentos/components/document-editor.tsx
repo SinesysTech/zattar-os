@@ -47,34 +47,17 @@ import { DocumentChat } from '@/features/documentos/components/document-chat';
 import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
 import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
 import { createClient } from '@/app/_lib/supabase/client';
-import type { DocumentoComUsuario } from '@/backend/types/documentos/types';
-import { exportToDocx } from '@/app/_lib/documentos/export-docx';
-import { exportToPdf, exportTextToPdf } from '@/app/_lib/documentos/export-pdf';
+import type { DocumentoComUsuario } from '../types';
+import { exportToPdf, exportTextToPdf, exportToDocx } from '../utils';
 import type { Descendant } from 'platejs';
-import {
-  carregarDocumento,
-  salvarDocumentoAutomatico,
-  salvarDocumento,
-} from '@/core/documentos/repository';
+import { useDocument } from '../../hooks/use-document';
+import { useDocumentAutoSave } from '../../hooks/use-document-auto-save';
 
 interface DocumentEditorProps {
   documentoId: number;
 }
 
-export function DocumentEditor({ documentoId }: DocumentEditorProps) {
-  const router = useRouter();
 
-  const supabase = createClient();
-
-  const [documento, setDocumento] = React.useState<DocumentoComUsuario | null>(null);
-  const [loading, setLoading] = React.useState(true);
-  const [saving, setSaving] = React.useState(false);
-  const [titulo, setTitulo] = React.useState('');
-  const [conteudo, setConteudo] = React.useState<Descendant[]>([]);
-  const [chatOpen, setChatOpen] = React.useState(false);
-  const [uploadOpen, setUploadOpen] = React.useState(false);
-  const [shareOpen, setShareOpen] = React.useState(false);
-  const [historyOpen, setHistoryOpen] = React.useState(false);
   const [
     currentUser,
     setCurrentUser,
