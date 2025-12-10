@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
-import FormStepLayout from "@/components/assinatura-digital/form/form-step-layout";
+import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
 import { toast } from "sonner";
 import { validateGeolocation } from "@/app/_lib/assinatura-digital/validations/business.validations";
 import { Button } from "@/components/ui/button";

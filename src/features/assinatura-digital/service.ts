@@ -21,7 +21,7 @@ import type {
   CreateTemplateInput,
   UpdateTemplateInput,
 } from './types';
-import mustache from 'mustache';
+import Mustache from 'mustache';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 /**
  * Gera um slug URL-friendly a partir de uma string.
@@ -157,14 +157,14 @@ export class AssinaturaDigitalService {
       );
     }
     // Usar Mustache.js para interpolação simples
-    return mustache.render(template.conteudo_markdown, data);
+    return Mustache.render(template.conteudo_markdown, data);
   }
 
   async gerarPdfDeMarkdown(
     markdownContent: string,
     data: Record<string, any>
   ): Promise<Buffer> {
-    const renderedMarkdown = mustache.render(markdownContent, data);
+    const renderedMarkdown = Mustache.render(markdownContent, data);
 
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();

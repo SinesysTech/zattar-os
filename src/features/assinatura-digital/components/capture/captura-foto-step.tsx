@@ -2,8 +2,8 @@
 
 import { useRef, useState } from "react";
 import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
-import CapturaFoto, { type CapturaFotoRef } from "@/components/assinatura-digital/capture/captura-foto";
-import FormStepLayout from "@/components/assinatura-digital/form/form-step-layout";
+import CapturaFoto, { type CapturaFotoRef } from "@/features/assinatura-digital/components/capture/captura-foto";
+import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
 import { toast } from "sonner";
 import { validatePhotoQuality } from "@/app/_lib/assinatura-digital/validations/business.validations";
 

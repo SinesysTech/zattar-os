@@ -12,7 +12,7 @@ import {
 import { cn } from '@/lib/utils';
 
 import type { TemplateCampo, TipoCampo } from '@/types/assinatura-digital';
-import { PdfPreviewDynamic as PdfPreview } from '@/components/assinatura-digital/pdf';
+import { PdfPreviewDynamic as PdfPreview } from '@/features/assinatura-digital/components/pdf';
 
 interface EditorField extends TemplateCampo {
   isSelected: boolean;

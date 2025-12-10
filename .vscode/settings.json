@@ -3,5 +3,15 @@
     "no-inline-styles": "off"
   },
   "vscode-edge-devtools.webhint": false,
-  "vscode-edge-devtools.mirrorEdits": false
+  "vscode-edge-devtools.mirrorEdits": false,
+  // Configuração para extensão Lua ignorar arquivos de licença e documentação
+  "Lua.workspace.ignoreDir": ["LICENSE", "TRADEMARK", "NOTICE"],
+  "Lua.diagnostics.globals": [],
+  // Associação de arquivos sem extensão como texto plano
+  "files.associations": {
+    "LICENSE": "plaintext",
+    "TRADEMARK": "plaintext",
+    "NOTICE": "plaintext",
+    "AGENTS": "markdown"
+  }
 }
