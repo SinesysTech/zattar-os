@@ -70,6 +70,41 @@ export const useChat = () => {
         });
 
         if (!res.ok) {
+          // Tentar obter detalhes do erro
+          let errorDetails: { error?: string; code?: string } = {};
+          try {
+            errorDetails = await res.json();
+          } catch {
+            // Se não conseguir fazer parse do JSON, usar valores padrão
+          }
+
+          // Verificar se é erro de API key não configurada (401)
+          if (res.status === 401 || errorDetails.code === 'MISSING_API_KEY') {
+            // Importar toast dinamicamente para evitar dependências circulares
+            import('sonner').then(({ toast }) => {
+              toast.error('IA indisponível', {
+                description: 'O recurso de IA não está configurado no servidor. A edição de documentos continua funcionando normalmente.',
+                duration: 5000,
+              });
+            });
+
+            // Retornar erro que será tratado pelo useChat
+            throw new Error(errorDetails.error || 'IA indisponível: API key não configurada');
+          }
+
+          // Para outros erros (500, etc), mostrar mensagem genérica
+          if (res.status >= 500) {
+            import('sonner').then(({ toast }) => {
+              toast.error('Erro temporário na IA', {
+                description: 'Não foi possível processar sua solicitação. Tente novamente em alguns instantes.',
+                duration: 5000,
+              });
+            });
+
+            throw new Error(errorDetails.error || 'Erro ao processar requisição AI');
+          }
+
+          // Fallback para modo de desenvolvimento/teste
           let sample: 'comment' | 'markdown' | 'mdx' | null = null;
 
           try {

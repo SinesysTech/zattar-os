@@ -77,7 +77,7 @@ export function AIMenu() {
 
   const chat = usePluginOption(AIChatPlugin, 'chat');
 
-  const { messages, status } = chat;
+  const { messages, status, error } = chat;
   const [anchorElement, setAnchorElement] = React.useState<HTMLElement | null>(
     null
   );
@@ -200,6 +200,13 @@ export function AIMenu() {
             isSelecting &&
             content &&
             toolName === 'generate' && <AIChatEditor content={content} />}
+
+          {error && (
+            <div className="flex select-none items-center gap-2 p-2 text-destructive text-sm border-b border-destructive/20 bg-destructive/5">
+              <X className="size-4" />
+              <span>IA indisponível. A edição continua funcionando.</span>
+            </div>
+          )}
 
           {isLoading ? (
             <div className="flex grow select-none items-center gap-2 p-2 text-muted-foreground text-sm">
