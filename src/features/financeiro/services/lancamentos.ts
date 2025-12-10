@@ -1,124 +1,201 @@
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { Lancamento, ListarLancamentosParams } from '../types/lancamentos';
+/**
+ * Service de Lançamentos Financeiros
+ * Casos de uso e orquestração de regras de negócio
+ */
+
+import { LancamentosRepository } from '../repository/lancamentos';
+import {
+    validarCriacaoLancamento,
+    validarEfetivacaoLancamento,
+    validarCancelamentoLancamento,
+    validarEstornoLancamento,
+    calcularProximaDataRecorrencia
+} from '../domain/lancamentos';
+import type { Lancamento, ListarLancamentosParams } from '../types/lancamentos';
+
+// ============================================================================
+// Service Implementation
+// ============================================================================
 
 export const LancamentosService = {
     /**
      * Lista lançamentos financeiros com filtros
      */
     async listar(params: ListarLancamentosParams): Promise<Lancamento[]> {
-        const supabase = createServiceClient();
-
-        let query = supabase
-            .from('lancamentos_financeiros')
-            .select('*');
-
-        if (params.tipo) {
-            query = query.eq('tipo', params.tipo);
-        }
-
-        if (params.busca) {
-            query = query.ilike('descricao', `%${params.busca}%`);
-        }
-
-        if (params.dataVencimentoInicio) {
-            query = query.gte('data_vencimento', params.dataVencimentoInicio);
-        }
-
-        if (params.dataVencimentoFim) {
-            query = query.lte('data_vencimento', params.dataVencimentoFim);
-        }
-
-        const { data, error } = await query;
-        if (error) throw new Error(`Erro ao listar lançamentos: ${error.message}`);
-
-        return (data || []).map(mapRecordToLancamento);
+        return LancamentosRepository.listar(params);
     },
 
+    /**
+     * Busca um lançamento por ID
+     */
     async buscarPorId(id: number): Promise<Lancamento | null> {
-        const supabase = createServiceClient();
-        const { data, error } = await supabase
-            .from('lancamentos_financeiros')
-            .select('*')
-            .eq('id', id)
-            .single();
-
-        if (error || !data) return null;
-        return mapRecordToLancamento(data);
+        return LancamentosRepository.buscarPorId(id);
     },
 
+    /**
+     * Cria um novo lançamento
+     */
     async criar(dados: Partial<Lancamento>): Promise<Lancamento> {
-        // Validações de regra de negócio antes de salvar
-        if (!dados.descricao) throw new Error("Descrição é obrigatória");
-        
-        const supabase = createServiceClient();
-        const { data, error } = await supabase
-            .from('lancamentos_financeiros')
-            .insert(mapLancamentoToRecord(dados))
-            .select()
-            .single();
+        // Validar regras de negócio
+        const validacao = validarCriacaoLancamento(dados);
+        if (!validacao.valido) {
+            throw new Error(validacao.erros.join('; '));
+        }
 
-        if (error) throw new Error(`Erro ao criar lançamento: ${error.message}`);
-        return mapRecordToLancamento(data);
+        // Valores padrão
+        const dadosCompletos: Partial<Lancamento> = {
+            ...dados,
+            status: dados.status || 'pendente',
+            dataLancamento: dados.dataLancamento || new Date().toISOString().split('T')[0],
+            dataCompetencia: dados.dataCompetencia || dados.dataLancamento || new Date().toISOString().split('T')[0],
+            recorrente: dados.recorrente || false,
+            anexos: dados.anexos || []
+        };
+
+        return LancamentosRepository.criar(dadosCompletos);
     },
 
+    /**
+     * Atualiza um lançamento
+     */
     async atualizar(id: number, dados: Partial<Lancamento>): Promise<Lancamento> {
-        const supabase = createServiceClient();
-        const { data, error } = await supabase
-            .from('lancamentos_financeiros')
-            .update(mapLancamentoToRecord(dados))
-            .eq('id', id)
-            .select()
-            .single();
+        const existente = await LancamentosRepository.buscarPorId(id);
+        if (!existente) {
+            throw new Error('Lançamento não encontrado');
+        }
 
-        if (error) throw new Error(`Erro ao atualizar lançamento: ${error.message}`);
-        return mapRecordToLancamento(data);
+        return LancamentosRepository.atualizar(id, dados);
+    },
+
+    /**
+     * Exclui um lançamento
+     */
+    async excluir(id: number): Promise<void> {
+        const existente = await LancamentosRepository.buscarPorId(id);
+        if (!existente) {
+            throw new Error('Lançamento não encontrado');
+        }
+
+        // Validar se pode ser excluído
+        if (existente.status === 'confirmado') {
+            throw new Error('Lançamento confirmado não pode ser excluído. Use estorno.');
+        }
+
+        return LancamentosRepository.excluir(id);
+    },
+
+    /**
+     * Efetiva (paga/recebe) um lançamento
+     */
+    async efetivar(
+        id: number,
+        dados: {
+            dataEfetivacao?: string;
+            formaPagamento?: string;
+            contaBancariaId?: number;
+        }
+    ): Promise<Lancamento> {
+        const existente = await LancamentosRepository.buscarPorId(id);
+        if (!existente) {
+            throw new Error('Lançamento não encontrado');
+        }
+
+        const validacao = validarEfetivacaoLancamento(existente);
+        if (!validacao.valido) {
+            throw new Error(validacao.erros.join('; '));
+        }
+
+        return LancamentosRepository.atualizar(id, {
+            status: 'confirmado',
+            dataEfetivacao: dados.dataEfetivacao || new Date().toISOString(),
+            formaPagamento: dados.formaPagamento as any,
+            contaBancariaId: dados.contaBancariaId
+        });
+    },
+
+    /**
+     * Cancela um lançamento
+     */
+    async cancelar(id: number): Promise<Lancamento> {
+        const existente = await LancamentosRepository.buscarPorId(id);
+        if (!existente) {
+            throw new Error('Lançamento não encontrado');
+        }
+
+        const validacao = validarCancelamentoLancamento(existente);
+        if (!validacao.valido) {
+            throw new Error(validacao.erros.join('; '));
+        }
+
+        return LancamentosRepository.atualizar(id, { status: 'cancelado' });
+    },
+
+    /**
+     * Estorna um lançamento
+     */
+    async estornar(id: number): Promise<Lancamento> {
+        const existente = await LancamentosRepository.buscarPorId(id);
+        if (!existente) {
+            throw new Error('Lançamento não encontrado');
+        }
+
+        const validacao = validarEstornoLancamento(existente);
+        if (!validacao.valido) {
+            throw new Error(validacao.erros.join('; '));
+        }
+
+        return LancamentosRepository.atualizar(id, { status: 'estornado' });
+    },
+
+    /**
+     * Gera próximo lançamento recorrente
+     */
+    async gerarRecorrente(lancamentoOrigemId: number): Promise<Lancamento> {
+        const origem = await LancamentosRepository.buscarPorId(lancamentoOrigemId);
+        if (!origem) {
+            throw new Error('Lançamento de origem não encontrado');
+        }
+
+        if (!origem.recorrente || !origem.frequenciaRecorrencia) {
+            throw new Error('Lançamento não é recorrente');
+        }
+
+        const novaDataVencimento = calcularProximaDataRecorrencia(
+            new Date(origem.dataVencimento || origem.dataLancamento),
+            origem.frequenciaRecorrencia
+        );
+
+        return LancamentosRepository.criar({
+            ...origem,
+            id: undefined as any,
+            status: 'pendente',
+            dataLancamento: new Date().toISOString().split('T')[0],
+            dataVencimento: novaDataVencimento.toISOString().split('T')[0],
+            dataCompetencia: novaDataVencimento.toISOString().split('T')[0],
+            dataEfetivacao: null,
+            lancamentoOrigemId: lancamentoOrigemId,
+            anexos: []
+        });
+    },
+
+    /**
+     * Busca lançamentos por parcela de acordo
+     */
+    async buscarPorParcela(parcelaId: number): Promise<Lancamento[]> {
+        return LancamentosRepository.buscarPorParcela(parcelaId);
+    },
+
+    /**
+     * Busca resumo de vencimentos
+     */
+    async buscarResumoVencimentos(tipo?: 'receita' | 'despesa') {
+        return LancamentosRepository.buscarResumoVencimentos(tipo);
+    },
+
+    /**
+     * Conta total de lançamentos
+     */
+    async contar(params: ListarLancamentosParams): Promise<number> {
+        return LancamentosRepository.contar(params);
     }
 };
-
-// Helpers (Simplificados)
-function mapRecordToLancamento(record: any): Lancamento {
-    return {
-        ...record,
-        dataLancamento: record.data_lancamento,
-        dataVencimento: record.data_vencimento,
-        dataEfetivacao: record.data_efetivacao,
-        dataCompetencia: record.data_competencia,
-        contaBancariaId: record.conta_bancaria_id,
-        contaContabilId: record.conta_contabil_id,
-        centroCustoId: record.centro_custo_id,
-        clienteId: record.cliente_id,
-        processoId: record.processo_id || null, // Se existir coluna direta ou via join
-        parcelaId: record.parcela_id
-    };
-}
-
-function mapLancamentoToRecord(domain: Partial<Lancamento>): any {
-    const record: any = {};
-
-    // Mapeamento explícito de camelCase para snake_case
-    if (domain.descricao !== undefined) record.descricao = domain.descricao;
-    if (domain.valor !== undefined) record.valor = domain.valor;
-    if (domain.dataLancamento !== undefined) record.data_lancamento = domain.dataLancamento;
-    if (domain.dataVencimento !== undefined) record.data_vencimento = domain.dataVencimento;
-    if (domain.dataCompetencia !== undefined) record.data_competencia = domain.dataCompetencia;
-    if (domain.dataEfetivacao !== undefined) record.data_efetivacao = domain.dataEfetivacao;
-    if (domain.status !== undefined) record.status = domain.status;
-    if (domain.tipo !== undefined) record.tipo = domain.tipo;
-    if (domain.categoria !== undefined) record.categoria = domain.categoria;
-    if (domain.formaPagamento !== undefined) record.forma_pagamento = domain.formaPagamento;
-    if (domain.origem !== undefined) record.origem = domain.origem;
-    if (domain.documento !== undefined) record.documento = domain.documento;
-    if (domain.observacoes !== undefined) record.observacoes = domain.observacoes;
-    if (domain.recorrente !== undefined) record.recorrente = domain.recorrente;
-    if (domain.frequenciaRecorrencia !== undefined) record.frequencia_recorrencia = domain.frequenciaRecorrencia;
-
-    // Foreign Keys
-    if (domain.contaBancariaId !== undefined) record.conta_bancaria_id = domain.contaBancariaId;
-    if (domain.contaContabilId !== undefined) record.conta_contabil_id = domain.contaContabilId;
-    if (domain.centroCustoId !== undefined) record.centro_custo_id = domain.centroCustoId;
-    if (domain.clienteId !== undefined) record.cliente_id = domain.clienteId;
-    if (domain.parcelaId !== undefined) record.parcela_id = domain.parcelaId;
-    if (domain.acordoCondenacaoId !== undefined) record.acordo_condenacao_id = domain.acordoCondenacaoId;
-
-    return record;
-}

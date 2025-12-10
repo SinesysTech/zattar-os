@@ -1,82 +1,49 @@
-import { SupabaseClient } from '@supabase/supabase-js';
-import { 
-    TransacaoComConciliacao, 
-    ImportarExtratoDTO, 
-    ImportarExtratoResponse, 
+/**
+ * Service de Conciliação Bancária
+ * Casos de uso e orquestração de regras de negócio
+ */
+
+import { ConciliacaoRepository } from '../repository/conciliacao';
+import {
+    filtrarCandidatos,
+    validarConciliacao,
+    validarDesconciliacao,
+    SCORE_MINIMO_AUTO_CONCILIACAO
+} from '../domain/conciliacao';
+import type {
+    ConciliacaoBancaria,
     SugestaoConciliacao,
-    LancamentoFinanceiroResumo,
+    ImportarExtratoDTO,
+    ImportarExtratoResponse,
     ConciliarManualDTO,
     ConciliarAutomaticaDTO,
     ConciliacaoResult,
     ListarTransacoesImportadasParams,
     ListarTransacoesResponse,
-    TransacaoImportada,
-    ConciliacaoBancaria
+    LancamentoFinanceiroResumo
 } from '../types/conciliacao';
-import { Lancamento } from '../types/lancamentos';
-import { createServiceClient } from '@/app/_lib/supabase/service';
+
+// ============================================================================
+// Service Implementation
+// ============================================================================
 
 export class ConciliacaoService {
-    private supabase: SupabaseClient;
-
-    constructor() {
-        this.supabase = createServiceClient();
-    }
-
+    /**
+     * Lista transações importadas com status de conciliação
+     */
     async listarTransacoes(params: ListarTransacoesImportadasParams): Promise<ListarTransacoesResponse> {
-        let query = this.supabase
-            .from('transacoes_importadas')
-            .select(`
-                *,
-                conciliacao_bancaria (*),
-                lancamentos (*)
-            `, { count: 'exact' });
-
-        if (params.contaBancariaId) {
-            query = query.eq('conta_bancaria_id', params.contaBancariaId);
-        }
-        
-        const { data, count, error } = await query;
-        
-        if (error) {
-            console.error('Erro ao listar transações:', error);
-            throw new Error('Erro ao listar transações');
-        }
-
-        const items: TransacaoComConciliacao[] = (data || []).map((item: any) => ({
-            id: item.id,
-            contaBancariaId: item.conta_bancaria_id,
-            dataTransacao: item.data_transacao,
-            descricao: item.descricao,
-            valor: item.valor,
-            tipoTransacao: item.tipo_transacao,
-            documento: item.documento,
-            hashInfo: item.hash_info,
-            statusConciliacao: item.conciliacao_bancaria?.[0]?.status || 'pendente',
-            lancamentoVinculadoId: item.conciliacao_bancaria?.[0]?.lancamento_financeiro_id,
-            lancamentoVinculado: item.lancamentos ? this.mapLancamento(item.lancamentos) : null,
-            conciliacao: item.conciliacao_bancaria?.[0] ? this.mapConciliacao(item.conciliacao_bancaria[0]) : null
-        }));
-
-        return {
-            items,
-            paginacao: {
-                pagina: params.pagina || 1,
-                limite: params.limite || 20,
-                total: count || 0,
-                totalPaginas: Math.ceil((count || 0) / (params.limite || 20))
-            },
-            resumo: {
-                totalPendentes: 0,
-                totalConciliadas: 0,
-                totalDivergentes: 0,
-                totalIgnoradas: 0,
-            }
-        };
+        return ConciliacaoRepository.listarTransacoesImportadas(params);
     }
 
+    /**
+     * Importa extrato bancário (OFX/CSV)
+     */
     async importarExtrato(dto: ImportarExtratoDTO): Promise<ImportarExtratoResponse> {
         console.log('Importando extrato:', dto.nomeArquivo);
+
+        // TODO: Implementar parsing de OFX/CSV
+        // Por enquanto retorna mock
+
         return {
             processados: 10,
             importados: 5,
@@ -85,48 +52,167 @@ export class ConciliacaoService {
         };
     }
 
+    /**
+     * Obtém sugestões de conciliação para uma transação
+     */
     async obterSugestoes(transacaoId: number): Promise<SugestaoConciliacao[]> {
-        return [];
+        const transacao = await ConciliacaoRepository.buscarTransacaoPorId(transacaoId);
+        if (!transacao) {
+            throw new Error('Transação não encontrada');
+        }
+
+        const validacao = validarConciliacao(transacao);
+        if (!validacao.valido) {
+            return [];
+        }
+
+        // Buscar lançamentos candidatos
+        const tipoEsperado = transacao.tipoTransacao === 'credito' ? 'receita' : 'despesa';
+        const lancamentos = await ConciliacaoRepository.buscarLancamentosCandidatos({
+            contaBancariaId: transacao.contaBancariaId,
+            tipo: tipoEsperado,
+            valorMin: transacao.valor * 0.9,
+            valorMax: transacao.valor * 1.1
+        });
+
+        return filtrarCandidatos(transacao, lancamentos);
     }
 
+    /**
+     * Concilia manualmente uma transação com um lançamento
+     */
     async conciliarManual(dto: ConciliarManualDTO): Promise<ConciliacaoBancaria> {
-        return {} as ConciliacaoBancaria;
+        const transacao = await ConciliacaoRepository.buscarTransacaoPorId(dto.transacaoImportadaId);
+        if (!transacao) {
+            throw new Error('Transação não encontrada');
+        }
+
+        const validacao = validarConciliacao(transacao);
+        if (!validacao.valido) {
+            throw new Error(validacao.erros.join('; '));
+        }
+
+        // Se é para ignorar (sem lançamento vinculado)
+        if (!dto.lancamentoFinanceiroId && !dto.criarNovoLancamento) {
+            return ConciliacaoRepository.criarConciliacao({
+                transacaoImportadaId: dto.transacaoImportadaId,
+                lancamentoFinanceiroId: null,
+                status: 'ignorado',
+                usuarioId: 'system' // TODO: Obter do contexto de autenticação
+            });
+        }
+
+        // TODO: Se criarNovoLancamento, criar o lançamento primeiro
+
+        return ConciliacaoRepository.criarConciliacao({
+            transacaoImportadaId: dto.transacaoImportadaId,
+            lancamentoFinanceiroId: dto.lancamentoFinanceiroId,
+            status: 'conciliado',
+            diferencaValor: 0, // TODO: Calcular diferença
+            usuarioId: 'system'
+        });
     }
 
+    /**
+     * Executa conciliação automática
+     */
+    async conciliarAutomaticamente(dto: ConciliarAutomaticaDTO): Promise<ConciliacaoResult[]> {
+        const resultados: ConciliacaoResult[] = [];
+
+        // Buscar transações pendentes
+        const { items: transacoes } = await ConciliacaoRepository.listarTransacoesImportadas({
+            contaBancariaId: dto.contaBancariaId,
+            dataInicio: dto.dataInicio,
+            dataFim: dto.dataFim
+        });
+
+        const pendentes = transacoes.filter(t => t.statusConciliacao === 'pendente');
+
+        for (const transacao of pendentes) {
+            try {
+                const sugestoes = await this.obterSugestoes(transacao.id);
+
+                // Se houver sugestão com score alto, conciliar automaticamente
+                const melhorSugestao = sugestoes[0];
+                if (melhorSugestao && melhorSugestao.score >= SCORE_MINIMO_AUTO_CONCILIACAO) {
+                    await this.conciliarManual({
+                        transacaoImportadaId: transacao.id,
+                        lancamentoFinanceiroId: melhorSugestao.lancamentoId
+                    });
+
+                    resultados.push({
+                        transacaoId: transacao.id,
+                        lancamentoId: melhorSugestao.lancamentoId,
+                        sucesso: true,
+                        mensagem: `Conciliado automaticamente (score: ${melhorSugestao.score})`
+                    });
+                } else {
+                    resultados.push({
+                        transacaoId: transacao.id,
+                        lancamentoId: 0,
+                        sucesso: false,
+                        mensagem: 'Nenhuma sugestão com score suficiente'
+                    });
+                }
+            } catch (error) {
+                resultados.push({
+                    transacaoId: transacao.id,
+                    lancamentoId: 0,
+                    sucesso: false,
+                    mensagem: String(error)
+                });
+            }
+        }
+
+        return resultados;
+    }
+
+    /**
+     * Busca lançamentos candidatos para conciliação manual
+     */
     async buscarLancamentosCandidatos(params: any): Promise<LancamentoFinanceiroResumo[]> {
-        return [];
+        const lancamentos = await ConciliacaoRepository.buscarLancamentosCandidatos(params);
+
+        return lancamentos.map(l => ({
+            id: l.id,
+            descricao: l.descricao,
+            dataLancamento: l.dataLancamento,
+            valor: l.valor,
+            tipo: l.tipo,
+            conciliado: l.status === 'confirmado'
+        }));
     }
 
-    async obterResumo(): Promise<{ totalPendentes: number; totalConciliadas: number; totalDivergentes: number; totalIgnoradas: number; }> {
-        return {
-            totalPendentes: 0,
-            totalConciliadas: 0,
-            totalDivergentes: 0,
-            totalIgnoradas: 0,
-        };
+    /**
+     * Obtém resumo de conciliação
+     */
+    async obterResumo(): Promise<{
+        totalPendentes: number;
+        totalConciliadas: number;
+        totalDivergentes: number;
+        totalIgnoradas: number;
+    }> {
+        return ConciliacaoRepository.calcularResumo();
     }
 
+    /**
+     * Desconcilia uma transação
+     */
     async desconciliar(transacaoId: number): Promise<void> {
-        console.log(`Desconciliando transação ${transacaoId}`);
-    }
+        const transacao = await ConciliacaoRepository.buscarTransacaoPorId(transacaoId);
+        if (!transacao) {
+            throw new Error('Transação não encontrada');
+        }
 
-    // Mappers
-    private mapLancamento(data: any): Lancamento {
-        return data as Lancamento;
-    }
+        const validacao = validarDesconciliacao(transacao);
+        if (!validacao.valido) {
+            throw new Error(validacao.erros.join('; '));
+        }
 
-    private mapConciliacao(data: any): ConciliacaoBancaria {
-        return {
-            id: data.id,
-            transacaoImportadaId: data.transacao_importada_id,
-            lancamentoFinanceiroId: data.lancamento_financeiro_id,
-            dataConciliacao: data.data_conciliacao,
-            status: data.status,
-            diferencaValor: data.diferenca_valor,
-            usuarioId: data.usuario_id,
-            observacoes: data.observacoes
-        };
+        await ConciliacaoRepository.removerConciliacao(transacaoId);
+        console.log(`Transação ${transacaoId} desconciliada`);
     }
 }
 
+// Exportar instância singleton para compatibilidade
 export const conciliacaoService = new ConciliacaoService();
