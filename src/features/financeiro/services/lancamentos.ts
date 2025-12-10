@@ -47,6 +47,9 @@ export const LancamentosService = {
     },
 
     async criar(dados: Partial<Lancamento>): Promise<Lancamento> {
+        // Validações de regra de negócio antes de salvar
+        if (!dados.descricao) throw new Error("Descrição é obrigatória");
+        
         const supabase = createServiceClient();
         const { data, error } = await supabase
             .from('lancamentos_financeiros')

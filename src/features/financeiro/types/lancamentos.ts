@@ -115,3 +115,23 @@ export interface ListarLancamentosParams {
     origem?: OrigemLancamento;
     recorrente?: boolean;
 }
+
+// Aliases for compatibility with Contas Pagar components
+export type StatusContaPagar = StatusLancamento;
+export type FormaPagamentoContaPagar = FormaPagamento;
+export type ContaPagarComDetalhes = Lancamento & {
+    fornecedor?: { id: number; razaoSocial: string; nomeFantasia?: string };
+    categoria_nome?: string; // Optional expanded fields
+};
+
+export interface ResumoVencimentos {
+    vencidas: { quantidade: number; valorTotal: number };
+    vencendoHoje: { quantidade: number; valorTotal: number };
+    vencendoEm7Dias: { quantidade: number; valorTotal: number };
+    vencendoEm30Dias: { quantidade: number; valorTotal: number };
+}
+
+export type ContasPagarFilters = ListarLancamentosParams & {
+    categoria?: string;
+};
+
