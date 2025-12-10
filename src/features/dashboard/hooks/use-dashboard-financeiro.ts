@@ -1,0 +1,255 @@
+'use client';
+
+/**
+ * Hooks para dados financeiros do dashboard
+ *
+ * Migrado de: src/app/_lib/hooks/use-dashboard-financeiro.ts
+ * Consome Server Actions do módulo financeiro
+ */
+
+import { useState, useEffect } from 'react';
+import useSWR from 'swr';
+import {
+  actionObterDashboardFinanceiro,
+  actionObterFluxoCaixaProjetado,
+  actionObterTopCategorias,
+} from '@/features/financeiro/actions/dashboard';
+import { actionObterFluxoCaixaUnificado } from '@/features/financeiro/actions/fluxo-caixa';
+
+// ============================================================================
+// Dashboard Financeiro Principal
+// ============================================================================
+
+const dashboardFetcher = async () => {
+  const result = await actionObterDashboardFinanceiro();
+  if (!result.success) throw new Error(result.error);
+  return result.data;
+};
+
+export function useDashboardFinanceiro() {
+  const { data, error, isValidating, mutate } = useSWR(
+    'dashboard-financeiro',
+    dashboardFetcher,
+    {
+      refreshInterval: 30000, // 30 segundos
+      revalidateOnFocus: false,
+    }
+  );
+
+  return {
+    data,
+    isLoading: !data && !error,
+    error,
+    isValidating,
+    mutate,
+  };
+}
+
+// ============================================================================
+// Saldo de Contas
+// ============================================================================
+
+export function useSaldoContas() {
+  const dash = useDashboardFinanceiro();
+
+  return {
+    ...dash,
+    saldoAtual: dash.data?.saldoMes ?? 0,
+  };
+}
+
+// ============================================================================
+// Contas a Pagar/Receber
+// ============================================================================
+
+export function useContasPagarReceber() {
+  const dash = useDashboardFinanceiro();
+
+  return {
+    ...dash,
+    contasPagar: {
+      quantidade: dash.data?.contasVencidas || 0,
+      valor: dash.data?.despesasPendentes || 0,
+    },
+    contasReceber: {
+      quantidade: 0,
+      valor: dash.data?.receitasPendentes || 0,
+    },
+  };
+}
+
+// ============================================================================
+// Fluxo de Caixa
+// ============================================================================
+
+export function useFluxoCaixa(meses: number = 6) {
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const hoje = new Date();
+        // Inicio: 6 meses atras
+        const inicio = new Date(hoje.getFullYear(), hoje.getMonth() - meses, 1);
+        // Fim: 6 meses no futuro
+        const fim = new Date(hoje.getFullYear(), hoje.getMonth() + 6, 0);
+
+        const result = await actionObterFluxoCaixaUnificado({
+          dataInicio: inicio.toISOString(),
+          dataFim: fim.toISOString(),
+          incluirProjetado: true,
+        });
+
+        if (result.success && result.data) {
+          const dadosGrafico = transformToChartData(result.data);
+          setData(dadosGrafico);
+        } else {
+          setError(result.error);
+        }
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [meses]);
+
+  return {
+    data,
+    isLoading: loading,
+    error,
+    isValidating: loading,
+    mutate: () => {},
+  };
+}
+
+function transformToChartData(fluxoUnificado: any): any[] {
+  if (!fluxoUnificado) return [];
+
+  // Adaptar dados do fluxo unificado para formato de gráfico
+  const resultado: any[] = [];
+
+  // Se tiver dados por período
+  if (fluxoUnificado.periodos && Array.isArray(fluxoUnificado.periodos)) {
+    return fluxoUnificado.periodos.map((p: any) => ({
+      mes: p.periodo || p.mes,
+      receitas: p.entradas || p.receitas || 0,
+      despesas: p.saidas || p.despesas || 0,
+      saldo: p.saldo || 0,
+    }));
+  }
+
+  // Fallback para formato simples
+  if (fluxoUnificado.realizado || fluxoUnificado.projetado) {
+    return [
+      {
+        mes: 'Realizado',
+        receitas: fluxoUnificado.realizado?.receitas || fluxoUnificado.realizado?.entradas || 0,
+        despesas: fluxoUnificado.realizado?.despesas || fluxoUnificado.realizado?.saidas || 0,
+      },
+      {
+        mes: 'Projetado',
+        receitas: fluxoUnificado.projetado?.receitas || fluxoUnificado.projetado?.entradas || 0,
+        despesas: fluxoUnificado.projetado?.despesas || fluxoUnificado.projetado?.saidas || 0,
+      },
+    ];
+  }
+
+  return resultado;
+}
+
+// ============================================================================
+// Despesas por Categoria
+// ============================================================================
+
+export function useDespesasPorCategoria() {
+  const [data, setData] = useState<{ categoria: string; valor: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await actionObterTopCategorias('despesa', 5);
+
+        if (result.success && result.data) {
+          setData(result.data.categorias.map((c: any) => ({
+            categoria: c.categoria,
+            valor: c.valor,
+          })));
+        } else {
+          setError(result.error);
+        }
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return {
+    despesasPorCategoria: data,
+    isLoading: loading,
+    error,
+  };
+}
+
+// ============================================================================
+// Orçamento Atual
+// ============================================================================
+
+export function useOrcamentoAtual() {
+  const dash = useDashboardFinanceiro();
+
+  return {
+    ...dash,
+    orcamentoAtual: null, // TODO: Implementar quando houver módulo de orçamentos
+  };
+}
+
+// ============================================================================
+// Alertas Financeiros
+// ============================================================================
+
+export function useAlertasFinanceiros() {
+  const dash = useDashboardFinanceiro();
+
+  // Gerar alertas baseado nos dados
+  const alertas: { tipo: string; mensagem: string }[] = [];
+
+  if (dash.data) {
+    if (dash.data.contasVencidas > 0) {
+      alertas.push({
+        tipo: 'danger',
+        mensagem: `${dash.data.contasVencidas} conta(s) vencida(s) no valor de ${formatarMoeda(dash.data.valorVencido)}`,
+      });
+    }
+
+    if (dash.data.despesasMes > dash.data.receitasMes) {
+      alertas.push({
+        tipo: 'warning',
+        mensagem: 'Despesas do mês superam as receitas',
+      });
+    }
+  }
+
+  return {
+    ...dash,
+    alertas,
+  };
+}
+
+// Helper para formatar moeda
+function formatarMoeda(valor: number): string {
+  return valor.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+}

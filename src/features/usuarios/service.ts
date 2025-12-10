@@ -22,6 +22,18 @@ export const service = {
     return usuario;
   },
 
+  async buscarPorCpf(cpf: string) {
+    return usuarioRepository.findByCpf(cpf);
+  },
+
+  async buscarPorEmail(email: string) {
+    return usuarioRepository.findByEmail(email);
+  },
+
+  async listarCargos() {
+    return usuarioRepository.listarCargos();
+  },
+
   async criarUsuario(dados: UsuarioDados): Promise<OperacaoUsuarioResult> {
     try {
       // Validar schema
