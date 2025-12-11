@@ -266,7 +266,7 @@ Todos os inputs são validados com Zod schemas:
 - `@/lib/supabase/service-client` - Cliente Supabase
 - `@/lib/redis/cache-utils` - Utilitários de cache
 - `@/lib/auth` - Autenticação e autorização
-- `@/backend/captura/services/timeline/timeline-persistence.service` - Timelines MongoDB
+- `@/features/captura/services/timeline/timeline-persistence.service` - Timelines MongoDB
 - `@/lib/redis/invalidation` - Invalidação de cache
 
 ## 🚀 Próximos Passos

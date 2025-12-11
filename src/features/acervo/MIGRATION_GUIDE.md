@@ -196,7 +196,7 @@ import { obterAcervoPaginado, obterAcervoUnificado } from "@/features/acervo";
 
 ```typescript
 // ❌ ESLint Error
-import { obterTimelineUnificadaPorId } from "@/backend/acervo/services/timeline/...";
+import { obterTimelineUnificadaPorId } from "@/features/acervo/timeline-unificada";
 
 // ✅ Usar feature
 import { obterTimelineUnificadaPorId } from "@/features/acervo";
@@ -209,7 +209,7 @@ import { obterTimelineUnificadaPorId } from "@/features/acervo";
 ### Antes:
 
 ```typescript
-import { obterAcervo } from "@/backend/acervo/services/listar-acervo.service";
+import { obterAcervoPaginado } from "@/features/acervo";
 ```
 
 ### Agora:
@@ -251,7 +251,7 @@ src/features/acervo/
 ### ❌ DON'T:
 
 - Não use `obterAcervo()` genérico em código novo
-- Não importe de `@/backend/acervo/*` em `src/`
+- Não use imports legados em `src/` (use `@/features/acervo`)
 - Não use type guards quando o tipo é garantido pelo método
 
 ---
