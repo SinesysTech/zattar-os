@@ -44,7 +44,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import { verificarPermissoes } from '@/backend/permissoes/services/persistence/permissao-persistence.service';
-import { buscarPendentesPorClienteCPF } from '@/backend/expedientes/services/persistence/listar-pendentes.service';
+import { buscarPendentesPorClienteCPF } from '@/features/expedientes/service';
 
 export async function GET(
   request: NextRequest,
@@ -84,11 +84,18 @@ export async function GET(
     }
 
     // 4. Buscar pendentes
-    const pendentes = await buscarPendentesPorClienteCPF(cpf);
+    const result = await buscarPendentesPorClienteCPF(cpf);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { success: false, error: result.error.message },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
-      data: pendentes,
+      data: result.data,
     });
   } catch (error) {
     console.error('Erro ao buscar pendentes por CPF do cliente:', error);

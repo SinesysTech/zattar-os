@@ -7,7 +7,7 @@ import {
   getCalendarCells,
   calculateMonthEventPositions,
 } from '@/components/calendar/helpers'; // Reusing helper functions
-import { Audiencia } from '@/core/audiencias/domain';
+import { Audiencia } from '@/features/audiencias';
 import { AudienciasMonthDayCell } from './audiencias-month-day-cell';
 import { AudienciaDetailSheet } from './audiencia-detail-sheet';
 

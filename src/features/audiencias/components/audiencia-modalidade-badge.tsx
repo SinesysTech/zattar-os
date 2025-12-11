@@ -1,4 +1,4 @@
-import { Audiencia, ModalidadeAudiencia, MODALIDADE_AUDIENCIA_LABELS } from '@/core/audiencias/domain';
+import { Audiencia, ModalidadeAudiencia, MODALIDADE_AUDIENCIA_LABELS } from '@/features/audiencias';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Video, MapPin, GitCompareArrows } from 'lucide-react';

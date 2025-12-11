@@ -13,6 +13,12 @@ import {
 } from '../domain/lancamentos';
 import type { Lancamento, ListarLancamentosParams } from '../types/lancamentos';
 
+type EfetivarLancamentoInput = {
+    dataEfetivacao?: string;
+    formaPagamento?: Lancamento['formaPagamento'];
+    contaBancariaId?: number;
+};
+
 // ============================================================================
 // Service Implementation
 // ============================================================================
@@ -89,11 +95,7 @@ export const LancamentosService = {
      */
     async efetivar(
         id: number,
-        dados: {
-            dataEfetivacao?: string;
-            formaPagamento?: string;
-            contaBancariaId?: number;
-        }
+        dados: EfetivarLancamentoInput
     ): Promise<Lancamento> {
         const existente = await LancamentosRepository.buscarPorId(id);
         if (!existente) {
@@ -108,8 +110,8 @@ export const LancamentosService = {
         return LancamentosRepository.atualizar(id, {
             status: 'confirmado',
             dataEfetivacao: dados.dataEfetivacao || new Date().toISOString(),
-            formaPagamento: dados.formaPagamento as any,
-            contaBancariaId: dados.contaBancariaId
+            formaPagamento: dados.formaPagamento ?? existente.formaPagamento ?? null,
+            contaBancariaId: dados.contaBancariaId ?? existente.contaBancariaId ?? null
         });
     },
 
@@ -165,9 +167,10 @@ export const LancamentosService = {
             origem.frequenciaRecorrencia
         );
 
+        const { id: _omitId, createdAt: _createdAt, updatedAt: _updatedAt, ...lancamentoBase } = origem;
+
         return LancamentosRepository.criar({
-            ...origem,
-            id: undefined as any,
+            ...lancamentoBase,
             status: 'pendente',
             dataLancamento: new Date().toISOString().split('T')[0],
             dataVencimento: novaDataVencimento.toISOString().split('T')[0],

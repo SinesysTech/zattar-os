@@ -68,7 +68,7 @@ export function ExpedientesCalendar() {
                     fetch('/api/tipos-expedientes?limite=100').then(r => r.json())
                 ]);
                 if (usersRes.success) setUsuarios(usersRes.data.usuarios);
-                if (tiposRes.success) setTiposExpedientes(tiposRes.data.tipos_expedientes);
+                if (tiposRes.success) setTiposExpedientes(tiposRes.data.data);
             } catch (err) {
                 console.error('Erro ao carregar dados auxiliares:', err);
             }
@@ -159,7 +159,7 @@ export function ExpedientesCalendar() {
                         </Button>
                     </div>
                     <Button variant="outline" size="sm" onClick={handleToday}>
-                         Hoje
+                        Hoje
                     </Button>
                 </div>
 
@@ -219,13 +219,13 @@ export function ExpedientesCalendar() {
                 }
             >
                 <div className="p-4 bg-muted/10 border-b">
-                   <h3 className="font-semibold flex items-center gap-2">
-                       <CalendarIcon className="h-4 w-4" />
-                       Expedientes de {format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
-                       <Badge variant="secondary" className="ml-2">
-                           {tableData.meta.total}
-                       </Badge>
-                   </h3>
+                    <h3 className="font-semibold flex items-center gap-2">
+                        <CalendarIcon className="h-4 w-4" />
+                        Expedientes de {format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
+                        <Badge variant="secondary" className="ml-2">
+                            {tableData.meta.total}
+                        </Badge>
+                    </h3>
                 </div>
 
                 <DataTable
@@ -236,7 +236,7 @@ export function ExpedientesCalendar() {
                     hidePagination={true}
                     hideTableBorder={true}
                     className="border-none"
-                    // @ts-ignore
+                    // @ts-expect-error - TanStack Table options type mismatch
                     options={{
                         meta: {
                             usuarios,

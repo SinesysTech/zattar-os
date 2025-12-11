@@ -5,7 +5,9 @@ import { conciliacaoService } from '../services/conciliacao';
 import { 
     ImportarExtratoDTO, 
     ConciliarManualDTO, 
-    ConciliarAutomaticaDTO 
+    ConciliarAutomaticaDTO,
+    ListarTransacoesImportadasParams,
+    BuscarLancamentosCandidatosParams 
 } from '../types/conciliacao';
 
 // Actions para Conciliação Bancária
@@ -57,7 +59,7 @@ export async function actionObterSugestoes(transacaoId: number) {
     }
 }
 
-export async function actionBuscarLancamentosManuais(params: any) {
+export async function actionBuscarLancamentosManuais(params: BuscarLancamentosCandidatosParams) {
     try {
         const lancamentos = await conciliacaoService.buscarLancamentosCandidatos(params);
         return { success: true, data: lancamentos };
@@ -67,10 +69,10 @@ export async function actionBuscarLancamentosManuais(params: any) {
     }
 }
 
-export async function actionConciliarAutomaticamente(dto: ConciliarAutomaticaDTO) {
+export async function actionConciliarAutomaticamente(_dto: ConciliarAutomaticaDTO) {
     try {
         // Implementar no serviço futuramente
-        // const resultado = await conciliacaoService.conciliarAutomaticamente(dto);
+        // const resultado = await conciliacaoService.conciliarAutomaticamente(_dto);
         revalidatePath('/financeiro/conciliacao-bancaria');
         return { success: true, message: 'Conciliação automática iniciada.' };
     } catch (error) {
@@ -78,7 +80,7 @@ export async function actionConciliarAutomaticamente(dto: ConciliarAutomaticaDTO
         return { success: false, error: 'Falha ao executar conciliação automática.' };
     }
 }
-export async function actionListarTransacoes(params: any) {
+export async function actionListarTransacoes(params: ListarTransacoesImportadasParams) {
     try {
         const resultado = await conciliacaoService.listarTransacoes(params);
         return { 

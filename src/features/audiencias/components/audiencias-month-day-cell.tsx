@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { transition } from '@/components/ui/animations';
 import { ICalendarCell } from '@/components/calendar/interfaces'; // Reusing ICalendarCell
-import { Audiencia } from '@/core/audiencias/domain';
+import { Audiencia } from '@/features/audiencias';
 import { AudienciaCard } from './audiencia-card'; // Reusing AudienciaCard
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';

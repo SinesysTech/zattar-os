@@ -10,8 +10,8 @@ import {
 	getExpedientesUsers,
 } from './requests-expedientes';
 import { obterUsuarios } from '@/backend/usuarios/services/usuarios/listar-usuarios.service';
-import { listarTiposExpedientes } from '@/backend/tipos-expedientes/services/tipos-expedientes/listar-tipos-expedientes.service';
-import type { ListarTiposExpedientesParams } from '@/backend/types/tipos-expedientes/types';
+import { listar } from '@/features/tipos-expedientes';
+import type { ListarTiposExpedientesParams } from '@/features/tipos-expedientes';
 
 async function getExpedientesCalendarData() {
 	// Buscar expedientes para um range amplo (últimos 3 meses e próximos 3 meses)
@@ -31,14 +31,14 @@ async function getExpedientesCalendarData() {
 		}),
 		getExpedientesUsers(),
 		obterUsuarios({ ativo: true, limite: 100 }),
-		listarTiposExpedientes({ limite: 100 } as ListarTiposExpedientesParams),
+		listar({ limite: 100 } as ListarTiposExpedientesParams),
 	]);
 
 	return {
 		events,
 		users,
 		usuarios: usuariosResult.usuarios || [],
-		tiposExpedientes: tiposResult.tipos_expedientes || [],
+		tiposExpedientes: tiposResult.data || [],
 	};
 }
 

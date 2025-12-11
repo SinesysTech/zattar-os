@@ -4,10 +4,6 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/app/_lib/hooks/use-debounce';
-import { Button } from '@/components/ui/button';
-import { ButtonGroup, ButtonGroupText } from '@/components/ui/button-group';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { ClientOnlyTabs, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { buildObrigacoesFilterOptions, buildObrigacoesFilterGroups, parseObrigacoesFilters, ObrigacoesFilters } from './obrigacoes-toolbar-filters';

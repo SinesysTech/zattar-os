@@ -135,3 +135,12 @@ export interface ConciliacaoFilters {
     tipoTransacao?: TipoTransacao;
     busca?: string;
 }
+
+export interface BuscarLancamentosCandidatosParams {
+    contaBancariaId?: number;
+    tipo: 'receita' | 'despesa';
+    valorMin?: number;
+    valorMax?: number;
+    dataInicio?: string;
+    dataFim?: string;
+}

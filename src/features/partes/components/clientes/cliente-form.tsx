@@ -179,7 +179,6 @@ export function ClienteFormDialog({
   const [currentStep, setCurrentStep] = React.useState(isEditMode ? 2 : 1);
   const [formData, setFormData] = React.useState(INITIAL_FORM_STATE);
   const [novoEmail, setNovoEmail] = React.useState('');
-  const [stepErrors, setStepErrors] = React.useState<string[]>([]);
   const formRef = React.useRef<HTMLFormElement>(null);
 
   // Server Action com useActionState
@@ -187,12 +186,12 @@ export function ClienteFormDialog({
 
   const boundAction = React.useCallback(
     async (prevState: ActionResult | null, formData: FormData) => {
-      if (isEditMode) {
+      if (isEditMode && cliente) {
         return actionAtualizarCliente(cliente.id, prevState, formData);
       }
       return actionCriarCliente(prevState, formData);
     },
-    [isEditMode, cliente?.id]
+    [isEditMode, cliente]
   );
 
   const [state, formAction, isPending] = useActionState(boundAction, initialState);

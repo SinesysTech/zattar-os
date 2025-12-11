@@ -1,5 +1,104 @@
 import { z } from 'zod';
-import type { PendenteManifestacao, ListarPendentesParams } from '@/backend/types/expedientes/types';
+
+// =============================================================================
+// LEGACY TYPES (MIGRATED FROM BACKEND)
+// =============================================================================
+
+/**
+ * Grau do processo
+ */
+export type GrauPendente = 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
+
+/**
+ * Campos disponíveis para ordenação
+ */
+export type OrdenarPorPendente =
+  | 'data_prazo_legal_parte'
+  | 'data_autuacao'
+  | 'numero_processo'
+  | 'nome_parte_autora'
+  | 'nome_parte_re'
+  | 'data_arquivamento'
+  | 'data_ciencia_parte'
+  | 'data_criacao_expediente'
+  | 'prioridade_processual'
+  | 'trt'
+  | 'grau'
+  | 'descricao_orgao_julgador'
+  | 'classe_judicial'
+  | 'tipo_expediente_id'
+  | 'responsavel_id' // TODO: Implementar ordenação por nome do responsável (join com usuarios)
+  | 'created_at'
+  | 'updated_at';
+
+/**
+ * Campos disponíveis para agrupamento
+ * NÃO incluir processo_id ou id_pje isoladamente (precisaria de TRT + grau para unicidade)
+ */
+export type AgruparPorPendente =
+  | 'trt'
+  | 'grau'
+  | 'responsavel_id'
+  | 'classe_judicial'
+  | 'codigo_status_processo'
+  | 'orgao_julgador'
+  | 'mes_autuacao'
+  | 'ano_autuacao'
+  | 'prazo_vencido'
+  | 'mes_prazo_legal';
+
+/**
+ * Direção da ordenação
+ */
+export type OrdemPendente = 'asc' | 'desc';
+
+/**
+ * Formato de banco de dados (snake_case) para Expediente.
+ * Usado por API routes legadas em /api/pendentes-manifestacao.
+ * @deprecated Preferir usar interface Expediente (camelCase) em novos códigos.
+ */
+export interface PendenteManifestacao {
+  id: number;
+  id_pje: number;
+  advogado_id: number;
+  processo_id: number | null;
+  trt: string;
+  grau: GrauPendente;
+  numero_processo: string;
+  descricao_orgao_julgador: string;
+  classe_judicial: string;
+  numero: number;
+  segredo_justica: boolean;
+  codigo_status_processo: string;
+  prioridade_processual: number;
+  nome_parte_autora: string;
+  qtde_parte_autora: number;
+  nome_parte_re: string;
+  qtde_parte_re: number;
+  data_autuacao: string; // ISO timestamp
+  juizo_digital: boolean;
+  data_arquivamento: string | null; // ISO timestamp
+  id_documento: number | null;
+  data_ciencia_parte: string | null; // ISO timestamp
+  data_prazo_legal_parte: string | null; // ISO timestamp
+  data_criacao_expediente: string | null; // ISO timestamp
+  prazo_vencido: boolean;
+  sigla_orgao_julgador: string | null;
+  baixado_em: string | null; // ISO timestamp - data de baixa do expediente
+  protocolo_id: string | null; // ID do protocolo quando houve protocolo de peça (pode conter números e letras)
+  justificativa_baixa: string | null; // Justificativa quando não houve protocolo
+  responsavel_id: number | null;
+  tipo_expediente_id: number | null; // Tipo de expediente associado
+  descricao_arquivos: string | null; // Descrição ou referência a arquivos relacionados
+  arquivo_nome: string | null; // Nome do arquivo PDF no Backblaze B2
+  arquivo_url: string | null; // URL pública do arquivo no Backblaze B2
+  arquivo_key: string | null; // Chave (path) do arquivo no bucket
+  arquivo_bucket: string | null; // Nome do bucket no Backblaze B2
+  observacoes: string | null;
+  created_at: string; // ISO timestamp
+  updated_at: string; // ISO timestamp
+}
+
 
 // =============================================================================
 // ENUMS & CONSTANTS
@@ -67,7 +166,7 @@ export interface Expediente {
   dataCriacaoExpediente: string | null;
   prazoVencido: boolean;
   siglaOrgaoJulgador: string | null;
-  dadosAnteriores: any | null;
+  dadosAnteriores: Record<string, unknown> | null;
   responsavelId: number | null;
   baixadoEm: string | null;
   protocoloId: string | null;
@@ -174,6 +273,7 @@ export type ListarExpedientesParams = {
   dataArquivamentoFim?: string;
   ordenarPor?: ExpedienteSortBy;
   ordem?: 'asc' | 'desc';
+  processoId?: number;
 };
 
 /**
@@ -195,6 +295,85 @@ export interface ExpedientesApiResponse {
 /**
  * Filter state interface for UI components
  */
-export interface ExpedientesFilters extends Omit<ListarExpedientesParams, 'pagina' | 'limite' | 'ordenarPor' | 'ordem'> {
-  // Add any UI specific filter properties if needed, currently matches ListarExpedientesParams almost 1:1
+export type ExpedientesFilters = Omit<ListarExpedientesParams, 'pagina' | 'limite' | 'ordenarPor' | 'ordem'>;
+
+// =============================================================================
+// LEGACY TYPES - Compatibilidade com código legado
+// =============================================================================
+
+/**
+ * @deprecated Use ListarExpedientesParams instead
+ * Parâmetros para listar pendentes (legado)
+ */
+/**
+ * Parâmetros para listar pendentes (legado - snake_case)
+ * Reflete exatamente os parâmetros aceitos pela rota /api/pendentes-manifestacao
+ */
+export interface ListarPendentesParams {
+  pagina?: number;
+  limite?: number;
+  busca?: string;
+  trt?: string;
+  grau?: GrauPendente;
+  responsavel_id?: number | 'null';
+  sem_responsavel?: boolean;
+  tipo_expediente_id?: number | 'null';
+  sem_tipo?: boolean;
+  baixado?: boolean;
+  prazo_vencido?: boolean;
+
+  // Datas
+  data_prazo_legal_inicio?: string; // YYYY-MM-DD
+  data_prazo_legal_fim?: string;
+  data_ciencia_inicio?: string;
+  data_ciencia_fim?: string;
+  data_criacao_expediente_inicio?: string;
+  data_criacao_expediente_fim?: string;
+  data_autuacao_inicio?: string;
+  data_autuacao_fim?: string;
+  data_arquivamento_inicio?: string;
+  data_arquivamento_fim?: string;
+
+  // Filtros específicos
+  numero_processo?: string;
+  nome_parte_autora?: string;
+  nome_parte_re?: string;
+  descricao_orgao_julgador?: string;
+  sigla_orgao_julgador?: string;
+  classe_judicial?: string;
+  codigo_status_processo?: string;
+  segredo_justica?: boolean;
+  juizo_digital?: boolean;
+  processo_id?: number;
+
+  // Ordenação
+  ordenar_por?: OrdenarPorPendente;
+  ordem?: OrdemPendente;
+
+  // Agrupamento
+  agrupar_por?: AgruparPorPendente;
+  incluir_contagem?: boolean;
+}
+
+/**
+ * Resultado da listagem de pendentes (legado)
+ */
+export interface ListarPendentesResult {
+  pendentes: PendenteManifestacao[];
+  total: number;
+  pagina: number;
+  limite: number;
+  totalPaginas: number;
+}
+
+/**
+ * Resultado agrupado da listagem de pendentes (legado)
+ */
+export interface ListarPendentesAgrupadoResult {
+  agrupamentos: Array<{
+    grupo: string;
+    quantidade: number;
+    pendentes?: PendenteManifestacao[];
+  }>;
+  total: number;
 }

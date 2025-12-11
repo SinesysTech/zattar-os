@@ -5,7 +5,7 @@ import {
     actionConciliarAutomaticamente,
     actionDesconciliar 
 } from '../actions/conciliacao';
-import { ConciliacaoFilters, ConciliarManualDTO } from '../types/conciliacao';
+import { ConciliacaoFilters, ConciliarManualDTO, ConciliarAutomaticaDTO } from '../types/conciliacao';
 
 export function useTransacoesImportadas(params: Partial<ConciliacaoFilters> & { pagina?: number; limite?: number; busca?: string }) {
     const key = ['conciliacao-transacoes', JSON.stringify(params)];
@@ -33,7 +33,7 @@ export async function conciliarManual(dto: ConciliarManualDTO) {
     return result.data;
 }
 
-export async function conciliarAutomaticamente(params: any) {
+export async function conciliarAutomaticamente(params: ConciliarAutomaticaDTO) {
     const result = await actionConciliarAutomaticamente(params);
     if (!result.success) throw new Error(result.error);
     return []; // Return mocked results for now

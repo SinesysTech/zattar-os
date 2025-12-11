@@ -7,7 +7,7 @@ import type {
   ExpedientesApiResponse,
   BuscarExpedientesParams,
 } from '@/app/_lib/types/expedientes';
-import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
+import type { PendenteManifestacao } from '@/features/expedientes/types';
 
 interface UsePendentesResult {
   expedientes: PendenteManifestacao[];

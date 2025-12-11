@@ -6,7 +6,7 @@ import {
   transition,
 } from "@/components/ui/animations";
 import { getCalendarCells } from "@/components/calendar/helpers";
-import { Audiencia } from '@/core/audiencias/domain';
+import { Audiencia } from '@/features/audiencias';
 import { ptBR } from 'date-fns/locale';
 
 interface AudienciasCalendarYearViewProps {

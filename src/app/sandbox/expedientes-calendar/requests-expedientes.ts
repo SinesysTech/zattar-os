@@ -7,11 +7,11 @@ import { expedientesToEvents } from './adapters/expediente-to-event.adapter';
 import type { IEvent, IUser } from '@/components/calendar/interfaces';
 import type { TEventColor } from '@/components/calendar/types';
 import { COLORS } from '@/components/calendar/constants';
-import type { ListarPendentesParams } from '@/backend/types/expedientes/types';
-import { obterPendentes } from '@/backend/expedientes/services/listar-pendentes.service';
+import type { ListarPendentesParams } from '@/features/expedientes/types';
+import { obterPendentes } from '@/features/expedientes/service';
 import { obterUsuarios } from '@/backend/usuarios/services/usuarios/listar-usuarios.service';
-import { listarTiposExpedientes } from '@/backend/tipos-expedientes/services/tipos-expedientes/listar-tipos-expedientes.service';
-import type { ListarTiposExpedientesParams } from '@/backend/types/tipos-expedientes/types';
+import { listar } from '@/features/tipos-expedientes';
+import type { ListarTiposExpedientesParams } from '@/features/tipos-expedientes';
 
 /**
  * Busca expedientes usando serviços do backend e converte para eventos do calendário
@@ -47,7 +47,14 @@ export async function getExpedientesEvents(
 		}
 
 		// Buscar expedientes usando o serviço diretamente
-		const resultado = await obterPendentes(listarParams);
+		const result = await obterPendentes(listarParams);
+
+		if (!result.success) {
+			console.error('Erro ao buscar expedientes:', result.error);
+			return [];
+		}
+
+		const resultado = result.data;
 
 		// Verificar se é resultado agrupado ou normal
 		if ('grupos' in resultado) {
@@ -60,11 +67,11 @@ export async function getExpedientesEvents(
 		// Buscar usuários e tipos de expedientes em paralelo
 		const [usuariosResult, tiposResult] = await Promise.all([
 			obterUsuarios({ ativo: true, limite: 100 }),
-			listarTiposExpedientes({ limite: 100 } as ListarTiposExpedientesParams),
+			listar({ limite: 100 } as ListarTiposExpedientesParams),
 		]);
 
 		const usuarios = usuariosResult.usuarios || [];
-		const tiposExpedientes = tiposResult.tipos_expedientes || [];
+		const tiposExpedientes = tiposResult.data || [];
 
 		// Converter expedientes para eventos
 		return expedientesToEvents(

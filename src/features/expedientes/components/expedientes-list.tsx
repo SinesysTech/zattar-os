@@ -60,58 +60,58 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
 
   // Load auxiliary data
   React.useEffect(() => {
-     const fetchAuxData = async () => {
-         try {
-             const [usersRes, tiposRes] = await Promise.all([
-                 fetch('/api/usuarios?ativo=true&limite=100').then(r => r.json()),
-                 fetch('/api/tipos-expedientes?limite=100').then(r => r.json())
-             ]);
-             if (usersRes.success) setUsuarios(usersRes.data.usuarios);
-             if (tiposRes.success) setTiposExpedientes(tiposRes.data.tipos_expedientes);
-         } catch (err) {
-             console.error('Erro ao carregar dados auxiliares:', err);
-         }
-     };
-     fetchAuxData();
+    const fetchAuxData = async () => {
+      try {
+        const [usersRes, tiposRes] = await Promise.all([
+          fetch('/api/usuarios?ativo=true&limite=100').then(r => r.json()),
+          fetch('/api/tipos-expedientes?limite=100').then(r => r.json())
+        ]);
+        if (usersRes.success) setUsuarios(usersRes.data.usuarios);
+        if (tiposRes.success) setTiposExpedientes(tiposRes.data.data);
+      } catch (err) {
+        console.error('Erro ao carregar dados auxiliares:', err);
+      }
+    };
+    fetchAuxData();
   }, []);
 
   const fetchData = React.useCallback(async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-          const params: ListarExpedientesParams = {
-            page: pagination.pageIndex + 1,
-            limit: pagination.pageSize,
-            search: globalFilter || undefined,
-          };
+    setIsLoading(true);
+    setError(null);
+    try {
+      const params: ListarExpedientesParams = {
+        page: pagination.pageIndex + 1,
+        limit: pagination.pageSize,
+        search: globalFilter || undefined,
+      };
 
-          const filters: ExpedientesFilters = {};
-          if (statusFilter === 'pendentes') filters.pendentes = true;
-          if (statusFilter === 'baixados') filters.baixados = true;
+      const filters: ExpedientesFilters = {};
+      if (statusFilter === 'pendentes') filters.pendentes = true;
+      if (statusFilter === 'baixados') filters.baixados = true;
 
-          // Note: Prazo filtering logic would be added here
+      // Note: Prazo filtering logic would be added here
 
-          if (dateRange?.from) filters.dataInicio = format(dateRange.from, 'yyyy-MM-dd');
-          if (dateRange?.to) filters.dataFim = format(dateRange.to, 'yyyy-MM-dd');
+      if (dateRange?.from) filters.dataInicio = format(dateRange.from, 'yyyy-MM-dd');
+      if (dateRange?.to) filters.dataFim = format(dateRange.to, 'yyyy-MM-dd');
 
-          const result = await actionListarExpedientes(params, filters);
+      const result = await actionListarExpedientes(params, filters);
 
-          if (!result.success) {
-            throw new Error(result.message || 'Erro ao listar expedientes');
-          }
-
-          setData(result.data);
-      } catch (err) {
-          setError(err instanceof Error ? err.message : 'Erro desconhecido');
-          console.error(err);
-      } finally {
-          setIsLoading(false);
+      if (!result.success) {
+        throw new Error(result.message || 'Erro ao listar expedientes');
       }
+
+      setData(result.data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro desconhecido');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   }, [pagination.pageIndex, pagination.pageSize, globalFilter, statusFilter, prazoFilter, dateRange]);
 
   // Trigger fetch on dependencies change
   React.useEffect(() => {
-      fetchData();
+    fetchData();
   }, [fetchData]);
 
   const defaultData = React.useMemo(() => ({ expedientes: [], meta: { total: 0, page: 1, limit: 10, totalPages: 0 } }), []);
@@ -122,8 +122,8 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
   };
 
   const handleSucessoOperacao = () => {
-      fetchData();
-      router.refresh();
+    fetchData();
+    router.refresh();
   };
 
   return (
@@ -138,7 +138,10 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
             newButtonTooltip="Novo Expediente"
             extraButtons={
               <div className="flex items-center gap-2">
-                <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
+                <Select
+                  value={statusFilter}
+                  onValueChange={(v: 'todos' | 'pendentes' | 'baixados') => setStatusFilter(v)}
+                >
                   <SelectTrigger className="w-[130px] h-9">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
@@ -150,16 +153,16 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
                 </Select>
 
                 <Select value={prazoFilter} onValueChange={(v: any) => setPrazoFilter(v)}>
-                    <SelectTrigger className="w-[140px] h-9">
-                        <SelectValue placeholder="Prazo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="todos">Todos Prazos</SelectItem>
-                        <SelectItem value="vencidos">Vencidos</SelectItem>
-                        <SelectItem value="hoje">Vence Hoje</SelectItem>
-                        <SelectItem value="amanha">Vence Amanhã</SelectItem>
-                        <SelectItem value="semana">Esta Semana</SelectItem>
-                    </SelectContent>
+                  <SelectTrigger className="w-[140px] h-9">
+                    <SelectValue placeholder="Prazo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="todos">Todos Prazos</SelectItem>
+                    <SelectItem value="vencidos">Vencidos</SelectItem>
+                    <SelectItem value="hoje">Vence Hoje</SelectItem>
+                    <SelectItem value="amanha">Vence Amanhã</SelectItem>
+                    <SelectItem value="semana">Esta Semana</SelectItem>
+                  </SelectContent>
                 </Select>
 
                 <div className="h-9 w-px bg-border mx-1" />
@@ -203,24 +206,24 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
             columnId: sorting[0]?.id || null,
             direction: sorting[0]?.desc ? 'desc' : 'asc',
             onSortingChange: (id, dir) => {
-               if (!id) setSorting([]);
-               else setSorting([{ id, desc: dir === 'desc' }]);
+              if (!id) setSorting([]);
+              else setSorting([{ id, desc: dir === 'desc' }]);
             }
           }}
           rowSelection={{
-             state: rowSelection,
-             onRowSelectionChange: setRowSelection
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection
           }}
           hidePagination={true}
           hideTableBorder={true}
           className="border-none"
-          // @ts-ignore
+          // @ts-expect-error - TanStack Table options type mismatch
           options={{
-              meta: {
-                  usuarios,
-                  tiposExpedientes,
-                  onSuccess: handleSucessoOperacao
-              }
+            meta: {
+              usuarios,
+              tiposExpedientes,
+              onSuccess: handleSucessoOperacao
+            }
           }}
         />
       </DataSurface>

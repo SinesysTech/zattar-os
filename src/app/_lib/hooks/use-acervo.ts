@@ -3,7 +3,7 @@
 // Hook para buscar processos do acervo (suporta unificação de multi-instância)
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import type { AcervoApiResponse, BuscarProcessosParams } from '@/app/_lib/types/acervo';
+import type { AcervoApiResponse, BuscarProcessosParams } from '@/features/processos/types';
 import type { Acervo, ProcessoUnificado } from '@/backend/types/acervo/types';
 
 interface UseAcervoResult {

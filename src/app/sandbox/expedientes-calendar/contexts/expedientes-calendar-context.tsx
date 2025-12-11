@@ -7,7 +7,7 @@
 
 import React, { createContext, useContext, type ReactNode } from 'react';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
+import type { TipoExpediente } from '@/features/tipos-expedientes';
 
 interface ExpedientesCalendarContextValue {
 	usuarios: Usuario[];

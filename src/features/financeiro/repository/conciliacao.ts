@@ -10,9 +10,76 @@ import type {
     ConciliacaoBancaria,
     ListarTransacoesImportadasParams,
     ListarTransacoesResponse,
-    Conciliacao
+    Conciliacao,
+    BuscarLancamentosCandidatosParams
 } from '../types/conciliacao';
 import type { Lancamento } from '../types/lancamentos';
+
+type ConciliacaoRow = {
+    id: number;
+    data_conciliacao: string;
+    saldo_banco: number;
+    saldo_sistema: number;
+    diferenca: number;
+};
+
+type ConciliacaoBancariaRecord = {
+    id: number;
+    transacao_importada_id: number;
+    lancamento_financeiro_id: number | null;
+    data_conciliacao: string;
+    status: ConciliacaoBancaria['status'];
+    diferenca_valor: number | null;
+    usuario_id: string;
+    observacoes: string | null;
+};
+
+type LancamentoRecord = {
+    id: number;
+    tipo: Lancamento['tipo'];
+    descricao: string;
+    valor: number;
+    data_lancamento: string;
+    data_vencimento: string | null;
+    data_efetivacao: string | null;
+    data_competencia: string;
+    status: Lancamento['status'];
+    origem: Lancamento['origem'];
+    forma_pagamento: Lancamento['formaPagamento'];
+    conta_bancaria_id: number | null;
+    conta_contabil_id: number;
+    centro_custo_id: number | null;
+    documento: string | null;
+    observacoes: string | null;
+    categoria: string | null;
+    cliente_id: number | null;
+    processo_id: number | null;
+    contrato_id: number | null;
+    parcela_id: number | null;
+    acordo_condenacao_id: number | null;
+    recorrente: boolean | null;
+    frequencia_recorrencia: Lancamento['frequenciaRecorrencia'];
+    lancamento_origem_id: number | null;
+    anexos: Lancamento['anexos'] | null;
+    created_at: string;
+    updated_at: string;
+    created_by: number | null;
+};
+
+type TransacaoImportadaRecord = {
+    id: number;
+    conta_bancaria_id: number;
+    data_transacao: string;
+    descricao: string;
+    valor: number;
+    tipo_transacao: TransacaoImportada['tipoTransacao'];
+    documento: string | null;
+    hash_info: string;
+    banco_original: string | null;
+    categoria_original: string | null;
+    conciliacao_bancaria?: ConciliacaoBancariaRecord[] | null;
+    lancamentos_financeiros?: LancamentoRecord | null;
+};
 
 // ============================================================================
 // Repository Implementation
@@ -34,7 +101,9 @@ export const ConciliacaoRepository = {
             return [];
         }
 
-        return (data || []).map((c: any) => ({
+        const registros = (data ?? []) as ConciliacaoRow[];
+
+        return registros.map((c) => ({
             id: c.id,
             data_conciliacao: c.data_conciliacao,
             saldo_banco: c.saldo_banco,
@@ -95,7 +164,8 @@ export const ConciliacaoRepository = {
             throw new Error('Erro ao listar transações');
         }
 
-        const items: TransacaoComConciliacao[] = (data || []).map(mapRecordToTransacao);
+        const registros = (data ?? []) as TransacaoImportadaRecord[];
+        const items: TransacaoComConciliacao[] = registros.map(mapRecordToTransacao);
 
         // Calcular resumo
         const resumo = await this.calcularResumo(params.contaBancariaId);
@@ -128,7 +198,7 @@ export const ConciliacaoRepository = {
             .single();
 
         if (error || !data) return null;
-        return mapRecordToTransacao(data);
+        return mapRecordToTransacao(data as TransacaoImportadaRecord);
     },
 
     /**
@@ -153,7 +223,7 @@ export const ConciliacaoRepository = {
             .single();
 
         if (error) throw new Error(`Erro ao criar transação: ${error.message}`);
-        return mapRecordToTransacaoSimples(data);
+        return mapRecordToTransacaoSimples(data as TransacaoImportadaRecord);
     },
 
     /**
@@ -312,14 +382,7 @@ export const ConciliacaoRepository = {
     /**
      * Busca lançamentos candidatos para conciliação
      */
-    async buscarLancamentosCandidatos(params: {
-        contaBancariaId?: number;
-        tipo: 'receita' | 'despesa';
-        valorMin?: number;
-        valorMax?: number;
-        dataInicio?: string;
-        dataFim?: string;
-    }): Promise<Lancamento[]> {
+    async buscarLancamentosCandidatos(params: BuscarLancamentosCandidatosParams): Promise<Lancamento[]> {
         const supabase = createServiceClient();
 
         let query = supabase
@@ -351,7 +414,8 @@ export const ConciliacaoRepository = {
         const { data, error } = await query;
         if (error) throw new Error(`Erro ao buscar lançamentos candidatos: ${error.message}`);
 
-        return (data || []).map(mapRecordToLancamento);
+        const registros = (data ?? []) as LancamentoRecord[];
+        return registros.map(mapRecordToLancamento);
     }
 };
 
@@ -359,7 +423,7 @@ export const ConciliacaoRepository = {
 // Mappers
 // ============================================================================
 
-function mapRecordToTransacao(record: any): TransacaoComConciliacao {
+function mapRecordToTransacao(record: TransacaoImportadaRecord): TransacaoComConciliacao {
     const conciliacao = record.conciliacao_bancaria?.[0];
     const lancamento = record.lancamentos_financeiros;
 
@@ -372,8 +436,8 @@ function mapRecordToTransacao(record: any): TransacaoComConciliacao {
         tipoTransacao: record.tipo_transacao,
         documento: record.documento,
         hashInfo: record.hash_info,
-        bancoOriginal: record.banco_original,
-        categoriaOriginal: record.categoria_original,
+        bancoOriginal: record.banco_original ?? undefined,
+        categoriaOriginal: record.categoria_original ?? undefined,
         statusConciliacao: conciliacao?.status || 'pendente',
         lancamentoVinculadoId: conciliacao?.lancamento_financeiro_id,
         lancamentoVinculado: lancamento ? mapRecordToLancamento(lancamento) : null,
@@ -381,7 +445,7 @@ function mapRecordToTransacao(record: any): TransacaoComConciliacao {
     };
 }
 
-function mapRecordToTransacaoSimples(record: any): TransacaoImportada {
+function mapRecordToTransacaoSimples(record: TransacaoImportadaRecord): TransacaoImportada {
     return {
         id: record.id,
         contaBancariaId: record.conta_bancaria_id,
@@ -391,25 +455,25 @@ function mapRecordToTransacaoSimples(record: any): TransacaoImportada {
         tipoTransacao: record.tipo_transacao,
         documento: record.documento,
         hashInfo: record.hash_info,
-        bancoOriginal: record.banco_original,
-        categoriaOriginal: record.categoria_original
+        bancoOriginal: record.banco_original ?? undefined,
+        categoriaOriginal: record.categoria_original ?? undefined
     };
 }
 
-function mapRecordToConciliacao(record: any): ConciliacaoBancaria {
+function mapRecordToConciliacao(record: ConciliacaoBancariaRecord): ConciliacaoBancaria {
     return {
         id: record.id,
         transacaoImportadaId: record.transacao_importada_id,
         lancamentoFinanceiroId: record.lancamento_financeiro_id,
         dataConciliacao: record.data_conciliacao,
         status: record.status,
-        diferencaValor: record.diferenca_valor,
+        diferencaValor: record.diferenca_valor ?? 0,
         usuarioId: record.usuario_id,
         observacoes: record.observacoes
     };
 }
 
-function mapRecordToLancamento(record: any): Lancamento {
+function mapRecordToLancamento(record: LancamentoRecord): Lancamento {
     return {
         id: record.id,
         tipo: record.tipo,

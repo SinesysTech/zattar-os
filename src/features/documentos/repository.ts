@@ -1493,7 +1493,10 @@ export async function atualizarPermissaoCompartilhamentoPorId(
 ): Promise<DocumentoCompartilhado> {
   const supabase = createServiceClient();
 
-  const updateData: Record<string, any> = {};
+  const updateData: Partial<{
+    permissao: 'visualizar' | 'editar';
+    pode_deletar: boolean;
+  }> = {};
 
   if (permissao) {
     updateData.permissao = permissao;

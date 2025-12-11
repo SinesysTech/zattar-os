@@ -2,7 +2,7 @@
  * Adaptador para converter PendenteManifestacao para IEvent do calendário
  */
 
-import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
+import type { PendenteManifestacao } from '@/features/expedientes/types';
 import type { IEvent, IUser } from '@/components/calendar/interfaces';
 import type { TEventColor } from '@/components/calendar/types';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
@@ -82,7 +82,7 @@ export function expedienteToEvent(
 	);
 
 	const descricaoParts: string[] = [];
-	
+
 	// Adicionar metadados no início (para uso interno)
 	if (expediente.tipo_expediente_id) {
 		descricaoParts.push(`__TIPO_ID__:${expediente.tipo_expediente_id}`);
@@ -90,7 +90,7 @@ export function expedienteToEvent(
 	if (expediente.responsavel_id) {
 		descricaoParts.push(`__RESPONSAVEL_ID__:${expediente.responsavel_id}`);
 	}
-	
+
 	// Informações visíveis
 	if (tipoExpediente) {
 		descricaoParts.push(`Tipo: ${tipoExpediente.tipo_expediente}`);
@@ -120,10 +120,10 @@ export function expedienteToEvent(
 	const user = responsavel
 		? usuarioToIUser(responsavel)
 		: {
-				id: '0',
-				name: 'Sem responsável',
-				picturePath: null,
-			};
+			id: '0',
+			name: 'Sem responsável',
+			picturePath: null,
+		};
 
 	return {
 		id: expediente.id,

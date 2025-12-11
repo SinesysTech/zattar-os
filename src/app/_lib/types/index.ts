@@ -28,7 +28,8 @@ export type {
 // Os tipos de processo-partes devem ser importados de @/backend/types/partes/processo-partes-types ou de um módulo core equivalente quando criado
 
 // Tipos específicos do frontend (UI, Formulários, APIs)
-export type { AcervoApiResponse, BuscarProcessosParams, ProcessosFilters } from './acervo';
+// Nota: Tipos de acervo foram movidos para @/features/processos/types
+export type { AcervoApiResponse, BuscarProcessosParams, ProcessosFilters } from '@/features/processos/types';
 export type { AudienciasApiResponse, BuscarAudienciasParams, AudienciasFilters } from './audiencias';
 export type { Assistente, AssistentesParams, AssistentesFilters, ViewMode as AssistentesViewMode, AssistentesApiResponse, CriarAssistenteData, AtualizarAssistenteData } from './assistentes';
 export type { ClientesApiResponse, BuscarClientesParams, ClienteFormData } from './clientes';

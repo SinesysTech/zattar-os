@@ -2,13 +2,13 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { audienciasService } from '@/core/audiencias';
+import * as service from './service';
 import {
   createAudienciaSchema,
   ListarAudienciasParams,
   StatusAudiencia,
   updateAudienciaSchema,
-} from '@/core/audiencias/domain';
+} from './domain';
 
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
@@ -59,9 +59,9 @@ export async function actionCriarAudiencia(
     };
   }
 
-  const result = await audienciasService.criarAudiencia(validation.data);
+  const result = await service.criarAudiencia(validation.data);
 
-  if (result.isErr()) {
+  if (!result.success) {
     return {
       success: false,
       error: result.error.message,
@@ -73,7 +73,7 @@ export async function actionCriarAudiencia(
 
   return {
     success: true,
-    data: result.value,
+    data: result.data,
     message: 'Audiência criada com sucesso.',
   };
 }
@@ -103,9 +103,9 @@ export async function actionAtualizarAudiencia(
     };
   }
 
-  const result = await audienciasService.atualizarAudiencia(id, validation.data);
+  const result = await service.atualizarAudiencia(id, validation.data);
 
-  if (result.isErr()) {
+  if (!result.success) {
     return {
       success: false,
       error: result.error.message,
@@ -117,7 +117,7 @@ export async function actionAtualizarAudiencia(
 
   return {
     success: true,
-    data: result.value,
+    data: result.data,
     message: 'Audiência atualizada com sucesso.',
   };
 }
@@ -129,14 +129,14 @@ export async function actionAtualizarStatusAudiencia(
 ): Promise<ActionResult> {
   const userId = undefined; // TODO: Get from auth context
 
-  const result = await audienciasService.atualizarStatusAudiencia(
+  const result = await service.atualizarStatusAudiencia(
     id,
     status,
     statusDescricao,
     userId
   );
 
-  if (result.isErr()) {
+  if (!result.success) {
     return {
       success: false,
       error: result.error.message,
@@ -148,7 +148,7 @@ export async function actionAtualizarStatusAudiencia(
 
   return {
     success: true,
-    data: result.value,
+    data: result.data,
     message: 'Status da audiência atualizado com sucesso.',
   };
 }
@@ -156,9 +156,9 @@ export async function actionAtualizarStatusAudiencia(
 export async function actionListarAudiencias(
   params: ListarAudienciasParams
 ): Promise<ActionResult<any>> {
-  const result = await audienciasService.listarAudiencias(params);
+  const result = await service.listarAudiencias(params);
 
-  if (result.isErr()) {
+  if (!result.success) {
     return {
       success: false,
       error: result.error.message,
@@ -168,7 +168,7 @@ export async function actionListarAudiencias(
 
   return {
     success: true,
-    data: result.value,
+    data: result.data,
     message: 'Audiências listadas com sucesso.',
   };
 }

@@ -10,6 +10,34 @@ import type { Lancamento } from '../types/lancamentos';
 import type { ParcelaObrigacao } from '../types/obrigacoes';
 import type { FiltroFluxoCaixa, FluxoCaixaDiario } from '../domain/fluxo-caixa';
 
+type ContaBancariaRecord = {
+    id: number;
+    nome: string;
+    banco: string | null;
+    agencia: string | null;
+    conta: string | null;
+    ativo: boolean;
+};
+
+type CentroCustoRecord = {
+    id: number;
+    nome: string;
+    codigo: string;
+    ativo: boolean;
+};
+
+type FluxoCaixaResumo = {
+    realizado: FluxoCaixaResumoSegmento;
+    projetado: FluxoCaixaResumoSegmento;
+    total: FluxoCaixaResumoSegmento;
+};
+
+type FluxoCaixaResumoSegmento = {
+    receitas: number;
+    despesas: number;
+    saldo: number;
+};
+
 // ============================================================================
 // Repository Implementation
 // ============================================================================
@@ -140,7 +168,7 @@ export const FluxoCaixaRepository = {
     /**
      * Busca resumo do fluxo de caixa para dashboard
      */
-    async buscarResumoFluxoCaixa(filtro: FiltroFluxoCaixa) {
+    async buscarResumoFluxoCaixa(filtro: FiltroFluxoCaixa): Promise<FluxoCaixaResumo> {
         const [realizados, pendentes] = await Promise.all([
             this.buscarLancamentosRealizados(filtro),
             this.buscarLancamentosPendentes(filtro)
@@ -184,7 +212,7 @@ export const FluxoCaixaRepository = {
     /**
      * Busca contas bancárias disponíveis
      */
-    async listarContasBancarias() {
+    async listarContasBancarias(): Promise<ContaBancariaRecord[]> {
         const supabase = createServiceClient();
         const { data, error } = await supabase
             .from('contas_bancarias')
@@ -194,13 +222,14 @@ export const FluxoCaixaRepository = {
 
         if (error) throw new Error(`Erro ao listar contas bancárias: ${error.message}`);
 
-        return data || [];
+        const registros = (data ?? []) as ContaBancariaRecord[];
+        return registros;
     },
 
     /**
      * Busca centros de custo disponíveis
      */
-    async listarCentrosCusto() {
+    async listarCentrosCusto(): Promise<CentroCustoRecord[]> {
         const supabase = createServiceClient();
         const { data, error } = await supabase
             .from('centros_custo')
@@ -210,7 +239,8 @@ export const FluxoCaixaRepository = {
 
         if (error) throw new Error(`Erro ao listar centros de custo: ${error.message}`);
 
-        return data || [];
+        const registros = (data ?? []) as CentroCustoRecord[];
+        return registros;
     }
 };
 

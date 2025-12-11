@@ -38,6 +38,7 @@ import type {
   ContaReceberComDetalhes,
   FormaRecebimentoContaReceber,
   AnexoLancamento,
+  Lancamento,
 } from '../../types/lancamentos';
 import {
   COMPROVANTE_ALLOWED_MIME_TYPES,
@@ -231,7 +232,7 @@ export function ReceberContaDialog({
       }
 
       // Preparar payload de atualização
-      const payload: any = {
+      const payload: Partial<Lancamento> = {
         status: 'confirmado',
         formaPagamento: formaRecebimento,
         contaBancariaId: parseInt(contaBancariaId, 10),

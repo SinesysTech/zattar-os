@@ -35,7 +35,7 @@ export function useObrigacoes(params: Partial<ObrigacoesFilters> & { pagina?: nu
 /**
  * Hook para obter resumo de obrigações com alertas
  */
-export function useResumoObrigacoes(params?: any) {
+export function useResumoObrigacoes(params?: Partial<ObrigacoesFilters>) {
     const key = ['obrigacoes-resumo', JSON.stringify(params)];
 
     const fetcher = async (): Promise<ObterResumoObrigacoesResult> => {

@@ -33,23 +33,23 @@ export function generateSlug(text: string): string {
  */
 export function fromSnakeToCamel<T = unknown>(obj: unknown): T {
   if (obj === null || obj === undefined) return obj as T;
-  
+
   if (Array.isArray(obj)) {
     return obj.map(item => fromSnakeToCamel(item)) as T;
   }
-  
+
   if (typeof obj === 'object' && obj.constructor === Object) {
     const camelObj: Record<string, unknown> = {};
-    
+
     for (const [key, value] of Object.entries(obj)) {
       // Converte snake_case para camelCase
       const camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
       camelObj[camelKey] = fromSnakeToCamel(value);
     }
-    
+
     return camelObj as T;
   }
-  
+
   return obj as T;
 }
 
@@ -58,23 +58,27 @@ export function fromSnakeToCamel<T = unknown>(obj: unknown): T {
  */
 export function fromCamelToSnake<T = unknown>(obj: unknown): T {
   if (obj === null || obj === undefined) return obj as T;
-  
+
   if (Array.isArray(obj)) {
     return obj.map(item => fromCamelToSnake(item)) as T;
   }
-  
+
   if (typeof obj === 'object' && obj.constructor === Object) {
     const snakeObj: Record<string, unknown> = {};
-    
+
     for (const [key, value] of Object.entries(obj)) {
       // Converte camelCase para snake_case
       const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
       snakeObj[snakeKey] = fromCamelToSnake(value);
     }
-    
+
     return snakeObj as T;
   }
-  
+
+  if (typeof obj === 'string') {
+    return obj.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`) as unknown as T;
+  }
+
   return obj as T;
 }
 

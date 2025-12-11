@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarTemplates, actionUsarTemplate, actionCriarTemplate, actionDeletarTemplate } from '../actions/templates-actions';
 import type { TemplateComUsuario, ListarTemplatesParams, CriarTemplateParams } from '../types';
 
@@ -10,16 +10,22 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
   const [params, setParams] = useState<ListarTemplatesParams>(initialParams || {});
 
   const fetchTemplates = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    startTransition(() => {
+      setLoading(true);
+      setError(null);
+    });
+    
     const result = await actionListarTemplates(params);
-    if (result.success) {
-      setTemplates(result.data || []);
-      setTotal(result.total || 0);
-    } else {
-      setError(result.error);
-    }
-    setLoading(false);
+    
+    startTransition(() => {
+      if (result.success) {
+        setTemplates(result.data || []);
+        setTotal(result.total || 0);
+      } else {
+        setError(result.error);
+      }
+      setLoading(false);
+    });
   }, [params]);
 
   useEffect(() => {
@@ -50,7 +56,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
     }
   }, [fetchTemplates]);
 
-  const useTemplate = useCallback(async (templateId: number, options?: { titulo?: string; pasta_id?: number | null }) => {
+  const createDocumentFromTemplate = useCallback(async (templateId: number, options?: { titulo?: string; pasta_id?: number | null }) => {
     setError(null);
     const result = await actionUsarTemplate(templateId, options);
     if (result.success) {
@@ -82,7 +88,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
     updateParams,
     fetchTemplates,
     createTemplate,
-    useTemplate,
+    createDocumentFromTemplate,
     deleteTemplate,
   };
 }

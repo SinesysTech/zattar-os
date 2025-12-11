@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarDocumentos } from '../actions/documentos-actions';
 import type { DocumentoComUsuario, ListarDocumentosParams } from '../types';
 
-export type DocumentFetcher = (params: any) => Promise<{ success: boolean; data?: any[]; total?: number; error?: string }>;
+export type DocumentFetcher = (params: ListarDocumentosParams) => Promise<{ success: boolean; data?: DocumentoComUsuario[]; total?: number; error?: string }>;
 
 export function useDocumentsList(
   initialParams?: ListarDocumentosParams,
@@ -15,16 +15,22 @@ export function useDocumentsList(
   const [params, setParams] = useState<ListarDocumentosParams>(initialParams || {});
 
   const fetchDocuments = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    startTransition(() => {
+      setLoading(true);
+      setError(null);
+    });
+    
     const result = await fetcher(params);
-    if (result.success) {
-      setDocuments(result.data || []);
-      setTotal(result.total || 0);
-    } else {
-      setError(result.error || 'Erro desconhecido');
-    }
-    setLoading(false);
+    
+    startTransition(() => {
+      if (result.success) {
+        setDocuments(result.data || []);
+        setTotal(result.total || 0);
+      } else {
+        setError(result.error || 'Erro desconhecido');
+      }
+      setLoading(false);
+    });
   }, [params, fetcher]);
 
   useEffect(() => {

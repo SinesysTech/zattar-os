@@ -71,7 +71,7 @@ export const useFolhasPagamento = (params: UseFolhasPagamentoParams = {}): UseFo
 
       setFolhas(result.data.items);
       setPaginacao(result.data.paginacao);
-      // @ts-ignore
+      // @ts-expect-error - Extra fields added in action
       setTotais(result.data.totais || null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar folhas de pagamento';

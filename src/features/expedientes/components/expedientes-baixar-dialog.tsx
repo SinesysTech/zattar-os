@@ -49,16 +49,15 @@ export function ExpedientesBaixarDialog({
   React.useEffect(() => {
     if (!open) {
       setModo('protocolo');
-      formState.success = false; // Reset form state on close
-      formState.error = '';
-      formState.message = '';
-      formState.errors = undefined;
     }
+  }, [open]);
+
+  React.useEffect(() => {
     if (formState.success) {
       onSuccess();
       onOpenChange(false);
     }
-  }, [open, formState, onOpenChange, onSuccess]);
+  }, [formState.success, onSuccess, onOpenChange]);
 
   if (!expediente) {
     return null;

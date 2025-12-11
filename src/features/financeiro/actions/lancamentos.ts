@@ -11,6 +11,10 @@ import { revalidatePath } from 'next/cache';
 type CriarLancamentoInput = Partial<Lancamento>;
 type AtualizarLancamentoInput = Partial<Lancamento>;
 
+type ActionResponse<T> = { success: true; data: T } | { success: false; error: string };
+
+type ActionVoidResponse = { success: true } | { success: false; error: string };
+
 export interface ListarLancamentosResult {
     dados: Lancamento[];
     meta: {
@@ -21,6 +25,10 @@ export interface ListarLancamentosResult {
     resumo: ResumoVencimentos;
 }
 
+function getErrorMessage(error: unknown): string {
+    return error instanceof Error ? error.message : 'Erro inesperado.';
+}
+
 // ============================================================================
 // Server Actions - CRUD
 // ============================================================================
@@ -28,7 +36,7 @@ export interface ListarLancamentosResult {
 /**
  * Lista lançamentos com paginação e resumo de vencimentos
  */
-export async function actionListarLancamentos(params: ListarLancamentosParams) {
+export async function actionListarLancamentos(params: ListarLancamentosParams): Promise<ActionResponse<ListarLancamentosResult>> {
     try {
         // Buscar lançamentos e total em paralelo
         const [lancamentos, total, resumo] = await Promise.all([
@@ -48,54 +56,54 @@ export async function actionListarLancamentos(params: ListarLancamentosParams) {
         };
 
         return { success: true, data: result };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
 /**
  * Exclui um lançamento
  */
-export async function actionExcluirLancamento(id: number) {
+export async function actionExcluirLancamento(id: number): Promise<ActionVoidResponse> {
     try {
         await LancamentosService.excluir(id);
         revalidatePath('/financeiro');
         return { success: true };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
 /**
  * Cria um novo lançamento
  */
-export async function actionCriarLancamento(dados: CriarLancamentoInput) {
+export async function actionCriarLancamento(dados: CriarLancamentoInput): Promise<ActionResponse<Lancamento>> {
     try {
         const lancamento = await LancamentosService.criar(dados);
         revalidatePath('/financeiro');
         return { success: true, data: lancamento };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
 /**
  * Atualiza um lançamento existente
  */
-export async function actionAtualizarLancamento(id: number, dados: AtualizarLancamentoInput) {
+export async function actionAtualizarLancamento(id: number, dados: AtualizarLancamentoInput): Promise<ActionResponse<Lancamento>> {
     try {
         const lancamento = await LancamentosService.atualizar(id, dados);
         revalidatePath('/financeiro');
         return { success: true, data: lancamento };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
 /**
  * Confirma (efetiva) um lançamento
  */
-export async function actionConfirmarLancamento(id: number) {
+export async function actionConfirmarLancamento(id: number): Promise<ActionResponse<Lancamento>> {
     try {
         const lancamento = await LancamentosService.atualizar(id, {
             status: 'confirmado',
@@ -103,33 +111,33 @@ export async function actionConfirmarLancamento(id: number) {
         });
         revalidatePath('/financeiro');
         return { success: true, data: lancamento };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
 /**
  * Cancela um lançamento
  */
-export async function actionCancelarLancamento(id: number) {
+export async function actionCancelarLancamento(id: number): Promise<ActionResponse<Lancamento>> {
     try {
         const lancamento = await LancamentosService.atualizar(id, { status: 'cancelado' });
         revalidatePath('/financeiro');
         return { success: true, data: lancamento };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
 /**
  * Estorna um lançamento
  */
-export async function actionEstornarLancamento(id: number) {
+export async function actionEstornarLancamento(id: number): Promise<ActionResponse<Lancamento>> {
     try {
         const lancamento = await LancamentosService.atualizar(id, { status: 'estornado' });
         revalidatePath('/financeiro');
         return { success: true, data: lancamento };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
