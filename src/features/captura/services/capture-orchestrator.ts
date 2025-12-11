@@ -131,7 +131,7 @@ export async function executarCaptura(
             // Ignorar erro ao salvar log
         });
 
-        return err(appError('CAPTURE_ERROR', errorMessage, { params }));
+        return err(appError('EXTERNAL_SERVICE_ERROR', errorMessage, { params }));
     } finally {
         // 10. Sempre fechar driver
         if (driver) {
