@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { DataTable } from '@/components/ui/data-table';
@@ -188,7 +188,7 @@ export function AcordosList({ busca, filtros, refreshKey }: AcordosListProps) {
 
   useEffect(() => {
     refetch();
-  }, [refreshKey]);
+  }, [refreshKey, refetch]);
 
   const colunas = React.useMemo(() => criarColunas(router), [router]);
 

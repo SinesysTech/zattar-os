@@ -236,7 +236,7 @@ export function ExpedientesCalendar() {
                     hidePagination={true}
                     hideTableBorder={true}
                     className="border-none"
-                    // @ts-ignore
+                    // @ts-expect-error - TanStack Table options type mismatch
                     options={{
                         meta: {
                             usuarios,

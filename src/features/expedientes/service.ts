@@ -10,33 +10,21 @@ import {
   Expediente,
 } from './types';
 import * as repository from './repository';
-import { Result, ok, err, appError, PaginatedResponse } from '@/core/common/types';
+import { Result, err, appError, PaginatedResponse } from '@/core/common/types';
 import { z } from 'zod';
 import { createDbClient } from '@/core/common/db';
 
-function snakeToCamel(obj: Record<string, any>): Record<string, any> {
-  const newObj: Record<string, any> = {};
+type PlainObject = Record<string, unknown>;
+
+function camelToSnake<TInput extends PlainObject>(obj: TInput): PlainObject {
+  const newObj: PlainObject = {};
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      const camelKey = key.replace(/([-_][a-z])/g, (group) =>
-        group.toUpperCase().replace('-', '').replace('_', '')
-      );
-      newObj[camelKey] = obj[key];
+      const snakeKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+      newObj[snakeKey] = obj[key];
     }
   }
   return newObj;
-}
-
-
-function camelToSnake(obj: Record<string, any>): Record<string, any> {
-    const newObj: Record<string, any> = {};
-    for (const key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-            newObj[snakeKey] = obj[key];
-        }
-    }
-    return newObj;
 }
 
 

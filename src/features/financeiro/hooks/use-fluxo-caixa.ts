@@ -196,7 +196,8 @@ export function useFluxoCaixa(options?: UseFluxoCaixaOptions): UseFluxoCaixaRetu
                 obterFluxoUnificado(options.filtros);
             }
         }
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [options?.autoFetch]);
 
     return {
         fluxoUnificado,

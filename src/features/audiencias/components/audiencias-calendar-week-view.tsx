@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { fadeIn, staggerContainer, transition } from '@/components/ui/animations';
 import { CalendarTimeline } from '@/components/calendar/calendar-time-line'; // Assuming this is generic
-import { Audiencia } from '@/core/audiencias/domain';
+import { Audiencia } from '@/features/audiencias';
 import { AudienciaCard } from './audiencia-card';
 import { ptBR } from 'date-fns/locale';
 

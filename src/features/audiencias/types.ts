@@ -17,7 +17,7 @@ export {
   createAudienciaSchema,
   updateAudienciaSchema,
   atualizarStatusSchema,
-} from '@/core/audiencias/domain';
+} from './domain';
 
 export type {
   CodigoTribunal,
@@ -25,7 +25,7 @@ export type {
   Audiencia,
   AudienciaSortBy,
   ListarAudienciasParams,
-} from '@/core/audiencias/domain';
+} from './domain';
 
 // Re-exporta tipos do backend
 export type {
@@ -45,7 +45,7 @@ export type {
 export interface AudienciasApiResponse {
   success: boolean;
   data: {
-    audiencias: import('@/core/audiencias/domain').Audiencia[];
+    audiencias: import('./domain').Audiencia[];
     paginacao: {
       pagina: number;
       limite: number;
@@ -62,13 +62,13 @@ export interface BuscarAudienciasParams {
   pagina?: number;
   limite?: number;
   busca?: string;
-  ordenar_por?: import('@/core/audiencias/domain').AudienciaSortBy;
+  ordenar_por?: import('./domain').AudienciaSortBy;
   ordem?: 'asc' | 'desc';
-  trt?: import('@/core/audiencias/domain').CodigoTribunal;
-  grau?: import('@/core/audiencias/domain').GrauTribunal;
+  trt?: import('./domain').CodigoTribunal;
+  grau?: import('./domain').GrauTribunal;
   responsavel_id?: number | 'null';
-  status?: import('@/core/audiencias/domain').StatusAudiencia;
-  modalidade?: import('@/core/audiencias/domain').ModalidadeAudiencia;
+  status?: import('./domain').StatusAudiencia;
+  modalidade?: import('./domain').ModalidadeAudiencia;
   tipo_descricao?: string;
   tipo_codigo?: string;
   data_inicio_inicio?: string;
@@ -82,7 +82,7 @@ export interface BuscarAudienciasParams {
  */
 export interface AudienciasFilters {
   trt?: string;
-  grau?: import('@/core/audiencias/domain').GrauTribunal;
+  grau?: import('./domain').GrauTribunal;
   responsavel_id?: number | 'null';
   busca?: string;
   numero_processo?: string;
@@ -117,7 +117,7 @@ export interface AudienciasPaginacao {
  * Resultado do hook useAudiencias
  */
 export interface UseAudienciasResult {
-  audiencias: import('@/core/audiencias/domain').Audiencia[];
+  audiencias: import('./domain').Audiencia[];
   paginacao: AudienciasPaginacao | null;
   isLoading: boolean;
   error: string | null;

@@ -7,6 +7,9 @@ import { Result, ok, err, appError, PaginatedResponse } from '@/core/common/type
 import {
   Expediente,
   ListarExpedientesParams,
+  CodigoTribunal,
+  GrauTribunal,
+  OrigemExpediente,
 } from './types';
 
 // =============================================================================
@@ -17,11 +20,58 @@ const TABLE_EXPEDIENTES = 'expedientes';
 const TABLE_ACERVO = 'acervo';
 const TABLE_TIPOS_EXPEDIENTES = 'tipos_expedientes';
 
+type ExpedienteRow = {
+  id: number;
+  id_pje: number | null;
+  advogado_id: number | null;
+  processo_id: number | null;
+  trt: CodigoTribunal;
+  grau: GrauTribunal;
+  numero_processo: string;
+  descricao_orgao_julgador: string | null;
+  classe_judicial: string | null;
+  numero: string | null;
+  segredo_justica: boolean;
+  codigo_status_processo: string | null;
+  prioridade_processual: boolean;
+  nome_parte_autora: string | null;
+  qtde_parte_autora: number | null;
+  nome_parte_re: string | null;
+  qtde_parte_re: number | null;
+  data_autuacao: string | null;
+  juizo_digital: boolean;
+  data_arquivamento: string | null;
+  id_documento: string | null;
+  data_ciencia_parte: string | null;
+  data_prazo_legal_parte: string | null;
+  data_criacao_expediente: string | null;
+  prazo_vencido: boolean;
+  sigla_orgao_julgador: string | null;
+  dados_anteriores: Record<string, unknown> | null;
+  responsavel_id: number | null;
+  baixado_em: string | null;
+  protocolo_id: string | null;
+  justificativa_baixa: string | null;
+  tipo_expediente_id: number | null;
+  descricao_arquivos: string | null;
+  arquivo_nome: string | null;
+  arquivo_url: string | null;
+  arquivo_bucket: string | null;
+  arquivo_key: string | null;
+  observacoes: string | null;
+  origem: OrigemExpediente;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ExpedienteInsertInput = Partial<Omit<ExpedienteRow, 'id' | 'created_at' | 'updated_at'>>;
+export type ExpedienteUpdateInput = Partial<Omit<ExpedienteRow, 'id'>>;
+
 // =============================================================================
 // CONVERSORES
 // =============================================================================
 
-function converterParaExpediente(data: Record<string, any>): Expediente {
+function converterParaExpediente(data: ExpedienteRow): Expediente {
   return {
     id: data.id,
     idPje: data.id_pje,
@@ -185,7 +235,7 @@ export async function tipoExpedienteExists(tipoId: number): Promise<Result<boole
 // FUNCOES DE ESCRITA
 // =============================================================================
 
-export async function saveExpediente(input: any): Promise<Result<Expediente>> {
+export async function saveExpediente(input: ExpedienteInsertInput): Promise<Result<Expediente>> {
   try {
     const db = createDbClient();
     const { data, error } = await db.from(TABLE_EXPEDIENTES).insert(input).select().single();
@@ -198,7 +248,7 @@ export async function saveExpediente(input: any): Promise<Result<Expediente>> {
   }
 }
 
-export async function updateExpediente(id: number, input: any, expedienteExistente: Expediente): Promise<Result<Expediente>> {
+export async function updateExpediente(id: number, input: ExpedienteUpdateInput, expedienteExistente: Expediente): Promise<Result<Expediente>> {
   try {
     const db = createDbClient();
     // Assuming dados_anteriores logic should be preserved here as well, although input type is 'any'

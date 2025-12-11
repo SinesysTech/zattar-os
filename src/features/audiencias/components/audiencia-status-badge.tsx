@@ -1,4 +1,4 @@
-import { Audiencia, StatusAudiencia, STATUS_AUDIENCIA_LABELS } from '@/core/audiencias/domain';
+import { Audiencia, StatusAudiencia, STATUS_AUDIENCIA_LABELS } from '@/features/audiencias';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 

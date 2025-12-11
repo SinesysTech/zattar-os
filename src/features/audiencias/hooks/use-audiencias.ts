@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import type { Audiencia } from '@/core/audiencias/domain';
+import type { Audiencia } from '@/features/audiencias';
 import type {
   AudienciasApiResponse,
   BuscarAudienciasParams,
