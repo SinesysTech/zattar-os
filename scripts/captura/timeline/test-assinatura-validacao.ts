@@ -8,9 +8,7 @@ config();
 
 import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
-import { autenticarPJE, type AuthResult } from '@/backend/captura/services/trt/trt-auth.service';
-import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import { fetchPJEAPI } from '@/backend/api/pje-trt/shared/fetch';
+import { autenticarPJE, getTribunalConfig, fetchPJEAPI, type AuthResult } from '@/features/captura';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

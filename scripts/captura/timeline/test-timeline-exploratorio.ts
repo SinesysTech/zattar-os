@@ -9,9 +9,7 @@ config(); // Carregar .env também se existir
 
 import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
-import { autenticarPJE, type AuthResult } from '@/backend/captura/services/trt/trt-auth.service';
-import { obterTimeline } from '@/backend/api/pje-trt';
-import { getTribunalConfig } from '@/backend/captura/services/trt/config';
+import { autenticarPJE, getTribunalConfig, obterTimeline, type AuthResult } from '@/features/captura';
 
 /**
  * Obter __dirname em módulos ES

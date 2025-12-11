@@ -3,9 +3,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuthentication } from '@/lib/auth/require-permission';
-import { listarPermissoesUsuario } from '@/backend/permissoes/services/persistence/permissao-persistence.service';
+import { listarPermissoesUsuario } from '@/features/usuarios/repository';
+import { usuarioRepository } from '@/features/usuarios/repository';
 import type { Permissao } from '@/features/usuarios/types/types';
-import { obterUsuarioPorId } from '@/backend/usuarios/services/usuarios/buscar-usuario.service';
 
 /**
  * @swagger
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     const { usuarioId } = authOrError;
 
     // 2. Buscar informações do usuário (inclui isSuperAdmin)
-    const usuario = await obterUsuarioPorId(usuarioId);
+    const usuario = await usuarioRepository.findById(usuarioId);
     if (!usuario) {
       return NextResponse.json(
         { success: false, error: 'Usuário não encontrado' },
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
       success: true,
       data: {
         usuarioId,
-        isSuperAdmin: usuario.isSuperAdmin,
+        isSuperAdmin: usuario.isSuperAdmin || false,
         permissoes: permissoesFiltradas.map((p: Permissao) => ({
           recurso: p.recurso,
           operacao: p.operacao,

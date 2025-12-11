@@ -192,13 +192,16 @@ type ActionResponse<T> = {
 - **RH** - `features/rh/`
 - **Expedientes** - `features/expedientes/` - Completo
   - Consolidação de duplicatas, tipos e serviços migrados
-- **Captura** - `features/captura/` ✅ (Domain, service, repository, drivers consolidados. Backend mantido como infraestrutura.)
+- **Captura** - `features/captura/` ✅ (Completo - Domain, service, repository, tipos, hooks)
+- **Usuários** - `features/usuarios/` ✅ (Completo - Repository, actions, hooks, permissões)
+- **Endereços** - `features/enderecos/` ✅ (Completo)
+- **Acervo** - `features/acervo/` ✅ (Completo)
 
-### Módulos Legados 🔄
+### Módulos em Migração 🔄
 
-- **Audiências** - Estrutura antiga em `app/(dashboard)/audiencias/`
-- **Acordos/Condenações** - Estrutura antiga
-- **Financeiro** - Módulo complexo com estrutura própria
+- **Audiências** - Em migração para `features/audiencias/`
+- **Acordos/Condenações** - Em migração para `features/acordos/`
+- **Financeiro** - Em migração para `features/financeiro/`
 
 ### Regras de Migração
 
@@ -314,14 +317,35 @@ src/features/{modulo}/
   - Consolidação de duplicatas, tipos e serviços migrados
 - 🔄 **Outros módulos** - Em migração progressiva
 
-#### Módulos Legados (Backend)
+#### Arquitetura Final FSD
 
-Módulos ainda não migrados permanecem em `backend/{modulo}/services/`:
+O Sinesys utiliza **100% Feature-Sliced Design (FSD)**:
 
-- Audiências
-- Acordos/Condenações
-- Financeiro
-- Captura de dados PJE/TRT
+- ✅ **Todas as features** estão em `src/features/{modulo}/`
+- ✅ **Infraestrutura** está em `src/lib/` (Supabase, Redis, etc.)
+- ✅ **Hooks** estão em `src/features/{modulo}/hooks/` ou `src/hooks/` (globais)
+- ✅ **Tipos** estão em `src/features/{modulo}/types.ts` ou `src/types/` (compartilhados)
+- ✅ **Server Actions** estão em `src/features/{modulo}/actions/`
+
+**Imports corretos:**
+```typescript
+// ✅ Features
+import { ... } from '@/features/partes';
+import { ... } from '@/features/processos';
+import { ... } from '@/features/captura';
+
+// ✅ Infraestrutura
+import { createClient } from '@/lib/supabase/server';
+import { getCached } from '@/lib/redis';
+
+// ✅ Hooks
+import { useTribunais } from '@/features/captura/hooks/use-tribunais';
+import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
+
+// ❌ NUNCA usar
+import { ... } from '@/backend/...'; // REMOVIDO
+import { ... } from '@/app/_lib/...'; // REMOVIDO
+```
 
 ### Quando Criar Novo Código
 
@@ -339,12 +363,12 @@ Módulos ainda não migrados permanecem em `backend/{modulo}/services/`:
 - Componentes sem lógica de negócio
 - Utilitários visuais reutilizáveis
 
-#### ✅ Use Backend (Legado) para:
+#### ✅ Use Infraestrutura (`src/lib/`) para:
 
-- Integrações externas (PJE/TRT, 2FAuth)
-- Autenticação e autorização
-- Utilitários de infraestrutura
-- Módulos ainda não migrados
+- Clientes Supabase (`@/lib/supabase/`)
+- Cache Redis (`@/lib/redis`)
+- Autenticação (`@/lib/auth/`)
+- Utilitários de infraestrutura (`@/lib/utils/`)
 
 ### Exemplo de Importação
 
@@ -357,8 +381,10 @@ import { listarProcessos, type Processo } from "@/features/processos";
 import { PageShell } from "@/components/shared/page-shell";
 import { Button } from "@/components/ui/button";
 
-// ❌ EVITAR - Importar diretamente de backend (exceto legado necessário)
-import { criarCliente } from "@/backend/clientes/services/clientes/criar-cliente.service";
+// ❌ PROIBIDO - Backend foi removido, use features
+// import { criarCliente } from "@/backend/clientes/services/clientes/criar-cliente.service";
+// ✅ Use features:
+import { actionCriarCliente } from "@/features/partes";
 ```
 
 ---

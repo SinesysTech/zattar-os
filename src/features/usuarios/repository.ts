@@ -343,5 +343,109 @@ export const usuarioRepository = {
     const supabase = createServiceClient();
     const { data } = await supabase.from('cargos').select('id').eq('id', id).single();
     return data;
-  }
+  },
 };
+
+// =============================================================================
+// PERMISSÕES REPOSITORY
+// =============================================================================
+
+export interface Permissao {
+  recurso: string;
+  operacao: string;
+  permitido: boolean;
+}
+
+/**
+ * Lista todas as permissões de um usuário
+ */
+export async function listarPermissoesUsuario(usuarioId: number): Promise<Permissao[]> {
+  const supabase = createServiceClient();
+  
+  const { data, error } = await supabase
+    .from('permissoes')
+    .select('recurso, operacao, permitido')
+    .eq('usuario_id', usuarioId)
+    .eq('permitido', true);
+
+  if (error) {
+    throw new Error(`Erro ao listar permissões: ${error.message}`);
+  }
+
+  return (data || []).map((p) => ({
+    recurso: p.recurso,
+    operacao: p.operacao,
+    permitido: p.permitido,
+  }));
+}
+
+/**
+ * Atribui múltiplas permissões a um usuário (upsert)
+ */
+export async function atribuirPermissoesBatch(
+  usuarioId: number,
+  permissoes: Permissao[],
+  executorId: number
+): Promise<void> {
+  const supabase = createServiceClient();
+
+  // Preparar dados para upsert
+  const dadosPermissoes = permissoes.map((p) => ({
+    usuario_id: usuarioId,
+    recurso: p.recurso,
+    operacao: p.operacao,
+    permitido: p.permitido,
+    created_by: executorId,
+  }));
+
+  // Upsert em batch
+  const { error } = await supabase
+    .from('permissoes')
+    .upsert(dadosPermissoes, {
+      onConflict: 'usuario_id,recurso,operacao',
+    });
+
+  if (error) {
+    throw new Error(`Erro ao atribuir permissões: ${error.message}`);
+  }
+}
+
+/**
+ * Substitui todas as permissões de um usuário (deleta todas e adiciona novas)
+ */
+export async function substituirPermissoes(
+  usuarioId: number,
+  permissoes: Permissao[],
+  executorId: number
+): Promise<void> {
+  const supabase = createServiceClient();
+
+  // Iniciar transação: deletar todas as permissões existentes
+  const { error: deleteError } = await supabase
+    .from('permissoes')
+    .delete()
+    .eq('usuario_id', usuarioId);
+
+  if (deleteError) {
+    throw new Error(`Erro ao remover permissões antigas: ${deleteError.message}`);
+  }
+
+  // Inserir novas permissões
+  if (permissoes.length > 0) {
+    const dadosPermissoes = permissoes.map((p) => ({
+      usuario_id: usuarioId,
+      recurso: p.recurso,
+      operacao: p.operacao,
+      permitido: p.permitido,
+      created_by: executorId,
+    }));
+
+    const { error: insertError } = await supabase
+      .from('permissoes')
+      .insert(dadosPermissoes);
+
+    if (insertError) {
+      throw new Error(`Erro ao inserir novas permissões: ${insertError.message}`);
+    }
+  }
+}

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import type { ColumnDef } from '@tanstack/react-table';
 import { listarTemplatesAction } from '@/features/assinatura-digital/actions';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
+import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';

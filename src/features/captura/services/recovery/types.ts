@@ -6,7 +6,7 @@
  * de elementos que falharam (endereços, partes, representantes).
  */
 
-import type { TipoCaptura } from '@/backend/types/captura/capturas-log-types';
+import type { TipoCaptura } from '../../types';
 import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 import type { StatusCapturaRaw } from '@/backend/types/mongodb/captura-log';
 

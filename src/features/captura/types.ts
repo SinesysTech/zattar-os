@@ -3,11 +3,11 @@ import type {
   CodigoTRT,
   GrauTRT,
   FiltroPrazoPendentes,
-} from '@/backend/types/captura/trt-types';
+} from './trt-types';
 
 export type { CodigoTRT, GrauTRT, FiltroPrazoPendentes };
 
-// Imported from backend to consolidate types
+// Tipo de captura
 export type TipoCaptura = 'acervo_geral' | 'arquivados' | 'audiencias' | 'pendentes' | 'partes' | 'combinada';
 export type StatusCaptura = 'pending' | 'in_progress' | 'completed' | 'failed';
 

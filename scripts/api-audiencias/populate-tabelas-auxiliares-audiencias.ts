@@ -10,11 +10,11 @@ config(); // Carregar .env também se existir
 
 import { readdir, readFile } from 'fs/promises';
 import { fileURLToPath } from 'url';
-import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
-import { salvarClasseJudicial } from '@/backend/captura/services/persistence/classe-judicial-persistence.service';
-import { salvarTipoAudiencia } from '@/backend/captura/services/persistence/tipo-audiencia-persistence.service';
-import { salvarSalaAudiencia } from '@/backend/captura/services/persistence/sala-audiencia-persistence.service';
-import { salvarOrgaoJulgador, buscarOrgaoJulgador } from '@/backend/captura/services/persistence/orgao-julgador-persistence.service';
+import type { CodigoTRT, GrauTRT } from '@/features/captura';
+import { salvarClasseJudicial } from '@/features/captura/services/persistence/classe-judicial-persistence.service';
+import { salvarTipoAudiencia } from '@/features/captura/services/persistence/tipo-audiencia-persistence.service';
+import { salvarSalaAudiencia } from '@/features/captura/services/persistence/sala-audiencia-persistence.service';
+import { salvarOrgaoJulgador, buscarOrgaoJulgador } from '@/features/captura/services/persistence/orgao-julgador-persistence.service';
 
 /**
  * Obter __dirname em módulos ES

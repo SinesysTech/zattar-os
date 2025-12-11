@@ -56,7 +56,7 @@ import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } fr
 import { buscarOuCriarAdvogadoPorCpf } from '@/lib/utils/captura/advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import { downloadAndUploadDocumento } from '../pje/pje-expediente-documento.service';
-import type { FetchDocumentoParams } from '@/backend/types/pje-trt/documento-types';
+import type { FetchDocumentoParams } from '../../types/pje-documento-types';
 import {
   buscarDadosComplementaresProcessos,
 } from './dados-complementares.service';

@@ -19,7 +19,7 @@ import FieldMappingEditor from '@/features/assinatura-digital/components/editor/
 import { Button } from '@/components/ui/button';
 import { Template } from '@/types/assinatura-digital/template.types';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
+import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
 
 async function getTemplate(id: string): Promise<Template> {
   const response = await fetch(`/api/assinatura-digital/templates/${id}`, {

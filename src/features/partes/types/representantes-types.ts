@@ -98,7 +98,7 @@ export interface Representante {
 /**
  * Tipos com endereço populado (para queries com JOIN)
  */
-import type { Endereco } from '@/backend/types/partes/enderecos-types';
+import type { Endereco } from '@/features/enderecos/types';
 
 export interface RepresentanteComEndereco extends Representante {
   endereco?: Endereco | null;

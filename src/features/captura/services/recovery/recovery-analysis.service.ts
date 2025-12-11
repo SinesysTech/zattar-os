@@ -1157,6 +1157,6 @@ function extrairElementosDeArquivados(
 }
 
 // Importar tipo de captura
-import type { TipoCaptura } from '@/backend/types/captura/capturas-log-types';
+import type { TipoCaptura } from '../../types';
 import type { TipoEntidadeRecuperavel, PendentePayload, AudienciaPayload } from './types';
 

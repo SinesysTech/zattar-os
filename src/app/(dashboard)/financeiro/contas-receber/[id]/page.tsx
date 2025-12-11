@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useContaReceber, cancelarConta } from '@/features/financeiro';
 import { useContasBancarias } from '@/features/financeiro';
-import { useClientes } from '@/app/_lib/hooks/use-clientes';
+import { useClientes } from '@/features/partes';
 import { useContratos } from '@/features/contratos';
 import { usePlanoContasAnaliticas } from '@/features/financeiro';
 import { useCentrosCustoAtivos } from '@/features/financeiro';

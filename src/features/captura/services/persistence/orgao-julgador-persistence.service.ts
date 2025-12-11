@@ -2,7 +2,7 @@
 // Salva órgãos julgadores capturados das audiências no banco de dados
 
 import { createServiceClient } from '@/lib/utils/supabase/service-client';
-import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
+import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
 import { getCached, setCached } from '@/lib/utils/redis/cache-utils';
 
 /**

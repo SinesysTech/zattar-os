@@ -8,7 +8,7 @@ import {
 import type {
   StatusCaptura,
   CriarCapturaLogParams,
-} from '@/backend/types/captura/capturas-log-types';
+} from '../types';
 
 /**
  * Criar registro de captura e retornar ID

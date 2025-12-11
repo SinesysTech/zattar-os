@@ -30,6 +30,24 @@ export type {
     TimelineResult,
 } from './types';
 
+// TRT Types (exportados de types.ts que re-exporta de trt-types.ts)
+export type {
+    CodigoTRT,
+    GrauTRT,
+    FiltroPrazoPendentes,
+} from './types';
+
+// TRT Types diretos (incluindo ConfigTRT que não está em types.ts)
+export type {
+    TipoRotaTRT,
+    TipoAcessoTribunal,
+    BaseCapturaTRTParams,
+    CredenciaisTRT,
+    CustomTimeouts,
+    TribunalConfigDb,
+    ConfigTRT,
+} from './types/trt-types';
+
 // Constants
 export { TRT_CODIGOS, GRAUS, FILTROS_PRAZO, STATUS_AUDIENCIA_OPTIONS } from './constants';
 
@@ -45,6 +63,22 @@ export type { JudicialDriver, SessaoAutenticada } from './drivers/judicial-drive
 
 // API Client (para uso em componentes)
 export * from './services/api-client';
+
+// PJE-TRT API (exportações principais)
+export { obterPartesProcesso, obterRepresentantesPartePorID } from './pje-trt/partes';
+export { obterTimeline } from './pje-trt/timeline';
+export { fetchPJEAPI } from './pje-trt/shared/fetch';
+export type { TimelineResponse, ObterTimelineOptions } from './pje-trt/timeline';
+
+// TRT Services (autenticação e configuração)
+export { autenticarPJE, type AuthResult } from './services/trt/trt-auth.service';
+export { getTribunalConfig } from './services/trt/config';
+
+// Timeline Service
+export { capturarTimeline, type CapturaTimelineParams, type CapturaTimelineResult } from './services/timeline/timeline-capture.service';
+
+// Partes Service
+export { capturarPartesProcesso, type ProcessoParaCaptura } from './services/partes/partes-capture.service';
 
 // Hooks
 export { useCapturaLog } from './hooks/use-capturas-log';

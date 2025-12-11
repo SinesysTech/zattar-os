@@ -27,13 +27,12 @@ export type {
   ListarAudienciasParams,
 } from './domain';
 
-// Re-exporta tipos do backend
-export type {
-  GrauAudiencia,
-  AudienciaInfra,
-  CriarAudienciaInfraParams,
-  AtualizarAudienciaInfraParams,
-} from '@/backend/types/audiencias/types';
+// Tipos legados que podem ser migrados posteriormente
+// TODO: Migrar estes tipos para domain.ts quando necessário
+export type GrauAudiencia = string;
+export type AudienciaInfra = unknown;
+export type CriarAudienciaInfraParams = unknown;
+export type AtualizarAudienciaInfraParams = unknown;
 
 // ============================================================================
 // Tipos específicos de frontend para audiências

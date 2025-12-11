@@ -53,7 +53,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useContasReceber, cancelarConta, excluirConta } from '@/features/financeiro';
 import { useContasBancarias } from '@/features/financeiro';
-import { useClientes } from '@/app/_lib/hooks/use-clientes';
+import { useClientes } from '@/features/partes';
 import { useContratos } from '@/features/contratos';
 import { usePlanoContasAnaliticas } from '@/features/financeiro';
 import { useCentrosCustoAtivos } from '@/features/financeiro';

@@ -59,6 +59,7 @@ export {
 // Hooks
 // ============================================================================
 export {
+  useClientes,
   usePartesContrarias,
   useTerceiros,
   useRepresentantes,

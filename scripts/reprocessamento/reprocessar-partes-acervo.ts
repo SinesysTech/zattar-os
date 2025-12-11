@@ -56,14 +56,12 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config({ path: resolve(process.cwd(), '.env') });
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
-import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import { autenticarPJE } from '@/backend/captura/services/trt/trt-auth.service';
-import { obterPartesProcesso } from '@/backend/api/pje-trt/partes';
-import { persistirPartesProcesso } from '@/backend/captura/services/partes/partes-capture.service';
-import { registrarCapturaRawLog } from '@/backend/captura/services/persistence/captura-raw-log.service';
-import type { GrauAcervo } from '@/backend/types/acervo/types';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
+import { getTribunalConfig, autenticarPJE, obterPartesProcesso } from '@/features/captura';
+import { persistirPartesProcesso } from '@/features/captura/services/partes/partes-capture.service';
+import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
+import type { GrauAcervo } from '@/features/acervo/types';
 
 // ============================================================================
 // TIPOS

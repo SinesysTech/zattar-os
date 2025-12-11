@@ -7,7 +7,7 @@ import {
   listarPermissoesUsuario, 
   atribuirPermissoesBatch, 
   substituirPermissoes 
-} from '@/backend/permissoes/services/persistence/permissao-persistence.service';
+} from '../repository';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { obterTodasPermissoes, validarAtribuirPermissoesDTO } from '@/features/usuarios/types/types';
 import type { Permissao } from '../types';

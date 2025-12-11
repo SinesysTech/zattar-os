@@ -24,25 +24,19 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@/core/*": ["./src/core/*"],
       "@/app/*": ["./src/app/*"],
       "@/components/*": ["./src/components/*"],
-      "@/lib/*": ["./src/lib/*", "src/core/app/_lib/*"],
-      "@/lib/hooks/*": ["src/core/app/_lib/hooks/*"],
-      "@/lib/types/*": ["./src/lib/types/*", "src/core/app/_lib/types/*"],
+      "@/lib/*": ["./src/lib/*"],
       "@/hooks/*": ["./src/hooks/*"],
       "@/types/*": ["./src/types/*"],
       "@/types/domain/*": ["./src/types/domain/*"],
-      "@/types/contracts/*": ["./src/types/contracts/*"],
-      "@/_lib/*": ["src/core/app/_lib/*"],
-      "@/backend/*": ["./backend/*"]
+      "@/types/contracts/*": ["./src/types/contracts/*"]
     }
   },
   "include": [
     "next-env.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "backend/**/*.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
@@ -53,7 +47,6 @@
     "tests/**",
     "**/*.test.ts",
     "**/*.test.tsx",
-    "dev/comunica-cnj/**",
-    "backend/pendentes/**"
+    "dev/comunica-cnj/**"
   ]
 }

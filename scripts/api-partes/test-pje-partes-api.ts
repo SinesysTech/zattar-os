@@ -20,9 +20,8 @@
  * - TWOFAUTH_ACCOUNT_ID
  */
 
-import { autenticarPJE } from '@/backend/api/pje-trt/shared/auth/autenticar';
-import { obterPartesProcesso, obterRepresentantesPartePorID } from '@/backend/api/pje-trt/partes';
-import { getCredentialComplete } from '@/backend/credenciais/services/persistence/credencial-persistence.service';
+import { autenticarPJE, obterPartesProcesso, obterRepresentantesPartePorID } from '@/features/captura';
+import { getCredentialComplete } from '@/features/advogados';
 import type { Page } from 'playwright';
 import { chromium } from 'playwright';
 

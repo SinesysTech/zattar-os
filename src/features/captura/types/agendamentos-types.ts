@@ -2,7 +2,7 @@
  * Tipos para gerenciamento de agendamentos de captura
  */
 
-import type { TipoCaptura } from '@/backend/types/captura/capturas-log-types';
+import type { TipoCaptura } from '../types';
 
 /**
  * Tipo de periodicidade do agendamento

@@ -5,7 +5,7 @@ import type {
   TipoAcessoTribunal,
   TribunalConfigDb,
   CustomTimeouts,
-} from '@/backend/types/captura/trt-types';
+} from '../../types/trt-types';
 
 /**
  * Serviço de persistência para configurações de tribunais

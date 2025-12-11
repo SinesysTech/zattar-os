@@ -3,7 +3,7 @@
 
 import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import type { Processo } from '@/features/captura/types/trt-types';
-import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
+import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
 import {
   compararObjetos,
   removerCamposControle,

@@ -16,7 +16,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type { Segmento, EscopoSegmento } from '@/features/assinatura-digital';
 import { listarSegmentosAction } from '@/features/assinatura-digital/actions';
 import { getSegmentoDisplayName, formatAtivoBadge, getAtivoBadgeVariant, truncateText } from '@/features/assinatura-digital';
-import { useMinhasPermissoes } from '@/app/_lib/hooks/use-minhas-permissoes';
+import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
 import { DataSurface } from '@/components/shared/data-surface';
 import { TablePagination } from '@/components/shared/table-pagination';
 import { SegmentoCreateDialog, SegmentoEditDialog, SegmentoDuplicateDialog, SegmentoDeleteDialog } from './components';

@@ -8,7 +8,7 @@ import type {
   AtualizarCapturaLogParams,
   ListarCapturasLogParams,
   ListarCapturasLogResult,
-} from '@/backend/types/captura/capturas-log-types';
+} from '../../types';
 
 /**
  * Criar um novo registro de captura

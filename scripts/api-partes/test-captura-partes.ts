@@ -9,13 +9,10 @@
  * npx tsx scripts/test-captura-partes.ts
  */
 
-import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import { autenticarPJE } from '@/backend/captura/services/trt/trt-auth.service';
-import { capturarPartesProcesso } from '@/backend/captura/services/partes/partes-capture.service';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { ProcessoParaCaptura } from '@/backend/captura/services/partes/partes-capture.service';
-import type { GrauAcervo } from '@/backend/types/acervo/types';
-import type { CodigoTRT } from '@/backend/types/captura/trt-types';
+import { getTribunalConfig, autenticarPJE, capturarPartesProcesso, type ProcessoParaCaptura } from '@/features/captura';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import type { GrauAcervo } from '@/features/acervo/types';
+import type { CodigoTRT } from '@/features/captura';
 
 // ==========================================
 // CONFIGURAÇÕES DE TESTE (HARDCODED)

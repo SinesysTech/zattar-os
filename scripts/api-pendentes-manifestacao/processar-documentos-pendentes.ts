@@ -15,13 +15,12 @@ import { config } from 'dotenv';
 import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
-import { autenticarPJE } from '@/backend/captura/services/trt/trt-auth.service';
-import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import { downloadAndUploadDocumento } from '@/backend/captura/services/pje/pje-expediente-documento.service';
-import type { FetchDocumentoParams } from '@/backend/types/pje-trt/documento-types';
-import type { GrauTRT } from '@/backend/types/captura/trt-types';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
+import { autenticarPJE, getTribunalConfig } from '@/features/captura';
+import { downloadAndUploadDocumento } from '@/features/captura/services/pje/pje-expediente-documento.service';
+import type { FetchDocumentoParams } from '@/lib/api/pje-trt/types';
+import type { GrauTRT } from '@/features/captura';
 import type { Browser, Page } from 'playwright';
 
 // Configuração

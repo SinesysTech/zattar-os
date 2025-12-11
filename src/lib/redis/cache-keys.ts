@@ -1,6 +1,6 @@
 import { generateCacheKey, CACHE_PREFIXES } from './cache-utils';
-import type { ListarPendentesParams } from '@/backend/types/expedientes/types';
-import type { ListarAudienciasParams } from '@/backend/types/audiencias/types';
+import type { ListarPendentesParams } from '@/features/expedientes/types';
+import type { ListarAudienciasParams } from '@/features/audiencias';
 import type { ListarAcervoParams } from '@/features/acervo/types';
 import type { ListarPlanoContasParams } from '@/features/financeiro/types/plano-contas.types';
 

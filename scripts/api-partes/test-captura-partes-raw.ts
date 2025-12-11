@@ -10,9 +10,9 @@ import fs from 'fs';
 // Carregar variáveis de ambiente do .env.local
 config({ path: path.resolve(process.cwd(), '.env.local') });
 
-import { autenticarPJE } from '@/backend/captura/services/trt/trt-auth.service';
-import type { ConfigTRT } from '@/backend/types/captura/trt-types';
-import type { GrauAcervo } from '@/backend/types/acervo/types';
+import { autenticarPJE } from '@/features/captura';
+import type { ConfigTRT } from '@/features/captura';
+import type { GrauAcervo } from '@/features/acervo/types';
 import type { Page } from 'playwright';
 
 // ==========================================

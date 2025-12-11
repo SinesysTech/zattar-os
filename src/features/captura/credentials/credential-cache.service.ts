@@ -17,7 +17,7 @@
  * - cleanExpiredCache(): Remove credenciais expiradas do cache
  */
 
-import type { CodigoTRT, GrauTRT, CredenciaisTRT } from '@/backend/types/captura/trt-types';
+import type { CodigoTRT, GrauTRT, CredenciaisTRT } from '../types/trt-types';
 import { createServiceClient } from '@/lib/utils/supabase/service-client';
 
 /**

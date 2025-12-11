@@ -7,8 +7,8 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config(); // Carregar .env também se existir
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import type { CodigoTRT, GrauTRT } from '@/features/captura';
 
 /**
  * Estatísticas de processamento

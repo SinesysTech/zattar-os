@@ -6,6 +6,7 @@
 import * as fc from 'fast-check';
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import Image from 'next/image';
 import { renderWithViewport } from '../../tests/helpers/responsive-test-helpers';
 
 // Clean up after each test
@@ -73,7 +74,9 @@ const MockAttachment = ({
             data-mobile={isMobile}
             className={isMobile ? 'w-full max-w-full' : 'max-w-sm'}
         >
-            {type === 'image' && <img src="/test.jpg" alt="test" className={isMobile ? 'w-full' : 'max-w-sm'} />}
+            {type === 'image' && (
+                <Image src="/test.jpg" alt="test" width={400} height={300} className={isMobile ? 'w-full' : 'max-w-sm'} />
+            )}
             {type === 'video' && <video src="/test.mp4" className={isMobile ? 'w-full' : 'max-w-sm'} />}
             {type === 'document' && (
                 <div className="flex items-center gap-2">
