@@ -65,7 +65,21 @@ export const useSalarios = (params: UseSalariosParams = {}): UseSalariosResult =
     setError(null);
 
     try {
-      const result = await actionListarSalarios(params);
+      const actionParams: UseSalariosParams = {
+        pagina: params.pagina,
+        limite: params.limite,
+        busca: params.busca,
+        usuarioId: params.usuarioId,
+        cargoId: params.cargoId,
+        ativo: params.ativo,
+        vigente: params.vigente,
+        ordenarPor: params.ordenarPor,
+        ordem: params.ordem,
+        incluirTotais: params.incluirTotais,
+        incluirSemSalario: params.incluirSemSalario,
+      };
+
+      const result = await actionListarSalarios(actionParams);
 
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Erro ao buscar salários');
@@ -73,9 +87,7 @@ export const useSalarios = (params: UseSalariosParams = {}): UseSalariosResult =
 
       setSalarios(result.data.items);
       setPaginacao(result.data.paginacao);
-      // @ts-expect-error - Extra fields added in action
       setTotais(result.data.totais || null);
-      // @ts-expect-error - Extra fields added in action
       setUsuariosSemSalario(result.data.usuariosSemSalario || []);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar salários';

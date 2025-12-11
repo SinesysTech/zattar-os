@@ -65,13 +65,15 @@ export function SalarioFormDialog({
       dataInicioVigencia: salario?.dataInicioVigencia ?? '',
       observacoes: salario?.observacoes ?? '',
     },
-    values: {
-      usuarioId: salario?.usuarioId ?? form.getValues().usuarioId,
-      cargoId: salario?.cargoId ?? form.getValues().cargoId,
-      salarioBruto: salario?.salarioBruto ?? form.getValues().salarioBruto,
-      dataInicioVigencia: salario?.dataInicioVigencia ?? form.getValues().dataInicioVigencia,
-      observacoes: salario?.observacoes ?? form.getValues().observacoes,
-    },
+    values: salario
+      ? {
+          usuarioId: salario.usuarioId,
+          cargoId: salario.cargoId,
+          salarioBruto: salario.salarioBruto,
+          dataInicioVigencia: salario.dataInicioVigencia,
+          observacoes: salario.observacoes || '',
+        }
+      : undefined,
   });
 
   const handleSubmit = form.handleSubmit(async (values) => {

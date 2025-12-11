@@ -295,6 +295,11 @@ export interface ListarSalariosResponse {
     total: number;
     totalPaginas: number;
   };
+  totais?: {
+    totalFuncionarios: number;
+    totalBrutoMensal: number;
+  };
+  usuariosSemSalario?: UsuarioResumo[];
 }
 
 // ============================================================================
@@ -333,6 +338,7 @@ export interface ListarFolhasResponse {
     valorTotalAprovada: number;
     valorTotalPaga: number;
   };
+  totais?: TotaisFolhasPorStatus;
 }
 
 /**

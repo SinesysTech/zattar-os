@@ -47,7 +47,6 @@ import { DocumentChat } from '@/features/documentos/components/document-chat';
 import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
 import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
 import { createClient } from '@/app/_lib/supabase/client';
-import type { DocumentoComUsuario } from '@/features/documentos/types';
 import { exportToPdf, exportTextToPdf, exportToDocx } from '@/features/documentos/utils';
 import type { Value } from '@/features/documentos/types';
 import { useDocument } from '@/features/documentos/hooks/use-document';
@@ -58,6 +57,8 @@ interface DocumentEditorProps {
 }
 
 
+export function DocumentEditor({ documentoId }: DocumentEditorProps) {
+  const router = useRouter();
   const { documento, loading, saving: manualSaving, saveDocument } = useDocument(documentoId);
   
   const [conteudo, setConteudo] = React.useState<Value[]>([]);

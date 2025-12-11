@@ -18,7 +18,6 @@ import {
 import {
   FolhaPagamentoComDetalhes,
   ListarFolhasParams,
-  StatusFolhaPagamento,
   TotaisFolhasPorStatus,
   GerarFolhaDTO,
   AprovarFolhaDTO,
@@ -63,7 +62,18 @@ export const useFolhasPagamento = (params: UseFolhasPagamentoParams = {}): UseFo
     setError(null);
 
     try {
-      const result = await actionListarFolhasPagamento(params);
+      const actionParams: UseFolhasPagamentoParams = {
+        pagina: params.pagina,
+        limite: params.limite,
+        mesReferencia: params.mesReferencia,
+        anoReferencia: params.anoReferencia,
+        status: params.status,
+        ordenarPor: params.ordenarPor,
+        ordem: params.ordem,
+        incluirTotais: params.incluirTotais,
+      };
+
+      const result = await actionListarFolhasPagamento(actionParams);
 
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Erro ao buscar folhas de pagamento');
@@ -71,7 +81,6 @@ export const useFolhasPagamento = (params: UseFolhasPagamentoParams = {}): UseFo
 
       setFolhas(result.data.items);
       setPaginacao(result.data.paginacao);
-      // @ts-expect-error - Extra fields added in action
       setTotais(result.data.totais || null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar folhas de pagamento';
@@ -250,7 +259,17 @@ export const previewGerarFolha = async (
 }>> => {
   try {
     const result = await actionPreviewGerarFolha(mesReferencia, anoReferencia);
-    return result as any; 
+    return result as MutationResult<{
+      salariosVigentes: Array<{
+        usuarioId: number;
+        nomeExibicao: string;
+        cargo?: string;
+        salarioBruto: number;
+      }>;
+      valorTotal: number;
+      totalFuncionarios: number;
+      periodoLabel: string;
+    }>; 
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : 'Erro ao gerar preview' };
   }
@@ -331,7 +350,12 @@ export const verificarCancelamentoFolha = async (id: number): Promise<MutationRe
 }>> => {
   try {
     const result = await actionVerificarCancelamentoFolha(id);
-    return result as any;
+    return result as MutationResult<{
+      podeCancelar: boolean;
+      motivo?: string;
+      status: string;
+      temLancamentosPagos: boolean;
+    }>;
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : 'Erro ao verificar cancelamento' };
   }
@@ -366,7 +390,12 @@ export const obterResumoParaPagamento = async (id: number): Promise<MutationResu
 }>> => {
   try {
     const result = await actionObterResumoPagamento(id);
-    return result as any;
+    return result as MutationResult<{
+      totalBruto: number;
+      totalItens: number;
+      itensPendentes: number;
+      itensConfirmados: number;
+    }>;
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : 'Erro ao obter resumo' };
   }
