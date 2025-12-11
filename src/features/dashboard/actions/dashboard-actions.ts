@@ -5,7 +5,7 @@
  * Substitui /api/dashboard/route.ts
  */
 
-import { createClient } from '@/backend/utils/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import * as service from '../service';
 import type { DashboardData } from '../types';
 

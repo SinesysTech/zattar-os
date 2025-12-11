@@ -57,6 +57,12 @@ export {
   service as usuariosService
 } from './service';
 
+// Actions
+export {
+  actionRedefinirSenha,
+  actionAtualizarSenhaServer
+} from './actions/senha-actions';
+
 // Hooks
 export { useUsuarios } from './hooks/use-usuarios';
 export { useUsuario } from './hooks/use-usuario';

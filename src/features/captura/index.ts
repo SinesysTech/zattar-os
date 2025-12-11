@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-// Domain & Types
-export * from './domain';
-export * from './types';
-
-// Comunica CNJ
-export * from './comunica-cnj/domain';
-export * from './comunica-cnj/cnj-client';
-export * from './comunica-cnj/repository';
-export * from './comunica-cnj/service';
-
-// Actions
-export * from './actions/comunica-cnj-actions';
-
-// Components
-export * from './components/comunica-cnj';
-=======
 // Domain (tipos e interfaces)
 export type {
     Credencial,
@@ -69,4 +52,15 @@ export { useCapturaLog } from './hooks/use-capturas-log';
 // Components (re-export principais)
 export { CapturaList } from './components/captura-list';
 export { CapturaDialog } from './components/captura-dialog';
->>>>>>> 4c84c8137c47678b3e092fd10ca3c5fb854cf2e4
+
+// Comunica CNJ
+export * from './comunica-cnj/domain';
+export * from './comunica-cnj/cnj-client';
+export * from './comunica-cnj/repository';
+export * from './comunica-cnj/service';
+
+// Actions
+export * from './actions/comunica-cnj-actions';
+
+// Comunica CNJ Components
+export * from './components/comunica-cnj';

@@ -37,23 +37,33 @@ export async function actionRedefinirSenha(usuarioId: number, novaSenha: string)
   }
 }
 
-export async function actionAlterarSenha(senhaAtual: string, novaSenha: string) {
+/**
+ * Atualiza senha do usuário autenticado via Admin API
+ * @description Apenas atualiza senha no Auth System. Verificação de senha atual
+ * deve ser feita client-side antes de chamar esta action.
+ * @param novaSenha Nova senha (8-72 caracteres)
+ */
+export async function actionAtualizarSenhaServer(novaSenha: string) {
   try {
     // Validar entrada
-    if (novaSenha.length < 8) return { success: false, error: 'Senha deve ter no mínimo 8 caracteres' };
-    if (novaSenha.length > 72) return { success: false, error: 'Senha deve ter no máximo 72 caracteres' };
+    if (novaSenha.length < 8) {
+      return { success: false, error: 'Senha deve ter no mínimo 8 caracteres' };
+    }
+    if (novaSenha.length > 72) {
+      return { success: false, error: 'Senha deve ter no máximo 72 caracteres' };
+    }
 
-    // Autenticar usuário e obter dados
+    // Autenticar usuário e obter auth_user_id
     const { userId } = await requireAuth([]);
-    
-    const supabaseAdmin = createServiceClient();
-    const { data: usuario, error: userError } = await supabaseAdmin
+
+    const supabase = createServiceClient();
+    const { data: usuario, error: userError } = await supabase
       .from('usuarios')
-      .select('email_corporativo, auth_user_id')
+      .select('auth_user_id')
       .eq('id', userId)
       .eq('ativo', true)
       .single();
-    
+
     if (userError || !usuario) {
       return { success: false, error: 'Usuário não encontrado' };
     }
@@ -62,25 +72,8 @@ export async function actionAlterarSenha(senhaAtual: string, novaSenha: string) 
       return { success: false, error: 'Usuário não vinculado ao sistema de autenticação' };
     }
 
-    // Verificar senha atual usando signInWithPassword temporário
-    // Isso é necessário pois não há API admin para validar senha atual
-    const { createClient } = await import('@supabase/supabase-js');
-    const tempClient = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
-    );
-    
-    const { error: signInError } = await tempClient.auth.signInWithPassword({
-      email: usuario.email_corporativo,
-      password: senhaAtual
-    });
-
-    if (signInError) {
-      return { success: false, error: 'Senha atual incorreta' };
-    }
-
-    // Atualizar senha usando Admin API (seguro após validação)
-    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
+    // Atualizar senha via Admin API (sem verificação de senha atual)
+    const { error: updateError } = await supabase.auth.admin.updateUserById(
       usuario.auth_user_id,
       { password: novaSenha }
     );
@@ -91,6 +84,6 @@ export async function actionAlterarSenha(senhaAtual: string, novaSenha: string) 
 
     return { success: true };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Erro ao alterar senha' };
+    return { success: false, error: error instanceof Error ? error.message : 'Erro ao atualizar senha' };
   }
 }
