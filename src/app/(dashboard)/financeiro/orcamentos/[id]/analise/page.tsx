@@ -34,7 +34,7 @@ import {
   useOrcamento,
   useAnaliseOrcamentaria,
   useProjecaoOrcamentaria,
-} from '@/app/_lib/hooks/use-orcamentos';
+} from '@/features/financeiro';
 import { toast } from 'sonner';
 import type {
   AnaliseOrcamentariaItem,
