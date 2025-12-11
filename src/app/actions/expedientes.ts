@@ -7,14 +7,14 @@ import {
   createExpedienteSchema,
   updateExpedienteSchema,
   ListarExpedientesParams,
-} from '@/core/expedientes/domain';
+} from '@/features/expedientes/types';
 import {
   criarExpediente,
   atualizarExpediente,
   realizarBaixa,
   reverterBaixa,
   listarExpedientes,
-} from '@/core/expedientes/service';
+} from '@/features/expedientes/service';
 
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS
@@ -147,7 +147,7 @@ export async function actionAtualizarExpediente(
       } else if (!isNaN(Number(value)) && (key.includes('qtde') || key.includes('pagina') || key.includes('limite'))) {
         rawData[key] = parseInt(value as string, 10);
       }
-       else if (value !== '') { // Only include non-empty values
+      else if (value !== '') { // Only include non-empty values
         rawData[key] = value;
       }
     }

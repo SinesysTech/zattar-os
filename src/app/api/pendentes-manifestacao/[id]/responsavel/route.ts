@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { atribuirResponsavelPendente } from '@/backend/expedientes/services/atribuir-responsavel.service';
+import { atribuirResponsavel } from '@/features/expedientes/service';
 
 /**
  * @swagger
@@ -125,18 +125,18 @@ export async function PATCH(
     if (authResult.userId === 'system') {
       // Sistema usa ID padrão do Super Administrador
       const usuarioExecutouId = 10;
-      
-      // 5. Executar atribuição
-      const resultado = await atribuirResponsavelPendente({
-        pendenteId,
-        responsavelId: responsavelId ?? null,
-        usuarioExecutouId,
-      });
 
-      if (!resultado.success) {
-        const statusCode = resultado.error?.includes('não encontrado') ? 404 : 400;
+      // 5. Executar atribuição
+      const result = await atribuirResponsavel(
+        pendenteId,
+        responsavelId ?? null,
+        usuarioExecutouId,
+      );
+
+      if (!result.success) {
+        const statusCode = result.error.message?.includes('não encontrado') ? 404 : 400; // Simplified check
         return NextResponse.json(
-          { error: resultado.error || 'Erro ao atribuir responsável' },
+          { error: result.error.message || 'Erro ao atribuir responsável' },
           { status: statusCode }
         );
       }
@@ -144,7 +144,7 @@ export async function PATCH(
       // 6. Retornar resultado
       return NextResponse.json({
         success: true,
-        data: resultado.data,
+        data: result.data,
       });
     }
 
@@ -159,16 +159,16 @@ export async function PATCH(
     const usuarioExecutouId = authResult.usuarioId;
 
     // 5. Executar atribuição
-    const resultado = await atribuirResponsavelPendente({
+    const result = await atribuirResponsavel(
       pendenteId,
-      responsavelId: responsavelId ?? null,
+      responsavelId ?? null,
       usuarioExecutouId,
-    });
+    );
 
-    if (!resultado.success) {
-      const statusCode = resultado.error?.includes('não encontrado') ? 404 : 400;
+    if (!result.success) {
+      const statusCode = result.error.message?.includes('não encontrado') ? 404 : 400; // Simplified check
       return NextResponse.json(
-        { error: resultado.error || 'Erro ao atribuir responsável' },
+        { error: result.error.message || 'Erro ao atribuir responsável' },
         { status: statusCode }
       );
     }
@@ -176,7 +176,7 @@ export async function PATCH(
     // 6. Retornar resultado
     return NextResponse.json({
       success: true,
-      data: resultado.data,
+      data: result.data,
     });
 
   } catch (error) {

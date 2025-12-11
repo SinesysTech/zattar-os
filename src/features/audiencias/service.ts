@@ -23,13 +23,13 @@ export async function criarAudiencia(input: z.infer<typeof createAudienciaSchema
         const { processoId, tipoAudienciaId } = validation.data;
 
         const processoExistsResult = await repo.processoExists(processoId);
-        if (processoExistsResult.isErr() || !processoExistsResult.value) {
+        if (!processoExistsResult.success || !processoExistsResult.data) {
             return err(appError('VALIDATION_ERROR', 'Processo não encontrado.'));
         }
 
         if (tipoAudienciaId) {
             const tipoExistsResult = await repo.tipoAudienciaExists(tipoAudienciaId);
-            if (tipoExistsResult.isErr() || !tipoExistsResult.value) {
+            if (!tipoExistsResult.success || !tipoExistsResult.data) {
                 return err(appError('VALIDATION_ERROR', 'Tipo de audiência não encontrado.'));
             }
         }
@@ -54,7 +54,7 @@ export async function listarAudiencias(params: ListarAudienciasParams): Promise<
         ...params,
         pagina: params.pagina && params.pagina > 0 ? params.pagina : 1,
         limite: params.limite && params.limite > 0 && params.limite <= 100 ? params.limite : 10,
-        ordenarPor: params.ordenarPor || 'data_inicio',
+        ordenarPor: params.ordenarPor || 'dataInicio',
         ordem: params.ordem || 'asc',
     };
     return repo.findAllAudiencias(sanitizedParams);
@@ -72,7 +72,7 @@ export async function atualizarAudiencia(id: number, input: z.infer<typeof updat
 
     try {
         const audienciaExistenteResult = await repo.findAudienciaById(id);
-        if (audienciaExistenteResult.isErr() || !audienciaExistenteResult.value) {
+        if (!audienciaExistenteResult.success || !audienciaExistenteResult.data) {
             return err(appError('NOT_FOUND', 'Audiência não encontrada.'));
         }
 
@@ -80,19 +80,19 @@ export async function atualizarAudiencia(id: number, input: z.infer<typeof updat
 
         if (processoId) {
             const processoExistsResult = await repo.processoExists(processoId);
-            if (processoExistsResult.isErr() || !processoExistsResult.value) {
+            if (!processoExistsResult.success || !processoExistsResult.data) {
                 return err(appError('VALIDATION_ERROR', 'Processo não encontrado.'));
             }
         }
 
         if (tipoAudienciaId) {
             const tipoExistsResult = await repo.tipoAudienciaExists(tipoAudienciaId);
-            if (tipoExistsResult.isErr() || !tipoExistsResult.value) {
+            if (!tipoExistsResult.success || !tipoExistsResult.data) {
                 return err(appError('VALIDATION_ERROR', 'Tipo de audiência não encontrado.'));
             }
         }
 
-        const result = await repo.updateAudiencia(id, validation.data, audienciaExistenteResult.value);
+        const result = await repo.updateAudiencia(id, validation.data, audienciaExistenteResult.data);
         return result;
 
     } catch (e: any) {
@@ -107,7 +107,7 @@ export async function atualizarStatusAudiencia(id: number, status: StatusAudienc
     }
 
     const audienciaExistenteResult = await repo.findAudienciaById(id);
-    if (audienciaExistenteResult.isErr() || !audienciaExistenteResult.value) {
+    if (!audienciaExistenteResult.success || !audienciaExistenteResult.data) {
         return err(appError('NOT_FOUND', 'Audiência não encontrada.'));
     }
 

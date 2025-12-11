@@ -7,8 +7,8 @@ import { expedientesToEvents } from './adapters/expediente-to-event.adapter';
 import type { IEvent, IUser } from '@/components/calendar/interfaces';
 import type { TEventColor } from '@/components/calendar/types';
 import { COLORS } from '@/components/calendar/constants';
-import type { ListarPendentesParams } from '@/backend/types/expedientes/types';
-import { obterPendentes } from '@/backend/expedientes/services/listar-pendentes.service';
+import type { ListarPendentesParams } from '@/features/expedientes/types';
+import { obterPendentes } from '@/features/expedientes/service';
 import { obterUsuarios } from '@/backend/usuarios/services/usuarios/listar-usuarios.service';
 import { listarTiposExpedientes } from '@/backend/tipos-expedientes/services/tipos-expedientes/listar-tipos-expedientes.service';
 import type { ListarTiposExpedientesParams } from '@/backend/types/tipos-expedientes/types';
@@ -47,7 +47,14 @@ export async function getExpedientesEvents(
 		}
 
 		// Buscar expedientes usando o serviço diretamente
-		const resultado = await obterPendentes(listarParams);
+		const result = await obterPendentes(listarParams);
+
+		if (!result.success) {
+			console.error('Erro ao buscar expedientes:', result.error);
+			return [];
+		}
+
+		const resultado = result.data;
 
 		// Verificar se é resultado agrupado ou normal
 		if ('grupos' in resultado) {

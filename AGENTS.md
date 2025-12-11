@@ -195,7 +195,7 @@ type ActionResponse<T> = {
 ### Módulos Legados 🔄
 
 - **Audiências** - Estrutura antiga em `app/(dashboard)/audiencias/`
-- **Expedientes** - Estrutura antiga
+- **Expedientes** - `features/expedientes/`
 - **Acordos/Condenações** - Estrutura antiga
 - **Financeiro** - Módulo complexo com estrutura própria
 - **Captura de dados PJE/TRT**
@@ -310,6 +310,8 @@ src/features/{modulo}/
   - Estrutura completa de feature
 - ✅ **RH** (`features/rh/`) - Completo
   - Salários, Folhas de Pagamento, Integração Financeira
+- ✅ **Expedientes** (`features/expedientes/`) - Completo
+  - Consolidação de duplicatas, tipos e serviços migrados
 - 🔄 **Outros módulos** - Em migração progressiva
 
 #### Módulos Legados (Backend)
@@ -317,7 +319,6 @@ src/features/{modulo}/
 Módulos ainda não migrados permanecem em `backend/{modulo}/services/`:
 
 - Audiências
-- Expedientes
 - Acordos/Condenações
 - Financeiro
 - Captura de dados PJE/TRT

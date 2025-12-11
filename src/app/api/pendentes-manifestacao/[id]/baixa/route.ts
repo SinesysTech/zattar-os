@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { baixarExpediente } from '@/backend/expedientes/services/baixa-expediente.service';
+import { realizarBaixa } from '@/features/expedientes/service';
 
 /**
  * @swagger
@@ -127,23 +127,26 @@ export async function PATCH(
     }
 
     // 5. Baixar expediente
-    const resultado = await baixarExpediente({
+    const result = await realizarBaixa(
       expedienteId,
-      protocoloId: protocolo_id ?? null,
-      justificativa: justificativa ?? null,
-      usuarioId,
-    });
+      {
+        protocoloId: protocolo_id ?? undefined,
+        justificativaBaixa: justificativa ?? undefined,
+      },
+      usuarioId
+    );
 
-    if (!resultado.success) {
+    if (!result.success) {
       const statusCode =
-        resultado.error?.includes('não encontrado') ||
-        resultado.error?.includes('já está baixado')
+        result.error.code === 'NOT_FOUND' ||
+          result.error.message.includes('não encontrado')
           ? 404
-          : resultado.error?.includes('É necessário')
+          : result.error.code === 'BAD_REQUEST' ||
+            result.error.message.includes('É necessário')
             ? 400
             : 500;
       return NextResponse.json(
-        { error: resultado.error || 'Erro ao baixar expediente' },
+        { error: result.error.message || 'Erro ao baixar expediente' },
         { status: statusCode }
       );
     }
@@ -151,7 +154,7 @@ export async function PATCH(
     // 6. Retornar resultado
     return NextResponse.json({
       success: true,
-      data: resultado.data,
+      data: result.data,
     });
   } catch (error) {
     console.error('Erro ao baixar expediente:', error);

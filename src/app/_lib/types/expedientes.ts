@@ -3,7 +3,7 @@
 import type {
   PendenteManifestacao,
   ListarPendentesParams,
-} from '@/backend/types/expedientes/types';
+} from '@/features/expedientes/types';
 
 /**
  * Resposta da API de expedientes (formato padrão)

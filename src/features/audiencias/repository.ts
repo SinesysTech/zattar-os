@@ -4,6 +4,7 @@ import { fromSnakeToCamel, fromCamelToSnake } from '@/lib/utils';
 import {
     Audiencia,
     ListarAudienciasParams,
+    StatusAudiencia,
 } from './domain';
 
 type AudienciaRow = Record<string, unknown>;
@@ -77,9 +78,9 @@ export async function findAllAudiencias(params: ListarAudienciasParams): Promise
 
         query = query.range(offset, offset + limit - 1);
 
-        const sortBy = params.ordenarPor || 'data_inicio';
+        const sortBy = params.ordenarPor || 'dataInicio';
         const ascending = params.ordem ? params.ordem === 'asc' : true;
-        query = query.order(fromCamelToSnake(sortBy), { ascending });
+        query = query.order(fromCamelToSnake(sortBy) as string, { ascending });
 
         const { data, error, count } = await query;
 
@@ -88,13 +89,17 @@ export async function findAllAudiencias(params: ListarAudienciasParams): Promise
             return err(appError('DATABASE_ERROR', 'Erro ao listar audiências.', { code: error.code }));
         }
 
+        const total = count || 0;
+        const totalPages = total ? Math.ceil(total / limit) : 1;
+
         return ok({
             data: data.map(converterParaAudiencia),
             pagination: {
-                currentPage: page,
-                pageSize: limit,
-                totalCount: count || 0,
-                totalPages: count ? Math.ceil(count / limit) : 1,
+                page: page,
+                limit: limit,
+                total: total,
+                totalPages: totalPages,
+                hasMore: page < totalPages,
             },
         });
     } catch (e: any) {
@@ -144,7 +149,7 @@ export async function tipoAudienciaExists(tipoId: number): Promise<Result<boolea
 export async function saveAudiencia(input: Partial<Audiencia>): Promise<Result<Audiencia>> {
     try {
         const db = createDbClient();
-        const snakeInput = fromCamelToSnake(input);
+        const snakeInput = fromCamelToSnake(input) as Record<string, any>;
         const { data, error } = await db
             .from('audiencias')
             .insert(snakeInput)
@@ -165,7 +170,7 @@ export async function saveAudiencia(input: Partial<Audiencia>): Promise<Result<A
 export async function updateAudiencia(id: number, input: Partial<Audiencia>, audienciaExistente: Audiencia): Promise<Result<Audiencia>> {
     try {
         const db = createDbClient();
-        const snakeInput = fromCamelToSnake(input);
+        const snakeInput = fromCamelToSnake(input) as Record<string, any>;
         // Preserve previous state for auditing
         snakeInput.dados_anteriores = fromCamelToSnake(audienciaExistente);
 
@@ -187,7 +192,7 @@ export async function updateAudiencia(id: number, input: Partial<Audiencia>, aud
     }
 }
 
-export async function atualizarStatus(id: number, status: string, statusDescricao?: string): Promise<Result<Audiencia>> {
+export async function atualizarStatus(id: number, status: StatusAudiencia, statusDescricao?: string): Promise<Result<Audiencia>> {
     try {
         const db = createDbClient();
         const updateData: Partial<AudienciaRow> = { status };

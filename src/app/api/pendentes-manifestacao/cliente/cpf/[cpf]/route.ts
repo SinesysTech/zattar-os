@@ -44,7 +44,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
 import { verificarPermissoes } from '@/backend/permissoes/services/persistence/permissao-persistence.service';
-import { buscarPendentesPorClienteCPF } from '@/backend/expedientes/services/persistence/listar-pendentes.service';
+import { buscarPendentesPorClienteCPF } from '@/features/expedientes/service';
 
 export async function GET(
   request: NextRequest,

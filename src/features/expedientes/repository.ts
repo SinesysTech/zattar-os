@@ -251,14 +251,14 @@ export async function saveExpediente(input: ExpedienteInsertInput): Promise<Resu
 export async function updateExpediente(id: number, input: ExpedienteUpdateInput, expedienteExistente: Expediente): Promise<Result<Expediente>> {
   try {
     const db = createDbClient();
-    // Assuming dados_anteriores logic should be preserved here as well, although input type is 'any'
+    // Preserva o histórico de dados anteriores para auditoria, evitando aninhamento recursivo
     const dadosUpdate = {
-        ...input,
-        dados_anteriores: {
-            ...expedienteExistente,
-            dados_anteriores: undefined, // Evitar aninhamento recursivo profundo
-            updated_at_previous: expedienteExistente.updatedAt,
-        }
+      ...input,
+      dados_anteriores: {
+        ...expedienteExistente,
+        dados_anteriores: undefined, // Evitar aninhamento recursivo profundo
+        updated_at_previous: expedienteExistente.updatedAt,
+      }
     };
 
     const { data, error } = await db.from(TABLE_EXPEDIENTES).update(dadosUpdate).eq('id', id).select().single();
@@ -304,5 +304,91 @@ export async function reverterBaixaExpediente(id: number): Promise<Result<Expedi
     return ok(converterParaExpediente(data));
   } catch (error) {
     return err(appError('DATABASE_ERROR', 'Erro ao reverter baixa.', undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function findExpedientesByClienteCPF(cpf: string): Promise<Result<Expediente[]>> {
+  try {
+    const db = createDbClient();
+    // Normalizar CPF (remover formatação)
+    const cpfNormalizado = cpf.replace(/\D/g, '');
+
+    if (!cpfNormalizado || cpfNormalizado.length !== 11) {
+      return err(appError('VALIDATION_ERROR', 'CPF inválido. Deve conter 11 dígitos.'));
+    }
+
+    // Buscar IDs dos clientes com o CPF fornecido
+    const { data: clienteIdsData, error: clienteError } = await db
+      .from('clientes')
+      .select('id')
+      .eq('cpf', cpfNormalizado);
+
+    if (clienteError) {
+      return err(appError('DATABASE_ERROR', `Falha ao buscar IDs de clientes: ${clienteError.message}`));
+    }
+
+    const entidadeIds = clienteIdsData.map(c => c.id);
+
+    if (entidadeIds.length === 0) {
+      return ok([]); // Nenhum cliente encontrado com este CPF
+    }
+
+    // Buscar expedientes através da relação:
+    // clientes -> processo_partes -> processos -> expedientes
+    const { data, error } = await db
+      .from(TABLE_EXPEDIENTES)
+      .select(`
+        *,
+        processo:processos!inner(
+          id,
+          numero_processo,
+          processo_partes!inner(
+            id,
+            tipo_entidade,
+            entidade_id
+          )
+        )
+      `)
+      .eq('processo.processo_partes.tipo_entidade', 'cliente')
+      .in('processo.processo_partes.entidade_id', entidadeIds)
+      .order('data_prazo_legal_parte', { ascending: true, nullsFirst: true })
+      .limit(100);
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', `Falha ao buscar pendentes por CPF: ${error.message}`));
+    }
+
+    // Note: The cast to unknown then ExpedienteRow is to handle the joined data structure if necessary, 
+    // but here we just want the expediente columns effectively.
+    // However, Supabase returns the joined structure. 
+    // We should map carefully. 'converterParaExpediente' expects ExpedienteRow.
+    // The query returns `expedientes.*` plus `processo: ...`. 
+    // 'data' items contain expediente fields.
+    const expedientes = (data || []).map(item => converterParaExpediente(item as unknown as ExpedienteRow));
+
+    return ok(expedientes);
+
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao buscar expedientes por CPF.', undefined, error instanceof Error ? error : undefined));
+  }
+}
+
+export async function updateResponsavel(expedienteId: number, responsavelId: number | null): Promise<Result<Expediente>> {
+  try {
+    const db = createDbClient();
+    const { data, error } = await db
+      .from(TABLE_EXPEDIENTES)
+      .update({ responsavel_id: responsavelId, updated_at: new Date().toISOString() })
+      .eq('id', expedienteId)
+      .select()
+      .single();
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', `Erro ao atualizar responsável: ${error.message}`));
+    }
+
+    return ok(converterParaExpediente(data));
+  } catch (error) {
+    return err(appError('DATABASE_ERROR', 'Erro ao atualizar responsável.', undefined, error instanceof Error ? error : undefined));
   }
 }

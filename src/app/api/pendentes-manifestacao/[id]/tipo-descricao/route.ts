@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { atualizarTipoDescricaoExpediente } from '@/backend/expedientes/services/atualizar-tipo-descricao.service';
+import { atualizarTipoDescricao } from '@/features/expedientes/service';
 
 /**
  * @swagger
@@ -108,19 +108,19 @@ export async function PATCH(
     if (authResult.userId === 'system') {
       // Sistema usa ID padrão do Super Administrador
       const usuarioExecutouId = 10;
-      
-      // 5. Executar atualização
-      const resultado = await atualizarTipoDescricaoExpediente({
-        expedienteId,
-        tipoExpedienteId: tipoExpedienteId ?? null,
-        descricaoArquivos: descricaoArquivos ?? null,
-        usuarioExecutouId,
-      });
 
-      if (!resultado.success) {
-        const statusCode = resultado.error?.includes('não encontrado') ? 404 : 400;
+      // 5. Executar atualização
+      const result = await atualizarTipoDescricao(
+        expedienteId,
+        tipoExpedienteId ?? null,
+        descricaoArquivos ?? null,
+        usuarioExecutouId,
+      );
+
+      if (!result.success) {
+        const statusCode = result.error.message?.includes('não encontrado') ? 404 : 400;
         return NextResponse.json(
-          { error: resultado.error || 'Erro ao atualizar tipo e descrição' },
+          { error: result.error.message || 'Erro ao atualizar tipo e descrição' },
           { status: statusCode }
         );
       }
@@ -128,7 +128,7 @@ export async function PATCH(
       // 6. Retornar resultado
       return NextResponse.json({
         success: true,
-        data: resultado.data,
+        data: result.data,
       });
     }
 
@@ -143,17 +143,17 @@ export async function PATCH(
     const usuarioExecutouId = authResult.usuarioId;
 
     // 5. Executar atualização
-    const resultado = await atualizarTipoDescricaoExpediente({
+    const result = await atualizarTipoDescricao(
       expedienteId,
-      tipoExpedienteId: tipoExpedienteId ?? null,
-      descricaoArquivos: descricaoArquivos ?? null,
+      tipoExpedienteId ?? null,
+      descricaoArquivos ?? null,
       usuarioExecutouId,
-    });
+    );
 
-    if (!resultado.success) {
-      const statusCode = resultado.error?.includes('não encontrado') ? 404 : 400;
+    if (!result.success) {
+      const statusCode = result.error.message?.includes('não encontrado') ? 404 : 400;
       return NextResponse.json(
-        { error: resultado.error || 'Erro ao atualizar tipo e descrição' },
+        { error: result.error.message || 'Erro ao atualizar tipo e descrição' },
         { status: statusCode }
       );
     }
@@ -161,7 +161,7 @@ export async function PATCH(
     // 6. Retornar resultado
     return NextResponse.json({
       success: true,
-      data: resultado.data,
+      data: result.data,
     });
 
   } catch (error) {

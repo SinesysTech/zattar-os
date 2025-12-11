@@ -20,7 +20,8 @@ import type {
     ConciliacaoResult,
     ListarTransacoesImportadasParams,
     ListarTransacoesResponse,
-    LancamentoFinanceiroResumo
+    LancamentoFinanceiroResumo,
+    BuscarLancamentosCandidatosParams
 } from '../types/conciliacao';
 
 // ============================================================================
@@ -170,7 +171,7 @@ export class ConciliacaoService {
     /**
      * Busca lançamentos candidatos para conciliação manual
      */
-    async buscarLancamentosCandidatos(params: any): Promise<LancamentoFinanceiroResumo[]> {
+    async buscarLancamentosCandidatos(params: BuscarLancamentosCandidatosParams): Promise<LancamentoFinanceiroResumo[]> {
         const lancamentos = await ConciliacaoRepository.buscarLancamentosCandidatos(params);
 
         return lancamentos.map(l => ({

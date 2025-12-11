@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { reverterBaixa } from '@/backend/expedientes/services/reverter-baixa.service';
+import { reverterBaixa } from '@/features/expedientes/service';
 
 /**
  * @swagger
@@ -95,19 +95,17 @@ export async function PATCH(
     }
 
     // 4. Reverter baixa
-    const resultado = await reverterBaixa({
-      expedienteId,
-      usuarioId,
-    });
+    const result = await reverterBaixa(expedienteId, usuarioId);
 
-    if (!resultado.success) {
+    if (!result.success) {
       const statusCode =
-        resultado.error?.includes('não encontrado') ||
-        resultado.error?.includes('não está baixado')
+        result.error.code === 'NOT_FOUND' ||
+          result.error.message.includes('não encontrado') ||
+          result.error.message.includes('não está baixado') // check if error message changed or use simple checks
           ? 404
           : 500;
       return NextResponse.json(
-        { error: resultado.error || 'Erro ao reverter baixa' },
+        { error: result.error.message || 'Erro ao reverter baixa' },
         { status: statusCode }
       );
     }
@@ -115,7 +113,7 @@ export async function PATCH(
     // 5. Retornar resultado
     return NextResponse.json({
       success: true,
-      data: resultado.data,
+      data: result.data,
     });
   } catch (error) {
     console.error('Erro ao reverter baixa:', error);

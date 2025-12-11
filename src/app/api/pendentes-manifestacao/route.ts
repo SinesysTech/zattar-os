@@ -1,10 +1,12 @@
+```
 // Rota de API para pendentes de manifestação
 // GET: Listar processos pendentes de manifestação com filtros, paginação, ordenação e agrupamento
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/backend/auth/api-auth';
-import { obterPendentes } from '@/backend/expedientes/services/listar-pendentes.service';
-import type { ListarPendentesParams } from '@/backend/types/expedientes/types';
+import { obterPendentes } from '@/features/expedientes/service';
+import type { ListarPendentesParams } from '@/features/expedientes/types';
+import { Result } from '@/core/common/types';
 
 /**
  * @swagger
@@ -23,8 +25,8 @@ import type { ListarPendentesParams } from '@/backend/types/expedientes/types';
  *       
  *       **Agrupamento:**
  *       - Quando `agrupar_por` está presente, retorna dados agrupados por campo específico
- *       - Use `incluir_contagem=true` para retornar apenas contagens (padrão)
- *       - Use `incluir_contagem=false` para retornar pendentes completos por grupo
+ *       - Use `incluir_contagem = true` para retornar apenas contagens (padrão)
+ *       - Use `incluir_contagem = false` para retornar pendentes completos por grupo
  *     tags:
  *       - Pendentes de Manifestação
  *     security:
@@ -445,7 +447,13 @@ export async function GET(request: NextRequest) {
     }
 
     // 4. Listar pendentes
-    const resultado = await obterPendentes(params);
+    const result = await obterPendentes(params);
+
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+
+    const resultado = result.data;
 
     // 5. Formatar resposta baseado no tipo de resultado
     if ('agrupamentos' in resultado) {
