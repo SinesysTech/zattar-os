@@ -12,7 +12,7 @@
 import { getTribunalConfig, autenticarPJE, capturarPartesProcesso, type ProcessoParaCaptura } from '@/features/captura';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type { GrauAcervo } from '@/features/acervo/types';
-import type { CodigoTRT } from '@/backend/types/captura/trt-types';
+import type { CodigoTRT } from '@/features/captura';
 
 // ==========================================
 // CONFIGURAÇÕES DE TESTE (HARDCODED)

@@ -16,7 +16,7 @@ import { Result, ok, err, appError } from '@/lib/types';
 import { getDriver } from '../drivers/factory';
 import { buscarCredencial, buscarConfigTribunal, salvarLogCaptura } from '../repository';
 import { criarProcesso } from '../../processos/service';
-import { getAdvogadoByCredentialId } from '@/backend/captura/credentials/credential.service';
+import { getAdvogadoByCredentialId } from '../credentials/credential.service';
 import type { JudicialDriver } from '../drivers/judicial-driver.interface';
 import type {
     Credencial,

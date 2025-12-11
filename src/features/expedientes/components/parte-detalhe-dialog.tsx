@@ -24,7 +24,7 @@ import {
   formatarTelefone,
   formatarTipoPessoa,
 } from '@/features/partes';
-import type { ParteComDadosCompletos } from '@/backend/types/partes/processo-partes-types';
+import type { ParteComDadosCompletos } from '@/features/partes/types/processo-partes';
 
 interface ParteDetalheDialogProps {
   open: boolean;

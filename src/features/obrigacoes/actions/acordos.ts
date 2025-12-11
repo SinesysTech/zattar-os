@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 import * as service from '../service';
 import { criarAcordoComParcelasSchema } from '../domain';
 import { AtualizarAcordoParams, ListarAcordosParams } from '../types';
-import { sincronizarAcordoCompleto, verificarConsistencia } from '@/backend/financeiro/obrigacoes/services/integracao/obrigacoes-integracao.service';
+import { sincronizarAcordoCompleto, verificarConsistencia } from '@/features/financeiro/services/obrigacoes-integracao';
 
 export async function actionListarAcordos(params: ListarAcordosParams) {
   try {

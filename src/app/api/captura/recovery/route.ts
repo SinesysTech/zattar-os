@@ -13,7 +13,7 @@ import {
 import { analisarGapsAgregado } from '@/backend/captura/services/recovery/recovery-analysis.service';
 import type { ListarLogsRecoveryParams } from '@/backend/captura/services/recovery/types';
 import type { TipoCaptura } from '@/features/captura/types';
-import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
+import type { CodigoTRT, GrauTRT } from '@/features/captura/types/trt-types';
 import type { StatusCapturaRaw } from '@/backend/types/mongodb/captura-log';
 
 /**

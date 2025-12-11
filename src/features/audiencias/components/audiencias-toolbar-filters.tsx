@@ -3,7 +3,7 @@
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
 import type { AudienciasFilters } from '../types';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import type { Usuario } from '@/features/usuarios/types';
 
 const TRIBUNAIS = [
   'TRT1',

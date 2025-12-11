@@ -21,7 +21,7 @@ import {
 } from '@/features/partes';
 import { getTipoParteLabel, getPoloLabel } from '@/types/terceiros';
 import type { Terceiro } from '@/features/partes';
-import type { Endereco } from '@/backend/types/partes/enderecos-types';
+import type { Endereco } from '@/features/enderecos/types';
 
 // Extend Terceiro to include all optional fields from database
 type TerceiroCompleto = Terceiro & {

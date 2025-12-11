@@ -85,3 +85,12 @@ export type {
   FormularioActions,
   FormularioStore,
 } from './store';
+
+// Template types for PDF generation
+export type {
+  TipoVariavel,
+  PosicaoCampo,
+  EstiloCampo,
+  ConteudoComposto,
+  TemplateCampo,
+} from './template.types';

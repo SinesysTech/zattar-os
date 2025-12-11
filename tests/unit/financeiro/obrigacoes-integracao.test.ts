@@ -26,7 +26,7 @@ const mockSupabaseFrom = jest.fn(() => ({
   update: mockSupabaseUpdate,
 }));
 
-jest.mock('@/backend/utils/supabase/service-client', () => ({
+jest.mock('@/lib/supabase/service-client', () => ({
   createServiceClient: () => ({
     from: mockSupabaseFrom,
   }),
@@ -40,13 +40,14 @@ const mockDetectarInconsistenciasAcordo = jest.fn();
 const mockInvalidateObrigacoesCache = jest.fn();
 
 jest.mock(
-  '@/backend/financeiro/obrigacoes/services/persistence/obrigacoes-persistence.service',
+  '@/features/financeiro/repository/obrigacoes',
   () => ({
-    buscarParcelaPorId: mockBuscarParcelaPorId,
-    buscarParcelasPorAcordo: mockBuscarParcelasPorAcordo,
-    buscarLancamentoPorParcela: mockBuscarLancamentoPorParcela,
-    detectarInconsistenciasAcordo: mockDetectarInconsistenciasAcordo,
-    invalidateObrigacoesCache: mockInvalidateObrigacoesCache,
+    ObrigacoesRepository: {
+      buscarParcelaPorId: mockBuscarParcelaPorId,
+      buscarParcelasPorAcordo: mockBuscarParcelasPorAcordo,
+      buscarLancamentoPorParcela: mockBuscarLancamentoPorParcela,
+      detectarInconsistencias: mockDetectarInconsistenciasAcordo,
+    },
   })
 );
 
@@ -56,7 +57,7 @@ import {
   sincronizarAcordoCompleto,
   verificarConsistencia,
   reverterSincronizacao,
-} from '@/backend/financeiro/obrigacoes/services/integracao/obrigacoes-integracao.service';
+} from '@/features/financeiro/services/obrigacoes-integracao';
 
 // =============================================================================
 // FIXTURES

@@ -6,8 +6,8 @@
  * comparando com os dados persistidos no PostgreSQL.
  */
 
-import type { CapturaRawLogDocument } from '@/backend/types/mongodb/captura-log';
-import type { EntidadeTipoEndereco } from '@/backend/types/partes/enderecos-types';
+import type { CapturaRawLogDocument } from '@/lib/types/captura-log';
+import type { EntidadeTipoEndereco } from '@/features/enderecos/types';
 import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import { buscarLogPorMongoId } from './captura-recovery.service';
 import type {

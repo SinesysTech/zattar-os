@@ -6,8 +6,8 @@ import type {
   CriarAgendamentoParams,
   AtualizarAgendamentoParams,
   ListarAgendamentosParams,
-} from '@/backend/types/captura/agendamentos-types';
-import type { Paginacao } from '@/backend/types/global';
+} from '../../types/agendamentos-types';
+import type { Paginacao } from '@/lib/types/paginacao';
 
 const TABLE_NAME = 'agendamentos';
 

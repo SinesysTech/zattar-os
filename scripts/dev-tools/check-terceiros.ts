@@ -3,7 +3,7 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config({ path: resolve(process.cwd(), '.env') });
 
-import { getMongoDatabase, closeMongoConnection } from '@/backend/utils/mongodb/client';
+import { getMongoDatabase, closeMongoConnection } from '@/lib/mongodb';
 
 async function main() {
   const db = await getMongoDatabase();

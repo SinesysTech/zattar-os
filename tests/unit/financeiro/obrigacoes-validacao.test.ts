@@ -22,7 +22,7 @@ const mockSupabaseFrom = jest.fn(() => ({
   select: mockSupabaseSelect,
 }));
 
-jest.mock('@/backend/utils/supabase/service-client', () => ({
+jest.mock('@/lib/supabase/service-client', () => ({
   createServiceClient: () => ({
     from: mockSupabaseFrom,
   }),

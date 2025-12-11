@@ -51,7 +51,7 @@ import {
   exportarComparativoCSV,
   exportarComparativoPDF,
 } from '@/features/financeiro/utils/export/orcamentos';
-import type { RelatorioComparativo } from '@/backend/financeiro/orcamento/services/orcamento/relatorios-orcamento.service';
+import type { RelatorioComparativo } from '@/features/financeiro/types/relatorios';
 
 // ============================================================================
 // Constantes e Helpers

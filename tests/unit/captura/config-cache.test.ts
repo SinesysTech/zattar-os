@@ -9,7 +9,7 @@ import { describe, it, expect, beforeEach, jest, afterEach } from '@jest/globals
 import type {
   TribunalConfigDb,
   TipoAcessoTribunal,
-} from '@/backend/types/captura/trt-types';
+} from '@/features/captura';
 
 // =============================================================================
 // MOCKS
@@ -20,7 +20,7 @@ const mockGetConfigByTRTAndGrau = jest.fn();
 const mockListAllConfigs = jest.fn();
 
 jest.mock(
-  '@/backend/captura/services/persistence/tribunal-config-persistence.service',
+  '@/features/captura/services/persistence/tribunal-config-persistence.service',
   () => ({
     getConfigByTRTAndGrau: mockGetConfigByTRTAndGrau,
     listAllConfigs: mockListAllConfigs,
@@ -33,7 +33,7 @@ import {
   isValidTribunalCode,
   listTribunalCodes,
   clearConfigCache,
-} from '@/backend/captura/services/trt/config';
+} from '@/features/captura';
 
 // =============================================================================
 // FIXTURES

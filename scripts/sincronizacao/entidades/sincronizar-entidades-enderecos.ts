@@ -34,8 +34,8 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config({ path: resolve(process.cwd(), '.env') });
 
-import { getMongoDatabase, closeMongoConnection } from '@/backend/utils/mongodb/client';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { getMongoDatabase, closeMongoConnection } from '@/lib/mongodb';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 // Clientes
 import {

@@ -6,9 +6,9 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { getCredential } from '@/backend/captura/credentials/credential.service';
+import { getCredential } from './credentials/credential.service';
 import type { Credencial, ConfigTribunal, CustomTimeouts } from './domain';
-import type { TipoAcessoTribunal } from '@/backend/types/captura/trt-types';
+import type { TipoAcessoTribunal } from './types/trt-types';
 
 /**
  * Busca credencial por ID
