@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { requirePermission } from '@/backend/auth/require-permission';
+import { requirePermission } from '@/lib/auth/require-permission';
 import { listSessoes } from '@/backend/assinatura-digital/services/signature.service';
 import type { ListSessoesParams } from '@/backend/types/assinatura-digital/types';
 

@@ -5,9 +5,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { listAllConfigs } from '@/backend/captura/services/persistence/tribunal-config-persistence.service';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import type { TipoAcessoTribunal, CustomTimeouts } from '@/backend/types/captura/trt-types';
 
 /**

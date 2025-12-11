@@ -6,10 +6,6 @@ import {
     ItalicIcon,
     UnderlineIcon,
     WandSparklesIcon,
-    List,
-    ListOrdered,
-    ImageIcon,
-    Link as LinkIcon,
 } from 'lucide-react';
 import { KEYS } from 'platejs';
 import { useEditorReadOnly } from 'platejs/react';

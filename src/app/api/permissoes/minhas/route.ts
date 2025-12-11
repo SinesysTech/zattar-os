@@ -2,7 +2,7 @@
 // GET: Retorna permissões do usuário autenticado, opcionalmente filtradas por recurso
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuthentication } from '@/backend/auth/require-permission';
+import { requireAuthentication } from '@/lib/auth/require-permission';
 import { listarPermissoesUsuario } from '@/backend/permissoes/services/persistence/permissao-persistence.service';
 import type { Permissao } from '@/backend/types/permissoes/types';
 import { obterUsuarioPorId } from '@/backend/usuarios/services/usuarios/buscar-usuario.service';

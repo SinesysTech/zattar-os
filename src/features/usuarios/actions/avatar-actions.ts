@@ -3,8 +3,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { requireAuth } from './utils';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { invalidateUsuariosCache } from '@/backend/utils/redis';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import { invalidateUsuariosCache } from '@/lib/redis';
 
 export async function actionUploadAvatar(usuarioId: number, formData: FormData) {
   try {

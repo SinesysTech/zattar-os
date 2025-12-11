@@ -6,20 +6,32 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getCurrentUser } from '@/lib/auth';
+import { authenticateRequest as getCurrentUser } from '@/lib/auth';
 import { checkPermission } from '@/lib/auth/authorization';
 import {
   obterAcervo,
   buscarProcessoPorId,
   atribuirResponsavel as atribuirResponsavelService,
   buscarProcessosClientePorCpf as buscarProcessosClientePorCpfService,
-} from './service';
+} from '../service';
 import {
   listarAcervoParamsSchema,
   atribuirResponsavelSchema,
   type ListarAcervoParams,
-} from './types';
-import type { ActionResponse } from '@/types';
+} from '../types';
+
+export type ActionResponse<T = unknown> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};
+
+function createErrorResponse(error: unknown, defaultMessage: string): ActionResponse {
+  return {
+    success: false,
+    error: error instanceof Error ? error.message : defaultMessage,
+  };
+}
 
 /**
  * Lists acervo with filters, pagination, and sorting
@@ -34,7 +46,7 @@ export async function actionListarAcervo(
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo:visualizar');
+    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
     if (!hasPermission) {
       return { success: false, error: 'Sem permissão para visualizar acervo' };
     }
@@ -48,10 +60,7 @@ export async function actionListarAcervo(
     return { success: true, data: result };
   } catch (error) {
     console.error('[actionListarAcervo] Error:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Erro ao listar acervo',
-    };
+    return createErrorResponse(error, 'Erro ao listar acervo');
   }
 }
 
@@ -68,7 +77,7 @@ export async function actionBuscarProcesso(
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo:visualizar');
+    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
     if (!hasPermission) {
       return { success: false, error: 'Sem permissão para visualizar acervo' };
     }
@@ -82,10 +91,7 @@ export async function actionBuscarProcesso(
     return { success: true, data: processo };
   } catch (error) {
     console.error('[actionBuscarProcesso] Error:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Erro ao buscar processo',
-    };
+    return createErrorResponse(error, 'Erro ao buscar processo');
   }
 }
 
@@ -103,7 +109,7 @@ export async function actionAtribuirResponsavel(
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo:editar');
+    const hasPermission = await checkPermission(user.id, 'acervo', 'editar');
     if (!hasPermission) {
       return { success: false, error: 'Sem permissão para editar acervo' };
     }
@@ -132,10 +138,7 @@ export async function actionAtribuirResponsavel(
     return { success: true, data: { message: 'Responsável atribuído com sucesso' } };
   } catch (error) {
     console.error('[actionAtribuirResponsavel] Error:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Erro ao atribuir responsável',
-    };
+    return createErrorResponse(error, 'Erro ao atribuir responsável');
   }
 }
 
@@ -153,7 +156,7 @@ export async function actionBuscarProcessosClientePorCpf(
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo:visualizar');
+    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
     if (!hasPermission) {
       return { success: false, error: 'Sem permissão para visualizar acervo' };
     }
@@ -163,10 +166,7 @@ export async function actionBuscarProcessosClientePorCpf(
     return result;
   } catch (error) {
     console.error('[actionBuscarProcessosClientePorCpf] Error:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Erro ao buscar processos por CPF',
-    };
+    return createErrorResponse(error, 'Erro ao buscar processos por CPF');
   }
 }
 
@@ -183,7 +183,7 @@ export async function actionExportarAcervoCSV(
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo:visualizar');
+    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
     if (!hasPermission) {
       return { success: false, error: 'Sem permissão para exportar acervo' };
     }
@@ -210,19 +210,24 @@ export async function actionExportarAcervoCSV(
       'Responsável ID',
     ];
 
-    const rows = result.processos.map(p => [
-      p.numero_processo,
-      p.trt,
-      p.grau,
-      p.origem,
-      p.classe_judicial,
-      p.nome_parte_autora,
-      p.nome_parte_re,
-      p.descricao_orgao_julgador,
-      p.data_autuacao,
-      p.status,
-      p.responsavel_id?.toString() ?? '',
-    ]);
+    const rows = result.processos.map(p => {
+      // Type guard to handle both Acervo and ProcessoUnificado
+      const isAcervo = 'grau' in p && 'origem' in p;
+
+      return [
+        p.numero_processo,
+        p.trt,
+        isAcervo ? p.grau : '',
+        isAcervo ? p.origem : '',
+        isAcervo ? p.classe_judicial : '',
+        p.nome_parte_autora,
+        p.nome_parte_re,
+        isAcervo ? p.descricao_orgao_julgador : '',
+        isAcervo ? p.data_autuacao : p.data_autuacao_mais_antiga,
+        isAcervo ? p.status : '',
+        p.responsavel_id?.toString() ?? '',
+      ];
+    });
 
     const csv = [
       headers.join(','),
@@ -244,3 +249,5 @@ export async function actionExportarAcervoCSV(
     };
   }
 }
+
+

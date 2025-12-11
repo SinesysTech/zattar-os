@@ -43,10 +43,10 @@ export function ExpedientesCalendarHeader({
 	filters = {},
 	onFilterChange,
 	onClearFilters,
-	usuarios: _usuarios = [],
+	usuarios = [],
 	tiposExpedientes = [],
-	onRefresh: _onRefresh,
-	isRefreshing: _isRefreshing = false,
+	onRefresh,
+	isRefreshing = false,
 }: ExpedientesCalendarHeaderProps) {
 	const { view, events } = useCalendar();
 

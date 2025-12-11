@@ -5,7 +5,6 @@
 
 import type {
   DocumentoComUsuario,
-  ConteudoDocumento,
   AutoSaveData,
   AtualizarDocumentoData,
 } from './domain';

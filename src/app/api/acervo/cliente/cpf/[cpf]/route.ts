@@ -201,8 +201,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
-import { buscarProcessosClientePorCpf } from '@/backend/acervo/services/buscar-processos-cliente-cpf.service';
+import { authenticateRequest } from '@/lib/auth/api-auth';
+import { buscarProcessosClientePorCpf } from '@/features/acervo';
 
 interface RouteParams {
   params: Promise<{
@@ -234,12 +234,12 @@ export async function GET(
       );
     }
 
-    // Buscar processos
+    // Buscar processos usando o serviço da feature
     const resultado = await buscarProcessosClientePorCpf(cpf);
 
     // Determinar status HTTP baseado no resultado
     if (resultado.success === false) {
-      const errorMessage = resultado.error;
+      const errorMessage = resultado.error || 'Erro desconhecido';
       // CPF inválido
       if (errorMessage.includes('inválido')) {
         return NextResponse.json(resultado, { status: 400 });

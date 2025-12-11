@@ -2,7 +2,7 @@
 'use server';
 
 import { requireAuth } from './utils';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 export async function actionRedefinirSenha(usuarioId: number, novaSenha: string) {
   try {

@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
-import { useCargos } from '@/app/_lib/hooks/use-cargos';
+import { useCargos } from '@/features/cargos';
 import { actionCriarSalario, actionAtualizarSalario } from '../../actions/salarios-actions';
 import type { SalarioComDetalhes } from '../../types';
 import { toast } from 'sonner';

@@ -62,7 +62,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { listarRepassesPendentes, type FiltrosRepassesPendentes } from '@/backend/acordos-condenacoes/services/persistence/repasse-persistence.service';
 
 export async function GET(request: NextRequest) {

@@ -3,7 +3,7 @@
  * Operações CRUD na tabela comunica_cnj com pattern Result<T>
  */
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { Result, ok, err, appError, PaginatedResponse } from '@/core/common/types';
 import type {
   ComunicacaoCNJ,

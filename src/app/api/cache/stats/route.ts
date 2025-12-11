@@ -2,8 +2,8 @@
 // GET: Obter estatísticas do Redis
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
-import { getCacheStats, isRedisAvailable } from '@/backend/utils/redis/cache-utils';
+import { authenticateRequest } from '@/lib/auth/api-auth';
+import { getCacheStats, isRedisAvailable } from '@/lib/redis/cache-utils';
 
 /**
  * @swagger

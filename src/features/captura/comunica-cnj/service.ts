@@ -7,7 +7,7 @@ import { getComunicaCNJClient } from './cnj-client';
 import * as repository from './repository';
 // Note: importing from core/expedientes/service might need to be migrated later if expedientes becomes a feature
 import { criarExpediente } from '@/core/expedientes/service'; 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 import type {
   ComunicacaoItem,

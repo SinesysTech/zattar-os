@@ -1,7 +1,7 @@
 // Rota de API para captura de processos arquivados do TRT
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
 import { arquivadosCapture } from '@/backend/captura/services/trt/arquivados.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';

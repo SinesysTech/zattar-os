@@ -2,8 +2,8 @@
 'use server';
 
 import { createClient } from '@/lib/server';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { checkPermission } from '@/backend/auth/authorization';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import { checkPermission } from '@/lib/auth/authorization';
 
 export async function requireAuth(permissions: string[] = []): Promise<{ userId: number }> {
   // 1. Authenticate user

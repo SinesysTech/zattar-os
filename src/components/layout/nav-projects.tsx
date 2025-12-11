@@ -70,16 +70,6 @@ export function NavProjects({
     }
   }
 
-  // Handler para quando clicar em item com subitens quando sidebar está colapsada
-  const handleItemClick = (itemName: string, hasSubItems: boolean) => {
-    if (hasSubItems && state === 'collapsed') {
-      // Expandir sidebar
-      setOpen(true)
-      // Expandir o item
-      setOpenItems(prev => ({ ...prev, [itemName]: true }))
-    }
-  }
-
   return (
     <SidebarGroup>
       <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">{label}</SidebarGroupLabel>

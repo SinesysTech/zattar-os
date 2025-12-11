@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/select';
 import { Loader2, Save, Search, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCargos } from '../../hooks/use-cargos';
+import { useCargos } from '@/features/cargos';
 import { actionAtualizarUsuario } from '../../actions/usuarios-actions';
 import type { Usuario, Endereco, GeneroUsuario } from '../../types';
 import { buscarEnderecoPorCep, limparCep } from '@/app/_lib/utils/viacep';

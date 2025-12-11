@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/auth/require-permission';
-import { uploadToBackblaze } from '@/backend/storage/backblaze-b2.service';
+import { requirePermission } from '@/lib/auth/require-permission';
+import { uploadToBackblaze } from '@/lib/storage/backblaze-b2.service';
 import { randomUUID } from 'crypto';
 
 /**

@@ -10,7 +10,6 @@ import * as repository from './repository';
 import { criarExpediente } from '@/core/expedientes/service';
 import type {
   ComunicacaoItem,
-  ComunicacaoProcessual,
   ConsultarComunicacoesParams,
   ConsultaResult,
   SincronizarParams,
@@ -23,7 +22,6 @@ import type {
   GrauTribunal,
   ComunicacaoDestinatario,
   PartesExtraidas,
-  CriarExpedienteFromCNJParams,
 } from './domain';
 import {
   consultarComunicacoesSchema,

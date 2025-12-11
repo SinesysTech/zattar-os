@@ -3,7 +3,7 @@
  * Camada de acesso a dados (Supabase)
  */
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { LancamentosRepository } from './lancamentos';
 import { ObrigacoesRepository } from './obrigacoes';
 import type { Lancamento } from '../types/lancamentos';

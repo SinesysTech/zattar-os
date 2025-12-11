@@ -67,7 +67,6 @@ import {
   clienteCpfDuplicadoError,
   clienteCnpjDuplicadoError,
   clienteNaoEncontradoError,
-  TipoPessoaIncompativelError,
   toAppError,
 } from './errors';
 

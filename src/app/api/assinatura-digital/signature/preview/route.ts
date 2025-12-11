@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { requirePermission } from '@/backend/auth/require-permission';
+import { requirePermission } from '@/lib/auth/require-permission';
 import { generatePreview } from '@/backend/assinatura-digital/services/signature.service';
 import type { PreviewPayload } from '@/backend/types/assinatura-digital/types';
 

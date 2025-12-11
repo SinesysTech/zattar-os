@@ -2,17 +2,10 @@
 
 import { motion } from "framer-motion";
 import {
-	CalendarRange,
-	Columns,
-	Grid2X2,
-	Grid3X3,
-	LayoutList,
-	List,
 	Plus,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
 import {
 	slideFromLeft,
 	slideFromRight,

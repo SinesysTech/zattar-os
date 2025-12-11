@@ -2,7 +2,7 @@
 // GET: Listar processos do acervo com filtros, paginação, ordenação e agrupamento
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { obterAcervo } from '@/backend/acervo/services/listar-acervo.service';
 import type { ListarAcervoParams } from '@/backend/types/acervo/types';
 

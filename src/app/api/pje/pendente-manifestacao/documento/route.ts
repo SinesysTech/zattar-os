@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
 import { autenticarPJE } from '@/backend/captura/services/trt/trt-auth.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';

@@ -32,8 +32,6 @@ export function Settings() {
 		setBadgeVariant,
 		use24HourFormat,
 		toggleTimeFormat,
-		view,
-		setView,
 		agendaModeGroupBy,
 		setAgendaModeGroupBy,
 	} = useCalendar();

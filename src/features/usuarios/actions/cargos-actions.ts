@@ -3,8 +3,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { requireAuth } from './utils';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { getCargosListKey, deleteCached } from '@/backend/utils/redis';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import { getCargosListKey, deleteCached } from '@/lib/redis';
 import { usuariosService } from '../index';
 
 export async function actionListarCargos() {

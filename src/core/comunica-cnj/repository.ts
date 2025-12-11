@@ -27,7 +27,7 @@ const TABLE_EXPEDIENTES = 'expedientes';
 /**
  * Converte dados do banco (snake_case) para formato do domain (camelCase)
  */
-function converterParaComunicacaoCNJ(data: Record<string, any>): ComunicacaoCNJ {
+function converterParaComunicacaoCNJ(data: Record<string, unknown>): ComunicacaoCNJ {
   return {
     id: data.id,
     idCnj: data.id_cnj,
@@ -64,7 +64,7 @@ function converterParaComunicacaoCNJ(data: Record<string, any>): ComunicacaoCNJ 
 /**
  * Converte dados do domain (camelCase) para formato do banco (snake_case)
  */
-function converterParaBanco(data: InserirComunicacaoParams): Record<string, any> {
+function converterParaBanco(data: InserirComunicacaoParams): Record<string, unknown> {
   return {
     id_cnj: data.idCnj,
     hash: data.hash,

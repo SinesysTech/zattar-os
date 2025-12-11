@@ -1,5 +1,5 @@
 import { createDbClient } from '@/core/common/db';
-import { getCached, setCached, invalidateCacheOnUpdate, CACHE_PREFIXES } from '@/backend/utils/redis';
+import { getCached, setCached, invalidateCacheOnUpdate, CACHE_PREFIXES } from '@/lib/redis';
 import type {
     TipoExpediente,
     CreateTipoExpedienteInput,

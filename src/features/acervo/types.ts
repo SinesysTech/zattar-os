@@ -378,6 +378,8 @@ export interface ProcessoClienteCPF {
   grau: string;
   origem: string;
   segredo_justica: boolean;
+  cpf?: string;
+  cliente_nome?: string;
   
   // Consolidated data
   nome_parte_autora?: string;
@@ -396,7 +398,7 @@ export interface ProcessoClienteCPF {
   };
   
   // Timeline
-  timeline?: any[];
+  timeline?: TimelineItemIA[];
   timeline_status?: TimelineStatus;
   timeline_ultimo_update?: string;
   

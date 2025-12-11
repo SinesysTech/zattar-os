@@ -2,7 +2,7 @@
 // GET: Busca clientes pelo nome (busca parcial)
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { buscarClientePorNome } from '@/backend/clientes/services/clientes/buscar-cliente-por-nome.service';
 
 /**

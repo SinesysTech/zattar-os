@@ -4,7 +4,7 @@ import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { actionBuscarAssistente, sanitizarIframeCode } from '@/features/assistentes';
 import { requireAuth } from '@/features/assistentes/actions/utils';
-// import { checkMultiplePermissions } from '@/backend/auth/authorization';
+// import { checkMultiplePermissions } from '@/lib/auth/authorization';
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const id = parseInt(params.id);

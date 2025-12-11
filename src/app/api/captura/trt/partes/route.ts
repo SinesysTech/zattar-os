@@ -3,7 +3,7 @@
 
 import type { Browser, Page } from 'playwright';
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/backend/auth/api-auth";
+import { authenticateRequest } from "@/lib/auth/api-auth";
 import { getCredentialComplete } from "@/backend/captura/credentials/credential.service";
 import { getTribunalConfig } from "@/backend/captura/services/trt/config";
 import {
@@ -12,14 +12,14 @@ import {
 } from "@/backend/captura/services/partes/partes-capture.service";
 import { autenticarPJE } from "@/backend/captura/services/trt/trt-auth.service";
 import { buscarAdvogado } from "@/backend/advogados/services/persistence/advogado-persistence.service";
-import { createServiceClient } from "@/backend/utils/supabase/service-client";
+import { createServiceClient } from "@/lib/supabase/service-client";
 import { registrarCapturaRawLog } from "@/backend/captura/services/persistence/captura-raw-log.service";
 import { criarCapturaLog, atualizarCapturaLog } from "@/backend/captura/services/persistence/captura-log-persistence.service";
 import type { CodigoTRT, GrauTRT } from "@/backend/types/captura/trt-types";
 import type { GrauAcervo } from "@/backend/types/acervo/types";
 import type { CapturaLog } from "@/backend/types/captura/capturas-log-types";
 import type { ResultadoCapturaPartes } from "@/backend/types/captura/capturas-log-types";
-import getLogger, { withCorrelationId } from '@/backend/utils/logger';
+import getLogger, { withCorrelationId } from '@/lib/logger';
 import { withDistributedLock } from '@/backend/utils/locks/distributed-lock';
 import { CAPTURA_CONFIG } from '@/backend/captura/services/partes/config';
 import { extractErrorInfo, LockError } from '@/backend/captura/services/partes/errors';

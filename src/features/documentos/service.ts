@@ -27,8 +27,8 @@ import {
   validateFileType,
   validateFileSize,
 } from '@/backend/documentos/services/upload/b2-upload.service'; // Keep as utility
-import { generatePresignedUrl as generatePresignedDownloadUrl } from '@/backend/storage/backblaze-b2.service';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { generatePresignedUrl as generatePresignedDownloadUrl } from '@/lib/storage/backblaze-b2.service';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 // ============================================================================
 // DOCUMENTOS

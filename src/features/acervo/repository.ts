@@ -19,7 +19,6 @@ import type {
   GrauAcervo,
   ProcessoClienteCpfRow,
 } from './types';
-import { mapearStatusProcesso } from './domain';
 
 const ACERVO_TTL = 900; // 15 minutes
 const ACERVO_UNIFICADO_TTL = 900; // 15 minutes
@@ -701,7 +700,7 @@ export async function buscarProcessosClientePorCpf(
   }
 
   // 4. Join and Map
-  const processos: ProcessoClienteCpfRow[] = acervoData.map((processo: any) => {
+  const processos: ProcessoClienteCpfRow[] = acervoData.map((processo: Record<string, unknown>) => {
     const part = participacoes.find(p => p.processo_id === processo.id);
     return {
       tipo_parte: part?.tipo_parte || 'DESCONHECIDO',
