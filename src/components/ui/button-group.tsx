@@ -1,5 +1,5 @@
 import type { VariantProps } from "class-variance-authority";
-import type * as React from "react";
+import * as React from "react";
 import { Children, cloneElement, isValidElement, type ReactElement } from "react";
 import type { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -32,6 +32,11 @@ export const ButtonGroup = ({
 				typeof child.type === "function" &&
 				(child.type as any)?.displayName === "ButtonGroupSeparator"
 			) {
+				return child;
+			}
+
+			// Fragment não aceita props como className, então pulamos
+			if (child.type === React.Fragment) {
 				return child;
 			}
 

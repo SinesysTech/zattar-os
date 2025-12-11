@@ -265,6 +265,9 @@ export const ResponsiveGrid = React.forwardRef<HTMLDivElement, ResponsiveGridPro
             return React.Children.map(children, (child) => {
                 if (!React.isValidElement(child)) return child;
 
+                // Fragment não aceita props como className, então pulamos
+                if (child.type === React.Fragment) return child;
+
                 // Adiciona classes de imagem aos filhos
                 const imageClasses = cn(
                     'responsive-grid-item',

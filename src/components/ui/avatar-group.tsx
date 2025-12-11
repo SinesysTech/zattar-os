@@ -37,6 +37,11 @@ const AvatarGroup = ({
 			{displayedAvatars.map((avatar, index) => {
 				if (!React.isValidElement(avatar)) return null;
 
+				// Fragment não aceita props como className, então pulamos
+				if (avatar.type === React.Fragment) {
+					return <div key={index} className="-ml-2 hover:z-10 relative">{avatar}</div>;
+				}
+
 				return (
 					<div key={index} className="-ml-2 hover:z-10 relative">
 						{React.cloneElement(avatar as React.ReactElement<AvatarProps>, {

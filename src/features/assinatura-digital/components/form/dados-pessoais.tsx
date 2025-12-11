@@ -13,7 +13,7 @@ import {
 } from '@/lib/assinatura-digital/validations/dadosPessoais.schema';
 import InputCPF from '@/features/assinatura-digital/components/inputs/input-cpf';
 import InputTelefone from '@/features/assinatura-digital/components/inputs/input-telefone';
-import InputCEP, { type AddressData } from '@/features/assinatura-digital/components/inputs/input-cep';
+import { InputCEP, type AddressData } from '@/features/enderecos';
 import InputData from '@/features/assinatura-digital/components/inputs/input-data';
 import { useFormularioStore } from '@/app/_lib/stores/assinatura-digital/formulario-store';
 import { toast } from 'sonner';

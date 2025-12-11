@@ -43,7 +43,7 @@ import {
   Check,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import InputCEP, { type InputCepAddress } from '@/features/assinatura-digital/components/inputs/input-cep';
+import { InputCEP, type InputCepAddress } from '@/features/enderecos';
 import InputTelefone from '@/features/assinatura-digital/components/inputs/input-telefone';
 import { actionCriarCliente, actionAtualizarCliente, type ActionResult } from '@/app/actions/partes';
 import type { Cliente } from '../../types';
@@ -661,6 +661,8 @@ export function ClienteFormDialog({
             size="icon"
             onClick={handleAddEmail}
             disabled={!novoEmail || !novoEmail.includes('@')}
+            aria-label="Adicionar e-mail"
+            title="Adicionar e-mail"
           >
             <Plus className="h-4 w-4" />
           </Button>
@@ -922,13 +924,18 @@ export function ClienteFormDialog({
           </div>
           <DialogDescription>{stepInfo.description}</DialogDescription>
 
-          <div className="w-full bg-muted rounded-full h-2 mt-4">
+          <div 
+            className="w-full bg-muted rounded-full h-2 mt-4"
+            style={{
+              '--progress-width': isEditMode
+                ? `${((currentStep - 1) / (TOTAL_STEPS - 1)) * 100}%`
+                : `${(currentStep / TOTAL_STEPS) * 100}%`,
+            } as React.CSSProperties}
+          >
             <div
               className="bg-primary h-2 rounded-full transition-all duration-300"
               style={{
-                width: isEditMode
-                  ? `${((currentStep - 1) / (TOTAL_STEPS - 1)) * 100}%`
-                  : `${(currentStep / TOTAL_STEPS) * 100}%`
+                width: 'var(--progress-width)',
               }}
             />
           </div>

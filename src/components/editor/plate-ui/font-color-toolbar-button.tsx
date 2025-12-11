@@ -285,6 +285,11 @@ function ColorInput({
       {React.Children.map(children, (child) => {
         if (!child) return child;
 
+        // Fragment não aceita props como onClick, então pulamos
+        if (React.isValidElement(child) && child.type === React.Fragment) {
+          return child;
+        }
+
         return React.cloneElement(
           child as React.ReactElement<{
             onClick: () => void;

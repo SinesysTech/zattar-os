@@ -83,6 +83,9 @@ export const ResponsiveFormLayout = React.forwardRef<HTMLDivElement, ResponsiveF
             return React.Children.map(children, (child) => {
                 if (!React.isValidElement(child)) return child;
 
+                // Fragment não aceita props como className, então pulamos
+                if (child.type === React.Fragment) return child;
+
                 // Check if this is a button container (div with buttons)
                 if (child.type === 'div' && child.props.children) {
                     const hasButtons = React.Children.toArray(child.props.children).some(
