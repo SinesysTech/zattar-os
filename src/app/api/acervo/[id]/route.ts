@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { obterAcervoPorId } from '@/backend/acervo/services/buscar-acervo.service';
+import { buscarProcessoPorId } from '@/features/acervo/service';
 
 /**
  * @swagger
@@ -120,7 +120,7 @@ export async function GET(
     }
 
     // 3. Buscar processo do acervo
-    const acervo = await obterAcervoPorId(acervoId);
+    const acervo = await buscarProcessoPorId(acervoId);
 
     if (!acervo) {
       return NextResponse.json(

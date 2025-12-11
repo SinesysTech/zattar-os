@@ -62,7 +62,7 @@ import {
 } from './dados-complementares.service';
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 /**
  * Resultado da captura de audiências
@@ -116,7 +116,7 @@ function validarFormatoData(data: string): boolean {
   if (!regex.test(data)) {
     return false;
   }
-  
+
   const date = new Date(data);
   return date instanceof Date && !isNaN(date.getTime());
 }
@@ -215,7 +215,7 @@ export async function audienciasCapture(
     // FASE 4: BUSCAR DADOS COMPLEMENTARES
     // ═══════════════════════════════════════════════════════════════
     console.log('🔄 [Audiências] Fase 4: Buscando dados complementares dos processos...');
-    
+
     const dadosComplementares = await buscarDadosComplementaresProcessos(
       page,
       processosIds,
@@ -254,10 +254,10 @@ export async function audienciasCapture(
     // Aqui apenas buscamos os IDs existentes para criar os vínculos.
     console.log('   📦 Buscando processos no acervo...');
     const mapeamentoIds = new Map<number, number>();
-    
+
     // Reutiliza lista de IDs já extraída na fase 3
     const supabase = (await import('@/backend/utils/supabase/service-client')).createServiceClient();
-    
+
     for (const idPje of processosIds) {
       const { data } = await supabase
         .from('acervo')
@@ -266,12 +266,12 @@ export async function audienciasCapture(
         .eq('trt', params.config.codigo)
         .eq('grau', params.config.grau)
         .maybeSingle();
-      
+
       if (data?.id) {
         mapeamentoIds.set(idPje, data.id);
       }
     }
-    
+
     console.log(`   ✅ ${mapeamentoIds.size}/${processosIds.length} processos encontrados no acervo`);
 
     // 5.3 Persistir timelines no MongoDB
@@ -309,11 +309,11 @@ export async function audienciasCapture(
         try {
           // Buscar ID do processo no acervo (persistido no passo 5.2)
           const idAcervo = mapeamentoIds.get(processoId);
-          
+
           // Buscar número do processo da audiência
           const audienciaDoProcesso = audiencias.find(a => a.idProcesso === processoId);
           const numeroProcesso = audienciaDoProcesso?.nrProcesso || audienciaDoProcesso?.processo?.numero;
-          
+
           // Usa persistirPartesProcesso em vez de capturarPartesProcesso
           // para evitar refetch da API (partes já foram buscadas em dados-complementares)
           await persistirPartesProcesso(
@@ -358,12 +358,12 @@ export async function audienciasCapture(
             buscarDocumentos: true,
             buscarMovimentos: false,
           });
-          
-          const candidato = timeline.find(d => 
-            d.documento && 
+
+          const candidato = timeline.find(d =>
+            d.documento &&
             ((d.tipo || '').toLowerCase().includes('ata') || (d.titulo || '').toLowerCase().includes('ata'))
           );
-          
+
           if (candidato && candidato.id) {
             const documentoId = candidato.id;
             const docDetalhes = await obterDocumento(page, String(a.idProcesso), String(documentoId), {

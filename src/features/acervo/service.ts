@@ -29,15 +29,50 @@ import {
 } from './utils';
 import { invalidateAcervoCache } from '@/lib/redis/invalidation';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { obterTimelinePorMongoId } from '@/backend/captura/services/timeline/timeline-persistence.service';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 // ============================================================================
 // Main Service Functions
 // ============================================================================
 
 /**
- * Lists acervo with filters, pagination, and sorting
+ * Lists acervo with separate instances (no unification)
+ * Returns flat array of all process instances
+ */
+export async function obterAcervoPaginado(
+  params: ListarAcervoParams = {}
+): Promise<ListarAcervoResult> {
+  return listarAcervoDb({ ...params, unified: false });
+}
+
+/**
+ * Lists acervo with unified processes (multi-instance grouping)
+ * Groups processes with same numero_processo
+ */
+export async function obterAcervoUnificado(
+  params: ListarAcervoParams = {}
+): Promise<ListarAcervoUnificadoResult> {
+  return listarAcervoUnificadoDb(params);
+}
+
+/**
+ * Lists acervo with grouping by field
+ * Returns aggregated data grouped by specified field
+ */
+export async function obterAcervoAgrupado(
+  params: ListarAcervoParams & { agrupar_por: string }
+): Promise<ListarAcervoAgrupadoResult> {
+  return listarAcervoAgrupadoDb(params);
+}
+
+/**
+ * Lists acervo with filters, pagination, and sorting (polymorphic)
+ * 
+ * @deprecated Use specific methods instead:
+ * - obterAcervoPaginado() for flat instances
+ * - obterAcervoUnificado() for unified processes
+ * - obterAcervoAgrupado() for grouped data
  * 
  * Flow:
  * 1. Validates input parameters
@@ -55,17 +90,17 @@ export async function obterAcervo(
 ): Promise<ListarAcervoResult | ListarAcervoAgrupadoResult | ListarAcervoUnificadoResult> {
   // If agrupar_por is present, use grouping function
   if (params.agrupar_por) {
-    return listarAcervoAgrupadoDb(params as ListarAcervoParams & { agrupar_por: string });
+    return obterAcervoAgrupado(params as ListarAcervoParams & { agrupar_por: string });
   }
 
   // If unified=true (or not specified, as it's the default), use unification function
   const unified = params.unified ?? true; // Default: true
   if (unified) {
-    return listarAcervoUnificadoDb(params);
+    return obterAcervoUnificado(params);
   }
 
   // Otherwise, use default listing function (separate instances)
-  return listarAcervoDb(params);
+  return obterAcervoPaginado(params);
 }
 
 /**
@@ -325,7 +360,7 @@ export async function buscarProcessosClientePorCpf(
         grau: p.grau,
         advogadoId: p.advogado_id,
       }));
-    
+
     sincronizarTimelineEmBackground(paraSincronizar);
 
     // 2. Group by numero_processo
@@ -355,8 +390,8 @@ export async function buscarProcessosClientePorCpf(
       const temTimeline = temTimelinePrimeiro || temTimelineSegundo;
 
       const taSincronizando = (
-          (agrupado.instancias.primeiro_grau && !agrupado.instancias.primeiro_grau.timeline_mongodb_id) ||
-          (agrupado.instancias.segundo_grau && !agrupado.instancias.segundo_grau.timeline_mongodb_id)
+        (agrupado.instancias.primeiro_grau && !agrupado.instancias.primeiro_grau.timeline_mongodb_id) ||
+        (agrupado.instancias.segundo_grau && !agrupado.instancias.segundo_grau.timeline_mongodb_id)
       );
 
       // Format process
@@ -365,8 +400,8 @@ export async function buscarProcessosClientePorCpf(
         timelinePrimeiroGrau,
         timelineSegundoGrau,
         {
-           timelineStatus: temTimeline ? 'disponivel' : 'indisponivel',
-           timelineMensagem: (taSincronizando && !temTimeline) ? msgSincronizando : undefined
+          timelineStatus: temTimeline ? 'disponivel' : 'indisponivel',
+          timelineMensagem: (taSincronizando && !temTimeline) ? msgSincronizando : undefined
         }
       );
 
@@ -399,8 +434,8 @@ export async function buscarProcessosClientePorCpf(
       success: true,
       data: {
         cliente: {
-            nome: cliente.nome,
-            cpf: formatarCpf(cliente.cpf),
+          nome: cliente.nome,
+          cpf: formatarCpf(cliente.cpf),
         },
         resumo,
         processos: processosFormatados,

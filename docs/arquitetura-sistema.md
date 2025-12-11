@@ -2491,6 +2491,121 @@ function DescricaoProcesso({ html }: { html: string }) {
 
 ---
 
+## 14. Manutenção de Documentação
+
+### 14.1. Manutenção Contínua
+
+A documentação arquitetural deve ser mantida sincronizada com o código para garantir que o conhecimento permaneça atualizado e útil.
+
+#### Quando Atualizar Documentação de Features
+
+Sempre que uma feature em `src/features/{modulo}` ganhar novas capacidades importantes, atualize o `README.md` local da feature com:
+
+- **Novos casos de uso**: Documente novos Server Actions, hooks ou serviços
+- **Mudanças em regras de negócio**: Atualize exemplos e fluxos principais
+- **Integrações críticas**: Documente dependências e integrações externas
+- **Exemplos de uso**: Inclua exemplos práticos de uso via barrel export (`@/features/{modulo}`)
+
+**Template de README de Feature:**
+
+```markdown
+# {Nome da Feature}
+
+## 📁 Estrutura
+[Estrutura de diretórios]
+
+## 🎯 Funcionalidades
+[Funcionalidades principais]
+
+## 🔧 Server Actions
+[Documentação de actions com exemplos]
+
+## 🪝 Hooks
+[Documentação de hooks]
+
+## 🎨 Componentes
+[Documentação de componentes]
+
+## 🔄 Migração
+[Se aplicável, histórico de migração]
+
+## 📝 Uso em Páginas
+[Exemplos de uso]
+```
+
+#### Quando Atualizar Documentação Central
+
+Revise `AGENTS.md` e `docs/arquitetura-sistema.md` quando houver:
+
+- **Mudanças estruturais** que afetem várias features:
+  - Novo padrão de Server Actions
+  - Mudança de camada de infraestrutura em `src/lib`
+  - Alteração significativa de layout ou componentes compartilhados
+- **Novos padrões arquiteturais**:
+  - Nova estratégia de estado global
+  - Novo padrão de autenticação/autorização
+  - Mudanças em convenções de nomenclatura
+
+#### Checklist de Revisão de PR
+
+Para alterações maiores, exija que o PR contenha:
+
+- [ ] Atualizações correspondentes nos READMEs de feature (se aplicável)
+- [ ] Atualizações nos docs centrais (`AGENTS.md`, `docs/arquitetura-sistema.md`) se houver mudanças estruturais
+- [ ] Exemplos de uso atualizados
+- [ ] Documentação de breaking changes (se houver)
+
+### 14.2. Prevenção de Regressão Arquitetural
+
+Para manter a arquitetura estabilizada, o projeto implementa verificações automáticas e manuais.
+
+#### Regras ESLint
+
+O projeto possui regras ESLint que impedem:
+
+- **Imports diretos de caminhos internos de features**: Força uso de barrel exports (`@/features/{modulo}`)
+- **Imports de pastas legadas**: Alerta caso alguém tente reintroduzir imports de `@/backend`, `@/core` ou `@/app/_lib` em arquivos de `src/`
+
+**Exemplos de imports proibidos:**
+
+```typescript
+// ❌ PROIBIDO - Import direto de caminho interno
+import { ClientesTable } from "@/features/partes/components/clientes/clientes-table";
+
+// ✅ CORRETO - Import via barrel export
+import { ClientesTable } from "@/features/partes";
+
+// ❌ PROIBIDO - Import de pasta legada
+import { criarCliente } from "@/backend/clientes/services/clientes/criar-cliente.service";
+
+// ✅ CORRETO - Import via feature
+import { actionCriarCliente } from "@/features/partes";
+```
+
+#### Verificação no CI
+
+O pipeline de CI inclui uma checagem que falha o build se encontrar:
+
+- Novos imports de pastas legadas (`@/backend`, `@/core`, `@/app/_lib`) em `src/**/*.ts*`
+- Imports diretos de caminhos internos de features fora da própria feature
+
+Execute localmente:
+
+```bash
+npm run check:architecture
+```
+
+#### Checklist de Revisão de Código
+
+Nas revisões de código, verifique:
+
+- [ ] **Nova lógica de negócio** está em `src/features/{modulo}` e não em `backend/` ou `app/_lib/`
+- [ ] **Novos componentes visuais reutilizáveis** foram avaliados para viver em `components/ui` ou `components/shared`
+- [ ] **Imports** usam barrel exports (`@/features/{modulo}`) e não caminhos diretos
+- [ ] **Server Actions** seguem o padrão `action{Verbo}` e estão em `features/{modulo}/actions/`
+- [ ] **Hooks customizados** estão em `features/{modulo}/hooks/` quando específicos da feature
+- [ ] **Tipos e schemas** estão em `features/{modulo}/domain.ts` ou `types.ts`
+
 ## Conclusão
 
 O **Sinesys** é um sistema robusto e escalável que combina as melhores práticas de desenvolvimento moderno:
@@ -2501,7 +2616,8 @@ O **Sinesys** é um sistema robusto e escalável que combina as melhores prátic
 ✅ **Performance**: Caching, lazy loading, otimização de queries  
 ✅ **Escalabilidade**: Containerização, microserviços, deploy automatizado  
 ✅ **UX**: Responsive design, PWA, colaboração em tempo real  
-✅ **DX**: Documentação completa, padrões claros, ferramentas modernas
+✅ **DX**: Documentação completa, padrões claros, ferramentas modernas  
+✅ **Manutenibilidade**: Documentação sincronizada, verificações automáticas
 
 ### Próximos Passos
 
@@ -2509,10 +2625,10 @@ O **Sinesys** é um sistema robusto e escalável que combina as melhores prátic
 2. **Testes**: Ampliar cobertura de testes (unit, integration, e2e)
 3. **CI/CD**: Automatizar pipeline completo de deploy
 4. **Observabilidade**: Logs estruturados, métricas, alertas
-5. **Documentação**: Manter docs atualizadas conforme evolução
+5. **Documentação**: Manter docs atualizadas conforme evolução (processo estabelecido)
 
 ---
 
 **Documento mantido por**: Equipe de Desenvolvimento Sinesys  
 **Última atualização**: Dezembro 2025  
-**Versão**: 1.0
+**Versão**: 1.1

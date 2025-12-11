@@ -163,7 +163,7 @@ export function CalendarWeekView({singleDayEvents, multiDayEvents}: IProps) {
                                                         date={day}
                                                         hour={hour}
                                                         minute={0}
-                                                        className="absolute inset-x-0 top-0  h-[48px]"
+                                                        className="absolute inset-x-0 top-0  h-12"
                                                     >
                                                         <AddEditEventDialog
                                                             startDate={day}
@@ -181,7 +181,7 @@ export function CalendarWeekView({singleDayEvents, multiDayEvents}: IProps) {
                                                         date={day}
                                                         hour={hour}
                                                         minute={30}
-                                                        className="absolute inset-x-0 bottom-0 h-[48px]"
+                                                        className="absolute inset-x-0 bottom-0 h-12"
                                                     >
                                                         <AddEditEventDialog
                                                             startDate={day}

@@ -5,10 +5,10 @@
  * e aplica deduplicação de eventos repetidos.
  */
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { obterTimelinePorMongoId } from '@/backend/captura/services/timeline/timeline-persistence.service';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
-import type { GrauProcesso } from '@/types/domain/common';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
+import type { GrauProcesso } from '@/core/partes';
 
 /**
  * Item da timeline com metadados de origem (grau/instância)

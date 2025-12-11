@@ -68,6 +68,9 @@ export {
 // Service (Exported for API Routes usage mainly)
 export {
   buscarProcessosClientePorCpf,
+  obterAcervoPaginado,
+  obterAcervoUnificado,
+  obterAcervoAgrupado,
 } from './service';
 
 // Hooks

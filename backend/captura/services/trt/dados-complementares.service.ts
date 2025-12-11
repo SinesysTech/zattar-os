@@ -11,7 +11,7 @@
 
 import type { Page } from 'playwright';
 import type { CodigoTRT, GrauTRT } from './types';
-import type { TimelineResponse, TimelineItem } from '@/backend/types/pje-trt/timeline';
+import type { TimelineResponse, TimelineItem } from '@/lib/api/pje-trt/types';
 import type { PartePJE } from '@/backend/api/pje-trt/partes/types';
 import { obterTimeline } from '@/backend/api/pje-trt/timeline/obter-timeline';
 import { obterPartesProcesso } from '@/backend/api/pje-trt/partes';
@@ -93,9 +93,9 @@ async function verificarProcessosParaRecaptura(
 ): Promise<{ paraRecapturar: number[]; pulados: number[] }> {
   const horasMinimas = options.horasParaRecaptura ?? 24;
   const dataLimite = new Date(Date.now() - horasMinimas * 60 * 60 * 1000);
-  
+
   const supabase = createServiceClient();
-  
+
   // Buscar processos atualizados recentemente no acervo
   const { data, error } = await supabase
     .from('acervo')
@@ -103,23 +103,23 @@ async function verificarProcessosParaRecaptura(
     .in('id_pje', processosIds)
     .eq('trt', options.trt)
     .eq('grau', options.grau);
-  
+
   if (error) {
     console.warn(`⚠️ [Recaptura] Erro ao verificar processos: ${error.message}. Capturando todos.`);
     return { paraRecapturar: processosIds, pulados: [] };
   }
-  
+
   // Criar Set de processos atualizados recentemente
   const processosRecentes = new Set(
     (data ?? [])
       .filter(p => new Date(p.updated_at) > dataLimite)
       .map(p => p.id_pje as number)
   );
-  
+
   // Separar processos que precisam recaptura dos que podem ser pulados
   const paraRecapturar = processosIds.filter(id => !processosRecentes.has(id));
   const pulados = processosIds.filter(id => processosRecentes.has(id));
-  
+
   return { paraRecapturar, pulados };
 }
 
@@ -160,19 +160,19 @@ export async function buscarDadosComplementaresProcessos(
 
   // Verificar quais processos precisam ser recapturados
   let processosParaBuscar = processosIds;
-  
+
   if (verificarRecaptura) {
     console.log(`🔍 [DadosComplementares] Verificando processos atualizados nas últimas ${horasParaRecaptura}h...`);
-    
+
     const resultado = await verificarProcessosParaRecaptura(processosIds, {
       horasParaRecaptura,
       trt: options.trt,
       grau: options.grau,
     });
-    
+
     processosParaBuscar = resultado.paraRecapturar;
     processosPulados = resultado.pulados.length;
-    
+
     if (processosPulados > 0) {
       console.log(`⏭️ [DadosComplementares] ${processosPulados} processos pulados (atualizados recentemente)`);
     }
@@ -188,7 +188,7 @@ export async function buscarDadosComplementaresProcessos(
 
   for (let i = 0; i < processosParaBuscar.length; i++) {
     const processoId = processosParaBuscar[i];
-    
+
     // Callback de progresso
     if (onProgress) {
       onProgress(i + 1, processosParaBuscar.length, processoId);
@@ -279,7 +279,7 @@ export function filtrarDocumentos(timeline: TimelineResponse): TimelineItem[] {
   if (!Array.isArray(timeline)) {
     return [];
   }
-  
+
   return timeline.filter(item => {
     // Verifica se é documento (não movimento)
     return item.documento === true;

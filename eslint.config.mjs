@@ -17,6 +17,44 @@ const eslintConfig = defineConfig([
     "public/workbox-*.js",
     "public/fallback-*.js",
   ]),
+  {
+    rules: {
+      // Prevenir imports diretos de caminhos internos de features
+      // NOTA: Imports relativos dentro da mesma feature são permitidos (ex: ../hooks/use-x)
+      // Mas imports absolutos de caminhos internos de outras features são bloqueados
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              // Bloqueia imports absolutos de caminhos internos de features
+              // Exemplo proibido: import { X } from '@/features/partes/components/...'
+              // Exemplo permitido: import { X } from '@/features/partes'
+              // Exemplo permitido (dentro da feature): import { X } from '../hooks/...'
+              group: [
+                "@/features/*/components/**",
+                "@/features/*/hooks/**",
+                "@/features/*/actions/**",
+                "@/features/*/utils/**",
+                "@/features/*/types/**",
+                "@/features/*/domain.ts",
+                "@/features/*/service.ts",
+                "@/features/*/repository.ts",
+              ],
+              message:
+                "Use barrel exports (@/features/{modulo}) instead of direct internal paths. For imports within the same feature, use relative paths (../hooks/...). Example: import { Component } from '@/features/partes'",
+            },
+            {
+              // Bloqueia imports de pastas legadas em src/ (exceto em backend/ e core/)
+              group: ["@/backend/**", "@/core/**", "@/app/_lib/**"],
+              message:
+                "Legacy imports are not allowed in src/. Use features from @/features/{modulo} instead. If you need backend functionality, it should be migrated to a feature module.",
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

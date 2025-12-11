@@ -3,8 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { obterAcervo } from '@/backend/acervo/services/listar-acervo.service';
-import type { ListarAcervoParams } from '@/backend/types/acervo/types';
+import { obterAcervo } from '@/features/acervo/service';
+import type { ListarAcervoParams } from '@/features/acervo/types';
 
 /**
  * @swagger

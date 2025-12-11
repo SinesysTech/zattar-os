@@ -79,7 +79,7 @@ export default function TermosAceiteStep() {
                 id="termos-aceite"
                 checked={aceiteCheckbox}
                 onCheckedChange={(checked) => setAceiteCheckbox(checked === true)}
-                className="min-w-[44px] min-h-[44px] flex-shrink-0 mt-1"
+                className="min-w-11 min-h-11 shrink-0 mt-1"
                 aria-label="Aceitar os termos e condições"
               />
               <Label

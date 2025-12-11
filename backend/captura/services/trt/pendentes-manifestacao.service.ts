@@ -62,7 +62,7 @@ import {
 } from './dados-complementares.service';
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 import { createServiceClient } from '@/backend/utils/supabase/service-client';
 
 /**
@@ -146,7 +146,7 @@ export async function pendentesManifestacaoCapture(
     // FASE 2: BUSCAR PENDENTES
     // ═══════════════════════════════════════════════════════════════
     console.log('📡 [Pendentes] Fase 2: Buscando pendentes de manifestação...');
-    
+
     const idAdvogado = parseInt(advogadoInfo.idAdvogado, 10);
     if (isNaN(idAdvogado)) {
       throw new Error(`ID do advogado inválido: ${advogadoInfo.idAdvogado}`);
@@ -204,7 +204,7 @@ export async function pendentesManifestacaoCapture(
     // FASE 4: BUSCAR DADOS COMPLEMENTARES (com verificação de recaptura)
     // ═══════════════════════════════════════════════════════════════
     console.log('🔄 [Pendentes] Fase 4: Buscando dados complementares...');
-    
+
     const dadosComplementares = await buscarDadosComplementaresProcessos(
       page,
       processosIds,
@@ -264,7 +264,7 @@ export async function pendentesManifestacaoCapture(
     console.log('   📦 Buscando processos no acervo...');
     const mapeamentoIds = new Map<number, number>();
     const supabase = createServiceClient();
-    
+
     for (const idPje of processosIds) {
       const { data } = await supabase
         .from('acervo')
@@ -273,7 +273,7 @@ export async function pendentesManifestacaoCapture(
         .eq('trt', params.config.codigo)
         .eq('grau', params.config.grau)
         .single();
-      
+
       if (data?.id) {
         mapeamentoIds.set(idPje, data.id);
       }
@@ -286,7 +286,7 @@ export async function pendentesManifestacaoCapture(
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
       if (dados.partes && dados.partes.length > 0) {
         const idAcervo = mapeamentoIds.get(processoId);
-        
+
         if (!idAcervo) {
           console.log(`   ⚠️ Processo ${processoId} não encontrado no acervo, pulando partes...`);
           continue;
@@ -295,7 +295,7 @@ export async function pendentesManifestacaoCapture(
         try {
           const pendente = (processos as ProcessoPendente[]).find(p => p.id === processoId);
           const numeroProcesso = pendente?.numeroProcesso;
-          
+
           // Usa persistirPartesProcesso em vez de capturarPartesProcesso
           // para evitar refetch da API (partes já foram buscadas em dados-complementares)
           await persistirPartesProcesso(

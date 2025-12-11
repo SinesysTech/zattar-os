@@ -64,7 +64,8 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type {
   ContaReceberComDetalhes,
   StatusContaReceber,
-} from '@/features/financeiro/types/lancamentos';
+  OrigemContaReceber,
+} from '@/backend/types/financeiro/contas-receber.types';
 
 // ============================================================================
 // Constantes e Helpers
@@ -361,6 +362,7 @@ export default function ContasReceberPage() {
       limite,
       busca: buscaDebounced || undefined,
       ...parsedFilters,
+      origem: parsedFilters.origem as OrigemContaReceber | undefined,
       incluirResumo: true,
     };
   }, [pagina, limite, buscaDebounced, selectedFilterIds]);

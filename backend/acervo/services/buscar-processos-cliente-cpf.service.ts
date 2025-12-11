@@ -14,7 +14,7 @@ import type {
   ClienteIA,
   ResumoProcessosIA,
 } from '@/backend/types/acervo/processos-cliente-cpf.types';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 import { buscarProcessosPorCpf } from './persistence/buscar-processos-cliente-cpf.service';
 import { obterTimelinePorMongoId } from '@/backend/captura/services/timeline/timeline-persistence.service';
 import {

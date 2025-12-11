@@ -15,7 +15,7 @@ import {
   ProcessoDetailSheet,
 } from '@/features/processos/components';
 import { useProcessos } from '@/features/processos/hooks';
-import type { ProcessosFilters, Processo, ProcessoUnificado, GrauProcesso } from '@/features/processos/types';
+import type { ProcessosFilters, Processo, ProcessoUnificado, GrauProcesso, ProcessoSortBy } from '@/features/processos/types';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Copy } from 'lucide-react';
@@ -70,7 +70,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
   const classeJudicial = processo.classeJudicial || '';
   const numeroProcesso = processo.numeroProcesso;
   // Use generic access or cast if property missing in Union type
-  const orgaoJulgador = (processo as any).descricao_orgao_julgador || '-'; 
+  const orgaoJulgador = processo.descricaoOrgaoJulgador || '-'; 
   const trt = processo.trt;
   const isUnificado = isProcessoUnificado(processo);
   const [copiado, setCopiado] = React.useState(false);
@@ -200,8 +200,8 @@ export function ProcessosTableWrapper() {
       pagina: pagination.pageIndex + 1,
       limite: pagination.pageSize,
       busca: buscaDebounced || undefined,
-      ordenar_por: sorting[0]?.id as any,
-      ordem: (sorting[0]?.desc ? 'desc' : 'asc') as any,
+      ordenar_por: (sorting[0]?.id === 'status' ? 'codigo_status_processo' : sorting[0]?.id) as ProcessoSortBy | undefined,
+      ordem: (sorting[0]?.desc ? 'desc' : 'asc') as 'asc' | 'desc',
       ...filtros,
     };
   }, [pagination, buscaDebounced, sorting, filtros]);
