@@ -1,11 +1,11 @@
 import type { Page } from 'playwright';
 import type { CapturaPartesResult, TipoParteClassificacao } from './types';
-import type { PartePJE, RepresentantePJE } from '@/backend/api/pje-trt/partes/types';
-import { obterPartesProcesso } from '@/backend/api/pje-trt/partes';
+import type { PartePJE, RepresentantePJE } from '@/features/captura/pje-trt/partes/types';
+import { obterPartesProcesso } from '@/features/captura/pje-trt/partes';
 import { identificarTipoParte, validarDocumentoAdvogado, type AdvogadoIdentificacao } from './identificacao-partes.service';
 import { upsertClientePorCPF, upsertClientePorCNPJ, buscarClientePorCPF, buscarClientePorCNPJ } from '@/backend/clientes/services/persistence/cliente-persistence.service';
 import { upsertParteContrariaPorCPF, upsertParteContrariaPorCNPJ, buscarParteContrariaPorCPF, buscarParteContrariaPorCNPJ } from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
-import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, buscarTerceiroPorCNPJ, criarTerceiroSemDocumento } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
+import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, buscarTerceiroPorCNPJ, criarTerceiroSemDocumento } from '@/features/partes/services/terceiros/persistence/terceiro-persistence.service';
 import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
 import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/backend/representantes/services/representantes-persistence.service';
 import { upsertEnderecoPorIdPje } from '@/features/enderecos';
@@ -15,7 +15,7 @@ import type { ClassificacaoEndereco, EntidadeTipoEndereco, SituacaoEndereco } fr
 import type { SituacaoOAB, TipoRepresentante, Polo } from '@/types/domain/representantes';
 import { validarPartePJE, validarPartesArray } from './schemas';
 import getLogger, { withCorrelationId } from '@/backend/utils/logger';
-import { withRetry } from '@/backend/utils/retry';
+import { withRetry } from '@/lib/utils/retry';
 import { CAPTURA_CONFIG } from './config';
 import { ValidationError, PersistenceError, extractErrorInfo } from './errors';
 import { upsertCadastroPJE, buscarEntidadePorIdPessoaPJE } from '@/backend/cadastros-pje/services/persistence/cadastro-pje-persistence.service';
@@ -870,14 +870,14 @@ async function processarParte(
           } as CriarTerceiroPFParams | CriarTerceiroPJParams;
 
           const result = isPessoaFisica
-            ? await withRetry<import('@/backend/terceiros/services/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
+            ? await withRetry<import('@/features/partes/services/terceiros/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
                 () => upsertTerceiroPorCPF(params as UpsertTerceiroPorCPFParams),
                 {
                   maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
                   baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
                 }
               )
-            : await withRetry<import('@/backend/terceiros/services/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
+            : await withRetry<import('@/features/partes/services/terceiros/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
                 () => upsertTerceiroPorCNPJ(params as UpsertTerceiroPorCNPJParams),
                 {
                   maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,

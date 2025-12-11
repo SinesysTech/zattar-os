@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 // TODO: Refactor to query via processo_partes JOIN
 // import { buscarRepresentantesPorProcesso } from '@/backend/representantes/services/representantes-persistence.service';
-// import type { BuscarRepresentantesPorProcessoParams, Grau } from '@/backend/types/representantes/representantes-types';
+// import type { BuscarRepresentantesPorProcessoParams, Grau } from '@/features/partes/types/representantes-types';
 
 /**
  * @swagger

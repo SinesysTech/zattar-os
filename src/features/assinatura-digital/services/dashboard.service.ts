@@ -1,6 +1,6 @@
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import { TABLE_SESSOES, TABLE_TEMPLATES } from './constants';
-import type { AssinaturaDigitalDashboardStats } from '@/backend/types/assinatura-digital/types';
+import type { AssinaturaDigitalDashboardStats } from '@/features/assinatura-digital/types/types';
 
 /**
  * Calcula métricas administrativas de assinaturas do dia.

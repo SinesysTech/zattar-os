@@ -3,18 +3,18 @@
  * Gerencia operações de CRUD na tabela plano_contas
  */
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import {
   getCached,
   setCached,
   deletePattern,
   CACHE_PREFIXES,
-} from '@/backend/utils/redis/cache-utils';
+} from '@/lib/utils/redis/cache-utils';
 import {
   getPlanoContasListKey,
   getPlanoContasHierarquiaKey,
-} from '@/backend/utils/redis/cache-keys';
-import { invalidatePlanoContasCache } from '@/backend/utils/redis/invalidation';
+} from '@/lib/utils/redis/cache-keys';
+import { invalidatePlanoContasCache } from '@/lib/utils/redis/invalidation';
 import type {
   PlanoConta,
   PlanoContaComPai,

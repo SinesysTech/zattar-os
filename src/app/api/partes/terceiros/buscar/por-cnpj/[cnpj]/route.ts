@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { buscarTerceiroPorCNPJ } from '@/backend/terceiros/services/terceiros/buscar-terceiro-por-cnpj.service';
+import { buscarTerceiroPorCNPJ } from '@/features/partes/services/terceiros/terceiros/buscar-terceiro-por-cnpj.service';
 
 /**
  * @swagger

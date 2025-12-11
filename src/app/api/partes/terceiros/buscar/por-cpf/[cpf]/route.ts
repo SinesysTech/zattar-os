@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { buscarTerceiroPorCPF } from '@/backend/terceiros/services/terceiros/buscar-terceiro-por-cpf.service';
+import { buscarTerceiroPorCPF } from '@/features/partes/services/terceiros/terceiros/buscar-terceiro-por-cpf.service';
 
 /**
  * @swagger

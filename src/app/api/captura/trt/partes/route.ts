@@ -20,7 +20,7 @@ import type { GrauAcervo } from "@/features/acervo/types";
 import type { CapturaLog } from "@/backend/types/captura/capturas-log-types";
 import type { ResultadoCapturaPartes } from "@/backend/types/captura/capturas-log-types";
 import getLogger, { withCorrelationId } from '@/lib/logger';
-import { withDistributedLock } from '@/backend/utils/locks/distributed-lock';
+import { withDistributedLock } from '@/lib/utils/locks/distributed-lock';
 import { CAPTURA_CONFIG } from '@/backend/captura/services/partes/config';
 import { extractErrorInfo, LockError } from '@/backend/captura/services/partes/errors';
 

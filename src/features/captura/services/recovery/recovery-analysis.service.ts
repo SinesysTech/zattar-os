@@ -8,7 +8,7 @@
 
 import type { CapturaRawLogDocument } from '@/backend/types/mongodb/captura-log';
 import type { EntidadeTipoEndereco } from '@/backend/types/partes/enderecos-types';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import { buscarLogPorMongoId } from './captura-recovery.service';
 import type {
   AnaliseCaptura,
@@ -22,7 +22,7 @@ import type {
   AnaliseAgregadaParams,
   AnaliseAgregadaResult,
 } from './types';
-import { getCapturaRawLogsCollection } from '@/backend/utils/mongodb/collections';
+import { getCapturaRawLogsCollection } from '@/lib/utils/mongodb/collections';
 
 // ============================================================================
 // Funções de Análise Individual

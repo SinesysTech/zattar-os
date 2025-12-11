@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { obterPlanoContaPorCodigo } from '@/backend/plano-contas/services/plano-contas/listar-plano-contas.service';
+import { obterPlanoContaPorCodigo } from '@/features/financeiro/services/plano-contas/plano-contas/listar-plano-contas.service';
 
 interface RouteParams {
   params: Promise<{ codigo: string }>;

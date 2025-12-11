@@ -4,8 +4,8 @@ import { requirePermission } from '@/lib/auth/require-permission';
 import {
   createFormulario,
   listFormularios,
-} from '@/backend/assinatura-digital/services/formularios.service';
-import type { UpsertFormularioInput } from '@/backend/types/assinatura-digital/types';
+} from '@/features/assinatura-digital/services/formularios.service';
+import type { UpsertFormularioInput } from '@/features/assinatura-digital/types/types';
 
 const upsertFormularioSchema = z.object({
   nome: z.string().min(1),

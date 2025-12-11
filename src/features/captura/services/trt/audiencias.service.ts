@@ -46,15 +46,15 @@
 
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaAudienciasParams } from './trt-capture.service';
-import { obterTodasAudiencias } from '@/backend/api/pje-trt';
-import type { Audiencia, PagedResponse } from '@/backend/types/pje-trt/types';
+import { obterTodasAudiencias } from '@/features/captura/pje-trt';
+import type { Audiencia, PagedResponse } from '@/features/captura/types/trt-types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
-import { obterTimeline } from '@/backend/api/pje-trt/timeline/obter-timeline';
-import { obterDocumento } from '@/backend/api/pje-trt/timeline/obter-documento';
-import { baixarDocumento } from '@/backend/api/pje-trt/timeline/baixar-documento';
+import { obterTimeline } from '@/features/captura/pje-trt/timeline/obter-timeline';
+import { obterDocumento } from '@/features/captura/pje-trt/timeline/obter-documento';
+import { baixarDocumento } from '@/features/captura/pje-trt/timeline/baixar-documento';
 import { uploadToBackblaze } from '@/backend/storage/backblaze-b2.service';
 import { gerarNomeDocumentoAudiencia, gerarCaminhoDocumento } from '@/backend/storage/file-naming.utils';
-import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
+import { buscarOuCriarAdvogadoPorCpf } from '@/lib/utils/captura/advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import {
   buscarDadosComplementaresProcessos,
@@ -256,7 +256,7 @@ export async function audienciasCapture(
     const mapeamentoIds = new Map<number, number>();
 
     // Reutiliza lista de IDs já extraída na fase 3
-    const supabase = (await import('@/backend/utils/supabase/service-client')).createServiceClient();
+    const supabase = (await import('@/lib/utils/supabase/service-client')).createServiceClient();
 
     for (const idPje of processosIds) {
       const { data } = await supabase

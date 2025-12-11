@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { buscarTerceiroPorNome } from '@/backend/terceiros/services/terceiros/buscar-terceiro-por-nome.service';
+import { buscarTerceiroPorNome } from '@/features/partes/services/terceiros/terceiros/buscar-terceiro-por-nome.service';
 
 /**
  * @swagger

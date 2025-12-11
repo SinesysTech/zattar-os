@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/lib/auth/require-permission';
-import { getTemplate } from '@/backend/assinatura-digital/services/templates.service';
-import { generatePdfFromTemplate } from '@/backend/assinatura-digital/services/template-pdf.service';
-import { storePdf } from '@/backend/assinatura-digital/services/storage.service';
+import { getTemplate } from '@/features/assinatura-digital/services/templates.service';
+import { generatePdfFromTemplate } from '@/features/assinatura-digital/services/template-pdf.service';
+import { storePdf } from '@/features/assinatura-digital/services/storage.service';
 import { generateMockDataForPreview } from '@/lib/assinatura-digital/utils/mock-data-generator';
 import type { TemplateCampo, StatusTemplate } from '@/types/assinatura-digital/template.types';
 

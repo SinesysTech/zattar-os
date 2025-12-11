@@ -19,7 +19,7 @@ import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import { segmentoSchema } from '@/types/assinatura-digital/segmento.types';
 import { generateSlug } from '@/features/assinatura-digital/utils/slug-helpers';
-import { AssinaturaDigitalSegmento } from '@/backend/types/assinatura-digital/types';
+import { AssinaturaDigitalSegmento } from '@/features/assinatura-digital/types/types';
 
 const editSegmentoSchema = segmentoSchema.extend({
   ativo: z.boolean(),

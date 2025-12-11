@@ -14,7 +14,7 @@ import {
 import type {
   ListarRepresentantesParams,
   CriarRepresentanteParams,
-} from '@/backend/types/representantes/representantes-types';
+} from '@/features/partes/types/representantes-types';
 
 /**
  * @swagger

@@ -10,7 +10,7 @@ import {
   atualizarRepresentante,
   deletarRepresentante,
 } from '@/backend/representantes/services/representantes-persistence.service';
-import type { AtualizarRepresentanteParams } from '@/backend/types/representantes/representantes-types';
+import type { AtualizarRepresentanteParams } from '@/features/partes/types/representantes-types';
 
 type RouteContext = {
   params: Promise<{

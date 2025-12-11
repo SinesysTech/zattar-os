@@ -9,7 +9,7 @@ import {
   substituirPermissoes 
 } from '@/backend/permissoes/services/persistence/permissao-persistence.service';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { obterTodasPermissoes, validarAtribuirPermissoesDTO } from '@/backend/types/permissoes/types';
+import { obterTodasPermissoes, validarAtribuirPermissoesDTO } from '@/features/usuarios/types/types';
 import type { Permissao } from '../types';
 
 export async function actionListarPermissoes(usuarioId: number) {

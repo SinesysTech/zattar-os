@@ -1,7 +1,7 @@
 // Serviço de persistência de histórico de capturas
 // Gerencia operações de CRUD na tabela capturas_log
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import type {
   CapturaLog,
   CriarCapturaLogParams,

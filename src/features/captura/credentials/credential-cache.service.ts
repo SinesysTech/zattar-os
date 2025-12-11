@@ -18,7 +18,7 @@
  */
 
 import type { CodigoTRT, GrauTRT, CredenciaisTRT } from '@/backend/types/captura/trt-types';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 
 /**
  * Interface para item do cache

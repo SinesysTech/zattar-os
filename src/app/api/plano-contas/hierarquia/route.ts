@@ -3,8 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { obterHierarquiaPlanoContas } from '@/backend/plano-contas/services/plano-contas/obter-hierarquia.service';
-import { listarContasSinteticas } from '@/backend/plano-contas/services/plano-contas/listar-plano-contas.service';
+import { obterHierarquiaPlanoContas } from '@/features/financeiro/services/plano-contas/plano-contas/obter-hierarquia.service';
+import { listarContasSinteticas } from '@/features/financeiro/services/plano-contas/plano-contas/listar-plano-contas.service';
 
 /**
  * @swagger

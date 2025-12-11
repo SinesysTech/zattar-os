@@ -12,10 +12,10 @@
 import type { Page } from 'playwright';
 import type { CodigoTRT, GrauTRT } from './types';
 import type { TimelineResponse, TimelineItem } from '@/lib/api/pje-trt/types';
-import type { PartePJE } from '@/backend/api/pje-trt/partes/types';
-import { obterTimeline } from '@/backend/api/pje-trt/timeline/obter-timeline';
-import { obterPartesProcesso } from '@/backend/api/pje-trt/partes';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import type { PartePJE } from '@/features/captura/pje-trt/partes/types';
+import { obterTimeline } from '@/features/captura/pje-trt/timeline/obter-timeline';
+import { obterPartesProcesso } from '@/features/captura/pje-trt/partes';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 
 /**
  * Configurações para busca de dados complementares

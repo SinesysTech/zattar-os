@@ -1,5 +1,5 @@
 
-import { MATRIZ_PERMISSOES, obterTotalPermissoes as obterTotal } from '@/backend/types/permissoes/types';
+import { MATRIZ_PERMISSOES, obterTotalPermissoes as obterTotal } from '@/features/usuarios/types/types';
 import type { Permissao, PermissaoMatriz } from './types';
 
 export { obterTotal as obterTotalPermissoes };

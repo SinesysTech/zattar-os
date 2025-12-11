@@ -34,8 +34,8 @@
  */
 
 import type { Page } from 'playwright';
-import type { Totalizador } from '@/backend/types/pje-trt/types';
-import { AgrupamentoProcessoTarefa } from '@/backend/types/pje-trt/types';
+import type { Totalizador } from '@/features/captura/types/trt-types';
+import { AgrupamentoProcessoTarefa } from '@/features/captura/types/trt-types';
 import { fetchPJEAPI } from '../shared/fetch';
 
 export async function obterTotalizadoresPendentesManifestacao(

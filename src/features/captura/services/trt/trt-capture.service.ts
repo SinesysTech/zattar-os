@@ -2,7 +2,7 @@
 // (Não usa mais herança - cada serviço chama autenticação diretamente)
 
 import type { CredenciaisTRT, ConfigTRT, FiltroPrazoPendentes } from '@/backend/types/captura/trt-types';
-import type { TwoFAuthConfig } from '@/backend/api/twofauth.service';
+import type { TwoFAuthConfig } from '@/lib/api/twofauth.service';
 
 /**
  * Parâmetros base para captura TRT

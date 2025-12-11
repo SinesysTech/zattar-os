@@ -50,10 +50,10 @@ import type { CapturaPendentesManifestacaoParams } from './trt-capture.service';
 import {
   obterTodosProcessosPendentesManifestacao,
   obterTotalizadoresPendentesManifestacao,
-} from '@/backend/api/pje-trt';
-import type { Processo } from '@/backend/types/pje-trt/types';
+} from '@/features/captura/pje-trt';
+import type { Processo } from '@/features/captura/types/trt-types';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
-import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
+import { buscarOuCriarAdvogadoPorCpf } from '@/lib/utils/captura/advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import { downloadAndUploadDocumento } from '../pje/pje-expediente-documento.service';
 import type { FetchDocumentoParams } from '@/backend/types/pje-trt/documento-types';
@@ -63,7 +63,7 @@ import {
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 
 /**
  * Resultado da captura de processos pendentes de manifestação

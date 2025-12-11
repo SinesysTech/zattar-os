@@ -22,7 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Loader2 } from "lucide-react";
 
-import type { AssinaturaDigitalFormulario } from "@/backend/types/assinatura-digital/types";
+import type { AssinaturaDigitalFormulario } from "@/features/assinatura-digital/types/types";
 import { generateSlug } from "@/features/assinatura-digital/utils/slug-helpers";
 
 const duplicateSchema = z.object({

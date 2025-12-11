@@ -36,7 +36,7 @@
  */
 
 import type { Page } from 'playwright';
-import type { PagedResponse, Audiencia } from '@/backend/types/pje-trt/types';
+import type { PagedResponse, Audiencia } from '@/features/captura/types/trt-types';
 import { fetchPJEAPI } from '../shared/fetch';
 
 export async function obterPautaAudiencias(

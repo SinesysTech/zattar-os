@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, AlertTriangle } from "lucide-react";
-import type { AssinaturaDigitalFormulario } from "@/backend/types/assinatura-digital/types";
+import type { AssinaturaDigitalFormulario } from "@/features/assinatura-digital/types/types";
 
 interface FormularioDeleteDialogProps {
   open: boolean;
