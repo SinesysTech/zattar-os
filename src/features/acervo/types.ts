@@ -5,6 +5,10 @@
 
 import { z } from 'zod';
 import { StatusProcesso } from '@/types/domain/common';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
+
+// Re-export timeline types for convenience
+export type { TimelineItemEnriquecido };
 
 // ============================================================================
 // Domain Types
@@ -380,7 +384,7 @@ export interface ProcessoClienteCPF {
   segredo_justica: boolean;
   cpf?: string;
   cliente_nome?: string;
-  
+
   // Consolidated data
   nome_parte_autora?: string;
   nome_parte_re?: string;
@@ -389,19 +393,19 @@ export interface ProcessoClienteCPF {
   codigo_status_processo?: string;
   status?: string;
   responsavel_id?: number;
-  
+
   // Instances
   instancias: {
     primeiro_grau?: InstanciaInfo;
     segundo_grau?: InstanciaInfo;
     tst?: InstanciaInfo;
   };
-  
+
   // Timeline
   timeline?: TimelineItemIA[];
   timeline_status?: TimelineStatus;
   timeline_ultimo_update?: string;
-  
+
   // Internal flags
   tem_timeline?: boolean;
   tem_detalhes?: boolean;

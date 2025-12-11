@@ -3,7 +3,7 @@
  */
 
 import type { ObjectId } from 'mongodb';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 /**
  * Documento da timeline armazenado no MongoDB
@@ -11,22 +11,22 @@ import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
 export interface TimelineDocument {
   /** ID do MongoDB */
   _id?: ObjectId;
-  
+
   /** ID do processo no PJE */
   processoId: string;
-  
+
   /** Código do TRT (ex: 'TRT3') */
   trtCodigo: string;
-  
+
   /** Grau da instância */
   grau: string;
-  
+
   /** Data/hora da captura */
   capturadoEm: Date;
-  
+
   /** Timeline completa com dados enriquecidos */
   timeline: TimelineItemEnriquecido[];
-  
+
   /** Metadados adicionais */
   metadata?: {
     /** ID do advogado que capturou */

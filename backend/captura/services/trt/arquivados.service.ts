@@ -46,15 +46,15 @@
 
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaTRTParams } from './trt-capture.service';
-import { obterTodosProcessosArquivados } from '@/backend/api/pje-trt';
-import type { Processo } from '@/backend/types/pje-trt/types';
+import { obterTodosProcessosArquivados } from '../../../../api/pje-trt/arquivados';
+import type { Processo } from '../../../../types/pje-trt/types';
 import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
-import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
+import { buscarOuCriarAdvogadoPorCpf } from '../../../../utils/captura/advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import { buscarDadosComplementaresProcessos } from './dados-complementares.service';
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 /**
  * Resultado da captura de processos arquivados
@@ -125,7 +125,7 @@ export async function arquivadosCapture(
     // FASE 2: BUSCAR PROCESSOS ARQUIVADOS
     // ═══════════════════════════════════════════════════════════════
     console.log('📡 [Arquivados] Fase 2: Buscando processos arquivados...');
-    
+
     const idAdvogado = parseInt(advogadoInfo.idAdvogado, 10);
     if (isNaN(idAdvogado)) {
       throw new Error(`ID do advogado inválido: ${advogadoInfo.idAdvogado}`);
@@ -166,7 +166,7 @@ export async function arquivadosCapture(
     // FASE 4: BUSCAR DADOS COMPLEMENTARES (com verificação de recaptura)
     // ═══════════════════════════════════════════════════════════════
     console.log('🔄 [Arquivados] Fase 4: Buscando dados complementares...');
-    
+
     const dadosComplementares = await buscarDadosComplementaresProcessos(
       page,
       processosIds,
@@ -248,7 +248,7 @@ export async function arquivadosCapture(
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
       if (dados.partes && dados.partes.length > 0) {
         const idAcervo = mapeamentoIds.get(processoId);
-        
+
         if (!idAcervo) {
           console.log(`   ⚠️ Processo ${processoId} não encontrado no mapeamento, pulando partes...`);
           continue;
@@ -257,7 +257,7 @@ export async function arquivadosCapture(
         try {
           const processo = processos.find(p => p.id === processoId);
           const numeroProcesso = processo?.numeroProcesso;
-          
+
           // Usa persistirPartesProcesso em vez de capturarPartesProcesso
           // para evitar refetch da API (partes já foram buscadas em dados-complementares)
           await persistirPartesProcesso(

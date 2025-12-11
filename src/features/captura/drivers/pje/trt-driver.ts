@@ -95,8 +95,8 @@ export class PjeTrtDriver implements JudicialDriver {
     ) {
       return {
         apiUrl: process.env.TWOFAUTH_API_URL,
-        apiToken: process.env.TWOFAUTH_API_TOKEN,
-        accountId: parseInt(process.env.TWOFAUTH_ACCOUNT_ID, 10),
+        token: process.env.TWOFAUTH_API_TOKEN,
+        accountId: process.env.TWOFAUTH_ACCOUNT_ID,
       };
     }
 
@@ -180,10 +180,10 @@ export class PjeTrtDriver implements JudicialDriver {
             audiencias.push({
               idProcesso: aud.idProcesso,
               numeroProcesso: aud.nrProcesso || aud.processo?.numero || '',
-              dataAudiencia: aud.dataHoraFim || aud.dataHora || '',
-              tipoAudiencia: aud.tipo || '',
-              situacao: aud.situacao || codigoSituacao,
-              sala: aud.sala,
+              dataAudiencia: aud.dataFim || aud.dataInicio || '',
+              tipoAudiencia: aud.tipo?.descricao || '',
+              situacao: aud.statusDescricao || aud.status || codigoSituacao,
+              sala: aud.salaAudiencia?.nome,
             });
 
             // Extrair processo se disponível
@@ -191,12 +191,12 @@ export class PjeTrtDriver implements JudicialDriver {
               processos.push({
                 idPje: aud.idProcesso,
                 numeroProcesso: aud.nrProcesso || aud.processo?.numero || '',
-                classeJudicial: '',
-                orgaoJulgador: aud.orgaoJulgador || '',
-                parteAutora: '',
-                parteRe: '',
+                classeJudicial: aud.processo?.classeJudicial?.descricao || '',
+                orgaoJulgador: aud.processo?.orgaoJulgador?.descricao || '',
+                parteAutora: aud.poloAtivo?.nome || '',
+                parteRe: aud.poloPassivo?.nome || '',
                 dataAutuacao: '',
-                status: '',
+                status: aud.status || '',
               });
             }
           }
@@ -285,10 +285,10 @@ export class PjeTrtDriver implements JudicialDriver {
       todasAudiencias.push({
         idProcesso: aud.idProcesso,
         numeroProcesso: aud.nrProcesso || aud.processo?.numero || '',
-        dataAudiencia: aud.dataHoraFim || aud.dataHora || '',
-        tipoAudiencia: aud.tipo || '',
-        situacao: aud.situacao || '',
-        sala: aud.sala,
+        dataAudiencia: aud.dataFim || aud.dataInicio || '',
+        tipoAudiencia: aud.tipo?.descricao || '',
+        situacao: aud.statusDescricao || aud.status || '',
+        sala: aud.salaAudiencia?.nome,
       });
     }
 

@@ -15,7 +15,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Acervo } from '@/backend/types/acervo/types';
 import type { TimelineDocument } from '@/backend/types/mongodb/timeline';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 import type { GrauProcesso } from '@/core/partes';
 
 /**

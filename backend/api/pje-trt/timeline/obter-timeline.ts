@@ -26,7 +26,7 @@
 
 import type { Page } from 'playwright';
 import { fetchPJEAPI } from '../shared/fetch';
-import type { TimelineResponse, ObterTimelineOptions } from '@/backend/types/pje-trt/timeline';
+import type { TimelineResponse, ObterTimelineOptions } from '@/lib/api/pje-trt/types';
 
 /**
  * Função: obterTimeline

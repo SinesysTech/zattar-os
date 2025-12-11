@@ -12,8 +12,8 @@
 import { autenticarPJE, type AuthResult } from '../trt/trt-auth.service';
 import { getTribunalConfig } from '../trt/config';
 import type { CodigoTRT, GrauTRT } from '../trt/types';
-import type { ConfigTRT } from '@/backend/types/captura/trt-types';
-import { obterTimeline, obterDocumento, baixarDocumento } from '@/backend/api/pje-trt/timeline';
+import type { ConfigTRT } from '../../../../types/captura/trt-types';
+import { obterTimeline, obterDocumento, baixarDocumento } from '../../../../api/pje-trt/timeline';
 import { uploadDocumentoTimeline } from '../backblaze/upload-documento-timeline.service';
 import { salvarTimelineNoMongoDB, atualizarTimelineMongoIdNoAcervo } from './timeline-persistence.service';
 import type {
@@ -23,7 +23,7 @@ import type {
   FiltroDocumentosTimeline,
   TimelineItemEnriquecido,
   BackblazeB2Info,
-} from '@/backend/types/pje-trt/timeline';
+} from '@/lib/api/pje-trt/types';
 
 /**
  * Parâmetros para captura de timeline

@@ -44,7 +44,12 @@ export type ProcessoSortBy =
   | 'data_arquivamento'
   | 'data_proxima_audiencia'
   | 'created_at'
-  | 'updated_at';
+  | 'updated_at'
+  | 'nome_parte_autora'
+  | 'nome_parte_re'
+  | 'trt'
+  | 'classe_judicial'
+  | 'codigo_status_processo';
 
 /**
  * Status de um processo judicial.

@@ -57,7 +57,7 @@ import { captureLogService, type LogEntry } from '../persistence/capture-log.ser
 import { buscarDadosComplementaresProcessos } from './dados-complementares.service';
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 /**
  * Resultado da captura de acervo geral
@@ -128,7 +128,7 @@ export async function acervoGeralCapture(
     // FASE 2: BUSCAR PROCESSOS
     // ═══════════════════════════════════════════════════════════════
     console.log('📡 [AcervoGeral] Fase 2: Buscando processos do acervo geral...');
-    
+
     const idAdvogado = parseInt(advogadoInfo.idAdvogado, 10);
     if (isNaN(idAdvogado)) {
       throw new Error(`ID do advogado inválido: ${advogadoInfo.idAdvogado}`);
@@ -170,7 +170,7 @@ export async function acervoGeralCapture(
     // FASE 4: BUSCAR DADOS COMPLEMENTARES (com verificação de recaptura)
     // ═══════════════════════════════════════════════════════════════
     console.log('🔄 [AcervoGeral] Fase 4: Buscando dados complementares...');
-    
+
     const dadosComplementares = await buscarDadosComplementaresProcessos(
       page,
       processosIds,
@@ -252,7 +252,7 @@ export async function acervoGeralCapture(
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
       if (dados.partes && dados.partes.length > 0) {
         const idAcervo = mapeamentoIds.get(processoId);
-        
+
         if (!idAcervo) {
           console.log(`   ⚠️ Processo ${processoId} não encontrado no mapeamento, pulando partes...`);
           continue;
@@ -261,7 +261,7 @@ export async function acervoGeralCapture(
         try {
           const processo = processos.find(p => p.id === processoId);
           const numeroProcesso = processo?.numeroProcesso;
-          
+
           // Usa persistirPartesProcesso em vez de capturarPartesProcesso
           // para evitar refetch da API (partes já foram buscadas em dados-complementares)
           await persistirPartesProcesso(

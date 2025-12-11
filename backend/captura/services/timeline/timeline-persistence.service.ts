@@ -8,10 +8,10 @@
  */
 
 import { ObjectId } from 'mongodb';
-import { getTimelineCollection } from '@/backend/utils/mongodb/collections';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { TimelineDocument, TimelinePersistenceResult } from '@/backend/types/mongodb/timeline';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import { getTimelineCollection } from '@/lib/mongodb/collections';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import type { TimelineDocument, TimelinePersistenceResult } from '../../../../types/mongodb/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 /**
  * Parâmetros para salvar timeline
@@ -80,7 +80,7 @@ export async function salvarTimelineNoMongoDB(
 
   // Tentar atualizar se existir, senão inserir
   const filter = { processoId, trtCodigo, grau };
-  
+
   const result = await collection.findOneAndUpdate(
     filter,
     {

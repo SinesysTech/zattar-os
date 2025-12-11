@@ -26,7 +26,7 @@
  */
 
 import type { Page } from 'playwright';
-import type { BaixarDocumentoOptions } from '@/backend/types/pje-trt/timeline';
+import type { BaixarDocumentoOptions } from '@/lib/api/pje-trt/types';
 
 /**
  * Função: baixarDocumento
@@ -60,7 +60,7 @@ export async function baixarDocumento(
   try {
     // Obter URL base do contexto da página
     const baseUrl = await page.evaluate(() => window.location.origin);
-    
+
     // Construir URL completa
     const endpoint = `/pje-comum-api/api/processos/id/${processoId}/documentos/id/${documentoId}/conteudo`;
     const queryParams = new URLSearchParams(
@@ -83,7 +83,7 @@ export async function baixarDocumento(
 
       // Obter como ArrayBuffer
       const arrayBuffer = await response.arrayBuffer();
-      
+
       // Converter para array de bytes
       return Array.from(new Uint8Array(arrayBuffer));
     }, fullUrl);

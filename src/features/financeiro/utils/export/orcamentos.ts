@@ -10,7 +10,8 @@ import type {
     AnaliseOrcamentaria,
     ResumoOrcamentario,
     EvolucaoMensal,
-} from '@/backend/types/financeiro/orcamento.types';
+    OrcamentoComItens,
+} from '@/features/financeiro/types/orcamentos';
 import type {
     RelatorioCompleto,
     RelatorioComparativo,
@@ -112,7 +113,7 @@ function gerarCSV(cabecalhos: string[], linhas: (string | number | null)[][]): s
 /**
  * Exporta orçamento básico para CSV
  */
-export function exportarOrcamentoCSV(orcamento: OrcamentoComDetalhes): void {
+export function exportarOrcamentoCSV(orcamento: OrcamentoComDetalhes | OrcamentoComItens): void {
     const cabecalhos = [
         'Conta Contábil',
         'Código',
@@ -122,14 +123,26 @@ export function exportarOrcamentoCSV(orcamento: OrcamentoComDetalhes): void {
         'Observações',
     ];
 
-    const linhas = orcamento.itens.map(item => [
-        item.contaContabil?.nome || '',
-        item.contaContabil?.codigo || '',
-        item.centroCusto?.nome || '-',
-        item.mes ? String(item.mes) : 'Todos',
-        item.valorOrcado,
-        item.observacoes || '',
-    ]);
+    const linhas = orcamento.itens.map(item => {
+        // Check if item has details (OrcamentoItemComDetalhes or similar from backend type structure if mixed)
+        // or using type guards/optional chaining
+        const conta = 'contaContabil' in item ? item.contaContabil : undefined;
+        const centro = 'centroCusto' in item ? item.centroCusto : undefined;
+        // Feature type checks
+        const valor = 'valorPrevisto' in item ? item.valorPrevisto : (item as any).valorOrcado;
+        // Mes might be missing on simple item or named differently?
+        // Feature type OrcamentoItem doesn't have mes. Backend type does.
+        const mes = 'mes' in item ? item.mes : undefined;
+        
+        return [
+            conta?.nome || '',
+            conta?.codigo || '',
+            centro?.nome || '-',
+            mes ? String(mes) : 'Todos',
+            valor,
+            item.observacoes || '',
+        ];
+    });
 
     const csv = gerarCSV(cabecalhos, linhas);
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });

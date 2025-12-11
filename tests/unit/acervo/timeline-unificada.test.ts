@@ -10,7 +10,7 @@ import {
   deduplicarTimeline,
   type TimelineItemUnificado,
 } from '@/backend/acervo/services/timeline/timeline-unificada.service';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 // =============================================================================
 // FIXTURES

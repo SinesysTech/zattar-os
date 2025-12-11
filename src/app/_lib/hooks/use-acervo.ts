@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { AcervoApiResponse, BuscarProcessosParams } from '@/features/processos/types';
-import type { Acervo, ProcessoUnificado } from '@/backend/types/acervo/types';
+import type { Acervo, ProcessoUnificado } from '@/features/acervo/types';
 
 interface UseAcervoResult {
   processos: (Acervo | ProcessoUnificado)[];

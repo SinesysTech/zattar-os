@@ -30,7 +30,7 @@
 
 import type { Page } from 'playwright';
 import { fetchPJEAPI } from '../shared/fetch';
-import type { DocumentoDetalhes, ObterDocumentoOptions } from '@/backend/types/pje-trt/timeline';
+import type { DocumentoDetalhes, ObterDocumentoOptions } from '@/lib/api/pje-trt/types';
 
 /**
  * Função: obterDocumento

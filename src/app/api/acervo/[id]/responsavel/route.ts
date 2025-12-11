@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { atribuirResponsavelAcervo } from '@/backend/acervo/services/atribuir-responsavel.service';
+import { atribuirResponsavel } from '@/features/acervo/service';
 
 /**
  * @swagger
@@ -122,16 +122,16 @@ export async function PATCH(
     // 4. Obter ID do usuário que está executando a ação
     // Se for sistema (service key), usar ID padrão 10 (Super Administrador)
     // Se for usuário autenticado, usar o usuarioId retornado pela autenticação
-    const usuarioExecutouId = authResult.userId === 'system' 
+    const usuarioExecutouId = authResult.userId === 'system'
       ? 10 // ID do Super Administrador para operações do sistema
       : authResult.usuarioId!; // usuarioId sempre existe para usuários autenticados
 
     // 5. Executar atribuição
-    const resultado = await atribuirResponsavelAcervo({
-      processoId,
-      responsavelId: responsavelId ?? null,
-      usuarioExecutouId,
-    });
+    const resultado = await atribuirResponsavel(
+      [processoId],
+      responsavelId ?? null,
+      usuarioExecutouId
+    );
 
     if (!resultado.success) {
       const statusCode = resultado.error?.includes('não encontrado') ? 404 : 400;
@@ -144,7 +144,7 @@ export async function PATCH(
     // 6. Retornar resultado
     return NextResponse.json({
       success: true,
-      data: resultado.data,
+      data: { id: processoId, responsavel_id: responsavelId },
     });
 
   } catch (error) {

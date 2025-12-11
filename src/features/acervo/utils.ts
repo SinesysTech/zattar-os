@@ -3,7 +3,7 @@ import {
   TIPO_PARTE_NOMES,
   CLASSE_JUDICIAL_NOMES,
 } from './domain';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 import type {
   ProcessoClienteCpfRow,
   TimelineItemIA,

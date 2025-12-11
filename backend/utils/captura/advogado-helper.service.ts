@@ -1,7 +1,7 @@
 // Helper para buscar advogado no banco de dados
 // Usado para obter advogado_id a partir do CPF
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 /**
  * Busca um advogado pelo CPF

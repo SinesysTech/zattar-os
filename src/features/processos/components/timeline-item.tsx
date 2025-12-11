@@ -12,7 +12,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { FileText, Activity, Download, ExternalLink, Lock, CheckCircle, XCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
-import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -78,11 +78,10 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
       <div className="relative flex flex-col items-center">
         {/* Círculo do item */}
         <div
-          className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
-            isDocumento
+          className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${isDocumento
               ? 'bg-blue-50 border-blue-500'
               : 'bg-gray-50 border-gray-400'
-          }`}
+            }`}
         >
           {isDocumento ? (
             <FileText className="h-5 w-5 text-blue-600" />

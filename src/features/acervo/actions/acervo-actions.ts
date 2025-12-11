@@ -10,6 +10,9 @@ import { authenticateRequest as getCurrentUser } from '@/lib/auth';
 import { checkPermission } from '@/lib/auth/authorization';
 import {
   obterAcervo,
+  obterAcervoPaginado,
+  obterAcervoUnificado,
+  obterAcervoAgrupado,
   buscarProcessoPorId,
   atribuirResponsavel as atribuirResponsavelService,
   buscarProcessosClientePorCpf as buscarProcessosClientePorCpfService,
@@ -172,6 +175,7 @@ export async function actionBuscarProcessosClientePorCpf(
 
 /**
  * Exports acervo to CSV
+ * Forces paginado mode (unified=false, no grouping) for proper CSV export
  */
 export async function actionExportarAcervoCSV(
   params: ListarAcervoParams = {}
@@ -188,12 +192,13 @@ export async function actionExportarAcervoCSV(
       return { success: false, error: 'Sem permissão para exportar acervo' };
     }
 
-    // Get all data (no pagination for export)
-    const result = await obterAcervo({ ...params, limite: 10000 });
-
-    if (!('processos' in result)) {
-      return { success: false, error: 'Formato de resultado inválido para exportação' };
-    }
+    // Get all data in paginado mode (no pagination, no unification, no grouping)
+    const result = await obterAcervoPaginado({
+      ...params,
+      limite: 10000,
+      unified: false,
+      agrupar_por: undefined,
+    });
 
     // Convert to CSV format
     const headers = [
@@ -210,24 +215,19 @@ export async function actionExportarAcervoCSV(
       'Responsável ID',
     ];
 
-    const rows = result.processos.map(p => {
-      // Type guard to handle both Acervo and ProcessoUnificado
-      const isAcervo = 'grau' in p && 'origem' in p;
-
-      return [
-        p.numero_processo,
-        p.trt,
-        isAcervo ? p.grau : '',
-        isAcervo ? p.origem : '',
-        isAcervo ? p.classe_judicial : '',
-        p.nome_parte_autora,
-        p.nome_parte_re,
-        isAcervo ? p.descricao_orgao_julgador : '',
-        isAcervo ? p.data_autuacao : p.data_autuacao_mais_antiga,
-        isAcervo ? p.status : '',
-        p.responsavel_id?.toString() ?? '',
-      ];
-    });
+    const rows = result.processos.map(p => [
+      p.numero_processo,
+      p.trt,
+      p.grau,
+      p.origem,
+      p.classe_judicial,
+      p.nome_parte_autora,
+      p.nome_parte_re,
+      p.descricao_orgao_julgador,
+      p.data_autuacao,
+      p.status,
+      p.responsavel_id?.toString() ?? '',
+    ]);
 
     const csv = [
       headers.join(','),
