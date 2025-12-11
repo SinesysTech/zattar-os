@@ -1,4 +1,4 @@
-import { uploadToBackblaze } from '@/backend/storage/backblaze-b2.service';
+import { uploadToBackblaze } from '@/lib/storage/backblaze-b2.service';
 import { buildFileName, decodeDataUrlToBuffer } from './base64';
 
 export interface StoredFile {

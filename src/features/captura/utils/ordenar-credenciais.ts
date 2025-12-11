@@ -1,6 +1,6 @@
 // Utilitário para ordenar credenciais por número do TRT e grau
 
-import type { CredencialCompleta } from '@/backend/captura/credentials/credential.service';
+import type { CredencialCompleta } from '../credentials/credential.service';
 
 /**
  * Extrai número do TRT para ordenação (TRT1 = 1, TRT10 = 10)
