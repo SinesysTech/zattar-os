@@ -28,6 +28,16 @@ export interface RelatorioExportacao {
     contentType: string;
 }
 
+type LancamentoRelatorio = {
+    dataLancamento: string;
+    descricao: string;
+    categoria?: string | null;
+    tipo: 'receita' | 'despesa';
+    valor: number;
+    status: string;
+    contaBancaria?: string | null;
+};
+
 // ============================================================================
 // Helpers
 // ============================================================================
@@ -75,7 +85,7 @@ export async function actionExportarLancamentosCSV(filtros: RelatorioFiltros) {
         // const lancamentos = await LancamentosService.listar({ dataInicio, dataFim, tipo });
 
         // Mock de dados para estrutura
-        const lancamentos: any[] = [];
+        const lancamentos: LancamentoRelatorio[] = [];
 
         const linhas: string[] = [];
         const sep = ',';

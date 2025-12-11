@@ -188,17 +188,16 @@ type ActionResponse<T> = {
 
 - **Partes** - `features/partes/`
 - **Processos** - `features/processos/`
-
 - **Contratos** - `features/contratos/`
 - **RH** - `features/rh/`
+- **Expedientes** - `features/expedientes/`
+- **Captura** - `features/captura/` ✅ (Domain, service, repository, drivers consolidados. Backend mantido como infraestrutura.)
 
 ### Módulos Legados 🔄
 
 - **Audiências** - Estrutura antiga em `app/(dashboard)/audiencias/`
-- **Expedientes** - `features/expedientes/`
 - **Acordos/Condenações** - Estrutura antiga
 - **Financeiro** - Módulo complexo com estrutura própria
-- **Captura de dados PJE/TRT**
 
 ### Regras de Migração
 

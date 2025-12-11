@@ -5,7 +5,6 @@
  * Consolida funcionalidades de fluxo de caixa
  */
 
-import { revalidatePath } from 'next/cache';
 import { FluxoCaixaService } from '../services/fluxo-caixa';
 import type { FiltroFluxoCaixa, FluxoCaixaConsolidado, FluxoCaixaDiario, FluxoCaixaPeriodo } from '../domain/fluxo-caixa';
 
@@ -29,6 +28,26 @@ export interface FluxoCaixaDashboard {
     alertas: { tipo: 'perigo' | 'atencao' | 'ok'; mensagem: string }[];
 }
 
+export interface FluxoCaixaResumoSegmento {
+    receitas: number;
+    despesas: number;
+    saldo: number;
+}
+
+export interface FluxoCaixaResumo {
+    realizado: FluxoCaixaResumoSegmento;
+    projetado: FluxoCaixaResumoSegmento;
+    total: FluxoCaixaResumoSegmento;
+}
+
+type ActionResult<T> = { success: true; data: T } | { success: false; error: string };
+
+export type IndicadoresSaude = Awaited<ReturnType<typeof FluxoCaixaService.getIndicadoresSaude>>;
+export type FluxoCaixaAlerta = Awaited<ReturnType<typeof FluxoCaixaService.getAlertasCaixa>>[number];
+export type FluxoCaixaResumoDashboard = Awaited<ReturnType<typeof FluxoCaixaService.getResumoDashboard>>;
+export type ContaBancariaResumo = Awaited<ReturnType<typeof FluxoCaixaService.listarContasBancarias>>[number];
+export type CentroCustoResumo = Awaited<ReturnType<typeof FluxoCaixaService.listarCentrosCusto>>[number];
+
 // ============================================================================
 // Server Actions
 // ============================================================================
@@ -36,7 +55,7 @@ export interface FluxoCaixaDashboard {
 /**
  * Obtém fluxo de caixa unificado (realizado + projetado)
  */
-export async function actionObterFluxoCaixaUnificado(filtros: FluxoCaixaFiltros) {
+export async function actionObterFluxoCaixaUnificado(filtros: FluxoCaixaFiltros): Promise<ActionResult<FluxoCaixaConsolidado>> {
     try {
         const filtro: FiltroFluxoCaixa = {
             dataInicio: filtros.dataInicio,
@@ -62,7 +81,7 @@ export async function actionObterFluxoCaixaDiario(
     contaBancariaId: number,
     dataInicio: string,
     dataFim: string
-) {
+): Promise<ActionResult<FluxoCaixaDiario[]>> {
     try {
         if (!contaBancariaId) {
             return { success: false, error: 'Conta bancária é obrigatória' };
@@ -91,7 +110,7 @@ export async function actionObterFluxoCaixaDiario(
 export async function actionObterFluxoCaixaPorPeriodo(
     filtros: FluxoCaixaFiltros,
     agrupamento: 'dia' | 'semana' | 'mes' = 'mes'
-) {
+): Promise<ActionResult<FluxoCaixaPeriodo[]>> {
     try {
         const filtro: FiltroFluxoCaixa = {
             dataInicio: filtros.dataInicio,
@@ -113,7 +132,7 @@ export async function actionObterFluxoCaixaPorPeriodo(
 /**
  * Obtém indicadores de saúde financeira
  */
-export async function actionObterIndicadoresSaude(filtros: FluxoCaixaFiltros) {
+export async function actionObterIndicadoresSaude(filtros: FluxoCaixaFiltros): Promise<ActionResult<IndicadoresSaude>> {
     try {
         const filtro: FiltroFluxoCaixa = {
             dataInicio: filtros.dataInicio,
@@ -134,7 +153,7 @@ export async function actionObterIndicadoresSaude(filtros: FluxoCaixaFiltros) {
 /**
  * Obtém alertas de fluxo de caixa
  */
-export async function actionObterAlertasCaixa(filtros: FluxoCaixaFiltros) {
+export async function actionObterAlertasCaixa(filtros: FluxoCaixaFiltros): Promise<ActionResult<FluxoCaixaAlerta[]>> {
     try {
         const filtro: FiltroFluxoCaixa = {
             dataInicio: filtros.dataInicio,
@@ -155,7 +174,7 @@ export async function actionObterAlertasCaixa(filtros: FluxoCaixaFiltros) {
 /**
  * Obtém resumo para dashboard de fluxo de caixa
  */
-export async function actionObterResumoDashboard(filtros: FluxoCaixaFiltros) {
+export async function actionObterResumoDashboard(filtros: FluxoCaixaFiltros): Promise<ActionResult<FluxoCaixaResumoDashboard>> {
     try {
         const filtro: FiltroFluxoCaixa = {
             dataInicio: filtros.dataInicio,
@@ -176,7 +195,7 @@ export async function actionObterResumoDashboard(filtros: FluxoCaixaFiltros) {
 /**
  * Obtém saldo inicial de uma conta
  */
-export async function actionObterSaldoInicial(contaBancariaId: number, data: string) {
+export async function actionObterSaldoInicial(contaBancariaId: number, data: string): Promise<ActionResult<{ saldo: number }>> {
     try {
         if (!contaBancariaId) {
             return { success: false, error: 'Conta bancária é obrigatória' };
@@ -198,7 +217,7 @@ export async function actionObterSaldoInicial(contaBancariaId: number, data: str
 /**
  * Lista contas bancárias disponíveis
  */
-export async function actionListarContasBancarias() {
+export async function actionListarContasBancarias(): Promise<ActionResult<ContaBancariaResumo[]>> {
     try {
         const contas = await FluxoCaixaService.listarContasBancarias();
 
@@ -212,7 +231,7 @@ export async function actionListarContasBancarias() {
 /**
  * Lista centros de custo disponíveis
  */
-export async function actionListarCentrosCusto() {
+export async function actionListarCentrosCusto(): Promise<ActionResult<CentroCustoResumo[]>> {
     try {
         const centros = await FluxoCaixaService.listarCentrosCusto();
 

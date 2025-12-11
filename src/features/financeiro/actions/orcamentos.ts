@@ -28,6 +28,10 @@ import {
     type PeriodoOrcamento,
     type CriarOrcamentoDTO,
     type AtualizarOrcamentoDTO,
+    type AnaliseOrcamentariaItem,
+    type ResumoOrcamentario,
+    type AlertaDesvio,
+    type ProjecaoItem,
 } from '../types/orcamentos';
 
 // ============================================================================
@@ -49,6 +53,13 @@ export interface AnaliseOrcamentariaOptions {
     incluirResumo?: boolean;
     incluirAlertas?: boolean;
     incluirEvolucao?: boolean;
+}
+
+export interface AnaliseOrcamentariaUI {
+    itens: AnaliseOrcamentariaItem[];
+    resumo: ResumoOrcamentario | null;
+    alertas: AlertaDesvio[] | null;
+    evolucao: ProjecaoItem[] | null;
 }
 
 // ============================================================================
@@ -273,7 +284,7 @@ export async function actionEncerrarOrcamento(id: number, usuarioId: string, obs
 export async function actionObterAnaliseOrcamentaria(
     orcamentoId: number,
     options?: AnaliseOrcamentariaOptions
-) {
+): Promise<{ success: true; data: AnaliseOrcamentariaUI } | { success: false; error: string }> {
     try {
         if (!orcamentoId || orcamentoId <= 0) {
             return { success: false, error: 'ID do orçamento inválido' };

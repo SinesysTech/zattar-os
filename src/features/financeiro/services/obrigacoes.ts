@@ -101,8 +101,9 @@ export const ObrigacoesService = {
             }
 
             return { sucesso: true, mensagem: `Acordo sincronizado. ${sucessos} parcelas processadas.` };
-        } catch (e: any) {
-            return { sucesso: false, mensagem: e.message };
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Erro ao sincronizar acordo.';
+            return { sucesso: false, mensagem: message };
         }
     },
 
@@ -130,9 +131,10 @@ export const ObrigacoesService = {
             // Esta lógica depende do serviço de integração do backend
 
             return { sucesso: true, mensagem: 'Sincronização realizada com sucesso' };
-        } catch (e: any) {
-            console.error(e);
-            return { sucesso: false, mensagem: e.message };
+        } catch (error) {
+            console.error(error);
+            const message = error instanceof Error ? error.message : 'Erro ao sincronizar parcela.';
+            return { sucesso: false, mensagem: message };
         }
     },
 

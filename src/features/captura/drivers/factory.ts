@@ -5,7 +5,7 @@
  * Esta factory permite adicionar novos tribunais sem modificar o orquestrador.
  * 
  * IMPORTANTE: A função de acesso a dados buscarConfigTribunal foi movida para
- * o repositório (src/core/captura/repository.ts) para manter clareza de responsabilidades.
+ * o repositório (src/features/captura/repository.ts) para manter clareza de responsabilidades.
  */
 
 import { PjeTrtDriver } from './pje/trt-driver';
@@ -64,7 +64,7 @@ export async function getDriver(tribunalId: string): Promise<JudicialDriver> {
       // Verificar se é um TRT antes de retornar PjeTrtDriver
       // PjeTrtDriver é específico para TRTs (TRT1-TRT24)
       const tribunalCodigo = config.tribunalCodigo || tribunalId;
-      
+
       if (isTRT(tribunalCodigo)) {
         return new PjeTrtDriver();
       } else {

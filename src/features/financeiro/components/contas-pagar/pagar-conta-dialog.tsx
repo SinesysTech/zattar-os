@@ -38,6 +38,7 @@ import type {
   ContaPagarComDetalhes,
   FormaPagamentoContaPagar,
   AnexoLancamento,
+  Lancamento,
 } from '../../types/lancamentos';
 
 interface PagarContaDialogProps {
@@ -227,7 +228,7 @@ export function PagarContaDialog({
       }
 
       // Preparar payload de atualização
-      const payload: any = {
+      const payload: Partial<Lancamento> = {
         status: 'confirmado',
         formaPagamento,
         contaBancariaId: parseInt(contaBancariaId, 10),

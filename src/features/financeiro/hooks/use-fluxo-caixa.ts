@@ -16,7 +16,13 @@ import {
     actionListarContasBancarias,
     actionListarCentrosCusto,
     type FluxoCaixaFiltros,
+    type IndicadoresSaude,
+    type FluxoCaixaAlerta,
+    type FluxoCaixaResumoDashboard,
+    type ContaBancariaResumo,
+    type CentroCustoResumo,
 } from '../actions/fluxo-caixa';
+import type { FluxoCaixaConsolidado, FluxoCaixaDiario, FluxoCaixaPeriodo } from '../domain/fluxo-caixa';
 
 interface UseFluxoCaixaOptions {
     autoFetch?: boolean;
@@ -24,14 +30,14 @@ interface UseFluxoCaixaOptions {
 }
 
 interface UseFluxoCaixaReturn {
-    fluxoUnificado: any | null;
-    fluxoDiario: any[];
-    fluxoPorPeriodo: any[];
-    indicadores: any | null;
-    alertas: any[];
-    resumo: any | null;
-    contasBancarias: any[];
-    centrosCusto: any[];
+    fluxoUnificado: FluxoCaixaConsolidado | null;
+    fluxoDiario: FluxoCaixaDiario[];
+    fluxoPorPeriodo: FluxoCaixaPeriodo[];
+    indicadores: IndicadoresSaude | null;
+    alertas: FluxoCaixaAlerta[];
+    resumo: FluxoCaixaResumoDashboard | null;
+    contasBancarias: ContaBancariaResumo[];
+    centrosCusto: CentroCustoResumo[];
     isLoading: boolean;
     error: string | null;
     obterFluxoUnificado: (filtros: FluxoCaixaFiltros) => Promise<void>;
@@ -45,14 +51,14 @@ interface UseFluxoCaixaReturn {
 }
 
 export function useFluxoCaixa(options?: UseFluxoCaixaOptions): UseFluxoCaixaReturn {
-    const [fluxoUnificado, setFluxoUnificado] = useState<any | null>(null);
-    const [fluxoDiario, setFluxoDiario] = useState<any[]>([]);
-    const [fluxoPorPeriodo, setFluxoPorPeriodo] = useState<any[]>([]);
-    const [indicadores, setIndicadores] = useState<any | null>(null);
-    const [alertas, setAlertas] = useState<any[]>([]);
-    const [resumo, setResumo] = useState<any | null>(null);
-    const [contasBancarias, setContasBancarias] = useState<any[]>([]);
-    const [centrosCusto, setCentrosCusto] = useState<any[]>([]);
+    const [fluxoUnificado, setFluxoUnificado] = useState<FluxoCaixaConsolidado | null>(null);
+    const [fluxoDiario, setFluxoDiario] = useState<FluxoCaixaDiario[]>([]);
+    const [fluxoPorPeriodo, setFluxoPorPeriodo] = useState<FluxoCaixaPeriodo[]>([]);
+    const [indicadores, setIndicadores] = useState<IndicadoresSaude | null>(null);
+    const [alertas, setAlertas] = useState<FluxoCaixaAlerta[]>([]);
+    const [resumo, setResumo] = useState<FluxoCaixaResumoDashboard | null>(null);
+    const [contasBancarias, setContasBancarias] = useState<ContaBancariaResumo[]>([]);
+    const [centrosCusto, setCentrosCusto] = useState<CentroCustoResumo[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

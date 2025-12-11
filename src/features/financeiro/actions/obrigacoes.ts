@@ -3,6 +3,7 @@
 import { ObrigacoesService } from '../services/obrigacoes';
 import { revalidatePath } from 'next/cache';
 import type { ParcelaObrigacao } from '../types/obrigacoes';
+import type { ListarLancamentosParams } from '../types/lancamentos';
 
 // ============================================================================
 // Types - Response padronizado (success/error)
@@ -32,6 +33,28 @@ export interface ObterResumoObrigacoesResult {
     resumo: ResumoObrigacoes;
 }
 
+type ActionStatusResponse = { success: true; message?: string } | { success: false; error: string };
+type ActionVoidResponse = { success: true } | { success: false; error: string };
+
+type ListarObrigacoesResult = {
+    dados: ParcelaObrigacao[];
+    meta: {
+        total: number;
+        pagina: number;
+        limite: number;
+    };
+    resumo: {
+        totalVencidas: number;
+        valorTotalVencido: number;
+        totalPendentes: number;
+        valorTotalPendente: number;
+    };
+};
+
+function getErrorMessage(error: unknown): string {
+    return error instanceof Error ? error.message : 'Erro inesperado.';
+}
+
 // ============================================================================
 // Server Actions - CRUD
 // ============================================================================
@@ -39,54 +62,60 @@ export interface ObterResumoObrigacoesResult {
 /**
  * Sincroniza uma parcela específica
  */
-export async function actionSincronizarParcela(parcelaId: number, forcar: boolean = false) {
+export async function actionSincronizarParcela(parcelaId: number, forcar: boolean = false): Promise<ActionStatusResponse> {
     try {
         const result = await ObrigacoesService.sincronizarParcela(parcelaId, forcar);
         revalidatePath('/financeiro');
         revalidatePath('/financeiro/obrigacoes');
-        return { success: result.sucesso, message: result.mensagem };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+        if (result.sucesso) {
+            return { success: true, message: result.mensagem };
+        }
+        return { success: false, error: result.mensagem };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
 /**
  * Registra declaração de prestação de contas
  */
-export async function actionRegistrarDeclaracao(parcelaId: number, urlArquivo: string) {
+export async function actionRegistrarDeclaracao(parcelaId: number, urlArquivo: string): Promise<ActionVoidResponse> {
     try {
         await ObrigacoesService.registrarDeclaracao(parcelaId, urlArquivo);
         revalidatePath('/financeiro');
         return { success: true };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
 /**
  * Gera repasse para cliente
  */
-export async function actionGerarRepasse(parcelaId: number, urlArquivo: string, dataRepasse: string) {
+export async function actionGerarRepasse(parcelaId: number, urlArquivo: string, dataRepasse: string): Promise<ActionVoidResponse> {
     try {
         await ObrigacoesService.registrarComprovanteRepasse(parcelaId, urlArquivo, dataRepasse);
         revalidatePath('/financeiro');
         return { success: true };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
 /**
  * Sincroniza todas as parcelas de um acordo
  */
-export async function actionSincronizarAcordo(acordoId: number, forcar: boolean = false) {
+export async function actionSincronizarAcordo(acordoId: number, forcar: boolean = false): Promise<ActionStatusResponse> {
     try {
         const result = await ObrigacoesService.sincronizarAcordo(acordoId, forcar);
         revalidatePath('/financeiro');
         revalidatePath('/financeiro/obrigacoes');
-        return { success: result.sucesso, message: result.mensagem };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+        if (result.sucesso) {
+            return { success: true, message: result.mensagem };
+        }
+        return { success: false, error: result.mensagem };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
@@ -162,15 +191,15 @@ export async function actionObterResumoObrigacoes(): Promise<{ success: true; da
             success: true,
             data: { alertas, resumo }
         };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
 /**
  * Obtém alertas financeiros (inconsistências)
  */
-export async function actionObterAlertasFinanceiros() {
+export async function actionObterAlertasFinanceiros(): Promise<{ success: true; data: AlertaObrigacao[] } | { success: false; error: string }> {
     try {
         const inconsistencias = await ObrigacoesService.detectarInconsistencias();
 
@@ -184,15 +213,17 @@ export async function actionObterAlertasFinanceiros() {
         }));
 
         return { success: true, data: alertas };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }
 
 /**
  * Lista obrigações com paginação
  */
-export async function actionListarObrigacoes(params: any) {
+export async function actionListarObrigacoes(
+    params: ListarLancamentosParams
+): Promise<{ success: true; data: ListarObrigacoesResult } | { success: false; error: string }> {
     try {
         const dados = await ObrigacoesService.listarParcelasComLancamentos(params);
 
@@ -218,7 +249,7 @@ export async function actionListarObrigacoes(params: any) {
                 }
             }
         };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
     }
 }

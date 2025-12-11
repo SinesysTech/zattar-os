@@ -273,6 +273,7 @@ export type ListarExpedientesParams = {
   dataArquivamentoFim?: string;
   ordenarPor?: ExpedienteSortBy;
   ordem?: 'asc' | 'desc';
+  processoId?: number;
 };
 
 /**
@@ -304,7 +305,55 @@ export type ExpedientesFilters = Omit<ListarExpedientesParams, 'pagina' | 'limit
  * @deprecated Use ListarExpedientesParams instead
  * Parâmetros para listar pendentes (legado)
  */
-export type ListarPendentesParams = ListarExpedientesParams;
+/**
+ * Parâmetros para listar pendentes (legado - snake_case)
+ * Reflete exatamente os parâmetros aceitos pela rota /api/pendentes-manifestacao
+ */
+export interface ListarPendentesParams {
+  pagina?: number;
+  limite?: number;
+  busca?: string;
+  trt?: string;
+  grau?: GrauPendente;
+  responsavel_id?: number | 'null';
+  sem_responsavel?: boolean;
+  tipo_expediente_id?: number | 'null';
+  sem_tipo?: boolean;
+  baixado?: boolean;
+  prazo_vencido?: boolean;
+
+  // Datas
+  data_prazo_legal_inicio?: string; // YYYY-MM-DD
+  data_prazo_legal_fim?: string;
+  data_ciencia_inicio?: string;
+  data_ciencia_fim?: string;
+  data_criacao_expediente_inicio?: string;
+  data_criacao_expediente_fim?: string;
+  data_autuacao_inicio?: string;
+  data_autuacao_fim?: string;
+  data_arquivamento_inicio?: string;
+  data_arquivamento_fim?: string;
+
+  // Filtros específicos
+  numero_processo?: string;
+  nome_parte_autora?: string;
+  nome_parte_re?: string;
+  descricao_orgao_julgador?: string;
+  sigla_orgao_julgador?: string;
+  classe_judicial?: string;
+  codigo_status_processo?: string;
+  segredo_justica?: boolean;
+  juizo_digital?: boolean;
+  processo_id?: number;
+
+  // Ordenação
+  ordenar_por?: OrdenarPorPendente;
+  ordem?: OrdemPendente;
+
+  // Agrupamento
+  agrupar_por?: AgruparPorPendente;
+  incluir_contagem?: boolean;
+}
 
 /**
  * Resultado da listagem de pendentes (legado)

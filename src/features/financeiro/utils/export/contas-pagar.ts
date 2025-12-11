@@ -19,11 +19,22 @@ import {
     downloadPDF,
 } from './helpers';
 
+type ContaPagarComNome = ContaPagarComDetalhes & { fornecedorNome?: string | null };
+
+function obterNomeFornecedor(conta: ContaPagarComNome): string {
+    return (
+        conta.fornecedor?.nomeFantasia ||
+        conta.fornecedor?.razaoSocial ||
+        conta.fornecedorNome ||
+        ''
+    );
+}
+
 export function exportarContasPagarCSV(contas: ContaPagarComDetalhes[]): void {
     const cabecalhos = ['Descrição', 'Fornecedor', 'Vencimento', 'Valor', 'Status'];
     const linhas = contas.map((conta) => [
         conta.descricao,
-        (conta as any).fornecedor?.nome || (conta as any).fornecedorNome || '',
+        obterNomeFornecedor(conta),
         conta.dataVencimento ? formatarData(conta.dataVencimento) : '-',
         conta.valor,
         conta.status,
@@ -37,7 +48,7 @@ export function gerarContasPagarCSV(contas: ContaPagarComDetalhes[]): string {
     const cabecalhos = ['Descrição', 'Fornecedor', 'Vencimento', 'Valor', 'Status'];
     const linhas = contas.map((conta) => [
         conta.descricao,
-        (conta as any).fornecedor?.nome || (conta as any).fornecedorNome || '',
+        obterNomeFornecedor(conta),
         conta.dataVencimento ? formatarData(conta.dataVencimento) : '-',
         conta.valor,
         conta.status,

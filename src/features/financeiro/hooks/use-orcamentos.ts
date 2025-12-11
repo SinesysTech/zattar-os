@@ -17,6 +17,7 @@ import {
     actionEncerrarOrcamento,
     actionObterAnaliseOrcamentaria,
     type ListarOrcamentosFilters,
+    type AnaliseOrcamentariaUI,
 } from '../actions/orcamentos';
 import type {
     OrcamentoComItens,
@@ -32,7 +33,7 @@ interface UseOrcamentosOptions {
 interface UseOrcamentosReturn {
     orcamentos: OrcamentoComItens[];
     orcamentoSelecionado: OrcamentoComItens | null;
-    analise: any | null;
+    analise: AnaliseOrcamentariaUI | null;
     isLoading: boolean;
     error: string | null;
     total: number;
@@ -51,7 +52,7 @@ interface UseOrcamentosReturn {
 export function useOrcamentos(options?: UseOrcamentosOptions): UseOrcamentosReturn {
     const [orcamentos, setOrcamentos] = useState<OrcamentoComItens[]>([]);
     const [orcamentoSelecionado, setOrcamentoSelecionado] = useState<OrcamentoComItens | null>(null);
-    const [analise, setAnalise] = useState<any | null>(null);
+    const [analise, setAnalise] = useState<AnaliseOrcamentariaUI | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [total, setTotal] = useState(0);
