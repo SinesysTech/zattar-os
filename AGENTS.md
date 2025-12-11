@@ -22,6 +22,85 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 
 ---
 
+# Arquitetura Sinesys 2.0 - AI-First
+
+## Novas Capacidades de IA
+
+O Sinesys 2.0 introduz uma arquitetura AI-First com as seguintes capacidades:
+
+### Integração MCP (Model Context Protocol)
+
+Server Actions são automaticamente expostas como ferramentas MCP para agentes de IA:
+
+```typescript
+// Usar ferramenta MCP
+{
+  "name": "listar_processos",
+  "arguments": { "trt": "TRT15", "limite": 10 }
+}
+```
+
+**Endpoint**: `GET/POST /api/mcp`
+
+### Busca Semântica (RAG)
+
+Busca inteligente usando embeddings de IA:
+
+```typescript
+import { buscaSemantica, obterContextoRAG } from '@/lib/ai';
+
+// Buscar documentos semanticamente similares
+const resultados = await buscaSemantica('audiência trabalhista RJ');
+
+// Obter contexto para LLM
+const { contexto, fontes } = await obterContextoRAG('pergunta', 2000);
+```
+
+### Safe Action Wrapper
+
+Wrapper padronizado para Server Actions compatíveis com UI e MCP:
+
+```typescript
+import { authenticatedAction } from '@/lib/safe-action';
+
+export const actionCriar = authenticatedAction(
+  createSchema,
+  async (data, { user }) => {
+    // data validado, user injetado
+    return resultado;
+  }
+);
+```
+
+### Arquivos RULES.md
+
+Cada feature contém um `RULES.md` com regras de negócio para contexto de IA:
+
+```
+src/features/processos/RULES.md   # Regras de processos
+src/features/partes/RULES.md      # Regras de partes
+src/features/audiencias/RULES.md  # Regras de audiências
+```
+
+### Scripts de Manutenção
+
+```bash
+npm run mcp:check    # Verificar ferramentas registradas
+npm run mcp:dev      # Servidor MCP de desenvolvimento
+npm run ai:reindex   # Reindexar documentos para busca
+```
+
+### Referência Rápida
+
+| Módulo | Localização | Descrição |
+|--------|-------------|-----------|
+| Safe Action | `@/lib/safe-action` | Wrapper de actions |
+| AI/RAG | `@/lib/ai` | Embeddings e busca |
+| MCP | `@/lib/mcp` | Servidor e ferramentas |
+| API MCP | `/api/mcp` | Endpoint SSE |
+
+---
+
 # Sinesys - Instruções para Agentes de IA
 
 ## 🏗 Arquitetura do Sistema
