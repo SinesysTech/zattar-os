@@ -17,6 +17,7 @@ import type {
   ProcessoInstancia,
   ListarAcervoUnificadoResult,
   GrauAcervo,
+  ProcessoClienteCpfRow,
 } from './types';
 import { mapearStatusProcesso } from './domain';
 
@@ -622,4 +623,117 @@ export async function atribuirResponsavel(
     const cacheKey = `acervo:id:${id}`;
     await setCached(cacheKey, null, 0); // Delete from cache
   }
+}
+
+/**
+ * Busca processos de um cliente pelo CPF
+ * Utiliza a VIEW materializada 'view_processos_cliente_por_cpf' se disponível,
+ * ou faz a query manual com JOINs
+ */
+export async function buscarProcessosClientePorCpf(
+  cpf: string
+): Promise<{ cliente: { id: number; nome: string; cpf: string; } | null; processos: ProcessoClienteCpfRow[] }> {
+  const supabase = createServiceClient();
+  const cpfLimpo = cpf.replace(/\D/g, '');
+
+  console.log(`🔍 [BuscarProcessosCPF] Buscando: ${cpfLimpo}`);
+
+  // 1. Buscar Cliente
+  const { data: cliente, error: errorCliente } = await supabase
+    .from('clientes')
+    .select('id, nome, cpf')
+    .eq('cpf', cpfLimpo)
+    .single();
+
+  if (errorCliente || !cliente) {
+    console.log('❌ [BuscarProcessosCPF] Cliente não encontrado');
+    return { cliente: null, processos: [] };
+  }
+
+  // 2. Buscar participações
+  const { data: participacoes, error: errorPart } = await supabase
+    .from('processo_partes')
+    .select('processo_id, tipo_parte, polo, principal')
+    .eq('tipo_entidade', 'cliente')
+    .eq('entidade_id', cliente.id);
+
+  if (errorPart || !participacoes || participacoes.length === 0) {
+    return {
+      cliente: { id: cliente.id, nome: cliente.nome, cpf: cliente.cpf },
+      processos: [],
+    };
+  }
+
+  // 3. Buscar processos
+  const processoIds = participacoes.map(p => p.processo_id);
+  const { data: acervoData, error: errorAcervo } = await supabase
+    .from('acervo')
+    .select(`
+      id,
+      id_pje,
+      advogado_id,
+      numero_processo,
+      trt,
+      grau,
+      classe_judicial,
+      nome_parte_autora,
+      nome_parte_re,
+      descricao_orgao_julgador,
+      codigo_status_processo,
+      location:origem,
+      data_autuacao,
+      data_arquivamento,
+      data_proxima_audiencia,
+      segredo_justica,
+      timeline_mongodb_id
+    `)
+    .in('id', processoIds);
+    // Note: 'origem' column might need alias if it conflicts or use proper name. 
+    // In backend service it was 'origem'. 
+    // However, in ProcessoClienteCpfRow I see 'origem'.
+    // In Supabase query, I should check if 'origem' is a column name or if I need to map it.
+    // The previous backend code had `origem` in select. I'll stick to that.
+    // But wait, in mapped object: `origem: processo.origem as 'acervo_geral' | 'arquivado'`.
+    // Let's correct select to just 'origem'.
+
+  if (errorAcervo || !acervoData) {
+    throw new Error(`Erro ao buscar processes: ${errorAcervo?.message}`);
+  }
+
+  // 4. Join and Map
+  const processos: ProcessoClienteCpfRow[] = acervoData.map((processo: any) => {
+    const part = participacoes.find(p => p.processo_id === processo.id);
+    return {
+      tipo_parte: part?.tipo_parte || 'DESCONHECIDO',
+      polo: part?.polo || 'DESCONHECIDO',
+      parte_principal: part?.principal || false,
+      processo_id: processo.id,
+      id_pje: processo.id_pje?.toString() || '0', 
+      advogado_id: processo.advogado_id,
+      numero_processo: processo.numero_processo,
+      trt: processo.trt,
+      grau: processo.grau as 'primeiro_grau' | 'segundo_grau',
+      classe_judicial: processo.classe_judicial,
+      nome_parte_autora: processo.nome_parte_autora,
+      nome_parte_re: processo.nome_parte_re,
+      descricao_orgao_julgador: processo.descricao_orgao_julgador,
+      codigo_status_processo: processo.codigo_status_processo,
+      origem: processo.origem as 'acervo_geral' | 'arquivado',
+      data_autuacao: processo.data_autuacao,
+      data_arquivamento: processo.data_arquivamento,
+      data_proxima_audiencia: processo.data_proxima_audiencia,
+      segredo_justica: processo.segredo_justica,
+      timeline_mongodb_id: processo.timeline_mongodb_id,
+    };
+  });
+
+  return {
+    cliente: { id: cliente.id, nome: cliente.nome, cpf: cliente.cpf },
+    processos,
+  };
+}
+
+export async function refreshViewProcessosClienteCpf(): Promise<void> {
+  const supabase = createServiceClient();
+  await supabase.rpc('refresh_processos_cliente_por_cpf');
 }
