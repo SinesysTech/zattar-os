@@ -23,8 +23,9 @@ import {
   formatarCnpj,
   formatarTelefone,
   formatarTipoPessoa,
+  actionBuscarPartesPorProcessoEPolo,
 } from '@/features/partes';
-import type { ParteComDadosCompletos } from '@/features/partes/types/processo-partes';
+import type { ParteComDadosCompletos } from '@/features/partes';
 
 interface ParteDetalheDialogProps {
   open: boolean;
@@ -32,15 +33,6 @@ interface ParteDetalheDialogProps {
   processoId: number | null;
   polo: 'ATIVO' | 'PASSIVO';
   nomeExibido: string; // nome mostrado no badge (fallback)
-}
-
-interface ApiResponse {
-  success: boolean;
-  data?: {
-    partes: ParteComDadosCompletos[];
-    principal: ParteComDadosCompletos | null;
-  };
-  error?: string;
 }
 
 export function ParteDetalheDialog({
@@ -69,24 +61,15 @@ export function ParteDetalheDialog({
       setError(null);
 
       try {
-        const response = await fetch(
-          `/api/partes/processo-partes/processo/${processoId}/polo/${polo}`
-        );
-
-        if (!response.ok) {
-          throw new Error('Erro ao buscar dados da parte');
+        const result = await actionBuscarPartesPorProcessoEPolo(processoId, polo);
+        if (!result.success) {
+          throw new Error(result.error || 'Erro ao buscar dados da parte');
         }
 
-        const data: ApiResponse = await response.json();
-
-        if (!data.success || !data.data) {
-          throw new Error(data.error || 'Erro ao buscar dados da parte');
-        }
-
-        setParte(data.data.principal);
+        setParte(result.data.principal);
         // Outras partes além da principal
         setOutrasPartes(
-          data.data.partes.filter(p => p.id !== data.data!.principal?.id)
+          result.data.partes.filter(p => p.id !== result.data.principal?.id)
         );
       } catch (err) {
         console.error('Erro ao buscar parte:', err);

@@ -33,10 +33,10 @@ import type {
   FetchDocumentoParams,
   FetchDocumentoResult,
   ArquivoInfo,
-} from '@/backend/types/pje-trt/documento-types';
-import { uploadToBackblaze } from '@/backend/storage/backblaze-b2.service';
-import { gerarCaminhoCompletoPendente } from '@/backend/storage/file-naming.utils';
-import { atualizarDocumentoPendente } from '@/backend/captura/services/persistence/pendentes-persistence.service';
+} from '@/features/captura/types/documento-types';
+import { uploadToBackblaze } from '@/lib/storage/backblaze-b2.service';
+import { gerarCaminhoCompletoPendente } from '@/lib/storage/file-naming.utils';
+import { atualizarDocumentoPendente } from '@/features/captura/services/persistence/pendentes-persistence.service';
 
 /**
  * Função: fetchDocumentoMetadata

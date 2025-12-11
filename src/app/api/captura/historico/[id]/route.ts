@@ -7,7 +7,7 @@ import { authenticateRequest } from '@/lib/auth/api-auth';
 import {
   buscarCapturaLog,
   deletarCapturaLog,
-} from '@/backend/captura/services/persistence/captura-log-persistence.service';
+} from '@/features/captura/services/persistence/captura-log-persistence.service';
 
 type RouteParams = {
   params: Promise<{

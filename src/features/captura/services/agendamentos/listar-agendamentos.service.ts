@@ -1,8 +1,8 @@
 // Serviço de aplicação para listar agendamentos
 
 import { listarAgendamentos as listarAgendamentosPersistence } from '../persistence/agendamento-persistence.service';
-import type { ListarAgendamentosParams } from '@/backend/types/captura/agendamentos-types';
-import type { Paginacao } from '@/backend/types/global';
+import type { ListarAgendamentosParams } from '../../types/agendamentos-types';
+import type { Paginacao } from '@/lib/types/paginacao';
 
 export interface ListarAgendamentosResult {
   agendamentos: Array<{

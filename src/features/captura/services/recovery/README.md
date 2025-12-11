@@ -16,7 +16,7 @@ Os dados brutos permanecem no MongoDB (`captura_logs_brutos`), permitindo recupe
 ## Arquitetura
 
 ```
-backend/captura/services/recovery/
+src/features/captura/services/recovery/
 ├── types.ts                      # Tipos TypeScript
 ├── captura-recovery.service.ts   # Listagem e busca de logs MongoDB
 ├── recovery-analysis.service.ts  # Análise de gaps (MongoDB vs PostgreSQL)
@@ -246,7 +246,7 @@ curl -X POST "http://localhost:3000/api/captura/recovery/reprocess" \
 ### Listar logs com gaps
 
 ```typescript
-import { listarLogsRecovery } from '@/backend/captura/services/recovery/captura-recovery.service';
+import { listarLogsRecovery } from '@/features/captura/services/recovery/captura-recovery.service';
 
 const resultado = await listarLogsRecovery({
   tipoCaptura: 'partes',
@@ -260,7 +260,7 @@ console.log(`Total de logs: ${resultado.total}`);
 ### Analisar gaps de um documento
 
 ```typescript
-import { analisarCaptura } from '@/backend/captura/services/recovery/recovery-analysis.service';
+import { analisarCaptura } from '@/features/captura/services/recovery/recovery-analysis.service';
 
 const analise = await analisarCaptura('507f1f77bcf86cd799439011');
 
@@ -273,7 +273,7 @@ if (analise) {
 ### Re-processar endereços
 
 ```typescript
-import { reprocessarElementos } from '@/backend/captura/services/recovery/endereco-recovery.service';
+import { reprocessarElementos } from '@/features/captura/services/recovery/endereco-recovery.service';
 
 const resultado = await reprocessarElementos({
   mongoIds: ['507f1f77bcf86cd799439011'],
@@ -292,7 +292,7 @@ console.log(`Erros: ${resultado.totalErros}`);
 ### Re-processar por captura_log_id
 
 ```typescript
-import { reprocessarEnderecosPorCapturaLogId } from '@/backend/captura/services/recovery/endereco-recovery.service';
+import { reprocessarEnderecosPorCapturaLogId } from '@/features/captura/services/recovery/endereco-recovery.service';
 
 const resultado = await reprocessarEnderecosPorCapturaLogId(123, {
   apenasGaps: true,

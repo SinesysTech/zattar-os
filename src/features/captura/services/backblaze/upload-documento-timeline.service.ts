@@ -5,8 +5,8 @@
  * para o Backblaze B2 com organização padronizada.
  */
 
-import { uploadToBackblaze, type BackblazeUploadResult } from '@/backend/storage/backblaze-b2.service';
-import { gerarCaminhoCompletoTimeline } from '@/backend/storage/file-naming.utils';
+import { uploadToBackblaze, type BackblazeUploadResult } from '@/lib/storage/backblaze-b2.service';
+import { gerarCaminhoCompletoTimeline } from '@/lib/storage/file-naming.utils';
 
 /**
  * Parâmetros para upload de documento da timeline

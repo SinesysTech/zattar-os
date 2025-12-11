@@ -1,6 +1,6 @@
 // Serviço para calcular próxima execução de agendamentos
 
-import type { Periodicidade } from '@/backend/types/captura/agendamentos-types';
+import type { Periodicidade } from '../../types/agendamentos-types';
 
 /**
  * Calcula a próxima execução baseado em periodicidade, dias_intervalo e horário

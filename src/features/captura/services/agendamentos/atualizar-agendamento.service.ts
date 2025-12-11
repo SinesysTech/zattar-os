@@ -2,7 +2,7 @@
 
 import { atualizarAgendamento as atualizarAgendamentoPersistence, buscarAgendamentoPorId } from '../persistence/agendamento-persistence.service';
 import { calcularProximaExecucao } from './calcular-proxima-execucao.service';
-import type { AtualizarAgendamentoParams, Agendamento } from '@/backend/types/captura/agendamentos-types';
+import type { AtualizarAgendamentoParams, Agendamento } from '../../types/agendamentos-types';
 
 /**
  * Atualiza um agendamento e recalcula próxima execução se necessário

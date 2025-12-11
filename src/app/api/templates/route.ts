@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
+import {
   listarTemplates,
   criarTemplate,
   listarTemplatesMaisUsados,

@@ -26,6 +26,9 @@ export type {
   ListarTerceirosParams,
 } from '../domain';
 
+// Processo-Partes
+export type { ParteComDadosCompletos } from './processo-partes';
+
 // Tipos de endereco
 export type ParteEndereco = {
   cep?: string | null;

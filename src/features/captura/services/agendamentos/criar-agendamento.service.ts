@@ -2,7 +2,7 @@
 
 import { criarAgendamento as criarAgendamentoPersistence } from '../persistence/agendamento-persistence.service';
 import { calcularProximaExecucao } from './calcular-proxima-execucao.service';
-import type { CriarAgendamentoParams, Agendamento } from '@/backend/types/captura/agendamentos-types';
+import type { CriarAgendamentoParams, Agendamento } from '../../types/agendamentos-types';
 
 /**
  * Cria um novo agendamento e calcula a próxima execução

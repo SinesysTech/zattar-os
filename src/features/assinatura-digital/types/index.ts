@@ -92,5 +92,5 @@ export type {
   PosicaoCampo,
   EstiloCampo,
   ConteudoComposto,
-  TemplateCampo,
+  TemplateCampo as TemplateCampoPdf,
 } from './template.types';

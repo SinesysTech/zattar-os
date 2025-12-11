@@ -310,7 +310,7 @@ await createMongoIndexes(); // Executar na inicialização
 ### Criar log de captura
 
 ```typescript
-import { criarCapturaLog } from "@/backend/captura/services/persistence/captura-log-persistence.service";
+import { criarCapturaLog } from "@/features/captura/services/persistence/captura-log-persistence.service";
 
 const capturaLog = await criarCapturaLog({
   tipo_captura: "partes",
@@ -323,7 +323,7 @@ const capturaLog = await criarCapturaLog({
 ### Salvar log bruto MongoDB
 
 ```typescript
-import { registrarCapturaRawLog } from "@/backend/captura/services/persistence/captura-raw-log.service";
+import { registrarCapturaRawLog } from "@/features/captura/services/persistence/captura-raw-log.service";
 
 const result = await registrarCapturaRawLog({
   captura_log_id: capturaLog.id,
@@ -346,7 +346,7 @@ if (!result.success) {
 ### Buscar logs de uma captura
 
 ```typescript
-import { buscarLogsBrutoPorCapturaId } from "@/backend/captura/services/persistence/captura-raw-log.service";
+import { buscarLogsBrutoPorCapturaId } from "@/features/captura/services/persistence/captura-raw-log.service";
 
 const logs = await buscarLogsBrutoPorCapturaId(capturaLogId);
 logs.forEach((log) => {
@@ -357,8 +357,8 @@ logs.forEach((log) => {
 ### Validar consistência
 
 ```typescript
-import { buscarCapturaLog } from "@/backend/captura/services/persistence/captura-log-persistence.service";
-import { contarLogsBrutoPorStatus } from "@/backend/captura/services/persistence/captura-raw-log.service";
+import { buscarCapturaLog } from "@/features/captura/services/persistence/captura-log-persistence.service";
+import { contarLogsBrutoPorStatus } from "@/features/captura/services/persistence/captura-raw-log.service";
 
 const captura = await buscarCapturaLog(id);
 const contadores = await contarLogsBrutoPorStatus(id);

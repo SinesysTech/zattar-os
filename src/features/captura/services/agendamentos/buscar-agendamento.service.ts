@@ -1,7 +1,7 @@
 // Serviço de aplicação para buscar agendamento por ID
 
 import { buscarAgendamentoPorId as buscarAgendamentoPorIdPersistence } from '../persistence/agendamento-persistence.service';
-import type { Agendamento } from '@/backend/types/captura/agendamentos-types';
+import type { Agendamento } from '../../types/agendamentos-types';
 
 /**
  * Busca um agendamento por ID

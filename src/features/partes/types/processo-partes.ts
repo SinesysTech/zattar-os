@@ -3,11 +3,12 @@
  */
 
 import type { TipoParteProcesso, PoloProcessoParte } from '@/types/domain/processo-partes';
-import type { Cliente, ParteContraria, Terceiro } from '../domain';
 
 /**
- * Parte com dados completos da entidade vinculada
- * Inclui informações da entidade (cliente, parte contrária ou terceiro) e do vínculo
+ * Parte com dados completos da entidade vinculada (shape usado no frontend)
+ *
+ * Nota: este tipo representa o payload retornado pelas actions (e antes pelas rotas REST),
+ * combinando dados do vínculo (processo_partes) + dados essenciais da entidade (clientes/partes_contrarias/terceiros).
  */
 export interface ParteComDadosCompletos {
   // Dados do vínculo
@@ -27,8 +28,16 @@ export interface ParteComDadosCompletos {
   dados_pje_completo: Record<string, unknown> | null;
   created_at: string;
   updated_at: string;
-  
-  // Dados da entidade (um dos três abaixo será preenchido)
-  entidade?: Cliente | ParteContraria | Terceiro;
+
+  // Dados essenciais da entidade (cliente/parte contrária/terceiro)
+  nome: string;
+  tipo_pessoa: 'pf' | 'pj';
+  cpf: string | null;
+  cnpj: string | null;
+  emails: string[] | null;
+  ddd_celular: string | null;
+  numero_celular: string | null;
+  ddd_telefone: string | null;
+  numero_telefone: string | null;
 }
 

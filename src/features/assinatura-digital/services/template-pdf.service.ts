@@ -1,7 +1,7 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import type { PDFFont, PDFImage } from 'pdf-lib';
 import { decodeDataUrlToBuffer } from './base64';
-import type { TemplateCampo, TipoVariavel, EstiloCampo } from '../types';
+import type { TemplateCampoPdf, TipoVariavel, EstiloCampo } from '../types';
 import type { ClienteBasico, FormularioBasico, SegmentoBasico, TemplateBasico } from './data.service';
 import { logger, createTimer, LogServices } from './logger';
 
@@ -15,7 +15,7 @@ interface PdfDataContext {
 }
 
 interface TemplateWithCampos extends TemplateBasico {
-  campos_parsed: TemplateCampo[];
+  campos_parsed: TemplateCampoPdf[];
 }
 
 /**
@@ -85,7 +85,7 @@ function convertY(y: number, height: number, pageHeight: number) {
 }
 
 function parseCampos(template: TemplateBasico): TemplateWithCampos {
-  let campos_parsed: TemplateCampo[] = [];
+  let campos_parsed: TemplateCampoPdf[] = [];
   try {
     campos_parsed = JSON.parse(template.campos || '[]');
   } catch {

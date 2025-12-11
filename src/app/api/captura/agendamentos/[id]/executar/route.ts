@@ -3,8 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { buscarAgendamento } from '@/backend/captura/services/agendamentos/buscar-agendamento.service';
-import { executarAgendamento } from '@/backend/captura/services/scheduler/executar-agendamento.service';
+import { buscarAgendamento } from '@/features/captura/services/agendamentos/buscar-agendamento.service';
+import { executarAgendamento } from '@/features/captura/services/scheduler/executar-agendamento.service';
 
 /**
  * @swagger

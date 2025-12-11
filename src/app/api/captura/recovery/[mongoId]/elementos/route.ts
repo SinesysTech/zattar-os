@@ -17,8 +17,8 @@ import { authenticateRequest } from '@/lib/auth/api-auth';
 import {
   extrairTodosElementos,
   extrairElementosPorTipo,
-} from '@/backend/captura/services/recovery/recovery-analysis.service';
-import { buscarLogPorMongoId } from '@/backend/captura/services/recovery/captura-recovery.service';
+} from '@/features/captura/services/recovery/recovery-analysis.service';
+import { buscarLogPorMongoId } from '@/features/captura/services/recovery/captura-recovery.service';
 
 interface RouteParams {
   params: Promise<{
