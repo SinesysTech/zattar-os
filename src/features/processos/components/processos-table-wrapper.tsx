@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableShell } from '@/components/shared/data-table-shell';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';

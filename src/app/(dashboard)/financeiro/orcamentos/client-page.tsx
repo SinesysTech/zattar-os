@@ -9,7 +9,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -17,9 +17,9 @@ import {
   buildOrcamentosFilterOptions,
   buildOrcamentosFilterGroups,
   parseOrcamentosFilters,
-} from '@/features/financeiro/components/orcamentos/orcamentos-toolbar-filters';
-import { ResumoCards } from '@/features/financeiro/components/orcamentos/resumo-cards';
-import { OrcamentoFormDialog } from '@/features/financeiro/components/orcamentos/orcamento-form-dialog';
+  ResumoCards,
+  OrcamentoFormDialog,
+} from '@/features/financeiro';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -56,17 +56,17 @@ import {
   iniciarExecucaoOrcamento,
   encerrarOrcamento,
   excluirOrcamento,
-} from '@/features/financeiro/hooks/use-orcamentos';
+} from '@/features/financeiro';
 import { toast } from 'sonner';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
   OrcamentoComItens,
   StatusOrcamento,
-} from '@/features/financeiro/types/orcamentos';
+} from '@/features/financeiro';
 import {
   exportarOrcamentoCSV,
   exportarRelatorioPDF,
-} from '@/features/financeiro/utils/export/orcamentos';
+} from '@/features/financeiro';
 
 // ============================================================================
 // Constantes e Helpers

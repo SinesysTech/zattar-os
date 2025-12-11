@@ -59,6 +59,8 @@ export {
 // Actions
 export {
   actionListarAcervo,
+  actionListarAcervoPaginado,
+  actionListarAcervoUnificado,
   actionBuscarProcesso,
   actionAtribuirResponsavel,
   actionBuscarProcessosClientePorCpf,

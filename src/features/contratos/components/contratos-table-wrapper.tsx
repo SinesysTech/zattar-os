@@ -12,7 +12,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/hooks/use-debounce';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { ContratosTable } from './contratos-table';
 import { ContratoForm } from './contrato-form';
