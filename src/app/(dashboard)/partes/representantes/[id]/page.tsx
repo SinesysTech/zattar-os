@@ -22,6 +22,7 @@ import {
   formatarCep,
 } from '@/features/partes';
 import type { RepresentanteComEndereco } from '@/features/partes';
+import { actionBuscarRepresentantePorId } from '@/features/partes/representantes/actions/representantes-actions';
 
 // Componente auxiliar para exibir campo
 function Campo({ label, value }: { label: string; value: React.ReactNode }) {
@@ -65,16 +66,13 @@ export default function RepresentantePage() {
   React.useEffect(() => {
     async function fetchRepresentante() {
       try {
-        const response = await fetch(`/api/representantes/${representanteId}`);
-        if (!response.ok) {
-          throw new Error('Erro ao carregar representante');
-        }
-        const data = await response.json();
-        if (data.success) {
-          setRepresentante(data.data);
-        } else {
-          throw new Error(data.error || 'Erro ao carregar representante');
-        }
+        const id = parseInt(representanteId);
+        if (isNaN(id) || id <= 0) throw new Error('ID inválido');
+
+        const result = await actionBuscarRepresentantePorId(id, { incluirEndereco: true });
+        if (!result.success) throw new Error(result.error || 'Erro ao carregar representante');
+
+        setRepresentante((result.data as RepresentanteComEndereco) || null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro desconhecido');
       } finally {

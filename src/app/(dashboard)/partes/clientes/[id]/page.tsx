@@ -21,6 +21,7 @@ import {
 } from '@/features/partes';
 import type { Cliente } from '@/features/partes';
 import type { Endereco } from '@/features/enderecos/types';
+import { actionBuscarCliente } from '@/features/partes/actions/clientes-actions';
 
 // Extend Cliente to include all optional fields from database
 type ClienteCompleto = Cliente & {
@@ -104,16 +105,12 @@ export default function ClientePage() {
   React.useEffect(() => {
     async function fetchCliente() {
       try {
-        const response = await fetch(`/api/clientes/${clienteId}`);
-        if (!response.ok) {
-          throw new Error('Erro ao carregar cliente');
-        }
-        const data = await response.json();
-        if (data.success) {
-          setCliente(data.data);
-        } else {
-          throw new Error(data.error || 'Erro ao carregar cliente');
-        }
+        const id = parseInt(clienteId);
+        if (isNaN(id) || id <= 0) throw new Error('ID inválido');
+
+        const result = await actionBuscarCliente(id);
+        if (!result.success) throw new Error(result.error || 'Erro ao carregar cliente');
+        setCliente((result.data as ClienteCompleto) || null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro desconhecido');
       } finally {

@@ -21,6 +21,7 @@ import {
 } from '@/features/partes';
 import type { ParteContraria } from '@/features/partes';
 import type { Endereco } from '@/features/enderecos/types';
+import { actionBuscarParteContraria } from '@/features/partes/actions/partes-contrarias-actions';
 
 // Extend ParteContraria to include all optional fields from database
 type ParteContrariaCompleta = ParteContraria & {
@@ -108,16 +109,12 @@ export default function ParteContrariaPage() {
   React.useEffect(() => {
     async function fetchParte() {
       try {
-        const response = await fetch(`/api/partes-contrarias/${parteId}`);
-        if (!response.ok) {
-          throw new Error('Erro ao carregar parte contrária');
-        }
-        const data = await response.json();
-        if (data.success) {
-          setParte(data.data);
-        } else {
-          throw new Error(data.error || 'Erro ao carregar parte contrária');
-        }
+        const id = parseInt(parteId);
+        if (isNaN(id) || id <= 0) throw new Error('ID inválido');
+
+        const result = await actionBuscarParteContraria(id);
+        if (!result.success) throw new Error(result.error || 'Erro ao carregar parte contrária');
+        setParte((result.data as ParteContrariaCompleta) || null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro desconhecido');
       } finally {

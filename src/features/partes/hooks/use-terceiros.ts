@@ -8,9 +8,9 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { Terceiro } from '../types';
 import type {
   BuscarTerceirosParams,
-  TerceirosApiResponse,
   PaginationInfo,
 } from '../types';
+import { actionListarTerceiros } from '../actions/terceiros-actions';
 
 interface UseTerceirosResult {
   terceiros: Terceiro[];
@@ -63,53 +63,28 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
     setError(null);
 
     try {
-      // Construir query string
-      const searchParams = new URLSearchParams();
+      const result = await actionListarTerceiros({
+        pagina,
+        limite,
+        busca: busca || undefined,
+        tipo_pessoa: (tipo_pessoa as 'pf' | 'pj' | '') || undefined,
+        tipo_parte: tipo_parte || undefined,
+        polo: polo || undefined,
+        situacao: (situacao as 'A' | 'I' | '') || undefined,
+        incluir_endereco: incluirEndereco,
+        incluir_processos: incluirProcessos,
+      });
 
-      searchParams.set('pagina', pagina.toString());
-      searchParams.set('limite', limite.toString());
-
-      if (busca) {
-        searchParams.set('busca', busca);
-      }
-      if (tipo_pessoa) {
-        searchParams.set('tipo_pessoa', tipo_pessoa);
-      }
-      if (tipo_parte) {
-        searchParams.set('tipo_parte', tipo_parte);
-      }
-      if (polo) {
-        searchParams.set('polo', polo);
-      }
-      if (situacao) {
-        searchParams.set('situacao', situacao);
-      }
-      if (incluirEndereco) {
-        searchParams.set('incluir_endereco', 'true');
-      }
-      if (incluirProcessos) {
-        searchParams.set('incluir_processos', 'true');
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Erro ao buscar terceiros');
       }
 
-      const response = await fetch(`/api/terceiros?${searchParams.toString()}`);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
-      }
-
-      const data: TerceirosApiResponse = await response.json();
-
-      if (!data.success) {
-        throw new Error('Resposta da API indicou falha');
-      }
-
-      setTerceiros(data.data.terceiros);
+      setTerceiros(result.data.data as Terceiro[]);
       setPaginacao({
-        pagina: data.data.pagina,
-        limite: data.data.limite,
-        total: data.data.total,
-        totalPaginas: data.data.totalPaginas,
+        pagina: result.data.pagination.page,
+        limite: result.data.pagination.limit,
+        total: result.data.pagination.total,
+        totalPaginas: result.data.pagination.totalPages,
       });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar terceiros';

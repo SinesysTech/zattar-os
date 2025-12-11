@@ -32,12 +32,10 @@ jest.mock('@/lib/supabase/service-client', () => ({
   }),
 }));
 
-// Mock do persistence service
+// Mock do repository
 const mockBuscarParcelaPorId = jest.fn();
 const mockBuscarParcelasPorAcordo = jest.fn();
-const mockBuscarLancamentoPorParcela = jest.fn();
-const mockDetectarInconsistenciasAcordo = jest.fn();
-const mockInvalidateObrigacoesCache = jest.fn();
+const mockDetectarInconsistencias = jest.fn();
 
 jest.mock(
   '@/features/financeiro/repository/obrigacoes',
@@ -45,8 +43,7 @@ jest.mock(
     ObrigacoesRepository: {
       buscarParcelaPorId: mockBuscarParcelaPorId,
       buscarParcelasPorAcordo: mockBuscarParcelasPorAcordo,
-      buscarLancamentoPorParcela: mockBuscarLancamentoPorParcela,
-      detectarInconsistencias: mockDetectarInconsistenciasAcordo,
+      detectarInconsistencias: mockDetectarInconsistencias,
     },
   })
 );
@@ -172,9 +169,7 @@ function resetMocks() {
 
   mockBuscarParcelaPorId.mockReset();
   mockBuscarParcelasPorAcordo.mockReset();
-  mockBuscarLancamentoPorParcela.mockReset();
-  mockDetectarInconsistenciasAcordo.mockReset();
-  mockInvalidateObrigacoesCache.mockReset();
+  mockDetectarInconsistencias.mockReset();
 
   // Setup chain mocks default
   mockSupabaseSelect.mockReturnValue({
