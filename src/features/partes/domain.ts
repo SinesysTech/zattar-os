@@ -998,7 +998,7 @@ export interface ListarTerceirosParams {
 // TIPOS COM RELACIONAMENTOS (JOINs)
 // =============================================================================
 
-import type { Endereco } from '@/core/enderecos';
+import type { Endereco } from '@/features/enderecos';
 
 /**
  * Processo relacionado a uma parte (resumo)

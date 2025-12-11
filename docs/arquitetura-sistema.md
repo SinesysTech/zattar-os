@@ -119,6 +119,9 @@ sinesys/
 │   │   ├── contratos/            # ✅ Contratos (migrado)
 │   │   ├── rh/                   # ✅ RH (migrado)
 │   │   ├── expedientes/          # ✅ Expedientes (migrado)
+│   │   ├── advogados/            # ✅ Advogados (migrado)
+│   │   ├── cargos/               # ✅ Cargos (migrado)
+│   │   ├── usuarios/             # ✅ Usuários (migrado)
 │   │   └── [...outros]/         # 🔄 Em migração
 │   ├── components/               # Componentes React reutilizáveis
 │   │   ├── ui/                   # Componentes base (shadcn/ui)
