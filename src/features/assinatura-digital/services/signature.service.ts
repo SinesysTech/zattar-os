@@ -74,7 +74,7 @@
 import { randomUUID } from 'crypto';
 import { PDFDocument } from 'pdf-lib';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import { generatePdfFromTemplate, appendManifestPage, MANIFEST_LEGAL_TEXT, type ManifestData } from './template-pdf.service';
 import { storePdf, storePhotoImage, storeSignatureImage } from './storage.service';
 import { calculateHash, verifyHash } from './integrity.service';
@@ -94,7 +94,7 @@ import type {
   PreviewResult,
   DeviceFingerprintData,
   AuditResult,
-} from '@/backend/types/assinatura-digital/types';
+} from '@/features/assinatura-digital/types/types';
 
 const SERVICE = LogServices.SIGNATURE;
 

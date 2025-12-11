@@ -53,13 +53,13 @@
 
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaCombinAdaParams } from './trt-capture.service';
-import { obterTodasAudiencias } from '@/backend/api/pje-trt';
+import { obterTodasAudiencias } from '@/features/captura/pje-trt';
 import {
     obterTodosProcessosPendentesManifestacao,
-} from '@/backend/api/pje-trt';
+} from '@/features/captura/pje-trt';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
-import { buscarOuCriarAdvogadoPorCpf } from '@/backend/utils/captura/advogado-helper.service';
+import { buscarOuCriarAdvogadoPorCpf } from '@/lib/utils/captura/advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import {
     buscarDadosComplementaresProcessos,
@@ -67,7 +67,7 @@ import {
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 
 /**
  * Resultado de uma captura individual (audiências ou pendentes)

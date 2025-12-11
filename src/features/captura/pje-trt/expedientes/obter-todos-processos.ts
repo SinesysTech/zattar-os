@@ -79,7 +79,7 @@
  */
 
 import type { Page } from 'playwright';
-import type { Processo } from '@/backend/types/pje-trt/types';
+import type { Processo } from '@/features/captura/types/trt-types';
 import { obterProcessosPendentesManifestacao } from './obter-processos';
 
 export async function obterTodosProcessosPendentesManifestacao(

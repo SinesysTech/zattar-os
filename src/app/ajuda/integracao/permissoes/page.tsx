@@ -323,7 +323,7 @@ Content-Type: application/json
             </CardHeader>
             <CardContent>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`import { checkPermission } from '@/backend/utils/auth/authorization';
+{`import { checkPermission } from '@/lib/auth/authorization';
 
 export async function POST(request: NextRequest) {
   const authResult = await authenticateRequest(request);
@@ -355,7 +355,7 @@ export async function POST(request: NextRequest) {
             </CardHeader>
             <CardContent>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`import { requirePermission } from '@/backend/utils/auth/require-permission';
+{`import { requirePermission } from '@/lib/auth/require-permission';
 
 export async function POST(request: NextRequest) {
   // Verifica autenticação + autorização em uma linha
@@ -380,7 +380,7 @@ export async function POST(request: NextRequest) {
             </CardHeader>
             <CardContent>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`import { invalidarCacheUsuario } from '@/backend/utils/auth/authorization';
+{`import { invalidarCacheUsuario } from '@/lib/auth/authorization';
 
 // Após atribuir permissões
 await atribuirPermissoesBatch(usuarioId, permissoes);
@@ -433,7 +433,7 @@ invalidarCacheUsuario(usuarioId);`}
                     <p className="text-muted-foreground"><strong>Causa:</strong> Cache desatualizado</p>
                     <p className="text-muted-foreground"><strong>Solução:</strong></p>
                     <pre className="text-sm bg-muted p-3 rounded-md overflow-x-auto">
-{`import { invalidarCacheUsuario } from '@/backend/utils/auth/authorization';
+{`import { invalidarCacheUsuario } from '@/lib/auth/authorization';
 await invalidarCacheUsuario(usuarioId);`}
                     </pre>
                   </AccordionContent>
@@ -462,7 +462,7 @@ await invalidarCacheUsuario(usuarioId);`}
                     <p className="text-muted-foreground"><strong>Causa:</strong> Cache não está funcionando</p>
                     <p className="text-muted-foreground"><strong>Solução:</strong> Verificar estatísticas do cache:</p>
                     <pre className="text-sm bg-muted p-3 rounded-md overflow-x-auto">
-{`import { getCacheStats } from '@/backend/utils/auth/authorization';
+{`import { getCacheStats } from '@/lib/auth/authorization';
 console.log(getCacheStats());`}
                     </pre>
                   </AccordionContent>

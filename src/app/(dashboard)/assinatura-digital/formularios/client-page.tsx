@@ -14,7 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { AssinaturaDigitalFormulario, AssinaturaDigitalSegmento, AssinaturaDigitalTemplate } from '@/backend/types/assinatura-digital/types';
+import type { AssinaturaDigitalFormulario, AssinaturaDigitalSegmento, AssinaturaDigitalTemplate } from '@/features/assinatura-digital/types/types';
 import { getFormularioDisplayName, formatBooleanBadge, getBooleanBadgeVariant, getAtivoBadgeTone, formatAtivoStatus, getTemplatePreviewText } from '@/features/assinatura-digital';
 import { DataSurface } from '@/components/shared/data-surface';
 import { TablePagination } from '@/components/shared/table-pagination';

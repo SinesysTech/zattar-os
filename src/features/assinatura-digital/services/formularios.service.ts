@@ -1,11 +1,11 @@
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import { TABLE_FORMULARIOS } from './constants';
 import type {
   AssinaturaDigitalFormulario,
   AssinaturaDigitalFormularioList,
   ListFormulariosParams,
   UpsertFormularioInput,
-} from '@/backend/types/assinatura-digital/types';
+} from '@/features/assinatura-digital/types/types';
 
 const FORMULARIO_SELECT = '*, segmento:assinatura_digital_segmentos(*)';
 

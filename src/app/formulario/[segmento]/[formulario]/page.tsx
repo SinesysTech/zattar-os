@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import FormularioPage from '@/features/assinatura-digital/components/form/formulario-page'
-import { getSegmentoBySlug } from '@/backend/assinatura-digital/services/segmentos.service'
-import { getFormularioBySlugAndSegmentoId } from '@/backend/assinatura-digital/services/formularios.service'
-import { getTemplate } from '@/backend/assinatura-digital/services/templates.service'
+import { getSegmentoBySlug } from '@/features/assinatura-digital/services/segmentos.service'
+import { getFormularioBySlugAndSegmentoId } from '@/features/assinatura-digital/services/formularios.service'
+import { getTemplate } from '@/features/assinatura-digital/services/templates.service'
 import type { DynamicFormSchema } from '@/types/assinatura-digital/form-schema.types'
 import type { MetadadoSeguranca } from '@/types/assinatura-digital/template.types'
 

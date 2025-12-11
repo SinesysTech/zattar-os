@@ -1,4 +1,4 @@
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import { TABLE_TEMPLATES } from './constants';
 import { logger, createTimer, LogServices, LogOperations } from './logger';
 import type {
@@ -6,7 +6,7 @@ import type {
   AssinaturaDigitalTemplateList,
   ListTemplatesParams,
   UpsertTemplateInput,
-} from '@/backend/types/assinatura-digital/types';
+} from '@/features/assinatura-digital/types/types';
 
 const TEMPLATE_SELECT = '*';
 const SERVICE = LogServices.TEMPLATES;

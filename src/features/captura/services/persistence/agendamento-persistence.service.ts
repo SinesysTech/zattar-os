@@ -1,6 +1,6 @@
 // Serviço de persistência para agendamentos de captura
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import type {
   Agendamento,
   CriarAgendamentoParams,

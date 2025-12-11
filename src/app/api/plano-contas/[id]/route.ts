@@ -3,13 +3,13 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { obterPlanoContaPorId } from '@/backend/plano-contas/services/plano-contas/listar-plano-contas.service';
+import { obterPlanoContaPorId } from '@/features/financeiro/services/plano-contas/plano-contas/listar-plano-contas.service';
 import {
   atualizarPlanoConta,
   desativarPlanoConta,
   ativarPlanoConta,
   deletarPlanoConta,
-} from '@/backend/plano-contas/services/plano-contas/gerenciar-plano-contas.service';
+} from '@/features/financeiro/services/plano-contas/plano-contas/gerenciar-plano-contas.service';
 import { validarAtualizarPlanoContaDTO } from '@/backend/types/financeiro/plano-contas.types';
 
 interface RouteParams {

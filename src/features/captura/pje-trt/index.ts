@@ -3,7 +3,7 @@
  * 
  * PROPÓSITO:
  * Re-exporta todas as APIs do PJE-TRT de forma centralizada.
- * Permite imports diretos do módulo principal: import { obterTodosProcessosAcervoGeral } from '@/backend/api/pje-trt'
+ * Permite imports diretos do módulo principal: import { obterTodosProcessosAcervoGeral } from '@/features/captura/pje-trt'
  */
 
 // Acervo Geral
@@ -42,5 +42,5 @@ export type { TimelineResponse, ObterTimelineOptions } from './timeline';
 export { fetchPJEAPI } from './shared/fetch';
 
 // Re-exportar tipos compartilhados
-export { AgrupamentoProcessoTarefa } from '@/backend/types/pje-trt/types';
-export type { Processo, Audiencia, Totalizador, PagedResponse } from '@/backend/types/pje-trt/types';
+export { AgrupamentoProcessoTarefa } from '@/features/captura/types/trt-types';
+export type { Processo, Audiencia, Totalizador, PagedResponse } from '@/features/captura/types/trt-types';

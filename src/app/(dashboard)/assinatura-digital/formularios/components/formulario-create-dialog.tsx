@@ -21,7 +21,7 @@ import { Combobox } from '@/components/ui/combobox';
 import { toast } from 'sonner';
 import { Loader2, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import type { AssinaturaDigitalSegmento, AssinaturaDigitalTemplate } from '@/backend/types/assinatura-digital/types';
+import type { AssinaturaDigitalSegmento, AssinaturaDigitalTemplate } from '@/features/assinatura-digital/types/types';
 import { generateSlug } from '@/features/assinatura-digital/utils/slug-helpers';
 
 const createFormularioSchema = z.object({

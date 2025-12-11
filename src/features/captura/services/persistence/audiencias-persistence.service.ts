@@ -1,8 +1,8 @@
 // Serviço de persistência de audiências
 // Salva audiências capturadas no banco de dados com comparação antes de atualizar
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import type { Audiencia } from '@/backend/types/pje-trt/types';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import type { Audiencia } from '@/features/captura/types/trt-types';
 import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 import { buscarOrgaoJulgador } from './orgao-julgador-persistence.service';
 import { buscarProcessoNoAcervo } from './acervo-persistence.service';
@@ -13,7 +13,7 @@ import { salvarSalaAudiencia } from './sala-audiencia-persistence.service';
 import {
   compararObjetos,
   removerCamposControle,
-} from '@/backend/utils/captura/comparison.util';
+} from '@/lib/utils/captura/comparison.util';
 import {
   captureLogService,
   type TipoEntidade,

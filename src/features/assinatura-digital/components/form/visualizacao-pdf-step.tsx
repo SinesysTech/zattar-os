@@ -42,7 +42,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { apiFetch } from "@/lib/api";
-import type { PreviewResult } from "@/backend/types/assinatura-digital/types";
+import type { PreviewResult } from "@/features/assinatura-digital/types/types";
 import { API_ROUTES } from "@/lib/assinatura-digital/constants/apiRoutes";
 
 interface TemplateMetadata {

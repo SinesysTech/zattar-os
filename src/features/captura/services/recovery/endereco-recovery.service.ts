@@ -6,12 +6,12 @@
  * usando os dados brutos salvos no MongoDB.
  */
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import {
   upsertEnderecoPorIdPje,
   type UpsertEnderecoPorIdPjeParams,
 } from '@/features/enderecos';
-import { withRetry } from '@/backend/utils/retry';
+import { withRetry } from '@/lib/utils/retry';
 import type { EntidadeTipoEndereco, SituacaoEndereco } from '@/features/enderecos';
 import { buscarLogPorMongoId } from './captura-recovery.service';
 import { analisarDocumento } from './recovery-analysis.service';

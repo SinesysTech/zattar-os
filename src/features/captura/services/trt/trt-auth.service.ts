@@ -3,7 +3,7 @@
 // Adaptado para integração com o serviço de captura TRT
 
 import { Browser, BrowserContext, Page } from 'playwright';
-import { getOTP, type TwoFAuthConfig } from '@/backend/api/twofauth.service';
+import { getOTP, type TwoFAuthConfig } from '@/lib/api/twofauth.service';
 import type { CredenciaisTRT, ConfigTRT } from '@/backend/types/captura/trt-types';
 import { getFirefoxConnection } from '@/backend/captura/services/browser/browser-connection.service';
 

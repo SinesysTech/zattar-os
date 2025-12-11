@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import { upsertRepresentantePorCPF } from '@/backend/representantes/services/representantes-persistence.service';
-import type { UpsertRepresentantePorCPFParams } from '@/backend/types/representantes/representantes-types';
+import type { UpsertRepresentantePorCPFParams } from '@/features/partes/types/representantes-types';
 
 /**
  * @swagger

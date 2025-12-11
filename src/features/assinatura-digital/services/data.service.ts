@@ -1,4 +1,4 @@
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 
 export interface ClienteBasico {
   id: number;

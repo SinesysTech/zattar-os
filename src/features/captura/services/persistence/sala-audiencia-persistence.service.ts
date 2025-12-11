@@ -1,10 +1,10 @@
 // Serviço de persistência de salas de audiência
 // Verifica se já existe e compara antes de atualizar
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
-import { compararObjetos } from '@/backend/utils/captura/comparison.util';
-import { getCached, setCached, generateCacheKey, CACHE_PREFIXES } from '@/backend/utils/redis/cache-utils';
+import { compararObjetos } from '@/lib/utils/captura/comparison.util';
+import { getCached, setCached, generateCacheKey, CACHE_PREFIXES } from '@/lib/utils/redis/cache-utils';
 
 /**
  * Interface para sala de audiência do PJE

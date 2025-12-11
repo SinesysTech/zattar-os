@@ -7,7 +7,7 @@ import {
   buscarTerceiroPorId,
   atualizarTerceiro,
   deletarTerceiro,
-} from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
+} from '@/features/partes/services/terceiros/persistence/terceiro-persistence.service';
 import type { AtualizarTerceiroParams } from '@/backend/types/partes';
 
 /**

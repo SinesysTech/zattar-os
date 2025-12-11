@@ -1,12 +1,12 @@
 // Serviço de persistência de classes judiciais
 // Verifica se já existe e compara antes de atualizar
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 import {
   compararObjetos,
-} from '@/backend/utils/captura/comparison.util';
-import { CACHE_PREFIXES, withCache } from '@/backend/utils/redis/cache-utils';
+} from '@/lib/utils/captura/comparison.util';
+import { CACHE_PREFIXES, withCache } from '@/lib/utils/redis/cache-utils';
 
 /**
  * Interface para classe judicial do PJE

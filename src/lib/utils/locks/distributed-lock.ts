@@ -1,5 +1,5 @@
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import getLogger from '@/backend/utils/logger';
+import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import getLogger from '@/lib/utils/logger';
 
 const logger = getLogger({ service: 'distributed-lock' });
 

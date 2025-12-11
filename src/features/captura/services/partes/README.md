@@ -267,7 +267,7 @@ console.log(`Erros: ${resultado.erros.length}`);
 
 ```typescript
 import { identificarTipoParte } from "@/backend/captura/services/partes/identificacao-partes.service";
-import type { PartePJE } from "@/backend/api/pje-trt/partes/types";
+import type { PartePJE } from "@/features/captura/pje-trt/partes/types";
 
 const parte: PartePJE = {
   idParte: 123,
