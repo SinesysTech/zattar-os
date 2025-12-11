@@ -1,16 +1,6 @@
-/**
- * API Route para usar um template
- *
- * POST /api/templates/[id]/usar - Cria documento a partir do template
- */
-
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import {
-  criarDocumentoDeTemplate,
-  buscarTemplateComUsuario,
-  incrementarUsoTemplate,
-} from '@/backend/documentos/services/persistence/templates-persistence.service';
+import { usarTemplate } from '@/features/documentos/service';
 
 /**
  * POST /api/templates/[id]/usar
@@ -35,32 +25,11 @@ export async function POST(
       );
     }
 
-    // Verificar se template existe e tem acesso
-    const template = await buscarTemplateComUsuario(template_id);
-
-    if (!template) {
-      return NextResponse.json(
-        { success: false, error: 'Template não encontrado' },
-        { status: 404 }
-      );
-    }
-
-    // Verificar se tem acesso (público ou próprio)
-    if (
-      template.visibilidade === 'privado' &&
-      template.criado_por !== authResult.usuario.id
-    ) {
-      return NextResponse.json(
-        { success: false, error: 'Acesso negado' },
-        { status: 403 }
-      );
-    }
-
     // Dados opcionais do body
     const body = await request.json().catch(() => ({}));
 
-    // Criar documento a partir do template
-    const documento = await criarDocumentoDeTemplate(
+    // Service já trata verificação de acesso, existência e incremento de uso
+    const documento = await usarTemplate(
       template_id,
       authResult.usuario.id,
       {
@@ -68,9 +37,6 @@ export async function POST(
         pasta_id: body.pasta_id,
       }
     );
-
-    // Incrementar contador de uso do template
-    await incrementarUsoTemplate(template_id);
 
     return NextResponse.json(
       { success: true, data: documento },
@@ -83,7 +49,7 @@ export async function POST(
         success: false,
         error: error instanceof Error ? error.message : 'Erro interno',
       },
-      { status: 500 }
+      { status: error instanceof Error && error.message.includes('não encontrado') ? 404 : 500 }
     );
   }
 }

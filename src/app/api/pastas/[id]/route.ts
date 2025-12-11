@@ -1,20 +1,10 @@
-/**
- * API Routes para pasta específica
- *
- * GET /api/pastas/[id] - Busca pasta
- * PUT /api/pastas/[id] - Atualiza pasta
- * DELETE /api/pastas/[id] - Soft delete pasta
- */
-
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import {
-  buscarPastaPorId,
+  buscarPasta,
   atualizarPasta,
   deletarPasta,
-  verificarAcessoPasta,
-} from '@/backend/documentos/services/persistence/pastas-persistence.service';
-import type { AtualizarPastaParams } from '@/backend/types/documentos/types';
+} from '@/features/documentos/service';
 
 /**
  * GET /api/pastas/[id]
@@ -39,24 +29,7 @@ export async function GET(
       );
     }
 
-    // Verificar acesso
-    const temAcesso = await verificarAcessoPasta(pasta_id, authResult.usuario.id);
-
-    if (!temAcesso) {
-      return NextResponse.json(
-        { success: false, error: 'Acesso negado' },
-        { status: 403 }
-      );
-    }
-
-    const pasta = await buscarPastaPorId(pasta_id);
-
-    if (!pasta) {
-      return NextResponse.json(
-        { success: false, error: 'Pasta não encontrada' },
-        { status: 404 }
-      );
-    }
+    const pasta = await buscarPasta(pasta_id, authResult.usuario.id);
 
     return NextResponse.json({
       success: true,
@@ -69,7 +42,7 @@ export async function GET(
         success: false,
         error: error instanceof Error ? error.message : 'Erro interno',
       },
-      { status: 500 }
+      { status: error instanceof Error && error.message.includes('não encontrada') || error.message.includes('negado') ? 404 : 500 }
     );
   }
 }
@@ -97,34 +70,8 @@ export async function PUT(
       );
     }
 
-    // Verificar acesso
-    const temAcesso = await verificarAcessoPasta(pasta_id, authResult.usuario.id);
-
-    if (!temAcesso) {
-      return NextResponse.json(
-        { success: false, error: 'Acesso negado' },
-        { status: 403 }
-      );
-    }
-
-    const body: AtualizarPastaParams = await request.json();
-
-    // Validação
-    if (body.nome !== undefined && body.nome.trim().length === 0) {
-      return NextResponse.json(
-        { success: false, error: 'Nome não pode ser vazio' },
-        { status: 400 }
-      );
-    }
-
-    if (body.nome && body.nome.length > 200) {
-      return NextResponse.json(
-        { success: false, error: 'Nome muito longo (máximo 200 caracteres)' },
-        { status: 400 }
-      );
-    }
-
-    const pasta = await atualizarPasta(pasta_id, body);
+    const body = await request.json();
+    const pasta = await atualizarPasta(pasta_id, body, authResult.usuario.id);
 
     return NextResponse.json({ success: true, data: pasta });
   } catch (error) {
@@ -162,17 +109,7 @@ export async function DELETE(
       );
     }
 
-    // Verificar acesso
-    const temAcesso = await verificarAcessoPasta(pasta_id, authResult.usuario.id);
-
-    if (!temAcesso) {
-      return NextResponse.json(
-        { success: false, error: 'Acesso negado' },
-        { status: 403 }
-      );
-    }
-
-    await deletarPasta(pasta_id);
+    await deletarPasta(pasta_id, authResult.usuario.id);
 
     return NextResponse.json({
       success: true,
