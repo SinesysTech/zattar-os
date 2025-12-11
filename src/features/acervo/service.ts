@@ -9,6 +9,7 @@ import {
   listarAcervoUnificado as listarAcervoUnificadoDb,
   buscarAcervoPorId,
   atribuirResponsavel as atribuirResponsavelDb,
+  buscarProcessosClientePorCpf as buscarProcessosClientePorCpfDb,
 } from './repository';
 import type {
   ListarAcervoParams,
@@ -161,6 +162,69 @@ interface TimelineCache {
 /**
  * Fetches all necessary timelines from MongoDB in parallel
  */
+// ============================================================================
+// Internal Types & Constants
+// ============================================================================
+
+const MENSAGEM_SINCRONIZANDO =
+  'A timeline deste processo está sendo sincronizada. ' +
+  'Por favor, aguarde 1-2 minutos e consulte novamente.';
+
+interface ProcessoParaSincronizar {
+  processoId: string;
+  numeroProcesso: string;
+  trt: string;
+  grau: 'primeiro_grau' | 'segundo_grau';
+  advogadoId: number;
+}
+
+export function getMensagemSincronizando(): string {
+  return MENSAGEM_SINCRONIZANDO;
+}
+
+/**
+ * Dispara captura de timeline em background (fire-and-forget)
+ */
+export function sincronizarTimelineEmBackground(
+  processos: ProcessoParaSincronizar[]
+): void {
+  if (processos.length === 0) {
+    return;
+  }
+
+  console.log(`🔄 [SincronizarTimeline] Disparando captura para ${processos.length} processos em background`);
+
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const serviceApiKey = process.env.SERVICE_API_KEY;
+
+  if (!serviceApiKey) {
+    console.warn('❌ [SincronizarTimeline] SERVICE_API_KEY não configurada');
+    return;
+  }
+
+  for (const processo of processos) {
+    const body = {
+      trtCodigo: processo.trt,
+      grau: processo.grau,
+      processoId: processo.processoId,
+      numeroProcesso: processo.numeroProcesso,
+      advogadoId: processo.advogadoId,
+      baixarDocumentos: false,
+    };
+
+    fetch(`${baseUrl}/api/captura/trt/timeline`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-service-api-key': serviceApiKey,
+      },
+      body: JSON.stringify(body),
+    }).catch((error) => {
+      console.warn(`⚠️ [SincronizarTimeline] Falha ao disparar captura para ${processo.numeroProcesso}:`, error.message);
+    });
+  }
+}
+
 async function buscarTimelinesEmParalelo(
   processos: ProcessoClienteCpfRow[]
 ): Promise<TimelineCache> {
@@ -240,20 +304,10 @@ export async function buscarProcessosClientePorCpf(
   console.log(`🔍 [BuscarProcessosCpf] Starting search for CPF ${cpfNormalizado.substring(0, 3)}***`);
 
   try {
-    // 1. Search processes in PostgreSQL
-    const supabase = createServiceClient();
-    const { data, error } = await supabase
-      .from('processos_cliente_por_cpf')
-      .select('*')
-      .eq('cpf', cpfNormalizado);
+    // 1. Search processes via Repository
+    const { cliente, processos: processosDb } = await buscarProcessosClientePorCpfDb(cpfNormalizado);
 
-    if (error) {
-      throw new Error(`Erro ao buscar processos: ${error.message}`);
-    }
-
-    const processosDb = (data || []) as ProcessoClienteCpfRow[];
-
-    if (processosDb.length === 0) {
+    if (!cliente || processosDb.length === 0) {
       console.log('ℹ️ [BuscarProcessosCpf] No processes found');
       return {
         success: false,
@@ -261,14 +315,20 @@ export async function buscarProcessosClientePorCpf(
       };
     }
 
-    console.log(`✅ [BuscarProcessosCpf] ${processosDb.length} records found in PostgreSQL`);
+    console.log(`✅ [BuscarProcessosCpf] ${processosDb.length} records found in DB`);
 
-    // Extract client data (first record is enough, all have same CPF)
-    const primeiroRegistro = processosDb[0];
-    const cliente: ClienteRespostaIA = {
-      nome: primeiroRegistro.cliente_nome,
-      cpf: formatarCpf(primeiroRegistro.cpf),
-    };
+    // 1.1 Trigger sync for processes without timeline
+    const paraSincronizar: ProcessoParaSincronizar[] = processosDb
+      .filter(p => !p.timeline_mongodb_id && p.id_pje !== '0')
+      .map(p => ({
+        processoId: p.id_pje,
+        numeroProcesso: p.numero_processo,
+        trt: p.trt,
+        grau: p.grau,
+        advogadoId: p.advogado_id,
+      }));
+    
+    sincronizarTimelineEmBackground(paraSincronizar);
 
     // 2. Group by numero_processo
     const processosAgrupados = agruparProcessosPorNumero(processosDb);
@@ -280,6 +340,8 @@ export async function buscarProcessosClientePorCpf(
     // 4. Format each process for response
     const processosFormatados: ProcessoRespostaIA[] = [];
 
+    const msgSincronizando = getMensagemSincronizando();
+
     for (const agrupado of processosAgrupados) {
       // Fetch timelines for instances
       const timelinePrimeiroGrau = agrupado.instancias.primeiro_grau?.timeline_mongodb_id
@@ -290,7 +352,14 @@ export async function buscarProcessosClientePorCpf(
         ? formatarTimeline(timelineCache[agrupado.instancias.segundo_grau.timeline_mongodb_id] ?? null)
         : [];
 
-      const temTimeline = timelinePrimeiroGrau.length > 0 || timelineSegundoGrau.length > 0;
+      const temTimelinePrimeiro = timelinePrimeiroGrau.length > 0;
+      const temTimelineSegundo = timelineSegundoGrau.length > 0;
+      const temTimeline = temTimelinePrimeiro || temTimelineSegundo;
+
+      const taSincronizando = (
+          (agrupado.instancias.primeiro_grau && !agrupado.instancias.primeiro_grau.timeline_mongodb_id) ||
+          (agrupado.instancias.segundo_grau && !agrupado.instancias.segundo_grau.timeline_mongodb_id)
+      );
 
       // Format process
       const processoFormatado = formatarProcessoParaIA(
@@ -298,7 +367,8 @@ export async function buscarProcessosClientePorCpf(
         timelinePrimeiroGrau,
         timelineSegundoGrau,
         {
-          timelineStatus: temTimeline ? 'disponivel' : 'indisponivel',
+           timelineStatus: temTimeline ? 'disponivel' : 'indisponivel',
+           timelineMensagem: (taSincronizando && !temTimeline) ? msgSincronizando : undefined
         }
       );
 
@@ -330,7 +400,10 @@ export async function buscarProcessosClientePorCpf(
     return {
       success: true,
       data: {
-        cliente,
+        cliente: {
+            nome: cliente.nome,
+            cpf: formatarCpf(cliente.cpf),
+        },
         resumo,
         processos: processosFormatados,
       },
