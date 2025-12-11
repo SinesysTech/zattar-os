@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarPastas, actionCriarPasta, actionDeletarPasta, actionMoverDocumento } from '../actions/pastas-actions';
-import type { PastaComContadores, Pasta } from '../types';
+import type { PastaComContadores } from '../types';
 
 export function useFolders() {
   const [folders, setFolders] = useState<PastaComContadores[]>([]);
@@ -8,15 +8,21 @@ export function useFolders() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchFolders = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    startTransition(() => {
+      setLoading(true);
+      setError(null);
+    });
+    
     const result = await actionListarPastas();
-    if (result.success) {
-      setFolders(result.data || []);
-    } else {
-      setError(result.error);
-    }
-    setLoading(false);
+    
+    startTransition(() => {
+      if (result.success) {
+        setFolders(result.data || []);
+      } else {
+        setError(result.error);
+      }
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {

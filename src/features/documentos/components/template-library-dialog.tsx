@@ -60,8 +60,6 @@ export function TemplateLibraryDialog({
     createDocumentFromTemplate
   } = useTemplates({ limit: 50 });
   
-  const [loadingMaisUsados, setLoadingMaisUsados] = React.useState(true);
-  const [loadingCategorias, setLoadingCategorias] = React.useState(true);
   const [creating, setCreating] = React.useState(false);
   const [maisUsados, setMaisUsados] = React.useState<TemplateComUsuario[]>([]);
   const [categorias, setCategorias] = React.useState<string[]>([]);
@@ -86,15 +84,13 @@ export function TemplateLibraryDialog({
       actionListarCategorias()
         .then(result => {
           if (result.success && result.data) setCategorias(result.data);
-        })
-        .finally(() => setLoadingCategorias(false));
+        });
         
       // Mais usados
       actionListarTemplatesMaisUsados(4)
         .then(result => {
           if (result.success && result.data) setMaisUsados(result.data);
-        })
-        .finally(() => setLoadingMaisUsados(false));
+        });
     }
   }, [open]);
 
