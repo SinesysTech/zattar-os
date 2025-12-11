@@ -23,7 +23,7 @@ import { Loader2 } from 'lucide-react';
 
 import type { AssinaturaDigitalSegmento } from '@/backend/types/assinatura-digital/types';
 import { segmentoSchema } from '@/types/assinatura-digital/segmento.types';
-import { generateSlug } from '@/app/_lib/assinatura-digital/slug-helpers';
+import { generateSlug } from '@/features/assinatura-digital/utils/slug-helpers';
 
 const duplicateSchema = segmentoSchema.extend({
   ativo: z.boolean().default(true),

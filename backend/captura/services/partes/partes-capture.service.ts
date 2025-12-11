@@ -8,10 +8,10 @@ import { upsertParteContrariaPorCPF, upsertParteContrariaPorCNPJ, buscarParteCon
 import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, buscarTerceiroPorCNPJ, criarTerceiroSemDocumento } from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
 import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
 import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/backend/representantes/services/representantes-persistence.service';
-import { upsertEnderecoPorIdPje } from '@/backend/enderecos/services/enderecos-persistence.service';
+import { upsertEnderecoPorIdPje } from '@/features/enderecos';
 import type { CriarClientePFParams, CriarClientePJParams, CriarParteContrariaPFParams, CriarParteContrariaPJParams, CriarTerceiroPFParams, CriarTerceiroPJParams, UpsertTerceiroPorCPFParams, UpsertTerceiroPorCNPJParams } from '@/types/contracts/partes';
 import type { GrauProcesso } from '@/types/domain/common';
-import type { ClassificacaoEndereco, EntidadeTipoEndereco, SituacaoEndereco } from '@/types/domain/enderecos';
+import type { ClassificacaoEndereco, EntidadeTipoEndereco, SituacaoEndereco } from '@/features/enderecos';
 import type { SituacaoOAB, TipoRepresentante, Polo } from '@/types/domain/representantes';
 import { validarPartePJE, validarPartesArray } from './schemas';
 import getLogger, { withCorrelationId } from '@/backend/utils/logger';

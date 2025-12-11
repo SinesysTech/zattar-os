@@ -39,7 +39,7 @@ import {
   Search,
   FileStack,
 } from 'lucide-react';
-import { useIsMobile } from '@/app/_lib/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-breakpoint';
 import { actionListarComunicacoesCapturadas } from '../../actions/comunica-cnj-actions';
 import type { ComunicacaoCNJ, ComunicacaoItem } from '../../comunica-cnj/domain';
 

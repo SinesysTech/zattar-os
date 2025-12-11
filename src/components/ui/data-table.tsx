@@ -161,6 +161,10 @@ export function DataTable<TData>({
     }
   };
 
+  // Obter rows de forma segura
+  const rowModel = table.getRowModel();
+  const rows = rowModel?.rows ?? [];
+
   // Renderizar o conteúdo da tabela
   const tableContent = (
     <>
@@ -202,8 +206,8 @@ export function DataTable<TData>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, rowIndex) => (
+            {rows.length > 0 ? (
+              rows.map((row, rowIndex) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}

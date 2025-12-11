@@ -49,7 +49,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useContasPagar, cancelarConta, excluirConta } from '@/features/financeiro/hooks/use-contas-pagar';
-import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
+import { useContasBancarias } from '@/features/financeiro';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';

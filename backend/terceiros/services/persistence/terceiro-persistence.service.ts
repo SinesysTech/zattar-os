@@ -14,7 +14,7 @@ import type {
   UpsertTerceiroPorDocumentoParams,
   TerceiroComEndereco,
 } from '@/types/contracts/partes';
-import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
+import { converterParaEndereco } from '@/features/enderecos/utils';
 
 /**
  * Terceiro com endereço e processos relacionados

@@ -2,7 +2,7 @@ import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { Children, cloneElement, isValidElement, type ReactElement } from "react";
 import type { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, isReactFragment } from "@/lib/utils";
 
 interface ButtonGroupProps {
 	className?: string;
@@ -36,7 +36,7 @@ export const ButtonGroup = ({
 			}
 
 			// Fragment não aceita props como className, então pulamos
-			if (child.type === React.Fragment) {
+			if (isReactFragment(child)) {
 				return child;
 			}
 

@@ -51,12 +51,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useContasReceber, cancelarConta, excluirConta } from '@/app/_lib/hooks/use-contas-receber';
-import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
+import { useContasReceber, cancelarConta, excluirConta } from '@/features/financeiro';
+import { useContasBancarias } from '@/features/financeiro';
 import { useClientes } from '@/app/_lib/hooks/use-clientes';
 import { useContratos } from '@/features/contratos';
-import { usePlanoContasAnaliticas } from '@/app/_lib/hooks/use-plano-contas';
-import { useCentrosCustoAtivos } from '@/app/_lib/hooks/use-centros-custo';
+import { usePlanoContasAnaliticas } from '@/features/financeiro';
+import { useCentrosCustoAtivos } from '@/features/financeiro';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

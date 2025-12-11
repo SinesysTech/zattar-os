@@ -9,7 +9,7 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { Representante } from '@/types/domain/representantes';
-import type { RepresentantesApiResponse } from '@/app/_lib/types/representantes';
+import type { RepresentantesApiResponse } from '@/types/representantes';
 import type { BuscarRepresentantesParams, PaginationInfo } from '../types';
 
 interface UseRepresentantesResult<T extends Representante = Representante> {

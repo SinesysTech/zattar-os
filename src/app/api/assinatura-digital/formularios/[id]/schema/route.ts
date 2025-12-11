@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/lib/auth/require-permission';
 import { getFormulario, updateFormulario } from '@/backend/assinatura-digital/services/formularios.service';
-import { validateFormSchema } from '@/app/_lib/assinatura-digital/form-schema/schema-validator';
+import { validateFormSchema } from '@/features/assinatura-digital/utils';
 import type { DynamicFormSchema } from '@/types/assinatura-digital/form-schema.types';
 
 /**

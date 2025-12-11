@@ -8,8 +8,8 @@ import * as React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useContaPagar, cancelarConta } from '@/app/_lib/hooks/use-contas-pagar';
-import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
+import { useContaPagar, cancelarConta } from '@/features/financeiro';
+import { useContasBancarias } from '@/features/financeiro';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {

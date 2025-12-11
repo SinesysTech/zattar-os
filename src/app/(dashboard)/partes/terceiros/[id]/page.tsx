@@ -19,7 +19,7 @@ import {
   formatarTipoPessoa,
   formatarCep,
 } from '@/features/partes';
-import { getTipoParteLabel, getPoloLabel } from '@/app/_lib/types/terceiros';
+import { getTipoParteLabel, getPoloLabel } from '@/types/terceiros';
 import type { Terceiro } from '@/features/partes';
 import type { Endereco } from '@/backend/types/partes/enderecos-types';
 

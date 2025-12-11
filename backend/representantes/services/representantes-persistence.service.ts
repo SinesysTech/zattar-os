@@ -24,7 +24,7 @@ import type {
 } from '@/types/contracts/representantes';
 
 
-import { converterParaEndereco } from '@/backend/enderecos/services/enderecos-persistence.service';
+import { converterParaEndereco } from '@/features/enderecos/utils';
 
 // ============================================================================
 // Validation Functions

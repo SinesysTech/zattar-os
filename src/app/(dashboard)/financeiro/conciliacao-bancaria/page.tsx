@@ -12,7 +12,7 @@ import { TransacoesImportadasTable } from '@/features/financeiro/components/conc
 import { AlertasConciliacao } from '@/features/financeiro/components/conciliacao/alertas-conciliacao';
 import { ExportButton } from '@/features/financeiro/components/export-button';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
+import { useContasBancarias } from '@/features/financeiro';
 import {
   useTransacoesImportadas,
   conciliarAutomaticamente as conciliarAutomaticamenteMutation,

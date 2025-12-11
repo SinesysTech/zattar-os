@@ -8,7 +8,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { useAudiencias } from '@/app/_lib/hooks/use-audiencias';
+import { useAudiencias } from '@/features/audiencias';
 import { Loader2, ExternalLink, CalendarDays, Clock, MapPin, Users, Info, User, ClipboardList, BookOpen } from 'lucide-react';
 import { Audiencia, GRAU_TRIBUNAL_LABELS } from '@/features/audiencias';
 import { format } from 'date-fns';

@@ -138,7 +138,7 @@ interface FormSchemaBuilderProps {
 **Usage:**
 ```typescript
 import { FormSchemaBuilder } from '@/components/assinatura-digital/schema-builder';
-import { validateFormSchema } from '@/app/_lib/assinatura-digital/form-schema/schema-validator';
+import { validateFormSchema } from '@/features/assinatura-digital/utils';
 
 const handleSave = async (schema: DynamicFormSchema) => {
   const validation = validateFormSchema(schema);

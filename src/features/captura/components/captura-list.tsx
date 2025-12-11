@@ -16,7 +16,7 @@ import { deletarCapturaLog } from '@/features/captura/services/api-client';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/features/captura/types';
 import type { CapturasFilters } from './captura-filters';
-import type { CodigoTRT } from '@/app/_lib/types/credenciais';
+import type { CodigoTRT } from '@/types/credenciais';
 import { Eye, Trash2 } from 'lucide-react';
 import {
   AlertDialog,

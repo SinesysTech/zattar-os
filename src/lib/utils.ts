@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -80,5 +81,15 @@ export function fromCamelToSnake<T = unknown>(obj: unknown): T {
   }
 
   return obj as T;
+}
+
+/**
+ * Verifica se um elemento React é um Fragment.
+ * Fragment não aceita props como className, então esta função é útil
+ * para evitar tentar passar props para Fragment.
+ */
+export function isReactFragment(element: React.ReactElement): boolean {
+  return element.type === React.Fragment || 
+         (typeof element.type === 'symbol' && element.type.toString().includes('Fragment'));
 }
 

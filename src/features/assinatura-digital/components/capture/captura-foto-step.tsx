@@ -1,11 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
+import { useFormularioStore } from "@/features/assinatura-digital/stores";
 import CapturaFoto, { type CapturaFotoRef } from "@/features/assinatura-digital/components/capture/captura-foto";
 import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
 import { toast } from "sonner";
-import { validatePhotoQuality } from "@/app/_lib/assinatura-digital/validations/business.validations";
+import { validatePhotoQuality } from "@/features/assinatura-digital/utils";
 
 export default function CapturaFotoStep() {
   const [loading, setLoading] = useState(false);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
+import { useFormularioStore } from "@/features/assinatura-digital/stores";
 import FormularioContainer from "./formulario-container";
 import type { DynamicFormSchema } from '@/types/assinatura-digital/form-schema.types';
 import type { MetadadoSeguranca } from '@/types/assinatura-digital/template.types';

@@ -8,14 +8,14 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { DateRange } from 'react-day-picker';
 import { ModalidadeAudiencia, StatusAudiencia, CODIGO_TRIBUNAL, GrauTribunal, type CodigoTribunal } from '@/features/audiencias';
-import { useAudiencias } from '@/app/_lib/hooks/use-audiencias';
-import type { BuscarAudienciasParams } from '@/app/_lib/types/audiencias';
+import { useAudiencias } from '@/features/audiencias';
+import type { BuscarAudienciasParams } from '@/types/audiencias';
 import { AudienciasListView } from './audiencias-list-view';
 import { AudienciasCalendarWeekView } from './audiencias-calendar-week-view';
 import { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';
 import { AudienciasCalendarYearView } from './audiencias-calendar-year-view';
 import { useTiposAudiencias } from '@/app/_lib/hooks/use-tipos-audiencias';
-import { useUsuarios } from '@/app/_lib/hooks/use-usuarios';
+import { useUsuarios } from '@/features/usuarios';
 import {
   Select,
   SelectContent,

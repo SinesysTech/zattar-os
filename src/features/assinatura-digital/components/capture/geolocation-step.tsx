@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
+import { useFormularioStore } from "@/features/assinatura-digital/stores";
 import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
 import { toast } from "sonner";
-import { validateGeolocation } from "@/app/_lib/assinatura-digital/validations/business.validations";
+import { validateGeolocation } from "@/features/assinatura-digital/utils";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { MapPin, Loader2, AlertCircle, CheckCircle2, RefreshCw, Info } from "lucide-react";

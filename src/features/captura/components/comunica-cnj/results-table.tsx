@@ -41,7 +41,7 @@ import {
   Gavel,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/app/_lib/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-breakpoint';
 import type { ComunicacaoItem } from '../../comunica-cnj/domain';
 
 // Configuração de tipos de comunicação (cores + ícones para acessibilidade)

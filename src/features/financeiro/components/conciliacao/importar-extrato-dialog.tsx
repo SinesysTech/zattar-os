@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
-import { useContasBancarias } from '@/app/_lib/hooks/use-contas-bancarias';
+import { useContasBancarias } from '@/features/financeiro';
 import { actionImportarExtrato } from '../../actions/conciliacao';
 
 interface Props {

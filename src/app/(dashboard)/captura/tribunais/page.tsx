@@ -12,7 +12,7 @@ import {
   buildTribunaisFilterGroups,
   parseTribunaisFilters,
 } from '../components/tribunais/tribunais-toolbar-filters';
-import type { TribunalConfig } from '@/app/_lib/types/tribunais';
+import type { TribunalConfig } from '@/types/tribunais';
 
 export default function TribunaisPage() {
   const {

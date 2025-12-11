@@ -139,6 +139,10 @@ export interface ListarEnderecosResult {
   totalPaginas: number;
 }
 
+export interface UpsertEnderecoPorIdPjeParams extends CriarEnderecoParams {
+  id_pje: number;
+}
+
 export interface BuscarEnderecosPorEntidadeParams {
   entidade_tipo: EntidadeTipoEndereco;
   entidade_id: number;

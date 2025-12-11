@@ -34,6 +34,12 @@ function createTypographyComponent<T extends React.ElementType>(
     ...props
   }: TypographyProps<C> & { ref?: React.ComponentPropsWithRef<C>['ref'] }) {
     const Element = (as || defaultElement) as React.ElementType;
+    
+    // Fragment não aceita props como className, então retornamos apenas children
+    if (Element === React.Fragment) {
+      return <>{children}</>;
+    }
+    
     return (
       <Element
         ref={ref}
