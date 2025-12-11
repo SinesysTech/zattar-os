@@ -1,7 +1,7 @@
 // Client-side exports (safe for Client Components)
 export * from './client';
 export * from './service-client';
-export * from './database.types';
+export type * from './database.types';
 export * from './db-client';
 export * from './set-user-context';
 

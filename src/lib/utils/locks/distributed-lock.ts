@@ -1,5 +1,5 @@
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
-import getLogger from '@/lib/utils/logger';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import getLogger from '@/lib/logger';
 
 const logger = getLogger({ service: 'distributed-lock' });
 
@@ -135,7 +135,7 @@ export class DistributedLock {
 
     if (!acquired) {
       // Importa LockError dinamicamente para evitar dependência circular
-      const { LockError } = await import('@/backend/captura/services/partes/errors');
+      const { LockError } = await import('@/features/captura/services/partes/errors');
       throw new LockError(`Captura já em andamento`, this.key);
     }
 

@@ -14,7 +14,7 @@ import { AudienciasListView } from './audiencias-list-view';
 import { AudienciasCalendarWeekView } from './audiencias-calendar-week-view';
 import { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';
 import { AudienciasCalendarYearView } from './audiencias-calendar-year-view';
-import { useTiposAudiencias } from '@/app/_lib/hooks/use-tipos-audiencias';
+import { useTiposAudiencias } from '@/features/audiencias';
 import { useUsuarios } from '@/features/usuarios';
 import {
   Select,

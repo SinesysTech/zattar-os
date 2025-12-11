@@ -6,8 +6,8 @@
 
 import { Collection } from 'mongodb';
 import { getMongoDatabase } from './client';
-import type { TimelineDocument } from '@/backend/types/mongodb/timeline';
-import type { CapturaRawLogDocument } from '@/backend/types/mongodb/captura-log';
+import type { TimelineDocument } from '@/lib/types/timeline';
+import type { CapturaRawLogDocument } from '@/lib/types/captura-log';
 
 /**
  * Nomes das coleções MongoDB

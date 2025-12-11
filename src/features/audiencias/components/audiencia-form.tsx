@@ -33,7 +33,7 @@ import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { ptBR } from 'date-fns/locale';
-import { useTiposAudiencias } from '@/app/_lib/hooks/use-tipos-audiencias';
+import { useTiposAudiencias } from '@/features/audiencias';
 import { useUsuarios } from '@/features/usuarios';
 
 interface AudienciaFormProps {

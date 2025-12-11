@@ -52,8 +52,8 @@ import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/au
 import { obterTimeline } from '@/features/captura/pje-trt/timeline/obter-timeline';
 import { obterDocumento } from '@/features/captura/pje-trt/timeline/obter-documento';
 import { baixarDocumento } from '@/features/captura/pje-trt/timeline/baixar-documento';
-import { uploadToBackblaze } from '@/backend/storage/backblaze-b2.service';
-import { gerarNomeDocumentoAudiencia, gerarCaminhoDocumento } from '@/backend/storage/file-naming.utils';
+import { uploadToBackblaze } from '@/lib/storage/backblaze-b2.service';
+import { gerarNomeDocumentoAudiencia, gerarCaminhoDocumento } from '@/lib/storage/file-naming.utils';
 import { buscarOuCriarAdvogadoPorCpf } from '@/lib/utils/captura/advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import {
