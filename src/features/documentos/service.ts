@@ -5,6 +5,7 @@ import {
   DocumentoComUsuario,
   Pasta,
   CriarPastaParams,
+  AtualizarPastaParams,
   PastaComContadores,
   Template,
   ListarTemplatesParams,
@@ -21,6 +22,10 @@ import {
 import * as repository from './repository';
 import * as domain from './domain';
 import {
+  uploadFileToB2,
+  generatePresignedUploadUrl,
+  getTipoMedia,
+  validateFileType,
   validateFileSize,
 } from './services/b2-upload.service'; // Moved to feature
 import { generatePresignedUrl as generatePresignedDownloadUrl } from '@/lib/storage/backblaze-b2.service';
@@ -151,6 +156,56 @@ export async function criarPasta(params: unknown, usuario_id: number): Promise<P
   }
 
   return repository.criarPasta(parsedParams as CriarPastaParams, usuario_id);
+}
+
+export async function buscarPasta(
+  id: number,
+  usuario_id: number
+): Promise<Pasta> {
+  const pasta = await repository.buscarPastaPorId(id);
+  if (!pasta) {
+    throw new Error('Pasta não encontrada.');
+  }
+
+  const temAcesso = await repository.verificarAcessoPasta(id, usuario_id);
+  if (!temAcesso) {
+    throw new Error('Acesso negado à pasta.');
+  }
+
+  return pasta;
+}
+
+export async function atualizarPasta(
+  id: number,
+  params: unknown,
+  usuario_id: number
+): Promise<Pasta> {
+  const parsedParams = domain.atualizarPastaSchema.parse(params);
+  
+  const temAcesso = await repository.verificarAcessoPasta(id, usuario_id);
+  // Nota: Para atualizar, talvez precise ser proprietário ou ter permissão de edição.
+  // A lógica atual de `repository.verificarAcessoPasta` retorna boolean simples.
+  // Se for pasta privada, só criador vê. Se for comum, todos veem.
+  // Mas para EDITAR, deveria ser mais restrito?
+  // A lógica original não especificava, mas vamos assumir que se tem acesso, pode editar
+  // OU devemos verificar propriedade?
+  // O backend original apenas verificava `verificarAcessoPasta` para GET/PUT/DELETE.
+  // Vamos manter a paridade.
+  
+  if (!temAcesso) {
+    throw new Error('Acesso negado à pasta.');
+  }
+  
+  // Vamos adicionar uma restrição extra de segurança: apenas criador edita pastas comuns/privadas?
+  // Ou pastas comuns são wiki-style? 
+  // O código original `verificarAcessoPasta` retorna true se comum OU se criado_por user.
+  // Vamos assumir que apenas o criador deve editar para evitar vandalismo, a menos que seja admin.
+  // Por segurança, vamos buscar a pasta e checar criador se quisermos ser estritos.
+  // Mas para migração fiel, vamos usar o que o repository provê + verificação de acesso.
+  
+  // Porém, a rota PUT original fazia `verificarAcessoPasta`.
+  
+  return repository.atualizarPasta(id, parsedParams as AtualizarPastaParams);
 }
 
 export async function moverDocumento(
