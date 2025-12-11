@@ -9,7 +9,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import type { ProcessoInstancia, GrauAcervo } from '@/features/acervo/types';
+import type { ProcessoInstancia, GrauProcesso } from '@/features/processos/types';
+import { ORIGEM_LABELS } from '@/features/processos/domain';
 
 interface GrauBadgesProps {
   instances?: ProcessoInstancia[];
@@ -18,7 +19,7 @@ interface GrauBadgesProps {
 /**
  * Mapeia grau para label legível
  */
-const GRAU_LABELS: Record<GrauAcervo, string> = {
+const GRAU_LABELS_MAP: Record<GrauProcesso, string> = {
   primeiro_grau: '1º Grau',
   segundo_grau: '2º Grau',
   tribunal_superior: 'Tribunal Superior',
@@ -27,7 +28,7 @@ const GRAU_LABELS: Record<GrauAcervo, string> = {
 /**
  * Mapeia grau para variante de badge
  */
-const GRAU_VARIANTS: Record<GrauAcervo, 'default' | 'secondary' | 'outline'> = {
+const GRAU_VARIANTS: Record<GrauProcesso, 'default' | 'secondary' | 'outline'> = {
   primeiro_grau: 'secondary',
   segundo_grau: 'default',
   tribunal_superior: 'outline',
@@ -45,14 +46,14 @@ export function GrauBadges({ instances }: GrauBadgesProps) {
 
   // Ordenar instâncias: primeiro grau, segundo grau, tribunal superior
   const instancesOrdenadas = [...instances].sort((a, b) => {
-    const ordem: Record<GrauAcervo, number> = { primeiro_grau: 1, segundo_grau: 2, tribunal_superior: 3 };
+    const ordem: Record<GrauProcesso, number> = { primeiro_grau: 1, segundo_grau: 2, tribunal_superior: 3 };
     return ordem[a.grau] - ordem[b.grau];
   });
 
   return (
     <div className="flex items-center gap-1.5 flex-wrap">
       {instancesOrdenadas.map((instance) => {
-        const label = GRAU_LABELS[instance.grau];
+        const label = GRAU_LABELS_MAP[instance.grau];
         const variant = GRAU_VARIANTS[instance.grau];
 
         return (
@@ -73,11 +74,11 @@ export function GrauBadges({ instances }: GrauBadgesProps) {
                   </div>
                   <div>
                     <strong>Origem:</strong>{' '}
-                    {instance.origem === 'acervo_geral' ? 'Acervo Geral' : 'Arquivado'}
+                    {ORIGEM_LABELS[instance.origem]}
                   </div>
                   <div>
                     <strong>Data Autuação:</strong>{' '}
-                    {new Date(instance.data_autuacao).toLocaleDateString('pt-BR')}
+                    {new Date(instance.dataAutuacao).toLocaleDateString('pt-BR')}
                   </div>
                 </div>
               </TooltipContent>
@@ -92,21 +93,21 @@ export function GrauBadges({ instances }: GrauBadgesProps) {
 /**
  * Versão simplificada sem tooltip (para células de tabela compactas)
  */
-export function GrauBadgesSimple({ grausAtivos }: { grausAtivos?: GrauAcervo[] }) {
+export function GrauBadgesSimple({ grausAtivos }: { grausAtivos?: GrauProcesso[] }) {
   if (!grausAtivos || grausAtivos.length === 0) {
     return null;
   }
 
   // Ordenar graus: primeiro grau, segundo grau, tribunal superior
   const grausOrdenados = [...grausAtivos].sort((a, b) => {
-    const ordem: Record<GrauAcervo, number> = { primeiro_grau: 1, segundo_grau: 2, tribunal_superior: 3 };
+    const ordem: Record<GrauProcesso, number> = { primeiro_grau: 1, segundo_grau: 2, tribunal_superior: 3 };
     return ordem[a] - ordem[b];
   });
 
   return (
     <div className="flex items-center gap-1 flex-wrap">
       {grausOrdenados.map((grau) => {
-        const label = GRAU_LABELS[grau];
+        const label = GRAU_LABELS_MAP[grau];
         const variant = GRAU_VARIANTS[grau];
 
         return (

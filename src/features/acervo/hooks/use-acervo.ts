@@ -37,7 +37,8 @@ export function useAcervo(initialParams: ListarAcervoParams = {}) {
       const result = await actionListarAcervo(fetchParams || params);
 
       if (result.success && result.data) {
-        setData(result.data as ListarAcervoResult);
+        // actionListarAcervo now always returns ListarAcervoResult (paginado mode)
+        setData(result.data);
       } else {
         setError(result.error || 'Erro ao carregar acervo');
         toast({

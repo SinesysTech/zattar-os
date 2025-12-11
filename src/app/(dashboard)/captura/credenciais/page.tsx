@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { DataTable } from '@/components/ui/data-table';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/hooks/use-debounce';
 import {
   AlertDialog,
   AlertDialogAction,

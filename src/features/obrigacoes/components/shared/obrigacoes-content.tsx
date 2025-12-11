@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/app/_lib/hooks/use-debounce';
+import { useDebounce } from '@/hooks/use-debounce';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { ClientOnlyTabs, TabsList, TabsTrigger } from '@/components/ui/client-only-tabs';
 import { buildObrigacoesFilterOptions, buildObrigacoesFilterGroups, parseObrigacoesFilters, ObrigacoesFilters } from './obrigacoes-toolbar-filters';

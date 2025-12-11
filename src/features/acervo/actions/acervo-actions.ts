@@ -41,6 +41,9 @@ function createErrorResponse(error: unknown, defaultMessage: string): ActionResp
 
 /**
  * Lists acervo with filters, pagination, and sorting
+ * 
+ * @deprecated Use actionListarAcervoPaginado or actionListarAcervoUnificado instead
+ * This function forces paginado mode (unified=false) for legacy UI compatibility
  */
 export async function actionListarAcervo(
   params: ListarAcervoParams = {}
@@ -60,13 +63,92 @@ export async function actionListarAcervo(
     // Validate params
     const validatedParams = listarAcervoParamsSchema.parse(params);
 
-    // Get acervo
-    const result = await obterAcervo(validatedParams);
+    // Force paginado mode (unified=false, no grouping) for legacy UI compatibility
+    // Legacy UI expects flat Acervo[] array, not ProcessoUnificado[]
+    const result = await obterAcervoPaginado({
+      ...validatedParams,
+      unified: false,
+      agrupar_por: undefined,
+    });
 
     return { success: true, data: result };
   } catch (error) {
     console.error('[actionListarAcervo] Error:', error);
     return createErrorResponse(error, 'Erro ao listar acervo');
+  }
+}
+
+/**
+ * Lists acervo in paginado mode (flat array of instances)
+ * Returns all process instances separately, no unification
+ */
+export async function actionListarAcervoPaginado(
+  params: Omit<ListarAcervoParams, 'unified' | 'agrupar_por'> = {}
+): Promise<ActionResponse> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: 'Não autenticado' };
+    }
+
+    // Check permission
+    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para visualizar acervo' };
+    }
+
+    // Validate params (exclude unified and agrupar_por)
+    const { unified, agrupar_por, ...restParams } = params;
+    const validatedParams = listarAcervoParamsSchema.parse(restParams);
+
+    // Get acervo in paginado mode
+    const result = await obterAcervoPaginado({
+      ...validatedParams,
+      unified: false,
+      agrupar_por: undefined,
+    });
+
+    return { success: true, data: result };
+  } catch (error) {
+    console.error('[actionListarAcervoPaginado] Error:', error);
+    return createErrorResponse(error, 'Erro ao listar acervo');
+  }
+}
+
+/**
+ * Lists acervo in unified mode (grouped by numero_processo)
+ * Groups processes with same numero_processo into ProcessoUnificado[]
+ */
+export async function actionListarAcervoUnificado(
+  params: Omit<ListarAcervoParams, 'unified' | 'agrupar_por'> = {}
+): Promise<ActionResponse> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: 'Não autenticado' };
+    }
+
+    // Check permission
+    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para visualizar acervo' };
+    }
+
+    // Validate params (exclude unified and agrupar_por)
+    const { unified, agrupar_por, ...restParams } = params;
+    const validatedParams = listarAcervoParamsSchema.parse(restParams);
+
+    // Get acervo in unified mode
+    const result = await obterAcervoUnificado({
+      ...validatedParams,
+      unified: true,
+      agrupar_por: undefined,
+    });
+
+    return { success: true, data: result };
+  } catch (error) {
+    console.error('[actionListarAcervoUnificado] Error:', error);
+    return createErrorResponse(error, 'Erro ao listar acervo unificado');
   }
 }
 

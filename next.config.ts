@@ -41,6 +41,15 @@ const nextConfig: NextConfig = {
     config.optimization = config.optimization || {};
     config.optimization.moduleIds = 'deterministic';
 
+    // Configurar aliases para resolução de módulos (alinhado com tsconfig.json)
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, 'src'),
+      '@/lib': path.resolve(__dirname, 'src/lib'),
+      '@/backend': path.resolve(__dirname, 'backend'),
+    };
+
     // Exclude test files from bundle
     config.module = config.module || {};
     config.module.rules = config.module.rules || [];

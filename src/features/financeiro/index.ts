@@ -35,3 +35,6 @@ export * from './utils/export';
 
 // Hooks - Re-exportar hooks
 export * from './hooks';
+
+// Components - Re-exportar componentes para uso externo
+export * from './components';

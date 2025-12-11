@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
-import { getSupabase } from '@/app/_lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import OrcamentosClientPage from './client-page';
 
 async function getCurrentUserId(): Promise<string | null> {
-  const { supabase } = getSupabase();
+  const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
