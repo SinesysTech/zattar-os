@@ -3,15 +3,10 @@ export * from './client';
 export * from './service-client';
 export * from './database.types';
 export * from './db-client';
-
-// Server-side exports (DO NOT import these in Client Components)
-// Import directly from the files instead:
-// - For Server Components: import { createClient } from '@/lib/supabase/server'
-// - For Server Actions: import { createClient } from '@/lib/supabase/server-client'
-// - For legacy server: import { createClient } from '@/lib/supabase/server'
-export * from './server';
 export * from './set-user-context';
 
-// NOTE: server-client.ts is NOT exported here to prevent Client Components
-// from accidentally importing it. Always import directly:
-// import { createClient } from '@/lib/supabase/server-client'
+// NOTE: Server-side exports are NOT included here to prevent Client Components
+// from accidentally importing them. Always import directly:
+// - For Server Components: import { createClient } from '@/lib/supabase/server'
+// - For Server Actions: import { createClient } from '@/lib/supabase/server-client'
+// These files use 'next/headers' which only works in Server Components/Actions
