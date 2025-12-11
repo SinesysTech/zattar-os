@@ -17,7 +17,7 @@ import type {
     RelatorioComparativo,
     RelatorioExecutivo,
     AnaliseParaUI,
-} from '@/backend/financeiro/orcamento/services/orcamento/relatorios-orcamento.service';
+} from '@/features/financeiro/types/relatorios';
 
 // ============================================================================
 // Tipos para API Response

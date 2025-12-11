@@ -2,8 +2,7 @@
  * Script para consultar a última captura de partes no MongoDB
  */
 
-import { getCapturaRawLogsCollection } from '@/backend/utils/mongodb/collections';
-import { closeMongoConnection } from '@/backend/utils/mongodb/client';
+import { getCapturaRawLogsCollection, closeMongoConnection } from '@/lib/mongodb';
 
 async function consultarUltimaCaptura() {
   try {

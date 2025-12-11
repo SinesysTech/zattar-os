@@ -1,7 +1,7 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import type { PDFFont, PDFImage } from 'pdf-lib';
 import { decodeDataUrlToBuffer } from './base64';
-import type { TemplateCampo, TipoVariavel, EstiloCampo } from '@/backend/types/template.types';
+import type { TemplateCampo, TipoVariavel, EstiloCampo } from '../types';
 import type { ClienteBasico, FormularioBasico, SegmentoBasico, TemplateBasico } from './data.service';
 import { logger, createTimer, LogServices } from './logger';
 

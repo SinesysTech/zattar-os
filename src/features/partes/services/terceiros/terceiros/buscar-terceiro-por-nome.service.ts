@@ -2,7 +2,7 @@
 // Camada de lógica de negócio com validações
 
 import { buscarTerceirosPorNome as buscarTerceirosPorNomePersistence } from '../persistence/terceiro-persistence.service';
-import type { Terceiro } from '@/backend/types/partes/terceiros-types';
+import type { Terceiro } from '@/features/partes/types';
 
 /**
  * Busca terceiros pelo nome (busca parcial)

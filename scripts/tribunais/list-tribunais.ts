@@ -1,4 +1,4 @@
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 async function main() {
   const supabase = createServiceClient();

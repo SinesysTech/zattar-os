@@ -20,7 +20,7 @@ import {
   formatarCep,
 } from '@/features/partes';
 import type { ParteContraria } from '@/features/partes';
-import type { Endereco } from '@/backend/types/partes/enderecos-types';
+import type { Endereco } from '@/features/enderecos/types';
 
 // Extend ParteContraria to include all optional fields from database
 type ParteContrariaCompleta = ParteContraria & {

@@ -20,7 +20,7 @@ import {
   formatarCep,
 } from '@/features/partes';
 import type { Cliente } from '@/features/partes';
-import type { Endereco } from '@/backend/types/partes/enderecos-types';
+import type { Endereco } from '@/features/enderecos/types';
 
 // Extend Cliente to include all optional fields from database
 type ClienteCompleto = Cliente & {

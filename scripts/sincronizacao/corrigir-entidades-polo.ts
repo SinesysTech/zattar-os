@@ -33,7 +33,7 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config({ path: resolve(process.cwd(), '.env') });
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 // ============================================================================
 // TIPOS

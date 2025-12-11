@@ -3,22 +3,21 @@ import type { CapturaPartesResult, TipoParteClassificacao } from './types';
 import type { PartePJE, RepresentantePJE } from '@/features/captura/pje-trt/partes/types';
 import { obterPartesProcesso } from '@/features/captura/pje-trt/partes';
 import { identificarTipoParte, validarDocumentoAdvogado, type AdvogadoIdentificacao } from './identificacao-partes.service';
-import { upsertClientePorCPF, upsertClientePorCNPJ, buscarClientePorCPF, buscarClientePorCNPJ } from '@/backend/clientes/services/persistence/cliente-persistence.service';
-import { upsertParteContrariaPorCPF, upsertParteContrariaPorCNPJ, buscarParteContrariaPorCPF, buscarParteContrariaPorCNPJ } from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
+import { upsertClientePorCPF, upsertClientePorCNPJ, buscarClientePorCPF, buscarClientePorCNPJ, upsertParteContrariaPorCPF, upsertParteContrariaPorCNPJ, buscarParteContrariaPorCPF, buscarParteContrariaPorCNPJ } from '@/features/partes/repository-compat';
 import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, buscarTerceiroPorCNPJ, criarTerceiroSemDocumento } from '@/features/partes/services/terceiros/persistence/terceiro-persistence.service';
-import { vincularParteProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
-import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/backend/representantes/services/representantes-persistence.service';
+import { vincularParteProcesso } from '@/features/partes/repository-processo-partes';
+import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/features/partes/repository-representantes';
 import { upsertEnderecoPorIdPje } from '@/features/enderecos';
 import type { CriarClientePFParams, CriarClientePJParams, CriarParteContrariaPFParams, CriarParteContrariaPJParams, CriarTerceiroPFParams, CriarTerceiroPJParams, UpsertTerceiroPorCPFParams, UpsertTerceiroPorCNPJParams } from '@/types/contracts/partes';
 import type { GrauProcesso } from '@/types/domain/common';
 import type { ClassificacaoEndereco, EntidadeTipoEndereco, SituacaoEndereco } from '@/features/enderecos';
 import type { SituacaoOAB, TipoRepresentante, Polo } from '@/types/domain/representantes';
 import { validarPartePJE, validarPartesArray } from './schemas';
-import getLogger, { withCorrelationId } from '@/backend/utils/logger';
+import getLogger, { withCorrelationId } from '@/lib/logger';
 import { withRetry } from '@/lib/utils/retry';
 import { CAPTURA_CONFIG } from './config';
 import { ValidationError, PersistenceError, extractErrorInfo } from './errors';
-import { upsertCadastroPJE, buscarEntidadePorIdPessoaPJE } from '@/backend/cadastros-pje/services/persistence/cadastro-pje-persistence.service';
+import { upsertCadastroPJE, buscarEntidadePorIdPessoaPJE } from '@/features/partes/repository-cadastros-pje';
 import type { TipoParteProcesso, PoloProcessoParte } from '@/types/domain/processo-partes';
 import { TIPOS_PARTE_PROCESSO_VALIDOS } from '@/types/domain/processo-partes';
 
@@ -1308,7 +1307,7 @@ async function vincularEnderecoNaEntidade(
   enderecoId: number
 ): Promise<void> {
   try {
-    const { createServiceClient } = await import('@/backend/utils/supabase/service-client');
+    const { createServiceClient } = await import('@/lib/supabase/service-client');
     const supabase = createServiceClient();
 
     let tableName: string;

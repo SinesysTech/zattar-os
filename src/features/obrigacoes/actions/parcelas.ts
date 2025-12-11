@@ -4,7 +4,7 @@
 import { revalidatePath } from 'next/cache';
 import * as service from '../service';
 import { AtualizarParcelaParams, MarcarParcelaRecebidaParams } from '../types';
-import { sincronizarParcelaParaFinanceiro } from '@/backend/financeiro/obrigacoes/services/integracao/obrigacoes-integracao.service';
+import { sincronizarParcelaParaFinanceiro } from '@/features/financeiro/services/obrigacoes-integracao';
 
 export async function actionMarcarParcelaRecebida(
   parcelaId: number, 

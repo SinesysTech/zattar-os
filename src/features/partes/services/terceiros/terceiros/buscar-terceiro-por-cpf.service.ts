@@ -2,7 +2,7 @@
 // Camada de lógica de negócio com validações
 
 import { buscarTerceiroPorCPF as buscarTerceiroPorCPFPersistence } from '../persistence/terceiro-persistence.service';
-import type { Terceiro } from '@/backend/types/partes/terceiros-types';
+import type { Terceiro } from '@/features/partes/types';
 
 /**
  * Busca um terceiro pelo CPF

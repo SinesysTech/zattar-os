@@ -5,7 +5,7 @@
  * Não contém lógica específica de TRT, TJSP, etc.
  */
 
-import type { TipoAcessoTribunal } from '@/backend/types/captura/trt-types';
+import type { TipoAcessoTribunal } from './types/trt-types';
 import type { GrauProcesso } from '@/features/partes';
 
 // =============================================================================

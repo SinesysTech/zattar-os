@@ -1,6 +1,6 @@
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { Advogado } from '@/backend/types/advogados/types';
+import type { Advogado } from '@/features/advogados/types';
 import type { TipoCaptura, StatusCaptura } from '@/features/captura/types';
 
 // Tipos de captura disponíveis

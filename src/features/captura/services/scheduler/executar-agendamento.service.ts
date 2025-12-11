@@ -1,7 +1,7 @@
 // Serviço para executar um agendamento de captura
 
 import type { Agendamento } from '@/backend/types/captura/agendamentos-types';
-import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
+import { getCredentialComplete } from '../../credentials/credential.service';
 import { getTribunalConfig } from '@/backend/captura/services/trt/config';
 import { acervoGeralCapture, type AcervoGeralResult } from '@/backend/captura/services/trt/acervo-geral.service';
 import { arquivadosCapture, type ArquivadosResult } from '@/backend/captura/services/trt/arquivados.service';
@@ -11,7 +11,7 @@ import { capturaCombinada, type CapturaCombinAdaResult } from '@/backend/captura
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
 import { atualizarAgendamento } from '../agendamentos/atualizar-agendamento.service';
 import { recalcularProximaExecucaoAposExecucao } from '../agendamentos/calcular-proxima-execucao.service';
-import type { FiltroPrazoPendentes, CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
+import type { FiltroPrazoPendentes, CodigoTRT, GrauTRT } from '../../types/trt-types';
 import { registrarCapturaRawLog } from '@/backend/captura/services/persistence/captura-raw-log.service';
 
 /**

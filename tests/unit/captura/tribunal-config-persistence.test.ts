@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import type { TipoAcessoTribunal } from '@/backend/types/captura/trt-types';
+import type { TipoAcessoTribunal } from '@/features/captura';
 
 // =============================================================================
 // MOCKS
@@ -35,7 +35,7 @@ mockEq.mockReturnValue({
 });
 
 // Mock do módulo de service client
-jest.mock('@/backend/utils/supabase/service-client', () => ({
+jest.mock('@/lib/supabase/service-client', () => ({
   createServiceClient: () => mockSupabaseClient,
 }));
 
@@ -45,7 +45,7 @@ import {
   getConfigByTRTAndGrau,
   listAllConfigs,
   isValidTribunalCode,
-} from '@/backend/captura/services/persistence/tribunal-config-persistence.service';
+} from '@/features/captura/services/persistence/tribunal-config-persistence.service';
 
 // =============================================================================
 // FIXTURES
