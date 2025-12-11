@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { listarCapturasLog } from '@/backend/captura/services/persistence/captura-log-persistence.service';
+import { listarCapturasLog } from '@/features/captura/services/persistence/captura-log-persistence.service';
 import type { ListarCapturasLogParams } from '@/features/captura/types';
 
 /**

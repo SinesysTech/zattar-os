@@ -3,12 +3,12 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
-import { acervoGeralCapture } from '@/backend/captura/services/trt/acervo-geral.service';
-import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
-import { ordenarCredenciaisPorTRT } from '@/backend/captura/utils/ordenar-credenciais';
-import { registrarCapturaRawLog } from '@/backend/captura/services/persistence/captura-raw-log.service';
+import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
+import { acervoGeralCapture } from '@/features/captura/services/trt/acervo-geral.service';
+import { getTribunalConfig } from '@/features/captura/services/trt/config';
+import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/features/captura/services/captura-log.service';
+import { ordenarCredenciaisPorTRT } from '@/features/captura/utils/ordenar-credenciais';
+import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
 
 /**
  * @swagger
