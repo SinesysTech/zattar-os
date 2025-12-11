@@ -17,11 +17,9 @@ import { Separator } from '@/components/ui/separator';
 import { ExternalLink, Calendar, FileText, Users, Building2, Scale, AlertCircle } from 'lucide-react';
 import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../types';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import type { TipoExpediente } from '@/features/tipos-expedientes';
 
-interface TipoExpediente {
-  id: number;
-  tipoExpediente: string;
-}
+
 
 interface ExpedienteVisualizarDialogProps {
   expediente: Expediente;
@@ -110,9 +108,9 @@ export function ExpedienteVisualizarDialog({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div>
-                              <DialogTitle className="text-xl">
-                                {expediente.classeJudicial} {expediente.numeroProcesso}
-                              </DialogTitle>              <DialogDescription className="mt-1">
+              <DialogTitle className="text-xl">
+                {expediente.classeJudicial} {expediente.numeroProcesso}
+              </DialogTitle>              <DialogDescription className="mt-1">
                 Detalhes completos do expediente
               </DialogDescription>
             </div>
@@ -168,12 +166,12 @@ export function ExpedienteVisualizarDialog({
                     {expediente.segredoJustica ? 'Sim' : 'Não'}
                   </Badge>
                 </div>
-                  <div>
-                    <div className="text-xs text-muted-foreground mb-1">Juízo Digital</div>
-                    <Badge tone={expediente.juizoDigital ? 'success' : 'neutral'} variant={expediente.juizoDigital ? 'soft' : 'outline'}>
-                      {expediente.juizoDigital ? 'Sim' : 'Não'}
-                    </Badge>
-                  </div>
+                <div>
+                  <div className="text-xs text-muted-foreground mb-1">Juízo Digital</div>
+                  <Badge tone={expediente.juizoDigital ? 'success' : 'neutral'} variant={expediente.juizoDigital ? 'soft' : 'outline'}>
+                    {expediente.juizoDigital ? 'Sim' : 'Não'}
+                  </Badge>
+                </div>
               </div>
             </div>
 
