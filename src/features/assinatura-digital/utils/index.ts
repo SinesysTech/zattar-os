@@ -24,11 +24,23 @@ export {
 export {
   validateCPF,
   validateCNPJ,
-  validateTelefone,
-  validateCEP,
-  validateEmail,
   validateCpfCnpj,
 } from './validators';
+
+// Validações de negócio / UX (retornam { valid, message/issues })
+export {
+  TEXT_LIMITS,
+  validateTextLength,
+  validateBirthDate,
+  validateBrazilianPhone,
+  validateCPFDigits,
+  validateEmail,
+  validateCEP,
+  validateGeolocation,
+  validatePhotoQuality,
+  validateSignatureQuality,
+  validateDataConsistency,
+} from './business-validations';
 
 // Device Fingerprint
 export { collectDeviceFingerprint } from './device-fingerprint';

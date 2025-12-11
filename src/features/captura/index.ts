@@ -30,6 +30,15 @@ export type {
     TimelineResult,
 } from './types';
 
+// PJE Documento Types
+export type {
+    DocumentoMetadata,
+    DocumentoConteudo,
+    FetchDocumentoParams,
+    FetchDocumentoResult,
+    ArquivoInfo,
+} from './types/documento-types';
+
 // TRT Types (exportados de types.ts que re-exporta de trt-types.ts)
 export type {
     CodigoTRT,

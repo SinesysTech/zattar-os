@@ -105,10 +105,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { buscarProcessosClientePorCpf } from '@/features/acervo';
-import { buscarAudienciasClientePorCpf } from '@/backend/audiencias/services/buscar-audiencias-cliente-cpf.service';
-import { obterClientePorCpf } from '@/backend/clientes/services/clientes/buscar-cliente.service';
-import { obterContratos } from '@/backend/contratos/services/contratos/listar-contratos.service';
-import { listarAcordosCondenacoes } from '@/backend/acordos-condenacoes/services/persistence/acordo-condenacao-persistence.service';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import {
   MeuProcessoLogger,
   Timer,
@@ -169,11 +166,16 @@ function validarCPF(cpf: string): { valido: boolean; cpfLimpo: string; erro?: st
 async function buscarDadosAgregados(cpf: string): Promise<AggregatedData> {
   const logger = new MeuProcessoLogger();
 
-  // Executar todas as buscas em paralelo
-  const [processosResult, audienciasResult, clienteResult] = await Promise.allSettled([
+  const supabase = createServiceClient();
+
+  // Executar as buscas base em paralelo (as demais dependem dos IDs retornados)
+  const [processosResult, clienteResult] = await Promise.allSettled([
     buscarProcessosClientePorCpf(cpf),
-    buscarAudienciasClientePorCpf(cpf),
-    obterClientePorCpf(cpf),
+    supabase
+      .from('clientes')
+      .select('id,nome,cpf')
+      .eq('cpf', cpf)
+      .maybeSingle(),
   ]);
 
   // Processar resultados de processos
@@ -181,32 +183,59 @@ async function buscarDadosAgregados(cpf: string): Promise<AggregatedData> {
     ? processosResult.value.data.processos || []
     : [];
 
-  // Processar resultados de audiências
-  const audiencias = audienciasResult.status === 'fulfilled' && audienciasResult.value.success
-    ? audienciasResult.value.data.audiencias || []
-    : [];
+  // Processar resultado de cliente
+  const clienteDb =
+    clienteResult.status === 'fulfilled' && !clienteResult.value.error
+      ? (clienteResult.value.data as { id: number; nome: string; cpf: string } | null)
+      : null;
 
-  // Processar resultado de cliente (retorna Cliente | null)
-  const clienteData = clienteResult.status === 'fulfilled' && clienteResult.value !== null
-    ? clienteResult.value
-    : null;
-
-  const cliente = clienteData
+  const cliente = clienteDb
     ? {
-      nome: clienteData.nome,
-      cpf: clienteData.cpf,
+      nome: clienteDb.nome,
+      cpf: clienteDb.cpf,
     }
     : null;
 
+  // IDs de processos (para audiências e acordos)
+  const processoIds = processos
+    .map((p: unknown) => (p as Record<string, unknown>).id || (p as Record<string, unknown>).processo_id)
+    .filter((id: unknown) => typeof id === 'number' && Number.isFinite(id)) as number[];
+
+  // Buscar audiências relacionadas aos processos do cliente (se houver)
+  let audiencias: unknown[] = [];
+  if (processoIds.length > 0) {
+    try {
+      const { data, error } = await supabase
+        .from('audiencias')
+        .select('*')
+        .in('processo_id', processoIds)
+        .order('data_inicio', { ascending: true });
+
+      if (error) {
+        logger.warn('Erro ao buscar audiências', { error });
+      } else {
+        audiencias = data ?? [];
+      }
+    } catch (error) {
+      logger.warn('Erro ao buscar audiências', { error });
+    }
+  }
+
   // Buscar contratos se cliente foi encontrado
   let contratos: unknown[] = [];
-  if (clienteData?.id) {
+  if (clienteDb?.id) {
     try {
-      const contratosResult = await obterContratos({
-        clienteId: clienteData.id,
-      });
-      // obterContratos retorna ListarContratosResult
-      contratos = contratosResult.contratos || [];
+      const { data, error } = await supabase
+        .from('contratos')
+        .select('*')
+        .eq('cliente_id', clienteDb.id)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        logger.warn('Erro ao buscar contratos', { error });
+      } else {
+        contratos = data ?? [];
+      }
     } catch (error) {
       logger.warn('Erro ao buscar contratos', { error });
     }
@@ -216,23 +245,18 @@ async function buscarDadosAgregados(cpf: string): Promise<AggregatedData> {
   let acordos: unknown[] = [];
   if (processos.length > 0) {
     try {
-      const processoIds = processos
-        .map((p: unknown) => (p as Record<string, unknown>).id || (p as Record<string, unknown>).processo_id)
-        .filter((id: unknown) => id != null) as number[];
-
       if (processoIds.length > 0) {
-        // Buscar acordos de cada processo e agregar
-        const acordosPromises = processoIds.map((processoId: number) =>
-          listarAcordosCondenacoes({ processoId, limite: 100 })
-        );
-        const acordosResults = await Promise.allSettled(acordosPromises);
+        const { data, error } = await supabase
+          .from('acordos_condenacoes')
+          .select('*, parcelas(*)')
+          .in('processo_id', processoIds)
+          .order('created_at', { ascending: false });
 
-        acordos = acordosResults
-          .filter((result) => result.status === 'fulfilled')
-          .flatMap((result) => {
-            const r = result as PromiseFulfilledResult<{ success: boolean; data: { acordos: unknown[] } }>;
-            return r.value.success ? r.value.data.acordos : [];
-          });
+        if (error) {
+          logger.warn('Erro ao buscar acordos', { error });
+        } else {
+          acordos = data ?? [];
+        }
       }
     } catch (error) {
       logger.warn('Erro ao buscar acordos', { error });

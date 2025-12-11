@@ -43,7 +43,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { verificarPermissoes } from '@/backend/permissoes/services/persistence/permissao-persistence.service';
+import { checkPermission } from '@/lib/auth/authorization';
 import { buscarPendentesPorClienteCPF } from '@/features/expedientes/service';
 
 export async function GET(
@@ -61,11 +61,7 @@ export async function GET(
     }
 
     // 2. Permissão
-    const temPermissao = await verificarPermissoes(
-      authResult.usuarioId,
-      'pendentes',
-      'visualizar'
-    );
+    const temPermissao = await checkPermission(authResult.usuarioId, 'pendentes', 'visualizar');
     if (!temPermissao) {
       return NextResponse.json(
         { success: false, error: 'Sem permissão para visualizar pendentes de manifestação' },

@@ -8,8 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { capturarTimeline } from '@/backend/captura/services/timeline/timeline-capture.service';
-import type { CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
+import { capturarTimeline, type CodigoTRT, type GrauTRT } from '@/features/captura';
 
 interface InstanciaAcervo {
   id: number;
