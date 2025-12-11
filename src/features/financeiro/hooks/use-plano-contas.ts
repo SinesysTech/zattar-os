@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { actionListarPlanoContas } from '../actions/plano-contas';
 import { PlanoContas } from '../types/plano-contas';
 
@@ -7,7 +7,7 @@ export function usePlanoContas() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const load = async () => {
+    const load = useCallback(async () => {
         setIsLoading(true);
         const result = await actionListarPlanoContas();
         if (result.success && result.data) {
@@ -17,11 +17,11 @@ export function usePlanoContas() {
             setError(result.error || 'Erro ao carregar plano de contas');
         }
         setIsLoading(false);
-    };
+    }, []);
 
     useEffect(() => {
         load();
-    }, []);
+    }, [load]);
 
     return { contas, isLoading, error, refetch: load };
 }

@@ -68,6 +68,22 @@ export {
 export type { ActionResult } from './actions';
 
 // ============================================================================
+// Service
+// ============================================================================
+export {
+  criarAudiencia,
+  buscarAudiencia,
+  listarAudiencias,
+  atualizarAudiencia,
+  atualizarStatusAudiencia,
+} from './service';
+
+// ============================================================================
+// Repository (for testing purposes)
+// ============================================================================
+export * as audienciasRepository from './repository';
+
+// ============================================================================
 // Types
 // ============================================================================
 export {

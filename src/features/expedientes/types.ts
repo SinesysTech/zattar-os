@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { PendenteManifestacao, ListarPendentesParams } from '@/backend/types/expedientes/types';
+import type { PendenteManifestacao } from '@/backend/types/expedientes/types';
 
 // =============================================================================
 // ENUMS & CONSTANTS
@@ -67,7 +67,7 @@ export interface Expediente {
   dataCriacaoExpediente: string | null;
   prazoVencido: boolean;
   siglaOrgaoJulgador: string | null;
-  dadosAnteriores: any | null;
+  dadosAnteriores: Record<string, unknown> | null;
   responsavelId: number | null;
   baixadoEm: string | null;
   protocoloId: string | null;
@@ -195,6 +195,4 @@ export interface ExpedientesApiResponse {
 /**
  * Filter state interface for UI components
  */
-export interface ExpedientesFilters extends Omit<ListarExpedientesParams, 'pagina' | 'limite' | 'ordenarPor' | 'ordem'> {
-  // Add any UI specific filter properties if needed, currently matches ListarExpedientesParams almost 1:1
-}
+export type ExpedientesFilters = Omit<ListarExpedientesParams, 'pagina' | 'limite' | 'ordenarPor' | 'ordem'>;

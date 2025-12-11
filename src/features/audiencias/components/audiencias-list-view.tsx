@@ -1,4 +1,4 @@
-import { Audiencia } from '@/core/audiencias/domain';
+import { Audiencia } from '@/features/audiencias';
 import { DataTable } from '@/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';

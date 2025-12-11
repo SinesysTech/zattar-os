@@ -1,4 +1,4 @@
-import { Audiencia, MODALIDADE_AUDIENCIA_LABELS, STATUS_AUDIENCIA_LABELS } from '@/core/audiencias/domain';
+import { Audiencia, MODALIDADE_AUDIENCIA_LABELS, STATUS_AUDIENCIA_LABELS } from '@/features/audiencias';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Card, CardContent } from '@/components/ui/card';

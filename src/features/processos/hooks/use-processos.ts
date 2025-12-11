@@ -154,7 +154,7 @@ export const useProcessos = (params: Record<string, unknown> = {}): UseProcessos
 
   // Memoizar parametros convertidos
   const convertedParams = useMemo(() => convertParams(params), [
-    params.pagina,
+    params,
     params.limite,
     params.busca,
     params.ordenar_por,

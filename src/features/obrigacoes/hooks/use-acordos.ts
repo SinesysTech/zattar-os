@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { actionListarAcordos } from '../actions/acordos';
 import { AcordoComParcelas, ListarAcordosParams } from '../types';
 
@@ -10,7 +10,7 @@ export function useAcordos(filtros: ListarAcordosParams) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  async function load() {
+  const load = useCallback(async () => {
     setIsLoading(true);
     const result = await actionListarAcordos(filtros);
     if (result.success && result.data) {
@@ -21,11 +21,11 @@ export function useAcordos(filtros: ListarAcordosParams) {
       setError(result.error || 'Erro desconhecido');
     }
     setIsLoading(false);
-  }
+  }, [filtros.processoId, filtros.tipo, filtros.direcao, filtros.status, filtros.pagina, filtros.limite, filtros.dataInicio, filtros.dataFim, filtros.busca]);
 
   useEffect(() => {
     load();
-  }, [filtros.processoId, filtros.tipo, filtros.direcao, filtros.status, filtros.pagina, filtros.limite, filtros.dataInicio, filtros.dataFim, filtros.busca]);
+  }, [load]);
 
   return { data, total, totalPaginas, isLoading, error, refetch: load };
 }

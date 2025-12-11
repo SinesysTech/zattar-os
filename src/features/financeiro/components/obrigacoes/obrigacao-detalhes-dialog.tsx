@@ -147,7 +147,7 @@ export function ObrigacaoDetalhesDialog({
     return null;
   }
 
-  // @ts-ignore
+  // @ts-expect-error - Tipo pode não estar no TIPO_CONFIG
   const tipoConfig = TIPO_CONFIG[obrigacao.tipo];
   const statusConfig = STATUS_CONFIG[obrigacao.status];
   const sincConfig = SINCRONIZACAO_CONFIG[obrigacao.statusSincronizacao];

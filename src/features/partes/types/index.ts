@@ -125,7 +125,9 @@ export interface TerceirosFilters {
 }
 
 export interface RepresentantesFilters {
-  // Reservado para futura extensao
+  tipo_pessoa?: 'pf' | 'pj';
+  situacao?: 'A' | 'I';
+  busca?: string;
 }
 
 // Re-exportar tipos de representantes do backend

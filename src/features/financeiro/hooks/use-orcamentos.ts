@@ -240,7 +240,8 @@ export function useOrcamentos(options?: UseOrcamentosOptions): UseOrcamentosRetu
         if (options?.autoFetch) {
             listar(options.filters);
         }
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [options?.autoFetch]);
 
     return {
         orcamentos,

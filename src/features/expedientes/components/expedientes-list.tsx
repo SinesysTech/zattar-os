@@ -138,7 +138,10 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
             newButtonTooltip="Novo Expediente"
             extraButtons={
               <div className="flex items-center gap-2">
-                <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
+                <Select 
+                  value={statusFilter} 
+                  onValueChange={(v: 'todos' | 'pendentes' | 'baixados') => setStatusFilter(v)}
+                >
                   <SelectTrigger className="w-[130px] h-9">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
@@ -214,7 +217,7 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
           hidePagination={true}
           hideTableBorder={true}
           className="border-none"
-          // @ts-ignore
+          // @ts-expect-error - TanStack Table options type mismatch
           options={{
               meta: {
                   usuarios,

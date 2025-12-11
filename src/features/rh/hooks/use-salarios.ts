@@ -73,9 +73,9 @@ export const useSalarios = (params: UseSalariosParams = {}): UseSalariosResult =
 
       setSalarios(result.data.items);
       setPaginacao(result.data.paginacao);
-      // @ts-ignore - Extra fields added in action
+      // @ts-expect-error - Extra fields added in action
       setTotais(result.data.totais || null);
-      // @ts-ignore - Extra fields added in action
+      // @ts-expect-error - Extra fields added in action
       setUsuariosSemSalario(result.data.usuariosSemSalario || []);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar salários';
@@ -281,7 +281,7 @@ export const useSalariosDoUsuario = (params: UseSalariosDoUsuarioParams): UseSal
          throw new Error(result.error || 'Erro ao buscar salários');
       }
 
-      let items = result.data;
+      const items = result.data;
       
       // Client-side filtering if API doesn't support it fully via standard action
       // Or we can invoke repository specialized function via action.

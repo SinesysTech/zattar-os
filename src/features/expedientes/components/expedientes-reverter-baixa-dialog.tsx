@@ -36,24 +36,29 @@ export function ExpedientesReverterBaixaDialog({
   expediente,
   onSuccess,
 }: ExpedientesReverterBaixaDialogProps) {
+  // Usar key para resetar o formulário quando o diálogo fechar
+  const [formKey, setFormKey] = React.useState(0);
+  
   const [formState, formAction] = useFormState(
     actionReverterBaixa.bind(null, expediente?.id || 0),
     initialState
   );
   const { pending } = useFormStatus();
 
-  // Resetar estado quando abrir/fechar
+  // Resetar estado quando fechar
   React.useEffect(() => {
     if (!open) {
-      formState.success = false; // Reset form state on close
-      formState.error = '';
-      formState.message = '';
+      setFormKey((prev) => prev + 1);
     }
+  }, [open]);
+
+  // Chamar onSuccess quando a ação for bem-sucedida
+  React.useEffect(() => {
     if (formState.success) {
       onSuccess();
       onOpenChange(false);
     }
-  }, [open, formState, onOpenChange, onSuccess]);
+  }, [formState.success, onSuccess, onOpenChange]);
 
   if (!expediente) {
     return null;
@@ -71,7 +76,7 @@ export function ExpedientesReverterBaixaDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form action={formAction} className="mt-6 space-y-6">
+        <form key={formKey} action={formAction} className="mt-6 space-y-6">
           {/* Informações do expediente */}
           <div className="space-y-2 rounded-lg border p-4 bg-muted/50">
             <div className="text-sm font-medium">Expediente</div>

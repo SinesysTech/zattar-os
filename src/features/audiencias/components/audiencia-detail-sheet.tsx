@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useAudiencias } from '@/app/_lib/hooks/use-audiencias';
 import { Loader2, ExternalLink, CalendarDays, Clock, MapPin, Users, Info, User, ClipboardList, BookOpen } from 'lucide-react';
-import { Audiencia, GRAU_TRIBUNAL_LABELS } from '@/core/audiencias/domain';
+import { Audiencia, GRAU_TRIBUNAL_LABELS } from '@/features/audiencias';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AudienciaStatusBadge } from './audiencia-status-badge';

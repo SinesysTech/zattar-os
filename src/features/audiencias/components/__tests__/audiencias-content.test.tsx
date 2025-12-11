@@ -2,15 +2,14 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AudienciasContent } from '../audiencias-content';
-import { useAudiencias } from '@/hooks/use-audiencias';
-import { useTiposAudiencias } from '@/hooks/use-tipos-audiencias';
-import { useUsuarios } from '@/hooks/use-usuarios';
-import { Audiencia, ModalidadeAudiencia, StatusAudiencia, GrauTribunal } from '@/core/audiencias/domain';
+import { useAudiencias, useTiposAudiencias } from '@/features/audiencias';
+import { useUsuarios } from '@/features/usuarios';
+import { Audiencia, ModalidadeAudiencia, StatusAudiencia, GrauTribunal } from '@/features/audiencias';
 
 // Mock hooks
-jest.mock('@/hooks/use-audiencias');
-jest.mock('@/hooks/use-tipos-audiencias');
-jest.mock('@/hooks/use-usuarios');
+jest.mock('@/features/audiencias');
+
+jest.mock('@/features/usuarios');
 
 const mockAudiencias: Audiencia[] = [
   {
@@ -109,7 +108,7 @@ describe('AudienciasContent', () => {
     // Switch back to Lista view
     await user.click(screen.getByRole('tab', { name: /lista/i }));
     await waitFor(() => {
-        expect(screen.getByText('0001234-56.2023.5.01.0001')).toBeInTheDocument();
+      expect(screen.getByText('0001234-56.2023.5.01.0001')).toBeInTheDocument();
     });
   });
 

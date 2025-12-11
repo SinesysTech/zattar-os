@@ -182,9 +182,9 @@ export interface EvolucaoMensal {
     percentualExecutado: number;
 }
 
-export interface ItemAnalise extends AnaliseOrcamentariaItem {}
+export type ItemAnalise = AnaliseOrcamentariaItem;
 
-export interface AlertaOrcamentario extends AlertaDesvio {}
+export type AlertaOrcamentario = AlertaDesvio;
 
 export interface ProjecaoOrcamentaria {
     projecao: ProjecaoItem[];

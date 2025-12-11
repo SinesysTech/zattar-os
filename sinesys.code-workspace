@@ -20,6 +20,13 @@
     "traycer.languagePreference": "Português",
     "kiroAgent.trustedCommands": [
       "*"
-    ]
+    ],
+    "codingcopilot.autoRun": true,
+    "codingcopilot.taskList": true,
+    "codingcopilot.generationPreference": "intelligentMode",
+    "codingcopilot.commitMessageLanguage": "en",
+    "codingcopilot.enableCompletionLanguage": {
+      "scminput": false
+    }
   }
 }
