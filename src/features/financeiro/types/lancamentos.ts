@@ -114,7 +114,9 @@ export interface ListarLancamentosParams {
     contaBancariaId?: number;
     origem?: OrigemLancamento;
     recorrente?: boolean;
+    lancamentoOrigemId?: number;
 }
+
 
 // Aliases for compatibility with Contas Pagar components
 export type StatusContaPagar = StatusLancamento;

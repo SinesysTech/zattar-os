@@ -23,8 +23,11 @@ export * from './services';
 export * from './actions';
 
 // Types - Re-exportar tipos principais
-export type * from './types/lancamentos';
-export type * from './types/conciliacao';
+export * from './services/orcamentos';
+export * from './services/recorrencia';
+
+export {
+type * from './types/conciliacao';
 export type * from './types/obrigacoes';
 export type * from './types/plano-contas';
 export type * from './types/dre';

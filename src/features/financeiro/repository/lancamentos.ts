@@ -73,11 +73,17 @@ export const LancamentosRepository = {
             query = query.eq('origem', params.origem);
         }
 
+
         if (params.recorrente !== undefined) {
             query = query.eq('recorrente', params.recorrente);
         }
 
+        if (params.lancamentoOrigemId) {
+            query = query.eq('lancamento_origem_id', params.lancamentoOrigemId);
+        }
+
         // Paginação
+
         if (params.limite) {
             const offset = ((params.pagina || 1) - 1) * params.limite;
             query = query.range(offset, offset + params.limite - 1);

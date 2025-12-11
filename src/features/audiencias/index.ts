@@ -78,6 +78,11 @@ export {
   atualizarStatusAudiencia,
 } from './service';
 
+export { buscarAudienciasClientePorCpf } from './services/ai-agent.service';
+export { atribuirResponsavelAudiencia } from './services/responsavel.service';
+export { atualizarUrlVirtualAudiencia } from './services/virtual.service';
+
+
 // ============================================================================
 // Repository (for testing purposes)
 // ============================================================================
@@ -124,3 +129,6 @@ export type {
   TipoAudiencia,
   UseTiposAudienciasResult,
 } from './types';
+
+export * from './types/ai-agent.types';
+
