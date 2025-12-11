@@ -9,7 +9,7 @@ import {
   gerarHashDeduplicacao,
   deduplicarTimeline,
   type TimelineItemUnificado,
-} from '@/backend/acervo/services/timeline/timeline-unificada.service';
+} from '@/features/acervo';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 // =============================================================================

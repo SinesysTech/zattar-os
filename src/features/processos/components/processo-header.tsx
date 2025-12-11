@@ -11,7 +11,7 @@
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Lock, User, Calendar, Layers } from 'lucide-react';
-import type { Acervo } from '@/backend/types/acervo/types';
+import type { Acervo } from '@/features/acervo/types';
 import type { GrauProcesso } from '@/core/partes';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

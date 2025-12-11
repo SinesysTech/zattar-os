@@ -4,7 +4,7 @@
  */
 
 import { z } from 'zod';
-import { StatusProcesso } from '@/types/domain/common';
+import { StatusProcesso } from '@/features/processos/domain';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 // Re-export timeline types for convenience
@@ -220,7 +220,7 @@ export interface ResumoProcessosIA {
 }
 
 export interface InstanciaProcessoIA {
-  vara: string;
+  vara: string | undefined;
   data_inicio: string;
   proxima_audiencia: string | null;
 }
@@ -237,7 +237,7 @@ export interface UltimaMovimentacaoIA {
   evento: string;
 }
 
-export type TimelineStatus = 'disponivel' | 'sincronizando' | 'indisponivel';
+export type TimelineStatus = 'disponivel' | 'sincronizando' | 'indisponivel' | 'erro';
 
 export interface ProcessoRespostaIA {
   numero: string;
@@ -250,10 +250,10 @@ export interface ProcessoRespostaIA {
     primeiro_grau: InstanciaProcessoIA | null;
     segundo_grau: InstanciaProcessoIA | null;
   };
-  timeline: TimelineItemIA[];
+  timeline?: TimelineItemIA[];
   timeline_status: TimelineStatus;
   timeline_mensagem?: string;
-  ultima_movimentacao: UltimaMovimentacaoIA | null;
+  ultima_movimentacao?: UltimaMovimentacaoIA | null;
 }
 
 export interface ProcessosClienteCpfSuccessResponse {
@@ -340,29 +340,6 @@ export const atribuirResponsavelSchema = z.object({
 // Processos Cliente CPF Types
 // ============================================================================
 
-export interface ProcessoClienteCpfRow {
-  tipo_parte: string;
-  polo: string;
-  parte_principal: boolean;
-  processo_id: number;
-  id_pje: string;
-  advogado_id: number;
-  numero_processo: string;
-  trt: string;
-  grau: 'primeiro_grau' | 'segundo_grau';
-  classe_judicial: string;
-  nome_parte_autora: string;
-  nome_parte_re: string;
-  descricao_orgao_julgador: string;
-  codigo_status_processo: string;
-  origem: 'acervo_geral' | 'arquivado';
-  data_autuacao: string;
-  data_arquivamento: string | null;
-  data_proxima_audiencia: string | null;
-  segredo_justica: boolean;
-  timeline_mongodb_id: string | null;
-}
-
 export interface InstanciaInfo {
   numero_processo: string;
   classe_judicial: string;
@@ -371,8 +348,6 @@ export interface InstanciaInfo {
   valor_causa?: number;
   segredo_justica?: boolean;
 }
-
-export type TimelineStatus = 'disponivel' | 'indisponivel' | 'erro';
 
 export interface ProcessoClienteCPF {
   numero_processo: string;
@@ -409,41 +384,6 @@ export interface ProcessoClienteCPF {
   // Internal flags
   tem_timeline?: boolean;
   tem_detalhes?: boolean;
-}
-
-export interface TimelineItemIA {
-  data: string;
-  evento: string;
-  descricao: string;
-  tem_documento: boolean;
-}
-
-export interface UltimaMovimentacaoIA {
-  data: string;
-  evento: string;
-}
-
-export interface InstanciaProcessoIA {
-  vara: string | undefined;
-  data_inicio: string;
-  proxima_audiencia: string | null;
-}
-
-export interface ProcessoRespostaIA {
-  numero: string;
-  tipo: string;
-  papel_cliente: string;
-  parte_contraria: string;
-  tribunal: string;
-  sigilo: boolean;
-  instancias: {
-    primeiro_grau: InstanciaProcessoIA | null;
-    segundo_grau: InstanciaProcessoIA | null;
-  };
-  timeline?: TimelineItemIA[];
-  timeline_status: TimelineStatus;
-  timeline_mensagem?: string;
-  ultima_movimentacao?: UltimaMovimentacaoIA | null;
 }
 
 export interface BuscarProcessosClienteCPFParams {

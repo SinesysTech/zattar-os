@@ -17,6 +17,9 @@ import {
   atribuirResponsavel as atribuirResponsavelService,
   buscarProcessosClientePorCpf as buscarProcessosClientePorCpfService,
 } from '../service';
+import { obterTimelineUnificadaPorId } from '../timeline-unificada';
+import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
+import { buscarAcervoPorId } from '../repository';
 import {
   listarAcervoParamsSchema,
   atribuirResponsavelSchema,
@@ -170,6 +173,90 @@ export async function actionBuscarProcessosClientePorCpf(
   } catch (error) {
     console.error('[actionBuscarProcessosClientePorCpf] Error:', error);
     return createErrorResponse(error, 'Erro ao buscar processos por CPF');
+  }
+}
+
+/**
+ * Gets timeline for a process by ID
+ * Supports unified mode that aggregates timelines from all process instances
+ */
+export async function actionObterTimelinePorId(
+  id: number,
+  unified: boolean = false
+): Promise<ActionResponse> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: 'Não autenticado' };
+    }
+
+    // Check permission
+    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para visualizar acervo' };
+    }
+
+    // Validate ID
+    if (!id || isNaN(id)) {
+      return { success: false, error: 'ID do acervo inválido' };
+    }
+
+    // Get acervo data
+    const acervo = await buscarAcervoPorId(id);
+    if (!acervo) {
+      return { success: false, error: 'Acervo não encontrado' };
+    }
+
+    // Get timeline - unified or individual
+    let timelineData = null;
+
+    if (unified) {
+      // Unified mode: aggregate timelines from all instances
+      try {
+        const timelineUnificada = await obterTimelineUnificadaPorId(id);
+        if (timelineUnificada) {
+          timelineData = {
+            timeline: timelineUnificada.timeline,
+            metadata: timelineUnificada.metadata,
+            unified: true,
+          };
+        }
+      } catch (error) {
+        console.error('[actionObterTimelinePorId] Erro ao buscar timeline unificada:', error);
+        // Continue without timeline if error
+      }
+    } else {
+      // Individual mode: get only timeline for this instance
+      if (acervo.timeline_mongodb_id) {
+        try {
+          const timelineDoc = await obterTimelinePorMongoId(acervo.timeline_mongodb_id);
+
+          if (timelineDoc) {
+            // Remove _id from MongoDB response (not serializable)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { _id, ...timelineResto } = timelineDoc;
+            timelineData = {
+              ...timelineResto,
+              unified: false,
+            };
+          }
+        } catch (error) {
+          console.error('[actionObterTimelinePorId] Erro ao buscar timeline MongoDB:', error);
+          // Continue without timeline if error
+        }
+      }
+    }
+
+    // Return combined data
+    const resultado = {
+      acervo,
+      timeline: timelineData,
+    };
+
+    return { success: true, data: resultado };
+  } catch (error) {
+    console.error('[actionObterTimelinePorId] Error:', error);
+    return createErrorResponse(error, 'Erro ao obter timeline');
   }
 }
 

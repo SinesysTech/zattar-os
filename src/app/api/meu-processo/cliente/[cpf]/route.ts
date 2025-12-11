@@ -104,7 +104,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { buscarProcessosClientePorCpf } from '@/backend/acervo/services/buscar-processos-cliente-cpf.service';
+import { buscarProcessosClientePorCpf } from '@/features/acervo';
 import { buscarAudienciasClientePorCpf } from '@/backend/audiencias/services/buscar-audiencias-cliente-cpf.service';
 import { obterClientePorCpf } from '@/backend/clientes/services/clientes/buscar-cliente.service';
 import { obterContratos } from '@/backend/contratos/services/contratos/listar-contratos.service';

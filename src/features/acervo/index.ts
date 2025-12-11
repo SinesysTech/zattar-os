@@ -63,6 +63,7 @@ export {
   actionAtribuirResponsavel,
   actionBuscarProcessosClientePorCpf,
   actionExportarAcervoCSV,
+  actionObterTimelinePorId,
 } from './actions/acervo-actions';
 
 // Service (Exported for API Routes usage mainly)
@@ -72,6 +73,16 @@ export {
   obterAcervoUnificado,
   obterAcervoAgrupado,
 } from './service';
+
+// Timeline Unificada
+export {
+  obterTimelineUnificada,
+  obterTimelineUnificadaPorId,
+  gerarHashDeduplicacao,
+  deduplicarTimeline,
+  type TimelineItemUnificado,
+  type TimelineUnificada,
+} from './timeline-unificada';
 
 // Hooks
 export {

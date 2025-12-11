@@ -7,8 +7,44 @@
 
 import { ObjectId } from 'mongodb';
 import { getTimelineCollection } from '@/lib/mongodb/collections';
-import type { TimelineDocument } from '@/backend/types/mongodb/timeline';
 import type { TimelineItemEnriquecido } from './types';
+
+/**
+ * Documento da timeline armazenado no MongoDB
+ */
+export interface TimelineDocument {
+  /** ID do MongoDB */
+  _id?: ObjectId;
+
+  /** ID do processo no PJE */
+  processoId: string;
+
+  /** Código do TRT (ex: 'TRT3') */
+  trtCodigo: string;
+
+  /** Grau da instância */
+  grau: string;
+
+  /** Data/hora da captura */
+  capturadoEm: Date;
+
+  /** Timeline completa com dados enriquecidos */
+  timeline: TimelineItemEnriquecido[];
+
+  /** Metadados adicionais */
+  metadata?: {
+    /** ID do advogado que capturou */
+    advogadoId?: number;
+    /** Total de documentos na timeline */
+    totalDocumentos: number;
+    /** Total de movimentos na timeline */
+    totalMovimentos: number;
+    /** Total de documentos baixados para Google Drive */
+    totalDocumentosBaixados: number;
+    /** Versão do schema (para migrações futuras) */
+    schemaVersion: number;
+  };
+}
 
 /**
  * Busca a timeline pelo ID do MongoDB

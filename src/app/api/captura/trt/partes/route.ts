@@ -16,7 +16,7 @@ import { createServiceClient } from "@/lib/supabase/service-client";
 import { registrarCapturaRawLog } from "@/backend/captura/services/persistence/captura-raw-log.service";
 import { criarCapturaLog, atualizarCapturaLog } from "@/backend/captura/services/persistence/captura-log-persistence.service";
 import type { CodigoTRT, GrauTRT } from "@/backend/types/captura/trt-types";
-import type { GrauAcervo } from "@/backend/types/acervo/types";
+import type { GrauAcervo } from "@/features/acervo/types";
 import type { CapturaLog } from "@/backend/types/captura/capturas-log-types";
 import type { ResultadoCapturaPartes } from "@/backend/types/captura/capturas-log-types";
 import getLogger, { withCorrelationId } from '@/lib/logger';

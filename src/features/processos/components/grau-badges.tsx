@@ -9,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import type { ProcessoInstancia, GrauAcervo } from '@/backend/types/acervo/types';
+import type { ProcessoInstancia, GrauAcervo } from '@/features/acervo/types';
 
 interface GrauBadgesProps {
   instances?: ProcessoInstancia[];

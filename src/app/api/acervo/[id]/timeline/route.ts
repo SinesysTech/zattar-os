@@ -7,9 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { createServiceClient } from '@/lib/supabase/service-client';
-import { obterTimelinePorMongoId } from '@/backend/captura/services/timeline/timeline-persistence.service';
-import { obterTimelineUnificadaPorId } from '@/backend/acervo/services/timeline/timeline-unificada.service';
+import { actionObterTimelinePorId } from '@/features/acervo/actions/acervo-actions';
 
 /**
  * @swagger
@@ -106,71 +104,21 @@ export async function GET(
 
     console.log('[GET /api/acervo/:id/timeline] Buscando dados', { acervoId, unified });
 
-    // 3. Buscar dados do acervo (PostgreSQL)
-    const supabase = createServiceClient();
-    const { data: acervo, error: acervoError } = await supabase
-      .from('acervo')
-      .select('*')
-      .eq('id', acervoId)
-      .single();
+    // 3. Usar Server Action para obter timeline
+    const result = await actionObterTimelinePorId(acervoId, unified);
 
-    if (acervoError || !acervo) {
+    if (!result.success) {
+      const status = result.error === 'Acervo não encontrado' ? 404 : 500;
       return NextResponse.json(
-        { error: 'Acervo não encontrado' },
-        { status: 404 }
+        { error: result.error },
+        { status }
       );
     }
-
-    // 4. Buscar timeline - modo unificado ou individual
-    let timelineData = null;
-
-    if (unified) {
-      // Modo unificado: agregar timelines de todas as instâncias
-      try {
-        const timelineUnificada = await obterTimelineUnificadaPorId(acervoId);
-        if (timelineUnificada) {
-          timelineData = {
-            timeline: timelineUnificada.timeline,
-            metadata: timelineUnificada.metadata,
-            unified: true,
-          };
-        }
-      } catch (error) {
-        console.error('[GET /api/acervo/:id/timeline] Erro ao buscar timeline unificada:', error);
-        // Continuar sem timeline se houver erro
-      }
-    } else {
-      // Modo individual: buscar apenas timeline da instância
-      if (acervo.timeline_mongodb_id) {
-        try {
-          const timelineDoc = await obterTimelinePorMongoId(acervo.timeline_mongodb_id);
-
-          if (timelineDoc) {
-            // Remover _id do MongoDB da resposta (não é serializável)
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { _id, ...timelineResto } = timelineDoc;
-            timelineData = {
-              ...timelineResto,
-              unified: false,
-            };
-          }
-        } catch (error) {
-          console.error('[GET /api/acervo/:id/timeline] Erro ao buscar timeline MongoDB:', error);
-          // Continuar sem a timeline se houver erro
-        }
-      }
-    }
-
-    // 5. Retornar dados combinados
-    const resultado = {
-      acervo,
-      timeline: timelineData,
-    };
 
     return NextResponse.json(
       {
         success: true,
-        data: resultado,
+        data: result.data,
       },
       { status: 200 }
     );
