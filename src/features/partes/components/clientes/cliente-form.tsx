@@ -180,7 +180,13 @@ export function ClienteFormDialog({
   const [formData, setFormData] = React.useState(INITIAL_FORM_STATE);
   const [novoEmail, setNovoEmail] = React.useState('');
   const [stepErrors, setStepErrors] = React.useState<string[]>([]);
+  const [mounted, setMounted] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
+
+  // Garantir que o componente só renderize Select após hidratação
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Server Action com useActionState
   const initialState: ActionResult | null = null;
@@ -518,40 +524,48 @@ export function ClienteFormDialog({
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
               <Label htmlFor="genero">Genero</Label>
-              <Select
-                value={formData.genero}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, genero: value }))}
-              >
-                <SelectTrigger id="genero">
-                  <SelectValue placeholder="Selecione..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {GENEROS.map((g) => (
-                    <SelectItem key={g.value} value={g.value}>
-                      {g.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {mounted ? (
+                <Select
+                  value={formData.genero}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, genero: value }))}
+                >
+                  <SelectTrigger id="genero">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GENEROS.map((g) => (
+                      <SelectItem key={g.value} value={g.value}>
+                        {g.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+              )}
               <input type="hidden" name="genero" value={formData.genero} />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="estado_civil">Estado Civil</Label>
-              <Select
-                value={formData.estado_civil}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, estado_civil: value }))}
-              >
-                <SelectTrigger id="estado_civil">
-                  <SelectValue placeholder="Selecione..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {ESTADOS_CIVIS.map((ec) => (
-                    <SelectItem key={ec.value} value={ec.value}>
-                      {ec.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {mounted ? (
+                <Select
+                  value={formData.estado_civil}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, estado_civil: value }))}
+                >
+                  <SelectTrigger id="estado_civil">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ESTADOS_CIVIS.map((ec) => (
+                      <SelectItem key={ec.value} value={ec.value}>
+                        {ec.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+              )}
               <input type="hidden" name="estado_civil" value={formData.estado_civil} />
             </div>
           </div>
@@ -801,21 +815,25 @@ export function ClienteFormDialog({
         </div>
         <div className="grid gap-2">
           <Label htmlFor="estado_sigla">Estado</Label>
-          <Select
-            value={formData.estado_sigla}
-            onValueChange={(value) => setFormData(prev => ({ ...prev, estado_sigla: value }))}
-          >
-            <SelectTrigger id="estado_sigla">
-              <SelectValue placeholder="UF" />
-            </SelectTrigger>
-            <SelectContent>
-              {ESTADOS_BR.map((uf) => (
-                <SelectItem key={uf} value={uf}>
-                  {uf}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {mounted ? (
+            <Select
+              value={formData.estado_sigla}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, estado_sigla: value }))}
+            >
+              <SelectTrigger id="estado_sigla">
+                <SelectValue placeholder="UF" />
+              </SelectTrigger>
+              <SelectContent>
+                {ESTADOS_BR.map((uf) => (
+                  <SelectItem key={uf} value={uf}>
+                    {uf}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+          )}
         </div>
       </div>
     </div>

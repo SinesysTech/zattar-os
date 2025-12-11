@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Combobox } from '@/components/ui/combobox';
 import { Loader2, Scale } from 'lucide-react';
-import { useAcervo } from '@/app/_lib/hooks/use-acervo';
+import { useAcervo } from '@/features/acervo';
 import { AcordoForm } from './acordo-form';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
