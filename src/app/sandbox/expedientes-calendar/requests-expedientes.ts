@@ -9,7 +9,7 @@ import type { TEventColor } from '@/components/calendar/types';
 import { COLORS } from '@/components/calendar/constants';
 import type { ListarPendentesParams } from '@/features/expedientes/types';
 import { obterPendentes } from '@/features/expedientes/service';
-import { obterUsuarios } from '@/backend/usuarios/services/usuarios/listar-usuarios.service';
+import { usuariosService } from '@/features/usuarios';
 import { listar } from '@/features/tipos-expedientes';
 import type { ListarTiposExpedientesParams } from '@/features/tipos-expedientes';
 
@@ -66,7 +66,7 @@ export async function getExpedientesEvents(
 
 		// Buscar usuários e tipos de expedientes em paralelo
 		const [usuariosResult, tiposResult] = await Promise.all([
-			obterUsuarios({ ativo: true, limite: 100 }),
+			usuariosService.listarUsuarios({ ativo: true, limite: 100 }),
 			listar({ limite: 100 } as ListarTiposExpedientesParams),
 		]);
 
@@ -91,7 +91,7 @@ export async function getExpedientesEvents(
  */
 export async function getExpedientesUsers(): Promise<IUser[]> {
 	try {
-		const resultado = await obterUsuarios({ ativo: true, limite: 100 });
+		const resultado = await usuariosService.listarUsuarios({ ativo: true, limite: 100 });
 		const usuarios = resultado.usuarios || [];
 
 		return usuarios.map((usuario) => ({

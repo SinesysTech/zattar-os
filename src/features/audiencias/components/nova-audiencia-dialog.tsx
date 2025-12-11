@@ -26,6 +26,13 @@ import {
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { Loader2 } from 'lucide-react';
 import { Typography } from '@/components/ui/typography';
+import { actionListarAcervoPaginado } from '@/features/acervo/actions/acervo-actions';
+import { actionListarUsuarios } from '@/features/usuarios/actions/usuarios-actions';
+import {
+  actionCriarAudienciaPayload,
+  actionListarTiposAudiencia,
+  actionListarSalasAudiencia,
+} from '@/features/audiencias/actions';
 
 interface NovaAudienciaDialogProps {
   open: boolean;
@@ -129,15 +136,18 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   const buscarProcessos = React.useCallback(async (trtParam: string, grauParam: string) => {
     setLoadingProcessos(true);
     try {
-      const response = await fetch(
-        `/api/acervo?trt=${trtParam}&grau=${grauParam}&limite=2000&ordenar_por=numero_processo&ordem=asc`
-      );
-      if (!response.ok) throw new Error('Erro ao buscar processos');
+      const result = await actionListarAcervoPaginado({
+        trt: trtParam as any,
+        grau: grauParam as any,
+        limite: 2000,
+        ordenar_por: 'numero_processo' as any,
+        ordem: 'asc',
+      } as any);
 
-      const data = await response.json();
-      if (data.success && data.data?.processos) {
-        setProcessos(data.data.processos);
-      }
+      if (!result.success) throw new Error(result.error || 'Erro ao buscar processos');
+
+      const processosResponse = result.data as any;
+      setProcessos((processosResponse?.processos ?? []) as Processo[]);
     } catch (err) {
       console.error('Erro ao buscar processos:', err);
       setError('Erro ao carregar processos');
@@ -149,13 +159,9 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   const buscarTiposAudiencia = React.useCallback(async (trt: string, grau: string) => {
     setLoadingTipos(true);
     try {
-      const response = await fetch(`/api/audiencias/tipos?trt=${trt}&grau=${grau}`);
-      if (!response.ok) throw new Error('Erro ao buscar tipos de audiência');
-
-      const data = await response.json();
-      if (data.success && data.data) {
-        setTiposAudiencia(data.data);
-      }
+      const result = await actionListarTiposAudiencia({ trt, grau });
+      if (!result.success) throw new Error(result.error || 'Erro ao buscar tipos de audiência');
+      setTiposAudiencia((result.data as unknown as TipoAudiencia[]) || []);
     } catch (err) {
       console.error('Erro ao buscar tipos de audiência:', err);
       setError('Erro ao carregar tipos de audiência');
@@ -167,13 +173,9 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   const buscarSalas = React.useCallback(async (trt: string, grau: string, orgaoJulgadorId: number) => {
     setLoadingSalas(true);
     try {
-      const response = await fetch(`/api/audiencias/salas?trt=${trt}&grau=${grau}&orgao_julgador_id=${orgaoJulgadorId}`);
-      if (!response.ok) throw new Error('Erro ao buscar salas de audiência');
-
-      const data = await response.json();
-      if (data.success && data.data) {
-        setSalas(data.data);
-      }
+      const result = await actionListarSalasAudiencia({ trt, grau, orgao_julgador_id: orgaoJulgadorId });
+      if (!result.success) throw new Error(result.error || 'Erro ao buscar salas de audiência');
+      setSalas((result.data as unknown as SalaAudiencia[]) || []);
     } catch (err) {
       console.error('Erro ao buscar salas de audiência:', err);
       setError('Erro ao carregar salas de audiência');
@@ -185,13 +187,11 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   const buscarUsuarios = React.useCallback(async () => {
     setLoadingUsuarios(true);
     try {
-      const response = await fetch('/api/usuarios?ativo=true&limite=1000');
-      if (!response.ok) throw new Error('Erro ao buscar usuários');
+      const result = await actionListarUsuarios({ ativo: true, limite: 1000 } as any);
+      if (!result.success) throw new Error(result.error || 'Erro ao buscar usuários');
 
-      const data = await response.json();
-      if (data.success && data.data?.usuarios) {
-        setUsuarios(data.data.usuarios);
-      }
+      const usuariosPayload = (result.data as any) ?? {};
+      setUsuarios((usuariosPayload.usuarios ?? usuariosPayload) as Usuario[]);
     } catch (err) {
       console.error('Erro ao buscar usuários:', err);
       setError('Erro ao carregar usuários');
@@ -301,29 +301,23 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/audiencias', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          processo_id: parseInt(processoId[0]),
-          advogado_id: 1,
-          data_inicio: dataInicioISO,
-          data_fim: dataFimISO,
-          tipo_audiencia_id: tipoAudienciaId ? parseInt(tipoAudienciaId) : undefined,
-          sala_audiencia_id: salaAudienciaId ? parseInt(salaAudienciaId) : undefined,
-          url_audiencia_virtual: urlVirtual || undefined,
-          endereco_presencial: enderecoPresencial,
-          observacoes: observacoes || undefined,
-          responsavel_id: responsavelId ? parseInt(responsavelId) : undefined,
-        }),
-      });
+      const result = await actionCriarAudienciaPayload({
+        processoId: parseInt(processoId[0]),
+        // O modelo de audiência em FSD não usa "advogado_id" (legado). Mantemos compatibilidade omitindo.
+        dataInicio: dataInicioISO,
+        dataFim: dataFimISO,
+        tipoAudienciaId: tipoAudienciaId ? parseInt(tipoAudienciaId) : undefined,
+        salaAudienciaId: salaAudienciaId ? parseInt(salaAudienciaId) : undefined,
+        urlAudienciaVirtual: urlVirtual || undefined,
+        enderecoPresencial: enderecoPresencial as any,
+        observacoes: observacoes || undefined,
+        responsavelId: responsavelId ? parseInt(responsavelId) : undefined,
+        trt: trt as any,
+        grau: grau as any,
+      } as any);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao criar audiência');
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao criar audiência');
       }
 
       // Resetar form

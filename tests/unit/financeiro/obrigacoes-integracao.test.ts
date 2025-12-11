@@ -54,7 +54,7 @@ import {
   sincronizarAcordoCompleto,
   verificarConsistencia,
   reverterSincronizacao,
-} from '@/features/financeiro/services/obrigacoes-integracao';
+} from '@/features/financeiro';
 
 // =============================================================================
 // FIXTURES

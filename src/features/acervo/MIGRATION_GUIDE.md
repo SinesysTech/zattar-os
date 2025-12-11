@@ -57,7 +57,7 @@ console.log(agrupado.agrupamentos); // ✅ OK
 **Antes:**
 
 ```typescript
-import { obterTimelineUnificadaPorId } from "@/backend/acervo/services/timeline/timeline-unificada.service";
+import { obterTimelineUnificadaPorId } from "@/features/acervo/timeline-unificada";
 ```
 
 **Agora:**
@@ -78,7 +78,7 @@ import {
 **Antes:**
 
 ```typescript
-import type { TimelineItemEnriquecido } from "@/backend/types/pje-trt/timeline";
+import type { TimelineItemEnriquecido } from "@/lib/api/pje-trt/types";
 ```
 
 **Agora:**
@@ -99,7 +99,7 @@ import type { TimelineItemEnriquecido } from "@/features/acervo/types";
 | **Listar processos unificados** | `obterAcervo({ unified: true })`       | `obterAcervoUnificado({ ... })`               |
 | **Agrupar por campo**           | `obterAcervo({ agrupar_por: 'trt' })`  | `obterAcervoAgrupado({ agrupar_por: 'trt' })` |
 | **Exportar CSV**                | Usar `actionExportarAcervoCSV()`       | ✅ Já migrado automaticamente                 |
-| **Timeline unificada**          | `backend/acervo/services/timeline/...` | `@/features/acervo`                           |
+| **Timeline unificada**          | `src/features/acervo/timeline-unificada` | `@/features/acervo`                         |
 
 ---
 

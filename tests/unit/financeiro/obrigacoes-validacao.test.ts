@@ -29,13 +29,11 @@ jest.mock('@/lib/supabase/service-client', () => ({
 }));
 
 // Importar após mocks
-// TODO: Serviço de validação ainda não foi migrado para @/features/financeiro
-// Por enquanto, este teste está desabilitado até que o serviço seja migrado
-// import {
-//   validarSincronizacaoParcela,
-//   validarSincronizacaoAcordo,
-//   formatarResultadoValidacao,
-// } from '@/features/financeiro/services/obrigacoes-validacao';
+import {
+  validarSincronizacaoParcela,
+  validarSincronizacaoAcordo,
+  formatarResultadoValidacao,
+} from '@/features/financeiro';
 
 // =============================================================================
 // FIXTURES

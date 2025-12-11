@@ -46,7 +46,7 @@ const eslintConfig = defineConfig([
             },
             {
               // Bloqueia imports de pastas legadas em src/ (exceto em backend/ e core/)
-              group: ["@/backend/**", "@/core/**", "@/app/_lib/**"],
+              group: ["**/backend/**", "@/core/**", "@/app/_lib/**"],
               message:
                 "Legacy imports are not allowed in src/. Use features from @/features/{modulo} instead. If you need backend functionality, it should be migrated to a feature module.",
             },

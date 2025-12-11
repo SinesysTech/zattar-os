@@ -87,7 +87,7 @@ import { PageShell } from "@/components/shared/page-shell";
 import { ClientesTable } from "@/features/partes/components/clientes/clientes-table";
 
 // Import de pasta legada (proibido)
-import { criarCliente } from "@/backend/clientes/services/clientes/criar-cliente.service";
+// (exemplo legado removido; use sempre imports via features)
 
 // Lógica de negócio fora de features/ (proibido)
 // Em app/_lib/ ou backend/ quando deveria estar em features/

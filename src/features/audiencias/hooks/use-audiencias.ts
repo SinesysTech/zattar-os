@@ -7,11 +7,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Audiencia } from '@/features/audiencias';
 import type {
-  AudienciasApiResponse,
   BuscarAudienciasParams,
   UseAudienciasResult,
   UseAudienciasOptions,
 } from '../types';
+import { actionListarAudiencias } from '../actions';
 
 /**
  * Hook para buscar audiências com filtros e paginação
@@ -37,62 +37,36 @@ export const useAudiencias = (
 
     try {
       // Construir query string
-      const searchParams = new URLSearchParams();
-
-      if (params.pagina !== undefined) {
-        searchParams.set('pagina', params.pagina.toString());
-      }
-      if (params.limite !== undefined) {
-        searchParams.set('limite', params.limite.toString());
-      }
-      if (params.busca) {
-        searchParams.set('busca', params.busca);
-      }
-      if (params.ordenar_por) {
-        searchParams.set('ordenar_por', params.ordenar_por);
-      }
-      if (params.ordem) {
-        searchParams.set('ordem', params.ordem);
-      }
-
-      // Adicionar outros filtros
-      Object.entries(params).forEach(([key, value]) => {
-        if (
-          value !== undefined &&
-          value !== null &&
-          key !== 'pagina' &&
-          key !== 'limite' &&
-          key !== 'busca' &&
-          key !== 'ordenar_por' &&
-          key !== 'ordem'
-        ) {
-          if (typeof value === 'boolean') {
-            searchParams.set(key, value.toString());
-          } else {
-            searchParams.set(key, String(value));
-          }
-        }
+      const result = await actionListarAudiencias({
+        pagina: params.pagina,
+        limite: params.limite,
+        busca: params.busca,
+        trt: params.trt as any,
+        grau: params.grau as any,
+        responsavelId: params.responsavel_id as any,
+        status: params.status as any,
+        modalidade: params.modalidade as any,
+        tipoAudienciaId: undefined,
+        dataInicioInicio: params.data_inicio_inicio,
+        dataInicioFim: params.data_inicio_fim,
+        dataFimInicio: params.data_fim_inicio,
+        dataFimFim: params.data_fim_fim,
+        ordenarPor: params.ordenar_por as any,
+        ordem: params.ordem,
       });
 
-      const response = await fetch(`/api/audiencias?${searchParams.toString()}`);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        const apiMsg =
-          errorData && typeof errorData.error === 'object' && errorData.error !== null
-            ? errorData.error.message
-            : errorData.error;
-        throw new Error(apiMsg || `Erro ${response.status}: ${response.statusText}`);
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao buscar audiências');
       }
 
-      const data: AudienciasApiResponse = await response.json();
-
-      if (!data.success) {
-        throw new Error('Resposta da API indicou falha');
-      }
-
-      setAudiencias(data.data.audiencias);
-      setPaginacao(data.data.paginacao);
+      const payload = result.data;
+      setAudiencias(payload.data);
+      setPaginacao({
+        pagina: payload.pagination.page,
+        limite: payload.pagination.limit,
+        total: payload.pagination.total,
+        totalPaginas: payload.pagination.totalPages,
+      });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar audiências';
       setError(errorMessage);
