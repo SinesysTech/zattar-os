@@ -17,9 +17,9 @@ import {
   buildOrcamentosFilterOptions,
   buildOrcamentosFilterGroups,
   parseOrcamentosFilters,
-} from './components/orcamentos-toolbar-filters';
-import { ResumoCards } from './components/resumo-cards';
-import { OrcamentoFormDialog } from './components/orcamento-form-dialog';
+} from '@/features/financeiro/components/orcamentos/orcamentos-toolbar-filters';
+import { ResumoCards } from '@/features/financeiro/components/orcamentos/resumo-cards';
+import { OrcamentoFormDialog } from '@/features/financeiro/components/orcamentos/orcamento-form-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
