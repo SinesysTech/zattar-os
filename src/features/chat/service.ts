@@ -16,7 +16,7 @@ import type {
   PaginatedResponse,
 } from './types';
 import { criarSalaChatSchema, criarMensagemChatSchema, TipoSalaChat } from './types';
-import { ChatRepository, chatRepository } from './repository';
+import { ChatRepository, createChatRepository } from './repository';
 
 // =============================================================================
 // SERVICE CLASS
@@ -214,39 +214,14 @@ export class ChatService {
 }
 
 // =============================================================================
-// SINGLETON INSTANCE & STANDALONE FUNCTIONS
+// FACTORY FUNCTION & STANDALONE FUNCTIONS
 // =============================================================================
 
-const chatService = new ChatService(chatRepository);
-export { chatService };
-
-// Standalone functions para uso direto
-export const criarSala = (input: CriarSalaChatInput, usuarioId: number) =>
-  chatService.criarSala(input, usuarioId);
-
-export const buscarSala = (id: number) => chatService.buscarSala(id);
-
-export const buscarSalaGeral = () => chatService.buscarSalaGeral();
-
-export const listarSalasDoUsuario = (usuarioId: number, params: ListarSalasParams) =>
-  chatService.listarSalasDoUsuario(usuarioId, params);
-
-export const atualizarNomeSala = (id: number, nome: string, usuarioId: number) =>
-  chatService.atualizarNomeSala(id, nome, usuarioId);
-
-export const deletarSala = (id: number, usuarioId: number) =>
-  chatService.deletarSala(id, usuarioId);
-
-export const enviarMensagem = (
-  input: z.infer<typeof criarMensagemChatSchema>,
-  usuarioId: number
-) => chatService.enviarMensagem(input, usuarioId);
-
-export const buscarHistoricoMensagens = (salaId: number, limite?: number, antesDe?: string) =>
-  chatService.buscarHistoricoMensagens(salaId, limite, antesDe);
-
-export const buscarUltimasMensagens = (salaId: number, limite?: number) =>
-  chatService.buscarUltimasMensagens(salaId, limite);
-
-export const deletarMensagem = (id: number, usuarioId: number) =>
-  chatService.deletarMensagem(id, usuarioId);
+/**
+ * Cria uma instância do ChatService com repository configurado
+ * Use esta função em Server Components/Actions onde você pode usar await
+ */
+export async function createChatService(): Promise<ChatService> {
+  const repository = await createChatRepository();
+  return new ChatService(repository);
+}

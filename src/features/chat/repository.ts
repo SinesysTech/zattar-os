@@ -7,7 +7,7 @@
 
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Result, ok, err } from 'neverthrow';
-import { getSupabase } from '@/app/_lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { fromSnakeToCamel, fromCamelToSnake } from '@/lib/utils';
 import type {
   SalaChat,
@@ -43,8 +43,8 @@ function converterParaMensagemChat(data: MensagemChatRow): MensagemChat {
 export class ChatRepository {
   private supabase: SupabaseClient;
 
-  constructor(supabase?: SupabaseClient) {
-    this.supabase = supabase || getSupabase();
+  constructor(supabase: SupabaseClient) {
+    this.supabase = supabase;
   }
 
   // ===========================================================================
@@ -351,8 +351,15 @@ export class ChatRepository {
 }
 
 // =============================================================================
-// SINGLETON INSTANCE
+// FACTORY FUNCTION
 // =============================================================================
 
-const chatRepository = new ChatRepository();
-export { chatRepository };
+/**
+ * Cria uma instância do ChatRepository com cliente Supabase
+ * Use esta função em Server Components/Actions onde você pode usar await
+ */
+export async function createChatRepository(): Promise<ChatRepository> {
+  const { createClient } = await import('@/lib/supabase/server');
+  const supabase = await createClient();
+  return new ChatRepository(supabase);
+}

@@ -11,7 +11,7 @@ import {
   toAppError,
   errorCodeToHttpStatus,
   isPartesError,
-} from '@/core/partes';
+} from '@/features/partes';
 
 /**
  * @swagger

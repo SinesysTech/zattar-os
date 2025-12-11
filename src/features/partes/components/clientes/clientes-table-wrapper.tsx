@@ -24,7 +24,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Eye, Pencil } from 'lucide-react';
-import type { Cliente, ProcessoRelacionado } from '@/core/partes';
+import type { Cliente, ProcessoRelacionado } from '../../types';
 import { ClienteFormDialog } from './cliente-form';
 import { ProcessosRelacionadosCell } from '../shared/processos-relacionados-cell';
 import { CopyButton } from '../shared/copy-button';

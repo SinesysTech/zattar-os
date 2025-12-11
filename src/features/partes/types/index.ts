@@ -24,7 +24,7 @@ export type {
   ListarClientesParams,
   ListarPartesContrariasParams,
   ListarTerceirosParams,
-} from '@/core/partes';
+} from '../domain';
 
 // Tipos de endereco
 export type ParteEndereco = {
@@ -38,7 +38,7 @@ export type ParteEndereco = {
 };
 
 // Tipos estendidos com processos relacionados
-export type { ProcessoRelacionado as ProcessoRelacionadoBase } from '@/core/partes';
+export type { ProcessoRelacionado as ProcessoRelacionadoBase } from '../domain';
 
 // Tipos de paginacao
 export interface PaginationInfo {
@@ -85,7 +85,7 @@ export interface BuscarRepresentantesParams {
 export interface PartesContrariasApiResponse {
   success: boolean;
   data: {
-    partesContrarias: import('@/core/partes').ParteContraria[];
+    partesContrarias: import('../domain').ParteContraria[];
     total: number;
     pagina: number;
     limite: number;
@@ -96,7 +96,7 @@ export interface PartesContrariasApiResponse {
 export interface TerceirosApiResponse {
   success: boolean;
   data: {
-    terceiros: import('@/core/partes').Terceiro[];
+    terceiros: import('../domain').Terceiro[];
     total: number;
     pagina: number;
     limite: number;
@@ -138,4 +138,4 @@ export type {
   TipoRepresentante,
   RepresentanteComEndereco,
   ListarRepresentantesResult,
-} from '@/backend/types/representantes/representantes-types';
+} from './representantes';

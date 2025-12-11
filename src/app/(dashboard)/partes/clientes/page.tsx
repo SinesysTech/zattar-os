@@ -5,7 +5,7 @@
  * Dados são carregados no servidor para melhor performance e SEO.
  */
 
-import { listarClientes } from '@/core/partes/service';
+import { listarClientes } from '@/features/partes/service';
 import { PageShell } from '@/components/shared/page-shell';
 import { ClientesTableWrapper } from '@/features/partes';
 

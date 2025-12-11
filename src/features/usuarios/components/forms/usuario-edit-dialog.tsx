@@ -28,7 +28,7 @@ import { toast } from 'sonner';
 import { useCargos } from '@/features/cargos';
 import { actionAtualizarUsuario } from '../../actions/usuarios-actions';
 import type { Usuario, Endereco, GeneroUsuario } from '../../types';
-import { buscarEnderecoPorCep, limparCep } from '@/app/_lib/utils/viacep';
+import { buscarEnderecoPorCep, limparCep } from '@/lib/utils/viacep';
 import { Typography } from '@/components/ui/typography';
 
 interface UsuarioEditDialogProps {

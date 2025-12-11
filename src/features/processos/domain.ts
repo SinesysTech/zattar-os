@@ -12,7 +12,7 @@
  */
 
 import { z } from 'zod';
-import type { GrauProcesso } from '@/core/partes';
+import type { GrauProcesso } from '@/features/partes';
 
 // =============================================================================
 // TIPOS BASE (ENUMS)

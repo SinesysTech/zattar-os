@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/lib/utils';
 
 // Tipos base para polimorfismo
 type AsProp<C extends React.ElementType> = {

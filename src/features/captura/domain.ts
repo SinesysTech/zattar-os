@@ -6,7 +6,7 @@
  */
 
 import type { TipoAcessoTribunal } from '@/backend/types/captura/trt-types';
-import type { GrauProcesso } from '@/core/partes';
+import type { GrauProcesso } from '@/features/partes';
 
 // =============================================================================
 // INTERFACES GENÉRICAS

@@ -27,7 +27,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/lib/utils';
 
 export function CodeBlockElement(props: PlateElementProps<TCodeBlockElement>) {
   const { editor, element } = props;

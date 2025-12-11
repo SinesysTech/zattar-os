@@ -11,7 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/lib/utils';
 
 export function DateElement(props: PlateElementProps<TDateElement>) {
   const { editor, element } = props;

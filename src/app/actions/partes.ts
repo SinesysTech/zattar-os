@@ -22,15 +22,13 @@ import {
   updateClienteSchema,
   createParteContrariaSchema,
   updateParteContrariaSchema,
-} from '@/core/partes/domain';
-import {
   criarCliente,
   atualizarCliente,
   listarClientes,
   criarParteContraria,
   atualizarParteContraria,
   listarPartesContrarias,
-} from '@/core/partes/service';
+} from '@/features/partes';
 
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS

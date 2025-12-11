@@ -46,25 +46,14 @@ export {
 // =============================================================================
 // REPOSITORY
 // =============================================================================
-export { ChatRepository, chatRepository } from './repository';
+export { ChatRepository, createChatRepository } from './repository';
 
 // =============================================================================
 // SERVICE
 // =============================================================================
 export {
   ChatService,
-  chatService,
-  // Standalone functions
-  criarSala,
-  buscarSala,
-  buscarSalaGeral,
-  listarSalasDoUsuario,
-  atualizarNomeSala,
-  deletarSala,
-  enviarMensagem,
-  buscarHistoricoMensagens,
-  buscarUltimasMensagens,
-  deletarMensagem,
+  createChatService,
 } from './service';
 
 // =============================================================================

@@ -17,7 +17,7 @@ import {
   usePluginOption,
 } from 'platejs/react';
 
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/lib/utils';
 
 import { Toolbar } from './toolbar';
 

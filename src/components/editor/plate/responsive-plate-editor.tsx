@@ -5,7 +5,7 @@ import { normalizeNodeId, type Descendant } from 'platejs';
 import { Plate, usePlateEditor } from 'platejs/react';
 import { ResponsiveEditorKit } from '@/components/editor/plate/responsive-editor-kit';
 import { ResponsiveEditor, ResponsiveEditorContainer } from '@/components/editor/plate-ui/responsive-editor';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/lib/utils';
 
 interface ResponsivePlateEditorProps {
     initialValue?: Descendant[];

@@ -41,7 +41,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/lib/utils';
 import { actionCriarExpediente } from '../actions';
 import { GrauTribunal, CodigoTribunal } from '../types';
 import type { TipoExpediente } from '@/features/tipos-expedientes';
