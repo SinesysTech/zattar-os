@@ -8,8 +8,8 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { getSupabase } from '@/app/_lib/supabase';
-import { chatService } from './service';
+import { createClient } from '@/lib/supabase/server';
+import { createChatService } from './service';
 import { criarSalaChatSchema, type ListarSalasParams, type ActionResult } from './types';
 
 // =============================================================================
@@ -27,7 +27,7 @@ function formatZodErrors(zodError: z.ZodError): Record<string, string[]> {
 }
 
 async function getCurrentUserId(): Promise<number | null> {
-  const { supabase } = getSupabase();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -75,6 +75,7 @@ export async function actionCriarSala(
     };
   }
 
+  const chatService = await createChatService();
   const result = await chatService.criarSala(validation.data, usuarioId);
 
   if (result.isErr()) {
@@ -103,6 +104,7 @@ export async function actionListarSalas(params: ListarSalasParams): Promise<Acti
     return { success: false, error: 'Usuário não autenticado.', message: 'Falha na autenticação.' };
   }
 
+  const chatService = await createChatService();
   const result = await chatService.listarSalasDoUsuario(usuarioId, params);
 
   if (result.isErr()) {
@@ -129,6 +131,7 @@ export async function actionDeletarSala(id: number): Promise<ActionResult> {
     return { success: false, error: 'Usuário não autenticado.', message: 'Falha na autenticação.' };
   }
 
+  const chatService = await createChatService();
   const result = await chatService.deletarSala(id, usuarioId);
 
   if (result.isErr()) {
@@ -157,6 +160,7 @@ export async function actionAtualizarNomeSala(id: number, nome: string): Promise
     return { success: false, error: 'Usuário não autenticado.', message: 'Falha na autenticação.' };
   }
 
+  const chatService = await createChatService();
   const result = await chatService.atualizarNomeSala(id, nome, usuarioId);
 
   if (result.isErr()) {
@@ -192,6 +196,7 @@ export async function actionEnviarMensagem(
     return { success: false, error: 'Usuário não autenticado.', message: 'Falha na autenticação.' };
   }
 
+  const chatService = await createChatService();
   const result = await chatService.enviarMensagem({ salaId, conteudo, tipo: 'texto' }, usuarioId);
 
   if (result.isErr()) {
@@ -217,6 +222,7 @@ export async function actionBuscarHistorico(
   limite?: number,
   antesDe?: string
 ): Promise<ActionResult> {
+  const chatService = await createChatService();
   const result = await chatService.buscarHistoricoMensagens(salaId, limite, antesDe);
 
   if (result.isErr()) {

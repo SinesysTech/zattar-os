@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { Terceiro } from '@/core/partes';
+import type { Terceiro } from '../types';
 import type {
   BuscarTerceirosParams,
   TerceirosApiResponse,

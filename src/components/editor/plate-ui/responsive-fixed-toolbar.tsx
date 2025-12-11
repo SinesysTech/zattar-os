@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/lib/utils';
 import { Toolbar } from './toolbar';
 import { FixedToolbarButtons } from './fixed-toolbar-buttons';
 import { MoreVertical } from 'lucide-react';

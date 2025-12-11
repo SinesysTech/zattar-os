@@ -5,7 +5,7 @@
  */
 
 import type { Processo, ProcessoUnificado, OrigemAcervo, Ordem, ProcessoSortBy } from '../domain';
-import type { GrauProcesso } from '@/core/partes';
+import type { GrauProcesso } from '@/features/partes';
 
 // Re-export dos tipos do domain para conveniência
 export type { Processo, ProcessoUnificado, OrigemAcervo, Ordem, ProcessoSortBy, GrauProcesso };

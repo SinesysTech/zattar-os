@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Eye, Pencil } from 'lucide-react';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Terceiro, ProcessoRelacionado } from '@/core/partes';
+import type { Terceiro, ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { useTerceiros } from '../../hooks';

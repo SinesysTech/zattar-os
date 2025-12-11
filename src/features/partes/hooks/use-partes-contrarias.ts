@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { ParteContraria } from '@/core/partes';
+import type { ParteContraria } from '../types';
 import type {
   BuscarPartesContrariasParams,
   PartesContrariasApiResponse,

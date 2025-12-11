@@ -17,9 +17,9 @@ import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Eye, Pencil, Phone, Mail } from 'lucide-react';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { ProcessoRelacionado } from '@/core/partes';
+import type { ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { useRepresentantes } from '../../hooks';

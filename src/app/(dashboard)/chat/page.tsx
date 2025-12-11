@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
-import { getSupabase } from '@/app/_lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  chatService,
+  createChatService,
   ChatLayout,
   ChatSidebar,
   ChatWindow,
@@ -11,7 +11,7 @@ import {
 } from '@/features/chat';
 
 async function getCurrentUserId(): Promise<number | null> {
-  const { supabase } = getSupabase();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -33,6 +33,9 @@ export default async function ChatPage({
 }) {
   const usuarioId = await getCurrentUserId();
   if (!usuarioId) redirect('/login');
+
+  // Criar instância do service
+  const chatService = await createChatService();
 
   // Buscar lista de salas
   const salasResult = await chatService.listarSalasDoUsuario(usuarioId, { limite: 50 });
@@ -66,7 +69,7 @@ export default async function ChatPage({
   }
 
   // Buscar dados do usuário
-  const { supabase } = getSupabase();
+  const supabase = await createClient();
   const { data: usuario } = await supabase
     .from('usuarios')
     .select('id, nome_completo, nome_exibicao')

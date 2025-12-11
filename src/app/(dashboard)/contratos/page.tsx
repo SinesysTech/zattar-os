@@ -7,7 +7,7 @@
 
 import { Suspense } from 'react';
 import { listarContratos, ContratosTableWrapper } from '@/features/contratos';
-import { listarClientes, listarPartesContrarias } from '@/core/partes/service';
+import { listarClientes, listarPartesContrarias } from '@/features/partes/service';
 import { PageShell } from '@/components/shared/page-shell';
 import { Skeleton } from '@/components/ui/skeleton';
 

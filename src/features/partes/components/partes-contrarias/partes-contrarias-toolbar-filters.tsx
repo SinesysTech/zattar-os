@@ -4,7 +4,7 @@
 
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { TipoPessoa, SituacaoPJE } from '@/core/partes';
+import type { TipoPessoa, SituacaoPJE } from '../../types';
 import type { PartesContrariasFilters } from '../../types';
 
 export const PARTES_CONTRARIAS_FILTER_CONFIGS: FilterConfig[] = [

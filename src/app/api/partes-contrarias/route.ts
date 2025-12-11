@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { listarPartesContrarias, criarParteContraria, type CreateParteContrariaInput } from '@/core/partes';
+import { listarPartesContrarias, criarParteContraria, type CreateParteContrariaInput } from '@/features/partes';
 
 /**
  * @swagger

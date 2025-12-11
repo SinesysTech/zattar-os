@@ -30,7 +30,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/app/_lib/utils/utils';
+import { cn } from '@/lib/utils';
 
 import { ToolbarButton } from './toolbar';
 
