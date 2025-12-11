@@ -51,14 +51,15 @@ export interface FluxoCaixaProjetadoItem {
  * Obtém dados do dashboard financeiro
  */
 export async function actionObterDashboardFinanceiro(usuarioId?: string) {
-    try {
-        const data = await getDashboardFinanceiro(usuarioId || 'system');
-
-        return { success: true, data };
-    } catch (error) {
-        console.error('Erro ao obter dashboard:', error);
-        return { success: false, error: error instanceof Error ? error.message : 'Erro interno' };
-    }
+    // TODO: Implementar serviço de dashboard em @/features/financeiro/services/dashboard
+    throw new Error('Serviço de dashboard ainda não foi migrado para @/features/financeiro');
+    // try {
+    //     const data = await getDashboardFinanceiro(usuarioId || 'system');
+    //     return { success: true, data };
+    // } catch (error) {
+    //     console.error('Erro ao obter dashboard:', error);
+    //     return { success: false, error: error instanceof Error ? error.message : 'Erro interno' };
+    // }
 }
 
 /**

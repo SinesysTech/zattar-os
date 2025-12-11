@@ -4,6 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { actionListarClientesSugestoes } from "@/features/partes/actions/clientes-actions";
 
 interface Option {
   id: number | string;
@@ -26,10 +27,9 @@ export function ClienteAutocomplete({ value, onChange }: Props) {
     async function fetchOptions() {
       setLoading(true);
       try {
-        const res = await fetch("/api/clientes/buscar/sugestoes?limit=20");
-        const json = await res.json();
-        if (res.ok && json.options) {
-          setOptions(json.options);
+        const result = await actionListarClientesSugestoes({ limit: 20 });
+        if (result.success && result.data?.options) {
+          setOptions(result.data.options);
         }
       } finally {
         setLoading(false);

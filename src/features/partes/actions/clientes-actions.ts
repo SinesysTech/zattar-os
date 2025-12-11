@@ -39,4 +39,23 @@ export async function actionAtualizarCliente(id: number, input: Parameters<typeo
   }
 }
 
+export async function actionListarClientesSugestoes(params?: { limit?: number }) {
+  try {
+    const limit = Math.min(Math.max(params?.limit ?? 20, 1), 100);
+    const result = await service.listarClientes({ pagina: 1, limite: limit });
+    if (!result.success) return { success: false, error: result.error.message };
+
+    const options = result.data.data.map((c) => ({
+      id: c.id,
+      label: c.nome,
+      cpf: (c as any).cpf ?? undefined,
+      cnpj: (c as any).cnpj ?? undefined,
+    }));
+
+    return { success: true, data: { options } };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
 

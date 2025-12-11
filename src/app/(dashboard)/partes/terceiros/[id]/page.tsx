@@ -22,6 +22,7 @@ import {
 import { getTipoParteLabel, getPoloLabel } from '@/types/terceiros';
 import type { Terceiro } from '@/features/partes';
 import type { Endereco } from '@/features/enderecos/types';
+import { actionBuscarTerceiro } from '@/features/partes/actions/terceiros-actions';
 
 // Extend Terceiro to include all optional fields from database
 type TerceiroCompleto = Terceiro & {
@@ -118,16 +119,13 @@ export default function TerceiroPage() {
   React.useEffect(() => {
     async function fetchTerceiro() {
       try {
-        const response = await fetch(`/api/partes/terceiros/${terceiroId}`);
-        if (!response.ok) {
-          throw new Error('Erro ao carregar terceiro');
-        }
-        const data = await response.json();
-        if (data.success) {
-          setTerceiro(data.data);
-        } else {
-          throw new Error(data.error || 'Erro ao carregar terceiro');
-        }
+        const id = parseInt(terceiroId);
+        if (isNaN(id) || id <= 0) throw new Error('ID inválido');
+
+        const result = await actionBuscarTerceiro(id);
+        if (!result.success) throw new Error(result.error || 'Erro ao carregar terceiro');
+
+        setTerceiro((result.data as TerceiroCompleto) || null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro desconhecido');
       } finally {
