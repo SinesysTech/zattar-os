@@ -190,7 +190,8 @@ type ActionResponse<T> = {
 - **Processos** - `features/processos/`
 - **Contratos** - `features/contratos/`
 - **RH** - `features/rh/`
-- **Expedientes** - `features/expedientes/`
+- **Expedientes** - `features/expedientes/` - Completo
+  - Consolidação de duplicatas, tipos e serviços migrados
 - **Captura** - `features/captura/` ✅ (Domain, service, repository, drivers consolidados. Backend mantido como infraestrutura.)
 
 ### Módulos Legados 🔄

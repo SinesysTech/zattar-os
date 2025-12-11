@@ -3,7 +3,7 @@
 // Hook para buscar tipos de expedientes do sistema
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import type { ListarTiposExpedientesParams, TipoExpediente } from '@/backend/types/tipos-expedientes/types';
+import type { ListarTiposExpedientesParams, TipoExpediente } from '@/features/tipos-expedientes';
 
 interface UseTiposExpedientesResult {
   tiposExpedientes: TipoExpediente[];
@@ -21,11 +21,13 @@ interface UseTiposExpedientesResult {
 interface TiposExpedientesApiResponse {
   success: boolean;
   data: {
-    tipos_expedientes: TipoExpediente[];
-    total: number;
-    pagina: number;
-    limite: number;
-    totalPaginas: number;
+    data: TipoExpediente[];
+    meta: {
+      total: number;
+      pagina: number;
+      limite: number;
+      totalPaginas: number;
+    };
   };
 }
 
@@ -37,27 +39,25 @@ export const useTiposExpedientes = (params: ListarTiposExpedientesParams = {}): 
   const [paginacao, setPaginacao] = useState<UseTiposExpedientesResult['paginacao']>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Extrair valores primitivos para usar no callback
   const pagina = params.pagina ?? 1;
   const limite = params.limite ?? 50;
   const busca = params.busca || '';
-  const created_by = params.created_by;
-  const ordenar_por = params.ordenar_por;
+  const ordenarPor = params.ordenarPor;
   const ordem = params.ordem;
-  
+
   // Normalizar parâmetros para comparação estável
   const paramsKey = useMemo(() => {
     return JSON.stringify({
       pagina,
       limite,
       busca,
-      created_by,
-      ordenar_por,
+      ordenarPor,
       ordem,
     });
-  }, [pagina, limite, busca, created_by, ordenar_por, ordem]);
-  
+  }, [pagina, limite, busca, ordenarPor, ordem]);
+
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
 
@@ -68,18 +68,15 @@ export const useTiposExpedientes = (params: ListarTiposExpedientesParams = {}): 
     try {
       // Construir query string
       const searchParams = new URLSearchParams();
-      
+
       searchParams.set('pagina', pagina.toString());
       searchParams.set('limite', limite.toString());
-      
+
       if (busca) {
         searchParams.set('busca', busca);
       }
-      if (created_by !== undefined) {
-        searchParams.set('created_by', created_by.toString());
-      }
-      if (ordenar_por) {
-        searchParams.set('ordenar_por', ordenar_por);
+      if (ordenarPor) {
+        searchParams.set('ordenar_por', ordenarPor);
       }
       if (ordem) {
         searchParams.set('ordem', ordem);
@@ -103,18 +100,13 @@ export const useTiposExpedientes = (params: ListarTiposExpedientesParams = {}): 
       }
 
       // Verificar se a estrutura de dados está correta
-      if (!data.data) {
+      if (!data.data || !data.data.data) {
         console.error('Estrutura de dados inválida:', data);
         throw new Error('Estrutura de dados inválida na resposta da API');
       }
 
-      setTiposExpedientes(data.data.tipos_expedientes || []);
-      setPaginacao({
-        pagina: data.data.pagina,
-        limite: data.data.limite,
-        total: data.data.total,
-        totalPaginas: data.data.totalPaginas,
-      });
+      setTiposExpedientes(data.data.data || []);
+      setPaginacao(data.data.meta || null);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Erro ao buscar tipos de expedientes';
@@ -124,7 +116,7 @@ export const useTiposExpedientes = (params: ListarTiposExpedientesParams = {}): 
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, created_by, ordenar_por, ordem]);
+  }, [pagina, limite, busca, ordenarPor, ordem]);
 
   useEffect(() => {
     // Só executar se os parâmetros realmente mudaram
@@ -143,4 +135,3 @@ export const useTiposExpedientes = (params: ListarTiposExpedientesParams = {}): 
     refetch: buscarTiposExpedientes,
   };
 };
-
