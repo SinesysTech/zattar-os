@@ -6,7 +6,9 @@
  */
 
 import { revalidatePath } from 'next/cache';
-import { getDashboardFinanceiro, getFluxoCaixaProjetadoDashboard } from '@/backend/financeiro/dashboard/services/dashboard/dashboard-financeiro.service';
+// TODO: Serviço de dashboard ainda não foi migrado para @/features/financeiro
+// Por enquanto, este arquivo está desabilitado até que o serviço seja migrado
+// import { getDashboardFinanceiro, getFluxoCaixaProjetadoDashboard } from '@/features/financeiro/services/dashboard';
 
 // ============================================================================
 // Types
@@ -63,15 +65,16 @@ export async function actionObterDashboardFinanceiro(usuarioId?: string) {
  * Obtém fluxo de caixa projetado para dashboard
  */
 export async function actionObterFluxoCaixaProjetado(meses: number = 6) {
-    try {
-        const mesLimit = Math.min(Math.max(meses, 1), 24); // 1 a 24 meses
-        const data = await getFluxoCaixaProjetadoDashboard(mesLimit);
-
-        return { success: true, data };
-    } catch (error) {
-        console.error('Erro ao obter fluxo de caixa projetado:', error);
-        return { success: false, error: error instanceof Error ? error.message : 'Erro interno' };
-    }
+    // TODO: Implementar serviço de dashboard em @/features/financeiro/services/dashboard
+    throw new Error('Serviço de dashboard ainda não foi migrado para @/features/financeiro');
+    // try {
+    //     const mesLimit = Math.min(Math.max(meses, 1), 24); // 1 a 24 meses
+    //     const data = await getFluxoCaixaProjetadoDashboard(mesLimit);
+    //     return { success: true, data };
+    // } catch (error) {
+    //     console.error('Erro ao obter fluxo de caixa projetado:', error);
+    //     return { success: false, error: error instanceof Error ? error.message : 'Erro interno' };
+    // }
 }
 
 /**
@@ -80,7 +83,9 @@ export async function actionObterFluxoCaixaProjetado(meses: number = 6) {
 export async function actionObterResumoContas() {
     try {
         // Busca dados do dashboard que já contém resumo de contas
-        const data = await getDashboardFinanceiro('system');
+        // TODO: Implementar serviço de dashboard
+        throw new Error('Serviço de dashboard ainda não foi migrado');
+        // const data = await getDashboardFinanceiro('system');
 
         return {
             success: true,
@@ -108,7 +113,9 @@ export async function actionObterResumoContas() {
  */
 export async function actionObterIndicadoresFinanceiros() {
     try {
-        const data = await getDashboardFinanceiro('system');
+        // TODO: Implementar serviço de dashboard
+        throw new Error('Serviço de dashboard ainda não foi migrado');
+        // const data = await getDashboardFinanceiro('system');
 
         // Calcular indicadores básicos
         const receitaTotal = data.receitasMes || 0;
@@ -138,7 +145,9 @@ export async function actionObterIndicadoresFinanceiros() {
  */
 export async function actionObterEvolucaoMensal(meses: number = 12) {
     try {
-        const data = await getDashboardFinanceiro('system');
+        // TODO: Implementar serviço de dashboard
+        throw new Error('Serviço de dashboard ainda não foi migrado');
+        // const data = await getDashboardFinanceiro('system');
 
         return {
             success: true,
@@ -158,7 +167,9 @@ export async function actionObterEvolucaoMensal(meses: number = 12) {
  */
 export async function actionObterTopCategorias(tipo: 'receita' | 'despesa' = 'despesa', limite: number = 5) {
     try {
-        const data = await getDashboardFinanceiro('system');
+        // TODO: Implementar serviço de dashboard
+        throw new Error('Serviço de dashboard ainda não foi migrado');
+        // const data = await getDashboardFinanceiro('system');
 
         // Filtrar e limitar categorias
         const categorias = (data.topCategorias || [])

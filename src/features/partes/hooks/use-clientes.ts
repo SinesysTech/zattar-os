@@ -7,6 +7,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { Cliente } from '../types';
 import type { ListarClientesParams } from '../types';
+import { actionListarClientes } from '../actions/clientes-actions';
 
 interface PaginationInfo {
   pagina: number;
@@ -68,65 +69,30 @@ export const useClientes = (params: ListarClientesParams = {}): UseClientesResul
     setError(null);
 
     try {
-      // Construir query string
-      const searchParams = new URLSearchParams();
+      const result = await actionListarClientes({
+        pagina,
+        limite,
+        busca: busca || undefined,
+        tipo_pessoa: (tipo_pessoa as 'pf' | 'pj' | '') || undefined,
+        nome: nome || undefined,
+        cpf: cpf || undefined,
+        cnpj: cnpj || undefined,
+        ativo,
+        incluir_endereco: incluirEndereco,
+        incluir_processos: incluirProcessos,
+      });
 
-      searchParams.set('pagina', pagina.toString());
-      searchParams.set('limite', limite.toString());
-
-      if (busca) {
-        searchParams.set('busca', busca);
-      }
-      if (tipo_pessoa) {
-        searchParams.set('tipo_pessoa', tipo_pessoa);
-      }
-      if (nome) {
-        searchParams.set('nome', nome);
-      }
-      if (cpf) {
-        searchParams.set('cpf', cpf);
-      }
-      if (cnpj) {
-        searchParams.set('cnpj', cnpj);
-      }
-      if (ativo !== undefined) {
-        searchParams.set('ativo', ativo.toString());
-      }
-      if (incluirEndereco) {
-        searchParams.set('incluir_endereco', 'true');
-      }
-      if (incluirProcessos) {
-        searchParams.set('incluir_processos', 'true');
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Erro ao buscar clientes');
       }
 
-      const response = await fetch(`/api/clientes?${searchParams.toString()}`);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error(data.error || 'Resposta da API indicou falha');
-      }
-
-      // A API retorna { success: true, data: { data: Cliente[], pagination: {...} } }
-      const clientesData = data.data?.data || [];
-      const paginationData = data.data?.pagination;
-
-      setClientes(clientesData);
-      if (paginationData) {
-        setPaginacao({
-          pagina: paginationData.page || pagina,
-          limite: paginationData.limit || limite,
-          total: paginationData.total || 0,
-          totalPaginas: paginationData.totalPages || 0,
-        });
-      } else {
-        setPaginacao(null);
-      }
+      setClientes(result.data.data as Cliente[]);
+      setPaginacao({
+        pagina: result.data.pagination.page,
+        limite: result.data.pagination.limit,
+        total: result.data.pagination.total,
+        totalPaginas: result.data.pagination.totalPages,
+      });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar clientes';
       setError(errorMessage);

@@ -8,9 +8,9 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { ParteContraria } from '../types';
 import type {
   BuscarPartesContrariasParams,
-  PartesContrariasApiResponse,
   PaginationInfo,
 } from '../types';
+import { actionListarPartesContrarias } from '../actions/partes-contrarias-actions';
 
 interface UsePartesContrariasResult {
   partesContrarias: ParteContraria[];
@@ -61,47 +61,26 @@ export const usePartesContrarias = (
     setError(null);
 
     try {
-      // Construir query string
-      const searchParams = new URLSearchParams();
+      const result = await actionListarPartesContrarias({
+        pagina,
+        limite,
+        busca: busca || undefined,
+        tipo_pessoa: (tipo_pessoa as 'pf' | 'pj' | '') || undefined,
+        situacao: (situacao as 'A' | 'I' | 'E' | 'H' | '') || undefined,
+        incluir_endereco: incluirEndereco,
+        incluir_processos: incluirProcessos,
+      });
 
-      searchParams.set('pagina', pagina.toString());
-      searchParams.set('limite', limite.toString());
-
-      if (busca) {
-        searchParams.set('busca', busca);
-      }
-      if (tipo_pessoa) {
-        searchParams.set('tipo_pessoa', tipo_pessoa);
-      }
-      if (situacao) {
-        searchParams.set('situacao', situacao);
-      }
-      if (incluirEndereco) {
-        searchParams.set('incluir_endereco', 'true');
-      }
-      if (incluirProcessos) {
-        searchParams.set('incluir_processos', 'true');
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Erro ao buscar partes contrárias');
       }
 
-      const response = await fetch(`/api/partes-contrarias?${searchParams.toString()}`);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
-      }
-
-      const data: PartesContrariasApiResponse = await response.json();
-
-      if (!data.success) {
-        throw new Error('Resposta da API indicou falha');
-      }
-
-      setPartesContrarias(data.data.partesContrarias);
+      setPartesContrarias(result.data.data as ParteContraria[]);
       setPaginacao({
-        pagina: data.data.pagina,
-        limite: data.data.limite,
-        total: data.data.total,
-        totalPaginas: data.data.totalPaginas,
+        pagina: result.data.pagination.page,
+        limite: result.data.pagination.limit,
+        total: result.data.pagination.total,
+        totalPaginas: result.data.pagination.totalPages,
       });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar partes contrarias';
