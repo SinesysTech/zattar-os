@@ -17,10 +17,10 @@ import {
   buildContasReceberFilterOptions,
   buildContasReceberFilterGroups,
   parseContasReceberFilters,
-} from './components/contas-receber-toolbar-filters';
-import { AlertasInadimplencia } from './components/alertas-inadimplencia';
-import { ReceberContaDialog } from './components/receber-conta-dialog';
-import { ContaReceberFormDialog } from './components/conta-receber-form-dialog';
+} from '@/features/financeiro/components/contas-receber/contas-receber-toolbar-filters';
+import { AlertasInadimplencia } from '@/features/financeiro/components/contas-receber/alertas-inadimplencia';
+import { ReceberContaDialog } from '@/features/financeiro/components/contas-receber/receber-conta-dialog';
+import { ContaReceberFormDialog } from '@/features/financeiro/components/contas-receber/conta-receber-form-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

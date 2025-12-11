@@ -30,3 +30,4 @@ export { TimelineLoading } from './timeline-loading';
 // Formulários e Sheets
 export { ProcessoDetailSheet } from './processo-detail-sheet';
 export { ProcessoForm } from './processo-form';
+export { ProcessosTableWrapper } from './processos-table-wrapper';
