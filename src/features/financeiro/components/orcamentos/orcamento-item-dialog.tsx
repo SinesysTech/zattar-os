@@ -27,7 +27,7 @@ import type {
   OrcamentoItemComDetalhes,
   CriarOrcamentoItemDTO,
   AtualizarOrcamentoItemDTO,
-} from '@/backend/types/financeiro/orcamento.types';
+} from '@/features/financeiro/types/orcamento.types';
 
 // ============================================================================
 // Tipos

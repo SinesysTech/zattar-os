@@ -10,7 +10,7 @@ import {
   type ListarPlanoContasParams,
   type TipoContaContabil,
   type NivelConta,
-} from '@/backend/types/financeiro/plano-contas.types';
+} from '@/features/financeiro/types/plano-contas.types';
 
 /**
  * @swagger

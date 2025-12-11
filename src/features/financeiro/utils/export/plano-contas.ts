@@ -3,7 +3,7 @@
  * Migrado de src/app/_lib/financeiro/export-plano-contas.ts
  */
 
-import type { PlanoContaHierarquico } from '@/backend/types/financeiro/plano-contas.types';
+import type { PlanoContaHierarquico } from '@/features/financeiro/types/plano-contas.types';
 import {
     formatarValor,
     gerarCSV,

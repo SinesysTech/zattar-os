@@ -61,12 +61,12 @@ import { ContaReceberFormDialog } from '../components/conta-receber-form-dialog'
 import { OrigemLancamentoSection } from '@/features/financeiro/components/shared';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import type { StatusContaReceber } from '@/backend/types/financeiro/contas-receber.types';
+import type { StatusContaReceber } from '@/features/financeiro/types/contas-receber.types';
 import {
   getHistoricoRecebimentos,
   isParcialmenteRecebida,
   FORMA_RECEBIMENTO_LABELS,
-} from '@/backend/types/financeiro/contas-receber.types';
+} from '@/features/financeiro/types/contas-receber.types';
 
 // ============================================================================
 // Constantes

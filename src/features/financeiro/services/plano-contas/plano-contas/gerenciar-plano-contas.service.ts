@@ -16,7 +16,7 @@ import type {
   AtualizarPlanoContaDTO,
   PlanoConta,
   getNaturezaPadrao,
-} from '@/backend/types/financeiro/plano-contas.types';
+} from '@/features/financeiro/types/plano-contas.types';
 
 /**
  * Criar nova conta no plano de contas

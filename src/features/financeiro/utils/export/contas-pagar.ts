@@ -8,7 +8,7 @@ import type {
     ContaPagarComDetalhes,
     ContasPagarFilters,
     ResumoVencimentos,
-} from '@/backend/types/financeiro/contas-pagar.types';
+} from '@/features/financeiro/types/contas-pagar.types';
 import {
     formatarData,
     formatarValor,

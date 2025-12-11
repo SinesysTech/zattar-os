@@ -7,7 +7,7 @@ import { rgb } from 'pdf-lib';
 import type {
     TransacaoBancariaImportada,
     ConciliacaoBancaria,
-} from '@/backend/types/financeiro/conciliacao-bancaria.types';
+} from '@/features/financeiro/types/conciliacao-bancaria.types';
 import {
     formatarData,
     gerarCSV,

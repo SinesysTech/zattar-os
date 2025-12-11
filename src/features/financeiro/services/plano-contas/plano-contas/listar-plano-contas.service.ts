@@ -13,7 +13,7 @@ import type {
   ListarPlanoContasResponse,
   PlanoContaComPai,
   PlanoConta,
-} from '@/backend/types/financeiro/plano-contas.types';
+} from '@/features/financeiro/types/plano-contas.types';
 
 /**
  * Obter listagem de plano de contas com filtros e paginação
