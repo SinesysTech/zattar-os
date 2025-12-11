@@ -31,7 +31,7 @@ export interface RelatorioParaExportacao {
     resumo?: ResumoOrcamentario | null;
     alertas?: Array<{ mensagem: string; severidade: string }>;
     evolucao?: EvolucaoMensal[];
-    projecao?: any[] | null;
+    projecao?: EvolucaoMensal[] | null;
     geradoEm: string;
 }
 

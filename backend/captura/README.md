@@ -24,7 +24,7 @@ Este diretório contém **serviços de infraestrutura** para integração com si
 - **`features/captura/`** — Camada de domínio (domain, service, repository, drivers, UI)
 - **`backend/captura/`** — Camada de infraestrutura (integrações externas, persistência)
 
-As API routes em `app/api/captura/` chamam diretamente `backend/captura/services/` para executar capturas. O orquestrador em `features/captura/service.ts` pode ser usado para casos de uso mais complexos.
+As API routes em `app/api/captura/` e Server Actions devem utilizar `features/captura/services/capture-orchestrator.ts` (exposto via `features/captura/service.ts`) como a camada de orquestração oficial. Ela coordena os drivers e regras de negócio, mantendo o backend isolado.
 
 ## Princípios
 

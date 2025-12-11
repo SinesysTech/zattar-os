@@ -20,11 +20,70 @@ import type {
     ResumoOrcamentario
 } from '../types/orcamentos';
 
+type ContaContabilResumo = { id: number; codigo: string; nome: string; tipo?: string | null };
+type CentroCustoResumo = { id: number; codigo: string; nome: string };
+
+type OrcamentoItemRow = {
+    id: number;
+    orcamento_id: number;
+    conta_contabil_id: number | null;
+    centro_custo_id: number | null;
+    descricao: string | null;
+    valor_previsto: number | null;
+    valor_realizado: number | null;
+    observacoes: string | null;
+    created_at: string;
+    updated_at: string;
+    contas_contabeis?: ContaContabilResumo;
+    centros_custo?: CentroCustoResumo;
+};
+
+type OrcamentoRow = {
+    id: number;
+    nome: string;
+    descricao: string | null;
+    ano: number;
+    periodo: Orcamento['periodo'];
+    data_inicio: string;
+    data_fim: string;
+    status: Orcamento['status'];
+    valor_total: number | null;
+    observacoes: string | null;
+    aprovado_por: string | null;
+    aprovado_em: string | null;
+    encerrado_por: string | null;
+    encerrado_em: string | null;
+    created_at: string;
+    updated_at: string;
+    created_by: string | null;
+    orcamento_itens?: OrcamentoItemRow[];
+};
+
+type OrcamentoRecordInput = {
+    nome?: string;
+    descricao?: string | null;
+    ano?: number;
+    periodo?: Orcamento['periodo'];
+    data_inicio?: string;
+    data_fim?: string;
+    observacoes?: string | null;
+};
+
+type OrcamentoStatusUpdate = {
+    status?: string;
+    updated_at?: string;
+    aprovado_por?: string;
+    aprovado_em?: string;
+    encerrado_por?: string;
+    encerrado_em?: string;
+    observacoes?: string;
+};
+
 // ============================================================================
 // Mappers
 // ============================================================================
 
-function mapRecordToOrcamento(record: any): Orcamento {
+function mapRecordToOrcamento(record: OrcamentoRow): Orcamento {
     return {
         id: record.id,
         nome: record.nome,

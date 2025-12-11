@@ -102,7 +102,8 @@ export async function exportarContasPagarPDF(
             y = base.pageHeight - margin;
         }
 
-        currentPage.drawText((conta as any).fornecedor?.nome || (conta as any).fornecedorNome || '-', {
+        const fornecedorNome = obterNomeFornecedor(conta) || '-';
+        currentPage.drawText(fornecedorNome, {
             x: colX[0],
             y,
             size: 9,
@@ -170,7 +171,8 @@ export async function gerarContasPagarPDFBytes(
             y = base.pageHeight - margin;
         }
 
-        currentPage.drawText((conta as any).fornecedor?.nome || (conta as any).fornecedorNome || '-', {
+        const fornecedorNome = obterNomeFornecedor(conta) || '-';
+        currentPage.drawText(fornecedorNome, {
             x: colX[0],
             y,
             size: 9,
