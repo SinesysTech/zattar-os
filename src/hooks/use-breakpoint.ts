@@ -174,6 +174,31 @@ export function useBreakpointBetween(min: Breakpoint, max: Breakpoint): boolean 
  * }
  * ```
  */
+/**
+ * Hook que verifica se o viewport é mobile (abaixo do breakpoint 'md')
+ * 
+ * Este é um hook de conveniência que retorna true se a largura do viewport
+ * for menor que 768px (breakpoint 'md' do Tailwind CSS).
+ * 
+ * @returns true se o viewport é mobile, false caso contrário
+ * 
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const isMobile = useIsMobile();
+ *   
+ *   return (
+ *     <div>
+ *       {isMobile ? <MobileView /> : <DesktopView />}
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
+export function useIsMobile(): boolean {
+    return useBreakpointBelow('md');
+}
+
 export function useBreakpoints() {
     const isMobile = useBreakpointBelow('md');
     const isTablet = useBreakpointBetween('md', 'lg');

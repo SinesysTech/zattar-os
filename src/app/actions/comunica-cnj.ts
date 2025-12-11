@@ -7,11 +7,11 @@ import {
   listarTribunaisDisponiveis,
   vincularComunicacaoAExpediente,
   obterStatusRateLimit,
-} from '@/core/comunica-cnj/service';
+} from '@/features/captura/comunica-cnj/service';
 import type {
   ConsultarComunicacoesParams,
   SincronizarParams,
-} from '@/core/comunica-cnj/domain';
+} from '@/features/captura/comunica-cnj/domain';
 
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS
