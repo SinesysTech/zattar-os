@@ -2,7 +2,7 @@
  * COMUNICA CNJ SERVICE - Camada de Lógica de Negócio
  */
 
-import { Result, ok, err, appError, PaginatedResponse } from '@/core/common/types';
+import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
 import { getComunicaCNJClient } from './cnj-client';
 import * as repository from './repository';
 // Note: importing from core/expedientes/service might need to be migrated later if expedientes becomes a feature

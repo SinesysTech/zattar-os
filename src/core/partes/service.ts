@@ -11,7 +11,7 @@
  * - NUNCA importar React/Next.js aqui
  */
 
-import { Result, ok, err, appError, PaginatedResponse } from '@/core/common/types';
+import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
 import {
   type Cliente,
   type ParteContraria,

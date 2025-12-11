@@ -7,3 +7,9 @@
 
 export * from './types';
 export * from './timeline';
+export * from './acervo-geral';
+export * from './expedientes';
+export * from './audiencias';
+export * from './arquivados';
+export * from './shared/fetch';
+

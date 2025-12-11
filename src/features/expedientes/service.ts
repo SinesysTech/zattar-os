@@ -20,9 +20,9 @@ import {
 } from './types';
 import * as repository from './repository';
 import type { ExpedienteInsertInput, ExpedienteUpdateInput } from './repository';
-import { Result, err, appError, PaginatedResponse } from '@/core/common/types';
+import { Result, err, appError, PaginatedResponse } from '@/lib/types';
 import { z } from 'zod';
-import { createDbClient } from '@/core/common/db';
+import { createDbClient } from '@/lib/supabase';
 import { appendFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 

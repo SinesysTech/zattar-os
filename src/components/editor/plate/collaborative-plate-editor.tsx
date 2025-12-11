@@ -17,7 +17,7 @@ import { YjsPlugin } from '@platejs/yjs/react';
 
 import { EditorKit } from '@/components/editor/plate/editor-kit';
 import { Editor, EditorContainer } from '@/components/editor/plate-ui/editor';
-import { createClient } from '@/app/_lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 import {
   SupabaseYjsProvider,
   type SupabaseYjsProviderOptions,

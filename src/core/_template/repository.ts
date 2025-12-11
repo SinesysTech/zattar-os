@@ -13,8 +13,8 @@
  * - NUNCA importar React/Next.js aqui
  */
 
-import { createDbClient } from '@/core/common/db';
-import { Result, ok, err, appError, PaginatedResponse } from '@/core/common/types';
+import { createDbClient } from '@/lib/supabase';
+import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
 import type { Tarefa, CreateTarefaInput, UpdateTarefaInput, ListTarefasParams } from './domain';
 
 const TABLE_NAME = 'tarefas';

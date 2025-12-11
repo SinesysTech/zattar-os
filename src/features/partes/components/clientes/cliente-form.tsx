@@ -179,6 +179,7 @@ export function ClienteFormDialog({
   const [currentStep, setCurrentStep] = React.useState(isEditMode ? 2 : 1);
   const [formData, setFormData] = React.useState(INITIAL_FORM_STATE);
   const [novoEmail, setNovoEmail] = React.useState('');
+  const [stepErrors, setStepErrors] = React.useState<string[]>([]);
   const formRef = React.useRef<HTMLFormElement>(null);
 
   // Server Action com useActionState
@@ -196,13 +197,19 @@ export function ClienteFormDialog({
 
   const [state, formAction, isPending] = useActionState(boundAction, initialState);
 
+  // Usar useRef para manter referência estável de onSuccess e evitar mudança no tamanho do array de dependências
+  const onSuccessRef = React.useRef(onSuccess);
+  React.useEffect(() => {
+    onSuccessRef.current = onSuccess;
+  }, [onSuccess]);
+
   // Efeito para tratar resultado da action
   React.useEffect(() => {
     if (state) {
       if (state.success) {
         toast.success(state.message);
         onOpenChange(false);
-        onSuccess?.();
+        onSuccessRef.current?.();
       } else {
         toast.error(state.message);
         if (state.errors) {
@@ -213,7 +220,7 @@ export function ClienteFormDialog({
         }
       }
     }
-  }, [state, onOpenChange, onSuccess]);
+  }, [state, onOpenChange]);
 
   // Reset ao fechar ou inicializar com dados do cliente
   React.useEffect(() => {

@@ -34,7 +34,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar"
-import { createClient } from "@/app/_lib/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 
 const teams = [
   {

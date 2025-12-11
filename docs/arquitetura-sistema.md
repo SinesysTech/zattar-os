@@ -105,33 +105,46 @@ O **Sinesys** é um sistema completo de gestão jurídica desenvolvido especific
 
 ```
 sinesys/
-├── app/                      # Aplicação Next.js (App Router)
-│   ├── (dashboard)/          # Grupo de rotas do dashboard
-│   ├── _lib/                 # Bibliotecas e utilitários do app
-│   ├── actions/              # Server Actions
-│   ├── api/                  # Endpoints de API REST
-│   ├── auth/                 # Páginas de autenticação
-│   └── globals.css           # Estilos globais
-├── backend/                  # Lógica de negócio e serviços
+├── src/
+│   ├── app/                      # Aplicação Next.js (App Router)
+│   │   ├── (dashboard)/          # Grupo de rotas do dashboard
+│   │   ├── actions/              # Server Actions (legado)
+│   │   ├── api/                  # Endpoints de API REST
+│   │   ├── auth/                 # Páginas de autenticação
+│   │   └── globals.css           # Estilos globais
+│   ├── features/                 # 🆕 MÓDULOS FSD (Feature-Sliced Design)
+│   │   ├── acervo/               # ✅ Processos (migrado)
+│   │   ├── partes/               # ✅ Clientes e partes (migrado)
+│   │   ├── processos/            # ✅ Processos (migrado)
+│   │   ├── contratos/            # ✅ Contratos (migrado)
+│   │   ├── rh/                   # ✅ RH (migrado)
+│   │   ├── expedientes/          # ✅ Expedientes (migrado)
+│   │   └── [...outros]/         # 🔄 Em migração
+│   ├── components/               # Componentes React reutilizáveis
+│   │   ├── ui/                   # Componentes base (shadcn/ui)
+│   │   ├── layout/               # Componentes de layout
+│   │   ├── shared/               # Componentes compartilhados
+│   │   └── {dominio}/            # Componentes específicos de domínio
+│   ├── lib/                      # Bibliotecas e configurações
+│   │   ├── api/                  # Integrações externas
+│   │   │   └── pje-trt/          # 🆕 Timeline PJE/TRT (migrado)
+│   │   ├── auth/                 # Autenticação e autorização
+│   │   ├── mongodb/              # Cliente MongoDB
+│   │   ├── redis/                # Cache Redis
+│   │   ├── supabase/             # Cliente Supabase
+│   │   ├── copilotkit/           # Configuração IA
+│   │   └── utils/                # Utilitários gerais
+│   ├── hooks/                    # React Hooks customizados
+│   └── types/                    # Tipos TypeScript compartilhados
+│       ├── domain/               # Entidades de domínio
+│       └── contracts/            # DTOs e contratos
+├── backend/                  # 🔄 Lógica de negócio legada (em migração)
 │   ├── {modulo}/services/    # Serviços de aplicação
 │   │   ├── {modulo}/         # Lógica de negócio
 │   │   └── persistence/      # Camada de persistência
 │   ├── auth/                 # Autenticação e autorização
 │   ├── types/                # Tipos TypeScript do backend
 │   └── utils/                # Utilitários do backend
-├── components/               # Componentes React reutilizáveis
-│   ├── ui/                   # Componentes base (shadcn/ui)
-│   ├── layout/               # Componentes de layout
-│   ├── shared/               # Componentes compartilhados
-│   └── {dominio}/            # Componentes específicos de domínio
-├── lib/                      # Bibliotecas e configurações
-│   ├── supabase/             # Cliente Supabase
-│   ├── copilotkit/           # Configuração IA
-│   └── utils/                # Utilitários gerais
-├── hooks/                    # React Hooks customizados
-├── types/                    # Tipos TypeScript compartilhados
-│   ├── domain/               # Entidades de domínio
-│   └── contracts/            # DTOs e contratos
 ├── supabase/                 # Banco de dados
 │   ├── migrations/           # Migrações SQL
 │   └── schemas/              # Schemas declarativos
@@ -140,11 +153,72 @@ sinesys/
 └── public/                   # Arquivos estáticos
 ```
 
-### 3.2. Convenções de Nomenclatura
+### 3.2. Migração para Feature-Sliced Design (FSD)
+
+O Sinesys está em **migração progressiva** de uma arquitetura baseada em camadas técnicas (`backend/`, `app/`) para uma **Arquitetura Orientada a Features (Feature-Sliced Design)**.
+
+#### Estrutura de Features
+
+```
+src/features/{modulo}/
+├── components/       # Componentes React específicos
+├── hooks/            # Hooks customizados
+├── actions/          # Server Actions (Next.js)
+├── domain.ts         # Entidades e regras de negócio
+├── service.ts        # Casos de uso
+├── repository.ts     # Acesso ao banco de dados
+├── types.ts          # Tipagem específica
+├── utils.ts          # Utilitários
+└── index.ts          # Barrel exports
+```
+
+#### Módulos Migrados para FSD ✅
+
+- **Acervo** (`features/acervo/`) - Completo
+
+  - Desacoplado do backend, com service/repository/actions próprios
+  - Timeline migrada para `lib/api/pje-trt/`
+  - Métodos específicos: `obterAcervoPaginado`, `obterAcervoUnificado`, `obterAcervoAgrupado`
+  - `backend/acervo/` e `backend/types/acervo/` **removidos** ✅
+
+- **Partes** (`features/partes/`) - Completo
+
+  - Clientes, Partes Contrárias, Terceiros, Representantes
+
+- **Processos** (`features/processos/`) - Completo
+
+  - Domain, Service, Repository pattern
+
+- **Contratos** (`features/contratos/`) - Completo
+
+- **RH** (`features/rh/`) - Completo
+
+  - Salários, Folhas de Pagamento, Integração Financeira
+
+- **Expedientes** (`features/expedientes/`) - Completo
+
+#### Módulos Legados (Backend) 🔄
+
+Módulos ainda não migrados permanecem em `backend/{modulo}/services/`:
+
+- Audiências
+- Acordos/Condenações
+- Financeiro
+- Captura de dados PJE/TRT (infraestrutura)
+
+#### Regras de Migração
+
+1. **Novos módulos**: Implementar diretamente em `features/`
+2. **Módulos existentes**: Migrar apenas quando houver necessidade de refatoração
+3. **Retrocompatibilidade**: Garantir que mudanças não quebrem funcionalidades
+4. **API Routes**: Migrar para Server Actions quando possível
+
+### 3.3. Convenções de Nomenclatura
 
 #### Diretórios
 
 - **Backend**: `kebab-case` (ex: `acordos-condenacoes/`)
+- **Features**: `kebab-case` (ex: `acervo/`, `partes/`)
 - **Componentes**: `kebab-case` (ex: `table-toolbar/`)
 - **Módulos**: Nome do domínio no singular/plural conforme contexto
 
@@ -401,9 +475,9 @@ src/
 
 Ao invés de espalhar código, **colocamos a lógica onde ela pertence**.
 
-- *Errado:* Colocar um componente `ProcessCard` dentro de `components/ui`.
-- *Certo:* Colocar em `src/features/processos/components/process-card.tsx`.
-- *Por que:* Quando você precisar alterar algo sobre processos, você vai em uma única pasta. Isso facilita a manutenção mental.
+- _Errado:_ Colocar um componente `ProcessCard` dentro de `components/ui`.
+- _Certo:_ Colocar em `src/features/processos/components/process-card.tsx`.
+- _Por que:_ Quando você precisar alterar algo sobre processos, você vai em uma única pasta. Isso facilita a manutenção mental.
 
 **Pilar 2: O Padrão "Data Surface" (Superfície de Dados)**
 
@@ -416,10 +490,14 @@ Ele aceita a `Toolbar`, a `Table` e o `Pagination` como children ou props, e gar
 O código crucial para `src/app/(dashboard)/layout.tsx`. Ele implementa o fundo Off-White e a Sidebar Charcoal fixa.
 
 ```tsx
-import { AppSidebar } from "@/components/layout/app-sidebar"
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <SidebarProvider>
       {/* 1. Sidebar (Fixo, Charcoal) */}
@@ -432,7 +510,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {children}
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }
 ```
 
@@ -441,12 +519,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 **Módulos Migrados (✅ Completo)**
 
 1. **Partes** (`features/partes/`)
+
    - Clientes
    - Partes Contrárias
    - Terceiros
    - Representantes
 
 2. **Processos** (`features/processos/`)
+
    - Domain, Service, Repository pattern
    - Server Actions implementados
    - Componentes específicos isolados
@@ -2512,24 +2592,31 @@ Sempre que uma feature em `src/features/{modulo}` ganhar novas capacidades impor
 # {Nome da Feature}
 
 ## 📁 Estrutura
+
 [Estrutura de diretórios]
 
 ## 🎯 Funcionalidades
+
 [Funcionalidades principais]
 
 ## 🔧 Server Actions
+
 [Documentação de actions com exemplos]
 
 ## 🪝 Hooks
+
 [Documentação de hooks]
 
 ## 🎨 Componentes
+
 [Documentação de componentes]
 
 ## 🔄 Migração
+
 [Se aplicável, histórico de migração]
 
 ## 📝 Uso em Páginas
+
 [Exemplos de uso]
 ```
 

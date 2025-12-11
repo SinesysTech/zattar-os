@@ -10,7 +10,7 @@ import {
   updateAudienciaSchema,
   Audiencia,
 } from './domain';
-import { PaginatedResponse } from '@/core/common/types';
+import { PaginatedResponse } from '@/lib/types';
 
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }

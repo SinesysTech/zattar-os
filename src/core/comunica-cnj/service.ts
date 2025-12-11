@@ -3,8 +3,8 @@
  * Orquestração e regras de negócio para comunicações CNJ
  */
 
-import { Result, ok, err, appError } from '@/core/common/types';
-import { createDbClient } from '@/core/common/db';
+import { Result, ok, err, appError } from '@/lib/types';
+import { createDbClient } from '@/lib/supabase';
 import { getComunicaCNJClient } from './cnj-client';
 import * as repository from './repository';
 import { criarExpediente } from '@/core/expedientes/service';
@@ -31,7 +31,7 @@ import {
   ListarComunicacoesParams,
   ComunicacaoCNJ,
 } from './domain';
-import type { PaginatedResponse } from '@/core/common/types';
+import type { PaginatedResponse } from '@/lib/types';
 
 // =============================================================================
 // UTILITÁRIOS

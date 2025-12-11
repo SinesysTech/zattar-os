@@ -207,3 +207,166 @@ export interface TimelineItemEnriquecido extends TimelineItem {
     /** Informações do Google Drive (deprecated, use backblaze) */
     googleDrive?: GoogleDriveInfo;
 }
+
+// =============================================================================
+// TYPES FROM BACKEND
+// =============================================================================
+
+/**
+ * Interface: PagedResponse<T>
+ */
+export interface PagedResponse<T> {
+  pagina: number;
+  tamanhoPagina: number;
+  qtdPaginas: number;
+  totalRegistros: number;
+  resultado: T[];
+}
+
+/**
+ * Interface: Totalizador
+ */
+export interface Totalizador {
+  quantidadeProcessos: number;
+  idAgrupamentoProcessoTarefa: number;
+  nomeAgrupamentoTarefa: string;
+  ordem: number;
+  destaque: boolean;
+}
+
+/**
+ * Interface: Processo
+ */
+export interface Processo {
+  id: number;
+  descricaoOrgaoJulgador: string;
+  classeJudicial: string;
+  numero: number;
+  numeroProcesso: string;
+  segredoDeJustica: boolean;
+  codigoStatusProcesso: string;
+  prioridadeProcessual: number;
+  nomeParteAutora: string;
+  qtdeParteAutora: number;
+  nomeParteRe: string;
+  qtdeParteRe: number;
+  dataAutuacao: string;
+  juizoDigital: boolean;
+  dataArquivamento?: string;
+  dataProximaAudiencia?: string | null;
+  temAssociacao: boolean;
+}
+
+/**
+ * Interface: ClasseJudicial
+ */
+export interface ClasseJudicial {
+  id: number;
+  codigo: string;
+  descricao: string;
+  sigla: string;
+  requerProcessoReferenciaCodigo: string;
+  controlaValorCausa: boolean;
+  podeIncluirAutoridade: boolean;
+  pisoValorCausa: number;
+  tetoValorCausa: number;
+  ativo: boolean;
+  idClasseJudicialPai: number | null;
+  possuiFilhos: boolean;
+}
+
+/**
+ * Interface: OrgaoJulgador
+ */
+export interface OrgaoJulgador {
+  id: number;
+  descricao: string;
+  cejusc: boolean;
+  ativo: boolean;
+  postoAvancado: boolean;
+  novoOrgaoJulgador: boolean;
+  codigoServentiaCnj: number;
+}
+
+/**
+ * Interface: ProcessoAudiencia
+ */
+export interface ProcessoAudiencia {
+  id: number;
+  numero: string;
+  classeJudicial: ClasseJudicial;
+  segredoDeJustica: boolean;
+  juizoDigital: boolean;
+  orgaoJulgador: OrgaoJulgador;
+}
+
+/**
+ * Interface: TipoAudiencia
+ */
+export interface TipoAudiencia {
+  id: number;
+  descricao: string;
+  codigo: string;
+  isVirtual: boolean;
+}
+
+/**
+ * Interface: PoloAudiencia
+ */
+export interface PoloAudiencia {
+  nome: string;
+  polo: string;
+  poloEnum: 'ATIVO' | 'PASSIVO';
+  representaVarios: boolean;
+  cpf?: string;
+  cnpj?: string;
+}
+
+/**
+ * Interface: SalaAudiencia
+ */
+export interface SalaAudiencia {
+  nome: string;
+  id?: number;
+}
+
+/**
+ * Interface: PautaAudienciaHorario
+ */
+export interface PautaAudienciaHorario {
+  id: number;
+  horaInicial: string;
+  horaFinal: string;
+}
+
+/**
+ * Interface: Audiencia
+ */
+export interface Audiencia {
+  id: number;
+  dataInicio: string;
+  dataFim: string;
+  salaAudiencia: SalaAudiencia;
+  status: string;
+  processo: ProcessoAudiencia;
+  tipo: TipoAudiencia;
+  designada: boolean;
+  emAndamento: boolean;
+  documentoAtivo: boolean;
+  poloAtivo: PoloAudiencia;
+  poloPassivo: PoloAudiencia;
+  pautaAudienciaHorario: PautaAudienciaHorario;
+  statusDescricao: string;
+  idProcesso: number;
+  nrProcesso: string;
+  urlAudienciaVirtual?: string;
+}
+
+/**
+ * Enum: AgrupamentoProcessoTarefa
+ */
+export enum AgrupamentoProcessoTarefa {
+  ACERVO_GERAL = 1,
+  PENDENTES_MANIFESTACAO = 2,
+  ARQUIVADOS = 5,
+}
