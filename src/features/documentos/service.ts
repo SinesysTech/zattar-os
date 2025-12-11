@@ -21,12 +21,8 @@ import {
 import * as repository from './repository';
 import * as domain from './domain';
 import {
-  uploadFileToB2,
-  generatePresignedUploadUrl,
-  getTipoMedia,
-  validateFileType,
   validateFileSize,
-} from '@/backend/documentos/services/upload/b2-upload.service'; // Keep as utility
+} from './services/b2-upload.service'; // Moved to feature
 import { generatePresignedUrl as generatePresignedDownloadUrl } from '@/lib/storage/backblaze-b2.service';
 import { createServiceClient } from '@/lib/supabase/service-client';
 

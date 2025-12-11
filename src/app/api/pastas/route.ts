@@ -7,12 +7,11 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import {
   listarPastasComContadores,
   criarPasta,
   buscarHierarquiaPastas,
-} from '@/backend/documentos/services/persistence/pastas-persistence.service';
-import type { CriarPastaParams } from '@/backend/types/documentos/types';
+} from '@/features/documentos';
+import type { CriarPastaParams } from '@/features/documentos';
 
 /**
  * GET /api/pastas

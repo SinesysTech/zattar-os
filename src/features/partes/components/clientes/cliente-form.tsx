@@ -680,6 +680,8 @@ export function ClienteFormDialog({
                   type="button"
                   onClick={() => handleRemoveEmail(index)}
                   className="ml-1 hover:bg-muted rounded-full p-0.5"
+                  aria-label={`Remover e-mail ${email}`}
+                  title={`Remover e-mail ${email}`}
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -924,18 +926,13 @@ export function ClienteFormDialog({
           </div>
           <DialogDescription>{stepInfo.description}</DialogDescription>
 
-          <div 
-            className="w-full bg-muted rounded-full h-2 mt-4"
-            style={{
-              '--progress-width': isEditMode
-                ? `${((currentStep - 1) / (TOTAL_STEPS - 1)) * 100}%`
-                : `${(currentStep / TOTAL_STEPS) * 100}%`,
-            } as React.CSSProperties}
-          >
+          <div className="w-full bg-muted rounded-full h-2 mt-4">
             <div
               className="bg-primary h-2 rounded-full transition-all duration-300"
               style={{
-                width: 'var(--progress-width)',
+                width: isEditMode
+                  ? `${((currentStep - 1) / (TOTAL_STEPS - 1)) * 100}%`
+                  : `${(currentStep / TOTAL_STEPS) * 100}%`,
               }}
             />
           </div>
