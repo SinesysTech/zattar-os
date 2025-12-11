@@ -2,7 +2,7 @@
 
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
-import { CapturaResult } from './captura-result';
+import { CapturaResult, CapturaResultData } from './captura-result';
 import { capturarPendentes } from '@/features/captura/services/api-client';
 import { FILTROS_PRAZO } from '@/features/captura/constants';
 import type { FiltroPrazoPendentes } from '@/features/captura/types';
@@ -24,7 +24,7 @@ export function PendentesForm({ onSuccess }: PendentesFormProps) {
   const [result, setResult] = useState<{
     success: boolean | null;
     error?: string;
-    data?: unknown;
+    data?: CapturaResultData;
     capture_id?: number;
   }>({ success: null });
 
@@ -132,7 +132,7 @@ export function PendentesForm({ onSuccess }: PendentesFormProps) {
       <CapturaResult
         success={result.success}
         error={result.error}
-        data={result.data as any}
+        data={result.data}
         captureId={result.capture_id}
       />
     </div>

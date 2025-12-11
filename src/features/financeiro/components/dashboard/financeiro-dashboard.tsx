@@ -23,8 +23,8 @@ export function FinanceiroDashboard() {
   const { contasPagar, contasReceber, error: errorContas } = useContasPagarReceber();
   const { alertas, error: errorAlertas } = useAlertasFinanceiros();
   
-  const { resumo: resumoObrigacoes, isLoading: isLoadingObrigacoes } = useResumoObrigacoes({ incluirAlertas: true });
-  const { orcamentos, isLoading: isLoadingOrcamentos } = useOrcamentos({ limite: 1000 });
+  const { resumo: resumoObrigacoes, isLoading: isLoadingObrigacoes } = useResumoObrigacoes();
+  const { orcamentos, isLoading: isLoadingOrcamentos } = useOrcamentos({ autoFetch: true, filters: { limite: 1000 } });
 
   const totaisOrcamentos = React.useMemo(() => {
     const t = {
@@ -118,7 +118,7 @@ export function FinanceiroDashboard() {
          <Card>
             <CardContent className="pt-6">
                 <h3 className="text-lg font-medium mb-4">Obrigações e Prazos</h3>
-                <ObrigacoesWidget resumo={resumoObrigacoes} isLoading={isLoadingObrigacoes} />
+                <ObrigacoesWidget resumo={resumoObrigacoes as any} isLoading={isLoadingObrigacoes} />
             </CardContent>
          </Card>
       </div>

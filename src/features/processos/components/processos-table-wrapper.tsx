@@ -67,8 +67,8 @@ const getParteAutoraColorClass = (): string => {
 
 function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
   const processo = row.original;
-  const classeJudicial = processo.classe_judicial || '';
-  const numeroProcesso = processo.numero_processo;
+  const classeJudicial = processo.classeJudicial || '';
+  const numeroProcesso = processo.numeroProcesso;
   // Use generic access or cast if property missing in Union type
   const orgaoJulgador = (processo as any).descricao_orgao_julgador || '-'; 
   const trt = processo.trt;
@@ -131,7 +131,7 @@ const colunas: ColumnDef<ProcessoComParticipacao>[] = [
         accessorKey: 'nome_parte_autora',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Cliente" />,
         cell: ({ row }) => {
-            const parteAutora = row.original.nome_parte_autora || '-';
+            const parteAutora = row.original.nomeParteAutora || '-';
             return (
             <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,15.625rem)]">
                 <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
@@ -174,7 +174,7 @@ const colunas: ColumnDef<ProcessoComParticipacao>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Última Movimentação" />,
         cell: ({ row }) => (
             <div className="min-h-10 flex items-center justify-center text-sm">
-              {formatarData(row.original.data_autuacao)}
+              {formatarData(row.original.dataAutuacao)}
             </div>
           ),
         size: 150,
@@ -236,7 +236,7 @@ export function ProcessosTableWrapper() {
         filterGroups={filterGroups}
         selectedFilters={selectedFilterIds}
         onFiltersChange={handleFilterIdsChange}
-        newButtonText="Novo Processo"
+        newButtonTooltip="Novo Processo"
         onNewClick={() => { /* Lógica para novo processo */ }}
     />
   );

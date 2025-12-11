@@ -108,7 +108,7 @@ export async function actionVincularExpediente(comunicacaoId: number, expediente
 /**
  * Listar tribunais disponíveis
  */
-export async function actionListarTribunaisDisponiveis(): Promise<{ success: boolean; data?: any[]; error?: string }> {
+export async function actionListarTribunaisDisponiveis(): Promise<{ success: boolean; data?: unknown[]; error?: string }> {
   try {
     // Permissão genérica ou pública autenticada
     await requireAuth([]); 

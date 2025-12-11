@@ -1,3 +1,4 @@
+
 'use client';
 
 /**
@@ -63,19 +64,19 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type {
   ContaReceberComDetalhes,
   StatusContaReceber,
-} from '@/backend/types/financeiro/contas-receber.types';
+} from '@/features/financeiro/types/lancamentos';
 
 // ============================================================================
 // Constantes e Helpers
 // ============================================================================
 
-type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
+type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning';
 
-const STATUS_CONFIG: Record<StatusContaReceber, { label: string; tone: BadgeTone }> = {
+const STATUS_CONFIG: Record<StatusContaReceber, { label: string; tone: BadgeVariant }> = {
   pendente: { label: 'Pendente', tone: 'warning' },
   confirmado: { label: 'Recebido', tone: 'success' },
-  cancelado: { label: 'Cancelado', tone: 'neutral' },
-  estornado: { label: 'Estornado', tone: 'danger' },
+  cancelado: { label: 'Cancelado', tone: 'secondary' },
+  estornado: { label: 'Estornado', tone: 'destructive' },
 };
 
 const formatarValor = (valor: number): string => {
@@ -267,7 +268,7 @@ function criarColunas(
           >
             {formatarData(conta.dataVencimento)}
             {vencida && (
-              <Badge tone="danger" variant="soft" className="ml-2">
+              <Badge variant="destructive" className="ml-2">
                 Vencida
               </Badge>
             )}
@@ -289,7 +290,7 @@ function criarColunas(
         const config = STATUS_CONFIG[status];
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge tone={config.tone} variant="soft">
+            <Badge variant={config.tone}>
               {config.label}
             </Badge>
           </div>

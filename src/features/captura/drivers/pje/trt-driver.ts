@@ -9,18 +9,15 @@
  * Estes valores foram ajustados empiricamente e são críticos para o funcionamento.
  */
 
-import type { Page, Browser } from 'playwright';
-import { autenticarPJE as autenticarPJEOriginal, obterTokens, obterIdAdvogado } from '@/backend/captura/services/trt/trt-auth.service';
+import { autenticarPJE as autenticarPJEOriginal } from '@/backend/captura/services/trt/trt-auth.service';
 import type { AuthResult } from '@/backend/captura/services/trt/trt-auth.service';
 import { obterTodasAudiencias } from '@/backend/api/pje-trt/audiencias';
 import { obterTodosProcessosPendentesManifestacao } from '@/backend/api/pje-trt/expedientes';
-import type { CredenciaisTRT, ConfigTRT, TipoAcessoTribunal } from '@/backend/types/captura/trt-types';
+import type { CredenciaisTRT, ConfigTRT, TipoAcessoTribunal, CodigoTRT, GrauTRT } from '@/backend/types/captura/trt-types';
 import type { TwoFAuthConfig } from '@/backend/api/twofauth.service';
 import type {
   JudicialDriver,
   SessaoAutenticada,
-  AuthTokens,
-  AdvogadoInfo,
 } from '../judicial-driver.interface';
 import type {
   Credencial,
@@ -31,7 +28,6 @@ import type {
   AudienciaCapturada,
   ProcessoCapturado,
 } from '../../domain';
-import type { GrauProcesso } from '@/core/partes';
 import { mapearTipoAcessoParaGrau } from '../../domain';
 
 /**
@@ -63,9 +59,9 @@ export class PjeTrtDriver implements JudicialDriver {
     const codigo = config.tribunalCodigo || this.extractCodigoTribunal(config.tribunalId);
 
     return {
-      codigo: codigo as any, // CodigoTRT
+      codigo: codigo as CodigoTRT,
       nome: config.tribunalNome || '', // Nome do tribunal
-      grau: grau as any, // GrauTRT
+      grau: grau as GrauTRT,
       tipoAcesso: config.tipoAcesso as TipoAcessoTribunal,
       loginUrl: config.loginUrl,
       baseUrl: config.baseUrl,

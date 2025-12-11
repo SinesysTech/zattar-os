@@ -35,9 +35,10 @@ export async function findAudienciaById(id: number): Promise<Result<Audiencia | 
         }
 
         return ok(data ? converterParaAudiencia(data) : null);
-    } catch (e: any) {
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error finding audiencia:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao buscar audiência.', { originalError: e.message }));
+        return err(appError('DATABASE_ERROR', 'Erro inesperado ao buscar audiência.', { originalError: message }));
     }
 }
 
@@ -102,9 +103,10 @@ export async function findAllAudiencias(params: ListarAudienciasParams): Promise
                 hasMore: page < totalPages,
             },
         });
-    } catch (e: any) {
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error finding all audiencias:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao listar audiências.', { originalError: e.message }));
+        return err(appError('DATABASE_ERROR', 'Erro inesperado ao listar audiências.', { originalError: message }));
     }
 }
 
@@ -121,9 +123,10 @@ export async function processoExists(processoId: number): Promise<Result<boolean
             return err(appError('DATABASE_ERROR', 'Erro ao verificar processo.', { code: error.code }));
         }
         return ok(!!data);
-    } catch (e: any) {
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error checking processo existence:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao verificar processo.', { originalError: e.message }));
+        return err(appError('DATABASE_ERROR', 'Erro inesperado ao verificar processo.', { originalError: message }));
     }
 }
 
@@ -140,16 +143,17 @@ export async function tipoAudienciaExists(tipoId: number): Promise<Result<boolea
             return err(appError('DATABASE_ERROR', 'Erro ao verificar tipo de audiência.', { code: error.code }));
         }
         return ok(!!data);
-    } catch (e: any) {
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error checking tipo_audiencia existence:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao verificar tipo de audiência.', { originalError: e.message }));
+        return err(appError('DATABASE_ERROR', 'Erro inesperado ao verificar tipo de audiência.', { originalError: message }));
     }
 }
 
 export async function saveAudiencia(input: Partial<Audiencia>): Promise<Result<Audiencia>> {
     try {
         const db = createDbClient();
-        const snakeInput = fromCamelToSnake(input) as Record<string, any>;
+        const snakeInput = fromCamelToSnake(input) as Record<string, unknown>;
         const { data, error } = await db
             .from('audiencias')
             .insert(snakeInput)
@@ -161,16 +165,17 @@ export async function saveAudiencia(input: Partial<Audiencia>): Promise<Result<A
             return err(appError('DATABASE_ERROR', 'Erro ao salvar audiência.', { code: error.code }));
         }
         return ok(converterParaAudiencia(data));
-    } catch (e: any) {
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error saving audiencia:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao salvar audiência.', { originalError: e.message }));
+        return err(appError('DATABASE_ERROR', 'Erro inesperado ao salvar audiência.', { originalError: message }));
     }
 }
 
 export async function updateAudiencia(id: number, input: Partial<Audiencia>, audienciaExistente: Audiencia): Promise<Result<Audiencia>> {
     try {
         const db = createDbClient();
-        const snakeInput = fromCamelToSnake(input) as Record<string, any>;
+        const snakeInput = fromCamelToSnake(input) as Record<string, unknown>;
         // Preserve previous state for auditing
         snakeInput.dados_anteriores = fromCamelToSnake(audienciaExistente);
 
@@ -186,9 +191,10 @@ export async function updateAudiencia(id: number, input: Partial<Audiencia>, aud
             return err(appError('DATABASE_ERROR', 'Erro ao atualizar audiência.', { code: error.code }));
         }
         return ok(converterParaAudiencia(data));
-    } catch (e: any) {
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error updating audiencia:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao atualizar audiência.', { originalError: e.message }));
+        return err(appError('DATABASE_ERROR', 'Erro inesperado ao atualizar audiência.', { originalError: message }));
     }
 }
 
@@ -211,8 +217,9 @@ export async function atualizarStatus(id: number, status: StatusAudiencia, statu
             return err(appError('DATABASE_ERROR', 'Erro ao atualizar status da audiência.', { code: error.code }));
         }
         return ok(converterParaAudiencia(data));
-    } catch (e: any) {
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error updating audiencia status:', e);
-        return err(appError('DATABASE_ERROR', 'Erro inesperado ao atualizar status da audiência.', { originalError: e.message }));
+        return err(appError('DATABASE_ERROR', 'Erro inesperado ao atualizar status da audiência.', { originalError: message }));
     }
 }

@@ -6,12 +6,11 @@ import { Result, ok, err, appError, PaginatedResponse } from '@/core/common/type
 import { getComunicaCNJClient } from './cnj-client';
 import * as repository from './repository';
 // Note: importing from core/expedientes/service might need to be migrated later if expedientes becomes a feature
-import { criarExpediente } from '@/core/expedientes/service'; 
+import { criarExpediente } from '@/features/expedientes/service'; 
 import { createServiceClient } from '@/lib/supabase/service-client';
 
 import type {
   ComunicacaoItem,
-  ComunicacaoProcessual,
   ConsultarComunicacoesParams,
   ConsultaResult,
   SincronizarParams,
@@ -24,10 +23,11 @@ import type {
   GrauTribunal,
   ComunicacaoDestinatario,
   PartesExtraidas,
-  CriarExpedienteFromCNJParams,
   ListarComunicacoesParams,
   ComunicacaoCNJ,
 } from './domain';
+
+import { OrigemExpediente, CodigoTribunal } from '@/features/expedientes/types';
 
 import {
   consultarComunicacoesSchema,
@@ -238,7 +238,7 @@ export async function listarComunicacoesCapturadas(
         appError(
           'DATABASE_ERROR',
           result.error.message || 'Erro ao listar comunicações capturadas.',
-          result.error.metadata
+          result.error.details
         )
       );
     }
@@ -542,7 +542,7 @@ async function criarExpedienteFromComunicacao(
     idPje,
     advogadoId: null,
     processoId: dadosAcervo?.processoId ?? null,
-    trt: comunicacao.siglaTribunal,
+    trt: comunicacao.siglaTribunal as CodigoTribunal,
     grau,
     numeroProcesso,
     descricaoOrgaoJulgador: comunicacao.nomeOrgao || 'Não especificado',
@@ -576,7 +576,7 @@ async function criarExpedienteFromComunicacao(
     arquivoBucket: null,
     arquivoKey: null,
     observacoes: null,
-    origem: 'comunica_cnj' as const,
+    origem: OrigemExpediente.COMUNICA_CNJ,
   };
 
   // WARNING: criarExpediente imported from core/expedientes/service might work, but it might use older db client
@@ -616,7 +616,7 @@ export async function vincularComunicacaoAExpediente(
 
   // Using dynamic import or direct import depending on how we handle expedientes
   // Since we are inside feature, we should ideally use feature-to-feature communication or core.
-  const { findExpedienteById } = await import('@/core/expedientes/repository'); 
+  const { findExpedienteById } = await import('@/features/expedientes/repository'); 
   const expedienteResult = await findExpedienteById(expedienteId);
   if (!expedienteResult.success) {
     return err(expedienteResult.error);

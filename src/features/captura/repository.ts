@@ -7,7 +7,8 @@
 
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { getCredential } from '@/backend/captura/credentials/credential.service';
-import type { Credencial, ConfigTribunal } from './domain';
+import type { Credencial, ConfigTribunal, CustomTimeouts } from './domain';
+import type { TipoAcessoTribunal } from '@/backend/types/captura/trt-types';
 
 /**
  * Busca credencial por ID
@@ -72,11 +73,11 @@ export async function buscarConfigTribunal(tribunalId: string): Promise<ConfigTr
     return {
         tribunalId: data.tribunal_id,
         sistema: data.sistema,
-        tipoAcesso: data.tipo_acesso as any, // TipoAcessoTribunal
+        tipoAcesso: data.tipo_acesso as TipoAcessoTribunal,
         loginUrl: data.url_login_seam,
         baseUrl: data.url_base,
         apiUrl: data.url_api || '',
-        customTimeouts: data.custom_timeouts as any, // CustomTimeouts
+        customTimeouts: data.custom_timeouts as CustomTimeouts,
         // Metadados adicionais do tribunal
         tribunalCodigo: tribunal.codigo,
         tribunalNome: tribunal.nome,

@@ -7,7 +7,7 @@
  * Usa Postgres Changes (INSERT events) para sincronização automática.
  */
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import type { MensagemComUsuario } from '../types';
@@ -46,8 +46,9 @@ export function useChatSubscription({
   onNewMessage,
   enabled = true,
 }: UseChatSubscriptionProps): UseChatSubscriptionReturn {
-  const supabase = useRef(createClient()).current;
+  const [supabase] = useState(() => createClient());
   const channelRef = useRef<RealtimeChannel | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   const handleInsert = useCallback(
     async (payload: { new: { id: number; sala_id: number } }) => {
@@ -116,11 +117,13 @@ export function useChatSubscription({
         },
         handleInsert
       )
-      .subscribe((status) => {
+      .subscribe((status: string) => {
         if (status === 'SUBSCRIBED') {
           console.log(`[Chat] Subscrito à sala ${salaId}`);
+          setIsConnected(true);
         } else if (status === 'CHANNEL_ERROR') {
           console.error(`[Chat] Erro ao subscrever à sala ${salaId}`);
+          setIsConnected(false);
         }
       });
 
@@ -129,10 +132,11 @@ export function useChatSubscription({
       console.log(`[Chat] Desconectando da sala ${salaId}`);
       supabase.removeChannel(channel);
       channelRef.current = null;
+      setIsConnected(false);
     };
   }, [salaId, enabled, supabase, handleInsert]);
 
   return {
-    isConnected: channelRef.current !== null,
+    isConnected,
   };
 }

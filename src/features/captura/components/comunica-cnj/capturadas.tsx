@@ -59,7 +59,7 @@ export function ComunicaCNJCapturadas() {
   const [selectedPdfHash, setSelectedPdfHash] = useState<string | null>(null);
 
   // Buscar comunicações capturadas
-  const fetchComunicacoes = async () => {
+  const fetchComunicacoes = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -98,11 +98,11 @@ export function ComunicaCNJCapturadas() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [searchTerm, tribunalFilter, vinculacaoFilter]);
 
   useEffect(() => {
     fetchComunicacoes();
-  }, [searchTerm, tribunalFilter, vinculacaoFilter]);
+  }, [fetchComunicacoes]);
 
   // Extrair valores únicos para filtros
   const uniqueTribunais = useMemo(() => {
