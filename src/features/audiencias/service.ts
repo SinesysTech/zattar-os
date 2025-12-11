@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Result, err, appError, PaginatedResponse } from '@/core/common/types';
+import { Result, err, appError, PaginatedResponse } from '@/lib/types';
 import {
     Audiencia,
     createAudienciaSchema,

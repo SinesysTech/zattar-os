@@ -46,7 +46,7 @@ import { VersionHistoryDialog } from '@/features/documentos/components/version-h
 import { DocumentChat } from '@/features/documentos/components/document-chat';
 import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
 import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
-import { createClient } from '@/app/_lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 import { exportToPdf, exportTextToPdf, exportToDocx } from '@/features/documentos/utils';
 import type { Value } from '@/features/documentos/types';
 import { useDocument } from '@/features/documentos/hooks/use-document';

@@ -12,7 +12,7 @@
  * @module features/captura/services/capture-orchestrator
  */
 
-import { Result, ok, err, appError } from '@/core/common/types';
+import { Result, ok, err, appError } from '@/lib/types';
 import { getDriver } from '../drivers/factory';
 import { buscarCredencial, buscarConfigTribunal, salvarLogCaptura } from '../repository';
 import { criarProcesso } from '../../processos/service';

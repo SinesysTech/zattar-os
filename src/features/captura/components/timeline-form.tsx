@@ -6,7 +6,7 @@ import { CapturaButton } from './captura-button';
 import { CapturaResult, CapturaResultData } from './captura-result';
 import { capturarTimeline } from '@/features/captura/services/api-client';
 import type { TimelineParams, FiltroDocumentosTimeline } from '@/features/captura/types';
-import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
+import { useCredenciais } from '@/features/advogados/hooks/use-credenciais';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
@@ -56,7 +56,9 @@ export function TimelineForm({ onSuccess }: TimelineFormProps) {
   }>({ success: null });
 
   // Buscar credenciais do advogado selecionado
-  const { credenciais } = useCredenciais(advogadoId ?? undefined, { active: true });
+  const { credenciais } = useCredenciais(
+    advogadoId ? { advogado_id: advogadoId, active: true } : { advogado_id: 0, active: true }
+  );
 
   // Obter credencial selecionada (primeira da lista)
   const credencialSelecionada = useMemo(() => {

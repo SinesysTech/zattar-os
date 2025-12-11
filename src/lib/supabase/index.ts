@@ -4,3 +4,4 @@ export * from './service-client';
 export * from './server';
 export * from './set-user-context';
 export * from './database.types';
+export * from './db-client';

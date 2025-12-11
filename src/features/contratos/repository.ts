@@ -9,8 +9,8 @@
  * - NUNCA fazer validação de negócio aqui (apenas persistência)
  */
 
-import { createDbClient } from '@/core/common/db';
-import { Result, ok, err, appError, PaginatedResponse } from '@/core/common/types';
+import { createDbClient } from '@/lib/supabase';
+import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
 import type {
   Contrato,
   CreateContratoInput,

@@ -8,7 +8,7 @@ import type {
   ListarComunicacoesParams,
 } from '../comunica-cnj/domain';
 import { SincronizacaoResult, ConsultaResult, ComunicacaoCNJ } from '../comunica-cnj/domain';
-import { PaginatedResponse } from '@/core/common/types';
+import { PaginatedResponse } from '@/lib/types';
 
 // =============================================================================
 // ACTIONS

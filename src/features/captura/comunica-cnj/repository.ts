@@ -4,7 +4,7 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { Result, ok, err, appError, PaginatedResponse } from '@/core/common/types';
+import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
 import type {
   ComunicacaoCNJ,
   InserirComunicacaoParams,

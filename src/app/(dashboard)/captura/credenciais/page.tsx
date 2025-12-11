@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { DataTable } from '@/components/ui/data-table';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
+import { actionAtualizarCredencial } from '@/features/advogados/actions/credenciais-actions';
 import { criarColunasCredenciais } from '../components/credenciais/credenciais-columns';
 import { AdvogadoViewDialog } from '../components/credenciais/advogado-view-dialog';
 import { CredenciaisDialog } from '../components/credenciais/credenciais-dialog';
@@ -27,7 +27,49 @@ import { toast } from 'sonner';
 import type { Credencial } from '@/app/_lib/types/credenciais';
 
 export default function CredenciaisPage() {
-  const { credenciais, isLoading, error, refetch, toggleStatus } = useCredenciais();
+  const [credenciais, setCredenciais] = useState<Credencial[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const buscarCredenciais = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/captura/credenciais');
+      if (!response.ok) {
+        throw new Error('Erro ao buscar credenciais');
+      }
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error('Erro ao buscar credenciais');
+      }
+      setCredenciais(data.data.credenciais);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar credenciais';
+      setError(errorMessage);
+      setCredenciais([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    buscarCredenciais();
+  }, [buscarCredenciais]);
+
+  const toggleStatus = useCallback(
+    async (advogadoId: number, credencialId: number, active: boolean) => {
+      const result = await actionAtualizarCredencial(credencialId, { active });
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao atualizar credencial');
+      }
+      await buscarCredenciais();
+    },
+    [buscarCredenciais]
+  );
+
+  const refetch = buscarCredenciais;
 
   // Estados de busca e filtros
   const [busca, setBusca] = useState('');
