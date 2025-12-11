@@ -2,12 +2,12 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { getCredentialComplete } from '@/backend/captura/credentials/credential.service';
-import { audienciasCapture } from '@/backend/captura/services/trt/audiencias.service';
-import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
-import { ordenarCredenciaisPorTRT } from '@/backend/captura/utils/ordenar-credenciais';
-import { registrarCapturaRawLog } from '@/backend/captura/services/persistence/captura-raw-log.service';
+import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
+import { audienciasCapture } from '@/features/captura/services/trt/audiencias.service';
+import { getTribunalConfig } from '@/features/captura/services/trt/config';
+import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/features/captura/services/captura-log.service';
+import { ordenarCredenciaisPorTRT } from '@/features/captura/utils/ordenar-credenciais';
+import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
 
 interface AudienciasParams {
   advogado_id: number;

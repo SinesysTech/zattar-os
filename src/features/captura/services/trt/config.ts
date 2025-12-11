@@ -9,7 +9,7 @@ import type {
   ConfigTRT,
   TipoAcessoTribunal,
   TribunalConfigDb,
-} from '@/backend/types/captura/trt-types';
+} from '../../types/trt-types';
 import {
   getConfigByTRTAndGrau,
   listAllConfigs,
