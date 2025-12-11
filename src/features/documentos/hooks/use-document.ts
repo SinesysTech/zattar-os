@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionBuscarDocumento, actionAtualizarDocumento } from '../actions/documentos-actions';
 import type { DocumentoComUsuario, AtualizarDocumentoParams } from '../types';
 
@@ -9,15 +9,21 @@ export function useDocument(documentoId: number) {
   const [error, setError] = useState<string | null>(null);
 
   const loadDocument = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    startTransition(() => {
+      setLoading(true);
+      setError(null);
+    });
+    
     const result = await actionBuscarDocumento(documentoId);
-    if (result.success) {
-      setDocumento(result.data);
-    } else {
-      setError(result.error);
-    }
-    setLoading(false);
+    
+    startTransition(() => {
+      if (result.success) {
+        setDocumento(result.data);
+      } else {
+        setError(result.error);
+      }
+      setLoading(false);
+    });
   }, [documentoId]);
 
   useEffect(() => {
