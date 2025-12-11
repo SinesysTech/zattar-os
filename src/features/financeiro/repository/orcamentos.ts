@@ -13,7 +13,6 @@ import type {
     ListarOrcamentosResponse,
     CriarOrcamentoDTO,
     AtualizarOrcamentoDTO,
-    CriarOrcamentoItemDTO,
     AnaliseOrcamentaria,
     AnaliseOrcamentariaItem,
     AlertaDesvio,
@@ -59,26 +58,6 @@ type OrcamentoRow = {
     orcamento_itens?: OrcamentoItemRow[];
 };
 
-type OrcamentoRecordInput = {
-    nome?: string;
-    descricao?: string | null;
-    ano?: number;
-    periodo?: Orcamento['periodo'];
-    data_inicio?: string;
-    data_fim?: string;
-    observacoes?: string | null;
-};
-
-type OrcamentoStatusUpdate = {
-    status?: string;
-    updated_at?: string;
-    aprovado_por?: string;
-    aprovado_em?: string;
-    encerrado_por?: string;
-    encerrado_em?: string;
-    observacoes?: string;
-};
-
 // ============================================================================
 // Mappers
 // ============================================================================
@@ -87,41 +66,41 @@ function mapRecordToOrcamento(record: OrcamentoRow): Orcamento {
     return {
         id: record.id,
         nome: record.nome,
-        descricao: record.descricao,
+        descricao: record.descricao ?? undefined,
         ano: record.ano,
         periodo: record.periodo,
         dataInicio: record.data_inicio,
         dataFim: record.data_fim,
         status: record.status,
         valorTotal: record.valor_total || 0,
-        observacoes: record.observacoes,
-        aprovadoPor: record.aprovado_por,
-        aprovadoEm: record.aprovado_em,
-        encerradoPor: record.encerrado_por,
-        encerradoEm: record.encerrado_em,
+        observacoes: record.observacoes ?? undefined,
+        aprovadoPor: record.aprovado_por ?? undefined,
+        aprovadoEm: record.aprovado_em ?? undefined,
+        encerradoPor: record.encerrado_por ?? undefined,
+        encerradoEm: record.encerrado_em ?? undefined,
         createdAt: record.created_at,
         updatedAt: record.updated_at,
-        createdBy: record.created_by
+        createdBy: record.created_by ?? ''
     };
 }
 
-function mapRecordToItem(record: any): OrcamentoItem {
+function mapRecordToItem(record: OrcamentoItemRow): OrcamentoItem {
     return {
         id: record.id,
         orcamentoId: record.orcamento_id,
-        contaContabilId: record.conta_contabil_id,
-        centroCustoId: record.centro_custo_id,
-        descricao: record.descricao,
+        contaContabilId: record.conta_contabil_id ?? 0,
+        centroCustoId: record.centro_custo_id ?? undefined,
+        descricao: record.descricao ?? '',
         valorPrevisto: record.valor_previsto || 0,
         valorRealizado: record.valor_realizado || 0,
-        observacoes: record.observacoes,
+        observacoes: record.observacoes ?? undefined,
         createdAt: record.created_at,
         updatedAt: record.updated_at
     };
 }
 
-function mapOrcamentoToRecord(dto: Partial<CriarOrcamentoDTO | AtualizarOrcamentoDTO>): Record<string, any> {
-    const record: Record<string, any> = {};
+function mapOrcamentoToRecord(dto: Partial<CriarOrcamentoDTO | AtualizarOrcamentoDTO>): Record<string, unknown> {
+    const record: Record<string, unknown> = {};
     if ('nome' in dto && dto.nome !== undefined) record.nome = dto.nome;
     if ('descricao' in dto && dto.descricao !== undefined) record.descricao = dto.descricao;
     if ('ano' in dto && dto.ano !== undefined) record.ano = dto.ano;
@@ -217,7 +196,7 @@ export const OrcamentosRepository = {
 
         if (error || !data) return null;
 
-        const itens = (data.orcamento_itens || []).map((item: any) => {
+        const itens = (data.orcamento_itens || []).map((item: OrcamentoItemRow) => {
             const baseItem = mapRecordToItem(item);
             const desvio = baseItem.valorRealizado - baseItem.valorPrevisto;
             const desvioPercentual = baseItem.valorPrevisto > 0
@@ -314,7 +293,7 @@ export const OrcamentosRepository = {
     ): Promise<Orcamento> {
         const supabase = createServiceClient();
 
-        const updates: Record<string, any> = {
+        const updates: Record<string, unknown> = {
             status,
             updated_at: new Date().toISOString()
         };

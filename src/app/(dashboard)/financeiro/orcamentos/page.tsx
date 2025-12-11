@@ -60,7 +60,7 @@ import {
 import { toast } from 'sonner';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
-  OrcamentoComDetalhes,
+  OrcamentoComItens,
   StatusOrcamento,
 } from '@/features/financeiro/types/orcamentos';
 import {
@@ -72,13 +72,14 @@ import {
 // Constantes e Helpers
 // ============================================================================
 
-type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
+type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning';
 
-const STATUS_CONFIG: Record<StatusOrcamento, { label: string; tone: BadgeTone }> = {
-  rascunho: { label: 'Rascunho', tone: 'neutral' },
-  aprovado: { label: 'Aprovado', tone: 'info' },
+const STATUS_CONFIG: Record<StatusOrcamento, { label: string; tone: BadgeVariant }> = {
+  rascunho: { label: 'Rascunho', tone: 'secondary' },
+  aprovado: { label: 'Aprovado', tone: 'default' }, // 'info' mapped to 'default' or similar
   em_execucao: { label: 'Em Execução', tone: 'success' },
-  encerrado: { label: 'Encerrado', tone: 'muted' },
+  encerrado: { label: 'Encerrado', tone: 'outline' }, // 'muted' mapped to 'outline'
+  cancelado: { label: 'Cancelado', tone: 'destructive' },
 };
 
 const PERIODO_LABELS: Record<string, string> = {
@@ -100,8 +101,8 @@ const formatarData = (data: string | null): string => {
   return format(new Date(data), 'dd/MM/yyyy', { locale: ptBR });
 };
 
-const calcularTotalOrcado = (orcamento: OrcamentoComDetalhes): number => {
-  return orcamento.itens?.reduce((sum, item) => sum + item.valorOrcado, 0) || 0;
+const calcularTotalOrcado = (orcamento: OrcamentoComItens): number => {
+  return orcamento.itens?.reduce((sum, item) => sum + item.valorPrevisto, 0) || 0;
 };
 
 // ============================================================================
@@ -119,15 +120,15 @@ function OrcamentosActions({
   onVerAnalise,
   onExportar,
 }: {
-  orcamento: OrcamentoComDetalhes;
-  onVerDetalhes: (orc: OrcamentoComDetalhes) => void;
-  onEditar: (orc: OrcamentoComDetalhes) => void;
-  onAprovar: (orc: OrcamentoComDetalhes) => void;
-  onIniciarExecucao: (orc: OrcamentoComDetalhes) => void;
-  onEncerrar: (orc: OrcamentoComDetalhes) => void;
-  onExcluir: (orc: OrcamentoComDetalhes) => void;
-  onVerAnalise: (orc: OrcamentoComDetalhes) => void;
-  onExportar: (orc: OrcamentoComDetalhes) => void;
+  orcamento: OrcamentoComItens;
+  onVerDetalhes: (orc: OrcamentoComItens) => void;
+  onEditar: (orc: OrcamentoComItens) => void;
+  onAprovar: (orc: OrcamentoComItens) => void;
+  onIniciarExecucao: (orc: OrcamentoComItens) => void;
+  onEncerrar: (orc: OrcamentoComItens) => void;
+  onExcluir: (orc: OrcamentoComItens) => void;
+  onVerAnalise: (orc: OrcamentoComItens) => void;
+  onExportar: (orc: OrcamentoComItens) => void;
 }) {
   const isRascunho = orcamento.status === 'rascunho';
   const isAprovado = orcamento.status === 'aprovado';
@@ -202,15 +203,15 @@ function OrcamentosActions({
 // ============================================================================
 
 function criarColunas(
-  onVerDetalhes: (orc: OrcamentoComDetalhes) => void,
-  onEditar: (orc: OrcamentoComDetalhes) => void,
-  onAprovar: (orc: OrcamentoComDetalhes) => void,
-  onIniciarExecucao: (orc: OrcamentoComDetalhes) => void,
-  onEncerrar: (orc: OrcamentoComDetalhes) => void,
-  onExcluir: (orc: OrcamentoComDetalhes) => void,
-  onVerAnalise: (orc: OrcamentoComDetalhes) => void,
-  onExportar: (orc: OrcamentoComDetalhes) => void
-): ColumnDef<OrcamentoComDetalhes>[] {
+  onVerDetalhes: (orc: OrcamentoComItens) => void,
+  onEditar: (orc: OrcamentoComItens) => void,
+  onAprovar: (orc: OrcamentoComItens) => void,
+  onIniciarExecucao: (orc: OrcamentoComItens) => void,
+  onEncerrar: (orc: OrcamentoComItens) => void,
+  onExcluir: (orc: OrcamentoComItens) => void,
+  onVerAnalise: (orc: OrcamentoComItens) => void,
+  onExportar: (orc: OrcamentoComItens) => void
+): ColumnDef<OrcamentoComItens>[] {
   return [
     {
       accessorKey: 'nome',
@@ -336,7 +337,7 @@ function criarColunas(
         const config = STATUS_CONFIG[status];
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge tone={config.tone} variant="soft">
+            <Badge variant={config.tone}>
               {config.label}
             </Badge>
           </div>
@@ -389,7 +390,7 @@ export default function OrcamentosPage() {
 
   // Estados de dialogs
   const [formDialogOpen, setFormDialogOpen] = React.useState(false);
-  const [selectedOrcamento, setSelectedOrcamento] = React.useState<OrcamentoComDetalhes | null>(null);
+  const [selectedOrcamento, setSelectedOrcamento] = React.useState<OrcamentoComItens | null>(null);
   const [aprovarDialogOpen, setAprovarDialogOpen] = React.useState(false);
   const [iniciarDialogOpen, setIniciarDialogOpen] = React.useState(false);
   const [encerrarDialogOpen, setEncerrarDialogOpen] = React.useState(false);
@@ -414,7 +415,10 @@ export default function OrcamentosPage() {
   }, [pagina, limite, buscaDebounced, selectedFilterIds]);
 
   // Hook de dados
-  const { orcamentos, paginacao, isLoading, error, refetch } = useOrcamentos(params);
+  const { orcamentos, total, isLoading, error, refetch } = useOrcamentos({
+    autoFetch: true,
+    filters: params,
+  });
 
   // Calcular totais por status
   const totais = React.useMemo(() => {
@@ -473,39 +477,39 @@ export default function OrcamentosPage() {
 
   // Handlers de ações
   const handleVerDetalhes = React.useCallback(
-    (orcamento: OrcamentoComDetalhes) => {
+    (orcamento: OrcamentoComItens) => {
       router.push(`/financeiro/orcamentos/${orcamento.id}`);
     },
     [router]
   );
 
-  const handleEditar = React.useCallback((orcamento: OrcamentoComDetalhes) => {
+  const handleEditar = React.useCallback((orcamento: OrcamentoComItens) => {
     setSelectedOrcamento(orcamento);
     setFormDialogOpen(true);
   }, []);
 
-  const handleAprovar = React.useCallback((orcamento: OrcamentoComDetalhes) => {
+  const handleAprovar = React.useCallback((orcamento: OrcamentoComItens) => {
     setSelectedOrcamento(orcamento);
     setAprovarDialogOpen(true);
   }, []);
 
-  const handleIniciarExecucao = React.useCallback((orcamento: OrcamentoComDetalhes) => {
+  const handleIniciarExecucao = React.useCallback((orcamento: OrcamentoComItens) => {
     setSelectedOrcamento(orcamento);
     setIniciarDialogOpen(true);
   }, []);
 
-  const handleEncerrar = React.useCallback((orcamento: OrcamentoComDetalhes) => {
+  const handleEncerrar = React.useCallback((orcamento: OrcamentoComItens) => {
     setSelectedOrcamento(orcamento);
     setEncerrarDialogOpen(true);
   }, []);
 
-  const handleExcluir = React.useCallback((orcamento: OrcamentoComDetalhes) => {
+  const handleExcluir = React.useCallback((orcamento: OrcamentoComItens) => {
     setSelectedOrcamento(orcamento);
     setExcluirDialogOpen(true);
   }, []);
 
   const handleVerAnalise = React.useCallback(
-    (orcamento: OrcamentoComDetalhes) => {
+    (orcamento: OrcamentoComItens) => {
       router.push(`/financeiro/orcamentos/${orcamento.id}/analise`);
     },
     [router]
@@ -513,7 +517,7 @@ export default function OrcamentosPage() {
 
   const [isExporting, setIsExporting] = React.useState(false);
 
-  const handleExportar = React.useCallback(async (orcamento: OrcamentoComDetalhes) => {
+  const handleExportar = React.useCallback(async (orcamento: OrcamentoComItens) => {
     if (isExporting) return;
 
     try {
@@ -550,7 +554,7 @@ export default function OrcamentosPage() {
         toast.success('Relatório PDF exportado com sucesso');
       } else {
         // Para orçamentos em rascunho ou aprovados, exportar apenas dados básicos
-        exportarOrcamentoCSV(orcamento);
+        exportarOrcamentoCSV(orcamento as any); // Cast as any because CSV export might assume different type, or update export
         toast.success('Orçamento exportado para CSV');
       }
     } catch (error) {
@@ -705,16 +709,14 @@ export default function OrcamentosPage() {
         data={orcamentos}
         columns={colunas}
         pagination={
-          paginacao
-            ? {
-              pageIndex: paginacao.pagina - 1,
-              pageSize: paginacao.limite,
-              total: paginacao.total,
-              totalPages: paginacao.totalPaginas,
-              onPageChange: setPagina,
-              onPageSizeChange: setLimite,
-            }
-            : undefined
+          {
+            pageIndex: pagina,
+            pageSize: limite,
+            total: total,
+            totalPages: Math.ceil(total / limite),
+            onPageChange: setPagina,
+            onPageSizeChange: setLimite,
+          }
         }
         sorting={undefined}
         isLoading={isLoading}

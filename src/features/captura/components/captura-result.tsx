@@ -3,10 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
-interface CapturaResultProps {
-  success: boolean | null;
-  error?: string;
-  data?: {
+export interface CapturaResultData {
     total?: number;
     processos?: unknown[];
     audiencias?: unknown[];
@@ -21,7 +18,33 @@ interface CapturaResultProps {
     filtroPrazo?: string;
     credenciais_processadas?: number;
     message?: string;
-  };
+    total_processos?: number;
+    total_partes?: number;
+    clientes?: number;
+    partes_contrarias?: number;
+    terceiros?: number;
+    representantes?: number;
+    vinculos?: number;
+    erros?: Array<{ processo_id: number; numero_processo: string; erro: string }>;
+    duracao_ms?: number;
+    timeline?: unknown[];
+    totalItens?: number;
+    totalDocumentos?: number;
+    totalMovimentos?: number;
+    documentosBaixados?: Array<{
+      detalhes: unknown;
+      pdfTamanho?: number;
+      erro?: string;
+    }>;
+    totalBaixadosSucesso?: number;
+    totalErros?: number;
+    mongoId?: string;
+  }
+
+interface CapturaResultProps {
+  success: boolean | null;
+  error?: string;
+  data?: CapturaResultData;
   captureId?: number | null;
 }
 

@@ -8,7 +8,9 @@ import {
   ListarAudienciasParams,
   StatusAudiencia,
   updateAudienciaSchema,
+  Audiencia,
 } from './domain';
+import { PaginatedResponse } from '@/core/common/types';
 
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
@@ -127,13 +129,10 @@ export async function actionAtualizarStatusAudiencia(
   status: StatusAudiencia,
   statusDescricao?: string
 ): Promise<ActionResult> {
-  const userId = undefined; // TODO: Get from auth context
-
   const result = await service.atualizarStatusAudiencia(
     id,
     status,
-    statusDescricao,
-    userId
+    statusDescricao
   );
 
   if (!result.success) {
@@ -155,7 +154,7 @@ export async function actionAtualizarStatusAudiencia(
 
 export async function actionListarAudiencias(
   params: ListarAudienciasParams
-): Promise<ActionResult<any>> {
+): Promise<ActionResult<PaginatedResponse<Audiencia>>> {
   const result = await service.listarAudiencias(params);
 
   if (!result.success) {

@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
-import { CapturaResult } from './captura-result';
+import { CapturaResult, CapturaResultData } from './captura-result';
 import { capturarTimeline } from '@/features/captura/services/api-client';
 import type { TimelineParams, FiltroDocumentosTimeline } from '@/features/captura/types';
 import { useCredenciais } from '@/app/_lib/hooks/use-credenciais';
@@ -52,7 +52,7 @@ export function TimelineForm({ onSuccess }: TimelineFormProps) {
   const [result, setResult] = useState<{
     success: boolean | null;
     error?: string;
-    data?: unknown;
+    data?: CapturaResultData;
   }>({ success: null });
 
   // Buscar credenciais do advogado selecionado
@@ -316,7 +316,7 @@ export function TimelineForm({ onSuccess }: TimelineFormProps) {
       <CapturaResult
         success={result.success}
         error={result.error}
-        data={result.data as any}
+        data={result.data}
       />
     </div>
   );

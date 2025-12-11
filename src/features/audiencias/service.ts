@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Result, ok, err, appError, PaginatedResponse } from '@/core/common/types';
+import { Result, err, appError, PaginatedResponse } from '@/core/common/types';
 import {
     Audiencia,
     createAudienciaSchema,
@@ -36,9 +36,10 @@ export async function criarAudiencia(input: z.infer<typeof createAudienciaSchema
 
         const result = await repo.saveAudiencia(validation.data);
         return result;
-    } catch (e: any) {
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
         console.error(e);
-        return err(appError('INTERNAL_ERROR', 'Erro ao criar audiência.', { originalError: e.message }));
+        return err(appError('INTERNAL_ERROR', 'Erro ao criar audiência.', { originalError: message }));
     }
 }
 
@@ -95,13 +96,14 @@ export async function atualizarAudiencia(id: number, input: z.infer<typeof updat
         const result = await repo.updateAudiencia(id, validation.data, audienciaExistenteResult.data);
         return result;
 
-    } catch (e: any) {
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
         console.error(e);
-        return err(appError('INTERNAL_ERROR', 'Erro ao atualizar audiência.', { originalError: e.message }));
+        return err(appError('INTERNAL_ERROR', 'Erro ao atualizar audiência.', { originalError: message }));
     }
 }
 
-export async function atualizarStatusAudiencia(id: number, status: StatusAudiencia, statusDescricao?: string, userId?: number): Promise<Result<Audiencia>> {
+export async function atualizarStatusAudiencia(id: number, status: StatusAudiencia, statusDescricao?: string): Promise<Result<Audiencia>> {
     if (!Object.values(StatusAudiencia).includes(status)) {
         return err(appError('VALIDATION_ERROR', 'Status inválido.'));
     }

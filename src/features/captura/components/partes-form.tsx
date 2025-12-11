@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { CapturaFormBase, validarCamposCaptura } from './captura-form-base';
 import { CapturaButton } from './captura-button';
-import { CapturaResult } from './captura-result';
+import { CapturaResult, CapturaResultData } from './captura-result';
 import { capturarPartes } from '@/features/captura/services/api-client';
 import type { CapturaPartesParams } from '@/features/captura/types';
 import type { Credencial } from '@/app/_lib/types/credenciais';
@@ -36,7 +36,7 @@ export function PartesForm({ onSuccess }: PartesFormProps) {
   const [result, setResult] = useState<{
     success: boolean | null;
     error?: string;
-    data?: unknown;
+    data?: CapturaResultData;
     capture_id?: number;
   }>({ success: null });
 
@@ -205,7 +205,7 @@ export function PartesForm({ onSuccess }: PartesFormProps) {
       <CapturaResult
         success={result.success}
         error={result.error}
-        data={result.data as any}
+        data={result.data}
         captureId={result.capture_id}
       />
     </div>

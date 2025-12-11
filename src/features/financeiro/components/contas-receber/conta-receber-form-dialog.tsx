@@ -43,6 +43,7 @@ import {
   actionCriarLancamento,
   actionAtualizarLancamento,
 } from '../../actions/lancamentos';
+import type { Contrato } from '@/features/contratos/types';
 import type {
   FormaRecebimentoContaReceber,
   FrequenciaRecorrencia,
@@ -168,13 +169,6 @@ interface Cliente {
   id: number;
   razaoSocial: string;
   nomeFantasia?: string;
-}
-
-interface Contrato {
-  id: number;
-  numero: string;
-  descricao?: string;
-  clienteId?: number;
 }
 
 interface ContaReceberFormDialogProps {
@@ -513,7 +507,7 @@ export function ContaReceberFormDialog({
                   <SelectContent>
                     {contratosDisponiveis.map((ct) => (
                       <SelectItem key={ct.id} value={ct.id.toString()}>
-                        {ct.numero} {ct.descricao && `- ${ct.descricao}`}
+                        Contrato #{ct.id} - {ct.tipoContrato}{ct.observacoes && ` - ${ct.observacoes.substring(0, 30)}...`}
                       </SelectItem>
                     ))}
                   </SelectContent>

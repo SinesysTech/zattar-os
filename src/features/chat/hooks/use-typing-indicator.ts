@@ -56,7 +56,7 @@ export function useTypingIndicator(
   currentUserId: number,
   currentUserName: string
 ): UseTypingIndicatorReturn {
-  const supabase = useRef(createClient()).current;
+  const [supabase] = useState(() => createClient());
   const channelRef = useRef<RealtimeChannel | null>(null);
   const [typingUsers, setTypingUsers] = useState<Map<number, TypingUser>>(new Map());
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
