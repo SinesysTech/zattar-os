@@ -11,7 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Toggle } from '@/components/ui/toggle';
 import { Separator } from '@/components/ui/separator';
 import { useCalendar } from '@/components/calendar/calendar-context';
-import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
+import type { TipoExpediente } from '@/features/tipos-expedientes';
 
 interface ExpedientesFiltersProps {
 	tiposExpedientes: TipoExpediente[];
@@ -255,7 +255,7 @@ export function ExpedientesFilters({
 								onClick={() => handleTipoSelect(tipo.id)}
 								className="w-full flex items-center justify-between px-2 py-1.5 text-sm rounded-md hover:bg-accent transition-colors"
 							>
-								<span className="truncate">{tipo.tipo_expediente}</span>
+								<span className="truncate">{tipo.tipoExpediente}</span>
 								{selectedFilters.tipoExpedienteId === tipo.id && (
 									<CheckIcon className="size-4 text-primary shrink-0" />
 								)}
@@ -302,11 +302,10 @@ export function ExpedientesFilters({
 							<button
 								onMouseEnter={() => handleCategoryEnter('status')}
 								onMouseLeave={handleCategoryLeave}
-								className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors ${
-									hoveredCategory === 'status'
+								className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors ${hoveredCategory === 'status'
 										? 'bg-accent'
 										: 'hover:bg-accent/50'
-								} ${selectedFilters.status ? 'font-medium' : ''}`}
+									} ${selectedFilters.status ? 'font-medium' : ''}`}
 							>
 								<span>Status</span>
 								{selectedFilters.status && (
@@ -318,11 +317,10 @@ export function ExpedientesFilters({
 							<button
 								onMouseEnter={() => handleCategoryEnter('trt')}
 								onMouseLeave={handleCategoryLeave}
-								className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors ${
-									hoveredCategory === 'trt'
+								className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors ${hoveredCategory === 'trt'
 										? 'bg-accent'
 										: 'hover:bg-accent/50'
-								} ${selectedFilters.trt ? 'font-medium' : ''}`}
+									} ${selectedFilters.trt ? 'font-medium' : ''}`}
 							>
 								<span>Tribunal (TRT)</span>
 								{selectedFilters.trt && (
@@ -334,11 +332,10 @@ export function ExpedientesFilters({
 							<button
 								onMouseEnter={() => handleCategoryEnter('grau')}
 								onMouseLeave={handleCategoryLeave}
-								className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors ${
-									hoveredCategory === 'grau'
+								className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors ${hoveredCategory === 'grau'
 										? 'bg-accent'
 										: 'hover:bg-accent/50'
-								} ${selectedFilters.grau ? 'font-medium' : ''}`}
+									} ${selectedFilters.grau ? 'font-medium' : ''}`}
 							>
 								<span>Grau</span>
 								{selectedFilters.grau && (
@@ -350,11 +347,10 @@ export function ExpedientesFilters({
 							<button
 								onMouseEnter={() => handleCategoryEnter('tipo')}
 								onMouseLeave={handleCategoryLeave}
-								className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors ${
-									hoveredCategory === 'tipo'
+								className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors ${hoveredCategory === 'tipo'
 										? 'bg-accent'
 										: 'hover:bg-accent/50'
-								} ${selectedFilters.tipoExpedienteId !== undefined ? 'font-medium' : ''}`}
+									} ${selectedFilters.tipoExpedienteId !== undefined ? 'font-medium' : ''}`}
 							>
 								<span>Tipo de Expediente</span>
 								{selectedFilters.tipoExpedienteId !== undefined && (

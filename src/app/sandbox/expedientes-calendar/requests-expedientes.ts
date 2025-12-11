@@ -10,8 +10,8 @@ import { COLORS } from '@/components/calendar/constants';
 import type { ListarPendentesParams } from '@/features/expedientes/types';
 import { obterPendentes } from '@/features/expedientes/service';
 import { obterUsuarios } from '@/backend/usuarios/services/usuarios/listar-usuarios.service';
-import { listarTiposExpedientes } from '@/backend/tipos-expedientes/services/tipos-expedientes/listar-tipos-expedientes.service';
-import type { ListarTiposExpedientesParams } from '@/backend/types/tipos-expedientes/types';
+import { listar } from '@/features/tipos-expedientes';
+import type { ListarTiposExpedientesParams } from '@/features/tipos-expedientes';
 
 /**
  * Busca expedientes usando serviços do backend e converte para eventos do calendário
@@ -67,11 +67,11 @@ export async function getExpedientesEvents(
 		// Buscar usuários e tipos de expedientes em paralelo
 		const [usuariosResult, tiposResult] = await Promise.all([
 			obterUsuarios({ ativo: true, limite: 100 }),
-			listarTiposExpedientes({ limite: 100 } as ListarTiposExpedientesParams),
+			listar({ limite: 100 } as ListarTiposExpedientesParams),
 		]);
 
 		const usuarios = usuariosResult.usuarios || [];
-		const tiposExpedientes = tiposResult.tipos_expedientes || [];
+		const tiposExpedientes = tiposResult.data || [];
 
 		// Converter expedientes para eventos
 		return expedientesToEvents(

@@ -34,7 +34,7 @@ import { useCalendar } from '@/components/calendar/calendar-context';
 import { formatTime } from '@/components/calendar/helpers';
 import type { IEvent } from '@/components/calendar/interfaces';
 import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
+import type { TipoExpediente } from '@/features/tipos-expedientes';
 
 interface ExpedienteEventDialogProps {
 	event: IEvent;
@@ -82,7 +82,7 @@ export function ExpedienteEventDialog({
 			// Atualizar tipo de expediente (só se mudou)
 			const tipoIdAtual = metadata.tipoId;
 			const tipoIdNovo = tipoSelecionado === 'null' ? null : parseInt(tipoSelecionado, 10);
-			
+
 			if (tipoIdAtual !== tipoIdNovo) {
 				const responseTipo = await fetch(
 					`/api/pendentes-manifestacao/${event.id}/tipo-descricao`,
@@ -128,15 +128,15 @@ export function ExpedienteEventDialog({
 				...event,
 				user: responsavel
 					? {
-							id: responsavel.id.toString(),
-							name: responsavel.nomeExibicao,
-							picturePath: null,
-						}
+						id: responsavel.id.toString(),
+						name: responsavel.nomeExibicao,
+						picturePath: null,
+					}
 					: {
-							id: '0',
-							name: 'Sem responsável',
-							picturePath: null,
-						},
+						id: '0',
+						name: 'Sem responsável',
+						picturePath: null,
+					},
 			};
 
 			updateEvent(updatedEvent);
@@ -254,8 +254,8 @@ export function ExpedienteEventDialog({
 										<p className="text-sm text-muted-foreground">
 											{metadata.tipoId
 												? tiposExpedientes.find(
-														(t) => t.id === metadata.tipoId
-													)?.tipo_expediente || 'Sem tipo'
+													(t) => t.id === metadata.tipoId
+												)?.tipoExpediente || 'Sem tipo'
 												: 'Sem tipo'}
 										</p>
 									) : (
@@ -274,7 +274,7 @@ export function ExpedienteEventDialog({
 														key={tipo.id}
 														value={tipo.id.toString()}
 													>
-														{tipo.tipo_expediente}
+														{tipo.tipoExpediente}
 													</SelectItem>
 												))}
 											</SelectContent>
