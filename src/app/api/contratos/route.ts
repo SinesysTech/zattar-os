@@ -2,7 +2,7 @@
 // GET: Listar contratos | POST: Criar contrato
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { obterContratos } from '@/backend/contratos/services/contratos/listar-contratos.service';
 import { cadastrarContrato } from '@/backend/contratos/services/contratos/criar-contrato.service';
 import type {

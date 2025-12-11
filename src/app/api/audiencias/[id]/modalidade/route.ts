@@ -1,10 +1,10 @@
 // Rota de API para atualizar modalidade da audiência manualmente
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/auth/require-permission';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { deletePattern } from '@/backend/utils/redis/cache-utils';
-import { CACHE_PREFIXES } from '@/backend/utils/redis/cache-utils';
+import { requirePermission } from '@/lib/auth/require-permission';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import { deletePattern } from '@/lib/redis/cache-utils';
+import { CACHE_PREFIXES } from '@/lib/redis/cache-utils';
 import type { ModalidadeAudiencia } from '@/backend/types/audiencias/types';
 
 const MODALIDADES_VALIDAS: ModalidadeAudiencia[] = ['virtual', 'presencial', 'hibrida'];

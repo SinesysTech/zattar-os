@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { sincronizarComunicacoes } from '@/core/comunica-cnj';
 import { createDbClient } from '@/core/common/db';
 

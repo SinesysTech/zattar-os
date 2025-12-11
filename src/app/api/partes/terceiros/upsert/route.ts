@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { upsertTerceiroPorIdPessoa } from '@/backend/partes/services/terceiros-persistence.service';
 import type { UpsertTerceiroPorIdPessoaParams } from '@/backend/types/partes/terceiros-types';
 

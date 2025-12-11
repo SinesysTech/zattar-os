@@ -120,7 +120,7 @@ export async function criarTemplateAction(
 
 export async function processarTemplateAction(
   templateId: number,
-  data: Record<string, any>,
+  data: Record<string, unknown>,
 ) {
   try {
     const { data: userData, error: userError } = await supabase.auth.getUser();
@@ -153,7 +153,7 @@ export async function processarTemplateAction(
 
 export async function gerarPdfDeMarkdownAction(
   markdownContent: string,
-  data: Record<string, any>,
+  data: Record<string, unknown>,
 ) {
   try {
     const { data: userData, error: userError } = await supabase.auth.getUser();

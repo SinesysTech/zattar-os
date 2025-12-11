@@ -14,7 +14,7 @@ import {
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
-import { DollarSign, Users, TrendingUp, TrendingDown, FileText } from 'lucide-react';
+import { DollarSign, Users, FileText } from 'lucide-react';
 
 import { MetricCard } from '@/features/dashboard/components/metric-card';
 import {

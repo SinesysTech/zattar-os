@@ -1,12 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { FileText, Loader2, Info, Edit } from 'lucide-react';
+import React, { useState } from 'react';
+import { FileText, Loader2, Info } from 'lucide-react';
 import { toast } from 'sonner';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
-import rehypeSanitize from 'rehype-sanitize';
 import { MarkdownRichTextEditorDialog } from './MarkdownRichTextEditorDialog.stub';
 
 import { Button } from '@/components/ui/button';

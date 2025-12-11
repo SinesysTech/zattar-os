@@ -2,7 +2,7 @@
 // GET: Listar advogados | POST: Criar advogado
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { listarAdvogados } from '@/backend/advogados/services/advogados/listar-advogados.service';
 import { criarAdvogado } from '@/backend/advogados/services/advogados/criar-advogado.service';
 import type { ListarAdvogadosParams, CriarAdvogadoParams } from '@/backend/types/advogados/types';

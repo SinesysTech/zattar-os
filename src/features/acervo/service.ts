@@ -18,7 +18,6 @@ import type {
   ListarAcervoUnificadoResult,
   ProcessosClienteCpfResponse,
   ProcessoRespostaIA,
-  ClienteRespostaIA,
   ResumoProcessosIA,
   ProcessoClienteCpfRow,
 } from './types';
@@ -27,10 +26,9 @@ import {
   agruparProcessosPorNumero,
   formatarTimeline,
   formatarProcessoParaIA,
-  type ProcessoAgrupado,
 } from './utils';
-import { invalidateAcervoCache } from '@/backend/utils/redis/invalidation';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { invalidateAcervoCache } from '@/lib/redis/invalidation';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { obterTimelinePorMongoId } from '@/backend/captura/services/timeline/timeline-persistence.service';
 import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
 

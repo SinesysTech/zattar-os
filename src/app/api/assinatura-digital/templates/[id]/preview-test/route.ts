@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/auth/require-permission';
+import { requirePermission } from '@/lib/auth/require-permission';
 import { getTemplate } from '@/backend/assinatura-digital/services/templates.service';
 import { generatePdfFromTemplate } from '@/backend/assinatura-digital/services/template-pdf.service';
 import { storePdf } from '@/backend/assinatura-digital/services/storage.service';

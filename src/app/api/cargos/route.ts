@@ -116,7 +116,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/auth/require-permission';
+import { requirePermission } from '@/lib/auth/require-permission';
 import {
   listarCargos,
   criarCargo,

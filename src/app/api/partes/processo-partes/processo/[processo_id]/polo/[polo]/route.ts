@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { buscarPartesPorProcesso } from '@/backend/processo-partes/services/persistence/processo-partes-persistence.service';
 import type { PoloProcessoParte } from '@/backend/types/partes/processo-partes-types';
 

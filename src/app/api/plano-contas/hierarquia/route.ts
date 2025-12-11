@@ -2,7 +2,7 @@
 // GET: Obter estrutura hierárquica completa
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { obterHierarquiaPlanoContas } from '@/backend/plano-contas/services/plano-contas/obter-hierarquia.service';
 import { listarContasSinteticas } from '@/backend/plano-contas/services/plano-contas/listar-plano-contas.service';
 

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { createClient as createSupabaseClient } from '@/backend/utils/supabase/server-client';
+import { createClient as createSupabaseClient } from '@/lib/supabase/server-client';
 import {
   createExpedienteSchema,
   updateExpedienteSchema,
@@ -29,7 +29,7 @@ export type ActionResult<T = unknown> =
 // =============================================================================
 
 function formatZodErrors(
-  zodError: z.ZodError<any>
+  zodError: z.ZodError
 ): Record<string, string[]> {
   const errors: Record<string, string[]> = {};
   for (const err of zodError.errors) {
@@ -136,7 +136,7 @@ export async function actionAtualizarExpediente(
       };
     }
 
-    const rawData: Record<string, any> = {};
+    const rawData: Record<string, string | number | boolean> = {};
     for (const [key, value] of formData.entries()) {
       if (value === 'true') {
         rawData[key] = true;

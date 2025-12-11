@@ -2,8 +2,8 @@
 // GET: Listar credenciais ativas com informações dos advogados
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { authenticateRequest } from '@/lib/auth/api-auth';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 /**
  * @swagger

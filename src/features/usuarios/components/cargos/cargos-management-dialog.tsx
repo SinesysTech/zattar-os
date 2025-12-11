@@ -27,8 +27,8 @@ import {
   FileX,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useCargos } from '../../hooks/use-cargos';
-import { actionCriarCargo, actionAtualizarCargo, actionDeletarCargo } from '../../actions/cargos-actions';
+import { useCargos } from '@/features/cargos';
+import { actionCriarCargo, actionAtualizarCargo, actionDeletarCargo } from '@/features/cargos';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
 import {

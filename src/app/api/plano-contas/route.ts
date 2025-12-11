@@ -2,7 +2,7 @@
 // GET: Listar plano de contas | POST: Criar nova conta
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { obterPlanoContas } from '@/backend/plano-contas/services/plano-contas/listar-plano-contas.service';
 import { criarPlanoConta } from '@/backend/plano-contas/services/plano-contas/gerenciar-plano-contas.service';
 import {

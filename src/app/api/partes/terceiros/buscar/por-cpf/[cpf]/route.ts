@@ -2,7 +2,7 @@
 // GET: Busca um terceiro pelo CPF
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { buscarTerceiroPorCPF } from '@/backend/terceiros/services/terceiros/buscar-terceiro-por-cpf.service';
 
 /**

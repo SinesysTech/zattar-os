@@ -59,7 +59,7 @@ export function ParcelasTable({
       const style = styles[status] || { tone: 'warning', variant: 'soft' };
 
       return (
-        <Badge tone={style.tone as any} variant={style.variant as any}>
+        <Badge tone={style.tone as BadgeProps['tone']} variant={style.variant as BadgeProps['variant']}>
           {labels[status] || status}
         </Badge>
       );

@@ -1,21 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useFormularioStore } from "@/app/_lib/stores/assinatura-digital/formulario-store";
 import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { TERMOS_VERSAO_ATUAL, TERMOS_TEXTO_DECLARACAO } from "@/lib/assinatura-digital/constants";
+import { TERMOS_TEXTO_DECLARACAO, TERMOS_VERSAO_ATUAL } from "@/features/assinatura-digital/constants/termos";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, ShieldCheck, Info } from "lucide-react";
+import { ShieldCheck, Info } from "lucide-react";
 
 export default function TermosAceiteStep() {
-  const [aceiteCheckbox, setAceiteCheckbox] = useState(false);
+  const { termosAceite } = useFormularioStore.getState();
+  const [aceiteCheckbox, setAceiteCheckbox] = useState(termosAceite === true);
 
   const {
-    termosAceite,
     setTermosAceite,
     proximaEtapa,
     etapaAnterior,
@@ -37,13 +37,6 @@ export default function TermosAceiteStep() {
     });
     proximaEtapa();
   };
-
-  useEffect(() => {
-    if (termosAceite === true) {
-      setAceiteCheckbox(true);
-      console.log("✅ Checkbox de aceite pré-marcado (dados do store).");
-    }
-  }, [termosAceite]);
 
   return (
     <FormStepLayout

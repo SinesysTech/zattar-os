@@ -8,8 +8,8 @@ import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import { v4 as uuidv4 } from 'uuid'; // Comment 6: Para gerar requestId único
 import { API_ROUTES } from "@/lib/assinatura-digital/constants/apiRoutes";
-import { TERMOS_VERSAO_ATUAL } from "@/lib/assinatura-digital/constants/termos";
 import { collectDeviceFingerprint } from "@/lib/assinatura-digital/utils";
+import { TERMOS_VERSAO_ATUAL } from "@/features/assinatura-digital/constants/termos";
 import type { DeviceFingerprintData } from "@/backend/types/assinatura-digital/types";
 import {
   validateSignatureQuality,

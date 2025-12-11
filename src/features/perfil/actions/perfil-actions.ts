@@ -1,7 +1,7 @@
 
 'use server';
 
-import { createClient } from '@/backend/utils/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { usuariosService } from '@/features/usuarios';
 import { revalidatePath } from 'next/cache';
 import { UsuarioDados } from '@/features/usuarios/types';

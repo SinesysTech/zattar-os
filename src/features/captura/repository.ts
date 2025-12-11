@@ -5,7 +5,7 @@
  * Reutiliza serviços existentes quando possível.
  */
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { getCredential } from '@/backend/captura/credentials/credential.service';
 import type { Credencial, ConfigTribunal } from './domain';
 

@@ -2,7 +2,7 @@
 // GET: Busca partes contrárias pelo nome (busca parcial)
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { buscarParteContrariaPorNome } from '@/backend/partes-contrarias/services/partes-contrarias/buscar-parte-contraria-por-nome.service';
 
 /**

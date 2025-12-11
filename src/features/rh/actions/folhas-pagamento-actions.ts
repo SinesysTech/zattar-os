@@ -3,7 +3,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { requireAuth } from './utils';
-import { checkPermission } from '@/backend/auth/authorization';
+import { checkPermission } from '@/lib/auth/authorization';
 import * as service from '../service';
 import { 
   gerarFolhaSchema, 

@@ -2,7 +2,7 @@
 // GET: Buscar parte contrária por ID | PATCH: Atualizar parte contrária
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { obterParteContrariaPorId } from '@/backend/partes-contrarias/services/partes-contrarias/buscar-parte-contraria.service';
 import { atualizarParteContraria } from '@/backend/partes-contrarias/services/partes-contrarias/atualizar-parte-contraria.service';
 import type { AtualizarParteContrariaParams } from '@/backend/types/partes';

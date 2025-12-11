@@ -2,7 +2,7 @@
 // GET: Buscar conta | PUT: Atualizar conta | DELETE: Desativar conta
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { obterPlanoContaPorId } from '@/backend/plano-contas/services/plano-contas/listar-plano-contas.service';
 import {
   atualizarPlanoConta,

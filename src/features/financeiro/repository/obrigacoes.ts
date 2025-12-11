@@ -4,7 +4,7 @@
  * Reutiliza repositório base da feature obrigacoes
  */
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import * as ObrigacoesRepoBase from '@/features/obrigacoes/repository';
 import type {
     ObrigacaoJuridica,

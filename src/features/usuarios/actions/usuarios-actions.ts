@@ -2,7 +2,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { requireAuth } from './utils';
 import { usuariosService, criarUsuarioSchema, atualizarUsuarioSchema } from '../index';
 import { ListarUsuariosParams, UsuarioDados } from '../types';

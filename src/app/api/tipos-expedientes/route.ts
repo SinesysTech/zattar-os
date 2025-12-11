@@ -17,8 +17,8 @@ export async function GET(request: NextRequest) {
       pagina: searchParams.get('pagina') ? Number(searchParams.get('pagina')) : undefined,
       limite: searchParams.get('limite') ? Number(searchParams.get('limite')) : undefined,
       busca: searchParams.get('busca') || undefined,
-      ordenarPor: (searchParams.get('ordenar_por') as any) || 'tipoExpediente', // Map snake to camel handled in repo? No, repo map needs 'tipoExpediente'
-      ordem: (searchParams.get('ordem') as any) || 'asc',
+      ordenarPor: (searchParams.get('ordenar_por') as 'tipoExpediente' | 'createdAt' | 'updatedAt' | undefined) || 'tipoExpediente',
+      ordem: (searchParams.get('ordem') as 'asc' | 'desc' | undefined) || 'asc',
     };
 
     // Fix ordenação se vier snake_case

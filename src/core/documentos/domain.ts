@@ -10,7 +10,7 @@ import type { Descendant } from 'platejs';
 export interface Documento {
   id: number;
   titulo: string;
-  conteudo_json: any; // Conteúdo do Plate.js - pode ser tipado com tipos específicos do Plate
+  conteudo_json: Descendant[]; // Conteúdo do Plate.js
   autor_id: number;
   pasta_id?: number | null;
   criado_em?: string;

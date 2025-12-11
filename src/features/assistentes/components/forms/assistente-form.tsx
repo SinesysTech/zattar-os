@@ -11,14 +11,13 @@ import { Switch } from '@/components/ui/switch';
 import { Loader2 } from 'lucide-react';
 import { 
   criarAssistenteSchema, 
-  atualizarAssistenteSchema, 
-  AssistenteSchema 
+  atualizarAssistenteSchema
 } from '../../domain';
 import { Assistente } from '../../types';
 
 interface AssistenteFormProps {
   initialData?: Assistente;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: FormData) => Promise<void>;
   onCancel: () => void;
   isLoading?: boolean;
 }
@@ -50,7 +49,7 @@ export function AssistenteForm({
 
   const ativo = watch('ativo');
 
-  const onFormSubmit = async (data: any) => {
+  const onFormSubmit = async (data: Record<string, unknown>) => {
     // Convert generic object to FormData for Server Action
     const formData = new FormData();
     if (data.nome) formData.append('nome', data.nome);

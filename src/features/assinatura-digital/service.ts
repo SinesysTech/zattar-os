@@ -149,7 +149,7 @@ export class AssinaturaDigitalService {
 
   async processarVariaveisMarkdown(
     template: Template,
-    data: Record<string, any>
+    data: Record<string, unknown>
   ): Promise<string> {
     if (template.tipo_template !== 'markdown' || !template.conteudo_markdown) {
       throw new Error(
@@ -162,7 +162,7 @@ export class AssinaturaDigitalService {
 
   async gerarPdfDeMarkdown(
     markdownContent: string,
-    data: Record<string, any>
+    data: Record<string, unknown>
   ): Promise<Buffer> {
     const renderedMarkdown = Mustache.render(markdownContent, data);
 

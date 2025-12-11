@@ -2,7 +2,7 @@
 // GET: Busca um cliente pelo CPF
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { obterClientePorCpf } from '@/backend/clientes/services/clientes/buscar-cliente.service';
 
 /**

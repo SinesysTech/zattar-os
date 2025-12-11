@@ -2,7 +2,7 @@
 // GET: Buscar conta por código
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { obterPlanoContaPorCodigo } from '@/backend/plano-contas/services/plano-contas/listar-plano-contas.service';
 
 interface RouteParams {

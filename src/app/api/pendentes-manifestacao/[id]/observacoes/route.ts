@@ -52,9 +52,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/auth/require-permission';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
-import { deletePattern, CACHE_PREFIXES } from '@/backend/utils/redis/cache-utils';
+import { requirePermission } from '@/lib/auth/require-permission';
+import { createServiceClient } from '@/lib/supabase/service-client';
+import { deletePattern, CACHE_PREFIXES } from '@/lib/redis/cache-utils';
 
 export async function PATCH(
   request: NextRequest,

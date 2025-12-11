@@ -2,10 +2,10 @@
 // POST: Limpar cache (todo ou padrão específico)
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
-import { getRedisClient, isRedisAvailable } from '@/backend/utils/redis/client';
-import { deletePattern } from '@/backend/utils/redis/cache-utils';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { authenticateRequest } from '@/lib/auth/api-auth';
+import { getRedisClient, isRedisAvailable } from '@/lib/redis/client';
+import { deletePattern } from '@/lib/redis/cache-utils';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 /**
  * Verifica se o usuário tem permissão de administrador

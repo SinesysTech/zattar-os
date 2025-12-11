@@ -65,6 +65,11 @@ export {
   actionExportarAcervoCSV,
 } from './actions/acervo-actions';
 
+// Service (Exported for API Routes usage mainly)
+export {
+  buscarProcessosClientePorCpf,
+} from './service';
+
 // Hooks
 export {
   useAcervo,

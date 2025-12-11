@@ -267,7 +267,7 @@ Todos os inputs são validados com Zod schemas:
 - `@/lib/redis/cache-utils` - Utilitários de cache
 - `@/lib/auth` - Autenticação e autorização
 - `@/backend/captura/services/timeline/timeline-persistence.service` - Timelines MongoDB
-- `@/backend/utils/redis/invalidation` - Invalidação de cache
+- `@/lib/redis/invalidation` - Invalidação de cache
 
 ## 🚀 Próximos Passos
 

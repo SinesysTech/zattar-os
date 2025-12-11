@@ -2,7 +2,7 @@
 // GET: Listar audiências com filtros, paginação e ordenação
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { obterAudiencias } from '@/backend/audiencias/services/listar-audiencias.service';
 import { criarAudiencia } from '@/backend/audiencias/services/criar-audiencia.service';
 import type { ListarAudienciasParams, CriarAudienciaParams } from '@/backend/types/audiencias/types';

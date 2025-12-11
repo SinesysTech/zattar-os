@@ -36,8 +36,8 @@ export function useTiposAudiencias(params?: { trt?: string; grau?: string; limit
       }
       const data = await response.json();
       setTiposAudiencia(data.data || []); // Assuming the API returns { success: true, data: [...] }
-    } catch (e: any) {
-      setError(e.message || 'Erro ao carregar tipos de audiência.');
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Erro ao carregar tipos de audiência.');
       setTiposAudiencia([]);
     } finally {
       setIsLoading(false);

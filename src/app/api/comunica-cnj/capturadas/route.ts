@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { listarComunicacoesCapturadas } from '@/core/comunica-cnj';
 import type { ListarComunicacoesParams } from '@/core/comunica-cnj/domain';
 

@@ -1,7 +1,7 @@
 // Rota de API para atualizar URL de audiência virtual
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/auth/require-permission';
+import { requirePermission } from '@/lib/auth/require-permission';
 import { atualizarUrlVirtualAudiencia } from '@/backend/audiencias/services/atualizar-url-virtual.service';
 
 /**

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission } from '@/backend/auth/require-permission';
+import { requirePermission } from '@/lib/auth/require-permission';
 import { getDashboardStats } from '@/backend/assinatura-digital/services/dashboard.service';
 
 export async function GET(request: NextRequest) {

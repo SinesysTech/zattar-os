@@ -759,7 +759,6 @@ export async function upsertClienteByCPF(
   input: CreateClienteInput
 ): Promise<Result<{ cliente: Cliente; created: boolean }>> {
   try {
-    const db = createDbClient();
     const cpfNormalizado = normalizarDocumento(cpf);
 
     // Verifica se ja existe

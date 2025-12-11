@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { upsertRepresentantePorCPF } from '@/backend/representantes/services/representantes-persistence.service';
 import type { UpsertRepresentantePorCPFParams } from '@/backend/types/representantes/representantes-types';
 

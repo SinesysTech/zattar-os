@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/backend/auth/api-auth";
+import { authenticateRequest } from "@/lib/auth/api-auth";
 import { obterClientes } from "@/backend/clientes/services/clientes/listar-clientes.service";
 
 export async function GET(request: NextRequest) {

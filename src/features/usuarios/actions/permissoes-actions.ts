@@ -8,7 +8,7 @@ import {
   atribuirPermissoesBatch, 
   substituirPermissoes 
 } from '@/backend/permissoes/services/persistence/permissao-persistence.service';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { obterTodasPermissoes, validarAtribuirPermissoesDTO } from '@/backend/types/permissoes/types';
 import type { Permissao } from '../types';
 

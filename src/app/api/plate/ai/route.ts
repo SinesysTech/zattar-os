@@ -215,11 +215,6 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('[Plate AI] Erro ao processar requisição:', error);
     
-    // Extrair mensagem de erro segura (sem expor detalhes internos)
-    const errorMessage = error instanceof Error 
-      ? error.message 
-      : 'Falha ao processar requisição AI';
-    
     return NextResponse.json(
       { 
         error: 'Falha ao processar requisição AI. Tente novamente em alguns instantes.',

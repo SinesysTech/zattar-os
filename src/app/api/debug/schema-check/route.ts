@@ -35,7 +35,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 export async function GET() {
   try {

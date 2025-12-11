@@ -1,7 +1,7 @@
 // Rota de API para buscar parte contrária por CPF
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { obterParteContrariaPorCpf } from '@/backend/partes-contrarias/services/partes-contrarias/buscar-parte-contraria.service';
 
 /**

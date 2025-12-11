@@ -2,7 +2,7 @@
 // GET: Buscar contrato por ID | PATCH: Atualizar contrato
 
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/backend/auth/api-auth';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { obterContratoPorId } from '@/backend/contratos/services/contratos/buscar-contrato.service';
 import { atualizarContrato } from '@/backend/contratos/services/contratos/atualizar-contrato.service';
 import type { ContratoDados } from '@/backend/contratos/services/persistence/contrato-persistence.service';

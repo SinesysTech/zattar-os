@@ -49,7 +49,6 @@ function ResponsiveDialog({
     open,
     onOpenChange,
     children,
-    mobileVariant = "fullscreen",
 }: ResponsiveDialogProps) {
     const isMobile = useBreakpointBelow("sm") // <640px
 

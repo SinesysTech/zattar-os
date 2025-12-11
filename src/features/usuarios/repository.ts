@@ -1,5 +1,5 @@
 
-import { createServiceClient } from '@/backend/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { 
   getCached, 
   setCached, 
@@ -7,7 +7,7 @@ import {
   getUsuariosListKey, 
   invalidateUsuariosCache,
   getCargosListKey
-} from '@/backend/utils/redis';
+} from '@/lib/redis';
 import { 
   Usuario, 
   UsuarioDados, 
