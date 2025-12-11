@@ -14,7 +14,7 @@ interface DialogState {
 }
 
 export function RepassesPageContent() {
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [refreshToken, setRefreshToken] = useState(0);
   const [declaracaoDialog, setDeclaracaoDialog] = useState<DialogState>({
     open: false,
     parcelaId: null
@@ -34,13 +34,13 @@ export function RepassesPageContent() {
   };
 
   const handleDialogSuccess = () => {
-    setRefreshKey(prev => prev + 1);
+    setRefreshToken(prev => prev + 1);
   };
 
   return (
     <div className="space-y-6">
       <RepassesPendentesList
-        key={refreshKey}
+        refreshToken={refreshToken}
         onAnexarDeclaracao={handleAnexarDeclaracao}
         onRealizarRepasse={handleRealizarRepasse}
       />

@@ -18,14 +18,23 @@ import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empt
 import { Typography } from '@/components/ui/typography';
 import { RepassePendente } from '../../types';
 import { useRepassesPendentes } from '../../hooks/use-repasses-pendentes';
+import { useEffect } from 'react';
 
 interface RepassesListProps {
   onAnexarDeclaracao?: (parcelaId: number) => void;
   onRealizarRepasse?: (parcelaId: number, valorRepasse: number) => void;
+  refreshToken?: number;
 }
 
-export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse }: RepassesListProps) {
-  const { data: repasses, isLoading, error } = useRepassesPendentes();
+export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, refreshToken }: RepassesListProps) {
+  const { data: repasses, isLoading, error, refetch } = useRepassesPendentes();
+
+  // Trigger refetch when refreshToken changes
+  useEffect(() => {
+    if (refreshToken !== undefined && refreshToken > 0) {
+      refetch();
+    }
+  }, [refreshToken, refetch]);
 
   // If we just loaded (or still same array ref), we filter for display
   const repassesPendentesDecl = repasses.filter(r => r.statusRepasse === 'pendente_declaracao');
