@@ -24,7 +24,6 @@ import {
   validateFileSize,
 } from './services/b2-upload.service'; // Moved to feature
 import { generatePresignedUrl as generatePresignedDownloadUrl } from '@/lib/storage/backblaze-b2.service';
-import { createServiceClient } from '@/lib/supabase/service-client';
 
 // ============================================================================
 // DOCUMENTOS
@@ -216,6 +215,41 @@ export async function criarTemplate(
 ): Promise<Template> {
   const parsedParams = domain.criarTemplateSchema.parse(params);
   return repository.criarTemplate(parsedParams as CriarTemplateParams, usuario_id);
+}
+
+export async function buscarTemplate(
+  id: number,
+  usuario_id: number
+): Promise<TemplateComUsuario> {
+  const template = await repository.buscarTemplateComUsuario(id);
+  if (!template) {
+    throw new Error('Template não encontrado.');
+  }
+
+  if (template.visibilidade === 'privado' && template.criado_por !== usuario_id) {
+    throw new Error('Acesso negado a este template.');
+  }
+
+  return template;
+}
+
+export async function atualizarTemplate(
+  id: number,
+  params: unknown,
+  usuario_id: number
+): Promise<Template> {
+  const parsedParams = domain.atualizarTemplateSchema.parse(params);
+  const template = await repository.buscarTemplatePorId(id);
+
+  if (!template) {
+    throw new Error('Template não encontrado.');
+  }
+
+  if (template.criado_por !== usuario_id) {
+    throw new Error('Acesso negado: apenas o proprietário pode editar este template.');
+  }
+
+  return repository.atualizarTemplate(id, parsedParams as AtualizarTemplateParams);
 }
 
 export async function usarTemplate(

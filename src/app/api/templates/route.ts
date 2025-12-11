@@ -7,16 +7,15 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import {
   listarTemplates,
   criarTemplate,
   listarTemplatesMaisUsados,
   listarCategoriasTemplates,
-} from '@/backend/documentos/services/persistence/templates-persistence.service';
+} from '@/features/documentos';
 import type {
   CriarTemplateParams,
   ListarTemplatesParams,
-} from '@/backend/types/documentos/types';
+} from '@/features/documentos';
 
 /**
  * GET /api/templates

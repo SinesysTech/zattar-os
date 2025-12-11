@@ -65,7 +65,7 @@ import {
 // Endereços
 import {
   upsertEnderecoPorIdPje,
-} from '@/backend/enderecos/services/enderecos-persistence.service';
+} from '@/features/enderecos';
 
 import type { EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } from '@/backend/types/partes/enderecos-types';
 
