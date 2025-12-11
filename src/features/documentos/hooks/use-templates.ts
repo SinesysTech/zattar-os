@@ -50,7 +50,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
     }
   }, [fetchTemplates]);
 
-  const useTemplate = useCallback(async (templateId: number, options?: { titulo?: string; pasta_id?: number | null }) => {
+  const createDocumentFromTemplate = useCallback(async (templateId: number, options?: { titulo?: string; pasta_id?: number | null }) => {
     setError(null);
     const result = await actionUsarTemplate(templateId, options);
     if (result.success) {
@@ -82,7 +82,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
     updateParams,
     fetchTemplates,
     createTemplate,
-    useTemplate,
+    createDocumentFromTemplate,
     deleteTemplate,
   };
 }
