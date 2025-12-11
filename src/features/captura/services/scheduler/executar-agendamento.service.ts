@@ -1,18 +1,18 @@
 // Serviço para executar um agendamento de captura
 
-import type { Agendamento } from '@/backend/types/captura/agendamentos-types';
+import type { Agendamento } from '../../types/agendamentos-types';
 import { getCredentialComplete } from '../../credentials/credential.service';
-import { getTribunalConfig } from '@/backend/captura/services/trt/config';
-import { acervoGeralCapture, type AcervoGeralResult } from '@/backend/captura/services/trt/acervo-geral.service';
-import { arquivadosCapture, type ArquivadosResult } from '@/backend/captura/services/trt/arquivados.service';
-import { audienciasCapture, type AudienciasResult } from '@/backend/captura/services/trt/audiencias.service';
-import { pendentesManifestacaoCapture, type PendentesManifestacaoResult } from '@/backend/captura/services/trt/pendentes-manifestacao.service';
-import { capturaCombinada, type CapturaCombinAdaResult } from '@/backend/captura/services/trt/captura-combinada.service';
-import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/backend/captura/services/captura-log.service';
+import { getTribunalConfig } from '../trt/config';
+import { acervoGeralCapture, type AcervoGeralResult } from '../trt/acervo-geral.service';
+import { arquivadosCapture, type ArquivadosResult } from '../trt/arquivados.service';
+import { audienciasCapture, type AudienciasResult } from '../trt/audiencias.service';
+import { pendentesManifestacaoCapture, type PendentesManifestacaoResult } from '../trt/pendentes-manifestacao.service';
+import { capturaCombinada, type CapturaCombinAdaResult } from '../trt/captura-combinada.service';
+import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '../captura-log.service';
 import { atualizarAgendamento } from '../agendamentos/atualizar-agendamento.service';
 import { recalcularProximaExecucaoAposExecucao } from '../agendamentos/calcular-proxima-execucao.service';
 import type { FiltroPrazoPendentes, CodigoTRT, GrauTRT } from '../../types/trt-types';
-import { registrarCapturaRawLog } from '@/backend/captura/services/persistence/captura-raw-log.service';
+import { registrarCapturaRawLog } from '../persistence/captura-raw-log.service';
 
 /**
  * Parâmetros para salvar payloads de partes no MongoDB

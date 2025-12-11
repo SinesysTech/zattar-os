@@ -5,8 +5,8 @@
 import type { PendenteManifestacao } from '@/features/expedientes/types';
 import type { IEvent, IUser } from '@/components/calendar/interfaces';
 import type { TEventColor } from '@/components/calendar/types';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
+import type { Usuario } from '@/features/usuarios';
+import type { TipoExpediente } from '@/features/tipos-expedientes';
 
 /**
  * Mapeia tipo_expediente_id para cor do evento

@@ -343,7 +343,7 @@ import { useTribunais } from '@/features/captura/hooks/use-tribunais';
 import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
 
 // ❌ NUNCA usar
-import { ... } from '@/backend/...'; // REMOVIDO
+// (o backend legado foi removido; use sempre features ou lib)
 import { ... } from '@/app/_lib/...'; // REMOVIDO
 ```
 
@@ -382,7 +382,7 @@ import { PageShell } from "@/components/shared/page-shell";
 import { Button } from "@/components/ui/button";
 
 // ❌ PROIBIDO - Backend foi removido, use features
-// import { criarCliente } from "@/backend/clientes/services/clientes/criar-cliente.service";
+// (exemplo legado removido)
 // ✅ Use features:
 import { actionCriarCliente } from "@/features/partes";
 ```

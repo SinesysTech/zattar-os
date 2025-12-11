@@ -6,6 +6,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { TipoAudiencia, UseTiposAudienciasResult } from '../types';
+import { actionListarTiposAudiencia } from '../actions';
 
 interface UseTiposAudienciasParams {
   trt?: string;
@@ -33,13 +34,17 @@ export function useTiposAudiencias(
       if (params?.grau) queryParams.append('grau', params.grau);
       if (params?.limite) queryParams.append('limite', params.limite.toString());
 
-      const url = `/api/audiencias/tipos?${queryParams.toString()}`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const result = await actionListarTiposAudiencia({
+        trt: params?.trt,
+        grau: params?.grau,
+        limite: params?.limite,
+      });
+
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao carregar tipos de audiência.');
       }
-      const data = await response.json();
-      setTiposAudiencia(data.data || []);
+
+      setTiposAudiencia((result.data as unknown as TipoAudiencia[]) || []);
     } catch (e: unknown) {
       const errorMessage = e instanceof Error ? e.message : 'Erro ao carregar tipos de audiência.';
       setError(errorMessage);

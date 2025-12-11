@@ -9,7 +9,7 @@ import {
 	getExpedientesEvents,
 	getExpedientesUsers,
 } from './requests-expedientes';
-import { obterUsuarios } from '@/backend/usuarios/services/usuarios/listar-usuarios.service';
+import { usuariosService } from '@/features/usuarios';
 import { listar } from '@/features/tipos-expedientes';
 import type { ListarTiposExpedientesParams } from '@/features/tipos-expedientes';
 
@@ -30,7 +30,7 @@ async function getExpedientesCalendarData() {
 			limite: 1000,
 		}),
 		getExpedientesUsers(),
-		obterUsuarios({ ativo: true, limite: 100 }),
+		usuariosService.listarUsuarios({ ativo: true, limite: 100 }),
 		listar({ limite: 100 } as ListarTiposExpedientesParams),
 	]);
 

@@ -33,7 +33,7 @@ import { Separator } from '@/components/ui/separator';
 import { useCalendar } from '@/components/calendar/calendar-context';
 import { formatTime } from '@/components/calendar/helpers';
 import type { IEvent } from '@/components/calendar/interfaces';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
+import type { Usuario } from '@/features/usuarios';
 import type { TipoExpediente } from '@/features/tipos-expedientes';
 
 interface ExpedienteEventDialogProps {

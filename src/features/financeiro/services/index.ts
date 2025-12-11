@@ -6,5 +6,7 @@ export * from './lancamentos';
 export * from './conciliacao';
 export * from './obrigacoes';
 export * from './obrigacoes-integracao';
+export * from './obrigacoes-validacao';
+export * from './dashboard';
 export * from './plano-contas';
 export * from './fluxo-caixa';

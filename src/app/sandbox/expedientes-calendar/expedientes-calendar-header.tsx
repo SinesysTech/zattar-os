@@ -19,8 +19,8 @@ import { UserSelect } from '@/components/shared/user-select';
 import { Settings } from '@/components/calendar/settings';
 import Views from '@/components/calendar/view-tabs';
 import { ExpedientesFilters } from './components/expedientes-filters';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
+import type { Usuario } from '@/features/usuarios';
+import type { TipoExpediente } from '@/features/tipos-expedientes';
 
 interface ExpedientesFiltersState {
 	trt?: string;

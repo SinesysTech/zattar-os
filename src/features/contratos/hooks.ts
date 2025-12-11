@@ -9,9 +9,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import type {
   Contrato,
-  ContratosApiResponse,
   BuscarContratosParams,
 } from './types';
+import { actionListarContratos } from './actions';
 
 interface UseContratosResult {
   contratos: Contrato[];
@@ -40,56 +40,30 @@ export const useContratos = (params: BuscarContratosParams = {}): UseContratosRe
     setError(null);
 
     try {
-      // Construir query string
-      const searchParams = new URLSearchParams();
+      const result = await actionListarContratos({
+        pagina: params.pagina,
+        limite: params.limite,
+        busca: params.busca,
+        areaDireito: params.areaDireito,
+        tipoContrato: params.tipoContrato,
+        status: params.status,
+        clienteId: params.clienteId,
+        parteContrariaId: params.parteContrariaId,
+        responsavelId: params.responsavelId,
+      });
 
-      if (params.pagina !== undefined) {
-        searchParams.set('pagina', params.pagina.toString());
-      }
-      if (params.limite !== undefined) {
-        searchParams.set('limite', params.limite.toString());
-      }
-      if (params.busca) {
-        searchParams.set('busca', params.busca);
-      }
-      if (params.areaDireito) {
-        searchParams.set('areaDireito', params.areaDireito);
-      }
-      if (params.tipoContrato) {
-        searchParams.set('tipoContrato', params.tipoContrato);
-      }
-      if (params.status) {
-        searchParams.set('status', params.status);
-      }
-      if (params.clienteId !== undefined) {
-        searchParams.set('clienteId', params.clienteId.toString());
-      }
-      if (params.parteContrariaId !== undefined) {
-        searchParams.set('parteContrariaId', params.parteContrariaId.toString());
-      }
-      if (params.responsavelId !== undefined) {
-        searchParams.set('responsavelId', params.responsavelId.toString());
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao buscar contratos');
       }
 
-      const response = await fetch(`/api/contratos?${searchParams.toString()}`);
+      const payload = result.data as { data: Contrato[]; pagination: { page: number; limit: number; total: number; totalPages: number } };
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
-      }
-
-      const data: ContratosApiResponse = await response.json();
-
-      if (!data.success) {
-        throw new Error('Resposta da API indicou falha');
-      }
-
-      setContratos(data.data.contratos);
+      setContratos(payload.data);
       setPaginacao({
-        pagina: data.data.pagina,
-        limite: data.data.limite,
-        total: data.data.total,
-        totalPaginas: data.data.totalPaginas,
+        pagina: payload.pagination.page,
+        limite: payload.pagination.limit,
+        total: payload.pagination.total,
+        totalPaginas: payload.pagination.totalPages,
       });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar contratos';

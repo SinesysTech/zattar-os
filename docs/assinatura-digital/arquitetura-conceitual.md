@@ -897,7 +897,7 @@ O módulo implementa auditoria forense completa via `signature.service.auditSign
 
 **Exemplo de uso:**
 ```typescript
-import { auditSignatureIntegrity } from '@/backend/assinatura-digital/services/signature.service';
+import { auditSignatureIntegrity } from '@/features/assinatura-digital/services/signature.service';
 
 const result = await auditSignatureIntegrity('123e4567-e89b-12d3-a456-426614174000');
 console.log(result.status); // "valido" | "invalido" | "erro"

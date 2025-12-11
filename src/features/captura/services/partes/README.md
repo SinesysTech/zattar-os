@@ -9,7 +9,7 @@ Este módulo implementa a captura automatizada de partes de processos do PJE-TRT
 O módulo é composto por três arquivos principais:
 
 ```
-backend/captura/services/partes/
+src/features/captura/services/partes/
 ├── partes-capture.service.ts      # Orquestração end-to-end da captura
 ├── identificacao-partes.service.ts # Lógica de identificação de tipo de parte
 ├── types.ts                        # Tipos TypeScript
@@ -238,7 +238,7 @@ Authorization: Bearer <token>
 ### Exemplo 1: Uso Direto do Serviço
 
 ```typescript
-import { capturarPartesProcesso } from '@/backend/captura/services/partes/partes-capture.service';
+import { capturarPartesProcesso } from '@/features/captura/services/partes/partes-capture.service';
 import type { Page } from 'playwright';
 
 const page: Page = ...; // Página autenticada no PJE
@@ -266,7 +266,7 @@ console.log(`Erros: ${resultado.erros.length}`);
 ### Exemplo 2: Identificação Manual
 
 ```typescript
-import { identificarTipoParte } from "@/backend/captura/services/partes/identificacao-partes.service";
+import { identificarTipoParte } from "@/features/captura/services/partes/identificacao-partes.service";
 import type { PartePJE } from "@/features/captura/pje-trt/partes/types";
 
 const parte: PartePJE = {
@@ -304,7 +304,7 @@ const tipo = identificarTipoParte(parte, advogado);
 ### Exemplo 3: Normalização de CPF
 
 ```typescript
-import { normalizarCpf } from "@/backend/captura/services/partes/identificacao-partes.service";
+import { normalizarCpf } from "@/features/captura/services/partes/identificacao-partes.service";
 
 normalizarCpf("123.456.789-00"); // "12345678900"
 normalizarCpf("123 456 789 00"); // "12345678900"
@@ -316,7 +316,7 @@ normalizarCpf(null); // ""
 ### Exemplo 4: Verificação de Tipo Especial
 
 ```typescript
-import { isTipoEspecial } from "@/backend/captura/services/partes/identificacao-partes.service";
+import { isTipoEspecial } from "@/features/captura/services/partes/identificacao-partes.service";
 
 isTipoEspecial("PERITO"); // true
 isTipoEspecial("perito"); // true (case-insensitive)
@@ -333,7 +333,7 @@ isTipoEspecial(""); // false
 
 ```bash
 # Executar testes de identificação
-npx tsx backend/captura/services/partes/__tests__/identificacao-partes.test.ts
+npx tsx src/features/captura/services/partes/__tests__/identificacao-partes.test.ts
 ```
 
 **Cobertura de testes**:
@@ -703,8 +703,8 @@ const representanteMultiplo2 = {
 
 **Related Files**:
 
-- `backend/enderecos/services/enderecos-persistence.service.ts` - Address CRUD
-- `backend/types/partes/enderecos-types.ts` - Type definitions
+- `src/features/enderecos` - Address CRUD
+- `src/features/enderecos/types` - Type definitions
 - `supabase/migrations/20251126000000_create_enderecos_table.sql` - Table schema
 - `supabase/migrations/20251124000000_add_endereco_id_to_partes.sql` - FK columns
 
@@ -798,7 +798,7 @@ const TIPOS_ESPECIAIS = [
 3. Executar testes:
 
 ```bash
-npx tsx backend/captura/services/partes/__tests__/identificacao-partes.test.ts
+npx tsx src/features/captura/services/partes/__tests__/identificacao-partes.test.ts
 ```
 
 ### Problema: Erro "Parte e advogado são obrigatórios"
@@ -1006,7 +1006,7 @@ it("deve identificar NOVO_TIPO_PERITO como terceiro", () => {
 3. Executar testes:
 
 ```bash
-npx tsx backend/captura/services/partes/__tests__/identificacao-partes.test.ts
+npx tsx src/features/captura/services/partes/__tests__/identificacao-partes.test.ts
 ```
 
 ### Modificar Algoritmo de Identificação
@@ -1023,13 +1023,13 @@ npx tsx backend/captura/services/partes/__tests__/identificacao-partes.test.ts
 
 ## Referências
 
-- **Serviço de Captura**: [`backend/captura/services/partes/partes-capture.service.ts`](./partes-capture.service.ts)
-- **Configuração**: [`backend/captura/services/partes/config.ts`](./config.ts)
-- **Schemas de Validação**: [`backend/captura/services/partes/schemas.ts`](./schemas.ts)
-- **Classes de Erro**: [`backend/captura/services/partes/errors.ts`](./errors.ts)
-- **Logger**: [`backend/utils/logger/`](../../../utils/logger/)
-- **Retry Util**: [`backend/utils/retry/`](../../../utils/retry/)
-- **Distributed Lock**: [`backend/utils/locks/distributed-lock.ts`](../../../utils/locks/distributed-lock.ts)
+- **Serviço de Captura**: [`src/features/captura/services/partes/partes-capture.service.ts`](./partes-capture.service.ts)
+- **Configuração**: [`src/features/captura/services/partes/config.ts`](./config.ts)
+- **Schemas de Validação**: [`src/features/captura/services/partes/schemas.ts`](./schemas.ts)
+- **Classes de Erro**: [`src/features/captura/services/partes/errors.ts`](./errors.ts)
+- **Logger**: [`src/lib/logger/`](../../../lib/logger/)
+- **Retry Util**: [`src/lib/retry/`](../../../lib/retry/)
+- **Distributed Lock**: [`src/lib/locks/distributed-lock.ts`](../../../lib/locks/distributed-lock.ts)
 - **Testes de Integração**: [`__tests__/captura-partes-integration.test.ts`](./__tests__/captura-partes-integration.test.ts)
 
 ---

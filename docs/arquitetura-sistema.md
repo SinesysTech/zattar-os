@@ -795,16 +795,11 @@ backend/
 **Exemplo**:
 
 ```typescript
-// backend/clientes/services/clientes/criar-cliente.service.ts
-import { criarCliente as criarClientePersistence } from "../persistence/cliente-persistence.service";
-import type {
-  CriarClienteParams,
-  Cliente,
-} from "@/backend/types/clientes/types";
+// src/features/partes/service.ts (exemplo simplificado)
+import { criarCliente as criarClientePersistence } from "@/features/partes/repository";
+import type { CreateClienteInput, Cliente } from "@/features/partes/domain";
 
-export async function criarCliente(
-  params: CriarClienteParams
-): Promise<Cliente> {
+export async function criarCliente(params: CreateClienteInput): Promise<Cliente> {
   // 1. Validações de negócio
   if (!params.nome || params.nome.trim().length < 3) {
     throw new Error("Nome deve ter pelo menos 3 caracteres");
@@ -839,15 +834,12 @@ export async function criarCliente(
 **Exemplo**:
 
 ```typescript
-// backend/clientes/services/persistence/cliente-persistence.service.ts
-import { createServiceClient } from "@/backend/utils/supabase/service-client";
-import type {
-  Cliente,
-  CriarClienteParams,
-} from "@/backend/types/clientes/types";
+// src/features/partes/repository.ts (exemplo simplificado)
+import { createServiceClient } from "@/lib/supabase/service-client";
+import type { Cliente, CreateClienteInput } from "@/features/partes/domain";
 
 export async function criarCliente(
-  params: CriarClienteParams
+  params: CreateClienteInput
 ): Promise<Cliente> {
   const supabase = createServiceClient();
 
@@ -937,11 +929,10 @@ app/api/
 ```typescript
 // app/api/clientes/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/backend/auth/api-auth";
 import {
   criarCliente,
   listarClientes,
-} from "@/backend/clientes/services/clientes";
+} from "@/features/partes";
 import { z } from "zod";
 
 // Schema de validação
@@ -2666,7 +2657,7 @@ import { ClientesTable } from "@/features/partes/components/clientes/clientes-ta
 import { ClientesTable } from "@/features/partes";
 
 // ❌ PROIBIDO - Import de pasta legada
-import { criarCliente } from "@/backend/clientes/services/clientes/criar-cliente.service";
+// (exemplo legado removido)
 
 // ✅ CORRETO - Import via feature
 import { actionCriarCliente } from "@/features/partes";

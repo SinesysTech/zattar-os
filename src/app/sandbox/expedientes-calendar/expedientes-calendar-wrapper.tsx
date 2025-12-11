@@ -12,8 +12,8 @@ import { DndProvider } from '@/components/calendar/dnd-context';
 import { ExpedientesCalendarHeader } from './expedientes-calendar-header';
 import { ExpedientesCalendarProvider } from './contexts/expedientes-calendar-context';
 import type { IEvent, IUser } from '@/components/calendar/interfaces';
-import type { Usuario } from '@/backend/usuarios/services/persistence/usuario-persistence.service';
-import type { TipoExpediente } from '@/backend/types/tipos-expedientes/types';
+import type { Usuario } from '@/features/usuarios';
+import type { TipoExpediente } from '@/features/tipos-expedientes';
 
 interface ExpedientesFilters {
 	trt?: string;
