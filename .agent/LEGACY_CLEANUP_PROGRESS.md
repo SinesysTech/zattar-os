@@ -16,16 +16,22 @@ Systematic cleanup and consolidation of legacy code into pure FSD architecture.
 
 ### ✅ Fase 1: Migrar Módulos Não-FSD para Features
 
-#### 1.1 Criar `src/features/acervo/`
+#### 1.1 Criar `src/features/acervo/` ✅ COMPLETED
 
 - [x] Created `types.ts` - Consolidated all acervo types with Zod schemas
 - [x] Created `domain.ts` - Business logic and mappings
-- [ ] Create `repository.ts` - Data access layer
-- [ ] Create `service.ts` - Business service layer
-- [ ] Create `actions/acervo-actions.ts` - Server Actions
-- [ ] Create `hooks/use-acervo.ts` - React hooks
-- [ ] Create components structure
-- [ ] Create `index.ts` - Barrel exports
+- [x] Created `repository.ts` - Data access layer with caching
+- [x] Created `service.ts` - Business service layer with CPF search
+- [x] Created `utils.ts` - Formatting and transformation utilities
+- [x] Created `actions/acervo-actions.ts` - Server Actions (5 actions)
+- [x] Created `hooks/use-acervo.ts` - React hooks (5 hooks)
+- [x] Created `components/list/acervo-table.tsx` - Table component
+- [x] Created `components/list/acervo-filters.tsx` - Filter component
+- [x] Created `index.ts` - Barrel exports
+- [x] Created `README.md` - Complete documentation
+
+**Summary**: 11 files created, ~2,000 lines of code
+**Features**: List, search, filter, assign, export, CPF search
 
 #### 1.2 Criar `src/features/advogados/`
 
@@ -73,7 +79,8 @@ Systematic cleanup and consolidation of legacy code into pure FSD architecture.
 
 ## Current Focus
 
-Working on Fase 1.1 - Creating complete acervo feature structure
+✅ **Completed**: Fase 1.1 - Acervo feature (100% complete)
+🔄 **Next**: Fase 1.2 - Advogados feature
 
 ## Notes
 
