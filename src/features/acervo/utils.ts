@@ -1,22 +1,17 @@
-/**
- * Utility functions for Acervo Feature
- * Formatting and data transformation utilities
- */
-
-import type {
-  ProcessoClienteCpfRow,
-  ProcessoRespostaIA,
-  InstanciaProcessoIA,
-  TimelineItemIA,
-  UltimaMovimentacaoIA,
-  TimelineStatus,
-} from './types';
 import {
   TRT_NOMES,
   TIPO_PARTE_NOMES,
   CLASSE_JUDICIAL_NOMES,
 } from './domain';
 import type { TimelineItemEnriquecido } from '@/backend/types/pje-trt/timeline';
+import type {
+  ProcessoClienteCpfRow,
+  TimelineItemIA,
+  UltimaMovimentacaoIA,
+  InstanciaProcessoIA,
+  ProcessoRespostaIA,
+  TimelineStatus,
+} from './types';
 
 // ============================================================================
 // Data Formatting
@@ -104,7 +99,7 @@ export function formatarItemTimeline(
     data: formatarData(item.data) || 'Data não informada',
     evento,
     descricao: item.titulo || '',
-    tem_documento: item.documento,
+    tem_documento: !!item.documento,
   };
 }
 

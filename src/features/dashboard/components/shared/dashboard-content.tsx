@@ -11,8 +11,14 @@ import type {
 } from '../../types';
 
 import { MetricCard } from './metric-card';
-import { WidgetFluxoCaixa } from '../widgets/widget-fluxo-caixa';
-import { WidgetDespesasCategoria } from '../widgets/widget-despesas-categoria';
+import {
+  WidgetFluxoCaixa,
+  WidgetDespesasCategoria,
+  WidgetProcessosResumo,
+  WidgetAudienciasProximas,
+  WidgetExpedientesUrgentes,
+  WidgetProdutividade,
+} from '../widgets';
 import { ObrigacoesRecentesCard } from './obrigacoes-recentes-card';
 
 import {
@@ -142,18 +148,56 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {/* Linha 1: KPIs */}
+        {/* Linha 1: KPIs Core - Processos, Audiências, Expedientes */}
+        <MetricCard
+          title="Processos"
+          value={data.processos.total.toLocaleString('pt-BR')}
+          href="/processos"
+        />
+        <MetricCard
+          title="Audiências"
+          value={data.audiencias.total.toLocaleString('pt-BR')}
+          href="/audiencias"
+        />
+        <MetricCard
+          title="Expedientes Pendentes"
+          value={data.expedientes.total.toLocaleString('pt-BR')}
+          href="/expedientes"
+        />
+        <MetricCard
+          title="Expedientes Vencidos"
+          value={data.expedientes.vencidos.toLocaleString('pt-BR')}
+          href="/expedientes"
+        />
+
+        {/* Linha 2: KPIs Financeiros */}
         <FinancialMetricCards />
 
-        {/* Linha 2: Gráficos */}
-        <div className="md:col-span-2 lg:col-span-3">
-            <WidgetFluxoCaixa />
+        {/* Linha 3: Widgets de Processos e Produtividade */}
+        <div className="md:col-span-2">
+          <WidgetProcessosResumo data={data.processos} />
         </div>
-        <div className='lg:col-span-1'>
-            <WidgetDespesasCategoria />
+        <div className="md:col-span-2">
+          <WidgetProdutividade data={data.produtividade} />
         </div>
 
-        {/* Linha 3: Listas Rápidas */}
+        {/* Linha 4: Gráficos Financeiros */}
+        <div className="md:col-span-2 lg:col-span-3">
+          <WidgetFluxoCaixa />
+        </div>
+        <div className="lg:col-span-1">
+          <WidgetDespesasCategoria />
+        </div>
+
+        {/* Linha 5: Listas Rápidas - Audiências e Expedientes */}
+        <div className="md:col-span-2">
+          <WidgetAudienciasProximas data={data.proximasAudiencias} />
+        </div>
+        <div className="md:col-span-2">
+          <WidgetExpedientesUrgentes data={data.expedientesUrgentes} />
+        </div>
+
+        {/* Linha 6: Obrigações */}
         <div className="col-span-1 md:col-span-2 lg:col-span-4">
           <ObrigacoesRecentesCard />
         </div>
@@ -193,18 +237,66 @@ function AdminDashboard({ data }: AdminDashboardProps) {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {/* Linha 1: KPIs */}
+        {/* Linha 1: KPIs Admin - Métricas do Escritório */}
+        <MetricCard
+          title="Total Processos"
+          value={data.metricas.totalProcessos.toLocaleString('pt-BR')}
+          href="/processos"
+        />
+        <MetricCard
+          title="Processos Ativos"
+          value={data.metricas.processosAtivos.toLocaleString('pt-BR')}
+          href="/processos"
+        />
+        <MetricCard
+          title="Total Audiências"
+          value={data.metricas.totalAudiencias.toLocaleString('pt-BR')}
+          href="/audiencias"
+        />
+        <MetricCard
+          title="Audiências do Mês"
+          value={data.metricas.audienciasMes.toLocaleString('pt-BR')}
+          href="/audiencias"
+        />
+        <MetricCard
+          title="Expedientes Pendentes"
+          value={data.metricas.expedientesPendentes.toLocaleString('pt-BR')}
+          href="/expedientes"
+        />
+        <MetricCard
+          title="Expedientes Vencidos"
+          value={data.metricas.expedientesVencidos.toLocaleString('pt-BR')}
+          href="/expedientes"
+        />
+        <MetricCard
+          title="Usuários Ativos"
+          value={data.metricas.totalUsuarios.toLocaleString('pt-BR')}
+        />
+        <MetricCard
+          title="Taxa de Resolução"
+          value={`${data.metricas.taxaResolucao}%`}
+        />
+
+        {/* Linha 2: KPIs Financeiros */}
         <FinancialMetricCards />
 
-        {/* Linha 2: Gráficos */}
+        {/* Linha 3: Gráficos Financeiros */}
         <div className="md:col-span-2 lg:col-span-3">
-            <WidgetFluxoCaixa />
+          <WidgetFluxoCaixa />
         </div>
-        <div className='lg:col-span-1'>
-            <WidgetDespesasCategoria />
+        <div className="lg:col-span-1">
+          <WidgetDespesasCategoria />
         </div>
 
-        {/* Linha 3: Listas Rápidas */}
+        {/* Linha 4: Listas Rápidas - Audiências e Expedientes */}
+        <div className="md:col-span-2">
+          <WidgetAudienciasProximas data={data.proximasAudiencias} />
+        </div>
+        <div className="md:col-span-2">
+          <WidgetExpedientesUrgentes data={data.expedientesUrgentes} />
+        </div>
+
+        {/* Linha 5: Obrigações */}
         <div className="col-span-1 md:col-span-2 lg:col-span-4">
           <ObrigacoesRecentesCard />
         </div>
