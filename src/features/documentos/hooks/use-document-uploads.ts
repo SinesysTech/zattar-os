@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarUploads, actionUploadArquivo, actionGerarPresignedUrl } from '../actions/uploads-actions';
 import type { DocumentoUploadComInfo } from '../types';
 
@@ -10,16 +10,22 @@ export function useDocumentUploads(documentoId: number) {
   const [uploadProgress, setUploadProgress] = useState<number>(0); // New state for tracking progress
 
   const fetchUploads = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    startTransition(() => {
+      setLoading(true);
+      setError(null);
+    });
+    
     const result = await actionListarUploads(documentoId);
-    if (result.success) {
-      setUploads(result.data || []);
-      setTotal(result.total || 0);
-    } else {
-      setError(result.error);
-    }
-    setLoading(false);
+    
+    startTransition(() => {
+      if (result.success) {
+        setUploads(result.data || []);
+        setTotal(result.total || 0);
+      } else {
+        setError(result.error);
+      }
+      setLoading(false);
+    });
   }, [documentoId]);
 
   useEffect(() => {

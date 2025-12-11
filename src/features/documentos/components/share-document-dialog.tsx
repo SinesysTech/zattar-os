@@ -37,7 +37,6 @@ import {
 } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { useDocumentSharing } from '@/features/documentos/hooks/use-document-sharing';
-import type { DocumentoCompartilhadoComUsuario } from '@/features/documentos/types';
 
 interface ShareDocumentDialogProps {
   open: boolean;
@@ -63,7 +62,6 @@ export function ShareDocumentDialog({
 }: ShareDocumentDialogProps) {
   const { 
     shares: compartilhamentos, 
-    loading: sharesLoading, 
     shareDocument, 
     updatePermission, 
     updateDeletePermission, 

@@ -1,5 +1,4 @@
 import {
-  Value,
   CriarDocumentoParams,
   AtualizarDocumentoParams,
   ListarDocumentosParams,
@@ -23,7 +22,6 @@ import * as repository from './repository';
 import * as domain from './domain';
 import {
   uploadFileToB2,
-  deleteFileFromB2,
   generatePresignedUploadUrl,
   getTipoMedia,
   validateFileType,
@@ -38,7 +36,7 @@ import { createServiceClient } from '@/backend/utils/supabase/service-client';
 
 export async function listarDocumentos(
   params: ListarDocumentosParams,
-  usuario_id: number
+  _usuario_id: number
 ): Promise<{ documentos: DocumentoComUsuario[]; total: number }> {
   // TODO: Implementar validação de acesso às pastas ou documentos compartilhados
   // Por enquanto, apenas o criador ou documentos públicos/compartilhados
@@ -279,7 +277,7 @@ export async function compartilharDocumento(
   compartilhado_por: number
 ): Promise<DocumentoCompartilhado> {
   const parsedParams = domain.criarCompartilhamentoSchema.parse(params);
-  const { documento_id, usuario_id, permissao } = parsedParams;
+  const { documento_id, usuario_id } = parsedParams;
 
   const documento = await repository.buscarDocumentoPorId(documento_id);
   if (!documento || documento.criado_por !== compartilhado_por) {
@@ -469,7 +467,7 @@ export async function listarUploads(
 export async function gerarPresignedUrl(
   filename: string,
   contentType: string,
-  usuario_id: number // Adicionado usuario_id para validação
+  _usuario_id: number // Adicionado usuario_id para validação
 ): Promise<{ uploadUrl: string; key: string; publicUrl: string }> {
   // TODO: Implementar validação de usuário e limites de upload antes de gerar URL
   return generatePresignedUploadUrl({ fileName: filename, contentType });
@@ -477,7 +475,7 @@ export async function gerarPresignedUrl(
 
 export async function gerarUrlDownload(
   key: string,
-  usuario_id: number
+  _usuario_id: number
 ): Promise<string> {
   // TODO: Implementar validação de acesso ao documento pelo key?
   // O ideal seria passar o documento_id, verificar acesso e pegar a key.
@@ -523,10 +521,8 @@ export async function limparLixeira(usuario_id: number): Promise<{ documentosDel
   // ou a regra de negócio pode ser "limpar os meus itens".
   // Vamos assumir que o serviço aqui é para o próprio usuário limpar SEUS itens da lixeira.
 
-  const supabase = createServiceClient(); // Usado para buscar itens do usuário
-
   let documentosDeletados = 0;
-  let pastasDeletadas = 0;
+  const pastasDeletadas = 0;
 
   // Deletar documentos do usuário na lixeira
   const docsNaLixeira = await repository.listarDocumentosLixeira(usuario_id);

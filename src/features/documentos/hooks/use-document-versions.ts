@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarVersoes, actionRestaurarVersao } from '../actions/versoes-actions';
 import type { DocumentoVersaoComUsuario } from '../types';
 
@@ -9,16 +9,22 @@ export function useDocumentVersions(documentoId: number) {
   const [error, setError] = useState<string | null>(null);
 
   const fetchVersions = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    startTransition(() => {
+      setLoading(true);
+      setError(null);
+    });
+    
     const result = await actionListarVersoes(documentoId);
-    if (result.success) {
-      setVersions(result.data || []);
-      setTotal(result.total || 0);
-    } else {
-      setError(result.error);
-    }
-    setLoading(false);
+    
+    startTransition(() => {
+      if (result.success) {
+        setVersions(result.data || []);
+        setTotal(result.total || 0);
+      } else {
+        setError(result.error);
+      }
+      setLoading(false);
+    });
   }, [documentoId]);
 
   useEffect(() => {

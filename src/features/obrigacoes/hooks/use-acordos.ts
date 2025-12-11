@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarAcordos } from '../actions/acordos';
 import { AcordoComParcelas, ListarAcordosParams } from '../types';
 
@@ -11,17 +11,23 @@ export function useAcordos(filtros: ListarAcordosParams) {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    setIsLoading(true);
+    startTransition(() => {
+      setIsLoading(true);
+    });
+    
     const result = await actionListarAcordos(filtros);
-    if (result.success && result.data) {
-      setData(result.data.acordos);
-      setTotal(result.data.total);
-      setTotalPaginas(result.data.totalPaginas);
-    } else {
-      setError(result.error || 'Erro desconhecido');
-    }
-    setIsLoading(false);
-  }, [filtros.processoId, filtros.tipo, filtros.direcao, filtros.status, filtros.pagina, filtros.limite, filtros.dataInicio, filtros.dataFim, filtros.busca]);
+    
+    startTransition(() => {
+      if (result.success && result.data) {
+        setData(result.data.acordos);
+        setTotal(result.data.total);
+        setTotalPaginas(result.data.totalPaginas);
+      } else {
+        setError(result.error || 'Erro desconhecido');
+      }
+      setIsLoading(false);
+    });
+  }, [filtros]);
 
   useEffect(() => {
     load();

@@ -44,6 +44,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/app/_lib/utils/utils';
 import { actionCriarExpediente } from '../actions';
 import { GrauTribunal, CodigoTribunal } from '../types';
+import type { TipoExpediente } from '@/features/tipos-expedientes';
 
 interface DadosIniciais {
   processoId: number;
@@ -71,10 +72,7 @@ interface Processo {
   grau: GrauTribunal;
 }
 
-interface TipoExpediente {
-  id: number;
-  tipoExpediente: string;
-}
+
 
 interface Usuario {
   id: number;
@@ -191,7 +189,7 @@ export function ExpedienteDialog({
         if (!response.ok || !result.success) {
           throw new Error(result.error || 'Erro ao buscar tipos de expediente');
         }
-        setTiposExpediente(result.data.tipos_expedientes || []);
+        setTiposExpediente(result.data.data || []);
       } catch (err: unknown) {
         console.error('Erro ao buscar tipos de expediente:', err);
       } finally {
