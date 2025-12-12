@@ -1,8 +1,13 @@
-import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { Children, cloneElement, isValidElement, type ReactElement } from "react";
-import type { buttonVariants } from "@/components/ui/button";
-import { cn, isReactFragment } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+
+function isReactFragment(node: React.ReactNode): boolean {
+	if (!node) return false;
+	if (typeof node !== 'object') return false;
+	if (!('type' in node)) return false;
+	return (node as any).type === React.Fragment;
+}
 
 interface ButtonGroupProps {
 	className?: string;

@@ -15,6 +15,8 @@ import {
   useReactTable,
   Header,
   flexRender,
+  PaginationState,
+  OnChangeFn,
 } from '@tanstack/react-table';
 import {
   DndContext,
@@ -32,6 +34,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { Loader2 } from 'lucide-react';
 
 import {
   Table,
@@ -45,13 +48,28 @@ import {
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 import { cn } from '@/lib/utils';
-// Note: DataTableColumnHeader is imported but not directly used inside the sortable wrapper unless we want to wrap it repeatedly.
-// Actually, flexRender handles the column header component rendering.
 
 // --- Types ---
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  
+  // Server-side / Controlled State
+  pagination?: {
+    pageIndex: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+    onPageChange: (pageIndex: number) => void;
+    onPageSizeChange: (pageSize: number) => void;
+  };
+  sorting?: SortingState;
+  onSortingChange?: OnChangeFn<SortingState>;
+  columnFilters?: ColumnFiltersState;
+  onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>;
+  
+  isLoading?: boolean;
+  error?: string | null;
 }
 
 // --- Draggable Header Component ---
@@ -91,18 +109,25 @@ function DraggableTableHeader({
 export function DataTable<TData, TValue>({
   columns,
   data,
+  pagination,
+  sorting: controlledSorting,
+  onSortingChange,
+  columnFilters: controlledColumnFilters,
+  onColumnFiltersChange,
+  isLoading,
+  error,
 }: DataTableProps<TData, TValue>) {
-  // States
+  // --- Local State (for uncontrolled mode) ---
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(
     {}
   );
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+  const [internalSorting, setInternalSorting] = React.useState<SortingState>([]);
+  const [internalColumnFilters, setInternalColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
-    columns.map((column) => column.id as string) // Ensure columns have IDs!
+    columns.map((column) => column.id || (column as any).accessorKey as string).filter(Boolean)
   );
   
   // Density State
@@ -114,7 +139,18 @@ export function DataTable<TData, TValue>({
     useSensor(KeyboardSensor)
   );
 
-  // Initialize Table
+  // --- Derived State ---
+  const sorting = controlledSorting ?? internalSorting;
+  const columnFilters = controlledColumnFilters ?? internalColumnFilters;
+  
+  const paginationState: PaginationState | undefined = pagination
+    ? {
+        pageIndex: pagination.pageIndex,
+        pageSize: pagination.pageSize,
+      }
+    : undefined;
+
+  // --- Table Instance ---
   const table = useReactTable({
     data,
     columns,
@@ -124,17 +160,37 @@ export function DataTable<TData, TValue>({
       rowSelection,
       columnFilters,
       columnOrder,
+      pagination: paginationState,
     },
-    enableRowSelection: true,
+    // Flags for server-side
+    manualPagination: !!pagination,
+    manualSorting: !!controlledSorting,
+    manualFiltering: !!controlledColumnFilters,
+    pageCount: pagination?.totalPages ?? -1,
+
+    // Handlers
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
+    onSortingChange: onSortingChange ?? setInternalSorting,
+    onColumnFiltersChange: onColumnFiltersChange ?? setInternalColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
+    
+    // Pagination Handler (Adapter)
+    onPaginationChange: (updater) => {
+        if (typeof updater === 'function') {
+            const newState = updater(paginationState || { pageIndex: 0, pageSize: 10 });
+            pagination?.onPageChange(newState.pageIndex);
+            pagination?.onPageSizeChange(newState.pageSize);
+        } else {
+             pagination?.onPageChange(updater.pageIndex);
+             pagination?.onPageSizeChange(updater.pageSize);
+        }
+    },
+
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(), // Client-side filtering if not manual
+    getPaginationRowModel: getPaginationRowModel(), // Client-side pagination if not manual
+    getSortedRowModel: getSortedRowModel(),     // Client-side sorting if not manual
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
@@ -160,6 +216,7 @@ export function DataTable<TData, TValue>({
       }
   }
 
+  // --- Render ---
   return (
     <div className="space-y-4">
       <DataTableToolbar 
@@ -168,7 +225,12 @@ export function DataTable<TData, TValue>({
           onDensityChange={setDensity}
       />
       
-      <div className="rounded-md border">
+      <div className="rounded-md border relative">
+        {isLoading && (
+            <div className="absolute inset-0 bg-background/50 z-10 flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        )}
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -190,7 +252,16 @@ export function DataTable<TData, TValue>({
               ))}
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
+              {error ? (
+                 <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center text-destructive"
+                  >
+                    {error}
+                  </TableCell>
+                </TableRow>
+              ) : table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}

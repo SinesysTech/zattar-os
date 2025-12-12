@@ -75,7 +75,8 @@ export function DataTableToolbar<TData>({
                    <DataTableFilter 
                        key={column.id} 
                        column={column} 
-                       title={column.columnDef.header?.toString()} 
+                       title={(column.columnDef.meta as any)?.filterTitle 
+                         ?? (typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id)} 
                        options={(column.columnDef.meta as any)?.filterOptions}
                    />
                )
