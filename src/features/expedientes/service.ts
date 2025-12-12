@@ -13,8 +13,6 @@ import {
   ListarPendentesAgrupadoResult,
   AgruparPorPendente,
   PendenteManifestacao,
-  ExpedientesFilters,
-  OrigemExpediente,
 } from './domain';
 import * as repository from './repository';
 import type { ExpedienteInsertInput, ExpedienteUpdateInput } from './repository';
@@ -45,7 +43,7 @@ function logDebug(location: string, message: string, data: unknown, hypothesisId
       mkdirSync(join(process.cwd(), '.cursor'), { recursive: true });
     } catch { }
     appendFileSync(logPath, JSON.stringify(logEntry) + '\n');
-  } catch (fileError) {
+  } catch {
     // Fallback: log to console with prefix for easy filtering
     console.log('[DEBUG]', JSON.stringify(logEntry));
   }
@@ -333,8 +331,8 @@ export async function obterPendentes(
     pagina: params.pagina,
     limite: params.agrupar_por ? 1000 : (params.limite ?? 50), // Se agrupar, buscar mais linhas
     busca: params.busca,
-    trt: params.trt as any,
-    grau: params.grau as any,
+    trt: params.trt as ListarExpedientesParams['trt'],
+    grau: params.grau as ListarExpedientesParams['grau'],
     responsavelId: params.responsavel_id === 'null' ? 'null' : (typeof params.responsavel_id === 'number' ? params.responsavel_id : undefined),
     tipoExpedienteId: params.tipo_expediente_id === 'null' ? undefined : (typeof params.tipo_expediente_id === 'number' ? params.tipo_expediente_id : undefined),
     semTipo: params.sem_tipo || params.tipo_expediente_id === 'null',
@@ -355,7 +353,7 @@ export async function obterPendentes(
     dataAutuacaoFim: params.data_autuacao_fim,
     dataArquivamentoInicio: params.data_arquivamento_inicio,
     dataArquivamentoFim: params.data_arquivamento_fim,
-    ordenarPor: params.ordenar_por as any,
+    ordenarPor: params.ordenar_por as ListarExpedientesParams['ordenarPor'],
     ordem: params.ordem,
     processoId: params.processo_id,
 
@@ -382,7 +380,7 @@ export async function obterPendentes(
 
   const result = await repository.findAllExpedientes(repoParams);
 
-  if (!result.success) return result as any;
+  if (!result.success) return result;
 
   const expedientes = result.data.data;
   const pendentes = expedientes.map(toPendenteManifestacao);
@@ -449,7 +447,7 @@ export async function obterPendentes(
 
 export async function buscarPendentesPorClienteCPF(cpf: string): Promise<Result<PendenteManifestacao[]>> {
   const result = await repository.findExpedientesByClienteCPF(cpf);
-  if (!result.success) return result as any;
+  if (!result.success) return result;
   return {
     success: true,
     data: result.data.map(toPendenteManifestacao)
@@ -519,7 +517,7 @@ export async function atualizarTipoDescricao(
   };
 
   const updateResult = await repository.updateExpediente(expedienteId, repoUpdateInput, current);
-  if (!updateResult.success) return updateResult as any;
+  if (!updateResult.success) return updateResult;
 
   await db.from('logs_alteracao').insert({
     tipo_entidade: 'expedientes',

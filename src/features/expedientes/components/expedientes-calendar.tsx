@@ -173,7 +173,7 @@ export function ExpedientesCalendar() {
                                 key={day.toString()}
                                 onClick={() => setSelectedDate(day)}
                                 className={`
-                                    flex flex-col items-center justify-center min-w-[4rem] py-2 rounded-md transition-all
+                                    flex flex-col items-center justify-center min-w-16 py-2 rounded-md transition-all
                                     ${isSelected ? 'bg-primary text-primary-foreground shadow-sm' : 'hover:bg-muted text-muted-foreground'}
                                     ${isTodayDate && !isSelected ? 'bg-accent text-accent-foreground font-semibold' : ''}
                                 `}
