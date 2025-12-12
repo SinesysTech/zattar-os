@@ -24,7 +24,7 @@ import {
   buildConciliacaoFilterGroups,
   parseConciliacaoFilters,
 } from '@/features/financeiro/components/conciliacao/conciliacao-toolbar-filters';
-import type { TransacaoComConciliacao } from '@/features/financeiro/types/conciliacao';
+import type { TransacaoComConciliacao } from '@/features/financeiro/domain/conciliacao';
 
 export default function ConciliacaoBancariaPage() {
   const [importarOpen, setImportarOpen] = useState(false);

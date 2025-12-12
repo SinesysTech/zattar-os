@@ -30,7 +30,7 @@ export type {
   ContratosFilters,
   PaginationInfo,
   ClienteInfo,
-} from './types';
+} from './domain';
 
 export {
   // Schemas Zod
@@ -48,7 +48,7 @@ export {
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
   POLO_PROCESSUAL_LABELS,
-} from './types';
+} from './domain';
 
 // =============================================================================
 // UTILS

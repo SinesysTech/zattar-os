@@ -11,7 +11,7 @@ import type {
   InstanciaProcessoIA,
   ProcessoRespostaIA,
   TimelineStatus,
-} from './types';
+} from './domain';
 
 // ============================================================================
 // Data Formatting

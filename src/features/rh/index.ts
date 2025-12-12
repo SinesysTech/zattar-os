@@ -19,7 +19,7 @@ export type {
   ListarFolhasResponse,
   StatusFolhaPagamento,
   FormaPagamentoFolha,
-} from './types';
+} from './domain';
 
 // Domain
 export {

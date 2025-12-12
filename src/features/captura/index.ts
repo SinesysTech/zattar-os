@@ -28,7 +28,7 @@ export type {
     PendentesResult,
     CapturaPartesResult,
     TimelineResult,
-} from './types';
+} from './domain';
 
 // PJE Documento Types
 export type {
@@ -44,7 +44,7 @@ export type {
     CodigoTRT,
     GrauTRT,
     FiltroPrazoPendentes,
-} from './types';
+} from './domain';
 
 // TRT Types diretos (incluindo ConfigTRT que não está em types.ts)
 export type {

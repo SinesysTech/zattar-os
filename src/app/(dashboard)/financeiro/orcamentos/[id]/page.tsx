@@ -58,7 +58,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type {
   OrcamentoItemComDetalhes,
   StatusOrcamento,
-} from '@/features/financeiro/types/orcamento.types';
+} from '@/features/financeiro/domain/orcamentos';
 
 // ============================================================================
 // Constantes e Helpers

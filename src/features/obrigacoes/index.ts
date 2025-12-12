@@ -19,7 +19,7 @@ export type {
   RegistrarRepasseParams,
   MarcarParcelaRecebidaParams,
   AtualizarParcelaParams
-} from './types';
+} from './domain';
 
 // Domain
 export {

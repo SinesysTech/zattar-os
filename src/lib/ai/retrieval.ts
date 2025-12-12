@@ -1,6 +1,11 @@
 /**
  * Módulo de busca semântica para o Sinesys
  *
+ * ⚠️ LEGACY: Este módulo está descontinuado.
+ * Use src/features/ai/repository.ts e searchEmbeddings() para novas implementações.
+ * Este módulo usa a tabela embeddings_conhecimento (legacy).
+ * O novo sistema usa public.embeddings e a função match_embeddings.
+ *
  * Implementa busca por similaridade de vetores usando pgvector no Supabase
  */
 

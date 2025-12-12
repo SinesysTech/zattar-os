@@ -37,7 +37,7 @@ import type {
   PlanoContasFilters,
   TipoContaContabil,
   NivelConta,
-} from '@/features/financeiro/types/plano-contas';
+} from '@/features/financeiro/domain/plano-contas';
 
 // Tons do Badge para tipos de conta
 type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';

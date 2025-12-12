@@ -34,14 +34,14 @@ export type {
   PaginationInfo,
   PaginatedResponse,
   ActionResult,
-} from './types';
+} from './domain';
 
 export {
   TipoSalaChat,
   TipoMensagemChat,
   criarSalaChatSchema,
   criarMensagemChatSchema,
-} from './types';
+} from './domain';
 
 // =============================================================================
 // REPOSITORY

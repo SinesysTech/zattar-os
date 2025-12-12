@@ -8,7 +8,7 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
-import type { GrauAcervo } from './types';
+import type { GrauAcervo } from './domain';
 
 // Type alias para compatibilidade interna
 type GrauProcesso = GrauAcervo;

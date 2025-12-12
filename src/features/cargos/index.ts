@@ -10,7 +10,7 @@ export type {
   ListarCargosParams,
   ListarCargosResponse,
   CargoComUsuariosError,
-} from './types';
+} from './domain';
 
 // Actions
 export {

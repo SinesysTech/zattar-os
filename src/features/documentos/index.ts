@@ -1,5 +1,5 @@
-export * from './types';
 export * from './domain';
+// export * from './domain'; // Already exported above
 export * from './utils';
 
 // Components

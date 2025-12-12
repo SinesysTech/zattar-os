@@ -24,10 +24,11 @@ export async function actionUploadArquivo(formData: FormData) {
     const upload = await service.uploadArquivo(file, documento_id, user.id);
 
     // Disparar indexação assíncrona para RAG (não bloqueia a resposta)
-    if (isContentTypeSupported(upload.tipo_mime)) {
-      after(async () => {
-        try {
-          console.log(`🧠 [AI] Disparando indexação para upload ${upload.id}`);
+    // Tentar indexar mesmo para tipos desconhecidos - deixar extractText decidir
+    after(async () => {
+      try {
+        if (isContentTypeSupported(upload.tipo_mime)) {
+          console.log(`🧠 [AI] Disparando indexação para upload ${upload.id} (${upload.tipo_mime})`);
           await indexDocument({
             entity_type: 'documento',
             entity_id: upload.id,
@@ -41,11 +42,36 @@ export async function actionUploadArquivo(formData: FormData) {
               documento_id,
             },
           });
-        } catch (error) {
-          console.error(`❌ [AI] Erro na indexação do upload ${upload.id}:`, error);
+        } else {
+          // Tentar indexar mesmo assim - extractText pode lidar com tipos não suportados
+          console.log(
+            `⚠️ [AI] Tipo não suportado explicitamente: ${upload.tipo_mime}. Tentando indexação com fallback.`
+          );
+          try {
+            await indexDocument({
+              entity_type: 'documento',
+              entity_id: upload.id,
+              parent_id: documento_id,
+              storage_provider: 'backblaze',
+              storage_key: upload.b2_key,
+              content_type: upload.tipo_mime,
+              metadata: {
+                nome_arquivo: upload.nome_arquivo,
+                usuario_id: user.id,
+                documento_id,
+                content_type_unknown: true, // Marcar como tipo desconhecido
+              },
+            });
+          } catch (error) {
+            console.warn(
+              `⚠️ [AI] Indexação falhou para tipo ${upload.tipo_mime}: ${error instanceof Error ? error.message : String(error)}`
+            );
+          }
         }
-      });
-    }
+      } catch (error) {
+        console.error(`❌ [AI] Erro na indexação do upload ${upload.id}:`, error);
+      }
+    });
 
     revalidatePath(`/documentos/${documento_id}`);
     return { success: true, data: upload };

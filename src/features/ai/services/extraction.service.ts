@@ -37,24 +37,45 @@ export async function extractTextFromDOCX(buffer: Buffer): Promise<string> {
 }
 
 export async function extractText(buffer: Buffer, contentType: string): Promise<string> {
-  if (contentType === 'application/pdf') {
-    return extractTextFromPDF(buffer);
-  }
+  const normalized = contentType.toLowerCase().trim();
 
-  if (
-    contentType.includes('word') ||
-    contentType.includes('docx') ||
-    contentType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  ) {
-    return extractTextFromDOCX(buffer);
-  }
+  try {
+    if (normalized === 'application/pdf' || normalized.includes('pdf')) {
+      return await extractTextFromPDF(buffer);
+    }
 
-  // Texto puro
-  if (contentType.includes('text') || contentType === 'text/plain') {
+    if (
+      normalized.includes('word') ||
+      normalized.includes('docx') ||
+      normalized === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      normalized === 'application/msword' ||
+      normalized === 'application/vnd.ms-word'
+    ) {
+      return await extractTextFromDOCX(buffer);
+    }
+
+    // Texto puro
+    if (normalized.includes('text') || normalized === 'text/plain') {
+      return buffer.toString('utf-8');
+    }
+
+    // HTML e Markdown também são texto
+    if (normalized === 'text/html' || normalized === 'text/markdown') {
+      return buffer.toString('utf-8');
+    }
+
+    // Se chegou aqui, o tipo não foi validado corretamente em isContentTypeSupported
+    // Mas tentamos extrair como texto UTF-8 como fallback
+    console.warn(
+      `⚠️ [Extraction] Tipo de conteúdo não mapeado explicitamente: ${contentType}. Tentando extrair como texto UTF-8.`
+    );
     return buffer.toString('utf-8');
+  } catch (error) {
+    console.error(`❌ [Extraction] Erro ao extrair texto de ${contentType}:`, error);
+    throw new Error(
+      `Erro ao extrair texto do tipo ${contentType}: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
+    );
   }
-
-  throw new Error(`Tipo de conteúdo não suportado para extração: ${contentType}`);
 }
 
 export function getSupportedContentTypes(): string[] {
@@ -65,10 +86,36 @@ export function getSupportedContentTypes(): string[] {
     'text/markdown',
     // DOCX quando implementado:
     // 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    // Variantes comuns de DOCX:
+    // 'application/msword',
+    // 'application/vnd.ms-word',
   ];
 }
 
+/**
+ * Verifica se um content-type é suportado para extração de texto.
+ * Usa correspondência exata ou por substring para variantes comuns.
+ */
 export function isContentTypeSupported(contentType: string): boolean {
+  if (!contentType || typeof contentType !== 'string') {
+    return false;
+  }
+
+  const normalized = contentType.toLowerCase().trim();
   const supported = getSupportedContentTypes();
-  return supported.some((type) => contentType.includes(type) || type.includes(contentType));
+
+  // Verificar correspondência exata primeiro
+  if (supported.includes(normalized)) {
+    return true;
+  }
+
+  // Verificar por substring para variantes comuns
+  // Ex: 'application/pdf' corresponde a 'application/pdf; charset=utf-8'
+  for (const type of supported) {
+    if (normalized.includes(type) || type.includes(normalized)) {
+      return true;
+    }
+  }
+
+  return false;
 }

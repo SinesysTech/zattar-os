@@ -3,7 +3,7 @@
  */
 
 import { listarPlanoContasHierarquico as listarHierarquicoPersistence } from '../persistence/plano-contas-persistence.service';
-import type { PlanoContaHierarquico } from '@/features/financeiro/types/plano-contas.types';
+import type { PlanoContaHierarquico } from '@/features/financeiro/domain/plano-contas';
 
 // Re-exporta funções utilitárias do módulo compartilhado
 export {

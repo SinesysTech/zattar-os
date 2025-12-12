@@ -2,6 +2,11 @@
 -- Description: Tabela para armazenamento de vetores de embedding para busca semântica (RAG)
 -- Author: Sinesys Architecture 2.0
 -- Date: 2025-01-01
+--
+-- ⚠️ LEGACY: Esta migration está descontinuada.
+-- A tabela embeddings_conhecimento foi substituída por public.embeddings (ver migration 2025-12-12-create-embeddings-system.sql).
+-- Esta migration é mantida apenas para referência histórica e não deve ser aplicada em novos ambientes.
+-- Use a tabela public.embeddings e a função match_embeddings para novas implementações.
 
 -- Habilitar extensão pgvector (se ainda não habilitada)
 CREATE EXTENSION IF NOT EXISTS vector;

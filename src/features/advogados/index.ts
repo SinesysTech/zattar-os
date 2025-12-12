@@ -14,7 +14,7 @@ export type {
   CriarCredencialParams,
   AtualizarCredencialParams,
   ListarCredenciaisParams,
-} from './types';
+} from './domain';
 
 // Actions
 export {

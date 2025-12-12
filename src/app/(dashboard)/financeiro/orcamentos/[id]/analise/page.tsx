@@ -45,7 +45,7 @@ import type {
   AnaliseOrcamentaria,
   Orcamento,
   EvolucaoMensal,
-} from '@/features/financeiro/types/orcamentos';
+} from '@/features/financeiro/domain/orcamentos';
 import {
   exportarOrcamentoCSV,
   exportarAnaliseCSV,

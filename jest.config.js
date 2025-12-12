@@ -42,6 +42,20 @@ const config = {
     '!**/node_modules/**',
   ],
   // Configuração para property-based testing com fast-check
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+    'src/features/**/domain.ts': {
+      statements: 90,
+    },
+    'src/features/**/service.ts': {
+      statements: 90,
+    },
+  },
   // globals configuration moved to transform
 };
 

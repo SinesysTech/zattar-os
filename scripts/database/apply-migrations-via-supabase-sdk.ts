@@ -16,16 +16,24 @@ if (!supabaseUrl || !supabaseServiceKey) {
 // Mantido para referência futura caso seja necessário usar a SDK
 // const _supabase = createClient(supabaseUrl, supabaseServiceKey, { ... });
 
-const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations', 'nao-aplicadas');
+const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
 
 const MIGRATIONS = [
   {
-    file: '20251125000000_create_locks_table.sql',
-    description: 'Criar tabela locks para distributed locking',
+    file: '20250101000000_create_embeddings_conhecimento.sql',
+    description: 'Criar tabela embeddings_conhecimento (Root)',
   },
   {
-    file: '20251125000003_add_ata_audiencia_fields.sql',
-    description: 'Adicionar campos de ata de audiência',
+    file: 'nao-aplicadas/2025-12-06-create-conciliacao-bancaria-tables.sql',
+    description: 'Criar tabelas de conciliação bancária',
+  },
+  {
+    file: 'nao-aplicadas/2025-12-07-add-dados-adicionais-conciliacoes.sql',
+    description: 'Adicionar dados adicionais conciliações',
+  },
+  {
+    file: 'nao-aplicadas/2025-12-12-create-embeddings-system.sql',
+    description: 'Criar sistema de embeddings',
   },
 ];
 

@@ -43,12 +43,12 @@ import { getSemanticBadgeVariant } from '@/lib/design-system';
 export function TipoDescricaoCell({
   expediente,
   onSuccess,
-  tiposExpedientes,
+  tiposExpedientes = [],
   isLoadingTipos
 }: {
   expediente: Expediente;
   onSuccess: () => void;
-  tiposExpedientes: Array<{ id: number; tipoExpediente: string }>;
+  tiposExpedientes?: Array<{ id: number; tipoExpediente: string }>;
   isLoadingTipos?: boolean;
 }) {
   const router = useRouter();
@@ -93,10 +93,14 @@ export function TipoDescricaoCell({
     }
   };
 
-  const tipoExpediente = tiposExpedientes.find(t => t.id === expediente.tipoExpedienteId);
+  const tipoExpediente = tiposExpedientes?.find(t => t.id === expediente.tipoExpedienteId);
   const tipoNome = tipoExpediente ? tipoExpediente.tipoExpediente : 'Sem tipo';
   const descricaoExibicao = expediente.descricaoArquivos || '-';
   const temDocumento = !!expediente.arquivoKey;
+  
+  const badgeVariant = expediente.tipoExpedienteId 
+    ? getSemanticBadgeVariant('expediente_tipo', expediente.tipoExpedienteId) 
+    : 'outline';
 
   return (
     <>
@@ -106,7 +110,7 @@ export function TipoDescricaoCell({
             {/* Badge de tipo seguido do ícone de documento - usa sistema semântico */}
             <div className="flex items-center gap-1.5">
               <Badge
-                variant={getSemanticBadgeVariant('expediente_tipo', expediente.tipoExpedienteId)}
+                variant={badgeVariant}
                 className="w-fit text-xs shrink-0"
               >
                 {tipoNome}
@@ -460,8 +464,8 @@ export const columns: ColumnDef<Expediente>[] = [
        const meta = table.options.meta as ExpedientesTableMeta;
        return <TipoDescricaoCell
                 expediente={row.original}
-                onSuccess={meta?.onSuccess}
-                tiposExpedientes={meta?.tiposExpedientes}
+                onSuccess={meta?.onSuccess || (() => {})}
+                tiposExpedientes={meta?.tiposExpedientes || []}
                 // isLoadingTipos could be passed via meta if needed
               />;
     },

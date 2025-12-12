@@ -1,6 +1,11 @@
 /**
  * Pipeline de indexação de documentos para o Sinesys
  *
+ * ⚠️ LEGACY: Este módulo está descontinuado.
+ * Use src/features/ai/services/indexing.service.ts para novas implementações.
+ * Este módulo usa a tabela embeddings_conhecimento (legacy).
+ * O novo sistema usa public.embeddings e a função match_embeddings.
+ *
  * Responsável por:
  * - Chunking inteligente de textos
  * - Geração de embeddings

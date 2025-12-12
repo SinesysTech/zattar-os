@@ -27,7 +27,7 @@ export type {
   TimelineStatus,
   ProcessoRespostaIA,
   ProcessosClienteCpfResponse,
-} from './types';
+} from './domain';
 
 // Domain
 export {

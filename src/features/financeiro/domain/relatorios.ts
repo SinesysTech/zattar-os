@@ -1,5 +1,5 @@
 /**
- * Tipos para relatórios financeiros
+ * Tipos para relatórios financeiros (Migrado de types/relatorios.ts)
  */
 
 export interface RelatorioComparativo {
@@ -13,6 +13,7 @@ export interface RelatorioComparativo {
     variacao: number;
     percentualRealizacao: number;
   }>;
+  periodo?: string; // Add optional property if referenced
   resumoGeral: {
     totalOrcadoGeral: number;
     totalRealizadoGeral: number;
@@ -32,25 +33,44 @@ export interface RelatorioComparativo {
 }
 
 export interface RelatorioCompleto {
-  orcamento: unknown;
-  analise: unknown;
-  resumo?: unknown;
+  orcamento: any; // Using any to avoid circular dependencies or if type is generic. Ideally should be OrcamentoComDetalhes
+  analise: any;
+  resumo?: any;
   alertas?: Array<{ mensagem: string; severidade: string }>;
-  evolucao?: unknown[];
-  projecao?: unknown[] | null;
+  evolucao?: any[];
+  projecao?: any[] | null;
   geradoEm: string;
 }
 
 export interface RelatorioExecutivo {
-  resumo: unknown;
-  principaisIndicadores: unknown;
+  resumo: any;
+  principaisIndicadores: any;
   alertas: Array<{ mensagem: string; severidade: string }>;
   geradoEm: string;
 }
 
 export interface AnaliseParaUI {
-  resumo: unknown;
-  principaisIndicadores: unknown;
+  resumo: any;
+  principaisIndicadores: any;
   alertas: Array<{ mensagem: string; severidade: string }>;
+  itensPorConta?: Array<{
+    contaContabilNome: string;
+    contaContabilCodigo?: string;
+    valorOrcado: number;
+    valorRealizado: number;
+    variacao: number;
+    variacaoPercentual: number;
+    status: string;
+    centroCustoNome?: string;
+    tipoConta?: string;
+    mes?: number;
+  }>;
+  itens?: Array<{
+        contaContabil?: { nome: string; codigo: string };
+        valorOrcado: number;
+        valorRealizado: number;
+        variacao: number;
+        variacaoPercentual: number;
+        status: string;
+    }>;
 }
-

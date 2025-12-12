@@ -10,7 +10,7 @@ import {
   ativarPlanoConta,
   deletarPlanoConta,
 } from '@/features/financeiro/services/plano-contas/plano-contas/gerenciar-plano-contas.service';
-import { validarAtualizarPlanoContaDTO } from '@/features/financeiro/types/plano-contas.types';
+import { validarAtualizarPlanoContaDTO } from '@/features/financeiro/domain/plano-contas';
 
 interface RouteParams {
   params: Promise<{ id: string }>;

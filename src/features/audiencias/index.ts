@@ -128,7 +128,7 @@ export type {
   UseAudienciasOptions,
   TipoAudiencia,
   UseTiposAudienciasResult,
-} from './types';
+} from './domain';
 
 export * from './types/ai-agent.types';
 

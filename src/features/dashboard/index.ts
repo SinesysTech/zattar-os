@@ -10,10 +10,10 @@
  */
 
 // Types
-export type * from './types';
+export type * from './domain';
 
 // Type Guards
-export { isDashboardAdmin, isDashboardUsuario } from './types';
+export { isDashboardAdmin, isDashboardUsuario } from './domain';
 
 // Domain (Schemas Zod)
 export * from './domain';

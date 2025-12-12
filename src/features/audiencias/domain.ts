@@ -73,7 +73,7 @@ export interface Audiencia {
   enderecoPresencial: EnderecoPresencial | null;
   responsavelId: number | null;
   observacoes: string | null;
-  dadosAnteriores: any | null;
+  dadosAnteriores: Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -142,10 +142,132 @@ export const MODALIDADE_AUDIENCIA_LABELS: Record<ModalidadeAudiencia, string> = 
   [ModalidadeAudiencia.Hibrida]: 'Híbrida',
 };
 
-// Re-exporting from another module might be needed if GRAU_TRIBUNAL_LABELS is defined elsewhere
-// For now, let's define it here if not present in expedientes
 export const GRAU_TRIBUNAL_LABELS: Record<GrauTribunal, string> = {
   [GrauTribunal.PrimeiroGrau]: '1º Grau',
   [GrauTribunal.SegundoGrau]: '2º Grau',
   [GrauTribunal.TribunalSuperior]: 'Tribunal Superior',
 };
+
+// ============================================================================
+// Tipos específicos de frontend para audiências (Consolidated)
+// ============================================================================
+
+/**
+ * Resposta da API de audiências (formato padrão)
+ */
+export interface AudienciasApiResponse {
+  success: boolean;
+  data: {
+    audiencias: Audiencia[];
+    paginacao: {
+      pagina: number;
+      limite: number;
+      total: number;
+      totalPaginas: number;
+    };
+  };
+}
+
+/**
+ * Parâmetros para buscar audiências (frontend)
+ */
+export interface BuscarAudienciasParams {
+  pagina?: number;
+  limite?: number;
+  busca?: string;
+  ordenar_por?: AudienciaSortBy;
+  ordem?: 'asc' | 'desc';
+  trt?: CodigoTribunal;
+  grau?: GrauTribunal;
+  responsavel_id?: number | 'null';
+  status?: StatusAudiencia;
+  modalidade?: ModalidadeAudiencia;
+  tipo_descricao?: string;
+  tipo_codigo?: string;
+  data_inicio_inicio?: string;
+  data_inicio_fim?: string;
+  data_fim_inicio?: string;
+  data_fim_fim?: string;
+}
+
+/**
+ * Estado de filtros da página de audiências
+ */
+export interface AudienciasFilters {
+  trt?: string;
+  grau?: GrauTribunal;
+  responsavel_id?: number | 'null';
+  busca?: string;
+  numero_processo?: string;
+  polo_ativo_nome?: string;
+  polo_passivo_nome?: string;
+  status?: string;
+  modalidade?: 'virtual' | 'presencial' | 'hibrida';
+  tipo_descricao?: string;
+  tipo_codigo?: string;
+  data_inicio_inicio?: string;
+  data_inicio_fim?: string;
+  data_fim_inicio?: string;
+  data_fim_fim?: string;
+}
+
+/**
+ * Visualização ativa de audiências
+ */
+export type AudienciasVisualizacao = 'semana' | 'mes' | 'ano' | 'lista';
+
+/**
+ * Paginação de audiências
+ */
+export interface AudienciasPaginacao {
+  pagina: number;
+  limite: number;
+  total: number;
+  totalPaginas: number;
+}
+
+/**
+ * Resultado do hook useAudiencias
+ */
+export interface UseAudienciasResult {
+  audiencias: Audiencia[];
+  paginacao: AudienciasPaginacao | null;
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+}
+
+/**
+ * Opções do hook useAudiencias
+ */
+export interface UseAudienciasOptions {
+  /** Se false, não faz a busca (útil para aguardar inicialização de parâmetros) */
+  enabled?: boolean;
+}
+
+/**
+ * Tipo de audiência (retornado pela API)
+ */
+export interface TipoAudiencia {
+  id: number;
+  codigo: string;
+  descricao: string;
+  trt: string;
+  grau: string;
+}
+
+/**
+ * Resultado do hook useTiposAudiencias
+ */
+export interface UseTiposAudienciasResult {
+  tiposAudiencia: TipoAudiencia[];
+  isLoading: boolean;
+  error: string | null;
+}
+
+// Tipos legados que podem ser migrados posteriormente
+// TODO: Migrar estes tipos para domain.ts quando necessário
+export type GrauAudiencia = string;
+export type AudienciaInfra = unknown;
+export type CriarAudienciaInfraParams = unknown;
+export type AtualizarAudienciaInfraParams = unknown;

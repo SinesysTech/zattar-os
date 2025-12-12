@@ -3,7 +3,7 @@
  * Migrado de src/app/_lib/financeiro/export-plano-contas.ts
  */
 
-import type { PlanoContaHierarquico } from '@/features/financeiro/types/plano-contas.types';
+import type { PlanoContaHierarquico } from '@/features/financeiro/domain/plano-contas';
 import {
     formatarValor,
     gerarCSV,
@@ -36,8 +36,8 @@ function achatarHierarquia(contas: PlanoContaHierarquico[], nivel: number = 0): 
             nivelIndentacao: nivel,
         });
 
-        if (conta.filhos && conta.filhos.length > 0) {
-            resultado.push(...achatarHierarquia(conta.filhos, nivel + 1));
+        if (conta.filhas && conta.filhas.length > 0) {
+            resultado.push(...achatarHierarquia(conta.filhas, nivel + 1));
         }
     }
 
@@ -129,8 +129,8 @@ export async function gerarPlanoContasPDFBytes(contas: PlanoContaHierarquico[]):
 
             y -= lineHeight;
 
-            if (conta.filhos && conta.filhos.length > 0) {
-                desenhar(conta.filhos, nivel + 1);
+            if (conta.filhas && conta.filhas.length > 0) {
+                desenhar(conta.filhas, nivel + 1);
             }
         }
     };
@@ -185,8 +185,8 @@ async function gerarPlanoContasPDFDocument(contas: PlanoContaHierarquico[]) {
 
             y -= lineHeight;
 
-            if (conta.filhos && conta.filhos.length > 0) {
-                desenhar(conta.filhos, nivel + 1);
+            if (conta.filhas && conta.filhas.length > 0) {
+                desenhar(conta.filhas, nivel + 1);
             }
         }
     };

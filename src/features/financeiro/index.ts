@@ -26,11 +26,7 @@ export * from './actions';
 export * from './services/orcamentos';
 export * from './services/recorrencia';
 
-export type * from './types/obrigacoes';
-export type * from './types/plano-contas';
-export type * from './types/dre';
-export type * from './types/orcamentos';
-export type * from './types/conciliacao';
+
 
 // Utils - Re-exportar utilitários de exportação
 export * from './utils/export';

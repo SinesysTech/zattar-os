@@ -18,7 +18,7 @@ import type {
   ListarAcervoUnificadoResult,
   GrauAcervo,
   ProcessoClienteCpfRow,
-} from './types';
+} from './domain';
 
 const ACERVO_TTL = 900; // 15 minutes
 const ACERVO_UNIFICADO_TTL = 900; // 15 minutes

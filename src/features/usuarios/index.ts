@@ -14,7 +14,7 @@ export type {
   GeneroUsuario,
   Endereco,
   UsuariosFilters
-} from './types';
+} from './domain';
 
 // Domain
 export {

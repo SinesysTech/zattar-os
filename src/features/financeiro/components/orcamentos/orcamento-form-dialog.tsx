@@ -38,7 +38,7 @@ import type {
     PeriodoOrcamento,
     CriarOrcamentoDTO,
     AtualizarOrcamentoDTO,
-} from '@/features/financeiro/types/orcamentos';
+} from '@/features/financeiro/domain/orcamentos';
 
 // ============================================================================
 // Tipos

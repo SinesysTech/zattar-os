@@ -32,7 +32,7 @@ import { useObrigacoes } from '@/features/financeiro';
 import type {
   TipoObrigacao,
   StatusObrigacao,
-} from '@/features/financeiro/types/obrigacoes.types';
+} from '@/features/financeiro/domain/obrigacoes';
 import { RepasseTracking } from '../components/repasse-tracking';
 
 // ============================================================================

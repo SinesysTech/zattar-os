@@ -2,7 +2,7 @@ import { generateCacheKey, CACHE_PREFIXES } from './cache-utils';
 import type { ListarPendentesParams } from '@/features/expedientes/types';
 import type { ListarAudienciasParams } from '@/features/audiencias';
 import type { ListarAcervoParams } from '@/features/acervo/types';
-import type { ListarPlanoContasParams } from '@/features/financeiro/types/plano-contas.types';
+import type { PlanoContasFilters as ListarPlanoContasParams } from '@/features/financeiro/domain/plano-contas';
 
 /**
  * Normalizes params by removing undefined values and sorting keys for consistency.

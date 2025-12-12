@@ -3,36 +3,113 @@
  * Entidades e regras de negócio puras (sem dependência de infraestrutura)
  */
 
-import type {
-    PlanoContas,
-    PlanoContaComPai,
-    CriarPlanoContaDTO,
-    AtualizarPlanoContaDTO,
-    PlanoContasFilters,
-    TipoContaContabil,
-    NaturezaConta,
-    NivelConta
-} from '../types/plano-contas';
+// ============================================================================
+// Tipos e Interfaces (From Types)
+// ============================================================================
 
-// Re-export types for convenience
-export type {
-    PlanoContas,
-    PlanoContaComPai,
-    CriarPlanoContaDTO,
-    AtualizarPlanoContaDTO,
-    PlanoContasFilters,
-    TipoContaContabil,
-    NaturezaConta,
-    NivelConta
+export type TipoContaContabil = 'ativo' | 'passivo' | 'receita' | 'despesa' | 'patrimonio_liquido';
+export type NaturezaConta = 'devedora' | 'credora';
+export type NivelConta = 'sintetica' | 'analitica';
+
+export interface PlanoContas {
+    id: number;
+    codigo: string;
+    nome: string;
+    descricao?: string | null;
+    tipo: TipoContaContabil; // mapped from 'tipo' in DB or 'tipoConta' in logic
+    tipoConta: TipoContaContabil; // alias for consistency
+    natureza: NaturezaConta;
+    nivel: NivelConta;
+    contaPaiId?: number | null;
+    ordemExibicao?: number | null;
+    ativo: boolean;
+
+    // Virtual
+    contaPai?: PlanoContas | null;
+    filhas?: PlanoContas[];
+}
+
+export interface PlanoContaComPai extends PlanoContas {
+    nomePai?: string;
+}
+
+export interface CriarPlanoContaDTO {
+    codigo: string;
+    nome: string;
+    descricao?: string;
+    tipoConta: TipoContaContabil;
+    natureza: NaturezaConta;
+    nivel: NivelConta;
+    contaPaiId?: number | null;
+    ordemExibicao?: number | null;
+    ativo?: boolean;
+}
+
+export interface AtualizarPlanoContaDTO extends Partial<CriarPlanoContaDTO> {
+    id: number;
+}
+
+export interface PlanoContasFilters {
+    tipoConta?: TipoContaContabil | TipoContaContabil[];
+    nivel?: NivelConta | NivelConta[];
+    ativo?: boolean;
+    busca?: string;
+}
+
+export interface ListarPlanoContasParams extends PlanoContasFilters {
+    pagina?: number;
+    limite?: number;
+}
+
+export interface ListarPlanoContasResponse {
+    items: PlanoContaComPai[];
+    total: number;
+    pagina: number;
+    limite: number;
+    totalPaginas: number;
+}
+
+export type PlanoConta = PlanoContas;
+
+export interface PlanoContaHierarquico extends PlanoContas {
+    filhas?: PlanoContaHierarquico[];
+    // Compatibility if needed, but domain uses filhas.
+    // Export script uses filhos, I will update export script to use filhas.
+}
+
+// ============================================================================
+// Lists/Selects & Constants (From Types)
+// ============================================================================
+
+export const TIPO_CONTA_LABELS: Record<TipoContaContabil, string> = {
+    ativo: 'Ativo',
+    passivo: 'Passivo',
+    receita: 'Receita',
+    despesa: 'Despesa',
+    patrimonio_liquido: 'Patrimônio Líquido',
 };
 
-// Re-export labels from types
-export {
-    TIPO_CONTA_LABELS,
-    NATUREZA_LABELS,
-    NIVEL_LABELS,
-    getNaturezaPadrao
-} from '../types/plano-contas';
+export const NATUREZA_LABELS: Record<NaturezaConta, string> = {
+    devedora: 'Devedora',
+    credora: 'Credora',
+};
+
+export const NIVEL_LABELS: Record<NivelConta, string> = {
+    sintetica: 'Sintética',
+    analitica: 'Analítica',
+};
+
+export const getNaturezaPadrao = (tipo: TipoContaContabil): NaturezaConta => {
+    switch (tipo) {
+        case 'ativo':
+        case 'despesa':
+            return 'devedora';
+        case 'passivo':
+        case 'receita':
+        case 'patrimonio_liquido':
+            return 'credora';
+    }
+};
 
 // ============================================================================
 // Regras de Negócio

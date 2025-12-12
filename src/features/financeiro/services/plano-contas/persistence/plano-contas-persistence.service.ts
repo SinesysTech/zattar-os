@@ -26,7 +26,7 @@ import type {
   TipoContaContabil,
   NaturezaConta,
   NivelConta,
-} from '@/features/financeiro/types/plano-contas.types';
+} from '@/features/financeiro/domain/plano-contas';
 
 // ============================================================================
 // Tipos internos

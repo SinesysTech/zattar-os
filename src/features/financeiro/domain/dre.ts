@@ -3,44 +3,131 @@
  * Entidades e regras de negocio puras (sem dependencia de infraestrutura)
  */
 
-import type {
-    DRE,
-    ResumoDRE,
-    PeriodoDRE,
-    TipoComparativo,
-    TipoConta,
-    TendenciaDRE,
-    ItemDRE,
-    CategoriaDRE,
-    VariacaoDRE,
-    VariacoesDRE,
-    ComparativoDRE,
-    EvolucaoDRE,
-    GerarDREDTO,
-    ListarDREsParams,
-    BuscarEvolucaoParams,
-    DREResponse
-} from '../types/dre';
+// ============================================================================
+// Enums e tipos literais (From Types)
+// ============================================================================
 
-// Re-export types for convenience
-export type {
-    DRE,
-    ResumoDRE,
-    PeriodoDRE,
-    TipoComparativo,
-    TipoConta,
-    TendenciaDRE,
-    ItemDRE,
-    CategoriaDRE,
-    VariacaoDRE,
-    VariacoesDRE,
-    ComparativoDRE,
-    EvolucaoDRE,
-    GerarDREDTO,
-    ListarDREsParams,
-    BuscarEvolucaoParams,
-    DREResponse
-};
+export type PeriodoDRE = 'mensal' | 'trimestral' | 'semestral' | 'anual';
+export type TipoComparativo = 'periodo_anterior' | 'mesmo_periodo_ano_anterior' | 'orcado';
+export type TipoConta = 'receita' | 'despesa' | 'custo';
+export type TendenciaDRE = 'crescente' | 'decrescente' | 'estavel';
+
+// ============================================================================
+// Interfaces (From Types)
+// ============================================================================
+
+export interface ItemDRE {
+    codigo: string;
+    descricao: string;
+    tipo: TipoConta;
+    valor: number;
+    percentualReceita: number;
+    subItens?: ItemDRE[];
+}
+
+export interface CategoriaDRE {
+    categoria: string;
+    valor: number;
+    percentualReceita: number;
+}
+
+export interface ResumoDRE {
+    receitaBruta: number;
+    deducoes: number;
+    receitaLiquida: number;
+    custosDiretos: number;
+    lucroBruto: number;
+    margemBruta: number;
+    despesasOperacionais: number;
+    lucroOperacional: number;
+    margemOperacional: number;
+    depreciacaoAmortizacao: number;
+    ebitda: number;
+    margemEBITDA: number;
+    receitasFinanceiras: number;
+    despesasFinanceiras: number;
+    resultadoFinanceiro: number;
+    resultadoAntesImposto: number;
+    impostos: number;
+    lucroLiquido: number;
+    margemLiquida: number;
+}
+
+export interface DRE {
+    periodo: {
+        tipo: PeriodoDRE;
+        dataInicio: string;
+        dataFim: string;
+        descricao: string;
+    };
+    resumo: ResumoDRE;
+    receitasPorCategoria: CategoriaDRE[];
+    despesasPorCategoria: CategoriaDRE[];
+    geradoEm: string;
+}
+
+export interface VariacaoDRE {
+    campo: string;
+    valorAtual: number;
+    valorComparativo: number;
+    variacao: number;
+    variacaoPercentual: number;
+}
+
+export interface VariacoesDRE {
+    receitaLiquida: VariacaoDRE;
+    lucroBruto: VariacaoDRE;
+    lucroOperacional: VariacaoDRE;
+    ebitda: VariacaoDRE;
+    lucroLiquido: VariacaoDRE;
+}
+
+export interface ComparativoDRE {
+    periodoAtual: DRE;
+    periodoAnterior?: DRE;
+    orcado?: DRE;
+    variacoes?: Record<string, number>;
+    variacoesOrcado?: Record<string, number>;
+}
+
+export interface EvolucaoDRE {
+    mes: number;
+    mesNome: string;
+    ano: number;
+    receitaLiquida: number;
+    lucroOperacional: number;
+    lucroLiquido: number;
+    margemLiquida: number;
+}
+
+// ============================================================================
+// DTOs (From Types)
+// ============================================================================
+
+export interface GerarDREDTO {
+    dataInicio: string;
+    dataFim: string;
+    tipo?: PeriodoDRE;
+    incluirComparativo?: boolean;
+    incluirOrcado?: boolean;
+}
+
+export interface ListarDREsParams {
+    ano?: number;
+    tipo?: PeriodoDRE;
+    pagina?: number;
+    limite?: number;
+}
+
+export interface BuscarEvolucaoParams {
+    ano: number;
+}
+
+export interface DREResponse {
+    dre: DRE;
+    comparativo?: ComparativoDRE;
+    geradoEm: string;
+}
 
 // ============================================================================
 // Validadores

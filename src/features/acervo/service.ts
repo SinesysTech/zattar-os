@@ -20,7 +20,7 @@ import type {
   ProcessoRespostaIA,
   ResumoProcessosIA,
   ProcessoClienteCpfRow,
-} from './types';
+} from './domain';
 import {
   formatarCpf,
   agruparProcessosPorNumero,

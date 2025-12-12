@@ -11,13 +11,13 @@ import type {
     ResumoOrcamentario,
     EvolucaoMensal,
     OrcamentoComItens,
-} from '@/features/financeiro/types/orcamentos';
-import type {
+} from '@/features/financeiro/domain/orcamentos';
+import {
     RelatorioCompleto,
     RelatorioComparativo,
     RelatorioExecutivo,
     AnaliseParaUI,
-} from '@/features/financeiro/types/relatorios';
+} from '@/features/financeiro/domain/relatorios';
 
 // ============================================================================
 // Tipos para API Response

@@ -46,12 +46,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useOrcamentos } from '@/features/financeiro/hooks/use-orcamentos';
 import { toast } from 'sonner';
-import type { OrcamentoComItens } from '@/features/financeiro/types/orcamentos';
+import type { OrcamentoComItens } from '@/features/financeiro/domain/orcamentos';
 import {
   exportarComparativoCSV,
   exportarComparativoPDF,
 } from '@/features/financeiro/utils/export/orcamentos';
-import type { RelatorioComparativo } from '@/features/financeiro/types/relatorios';
+import type { RelatorioComparativo } from '@/features/financeiro/domain/relatorios';
 
 // ============================================================================
 // Constantes e Helpers

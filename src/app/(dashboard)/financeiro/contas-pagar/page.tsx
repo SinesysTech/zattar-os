@@ -56,7 +56,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type {
     Lancamento,
     StatusLancamento,
-} from '@/features/financeiro/types/lancamentos';
+} from '@/features/financeiro/domain/lancamentos';
 
 // ============================================================================
 // Constantes e Helpers

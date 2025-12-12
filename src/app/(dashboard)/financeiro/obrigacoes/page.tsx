@@ -45,7 +45,7 @@ import type {
   TipoObrigacao,
   StatusObrigacao,
   StatusSincronizacao,
-} from '@/features/financeiro/types/obrigacoes';
+} from '@/features/financeiro/domain/obrigacoes';
 
 // ============================================================================
 // Constantes e Helpers

@@ -1,5 +1,5 @@
 // Types
-export type { Assistente, AssistentesParams, AssistentesFilters, ViewMode } from './types';
+export type { Assistente, AssistentesParams, AssistentesFilters, ViewMode } from './domain';
 
 // Domain
 export { assistenteSchema, criarAssistenteSchema, atualizarAssistenteSchema, STATUS_LABELS } from './domain';
