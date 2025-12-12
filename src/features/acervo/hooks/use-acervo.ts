@@ -164,7 +164,9 @@ export function useAtribuirResponsavel() {
  * Hook for searching processes by client CPF (for AI Agent)
  */
 export function useProcessosClienteCpf() {
-  const [data, setData] = useState<ProcessosClienteCpfResponse | null>(null);
+  type ProcessosClienteCpfData = Extract<ProcessosClienteCpfResponse, { success: true }>['data'];
+
+  const [data, setData] = useState<ProcessosClienteCpfData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -175,12 +177,12 @@ export function useProcessosClienteCpf() {
     try {
       const result = await actionBuscarProcessosClientePorCpf(cpf);
 
-      if (result.success && result.data) {
-        setData({ success: true, data: result.data });
+      if (result.success) {
+        setData(result.data);
       } else {
         const msg = result.error || 'Erro ao buscar processos';
+        setData(null);
         setError(msg);
-        setData({ success: false, error: msg });
         toast.error('Erro', {
           description: msg,
         });
@@ -188,7 +190,7 @@ export function useProcessosClienteCpf() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
       setError(errorMessage);
-      setData({ success: false, error: errorMessage });
+      setData(null);
       toast.error('Erro', { description: errorMessage });
     } finally {
       setLoading(false);

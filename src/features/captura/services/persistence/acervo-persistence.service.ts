@@ -1,17 +1,11 @@
 // Serviço de persistência de acervo (acervo geral + arquivados)
 // Salva processos capturados no banco de dados com comparação antes de atualizar
 
-import { createServiceClient } from '@/lib/supabase/service-client';
-import type { Processo } from '@/features/captura/types/trt-types';
-import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
-import {
-  compararObjetos,
-  removerCamposControle,
-} from '@/lib/utils/captura/comparison.util';
-import {
-  captureLogService,
-  type TipoEntidade,
-} from './capture-log.service';
+import { createServiceClient } from "@/lib/supabase/service-client";
+import type { Processo } from "../../types/types";
+import type { CodigoTRT, GrauTRT } from "../../types/trt-types";
+import { compararObjetos, removerCamposControle } from "./comparison.util";
+import { captureLogService, type TipoEntidade } from "./capture-log.service";
 
 /**
  * Parâmetros para salvar processos no acervo
@@ -19,7 +13,7 @@ import {
 export interface SalvarAcervoParams {
   processos: Processo[];
   advogadoId: number;
-  origem: 'acervo_geral' | 'arquivado';
+  origem: "acervo_geral" | "arquivado";
   trt: CodigoTRT;
   grau: GrauTRT;
 }
@@ -61,16 +55,16 @@ async function buscarProcessoExistente(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('acervo')
-    .select('*')
-    .eq('id_pje', idPje)
-    .eq('trt', trt)
-    .eq('grau', grau)
-    .eq('numero_processo', numeroProcesso.trim())
+    .from("acervo")
+    .select("*")
+    .eq("id_pje", idPje)
+    .eq("trt", trt)
+    .eq("grau", grau)
+    .eq("numero_processo", numeroProcesso.trim())
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       // Nenhum registro encontrado
       return null;
     }
@@ -108,7 +102,7 @@ export async function salvarAcervo(
   let naoAtualizados = 0;
   let erros = 0;
 
-  const entidade: TipoEntidade = 'acervo';
+  const entidade: TipoEntidade = "acervo";
 
   // Processar cada processo individualmente para comparar antes de persistir
   for (const processo of processos) {
@@ -119,8 +113,8 @@ export async function salvarAcervo(
       // Tratar valores nulos/vazios com valores padrão seguros
       const classeJudicial = processo.classeJudicial
         ? processo.classeJudicial.trim()
-        : 'Não informada';
-      
+        : "Não informada";
+
       const dadosNovos = {
         id_pje: processo.id,
         advogado_id: advogadoId,
@@ -129,14 +123,14 @@ export async function salvarAcervo(
         grau,
         numero_processo: numeroProcesso,
         numero: processo.numero ?? 0,
-        descricao_orgao_julgador: processo.descricaoOrgaoJulgador?.trim() || '',
+        descricao_orgao_julgador: processo.descricaoOrgaoJulgador?.trim() || "",
         classe_judicial: classeJudicial,
         segredo_justica: processo.segredoDeJustica ?? false,
-        codigo_status_processo: processo.codigoStatusProcesso?.trim() || '',
+        codigo_status_processo: processo.codigoStatusProcesso?.trim() || "",
         prioridade_processual: processo.prioridadeProcessual ?? 0,
-        nome_parte_autora: processo.nomeParteAutora?.trim() || '',
+        nome_parte_autora: processo.nomeParteAutora?.trim() || "",
         qtde_parte_autora: processo.qtdeParteAutora ?? 1,
-        nome_parte_re: processo.nomeParteRe?.trim() || '',
+        nome_parte_re: processo.nomeParteRe?.trim() || "",
         qtde_parte_re: processo.qtdeParteRe ?? 1,
         data_autuacao: parseDate(processo.dataAutuacao),
         juizo_digital: processo.juizoDigital ?? false,
@@ -156,9 +150,9 @@ export async function salvarAcervo(
       if (!registroExistente) {
         // Registro não existe - inserir e retornar o ID gerado
         const { data: inserted, error } = await supabase
-          .from('acervo')
+          .from("acervo")
           .insert(dadosNovos)
-          .select('id')
+          .select("id")
           .single();
 
         if (error) {
@@ -206,15 +200,15 @@ export async function salvarAcervo(
           );
 
           const { error } = await supabase
-            .from('acervo')
+            .from("acervo")
             .update({
               ...dadosNovos,
               dados_anteriores: dadosAnteriores,
             })
-            .eq('id_pje', processo.id)
-            .eq('trt', trt)
-            .eq('grau', grau)
-            .eq('numero_processo', numeroProcesso);
+            .eq("id_pje", processo.id)
+            .eq("trt", trt)
+            .eq("grau", grau)
+            .eq("numero_processo", numeroProcesso);
 
           if (error) {
             throw error;
@@ -233,8 +227,7 @@ export async function salvarAcervo(
       }
     } catch (error) {
       erros++;
-      const erroMsg =
-        error instanceof Error ? error.message : String(error);
+      const erroMsg = error instanceof Error ? error.message : String(error);
       captureLogService.logErro(entidade, erroMsg, {
         id_pje: processo.id,
         numero_processo: processo.numeroProcesso,
@@ -270,16 +263,16 @@ export async function buscarProcessoNoAcervo(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('acervo')
-    .select('id')
-    .eq('id_pje', idPje)
-    .eq('trt', trt)
-    .eq('grau', grau)
-    .eq('numero_processo', numeroProcesso.trim())
+    .from("acervo")
+    .select("id")
+    .eq("id_pje", idPje)
+    .eq("trt", trt)
+    .eq("grau", grau)
+    .eq("numero_processo", numeroProcesso.trim())
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       // Nenhum registro encontrado
       return null;
     }
@@ -288,4 +281,3 @@ export async function buscarProcessoNoAcervo(
 
   return data ? { id: data.id } : null;
 }
-

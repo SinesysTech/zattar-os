@@ -23,6 +23,7 @@ import {
   listarAcervoParamsSchema,
   atribuirResponsavelSchema,
   type ListarAcervoParams,
+  type ProcessosClienteCpfResponse,
 } from '../domain';
 
 export type ActionResponse<T = unknown> = {
@@ -194,7 +195,7 @@ export async function actionAtribuirResponsavel(
  */
 export async function actionBuscarProcessosClientePorCpf(
   cpf: string
-): Promise<ActionResponse> {
+): Promise<ProcessosClienteCpfResponse> {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -212,7 +213,10 @@ export async function actionBuscarProcessosClientePorCpf(
     return result;
   } catch (error) {
     console.error('[actionBuscarProcessosClientePorCpf] Error:', error);
-    return createErrorResponse(error, 'Erro ao buscar processos por CPF');
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro ao buscar processos por CPF',
+    };
   }
 }
 

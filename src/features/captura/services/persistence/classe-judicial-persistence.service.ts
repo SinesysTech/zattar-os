@@ -5,7 +5,7 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
 import {
   compararObjetos,
-} from '@/lib/utils/captura/comparison.util';
+} from './comparison.util';
 import { CACHE_PREFIXES, withCache } from '@/lib/redis/cache-utils';
 
 /**

@@ -1,23 +1,23 @@
 // Serviço de persistência de audiências
 // Salva audiências capturadas no banco de dados com comparação antes de atualizar
 
-import { createServiceClient } from '@/lib/supabase/service-client';
-import type { Audiencia } from '@/features/captura/types/trt-types';
-import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
-import { buscarOrgaoJulgador } from './orgao-julgador-persistence.service';
-import { buscarProcessoNoAcervo } from './acervo-persistence.service';
-import { salvarOrgaoJulgador } from './orgao-julgador-persistence.service';
-import { salvarClasseJudicial, buscarClasseJudicial } from './classe-judicial-persistence.service';
-import { salvarTipoAudiencia, buscarTipoAudiencia } from './tipo-audiencia-persistence.service';
-import { salvarSalaAudiencia } from './sala-audiencia-persistence.service';
+import { createServiceClient } from "@/lib/supabase/service-client";
+import type { Audiencia } from "../../types/types";
+import type { CodigoTRT, GrauTRT } from "../../types/trt-types";
+import { buscarOrgaoJulgador } from "./orgao-julgador-persistence.service";
+import { buscarProcessoNoAcervo } from "./acervo-persistence.service";
+import { salvarOrgaoJulgador } from "./orgao-julgador-persistence.service";
 import {
-  compararObjetos,
-  removerCamposControle,
-} from '@/lib/utils/captura/comparison.util';
+  salvarClasseJudicial,
+  buscarClasseJudicial,
+} from "./classe-judicial-persistence.service";
 import {
-  captureLogService,
-  type TipoEntidade,
-} from './capture-log.service';
+  salvarTipoAudiencia,
+  buscarTipoAudiencia,
+} from "./tipo-audiencia-persistence.service";
+import { salvarSalaAudiencia } from "./sala-audiencia-persistence.service";
+import { compararObjetos, removerCamposControle } from "./comparison.util";
+import { captureLogService, type TipoEntidade } from "./capture-log.service";
 
 /**
  * Parâmetros para salvar audiências
@@ -27,7 +27,7 @@ export interface SalvarAudienciasParams {
   advogadoId: number;
   trt: CodigoTRT;
   grau: GrauTRT;
-  atas?: Record<number, { documentoId: number; url: string }>; 
+  atas?: Record<number, { documentoId: number; url: string }>;
 }
 
 /**
@@ -64,16 +64,16 @@ async function buscarAudienciaExistente(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('audiencias')
-    .select('*')
-    .eq('id_pje', idPje)
-    .eq('trt', trt)
-    .eq('grau', grau)
-    .eq('numero_processo', numeroProcesso.trim())
+    .from("audiencias")
+    .select("*")
+    .eq("id_pje", idPje)
+    .eq("trt", trt)
+    .eq("grau", grau)
+    .eq("numero_processo", numeroProcesso.trim())
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar audiência: ${error.message}`);
@@ -120,15 +120,16 @@ export async function salvarAudiencias(
   for (const audiencia of audiencias) {
     if (audiencia.processo?.orgaoJulgador) {
       const orgaoJulgador = audiencia.processo.orgaoJulgador;
-      
+
       // Verificar se já existe
       const cached = cacheOrgaos.get(orgaoJulgador.id) || null;
-      const existe = cached || await buscarOrgaoJulgador(orgaoJulgador.id, trt, grau);
-      
+      const existe =
+        cached || (await buscarOrgaoJulgador(orgaoJulgador.id, trt, grau));
+
       if (!existe) {
         // Salvar órgão julgador
-        const descricao = orgaoJulgador.descricao || '';
-        
+        const descricao = orgaoJulgador.descricao || "";
+
         const salvo = await salvarOrgaoJulgador({
           orgaoJulgador: {
             id: orgaoJulgador.id,
@@ -189,12 +190,15 @@ export async function salvarAudiencias(
 
       // Buscar ID do órgão julgador
       if (audiencia.processo?.orgaoJulgador) {
-        const cached = cacheOrgaos.get(audiencia.processo.orgaoJulgador.id) || null;
-        const orgao = cached || await buscarOrgaoJulgador(
-          audiencia.processo.orgaoJulgador.id,
-          trt,
-          grau
-        );
+        const cached =
+          cacheOrgaos.get(audiencia.processo.orgaoJulgador.id) || null;
+        const orgao =
+          cached ||
+          (await buscarOrgaoJulgador(
+            audiencia.processo.orgaoJulgador.id,
+            trt,
+            grau
+          ));
         orgaoJulgadorId = orgao?.id ?? null;
       }
 
@@ -211,23 +215,23 @@ export async function salvarAudiencias(
 
       // Buscar ID da classe judicial
       if (audiencia.processo?.classeJudicial) {
-        const cached = cacheClasses.get(audiencia.processo.classeJudicial.id) || null;
-        const classe = cached || await buscarClasseJudicial(
-          audiencia.processo.classeJudicial.id,
-          trt,
-          grau
-        );
+        const cached =
+          cacheClasses.get(audiencia.processo.classeJudicial.id) || null;
+        const classe =
+          cached ||
+          (await buscarClasseJudicial(
+            audiencia.processo.classeJudicial.id,
+            trt,
+            grau
+          ));
         classeJudicialId = classe?.id ?? null;
       }
 
       // Buscar ID do tipo de audiência
       if (audiencia.tipo) {
         const cached = cacheTipos.get(audiencia.tipo.id) || null;
-        const tipo = cached || await buscarTipoAudiencia(
-          audiencia.tipo.id,
-          trt,
-          grau
-        );
+        const tipo =
+          cached || (await buscarTipoAudiencia(audiencia.tipo.id, trt, grau));
         tipoAudienciaId = tipo?.id ?? null;
       }
 
@@ -268,19 +272,19 @@ export async function salvarAudiencias(
   let naoAtualizados = 0;
   let erros = 0;
 
-  const entidade: TipoEntidade = 'audiencias';
+  const entidade: TipoEntidade = "audiencias";
 
   // Processar cada audiência individualmente
-  for (const { 
-    audiencia, 
-    orgaoJulgadorId, 
-    processoId, 
-    classeJudicialId, 
-    tipoAudienciaId, 
-    salaAudienciaId 
+  for (const {
+    audiencia,
+    orgaoJulgadorId,
+    processoId,
+    classeJudicialId,
+    tipoAudienciaId,
+    salaAudienciaId,
   } of dadosComRelacoes) {
     try {
-      const numeroProcesso = audiencia.processo?.numero?.trim() ?? '';
+      const numeroProcesso = audiencia.processo?.numero?.trim() ?? "";
 
       const dadosNovos = {
         id_pje: audiencia.id,
@@ -305,9 +309,11 @@ export async function salvarAudiencias(
         em_andamento: audiencia.emAndamento ?? false,
         documento_ativo: audiencia.documentoAtivo ?? false,
         polo_ativo_nome: audiencia.poloAtivo?.nome?.trim() ?? null,
-        polo_ativo_representa_varios: audiencia.poloAtivo?.representaVarios ?? false,
+        polo_ativo_representa_varios:
+          audiencia.poloAtivo?.representaVarios ?? false,
         polo_passivo_nome: audiencia.poloPassivo?.nome?.trim() ?? null,
-        polo_passivo_representa_varios: audiencia.poloPassivo?.representaVarios ?? false,
+        polo_passivo_representa_varios:
+          audiencia.poloPassivo?.representaVarios ?? false,
         url_audiencia_virtual: audiencia.urlAudienciaVirtual?.trim() ?? null,
         segredo_justica: audiencia.processo?.segredoDeJustica ?? false,
         juizo_digital: audiencia.processo?.juizoDigital ?? false,
@@ -326,7 +332,7 @@ export async function salvarAudiencias(
 
       if (!registroExistente) {
         // Inserir
-        const { error } = await supabase.from('audiencias').insert(dadosNovos);
+        const { error } = await supabase.from("audiencias").insert(dadosNovos);
 
         if (error) {
           throw error;
@@ -346,7 +352,9 @@ export async function salvarAudiencias(
         const dadosParaAtualizar = { ...dadosNovos };
 
         // Preservar url_audiencia_virtual se existente tem valor e captura não
-        const urlExistente = registroExistente.url_audiencia_virtual as string | null;
+        const urlExistente = registroExistente.url_audiencia_virtual as
+          | string
+          | null;
         if (urlExistente && !dadosNovos.url_audiencia_virtual) {
           dadosParaAtualizar.url_audiencia_virtual = urlExistente;
         }
@@ -372,15 +380,15 @@ export async function salvarAudiencias(
           );
 
           const { error } = await supabase
-            .from('audiencias')
+            .from("audiencias")
             .update({
               ...dadosParaAtualizar,
               dados_anteriores: dadosAnteriores,
             })
-            .eq('id_pje', audiencia.id)
-            .eq('trt', trt)
-            .eq('grau', grau)
-            .eq('numero_processo', numeroProcesso);
+            .eq("id_pje", audiencia.id)
+            .eq("trt", trt)
+            .eq("grau", grau)
+            .eq("numero_processo", numeroProcesso);
 
           if (error) {
             throw error;
@@ -399,8 +407,7 @@ export async function salvarAudiencias(
       }
     } catch (error) {
       erros++;
-      const erroMsg =
-        error instanceof Error ? error.message : String(error);
+      const erroMsg = error instanceof Error ? error.message : String(error);
       captureLogService.logErro(entidade, erroMsg, {
         id_pje: audiencia.id,
         numero_processo: audiencia.processo?.numero,

@@ -10,6 +10,7 @@ import type { CapturaRawLogDocument } from '@/lib/types/captura-log';
 import type { EntidadeTipoEndereco } from '@/features/enderecos/types';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { buscarLogPorMongoId } from './captura-recovery.service';
+import type { TipoCaptura } from '../../types/types';
 import type {
   AnaliseCaptura,
   ElementoRecuperavel,
@@ -19,6 +20,9 @@ import type {
   PartePJEPayload,
   RepresentantePJEPayload,
   EnderecoPJEPayload,
+  TipoEntidadeRecuperavel,
+  PendentePayload,
+  AudienciaPayload,
   AnaliseAgregadaParams,
   AnaliseAgregadaResult,
 } from './types';
@@ -1155,8 +1159,4 @@ function extrairElementosDeArquivados(
     tipoCaptura: 'arquivados',
   };
 }
-
-// Importar tipo de captura
-import type { TipoCaptura } from '../../types';
-import type { TipoEntidadeRecuperavel, PendentePayload, AudienciaPayload } from './types';
 

@@ -3,8 +3,8 @@
 
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
-import { compararObjetos } from '@/lib/utils/captura/comparison.util';
-import { getCached, setCached } from '@/lib/utils/redis';
+import { compararObjetos } from './comparison.util';    
+import { getCached, setCached } from '@/lib/redis/cache-utils';
 
 /**
  * Interface para tipo de audiência do PJE

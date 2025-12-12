@@ -1,17 +1,11 @@
 // Serviço de persistência de processos pendentes de manifestação
 // Salva processos pendentes capturados no banco de dados com comparação antes de atualizar
 
-import { createServiceClient } from '@/lib/supabase/service-client';
-import type { Processo } from '@/features/captura/types/trt-types';
-import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
-import {
-  compararObjetos,
-  removerCamposControle,
-} from '@/lib/utils/captura/comparison.util';
-import {
-  captureLogService,
-  type TipoEntidade,
-} from './capture-log.service';
+import { createServiceClient } from "@/lib/supabase/service-client";
+import type { Processo } from "../../types/types";
+import type { CodigoTRT, GrauTRT } from "../../types/trt-types";
+import { compararObjetos, removerCamposControle } from "./comparison.util";
+import { captureLogService, type TipoEntidade } from "./capture-log.service";
 
 /**
  * Processo pendente com campos adicionais específicos
@@ -70,16 +64,16 @@ async function buscarPendenteExistente(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('expedientes')
-    .select('*')
-    .eq('id_pje', idPje)
-    .eq('trt', trt)
-    .eq('grau', grau)
-    .eq('numero_processo', numeroProcesso.trim())
+    .from("expedientes")
+    .select("*")
+    .eq("id_pje", idPje)
+    .eq("trt", trt)
+    .eq("grau", grau)
+    .eq("numero_processo", numeroProcesso.trim())
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar pendente: ${error.message}`);
@@ -113,7 +107,7 @@ export async function salvarPendentes(
   let naoAtualizados = 0;
   let erros = 0;
 
-  const entidade: TipoEntidade = 'expedientes';
+  const entidade: TipoEntidade = "expedientes";
 
   // Processar cada processo individualmente
   for (const processo of processos) {
@@ -157,9 +151,7 @@ export async function salvarPendentes(
 
       if (!registroExistente) {
         // Inserir
-        const { error } = await supabase
-          .from('expedientes')
-          .insert(dadosNovos);
+        const { error } = await supabase.from("expedientes").insert(dadosNovos);
 
         if (error) {
           throw error;
@@ -195,15 +187,15 @@ export async function salvarPendentes(
           );
 
           const { error } = await supabase
-            .from('expedientes')
+            .from("expedientes")
             .update({
               ...dadosNovos,
               dados_anteriores: dadosAnteriores,
             })
-            .eq('id_pje', processo.id)
-            .eq('trt', trt)
-            .eq('grau', grau)
-            .eq('numero_processo', numeroProcesso);
+            .eq("id_pje", processo.id)
+            .eq("trt", trt)
+            .eq("grau", grau)
+            .eq("numero_processo", numeroProcesso);
 
           if (error) {
             throw error;
@@ -222,8 +214,7 @@ export async function salvarPendentes(
       }
     } catch (error) {
       erros++;
-      const erroMsg =
-        error instanceof Error ? error.message : String(error);
+      const erroMsg = error instanceof Error ? error.message : String(error);
       captureLogService.logErro(entidade, erroMsg, {
         id_pje: processo.id,
         numero_processo: processo.numeroProcesso,
@@ -267,14 +258,14 @@ export async function atualizarDocumentoPendente(
   const supabase = createServiceClient();
 
   const { error } = await supabase
-    .from('expedientes')
+    .from("expedientes")
     .update({
       arquivo_nome: arquivoInfo.arquivo_nome,
       arquivo_url: arquivoInfo.arquivo_url,
       arquivo_key: arquivoInfo.arquivo_key,
       arquivo_bucket: arquivoInfo.arquivo_bucket,
     })
-    .eq('id', pendenteId);
+    .eq("id", pendenteId);
 
   if (error) {
     throw new Error(
@@ -284,4 +275,3 @@ export async function atualizarDocumentoPendente(
 
   console.log(`✅ Documento atualizado no banco para expediente ${pendenteId}`);
 }
-
