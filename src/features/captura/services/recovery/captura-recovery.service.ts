@@ -7,7 +7,7 @@
  */
 
 import { ObjectId, type Filter, type Sort } from 'mongodb';
-import { getCapturaRawLogsCollection } from '@/lib/utils/mongodb/collections';
+import { getCapturaRawLogsCollection } from '@/lib/mongodb/collections';
 import type { CapturaRawLogDocument } from '@/lib/types/captura-log';
 import type {
   ListarLogsRecoveryParams,

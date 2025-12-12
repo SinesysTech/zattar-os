@@ -13,8 +13,8 @@ import {
 import {
   getPlanoContasListKey,
   getPlanoContasHierarquiaKey,
-} from '@/lib/utils/redis/cache-keys';
-import { invalidatePlanoContasCache } from '@/lib/utils/redis/invalidation';
+} from '@/lib/redis/cache-keys';
+import { invalidatePlanoContasCache } from '@/lib/redis/invalidation';
 import type {
   PlanoConta,
   PlanoContaComPai,
