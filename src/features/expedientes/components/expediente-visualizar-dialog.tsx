@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { ExternalLink, Calendar, FileText, Users, Building2, Scale, AlertCircle } from 'lucide-react';
-import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../types';
+import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
 import type { Usuario } from '@/features/usuarios/types';
 import type { TipoExpediente } from '@/features/tipos-expedientes';
 

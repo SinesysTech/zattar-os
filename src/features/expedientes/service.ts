@@ -8,16 +8,14 @@ import {
   baixaExpedienteSchema,
   ListarExpedientesParams,
   Expediente,
-  // Legacy types
   ListarPendentesParams,
   ListarPendentesResult,
   ListarPendentesAgrupadoResult,
   AgruparPorPendente,
   PendenteManifestacao,
   ExpedientesFilters,
-  // Enums
   OrigemExpediente,
-} from './types';
+} from './domain';
 import * as repository from './repository';
 import type { ExpedienteInsertInput, ExpedienteUpdateInput } from './repository';
 import { Result, err, appError, PaginatedResponse } from '@/lib/types';

@@ -20,7 +20,7 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { ListarExpedientesParams, ExpedientesApiResponse, ExpedientesFilters } from '../types';
+import { ListarExpedientesParams, ExpedientesApiResponse, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';

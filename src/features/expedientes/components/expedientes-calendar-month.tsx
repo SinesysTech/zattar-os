@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
-import type { Expediente, ListarExpedientesParams, ExpedientesApiResponse, ExpedientesFilters } from '../types';
+import type { Expediente, ListarExpedientesParams, ExpedientesApiResponse, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, RefreshCw, Calendar as CalendarIcon } from 'lucide-react';

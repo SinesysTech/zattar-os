@@ -7,7 +7,7 @@ import {
   createExpedienteSchema,
   updateExpedienteSchema,
   ListarExpedientesParams,
-} from './types';
+} from './domain';
 import {
   criarExpediente,
   atualizarExpediente,

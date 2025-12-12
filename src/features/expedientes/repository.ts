@@ -10,7 +10,7 @@ import {
   CodigoTribunal,
   GrauTribunal,
   OrigemExpediente,
-} from './types';
+} from './domain';
 
 // =============================================================================
 // CONSTANTES

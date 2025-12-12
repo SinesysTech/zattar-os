@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { actionReverterBaixa } from '../actions';
-import { Expediente } from '../types';
+import { Expediente } from '../domain';
 
 interface ExpedientesReverterBaixaDialogProps {
   open: boolean;

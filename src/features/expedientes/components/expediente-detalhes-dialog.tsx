@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Expediente } from '../types';
+import { Expediente } from '../domain';
 import { actionAtualizarExpediente } from '../actions';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';

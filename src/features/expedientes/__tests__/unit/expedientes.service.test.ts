@@ -12,7 +12,7 @@ import {
   processoExists,
 } from '../../repository';
 import { ok, err } from '@/lib/types';
-import { CodigoTribunal, GrauTribunal, OrigemExpediente } from '../../types';
+import { CodigoTribunal, GrauTribunal, OrigemExpediente } from '../../domain';
 import { createDbClient } from '@/lib/supabase';
 
 // Mock repository

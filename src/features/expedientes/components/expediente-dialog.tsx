@@ -43,7 +43,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { actionCriarExpediente } from '../actions';
-import { GrauTribunal, CodigoTribunal } from '../types';
+import { GrauTribunal, CodigoTribunal } from '../domain';
 import type { TipoExpediente } from '@/features/tipos-expedientes';
 import { actionListarAcervoPaginado } from '@/features/acervo';
 

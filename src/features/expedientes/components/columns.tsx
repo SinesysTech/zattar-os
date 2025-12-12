@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, FileText, CheckCircle2, AlertTriangle, Scale, Eye, Pencil, FileDown } from 'lucide-react';
-import { Expediente, GrauTribunal, CodigoTribunal, GRAU_TRIBUNAL_LABELS } from '../types';
+import { Expediente, GrauTribunal, CodigoTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
 import { actionAtualizarExpediente } from '../actions';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
