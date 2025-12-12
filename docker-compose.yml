@@ -54,25 +54,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-# ==========================================================================
-# SERVIÇOS EXTERNOS (repositórios separados)
-# ==========================================================================
-# 
-# Os seguintes serviços agora estão em repositórios separados:
-#
-# 1. sinesys-mcp-server (MCP Server para agentes IA)
-#    - Repositório: sinesys-mcp-server
-#    - Deploy separado no CapRover: sinesys-mcp
-#
-# 2. sinesys-browser-server (Firefox para scraping)
-#    - Repositório: sinesys-browser-server
-#    - Deploy separado no CapRover: sinesys-browser
-#    - WebSocket habilitado!
-#
-# Para desenvolvimento com todos os serviços, use docker-compose.full.yml
-# ==========================================================================
-
 networks:
   sinesys_network:
     driver: bridge
