@@ -11,9 +11,9 @@ import {
   reverterBaixaExpediente,
   processoExists,
 } from '../../repository';
-import { ok, err } from '@/lib/types';
+import { ok, err } from '../../../../lib/types';
 import { CodigoTribunal, GrauTribunal, OrigemExpediente } from '../../domain';
-import { createDbClient } from '@/lib/supabase';
+import { createDbClient } from '../../../../lib/supabase';
 
 // Mock repository
 jest.mock('../../repository');

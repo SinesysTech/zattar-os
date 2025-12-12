@@ -33,7 +33,7 @@ export type ActionResult<T = unknown> =
 // =============================================================================
 
 function formatZodErrors(
-  zodError: z.ZodError<any>
+  zodError: z.ZodError<unknown>
 ): Record<string, string[]> {
   const errors: Record<string, string[]> = {};
   for (const err of zodError.errors) {
@@ -180,7 +180,7 @@ export async function actionAtualizarExpediente(
       };
     }
 
-    const rawData: Record<string, any> = {};
+    const rawData: Record<string, unknown> = {};
     for (const [key, value] of formData.entries()) {
       if (value === 'true') {
         rawData[key] = true;
