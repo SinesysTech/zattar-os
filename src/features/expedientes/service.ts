@@ -8,11 +8,6 @@ import {
   baixaExpedienteSchema,
   ListarExpedientesParams,
   Expediente,
-  ListarPendentesParams,
-  ListarPendentesResult,
-  ListarPendentesAgrupadoResult,
-  AgruparPorPendente,
-  PendenteManifestacao,
 } from './domain';
 import * as repository from './repository';
 import type { ExpedienteInsertInput, ExpedienteUpdateInput } from './repository';
@@ -104,6 +99,13 @@ export async function listarExpedientes(params: ListarExpedientesParams): Promis
     ordem: params.ordem ?? 'asc',
   };
   return repository.findAllExpedientes(saneParams);
+}
+
+export async function buscarExpedientesPorClienteCPF(cpf: string): Promise<Result<Expediente[]>> {
+  if (!cpf || !cpf.trim()) {
+    return err(appError('VALIDATION_ERROR', 'CPF é obrigatório.'));
+  }
+  return repository.findExpedientesByClienteCPF(cpf);
 }
 
 export async function atualizarExpediente(id: number, input: z.infer<typeof updateExpedienteSchema>): Promise<Result<Expediente>> {
@@ -269,189 +271,6 @@ export async function reverterBaixa(id: number, userId: number): Promise<Result<
   }
 
   return reversaoResult;
-}
-
-// =============================================================================
-// LEGACY SERVICES (MIGRATED FROM BACKEND)
-// =============================================================================
-
-/**
- * Converte Expediente (camelCase) para PendenteManifestacao (snake_case)
- */
-function toPendenteManifestacao(exp: Expediente): PendenteManifestacao {
-  return {
-    id: exp.id,
-    id_pje: exp.idPje ?? 0,
-    advogado_id: exp.advogadoId ?? 0,
-    processo_id: exp.processoId,
-    trt: exp.trt,
-    grau: exp.grau,
-    numero_processo: exp.numeroProcesso,
-    descricao_orgao_julgador: exp.descricaoOrgaoJulgador ?? '',
-    classe_judicial: exp.classeJudicial ?? '',
-    numero: exp.numero ? parseInt(exp.numero) : 0,
-    segredo_justica: exp.segredoJustica,
-    codigo_status_processo: exp.codigoStatusProcesso ?? '',
-    prioridade_processual: exp.prioridadeProcessual ? 1 : 0,
-    nome_parte_autora: exp.nomeParteAutora ?? '',
-    qtde_parte_autora: exp.qtdeParteAutora ?? 0,
-    nome_parte_re: exp.nomeParteRe ?? '',
-    qtde_parte_re: exp.qtdeParteRe ?? 0,
-    data_autuacao: exp.dataAutuacao ?? '',
-    juizo_digital: exp.juizoDigital,
-    data_arquivamento: exp.dataArquivamento,
-    id_documento: exp.idDocumento ? parseInt(exp.idDocumento) : null,
-    data_ciencia_parte: exp.dataCienciaParte,
-    data_prazo_legal_parte: exp.dataPrazoLegalParte,
-    data_criacao_expediente: exp.dataCriacaoExpediente,
-    prazo_vencido: exp.prazoVencido,
-    sigla_orgao_julgador: exp.siglaOrgaoJulgador,
-    baixado_em: exp.baixadoEm,
-    protocolo_id: exp.protocoloId,
-    justificativa_baixa: exp.justificativaBaixa,
-    responsavel_id: exp.responsavelId,
-    tipo_expediente_id: exp.tipoExpedienteId,
-    descricao_arquivos: exp.descricaoArquivos,
-    arquivo_nome: exp.arquivoNome,
-    arquivo_url: exp.arquivoUrl,
-    arquivo_bucket: exp.arquivoBucket,
-    arquivo_key: exp.arquivoKey,
-    observacoes: exp.observacoes,
-    created_at: exp.createdAt,
-    updated_at: exp.updatedAt,
-  };
-}
-
-export async function obterPendentes(
-  params: ListarPendentesParams & { agrupar_por?: AgruparPorPendente }
-): Promise<Result<ListarPendentesResult | ListarPendentesAgrupadoResult>> {
-  // Mapear filtros legacy para features params
-  // Mapear filtros legacy para features params
-  const repoParams: ListarExpedientesParams = {
-    pagina: params.pagina,
-    limite: params.agrupar_por ? 1000 : (params.limite ?? 50), // Se agrupar, buscar mais linhas
-    busca: params.busca,
-    trt: params.trt as ListarExpedientesParams['trt'],
-    grau: params.grau as ListarExpedientesParams['grau'],
-    responsavelId: params.responsavel_id === 'null' ? 'null' : (typeof params.responsavel_id === 'number' ? params.responsavel_id : undefined),
-    tipoExpedienteId: params.tipo_expediente_id === 'null' ? undefined : (typeof params.tipo_expediente_id === 'number' ? params.tipo_expediente_id : undefined),
-    semTipo: params.sem_tipo || params.tipo_expediente_id === 'null',
-    semResponsavel: params.sem_responsavel || params.responsavel_id === 'null',
-    baixado: params.baixado,
-    prazoVencido: params.prazo_vencido,
-    dataPrazoLegalInicio: params.data_prazo_legal_inicio,
-    dataPrazoLegalFim: params.data_prazo_legal_fim,
-    dataCienciaInicio: params.data_ciencia_inicio,
-    dataCienciaFim: params.data_ciencia_fim,
-    dataCriacaoExpedienteInicio: params.data_criacao_expediente_inicio,
-    dataCriacaoExpedienteFim: params.data_criacao_expediente_fim,
-    classeJudicial: params.classe_judicial,
-    codigoStatusProcesso: params.codigo_status_processo,
-    segredoJustica: params.segredo_justica,
-    juizoDigital: params.juizo_digital,
-    dataAutuacaoInicio: params.data_autuacao_inicio,
-    dataAutuacaoFim: params.data_autuacao_fim,
-    dataArquivamentoInicio: params.data_arquivamento_inicio,
-    dataArquivamentoFim: params.data_arquivamento_fim,
-    ordenarPor: params.ordenar_por as ListarExpedientesParams['ordenarPor'],
-    ordem: params.ordem,
-    processoId: params.processo_id,
-
-    // Mapeamento específico de campos de filtro de texto que não existiam no ListarExpedientesParams mas podem ser suportados se estendidos ou via 'busca' genérica.
-    // OBS: O repositório findAllExpedientes atualmente suporta 'busca', 'numeroProcesso', 'nomeParteAutora', etc se forem adicionados ao ListarExpedientesParams.
-    // O service.ts define ListarExpedientesParams importado de types.ts. Vamos verificar se types.ts tem esses campos.
-    // types.ts ListarExpedientesParams tem: sem 'numeroProcesso', 'nomeParteAutora' explícitos na interface, mas o repositório usa QueryBuilder.
-    // O comentário do usuário diz: "mapear de forma explícita cada campo snake_case para o respectivo campo camelCase em ListarExpedientesParams".
-    // Mas ListarExpedientesParams NÃO tem numeroProcesso, nomeParteAutora, etc.
-    // Vou assumir que devo passar apenas o que existe em ListarExpedientesParams ou estender ListarExpedientesParams se necessário?
-    // O usuário disse: "mapear de forma explícita cada campo snake_case para o respectivo campo camelCase em ListarExpedientesParams ANTES de chamar repository.findAllExpedientes."
-    // Olhando types.ts, ListarExpedientesParams NÃO tem numeroProcesso.
-    // Porém, o repository.findAllExpedientes recebe esse objeto. Se eu passar propriedades extras que o TS não conhece, dá erro?
-    // O tipo é estrito.
-    // Vamos olhar repository.findAllExpedientes para ver se ele aceita params extras? Ele aceita ListarExpedientesParams.
-    // Talvez eu deva adicionar esses campos em ListarExpedientesParams em types.ts?
-    // O usuário NÃO pediu para alterar ListarExpedientesParams, pediu para criar interface própria para ListarPendentesParams.
-    // Mas se o repository não aceita numeroProcesso, então o filtro vai ser ignorado?
-    // Vamos ver o route.ts legacy. Ele passa numero_processo.
-    // Se o repository novo não suporta numeroProcesso, perdemos funcionalidade.
-    // Mas meu trabalho é corrigir conflito de tipos.
-    // Vou mapear o que é possível mapear.
-  };
-
-  const result = await repository.findAllExpedientes(repoParams);
-
-  if (!result.success) return result;
-
-  const expedientes = result.data.data;
-  const pendentes = expedientes.map(toPendenteManifestacao);
-
-  // Lógica de Agrupamento
-  if (params.agrupar_por) {
-    const grupos = new Map<string, PendenteManifestacao[]>();
-    const incluirContagem = params.incluir_contagem !== false;
-
-    for (const item of pendentes) {
-      let chave = 'outros';
-      // Implementação simplificada de chaves - expandir conforme necessidade
-      if (params.agrupar_por === 'trt') chave = item.trt;
-      else if (params.agrupar_por === 'grau') chave = item.grau;
-      else if (params.agrupar_por === 'responsavel_id') chave = item.responsavel_id?.toString() ?? 'sem_responsavel';
-      else if (params.agrupar_por === 'classe_judicial') chave = item.classe_judicial;
-      else if (params.agrupar_por === 'codigo_status_processo') chave = item.codigo_status_processo;
-      else if (params.agrupar_por === 'orgao_julgador') chave = item.descricao_orgao_julgador;
-      else if (params.agrupar_por === 'prazo_vencido') chave = item.prazo_vencido ? 'vencido' : 'no_prazo';
-      else if (params.agrupar_por === 'mes_autuacao') {
-        // Extrair YYYY-MM de data_autuacao
-        chave = item.data_autuacao ? item.data_autuacao.substring(0, 7) : 'sem_data';
-      }
-      else if (params.agrupar_por === 'ano_autuacao') {
-        // Extrair YYYY de data_autuacao
-        chave = item.data_autuacao ? item.data_autuacao.substring(0, 4) : 'sem_data';
-      }
-      else if (params.agrupar_por === 'mes_prazo_legal') {
-        // Extrair YYYY-MM de data_prazo_legal_parte
-        chave = item.data_prazo_legal_parte ? item.data_prazo_legal_parte.substring(0, 7) : 'sem_data';
-      }
-
-      if (!grupos.has(chave)) grupos.set(chave, []);
-      grupos.get(chave)!.push(item);
-    }
-
-    const agrupamentos = Array.from(grupos.entries()).map(([grupo, items]) => ({
-      grupo,
-      quantidade: items.length,
-      pendentes: incluirContagem ? undefined : items,
-    })).sort((a, b) => b.quantidade - a.quantidade);
-
-    return {
-      success: true,
-      data: {
-        agrupamentos,
-        total: pendentes.length,
-      } as ListarPendentesAgrupadoResult
-    };
-  }
-
-  // Retorno padrão
-  return {
-    success: true,
-    data: {
-      pendentes,
-      total: result.data.pagination.total,
-      pagina: result.data.pagination.page,
-      limite: result.data.pagination.limit,
-      totalPaginas: result.data.pagination.totalPages,
-    } as ListarPendentesResult
-  };
-}
-
-export async function buscarPendentesPorClienteCPF(cpf: string): Promise<Result<PendenteManifestacao[]>> {
-  const result = await repository.findExpedientesByClienteCPF(cpf);
-  if (!result.success) return result;
-  return {
-    success: true,
-    data: result.data.map(toPendenteManifestacao)
-  };
 }
 
 export async function atribuirResponsavel(

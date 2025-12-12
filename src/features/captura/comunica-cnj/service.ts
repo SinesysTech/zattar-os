@@ -27,7 +27,7 @@ import type {
   ComunicacaoCNJ,
 } from './domain';
 
-import { OrigemExpediente, CodigoTribunal } from '@/features/expedientes/types';
+import { OrigemExpediente, CodigoTribunal } from '@/features/expedientes/domain';
 
 import {
   consultarComunicacoesSchema,

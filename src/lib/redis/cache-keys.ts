@@ -1,5 +1,5 @@
 import { generateCacheKey, CACHE_PREFIXES } from './cache-utils';
-import type { ListarPendentesParams } from '@/features/expedientes/types';
+import type { ListarExpedientesParams } from '@/features/expedientes/domain';
 import type { ListarAudienciasParams } from '@/features/audiencias';
 import type { ListarAcervoParams } from '@/features/acervo/types';
 import type { PlanoContasFilters as ListarPlanoContasParams } from '@/features/financeiro/domain/plano-contas';
@@ -20,17 +20,17 @@ function normalizeParams(params: unknown): Record<string, unknown> {
 }
 
 /**
- * Generates cache key for pendentes list based on ListarPendentesParams.
+ * Generates cache key for pendentes list based on ListarExpedientesParams.
  */
-export function getPendentesListKey(params: ListarPendentesParams): string {
+export function getPendentesListKey(params: ListarExpedientesParams): string {
   const normalized = normalizeParams(params);
   return generateCacheKey(CACHE_PREFIXES.pendentes, normalized);
 }
 
 /**
- * Generates cache key for pendentes group based on ListarPendentesParams.
+ * Generates cache key for pendentes group based on ListarExpedientesParams.
  */
-export function getPendentesGroupKey(params: ListarPendentesParams): string {
+export function getPendentesGroupKey(params: ListarExpedientesParams): string {
   const normalized = normalizeParams(params);
   return generateCacheKey(`${CACHE_PREFIXES.pendentes}:group`, normalized);
 }
