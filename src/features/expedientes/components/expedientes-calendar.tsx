@@ -7,10 +7,8 @@ import {
     ChevronRight,
     Calendar as CalendarIcon,
     RefreshCw,
-    Filter
 } from 'lucide-react';
 import {
-    addDays,
     startOfWeek,
     endOfWeek,
     format,
@@ -30,10 +28,14 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { ListarExpedientesParams, ExpedientesApiResponse, ExpedientesFilters } from '../domain';
+import type { PaginatedResponse } from '@/lib/types';
+import { ListarExpedientesParams, type Expediente } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
+
+type UsuarioOption = { id: number; nome_exibicao?: string; nomeExibicao?: string; nome?: string };
+type TipoExpedienteOption = { id: number; tipoExpediente?: string; tipo_expediente?: string; nome?: string };
 
 export function ExpedientesCalendar() {
     const router = useRouter();
@@ -43,16 +45,17 @@ export function ExpedientesCalendar() {
     const [selectedDate, setSelectedDate] = React.useState(new Date());
     const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
     const [globalFilter, setGlobalFilter] = React.useState('');
+    const [selectedFilters, setSelectedFilters] = React.useState<string[]>([]);
     const [isNovoDialogOpen, setIsNovoDialogOpen] = React.useState(false);
 
     // Data State
-    const [data, setData] = React.useState<ExpedientesApiResponse | null>(null);
+    const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
     const [isLoading, setIsLoading] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
 
     // Aux Data State
-    const [usuarios, setUsuarios] = React.useState<any[]>([]);
-    const [tiposExpedientes, setTiposExpedientes] = React.useState<any[]>([]);
+    const [usuarios, setUsuarios] = React.useState<UsuarioOption[]>([]);
+    const [tiposExpedientes, setTiposExpedientes] = React.useState<TipoExpedienteOption[]>([]);
 
     // Calendar Days
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 }); // Domingo
@@ -81,30 +84,27 @@ export function ExpedientesCalendar() {
         setIsLoading(true);
         setError(null);
         try {
-            // Filter by selected date
+            // Filtrar por data selecionada (calendário semanal)
             const dateStr = format(selectedDate, 'yyyy-MM-dd');
 
             const params: ListarExpedientesParams = {
-                page: 1,
-                limit: 100, // Show more items in calendar view
-                search: globalFilter || undefined,
+                pagina: 1,
+                limite: 100, // Mostrar mais itens na visão de calendário
+                busca: globalFilter || undefined,
+                dataPrazoLegalInicio: dateStr,
+                dataPrazoLegalFim: dateStr,
             };
 
-            const filters: ExpedientesFilters = {
-                dataInicio: dateStr,
-                dataFim: dateStr
-            };
+            if (statusFilter === 'pendentes') params.baixado = false;
+            if (statusFilter === 'baixados') params.baixado = true;
 
-            if (statusFilter === 'pendentes') filters.pendentes = true;
-            if (statusFilter === 'baixados') filters.baixados = true;
-
-            const result = await actionListarExpedientes(params, filters);
+            const result = await actionListarExpedientes(params);
 
             if (!result.success) {
                 throw new Error(result.message || 'Erro ao listar expedientes');
             }
 
-            setData(result.data);
+            setData(result.data as PaginatedResponse<Expediente>);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Erro desconhecido');
             console.error(err);
@@ -140,7 +140,8 @@ export function ExpedientesCalendar() {
         router.refresh();
     };
 
-    const tableData = data || { expedientes: [], meta: { total: 0 } };
+    const total = data?.pagination.total ?? 0;
+    const tableData = data?.data ?? [];
 
     return (
         <div className="flex flex-col h-full space-y-4">
@@ -193,11 +194,13 @@ export function ExpedientesCalendar() {
                         variant="integrated"
                         searchValue={globalFilter}
                         onSearchChange={setGlobalFilter}
+                        selectedFilters={selectedFilters}
+                        onFiltersChange={setSelectedFilters}
                         onNewClick={() => setIsNovoDialogOpen(true)}
                         newButtonTooltip="Novo Expediente"
                         extraButtons={
                             <div className="flex items-center gap-2">
-                                <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
+                                <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}>
                                     <SelectTrigger className="w-[130px] h-9">
                                         <SelectValue placeholder="Status" />
                                     </SelectTrigger>
@@ -223,13 +226,13 @@ export function ExpedientesCalendar() {
                         <CalendarIcon className="h-4 w-4" />
                         Expedientes de {format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
                         <Badge variant="secondary" className="ml-2">
-                            {tableData.meta.total}
+                            {total}
                         </Badge>
                     </h3>
                 </div>
 
                 <DataTable
-                    data={tableData.expedientes}
+                    data={tableData}
                     columns={columns}
                     isLoading={isLoading}
                     error={error}

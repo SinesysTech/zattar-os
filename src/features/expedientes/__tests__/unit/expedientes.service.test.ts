@@ -9,9 +9,8 @@ import {
   findExpedienteById,
   baixarExpediente,
   reverterBaixaExpediente,
-  processoExists,
 } from '../../repository';
-import { ok, err } from '../../../../lib/types';
+import { ok } from '../../../../lib/types';
 import { CodigoTribunal, GrauTribunal, OrigemExpediente } from '../../domain';
 import { createDbClient } from '../../../../lib/supabase';
 
