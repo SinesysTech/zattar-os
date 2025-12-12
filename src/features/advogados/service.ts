@@ -22,7 +22,7 @@ import type {
   ListarCredenciaisParams,
   CriarCredencialParams,
   AtualizarCredencialParams,
-} from './types';
+} from './domain';
 
 // ============================================================================
 // Advogados

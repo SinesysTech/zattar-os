@@ -33,7 +33,7 @@ import {
     type ResumoOrcamentario,
     type AlertaDesvio,
     type ProjecaoItem,
-} from '../types/orcamentos';
+} from '../domain/orcamentos';
 
 // ============================================================================
 // Types

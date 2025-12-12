@@ -5,7 +5,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { CredencialComAdvogado, ListarCredenciaisParams } from '../types';
+import type { CredencialComAdvogado, ListarCredenciaisParams } from '../domain';
 import { actionListarCredenciais } from '../actions/credenciais-actions';
 
 interface UseCredenciaisResult {

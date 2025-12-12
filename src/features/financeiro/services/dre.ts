@@ -11,7 +11,7 @@ import type {
     EvolucaoDRE,
     GerarDREDTO,
     CategoriaDRE
-} from '../types/dre';
+} from '../domain/dre';
 import {
     validarGerarDREDTO,
     gerarDescricaoPeriodo,

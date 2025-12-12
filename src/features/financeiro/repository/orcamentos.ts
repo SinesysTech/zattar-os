@@ -17,7 +17,7 @@ import type {
     AnaliseOrcamentariaItem,
     AlertaDesvio,
     ResumoOrcamentario
-} from '../types/orcamentos';
+} from '../domain/orcamentos';
 
 type ContaContabilResumo = { id: number; codigo: string; nome: string; tipo?: string | null };
 type CentroCustoResumo = { id: number; codigo: string; nome: string };

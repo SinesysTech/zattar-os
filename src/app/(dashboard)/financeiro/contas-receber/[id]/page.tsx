@@ -56,8 +56,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { ReceberContaDialog } from '../components/receber-conta-dialog';
-import { ContaReceberFormDialog } from '../components/conta-receber-form-dialog';
+import { ReceberContaDialog } from '@/features/financeiro/components/contas-receber/receber-conta-dialog';
+import { ContaReceberFormDialog } from '@/features/financeiro/components/contas-receber/conta-receber-form-dialog';
 import { OrigemLancamentoSection } from '@/features/financeiro/components/shared';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

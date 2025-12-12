@@ -48,12 +48,12 @@ export {
   buildAudienciasFilterOptions,
   buildAudienciasFilterGroups,
   parseAudienciasFilters,
-} from './components';
+} from "./components";
 
 // ============================================================================
 // Hooks
 // ============================================================================
-export { useAudiencias, useTiposAudiencias } from './hooks';
+export { useAudiencias, useTiposAudiencias } from "./hooks";
 
 // ============================================================================
 // Actions
@@ -63,9 +63,9 @@ export {
   actionAtualizarAudiencia,
   actionAtualizarStatusAudiencia,
   actionListarAudiencias,
-} from './actions';
+} from "./actions";
 
-export type { ActionResult } from './actions';
+export type { ActionResult } from "./actions";
 
 // ============================================================================
 // Service
@@ -76,17 +76,16 @@ export {
   listarAudiencias,
   atualizarAudiencia,
   atualizarStatusAudiencia,
-} from './service';
+} from "./service";
 
-export { buscarAudienciasClientePorCpf } from './services/ai-agent.service';
-export { atribuirResponsavelAudiencia } from './services/responsavel.service';
-export { atualizarUrlVirtualAudiencia } from './services/virtual.service';
-
+// NOTE: Server-side services (responsavel.service, virtual.service, ai-agent.service)
+// are NOT exported here to prevent Redis/Node.js dependencies from being bundled
+// in client components. These services should only be used by server actions.
 
 // ============================================================================
 // Repository (for testing purposes)
 // ============================================================================
-export * as audienciasRepository from './repository';
+export * as audienciasRepository from "./repository";
 
 // ============================================================================
 // Types
@@ -104,7 +103,7 @@ export {
   createAudienciaSchema,
   updateAudienciaSchema,
   atualizarStatusSchema,
-} from './domain';
+} from "./domain";
 
 export type {
   // Domain types
@@ -128,7 +127,6 @@ export type {
   UseAudienciasOptions,
   TipoAudiencia,
   UseTiposAudienciasResult,
-} from './domain';
+} from "./domain";
 
-export * from './types/ai-agent.types';
-
+export * from "./types/ai-agent.types";

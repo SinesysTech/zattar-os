@@ -11,8 +11,8 @@ import {
     calcularComparativoDRE,
     calcularEvolucaoAnual,
 } from '../services/dre';
-import { validarGerarDREDTO, isPeriodoDREValido } from '../types/dre';
-import type { PeriodoDRE, DRE } from '../types/dre';
+import { validarGerarDREDTO, isPeriodoDREValido } from '../domain/dre';
+import type { PeriodoDRE, DRE } from '../domain/dre';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
 // ============================================================================
