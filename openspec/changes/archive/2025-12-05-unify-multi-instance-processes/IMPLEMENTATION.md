@@ -86,7 +86,7 @@ Componentes criados:
 **Exemplo de uso**:
 ```tsx
 import { GrauBadges } from './components/grau-badges';
-import type { ProcessoUnificado } from '@/backend/types/acervo/types';
+import type { ProcessoUnificado } from '@/features/acervo/types';
 
 // Na definição de colunas da tabela
 {
@@ -226,7 +226,7 @@ function ProcessosPage() {
 
 **Type Guards**:
 ```tsx
-import type { ProcessoUnificado } from '@/backend/types/acervo/types';
+import type { ProcessoUnificado } from '@/features/acervo/types';
 
 // Verificar se é processo unificado
 function isProcessoUnificado(processo: any): processo is ProcessoUnificado {

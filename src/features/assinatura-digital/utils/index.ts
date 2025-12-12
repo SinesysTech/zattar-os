@@ -24,6 +24,7 @@ export {
 export {
   validateCPF,
   validateCNPJ,
+  validateTelefone,
   validateCpfCnpj,
 } from './validators';
 
@@ -41,6 +42,9 @@ export {
   validateSignatureQuality,
   validateDataConsistency,
 } from './business-validations';
+
+// Schema builder (validação de schema dinâmico)
+export { validateFormSchema } from './form-schema-validation';
 
 // Device Fingerprint
 export { collectDeviceFingerprint } from './device-fingerprint';

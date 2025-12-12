@@ -37,37 +37,81 @@ config({ path: resolve(process.cwd(), '.env') });
 import { getMongoDatabase, closeMongoConnection } from '@/lib/mongodb';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
-// Clientes
-import {
-  buscarClientePorCPF,
-  buscarClientePorCNPJ,
-  upsertClientePorCPF,
-  upsertClientePorCNPJ,
-} from '@/backend/clientes/services/persistence/cliente-persistence.service';
-
-// Partes Contrárias
-import {
-  buscarParteContrariaPorCPF,
-  buscarParteContrariaPorCNPJ,
-  upsertParteContrariaPorCPF,
-  upsertParteContrariaPorCNPJ,
-} from '@/backend/partes-contrarias/services/persistence/parte-contraria-persistence.service';
-
-// Terceiros
 import {
   buscarTerceiroPorCPF,
   buscarTerceiroPorCNPJ,
   upsertTerceiroPorCPF,
   upsertTerceiroPorCNPJ,
   criarTerceiroSemDocumento,
-} from '@/backend/terceiros/services/persistence/terceiro-persistence.service';
+} from '@/features/partes/services/terceiros/persistence/terceiro-persistence.service';
+
+// Compat (Clientes / Partes Contrárias) - wrappers para manter API do script
+import {
+  buscarClientePorCPF as buscarClientePorCPFCompat,
+  buscarClientePorCNPJ as buscarClientePorCNPJCompat,
+  upsertClientePorCPF as upsertClientePorCPFCompat,
+  upsertClientePorCNPJ as upsertClientePorCNPJCompat,
+  buscarParteContrariaPorCPF as buscarParteContrariaPorCPFCompat,
+  buscarParteContrariaPorCNPJ as buscarParteContrariaPorCNPJCompat,
+  upsertParteContrariaPorCPF as upsertParteContrariaPorCPFCompat,
+  upsertParteContrariaPorCNPJ as upsertParteContrariaPorCNPJCompat,
+} from '@/features/partes/repository-compat';
 
 // Endereços
 import {
   upsertEnderecoPorIdPje,
 } from '@/features/enderecos';
 
-import type { EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } from '@/backend/types/partes/enderecos-types';
+import type { EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } from '@/features/enderecos/types';
+
+type OperacaoClienteResult = { sucesso: boolean; cliente?: { id: number }; erro?: string; criado?: boolean };
+type OperacaoParteContrariaResult = { sucesso: boolean; parteContraria?: { id: number }; erro?: string; criado?: boolean };
+
+async function buscarClientePorCPF(cpf: string) {
+  return await buscarClientePorCPFCompat(cpf);
+}
+async function buscarClientePorCNPJ(cnpj: string) {
+  return await buscarClientePorCNPJCompat(cnpj);
+}
+async function upsertClientePorCPF(params: any): Promise<OperacaoClienteResult> {
+  try {
+    const { cliente, created } = await upsertClientePorCPFCompat(params.cpf, params);
+    return { sucesso: true, cliente, criado: created };
+  } catch (error) {
+    return { sucesso: false, erro: error instanceof Error ? error.message : String(error) };
+  }
+}
+async function upsertClientePorCNPJ(params: any): Promise<OperacaoClienteResult> {
+  try {
+    const { cliente, created } = await upsertClientePorCNPJCompat(params.cnpj, params);
+    return { sucesso: true, cliente, criado: created };
+  } catch (error) {
+    return { sucesso: false, erro: error instanceof Error ? error.message : String(error) };
+  }
+}
+
+async function buscarParteContrariaPorCPF(cpf: string) {
+  return await buscarParteContrariaPorCPFCompat(cpf);
+}
+async function buscarParteContrariaPorCNPJ(cnpj: string) {
+  return await buscarParteContrariaPorCNPJCompat(cnpj);
+}
+async function upsertParteContrariaPorCPF(params: any): Promise<OperacaoParteContrariaResult> {
+  try {
+    const { parteContraria, created } = await upsertParteContrariaPorCPFCompat(params.cpf, params);
+    return { sucesso: true, parteContraria, criado: created };
+  } catch (error) {
+    return { sucesso: false, erro: error instanceof Error ? error.message : String(error) };
+  }
+}
+async function upsertParteContrariaPorCNPJ(params: any): Promise<OperacaoParteContrariaResult> {
+  try {
+    const { parteContraria, created } = await upsertParteContrariaPorCNPJCompat(params.cnpj, params);
+    return { sucesso: true, parteContraria, criado: created };
+  } catch (error) {
+    return { sucesso: false, erro: error instanceof Error ? error.message : String(error) };
+  }
+}
 
 // ============================================================================
 // TIPOS
