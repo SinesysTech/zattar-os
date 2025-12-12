@@ -9,10 +9,8 @@ import { revalidatePath } from 'next/cache';
 import { authenticateRequest as getCurrentUser } from '@/lib/auth';
 import { checkPermission } from '@/lib/auth/authorization';
 import {
-  obterAcervo,
   obterAcervoPaginado,
   obterAcervoUnificado,
-  obterAcervoAgrupado,
   buscarProcessoPorId,
   atribuirResponsavel as atribuirResponsavelService,
   buscarProcessosClientePorCpf as buscarProcessosClientePorCpfService,
@@ -59,9 +57,8 @@ export async function actionListarAcervoPaginado(
       return { success: false, error: 'Sem permissão para visualizar acervo' };
     }
 
-    // Validate params (exclude unified and agrupar_por)
-    const { unified, agrupar_por, ...restParams } = params;
-    const validatedParams = listarAcervoParamsSchema.parse(restParams);
+    // Validate params
+    const validatedParams = listarAcervoParamsSchema.parse(params);
 
     // Get acervo in paginado mode
     const result = await obterAcervoPaginado({
@@ -96,9 +93,8 @@ export async function actionListarAcervoUnificado(
       return { success: false, error: 'Sem permissão para visualizar acervo' };
     }
 
-    // Validate params (exclude unified and agrupar_por)
-    const { unified, agrupar_por, ...restParams } = params;
-    const validatedParams = listarAcervoParamsSchema.parse(restParams);
+    // Validate params
+    const validatedParams = listarAcervoParamsSchema.parse(params);
 
     // Get acervo in unified mode
     const result = await obterAcervoUnificado({

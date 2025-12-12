@@ -42,6 +42,7 @@ export interface Acervo {
   data_proxima_audiencia: string | null;
   tem_associacao: boolean;
   responsavel_id: number | null;
+  timeline_mongodb_id?: string | null;
   created_at: string;
   updated_at: string;
 }

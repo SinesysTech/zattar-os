@@ -5,7 +5,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import {
   actionListarAcervoPaginado,
   actionBuscarProcesso,
@@ -27,7 +27,6 @@ export function useAcervo(initialParams: ListarAcervoParams = {}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [params, setParams] = useState<ListarAcervoParams>(initialParams);
-  const { toast } = useToast();
 
   const fetchAcervo = useCallback(async (fetchParams?: ListarAcervoParams) => {
     setLoading(true);
@@ -37,27 +36,21 @@ export function useAcervo(initialParams: ListarAcervoParams = {}) {
       const result = await actionListarAcervoPaginado(fetchParams || params);
 
       if (result.success && result.data) {
-        setData(result.data);
+        setData(result.data as ListarAcervoResult);
       } else {
         setError(result.error || 'Erro ao carregar acervo');
-        toast({
-          title: 'Erro',
+        toast.error('Erro', {
           description: result.error || 'Erro ao carregar acervo',
-          variant: 'destructive',
         });
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
       setError(errorMessage);
-      toast({
-        title: 'Erro',
-        description: errorMessage,
-        variant: 'destructive',
-      });
+      toast.error('Erro', { description: errorMessage });
     } finally {
       setLoading(false);
     }
-  }, [params, toast]);
+  }, [params]);
 
   useEffect(() => {
     fetchAcervo();
@@ -88,8 +81,6 @@ export function useProcesso(id: number | null) {
   const [processo, setProcesso] = useState<Acervo | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast();
-
   const fetchProcesso = useCallback(async () => {
     if (!id) return;
 
@@ -103,24 +94,18 @@ export function useProcesso(id: number | null) {
         setProcesso(result.data as Acervo);
       } else {
         setError(result.error || 'Erro ao carregar processo');
-        toast({
-          title: 'Erro',
+        toast.error('Erro', {
           description: result.error || 'Erro ao carregar processo',
-          variant: 'destructive',
         });
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
       setError(errorMessage);
-      toast({
-        title: 'Erro',
-        description: errorMessage,
-        variant: 'destructive',
-      });
+      toast.error('Erro', { description: errorMessage });
     } finally {
       setLoading(false);
     }
-  }, [id, toast]);
+  }, [id]);
 
   useEffect(() => {
     fetchProcesso();
@@ -139,7 +124,6 @@ export function useProcesso(id: number | null) {
  */
 export function useAtribuirResponsavel() {
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
 
   const atribuir = useCallback(async (
     processoIds: number[],
@@ -151,31 +135,24 @@ export function useAtribuirResponsavel() {
       const result = await actionAtribuirResponsavel(processoIds, responsavelId);
 
       if (result.success) {
-        toast({
-          title: 'Sucesso',
+        toast.success('Responsável atribuído', {
           description: 'Responsável atribuído com sucesso',
         });
         return true;
       } else {
-        toast({
-          title: 'Erro',
+        toast.error('Erro', {
           description: result.error || 'Erro ao atribuir responsável',
-          variant: 'destructive',
         });
         return false;
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
-      toast({
-        title: 'Erro',
-        description: errorMessage,
-        variant: 'destructive',
-      });
+      toast.error('Erro', { description: errorMessage });
       return false;
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, []);
 
   return {
     atribuir,
@@ -190,7 +167,6 @@ export function useProcessosClienteCpf() {
   const [data, setData] = useState<ProcessosClienteCpfResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast();
 
   const buscar = useCallback(async (cpf: string) => {
     setLoading(true);
@@ -199,30 +175,24 @@ export function useProcessosClienteCpf() {
     try {
       const result = await actionBuscarProcessosClientePorCpf(cpf);
 
-      if (result.success) {
-        setData(result as ProcessosClienteCpfResponse);
+      if (result.success && result.data) {
+        setData(result.data as ProcessosClienteCpfResponse);
       } else {
         setError(result.error || 'Erro ao buscar processos');
-        setData({ success: false, error: result.error || 'Erro ao buscar processos' });
-        toast({
-          title: 'Erro',
+        setData(null);
+        toast.error('Erro', {
           description: result.error || 'Erro ao buscar processos',
-          variant: 'destructive',
         });
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
       setError(errorMessage);
-      setData({ success: false, error: errorMessage });
-      toast({
-        title: 'Erro',
-        description: errorMessage,
-        variant: 'destructive',
-      });
+      setData(null);
+      toast.error('Erro', { description: errorMessage });
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, []);
 
   return {
     data,
