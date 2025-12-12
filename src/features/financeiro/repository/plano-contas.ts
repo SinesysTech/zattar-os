@@ -101,7 +101,8 @@ export const PlanoContasRepository = {
 
         if (error) throw new Error(`Erro ao listar plano de contas: ${error.message}`);
 
-        return (data || []).map(record => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (data || []).map((record: Record<string, any>) => ({
             ...mapRecordToConta(record),
             nomePai: record.conta_pai?.nome
         }));
@@ -171,6 +172,7 @@ export const PlanoContasRepository = {
     async atualizar(id: number, dados: Partial<AtualizarPlanoContaDTO>): Promise<PlanoContas> {
         const supabase = createServiceClient();
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const record: Record<string, any> = {
             updated_at: new Date().toISOString()
         };
@@ -310,7 +312,7 @@ export const PlanoContasRepository = {
 
         if (error) throw new Error(`Erro ao listar códigos: ${error.message}`);
 
-        return (data || []).map(c => c.codigo);
+        return (data || []).map((c: { codigo: string }) => c.codigo);
     }
 };
 
@@ -318,7 +320,8 @@ export const PlanoContasRepository = {
 // Mappers
 // ============================================================================
 
-function mapRecordToConta(record: any): PlanoContas {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapRecordToConta(record: Record<string, any>): PlanoContas {
     return {
         id: record.id,
         codigo: record.codigo,

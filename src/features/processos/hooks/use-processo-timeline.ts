@@ -18,7 +18,7 @@ import type { TimelineDocument } from '@/lib/types/timeline';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 import type { GrauProcesso } from '@/features/partes';
 import { actionObterTimelinePorId, actionRecapturarTimeline } from '@/features/acervo';
-import { actionCapturarTimeline } from '@/features/captura';
+import { actionCapturarTimeline, type CodigoTRT, type GrauTRT } from '@/features/captura';
 
 /**
  * Item da timeline com metadados de origem (para modo unificado)
@@ -145,8 +145,8 @@ export function useProcessoTimeline(
       });
 
       const result = await actionCapturarTimeline({
-        trtCodigo: processo.trt as any, // Cast to avoid type mismatch if strings differ
-        grau: processo.grau as any,
+        trtCodigo: String(processo.trt) as CodigoTRT,
+        grau: String(processo.grau) as GrauTRT,
         processoId: String(processo.id_pje),
         numeroProcesso: processo.numero_processo,
         advogadoId: processo.advogado_id,

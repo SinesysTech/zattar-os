@@ -34,7 +34,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useDRE, useEvolucaoDRE, useExportarDRE, gerarPeriodoAtual } from '@/features/financeiro/hooks/use-dre';
+import { useDRE, useEvolucaoDRE, useExportarDRE, gerarPeriodoAtual } from '@/features/financeiro';
 import { toast } from 'sonner';
 import type {
   ResumoDRE,
@@ -478,7 +478,7 @@ function CategoriaPieChart({
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percentual }: { name: string; percentual: number }) => `${name.slice(0, 15)}${name.length > 15 ? '...' : ''} (${percentual.toFixed(1)}%)`}
+            label={({ name, percentual }: any) => `${name.slice(0, 15)}${name.length > 15 ? '...' : ''} (${(percentual as number).toFixed(1)}%)`}
             outerRadius={100}
             fill="#8884d8"
             dataKey="value"
@@ -777,7 +777,7 @@ export default function DREPage() {
                   />
                   <div className="space-y-2">
                     <h4 className="font-medium mb-4">Detalhamento</h4>
-                    {dre.receitasPorCategoria.map((cat, i) => (
+                    {dre.receitasPorCategoria.map((cat: CategoriaDRE, i: number) => (
                       <div key={cat.categoria} className="flex items-center justify-between p-2 border rounded">
                         <div className="flex items-center gap-2">
                           <div
@@ -823,7 +823,7 @@ export default function DREPage() {
                   />
                   <div className="space-y-2">
                     <h4 className="font-medium mb-4">Detalhamento</h4>
-                    {dre.despesasPorCategoria.map((cat, i) => (
+                    {dre.despesasPorCategoria.map((cat: CategoriaDRE, i: number) => (
                       <div key={cat.categoria} className="flex items-center justify-between p-2 border rounded">
                         <div className="flex items-center gap-2">
                           <div
