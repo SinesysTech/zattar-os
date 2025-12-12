@@ -1,8 +1,11 @@
 'use server';
 
+import { after } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { authenticateRequest } from '@/lib/auth';
 import * as service from '../service';
+import { indexDocument } from '@/features/ai/services/indexing.service';
+import { isContentTypeSupported } from '@/features/ai/services/extraction.service';
 
 export async function actionUploadArquivo(formData: FormData) {
   try {
@@ -19,6 +22,31 @@ export async function actionUploadArquivo(formData: FormData) {
     }
 
     const upload = await service.uploadArquivo(file, documento_id, user.id);
+
+    // Disparar indexação assíncrona para RAG (não bloqueia a resposta)
+    if (isContentTypeSupported(upload.tipo_mime)) {
+      after(async () => {
+        try {
+          console.log(`🧠 [AI] Disparando indexação para upload ${upload.id}`);
+          await indexDocument({
+            entity_type: 'documento',
+            entity_id: upload.id,
+            parent_id: documento_id,
+            storage_provider: 'backblaze',
+            storage_key: upload.b2_key,
+            content_type: upload.tipo_mime,
+            metadata: {
+              nome_arquivo: upload.nome_arquivo,
+              usuario_id: user.id,
+              documento_id,
+            },
+          });
+        } catch (error) {
+          console.error(`❌ [AI] Erro na indexação do upload ${upload.id}:`, error);
+        }
+      });
+    }
+
     revalidatePath(`/documentos/${documento_id}`);
     return { success: true, data: upload };
   } catch (error) {
