@@ -1,7 +1,7 @@
 // Serviço de persistência de salas de audiência
 // Verifica se já existe e compara antes de atualizar
 
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
 import { compararObjetos } from '@/lib/utils/captura/comparison.util';
 import { getCached, setCached, generateCacheKey, CACHE_PREFIXES } from '@/lib/utils/redis/cache-utils';

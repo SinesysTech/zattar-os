@@ -8,7 +8,7 @@
 
 import type { CapturaRawLogDocument } from '@/lib/types/captura-log';
 import type { EntidadeTipoEndereco } from '@/features/enderecos/types';
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { buscarLogPorMongoId } from './captura-recovery.service';
 import type {
   AnaliseCaptura,

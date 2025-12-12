@@ -1,7 +1,7 @@
 // Serviço de persistência de terceiros
 // Gerencia operações de CRUD na tabela terceiros (tabela global, sem vinculação direta a processos)
 
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import type { Terceiro } from '@/types/domain/partes';
 import type { ProcessoRelacionado } from '@/types/domain/processo-relacionado';
 import type {

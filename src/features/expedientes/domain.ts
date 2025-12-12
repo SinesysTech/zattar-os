@@ -157,6 +157,12 @@ export type ListarExpedientesParams = {
   semResponsavel?: boolean;
   baixado?: boolean;
   prazoVencido?: boolean;
+  /**
+   * Quando usado junto com `dataPrazoLegalInicio`/`dataPrazoLegalFim`,
+   * inclui também expedientes com `dataPrazoLegalParte` nula (itens "sem prazo"),
+   * preservando o comportamento legado do calendário (itens flutuantes/pinados).
+   */
+  incluirSemPrazo?: boolean;
   dataPrazoLegalInicio?: string;
   dataPrazoLegalFim?: string;
   dataCienciaInicio?: string;

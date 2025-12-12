@@ -1,4 +1,4 @@
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { TABLE_TEMPLATES } from './constants';
 import { logger, createTimer, LogServices, LogOperations } from './logger';
 import type {

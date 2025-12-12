@@ -1,7 +1,7 @@
 // Serviço de persistência de classes judiciais
 // Verifica se já existe e compara antes de atualizar
 
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
 import {
   compararObjetos,

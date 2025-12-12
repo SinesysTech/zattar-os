@@ -1,4 +1,4 @@
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { TABLE_FORMULARIOS } from './constants';
 import type {
   AssinaturaDigitalFormulario,

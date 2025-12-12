@@ -1,7 +1,7 @@
 // Serviço de persistência de acervo (acervo geral + arquivados)
 // Salva processos capturados no banco de dados com comparação antes de atualizar
 
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import type { Processo } from '@/features/captura/types/trt-types';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
 import {

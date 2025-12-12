@@ -3,7 +3,7 @@
  * Registra todas as alterações de permissões na tabela logs_alteracao
  */
 
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import type { Recurso, Operacao } from '@/features/usuarios/types/types';
 
 /**

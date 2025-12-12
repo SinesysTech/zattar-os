@@ -1,7 +1,7 @@
 // Serviço de persistência de audiências
 // Salva audiências capturadas no banco de dados com comparação antes de atualizar
 
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import type { Audiencia } from '@/features/captura/types/trt-types';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
 import { buscarOrgaoJulgador } from './orgao-julgador-persistence.service';
