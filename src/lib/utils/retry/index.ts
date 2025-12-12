@@ -1,4 +1,4 @@
-import getLogger from '@/lib/utils/logger';
+import getLogger from '@/lib/logger';
 
 const logger = getLogger({ service: 'retry-util' });
 
