@@ -99,8 +99,8 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
 }
 
 // Helper seguro para propriedade que pode faltar no tipo
-function umaPropriedadeSegura(processo: any): string {
-    return processo.descricaoOrgaoJulgador || '-';
+function umaPropriedadeSegura(processo: ProcessoComParticipacao): string {
+    return (processo as any).descricaoOrgaoJulgador || '-';
 }
 
 const colunas: ColumnDef<ProcessoComParticipacao>[] = [

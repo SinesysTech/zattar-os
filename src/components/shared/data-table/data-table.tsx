@@ -73,11 +73,11 @@ interface DataTableProps<TData, TValue> {
 }
 
 // --- Draggable Header Component ---
-function DraggableTableHeader({
+function DraggableTableHeader<TData>({
   header,
   className,
 }: {
-  header: Header<any, unknown>;
+  header: Header<TData, unknown>;
   className?: string;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
@@ -127,7 +127,7 @@ export function DataTable<TData, TValue>({
     []
   );
   const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
-    columns.map((column) => column.id || (column as any).accessorKey as string).filter(Boolean)
+    columns.map((column) => column.id || (column as ColumnDef<TData> & { accessorKey?: string }).accessorKey as string).filter(Boolean)
   );
   
   // Density State

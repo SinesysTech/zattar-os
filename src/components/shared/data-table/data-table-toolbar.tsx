@@ -70,14 +70,14 @@ export function DataTableToolbar<TData>({
         
         {/* Dynamic Filters from Columns */}
         {table.getAllColumns().map((column) => {
-           if ((column.columnDef.meta as any)?.filterVariant) {
+           if (column.columnDef.meta?.filterVariant) {
                return (
                    <DataTableFilter 
                        key={column.id} 
                        column={column} 
-                       title={(column.columnDef.meta as any)?.filterTitle 
+                       title={column.columnDef.meta?.filterTitle 
                          ?? (typeof column.columnDef.header === 'string' ? column.columnDef.header : column.id)} 
-                       options={(column.columnDef.meta as any)?.filterOptions}
+                       options={column.columnDef.meta?.filterOptions}
                    />
                )
            }

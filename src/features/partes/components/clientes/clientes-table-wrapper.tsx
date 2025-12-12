@@ -59,7 +59,7 @@ export function ClientesTableWrapper({
   const [error, setError] = React.useState<string | null>(null);
 
   // Filter & Search State (mapped to DataTable state if needed, but here we control data fetching)
-  const [globalFilter, setGlobalFilter] = React.useState('');
+  const [globalFilter] = React.useState('');
   // We can map specific column filters here if we want to server-side filter them
   // For now, let's focus on global search and simple pagination as in the original
   
