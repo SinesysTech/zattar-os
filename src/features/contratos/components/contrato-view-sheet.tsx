@@ -65,11 +65,11 @@ interface InfoItemProps {
 function InfoItem({ label, value, icon, className }: InfoItemProps) {
   return (
     <div className={cn('flex flex-col gap-1', className)}>
-      <dt className="text-sm text-muted-foreground flex items-center gap-1.5">
+      <div className="text-sm text-muted-foreground flex items-center gap-1.5">
         {icon}
         {label}
-      </dt>
-      <dd className="text-sm font-medium">{value || '-'}</dd>
+      </div>
+      <div className="text-sm font-medium">{value || '-'}</div>
     </div>
   );
 }
