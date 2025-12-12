@@ -148,7 +148,10 @@ export function ExpedientesCalendarYear() {
                  <Button variant="outline" size="sm" onClick={() => setCurrentYear(new Date())}>Ano Atual</Button>
             </div>
              <div className="flex items-center gap-2">
-                 <Select value={statusFilter} onValueChange={(v: any) => setStatusFilter(v)}>
+                 <Select
+                   value={statusFilter}
+                   onValueChange={(v) => setStatusFilter(v as 'todos' | 'pendentes' | 'baixados')}
+                 >
                     <SelectTrigger className="w-[130px] h-9">
                         <SelectValue placeholder="Status" />
                     </SelectTrigger>

@@ -18,7 +18,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/design-system';
 import type { Acervo } from '../../types';
-import { StatusProcesso } from '@/types/domain/common';
+import { StatusProcesso } from '@/features/processos/domain';
 
 interface AcervoTableProps {
   processos: Acervo[];
