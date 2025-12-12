@@ -70,8 +70,8 @@ export function mapClienteFormToCliente(form: DadosPessoaisFormData): ClienteFor
     endereco_cep: endereco_cep || undefined,
 
     estado_civil: form.estadoCivil,
-    genero: Number.parseInt(form.genero, 10),
-    nacionalidade_id: Number.parseInt(form.nacionalidade, 10),
+    genero: Number.parseInt(form.genero || '0', 10),
+    nacionalidade_id: Number.parseInt(form.nacionalidade || '0', 10),
   };
 }
 

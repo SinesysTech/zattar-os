@@ -32,9 +32,9 @@
  */
 
 import { useState, useEffect, useRef } from "react";
-import { useFormularioStore } from "@/features/assinatura-digital/stores";
-import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
-import PdfPreviewDynamic from "@/features/assinatura-digital/components/pdf/PdfPreviewDynamic";
+import { useFormularioStore } from "../../store";
+import FormStepLayout from "./form-step-layout";
+import PdfPreviewDynamic from "../pdf/PdfPreviewDynamic";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Loader2, AlertCircle } from "lucide-react";
@@ -89,7 +89,7 @@ export default function VisualizacaoPdfStep() {
     let cancelled = false;
     (async () => {
       try {
-        const metadataPromises = templateIds.map(async (id) => {
+        const metadataPromises = templateIds.map(async (id: string | number) => {
           // Comment 3 fix: Check cache first
           const cachedTemplate = getCachedTemplate(id);
           if (cachedTemplate) {
@@ -140,52 +140,6 @@ export default function VisualizacaoPdfStep() {
       cancelled = true;
     };
   }, [templateIds, templateIdSelecionado, setTemplateIdSelecionado, getCachedTemplate, setCachedTemplate]);
-
-  // Fetch metadata for the currently selected/effective template
-  // Comment 3 fix: Use cache to avoid duplicate fetches
-  useEffect(() => {
-    const effectiveTemplateId = templateIdSelecionado || (templateIds && templateIds[0]);
-    if (!effectiveTemplateId) {
-      setTemplateMeta(null);
-      return;
-    }
-
-    // Comment 3 fix: Check cache first
-    const cachedTemplate = getCachedTemplate(effectiveTemplateId);
-    if (cachedTemplate) {
-      setTemplateMeta({
-        nome: cachedTemplate.nome,
-        versao: cachedTemplate.versao,
-        status: cachedTemplate.status,
-      });
-      return;
-    }
-
-    let cancelled = false;
-    (async () => {
-      try {
-        const response = await fetch(`/api/templates/${effectiveTemplateId}`);
-        const data = await response.json();
-
-        if (!cancelled && data.success && data.data) {
-          // Comment 3 fix: Store in cache
-          setCachedTemplate(effectiveTemplateId, data.data);
-
-          setTemplateMeta({
-            nome: data.data.nome,
-            versao: data.data.versao,
-            status: data.data.status,
-          });
-        }
-      } catch (err) {
-        console.error("Error fetching template metadata:", err);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [templateIdSelecionado, templateIds, getCachedTemplate, setCachedTemplate]);
 
   const buscarTemplateFallback = async () => {
     setIsFetchingTemplate(true);

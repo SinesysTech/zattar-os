@@ -11,17 +11,14 @@ import {
   getGeneroText,
   getNacionalidadeText,
 } from '../../validations/dados-pessoais.schema';
-import InputCPF from '@/features/assinatura-digital/components/inputs/input-cpf';
-import InputTelefone from '@/features/assinatura-digital/components/inputs/input-telefone';
+import InputCPF from '../inputs/input-cpf';
+import InputTelefone from '../inputs/input-telefone';
 import { InputCEP, type AddressData } from '@/features/enderecos';
-import InputData from '@/features/assinatura-digital/components/inputs/input-data';
-import { useFormularioStore } from '@/features/assinatura-digital/stores';
+import InputData from '../inputs/input-data';
+import { useFormularioStore } from '../../store';
 import { toast } from 'sonner';
 import { apiFetch } from '@/lib/api';
-import { formatCPF, parseCPF } from '@/features/assinatura-digital/utils/formatters';
-import { formatData } from '@/features/assinatura-digital/utils/formatters';
-import { formatTelefone, parseTelefone } from '@/features/assinatura-digital/utils/formatters';
-import { parseCEP } from '@/features/assinatura-digital/utils/formatters';
+import { formatCPF, parseCPF, formatData, formatTelefone, parseTelefone, parseCEP } from '../../utils/formatters';
 import {
   API_ROUTES,
   ESTADOS_BRASILEIROS,
@@ -55,8 +52,8 @@ import {
   validateCPFDigits,
   validateEmail,
   validateTextLength,
-} from '@/features/assinatura-digital/utils';
-import FormStepLayout from '@/features/assinatura-digital/components/form/form-step-layout';
+} from '../../utils';
+import FormStepLayout from './form-step-layout';
 
 export default function DadosPessoais() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -114,26 +111,26 @@ export default function DadosPessoais() {
       if (dadosCPF?.clienteExistente && dadosCPF.dadosCliente) {
         const cliente = dadosCPF.dadosCliente;
 
-        const anyCliente = cliente as Record<string, unknown>;
-        const cep = (anyCliente.cep as string | undefined) ?? cliente.endereco_cep ?? '';
-        const logradouro = (anyCliente.logradouro as string | undefined) ?? cliente.endereco_rua ?? cliente.endereco_completo ?? '';
-        const numero = (anyCliente.numero as string | undefined) ?? cliente.endereco_numero ?? '';
-        const complemento = (anyCliente.complemento as string | undefined) ?? cliente.endereco_complemento ?? '';
-        const bairro = (anyCliente.bairro as string | undefined) ?? cliente.endereco_bairro ?? '';
-        const cidade = (anyCliente.cidade as string | undefined) ?? cliente.endereco_cidade ?? '';
-        const estado = (anyCliente.estado as string | undefined) ?? cliente.endereco_uf ?? '';
+        // Extract address data from cliente (using correct property names)
+        const cep = cliente.cep ?? '';
+        const logradouro = cliente.logradouro ?? '';
+        const numero = cliente.numero ?? '';
+        const complemento = cliente.complemento ?? '';
+        const bairro = cliente.bairro ?? '';
+        const cidade = cliente.cidade ?? '';
+        const estado = cliente.uf ?? '';
 
         form.reset({
-          name: (anyCliente.name as string | undefined) ?? cliente.nome ?? '',
-          cpf: formatCPF(cliente.cpf || ''),
-          rg: cliente.rg || '',
-          dataNascimento: formatData(cliente.data_nascimento || ''),
-          estadoCivil: (anyCliente.estado_civil as string | undefined) || '1',
-          genero: (anyCliente.genero as string | number | undefined) !== undefined ? String(anyCliente.genero) : '1',
-          nacionalidade: (anyCliente.nacionalidade_id as number | undefined) !== undefined ? String(anyCliente.nacionalidade_id) : '30',
+          name: cliente.nome ?? '',
+          cpf: formatCPF(cliente.cpf ?? ''),
+          rg: cliente.rg ?? '',
+          dataNascimento: formatData(cliente.data_nascimento ?? ''),
+          estadoCivil: cliente.estado_civil ?? '1',
+          genero: cliente.genero ?? '1',
+          nacionalidade: cliente.nacionalidade ?? '30',
           email: cliente.email || '',
           celular: formatTelefone(cliente.celular || ''),
-          telefone: (anyCliente.telefone_1 as string | undefined) ? formatTelefone(anyCliente.telefone_1 as string) : '',
+          telefone: cliente.telefone ? formatTelefone(cliente.telefone) : '',
           cep,
           logradouro,
           numero,
@@ -195,7 +192,7 @@ export default function DadosPessoais() {
       issues.push(cpfCheck.message ?? 'CPF invalido');
     }
 
-    const birthCheck = validateBirthDate(data.dataNascimento);
+    const birthCheck = validateBirthDate(data.dataNascimento ?? '');
     if (!birthCheck.valid) {
       issues.push(birthCheck.message ?? 'Data de nascimento invalida');
     }
@@ -217,15 +214,15 @@ export default function DadosPessoais() {
       }
     }
 
-    const cepCheck = validateCEP(data.cep);
+    const cepCheck = validateCEP(data.cep ?? '');
     if (!cepCheck.valid) {
       issues.push(cepCheck.message ?? 'CEP invalido');
     }
 
     const textFields: Array<[string, string, keyof typeof TEXT_LIMITS]> = [
-      [data.logradouro, 'Logradouro', 'logradouro'],
-      [data.bairro, 'Bairro', 'bairro'],
-      [data.cidade, 'Cidade', 'cidade'],
+      [data.logradouro ?? '', 'Logradouro', 'logradouro'],
+      [data.bairro ?? '', 'Bairro', 'bairro'],
+      [data.cidade ?? '', 'Cidade', 'cidade'],
     ];
 
     if (data.complemento) {
@@ -251,7 +248,7 @@ export default function DadosPessoais() {
       cpf: rawCpf,
       celular: localCelular,
       telefone: data.telefone ? localTelefone : '',
-      cep: parseCEP(data.cep),
+      cep: parseCEP(data.cep ?? ''),
     };
 
     try {
@@ -288,20 +285,20 @@ export default function DadosPessoais() {
         nome_completo: data.name,
         cpf: rawCpf,
         rg: data.rg || undefined,
-        data_nascimento: data.dataNascimento,
-        estado_civil: data.estadoCivil,
-        genero: data.genero,
-        nacionalidade: data.nacionalidade,
-        email: data.email,
+        data_nascimento: data.dataNascimento ?? '',
+        estado_civil: data.estadoCivil ?? '',
+        genero: data.genero ?? '',
+        nacionalidade: data.nacionalidade ?? '',
+        email: data.email ?? '',
         celular: localCelular,
         telefone: localTelefone || undefined,
-        endereco_cep: parseCEP(data.cep),
-        endereco_logradouro: data.logradouro,
-        endereco_numero: data.numero,
+        endereco_cep: parseCEP(data.cep ?? ''),
+        endereco_logradouro: data.logradouro ?? '',
+        endereco_numero: data.numero ?? '',
         endereco_complemento: data.complemento || undefined,
-        endereco_bairro: data.bairro,
-        endereco_cidade: data.cidade,
-        endereco_uf: data.estado,
+        endereco_bairro: data.bairro ?? '',
+        endereco_cidade: data.cidade ?? '',
+        endereco_uf: data.estado ?? '',
       });
 
       toast.success('Sucesso', {

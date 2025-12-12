@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useFormularioStore } from "@/features/assinatura-digital/stores";
+import { useFormularioStore } from "../../store";
 import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";

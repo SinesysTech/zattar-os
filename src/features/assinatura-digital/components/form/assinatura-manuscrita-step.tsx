@@ -1,20 +1,19 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useFormularioStore } from "@/features/assinatura-digital/stores";
-import CanvasAssinatura, { type CanvasAssinaturaRef } from "@/features/assinatura-digital/components/signature/canvas-assinatura";
-import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
+import { useFormularioStore } from "../../store";
+import CanvasAssinatura, { type CanvasAssinaturaRef } from "../signature/canvas-assinatura";
+import FormStepLayout from "./form-step-layout";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import { v4 as uuidv4 } from 'uuid'; // Comment 6: Para gerar requestId único
 import { API_ROUTES, collectDeviceFingerprint } from "@/features/assinatura-digital";                                                                               
-import { TERMOS_VERSAO_ATUAL } from "@/features/assinatura-digital/constants/termos";
-import type { DeviceFingerprintData } from "@/features/assinatura-digital/types/types";
+import type { DeviceFingerprintData } from "@/features/assinatura-digital";
 import {
   validateSignatureQuality,
   validatePhotoQuality,
   validateDataConsistency,
-} from "@/features/assinatura-digital/utils";
+} from "@/features/assinatura-digital";
 
 async function getClientIP(): Promise<{ ip: string; source?: string }> {
   try {

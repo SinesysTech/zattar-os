@@ -35,8 +35,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Template, StatusTemplate } from '@/types/assinatura-digital';
-import { validateMarkdownForForm } from '@/features/assinatura-digital';
+import type { Template, StatusTemplate } from '@/features/assinatura-digital';
+import { validateMarkdownForForm } from './editor-helpers';
 
 interface TemplateInfoPopoverProps {
   trigger: React.ReactNode;

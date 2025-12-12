@@ -41,13 +41,13 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { ConteudoComposto } from '@/types/assinatura-digital/template.types';
+import type { ConteudoComposto } from '@/features/assinatura-digital';
 import {
   getAvailableVariables,
   type VariableOption,
   type TiptapDocument,
   type TiptapNode,
-} from '@/features/assinatura-digital';
+} from './editor-helpers';
 
 interface RichTextEditorProps {
   value?: ConteudoComposto;

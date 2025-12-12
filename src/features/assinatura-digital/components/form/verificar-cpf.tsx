@@ -4,12 +4,11 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { verificarCPFSchema, type VerificarCPFFormData } from '../../validations/verificar-cpf.schema';
-import InputCPF from '@/features/assinatura-digital/components/inputs/input-cpf';
-import { useFormularioStore } from '@/features/assinatura-digital/stores';
+import InputCPF from '../inputs/input-cpf';
+import { useFormularioStore } from '../../store';
 import { toast } from 'sonner';
 import { API_ROUTES } from '@/features/assinatura-digital';
-import { parseCPF } from '@/features/assinatura-digital/utils/formatters';
-import { validateCPF } from '@/features/assinatura-digital/utils';
+import { parseCPF, validateCPF } from '@/features/assinatura-digital';
 import {
   Form,
   FormControl,
@@ -18,8 +17,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import type { ClienteAssinaturaDigital } from '@/types/assinatura-digital/cliente-adapter.types';
-import FormStepLayout from '@/features/assinatura-digital/components/form/form-step-layout';
+import type { ClienteAssinaturaDigital } from '@/features/assinatura-digital';
+import FormStepLayout from './form-step-layout';
 
 type VerificarCPFResponse = {
   exists: boolean;

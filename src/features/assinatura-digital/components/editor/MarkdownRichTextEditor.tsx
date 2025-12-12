@@ -10,7 +10,7 @@ import {
   markdownToTiptapJSON,
   tiptapJSONToMarkdown,
   type TiptapDocument,
-} from '@/lib/assinatura-digital';
+} from './editor-helpers';
 import { Button } from '@/components/ui/button';
 import { Combobox } from '@/components/ui/combobox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';

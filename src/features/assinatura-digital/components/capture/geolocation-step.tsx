@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useFormularioStore } from "@/features/assinatura-digital/stores";
+import { useFormularioStore } from "../../store";
 import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
 import { toast } from "sonner";
 import { validateGeolocation } from "@/features/assinatura-digital/utils";
