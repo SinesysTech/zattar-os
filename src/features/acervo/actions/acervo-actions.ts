@@ -25,7 +25,7 @@ import {
   listarAcervoParamsSchema,
   atribuirResponsavelSchema,
   type ListarAcervoParams,
-} from '../types';
+} from '../domain';
 
 export type ActionResponse<T = unknown> = {
   success: boolean;
@@ -38,45 +38,6 @@ function createErrorResponse(error: unknown, defaultMessage: string): ActionResp
     success: false,
     error: error instanceof Error ? error.message : defaultMessage,
   };
-}
-
-/**
- * Lists acervo with filters, pagination, and sorting
- * 
- * @deprecated Use actionListarAcervoPaginado or actionListarAcervoUnificado instead
- * This function forces paginado mode (unified=false) for legacy UI compatibility
- */
-export async function actionListarAcervo(
-  params: ListarAcervoParams = {}
-): Promise<ActionResponse> {
-  try {
-    const user = await getCurrentUser();
-    if (!user) {
-      return { success: false, error: 'Não autenticado' };
-    }
-
-    // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
-    if (!hasPermission) {
-      return { success: false, error: 'Sem permissão para visualizar acervo' };
-    }
-
-    // Validate params
-    const validatedParams = listarAcervoParamsSchema.parse(params);
-
-    // Force paginado mode (unified=false, no grouping) for legacy UI compatibility
-    // Legacy UI expects flat Acervo[] array, not ProcessoUnificado[]
-    const result = await obterAcervoPaginado({
-      ...validatedParams,
-      unified: false,
-      agrupar_por: undefined,
-    });
-
-    return { success: true, data: result };
-  } catch (error) {
-    console.error('[actionListarAcervo] Error:', error);
-    return createErrorResponse(error, 'Erro ao listar acervo');
-  }
 }
 
 /**

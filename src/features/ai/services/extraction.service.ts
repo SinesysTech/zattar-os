@@ -2,26 +2,35 @@ type PdfJs = typeof import('pdfjs-dist/legacy/build/pdf.mjs');
 
 async function getPdfJs(): Promise<PdfJs> {
   // Import lazy para evitar avaliar `pdfjs-dist` no SSR/Node (erro: DOMMatrix is not defined)
-  return (await import('pdfjs-dist/legacy/build/pdf.mjs')) as PdfJs;
-}
+  const pdfjs = (await import('pdfjs-dist/legacy/build/pdf.mjs')) as PdfJs;
 
-interface TextItem {
-  str: string;
-  transform?: number[];
+  // No servidor, desabilitar worker explicitamente (evita dependências de ambiente/bundler).
+  if (typeof window === 'undefined') {
+    pdfjs.GlobalWorkerOptions.workerSrc = '';
+  }
+
+  return pdfjs;
 }
 
 export async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   const pdfjs = await getPdfJs();
   const data = new Uint8Array(buffer);
-  const pdf = await pdfjs.getDocument({ data, disableWorker: true }).promise;
+  // `disableWorker` não está tipado nas definições atuais do pdfjs-dist v5, mas é suportado em runtime.
+  const pdf = await pdfjs.getDocument({ data, disableWorker: true } as unknown as Parameters<PdfJs['getDocument']>[0]).promise;
   const textParts: string[] = [];
 
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    const pageText = content.items
-      .filter((item): item is TextItem => 'str' in item)
-      .map((item) => item.str)
+    const pageText = (content.items as unknown[])
+      .map((item) => {
+        if (item && typeof item === 'object' && 'str' in item) {
+          const str = (item as { str?: unknown }).str;
+          return typeof str === 'string' ? str : '';
+        }
+        return '';
+      })
+      .filter((s) => s.length > 0)
       .join(' ');
     textParts.push(pageText);
   }
@@ -29,7 +38,7 @@ export async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   return textParts.join('\n\n');
 }
 
-export async function extractTextFromDOCX(buffer: Buffer): Promise<string> {
+export async function extractTextFromDOCX(_buffer: Buffer): Promise<string> {
   // Implementação básica usando mammoth
   // Por ora, lançar erro indicando necessidade de implementação
   throw new Error(

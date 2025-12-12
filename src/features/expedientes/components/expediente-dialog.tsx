@@ -45,7 +45,7 @@ import { cn } from '@/lib/utils';
 import { actionCriarExpediente } from '../actions';
 import { GrauTribunal, CodigoTribunal } from '../types';
 import type { TipoExpediente } from '@/features/tipos-expedientes';
-import { actionListarAcervo } from '@/features/acervo';
+import { actionListarAcervoPaginado } from '@/features/acervo';
 
 interface DadosIniciais {
   processoId: number;
@@ -255,11 +255,10 @@ export function ExpedienteDialog({
     setLoadingProcessos(true);
 
     try {
-      const result = await actionListarAcervo({
+      const result = await actionListarAcervoPaginado({
         trt: trtValue,
         grau: grauValue,
         limite: 100,
-        unified: false, // Ensure we get raw instances
       });
 
       if (!result.success || !result.data) {

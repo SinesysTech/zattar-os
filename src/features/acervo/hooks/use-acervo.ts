@@ -7,7 +7,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import {
-  actionListarAcervo,
+  actionListarAcervoPaginado,
   actionBuscarProcesso,
   actionAtribuirResponsavel,
   actionBuscarProcessosClientePorCpf,
@@ -17,7 +17,7 @@ import type {
   ListarAcervoResult,
   Acervo,
   ProcessosClienteCpfResponse,
-} from '../types';
+} from '../domain';
 
 /**
  * Hook for listing acervo with filters and pagination
@@ -34,10 +34,9 @@ export function useAcervo(initialParams: ListarAcervoParams = {}) {
     setError(null);
 
     try {
-      const result = await actionListarAcervo(fetchParams || params);
+      const result = await actionListarAcervoPaginado(fetchParams || params);
 
       if (result.success && result.data) {
-        // actionListarAcervo now always returns ListarAcervoResult (paginado mode)
         setData(result.data);
       } else {
         setError(result.error || 'Erro ao carregar acervo');
