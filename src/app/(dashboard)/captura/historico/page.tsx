@@ -1,8 +1,7 @@
 'use client';
 
 import { Suspense, useState } from 'react';
-import { CapturaList } from '@/features/captura/components/captura-list';
-import { CapturaDialog } from '@/features/captura/components/captura-dialog';
+import { CapturaList, CapturaDialog } from '@/features/captura';
 import { DataSurface } from '@/components/ui/data-surface';
 import { Database } from 'lucide-react';
 
