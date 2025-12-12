@@ -15,7 +15,7 @@ import type {
 import {
     RelatorioCompleto,
     RelatorioComparativo,
-    RelatorioExecutivo,
+    // RelatorioExecutivo,
     AnaliseParaUI,
 } from '@/features/financeiro/domain/relatorios';
 

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { PlanoContasService } from '../services/plano-contas';
-import { CriarPlanoContaDTO, AtualizarPlanoContaDTO, PlanoContasFilters } from '../types/plano-contas';
+import { CriarPlanoContaDTO, AtualizarPlanoContaDTO, PlanoContasFilters } from '../domain/plano-contas';
 
 export async function actionListarPlanoContas(filters?: PlanoContasFilters) {
     try {

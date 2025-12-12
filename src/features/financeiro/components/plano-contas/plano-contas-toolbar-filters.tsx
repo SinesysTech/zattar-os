@@ -4,7 +4,7 @@ import {
   parseFilterValues,
 } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup, ComboboxOption } from '@/components/ui/table-toolbar';
-import type { PlanoContasFilters } from '../../types/plano-contas';
+import type { PlanoContasFilters } from '../../domain/plano-contas';
 
 export const PLANO_CONTAS_FILTER_CONFIGS: FilterConfig[] = [
   {

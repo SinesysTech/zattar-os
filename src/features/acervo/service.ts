@@ -30,7 +30,27 @@ import {
 import { invalidateAcervoCache } from '@/lib/redis/invalidation';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
+import { capturarTimeline, type CodigoTRT, type GrauTRT } from '@/features/captura';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
+
+interface RecaptureResult {
+  instanciaId: number;
+  trt: string;
+  grau: string;
+  status: 'ok' | 'erro';
+  mensagem?: string;
+  totalItens?: number;
+  totalDocumentos?: number;
+  totalMovimentos?: number;
+  mongoId?: string;
+}
+
+interface RecaptureResponse {
+  numero_processo: string;
+  resultados: RecaptureResult[];
+  totalSucesso: number;
+  totalErro: number;
+}
 
 // ============================================================================
 // Main Service Functions
@@ -449,4 +469,96 @@ export async function buscarProcessosClientePorCpf(
       error: error instanceof Error ? error.message : 'Erro interno ao buscar processos',
     };
   }
+}
+
+/**
+ * Recaptura a timeline de TODAS as instâncias do processo (1º, 2º e TST),
+ * garantindo que a visão unificada fique atualizada.
+ */
+export async function recapturarTimelineUnificada(acervoId: number): Promise<RecaptureResponse> {
+  const supabase = createServiceClient();
+
+  // Buscar número do processo
+  const { data: acervo, error: acervoError } = await supabase
+    .from('acervo')
+    .select('numero_processo')
+    .eq('id', acervoId)
+    .single();
+
+  if (acervoError || !acervo) {
+    throw new Error('Processo não encontrado');
+  }
+
+  // Buscar todas as instâncias do mesmo número de processo
+  const { data: instancias, error: instanciasError } = await supabase
+    .from('acervo')
+    .select('id, trt, grau, id_pje, numero_processo, advogado_id')
+    .eq('numero_processo', acervo.numero_processo);
+
+  if (instanciasError) {
+    throw new Error(`Erro ao buscar instâncias: ${instanciasError.message}`);
+  }
+
+  if (!instancias || instancias.length === 0) {
+    throw new Error('Nenhuma instância encontrada para o processo');
+  }
+
+  const resultados: RecaptureResult[] = [];
+
+  // Recapturar cada instância sequencialmente
+  for (const inst of instancias) {
+    console.log(`[recapture] Processando instância ${inst.grau} (${inst.trt})...`);
+    
+    try {
+      const resultado = await capturarTimeline({
+        trtCodigo: inst.trt as CodigoTRT,
+        grau: inst.grau as GrauTRT,
+        processoId: String(inst.id_pje),
+        numeroProcesso: inst.numero_processo,
+        advogadoId: inst.advogado_id,
+        baixarDocumentos: true,
+        filtroDocumentos: {
+          apenasAssinados: false,
+          apenasNaoSigilosos: false,
+        },
+      });
+
+      console.log(`[recapture] ✅ Instância ${inst.grau} capturada:`, {
+        totalItens: resultado.totalItens,
+        totalDocumentos: resultado.totalDocumentos,
+      });
+
+      resultados.push({
+        instanciaId: inst.id,
+        trt: inst.trt,
+        grau: inst.grau,
+        status: 'ok',
+        totalItens: resultado.totalItens,
+        totalDocumentos: resultado.totalDocumentos,
+        totalMovimentos: resultado.totalMovimentos,
+        mongoId: resultado.mongoId,
+      });
+    } catch (error) {
+      console.error(`[recapture] ❌ Erro na instância ${inst.grau}:`, error);
+      resultados.push({
+        instanciaId: inst.id,
+        trt: inst.trt,
+        grau: inst.grau,
+        status: 'erro',
+        mensagem: error instanceof Error ? error.message : 'Erro desconhecido',
+      });
+    }
+  }
+
+  const totalSucesso = resultados.filter(r => r.status === 'ok').length;
+  const totalErro = resultados.length - totalSucesso;
+
+  console.log(`[recapture] ✅ Recaptura finalizada: ${totalSucesso} sucesso, ${totalErro} erro`);
+
+  return {
+    numero_processo: acervo.numero_processo,
+    resultados,
+    totalSucesso,
+    totalErro,
+  };
 }

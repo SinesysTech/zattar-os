@@ -10,7 +10,7 @@ import type {
     CriarPlanoContaDTO,
     AtualizarPlanoContaDTO,
     PlanoContasFilters
-} from '../types/plano-contas';
+} from '../domain/plano-contas';
 
 // ============================================================================
 // Repository Implementation

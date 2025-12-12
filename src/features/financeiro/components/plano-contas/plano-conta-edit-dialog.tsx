@@ -33,7 +33,7 @@ import {
   type PlanoContaComPai,
   type TipoContaContabil,
   type NaturezaConta,
-} from '../../types/plano-contas';
+} from '../../domain/plano-contas';
 import { actionAtualizarConta } from '../../actions/plano-contas';
 
 const editPlanoContaSchema = z.object({

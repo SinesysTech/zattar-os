@@ -16,6 +16,7 @@ import {
   buscarProcessoPorId,
   atribuirResponsavel as atribuirResponsavelService,
   buscarProcessosClientePorCpf as buscarProcessosClientePorCpfService,
+  recapturarTimelineUnificada,
 } from '../service';
 import { obterTimelineUnificadaPorId } from '../timeline-unificada';
 import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
@@ -416,6 +417,37 @@ export async function actionExportarAcervoCSV(
       success: false,
       error: error instanceof Error ? error.message : 'Erro ao exportar acervo',
     };
+  }
+}
+
+/**
+ * Triggers recapture of timeline for all instances of a unified process
+ */
+export async function actionRecapturarTimeline(
+  acervoId: number
+): Promise<ActionResponse> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: 'Não autenticado' };
+    }
+
+    // Check permission (same as visualize)
+    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para visualizar acervo' };
+    }
+
+    const result = await recapturarTimelineUnificada(acervoId);
+
+    // Revalidate paths
+    revalidatePath(`/processos/${acervoId}/timeline`);
+    revalidatePath(`/processos/${acervoId}`);
+
+    return { success: true, data: result };
+  } catch (error) {
+    console.error('[actionRecapturarTimeline] Error:', error);
+    return createErrorResponse(error, 'Erro ao recapturar timeline');
   }
 }
 

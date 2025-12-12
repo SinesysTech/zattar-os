@@ -45,6 +45,7 @@ import { cn } from '@/lib/utils';
 import { actionCriarExpediente } from '../actions';
 import { GrauTribunal, CodigoTribunal } from '../types';
 import type { TipoExpediente } from '@/features/tipos-expedientes';
+import { actionListarAcervo } from '@/features/acervo';
 
 interface DadosIniciais {
   processoId: number;
@@ -254,27 +255,27 @@ export function ExpedienteDialog({
     setLoadingProcessos(true);
 
     try {
-      const params = new URLSearchParams({
+      const result = await actionListarAcervo({
         trt: trtValue,
         grau: grauValue,
-        limite: '100',
+        limite: 100,
+        unified: false, // Ensure we get raw instances
       });
 
-      const response = await fetch(`/api/acervo?${params.toString()}`);
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
+      if (!result.success || !result.data) {
         throw new Error(result.error || 'Erro ao buscar processos');
       }
 
       // Convertendo chaves de snake_case para camelCase para o estado local
-      const camelCaseProcessos = (result.data.processos || []).map((p: any) => ({
+      const processosData = 'processos' in result.data ? result.data.processos : [];
+      
+      const camelCaseProcessos = processosData.map((p) => ({
         id: p.id,
         numeroProcesso: p.numero_processo,
         nomeParteAutora: p.polo_ativo_nome,
         nomeParteRe: p.polo_passivo_nome,
-        trt: p.trt,
-        grau: p.grau,
+        trt: p.trt as CodigoTribunal,
+        grau: p.grau as GrauTribunal,
       }));
       setProcessos(camelCaseProcessos);
     } catch (err: unknown) {

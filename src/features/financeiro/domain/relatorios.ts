@@ -32,19 +32,33 @@ export interface RelatorioComparativo {
   geradoEm: string;
 }
 
+import type {
+  Orcamento,
+  OrcamentoComDetalhes,
+  AnaliseOrcamentaria,
+  ResumoOrcamentario,
+  EvolucaoMensal,
+  ProjecaoItem,
+} from './orcamentos';
+
 export interface RelatorioCompleto {
-  orcamento: any; // Using any to avoid circular dependencies or if type is generic. Ideally should be OrcamentoComDetalhes
-  analise: any;
-  resumo?: any;
+  orcamento: OrcamentoComDetalhes | Orcamento;
+  analise: AnaliseOrcamentaria;
+  resumo?: ResumoOrcamentario;
   alertas?: Array<{ mensagem: string; severidade: string }>;
-  evolucao?: any[];
-  projecao?: any[] | null;
+  evolucao?: EvolucaoMensal[];
+  projecao?: ProjecaoItem[] | null;
   geradoEm: string;
 }
 
 export interface RelatorioExecutivo {
-  resumo: any;
-  principaisIndicadores: any;
+  resumo: ResumoOrcamentario;
+  principaisIndicadores: {
+    totalOrcado: number;
+    totalRealizado: number;
+    percentualExecutado: number;
+    saldo: number;
+  };
   alertas: Array<{ mensagem: string; severidade: string }>;
   geradoEm: string;
 }

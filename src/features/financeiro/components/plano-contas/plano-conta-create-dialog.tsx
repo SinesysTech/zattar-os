@@ -35,7 +35,7 @@ import {
   type TipoContaContabil,
   type NaturezaConta,
   type NivelConta,
-} from '../../types/plano-contas';
+} from '../../domain/plano-contas';
 import { actionCriarConta } from '../../actions/plano-contas';
 
 const createPlanoContaSchema = z.object({

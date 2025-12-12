@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, startTransition } from 'react';
 import { actionListarPlanoContas } from '../actions/plano-contas';
-import { PlanoContas, PlanoContasFilters } from '../types/plano-contas';
+import { PlanoContas, PlanoContasFilters } from '../domain/plano-contas';
 
 export function usePlanoContas(filters?: PlanoContasFilters & { limite?: number }) {
     const [contas, setContas] = useState<PlanoContas[]>([]);

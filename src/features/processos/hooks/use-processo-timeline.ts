@@ -17,6 +17,8 @@ import type { Acervo } from '@/features/acervo/types';
 import type { TimelineDocument } from '@/lib/types/timeline';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 import type { GrauProcesso } from '@/features/partes';
+import { actionObterTimelinePorId, actionRecapturarTimeline } from '@/features/acervo';
+import { actionCapturarTimeline } from '@/features/captura';
 
 /**
  * Item da timeline com metadados de origem (para modo unificado)
@@ -109,11 +111,9 @@ export function useProcessoTimeline(
     try {
       setError(null);
 
-      const url = `/api/acervo/${id}/timeline${unified ? '?unified=true' : ''}`;
-      const response = await fetch(url);
-      const result = await response.json();
+      const result = await actionObterTimelinePorId(id, unified);
 
-      if (!response.ok) {
+      if (!result.success) {
         throw new Error(result.error || 'Erro ao buscar dados do processo');
       }
 
@@ -144,26 +144,20 @@ export function useProcessoTimeline(
         numeroProcesso: processo.numero_processo,
       });
 
-      const response = await fetch('/api/captura/trt/timeline', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          trtCodigo: processo.trt,
-          grau: processo.grau,
-          processoId: processo.id_pje,
-          numeroProcesso: processo.numero_processo,
-          advogadoId: processo.advogado_id,
-          baixarDocumentos: true,
-          filtroDocumentos: {
-            apenasAssinados: false, // Baixar todos os documentos
-            apenasNaoSigilosos: false, // Incluir sigilosos também
-          },
-        }),
+      const result = await actionCapturarTimeline({
+        trtCodigo: processo.trt as any, // Cast to avoid type mismatch if strings differ
+        grau: processo.grau as any,
+        processoId: String(processo.id_pje),
+        numeroProcesso: processo.numero_processo,
+        advogadoId: processo.advogado_id,
+        baixarDocumentos: true,
+        filtroDocumentos: {
+          apenasAssinados: false, // Baixar todos os documentos
+          apenasNaoSigilosos: false, // Incluir sigilosos também
+        },
       });
 
-      const result = await response.json();
-
-      if (!response.ok) {
+      if (!result.success) {
         throw new Error(result.error || 'Erro ao iniciar captura da timeline');
       }
 
@@ -247,13 +241,9 @@ export function useProcessoTimeline(
       setIsCapturing(true);
       setPollingAttempts(0);
 
-      const response = await fetch(`/api/acervo/${id}/timeline/recapture`, {
-        method: 'POST',
-      });
+      const result = await actionRecapturarTimeline(id);
 
-      const result = await response.json();
-
-      if (!response.ok) {
+      if (!result.success) {
         throw new Error(result.error || 'Erro ao recapturar timeline');
       }
 

@@ -104,6 +104,7 @@ export * from './comunica-cnj/service';
 
 // Actions
 export * from './actions/comunica-cnj-actions';
+export * from './actions/timeline-actions';
 
 // Comunica CNJ Components
 export * from './components/comunica-cnj';

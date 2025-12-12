@@ -6,6 +6,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { Acervo } from '@/features/acervo/types';
+import { actionBuscarProcesso } from '@/features/acervo';
 
 interface UseProcessoDetailResult {
   processo: Acervo | null;
@@ -34,20 +35,13 @@ export const useProcessoDetail = (processoId: number | null): UseProcessoDetailR
     setError(null);
 
     try {
-      const response = await fetch(`/api/acervo/${processoId}`);
+      const result = await actionBuscarProcesso(processoId);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
-        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
+      if (!result.success) {
+        throw new Error(result.error || 'Falha ao buscar processo');
       }
 
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error('Resposta da API indicou falha');
-      }
-
-      setProcesso(data.data);
+      setProcesso(result.data || null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar processo';
       setError(errorMessage);

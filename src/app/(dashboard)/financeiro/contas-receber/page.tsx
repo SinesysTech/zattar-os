@@ -65,7 +65,7 @@ import type {
   ContaReceberComDetalhes,
   StatusContaReceber,
   OrigemContaReceber,
-} from '@/features/financeiro/types/contas-receber.types';
+} from '@/features/financeiro/domain/lancamentos';
 
 // ============================================================================
 // Constantes e Helpers
