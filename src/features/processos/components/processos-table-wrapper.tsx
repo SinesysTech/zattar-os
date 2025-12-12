@@ -16,11 +16,13 @@ import {
 } from '@/features/processos/components';
 import { useProcessos } from '@/features/processos/hooks';
 import type { ProcessosFilters, Processo, ProcessoUnificado, GrauProcesso, ProcessoSortBy } from '@/features/processos/types';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Copy } from 'lucide-react';
 import type { ColumnDef, SortingState, Row } from '@tanstack/react-table';
-import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
+import { GRAU_LABELS } from '@/lib/design-system';
 
 type ProcessoComParticipacao = Processo | ProcessoUnificado;
 
@@ -91,7 +93,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
           {numeroProcesso}
         </div>
         <Button variant="outline" size="icon" className="h-6 w-6" onClick={copiarNumeroProcesso}>
-          <Copy className={`h-3 w-3 ${copiado ? 'text-green-600' : ''}`} />
+          <Copy className={cn('h-3 w-3', copiado ? 'text-success' : '')} />
         </Button>
       </div>
       <div className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</div>
@@ -138,13 +140,13 @@ const colunas: ColumnDef<ProcessoComParticipacao>[] = [
     },
     {
         accessorKey: 'status',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+        header: 'Status',
         cell: ({ row }) => {
             const status = row.original.status;
             return (
-              <div className="min-h-10 flex items-center justify-center">
-                <Badge variant="default">{status}</Badge>
-              </div>
+                <Badge variant={getSemanticBadgeVariant('status', status)}>
+                    {status}
+                </Badge>
             );
         },
         size: 150,

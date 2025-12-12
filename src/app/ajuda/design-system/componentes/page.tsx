@@ -120,7 +120,7 @@ export default function ComponentesPage() {
               <Badge variant="destructive">Destructive</Badge>
               <Badge variant="success">Success</Badge>
               <Badge variant="warning">Warning</Badge>
-              <Badge variant="action">Action</Badge>
+              <Badge variant="accent">Accent</Badge>
             </div>
           </CardContent>
         </Card>

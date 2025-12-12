@@ -333,12 +333,12 @@ export function ExpedienteActions({
           <DropdownMenuSeparator />
           {!expediente.baixadoEm ? (
             <DropdownMenuItem onClick={() => setShowBaixar(true)}>
-              <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
+              <CheckCircle2 className="mr-2 h-4 w-4 text-success" />
               Baixar Expediente
             </DropdownMenuItem>
           ) : (
             <DropdownMenuItem onClick={() => setShowReverter(true)}>
-              <AlertTriangle className="mr-2 h-4 w-4 text-orange-600" />
+              <AlertTriangle className="mr-2 h-4 w-4 text-warning" />
               Reverter Baixa
             </DropdownMenuItem>
           )}
@@ -442,13 +442,11 @@ export const columns: ColumnDef<Expediente>[] = [
                  nome={e.nomeParteAutora}
                  processoId={e.processoId}
                  polo="ATIVO"
-                 className="text-blue-700 bg-blue-50 hover:bg-blue-100 border-blue-200"
                />
                <ParteDetalheButton
                  nome={e.nomeParteRe}
                  processoId={e.processoId}
                  polo="PASSIVO"
-                 className="text-red-700 bg-red-50 hover:bg-red-100 border-red-200"
                />
             </div>
         );
@@ -505,15 +503,15 @@ export const columns: ColumnDef<Expediente>[] = [
 ];
 
 // Helper component for Parte Button
-function ParteDetalheButton({ nome, processoId, polo, className }: { nome: string | null; processoId: number | null; polo: 'ATIVO' | 'PASSIVO'; className?: string }) {
+function ParteDetalheButton({ nome, processoId, polo }: { nome: string | null; processoId: number | null; polo: 'ATIVO' | 'PASSIVO' }) {
     const [open, setOpen] = React.useState(false);
     if (!nome) return <span className="text-xs text-muted-foreground">-</span>;
 
     return (
         <>
         <Badge
-            variant="outline"
-            className={`cursor-pointer w-fit max-w-full truncate block ${className}`}
+            variant={getSemanticBadgeVariant('polo', polo)}
+            className="cursor-pointer w-fit max-w-full truncate block"
             onClick={() => setOpen(true)}
             title={nome}
         >
