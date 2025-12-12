@@ -130,6 +130,19 @@ export async function actionCancelarLancamento(id: number): Promise<ActionRespon
 }
 
 /**
+ * Busca um lançamento por ID
+ */
+export async function actionBuscarLancamento(id: number): Promise<ActionResponse<Lancamento>> {
+    try {
+        const lancamento = await LancamentosService.buscarPorId(id);
+        if (!lancamento) return { success: false, error: 'Lançamento não encontrado' };
+        return { success: true, data: lancamento };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
+    }
+}
+
+/**
  * Estorna um lançamento
  */
 export async function actionEstornarLancamento(id: number): Promise<ActionResponse<Lancamento>> {

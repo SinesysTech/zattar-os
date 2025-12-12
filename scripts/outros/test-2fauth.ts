@@ -10,7 +10,7 @@ import { resolve } from 'path';
 // Carregar variáveis de ambiente do .env.local
 dotenv.config({ path: resolve(__dirname, '../.env.local') });
 
-import { getOTP } from '@/backend/api/twofauth.service';
+import { getOTP } from '@/lib/api';
 
 async function testTwoFAuth() {
   console.log('🧪 Testando conexão com 2FAuth...\n');

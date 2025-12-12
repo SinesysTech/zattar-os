@@ -3,7 +3,7 @@
  * Business logic and domain rules
  */
 
-import { StatusProcesso } from '@/types/domain/common';
+import { StatusProcesso } from '@/features/processos/domain';
 import type { Acervo } from './types';
 
 /**

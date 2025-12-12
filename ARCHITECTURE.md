@@ -1,361 +1,333 @@
-# 🏗️ Arquitetura Sinesys 2.0: AI-First Standard
+# Arquitetura Sinesys 2.0
 
-**Versão:** 2.0 (Integrated MCP Edition)
-**Status:** Canonical
+## Visão Geral
 
-Esta é a documentação definitiva da **Arquitetura Sinesys 2.0**. Ela foi projetada para ser seguida rigorosamente por desenvolvedores humanos e agentes de IA, garantindo que o sistema seja, ao mesmo tempo, um produto robusto e uma plataforma de agentes.
+O Sinesys é um sistema de gestão jurídica desenvolvido com arquitetura AI-First, utilizando Next.js 16, React 19, Supabase e integração MCP (Model Context Protocol).
 
----
-
-## 1. Princípios Fundamentais (The AI-First Manifesto)
-
-1. **Contexto é Soberano:** O código é organizado para minimizar a "janela de contexto" necessária para entender uma funcionalidade. Features são ilhas autossuficientes.
-2. **Schema como Contrato:** Zod Schemas (`zod`) não são apenas validação; são a definição da verdade para o Banco de Dados, Formulários React e Ferramentas de IA (MCP).
-3. **Dual-Use Actions:** Toda Server Action deve ser projetada para ser consumida por uma Interface Humana (UI) E por um Agente de IA (MCP) sem modificação de código.
-4. **Introspecção Nativa (RAG):** O sistema se auto-indexa. Todo dado criado gera um vetor de conhecimento acessível via busca semântica.
-5. **MCP Integrado:** O servidor MCP não é um processo separado. Ele roda dentro do runtime do Next.js, expondo as funcionalidades do sistema como ferramentas via API Routes.
-
----
-
-## 2. Estrutura de Diretórios Global
-
-A raiz do projeto é limpa, eliminando pastas legadas.
-
-```text
-src/
-├── app/                  # Roteamento (Next.js App Router)
-│   ├── (dashboard)/      # Rotas de UI protegidas
-│   ├── api/              # Endpoints REST
-│   │   └── mcp/          # 🆕 Endpoint do Servidor MCP (SSE)
-│   └── layout.tsx        # Shell da Aplicação
-│
-├── features/             # 🏝️ Módulos de Negócio (Feature-Sliced)
-│   ├── processos/
-│   ├── financeiro/
-│   └── [feature]/
-│
-├── lib/                  # Infraestrutura Compartilhada
-│   ├── ai/               # 🧠 Núcleo de IA (Embedding, RAG)
-│   ├── db/               # Cliente Supabase & Schema
-│   ├── mcp/              # 🔌 Configuração do Servidor MCP Integrado
-│   └── safe-action.ts    # Wrapper para Server Actions
-│
-├── components/           # UI Compartilhada (Design System)
-│   └── ui/               # shadcn/ui primitives
-│
-└── types/                # Tipos Globais (apenas o essencial)
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         CAMADA UI                               │
+│  React 19 + Next.js 16 + Tailwind CSS + shadcn/ui               │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    CAMADA DE SERVER ACTIONS                     │
+│  Safe Action Wrapper + Validação Zod + Autenticação             │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┴───────────────┐
+              ▼                               ▼
+┌─────────────────────────┐     ┌─────────────────────────┐
+│      API MCP SSE        │     │    Service Layer        │
+│  /api/mcp (ferramentas) │     │  Business Logic         │
+└─────────────────────────┘     └─────────────────────────┘
+              │                               │
+              └───────────────┬───────────────┘
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    CAMADA DE REPOSITÓRIO                        │
+│  Supabase Client + Queries Tipadas                              │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┼───────────────┐
+              ▼               ▼               ▼
+┌───────────────────┐ ┌───────────────┐ ┌───────────────┐
+│     Supabase      │ │    Redis      │ │   AI/RAG      │
+│  PostgreSQL + RLS │ │    Cache      │ │  pgvector     │
+└───────────────────┘ └───────────────┘ └───────────────┘
 ```
 
----
+## Estrutura de Diretórios
 
-## 3. O Padrão de Feature (The Feature Pod)
-
-Cada pasta dentro de `features/` deve seguir estritamente esta anatomia. A IA deve ser instruída a **nunca** desviar deste padrão.
-
-Exemplo: `src/features/processos/`
-
-```text
-src/features/processos/
-├── components/           # UI Components (Client-side)
-│   ├── processo-form.tsx # Usa os Schemas de types.ts
-│   └── timeline.tsx
+```
+sinesys/
+├── src/
+│   ├── app/                    # App Router (Next.js 16)
+│   │   ├── (auth)/             # Rotas autenticadas
+│   │   ├── api/                # API Routes
+│   │   │   └── mcp/            # Endpoint MCP SSE
+│   │   └── layout.tsx
+│   │
+│   ├── features/               # Feature-Sliced Design (22 módulos)
+│   │   ├── processos/          # Gestão de processos
+│   │   │   ├── actions/        # Server Actions
+│   │   │   ├── components/     # Componentes React
+│   │   │   ├── domain.ts       # Entidades + Zod schemas
+│   │   │   ├── service.ts      # Lógica de negócio
+│   │   │   ├── repository.ts   # Acesso a dados
+│   │   │   ├── RULES.md        # Regras de negócio (IA context)
+│   │   │   └── index.ts        # Barrel exports
+│   │   ├── partes/
+│   │   ├── audiencias/
+│   │   ├── documentos/
+│   │   ├── financeiro/
+│   │   ├── busca/              # Busca semântica
+│   │   └── ... (17 outros módulos)
+│   │
+│   ├── lib/                    # Bibliotecas compartilhadas
+│   │   ├── ai/                 # Camada de IA/RAG
+│   │   │   ├── embedding.ts    # Geração de vetores
+│   │   │   ├── indexing.ts     # Pipeline de ingestão
+│   │   │   ├── retrieval.ts    # Busca semântica
+│   │   │   └── index.ts
+│   │   ├── mcp/                # Integração MCP
+│   │   │   ├── server.ts       # McpServer singleton
+│   │   │   ├── registry.ts     # Registro de ferramentas
+│   │   │   └── utils.ts        # Helpers
+│   │   ├── auth/               # Autenticação
+│   │   ├── supabase/           # Clientes Supabase
+│   │   ├── redis/              # Cache Redis
+│   │   └── safe-action.ts      # Wrapper de actions
+│   │
+│   └── components/             # Componentes globais
+│       └── ui/                 # shadcn/ui
 │
-├── server/               # 🔒 Lógica de Servidor (Server-side Only)
-│   ├── actions.ts        # Server Actions (Entrypoints)
-│   ├── service.ts        # Regras de Negócio Puras
-│   └── repository.ts     # Acesso ao DB (Supabase)
+├── supabase/
+│   └── migrations/             # Migrações SQL
 │
-├── types.ts              # 📜 Fonte da Verdade (Zod Schemas + TS Types)
-├── utils.ts              # Helpers locais
-└── RULES.md              # 🧠 Contexto em Linguagem Natural para IA
+├── scripts/
+│   ├── ai/                     # Scripts de IA
+│   │   └── reindex-all.ts
+│   └── mcp/                    # Scripts MCP
+│       ├── check-registry.ts
+│       └── dev-server.ts
+│
+├── .mcp.json                   # Configuração MCP
+└── package.json
 ```
 
-### 3.1. `RULES.md` (Contexto Local)
+## Padrão de Feature
 
-Arquivo obrigatório em cada feature. Contém regras que não são óbvias no código.
+Cada feature segue a estrutura Domain → Service → Repository → Actions:
 
-> **Exemplo:** "Ao arquivar um processo, verificar se existem custas pendentes. Se houver, bloquear a ação e sugerir a criação de um boleto."
-
-### 3.2. `types.ts` (Schema-First)
-
-Define os dados antes de qualquer lógica.
-
+### domain.ts
+Define entidades, enums, schemas Zod e tipos:
 ```typescript
-import { z } from "zod";
+// Entidade
+export interface Processo { ... }
 
-export const ProcessoSchema = z.object({
-  numero: z.string().min(20),
-  parte_autora: z.string(),
-  // ...
-});
+// Schemas
+export const createProcessoSchema = z.object({ ... });
+export const updateProcessoSchema = z.object({ ... });
 
-// Input para criação (usado no Form E na Tool da IA)
-export const CriarProcessoInput = ProcessoSchema.pick({
-  numero: true,
-  parte_autora: true
-});
-
-export type CriarProcessoInput = z.infer<typeof CriarProcessoInput>;
+// Tipos inferidos
+export type CreateProcessoInput = z.infer<typeof createProcessoSchema>;
 ```
 
-### 3.3. `server/actions.ts` (Dual-Use Pattern)
-
-As Actions usam um wrapper (`actionClient` ou `createSafeAction`) que garante tipagem e tratamento de erro padronizado.
-
+### service.ts
+Implementa lógica de negócio:
 ```typescript
-'use server'
-import { authenticatedAction } from "@/lib/safe-action";
-import { CriarProcessoInput } from "../types";
-import { criarProcessoService } from "./service";
+export async function criarProcesso(
+  input: CreateProcessoInput
+): Promise<Result<Processo, ServiceError>> {
+  // Validação de regras de negócio
+  // Chamada ao repository
+  // Indexação para IA (after())
+}
+```
 
-// Esta action é importada pelo React E pelo registro do MCP
-export const criarProcessoAction = authenticatedAction(
-  CriarProcessoInput, // Zod valida entrada automaticamente
+### repository.ts
+Acesso a dados via Supabase:
+```typescript
+export async function create(
+  data: CreateProcessoInput
+): Promise<Result<Processo, RepositoryError>> {
+  const supabase = await createClient();
+  // Query Supabase
+}
+```
+
+### actions/
+Server Actions para UI e MCP:
+```typescript
+export const actionCriarProcesso = authenticatedAction(
+  createProcessoSchema,
   async (data, { user }) => {
-    const processo = await criarProcessoService(data, user.id);
-    return {
-      message: `Processo ${processo.numero} criado.`,
-      processo_id: processo.id
-    };
+    const result = await criarProcesso(data);
+    revalidatePath('/processos');
+    return result.data;
   }
 );
 ```
 
----
+### RULES.md
+Contexto de regras de negócio para agentes de IA:
+```markdown
+# Regras de Negócio - Processos
 
-## 4. Integração MCP Nativa (The Internal Bridge)
+## Validação
+- Número CNJ: formato NNNNNNN-DD.AAAA.J.TT.OOOO
 
-Em vez de um processo Node.js separado, o MCP roda como uma **Route Handler** do Next.js. Isso permite que agentes externos (como Claude Desktop ou IDEs) se conectem ao Sinesys.
+## Regras
+- Não arquivar processo com audiências pendentes
+...
+```
 
-### 4.1. Registry de Ferramentas (`src/lib/mcp/registry.ts`)
+## Integração MCP
 
-Arquivo central que importa as actions das features e as converte em Tools MCP.
+O servidor MCP expõe Server Actions como ferramentas para agentes de IA:
 
+### Endpoint SSE
+```
+GET  /api/mcp      → Inicia conexão SSE
+POST /api/mcp      → Executa ferramenta
+```
+
+### Registro de Ferramentas
 ```typescript
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { z } from "zod";
-// Importando Actions das Features
-import { criarProcessoAction } from "@/features/processos/server/actions";
-import { CriarProcessoInput } from "@/features/processos/types";
-
-export const mcpServer = new McpServer({
-  name: "Sinesys API",
-  version: "2.0.0"
+// src/lib/mcp/registry.ts
+registerMcpTool({
+  name: 'criar_processo',
+  description: 'Cria um novo processo no sistema',
+  schema: createProcessoSchema,
+  handler: async (args) => {
+    const result = await actionCriarProcesso(args);
+    return actionResultToMcp(result);
+  },
 });
+```
 
-// Função para registrar todas as tools
-export function registerTools() {
-  // Tool: Criar Processo
-  mcpServer.tool(
-    "criar_processo",
-    "Cria um novo processo jurídico no acervo",
-    CriarProcessoInput.shape, // Usa o Zod Schema da feature!
-    async (args) => {
-      // Chama a mesma Server Action que a UI usa
-      const result = await criarProcessoAction(args);
-      if (!result?.data) throw new Error(result?.serverError || "Erro desconhecido");
-
-      return {
-        content: [{ type: "text", text: JSON.stringify(result.data) }]
-      };
+### Configuração
+```json
+// .mcp.json
+{
+  "mcpServers": {
+    "sinesys": {
+      "type": "sse",
+      "url": "http://localhost:3000/api/mcp"
     }
-  );
-
-  // ... registrar outras tools
+  }
 }
 ```
 
-### 4.2. O Endpoint SSE (`src/app/api/mcp/route.ts`)
+## Camada de IA/RAG
 
-Expõe o servidor via Server-Sent Events (SSE) para conexão.
+Pipeline para busca semântica e contexto para LLMs:
 
+### Indexação
 ```typescript
-import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
-import { mcpServer, registerTools } from "@/lib/mcp/registry";
+import { indexarDocumento } from '@/lib/ai/indexing';
 
-// Inicializa tools na primeira chamada
-registerTools();
-
-export async function GET(req: Request) {
-  const transport = new SSEServerTransport("/api/mcp/messages", res);
-  await mcpServer.connect(transport);
-  // ... lógica de stream SSE padrão do SDK MCP
-}
-
-export async function POST(req: Request) {
-  // Lógica para receber mensagens do cliente MCP e rotear para o transport
-}
-```
-
----
-
-## 5. Camada de Inteligência e RAG (`src/lib/ai`)
-
-O sistema não apenas armazena dados, ele gera conhecimento vetorial automaticamente.
-
-### 5.1. Estrutura
-
-```text
-src/lib/ai/
-├── embedding.ts      # Gera vetores (OpenAI/Cohere)
-├── indexing.ts       # Pipeline de ingestão (Chunking -> Vector DB)
-└── retrieval.ts      # Busca semântica (usada pelos Agentes)
-```
-
-### 5.2. Pipeline de "Conhecimento Vivo"
-
-Sempre que uma Action de mutação (Criar/Editar) é chamada em uma feature, ela deve disparar a reindexação de forma assíncrona.
-
-**Exemplo em `src/features/pecas/server/service.ts`:**
-
-```typescript
-import { after } from "next/server"; // Next.js 15+ async execution
-import { indexarDocumento } from "@/lib/ai/indexing";
-
-export async function salvarPeca(dados: any) {
-  const peca = await db.insert(pecas).values(dados);
-
-  // ⚡ Fire-and-forget: Não trava a resposta para o usuário
-  after(async () => {
-    await indexarDocumento({
-      texto: await extrairTextoPDF(peca.url),
-      metadata: { tipo: 'peca', id: peca.id, processoId: peca.processo_id }
-    });
+// Após criar processo
+after(async () => {
+  await indexarDocumento({
+    texto: `Processo ${processo.numeroProcesso}...`,
+    metadata: { tipo: 'processo', id: processo.id }
   });
-
-  return peca;
-}
+});
 ```
 
----
+### Busca Semântica
+```typescript
+import { buscaSemantica } from '@/lib/ai/retrieval';
 
-## 6. Fluxo de Desenvolvimento AI-First (Instruções para o Agente de Código)
+const resultados = await buscaSemantica('trabalhista RJ', {
+  limite: 10,
+  threshold: 0.7,
+  filtros: { tipo: 'processo' }
+});
+```
 
-Quando você (humano) pedir para a IA (Cursor/Windsurf/Gemini) criar uma nova funcionalidade, ela deve seguir estritamente esta ordem de operações:
+### Contexto RAG
+```typescript
+import { obterContextoRAG } from '@/lib/ai/retrieval';
 
-**Passo 1: Entendimento (Contexto)**
+const { contexto, fontes } = await obterContextoRAG(
+  'Quais processos estão com audiência próxima?',
+  2000 // max tokens
+);
+```
 
-- Ler `src/features/{modulo}/RULES.md`.
-- Se o arquivo não existir, criá-lo com as regras de negócio inferidas.
+## Safe Action Wrapper
 
-**Passo 2: Definição de Dados (Schema)**
-
-- Criar/Atualizar `src/features/{modulo}/types.ts`.
-- Definir Zod Schemas para as Entidades e para os Inputs das Actions.
-
-**Passo 3: Lógica e Ferramental (Server)**
-
-- Implementar `repository.ts` (Queries SQL).
-- Implementar `service.ts` (Regras de negócio).
-- Implementar `actions.ts` (Exposição segura).
-- **Crucial:** Ir em `src/lib/mcp/registry.ts` e registrar a nova action como uma Tool.
-
-**Passo 4: Interface (UI)**
-
-- Criar componentes em `components/` usando os tipos exportados no Passo 2.
-- Conectar componentes às actions do Passo 3.
-
----
-
-## 7. Comandos de Manutenção
-
-- **`npm run mcp:check`**: Script que verifica se todas as Server Actions exportadas possuem uma entrada correspondente no `registry.ts` (garante que a IA sempre tenha acesso ao que o humano tem).
-- **`npm run ai:reindex`**: Script para varrer o banco e regenerar embeddings (caso mude o modelo de IA).
-
----
-
-## 8. Features Atuais
-
-### Módulos Migrados para Feature-Sliced Design
-
-| Feature | Path | Status |
-|---------|------|--------|
-| Acervo | `features/acervo/` | ✅ Completo |
-| Advogados | `features/advogados/` | ✅ Completo |
-| Assinatura Digital | `features/assinatura-digital/` | ✅ Completo |
-| Assistentes | `features/assistentes/` | ✅ Completo |
-| Audiências | `features/audiencias/` | ✅ Completo |
-| Captura | `features/captura/` | ✅ Completo |
-| Cargos | `features/cargos/` | ✅ Completo |
-| Chat | `features/chat/` | ✅ Completo |
-| Contratos | `features/contratos/` | ✅ Completo |
-| Dashboard | `features/dashboard/` | ✅ Completo |
-| Documentos | `features/documentos/` | ✅ Completo |
-| Endereços | `features/enderecos/` | ✅ Completo |
-| Expedientes | `features/expedientes/` | ✅ Completo |
-| Financeiro | `features/financeiro/` | ✅ Completo |
-| Obrigações | `features/obrigacoes/` | ✅ Completo |
-| Partes | `features/partes/` | ✅ Completo |
-| Perfil | `features/perfil/` | ✅ Completo |
-| Processos | `features/processos/` | ✅ Completo |
-| Repasses | `features/repasses/` | ✅ Completo |
-| RH | `features/rh/` | ✅ Completo |
-| Tipos Expedientes | `features/tipos-expedientes/` | ✅ Completo |
-| Usuários | `features/usuarios/` | ✅ Completo |
-
----
-
-## 9. Infraestrutura (`src/lib/`)
-
-### Componentes Atuais
-
-| Módulo | Path | Descrição |
-|--------|------|-----------|
-| Supabase | `lib/supabase/` | Cliente e helpers para Supabase |
-| Redis | `lib/redis/` | Cache e sessões |
-| Auth | `lib/auth/` | Autenticação e autorização |
-| Storage | `lib/storage/` | Upload e gerenciamento de arquivos |
-| Logger | `lib/logger/` | Sistema de logs estruturados |
-| Utils | `lib/utils/` | Utilitários compartilhados |
-| CopilotKit | `lib/copilotkit/` | Integração com AI assistants |
-| MongoDB | `lib/mongodb/` | Conexão com MongoDB |
-| YJS | `lib/yjs/` | Colaboração em tempo real |
-
-### Planejados (Arquitetura 2.0)
-
-| Módulo | Path | Descrição |
-|--------|------|-----------|
-| AI | `lib/ai/` | 🔮 Embeddings, RAG, busca semântica |
-| MCP | `lib/mcp/` | 🔮 Servidor MCP integrado |
-
----
-
-## 10. Referência Rápida
-
-### Imports Padronizados
+Wrapper padronizado para Server Actions:
 
 ```typescript
-// ✅ Features
-import { ClientesTable, actionListarClientes } from "@/features/partes";
-import { listarProcessos, type Processo } from "@/features/processos";
+import { authenticatedAction } from '@/lib/safe-action';
 
-// ✅ Componentes UI
-import { Button } from "@/components/ui/button";
-import { PageShell } from "@/components/shared/page-shell";
+// Action autenticada com validação automática
+export const actionCriar = authenticatedAction(
+  schema,
+  async (data, { user }) => {
+    // `data` já validado pelo schema
+    // `user` injetado automaticamente
+    return { ... };
+  }
+);
 
-// ✅ Infraestrutura
-import { createClient } from "@/lib/supabase/server";
-import { cn } from "@/lib/utils";
-
-// ❌ NUNCA usar (removidos)
-// import { ... } from "@/backend/...";
-// import { ... } from "@/app/_lib/...";
+// Compatível com UI (FormData) e MCP (JSON)
+await actionCriar(formData);  // UI
+await actionCriar({ ... });   // MCP
 ```
 
-### Checklist Nova Feature
+## Fluxo de Dados
 
-- [ ] Criar estrutura em `src/features/{modulo}/`
-- [ ] Definir `types.ts` com Zod Schemas
-- [ ] Implementar `repository.ts` (acesso a dados)
-- [ ] Implementar `service.ts` (lógica de negócio)
-- [ ] Criar Server Actions em `actions/`
-- [ ] Criar componentes em `components/`
-- [ ] Exportar via `index.ts` (barrel)
-- [ ] Criar `RULES.md` com regras de negócio
-- [ ] Registrar no MCP Registry (quando implementado)
-- [ ] Criar página em `app/(dashboard)/{modulo}/`
-- [ ] Testar responsividade
+```mermaid
+sequenceDiagram
+    participant UI as React UI
+    participant Action as Server Action
+    participant Service as Service Layer
+    participant Repo as Repository
+    participant DB as Supabase
+    participant AI as AI Layer
+    participant MCP as MCP Tool
 
----
+    UI->>Action: Criar Processo (FormData)
+    MCP->>Action: Criar Processo (JSON)
+    Action->>Action: Validar com Zod
+    Action->>Service: criarProcesso(data)
+    Service->>Repo: create(data)
+    Repo->>DB: INSERT
+    DB-->>Repo: processo
+    Repo-->>Service: processo
+    Service->>AI: indexarDocumento (async)
+    AI->>DB: INSERT embedding
+    Service-->>Action: { success, data }
+    Action-->>UI: { success, data }
+    Action-->>MCP: { content: [...] }
+```
 
-Esta instrução serve como o "Manual de Operações" da arquitetura Sinesys. Referencie este arquivo nas regras do seu editor de código (ex: `.cursorrules`, `.windsurfrules`).
+## Scripts de Manutenção
+
+```bash
+# Verificar registro MCP
+npm run mcp:check
+
+# Servidor MCP de desenvolvimento
+npm run mcp:dev
+
+# Reindexar documentos para IA
+npm run ai:reindex
+```
+
+## Configurações de Ambiente
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# Redis (opcional)
+ENABLE_REDIS_CACHE=true
+REDIS_URL=
+REDIS_PASSWORD=
+
+# IA/Embeddings
+OPENAI_API_KEY=
+AI_EMBEDDING_PROVIDER=openai  # ou cohere
+AI_EMBEDDING_CACHE_ENABLED=true
+
+# MCP
+SINESYS_API_TOKEN=
+```
+
+## Princípios de Design
+
+1. **AI-First**: Toda funcionalidade é exposta como ferramenta MCP
+2. **Type-Safe**: Validação com Zod em todas as camadas
+3. **Dual-Use**: Actions funcionam com UI e agentes
+4. **Feature-Sliced**: Módulos isolados e coesos
+5. **Conhecimento Vivo**: Documentos indexados automaticamente
+6. **Segurança**: RLS no Supabase + autenticação em Actions

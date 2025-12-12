@@ -12,7 +12,7 @@ As tarefas estão ordenadas para permitir desenvolvimento incremental com entreg
 
 ### 1.1. Criar tipos de timeline frontend
 - [x] Criar tipos em `app/_lib/types/timeline.ts` (utilizados tipos existentes do backend)
-- [x] Tipos já existentes em `@/backend/types/pje-trt/timeline` e `@/backend/types/mongodb/timeline`
+- [x] Tipos já existentes em `@/features/captura/pje-trt/timeline` e `@/features/captura/types` (timeline/mongodb)
 
 **Validação**: TypeScript compila sem erros, tipos estão disponíveis para importação
 

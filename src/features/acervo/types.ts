@@ -15,7 +15,7 @@ export type { TimelineItemEnriquecido };
 // ============================================================================
 
 export type OrigemAcervo = 'acervo_geral' | 'arquivado';
-export type GrauAcervo = 'primeiro_grau' | 'segundo_grau';
+export type GrauAcervo = 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
 
 export interface Acervo {
   id: number;
