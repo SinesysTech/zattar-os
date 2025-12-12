@@ -66,6 +66,7 @@ export {
   actionBuscarProcessosClientePorCpf,
   actionExportarAcervoCSV,
   actionObterTimelinePorId,
+  actionRecapturarTimeline,
 } from './actions/acervo-actions';
 
 // Service (Exported for API Routes usage mainly)

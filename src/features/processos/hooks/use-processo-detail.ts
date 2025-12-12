@@ -41,7 +41,7 @@ export const useProcessoDetail = (processoId: number | null): UseProcessoDetailR
         throw new Error(result.error || 'Falha ao buscar processo');
       }
 
-      setProcesso(result.data || null);
+      setProcesso((result.data as Acervo) || null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar processo';
       setError(errorMessage);
