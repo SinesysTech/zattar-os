@@ -59,7 +59,7 @@ import {
 } from '@/features/captura/pje-trt';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
-import { buscarOuCriarAdvogadoPorCpf } from '@/lib/utils/captura/advogado-helper.service';
+import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import {
     buscarDadosComplementaresProcessos,

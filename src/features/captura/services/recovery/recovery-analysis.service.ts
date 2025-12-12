@@ -22,7 +22,7 @@ import type {
   AnaliseAgregadaParams,
   AnaliseAgregadaResult,
 } from './types';
-import { getCapturaRawLogsCollection } from '@/lib/utils/mongodb/collections';
+import { getCapturaRawLogsCollection } from '@/lib/mongodb/collections';
 
 // ============================================================================
 // Funções de Análise Individual

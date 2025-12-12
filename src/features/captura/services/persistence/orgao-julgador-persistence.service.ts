@@ -3,7 +3,7 @@
 
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
-import { getCached, setCached } from '@/lib/utils/redis/cache-utils';
+import { getCached, setCached } from '@/lib/redis/cache-utils';
 
 /**
  * Dados de um órgão julgador vindo da API do PJE
