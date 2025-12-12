@@ -5,6 +5,7 @@ export interface DataSurfaceProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
   subtitle?: string;
   icon?: LucideIcon;
+  actions?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -12,6 +13,7 @@ export function DataSurface({
   title,
   subtitle,
   icon: Icon,
+  actions,
   children,
   className,
   ...props
@@ -36,6 +38,7 @@ export function DataSurface({
             )}
           </div>
         </div>
+        {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
       <div className="flex-1 rounded-md border bg-card text-card-foreground shadow-sm">
         {children}
