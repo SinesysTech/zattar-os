@@ -1,0 +1,99 @@
+
+> sinesys@0.1.0 test
+> jest src/features/processos/__tests__/unit/processos.service.test.ts
+
+ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+transform: {
+    <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+},
+See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+ts-jest[config] (WARN) 
+    The "ts-jest" config option "isolatedModules" is deprecated and will be removed in v30.0.0. Please use "isolatedModules: true" in E:/Development/sinesys/tsconfig.test.json instead, see https://www.typescriptlang.org/tsconfig/#isolatedModules
+  
+FAIL src/features/processos/__tests__/unit/processos.service.test.ts
+  Processos Service
+    criarProcesso
+      × deve criar processo com sucesso (47 ms)
+      √ deve retornar erro se validação Zod falhar (4 ms)
+      × deve retornar erro se numero CNJ for inválido (3 ms)
+      × deve retornar erro se advogado não existir (9 ms)
+    buscarProcesso
+      √ deve retornar processo se encontrado (2 ms)
+    listarProcessos
+      √ deve listar processos com sucesso (3 ms)
+    atualizarProcesso
+      × deve atualizar processo com sucesso (3 ms)
+
+  ● Processos Service › criarProcesso › deve criar processo com sucesso
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    [0m [90m 63 |[39m
+     [90m 64 |[39m       [90m// Assert[39m
+    [31m[1m>[22m[39m[90m 65 |[39m       expect(result[33m.[39msuccess)[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m    |[39m                              [31m[1m^[22m[39m
+     [90m 66 |[39m       [36mif[39m (result[33m.[39msuccess) {
+     [90m 67 |[39m         expect(result[33m.[39mdata[33m.[39mid)[33m.[39mtoBe([35m1[39m)[33m;[39m
+     [90m 68 |[39m       }[0m
+
+      at Object.<anonymous> (src/features/processos/__tests__/unit/processos.service.test.ts:65:30)
+
+  ● Processos Service › criarProcesso › deve retornar erro se numero CNJ for inválido
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "padrao CNJ"
+    Received string:    "Required"
+
+    [0m [90m  95 |[39m       expect(result[33m.[39msuccess)[33m.[39mtoBe([36mfalse[39m)[33m;[39m
+     [90m  96 |[39m       [36mif[39m ([33m![39mresult[33m.[39msuccess) {
+    [31m[1m>[22m[39m[90m  97 |[39m         expect(result[33m.[39merror[33m.[39mmessage)[33m.[39mtoContain([32m'padrao CNJ'[39m)[33m;[39m
+     [90m     |[39m                                      [31m[1m^[22m[39m
+     [90m  98 |[39m       }
+     [90m  99 |[39m     })[33m;[39m
+     [90m 100 |[39m[0m
+
+      at Object.<anonymous> (src/features/processos/__tests__/unit/processos.service.test.ts:97:38)
+
+  ● Processos Service › criarProcesso › deve retornar erro se advogado não existir
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "NOT_FOUND"
+    Received: "VALIDATION_ERROR"
+
+    [0m [90m 109 |[39m       expect(result[33m.[39msuccess)[33m.[39mtoBe([36mfalse[39m)[33m;[39m
+     [90m 110 |[39m       [36mif[39m ([33m![39mresult[33m.[39msuccess) {
+    [31m[1m>[22m[39m[90m 111 |[39m         expect(result[33m.[39merror[33m.[39mcode)[33m.[39mtoBe([32m'NOT_FOUND'[39m)[33m;[39m
+     [90m     |[39m                                   [31m[1m^[22m[39m
+     [90m 112 |[39m       }
+     [90m 113 |[39m     })[33m;[39m
+     [90m 114 |[39m   })[33m;[39m[0m
+
+      at Object.<anonymous> (src/features/processos/__tests__/unit/processos.service.test.ts:111:35)
+
+  ● Processos Service › atualizarProcesso › deve atualizar processo com sucesso
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    [0m [90m 162 |[39m
+     [90m 163 |[39m       [90m// Assert[39m
+    [31m[1m>[22m[39m[90m 164 |[39m       expect(result[33m.[39msuccess)[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m     |[39m                              [31m[1m^[22m[39m
+     [90m 165 |[39m       expect(updateProcessoRepo)[33m.[39mtoHaveBeenCalledTimes([35m1[39m)[33m;[39m
+     [90m 166 |[39m     })[33m;[39m
+     [90m 167 |[39m   })[33m;[39m[0m
+
+      at Object.<anonymous> (src/features/processos/__tests__/unit/processos.service.test.ts:164:30)
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 3 passed, 7 total
+Snapshots:   0 total
+Time:        5.278 s
+Ran all test suites matching src/features/processos/__tests__/unit/processos.service.test.ts.

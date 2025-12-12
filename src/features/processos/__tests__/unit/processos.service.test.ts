@@ -40,17 +40,23 @@ describe('Processos Service', () => {
     const validInput = {
       idPje: 123,
       advogadoId: 1,
-      origem: 'TRT',
+      origem: 'acervo_geral',
       trt: '02',
-      grau: '1',
+      grau: 'primeiro_grau',
       numeroProcesso: '0000000-00.2023.5.02.0001',
       classeJudicial: 'ATOrd',
       codigoStatusProcesso: 'A',
       descricaoStatusProcesso: 'Ativo',
       juizoDigital: true,
       segredoJustica: false,
-      dataAutuacao: new Date(),
-      valorCausa: 1000,
+      numero: 123456,
+      descricaoOrgaoJulgador: 'Vara do Trabalho',
+      nomeParteAutora: 'Autor Teste',
+      nomeParteRe: 'Re Teste',
+      dataAutuacao: new Date().toISOString(),
+      prioridadeProcessual: 0,
+      qtdeParteAutora: 1,
+      qtdeParteRe: 1,
     };
 
     it('deve criar processo com sucesso', async () => {
