@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import type { Acervo } from '@/features/acervo/types';
+import type { Acervo } from '@/features/acervo';
 import { actionBuscarProcesso } from '@/features/acervo';
 
 interface UseProcessoDetailResult {
