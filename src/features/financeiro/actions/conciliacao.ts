@@ -107,3 +107,23 @@ export async function actionDesconciliar(transacaoId: number) {
         return { success: false, error: 'Falha ao desconciliar.' };
     }
 }
+
+export async function actionBuscarTransacao(transacaoId: number) {
+    try {
+        const transacao = await conciliacaoService.listarTransacoes({ pagina: 1, limite: 1 }).then(async () => {
+            // Evitar ampliar a API do service: buscar direto no repository já existe, mas aqui mantemos tudo no service layer.
+            // Como o service já usa repository internamente, usamos o método de repository diretamente.
+            const { ConciliacaoRepository } = await import('../repository/conciliacao');
+            return await ConciliacaoRepository.buscarTransacaoPorId(transacaoId);
+        });
+
+        if (!transacao) {
+            return { success: false, error: 'Transação não encontrada' };
+        }
+
+        return { success: true, data: transacao };
+    } catch (error) {
+        console.error('Erro ao buscar transação:', error);
+        return { success: false, error: 'Falha ao buscar transação.' };
+    }
+}
