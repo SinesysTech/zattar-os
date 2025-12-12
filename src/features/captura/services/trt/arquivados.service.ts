@@ -46,10 +46,10 @@
 
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaTRTParams } from './trt-capture.service';
-import { obterTodosProcessosArquivados } from '../../../../api/pje-trt/arquivados';
-import type { Processo } from '../../../../types/pje-trt/types';
+import { obterTodosProcessosArquivados } from '@/features/captura/pje-trt';
+import type { Processo } from '@/features/captura/types/trt-types';
 import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
-import { buscarOuCriarAdvogadoPorCpf } from '../../../../utils/captura/advogado-helper.service';
+import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import { buscarDadosComplementaresProcessos } from './dados-complementares.service';
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';

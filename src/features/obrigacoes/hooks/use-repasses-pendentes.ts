@@ -1,4 +1,6 @@
 
+'use client';
+
 import { useState, useEffect, useCallback, useMemo, startTransition } from 'react';
 import { actionListarRepassesPendentes } from '../actions/repasses';
 import { FiltrosRepasses, RepassePendente } from '../types';
