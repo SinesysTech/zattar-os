@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { createChatService } from './service';
-import { criarSalaChatSchema, type ListarSalasParams, type ActionResult } from './types';
+import { criarSalaChatSchema, type ListarSalasParams, type ActionResult } from './domain';
 
 // =============================================================================
 // HELPERS

@@ -2,7 +2,7 @@
  * ASSINATURA DIGITAL - Utils barrel export
  */
 
-export { generateZodSchema } from './zod-schema-generator';
+export { generateZodSchema } from "./zod-schema-generator";
 
 // Formatadores
 export {
@@ -20,7 +20,7 @@ export {
   formatData,
   formatDataHora,
   parseDataBR,
-} from './formatters';
+} from "./formatters";
 
 // Validadores
 export {
@@ -28,7 +28,7 @@ export {
   validateCNPJ,
   validateTelefone,
   validateCpfCnpj,
-} from './validators';
+} from "./validators";
 
 // Validações de negócio / UX (retornam { valid, message/issues })
 export {
@@ -43,13 +43,13 @@ export {
   validatePhotoQuality,
   validateSignatureQuality,
   validateDataConsistency,
-} from './business-validations';
+} from "./business-validations";
 
 // Schema builder (validação de schema dinâmico)
-export { validateFormSchema } from './form-schema-validation';
+export { validateFormSchema } from "./form-schema-validation";
 
 // Device Fingerprint
-export { collectDeviceFingerprint } from './device-fingerprint';
+export { collectDeviceFingerprint } from "./device-fingerprint";
 
 // Display Utils (badges, formatação de nomes, truncate, etc.)
 export {
@@ -71,7 +71,7 @@ export {
   getAtivoBadgeTone,
   formatBooleanBadge,
   getBooleanBadgeVariant,
-} from './display';
+} from "./display";
 
 // Slug Helpers
 export {
@@ -80,4 +80,11 @@ export {
   generateSlug,
   generateFormularioSlug,
   validateSlug,
-} from './slug-helpers';
+} from "./slug-helpers";
+
+// Cliente Adapters
+export type { ClienteFormsignPayload } from "./cliente-adapters";
+export {
+  mapClienteFormToCliente,
+  clienteSinesysToAssinaturaDigital,
+} from "./cliente-adapters";
