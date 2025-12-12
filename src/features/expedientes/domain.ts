@@ -180,3 +180,5 @@ export type ListarExpedientesParams = {
  * Filter state interface for UI components
  */
 export type ExpedientesFilters = Omit<ListarExpedientesParams, 'pagina' | 'limite' | 'ordenarPor' | 'ordem'>;
+
+,

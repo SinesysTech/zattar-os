@@ -259,7 +259,7 @@ import type { ListarExpedientesParams } from '@/features/expedientes/domain';
  *                         pendentes:
  *                           type: array
  *                           items:
- *                             $ref: '#/components/schemas/PendenteManifestacao'
+ *                             $ref: '#/components/schemas/Expediente'
  *                         paginacao:
  *                           type: object
  *                           properties:
@@ -286,7 +286,7 @@ import type { ListarExpedientesParams } from '@/features/expedientes/domain';
  *                               pendentes:
  *                                 type: array
  *                                 items:
- *                                   $ref: '#/components/schemas/PendenteManifestacao'
+ *                                   $ref: '#/components/schemas/Expediente'
  *                         total:
  *                           type: integer
  *             examples:
@@ -369,10 +369,9 @@ export async function GET(request: NextRequest) {
       return isNaN(num) ? undefined : num;
     };
 
-    // Função auxiliar para converter tipo_expediente_id para number ou 'null'
-    const parseTipoExpedienteId = (value: string | null): number | 'null' | undefined => {
+    // Função auxiliar para converter tipoExpedienteId para number
+    const parseTipoExpedienteId = (value: string | null): number | undefined => {
       if (value === null) return undefined;
-      if (value === 'null') return 'null';
       const num = parseInt(value, 10);
       return isNaN(num) ? undefined : num;
     };
@@ -400,7 +399,7 @@ export async function GET(request: NextRequest) {
 
       baixado: parseBoolean(searchParams.get('baixado')),
       prazoVencido: parseBoolean(searchParams.get('prazoVencido')),
-      tipoExpedienteId: parseTipoExpedienteId(searchParams.get('tipoExpedienteId')) as number | undefined,
+      tipoExpedienteId: parseTipoExpedienteId(searchParams.get('tipoExpedienteId')),
       semTipo: parseBoolean(searchParams.get('semTipo')),
 
       dataPrazoLegalInicio: searchParams.get('dataPrazoLegalInicio') || undefined,

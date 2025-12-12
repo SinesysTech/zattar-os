@@ -20,13 +20,14 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { ListarExpedientesParams, ExpedientesApiResponse, ExpedientesFilters } from '../domain';
+import type { PaginatedResponse } from '@/lib/types';
+import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
 
 interface ExpedientesListProps {
-  initialData?: ExpedientesApiResponse; // Optional initial data from server
+  initialData?: PaginatedResponse<Expediente>; // Optional initial data from server
 }
 
 export function ExpedientesList({ initialData }: ExpedientesListProps) {
@@ -54,7 +55,7 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
   const [tiposExpedientes, setTiposExpedientes] = React.useState<any[]>([]);
 
   // Data fetching state
-  const [data, setData] = React.useState<ExpedientesApiResponse | undefined>(initialData);
+  const [data, setData] = React.useState<PaginatedResponse<Expediente> | undefined>(initialData);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -80,21 +81,26 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
     setError(null);
     try {
       const params: ListarExpedientesParams = {
-        page: pagination.pageIndex + 1,
-        limit: pagination.pageSize,
-        search: globalFilter || undefined,
+        pagina: pagination.pageIndex + 1,
+        limite: pagination.pageSize,
+        busca: globalFilter || undefined,
       };
 
       const filters: ExpedientesFilters = {};
-      if (statusFilter === 'pendentes') filters.pendentes = true;
-      if (statusFilter === 'baixados') filters.baixados = true;
+      if (statusFilter === 'pendentes') filters.baixado = false;
+      if (statusFilter === 'baixados') filters.baixado = true;
 
       // Note: Prazo filtering logic would be added here
 
-      if (dateRange?.from) filters.dataInicio = format(dateRange.from, 'yyyy-MM-dd');
-      if (dateRange?.to) filters.dataFim = format(dateRange.to, 'yyyy-MM-dd');
+      if (dateRange?.from) filters.dataPrazoLegalInicio = format(dateRange.from, 'yyyy-MM-dd');
+      if (dateRange?.to) filters.dataPrazoLegalFim = format(dateRange.to, 'yyyy-MM-dd');
 
-      const result = await actionListarExpedientes(params, filters);
+      const mergedParams: ListarExpedientesParams = {
+        ...params,
+        ...filters,
+      };
+
+      const result = await actionListarExpedientes(mergedParams);
 
       if (!result.success) {
         throw new Error(result.message || 'Erro ao listar expedientes');
@@ -114,7 +120,13 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
     fetchData();
   }, [fetchData]);
 
-  const defaultData = React.useMemo(() => ({ expedientes: [], meta: { total: 0, page: 1, limit: 10, totalPages: 0 } }), []);
+  const defaultData = React.useMemo<PaginatedResponse<Expediente>>(
+    () => ({
+      data: [],
+      pagination: { page: 1, limit: 10, total: 0, totalPages: 0, hasMore: false },
+    }),
+    []
+  );
   const tableData = data || defaultData;
 
   const handleRefresh = () => {

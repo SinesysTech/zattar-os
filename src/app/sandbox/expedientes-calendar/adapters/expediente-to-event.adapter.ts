@@ -93,7 +93,7 @@ export function expedienteToEvent(
 
 	// Informações visíveis
 	if (tipoExpediente) {
-		descricaoParts.push(`Tipo: ${tipoExpediente.tipo_expediente}`);
+		descricaoParts.push(`Tipo: ${tipoExpediente.tipoExpediente}`);
 	}
 	if (responsavel) {
 		descricaoParts.push(`Responsável: ${responsavel.nomeExibicao}`);
