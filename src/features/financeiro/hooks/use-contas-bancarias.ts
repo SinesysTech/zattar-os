@@ -12,7 +12,7 @@ type ContaBancariaUI = {
   ativo: boolean;
 };
 
-export function useContasBancarias() {
+export function useContasBancarias(_options?: { ativos?: boolean }) {
   const fetcher = async () => {
     const result = await actionListarContasBancariasAtivas();
     if (!result.success) throw new Error(result.error || 'Erro ao listar contas bancárias');
@@ -28,5 +28,6 @@ export function useContasBancarias() {
     refetch: mutate,
   };
 }
+
 
 

@@ -27,4 +27,10 @@ export function useCentrosCustoAtivos() {
   };
 }
 
+export function useCentrosCusto(_options?: { ativos?: boolean; limite?: number }) {
+  // Por enquanto, a action já retorna apenas ativos; mantemos assinatura compatível com a UI.
+  return useCentrosCustoAtivos();
+}
+
+
 

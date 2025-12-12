@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo, useCallback, startTransition } from 'react';
 import { actionListarPlanoContas } from '../actions/plano-contas';
-import { PlanoContas } from '../types/plano-contas';
+import { PlanoContas, PlanoContasFilters } from '../types/plano-contas';
 
-export function usePlanoContas() {
+export function usePlanoContas(filters?: PlanoContasFilters & { limite?: number }) {
     const [contas, setContas] = useState<PlanoContas[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -12,7 +12,7 @@ export function usePlanoContas() {
             setIsLoading(true);
         });
         
-        const result = await actionListarPlanoContas();
+        const result = await actionListarPlanoContas(filters);
         
         startTransition(() => {
             if (result.success && result.data) {
@@ -23,13 +23,14 @@ export function usePlanoContas() {
             }
             setIsLoading(false);
         });
-    }, []);
+    }, [filters]);
 
     useEffect(() => {
         load();
     }, [load]);
 
-    return { contas, isLoading, error, refetch: load };
+    // Alias compatível com usos existentes na UI
+    return { contas, planoContas: contas, isLoading, error, refetch: load };
 }
 
 export function usePlanoContasAnaliticas() {

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { conciliacaoService } from '../services/conciliacao';
+import { ConciliacaoRepository } from '../repository/conciliacao';
 import { 
     ImportarExtratoDTO, 
     ConciliarManualDTO, 
@@ -110,12 +111,7 @@ export async function actionDesconciliar(transacaoId: number) {
 
 export async function actionBuscarTransacao(transacaoId: number) {
     try {
-        const transacao = await conciliacaoService.listarTransacoes({ pagina: 1, limite: 1 }).then(async () => {
-            // Evitar ampliar a API do service: buscar direto no repository já existe, mas aqui mantemos tudo no service layer.
-            // Como o service já usa repository internamente, usamos o método de repository diretamente.
-            const { ConciliacaoRepository } = await import('../repository/conciliacao');
-            return await ConciliacaoRepository.buscarTransacaoPorId(transacaoId);
-        });
+        const transacao = await ConciliacaoRepository.buscarTransacaoPorId(transacaoId);
 
         if (!transacao) {
             return { success: false, error: 'Transação não encontrada' };
