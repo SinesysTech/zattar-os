@@ -93,6 +93,9 @@ export function ExpedientesCalendar() {
                 busca: globalFilter || undefined,
                 dataPrazoLegalInicio: dateStr,
                 dataPrazoLegalFim: dateStr,
+                // Preserva comportamento legado: itens "sem prazo" devem aparecer no calendário
+                // mesmo quando filtramos por um dia específico.
+                incluirSemPrazo: true,
             };
 
             if (statusFilter === 'pendentes') params.baixado = false;

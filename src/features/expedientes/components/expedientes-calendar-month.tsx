@@ -110,6 +110,9 @@ export function ExpedientesCalendarMonth() {
       const filters: ExpedientesFilters = {
         dataPrazoLegalInicio: format(start, 'yyyy-MM-dd'),
         dataPrazoLegalFim: format(end, 'yyyy-MM-dd'),
+        // Preserva comportamento legado: itens "sem prazo" devem aparecer no calendário
+        // mesmo quando aplicamos filtro de range por data de prazo.
+        incluirSemPrazo: true,
       };
 
       if (statusFilter === 'pendentes') filters.baixado = false;

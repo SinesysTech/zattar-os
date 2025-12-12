@@ -159,8 +159,32 @@ export async function findAllExpedientes(params: ListarExpedientesParams = {}): 
     if (params.baixado === true) query = query.not('baixado_em', 'is', null);
     if (params.baixado === false) query = query.is('baixado_em', null);
     if (params.prazoVencido !== undefined) query = query.eq('prazo_vencido', params.prazoVencido);
-    if (params.dataPrazoLegalInicio) query = query.gte('data_prazo_legal_parte', params.dataPrazoLegalInicio);
-    if (params.dataPrazoLegalFim) query = query.lte('data_prazo_legal_parte', params.dataPrazoLegalFim);
+    // Importante: `gte/lte` exclui linhas onde `data_prazo_legal_parte` é null.
+    // Para preservar o comportamento legado do calendário (itens "sem prazo" que aparecem em todos os dias),
+    // quando `incluirSemPrazo` está ativo e há filtro de range, usamos OR: (range) OR (is null).
+    if (params.dataPrazoLegalInicio || params.dataPrazoLegalFim) {
+      if (params.incluirSemPrazo) {
+        const inicio = params.dataPrazoLegalInicio;
+        const fim = params.dataPrazoLegalFim;
+
+        if (inicio && fim) {
+          query = query.or(
+            `data_prazo_legal_parte.is.null,and(data_prazo_legal_parte.gte.${inicio},data_prazo_legal_parte.lte.${fim})`
+          );
+        } else if (inicio) {
+          query = query.or(
+            `data_prazo_legal_parte.is.null,data_prazo_legal_parte.gte.${inicio}`
+          );
+        } else if (fim) {
+          query = query.or(
+            `data_prazo_legal_parte.is.null,data_prazo_legal_parte.lte.${fim}`
+          );
+        }
+      } else {
+        if (params.dataPrazoLegalInicio) query = query.gte('data_prazo_legal_parte', params.dataPrazoLegalInicio);
+        if (params.dataPrazoLegalFim) query = query.lte('data_prazo_legal_parte', params.dataPrazoLegalFim);
+      }
+    }
     if (params.dataCienciaInicio) query = query.gte('data_ciencia_parte', params.dataCienciaInicio);
     if (params.dataCienciaFim) query = query.lte('data_ciencia_parte', params.dataCienciaFim);
     if (params.dataCriacaoExpedienteInicio) query = query.gte('data_criacao_expediente', params.dataCriacaoExpedienteInicio);
