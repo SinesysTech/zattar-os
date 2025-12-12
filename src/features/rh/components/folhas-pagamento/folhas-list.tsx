@@ -17,7 +17,8 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { GerarFolhaDialog } from './gerar-folha-dialog';
 import { useFolhasPagamento } from '../../hooks';
-import { MESES_LABELS, STATUS_FOLHA_LABELS, STATUS_FOLHA_CORES } from '../../domain';
+import { MESES_LABELS, STATUS_FOLHA_LABELS } from '../../domain';
+import { STATUS_FOLHA_CORES } from '../../utils';
 
 const statusOptions = [
   { value: 'rascunho', label: STATUS_FOLHA_LABELS.rascunho },

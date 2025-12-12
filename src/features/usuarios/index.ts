@@ -39,7 +39,8 @@ export {
   formatarData,
   formatarEnderecoCompleto,
   formatarGenero,
-  normalizarCpf
+  normalizarCpf,
+  getAvatarUrl
 } from './utils';
 
 // Permissions Utils

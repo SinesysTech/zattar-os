@@ -104,7 +104,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { buscarProcessosClientePorCpf } from '@/features/acervo';
+import { buscarProcessosClientePorCpf } from '@/features/acervo/service';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import {
   MeuProcessoLogger,

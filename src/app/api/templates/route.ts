@@ -12,7 +12,7 @@ import {
   criarTemplate,
   listarTemplatesMaisUsados,
   listarCategoriasTemplates,
-} from '@/features/documentos';
+} from '@/features/documentos/service';
 import type {
   CriarTemplateParams,
   ListarTemplatesParams,

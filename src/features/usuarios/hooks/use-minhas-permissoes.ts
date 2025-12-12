@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { createClient } from '@/lib/client';
-import { listarPermissoesUsuario } from '../repository';
-import { usuarioRepository } from '../repository';
 import type { Permissao } from '../types';
 
 export interface MinhasPermissoesData {
@@ -36,15 +34,37 @@ export function useMinhasPermissoes(recurso?: string) {
       }
 
       // Buscar usuário no banco pelo auth_user_id
-      const usuario = await usuarioRepository.findByEmail(user.email || '');
-      if (!usuario) {
+      const emailLower = (user.email || '').trim().toLowerCase();
+      if (!emailLower) {
+        setError('Email do usuário não encontrado');
+        setIsLoading(false);
+        return;
+      }
+
+      const { data: usuario, error: usuarioError } = await supabase
+        .from('usuarios')
+        .select('id, is_super_admin')
+        .eq('email_corporativo', emailLower)
+        .single();
+
+      if (usuarioError || !usuario) {
         setError('Usuário não encontrado');
         setIsLoading(false);
         return;
       }
 
       // Buscar permissões
-      const permissoes = await listarPermissoesUsuario(usuario.id);
+      const { data: permissoesData, error: permissoesError } = await supabase
+        .from('permissoes')
+        .select('recurso, operacao, permitido')
+        .eq('usuario_id', usuario.id)
+        .eq('permitido', true);
+
+      if (permissoesError) {
+        throw new Error(permissoesError.message);
+      }
+
+      const permissoes = (permissoesData ?? []) as Permissao[];
 
       // Filtrar por recurso se especificado
       let permissoesFiltradas = permissoes;
@@ -54,7 +74,7 @@ export function useMinhasPermissoes(recurso?: string) {
 
       setData({
         usuarioId: usuario.id,
-        isSuperAdmin: usuario.isSuperAdmin,
+        isSuperAdmin: Boolean((usuario as any).is_super_admin),
         permissoes: permissoesFiltradas,
       });
     } catch (err) {

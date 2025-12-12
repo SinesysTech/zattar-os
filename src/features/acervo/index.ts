@@ -69,23 +69,13 @@ export {
   actionRecapturarTimeline,
 } from './actions/acervo-actions';
 
-// Service (Exported for API Routes usage mainly)
-export {
-  buscarProcessosClientePorCpf,
-  obterAcervoPaginado,
-  obterAcervoUnificado,
-  obterAcervoAgrupado,
-} from './service';
+// NOTE:
+// Não re-exportar `./service` aqui, pois ele depende de módulos server-only (ex: captura/Playwright)
+// e este barrel é consumido por Client Components.
 
-// Timeline Unificada
-export {
-  obterTimelineUnificada,
-  obterTimelineUnificadaPorId,
-  gerarHashDeduplicacao,
-  deduplicarTimeline,
-  type TimelineItemUnificado,
-  type TimelineUnificada,
-} from './timeline-unificada';
+// NOTE:
+// Não re-exportar `./timeline-unificada` aqui, pois depende de MongoDB (server-only)
+// e este barrel é consumido por Client Components.
 
 // Hooks
 export {

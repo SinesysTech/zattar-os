@@ -16,7 +16,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { formatDate } from '@/lib/utils';
+import { formatDate } from '@/lib/design-system';
 import type { Acervo } from '../../types';
 import { StatusProcesso } from '@/types/domain/common';
 

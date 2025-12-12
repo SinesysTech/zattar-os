@@ -2,6 +2,8 @@
  * ASSINATURA DIGITAL - Utils barrel export
  */
 
+export { generateZodSchema } from './zod-schema-generator';
+
 // Formatadores
 export {
   formatCPF,

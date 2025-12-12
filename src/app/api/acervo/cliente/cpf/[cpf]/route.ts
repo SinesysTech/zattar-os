@@ -202,7 +202,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { buscarProcessosClientePorCpf } from '@/features/acervo';
+import { buscarProcessosClientePorCpf } from '@/features/acervo/service';
 
 interface RouteParams {
   params: Promise<{

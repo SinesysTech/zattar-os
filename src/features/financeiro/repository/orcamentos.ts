@@ -283,6 +283,23 @@ export const OrcamentosRepository = {
     },
 
     /**
+     * Exclui um item específico de um orçamento
+     */
+    async excluirItem(orcamentoId: number, itemId: number): Promise<void> {
+        const supabase = createServiceClient();
+
+        const { error } = await supabase
+            .from('orcamento_itens')
+            .delete()
+            .eq('id', itemId)
+            .eq('orcamento_id', orcamentoId);
+
+        if (error) {
+            throw new Error(`Erro ao excluir item do orçamento: ${error.message}`);
+        }
+    },
+
+    /**
      * Atualiza status do orçamento
      */
     async atualizarStatus(

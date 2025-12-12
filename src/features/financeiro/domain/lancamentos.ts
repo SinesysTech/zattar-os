@@ -155,6 +155,58 @@ export type ContaReceberComDetalhes = Lancamento & {
     categoria_nome?: string;
 };
 
+/**
+ * Recebimento parcial/total de uma conta a receber.
+ * Este tipo é consumido pela UI de detalhes de "Contas a Receber".
+ */
+export interface RecebimentoContaReceber {
+    id: number;
+    valor: number;
+    formaRecebimento: FormaPagamento;
+    dataRecebimento: string;
+    comprovante?: { url: string } | null;
+    observacoes?: string | null;
+}
+
+export interface HistoricoRecebimentos {
+    recebimentos: RecebimentoContaReceber[];
+    valorTotalRecebido: number;
+    valorPendente: number;
+}
+
+/**
+ * Calcula histórico de recebimentos a partir do payload retornado pela API/hook.
+ * Retorna null quando não há recebimentos.
+ */
+export function getHistoricoRecebimentos(conta: {
+    valor: number;
+    recebimentos?: RecebimentoContaReceber[] | null;
+}): HistoricoRecebimentos | null {
+    const recebimentos = conta.recebimentos ?? [];
+    if (recebimentos.length === 0) return null;
+
+    const valorTotalRecebido = recebimentos.reduce((acc, r) => acc + (r.valor || 0), 0);
+    const valorPendente = Math.max(0, conta.valor - valorTotalRecebido);
+
+    return {
+        recebimentos,
+        valorTotalRecebido,
+        valorPendente,
+    };
+}
+
+/**
+ * Indica se a conta possui recebimentos, mas ainda há valor pendente.
+ */
+export function isParcialmenteRecebida(conta: {
+    valor: number;
+    recebimentos?: RecebimentoContaReceber[] | null;
+}): boolean {
+    const historico = getHistoricoRecebimentos(conta);
+    if (!historico) return false;
+    return historico.valorTotalRecebido > 0 && historico.valorPendente > 0;
+}
+
 export type ResumoInadimplencia = ResumoVencimentos;
 
 export type ContasReceberFilters = ListarLancamentosParams & {
@@ -358,6 +410,9 @@ export const FORMA_PAGAMENTO_LABELS: Record<FormaPagamento, string> = {
     cheque: 'Cheque',
     deposito_judicial: 'Depósito Judicial'
 };
+
+// Alias para compatibilidade com a UI de Contas a Receber
+export const FORMA_RECEBIMENTO_LABELS = FORMA_PAGAMENTO_LABELS;
 
 export const FREQUENCIA_RECORRENCIA_LABELS: Record<FrequenciaRecorrencia, string> = {
     semanal: 'Semanal',
