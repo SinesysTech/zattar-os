@@ -3,7 +3,7 @@
  * Gerencia operações de CRUD na tabela plano_contas
  */
 
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import {
   getCached,
   setCached,

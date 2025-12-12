@@ -67,7 +67,7 @@ import {
 import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 /**
  * Resultado de uma captura individual (audiências ou pendentes)

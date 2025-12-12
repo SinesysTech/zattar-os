@@ -6,7 +6,7 @@
  * usando os dados brutos salvos no MongoDB.
  */
 
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import {
   upsertEnderecoPorIdPje,
   type UpsertEnderecoPorIdPjeParams,

@@ -1,4 +1,4 @@
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import type {
   CodigoTRT,
   GrauTRT,

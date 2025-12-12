@@ -256,7 +256,7 @@ export async function audienciasCapture(
     const mapeamentoIds = new Map<number, number>();
 
     // Reutiliza lista de IDs já extraída na fase 3
-    const supabase = (await import('@/lib/utils/supabase/service-client')).createServiceClient();
+    const supabase = (await import('@/lib/supabase/service-client')).createServiceClient();
 
     for (const idPje of processosIds) {
       const { data } = await supabase

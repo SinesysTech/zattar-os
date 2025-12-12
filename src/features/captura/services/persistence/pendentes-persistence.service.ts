@@ -1,7 +1,7 @@
 // Serviço de persistência de processos pendentes de manifestação
 // Salva processos pendentes capturados no banco de dados com comparação antes de atualizar
 
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import type { Processo } from '@/features/captura/types/trt-types';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
 import {

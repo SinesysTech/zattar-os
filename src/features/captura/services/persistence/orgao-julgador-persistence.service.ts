@@ -1,7 +1,7 @@
 // Serviço de persistência de órgãos julgadores
 // Salva órgãos julgadores capturados das audiências no banco de dados
 
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
 import { getCached, setCached } from '@/lib/utils/redis/cache-utils';
 

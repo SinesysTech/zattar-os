@@ -2,7 +2,7 @@
 // Responsável por buscar credenciais do banco de dados
 
 import type { CodigoTRT, GrauTRT, CredenciaisTRT } from '../types/trt-types';
-import { createServiceClient } from '@/lib/utils/supabase/service-client';
+import { createServiceClient } from '@/lib/supabase/service-client';
 import { getFromCache, setCache } from './credential-cache.service';
 
 // Re-exportar getCredentialsBatch para facilitar imports
