@@ -17,7 +17,7 @@ import { TableToolbar } from '@/components/ui/table-toolbar';
 import { ContratosTable } from './contratos-table';
 import { ContratoForm } from './contrato-form';
 import { ContratoViewSheet } from './contrato-view-sheet';
-import type { Contrato, ListarContratosParams, ContratosFilters, PaginationInfo, ClienteInfo } from '../types';
+import type { Contrato, ListarContratosParams, ContratosFilters, PaginationInfo, ClienteInfo } from '../domain';
 import { actionListarContratos } from '../actions';
 import {
   buildContratosFilterOptions,

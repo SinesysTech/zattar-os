@@ -5,7 +5,7 @@ import { FileText, ArrowRight } from 'lucide-react';
 import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import type { ProcessoResumo } from '../../types';
+import type { ProcessoResumo } from '../../domain';
 
 interface WidgetProcessosResumoProps {
   data: ProcessoResumo;

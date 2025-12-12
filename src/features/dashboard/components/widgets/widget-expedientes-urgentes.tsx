@@ -6,7 +6,7 @@ import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/formatters';
-import type { ExpedienteUrgente } from '../../types';
+import type { ExpedienteUrgente } from '../../domain';
 
 interface WidgetExpedientesUrgentesProps {
   data: ExpedienteUrgente[];

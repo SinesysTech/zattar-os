@@ -33,13 +33,13 @@ import { cn } from '@/lib/utils';
 import { Loader2, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionCriarContrato, actionAtualizarContrato, type ActionResult } from '../actions';
-import type { Contrato, TipoContrato, TipoCobranca, StatusContrato, PoloProcessual, ClienteInfo } from '../types';
+import type { Contrato, TipoContrato, TipoCobranca, StatusContrato, PoloProcessual, ClienteInfo } from '../domain';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
   POLO_PROCESSUAL_LABELS,
-} from '../types';
+} from '../domain';
 import { listarSegmentosAction } from '@/features/assinatura-digital/actions';
 import type { Segmento } from '@/features/assinatura-digital';
 

@@ -7,7 +7,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import * as service from '../service';
-import type { DashboardData } from '../types';
+import type { DashboardData } from '../domain';
 
 interface ActionResult<T> {
   success: boolean;
@@ -32,7 +32,7 @@ export async function actionObterDashboard(): Promise<ActionResult<DashboardData
     const { data: usuario, error: usuarioError } = await supabase
       .from('usuarios')
       .select('id, is_super_admin')
-      .eq('auth_id', user.id)
+      .eq('auth_user_id', user.id)
       .single();
 
     if (usuarioError || !usuario) {
@@ -73,7 +73,7 @@ export async function actionObterDashboardUsuario(
     const { data: usuarioLogado } = await supabase
       .from('usuarios')
       .select('id, is_super_admin')
-      .eq('auth_id', user.id)
+      .eq('auth_user_id', user.id)
       .single();
 
     if (!usuarioLogado) {

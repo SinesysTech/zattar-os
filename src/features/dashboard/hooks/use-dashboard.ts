@@ -13,7 +13,7 @@ import type {
   DashboardData,
   DashboardUsuarioData,
   DashboardAdminData,
-} from '../types';
+} from '../domain';
 
 interface UseDashboardResult {
   data: DashboardData | null;

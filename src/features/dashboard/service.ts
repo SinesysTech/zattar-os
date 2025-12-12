@@ -11,7 +11,7 @@ import * as repo from './repository';
 import type {
   DashboardUsuarioData,
   DashboardAdminData,
-} from './types';
+} from './domain';
 
 // ============================================================================
 // Dashboard de Usuário

@@ -7,7 +7,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import * as service from '../service';
-import type { MetricasEscritorio, CargaUsuario, PerformanceAdvogado } from '../types';
+import type { MetricasEscritorio, CargaUsuario, PerformanceAdvogado } from '../domain';
 
 interface MetricasResult {
   metricas: MetricasEscritorio;
@@ -39,7 +39,7 @@ export async function actionObterMetricas(): Promise<ActionResult<MetricasResult
     const { data: usuario } = await supabase
       .from('usuarios')
       .select('id, is_super_admin')
-      .eq('auth_id', user.id)
+      .eq('auth_user_id', user.id)
       .single();
 
     if (!usuario) {
@@ -77,7 +77,7 @@ export async function actionObterCargaUsuarios(): Promise<ActionResult<CargaUsua
     const { data: usuario } = await supabase
       .from('usuarios')
       .select('is_super_admin')
-      .eq('auth_id', user.id)
+      .eq('auth_user_id', user.id)
       .single();
 
     if (!usuario?.is_super_admin) {
@@ -106,7 +106,7 @@ export async function actionObterPerformanceAdvogados(): Promise<ActionResult<Pe
     const { data: usuario } = await supabase
       .from('usuarios')
       .select('is_super_admin')
-      .eq('auth_id', user.id)
+      .eq('auth_user_id', user.id)
       .single();
 
     if (!usuario?.is_super_admin) {

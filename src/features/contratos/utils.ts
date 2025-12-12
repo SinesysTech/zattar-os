@@ -10,7 +10,7 @@ import type {
   TipoCobranca,
   StatusContrato,
   PoloProcessual,
-} from './types';
+} from './domain';
 
 // =============================================================================
 // FORMATADORES DE ENUMS

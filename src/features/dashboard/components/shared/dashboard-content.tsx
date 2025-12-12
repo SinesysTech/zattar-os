@@ -8,7 +8,7 @@ import { useDashboard } from '../../hooks';
 import type {
   DashboardUsuarioData,
   DashboardAdminData,
-} from '../../types';
+} from '../../domain';
 
 import { MetricCard } from './metric-card';
 import {

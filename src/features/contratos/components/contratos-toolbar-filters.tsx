@@ -6,7 +6,7 @@
 
 import { FilterConfig, buildFilterOptions, parseFilterValues, type ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { ContratosFilters } from '../types';
+import type { ContratosFilters } from '../domain';
 
 export const CONTRATOS_FILTER_CONFIGS: FilterConfig[] = [
   {

@@ -22,7 +22,7 @@ import type {
   TipoCobranca,
   StatusContrato,
   PoloProcessual,
-} from './types';
+} from './domain';
 
 // =============================================================================
 // CONSTANTES
@@ -355,8 +355,9 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
 
     if (input.segmentoId) {
       dadosInsercao.segmento_id = input.segmentoId;
-    } else if (input.areaDireito) {
-      // Manter area_direito por compatibilidade se segmentoId não for fornecido
+    }
+
+    if (input.areaDireito) {
       dadosInsercao.area_direito = input.areaDireito;
     }
 

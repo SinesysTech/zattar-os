@@ -4,7 +4,7 @@ import { TrendingUp, TrendingDown, Minus, BarChart3 } from 'lucide-react';
 import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import type { ProdutividadeResumo } from '../../types';
+import type { ProdutividadeResumo } from '../../domain';
 
 interface WidgetProdutividadeProps {
   data: ProdutividadeResumo;

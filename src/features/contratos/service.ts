@@ -18,7 +18,7 @@ import {
   type ListarContratosParams,
   createContratoSchema,
   updateContratoSchema,
-} from './types';
+} from './domain';
 import {
   findContratoById,
   findAllContratos,

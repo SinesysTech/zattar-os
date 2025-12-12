@@ -21,14 +21,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Eye, Pencil } from 'lucide-react';
-import type { Contrato, ClienteInfo } from '../types';
+import type { Contrato, ClienteInfo } from '../domain';
 import {
   AREA_DIREITO_LABELS,
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
   POLO_PROCESSUAL_LABELS,
-} from '../types';
+} from '../domain';
 import { getStatusVariant, getTipoContratoVariant, formatarData } from '../utils';
 
 // =============================================================================

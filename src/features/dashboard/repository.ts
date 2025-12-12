@@ -21,7 +21,7 @@ import type {
   CargaUsuario,
   StatusCaptura,
   PerformanceAdvogado,
-} from './types';
+} from './domain';
 
 // ============================================================================
 // PROCESSOS

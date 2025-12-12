@@ -23,7 +23,7 @@ import {
   type ParteContrato,
   createContratoSchema,
   updateContratoSchema,
-} from './types';
+} from './domain';
 import {
   criarContrato,
   atualizarContrato,

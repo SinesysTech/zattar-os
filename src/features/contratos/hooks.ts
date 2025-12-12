@@ -10,7 +10,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type {
   Contrato,
   BuscarContratosParams,
-} from './types';
+} from './domain';
 import { actionListarContratos } from './actions';
 
 interface UseContratosResult {

@@ -6,7 +6,7 @@ import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/formatters';
-import type { AudienciaProxima } from '../../types';
+import type { AudienciaProxima } from '../../domain';
 
 interface WidgetAudienciasProximasProps {
   data: AudienciaProxima[];
@@ -117,6 +117,8 @@ export function WidgetAudienciasProximas({
                     href={audiencia.url_audiencia_virtual}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Abrir link da audiência virtual em nova aba"
+                    title="Abrir audiência virtual"
                     className="text-primary hover:text-primary/80"
                   >
                     <ExternalLink className="h-4 w-4" />

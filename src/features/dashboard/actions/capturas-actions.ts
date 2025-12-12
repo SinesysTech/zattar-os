@@ -7,7 +7,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import * as service from '../service';
-import type { StatusCaptura } from '../types';
+import type { StatusCaptura } from '../domain';
 
 interface CapturasResult {
   capturas: StatusCaptura[];
@@ -37,7 +37,7 @@ export async function actionObterCapturas(): Promise<ActionResult<CapturasResult
     const { data: usuario } = await supabase
       .from('usuarios')
       .select('id, is_super_admin')
-      .eq('auth_id', user.id)
+      .eq('auth_user_id', user.id)
       .single();
 
     if (!usuario) {
@@ -78,7 +78,7 @@ export async function actionObterDetalheCaptura(
     const { data: usuario } = await supabase
       .from('usuarios')
       .select('is_super_admin')
-      .eq('auth_id', user.id)
+      .eq('auth_user_id', user.id)
       .single();
 
     if (!usuario?.is_super_admin) {

@@ -28,14 +28,14 @@ import {
   FileText,
   Clock,
 } from 'lucide-react';
-import type { Contrato } from '../types';
+import type { Contrato } from '../domain';
 import {
   AREA_DIREITO_LABELS,
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
   POLO_PROCESSUAL_LABELS,
-} from '../types';
+} from '../domain';
 import { formatarData, formatarDataHora, getStatusVariant } from '../utils';
 
 // =============================================================================

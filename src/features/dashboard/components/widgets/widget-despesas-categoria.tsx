@@ -9,6 +9,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useDespesasPorCategoria } from '../../hooks';
 
 const COLORS = ['#ef4444', '#f97316', '#f59e0b', '#10b981', '#3b82f6'];
+const DOT_BG_CLASSES = [
+  'bg-[#ef4444]',
+  'bg-[#f97316]',
+  'bg-[#f59e0b]',
+  'bg-[#10b981]',
+  'bg-[#3b82f6]',
+];
 
 const formatarValor = (valor: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
@@ -44,12 +51,12 @@ export function WidgetDespesasCategoria() {
 
   return (
     <Card>
-      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 pb-2">
-        <CardTitle className="flex items-center gap-2 text-sm font-medium">
+      <CardHeader className="flex flex-col gap-2 pb-2 sm:flex-row sm:items-center sm:justify-between">
+        <CardTitle className="flex min-w-0 flex-1 items-center gap-2 text-sm font-medium">
           <PieIcon className="h-4 w-4" />
           <span className="truncate">Despesas por Categoria</span>
         </CardTitle>
-        <Button variant="ghost" size="sm" asChild className="w-full sm:w-auto">
+        <Button variant="ghost" size="sm" asChild className="w-full shrink-0 sm:w-auto">
           <Link href="/financeiro/dre">DRE</Link>
         </Button>
       </CardHeader>
@@ -80,8 +87,7 @@ export function WidgetDespesasCategoria() {
             <div key={item.categoria} className="flex items-center justify-between rounded-md bg-muted/60 p-2 gap-2">
               <div className="flex items-center gap-2 min-w-0 flex-1">
                 <span
-                  className="h-3 w-3 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: COLORS[idx % COLORS.length] }}
+                  className={`h-3 w-3 rounded-full shrink-0 ${DOT_BG_CLASSES[idx % DOT_BG_CLASSES.length]}`}
                 />
                 <span className="truncate">{item.categoria}</span>
               </div>
