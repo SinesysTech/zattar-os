@@ -44,7 +44,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import { checkPermission } from '@/lib/auth/authorization';
-import { buscarPendentesPorClienteCPF } from '@/features/expedientes/service';
+import { buscarExpedientesPorClienteCPF } from '@/features/expedientes/service';
 
 export async function GET(
   request: NextRequest,
@@ -80,7 +80,7 @@ export async function GET(
     }
 
     // 4. Buscar pendentes
-    const result = await buscarPendentesPorClienteCPF(cpf);
+    const result = await buscarExpedientesPorClienteCPF(cpf);
 
     if (!result.success) {
       return NextResponse.json(

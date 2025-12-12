@@ -1,8 +1,8 @@
 /**
- * Adaptador para converter PendenteManifestacao para IEvent do calendário
+ * Adaptador para converter Expediente (domain) para IEvent do calendário
  */
 
-import type { PendenteManifestacao } from '@/features/expedientes/types';
+import type { Expediente } from '@/features/expedientes/domain';
 import type { IEvent, IUser } from '@/components/calendar/interfaces';
 import type { TEventColor } from '@/components/calendar/types';
 import type { Usuario } from '@/features/usuarios';
@@ -35,60 +35,60 @@ export function usuarioToIUser(usuario: Usuario): IUser {
 }
 
 /**
- * Converte PendenteManifestacao para IEvent
+ * Converte Expediente para IEvent
  * 
  * Mapeamento:
  * - id: expediente.id
- * - startDate: data_prazo_legal_parte (ou data_criacao_expediente se não houver prazo)
+ * - startDate: dataPrazoLegalParte (ou dataCriacaoExpediente se não houver prazo)
  * - endDate: mesma data (evento de um dia)
  * - title: número do processo + classe judicial
- * - color: baseado em tipo_expediente_id
+ * - color: baseado em tipoExpedienteId
  * - description: informações do expediente formatadas
  * - user: responsável (ou usuário padrão se não houver)
  */
 export function expedienteToEvent(
-	expediente: PendenteManifestacao,
+	expediente: Expediente,
 	colors: TEventColor[],
 	usuarios: Usuario[],
 	tiposExpedientes: TipoExpediente[]
 ): IEvent {
-	// Data principal: data_prazo_legal_parte ou data_criacao_expediente
+	// Data principal: dataPrazoLegalParte ou dataCriacaoExpediente
 	const dataPrincipal =
-		expediente.data_prazo_legal_parte ||
-		expediente.data_criacao_expediente ||
-		expediente.created_at;
+		expediente.dataPrazoLegalParte ||
+		expediente.dataCriacaoExpediente ||
+		expediente.createdAt;
 
 	// Garantir que é uma data válida
 	const startDate = new Date(dataPrincipal);
 	const endDate = new Date(startDate); // Evento de um dia
 
 	// Título: classe judicial + número do processo (formato: "CLASSE JUDICIAL NÚMERO DO PROCESSO")
-	const titulo = expediente.classe_judicial
-		? `${expediente.classe_judicial} ${expediente.numero_processo}`
-		: expediente.numero_processo;
+	const titulo = expediente.classeJudicial
+		? `${expediente.classeJudicial} ${expediente.numeroProcesso}`
+		: expediente.numeroProcesso;
 
 	// Cor baseada no tipo de expediente
 	const color = getColorByTipoExpediente(
-		expediente.tipo_expediente_id,
+		expediente.tipoExpedienteId,
 		colors
 	);
 
 	// Descrição formatada com informações do expediente
 	const tipoExpediente = tiposExpedientes.find(
-		(t) => t.id === expediente.tipo_expediente_id
+		(t) => t.id === expediente.tipoExpedienteId
 	);
 	const responsavel = usuarios.find(
-		(u) => u.id === expediente.responsavel_id
+		(u) => u.id === expediente.responsavelId
 	);
 
 	const descricaoParts: string[] = [];
 
 	// Adicionar metadados no início (para uso interno)
-	if (expediente.tipo_expediente_id) {
-		descricaoParts.push(`__TIPO_ID__:${expediente.tipo_expediente_id}`);
+	if (expediente.tipoExpedienteId) {
+		descricaoParts.push(`__TIPO_ID__:${expediente.tipoExpedienteId}`);
 	}
-	if (expediente.responsavel_id) {
-		descricaoParts.push(`__RESPONSAVEL_ID__:${expediente.responsavel_id}`);
+	if (expediente.responsavelId) {
+		descricaoParts.push(`__RESPONSAVEL_ID__:${expediente.responsavelId}`);
 	}
 
 	// Informações visíveis
@@ -98,17 +98,17 @@ export function expedienteToEvent(
 	if (responsavel) {
 		descricaoParts.push(`Responsável: ${responsavel.nomeExibicao}`);
 	}
-	if (expediente.nome_parte_autora) {
-		descricaoParts.push(`Parte Autora: ${expediente.nome_parte_autora}`);
+	if (expediente.nomeParteAutora) {
+		descricaoParts.push(`Parte Autora: ${expediente.nomeParteAutora}`);
 	}
-	if (expediente.nome_parte_re) {
-		descricaoParts.push(`Parte Ré: ${expediente.nome_parte_re}`);
+	if (expediente.nomeParteRe) {
+		descricaoParts.push(`Parte Ré: ${expediente.nomeParteRe}`);
 	}
-	if (expediente.descricao_orgao_julgador) {
-		descricaoParts.push(`Órgão: ${expediente.descricao_orgao_julgador}`);
+	if (expediente.descricaoOrgaoJulgador) {
+		descricaoParts.push(`Órgão: ${expediente.descricaoOrgaoJulgador}`);
 	}
-	if (expediente.descricao_arquivos) {
-		descricaoParts.push(`Descrição: ${expediente.descricao_arquivos}`);
+	if (expediente.descricaoArquivos) {
+		descricaoParts.push(`Descrição: ${expediente.descricaoArquivos}`);
 	}
 	if (expediente.observacoes) {
 		descricaoParts.push(`Observações: ${expediente.observacoes}`);
@@ -137,22 +137,22 @@ export function expedienteToEvent(
 }
 
 /**
- * Converte array de PendenteManifestacao para array de IEvent
+ * Converte array de Expediente para array de IEvent
  */
 export function expedientesToEvents(
-	expedientes: PendenteManifestacao[],
+	expedientes: Expediente[],
 	colors: TEventColor[],
 	usuarios: Usuario[],
 	tiposExpedientes: TipoExpediente[]
 ): IEvent[] {
 	return expedientes
 		.filter((exp) => {
-			// Filtrar apenas expedientes com data_prazo_legal_parte válida
-			// ou data_criacao_expediente válida
+			// Filtrar apenas expedientes com dataPrazoLegalParte válida
+			// ou dataCriacaoExpediente válida
 			return (
-				exp.data_prazo_legal_parte ||
-				exp.data_criacao_expediente ||
-				exp.created_at
+				exp.dataPrazoLegalParte ||
+				exp.dataCriacaoExpediente ||
+				exp.createdAt
 			);
 		})
 		.map((exp) => expedienteToEvent(exp, colors, usuarios, tiposExpedientes));

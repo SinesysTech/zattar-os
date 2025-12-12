@@ -4,8 +4,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { obterPendentes } from '@/features/expedientes/service';
-import type { ListarPendentesParams } from '@/features/expedientes/types';
+import { listarExpedientes } from '@/features/expedientes/service';
+import type { ListarExpedientesParams } from '@/features/expedientes/domain';
 
 /**
  * @swagger
@@ -377,57 +377,45 @@ export async function GET(request: NextRequest) {
       return isNaN(num) ? undefined : num;
     };
 
-    const params: ListarPendentesParams = {
+    const params: ListarExpedientesParams = {
       // Paginação
       pagina: searchParams.get('pagina') ? parseInt(searchParams.get('pagina')!, 10) : undefined,
       limite: searchParams.get('limite') ? parseInt(searchParams.get('limite')!, 10) : undefined,
 
       // Filtros básicos
-      trt: searchParams.get('trt') || undefined,
-      grau: searchParams.get('grau') as 'primeiro_grau' | 'segundo_grau' | undefined,
-      responsavel_id: parseResponsavelId(searchParams.get('responsavel_id')),
-      sem_responsavel: parseBoolean(searchParams.get('sem_responsavel')),
+      trt: (searchParams.get('trt') as ListarExpedientesParams['trt']) || undefined,
+      grau: (searchParams.get('grau') as ListarExpedientesParams['grau']) || undefined,
+      responsavelId: parseResponsavelId(searchParams.get('responsavelId')),
+      semResponsavel: parseBoolean(searchParams.get('semResponsavel')),
 
       // Busca textual
       busca: searchParams.get('busca') || undefined,
 
-      // Filtros específicos
-      numero_processo: searchParams.get('numero_processo') || undefined,
-      nome_parte_autora: searchParams.get('nome_parte_autora') || undefined,
-      nome_parte_re: searchParams.get('nome_parte_re') || undefined,
-      descricao_orgao_julgador: searchParams.get('descricao_orgao_julgador') || undefined,
-      sigla_orgao_julgador: searchParams.get('sigla_orgao_julgador') || undefined,
-      classe_judicial: searchParams.get('classe_judicial') || undefined,
-      codigo_status_processo: searchParams.get('codigo_status_processo') || undefined,
-      segredo_justica: parseBoolean(searchParams.get('segredo_justica')),
-      juizo_digital: parseBoolean(searchParams.get('juizo_digital')),
-      processo_id: searchParams.get('processo_id') ? parseInt(searchParams.get('processo_id')!, 10) : undefined,
+      // Filtros (camelCase)
+      classeJudicial: searchParams.get('classeJudicial') || undefined,
+      codigoStatusProcesso: searchParams.get('codigoStatusProcesso') || undefined,
+      segredoJustica: parseBoolean(searchParams.get('segredoJustica')),
+      juizoDigital: parseBoolean(searchParams.get('juizoDigital')),
+      processoId: searchParams.get('processoId') ? parseInt(searchParams.get('processoId')!, 10) : undefined,
 
-      // Filtros específicos de pendentes
       baixado: parseBoolean(searchParams.get('baixado')),
-      prazo_vencido: parseBoolean(searchParams.get('prazo_vencido')),
-      tipo_expediente_id: parseTipoExpedienteId(searchParams.get('tipo_expediente_id')),
-      sem_tipo: parseBoolean(searchParams.get('sem_tipo')),
-      data_prazo_legal_inicio: searchParams.get('data_prazo_legal_inicio') || undefined,
-      data_prazo_legal_fim: searchParams.get('data_prazo_legal_fim') || undefined,
-      data_ciencia_inicio: searchParams.get('data_ciencia_inicio') || undefined,
-      data_ciencia_fim: searchParams.get('data_ciencia_fim') || undefined,
-      data_criacao_expediente_inicio: searchParams.get('data_criacao_expediente_inicio') || undefined,
-      data_criacao_expediente_fim: searchParams.get('data_criacao_expediente_fim') || undefined,
+      prazoVencido: parseBoolean(searchParams.get('prazoVencido')),
+      tipoExpedienteId: parseTipoExpedienteId(searchParams.get('tipoExpedienteId')) as number | undefined,
+      semTipo: parseBoolean(searchParams.get('semTipo')),
 
-      // Filtros de data (comuns)
-      data_autuacao_inicio: searchParams.get('data_autuacao_inicio') || undefined,
-      data_autuacao_fim: searchParams.get('data_autuacao_fim') || undefined,
-      data_arquivamento_inicio: searchParams.get('data_arquivamento_inicio') || undefined,
-      data_arquivamento_fim: searchParams.get('data_arquivamento_fim') || undefined,
+      dataPrazoLegalInicio: searchParams.get('dataPrazoLegalInicio') || undefined,
+      dataPrazoLegalFim: searchParams.get('dataPrazoLegalFim') || undefined,
+      dataCienciaInicio: searchParams.get('dataCienciaInicio') || undefined,
+      dataCienciaFim: searchParams.get('dataCienciaFim') || undefined,
+      dataCriacaoExpedienteInicio: searchParams.get('dataCriacaoExpedienteInicio') || undefined,
+      dataCriacaoExpedienteFim: searchParams.get('dataCriacaoExpedienteFim') || undefined,
+      dataAutuacaoInicio: searchParams.get('dataAutuacaoInicio') || undefined,
+      dataAutuacaoFim: searchParams.get('dataAutuacaoFim') || undefined,
+      dataArquivamentoInicio: searchParams.get('dataArquivamentoInicio') || undefined,
+      dataArquivamentoFim: searchParams.get('dataArquivamentoFim') || undefined,
 
-      // Ordenação
-      ordenar_por: searchParams.get('ordenar_por') as ListarPendentesParams['ordenar_por'] | undefined,
-      ordem: searchParams.get('ordem') as 'asc' | 'desc' | undefined,
-
-      // Agrupamento
-      agrupar_por: searchParams.get('agrupar_por') as ListarPendentesParams['agrupar_por'] | undefined,
-      incluir_contagem: parseBoolean(searchParams.get('incluir_contagem')),
+      ordenarPor: (searchParams.get('ordenarPor') as ListarExpedientesParams['ordenarPor']) || undefined,
+      ordem: (searchParams.get('ordem') as ListarExpedientesParams['ordem']) || undefined,
     };
 
     // 3. Validações básicas
@@ -446,36 +434,16 @@ export async function GET(request: NextRequest) {
     }
 
     // 4. Listar pendentes
-    const result = await obterPendentes(params);
+    const result = await listarExpedientes(params);
 
     if (!result.success) {
       throw new Error(result.error.message);
     }
 
-    const resultado = result.data;
-
-    // 5. Formatar resposta baseado no tipo de resultado
-    if ('agrupamentos' in resultado) {
-      // Resposta com agrupamento
-      return NextResponse.json({
-        success: true,
-        data: resultado,
-      });
-    } else {
-      // Resposta padrão com paginação
-      return NextResponse.json({
-        success: true,
-        data: {
-          pendentes: resultado.pendentes,
-          paginacao: {
-            pagina: resultado.pagina,
-            limite: resultado.limite,
-            total: resultado.total,
-            totalPaginas: resultado.totalPaginas,
-          },
-        },
-      });
-    }
+    return NextResponse.json({
+      success: true,
+      data: result.data,
+    });
   } catch (error) {
     console.error('Erro ao listar pendentes de manifestação:', error);
     const erroMsg = error instanceof Error ? error.message : 'Erro interno do servidor';
