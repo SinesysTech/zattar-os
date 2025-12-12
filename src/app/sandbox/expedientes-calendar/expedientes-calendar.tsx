@@ -9,7 +9,7 @@ import {
 	getExpedientesEvents,
 	getExpedientesUsers,
 } from './requests-expedientes';
-import { usuariosService } from '@/features/usuarios';
+import { service as usuariosService } from '@/features/usuarios/service';
 import { listar } from '@/features/tipos-expedientes';
 import type { ListarTiposExpedientesParams } from '@/features/tipos-expedientes';
 

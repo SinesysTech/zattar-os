@@ -50,6 +50,31 @@ const nextConfig: NextConfig = {
       '@/backend': path.resolve(__dirname, 'backend'),
     };
 
+    // Prevent Node.js built-in modules from being bundled in the client
+    // This is necessary because ioredis and other server-only libraries
+    // use Node.js modules like 'dns', 'net', 'tls', etc.
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        dns: false,
+        net: false,
+        tls: false,
+        fs: false,
+        path: false,
+        os: false,
+        crypto: false,
+        stream: false,
+        http: false,
+        https: false,
+        zlib: false,
+        querystring: false,
+        util: false,
+        url: false,
+        buffer: false,
+        events: false,
+      };
+    }
+
     // Exclude test files from bundle
     config.module = config.module || {};
     config.module.rules = config.module.rules || [];
