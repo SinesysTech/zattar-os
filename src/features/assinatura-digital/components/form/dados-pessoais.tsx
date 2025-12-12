@@ -10,7 +10,7 @@ import {
   getEstadoCivilText,
   getGeneroText,
   getNacionalidadeText,
-} from '@/lib/assinatura-digital/validations/dadosPessoais.schema';
+} from '../../validations/dados-pessoais.schema';
 import InputCPF from '@/features/assinatura-digital/components/inputs/input-cpf';
 import InputTelefone from '@/features/assinatura-digital/components/inputs/input-telefone';
 import { InputCEP, type AddressData } from '@/features/enderecos';
@@ -22,9 +22,13 @@ import { formatCPF, parseCPF } from '@/features/assinatura-digital/utils/formatt
 import { formatData } from '@/features/assinatura-digital/utils/formatters';
 import { formatTelefone, parseTelefone } from '@/features/assinatura-digital/utils/formatters';
 import { parseCEP } from '@/features/assinatura-digital/utils/formatters';
-import { ESTADOS_CIVIS, GENEROS, ESTADOS_BRASILEIROS } from '@/lib/assinatura-digital/constants/estadosCivis';
-import { NACIONALIDADES } from '@/lib/assinatura-digital/constants/nacionalidades';
-import { API_ROUTES } from '@/lib/assinatura-digital/constants/apiRoutes';
+import {
+  API_ROUTES,
+  ESTADOS_BRASILEIROS,
+  ESTADOS_CIVIS,
+  GENEROS,
+  NACIONALIDADES,
+} from '@/features/assinatura-digital';
 import { Separator } from '@/components/ui/separator';
 import {
   Form,

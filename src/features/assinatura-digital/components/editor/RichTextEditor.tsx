@@ -47,7 +47,7 @@ import {
   type VariableOption,
   type TiptapDocument,
   type TiptapNode,
-} from '@/lib/assinatura-digital';
+} from '@/features/assinatura-digital';
 
 interface RichTextEditorProps {
   value?: ConteudoComposto;

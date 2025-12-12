@@ -4,7 +4,7 @@
  * Mantido em `src/types/*` por compatibilidade (imports legados).
  */
 
-import type { DadosPessoaisFormData } from '@/lib/assinatura-digital/validations/dadosPessoais.schema';
+import type { DadosPessoaisFormData } from '@/features/assinatura-digital/validations/dados-pessoais.schema';
 
 export type ClienteFormsignPayload = {
   id?: number;

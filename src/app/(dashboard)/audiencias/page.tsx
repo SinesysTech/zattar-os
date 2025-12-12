@@ -1,4 +1,4 @@
-import { AudienciasContent } from '@/features/audiencias/components/audiencias-content';
+import { AudienciasContent } from '@/features/audiencias';
 
 export const dynamic = 'force-dynamic';
 
