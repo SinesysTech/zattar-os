@@ -46,7 +46,7 @@ export const criarUsuarioSchema = z.object({
   ufOab: z.string().length(2, 'UF da OAB deve ter 2 letras').optional().nullable(),
   emailPessoal: emailSchema.nullable().optional().or(z.literal('')),
   emailCorporativo: emailSchema,
-  telefone: telefoneSchema,
+  telefone: telefoneSchema.optional(),
   ramal: z.string().optional().nullable(),
   endereco: enderecoSchema,
   authUserId: z.string().uuid().optional().nullable(),

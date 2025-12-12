@@ -30,7 +30,8 @@ export const createSegmentoSchema = z.object({
   slug: z
     .string()
     .min(1, 'Slug é obrigatório')
-    .regex(/^[a-z0-9-]+$/, 'Slug deve conter apenas letras minúsculas, números e hífens'),
+    .regex(/^[a-z0-9-]+$/, 'Slug deve conter apenas letras minúsculas, números e hífens')
+    .optional(),
   descricao: z.string().optional(),
   escopo: z.enum(['global', 'contratos', 'assinatura']).default('global'),
   ativo: z.boolean().default(true),

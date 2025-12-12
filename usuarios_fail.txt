@@ -1,0 +1,60 @@
+
+> sinesys@0.1.0 test
+> jest src/features/usuarios/__tests__/unit/usuarios.service.test.ts
+
+ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+transform: {
+    <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+},
+See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+ts-jest[config] (WARN) 
+    The "ts-jest" config option "isolatedModules" is deprecated and will be removed in v30.0.0. Please use "isolatedModules: true" in E:/Development/sinesys/tsconfig.test.json instead, see https://www.typescriptlang.org/tsconfig/#isolatedModules
+  
+FAIL src/features/usuarios/__tests__/unit/usuarios.service.test.ts
+  Usuarios Service
+    criarUsuario
+      × deve criar usuario com sucesso (11 ms)
+      × deve falhar se CPF ja existir (3 ms)
+    buscarUsuario
+      √ deve buscar usuario com sucesso (1 ms)
+      √ deve lançar erro se usuario nao encontrado (4 ms)
+
+  ● Usuarios Service › criarUsuario › deve criar usuario com sucesso
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+    [0m [90m 48 |[39m
+     [90m 49 |[39m       [90m// Assert[39m
+    [31m[1m>[22m[39m[90m 50 |[39m       expect(result[33m.[39msucesso)[33m.[39mtoBe([36mtrue[39m)[33m;[39m
+     [90m    |[39m                              [31m[1m^[22m[39m
+     [90m 51 |[39m       expect(result[33m.[39musuario)[33m.[39mtoBeDefined()[33m;[39m
+     [90m 52 |[39m       expect(usuarioRepository[33m.[39mcreate)[33m.[39mtoHaveBeenCalled()[33m;[39m
+     [90m 53 |[39m     })[33m;[39m[0m
+
+      at Object.<anonymous> (src/features/usuarios/__tests__/unit/usuarios.service.test.ts:50:30)
+
+  ● Usuarios Service › criarUsuario › deve falhar se CPF ja existir
+
+    expect(received).toMatch(expected)
+
+    Expected pattern: /CPF já cadastrado/
+    Received string:  "Required"
+
+    [0m [90m 62 |[39m       [90m// Assert[39m
+     [90m 63 |[39m       expect(result[33m.[39msucesso)[33m.[39mtoBe([36mfalse[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 64 |[39m       expect(result[33m.[39merro)[33m.[39mtoMatch([35m/CPF já cadastrado/[39m)[33m;[39m
+     [90m    |[39m                           [31m[1m^[22m[39m
+     [90m 65 |[39m       expect(usuarioRepository[33m.[39mcreate)[33m.[39mnot[33m.[39mtoHaveBeenCalled()[33m;[39m
+     [90m 66 |[39m     })[33m;[39m
+     [90m 67 |[39m   })[33m;[39m[0m
+
+      at Object.<anonymous> (src/features/usuarios/__tests__/unit/usuarios.service.test.ts:64:27)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 2 passed, 4 total
+Snapshots:   0 total
+Time:        2.501 s
+Ran all test suites matching src/features/usuarios/__tests__/unit/usuarios.service.test.ts.

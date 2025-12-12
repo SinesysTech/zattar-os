@@ -7,7 +7,7 @@ import {
 import {
   listarDocumentos as listarDocumentosRepo,
   criarDocumento as criarDocumentoRepo,
-  buscarDocumento as buscarDocumentoRepo,
+  buscarDocumentoComUsuario as buscarDocumentoComUsuarioRepo,
 } from '../../repository';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
@@ -52,7 +52,7 @@ describe('Documentos Service', () => {
     it('deve criar documento com sucesso', async () => {
       // Arrange
       (criarDocumentoRepo as jest.Mock).mockResolvedValue(mockDocumento);
-      (buscarDocumento as jest.Mock).mockResolvedValue(mockDocumento);
+      (buscarDocumentoComUsuarioRepo as jest.Mock).mockResolvedValue(mockDocumento);
 
       const params = {
         titulo: 'Novo Documento',
@@ -90,7 +90,7 @@ describe('Documentos Service', () => {
       // Assert
       expect(result.documentos).toHaveLength(1);
       expect(result.total).toBe(1);
-      expect(listarDocumentosRepo).toHaveBeenCalledWith(params, mockUsuarioId);
+      expect(listarDocumentosRepo).toHaveBeenCalledWith(params);
     });
   });
 });
