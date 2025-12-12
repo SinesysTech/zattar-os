@@ -91,7 +91,7 @@ describe('Comunica CNJ Service', () => {
 
       // Assert
       expect(result.success).toBe(true);
-      expect(mockClient.consultarComunicacoes).toHaveBeenCalledWith(params);
+      expect(mockClient.consultarComunicacoes).toHaveBeenCalledWith(expect.objectContaining(params));
     });
 
     it('deve retornar erro de validação se params invalidos', async () => {

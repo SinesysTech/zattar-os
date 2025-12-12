@@ -1,0 +1,60 @@
+
+> sinesys@0.1.0 test
+> jest src/features/documentos/__tests__/unit/documentos.service.test.ts
+
+ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+transform: {
+    <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+},
+See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+ts-jest[config] (WARN) 
+    The "ts-jest" config option "isolatedModules" is deprecated and will be removed in v30.0.0. Please use "isolatedModules: true" in E:/Development/sinesys/tsconfig.test.json instead, see https://www.typescriptlang.org/tsconfig/#isolatedModules
+  
+FAIL src/features/documentos/__tests__/unit/documentos.service.test.ts
+  Documentos Service
+    criarDocumento
+      × deve criar documento com sucesso (4 ms)
+    listarDocumentos
+      × deve listar documentos com sucesso (10 ms)
+
+  ● Documentos Service › criarDocumento › deve criar documento com sucesso
+
+    TypeError: service_1.buscarDocumento.mockResolvedValue is not a function
+
+    [0m [90m 53 |[39m       [90m// Arrange[39m
+     [90m 54 |[39m       (criarDocumentoRepo [36mas[39m jest[33m.[39m[33mMock[39m)[33m.[39mmockResolvedValue(mockDocumento)[33m;[39m
+    [31m[1m>[22m[39m[90m 55 |[39m       (buscarDocumento [36mas[39m jest[33m.[39m[33mMock[39m)[33m.[39mmockResolvedValue(mockDocumento)[33m;[39m
+     [90m    |[39m                                      [31m[1m^[22m[39m
+     [90m 56 |[39m
+     [90m 57 |[39m       [36mconst[39m params [33m=[39m {
+     [90m 58 |[39m         titulo[33m:[39m [32m'Novo Documento'[39m[33m,[39m[0m
+
+      at Object.<anonymous> (src/features/documentos/__tests__/unit/documentos.service.test.ts:55:38)
+
+  ● Documentos Service › listarDocumentos › deve listar documentos com sucesso
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    - Expected
+    + Received
+
+      {"limit": 10, "offset": 0},
+    - 123,
+
+    Number of calls: 1
+
+    [0m [90m 91 |[39m       expect(result[33m.[39mdocumentos)[33m.[39mtoHaveLength([35m1[39m)[33m;[39m
+     [90m 92 |[39m       expect(result[33m.[39mtotal)[33m.[39mtoBe([35m1[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 93 |[39m       expect(listarDocumentosRepo)[33m.[39mtoHaveBeenCalledWith(params[33m,[39m mockUsuarioId)[33m;[39m
+     [90m    |[39m                                    [31m[1m^[22m[39m
+     [90m 94 |[39m     })[33m;[39m
+     [90m 95 |[39m   })[33m;[39m
+     [90m 96 |[39m })[33m;[39m[0m
+
+      at Object.<anonymous> (src/features/documentos/__tests__/unit/documentos.service.test.ts:93:36)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 2 total
+Snapshots:   0 total
+Time:        3.723 s, estimated 4 s
+Ran all test suites matching src/features/documentos/__tests__/unit/documentos.service.test.ts.
