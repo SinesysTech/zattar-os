@@ -327,9 +327,7 @@ export function ResponsiveTable<TData>({
     const renderTableLayout = () => {
         return (
             <div className={cn(
-                'relative',
-                useScrollLayout && 'overflow-x-auto',
-                useScrollLayout && 'scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent'
+                'relative w-full overflow-auto',
             )}>
                 {isLoading && (
                     <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50">
