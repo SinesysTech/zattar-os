@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Loader2, AlertCircle } from "lucide-react";
 import { toast } from 'sonner';
 import ReactMarkdown from "react-markdown";
-import { renderMarkdownWithVariables, getMarkdownPlugins, getMarkdownStyles } from "@/lib/assinatura-digital/utils/markdown-renderer";
+import { renderMarkdownWithVariables, getMarkdownPlugins, getMarkdownStyles } from "../../utils/markdown-renderer";
 import { DadosGeracao, Template } from "@/types/assinatura-digital/template.types";
 import { VisualizacaoMarkdownData } from "@/types/assinatura-digital/formulario.types";
 import { apiFetch } from "@/lib/api";

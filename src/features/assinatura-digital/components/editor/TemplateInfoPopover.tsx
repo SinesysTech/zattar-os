@@ -36,7 +36,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { Template, StatusTemplate } from '@/types/assinatura-digital';
-import { validateMarkdownForForm } from '@/lib/assinatura-digital';
+import { validateMarkdownForForm } from '@/features/assinatura-digital';
 
 interface TemplateInfoPopoverProps {
   trigger: React.ReactNode;
