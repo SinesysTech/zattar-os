@@ -355,9 +355,9 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
 
     if (input.segmentoId) {
       dadosInsercao.segmento_id = input.segmentoId;
-    }
-
-    if (input.areaDireito) {
+    } else if (input.areaDireito) {
+      // Fallback temporário: `area_direito` é legado (deprecated) e só deve ser usado
+      // quando `segmento_id` não for fornecido.
       dadosInsercao.area_direito = input.areaDireito;
     }
 

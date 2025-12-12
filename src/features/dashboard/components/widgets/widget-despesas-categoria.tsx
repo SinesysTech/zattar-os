@@ -8,13 +8,21 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useDespesasPorCategoria } from '../../hooks';
 
-const COLORS = ['#ef4444', '#f97316', '#f59e0b', '#10b981', '#3b82f6'];
+// Cores do gráfico devem vir do tema (tokens), sem hardcode em componentes de feature
+const COLORS = [
+  'var(--chart-1)',
+  'var(--chart-2)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-5)',
+];
+
 const DOT_BG_CLASSES = [
-  'bg-[#ef4444]',
-  'bg-[#f97316]',
-  'bg-[#f59e0b]',
-  'bg-[#10b981]',
-  'bg-[#3b82f6]',
+  'bg-(--chart-1)',
+  'bg-(--chart-2)',
+  'bg-(--chart-3)',
+  'bg-(--chart-4)',
+  'bg-(--chart-5)',
 ];
 
 const formatarValor = (valor: number) =>

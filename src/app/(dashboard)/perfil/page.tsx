@@ -5,7 +5,7 @@ import { PerfilView } from '@/features/perfil';
 
 export default function PerfilPage() {
   return (
-    <PageShell title="Meu Perfil">
+    <PageShell>
       <PerfilView />
     </PageShell>
   );
