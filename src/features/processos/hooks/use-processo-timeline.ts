@@ -18,7 +18,8 @@ import type { TimelineDocument } from '@/lib/types/timeline';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 import type { GrauProcesso } from '@/features/partes';
 import { actionObterTimelinePorId, actionRecapturarTimeline } from '@/features/acervo';
-import { actionCapturarTimeline, type CodigoTRT, type GrauTRT } from '@/features/captura';
+import { actionCapturarTimeline } from '@/features/captura/actions/timeline-actions';
+import type { CodigoTRT, GrauTRT } from '@/features/captura/domain';
 
 /**
  * Item da timeline com metadados de origem (para modo unificado)

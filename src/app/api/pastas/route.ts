@@ -11,7 +11,7 @@ import {
   listarPastasComContadores,
   criarPasta,
   buscarHierarquiaPastas,
-} from '@/features/documentos';
+} from '@/features/documentos/service';
 import type { CriarPastaParams } from '@/features/documentos';
 
 /**

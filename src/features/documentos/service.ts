@@ -145,6 +145,28 @@ export async function listarPastas(usuario_id: number): Promise<PastaComContador
   return repository.listarPastasComContadores(undefined, usuario_id);
 }
 
+/**
+ * Lista pastas com contadores (documentos/subpastas), suportando filtro por pasta pai.
+ * Usado por rotas API e pela UI de navegação de pastas.
+ */
+export async function listarPastasComContadores(
+  pasta_pai_id: number | null | undefined,
+  usuario_id: number
+): Promise<PastaComContadores[]> {
+  return repository.listarPastasComContadores(pasta_pai_id, usuario_id);
+}
+
+/**
+ * Busca hierarquia (árvore) de pastas.
+ */
+export async function buscarHierarquiaPastas(
+  pasta_raiz_id: number | null | undefined,
+  incluir_documentos: boolean,
+  usuario_id: number
+): Promise<PastaHierarquia[]> {
+  return repository.buscarHierarquiaPastas(pasta_raiz_id, incluir_documentos, usuario_id);
+}
+
 export async function criarPasta(params: unknown, usuario_id: number): Promise<Pasta> {
   const parsedParams = domain.criarPastaSchema.parse(params);
 

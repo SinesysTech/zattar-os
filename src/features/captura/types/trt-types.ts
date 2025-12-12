@@ -1,5 +1,8 @@
 // Tipos TypeScript compartilhados para serviços de captura TRT
 
+// Re-export de valores runtime usados pelo PJE (não pode ser `export type`)
+export { AgrupamentoProcessoTarefa } from './types';
+
 /**
  * Tipos de rotas disponíveis no TRT
  */

@@ -9,3 +9,9 @@ export { AudienciaDetailSheet } from './audiencia-detail-sheet';
 export { AudienciaStatusBadge } from './audiencia-status-badge';
 export { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 export { AudienciasMonthDayCell } from './audiencias-month-day-cell';
+export {
+  AUDIENCIAS_FILTER_CONFIGS,
+  buildAudienciasFilterOptions,
+  buildAudienciasFilterGroups,
+  parseAudienciasFilters,
+} from './audiencias-toolbar-filters';

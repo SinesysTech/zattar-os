@@ -1,4 +1,5 @@
 
+import { formatDate as formatDateDS } from "@/lib/design-system";
 import { AcordoCondenacao, DirecaoPagamento, FormaPagamento, StatusAcordo, StatusRepasse, TipoObrigacao } from "./types";
 import { TIPO_LABELS, DIRECAO_LABELS, STATUS_LABELS, FORMA_PAGAMENTO_LABELS } from "./domain";
 
@@ -89,4 +90,8 @@ export const formatCurrency = (value: number) => {
     style: 'currency',
     currency: 'BRL',
   }).format(value);
+};
+
+export const formatDate = (dateISO: string | Date | null | undefined): string => {
+  return formatDateDS(dateISO);
 };

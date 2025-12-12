@@ -35,11 +35,11 @@ import { MarkdownRichTextEditor } from '@/features/assinatura-digital/components
 
 import {
   createTemplateSchema,
-  listarSegmentosAction,
   Segmento,
-  criarTemplateAction,
   TipoTemplate,
 } from '@/features/assinatura-digital';
+
+import { listarSegmentosAction, criarTemplateAction } from '@/features/assinatura-digital/actions';
 
 const formSchema = createTemplateSchema.extend({
   // Adicionar campos específicos da UI, se necessário, ou remover os do schema principal se forem apenas de backend

@@ -12,6 +12,7 @@ import {
     buscarOrcamentoComDetalhes,
     atualizarOrcamento,
     deletarOrcamento,
+    excluirItemOrcamento,
     aprovarOrcamento,
     iniciarExecucaoOrcamento,
     encerrarOrcamento,
@@ -188,6 +189,30 @@ export async function actionExcluirOrcamento(id: number) {
         console.error('Erro ao deletar orçamento:', error);
         const erroMsg = error instanceof Error ? error.message : 'Erro interno';
 
+        return { success: false, error: erroMsg };
+    }
+}
+
+/**
+ * Exclui item de orçamento (apenas em rascunho / quando permitido pelo domain)
+ */
+export async function actionExcluirItemOrcamento(orcamentoId: number, itemId: number) {
+    try {
+        if (!orcamentoId || orcamentoId <= 0) {
+            return { success: false, error: 'ID do orçamento inválido' };
+        }
+        if (!itemId || itemId <= 0) {
+            return { success: false, error: 'ID do item inválido' };
+        }
+
+        await excluirItemOrcamento(orcamentoId, itemId);
+        revalidatePath(`/financeiro/orcamentos/${orcamentoId}`);
+        revalidatePath('/financeiro/orcamentos');
+
+        return { success: true, message: 'Item excluído com sucesso' };
+    } catch (error) {
+        console.error('Erro ao excluir item do orçamento:', error);
+        const erroMsg = error instanceof Error ? error.message : 'Erro interno';
         return { success: false, error: erroMsg };
     }
 }

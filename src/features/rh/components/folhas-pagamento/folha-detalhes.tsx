@@ -13,8 +13,8 @@ import { PagarFolhaDialog } from './pagar-folha-dialog';
 import {
   MESES_LABELS,
   STATUS_FOLHA_LABELS,
-  STATUS_FOLHA_CORES,
 } from '../../domain';
+import { STATUS_FOLHA_CORES } from '../../utils';
 import { useFolhaPagamento, cancelarFolha } from '../../hooks';
 import { toast } from 'sonner';
 

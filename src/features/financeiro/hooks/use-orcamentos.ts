@@ -13,6 +13,7 @@ import {
     actionCriarOrcamento,
     actionAtualizarOrcamento,
     actionExcluirOrcamento,
+    actionExcluirItemOrcamento,
     actionAprovarOrcamento,
     actionIniciarExecucaoOrcamento,
     actionEncerrarOrcamento,
@@ -318,6 +319,18 @@ export async function encerrarOrcamento(id: number): Promise<MutationResult> {
 export async function excluirOrcamento(id: number): Promise<MutationResult> {
     try {
         const result = await actionExcluirOrcamento(id);
+        return { success: result.success, error: result.error };
+    } catch (err) {
+        return { success: false, error: err instanceof Error ? err.message : 'Erro desconhecido' };
+    }
+}
+
+/**
+ * Excluir item do orçamento (função standalone)
+ */
+export async function excluirItemOrcamento(orcamentoId: number, itemId: number): Promise<MutationResult> {
+    try {
+        const result = await actionExcluirItemOrcamento(orcamentoId, itemId);
         return { success: result.success, error: result.error };
     } catch (err) {
         return { success: false, error: err instanceof Error ? err.message : 'Erro desconhecido' };

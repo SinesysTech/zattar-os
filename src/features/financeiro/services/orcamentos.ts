@@ -101,6 +101,23 @@ export const OrcamentosService = {
     },
 
     /**
+     * Exclui item de orçamento (apenas quando orçamento pode ser editado)
+     */
+    async excluirItem(orcamentoId: number, itemId: number): Promise<void> {
+        const existente = await OrcamentosRepository.buscarPorId(orcamentoId);
+        if (!existente) {
+            throw new Error('Orçamento não encontrado');
+        }
+
+        const podeEditar = podeEditarOrcamento(existente);
+        if (!podeEditar.pode) {
+            throw new Error(podeEditar.motivo);
+        }
+
+        return OrcamentosRepository.excluirItem(orcamentoId, itemId);
+    },
+
+    /**
      * Aprova orçamento
      */
     async aprovar(id: number, usuarioId: string, observacoes?: string): Promise<Orcamento> {
@@ -185,6 +202,7 @@ export const buscarOrcamentoComDetalhes = OrcamentosService.buscarPorId.bind(Orc
 export const criarOrcamento = OrcamentosService.criar.bind(OrcamentosService);
 export const atualizarOrcamento = OrcamentosService.atualizar.bind(OrcamentosService);
 export const deletarOrcamento = OrcamentosService.excluir.bind(OrcamentosService);
+export const excluirItemOrcamento = OrcamentosService.excluirItem.bind(OrcamentosService);
 export const aprovarOrcamento = OrcamentosService.aprovar.bind(OrcamentosService);
 export const iniciarExecucaoOrcamento = OrcamentosService.iniciarExecucao.bind(OrcamentosService);
 export const encerrarOrcamento = OrcamentosService.encerrar.bind(OrcamentosService);
