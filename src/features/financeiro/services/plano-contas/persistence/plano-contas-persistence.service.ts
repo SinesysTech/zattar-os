@@ -9,7 +9,7 @@ import {
   setCached,
   deletePattern,
   CACHE_PREFIXES,
-} from '@/lib/utils/redis/cache-utils';
+} from '@/lib/redis/cache-utils';
 import {
   getPlanoContasListKey,
   getPlanoContasHierarquiaKey,

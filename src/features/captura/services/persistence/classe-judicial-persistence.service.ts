@@ -6,7 +6,7 @@ import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
 import {
   compararObjetos,
 } from '@/lib/utils/captura/comparison.util';
-import { CACHE_PREFIXES, withCache } from '@/lib/utils/redis/cache-utils';
+import { CACHE_PREFIXES, withCache } from '@/lib/redis/cache-utils';
 
 /**
  * Interface para classe judicial do PJE

@@ -54,7 +54,7 @@ import { obterDocumento } from '@/features/captura/pje-trt/timeline/obter-docume
 import { baixarDocumento } from '@/features/captura/pje-trt/timeline/baixar-documento';
 import { uploadToBackblaze } from '@/lib/storage/backblaze-b2.service';
 import { gerarNomeDocumentoAudiencia, gerarCaminhoDocumento } from '@/lib/storage/file-naming.utils';
-import { buscarOuCriarAdvogadoPorCpf } from '@/lib/utils/captura/advogado-helper.service';
+import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import {
   buscarDadosComplementaresProcessos,
