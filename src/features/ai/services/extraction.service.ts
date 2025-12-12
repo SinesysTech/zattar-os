@@ -1,8 +1,8 @@
-import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
+type PdfJs = typeof import('pdfjs-dist/legacy/build/pdf.mjs');
 
-// Configurar worker do PDF.js para Node.js
-if (typeof window === 'undefined') {
-  GlobalWorkerOptions.workerSrc = '';
+async function getPdfJs(): Promise<PdfJs> {
+  // Import lazy para evitar avaliar `pdfjs-dist` no SSR/Node (erro: DOMMatrix is not defined)
+  return (await import('pdfjs-dist/legacy/build/pdf.mjs')) as PdfJs;
 }
 
 interface TextItem {
@@ -11,8 +11,9 @@ interface TextItem {
 }
 
 export async function extractTextFromPDF(buffer: Buffer): Promise<string> {
+  const pdfjs = await getPdfJs();
   const data = new Uint8Array(buffer);
-  const pdf = await getDocument({ data }).promise;
+  const pdf = await pdfjs.getDocument({ data, disableWorker: true }).promise;
   const textParts: string[] = [];
 
   for (let i = 1; i <= pdf.numPages; i++) {

@@ -8,7 +8,6 @@ import { ProcessosTableWrapper } from '@/features/processos/components';
 export default function ProcessosPage() {
   return (
     <PageShell
-      title="Processos"
       actions={<Button>Novo Processo</Button>}
     >
       <ProcessosTableWrapper />

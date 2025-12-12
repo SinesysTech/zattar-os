@@ -3,7 +3,7 @@ import { DashboardContent } from '@/features/dashboard';
 
 export default function DashboardPage() {
   return (
-    <PageShell title="Dashboard">
+    <PageShell>
       <DashboardContent />
     </PageShell>
   );

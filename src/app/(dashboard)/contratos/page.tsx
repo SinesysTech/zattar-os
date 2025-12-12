@@ -41,10 +41,7 @@ export default async function ContratosPage() {
     : [];
 
   return (
-    <PageShell
-      title="Gestão de Contratos"
-      description="Gerencie contratos jurídicos do escritório"
-    >
+    <PageShell>
       <Suspense fallback={<ContratosLoading />}>
         <ContratosTableWrapper
           initialData={contratos}
