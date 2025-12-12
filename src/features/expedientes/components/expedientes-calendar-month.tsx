@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
-import type { Expediente, ListarExpedientesParams, ExpedientesApiResponse, ExpedientesFilters } from '../domain';
+import type { PaginatedResponse } from '@/lib/types';
+import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, RefreshCw, Calendar as CalendarIcon } from 'lucide-react';
@@ -21,7 +22,7 @@ export function ExpedientesCalendarMonth() {
   const [globalFilter, setGlobalFilter] = React.useState('');
   
   // Data State
-  const [data, setData] = React.useState<ExpedientesApiResponse | null>(null);
+  const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -31,7 +32,7 @@ export function ExpedientesCalendarMonth() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
   // Derived
-  const expedientes = data?.expedientes || [];
+  const expedientes = data?.data || [];
 
   // Itens especiais
   const semPrazoPendentes = React.useMemo(
@@ -93,6 +94,43 @@ export function ExpedientesCalendarMonth() {
     return mapa;
   }, [expedientes, currentMonth]);
 
+  const fetchData = React.useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const start = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+      const end = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+
+      const params: ListarExpedientesParams = {
+        pagina: 1,
+        limite: 1000,
+        busca: globalFilter || undefined,
+      };
+
+      const filters: ExpedientesFilters = {
+        dataPrazoLegalInicio: format(start, 'yyyy-MM-dd'),
+        dataPrazoLegalFim: format(end, 'yyyy-MM-dd'),
+      };
+
+      if (statusFilter === 'pendentes') filters.baixado = false;
+      if (statusFilter === 'baixados') filters.baixado = true;
+
+      const result = await actionListarExpedientes({ ...params, ...filters });
+      if (!result.success) throw new Error(result.message || 'Erro ao listar expedientes');
+
+      setData(result.data as PaginatedResponse<Expediente>);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro desconhecido');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentMonth, globalFilter, statusFilter]);
+
+  React.useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   const getExpedientesDia = (dia: Date | null) => {
     if (!dia) return [];
     const chave = `${dia.getFullYear()}-${dia.getMonth()}-${dia.getDate()}`;
@@ -108,53 +146,6 @@ export function ExpedientesCalendarMonth() {
     
     return [...semPrazoPendentes, ...vencidosPendentes, ...restantes];
   };
-
-  const fetchData = React.useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-        // We fetch for the whole month + optional buffers if API supports it, 
-        // or just large limit for now as per legacy behavior likely fetching generic list.
-        // Actually legacy was fetching `pendentes-manifestacao` which returned a list.
-        // New API `listarExpedientes` supports date ranges.
-        
-        const start = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-        const end = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
-
-        const params: ListarExpedientesParams = {
-            page: 1,
-            limit: 500, // Adjust as needed
-            search: globalFilter || undefined,
-        };
-        
-        const filters: ExpedientesFilters = {
-             dataInicio: format(start, 'yyyy-MM-dd'),
-             dataFim: format(end, 'yyyy-MM-dd')
-        };
-        
-        if (statusFilter === 'pendentes') filters.pendentes = true;
-        if (statusFilter === 'baixados') filters.baixados = true;
-        
-        // Note: Logic for pinned (no date) might require separate fetch or API flag if they fall outside date range filter.
-        // If API filters by `dataPrazoLegal` range strictly, items without date won't return.
-        // We might need to relax date filter or make a separate request for 'no date' items if needed.
-        // For now assume standard filter.
-        
-        const result = await actionListarExpedientes(params, filters);
-        
-        if (!result.success) throw new Error(result.message);
-        setData(result.data);
-
-    } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-        setIsLoading(false);
-    }
-  }, [currentMonth, globalFilter, statusFilter]);
-
-  React.useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   const handleExpedienteClick = (expediente: Expediente) => {
     setExpedienteSelecionado(expediente);

@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
-import type { Expediente, ListarExpedientesParams, ExpedientesApiResponse, ExpedientesFilters } from '../domain';
+import type { PaginatedResponse } from '@/lib/types';
+import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
@@ -13,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 export function ExpedientesCalendarYear() {
   const [currentYear, setCurrentYear] = React.useState(new Date());
-  const [data, setData] = React.useState<ExpedientesApiResponse | null>(null);
+  const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [expedientesDia, setExpedientesDia] = React.useState<Expediente[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -21,7 +22,7 @@ export function ExpedientesCalendarYear() {
   // Filters
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
 
-  const expedientes = data?.expedientes || [];
+  const expedientes = data?.data || [];
 
   const semPrazoPendentes = React.useMemo(
     () => expedientes.filter((e) => !e.baixadoEm && !e.dataPrazoLegalParte),
@@ -43,18 +44,19 @@ export function ExpedientesCalendarYear() {
         const end = new Date(currentYear.getFullYear(), 11, 31);
         
         const params: ListarExpedientesParams = {
-            page: 1, limit: 1000, 
+            pagina: 1,
+            limite: 1000,
         };
         const filters: ExpedientesFilters = {
-            dataInicio: format(start, 'yyyy-MM-dd'),
-            dataFim: format(end, 'yyyy-MM-dd')
+            dataPrazoLegalInicio: format(start, 'yyyy-MM-dd'),
+            dataPrazoLegalFim: format(end, 'yyyy-MM-dd'),
         };
         
-        if (statusFilter === 'pendentes') filters.pendentes = true;
-        if (statusFilter === 'baixados') filters.baixados = true;
+        if (statusFilter === 'pendentes') filters.baixado = false;
+        if (statusFilter === 'baixados') filters.baixado = true;
 
-        const result = await actionListarExpedientes(params, filters);
-        if (result.success) setData(result.data);
+        const result = await actionListarExpedientes({ ...params, ...filters });
+        if (result.success) setData(result.data as PaginatedResponse<Expediente>);
     } catch (err) {
         console.error(err);
     } finally {

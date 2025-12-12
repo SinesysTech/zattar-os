@@ -7,8 +7,8 @@ import { expedientesToEvents } from './adapters/expediente-to-event.adapter';
 import type { IEvent, IUser } from '@/components/calendar/interfaces';
 import type { TEventColor } from '@/components/calendar/types';
 import { COLORS } from '@/components/calendar/constants';
-import type { ListarPendentesParams } from '@/features/expedientes/types';
-import { obterPendentes } from '@/features/expedientes/service';
+import type { ListarExpedientesParams } from '@/features/expedientes/domain';
+import { listarExpedientes } from '@/features/expedientes/service';
 import { usuariosService } from '@/features/usuarios';
 import { listar } from '@/features/tipos-expedientes';
 import type { ListarTiposExpedientesParams } from '@/features/tipos-expedientes';
@@ -27,42 +27,33 @@ export async function getExpedientesEvents(
 ): Promise<IEvent[]> {
 	try {
 		// Construir parâmetros para o serviço
-		const listarParams: ListarPendentesParams = {
+		const listarParams: ListarExpedientesParams = {
 			pagina: 1,
 			limite: params?.limite || 1000,
 		};
 
 		if (params?.dataInicio) {
-			listarParams.data_prazo_legal_inicio = params.dataInicio;
+			listarParams.dataPrazoLegalInicio = params.dataInicio;
 		}
 		if (params?.dataFim) {
-			listarParams.data_prazo_legal_fim = params.dataFim;
+			listarParams.dataPrazoLegalFim = params.dataFim;
 		}
 		if (params?.responsavelId !== undefined) {
-			listarParams.responsavel_id =
-				params.responsavelId === null ? null : params.responsavelId;
+			listarParams.responsavelId = params.responsavelId;
 		}
 		if (params?.baixado !== undefined) {
 			listarParams.baixado = params.baixado;
 		}
 
 		// Buscar expedientes usando o serviço diretamente
-		const result = await obterPendentes(listarParams);
+		const result = await listarExpedientes(listarParams);
 
 		if (!result.success) {
 			console.error('Erro ao buscar expedientes:', result.error);
 			return [];
 		}
 
-		const resultado = result.data;
-
-		// Verificar se é resultado agrupado ou normal
-		if ('grupos' in resultado) {
-			// Resultado agrupado - não esperado aqui, retornar vazio
-			return [];
-		}
-
-		const expedientes = resultado.pendentes || [];
+		const expedientes = result.data.data || [];
 
 		// Buscar usuários e tipos de expedientes em paralelo
 		const [usuariosResult, tiposResult] = await Promise.all([

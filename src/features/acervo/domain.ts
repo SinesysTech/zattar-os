@@ -425,6 +425,7 @@ export function converterParaAcervo(data: Record<string, unknown>): Acervo {
     id: data.id as number,
     id_pje: data.id_pje as number,
     advogado_id: data.advogado_id as number,
+    timeline_mongodb_id: (data.timeline_mongodb_id as string | null) ?? null,
     origem: data.origem as 'acervo_geral' | 'arquivado',
     trt: data.trt as string,
     grau: data.grau as 'primeiro_grau' | 'segundo_grau',

@@ -176,18 +176,19 @@ export function useProcessosClienteCpf() {
       const result = await actionBuscarProcessosClientePorCpf(cpf);
 
       if (result.success && result.data) {
-        setData(result.data as ProcessosClienteCpfResponse);
+        setData({ success: true, data: result.data });
       } else {
-        setError(result.error || 'Erro ao buscar processos');
-        setData(null);
+        const msg = result.error || 'Erro ao buscar processos';
+        setError(msg);
+        setData({ success: false, error: msg });
         toast.error('Erro', {
-          description: result.error || 'Erro ao buscar processos',
+          description: msg,
         });
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
       setError(errorMessage);
-      setData(null);
+      setData({ success: false, error: errorMessage });
       toast.error('Erro', { description: errorMessage });
     } finally {
       setLoading(false);

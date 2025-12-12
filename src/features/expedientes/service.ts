@@ -313,7 +313,7 @@ export async function atualizarTipoDescricao(
   tipoExpedienteId: number | null,
   descricaoArquivos?: string | null,
   usuarioExecutouId?: number
-): Promise<Result<PendenteManifestacao>> {
+): Promise<Result<Expediente>> {
   const db = createDbClient();
   let userId = usuarioExecutouId;
   if (!userId) {
@@ -354,6 +354,6 @@ export async function atualizarTipoDescricao(
 
   return {
     success: true,
-    data: toPendenteManifestacao(updateResult.data)
+    data: updateResult.data,
   };
 }
