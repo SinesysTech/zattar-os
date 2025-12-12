@@ -31,25 +31,14 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useRouter } from 'next/navigation';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 
 // =============================================================================
 // HELPER COMPONENTS (CELL RENDERERS)
 // =============================================================================
 
-const getTipoExpedienteColorClass = (tipoId: number | null): string => {
-  if (!tipoId) return 'bg-gray-100 text-gray-800 border-gray-200';
-  const colors = [
-    'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
-    'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
-    'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
-    'bg-pink-100 text-pink-800 border-pink-200 dark:bg-pink-900 dark:text-pink-200 dark:border-pink-800',
-    'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-800',
-    'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-200 dark:border-indigo-800',
-    'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-200 dark:border-orange-800',
-    'bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900 dark:text-teal-200 dark:border-teal-800',
-  ];
-  return colors[(tipoId - 1) % colors.length] || colors[0];
-};
+// Função getTipoExpedienteColorClass removida.
+// Agora usamos getSemanticBadgeVariant('expediente_tipo', tipoId) de @/lib/design-system
 
 export function TipoDescricaoCell({
   expediente,
@@ -114,11 +103,11 @@ export function TipoDescricaoCell({
       <div className="relative min-h-10 max-w-[300px] group">
         <div className="w-full min-h-10 flex items-start gap-2 pr-8 py-2">
           <div className="flex flex-col items-start justify-start gap-1.5 flex-1">
-            {/* Badge de tipo seguido do ícone de documento */}
+            {/* Badge de tipo seguido do ícone de documento - usa sistema semântico */}
             <div className="flex items-center gap-1.5">
               <Badge
-                variant="outline"
-                className={`w-fit text-xs shrink-0 ${expediente.tipoExpedienteId ? getTipoExpedienteColorClass(expediente.tipoExpedienteId) : ''}`}
+                variant={getSemanticBadgeVariant('expediente_tipo', expediente.tipoExpedienteId)}
+                className="w-fit text-xs shrink-0"
               >
                 {tipoNome}
               </Badge>

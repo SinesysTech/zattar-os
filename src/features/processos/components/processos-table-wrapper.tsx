@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Copy } from 'lucide-react';
 import type { ColumnDef, SortingState, Row } from '@tanstack/react-table';
+import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 
 type ProcessoComParticipacao = Processo | ProcessoUnificado;
 
@@ -37,32 +38,11 @@ const formatarData = (dataISO: string | null): string => {
   }
 };
 
-const getTRTColorClass = (trt: string): string => {
-    const trtColors: Record<string, string> = {
-      'TRT1': 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
-      'TRT2': 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
-    };
-    return trtColors[trt] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
-};
-
-const getGrauColorClass = (grau: GrauProcesso): string => {
-  const grauColors: Record<string, string> = {
-    'primeiro_grau': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
-    'segundo_grau': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
-    'tribunal_superior': 'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-200 dark:border-indigo-800',
-  };
-  return grauColors[grau] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
-};
+// Funções getTRTColorClass, getGrauColorClass e getParteAutoraColorClass removidas.
+// Agora usamos getSemanticBadgeVariant de @/lib/design-system
 
 const formatarGrau = (grau: GrauProcesso): string => {
-  if (grau === 'primeiro_grau') return '1º Grau';
-  if (grau === 'segundo_grau') return '2º Grau';
-  if (grau === 'tribunal_superior') return 'Tribunal Superior';
-  return grau;
-};
-
-const getParteAutoraColorClass = (): string => {
-  return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800';
+  return GRAU_LABELS[grau] || grau;
 };
 
 function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
@@ -94,13 +74,13 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
   return (
     <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,23.75rem)]">
       <div className="flex items-center gap-1.5 flex-wrap">
-        <Badge variant="outline" className={`${getTRTColorClass(trt)} w-fit text-xs`}>
+        <Badge variant={getSemanticBadgeVariant('tribunal', trt)} className="w-fit text-xs">
           {trt}
         </Badge>
         {isUnificado ? (
           <GrauBadges instances={processo.instances} />
         ) : (
-          <Badge variant="outline" className={`${getGrauColorClass(processo.grau)} w-fit text-xs`}>
+          <Badge variant={getSemanticBadgeVariant('grau', processo.grau)} className="w-fit text-xs">
             {formatarGrau(processo.grau)}
           </Badge>
         )}
@@ -134,7 +114,7 @@ const colunas: ColumnDef<ProcessoComParticipacao>[] = [
             const parteAutora = row.original.nomeParteAutora || '-';
             return (
             <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,15.625rem)]">
-                <Badge variant="outline" className={`${getParteAutoraColorClass()} block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left`}>
+                <Badge variant={getSemanticBadgeVariant('polo', 'ATIVO')} className="block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left">
                 {parteAutora}
                 </Badge>
             </div>
@@ -150,7 +130,7 @@ const colunas: ColumnDef<ProcessoComParticipacao>[] = [
             const trt = row.original.trt;
             return (
                 <div className="min-h-10 flex items-center justify-center">
-                    <Badge variant="outline" className={getTRTColorClass(trt)}>{trt}</Badge>
+                    <Badge variant={getSemanticBadgeVariant('tribunal', trt)}>{trt}</Badge>
                 </div>
             );
         },

@@ -18,44 +18,48 @@ interface StatCardProps {
   variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
 }
 
+/**
+ * Variant styles using Tailwind semantic colors.
+ * Note: These are intentional design system color mappings for dashboard widgets.
+ */
 const variantStyles = {
   default: {
     icon: 'text-primary bg-primary/10',
     trend: {
-      up: 'text-emerald-600',
-      down: 'text-red-600',
+      up: 'text-emerald-600 dark:text-emerald-400',
+      down: 'text-red-600 dark:text-red-400',
       neutral: 'text-muted-foreground',
     },
   },
   success: {
-    icon: 'text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30',
+    icon: 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30',
     trend: {
-      up: 'text-emerald-600',
-      down: 'text-red-600',
+      up: 'text-emerald-600 dark:text-emerald-400',
+      down: 'text-red-600 dark:text-red-400',
       neutral: 'text-muted-foreground',
     },
   },
   warning: {
-    icon: 'text-amber-600 bg-amber-100 dark:bg-amber-900/30',
+    icon: 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30',
     trend: {
-      up: 'text-amber-600',
-      down: 'text-emerald-600',
+      up: 'text-amber-600 dark:text-amber-400',
+      down: 'text-emerald-600 dark:text-emerald-400',
       neutral: 'text-muted-foreground',
     },
   },
   danger: {
-    icon: 'text-red-600 bg-red-100 dark:bg-red-900/30',
+    icon: 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30',
     trend: {
-      up: 'text-red-600',
-      down: 'text-emerald-600',
+      up: 'text-red-600 dark:text-red-400',
+      down: 'text-emerald-600 dark:text-emerald-400',
       neutral: 'text-muted-foreground',
     },
   },
   info: {
-    icon: 'text-sky-600 bg-sky-100 dark:bg-sky-900/30',
+    icon: 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30',
     trend: {
-      up: 'text-sky-600',
-      down: 'text-red-600',
+      up: 'text-blue-600 dark:text-blue-400',
+      down: 'text-red-600 dark:text-red-400',
       neutral: 'text-muted-foreground',
     },
   },

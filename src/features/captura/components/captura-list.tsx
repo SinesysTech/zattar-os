@@ -18,6 +18,7 @@ import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/features/captura/
 import type { CapturasFilters } from './captura-filters';
 import type { CodigoTRT } from '@/types/credenciais';
 import { Eye, Trash2 } from 'lucide-react';
+import { getSemanticBadgeVariant, CAPTURA_STATUS_LABELS } from '@/lib/design-system';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -65,74 +66,15 @@ const formatarTipoCaptura = (tipo: TipoCaptura): string => {
 };
 
 /**
- * Retorna badge de status com cor apropriada
+ * Retorna badge de status com cor apropriada usando o sistema semântico.
+ *
+ * @ai-context Este componente usa getSemanticBadgeVariant() do design system.
  */
 const StatusBadge = ({ status }: { status: StatusCaptura }) => {
-  const statusConfig: Record<StatusCaptura, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline'; className: string }> = {
-    pending: {
-      label: 'Pendente',
-      variant: 'secondary',
-      className: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800'
-    },
-    in_progress: {
-      label: 'Em Progresso',
-      variant: 'secondary',
-      className: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800'
-    },
-    completed: {
-      label: 'Concluída',
-      variant: 'secondary',
-      className: 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800'
-    },
-    failed: {
-      label: 'Falhou',
-      variant: 'destructive',
-      className: 'bg-red-600 text-white border-red-600 dark:bg-red-700 dark:border-red-700'
-    },
-  };
+  const variant = getSemanticBadgeVariant('captura_status', status);
+  const label = CAPTURA_STATUS_LABELS[status] || status;
 
-  const config = statusConfig[status] || {
-    label: status,
-    variant: 'outline' as const,
-    className: 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700'
-  };
-
-  return <Badge variant={config.variant} className={config.className}>{config.label}</Badge>;
-};
-
-/**
- * Retorna a classe CSS de cor para badge do TRT
- */
-const getTRTColorClass = (trt: string): string => {
-  const trtColors: Record<string, string> = {
-    'TRT1': 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-800',
-    'TRT2': 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-800',
-    'TRT3': 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-800',
-    'TRT4': 'bg-pink-100 text-pink-800 border-pink-200 dark:bg-pink-900 dark:text-pink-200 dark:border-pink-800',
-    'TRT5': 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-800',
-    'TRT6': 'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-200 dark:border-indigo-800',
-    'TRT7': 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-800',
-    'TRT8': 'bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900 dark:text-teal-200 dark:border-teal-800',
-    'TRT9': 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-200 dark:border-orange-800',
-    'TRT10': 'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900 dark:text-cyan-200 dark:border-cyan-800',
-    'TRT11': 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900 dark:text-emerald-200 dark:border-emerald-800',
-    'TRT12': 'bg-violet-100 text-violet-800 border-violet-200 dark:bg-violet-900 dark:text-violet-200 dark:border-violet-800',
-    'TRT13': 'bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900 dark:text-rose-200 dark:border-rose-800',
-    'TRT14': 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900 dark:text-amber-200 dark:border-amber-800',
-    'TRT15': 'bg-lime-100 text-lime-800 border-lime-200 dark:bg-lime-900 dark:text-lime-200 dark:border-lime-800',
-    'TRT16': 'bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-900 dark:text-sky-200 dark:border-sky-800',
-    'TRT17': 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200 dark:bg-fuchsia-900 dark:text-fuchsia-200 dark:border-fuchsia-800',
-    'TRT18': 'bg-stone-100 text-stone-800 border-stone-200 dark:bg-stone-900 dark:text-stone-200 dark:border-stone-800',
-    'TRT19': 'bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:border-slate-800',
-    'TRT20': 'bg-zinc-100 text-zinc-800 border-zinc-200 dark:bg-zinc-900 dark:text-zinc-200 dark:border-zinc-800',
-    'TRT21': 'bg-neutral-100 text-neutral-800 border-neutral-200 dark:bg-neutral-900 dark:text-neutral-200 dark:border-neutral-800',
-    'TRT22': 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800',
-    'TRT23': 'bg-blue-200 text-blue-900 border-blue-300 dark:bg-blue-800 dark:text-blue-100 dark:border-blue-700',
-    'TRT24': 'bg-green-200 text-green-900 border-green-300 dark:bg-green-800 dark:text-green-100 dark:border-green-700',
-    'TJMG': 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800',
-  };
-
-  return trtColors[trt] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-800';
+  return <Badge variant={variant}>{label}</Badge>;
 };
 
 /**
@@ -201,14 +143,14 @@ function criarColunas(
                 {tribunaisUnicos.slice(0, 3).map((tribunal) => (
                   <Badge
                     key={tribunal}
-                    variant="outline"
-                    className={`text-xs ${getTRTColorClass(tribunal)}`}
+                    variant={getSemanticBadgeVariant('tribunal', tribunal)}
+                    className="text-xs"
                   >
                     {tribunal}
                   </Badge>
                 ))}
                 {tribunaisUnicos.length > 3 && (
-                  <Badge variant="outline" className="text-xs bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600">
+                  <Badge variant="neutral" className="text-xs">
                     +{tribunaisUnicos.length - 3}
                   </Badge>
                 )}

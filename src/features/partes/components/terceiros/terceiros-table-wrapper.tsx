@@ -33,6 +33,8 @@ import {
   parseTerceirosFilters,
 } from './terceiros-toolbar-filters';
 import type { TerceirosFilters } from '../../types';
+import { Badge } from '@/components/ui/badge';
+import { getSemanticBadgeVariant, getParteTipoLabel } from '@/lib/design-system';
 
 /**
  * Tipo estendido de terceiro com processos relacionados
@@ -89,91 +91,8 @@ function formatarData(dataISO: string | null): string {
   }
 }
 
-/**
- * Converte texto para Title Case (primeira letra de cada palavra em maiúsculo)
- */
-function toTitleCase(str: string): string {
-  return str
-    .toLowerCase()
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
-/**
- * Retorna label formatado do tipo de parte
- * Converte para title case para uniformizar a exibição
- */
-function getTipoParteLabel(tipoParte: string): string {
-  const labels: Record<string, string> = {
-    PERITO: 'Perito',
-    PERITO_CONTADOR: 'Perito Contador',
-    PERITO_MEDICO: 'Perito Médico',
-    MINISTERIO_PUBLICO: 'Ministério Público',
-    MINISTERIO_PUBLICO_TRABALHO: 'MP do Trabalho',
-    ASSISTENTE: 'Assistente',
-    ASSISTENTE_TECNICO: 'Assistente Técnico',
-    TESTEMUNHA: 'Testemunha',
-    CUSTOS_LEGIS: 'Custos Legis',
-    AMICUS_CURIAE: 'Amicus Curiae',
-    PREPOSTO: 'Preposto',
-    CURADOR: 'Curador',
-    CURADOR_ESPECIAL: 'Curador Especial',
-    INVENTARIANTE: 'Inventariante',
-    ADMINISTRADOR: 'Administrador',
-    SINDICO: 'Síndico',
-    DEPOSITARIO: 'Depositário',
-    LEILOEIRO: 'Leiloeiro',
-    LEILOEIRO_OFICIAL: 'Leiloeiro Oficial',
-    OUTRO: 'Outro',
-    TERCEIRO_INTERESSADO: 'Terceiro Interessado',
-  };
-  // Se não encontrar no mapa, converte para title case
-  return labels[tipoParte] || toTitleCase(tipoParte.replace(/_/g, ' '));
-}
-
-/**
- * Retorna as classes CSS do badge para cada tipo de parte
- * Cada tipo tem uma cor específica para fácil identificação
- */
-function getTipoParteBadgeClasses(tipoParte: string): string {
-  const classes: Record<string, string> = {
-    // Peritos - Azul
-    PERITO: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800',
-    PERITO_CONTADOR: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800',
-    PERITO_MEDICO: 'bg-sky-100 text-sky-800 border-sky-200 dark:bg-sky-900/30 dark:text-sky-300 dark:border-sky-800',
-    // Ministério Público - Roxo
-    MINISTERIO_PUBLICO: 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:border-purple-800',
-    MINISTERIO_PUBLICO_TRABALHO: 'bg-violet-100 text-violet-800 border-violet-200 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-800',
-    // Assistentes - Ciano
-    ASSISTENTE: 'bg-cyan-100 text-cyan-800 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-800',
-    ASSISTENTE_TECNICO: 'bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900/30 dark:text-teal-300 dark:border-teal-800',
-    // Testemunha - Verde
-    TESTEMUNHA: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800',
-    // Jurídicos - Indigo
-    CUSTOS_LEGIS: 'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800',
-    AMICUS_CURIAE: 'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800',
-    // Preposto - Laranja
-    PREPOSTO: 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/30 dark:text-orange-300 dark:border-orange-800',
-    // Curadores - Amarelo
-    CURADOR: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
-    CURADOR_ESPECIAL: 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-800',
-    // Administrativos - Rosa/Pink
-    INVENTARIANTE: 'bg-pink-100 text-pink-800 border-pink-200 dark:bg-pink-900/30 dark:text-pink-300 dark:border-pink-800',
-    ADMINISTRADOR: 'bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800',
-    SINDICO: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200 dark:bg-fuchsia-900/30 dark:text-fuchsia-300 dark:border-fuchsia-800',
-    // Depositário - Lima
-    DEPOSITARIO: 'bg-lime-100 text-lime-800 border-lime-200 dark:bg-lime-900/30 dark:text-lime-300 dark:border-lime-800',
-    // Leiloeiros - Âmbar
-    LEILOEIRO: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
-    LEILOEIRO_OFICIAL: 'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800',
-    // Terceiro Interessado - Slate
-    TERCEIRO_INTERESSADO: 'bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-900/30 dark:text-slate-300 dark:border-slate-800',
-    // Outro - Cinza
-    OUTRO: 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-800',
-  };
-  return classes[tipoParte] || 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-800';
-}
+// Funções getTipoParteLabel e getTipoParteBadgeClasses removidas.
+// Agora usamos getParteTipoLabel e getSemanticBadgeVariant de @/lib/design-system
 
 function TerceiroActions({ terceiro }: { terceiro: TerceiroComProcessos }) {
   return (
@@ -241,11 +160,11 @@ export function TerceirosTableWrapper() {
           return (
             <div className="min-h-10 flex items-start justify-start py-2 group">
               <div className="flex flex-col gap-0.5">
-                {/* Linha 1: Badge do tipo de parte */}
+                {/* Linha 1: Badge do tipo de parte - usa sistema semântico */}
                 {tipoParte && (
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border w-fit ${getTipoParteBadgeClasses(tipoParte)}`}>
-                    {getTipoParteLabel(tipoParte)}
-                  </span>
+                  <Badge variant={getSemanticBadgeVariant('parte', tipoParte)} className="w-fit">
+                    {getParteTipoLabel(tipoParte)}
+                  </Badge>
                 )}
                 {/* Linha 2: Nome */}
                 <div className="flex items-center gap-1">
