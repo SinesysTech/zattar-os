@@ -288,7 +288,7 @@ export function PartesContrariasTableWrapper() {
           </div>
         ),
         enableSorting: false,
-        size: 120,
+        size: 150,
         cell: ({ row }) => {
           return (
             <div className="min-h-10 flex items-center justify-center">

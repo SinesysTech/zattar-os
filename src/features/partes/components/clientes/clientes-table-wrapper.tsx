@@ -151,7 +151,7 @@ function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): Responsiv
       id: 'identificacao',
       header: ({ column }) => (
         <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="Identificacao" />
+          <DataTableColumnHeader column={column} title="Identificação" />
         </div>
       ),
       enableSorting: true,
@@ -159,7 +159,7 @@ function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): Responsiv
       size: 320,
       priority: 1,
       sticky: true,
-      cardLabel: 'Identificacao',
+      cardLabel: 'Identificação',
       meta: { align: 'left' },
       cell: ({ row }) => {
         const cliente = row.original;
@@ -267,13 +267,13 @@ function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): Responsiv
       id: 'endereco',
       header: () => (
         <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Endereco</div>
+          <div className="text-sm font-medium">Endereço</div>
         </div>
       ),
       enableSorting: false,
       size: 260,
       priority: 4,
-      cardLabel: 'Endereco',
+      cardLabel: 'Endereço',
       meta: { align: 'left' },
       cell: ({ row }) => {
         const cliente = row.original;
@@ -309,13 +309,13 @@ function criarColunas(onEdit: (cliente: ClienteComProcessos) => void): Responsiv
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Acoes</div>
+          <div className="text-sm font-medium">Ações</div>
         </div>
       ),
       enableSorting: false,
-      size: 120,
+      size: 180,
       priority: 5,
-      cardLabel: 'Acoes',
+      cardLabel: 'Ações',
       cell: ({ row }) => {
         const cliente = row.original;
         return (

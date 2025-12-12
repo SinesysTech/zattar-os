@@ -321,7 +321,7 @@ function criarColunas(): ColumnDef<RepresentanteComProcessos>[] {
         </div>
       ),
       enableSorting: false,
-      size: 90,
+      size: 140,
       cell: ({ row }) => {
         const representante = row.original;
         return (

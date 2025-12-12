@@ -113,7 +113,7 @@ export {
 } from "./services/partes/partes-capture.service";
 
 // Hooks
-export { useCapturaLog } from "./hooks/use-capturas-log";
+export { useCapturasLog } from "./hooks/use-capturas-log";
 
 // Components (re-export principais)
 export { CapturaList } from "./components/captura-list";

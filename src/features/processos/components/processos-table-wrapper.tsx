@@ -6,6 +6,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { DataTableShell } from '@/components/shared/data-table-shell';
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
+import { TablePagination } from '@/components/shared/table-pagination';
 import {
   buildProcessosFilterOptions,
   buildProcessosFilterGroups,
@@ -16,13 +17,12 @@ import {
 } from '@/features/processos/components';
 import { useProcessos } from '@/features/processos/hooks';
 import type { ProcessosFilters, Processo, ProcessoUnificado, GrauProcesso, ProcessoSortBy } from '@/features/processos/types';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Copy } from 'lucide-react';
 import type { ColumnDef, SortingState, Row } from '@tanstack/react-table';
-import { GRAU_LABELS } from '@/lib/design-system';
 
 type ProcessoComParticipacao = Processo | ProcessoUnificado;
 
@@ -40,9 +40,6 @@ const formatarData = (dataISO: string | null): string => {
   }
 };
 
-// Funções getTRTColorClass, getGrauColorClass e getParteAutoraColorClass removidas.
-// Agora usamos getSemanticBadgeVariant de @/lib/design-system
-
 const formatarGrau = (grau: GrauProcesso): string => {
   return GRAU_LABELS[grau] || grau;
 };
@@ -52,7 +49,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
   const classeJudicial = processo.classeJudicial || '';
   const numeroProcesso = processo.numeroProcesso;
   // Use generic access or cast if property missing in Union type
-  const orgaoJulgador = processo.descricaoOrgaoJulgador || '-'; 
+  const orgaoJulgador = umaPropriedadeSegura(processo);
   const trt = processo.trt;
   const isUnificado = isProcessoUnificado(processo);
   const [copiado, setCopiado] = React.useState(false);
@@ -99,6 +96,11 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
       <div className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</div>
     </div>
   );
+}
+
+// Helper seguro para propriedade que pode faltar no tipo
+function umaPropriedadeSegura(processo: any): string {
+    return processo.descricaoOrgaoJulgador || '-';
 }
 
 const colunas: ColumnDef<ProcessoComParticipacao>[] = [
@@ -156,7 +158,7 @@ const colunas: ColumnDef<ProcessoComParticipacao>[] = [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Última Movimentação" />,
         cell: ({ row }) => (
             <div className="min-h-10 flex items-center justify-center text-sm">
-              {formatarData(row.original.dataAutuacao)}
+                {formatarData(row.original.dataAutuacao)}
             </div>
           ),
         size: 150,
@@ -207,6 +209,7 @@ export function ProcessosTableWrapper() {
 
   const toolbar = (
     <TableToolbar
+        variant="integrated"
         searchValue={busca}
         onSearchChange={(value) => {
             setBusca(value);
@@ -223,13 +226,26 @@ export function ProcessosTableWrapper() {
     />
   );
 
+  const paginationControl = paginacao ? (
+    <TablePagination
+      variant="integrated"
+      pageIndex={paginacao.pagina - 1}
+      pageSize={paginacao.limite}
+      total={paginacao.total}
+      totalPages={paginacao.totalPaginas}
+      onPageChange={(pageIndex) => setPagination(prev => ({ ...prev, pageIndex }))}
+      onPageSizeChange={(pageSize) => setPagination({ pageIndex: 0, pageSize })}
+      isLoading={isLoading}
+    />
+  ) : null;
+
   const hasFilters = selectedFilterIds.length > 0 || busca.length > 0;
 
   const showEmptyState = !isLoading && !error && (processos === null || processos.length === 0);
 
   return (
     <>
-        <DataTableShell toolbar={toolbar}>
+        <DataTableShell toolbar={toolbar} pagination={paginationControl}>
             {showEmptyState ? (
                 <ProcessosEmptyState
                     onClearFilters={() => handleFilterIdsChange([])}
@@ -242,8 +258,12 @@ export function ProcessosTableWrapper() {
                     isLoading={isLoading}
                     error={error}
                     onRowClick={handleRowClick}
+                    hideTableBorder
+                    hidePagination
+                    className="border-none"
+                    // Pass current pagination state for manual control internal logic
                     pagination={paginacao ? {
-                        pageIndex: paginacao.pagina -1,
+                        pageIndex: paginacao.pagina - 1,
                         pageSize: paginacao.limite,
                         total: paginacao.total,
                         totalPages: paginacao.totalPaginas,
