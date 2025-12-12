@@ -1,33 +1,38 @@
+"use server";
 
-'use server';
-
-import { revalidatePath } from 'next/cache';
-import { requireAuth } from './utils';
-import { createServiceClient } from '@/lib/supabase/service-client';
-import { getCargosListKey, deleteCached } from '@/lib/redis';
-import { usuariosService } from '../index';
+import { revalidatePath } from "next/cache";
+import { requireAuth } from "./utils";
+import { createServiceClient } from "@/lib/supabase/service-client";
+import { getCargosListKey, deleteCached } from "@/lib/redis";
+import { service as usuariosService } from "../service";
 
 export async function actionListarCargos() {
   try {
-    await requireAuth(['usuarios:visualizar']);
+    await requireAuth(["usuarios:visualizar"]);
     const cargos = await usuariosService.listarCargos();
     return { success: true, data: cargos };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Erro ao listar cargos' };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro ao listar cargos",
+    };
   }
 }
 
-export async function actionCriarCargo(dados: { nome: string; descricao?: string }) {
+export async function actionCriarCargo(dados: {
+  nome: string;
+  descricao?: string;
+}) {
   try {
-    await requireAuth(['usuarios:editar']); // Or specific cargo permission
-    
+    await requireAuth(["usuarios:editar"]); // Or specific cargo permission
+
     const supabase = createServiceClient();
     const { data, error } = await supabase
-      .from('cargos')
-      .insert({ 
-        nome: dados.nome.trim(), 
+      .from("cargos")
+      .insert({
+        nome: dados.nome.trim(),
         descricao: dados.descricao?.trim(),
-        ativo: true
+        ativo: true,
       })
       .select()
       .single();
@@ -36,55 +41,73 @@ export async function actionCriarCargo(dados: { nome: string; descricao?: string
 
     // Invalidate cache
     await deleteCached(getCargosListKey({}));
-    revalidatePath('/usuarios');
+    revalidatePath("/usuarios");
 
     return { success: true, data };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Erro ao criar cargo' };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro ao criar cargo",
+    };
   }
 }
 
-export async function actionAtualizarCargo(id: number, dados: { nome?: string; descricao?: string; ativo?: boolean }) {
+export async function actionAtualizarCargo(
+  id: number,
+  dados: { nome?: string; descricao?: string; ativo?: boolean }
+) {
   try {
-    await requireAuth(['usuarios:editar']);
+    await requireAuth(["usuarios:editar"]);
     const supabase = createServiceClient();
     const { data, error } = await supabase
-      .from('cargos')
+      .from("cargos")
       .update(dados)
-      .eq('id', id)
+      .eq("id", id)
       .select()
       .single();
 
-     if (error) return { success: false, error: error.message };
+    if (error) return { success: false, error: error.message };
 
-     await deleteCached(getCargosListKey({}));
-     revalidatePath('/usuarios');
-     
-     return { success: true, data };
+    await deleteCached(getCargosListKey({}));
+    revalidatePath("/usuarios");
+
+    return { success: true, data };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Erro ao atualizar cargo' };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro ao atualizar cargo",
+    };
   }
 }
 
 export async function actionDeletarCargo(id: number) {
   try {
-    await requireAuth(['usuarios:editar']);
+    await requireAuth(["usuarios:editar"]);
     const supabase = createServiceClient();
-    
+
     // Check usage?
-    const { count } = await supabase.from('usuarios').select('*', { count: 'exact', head: true }).eq('cargo_id', id);
+    const { count } = await supabase
+      .from("usuarios")
+      .select("*", { count: "exact", head: true })
+      .eq("cargo_id", id);
     if (count && count > 0) {
-      return { success: false, error: 'Não é possível excluir cargo em uso por usuários.' };
+      return {
+        success: false,
+        error: "Não é possível excluir cargo em uso por usuários.",
+      };
     }
 
-    const { error } = await supabase.from('cargos').delete().eq('id', id);
+    const { error } = await supabase.from("cargos").delete().eq("id", id);
     if (error) return { success: false, error: error.message };
 
     await deleteCached(getCargosListKey({}));
-    revalidatePath('/usuarios');
+    revalidatePath("/usuarios");
 
     return { success: true };
   } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Erro ao excluir cargo' };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro ao excluir cargo",
+    };
   }
 }
