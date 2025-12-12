@@ -9,7 +9,7 @@ import { vincularParteProcesso } from '@/features/partes/repository-processo-par
 import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/features/partes/repository-representantes';
 import { upsertEnderecoPorIdPje } from '@/features/enderecos';
 import type { CriarClientePFParams, CriarClientePJParams, CriarParteContrariaPFParams, CriarParteContrariaPJParams, CriarTerceiroPFParams, CriarTerceiroPJParams, UpsertTerceiroPorCPFParams, UpsertTerceiroPorCNPJParams } from '@/types/contracts/partes';
-import type { GrauProcesso } from '@/types/domain/common';
+import type { GrauProcesso } from '@/features/partes/domain';
 import type { ClassificacaoEndereco, EntidadeTipoEndereco, SituacaoEndereco } from '@/features/enderecos';
 import type { SituacaoOAB, TipoRepresentante, Polo } from '@/types/domain/representantes';
 import { validarPartePJE, validarPartesArray } from './schemas';
@@ -203,7 +203,7 @@ function extrairCamposPJE(parte: PartePJE) {
   camposExtraidos.status_pje = dados?.status as string | undefined;
   camposExtraidos.situacao_pje = dados?.situacao as string | undefined;
   camposExtraidos.autoridade = dados?.autoridade !== undefined ? Boolean(dados.autoridade) : undefined;
-  
+
   // Login pode estar na raiz OU dentro de pessoaFisica/pessoaJuridica
   camposExtraidos.login_pje = (dados?.login ?? pessoaFisica?.login ?? pessoaJuridica?.login) as string | undefined;
 
@@ -212,7 +212,7 @@ function extrairCamposPJE(parte: PartePJE) {
     // Sexo pode vir como "sexo" (texto) ou "codigoSexo" (código)
     camposExtraidos.sexo = (pessoaFisica.sexo ?? dados?.sexo) as string | undefined;
     camposExtraidos.nome_genitora = pessoaFisica.nomeGenitora as string | undefined;
-    
+
     // Naturalidade (cast para tipo específico)
     const naturalidade = pessoaFisica.naturalidade as NaturalidadePJE | undefined;
     if (naturalidade) {
@@ -223,7 +223,7 @@ function extrairCamposPJE(parte: PartePJE) {
       camposExtraidos.naturalidade_estado_sigla = naturalidade.estado?.sigla;
       // NOTA: naturalidade_estado_descricao não existe no schema de terceiros
     }
-    
+
     // UF Nascimento (cast para tipo específico)
     const ufNascimento = pessoaFisica.ufNascimento as EstadoPJE | undefined;
     if (ufNascimento) {
@@ -231,7 +231,7 @@ function extrairCamposPJE(parte: PartePJE) {
       camposExtraidos.uf_nascimento_sigla = ufNascimento.sigla;
       camposExtraidos.uf_nascimento_descricao = ufNascimento.descricao;
     }
-    
+
     // País Nascimento (cast para tipo específico)
     const paisNascimento = pessoaFisica.paisNascimento as PaisPJE | undefined;
     if (paisNascimento) {
@@ -239,19 +239,19 @@ function extrairCamposPJE(parte: PartePJE) {
       camposExtraidos.pais_nascimento_codigo = paisNascimento.codigo;
       camposExtraidos.pais_nascimento_descricao = paisNascimento.descricao;
     }
-    
+
     camposExtraidos.escolaridade_codigo = pessoaFisica.escolaridade !== undefined ? Number(pessoaFisica.escolaridade) : undefined;
-    
+
     // Situação CPF Receita - o campo no PJE é "situacaoCpfReceitaFederal" (não "situacaoCpfReceita")
     const situacaoCpfReceita = pessoaFisica.situacaoCpfReceitaFederal as SituacaoReceitaPJE | undefined;
     if (situacaoCpfReceita) {
       camposExtraidos.situacao_cpf_receita_id = situacaoCpfReceita.id !== undefined ? Number(situacaoCpfReceita.id) : undefined;
       camposExtraidos.situacao_cpf_receita_descricao = situacaoCpfReceita.descricao;
     }
-    
+
     // Campo é "podeUsarCelularParaMensagem" (não "podeUsarCelularMensagem")
-    camposExtraidos.pode_usar_celular_mensagem = pessoaFisica.podeUsarCelularParaMensagem !== undefined 
-      ? Boolean(pessoaFisica.podeUsarCelularParaMensagem) 
+    camposExtraidos.pode_usar_celular_mensagem = pessoaFisica.podeUsarCelularParaMensagem !== undefined
+      ? Boolean(pessoaFisica.podeUsarCelularParaMensagem)
       : undefined;
   }
 
@@ -260,30 +260,30 @@ function extrairCamposPJE(parte: PartePJE) {
     camposExtraidos.inscricao_estadual = pessoaJuridica.inscricaoEstadual as string | undefined;
     camposExtraidos.data_abertura = pessoaJuridica.dataAbertura as string | undefined;
     camposExtraidos.orgao_publico = pessoaJuridica.orgaoPublico !== undefined ? Boolean(pessoaJuridica.orgaoPublico) : undefined;
-    
+
     // Tipo Pessoa - pode vir como objeto {codigo, label} ou strings separadas
     const tipoPessoaCodigo = pessoaJuridica.tipoPessoaCodigo as string | undefined;
     const tipoPessoaLabel = pessoaJuridica.tipoPessoaLabel as string | undefined;
     camposExtraidos.tipo_pessoa_codigo_pje = tipoPessoaCodigo;
     camposExtraidos.tipo_pessoa_label_pje = tipoPessoaLabel ?? pessoaJuridica.dsTipoPessoa as string | undefined;
-    
+
     // Situação CNPJ Receita - o campo no PJE é "situacaoCnpjReceitaFederal"
     const situacaoCnpjReceita = pessoaJuridica.situacaoCnpjReceitaFederal as SituacaoReceitaPJE | undefined;
     if (situacaoCnpjReceita) {
       camposExtraidos.situacao_cnpj_receita_id = situacaoCnpjReceita.id !== undefined ? Number(situacaoCnpjReceita.id) : undefined;
       camposExtraidos.situacao_cnpj_receita_descricao = situacaoCnpjReceita.descricao;
     }
-    
+
     camposExtraidos.ramo_atividade = pessoaJuridica.dsRamoAtividade as string | undefined;
     camposExtraidos.cpf_responsavel = pessoaJuridica.numeroCpfResponsavel as string | undefined;
     camposExtraidos.oficial = pessoaJuridica.oficial !== undefined ? Boolean(pessoaJuridica.oficial) : undefined;
-    
+
     // Porte - pode vir como objeto ou campos separados (porteCodigo, porteLabel)
     const porteCodigo = pessoaJuridica.porteCodigo as number | undefined;
     const porteLabel = pessoaJuridica.porteLabel as string | undefined;
     camposExtraidos.porte_codigo = porteCodigo !== undefined ? Number(porteCodigo) : undefined;
     camposExtraidos.porte_descricao = porteLabel;
-    
+
     camposExtraidos.ultima_atualizacao_pje = pessoaJuridica.ultimaAtualizacao as string | undefined;
   }
 
@@ -722,7 +722,7 @@ async function processarParte(
   // Validar se o documento tem comprimento correto (CPF=11, CNPJ=14)
   const temDocumentoValido = documentoNormalizado &&
     ((isPessoaFisica && documentoNormalizado.length === 11) ||
-     (!isPessoaFisica && documentoNormalizado.length === 14));
+      (!isPessoaFisica && documentoNormalizado.length === 14));
 
   try {
     let entidadeId: number | null = null;
@@ -870,19 +870,19 @@ async function processarParte(
 
           const result = isPessoaFisica
             ? await withRetry<import('@/features/partes/services/terceiros/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
-                () => upsertTerceiroPorCPF(params as UpsertTerceiroPorCPFParams),
-                {
-                  maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-                  baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-                }
-              )
+              () => upsertTerceiroPorCPF(params as UpsertTerceiroPorCPFParams),
+              {
+                maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+                baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+              }
+            )
             : await withRetry<import('@/features/partes/services/terceiros/persistence/terceiro-persistence.service').OperacaoTerceiroResult & { criado: boolean }>(
-                () => upsertTerceiroPorCNPJ(params as UpsertTerceiroPorCNPJParams),
-                {
-                  maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
-                  baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
-                }
-              );
+              () => upsertTerceiroPorCNPJ(params as UpsertTerceiroPorCNPJParams),
+              {
+                maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+                baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+              }
+            );
           if (result.sucesso && result.terceiro) {
             entidadeId = result.terceiro.id;
           } else {
@@ -899,7 +899,7 @@ async function processarParte(
         // SEM DOCUMENTO VÁLIDO: Buscar via cadastros_pje (id_pessoa_pje) ou criar novo
         // Isso é comum para entidades como Ministério Público, Peritos sem CPF cadastrado, Testemunhas, etc.
         console.log(`[PARTES] Terceiro "${parte.nome}" sem documento válido - usando busca por id_pessoa_pje`);
-        
+
         // 1. Tentar encontrar entidade existente via cadastros_pje
         const cadastroExistente = await buscarEntidadePorIdPessoaPJE({
           id_pessoa_pje: parte.idPessoa,
@@ -917,7 +917,7 @@ async function processarParte(
           // Determina tipo_pessoa baseado no nome (heurística: nomes com "MINISTÉRIO", "UNIÃO", etc são PJ)
           const pareceSerPJ = /^(MINISTÉRIO|MINISTERIO|UNIÃO|UNIAO|ESTADO|MUNICÍPIO|MUNICIPIO|INSTITUTO|INSS|IBAMA|ANVISA|RECEITA|FAZENDA|FUNDAÇÃO|FUNDACAO|AUTARQUIA|EMPRESA|ÓRGÃO|ORGAO)/i.test(parte.nome.trim());
           const tipoPessoaInferido: 'pf' | 'pj' = pareceSerPJ ? 'pj' : 'pf';
-          
+
           const params = {
             nome: parte.nome,
             tipo_pessoa: tipoPessoaInferido,
@@ -937,7 +937,7 @@ async function processarParte(
               baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
             }
           );
-          
+
           if (result.sucesso && result.terceiro) {
             entidadeId = result.terceiro.id;
             console.log(`[PARTES] Terceiro "${parte.nome}" criado sem documento: ID ${entidadeId}`);
@@ -1024,17 +1024,17 @@ async function processarRepresentantes(
         // INSERT: novo representante
         const camposExtras = extrairCamposRepresentantePJE(rep);
 
-      const params = {
-        nome: rep.nome,
-        cpf: cpfNormalizado,
-        numero_oab: rep.numeroOAB || undefined,
-        situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
-        tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,
-        email: rep.email || undefined,
-        ddd_celular: rep.telefones?.[0]?.ddd || undefined,
-        numero_celular: rep.telefones?.[0]?.numero || undefined,
-        ...camposExtras,
-      };
+        const params = {
+          nome: rep.nome,
+          cpf: cpfNormalizado,
+          numero_oab: rep.numeroOAB || undefined,
+          situacao_oab: (rep.situacaoOAB as unknown as SituacaoOAB) || undefined,
+          tipo: (rep.tipo as unknown as TipoRepresentante) || undefined,
+          email: rep.email || undefined,
+          ddd_celular: rep.telefones?.[0]?.ddd || undefined,
+          numero_celular: rep.telefones?.[0]?.numero || undefined,
+          ...camposExtras,
+        };
 
         const result = await upsertRepresentantePorCPF(params);
         if (result.sucesso && result.representante) {

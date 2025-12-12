@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
+import useSWR from 'swr';
 import {
     actionListarOrcamentos,
     actionBuscarOrcamento,
@@ -16,6 +17,7 @@ import {
     actionIniciarExecucaoOrcamento,
     actionEncerrarOrcamento,
     actionObterAnaliseOrcamentaria,
+    actionObterProjecaoOrcamentaria,
     type ListarOrcamentosFilters,
     type AnaliseOrcamentariaUI,
 } from '../actions/orcamentos';
@@ -320,4 +322,72 @@ export async function excluirOrcamento(id: number): Promise<MutationResult> {
     } catch (err) {
         return { success: false, error: err instanceof Error ? err.message : 'Erro desconhecido' };
     }
+}
+
+// ============================================================================
+// Hooks adicionais esperados pelas páginas (compatibilidade)
+// ============================================================================
+
+export function useOrcamento(orcamentoId: number) {
+    const key = orcamentoId ? ['orcamento', orcamentoId] : null;
+
+    const fetcher = async () => {
+        const result = await actionBuscarOrcamento(orcamentoId);
+        if (!result.success) throw new Error(result.error);
+        return result.data;
+    };
+
+    const { data, error, isLoading, mutate } = useSWR(key, fetcher);
+
+    return {
+        orcamento: data ?? null,
+        isLoading,
+        error: error ? (error instanceof Error ? error.message : 'Erro ao carregar') : null,
+        refetch: mutate,
+    };
+}
+
+export function useAnaliseOrcamentaria(
+    orcamentoId: number,
+    options?: { incluirResumo?: boolean; incluirAlertas?: boolean; incluirEvolucao?: boolean }
+) {
+    const key = orcamentoId ? ['orcamento-analise', orcamentoId, JSON.stringify(options ?? {})] : null;
+
+    const fetcher = async () => {
+        const result = await actionObterAnaliseOrcamentaria(orcamentoId, options);
+        if (!result.success) throw new Error(result.error);
+        return result.data;
+    };
+
+    const { data, error, isLoading, mutate } = useSWR(key, fetcher);
+
+    return {
+        itens: data?.itens ?? [],
+        resumo: data?.resumo ?? null,
+        alertas: data?.alertas ?? null,
+        evolucao: data?.evolucao ?? null,
+        isLoading,
+        error: error ? (error instanceof Error ? error.message : 'Erro ao carregar') : null,
+        refetch: mutate,
+    };
+}
+
+export function useProjecaoOrcamentaria(orcamentoId: number) {
+    const key = orcamentoId ? ['orcamento-projecao', orcamentoId] : null;
+
+    const fetcher = async () => {
+        const result = await actionObterProjecaoOrcamentaria(orcamentoId);
+        if (!result.success) throw new Error(result.error);
+        return result.data;
+    };
+
+    const { data, error, isLoading, mutate } = useSWR(key, fetcher);
+
+    return {
+        projecao: data?.projecao ?? [],
+        resumo: data?.resumo ?? null,
+        isLoading,
+        error: error ? (error instanceof Error ? error.message : 'Erro ao carregar') : null,
+        refetch: mutate,
+    };
 }

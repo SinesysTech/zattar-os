@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { conciliacaoService } from '../services/conciliacao';
+import { ConciliacaoRepository } from '../repository/conciliacao';
 import { 
     ImportarExtratoDTO, 
     ConciliarManualDTO, 
@@ -105,5 +106,20 @@ export async function actionDesconciliar(transacaoId: number) {
     } catch (error) {
         console.error('Erro ao desconciliar:', error);
         return { success: false, error: 'Falha ao desconciliar.' };
+    }
+}
+
+export async function actionBuscarTransacao(transacaoId: number) {
+    try {
+        const transacao = await ConciliacaoRepository.buscarTransacaoPorId(transacaoId);
+
+        if (!transacao) {
+            return { success: false, error: 'Transação não encontrada' };
+        }
+
+        return { success: true, data: transacao };
+    } catch (error) {
+        console.error('Erro ao buscar transação:', error);
+        return { success: false, error: 'Falha ao buscar transação.' };
     }
 }
