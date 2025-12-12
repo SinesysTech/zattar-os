@@ -159,7 +159,7 @@ describe('Processos Service', () => {
 
     it('deve atualizar processo com sucesso', async () => {
       // Arrange
-      const updateData = { descricaoStatusProcesso: 'Arquivado' };
+      const updateData = { codigoStatusProcesso: 'B' };
       (findProcessoById as jest.Mock).mockResolvedValue(ok(existingProcesso));
       (updateProcessoRepo as jest.Mock).mockResolvedValue(ok({ ...existingProcesso, ...updateData }));
 

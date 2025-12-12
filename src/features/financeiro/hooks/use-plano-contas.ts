@@ -32,6 +32,16 @@ export function usePlanoContas() {
     return { contas, isLoading, error, refetch: load };
 }
 
+export function usePlanoContasAnaliticas() {
+    const { contas, isLoading, error, refetch } = usePlanoContas();
+
+    const contasAnaliticas = useMemo(() => {
+        return (contas ?? []).filter((c) => c.ativo === true && c.nivel === 'analitica');
+    }, [contas]);
+
+    return { contas: contasAnaliticas, isLoading, error, refetch };
+}
+
 export type PlanoContaHierarquico = PlanoContas & {
     nivelIndentacao: number;
     filhas?: PlanoContaHierarquico[];
