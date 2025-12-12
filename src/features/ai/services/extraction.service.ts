@@ -41,6 +41,7 @@ export async function extractTextFromPDF(buffer: Buffer): Promise<string> {
 export async function extractTextFromDOCX(_buffer: Buffer): Promise<string> {
   // Implementação básica usando mammoth
   // Por ora, lançar erro indicando necessidade de implementação
+  void _buffer;
   throw new Error(
     'Extração de DOCX não implementada ainda. Instale mammoth: npm install mammoth'
   );
