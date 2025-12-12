@@ -15,7 +15,7 @@ import {
   type ListarCredenciaisParams,
   type CriarCredencialParams,
   type AtualizarCredencialParams,
-} from '../types';
+} from '../domain';
 import type { ActionResponse } from './advogados-actions'; // Reuse type
 
 export async function actionListarCredenciais(

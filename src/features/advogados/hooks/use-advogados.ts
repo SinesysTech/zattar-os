@@ -5,7 +5,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { Advogado, ListarAdvogadosParams } from '../types';
+import type { Advogado, ListarAdvogadosParams } from '../domain';
 import { actionListarAdvogados } from '../actions/advogados-actions';
 
 interface UseAdvogadosResult {

@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dialog';
 
 import { DEFAULT_ZOOM_CONFIG, PDF_CANVAS_SIZE } from '@/features/assinatura-digital';
-import type { Template, TemplateCampo, ApiPreviewTestResponse } from '@/features/assinatura-digital';
+import type { Template, TemplateCampo } from '@/features/assinatura-digital';
 import ToolbarButtons from './ToolbarButtons';
 import ToolbarButtonsMobile from './ToolbarButtonsMobile';
 import PropertiesPopover from './PropertiesPopover';
@@ -39,6 +39,10 @@ interface EditorField extends TemplateCampo {
   isDragging: boolean;
   justAdded?: boolean;
 }
+
+type ApiPreviewTestResponse =
+  | { success: true; arquivo_url: string; arquivo_nome?: string }
+  | { success: false; error: string };
 
 type EditorMode = 'select' | 'add_text' | 'add_image' | 'add_rich_text';
 

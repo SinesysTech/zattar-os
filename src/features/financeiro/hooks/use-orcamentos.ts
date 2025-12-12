@@ -26,7 +26,7 @@ import type {
     OrcamentoComItens,
     CriarOrcamentoDTO,
     AtualizarOrcamentoDTO,
-} from '../types/orcamentos';
+} from '../domain/orcamentos';
 
 interface UseOrcamentosOptions {
     autoFetch?: boolean;

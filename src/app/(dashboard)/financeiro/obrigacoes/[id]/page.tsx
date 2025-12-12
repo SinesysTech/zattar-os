@@ -33,7 +33,7 @@ import type {
   TipoObrigacao,
   StatusObrigacao,
 } from '@/features/financeiro/domain/obrigacoes';
-import { RepasseTracking } from '../components/repasse-tracking';
+import { RepasseTracking } from '@/features/financeiro/components/obrigacoes/repasse-tracking';
 
 // ============================================================================
 // Constantes

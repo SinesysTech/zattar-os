@@ -9,7 +9,7 @@
 import { MessageSquare, Globe, FileText, Users } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { TipoSalaChat, type SalaChat } from '../types';
+import { TipoSalaChat, type SalaChat } from '../domain';
 
 interface RoomListProps {
   /** Lista de salas */

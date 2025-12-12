@@ -38,4 +38,19 @@ export const CaptionTextarea = React.forwardRef<
   );
 });
 
+export function CaptionButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      type="button"
+      className={cn(
+        'inline-flex h-7 items-center gap-2 rounded-md border px-2 text-sm',
+        'hover:bg-accent hover:text-accent-foreground'
+      )}
+      {...props}
+    >
+      Legenda
+    </button>
+  );
+}
+
 

@@ -15,7 +15,7 @@ import {
   type ListarAdvogadosParams,
   type CriarAdvogadoParams,
   type AtualizarAdvogadoParams,
-} from '../types';
+} from '../domain';
 
 export type ActionResponse<T = any> = {
   success: boolean;

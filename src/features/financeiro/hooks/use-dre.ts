@@ -19,7 +19,7 @@ import type {
     EvolucaoDRE,
     PeriodoDRE,
     VariacoesDRE,
-} from '../types/dre';
+} from '../domain/dre';
 
 // ============================================================================
 // Types

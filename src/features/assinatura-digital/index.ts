@@ -111,6 +111,9 @@ export {
   validateMarkdownForForm,
 } from "./types";
 
+export type { PdfPreviewProps, PdfLoadState, PdfZoomConfig } from "./types";
+export { DEFAULT_ZOOM_CONFIG, PDF_CANVAS_SIZE } from "./types";
+
 // =============================================================================
 // CONSTANTS
 // =============================================================================

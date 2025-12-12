@@ -48,6 +48,18 @@ export {
   isFormattedBRField,
 } from "./domain";
 
+// PDF preview/editor (zoom/canvas) - usados por `components/pdf/*` e `components/editor/*`
+export type {
+  PdfPreviewProps,
+  PdfLoadState,
+  PdfZoomConfig,
+} from "@/types/assinatura-digital/pdf-preview.types";
+
+export {
+  DEFAULT_ZOOM_CONFIG,
+  PDF_CANVAS_SIZE,
+} from "@/types/assinatura-digital/pdf-preview.types";
+
 // API types (payloads, responses, records)
 export type {
   DeviceFingerprintData,

@@ -15,7 +15,7 @@ import type {
     AnaliseOrcamentariaItem,
     ResumoOrcamentario,
     AlertaDesvio
-} from '../types/orcamentos';
+} from '../domain/orcamentos';
 import {
     validarCriarOrcamentoDTO,
     validarAtualizarOrcamentoDTO,
