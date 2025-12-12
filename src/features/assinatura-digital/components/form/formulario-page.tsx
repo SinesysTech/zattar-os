@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { useFormularioStore } from "../../store";
 import FormularioContainer from "./formulario-container";
-import type { DynamicFormSchema } from '@/types/assinatura-digital/form-schema.types';
-import type { MetadadoSeguranca } from '@/types/assinatura-digital/template.types';
+import type { DynamicFormSchema } from '@/features/assinatura-digital';
+import type { MetadadoSeguranca } from '@/features/assinatura-digital';
 
 interface FormularioPageProps {
   segmentoId: number;

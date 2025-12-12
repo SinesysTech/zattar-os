@@ -14,8 +14,8 @@ import type {
   CriarSalaChatInput,
   ListarSalasParams,
   PaginatedResponse,
-} from './types';
-import { criarSalaChatSchema, criarMensagemChatSchema, TipoSalaChat } from './types';
+} from './domain';
+import { criarSalaChatSchema, criarMensagemChatSchema, TipoSalaChat } from './domain';
 import { ChatRepository, createChatRepository } from './repository';
 
 // =============================================================================

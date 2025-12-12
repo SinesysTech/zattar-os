@@ -91,7 +91,7 @@ export default function VisualizacaoPdfStep() {
       try {
         const metadataPromises = templateIds.map(async (id: string | number) => {
           // Comment 3 fix: Check cache first
-          const cachedTemplate = getCachedTemplate(id);
+          const cachedTemplate = getCachedTemplate(String(id));
           if (cachedTemplate) {
             return {
               id: String(id),
@@ -108,7 +108,7 @@ export default function VisualizacaoPdfStep() {
 
             if (data.success && data.data) {
               // Comment 3 fix: Store in cache
-              setCachedTemplate(id, data.data);
+              setCachedTemplate(String(id), data.data);
 
               return {
                 id: String(id),
@@ -217,10 +217,9 @@ export default function VisualizacaoPdfStep() {
 
       if (response.success && response.data?.pdf_url) {
         const pdfData = {
-          pdfUrl: response.data.pdf_url,
-          templateId,
-          geradoEm: new Date().toISOString(),
-          temporario: true,
+          pdf_url: response.data.pdf_url,
+          template_id: templateId,
+          gerado_em: new Date().toISOString(),
         };
 
         setPdfUrl(response.data.pdf_url);
@@ -244,13 +243,13 @@ export default function VisualizacaoPdfStep() {
   useEffect(() => {
     const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutos
 
-    if (dadosVisualizacaoPdf?.pdfUrl && dadosVisualizacaoPdf.geradoEm) {
-      const geradoEm = new Date(dadosVisualizacaoPdf.geradoEm).getTime();
+    if (dadosVisualizacaoPdf?.pdf_url && dadosVisualizacaoPdf.gerado_em) {
+      const geradoEm = new Date(dadosVisualizacaoPdf.gerado_em).getTime();
       const agora = Date.now();
 
       // Verificar se o cache ainda é válido (dentro do TTL)
       if (agora - geradoEm < CACHE_TTL_MS) {
-        setPdfUrl(dadosVisualizacaoPdf.pdfUrl);
+        setPdfUrl(dadosVisualizacaoPdf.pdf_url);
         return;
       }
     }
@@ -264,7 +263,7 @@ export default function VisualizacaoPdfStep() {
   const lastKeysRef = useRef<string | null>(null);
   useEffect(() => {
     const key = `${dadosPessoais?.cliente_id ?? ''}-${dadosAcao?.acao_id ?? ''}`;
-    if (lastKeysRef.current && lastKeysRef.current !== key && dadosVisualizacaoPdf?.pdfUrl) {
+    if (lastKeysRef.current && lastKeysRef.current !== key && dadosVisualizacaoPdf?.pdf_url) {
       setDadosVisualizacaoPdf(null);
       setPdfUrl(null);
       if (!isGenerating && !isFetchingTemplate) {

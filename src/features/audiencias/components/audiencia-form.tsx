@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Audiencia, createAudienciaSchema, ModalidadeAudiencia, StatusAudiencia } from '@/features/audiencias';
-import { actionCriarAudiencia, actionAtualizarAudiencia, ActionResult } from '@/app/actions/audiencias';
+import { actionCriarAudiencia, actionAtualizarAudiencia, ActionResult } from '@/features/audiencias/actions';
 import { toast } from 'sonner';
 import { useFormState, useFormStatus } from 'react-dom';
 import { CalendarIcon } from 'lucide-react';

@@ -11,8 +11,8 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { toast } from 'sonner';
 import ReactMarkdown from "react-markdown";
 import { renderMarkdownWithVariables, getMarkdownPlugins, getMarkdownStyles } from "../../utils/markdown-renderer";
-import { DadosGeracao, Template } from "@/types/assinatura-digital/template.types";
-import { VisualizacaoMarkdownData } from "@/types/assinatura-digital/formulario.types";
+import { DadosGeracao, Template } from "@/features/assinatura-digital";
+import { VisualizacaoMarkdownData } from "@/features/assinatura-digital";
 import { apiFetch } from "@/lib/api";
 
 interface TemplateMetadata {
@@ -130,7 +130,7 @@ export default function VisualizacaoMarkdownStep() {
       }
 
       // Preparar dados para geração
-      const cliente: import('@/types/assinatura-digital/template.types').ClienteDadosGeracao = {
+      const cliente: import('@/features/assinatura-digital').ClienteDadosGeracao = {
         nome: dadosPessoais?.nome_completo || '',
         cpf: dadosPessoais?.cpf || '',
         rg: dadosPessoais?.rg || undefined,

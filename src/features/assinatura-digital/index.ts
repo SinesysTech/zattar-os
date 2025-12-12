@@ -86,7 +86,11 @@ export type {
   FormularioState,
   FormularioActions,
   FormularioStore,
-} from './types';
+  // Editor helpers
+  VariableOption,
+  TiptapNode,
+  TiptapDocument,
+} from "./types";
 
 export {
   FormFieldType,
@@ -100,7 +104,12 @@ export {
   updateAssinaturaDigitalSchema,
   fieldRequiresOptions,
   isFormattedBRField,
-} from './types';
+  // Editor helpers
+  getAvailableVariables,
+  markdownToTiptapJSON,
+  tiptapJSONToMarkdown,
+  validateMarkdownForForm,
+} from "./types";
 
 // =============================================================================
 // CONSTANTS
@@ -114,7 +123,7 @@ export {
   TERMOS_TEXTO_DECLARACAO,
   DEFAULT_TOTAL_STEPS,
   API_ROUTES,
-} from './constants';
+} from "./constants";
 
 // =============================================================================
 // UTILS
@@ -159,15 +168,23 @@ export {
   getAtivoBadgeTone,
   formatBooleanBadge,
   getBooleanBadgeVariant,
-} from './utils';
+  // Cliente adapters
+  mapClienteFormToCliente,
+  clienteSinesysToAssinaturaDigital,
+} from "./utils";
+
+export type { ClienteFormsignPayload } from "./utils";
 
 // =============================================================================
 // STORE
 // =============================================================================
-export { useFormularioStore } from './store';
+export { useFormularioStore } from "./store";
 
 // =============================================================================
 // SERVICE & REPOSITORY
 // =============================================================================
-export { AssinaturaDigitalService, createAssinaturaDigitalService } from './service';
-export { AssinaturaDigitalRepository } from './repository';
+export {
+  AssinaturaDigitalService,
+  createAssinaturaDigitalService,
+} from "./service";
+export { AssinaturaDigitalRepository } from "./repository";

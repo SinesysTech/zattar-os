@@ -13,7 +13,7 @@ import {
   validateSignatureQuality,
   validatePhotoQuality,
   validateDataConsistency,
-} from "@/features/assinatura-digital";
+} from "../../utils";
 
 async function getClientIP(): Promise<{ ip: string; source?: string }> {
   try {

@@ -12,7 +12,7 @@ import {
 import { EventListDialog } from "@/components/calendar/events-list-dialog";
 import { DroppableArea } from "@/components/calendar/droppable-area";
 import { getMonthCellEvents } from "@/components/calendar/helpers";
-import { useMediaQuery } from "@/components/hooks";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import type {
   ICalendarCell,
   IEvent,

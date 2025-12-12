@@ -16,8 +16,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-import { DEFAULT_ZOOM_CONFIG, PDF_CANVAS_SIZE } from '@/types/assinatura-digital/pdf-preview.types';
-import type { Template, TemplateCampo, ApiPreviewTestResponse } from '@/types/assinatura-digital/template.types';
+import { DEFAULT_ZOOM_CONFIG, PDF_CANVAS_SIZE } from '@/features/assinatura-digital';
+import type { Template, TemplateCampo, ApiPreviewTestResponse } from '@/features/assinatura-digital';
 import ToolbarButtons from './ToolbarButtons';
 import ToolbarButtonsMobile from './ToolbarButtonsMobile';
 import PropertiesPopover from './PropertiesPopover';
@@ -29,7 +29,7 @@ import { RichTextEditorPopover } from './RichTextEditorPopover';
 import styles from './FieldMappingEditor.module.css';
 
 interface FieldMappingEditorProps {
-  template: Template; // from @/types/assinatura-digital/template.types
+  template: Template; // from @/features/assinatura-digital
   onCancel?: () => void;
   mode?: 'edit' | 'create';
 }

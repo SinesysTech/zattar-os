@@ -34,7 +34,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { COLORS } from "@/components/calendar/constants";
 import { useCalendar } from "@/components/calendar/calendar-context";
-import { useDisclosure } from "@/components/hooks";
+import { useDisclosure } from "@/hooks/use-disclosure";
 import type { IEvent } from "@/components/calendar/interfaces";
 import {
 	eventSchema,

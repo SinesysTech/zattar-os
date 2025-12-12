@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { DynamicFormSchema, FormFieldSchema, FormSectionSchema, FormFieldType } from '@/types/assinatura-digital/form-schema.types';
+import { DynamicFormSchema, FormFieldSchema, FormSectionSchema, FormFieldType } from '@/features/assinatura-digital';
 import { validateFormSchema } from '@/features/assinatura-digital/utils';
 import DynamicFormRenderer from '@/features/assinatura-digital/components/form/dynamic-form-renderer';
 import FieldPalette from '@/features/assinatura-digital/components/schema-builder/FieldPalette';

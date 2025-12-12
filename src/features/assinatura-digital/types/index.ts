@@ -32,7 +32,7 @@ export type {
   CreateAssinaturaDigitalInput,
   UpdateAssinaturaDigitalInput,
   AssinaturaDigital,
-} from './domain';
+} from "./domain";
 
 export {
   FormFieldType,
@@ -46,7 +46,7 @@ export {
   updateAssinaturaDigitalSchema,
   fieldRequiresOptions,
   isFormattedBRField,
-} from './domain';
+} from "./domain";
 
 // API types (payloads, responses, records)
 export type {
@@ -69,7 +69,7 @@ export type {
   DashboardStats,
   VisualizacaoPdfData,
   VisualizacaoMarkdownData,
-} from './api';
+} from "./api";
 
 // Store types
 export type {
@@ -84,7 +84,7 @@ export type {
   FormularioState,
   FormularioActions,
   FormularioStore,
-} from './store';
+} from "./store";
 
 // Template types for PDF generation
 export type {
@@ -93,4 +93,19 @@ export type {
   EstiloCampo,
   ConteudoComposto,
   TemplateCampo as TemplateCampoPdf,
-} from './template.types';
+} from "./template.types";
+
+// Editor helper types and functions (from components/editor/editor-helpers.ts)
+// Note: These are re-exported for convenience, but the original source is in components
+export type {
+  VariableOption,
+  TiptapNode,
+  TiptapDocument,
+} from "../components/editor/editor-helpers";
+
+export {
+  getAvailableVariables,
+  markdownToTiptapJSON,
+  tiptapJSONToMarkdown,
+  validateMarkdownForForm,
+} from "../components/editor/editor-helpers";

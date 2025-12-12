@@ -104,7 +104,7 @@ export {
   createAudienciaSchema,
   updateAudienciaSchema,
   atualizarStatusSchema,
-} from './types';
+} from './domain';
 
 export type {
   // Domain types

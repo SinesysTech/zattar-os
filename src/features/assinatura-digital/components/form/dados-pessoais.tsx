@@ -43,7 +43,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { mapClienteFormToCliente } from '@/types/assinatura-digital/cliente-adapter.types';
+import { mapClienteFormToCliente } from '@/features/assinatura-digital';
 import {
   TEXT_LIMITS,
   validateBirthDate,

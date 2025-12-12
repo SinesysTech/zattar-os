@@ -16,7 +16,7 @@ import type {
   ListarSalasParams,
   ListarMensagensParams,
   PaginatedResponse,
-} from './types';
+} from './domain';
 
 // =============================================================================
 // INTERNAL HELPERS

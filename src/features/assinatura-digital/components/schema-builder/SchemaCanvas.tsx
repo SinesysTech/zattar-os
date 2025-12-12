@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { DynamicFormSchema, FormSectionSchema, FormFieldSchema, FormFieldType } from '@/types/assinatura-digital/form-schema.types';
+import { DynamicFormSchema, FormSectionSchema, FormFieldSchema, FormFieldType } from '@/features/assinatura-digital';
 import { Edit, Trash2, Copy, GripVertical, Plus, AlertCircle, CheckCircle, Info, Type, Hash, Calendar, List, FileText, Phone, MapPin, CreditCard, Building, Mail, CheckSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

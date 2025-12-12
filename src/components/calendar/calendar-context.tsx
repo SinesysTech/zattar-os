@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { createContext, useContext, useState } from "react";
-import { useLocalStorage } from "@/components/hooks";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 import type { IEvent, IUser } from "@/components/calendar/interfaces";
 import type {
 	TCalendarView,
