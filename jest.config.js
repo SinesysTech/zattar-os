@@ -25,25 +25,24 @@ const config = {
     '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: 'tsconfig.test.json',
       useESM: true,
+      isolatedModules: true,
     }],
   },
   setupFilesAfterEnv: ['<rootDir>/src/testing/setup.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverageFrom: [
-    'backend/**/*.ts',
-    'app/api/**/*.ts',
-    'components/**/*.tsx',
-    'hooks/**/*.ts',
-    'hooks/**/*.tsx',
+    'src/features/**/*.{ts,tsx}',
+    'src/components/**/*.{ts,tsx}',
+    'src/hooks/**/*.{ts,tsx}',
+    'src/lib/**/*.{ts,tsx}',
     '!**/*.d.ts',
+    '!**/index.ts',
+    '!**/types.ts',
+    '!src/testing/**',
     '!**/node_modules/**',
   ],
   // Configuração para property-based testing com fast-check
-  globals: {
-    'ts-jest': {
-      isolatedModules: true,
-    },
-  },
+  // globals configuration moved to transform
 };
 
 module.exports = config;

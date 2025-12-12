@@ -23,3 +23,14 @@
 {"location":"service.ts:164","message":"realizarBaixa EXIT","data":{"success":true},"timestamp":1765519591302,"sessionId":"debug-session","runId":"run1","hypothesisId":"A,B"}
 {"location":"service.ts:109","message":"realizarBaixa ENTRY","data":{"id":99,"userId":123,"hasInput":true},"timestamp":1765519591378,"sessionId":"debug-session","runId":"run1","hypothesisId":"A,B,C,D,E"}
 {"location":"service.ts:122","message":"findExpedienteById RESULT","data":{"success":true,"hasData":false},"timestamp":1765519591384,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"service.ts:109","message":"realizarBaixa ENTRY","data":{"id":1,"userId":123,"hasInput":true},"timestamp":1765521120694,"sessionId":"debug-session","runId":"run1","hypothesisId":"A,B,C,D,E"}
+{"location":"service.ts:122","message":"findExpedienteById RESULT","data":{"success":true,"hasData":true,"baixadoEm":null},"timestamp":1765521120697,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"service.ts:130","message":"BEFORE baixarExpediente","data":{"id":1,"hasJustificativa":true},"timestamp":1765521120697,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"service.ts:137","message":"AFTER baixarExpediente","data":{"success":true,"hasData":true},"timestamp":1765521120698,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"service.ts:140","message":"BEFORE RPC call","data":{"id":1,"userId":123,"hasJustificativa":true},"timestamp":1765521120699,"sessionId":"debug-session","runId":"run1","hypothesisId":"D,E"}
+{"location":"service.ts:148","message":"RPC PARAMS","data":{"p_expediente_id":1,"p_usuario_id":123,"p_protocolo_id":null,"p_justificativa":"Resolvido"},"timestamp":1765521120700,"sessionId":"debug-session","runId":"run1","hypothesisId":"E"}
+{"location":"service.ts:151","message":"AFTER RPC call","data":{"hasError":false,"errorType":"object","errorValue":null,"hasData":false},"timestamp":1765521120700,"sessionId":"debug-session","runId":"run1","hypothesisId":"A,D"}
+{"location":"service.ts:158","message":"RPC SUCCESS","data":{},"timestamp":1765521120751,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"service.ts:164","message":"realizarBaixa EXIT","data":{"success":true},"timestamp":1765521120753,"sessionId":"debug-session","runId":"run1","hypothesisId":"A,B"}
+{"location":"service.ts:109","message":"realizarBaixa ENTRY","data":{"id":99,"userId":123,"hasInput":true},"timestamp":1765521120755,"sessionId":"debug-session","runId":"run1","hypothesisId":"A,B,C,D,E"}
+{"location":"service.ts:122","message":"findExpedienteById RESULT","data":{"success":true,"hasData":false},"timestamp":1765521120755,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}

@@ -11,7 +11,7 @@ import { ResponsiveFilterPanel } from '@/components/ui/responsive-filter-panel'
 
 // Mock the useIsMobile hook
 const mockUseIsMobile = jest.fn()
-jest.mock('@/app/_lib/hooks/use-mobile', () => ({
+jest.mock('@/hooks/use-breakpoint', () => ({
     useIsMobile: () => mockUseIsMobile(),
 }))
 
