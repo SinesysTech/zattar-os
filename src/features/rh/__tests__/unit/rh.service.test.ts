@@ -12,11 +12,11 @@ import {
   buscarFolhaPorId,
   atualizarStatusFolha,
 } from '../../repository';
-import { createServiceClient } from '@/lib/supabase/service-client';
+import { createServiceClient } from "../../../../lib/supabase/service-client";
 
 // Mock mocks
 jest.mock('../../repository');
-jest.mock('@/lib/supabase/service-client', () => ({
+jest.mock('../../../../lib/supabase/service-client', () => ({
   createServiceClient: jest.fn(),
 }));
 

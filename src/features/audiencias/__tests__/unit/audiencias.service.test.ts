@@ -1,16 +1,17 @@
 import {
   criarAudiencia,
-  buscarAudiencia,
-  listarAudiencias,
   atualizarAudiencia,
   atualizarStatusAudiencia,
 } from "../../service";
 import * as repo from "../../repository";
-import { ok, err } from "@/lib/types";
-import { StatusAudiencia } from "../../domain";
+import { StatusAudiencia, CreateAudienciaInput, UpdateAudienciaInput } from "../../domain";
 
 // Mock repository
 jest.mock("../../repository");
+
+// Helper for result types since we can't import ok/err easily if they are missing
+const ok = <T>(data: T) => ({ success: true as const, data });
+// const err = <E>(error: E) => ({ success: false as const, error });
 
 describe("Audiencias Service", () => {
   beforeEach(() => {
@@ -22,8 +23,7 @@ describe("Audiencias Service", () => {
       processoId: 1,
       tipoAudienciaId: 2,
       dataInicio: "2023-01-01T10:00:00Z",
-      dataFim: "2023-01-01T11:00:00Z", // added valid end date
-      // pauta removed
+      dataFim: "2023-01-01T11:00:00Z",
     };
 
     it("deve criar audiencia com sucesso", async () => {
@@ -35,7 +35,7 @@ describe("Audiencias Service", () => {
       );
 
       // Act
-      const result = await criarAudiencia(validAudiencia as any);
+      const result = await criarAudiencia(validAudiencia as unknown as CreateAudienciaInput);
 
       // Assert
       expect(result.success).toBe(true);
@@ -45,31 +45,28 @@ describe("Audiencias Service", () => {
     it("deve falhar se processo nao existir", async () => {
       // Arrange
       (repo.processoExists as jest.Mock).mockResolvedValue(ok(false));
-      (repo.tipoAudienciaExists as jest.Mock).mockResolvedValue(ok(true)); // Ensure verification continues to process check
+      (repo.tipoAudienciaExists as jest.Mock).mockResolvedValue(ok(true));
 
       // Act
-      const result = await criarAudiencia(validAudiencia as any);
+      const result = await criarAudiencia(validAudiencia as unknown as CreateAudienciaInput);
 
       // Assert
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.code).toBe("VALIDATION_ERROR");
-        // Optionally check message 'Processo não encontrado'
       }
     });
 
     it("deve falhar de validacao Zod", async () => {
       // Arrange
-      // Missing processID is not enough if object is partial? Schema says required.
-      // Providing object without processId.
       const invalid = { ...validAudiencia };
-      delete (invalid as any).processoId;
+      // @ts-expect-error forcing invalid input
+      delete invalid.processoId;
 
-      // repo mocks unnecessary if Zod fails first, but good practice to allow them returning something
       (repo.processoExists as jest.Mock).mockResolvedValue(ok(true));
 
       // Act
-      const result = await criarAudiencia(invalid as any);
+      const result = await criarAudiencia(invalid as unknown as CreateAudienciaInput);
 
       // Assert
       expect(result.success).toBe(false);
@@ -91,7 +88,7 @@ describe("Audiencias Service", () => {
       );
 
       // Act
-      const result = await atualizarAudiencia(1, updateData as any);
+      const result = await atualizarAudiencia(1, updateData as unknown as UpdateAudienciaInput);
 
       // Assert
       expect(result.success).toBe(true);
@@ -110,7 +107,7 @@ describe("Audiencias Service", () => {
     it("deve atualizar status com sucesso", async () => {
       (repo.findAudienciaById as jest.Mock).mockResolvedValue(ok({ id: 1 }));
       (repo.atualizarStatus as jest.Mock).mockResolvedValue(
-        ok({ id: 1, status: StatusAudiencia.REALIZADA })
+        ok({ id: 1, status: StatusAudiencia.Finalizada })
       );
 
       const result = await atualizarStatusAudiencia(
