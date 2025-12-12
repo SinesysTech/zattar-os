@@ -15,6 +15,10 @@ import {
   reverterBaixa,
   listarExpedientes,
 } from './service';
+import { after } from 'next/server';
+import { indexDocument } from '@/features/ai/services/indexing.service';
+import { authenticateRequest } from '@/lib/auth';
+import { listarUploads } from '@/features/documentos/service';
 
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS
@@ -51,6 +55,7 @@ export async function actionCriarExpediente(
   formData: FormData
 ): Promise<ActionResult> {
   try {
+    const user = await authenticateRequest();
     const rawData = {
       numeroProcesso: formData.get('numeroProcesso'),
       trt: formData.get('trt'),
@@ -106,6 +111,45 @@ export async function actionCriarExpediente(
     revalidatePath('/expedientes/ano');
     revalidatePath('/expedientes/lista');
     // revalidatePath('/dashboard'); // Uncomment if dashboard has expedited widget
+
+
+    // 🆕 AI Indexing Hook
+    if (result.success && user) {
+      const expedienteId = result.data.id;
+      const idDocumentoStr = formData.get('idDocumento') as string;
+      const idDocumento = idDocumentoStr ? parseInt(idDocumentoStr, 10) : null;
+
+      after(async () => {
+        try {
+          // Se tiver documento vinculado, tentar encontrar o arquivo para indexar
+          if (idDocumento) {
+            const { uploads } = await listarUploads(idDocumento, user.id);
+            const latestUpload = uploads[0]; // Pega o mais recente
+
+            if (latestUpload && latestUpload.b2_key) {
+              console.log(`🧠 [AI] Indexando expediente ${expedienteId} via documento ${idDocumento}`);
+              await indexDocument({
+                entity_type: 'expediente',
+                entity_id: expedienteId,
+                parent_id: null, // Expediente é raiz? Ou vinculado a processo?
+                storage_provider: 'backblaze',
+                storage_key: latestUpload.b2_key,
+                content_type: latestUpload.tipo_mime,
+                metadata: {
+                  ...result.data, // Metadados do expediente
+                  indexed_by: user.id,
+                  linked_document_id: idDocumento,
+                },
+              });
+            }
+          }
+          // TODO: Se não tiver documento, poderíamos indexar apenas os metadados como texto?
+          // Por enquanto, seguimos o padrão de indexar se houver conteúdo/arquivo.
+        } catch (error) {
+          console.error(`❌ [AI] Erro ao indexar expediente ${expedienteId}:`, error);
+        }
+      });
+    }
 
     return {
       success: true,

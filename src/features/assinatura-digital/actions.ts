@@ -11,6 +11,9 @@ import {
 } from './types';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
+import { after } from 'next/server';
+import { indexText, indexDocument } from '@/features/ai/services/indexing.service';
+import { extractKeyFromUrl } from '@/features/ai/services/storage-adapter.service';
 
 const supabase = createClient();
 const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
@@ -111,6 +114,43 @@ export async function criarTemplateAction(
     // TODO: Adicionar verificação de permissões aqui
 
     const template = await assinaturaDigitalService.criarTemplate(input);
+    
+    // 🆕 AI Indexing Hook
+    after(async () => {
+      try {
+        console.log(`🧠 [AI] Indexando template de assinatura digital ${template.id}`);
+        
+        const metadata = {
+          nome: template.nome,
+          descricao: template.descricao,
+          segmento_id: template.segmento_id,
+          indexed_by: userData.user.id, // Auth user
+        };
+
+        if (template.tipo_template === 'markdown' && template.conteudo_markdown) {
+          await indexText(template.conteudo_markdown, {
+            entity_type: 'assinatura_digital', // Usando tipo genérico mapeado no chat
+            entity_id: template.id,
+            metadata: { ...metadata, type: 'markdown_template' },
+          });
+        } else if (template.tipo_template === 'pdf' && template.pdf_url) {
+          const key = extractKeyFromUrl(template.pdf_url);
+          if (key) {
+            await indexDocument({
+              entity_type: 'assinatura_digital',
+              entity_id: template.id,
+              storage_provider: 'backblaze', // Assumindo backblaze padrão
+              storage_key: key,
+              content_type: 'application/pdf',
+              metadata: { ...metadata, type: 'pdf_template' },
+            });
+          }
+        }
+      } catch (error) {
+        console.error(`❌ [AI] Erro ao indexar template ${template.id}:`, error);
+      }
+    });
+
     revalidatePath('/assinatura-digital/templates');
     return { success: true, data: template };
   } catch (error) {
