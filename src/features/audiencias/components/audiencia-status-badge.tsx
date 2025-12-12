@@ -1,33 +1,28 @@
-import { Audiencia, StatusAudiencia, STATUS_AUDIENCIA_LABELS } from '@/features/audiencias';
+import { StatusAudiencia, STATUS_AUDIENCIA_LABELS } from '@/features/audiencias';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 
+/**
+ * AudienciaStatusBadge - Badge para exibir status de audiência.
+ *
+ * @ai-context Este componente usa o sistema de variantes semânticas.
+ * A cor é determinada automaticamente pelo mapeamento em @/lib/design-system/variants.ts.
+ *
+ * @example
+ * <AudienciaStatusBadge status={StatusAudiencia.Marcada} />
+ * <AudienciaStatusBadge status={StatusAudiencia.Finalizada} />
+ */
 interface AudienciaStatusBadgeProps {
   status: StatusAudiencia;
   className?: string;
 }
 
 export function AudienciaStatusBadge({ status, className }: AudienciaStatusBadgeProps) {
-  let variant: 'default' | 'secondary' | 'outline' | 'destructive' = 'default';
-  let colorClass = '';
-
-  switch (status) {
-    case StatusAudiencia.Marcada:
-      colorClass = 'bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100 dark:hover:bg-blue-800';
-      break;
-    case StatusAudiencia.Finalizada:
-      colorClass = 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900 dark:text-green-100 dark:hover:bg-green-800';
-      break;
-    case StatusAudiencia.Cancelada:
-      colorClass = 'bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-100 dark:hover:bg-red-800';
-      break;
-    default:
-      variant = 'secondary';
-      break;
-  }
+  const variant = getSemanticBadgeVariant('audiencia_status', status);
 
   return (
-    <Badge className={cn('text-xs font-medium', colorClass, className)}>
+    <Badge variant={variant} className={cn('text-xs font-medium', className)}>
       {STATUS_AUDIENCIA_LABELS[status]}
     </Badge>
   );

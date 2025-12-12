@@ -117,10 +117,10 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
          <h2 className="text-lg font-semibold flex items-center gap-2">
            <RefreshCw className="h-5 w-5" /> Integração Financeira
          </h2>
-         <Badge variant="outline" className={cn('gap-1', 
-            statusGeral === 'sincronizado' && 'text-green-600 border-green-600',
+         <Badge variant="outline" className={cn('gap-1',
+            statusGeral === 'sincronizado' && 'text-emerald-600 border-emerald-600',
             statusGeral === 'pendente' && 'text-amber-600 border-amber-600',
-            statusGeral === 'inconsistente' && 'text-red-600 border-red-600'
+            statusGeral === 'inconsistente' && 'text-destructive border-destructive'
          )}>
             {statusGeral === 'sincronizado' ? <CheckCircle className="h-3 w-3" /> : 
              statusGeral === 'pendente' ? <Clock className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
@@ -134,17 +134,17 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
                 <p className="text-xs text-muted-foreground">Total</p>
                 <p className="text-xl font-bold">{statusSync.totalParcelas}</p>
              </div>
-             <div className="rounded-lg bg-green-50 p-3">
+             <div className="rounded-lg bg-emerald-50 dark:bg-emerald-950/30 p-3">
                 <p className="text-xs text-muted-foreground">Sincronizadas</p>
-                <p className="text-xl font-bold text-green-600">{statusSync.parcelasSincronizadas}</p>
+                <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{statusSync.parcelasSincronizadas}</p>
              </div>
-             <div className="rounded-lg bg-amber-50 p-3">
+             <div className="rounded-lg bg-amber-50 dark:bg-amber-950/30 p-3">
                 <p className="text-xs text-muted-foreground">Pendentes</p>
-                <p className="text-xl font-bold text-amber-600">{statusSync.parcelasPendentes}</p>
+                <p className="text-xl font-bold text-amber-600 dark:text-amber-400">{statusSync.parcelasPendentes}</p>
              </div>
-             <div className="rounded-lg bg-red-50 p-3">
+             <div className="rounded-lg bg-red-50 dark:bg-red-950/30 p-3">
                 <p className="text-xs text-muted-foreground">Inconsistentes</p>
-                <p className="text-xl font-bold text-red-600">{statusSync.parcelasInconsistentes}</p>
+                <p className="text-xl font-bold text-red-600 dark:text-red-400">{statusSync.parcelasInconsistentes}</p>
              </div>
           </div>
        )}
@@ -174,7 +174,7 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
            <AlertDialogFooter>
              <AlertDialogCancel>Cancelar</AlertDialogCancel>
              <AlertDialogAction onClick={() => handleSincronizar(false)}>Sincronizar</AlertDialogAction>
-             {temInconsistencias && <AlertDialogAction onClick={() => handleSincronizar(true)} className="bg-amber-600">Forçar</AlertDialogAction>}
+             {temInconsistencias && <AlertDialogAction onClick={() => handleSincronizar(true)} className="bg-orange-500 hover:bg-orange-600 text-white">Forçar</AlertDialogAction>}
            </AlertDialogFooter>
          </AlertDialogContent>
        </AlertDialog>

@@ -3,7 +3,9 @@ import {
     actionListarTransacoes, 
     actionConciliarManual, 
     actionConciliarAutomaticamente,
-    actionDesconciliar 
+    actionDesconciliar,
+    actionBuscarTransacao,
+    actionObterSugestoes
 } from '../actions/conciliacao';
 import { ConciliacaoFilters, ConciliarManualDTO, ConciliarAutomaticaDTO } from '../types/conciliacao';
 
@@ -24,6 +26,44 @@ export function useTransacoesImportadas(params: Partial<ConciliacaoFilters> & { 
         isLoading,
         error: error ? (error instanceof Error ? error.message : 'Erro ao carregar') : null,
         refetch: mutate
+    };
+}
+
+export function useTransacaoDetalhes(transacaoId: number) {
+    const key = transacaoId ? ['conciliacao-transacao', transacaoId] : null;
+
+    const fetcher = async () => {
+        const result = await actionBuscarTransacao(transacaoId);
+        if (!result.success) throw new Error(result.error);
+        return result.data;
+    };
+
+    const { data, error, isLoading, mutate } = useSWR(key, fetcher);
+
+    return {
+        transacao: data ?? null,
+        isLoading,
+        error: error ? (error instanceof Error ? error.message : 'Erro ao carregar') : null,
+        refetch: mutate,
+    };
+}
+
+export function useSugestoesConciliacao(transacaoId: number) {
+    const key = transacaoId ? ['conciliacao-sugestoes', transacaoId] : null;
+
+    const fetcher = async () => {
+        const result = await actionObterSugestoes(transacaoId);
+        if (!result.success) throw new Error(result.error);
+        return result.data;
+    };
+
+    const { data, error, isLoading, mutate } = useSWR(key, fetcher);
+
+    return {
+        sugestoes: data ?? [],
+        isLoading,
+        error: error ? (error instanceof Error ? error.message : 'Erro ao carregar') : null,
+        refetch: mutate,
     };
 }
 

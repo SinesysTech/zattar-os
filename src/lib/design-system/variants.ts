@@ -1,0 +1,496 @@
+/**
+ * Design System Variants
+ *
+ * Este arquivo define os mapeamentos semânticos do Design System Sinesys.
+ * Aqui centralizamos TODA a lógica de mapeamento de domínio para variante visual.
+ *
+ * @ai-context Use getSemanticBadgeVariant() para determinar a variante visual correta.
+ * NUNCA crie funções getXXXColorClass() locais - sempre use este módulo centralizado.
+ */
+
+// =============================================================================
+// TIPOS DE VARIANTES VISUAIS
+// =============================================================================
+
+/**
+ * Variantes visuais disponíveis para Badge.
+ * Estas variantes correspondem às definidas em badge.tsx
+ */
+export type BadgeVisualVariant =
+  | 'default'
+  | 'secondary'
+  | 'destructive'
+  | 'outline'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'neutral'
+  | 'accent';
+
+/**
+ * Categorias semânticas para mapeamento de badges.
+ */
+export type BadgeCategory =
+  | 'tribunal'
+  | 'status'
+  | 'grau'
+  | 'parte'
+  | 'audiencia_status'
+  | 'audiencia_modalidade'
+  | 'expediente_tipo'
+  | 'captura_status'
+  | 'polo';
+
+// =============================================================================
+// MAPEAMENTO DE TRIBUNAIS
+// =============================================================================
+
+/**
+ * Mapeamento de tribunais para variantes visuais.
+ * Tribunais são agrupados por similaridade visual para facilitar identificação.
+ *
+ * Padrão: Tribunais do mesmo tipo/região compartilham variantes.
+ */
+export const TRIBUNAL_VARIANTS: Record<string, BadgeVisualVariant> = {
+  // Tribunais Regionais do Trabalho - Alternância de cores
+  TRT1: 'info',       // RJ
+  TRT2: 'success',    // SP Capital
+  TRT3: 'warning',    // MG
+  TRT4: 'destructive',// RS
+  TRT5: 'accent',     // BA
+  TRT6: 'info',       // PE
+  TRT7: 'success',    // CE
+  TRT8: 'neutral',    // PA/AP
+  TRT9: 'warning',    // PR
+  TRT10: 'info',      // DF/TO
+  TRT11: 'success',   // AM/RR
+  TRT12: 'warning',   // SC
+  TRT13: 'accent',    // PB
+  TRT14: 'neutral',   // RO/AC
+  TRT15: 'info',      // Campinas
+  TRT16: 'success',   // MA
+  TRT17: 'warning',   // ES
+  TRT18: 'info',      // GO
+  TRT19: 'success',   // AL
+  TRT20: 'warning',   // SE
+  TRT21: 'accent',    // RN
+  TRT22: 'neutral',   // PI
+  TRT23: 'info',      // MT
+  TRT24: 'success',   // MS
+
+  // Tribunais Superiores - Neutral/Formal
+  TST: 'neutral',
+  STJ: 'neutral',
+  STF: 'neutral',
+
+  // Tribunais de Justiça - Seguem padrão dos TRTs da região
+  TJSP: 'success',
+  TJRJ: 'info',
+  TJMG: 'warning',
+  TJRS: 'destructive',
+  TJPR: 'warning',
+  TJSC: 'warning',
+  TJBA: 'accent',
+  TJPE: 'info',
+  TJCE: 'success',
+  TJGO: 'info',
+  TJDF: 'info',
+  TJES: 'warning',
+  TJMT: 'info',
+  TJMS: 'success',
+  TJPA: 'neutral',
+  TJAM: 'success',
+  TJMA: 'success',
+  TJPI: 'neutral',
+  TJPB: 'accent',
+  TJRN: 'accent',
+  TJSE: 'warning',
+  TJAL: 'success',
+  TJRO: 'neutral',
+  TJAC: 'neutral',
+  TJAP: 'neutral',
+  TJRR: 'success',
+  TJTO: 'info',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE PROCESSO
+// =============================================================================
+
+/**
+ * Mapeamento de status de processo para variantes visuais.
+ * Status segue semântica intuitiva: ativo=success, arquivado=neutral, etc.
+ */
+export const STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  // Status ativos
+  ATIVO: 'success',
+  EM_ANDAMENTO: 'success',
+  TRAMITANDO: 'success',
+
+  // Status de atenção
+  SUSPENSO: 'warning',
+  AGUARDANDO: 'warning',
+  PENDENTE: 'warning',
+  RECURSAL: 'warning',
+
+  // Status finalizados
+  ARQUIVADO: 'neutral',
+  ENCERRADO: 'neutral',
+  FINALIZADO: 'neutral',
+  BAIXADO: 'neutral',
+
+  // Status de erro/problema
+  ERRO: 'destructive',
+  CANCELADO: 'destructive',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE GRAUS DE PROCESSO
+// =============================================================================
+
+/**
+ * Mapeamento de graus de jurisdição para variantes visuais.
+ */
+export const GRAU_VARIANTS: Record<string, BadgeVisualVariant> = {
+  primeiro_grau: 'success',
+  segundo_grau: 'warning',
+  tribunal_superior: 'info',
+  '1g': 'success',
+  '2g': 'warning',
+  'tst': 'info',
+  'stj': 'neutral',
+  'stf': 'neutral',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE TIPOS DE PARTE
+// =============================================================================
+
+/**
+ * Mapeamento de tipos de parte (terceiros) para variantes visuais.
+ * Agrupados por categoria funcional.
+ */
+export const PARTE_TIPO_VARIANTS: Record<string, BadgeVisualVariant> = {
+  // Peritos - Info (técnicos)
+  PERITO: 'info',
+  PERITO_CONTADOR: 'info',
+  PERITO_MEDICO: 'info',
+
+  // Ministério Público - Accent (autoridade)
+  MINISTERIO_PUBLICO: 'accent',
+  MINISTERIO_PUBLICO_TRABALHO: 'accent',
+
+  // Assistentes - Success (apoio)
+  ASSISTENTE: 'success',
+  ASSISTENTE_TECNICO: 'success',
+
+  // Testemunha - Info
+  TESTEMUNHA: 'info',
+
+  // Jurídicos - Neutral (formal)
+  CUSTOS_LEGIS: 'neutral',
+  AMICUS_CURIAE: 'neutral',
+
+  // Preposto - Warning (representante)
+  PREPOSTO: 'warning',
+
+  // Curadores - Warning (tutela)
+  CURADOR: 'warning',
+  CURADOR_ESPECIAL: 'warning',
+
+  // Administrativos - Neutral
+  INVENTARIANTE: 'neutral',
+  ADMINISTRADOR: 'neutral',
+  SINDICO: 'neutral',
+  DEPOSITARIO: 'neutral',
+
+  // Leiloeiros - Warning
+  LEILOEIRO: 'warning',
+  LEILOEIRO_OFICIAL: 'warning',
+
+  // Terceiro Interessado - Neutral
+  TERCEIRO_INTERESSADO: 'neutral',
+
+  // Outros - Default
+  OUTRO: 'default',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE POLO PROCESSUAL
+// =============================================================================
+
+/**
+ * Mapeamento de polo processual para variantes visuais.
+ */
+export const POLO_VARIANTS: Record<string, BadgeVisualVariant> = {
+  ATIVO: 'info',
+  PASSIVO: 'destructive',
+  AUTOR: 'info',
+  REU: 'destructive',
+  RECLAMANTE: 'info',
+  RECLAMADO: 'destructive',
+  REQUERENTE: 'info',
+  REQUERIDO: 'destructive',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE AUDIÊNCIA
+// =============================================================================
+
+/**
+ * Mapeamento de status de audiência para variantes visuais.
+ */
+export const AUDIENCIA_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  Marcada: 'info',
+  MARCADA: 'info',
+  Finalizada: 'success',
+  FINALIZADA: 'success',
+  Cancelada: 'destructive',
+  CANCELADA: 'destructive',
+  Adiada: 'warning',
+  ADIADA: 'warning',
+  Reagendada: 'warning',
+  REAGENDADA: 'warning',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE MODALIDADE DE AUDIÊNCIA
+// =============================================================================
+
+/**
+ * Mapeamento de modalidade de audiência para variantes visuais.
+ */
+export const AUDIENCIA_MODALIDADE_VARIANTS: Record<string, BadgeVisualVariant> = {
+  Virtual: 'accent',
+  VIRTUAL: 'accent',
+  Presencial: 'warning',
+  PRESENCIAL: 'warning',
+  Hibrida: 'info',
+  HIBRIDA: 'info',
+  Telepresencial: 'accent',
+  TELEPRESENCIAL: 'accent',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE TIPOS DE EXPEDIENTE
+// =============================================================================
+
+/**
+ * Mapeamento de tipos de expediente por ID para variantes visuais.
+ * Usa um ciclo de cores para tipos dinâmicos.
+ */
+export const EXPEDIENTE_TIPO_VARIANTS: Record<number, BadgeVisualVariant> = {
+  1: 'info',
+  2: 'success',
+  3: 'accent',
+  4: 'warning',
+  5: 'neutral',
+  6: 'info',
+  7: 'success',
+  8: 'accent',
+} as const;
+
+/**
+ * Ciclo de variantes para tipos de expediente dinâmicos.
+ */
+const EXPEDIENTE_TIPO_CYCLE: BadgeVisualVariant[] = [
+  'info',
+  'success',
+  'accent',
+  'warning',
+  'neutral',
+];
+
+/**
+ * Obtém variante para tipo de expediente por ID.
+ */
+export function getExpedienteTipoVariant(tipoId: number | null): BadgeVisualVariant {
+  if (!tipoId) return 'neutral';
+  return EXPEDIENTE_TIPO_VARIANTS[tipoId] ?? EXPEDIENTE_TIPO_CYCLE[(tipoId - 1) % EXPEDIENTE_TIPO_CYCLE.length];
+}
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE CAPTURA
+// =============================================================================
+
+/**
+ * Mapeamento de status de captura para variantes visuais.
+ */
+export const CAPTURA_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
+  pending: 'warning',
+  PENDING: 'warning',
+  in_progress: 'info',
+  IN_PROGRESS: 'info',
+  completed: 'success',
+  COMPLETED: 'success',
+  failed: 'destructive',
+  FAILED: 'destructive',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE COMUNICAÇÃO CNJ
+// =============================================================================
+
+/**
+ * Mapeamento de tipos de comunicação CNJ para variantes visuais.
+ */
+export const COMUNICACAO_CNJ_VARIANTS: Record<string, BadgeVisualVariant> = {
+  citacao: 'info',
+  CITACAO: 'info',
+  intimacao: 'warning',
+  INTIMACAO: 'warning',
+  notificacao: 'accent',
+  NOTIFICACAO: 'accent',
+  edital: 'neutral',
+  EDITAL: 'neutral',
+} as const;
+
+// =============================================================================
+// FUNÇÃO PRINCIPAL DE MAPEAMENTO
+// =============================================================================
+
+/**
+ * Obtém a variante visual semântica para um badge.
+ *
+ * @param category - A categoria semântica (tribunal, status, parte, etc.)
+ * @param key - O valor a ser mapeado (ex: 'TRT1', 'ATIVO', 'PERITO')
+ * @returns A variante visual correspondente
+ *
+ * @example
+ * // Uso correto:
+ * <Badge variant={getSemanticBadgeVariant('tribunal', 'TRT1')}>TRT1</Badge>
+ * <Badge variant={getSemanticBadgeVariant('status', 'ATIVO')}>Ativo</Badge>
+ * <Badge variant={getSemanticBadgeVariant('audiencia_status', 'Marcada')}>Marcada</Badge>
+ */
+export function getSemanticBadgeVariant(
+  category: BadgeCategory,
+  key: string | number | null | undefined
+): BadgeVisualVariant {
+  if (key === null || key === undefined) {
+    return 'neutral';
+  }
+
+  const normalizedKey = typeof key === 'string'
+    ? key.replace(/\s+/g, '').toUpperCase()
+    : key;
+
+  switch (category) {
+    case 'tribunal':
+      return TRIBUNAL_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'status':
+      return STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'grau':
+      return GRAU_VARIANTS[typeof key === 'string' ? key.toLowerCase() : key] ?? 'neutral';
+
+    case 'parte':
+      return PARTE_TIPO_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'polo':
+      return POLO_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'audiencia_status':
+      return AUDIENCIA_STATUS_VARIANTS[key as string] ??
+             AUDIENCIA_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'audiencia_modalidade':
+      return AUDIENCIA_MODALIDADE_VARIANTS[key as string] ??
+             AUDIENCIA_MODALIDADE_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'expediente_tipo':
+      return getExpedienteTipoVariant(typeof key === 'number' ? key : parseInt(key as string, 10) || null);
+
+    case 'captura_status':
+      return CAPTURA_STATUS_VARIANTS[key as string] ??
+             CAPTURA_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    default:
+      return 'neutral';
+  }
+}
+
+// =============================================================================
+// LABELS SEMÂNTICOS
+// =============================================================================
+
+/**
+ * Labels amigáveis para tipos de parte.
+ */
+export const PARTE_TIPO_LABELS: Record<string, string> = {
+  PERITO: 'Perito',
+  PERITO_CONTADOR: 'Perito Contador',
+  PERITO_MEDICO: 'Perito Medico',
+  MINISTERIO_PUBLICO: 'Ministerio Publico',
+  MINISTERIO_PUBLICO_TRABALHO: 'MP do Trabalho',
+  ASSISTENTE: 'Assistente',
+  ASSISTENTE_TECNICO: 'Assistente Tecnico',
+  TESTEMUNHA: 'Testemunha',
+  CUSTOS_LEGIS: 'Custos Legis',
+  AMICUS_CURIAE: 'Amicus Curiae',
+  PREPOSTO: 'Preposto',
+  CURADOR: 'Curador',
+  CURADOR_ESPECIAL: 'Curador Especial',
+  INVENTARIANTE: 'Inventariante',
+  ADMINISTRADOR: 'Administrador',
+  SINDICO: 'Sindico',
+  DEPOSITARIO: 'Depositario',
+  LEILOEIRO: 'Leiloeiro',
+  LEILOEIRO_OFICIAL: 'Leiloeiro Oficial',
+  OUTRO: 'Outro',
+  TERCEIRO_INTERESSADO: 'Terceiro Interessado',
+} as const;
+
+/**
+ * Labels amigáveis para graus de processo.
+ */
+export const GRAU_LABELS: Record<string, string> = {
+  primeiro_grau: '1 Grau',
+  segundo_grau: '2 Grau',
+  tribunal_superior: 'Tribunal Superior',
+} as const;
+
+/**
+ * Labels amigáveis para status de captura.
+ */
+export const CAPTURA_STATUS_LABELS: Record<string, string> = {
+  pending: 'Pendente',
+  in_progress: 'Em Progresso',
+  completed: 'Concluida',
+  failed: 'Falhou',
+} as const;
+
+/**
+ * Obtém o label amigável para um tipo de parte.
+ */
+export function getParteTipoLabel(tipoParte: string): string {
+  const normalized = tipoParte.toUpperCase().replace(/\s+/g, '_');
+  return PARTE_TIPO_LABELS[normalized] ?? tipoParte
+    .toLowerCase()
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+// =============================================================================
+// EXPORTS AGRUPADOS
+// =============================================================================
+
+export const VARIANTS = {
+  tribunal: TRIBUNAL_VARIANTS,
+  status: STATUS_VARIANTS,
+  grau: GRAU_VARIANTS,
+  parte: PARTE_TIPO_VARIANTS,
+  polo: POLO_VARIANTS,
+  audienciaStatus: AUDIENCIA_STATUS_VARIANTS,
+  audienciaModalidade: AUDIENCIA_MODALIDADE_VARIANTS,
+  expedienteTipo: EXPEDIENTE_TIPO_VARIANTS,
+  capturaStatus: CAPTURA_STATUS_VARIANTS,
+  comunicacaoCnj: COMUNICACAO_CNJ_VARIANTS,
+} as const;
+
+export const LABELS = {
+  parte: PARTE_TIPO_LABELS,
+  grau: GRAU_LABELS,
+  capturaStatus: CAPTURA_STATUS_LABELS,
+} as const;
