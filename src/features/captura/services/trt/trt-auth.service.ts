@@ -2,6 +2,8 @@
 // Baseado no código validado de trt-auth-common.ts
 // Adaptado para integração com o serviço de captura TRT
 
+import 'server-only';
+
 import { Browser, BrowserContext, Page } from 'playwright';
 import { getOTP, type TwoFAuthConfig } from '@/lib/api/twofauth.service';
 import type { CredenciaisTRT, ConfigTRT } from '../../types/trt-types';

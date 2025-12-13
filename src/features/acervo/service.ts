@@ -30,7 +30,7 @@ import {
 import { invalidateAcervoCache } from '@/lib/redis/invalidation';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
-import { capturarTimeline, type CodigoTRT, type GrauTRT } from '@/features/captura';
+import { capturarTimeline, type CodigoTRT, type GrauTRT } from '@/features/captura/server';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 interface RecaptureResult {
