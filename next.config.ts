@@ -5,7 +5,14 @@ import withPWA from '@ducanh2912/next-pwa';
 const nextConfig: NextConfig = {
   // Generates a build optimized for Docker, reducing image size and improving startup time
   output: 'standalone',
-  serverExternalPackages: ['pino', 'pino-pretty', 'thread-stream'],
+  serverExternalPackages: [
+    'pino',
+    'pino-pretty',
+    'thread-stream',
+    // Avoid bundling Playwright (Turbopack can choke on recorder assets like .ttf)
+    'playwright',
+    'playwright-core',
+  ],
   // Disables browser source maps in production to save ~500MB during build and reduce bundle size
   productionBrowserSourceMaps: false,
   // Exclude test files from compilation

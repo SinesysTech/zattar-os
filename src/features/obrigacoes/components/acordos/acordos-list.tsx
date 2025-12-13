@@ -14,7 +14,7 @@ import { Eye } from 'lucide-react';
 import { formatDate } from '@/lib/formatters';
 import { formatCurrency } from '@/features/obrigacoes/utils';
 import type { ColumnDef } from '@tanstack/react-table';
-import { AcordoComParcelas, ListarAcordosParams } from '../../types';
+import type { AcordoComParcelas, ListarAcordosParams } from '@/features/obrigacoes/types';
 import { useAcordos } from '../../hooks/use-acordos';
 import {
   formatarDirecao,

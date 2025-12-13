@@ -4,7 +4,7 @@ import { useId, useMemo, useState } from 'react'
 
 import { SearchIcon } from 'lucide-react'
 
-import type { Column, ColumnDef, ColumnFiltersState, RowData, SortingState } from '@tanstack/react-table'
+import type { Column, ColumnDef, ColumnFiltersState, SortingState } from '@tanstack/react-table'
 import {
   flexRender,
   getCoreRowModel,
@@ -25,13 +25,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 import { cn } from '@/lib/utils'
-
-declare module '@tanstack/react-table' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
-}
 
 type Item = {
   id: string
@@ -202,6 +195,7 @@ const DataTableWithColumnFilterDemo = () => {
     }
   ])
 
+  // eslint-disable-next-line react-hooks/incompatible-library -- demo file; safe to skip React Compiler memoization here
   const table = useReactTable({
     data: items,
     columns,
@@ -276,7 +270,7 @@ const DataTableWithColumnFilterDemo = () => {
   )
 }
 
-function Filter({ column }: { column: Column<any, unknown> }) {
+function Filter({ column }: { column: Column<Item, unknown> }) {
   const id = useId()
   const columnFilterValue = column.getFilterValue()
   const { filterVariant } = column.columnDef.meta ?? {}
@@ -306,7 +300,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
         <div className='flex'>
           <Input
             id={`${id}-range-1`}
-            className='flex-1 rounded-r-none [-moz-appearance:_textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none'
+            className='flex-1 rounded-r-none [-moz-appearance:textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none'
             value={(columnFilterValue as [number, number])?.[0] ?? ''}
             onChange={e =>
               column.setFilterValue((old: [number, number]) => [
@@ -320,7 +314,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           />
           <Input
             id={`${id}-range-2`}
-            className='-ms-px flex-1 rounded-l-none [-moz-appearance:_textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none'
+            className='-ms-px flex-1 rounded-l-none [-moz-appearance:textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none'
             value={(columnFilterValue as [number, number])?.[1] ?? ''}
             onChange={e =>
               column.setFilterValue((old: [number, number]) => [

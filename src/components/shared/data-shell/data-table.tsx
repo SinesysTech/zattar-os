@@ -4,6 +4,7 @@ import * as React from 'react';
 import {
   type ColumnDef,
   type ColumnFiltersState,
+  type Header,
   type OnChangeFn,
   type PaginationState,
   type RowSelectionState,
@@ -97,12 +98,17 @@ export interface DataTableProps<TData, TValue> {
   hideTableBorder?: boolean;
   hideColumnBorders?: boolean;
   /**
+   * Estratégia de layout da tabela.
+   * - 'auto' (default): respeita larguras intrínsecas/min-w do conteúdo (útil quando colunas não têm `size`).
+   * - 'fixed': usa algoritmo fixo; prefira quando a maioria das colunas define `size` para larguras estáveis.
+   */
+  tableLayout?: 'auto' | 'fixed';
+  /**
    * Escape hatch para passar `meta` (ex.: lookups) para cells/headers.
    * Mantemos compatibilidade com usos existentes que injetam `meta` via options.
    */
   options?: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    meta?: any;
+    meta?: Record<string, unknown>;
   };
   onTableReady?: (table: TanstackTable<TData>) => void;
   className?: string;
@@ -117,8 +123,7 @@ function DraggableTableHeader<TData>({
   className,
   style: extraStyle,
 }: {
-  // TanStack's Header type is generic but nested; keep it simple here.
-  header: any;
+  header: Header<TData, unknown>;
   className?: string;
   style?: React.CSSProperties;
 }) {
@@ -174,6 +179,7 @@ export function DataTable<TData, TValue>({
   emptyComponent,
   hideTableBorder,
   hideColumnBorders,
+  tableLayout = 'auto',
   options,
   onTableReady,
   className,
@@ -377,7 +383,7 @@ export function DataTable<TData, TValue>({
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <Table className="w-full table-fixed">
+        <Table className={cn('w-full', tableLayout === 'fixed' ? 'table-fixed' : 'table-auto')}>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -385,7 +391,7 @@ export function DataTable<TData, TValue>({
                   items={columnOrder}
                   strategy={horizontalListSortingStrategy}
                 >
-                  {headerGroup.headers.map((header: any, index: number) => {
+                  {headerGroup.headers.map((header, index: number) => {
                     const columnSize = header.column.columnDef.size as number | undefined;
                     const maxWidth = columnSize ? `${columnSize}px` : undefined;
                     const meta = header.column.columnDef.meta as
@@ -413,7 +419,6 @@ export function DataTable<TData, TValue>({
                         index === headerGroup.headers.length - 1 && 'pr-6',
                         hasBorder && 'border-r border-border'
                       )}
-                      // eslint-disable-next-line react/forbid-dom-props
                       style={
                         maxWidth ? ({ maxWidth, width: maxWidth } as React.CSSProperties) : undefined
                       }
@@ -469,7 +474,6 @@ export function DataTable<TData, TValue>({
                         index === all.length - 1 && 'pr-6',
                         hasBorder && 'border-r border-border'
                       )}
-                      // eslint-disable-next-line react/forbid-dom-props
                       style={
                         maxWidth ? ({ maxWidth, width: maxWidth } as React.CSSProperties) : undefined
                       }

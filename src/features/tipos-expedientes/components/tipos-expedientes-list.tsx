@@ -4,7 +4,6 @@ import * as React from 'react';
 import {
     ColumnDef,
     PaginationState,
-    SortingState,
 } from '@tanstack/react-table';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 import { format } from 'date-fns';
@@ -116,7 +115,6 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
         pageIndex: 0,
         pageSize: 50,
     });
-    const [sorting, setSorting] = React.useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = React.useState('');
 
     // Dialog State
@@ -131,8 +129,8 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
                 pagina: pagination.pageIndex + 1,
                 limite: pagination.pageSize,
                 busca: globalFilter,
-                ordenarPor: sorting[0]?.id as any || 'tipoExpediente',
-                ordem: sorting[0]?.desc ? 'desc' : 'asc',
+                ordenarPor: 'tipoExpediente',
+                ordem: 'asc',
             });
 
             if (result.success && result.data) {
@@ -140,12 +138,12 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
             } else {
                 toast.error(result.error || 'Erro ao carregar dados');
             }
-        } catch (error) {
+        } catch {
             toast.error('Erro desconhecido ao carregar dados');
         } finally {
             setIsLoading(false);
         }
-    }, [pagination.pageIndex, pagination.pageSize, globalFilter, sorting]);
+    }, [pagination.pageIndex, pagination.pageSize, globalFilter]);
 
     // Effects
     React.useEffect(() => {
@@ -176,7 +174,7 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
             } else {
                 toast.error(result.error || 'Erro ao excluir');
             }
-        } catch (error) {
+        } catch {
             toast.error('Erro ao excluir');
         }
     };
@@ -193,6 +191,8 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
                         variant="integrated"
                         searchValue={globalFilter}
                         onSearchChange={setGlobalFilter}
+                        selectedFilters={[]}
+                        onFiltersChange={() => {}}
                         onNewClick={handleNew}
                         newButtonTooltip="Novo Tipo"
                     />

@@ -30,6 +30,16 @@ interface ExpedientesListProps {
   initialData?: PaginatedResponse<Expediente>; // Optional initial data from server
 }
 
+type UsuarioOption = {
+  id: number;
+  nomeExibicao: string;
+};
+
+type TipoExpedienteOption = {
+  id: number;
+  tipoExpediente: string;
+};
+
 export function ExpedientesList({ initialData }: ExpedientesListProps) {
   const router = useRouter();
 
@@ -48,11 +58,11 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
   // Custom Filters State
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
   const [prazoFilter, setPrazoFilter] = React.useState<'todos' | 'vencidos' | 'hoje' | 'amanha' | 'semana'>('todos');
-  const [dateRange, setDateRange] = React.useState<{ from: Date; to: Date } | undefined>(undefined);
+  const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>(undefined);
 
   // Aux Data State
-  const [usuarios, setUsuarios] = React.useState<any[]>([]);
-  const [tiposExpedientes, setTiposExpedientes] = React.useState<any[]>([]);
+  const [usuarios, setUsuarios] = React.useState<UsuarioOption[]>([]);
+  const [tiposExpedientes, setTiposExpedientes] = React.useState<TipoExpedienteOption[]>([]);
 
   // Data fetching state
   const [data, setData] = React.useState<PaginatedResponse<Expediente> | undefined>(initialData);
@@ -63,12 +73,23 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
   React.useEffect(() => {
     const fetchAuxData = async () => {
       try {
-        const [usersRes, tiposRes] = await Promise.all([
-          fetch('/api/usuarios?ativo=true&limite=100').then(r => r.json()),
-          fetch('/api/tipos-expedientes?limite=100').then(r => r.json())
+        const [usersRes, tiposRes]: [unknown, unknown] = await Promise.all([
+          fetch('/api/usuarios?ativo=true&limite=100').then((r) => r.json()),
+          fetch('/api/tipos-expedientes?limite=100').then((r) => r.json()),
         ]);
-        if (usersRes.success) setUsuarios(usersRes.data.usuarios);
-        if (tiposRes.success) setTiposExpedientes(tiposRes.data.data);
+
+        const usersPayload = usersRes as { success?: boolean; data?: { usuarios?: UsuarioOption[] } };
+        const tiposPayload = tiposRes as { success?: boolean; data?: { data?: TipoExpedienteOption[] } };
+
+        const usuariosArr = usersPayload.data?.usuarios;
+        if (usersPayload.success && Array.isArray(usuariosArr)) {
+          setUsuarios(usuariosArr);
+        }
+
+        const tiposArr = tiposPayload.data?.data;
+        if (tiposPayload.success && Array.isArray(tiposArr)) {
+          setTiposExpedientes(tiposArr);
+        }
       } catch (err) {
         console.error('Erro ao carregar dados auxiliares:', err);
       }
@@ -106,14 +127,14 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
         throw new Error(result.message || 'Erro ao listar expedientes');
       }
 
-      setData(result.data);
+      setData(result.data as PaginatedResponse<Expediente>);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
       console.error(err);
     } finally {
       setIsLoading(false);
     }
-  }, [pagination.pageIndex, pagination.pageSize, globalFilter, statusFilter, prazoFilter, dateRange]);
+  }, [pagination.pageIndex, pagination.pageSize, globalFilter, statusFilter, dateRange]);
 
   // Trigger fetch on dependencies change
   React.useEffect(() => {
@@ -146,6 +167,8 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
             variant="integrated"
             searchValue={globalFilter}
             onSearchChange={setGlobalFilter}
+            selectedFilters={[]}
+            onFiltersChange={() => {}}
             onNewClick={() => setIsNovoDialogOpen(true)}
             newButtonTooltip="Novo Expediente"
             extraButtons={
@@ -164,7 +187,10 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
                   </SelectContent>
                 </Select>
 
-                <Select value={prazoFilter} onValueChange={(v: any) => setPrazoFilter(v)}>
+                <Select
+                  value={prazoFilter}
+                  onValueChange={(v: 'todos' | 'vencidos' | 'hoje' | 'amanha' | 'semana') => setPrazoFilter(v)}
+                >
                   <SelectTrigger className="w-[140px] h-9">
                     <SelectValue placeholder="Prazo" />
                   </SelectTrigger>
@@ -181,7 +207,7 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
 
                 <DateRangePicker
                   value={dateRange}
-                  onValueChange={setDateRange}
+                  onChange={setDateRange}
                   placeholder="Período"
                   className="w-[240px] h-9"
                 />
@@ -200,44 +226,45 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
             variant="integrated"
             pageIndex={pagination.pageIndex}
             pageSize={pagination.pageSize}
-            total={tableData.meta.total}
-            totalPages={tableData.meta.totalPages || Math.ceil(tableData.meta.total / pagination.pageSize)}
+            total={tableData.pagination.total}
+            totalPages={tableData.pagination.totalPages}
             onPageChange={(page) => setPagination((prev) => ({ ...prev, pageIndex: page }))}
             onPageSizeChange={(size) => setPagination((prev) => ({ ...prev, pageSize: size, pageIndex: 0 }))}
             isLoading={isLoading}
           />
         }
       >
-        <DataTable
-          data={tableData.expedientes}
-          columns={columns}
-          isLoading={isLoading}
-          error={error}
-          pagination={undefined}
-          sorting={{
-            columnId: sorting[0]?.id || null,
-            direction: sorting[0]?.desc ? 'desc' : 'asc',
-            onSortingChange: (id, dir) => {
-              if (!id) setSorting([]);
-              else setSorting([{ id, desc: dir === 'desc' }]);
-            }
-          }}
-          rowSelection={{
-            state: rowSelection,
-            onRowSelectionChange: setRowSelection
-          }}
-          hidePagination={true}
-          hideTableBorder={true}
-          className="border-none"
-          // @ts-expect-error - TanStack Table options type mismatch
-          options={{
-            meta: {
-              usuarios,
-              tiposExpedientes,
-              onSuccess: handleSucessoOperacao
-            }
-          }}
-        />
+        <div className="relative border-t">
+          <DataTable
+            data={tableData.data}
+            columns={columns}
+            isLoading={isLoading}
+            error={error}
+            pagination={undefined}
+            sorting={{
+              columnId: sorting[0]?.id || null,
+              direction: sorting[0]?.desc ? 'desc' : 'asc',
+              onSortingChange: (id, dir) => {
+                if (!id) setSorting([]);
+                else setSorting([{ id, desc: dir === 'desc' }]);
+              }
+            }}
+            rowSelection={{
+              state: rowSelection,
+              onRowSelectionChange: setRowSelection
+            }}
+            hidePagination={true}
+            hideTableBorder={true}
+            className="border-none"
+            options={{
+              meta: {
+                usuarios,
+                tiposExpedientes,
+                onSuccess: handleSucessoOperacao
+              }
+            }}
+          />
+        </div>
       </DataShell>
 
       <ExpedienteDialog

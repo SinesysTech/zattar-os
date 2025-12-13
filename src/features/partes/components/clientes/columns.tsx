@@ -252,7 +252,7 @@ export const getClientesColumns = (
       const enderecoFormatado = formatarEnderecoCompleto(cliente.endereco);
       return (
         <div
-          className="min-w-0 max-w-full overflow-hidden text-sm text-muted-foreground whitespace-normal break-words"
+          className="min-w-0 max-w-full overflow-hidden text-sm text-muted-foreground whitespace-normal wrap-break-word"
           title={enderecoFormatado}
         >
           {enderecoFormatado || '-'}
