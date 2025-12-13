@@ -5,7 +5,7 @@ import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce'; 
-import { DataTable } from '@/components/ui/data-table';
+import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { SalarioFormDialog } from './salario-form-dialog';
@@ -431,56 +431,56 @@ export function SalariosList() {
         </div>
       )}
 
-      {/* Toolbar */}
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={setBusca}
-        searchPlaceholder="Buscar por funcionário ou observações..."
-        filterOptions={[]}
-        selectedFilters={[]}
-        onFiltersChange={() => { }}
-        showFilterButton={false}
-      />
-
-      {/* Tabela */}
-      {error ? (
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center text-destructive">
-          {error}
+      <DataShell
+        header={
+          <TableToolbar
+            variant="integrated"
+            searchValue={busca}
+            onSearchChange={setBusca}
+            searchPlaceholder="Buscar por funcionário ou observações..."
+            filterOptions={[]}
+            selectedFilters={[]}
+            onFiltersChange={() => { }}
+            showFilterButton={false}
+          />
+        }
+        footer={
+          paginacao && paginacao.totalPaginas > 0 ? (
+            <DataPagination
+              pageIndex={pagina - 1}
+              pageSize={50}
+              total={paginacao.total}
+              totalPages={paginacao.totalPaginas}
+              onPageChange={(pageIndex) => setPagina(pageIndex + 1)}
+              onPageSizeChange={() => { }}
+              isLoading={isLoading}
+            />
+          ) : null
+        }
+      >
+        <div className="relative border-t">
+          <DataTable
+            columns={colunas}
+            data={salarios}
+            isLoading={isLoading}
+            error={error}
+            pagination={
+              paginacao
+                ? {
+                    pageIndex: pagina - 1,
+                    pageSize: 50,
+                    total: paginacao.total,
+                    totalPages: paginacao.totalPaginas,
+                    onPageChange: (pageIndex) => setPagina(pageIndex + 1),
+                    onPageSizeChange: () => { },
+                  }
+                : undefined
+            }
+            hideTableBorder={true}
+            hidePagination={true}
+          />
         </div>
-      ) : (
-        <DataTable
-          columns={colunas}
-          data={salarios}
-          isLoading={isLoading}
-        />
-      )}
-
-      {/* Paginação */}
-      {paginacao && paginacao.totalPaginas > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            Mostrando {salarios.length} de {paginacao.total} registros
-          </p>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPagina((p) => Math.max(1, p - 1))}
-              disabled={pagina === 1}
-            >
-              Anterior
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPagina((p) => Math.min(paginacao.totalPaginas, p + 1))}
-              disabled={pagina === paginacao.totalPaginas}
-            >
-              Próximo
-            </Button>
-          </div>
-        </div>
-      )}
+      </DataShell>
 
       {/* Dialog de Formulário */}
       <SalarioFormDialog

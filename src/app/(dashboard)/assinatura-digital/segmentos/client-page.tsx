@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +17,7 @@ import type { Segmento, EscopoSegmento } from '@/features/assinatura-digital';
 import { listarSegmentosAction } from '@/features/assinatura-digital/actions';
 import { getSegmentoDisplayName, formatAtivoBadge, getAtivoBadgeVariant, truncateText } from '@/features/assinatura-digital';
 import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
-import { DataSurface } from '@/components/shared/data-surface';
+import { DataShell } from '@/components/shared/data-shell';
 import { TablePagination } from '@/components/shared/table-pagination';
 import { SegmentoCreateDialog, SegmentoEditDialog, SegmentoDuplicateDialog, SegmentoDeleteDialog } from './components';
 
@@ -194,7 +194,7 @@ export function SegmentosClient() {
         </div>
       )}
 
-      <DataSurface
+      <DataShell
         className="flex-1"
         header={
           <TableToolbar
@@ -251,7 +251,7 @@ export function SegmentosClient() {
           hidePagination
           hideTableBorder
         />
-      </DataSurface>
+      </DataShell>
 
       <SegmentoCreateDialog
         open={createOpen}

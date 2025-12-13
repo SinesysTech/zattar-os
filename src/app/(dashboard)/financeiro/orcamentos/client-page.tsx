@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import {
@@ -682,51 +682,61 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
         onFiltrarEncerrado={handleFiltrarEncerrado}
       />
 
-      {/* Toolbar */}
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={(value) => {
-          setBusca(value);
-          setPagina(0);
-        }}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar por nome ou descrição..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="buttons"
-        onNewClick={handleNovo}
-        newButtonTooltip="Novo Orçamento"
-      />
-
-      {/* Mensagem de erro */}
-      {error && (
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
-          <p className="font-semibold">Erro ao carregar orçamentos:</p>
-          <p>{error}</p>
-        </div>
-      )}
-
-      {/* Tabela */}
-      <DataTable
-        data={orcamentos}
-        columns={colunas}
-        pagination={
-          {
-            pageIndex: pagina,
-            pageSize: limite,
-            total: total,
-            totalPages: Math.ceil(total / limite),
-            onPageChange: setPagina,
-            onPageSizeChange: setLimite,
-          }
+      <DataShell
+        header={
+          <TableToolbar
+            variant="integrated"
+            searchValue={busca}
+            onSearchChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar por nome ou descrição..."
+            filterOptions={filterOptions}
+            filterGroups={filterGroups}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            filterButtonsMode="buttons"
+            onNewClick={handleNovo}
+            newButtonTooltip="Novo Orçamento"
+          />
         }
-        sorting={undefined}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhum orçamento encontrado."
-      />
+        footer={
+          total > 0 ? (
+            <DataPagination
+              pageIndex={pagina}
+              pageSize={limite}
+              total={total}
+              totalPages={Math.ceil(total / limite)}
+              onPageChange={setPagina}
+              onPageSizeChange={setLimite}
+              isLoading={isLoading}
+            />
+          ) : null
+        }
+      >
+        <div className="relative border-t">
+          <DataTable
+            data={orcamentos}
+            columns={colunas}
+            pagination={{
+              pageIndex: pagina,
+              pageSize: limite,
+              total,
+              totalPages: Math.ceil(total / limite),
+              onPageChange: setPagina,
+              onPageSizeChange: setLimite,
+            }}
+            sorting={undefined}
+            isLoading={isLoading}
+            error={error}
+            emptyMessage="Nenhum orçamento encontrado."
+            hideTableBorder={true}
+            hidePagination={true}
+          />
+        </div>
+      </DataShell>
 
       {/* Dialog de Formulário */}
       <OrcamentoFormDialog

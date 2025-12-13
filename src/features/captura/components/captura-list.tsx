@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -353,45 +353,63 @@ export function CapturaList({ onNewClick, newButtonTooltip = 'Nova Captura' }: C
   }, []);
 
   return (
-    <div className="space-y-4">
-      {/* Barra de busca e filtros */}
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={(value) => {
-          setBusca(value);
-          setPagina(0);
-        }}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar capturas..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        onNewClick={onNewClick}
-        newButtonTooltip={newButtonTooltip}
-      />
-
-      {/* Tabela */}
-      <DataTable
-        data={capturas}
-        columns={colunas}
-        pagination={
-          paginacao
-            ? {
-              pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-              pageSize: paginacao.limite,
-              total: paginacao.total,
-              totalPages: paginacao.totalPaginas,
-              onPageChange: setPagina,
-              onPageSizeChange: setLimite,
-            }
-            : undefined
-        }
-        sorting={undefined}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhuma captura encontrada no histórico."
-      />
-    </div>
+    <DataShell
+      header={
+        <TableToolbar
+          variant="integrated"
+          searchValue={busca}
+          onSearchChange={(value) => {
+            setBusca(value);
+            setPagina(0);
+          }}
+          isSearching={isSearching}
+          searchPlaceholder="Buscar capturas..."
+          filterOptions={filterOptions}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilterIds}
+          onFiltersChange={handleFilterIdsChange}
+          onNewClick={onNewClick}
+          newButtonTooltip={newButtonTooltip}
+        />
+      }
+      footer={
+        paginacao ? (
+          <DataPagination
+            pageIndex={paginacao.pagina - 1}
+            pageSize={paginacao.limite}
+            total={paginacao.total}
+            totalPages={paginacao.totalPaginas}
+            onPageChange={setPagina}
+            onPageSizeChange={setLimite}
+            isLoading={isLoading}
+          />
+        ) : null
+      }
+    >
+      <div className="relative border-t">
+        <DataTable
+          data={capturas}
+          columns={colunas}
+          pagination={
+            paginacao
+              ? {
+                  pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                  pageSize: paginacao.limite,
+                  total: paginacao.total,
+                  totalPages: paginacao.totalPaginas,
+                  onPageChange: setPagina,
+                  onPageSizeChange: setLimite,
+                }
+              : undefined
+          }
+          sorting={undefined}
+          isLoading={isLoading}
+          error={error}
+          emptyMessage="Nenhuma captura encontrada no histórico."
+          hideTableBorder={true}
+          hidePagination={true}
+        />
+      </div>
+    </DataShell>
   );
 }

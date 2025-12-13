@@ -21,9 +21,9 @@ import {
 import { ptBR } from 'date-fns/locale';
 
 import { Button } from '@/components/ui/button';
-import { DataSurface } from '@/components/shared/data-surface';
+import { DataShell } from '@/components/shared/data-shell';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { DataTable } from '@/components/ui/data-table';
+import { DataTable } from '@/components/shared/data-shell';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -191,7 +191,7 @@ export function ExpedientesCalendar() {
             </div>
 
             {/* List View for Selected Day */}
-            <DataSurface
+            <DataShell
                 header={
                     <TableToolbar
                         variant="integrated"
@@ -251,7 +251,7 @@ export function ExpedientesCalendar() {
                         }
                     }}
                 />
-            </DataSurface>
+            </DataShell>
 
             <ExpedienteDialog
                 open={isNovoDialogOpen}

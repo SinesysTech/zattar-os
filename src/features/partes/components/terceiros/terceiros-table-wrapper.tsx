@@ -8,7 +8,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Button } from '@/components/ui/button';
@@ -336,51 +336,71 @@ export function TerceirosTableWrapper() {
   }, []);
 
   return (
-    <div className="space-y-4">
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={(value) => {
-          setBusca(value);
-          setPagina(0);
-        }}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar terceiros..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="buttons"
-        onNewClick={() => {
-          // TODO: Implementar dialog de criação
-          console.log('Novo terceiro');
-        }}
-        newButtonTooltip="Novo terceiro"
-      />
-
-      <DataTable
-        columns={columns}
-        data={terceiros}
-        pagination={
-          paginacao
-            ? {
-                pageIndex: paginacao.pagina - 1,
-                pageSize: paginacao.limite,
-                total: paginacao.total,
-                totalPages: paginacao.totalPaginas,
-                onPageChange: setPagina,
-                onPageSizeChange: setLimite,
-              }
-            : undefined
-        }
-        sorting={{
-          columnId: ordenarPor,
-          direction: ordem,
-          onSortingChange: handleSortingChange,
-        }}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhum terceiro encontrado"
-      />
-    </div>
+    <DataShell
+      header={
+        <TableToolbar
+          variant="integrated"
+          searchValue={busca}
+          onSearchChange={(value) => {
+            setBusca(value);
+            setPagina(0);
+          }}
+          isSearching={isSearching}
+          searchPlaceholder="Buscar terceiros..."
+          filterOptions={filterOptions}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilterIds}
+          onFiltersChange={handleFilterIdsChange}
+          filterButtonsMode="buttons"
+          onNewClick={() => {
+            // TODO: Implementar dialog de criação
+            console.log('Novo terceiro');
+          }}
+          newButtonTooltip="Novo terceiro"
+        />
+      }
+      footer={
+        paginacao ? (
+          <DataPagination
+            pageIndex={paginacao.pagina - 1}
+            pageSize={paginacao.limite}
+            total={paginacao.total}
+            totalPages={paginacao.totalPaginas}
+            onPageChange={setPagina}
+            onPageSizeChange={setLimite}
+            isLoading={isLoading}
+          />
+        ) : null
+      }
+    >
+      <div className="relative border-t">
+        <DataTable
+          columns={columns}
+          data={terceiros}
+          pagination={
+            paginacao
+              ? {
+                  pageIndex: paginacao.pagina - 1,
+                  pageSize: paginacao.limite,
+                  total: paginacao.total,
+                  totalPages: paginacao.totalPaginas,
+                  onPageChange: setPagina,
+                  onPageSizeChange: setLimite,
+                }
+              : undefined
+          }
+          sorting={{
+            columnId: ordenarPor,
+            direction: ordem,
+            onSortingChange: handleSortingChange,
+          }}
+          isLoading={isLoading}
+          error={error}
+          emptyMessage="Nenhum terceiro encontrado"
+          hideTableBorder={true}
+          hidePagination={true}
+        />
+      </div>
+    </DataShell>
   );
 }

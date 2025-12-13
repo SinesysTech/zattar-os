@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+import { Typography } from '@/components/ui/typography';
 
 /**
  * PageShell - Container principal para páginas.
@@ -15,21 +16,29 @@ import { cn } from '@/lib/utils';
  * </PageShell>
  */
 interface PageShellProps {
+  title?: string;
+  description?: string;
   actions?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
 }
 
 export function PageShell({
+  title,
+  description,
   actions,
   children,
   className,
 }: PageShellProps) {
   return (
-    <main className={cn('flex-1 space-y-4', className)}>
-      {actions && (
-        <div className="mb-4 flex items-center justify-end gap-2">
-          {actions}
+    <main className={cn('flex-1 space-y-6', className)}>
+      {(title || description || actions) && (
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="space-y-1">
+            {title && <Typography.H1>{title}</Typography.H1>}
+            {description && <Typography.Muted>{description}</Typography.Muted>}
+          </div>
+          {actions && <div className="flex items-center gap-2">{actions}</div>}
         </div>
       )}
       <div className="space-y-4">{children}</div>

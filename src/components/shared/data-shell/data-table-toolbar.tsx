@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import type { Table } from '@tanstack/react-table';
-import { DataTableAdvancedToolbar } from '@/components/shared/data-table/data-table-advanced-toolbar';
+import { DataTableAdvancedToolbar } from './data-table-advanced-toolbar';
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;

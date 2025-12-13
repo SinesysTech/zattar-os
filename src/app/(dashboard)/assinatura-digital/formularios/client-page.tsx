@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
-import { DataTable } from '@/components/ui/data-table';
+import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +16,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import type { ColumnDef } from '@tanstack/react-table';
 import type { AssinaturaDigitalFormulario, AssinaturaDigitalSegmento, AssinaturaDigitalTemplate } from '@/features/assinatura-digital/types/types';
 import { getFormularioDisplayName, formatBooleanBadge, getBooleanBadgeVariant, getAtivoBadgeTone, formatAtivoStatus, getTemplatePreviewText } from '@/features/assinatura-digital';
-import { DataSurface } from '@/components/shared/data-surface';
+import { DataShell } from '@/components/shared/data-shell';
 import { TablePagination } from '@/components/shared/table-pagination';
 import { FormularioCreateDialog } from './components/formulario-create-dialog';
 import { FormularioDuplicateDialog } from './components/formulario-duplicate-dialog';
@@ -355,7 +355,7 @@ export function FormulariosClient() {
         </div>
       )}
 
-      <DataSurface
+      <DataShell
         className="flex-1"
         header={
           <TableToolbar
@@ -409,7 +409,7 @@ export function FormulariosClient() {
           hidePagination
           hideTableBorder
         />
-      </DataSurface>
+      </DataShell>
 
       <FormularioCreateDialog open={createOpen} onOpenChange={setCreateOpen} onSuccess={handleCreateSuccess} segmentos={segmentos} templates={templates} />
 

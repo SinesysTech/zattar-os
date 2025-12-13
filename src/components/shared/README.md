@@ -4,14 +4,14 @@ Este diretório contém componentes de UI reutilizáveis e agnósticos de negóc
 
 ### Componentes Principais
 
-- **`PageShell`**: Um componente de layout que envolve o conteúdo principal de uma página. Ele normalmente inclui o título da página, uma descrição e slots para ações (como botões).
+- **`PageShell`**: Um componente de layout que envolve o conteúdo principal de uma página. Inclui título, descrição e slots para ações (como botões).
   - **Quando usar:** Em todas as páginas de nível superior dentro de um módulo para garantir consistência visual.
 
-- **`TableToolbar`**: Uma barra de ferramentas especializada para tabelas de dados. Inclui funcionalidades como busca (filtro de texto), botões para filtros avançados e ações primárias (ex: "Adicionar Novo").
-  - **Quando usar:** Sempre que uma tabela de dados (`<ResponsiveTable />`) for exibida, para fornecer controles de usuário padronizados.
+- **`DataShell`**: Container visual para superfícies de dados (listas/tabelas), com narrativa “colada” (header + conteúdo scrollável + footer).
+  - **Quando usar:** Em páginas de listagem para unir toolbar, tabela e paginação com consistência.
 
-- **`ResponsiveTable`**: Um wrapper em torno do componente de tabela (`<Table />`) do `shadcn/ui`. Ele gerencia a responsividade, transformando a tabela em uma lista de "cards" em telas menores para melhor usabilidade mobile.
-  - **Quando usar:** Para exibir qualquer conjunto de dados tabulares.
+- **`DataTable`**: Tabela baseada em TanStack Table, projetada para ser usada dentro do `DataShell`.
+  - **Quando usar:** Para exibir conjuntos de dados tabulares (com paginação/ordenação server-side quando necessário).
 
 - **`StatCard`**: Um card de exibição para métricas e estatísticas chave. Geralmente inclui um ícone, um valor numérico grande e uma descrição ou variação percentual.
   - **Quando usar:** Em dashboards e páginas de visão geral para destacar KPIs importantes.
@@ -23,8 +23,8 @@ Siga este padrão ao construir uma nova página de listagem em um módulo. Isso 
 ```tsx
 // ✅ CORRETO: Usar PageShell para páginas de módulo
 import { PageShell } from '@/components/shared/page-shell';
-import { TableToolbar } from '@/components/shared/table-toolbar';
-import { ResponsiveTable } from '@/components/shared/responsive-table';
+import { DataShell, DataTable, DataPagination } from '@/components/shared/data-shell';
+import { TableToolbar } from '@/components/ui/table-toolbar';
 
 export default function MinhaPaginaDeListagem() {
   return (
@@ -32,8 +32,14 @@ export default function MinhaPaginaDeListagem() {
       title="Lançamentos Financeiros"
       description="Gerencie receitas e despesas"
     >
-      <TableToolbar onSearch={...} filters={...} />
-      <ResponsiveTable data={...} columns={...} />
+      <DataShell
+        header={<TableToolbar variant="integrated" {...propsToolbar} />}
+        footer={<DataPagination {...propsPaginacao} />}
+      >
+        <div className="relative border-t">
+          <DataTable {...propsTabela} hideTableBorder hidePagination />
+        </div>
+      </DataShell>
     </PageShell>
   );
 }

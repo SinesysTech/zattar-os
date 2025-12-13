@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { DataTable } from '@/components/ui/data-table';
+import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -193,21 +193,41 @@ export function AcordosList({ busca, filtros, refreshKey }: AcordosListProps) {
   const colunas = React.useMemo(() => criarColunas(router), [router]);
 
   return (
-    <DataTable
-      data={data}
-      columns={colunas}
-      pagination={{
-        pageIndex: pagina,
-        pageSize: limite,
-        total,
-        totalPages: totalPaginas,
-        onPageChange: setPagina,
-        onPageSizeChange: setLimite,
-      }}
-      isLoading={isLoading}
-      error={error}
-      emptyMessage="Nenhuma obrigação encontrada."
-      onRowClick={(row) => router.push(`/acordos-condenacoes/${row.id}`)}
-    />
+    <DataShell
+      footer={
+        totalPaginas > 0 ? (
+          <DataPagination
+            pageIndex={pagina}
+            pageSize={limite}
+            total={total}
+            totalPages={totalPaginas}
+            onPageChange={setPagina}
+            onPageSizeChange={setLimite}
+            isLoading={isLoading}
+          />
+        ) : null
+      }
+    >
+      <div className="relative">
+        <DataTable
+          data={data}
+          columns={colunas}
+          pagination={{
+            pageIndex: pagina,
+            pageSize: limite,
+            total,
+            totalPages: totalPaginas,
+            onPageChange: setPagina,
+            onPageSizeChange: setLimite,
+          }}
+          isLoading={isLoading}
+          error={error}
+          emptyMessage="Nenhuma obrigação encontrada."
+          onRowClick={(row) => router.push(`/acordos-condenacoes/${row.id}`)}
+          hideTableBorder={true}
+          hidePagination={true}
+        />
+      </div>
+    </DataShell>
   );
 }

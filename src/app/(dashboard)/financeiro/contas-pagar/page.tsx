@@ -9,7 +9,7 @@ import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { ExportButton } from '@/features/financeiro/components/export-button';
@@ -474,53 +474,65 @@ export default function ContasPagarPage() {
         />
       </div>
 
-      {/* Toolbar */}
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={(value) => {
-          setBusca(value);
-          setPagina(0);
-        }}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar por descrição, documento ou categoria..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="buttons"
-        onNewClick={() => toast.info('Funcionalidade de criação em desenvolvimento')}
-        newButtonTooltip="Nova Conta a Pagar"
-      />
-
-      {/* Mensagem de erro */}
-      {error && (
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
-          <p className="font-semibold">Erro ao carregar contas a pagar:</p>
-          <p>{error}</p>
-        </div>
-      )}
-
-      {/* Tabela */}
-      <DataTable
-        data={contasPagar}
-        columns={colunas}
-        pagination={
-          paginacao
-            ? {
-              pageIndex: paginacao.pagina - 1,
-              pageSize: paginacao.limite,
-              total: paginacao.total,
-              totalPages: paginacao.totalPaginas,
-              onPageChange: setPagina,
-              onPageSizeChange: setLimite,
-            }
-            : undefined
+      <DataShell
+        header={
+          <TableToolbar
+            variant="integrated"
+            searchValue={busca}
+            onSearchChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar por descrição, documento ou categoria..."
+            filterOptions={filterOptions}
+            filterGroups={filterGroups}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            filterButtonsMode="buttons"
+            onNewClick={() => toast.info('Funcionalidade de criação em desenvolvimento')}
+            newButtonTooltip="Nova Conta a Pagar"
+          />
         }
-        sorting={undefined}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhuma conta a pagar encontrada."
-      />
+        footer={
+          paginacao ? (
+            <DataPagination
+              pageIndex={paginacao.pagina - 1}
+              pageSize={paginacao.limite}
+              total={paginacao.total}
+              totalPages={paginacao.totalPaginas}
+              onPageChange={setPagina}
+              onPageSizeChange={setLimite}
+              isLoading={isLoading}
+            />
+          ) : null
+        }
+      >
+        <div className="relative border-t">
+          <DataTable
+            data={contasPagar}
+            columns={colunas}
+            pagination={
+              paginacao
+                ? {
+                    pageIndex: paginacao.pagina - 1,
+                    pageSize: paginacao.limite,
+                    total: paginacao.total,
+                    totalPages: paginacao.totalPaginas,
+                    onPageChange: setPagina,
+                    onPageSizeChange: setLimite,
+                  }
+                : undefined
+            }
+            sorting={undefined}
+            isLoading={isLoading}
+            error={error}
+            emptyMessage="Nenhuma conta a pagar encontrada."
+            hideTableBorder={true}
+            hidePagination={true}
+          />
+        </div>
+      </DataShell>
 
       {/* Dialog de Pagamento */}
       {selectedConta && (

@@ -12,7 +12,7 @@ import { format, addMonths, subMonths, isSameDay, isToday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { DataSurface } from '@/components/shared/data-surface';
+import { DataShell } from '@/components/shared/data-shell';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 
 export function ExpedientesCalendarMonth() {
