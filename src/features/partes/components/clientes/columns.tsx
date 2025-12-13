@@ -1,11 +1,9 @@
 'use client';
 
-import * as React from 'react';
 import Link from 'next/link';
 import { ColumnDef } from '@tanstack/react-table';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, Pencil, Trash2 } from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import {
@@ -13,7 +11,18 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { DataTableColumnHeader } from '@/components/shared/data-table/data-table-column-header';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 import type { Cliente, ProcessoRelacionado } from '../../types';
 import { ProcessosRelacionadosCell } from '../shared/processos-relacionados-cell';
@@ -47,9 +56,11 @@ export type ClienteComProcessos = Cliente & {
 function ClienteActions({
   cliente,
   onEdit,
+  onDelete,
 }: {
   cliente: ClienteComProcessos;
   onEdit: (cliente: ClienteComProcessos) => void;
+  onDelete: (cliente: ClienteComProcessos) => void;
 }) {
   return (
     <ButtonGroup>
@@ -83,6 +94,35 @@ function ClienteActions({
         </TooltipTrigger>
         <TooltipContent>Editar</TooltipContent>
       </Tooltip>
+
+      <AlertDialog>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Trash2 className="h-4 w-4" />
+                <span className="sr-only">Desativar cliente</span>
+              </Button>
+            </AlertDialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>Desativar</TooltipContent>
+        </Tooltip>
+
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Desativar cliente?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Isso é um soft delete. O cliente ficará como inativo e não aparecerá nas listagens padrão.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={() => onDelete(cliente)}>
+              Desativar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </ButtonGroup>
   );
 }
@@ -104,7 +144,8 @@ function formatarData(dataISO: string | null): string {
 
 // Define Columns
 export const getClientesColumns = (
-  onEdit: (cliente: ClienteComProcessos) => void
+  onEdit: (cliente: ClienteComProcessos) => void,
+  onDelete: (cliente: ClienteComProcessos) => void
 ): ColumnDef<ClienteComProcessos>[] => [
   {
     accessorKey: 'nome',
@@ -145,10 +186,6 @@ export const getClientesColumns = (
       );
     },
     enableSorting: true,
-    meta: {
-      filterVariant: 'text',
-      filterTitle: 'Identificação',
-    },
   },
   {
     id: 'contato',
@@ -176,14 +213,14 @@ export const getClientesColumns = (
             <>
               {emails.slice(0, 2).map((email, idx) => (
                 <div key={idx} className="flex items-center gap-1">
-                  <span className="text-xs text-muted-foreground truncate max-w-[180px]">
+                  <span className="text-sm text-muted-foreground truncate max-w-[220px]">
                     {email}
                   </span>
                   <CopyButton text={email} label="Copiar e-mail" />
                 </div>
               ))}
               {emails.length > 2 && (
-                <span className="text-xs text-muted-foreground">
+                <span className="text-sm text-muted-foreground">
                   +{emails.length - 2} e-mail(s)
                 </span>
               )}
@@ -192,7 +229,7 @@ export const getClientesColumns = (
                 const telefoneRaw = `${tel.ddd}${tel.numero}`;
                 return (
                   <div key={idx} className="flex items-center gap-1">
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-sm text-muted-foreground">
                       {telefoneFormatado}
                     </span>
                     <CopyButton text={telefoneRaw} label="Copiar telefone" />
@@ -214,42 +251,10 @@ export const getClientesColumns = (
       const cliente = row.original;
       const enderecoFormatado = formatarEnderecoCompleto(cliente.endereco);
       return (
-        <div className="text-sm min-w-[200px] truncate" title={enderecoFormatado}>
+        <div className="text-sm min-w-[340px] whitespace-normal wrap-break-word" title={enderecoFormatado}>
           {enderecoFormatado}
         </div>
       );
-    },
-  },
-  {
-    accessorKey: 'tipo_pessoa',
-    header: 'Tipo',
-    cell: ({ row }) => {
-        const tipo = row.getValue('tipo_pessoa') as string;
-        return <Badge variant="outline">{tipo === 'pf' ? 'Física' : 'Jurídica'}</Badge>
-    },
-    meta: {
-      filterVariant: 'select',
-      filterTitle: 'Tipo',
-      filterOptions: [
-        { label: 'Pessoa Física', value: 'pf' },
-        { label: 'Pessoa Jurídica', value: 'pj' },
-      ],
-    },
-  },
-  {
-    accessorKey: 'situacao',
-    header: 'Situação',
-    cell: ({ row }) => {
-        const situacao = row.getValue('situacao') as string;
-        return <Badge variant={situacao === 'A' ? 'default' : 'destructive'}>{situacao === 'A' ? 'Ativo' : 'Inativo'}</Badge>
-    },
-    meta: {
-      filterVariant: 'select',
-      filterTitle: 'Situação',
-      filterOptions: [
-        { label: 'Ativo', value: 'A' },
-        { label: 'Inativo', value: 'I' },
-      ],
     },
   },
   {
@@ -268,7 +273,7 @@ export const getClientesColumns = (
     id: 'actions',
     header: 'Ações',
     cell: ({ row }) => (
-      <ClienteActions cliente={row.original} onEdit={onEdit} />
+      <ClienteActions cliente={row.original} onEdit={onEdit} onDelete={onDelete} />
     ),
     enableSorting: false,
     enableHiding: false,

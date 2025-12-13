@@ -464,7 +464,7 @@ export async function findAllClientes(
 ): Promise<Result<PaginatedResponse<Cliente>>> {
   try {
     const db = createDbClient();
-    const { pagina = 1, limite = 50, tipo_pessoa, busca, nome, cpf, cnpj, ordenar_por = 'created_at', ordem = 'desc' } = params;
+    const { pagina = 1, limite = 50, tipo_pessoa, busca, nome, cpf, cnpj, ativo, ordenar_por = 'created_at', ordem = 'desc' } = params;
 
     const offset = (pagina - 1) * limite;
 
@@ -492,6 +492,10 @@ export async function findAllClientes(
 
     if (cnpj) {
       query = query.eq('cnpj', normalizarDocumento(cnpj));
+    }
+
+    if (ativo !== undefined) {
+      query = query.eq('ativo', ativo);
     }
 
     // Ordenacao e paginacao
@@ -1645,7 +1649,7 @@ export async function findAllClientesComEndereco(
 ): Promise<Result<PaginatedResponse<ClienteComEndereco>>> {
   try {
     const db = createDbClient();
-    const { pagina = 1, limite = 50, tipo_pessoa, busca, nome, cpf, cnpj, ordenar_por = 'created_at', ordem = 'desc' } = params;
+    const { pagina = 1, limite = 50, tipo_pessoa, busca, nome, cpf, cnpj, ativo, ordenar_por = 'created_at', ordem = 'desc' } = params;
 
     const offset = (pagina - 1) * limite;
 
@@ -1679,6 +1683,10 @@ export async function findAllClientesComEndereco(
 
     if (cnpj) {
       query = query.eq('cnpj', normalizarDocumento(cnpj));
+    }
+
+    if (ativo !== undefined) {
+      query = query.eq('ativo', ativo);
     }
 
     // Ordenacao e paginacao
@@ -1734,7 +1742,7 @@ export async function findAllClientesComEnderecoEProcessos(
 ): Promise<Result<PaginatedResponse<ClienteComEnderecoEProcessos>>> {
   try {
     const db = createDbClient();
-    const { pagina = 1, limite = 50, tipo_pessoa, busca, nome, cpf, cnpj, ordenar_por = 'created_at', ordem = 'desc' } = params;
+    const { pagina = 1, limite = 50, tipo_pessoa, busca, nome, cpf, cnpj, ativo, ordenar_por = 'created_at', ordem = 'desc' } = params;
 
     const offset = (pagina - 1) * limite;
 
@@ -1769,6 +1777,10 @@ export async function findAllClientesComEnderecoEProcessos(
 
     if (cnpj) {
       query = query.eq('cnpj', normalizarDocumento(cnpj));
+    }
+
+    if (ativo !== undefined) {
+      query = query.eq('ativo', ativo);
     }
 
     // Ordenacao e paginacao

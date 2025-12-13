@@ -18,8 +18,15 @@ import { Plus } from 'lucide-react';
 import type { Cliente } from '../../types';
 import { ClienteFormDialog } from './cliente-form';
 import { getClientesColumns, ClienteComProcessos } from './columns';
-import { actionListarClientes } from '@/app/actions/partes';
+import { actionDesativarCliente, actionListarClientes } from '@/app/actions/partes';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 // =============================================================================
 // TIPOS
@@ -59,7 +66,9 @@ export function ClientesTableWrapper({
   const [error, setError] = React.useState<string | null>(null);
 
   // Filter & Search State (mapped to DataTable state if needed, but here we control data fetching)
-  const [globalFilter] = React.useState('');
+  const [globalFilter, setGlobalFilter] = React.useState('');
+  const [tipoPessoa, setTipoPessoa] = React.useState<'all' | 'pf' | 'pj'>('all');
+  const [situacao, setSituacao] = React.useState<'ativo' | 'inativo' | ''>('ativo');
   // We can map specific column filters here if we want to server-side filter them
   // For now, let's focus on global search and simple pagination as in the original
   
@@ -79,7 +88,9 @@ export function ClientesTableWrapper({
         pagina: pageIndex + 1,
         limite: pageSize,
         busca: buscaDebounced || undefined,
-        // TODO: Pass column filters to backend if implemented
+        tipo_pessoa: tipoPessoa === 'all' ? undefined : tipoPessoa,
+        ativo: situacao === '' ? undefined : situacao === 'ativo',
+        incluir_processos: true,
       });
 
       if (result.success) {
@@ -95,7 +106,7 @@ export function ClientesTableWrapper({
     } finally {
       setIsLoading(false);
     }
-  }, [pageIndex, pageSize, buscaDebounced]);
+  }, [pageIndex, pageSize, buscaDebounced, tipoPessoa, situacao]);
 
   // Ref para controlar primeira renderizacao
   const isFirstRender = React.useRef(true);
@@ -116,6 +127,27 @@ export function ClientesTableWrapper({
     setEditOpen(true);
   }, []);
 
+  const handleDelete = React.useCallback(
+    async (cliente: ClienteComProcessos) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const result = await actionDesativarCliente(cliente.id);
+        if (!result.success) {
+          setError(result.error);
+          return;
+        }
+        await refetch();
+        router.refresh();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erro ao desativar cliente');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [refetch, router]
+  );
+
   const handleEditSuccess = React.useCallback(() => {
     refetch();
     setEditOpen(false);
@@ -129,22 +161,13 @@ export function ClientesTableWrapper({
     router.refresh();
   }, [refetch, router]);
 
-  const columns = React.useMemo(() => getClientesColumns(handleEdit), [handleEdit]);
+  const columns = React.useMemo(
+    () => getClientesColumns(handleEdit, handleDelete),
+    [handleEdit, handleDelete]
+  );
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <Tooltip>
-           <TooltipTrigger asChild>
-              <Button onClick={() => setCreateOpen(true)}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Novo Cliente
-              </Button>
-           </TooltipTrigger>
-           <TooltipContent>Novo Cliente</TooltipContent>
-        </Tooltip>
-      </div>
-
       <DataTable
         data={clientes}
         columns={columns}
@@ -158,6 +181,62 @@ export function ClientesTableWrapper({
         }}
         isLoading={isLoading}
         error={error}
+        searchValue={globalFilter}
+        onSearchValueChange={(value) => {
+          setGlobalFilter(value);
+          setPageIndex(0);
+        }}
+        filtersSlot={
+          <div className="flex items-center gap-2">
+            <Select
+              value={situacao}
+              onValueChange={(val) => {
+                const next = val as 'ativo' | 'inativo' | '';
+                setSituacao(next);
+                setPageIndex(0);
+              }}
+            >
+              <SelectTrigger className="h-9 w-[150px]">
+                <SelectValue placeholder="Situação" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ativo">Ativo</SelectItem>
+                <SelectItem value="inativo">Inativo</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={tipoPessoa}
+              onValueChange={(val) => {
+                const next = val as 'all' | 'pf' | 'pj';
+                setTipoPessoa(next);
+                setPageIndex(0);
+              }}
+            >
+              <SelectTrigger className="h-9 w-[170px]">
+                <SelectValue placeholder="Tipo de pessoa" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas</SelectItem>
+                <SelectItem value="pf">Pessoa Física</SelectItem>
+                <SelectItem value="pj">Pessoa Jurídica</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        }
+        actionSlot={
+             <div className="flex items-center">
+                 <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button onClick={() => setCreateOpen(true)} size="sm">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Novo Cliente
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Novo Cliente</TooltipContent>
+                 </Tooltip>
+             </div>
+        }
       />
 
       <ClienteFormDialog

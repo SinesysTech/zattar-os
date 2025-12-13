@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
 import { DataTableShell } from '@/components/shared/data-table-shell';
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { TablePagination } from '@/components/shared/table-pagination';
 import {
@@ -100,7 +100,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
 
 // Helper seguro para propriedade que pode faltar no tipo
 function umaPropriedadeSegura(processo: ProcessoComParticipacao): string {
-    return (processo as any).descricaoOrgaoJulgador || '-';
+    return (processo as unknown as { descricaoOrgaoJulgador?: string }).descricaoOrgaoJulgador || '-';
 }
 
 const colunas: ColumnDef<ProcessoComParticipacao>[] = [

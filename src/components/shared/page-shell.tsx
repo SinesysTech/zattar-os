@@ -26,9 +26,9 @@ export function PageShell({
   className,
 }: PageShellProps) {
   return (
-    <main className={cn('flex-1 space-y-4 p-4 sm:p-6 md:p-8 pt-6', className)}>
+    <main className={cn('flex-1 space-y-4', className)}>
       {actions && (
-        <div className="flex items-center justify-end gap-2 mb-6">
+        <div className="mb-4 flex items-center justify-end gap-2">
           {actions}
         </div>
       )}

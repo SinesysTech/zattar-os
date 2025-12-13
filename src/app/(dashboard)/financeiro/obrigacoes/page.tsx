@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataTable } from '@/components/ui/data-table';
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar, type ComboboxOption, type FilterGroup } from '@/components/ui/table-toolbar';
 import { AlertasObrigacoes } from '@/features/financeiro/components/obrigacoes/alertas-obrigacoes';
 import { ResumoCards } from '@/features/financeiro/components/obrigacoes/resumo-cards';

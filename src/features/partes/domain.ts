@@ -937,6 +937,12 @@ export interface ListarClientesParams {
   nome?: string;
   cpf?: string;
   cnpj?: string;
+  /**
+   * Situação do cliente no sistema (soft delete).
+   * - true: ativo
+   * - false: inativo
+   */
+  ativo?: boolean;
   ordenar_por?: OrdenarPorParte;
   ordem?: Ordem;
   numero_processo?: string;

@@ -11,7 +11,7 @@
 
 import * as React from 'react';
 import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Badge } from '@/components/ui/badge';
