@@ -251,8 +251,11 @@ export const getClientesColumns = (
       const cliente = row.original;
       const enderecoFormatado = formatarEnderecoCompleto(cliente.endereco);
       return (
-        <div className="text-sm min-w-[340px] whitespace-normal wrap-break-word" title={enderecoFormatado}>
-          {enderecoFormatado}
+        <div
+          className="min-w-0 max-w-full overflow-hidden text-sm text-muted-foreground whitespace-normal break-words"
+          title={enderecoFormatado}
+        >
+          {enderecoFormatado || '-'}
         </div>
       );
     },

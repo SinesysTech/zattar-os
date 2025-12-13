@@ -144,9 +144,11 @@ function DraggableTableHeader<TData>({
       {...attributes}
       {...listeners}
     >
-      {header.isPlaceholder
-        ? null
-        : flexRender(header.column.columnDef.header, header.getContext())}
+      <div className="min-w-0">
+        {header.isPlaceholder
+          ? null
+          : flexRender(header.column.columnDef.header, header.getContext())}
+      </div>
     </TableHead>
   );
 }
@@ -375,7 +377,7 @@ export function DataTable<TData, TValue>({
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <Table>
+        <Table className="w-full table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -472,7 +474,9 @@ export function DataTable<TData, TValue>({
                         maxWidth ? ({ maxWidth, width: maxWidth } as React.CSSProperties) : undefined
                       }
                     >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      <div className="min-w-0">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </div>
                     </TableCell>
                     );
                   })}

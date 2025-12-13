@@ -256,8 +256,10 @@ export function PartesContrariasTableWrapper() {
         cell: ({ row }) => {
           const enderecoFormatado = formatarEnderecoCompleto(row.original.endereco);
           return (
-            <div className="min-h-10 flex items-center justify-start text-sm">
-              {enderecoFormatado}
+            <div className="min-h-10 min-w-0 flex items-center justify-start overflow-hidden">
+              <span className="min-w-0 max-w-full text-sm text-muted-foreground whitespace-normal break-words" title={enderecoFormatado}>
+                {enderecoFormatado || '-'}
+              </span>
             </div>
           );
         },
