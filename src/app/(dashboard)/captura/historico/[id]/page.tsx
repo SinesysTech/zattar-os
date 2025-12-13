@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
-import { buscarCapturaLog, CapturaResult, type CapturaResultData } from '@/features/captura';
+import { CapturaResult, type CapturaResultData } from '@/features/captura';
+import { buscarCapturaLog } from '@/features/captura/server';
 import { DataSurface } from '@/components/ui/data-surface';
 import { ArrowLeft, Database } from 'lucide-react';
 import Link from 'next/link';

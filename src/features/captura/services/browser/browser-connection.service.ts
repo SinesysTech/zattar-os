@@ -20,6 +20,8 @@
  * ```
  */
 
+import 'server-only';
+
 import { Browser, BrowserContext, Page, firefox } from 'playwright';
 
 // ============================================================================
