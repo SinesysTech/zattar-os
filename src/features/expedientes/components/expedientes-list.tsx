@@ -11,9 +11,9 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 
-import { DataSurface } from '@/components/shared/data-surface';
+import { DataShell } from '@/components/shared/data-shell';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { DataTable } from '@/components/ui/data-table';
+import { DataTable } from '@/components/shared/data-shell';
 import { TablePagination } from '@/components/shared/table-pagination';
 import { Button } from '@/components/ui/button';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
@@ -140,7 +140,7 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
 
   return (
     <div className="flex flex-col h-full space-y-4">
-      <DataSurface
+      <DataShell
         header={
           <TableToolbar
             variant="integrated"
@@ -238,7 +238,7 @@ export function ExpedientesList({ initialData }: ExpedientesListProps) {
             }
           }}
         />
-      </DataSurface>
+      </DataShell>
 
       <ExpedienteDialog
         open={isNovoDialogOpen}

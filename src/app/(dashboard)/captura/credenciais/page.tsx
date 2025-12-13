@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { DataTable } from '@/components/ui/data-table';
+import { DataShell, DataTable } from '@/components/shared/data-shell';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
@@ -190,27 +190,36 @@ export default function CredenciaisPage() {
 
   return (
     <div className="space-y-4">
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={setBusca}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar credenciais..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        onNewClick={() => setCredencialDialog({ open: true, credencial: null })}
-        newButtonTooltip="Nova Credencial"
-        filterButtonsMode="buttons"
-      />
-
-      <DataTable
-        data={credenciaisFiltradas}
-        columns={colunas}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhuma credencial encontrada."
-      />
+      <DataShell
+        header={
+          <TableToolbar
+            variant="integrated"
+            searchValue={busca}
+            onSearchChange={setBusca}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar credenciais..."
+            filterOptions={filterOptions}
+            filterGroups={filterGroups}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            onNewClick={() => setCredencialDialog({ open: true, credencial: null })}
+            newButtonTooltip="Nova Credencial"
+            filterButtonsMode="buttons"
+          />
+        }
+      >
+        <div className="relative border-t">
+          <DataTable
+            data={credenciaisFiltradas}
+            columns={colunas}
+            isLoading={isLoading}
+            error={error}
+            emptyMessage="Nenhuma credencial encontrada."
+            hideTableBorder={true}
+            hidePagination={true}
+          />
+        </div>
+      </DataShell>
 
       {/* Dialogs */}
       <AdvogadoViewDialog

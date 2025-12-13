@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import {
@@ -313,23 +313,6 @@ export default function PlanoContasPage() {
 
   return (
     <div className="space-y-3">
-      {/* Toolbar com busca, filtros e ações */}
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={(value) => {
-          setBusca(value);
-          setPagina(0);
-        }}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar por código ou nome..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="buttons"
-        onNewClick={() => setCreateOpen(true)}
-        newButtonTooltip="Nova Conta"
-      />
       <div className="flex justify-end">
         <ExportButton
           endpoint="/api/financeiro/plano-contas/exportar"
@@ -340,35 +323,65 @@ export default function PlanoContasPage() {
         />
       </div>
 
-      {/* Mensagem de erro */}
-      {error && (
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
-          <p className="font-semibold">Erro ao carregar plano de contas:</p>
-          <p>{error}</p>
-        </div>
-      )}
-
-      {/* Tabela */}
-      <DataTable
-        data={planoContas}
-        columns={colunas}
-        pagination={
-          paginacao
-            ? {
-              pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-              pageSize: paginacao.limite,
-              total: paginacao.total,
-              totalPages: paginacao.totalPaginas,
-              onPageChange: setPagina,
-              onPageSizeChange: setLimite,
-            }
-            : undefined
+      <DataShell
+        header={
+          <TableToolbar
+            variant="integrated"
+            searchValue={busca}
+            onSearchChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar por código ou nome..."
+            filterOptions={filterOptions}
+            filterGroups={filterGroups}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            filterButtonsMode="buttons"
+            onNewClick={() => setCreateOpen(true)}
+            newButtonTooltip="Nova Conta"
+          />
         }
-        sorting={undefined}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhuma conta encontrada."
-      />
+        footer={
+          paginacao ? (
+            <DataPagination
+              pageIndex={paginacao.pagina - 1}
+              pageSize={paginacao.limite}
+              total={paginacao.total}
+              totalPages={paginacao.totalPaginas}
+              onPageChange={setPagina}
+              onPageSizeChange={setLimite}
+              isLoading={isLoading}
+            />
+          ) : null
+        }
+      >
+        <div className="relative border-t">
+          <DataTable
+            data={planoContas}
+            columns={colunas}
+            pagination={
+              paginacao
+                ? {
+                    pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                    pageSize: paginacao.limite,
+                    total: paginacao.total,
+                    totalPages: paginacao.totalPaginas,
+                    onPageChange: setPagina,
+                    onPageSizeChange: setLimite,
+                  }
+                : undefined
+            }
+            sorting={undefined}
+            isLoading={isLoading}
+            error={error}
+            emptyMessage="Nenhuma conta encontrada."
+            hideTableBorder={true}
+            hidePagination={true}
+          />
+        </div>
+      </DataShell>
 
       {/* Dialog para criação */}
       <PlanoContaCreateDialog

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback } from 'react';
-import { DataTable } from '@/components/ui/data-table';
+import { DataShell, DataTable } from '@/components/shared/data-shell';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useTribunais } from '@/features/captura/hooks/use-tribunais';
@@ -92,27 +92,36 @@ export default function TribunaisPage() {
 
   return (
     <div className="space-y-4">
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={setBusca}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar tribunais..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        onNewClick={() => setTribunalDialog({ open: true, tribunal: null })}
-        newButtonTooltip="Nova Configuração de Tribunal"
-        filterButtonsMode="buttons"
-      />
-
-      <DataTable
-        data={tribunaisFiltrados}
-        columns={colunas}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhuma configuração de tribunal encontrada."
-      />
+      <DataShell
+        header={
+          <TableToolbar
+            variant="integrated"
+            searchValue={busca}
+            onSearchChange={setBusca}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar tribunais..."
+            filterOptions={filterOptions}
+            filterGroups={filterGroups}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            onNewClick={() => setTribunalDialog({ open: true, tribunal: null })}
+            newButtonTooltip="Nova Configuração de Tribunal"
+            filterButtonsMode="buttons"
+          />
+        }
+      >
+        <div className="relative border-t">
+          <DataTable
+            data={tribunaisFiltrados}
+            columns={colunas}
+            isLoading={isLoading}
+            error={error}
+            emptyMessage="Nenhuma configuração de tribunal encontrada."
+            hideTableBorder={true}
+            hidePagination={true}
+          />
+        </div>
+      </DataShell>
 
       <TribunaisDialog
         tribunal={tribunalDialog.tribunal}

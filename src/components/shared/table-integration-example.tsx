@@ -3,15 +3,15 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { PageShell } from '@/components/shared/page-shell';
-import { DataTableShell } from '@/components/shared/data-table-shell';
 import { TableToolbar, type FilterGroup } from '@/components/ui/table-toolbar';
 import { TablePagination } from '@/components/shared/table-pagination';
-import { DataTable, type ColumnDef } from '@/components/ui/data-table';
+import { DataShell, DataTable } from '@/components/shared/data-shell';
 import { DetailSheet } from '@/components/shared/detail-sheet';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import type { ColumnDef } from '@tanstack/react-table';
 
 // --- Mock Data and Types ---
 interface ExampleData {
@@ -107,11 +107,11 @@ export function TableIntegrationExample() {
   return (
     <PageShell
       title="Exemplo de Tabela Integrada"
-      description="Demonstração da integração de PageShell, DataTableShell, Toolbar, Pagination e DetailSheet."
+      description="Demonstração da integração de PageShell, DataShell, Toolbar, Pagination e DetailSheet."
       actions={<Button onClick={() => setDialogOpen(true)}>Nova Ação</Button>}
     >
-      <DataTableShell
-        toolbar={
+      <DataShell
+        header={
           <TableToolbar
             variant="integrated"
             searchValue={search}
@@ -124,7 +124,7 @@ export function TableIntegrationExample() {
             filterButtonsMode='buttons'
           />
         }
-        pagination={
+        footer={
           <TablePagination
             variant="integrated"
             pageIndex={page}
@@ -143,9 +143,10 @@ export function TableIntegrationExample() {
           data={paginatedData}
           columns={columns}
           onRowClick={(row) => setSelectedRow(row)}
-          hideTableBorder={true} // The border is handled by DataTableShell
+          hideTableBorder={true} // The border is handled by DataShell
+          hidePagination={true}
         />
-      </DataTableShell>
+      </DataShell>
 
       <DetailSheet
         open={!!selectedRow}

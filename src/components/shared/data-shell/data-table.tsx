@@ -9,6 +9,7 @@ import {
   type RowSelectionState,
   type SortingState,
   type VisibilityState,
+  type Table as TanstackTable,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -103,6 +104,7 @@ export interface DataTableProps<TData, TValue> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     meta?: any;
   };
+  onTableReady?: (table: TanstackTable<TData>) => void;
   className?: string;
 }
 
@@ -171,6 +173,7 @@ export function DataTable<TData, TValue>({
   hideTableBorder,
   hideColumnBorders,
   options,
+  onTableReady,
   className,
 }: DataTableProps<TData, TValue>) {
   const [internalRowSelection, setInternalRowSelection] =
@@ -330,6 +333,10 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     meta: options?.meta,
   });
+
+  React.useEffect(() => {
+    onTableReady?.(table);
+  }, [onTableReady, table]);
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;

@@ -8,7 +8,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { listarTemplatesAction } from '@/features/assinatura-digital/actions';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
-import { DataTable } from '@/components/ui/data-table';
+import { DataTable, DataShell } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Badge } from '@/components/ui/badge';
@@ -39,7 +39,7 @@ import {
   getTemplateDisplayName,
 } from '@/features/assinatura-digital';
 import type { Template, TipoTemplate } from '@/features/assinatura-digital';
-import { DataSurface } from '@/components/shared/data-surface';
+// DataShell substitui DataSurface (padrão novo)
 import { TablePagination } from '@/components/shared/table-pagination';
 import { TemplateCreateDialog } from './components/template-create-dialog';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
@@ -569,7 +569,7 @@ export default function TemplatesPage() {
       )}
 
       {/* Tabela com DataSurface */}
-      <DataSurface
+      <DataShell
         className="flex-1"
         header={
           <TableToolbar
@@ -626,7 +626,7 @@ export default function TemplatesPage() {
           hidePagination
           hideTableBorder
         />
-      </DataSurface>
+      </DataShell>
 
       {/* Dialog para criação de novo template (manter para compatibilidade se houver fluxo PDF direto) */}
       <TemplateCreateDialog

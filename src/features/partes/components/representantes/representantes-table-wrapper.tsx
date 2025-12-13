@@ -11,7 +11,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Button } from '@/components/ui/button';
@@ -373,48 +373,64 @@ export function RepresentantesTableWrapper() {
   }, []);
 
   return (
-    <div className="space-y-4">
-      {/* Barra de busca e filtros */}
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={(value) => {
-          setBusca(value);
-          setPagina(0);
-        }}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar por nome, CPF ou OAB..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="buttons"
-        onNewClick={() => setCreateOpen(true)}
-        newButtonTooltip="Novo Representante"
-      />
-
-      {/* Tabela */}
-      <DataTable<RepresentanteComProcessos>
-        data={representantes}
-        columns={colunas}
-        pagination={
-          paginacao
-            ? {
-                pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-                pageSize: paginacao.limite,
-                total: paginacao.total,
-                totalPages: paginacao.totalPaginas,
-                onPageChange: setPagina,
-                onPageSizeChange: setLimite,
-              }
-            : undefined
-        }
-        sorting={undefined}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhum representante encontrado."
-      />
-
-      {/* TODO: Implementar RepresentanteCreateSheet */}
-    </div>
+    <DataShell
+      header={
+        <TableToolbar
+          variant="integrated"
+          searchValue={busca}
+          onSearchChange={(value) => {
+            setBusca(value);
+            setPagina(0);
+          }}
+          isSearching={isSearching}
+          searchPlaceholder="Buscar por nome, CPF ou OAB..."
+          filterOptions={filterOptions}
+          filterGroups={filterGroups}
+          selectedFilters={selectedFilterIds}
+          onFiltersChange={handleFilterIdsChange}
+          filterButtonsMode="buttons"
+          onNewClick={() => setCreateOpen(true)}
+          newButtonTooltip="Novo Representante"
+        />
+      }
+      footer={
+        paginacao ? (
+          <DataPagination
+            pageIndex={paginacao.pagina - 1}
+            pageSize={paginacao.limite}
+            total={paginacao.total}
+            totalPages={paginacao.totalPaginas}
+            onPageChange={setPagina}
+            onPageSizeChange={setLimite}
+            isLoading={isLoading}
+          />
+        ) : null
+      }
+    >
+      <div className="relative border-t">
+        <DataTable<RepresentanteComProcessos, unknown>
+          data={representantes}
+          columns={colunas}
+          pagination={
+            paginacao
+              ? {
+                  pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                  pageSize: paginacao.limite,
+                  total: paginacao.total,
+                  totalPages: paginacao.totalPaginas,
+                  onPageChange: setPagina,
+                  onPageSizeChange: setLimite,
+                }
+              : undefined
+          }
+          sorting={undefined}
+          isLoading={isLoading}
+          error={error}
+          emptyMessage="Nenhum representante encontrado."
+          hideTableBorder={true}
+          hidePagination={true}
+        />
+      </div>
+    </DataShell>
   );
 }

@@ -2,8 +2,7 @@
 
 import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
-import { DataTableShell } from '@/components/shared/data-table-shell';
+import { DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { TablePagination } from '@/components/shared/table-pagination';
@@ -245,21 +244,22 @@ export function ProcessosTableWrapper() {
 
   return (
     <>
-        <DataTableShell toolbar={toolbar} pagination={paginationControl}>
+        <DataShell header={toolbar} footer={paginationControl}>
             {showEmptyState ? (
                 <ProcessosEmptyState
                     onClearFilters={() => handleFilterIdsChange([])}
                     hasFilters={hasFilters}
                 />
             ) : (
-                <DataTable
+                <div className="relative border-t">
+                  <DataTable
                     columns={colunas}
                     data={processos || []}
                     isLoading={isLoading}
                     error={error}
                     onRowClick={handleRowClick}
-                    hideTableBorder
-                    hidePagination
+                    hideTableBorder={true}
+                    hidePagination={true}
                     className="border-none"
                     // Pass current pagination state for manual control internal logic
                     pagination={paginacao ? {
@@ -281,9 +281,10 @@ export function ProcessosTableWrapper() {
                             }
                         }
                     }}
-                />
+                  />
+                </div>
             )}
-        </DataTableShell>
+        </DataShell>
 
         <ProcessoDetailSheet
             isOpen={isSheetOpen}

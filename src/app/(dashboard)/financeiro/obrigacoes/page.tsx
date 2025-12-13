@@ -9,7 +9,7 @@ import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable } from '@/components/ui/data-table';
+import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar, type ComboboxOption, type FilterGroup } from '@/components/ui/table-toolbar';
 import { AlertasObrigacoes } from '@/features/financeiro/components/obrigacoes/alertas-obrigacoes';
@@ -514,51 +514,63 @@ export default function ObrigacoesPage() {
         onFiltrarInconsistentes={handleFiltrarInconsistentes}
       />
 
-      {/* Toolbar */}
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={(value) => {
-          setBusca(value);
-          setPagina(0);
-        }}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar por descrição, cliente ou processo..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        filterButtonsMode="buttons"
-      />
-
-      {/* Mensagem de erro */}
-      {error && (
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
-          <p className="font-semibold">Erro ao carregar obrigações:</p>
-          <p>{error}</p>
-        </div>
-      )}
-
-      {/* Tabela */}
-      <DataTable
-        data={obrigacoes}
-        columns={colunas}
-        pagination={
-          paginacao
-            ? {
-                pageIndex: paginacao.pagina - 1,
-                pageSize: paginacao.limite,
-                total: paginacao.total,
-                totalPages: paginacao.totalPaginas,
-                onPageChange: setPagina,
-                onPageSizeChange: setLimite,
-              }
-            : undefined
+      <DataShell
+        header={
+          <TableToolbar
+            variant="integrated"
+            searchValue={busca}
+            onSearchChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar por descrição, cliente ou processo..."
+            filterOptions={filterOptions}
+            filterGroups={filterGroups}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            filterButtonsMode="buttons"
+          />
         }
-        sorting={undefined}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Nenhuma obrigação encontrada."
-      />
+        footer={
+          paginacao ? (
+            <DataPagination
+              pageIndex={paginacao.pagina - 1}
+              pageSize={paginacao.limite}
+              total={paginacao.total}
+              totalPages={paginacao.totalPaginas}
+              onPageChange={setPagina}
+              onPageSizeChange={setLimite}
+              isLoading={isLoading}
+            />
+          ) : null
+        }
+      >
+        <div className="relative border-t">
+          <DataTable
+            data={obrigacoes}
+            columns={colunas}
+            pagination={
+              paginacao
+                ? {
+                    pageIndex: paginacao.pagina - 1,
+                    pageSize: paginacao.limite,
+                    total: paginacao.total,
+                    totalPages: paginacao.totalPaginas,
+                    onPageChange: setPagina,
+                    onPageSizeChange: setLimite,
+                  }
+                : undefined
+            }
+            sorting={undefined}
+            isLoading={isLoading}
+            error={error}
+            emptyMessage="Nenhuma obrigação encontrada."
+            hideTableBorder={true}
+            hidePagination={true}
+          />
+        </div>
+      </DataShell>
 
     </div>
   );

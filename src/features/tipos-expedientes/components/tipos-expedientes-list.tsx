@@ -10,9 +10,8 @@ import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
-import { DataTableShell } from '@/components/shared/data-table-shell';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { DataTable } from '@/components/ui/data-table';
+import { DataShell, DataTable } from '@/components/shared/data-shell';
 import { TablePagination } from '@/components/shared/table-pagination';
 import { Button } from '@/components/ui/button';
 import {
@@ -188,8 +187,8 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
 
     return (
         <div className="flex flex-col h-full space-y-4">
-            <DataTableShell
-                toolbar={
+            <DataShell
+                header={
                     <TableToolbar
                         variant="integrated"
                         searchValue={globalFilter}
@@ -198,7 +197,7 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
                         newButtonTooltip="Novo Tipo"
                     />
                 }
-                pagination={
+                footer={
                     <TablePagination
                         variant="integrated"
                         pageIndex={pagination.pageIndex}
@@ -211,23 +210,24 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
                     />
                 }
             >
-                <DataTable
-                    data={data.data}
-                    columns={columns}
-                    isLoading={isLoading}
-                    pagination={undefined}
-                    hidePagination
-                    hideTableBorder
-                    className="border-none"
-                    // @ts-expect-error - Meta injection for actions
-                    options={{
-                        meta: {
-                            onEdit: handleEdit,
-                            onDelete: handleDelete
-                        }
-                    }}
-                />
-            </DataTableShell>
+                <div className="relative border-t">
+                    <DataTable
+                        data={data.data}
+                        columns={columns}
+                        isLoading={isLoading}
+                        pagination={undefined}
+                        hidePagination={true}
+                        hideTableBorder={true}
+                        className="border-none"
+                        options={{
+                            meta: {
+                                onEdit: handleEdit,
+                                onDelete: handleDelete
+                            }
+                        }}
+                    />
+                </div>
+            </DataShell>
 
             <TipoExpedienteForm
                 open={dialogOpen}

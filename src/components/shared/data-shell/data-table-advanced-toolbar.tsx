@@ -43,7 +43,6 @@ export function DataTableAdvancedToolbar<TData>({
   onSearchValueChange,
   filtersSlot,
 }: DataTableAdvancedToolbarProps<TData>) {
-  
   const handleExport = (format: 'csv' | 'xlsx' | 'json') => {
     if (onExport) {
       onExport(format);
@@ -61,21 +60,20 @@ export function DataTableAdvancedToolbar<TData>({
       link.href = jsonString;
       link.download = `${filename}.json`;
       link.click();
-    } else {
-      const worksheet = XLSX.utils.json_to_sheet(data);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
-      XLSX.writeFile(workbook, `${filename}.${format}`);
+      return;
     }
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+    XLSX.writeFile(workbook, `${filename}.${format}`);
   };
 
   return (
     <div className="px-6 space-y-3">
       {/* Linha 1: filtros + visualizar */}
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-wrap items-center gap-2">
-          {filtersSlot}
-        </div>
+        <div className="flex flex-wrap items-center gap-2">{filtersSlot}</div>
 
         <Tooltip>
           <TooltipTrigger asChild>
@@ -193,3 +191,5 @@ export function DataTableAdvancedToolbar<TData>({
     </div>
   );
 }
+
+
