@@ -86,27 +86,82 @@ export const formatarEnderecoCompleto = (endereco: {
 } | null | undefined): string => {
   if (!endereco) return '-';
 
+  const toTitleCasePtBr = (input: string): string => {
+    const raw = input.trim();
+    if (!raw) return '';
+
+    const LOWER_WORDS = new Set(['de', 'da', 'das', 'do', 'dos', 'e']);
+    const KEEP_UPPER = new Set([
+      'me',
+      'epp',
+      'ltda',
+      'eireli',
+      'sa',
+      's/a',
+      's.a',
+      's.a.',
+      'cep',
+      'cpf',
+      'cnpj',
+      'rg',
+      'uf',
+    ]);
+    const isRomanNumeral = (w: string) =>
+      /^[ivxlcdm]+$/i.test(w) && w.length <= 6;
+
+    const titleWord = (word: string, idx: number): string => {
+      const cleaned = word.replace(/[.,;:()]/g, '');
+      const lower = cleaned.toLowerCase();
+
+      if (KEEP_UPPER.has(lower)) return cleaned.toUpperCase();
+      if (isRomanNumeral(cleaned)) return cleaned.toUpperCase();
+      if (cleaned.length <= 2 && cleaned === cleaned.toUpperCase()) return cleaned;
+      if (idx > 0 && LOWER_WORDS.has(lower)) return lower;
+
+      const first = cleaned.charAt(0).toUpperCase();
+      const rest = cleaned.slice(1).toLowerCase();
+      return first + rest;
+    };
+
+    return raw
+      .split(/\s+/)
+      .map((token, idx) => {
+        // preserve punctuation around token
+        const leading = token.match(/^[^\p{L}\p{N}]*/u)?.[0] ?? '';
+        const trailing = token.match(/[^\p{L}\p{N}]*$/u)?.[0] ?? '';
+        const core = token.slice(leading.length, token.length - trailing.length);
+
+        const coreParts = core
+          .split('-')
+          .map((part) => titleWord(part, idx))
+          .join('-');
+
+        return `${leading}${coreParts}${trailing}`;
+      })
+      .join(' ');
+  };
+
   const partes: string[] = [];
 
   if (endereco.logradouro) {
-    let logradouroCompleto = endereco.logradouro;
+    let logradouroCompleto = toTitleCasePtBr(endereco.logradouro);
     if (endereco.numero) {
       logradouroCompleto += `, ${endereco.numero}`;
     }
     if (endereco.complemento) {
-      logradouroCompleto += ` - ${endereco.complemento}`;
+      logradouroCompleto += ` - ${toTitleCasePtBr(endereco.complemento)}`;
     }
     partes.push(logradouroCompleto);
   }
 
   if (endereco.bairro) {
-    partes.push(endereco.bairro);
+    partes.push(toTitleCasePtBr(endereco.bairro));
   }
 
   if (endereco.municipio && endereco.estado_sigla) {
-    partes.push(`${endereco.municipio} - ${endereco.estado_sigla}`);
+    partes.push(`${toTitleCasePtBr(endereco.municipio)} - ${endereco.estado_sigla.toUpperCase()}`);
   } else if (endereco.municipio) {
-    partes.push(endereco.municipio);
+    partes.push(toTitleCasePtBr(endereco.municipio));
   }
 
   if (endereco.cep) {
@@ -133,7 +188,53 @@ export const formatarData = (dataISO: string | null | undefined): string => {
  * Formata nome completo ou razao social
  */
 export const formatarNome = (nome: string | null | undefined): string => {
-  return nome || '-';
+  if (!nome) return '-';
+
+  const raw = nome.trim();
+  if (!raw) return '-';
+
+  const LOWER_WORDS = new Set(['de', 'da', 'das', 'do', 'dos', 'e']);
+  const KEEP_UPPER = new Set([
+    'me',
+    'epp',
+    'ltda',
+    'eireli',
+    'sa',
+    's/a',
+    's.a',
+    's.a.',
+  ]);
+  const isRomanNumeral = (w: string) => /^[ivxlcdm]+$/i.test(w) && w.length <= 6;
+
+  const titleWord = (word: string, idx: number): string => {
+    const cleaned = word.replace(/[.,;:()]/g, '');
+    const lower = cleaned.toLowerCase();
+
+    if (KEEP_UPPER.has(lower)) return cleaned.toUpperCase();
+    if (isRomanNumeral(cleaned)) return cleaned.toUpperCase();
+    if (cleaned.length <= 2 && cleaned === cleaned.toUpperCase()) return cleaned;
+    if (idx > 0 && LOWER_WORDS.has(lower)) return lower;
+
+    const first = cleaned.charAt(0).toUpperCase();
+    const rest = cleaned.slice(1).toLowerCase();
+    return first + rest;
+  };
+
+  return raw
+    .split(/\s+/)
+    .map((token, idx) => {
+      const leading = token.match(/^[^\p{L}\p{N}]*/u)?.[0] ?? '';
+      const trailing = token.match(/[^\p{L}\p{N}]*$/u)?.[0] ?? '';
+      const core = token.slice(leading.length, token.length - trailing.length);
+
+      const coreParts = core
+        .split('-')
+        .map((part) => titleWord(part, idx))
+        .join('-');
+
+      return `${leading}${coreParts}${trailing}`;
+    })
+    .join(' ');
 };
 
 /**

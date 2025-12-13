@@ -191,3 +191,8 @@ export {
   createAssinaturaDigitalService,
 } from "./service";
 export { AssinaturaDigitalRepository } from "./repository";
+
+// =============================================================================
+// COMPONENTS
+// =============================================================================
+export * from "./components/inputs";

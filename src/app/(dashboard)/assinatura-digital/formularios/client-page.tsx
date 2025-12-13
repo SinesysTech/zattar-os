@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
 import { DataTable } from '@/components/ui/data-table';
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

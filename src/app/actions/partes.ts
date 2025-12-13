@@ -25,6 +25,7 @@ import {
   criarCliente,
   atualizarCliente,
   listarClientes,
+  desativarCliente,
   criarParteContraria,
   atualizarParteContraria,
   listarPartesContrarias,
@@ -320,6 +321,48 @@ export async function actionListarClientes(
       success: false,
       error: error instanceof Error ? error.message : 'Erro interno do servidor',
       message: 'Erro ao carregar clientes. Tente novamente.',
+    };
+  }
+}
+
+/**
+ * Action para desativar um cliente (soft delete)
+ */
+export async function actionDesativarCliente(id: number): Promise<ActionResult> {
+  try {
+    if (!id || id <= 0) {
+      return {
+        success: false,
+        error: 'ID inválido',
+        message: 'ID do cliente é obrigatório',
+      };
+    }
+
+    const result = await desativarCliente(id);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    revalidatePath('/partes/clientes');
+    revalidatePath(`/partes/clientes/${id}`);
+    revalidatePath('/partes');
+
+    return {
+      success: true,
+      data: null,
+      message: 'Cliente desativado com sucesso',
+    };
+  } catch (error) {
+    console.error('Erro ao desativar cliente:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro interno do servidor',
+      message: 'Erro ao desativar cliente. Tente novamente.',
     };
   }
 }

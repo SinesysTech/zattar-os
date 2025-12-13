@@ -14,6 +14,8 @@ export default async function ClientesPage() {
   const result = await listarClientes({
     pagina: 1,
     limite: 50,
+    incluir_processos: true,
+    ativo: true,
   });
 
   const clientes = result.success ? result.data.data : [];

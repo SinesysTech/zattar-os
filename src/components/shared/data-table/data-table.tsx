@@ -44,9 +44,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Checkbox } from '@/components/ui/checkbox';
 
 import { DataTablePagination } from './data-table-pagination';
-import { DataTableToolbar } from './data-table-toolbar';
+import { DataTableAdvancedToolbar } from './data-table-advanced-toolbar';
 import { cn } from '@/lib/utils';
 
 // --- Types ---
@@ -70,6 +71,15 @@ interface DataTableProps<TData, TValue> {
   
   isLoading?: boolean;
   error?: string | null;
+
+  // New features
+  actionSlot?: React.ReactNode;
+  /** Valor do campo de busca (controlado externamente). */
+  searchValue?: string;
+  /** Handler do campo de busca (para refetch server-side, por exemplo). */
+  onSearchValueChange?: (value: string) => void;
+  /** Slot para filtros adicionais (ex.: Situação, Tipo de pessoa). */
+  filtersSlot?: React.ReactNode;
 }
 
 // --- Draggable Header Component ---
@@ -81,7 +91,7 @@ function DraggableTableHeader<TData>({
   className?: string;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: header.column.id });
+    useSortable({ id: header.column.id, disabled: header.column.id === 'select' });
 
   const style: React.CSSProperties = {
     transform: CSS.Translate.toString(transform),
@@ -116,6 +126,10 @@ export function DataTable<TData, TValue>({
   onColumnFiltersChange,
   isLoading,
   error,
+  actionSlot,
+  searchValue,
+  onSearchValueChange,
+  filtersSlot,
 }: DataTableProps<TData, TValue>) {
   // --- Local State (for uncontrolled mode) ---
   const [rowSelection, setRowSelection] = React.useState({});
@@ -126,9 +140,16 @@ export function DataTable<TData, TValue>({
   const [internalColumnFilters, setInternalColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
-    columns.map((column) => column.id || (column as ColumnDef<TData> & { accessorKey?: string }).accessorKey as string).filter(Boolean)
-  );
+  const [columnOrder, setColumnOrder] = React.useState<string[]>(() => [
+    'select',
+    ...columns
+      .map(
+        (column) =>
+          column.id ||
+          ((column as ColumnDef<TData> & { accessorKey?: string }).accessorKey as string)
+      )
+      .filter(Boolean),
+  ]);
   
   // Density State
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
@@ -150,10 +171,42 @@ export function DataTable<TData, TValue>({
       }
     : undefined;
 
+  const selectionColumn = React.useMemo<ColumnDef<TData, unknown>>(
+    () => ({
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Selecionar todos"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Selecionar linha"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+      size: 44,
+    }),
+    []
+  );
+
+  const tableColumns = React.useMemo<ColumnDef<TData, unknown>[]>(
+    () => [selectionColumn, ...(columns as unknown as ColumnDef<TData, unknown>[])],
+    [columns, selectionColumn]
+  );
+
   // --- Table Instance ---
   const table = useReactTable({
     data,
-    columns,
+    columns: tableColumns,
     state: {
       sorting,
       columnVisibility,
@@ -198,7 +251,10 @@ export function DataTable<TData, TValue>({
   // Handle Drag End
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-    if (active && over && active.id !== over.id) {
+    if (!active || !over) return;
+    // keep selection checkbox column pinned at the start
+    if (active.id === 'select' || over.id === 'select') return;
+    if (active.id !== over.id) {
       setColumnOrder((order) => {
         const oldIndex = order.indexOf(active.id as string);
         const newIndex = order.indexOf(over.id as string);
@@ -212,86 +268,116 @@ export function DataTable<TData, TValue>({
       switch (density) {
           case 'compact': return 'py-1 px-2';
           case 'relaxed': return 'py-4 px-4';
-          default: return 'py-2 px-2';
+          default: return 'py-2 px-2'; // standard
       }
   }
 
   // --- Render ---
   return (
     <div className="space-y-4">
-      <DataTableToolbar 
-          table={table} 
-          density={density}
-          onDensityChange={setDensity}
-      />
-      
-      <div className="rounded-md border relative">
-        {isLoading && (
-            <div className="absolute inset-0 bg-background/50 z-10 flex items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      {/* Outer Card Container for Premium Look */}
+      <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
+          {/* Toolbar: vertical padding only so separators can go full-width */}
+          <div className="pt-6 pb-4">
+            <DataTableAdvancedToolbar 
+                table={table} 
+                actionSlot={actionSlot}
+                density={density}
+                onDensityChange={setDensity}
+                searchValue={searchValue}
+                onSearchValueChange={onSearchValueChange}
+                filtersSlot={filtersSlot}
+            />
+          </div>
+          
+          <div className="relative border-t">
+            {isLoading && (
+                <div className="absolute inset-0 bg-background/50 z-10 flex items-center justify-center">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+            )}
+            <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            >
+            <Table>
+                <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                    <SortableContext
+                        items={columnOrder}
+                        strategy={horizontalListSortingStrategy}
+                    >
+                        {headerGroup.headers.map((header, index) => (
+                        <DraggableTableHeader
+                          key={header.id}
+                          header={header}
+                          className={cn(
+                            getCellPadding(),
+                            index === 0 && 'pl-6',
+                            index === headerGroup.headers.length - 1 && 'pr-6'
+                          )}
+                        />
+                        ))}
+                    </SortableContext>
+                    </TableRow>
+                ))}
+                </TableHeader>
+                <TableBody>
+                {error ? (
+                    <TableRow>
+                    <TableCell
+                        colSpan={columns.length}
+                        className="h-24 px-6 text-center text-destructive"
+                    >
+                        {error}
+                    </TableCell>
+                    </TableRow>
+                ) : table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                    <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && 'selected'}
+                    >
+                        {row.getVisibleCells().map((cell, index, all) => (
+                        <TableCell
+                          key={cell.id}
+                          className={cn(
+                            getCellPadding(),
+                            index === 0 && 'pl-6',
+                            index === all.length - 1 && 'pr-6'
+                          )}
+                        >
+                            {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                            )}
+                        </TableCell>
+                        ))}
+                    </TableRow>
+                    ))
+                ) : (
+                    <TableRow>
+                    <TableCell
+                        colSpan={columns.length}
+                        className="h-24 px-6 text-center"
+                    >
+                        No results.
+                    </TableCell>
+                    </TableRow>
+                )}
+                </TableBody>
+            </Table>
+            </DndContext>
+          </div>
+          {/* Pagination: full-width divider + consistent horizontal padding */}
+          <div className="border-t">
+            <div className="px-6 py-4">
+              <DataTablePagination table={table} />
             </div>
-        )}
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  <SortableContext
-                    items={columnOrder}
-                    strategy={horizontalListSortingStrategy}
-                  >
-                    {headerGroup.headers.map((header) => (
-                      <DraggableTableHeader key={header.id} header={header} />
-                    ))}
-                  </SortableContext>
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {error ? (
-                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center text-destructive"
-                  >
-                    {error}
-                  </TableCell>
-                </TableRow>
-              ) : table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className={getCellPadding()}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </DndContext>
+          </div>
       </div>
-      <DataTablePagination table={table} />
     </div>
   );
 }

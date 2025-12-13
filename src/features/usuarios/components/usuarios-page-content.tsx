@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { TableWithToolbar, type ResponsiveTableColumn } from '@/components/ui/table-with-toolbar';
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Button } from '@/components/ui/button';
 import { Eye, Settings, KeyRound, ShieldAlert } from 'lucide-react';
 import {

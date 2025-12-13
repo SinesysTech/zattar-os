@@ -44,12 +44,11 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { InputCEP, type InputCepAddress } from '@/features/enderecos';
-import InputTelefone from '@/features/assinatura-digital/components/inputs/input-telefone';
-import { actionCriarCliente, actionAtualizarCliente, type ActionResult } from '@/app/actions/partes';
+import { InputTelefone } from '@/features/assinatura-digital';
+import { actionCriarCliente, actionAtualizarCliente } from '@/app/actions/partes';
+import type { ActionResult } from '@/app/actions/partes';
 import type { Cliente } from '../../types';
-
-// =============================================================================
-// TIPOS E CONSTANTES
+import { Progress } from '@/components/ui/progress';
 // =============================================================================
 
 interface ClienteFormDialogProps {
@@ -179,7 +178,6 @@ export function ClienteFormDialog({
   const [currentStep, setCurrentStep] = React.useState(isEditMode ? 2 : 1);
   const [formData, setFormData] = React.useState(INITIAL_FORM_STATE);
   const [novoEmail, setNovoEmail] = React.useState('');
-  const [stepErrors, setStepErrors] = React.useState<string[]>([]);
   const [mounted, setMounted] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
 
@@ -218,12 +216,6 @@ export function ClienteFormDialog({
         onSuccessRef.current?.();
       } else {
         toast.error(state.message);
-        if (state.errors) {
-          const errorMessages = Object.entries(state.errors)
-            .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
-            .slice(0, 3);
-          setStepErrors(errorMessages);
-        }
       }
     }
   }, [state, onOpenChange]);
@@ -234,7 +226,6 @@ export function ClienteFormDialog({
       setCurrentStep(isEditMode ? 2 : 1);
       setFormData(INITIAL_FORM_STATE);
       setNovoEmail('');
-      setStepErrors([]);
     } else if (isEditMode && cliente) {
       // Preencher com dados do cliente para edicao
       setFormData({
@@ -357,23 +348,19 @@ export function ClienteFormDialog({
   const handleNext = () => {
     const errors = validateStep(currentStep);
     if (errors.length > 0) {
-      setStepErrors(errors);
       toast.error(errors.join('\n'));
       return;
     }
-    setStepErrors([]);
     setCurrentStep(prev => Math.min(prev + 1, TOTAL_STEPS));
   };
 
   const handlePrevious = () => {
-    setStepErrors([]);
     setCurrentStep(prev => Math.max(prev - 1, isEditMode ? 2 : 1));
   };
 
   const handleSubmit = () => {
     const errors = validateStep(currentStep);
     if (errors.length > 0) {
-      setStepErrors(errors);
       toast.error(errors.join('\n'));
       return;
     }
@@ -911,6 +898,9 @@ export function ClienteFormDialog({
   const stepInfo = STEP_INFO[currentStep as keyof typeof STEP_INFO];
   const isFirstStep = currentStep === (isEditMode ? 2 : 1);
   const isLastStep = currentStep === TOTAL_STEPS;
+  const progressValue = isEditMode
+    ? ((currentStep - 1) / (TOTAL_STEPS - 1)) * 100
+    : (currentStep / TOTAL_STEPS) * 100;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -926,16 +916,7 @@ export function ClienteFormDialog({
           </div>
           <DialogDescription>{stepInfo.description}</DialogDescription>
 
-          <div className="w-full bg-muted rounded-full h-2 mt-4">
-            <div
-              className="bg-primary h-2 rounded-full transition-all duration-300"
-              style={{
-                width: isEditMode
-                  ? `${((currentStep - 1) / (TOTAL_STEPS - 1)) * 100}%`
-                  : `${(currentStep / TOTAL_STEPS) * 100}%`,
-              }}
-            />
-          </div>
+          <Progress value={progressValue} className="mt-4 h-2" />
         </DialogHeader>
 
         <form ref={formRef} action={formAction}>
